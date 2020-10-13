@@ -28,10 +28,13 @@ export class CToken extends Token {
   public readonly liquidity?: number
   public readonly canBeCollateral?: boolean
   public readonly underlyingPrice?: number
+  public readonly isListed?: boolean
+  public readonly collateralFactorMantissa?: number
+
 
   constructor(chainId: ChainId, cAddress: string, address: string, decimals: number, cSymbol?: string, cName?: string, symbol?: string, name?: string,
     supplyRatePerBlock?: number, borrowRatePerBlock?: number, supplyBalance?: number, borrowBalance?: number,
-    liquidity?: number, canBeCollateral?: boolean, underlyingPrice?: number) {
+    liquidity?: number, canBeCollateral?: boolean, underlyingPrice?: number, isListed?: boolean, collateralFactorMantissa?: number) {
     super(chainId, address, decimals, symbol, name)
 
     this.cAddress = cAddress
@@ -45,6 +48,8 @@ export class CToken extends Token {
     this.liquidity = liquidity
     this.canBeCollateral = canBeCollateral
     this.underlyingPrice = underlyingPrice
+    this.isListed = isListed
+    this.collateralFactorMantissa = collateralFactorMantissa
   }
 
   public equals(other: CToken): boolean {
@@ -87,6 +92,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
   const cashResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'getCash')
   const membershipResults = useSingleContractMultipleData(comptroller, 'checkMembership', membershipArgs)
   const underlyingPriceResults = useSingleContractMultipleData(oracle, 'getUnderlyingPrice', cTokenAddresses.map(cTokenAddress => [cTokenAddress]))
+  const marketsResults = useSingleContractMultipleData(comptroller, 'markets', cTokenAddresses.map(cTokenAddress => [cTokenAddress]))
 
   return useMemo(() => {
     return supplyRatePerBlockResults.map((supplyRatePerBlockResult, i) => {
@@ -96,6 +102,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       const { result: cashValue, loading: cashResultLoading } = cashResults[i]
       const { result: membershipValue, loading: membershipLoading } = membershipResults[i]
       const { result: underlyingPriceValue, loading: underlyingPriceLoading } = underlyingPriceResults[i]
+      const { result: marketsValue, loading: marketsResultLoading } = marketsResults.length !== 0 ? marketsResults[i] : { result: [0, 0, 0], loading: false }
 
       if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, null]
       if (borrowRatePerBlockResultLoading) return [CTokenState.LOADING, null]
@@ -103,6 +110,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       if (cashResultLoading) return [CTokenState.LOADING, null]
       if (membershipLoading) return [CTokenState.LOADING, null]
       if (underlyingPriceLoading) return [CTokenState.LOADING, null]
+      if (marketsResultLoading) return [CTokenState.LOADING, null]
 
       if (!supplyRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]
       if (!borrowRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]
@@ -110,13 +118,14 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       if (!cashValue) return [CTokenState.NOT_EXISTS, null]
       if (!membershipValue) return [CTokenState.NOT_EXISTS, null]
       if (!underlyingPriceValue) return [CTokenState.NOT_EXISTS, null]
+      if (!marketsValue) return [CTokenState.NOT_EXISTS, null]
 
       return [
         CTokenState.EXISTS,
         new CToken(chainId ?? ChainId.MAINNET, cTokenList[i][0], cTokenList[i][1], cTokenList[i][2], cTokenList[i][3], cTokenList[i][4], cTokenList[i][5], cTokenList[i][6],
-          supplyRatePerBlockValue[0], borrowRatePerBlockValue[0], accountSnapshotValue[1], accountSnapshotValue[2], cashValue[0], membershipValue[0], underlyingPriceValue[0]
+          supplyRatePerBlockValue[0], borrowRatePerBlockValue[0], accountSnapshotValue[1], accountSnapshotValue[2], cashValue[0], membershipValue[0], underlyingPriceValue[0], marketsValue[0], marketsValue[1]
         )
       ]
     })
-  }, [supplyRatePerBlockResults, borrowRatePerBlockResults, accountSnapshotResults, cashResults, membershipResults, underlyingPriceResults, cTokenList, chainId])
+  }, [supplyRatePerBlockResults, borrowRatePerBlockResults, accountSnapshotResults, cashResults, membershipResults, underlyingPriceResults, marketsResults, cTokenList, chainId])
 }
