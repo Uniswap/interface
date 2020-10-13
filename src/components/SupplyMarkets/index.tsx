@@ -9,7 +9,6 @@ const MarketsCard = styled.div`
   background: #ffffff;
   box-shadow: 0px 2px 4px rgba(16, 21, 24, 0.05);
   border-radius: 4px;
-  margin-bottom: 1.33rem;
 `
 
 const MarketsCardHeader = styled.div`
@@ -19,6 +18,7 @@ const MarketsCardHeader = styled.div`
   justify-content: space-between;
   font-size: 1.1rem;
   padding: 1rem 1.75rem;
+  font-weight: 600;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 `
 
@@ -70,49 +70,93 @@ function SupplyMarkets() {
   // const [isDark] = useDarkModeManager()
 
   return (
-    <MarketsCard>
-      <MarketsCardHeader>Supply Markets</MarketsCardHeader>
-      <AssetWrap>
-        <AssetWrapLabels>
-          <AssetLabel textAlign={'left'}>Asset</AssetLabel>
-          <AssetLabel textAlign={'right'}>APY</AssetLabel>
-          <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
-          <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
-        </AssetWrapLabels>
-        <AssetItemWrap>
-          <AssetItem>
-            <div style={{ justifySelf: 'start' }}>BTC</div>
-            <div>0.01%</div>
-            <div>0 BTC</div>
-            <Switch />
-          </AssetItem>
-          <AssetItem>
-            <div style={{ justifySelf: 'start' }}>BTC</div>
-            <div>0.01%</div>
-            <div>0 BTC</div>
-            <Switch />
-          </AssetItem>
-          <AssetItem>
-            <div style={{ justifySelf: 'start' }}>BTC</div>
-            <div>0.01%</div>
-            <div>0 BTC</div>
-            <Switch />
-          </AssetItem>
-          <AssetItem>
-            <div style={{ justifySelf: 'start' }}>BTC</div>
-            <div>0.01%</div>
-            <div>0 BTC</div>
-            <Switch />
-          </AssetItem>
-          <AssetItem>
-            <div style={{ justifySelf: 'start' }}>BTC</div>
-            <div>0.01%</div>
-            <div>0 BTC</div>
-            <Switch />
-          </AssetItem>
-        </AssetItemWrap>
-      </AssetWrap>
-    </MarketsCard>
+    <div>
+      <MarketsCard>
+        <MarketsCardHeader>Supply</MarketsCardHeader>
+        <AssetWrap>
+          <AssetWrapLabels>
+            <AssetLabel textAlign={'left'}>Asset</AssetLabel>
+            <AssetLabel textAlign={'right'}>APY</AssetLabel>
+            <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
+            <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
+          </AssetWrapLabels>
+          <AssetItemWrap>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+          </AssetItemWrap>
+        </AssetWrap>
+      </MarketsCard>
+      <MarketsCard style={{ marginTop: '1rem' }}>
+        <AssetWrap>
+          <AssetWrapLabels>
+            <AssetLabel textAlign={'left'}>Asset</AssetLabel>
+            <AssetLabel textAlign={'right'}>APY</AssetLabel>
+            <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
+            <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
+          </AssetWrapLabels>
+          <AssetItemWrap>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+            <AssetItem>
+              <div style={{ justifySelf: 'start' }}>BTC</div>
+              <div>0.01%</div>
+              <div>0 BTC</div>
+              <Switch />
+            </AssetItem>
+          </AssetItemWrap>
+        </AssetWrap>
+      </MarketsCard>
+    </div>
   )
 }
 

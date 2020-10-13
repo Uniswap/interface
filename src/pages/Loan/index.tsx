@@ -48,9 +48,9 @@ export default function Loan() {
   // `};
   // `
 
-  let result = useCTokens()
+  const result = useCTokens()
   console.log('rrrresult', result)
-  
+
   return (
     <PageWrapper gap="lg" justify="center">
       <Summary></Summary>
