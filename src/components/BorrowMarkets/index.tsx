@@ -4,6 +4,7 @@ import React from 'react'
 // import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
+import CurrencyIcon from '../CurrencyIcon'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -63,6 +64,12 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   }
 `
 
+const AssetLogo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-self: start;
+`
+
 const ethMantissa = 1e18
 const blocksPerDay = 4 * 60 * 24
 const daysPerYear = 365
@@ -101,7 +108,10 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
             <AssetItemWrap>
               {borrowedAsset.map((item: any) => (
                 <AssetItem key={item?.symbol}>
-                  <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
+                  <AssetLogo>
+                    <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                    {item?.symbol}
+                  </AssetLogo>
                   <div>
                     {(
                       (Math.pow((item?.borrowRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
@@ -145,7 +155,10 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
             {!!borrowAsset.length
               ? borrowAsset.map((item: any) => (
                   <AssetItem key={item?.symbol}>
-                    <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
+                    <AssetLogo>
+                      <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                      {item?.symbol}
+                    </AssetLogo>
                     <div>
                       {(
                         (Math.pow((item?.borrowRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
