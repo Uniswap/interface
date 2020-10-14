@@ -65,6 +65,12 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
+  const suppliedAsset = allMarkets.map((item: any) => {
+    return {
+      ...item?.[1]
+    }
+  })
+  console.log(suppliedAsset, 'suppliedAsset111')
   console.log('summary', allMarkets.length)
 
   return (

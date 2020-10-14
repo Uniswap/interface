@@ -64,6 +64,9 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
     background: rgba(4, 169, 245, 0.05);
   }
 `
+const ethMantissa = 1e18
+const blocksPerDay = 4 * 60 * 24
+const daysPerYear = 365
 
 function SupplyMarkets({ allMarkets = [] }: { allMarkets: any; height?: number }) {
   // const { t } = useTranslation()
@@ -91,10 +94,10 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any; height?: number }
           <AssetItemWrap>
             {!!suppliedAsset.length
               ? suppliedAsset.map((item: any) => (
-                  <AssetItem key={item?.cSymbol}>
-                    <div style={{ justifySelf: 'start' }}>{item?.cSymbol}</div>
-                    <div>0.01%</div>
-                    <div>{item?.supplyBalance?.toString()} BTC</div>
+                  <AssetItem key={item?.symbol}>
+                    <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
+                    <div>{((((Math.pow(((item?.supplyRatePerBlock) / ethMantissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100).toFixed(2)}%</div>
+                    <div> 0 {item?.symbol}</div>
                     <Switch />
                   </AssetItem>
                 ))
@@ -103,7 +106,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any; height?: number }
         </AssetWrap>
       </MarketsCard>
       <MarketsCard style={{ marginTop: '1rem' }}>
-        <MarketsCardHeader>Supply</MarketsCardHeader>
+        <MarketsCardHeader>Supply Markets</MarketsCardHeader>
         <AssetWrap>
           <AssetWrapLabels>
             <AssetLabel textAlign={'left'}>Asset</AssetLabel>
@@ -114,10 +117,10 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any; height?: number }
           <AssetItemWrap>
             {!!suppliedAsset.length
               ? suppliedAsset.map((item: any) => (
-                  <AssetItem key={item?.cSymbol}>
-                    <div style={{ justifySelf: 'start' }}>{item?.cSymbol}</div>
-                    <div>0.01%</div>
-                    <div>{item?.supplyBalance?.toString()} BTC</div>
+                  <AssetItem key={item?.symbol}>
+                    <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
+                    <div>{((((Math.pow(((item?.supplyRatePerBlock) / ethMantissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100).toFixed(2)}%</div>
+                    <div> 0 {item?.symbol}</div>
                     <Switch />
                   </AssetItem>
                 ))
