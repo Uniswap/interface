@@ -4,7 +4,7 @@ import React from 'react'
 
 import Switch from '../Switch'
 import styled from 'styled-components'
-// import { utils } from 'ethers'
+import { utils } from 'ethers'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -97,7 +97,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any; height?: number }
                   <AssetItem key={item?.symbol}>
                     <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
                     <div>{((((Math.pow(((item?.supplyRatePerBlock) / ethMantissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100).toFixed(2)}%</div>
-                    <div> 0 {item?.symbol}</div>
+                    <div>${item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice ? (parseFloat(utils.formatEther(item?.supplyBalance)) * parseFloat(utils.formatEther(item?.exchangeRateMantissa)) * parseFloat(utils.formatEther(item?.underlyingPrice))).toFixed(2) : ''}</div>
                     <Switch />
                   </AssetItem>
                 ))
@@ -120,7 +120,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any; height?: number }
                   <AssetItem key={item?.symbol}>
                     <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
                     <div>{((((Math.pow(((item?.supplyRatePerBlock) / ethMantissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100).toFixed(2)}%</div>
-                    <div> 0 {item?.symbol}</div>
+                    <div>${item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice ? (parseFloat(utils.formatEther(item?.supplyBalance)) * parseFloat(utils.formatEther(item?.exchangeRateMantissa)) * parseFloat(utils.formatEther(item?.underlyingPrice))).toFixed(2) : ''}</div>
                     <Switch />
                   </AssetItem>
                 ))
