@@ -4,6 +4,7 @@ import { LightCard } from '../../components/Card'
 // import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
+import { utils } from 'ethers'
 
 // import { YellowCard } from '../Card'
 
@@ -70,7 +71,30 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
       ...item?.[1]
     }
   })
-  console.log(suppliedAsset, 'suppliedAsset111')
+  console.log(suppliedAsset, 'suppliedAsset')
+  console.log(utils.formatEther(suppliedAsset[0]?.borrowBalance ? suppliedAsset[0]?.borrowBalance : 0), 'suppliedAsset[0]?.borrowBalance')
+  console.log(parseFloat(utils.formatEther(suppliedAsset[0]?.underlyingPrice ? suppliedAsset[0]?.underlyingPrice : 0)), 'suppliedAsset[0]?.underlyingPrice')
+  
+  function getSupplyTotalBalance() {
+    let supplyTotalBalance = 0
+    suppliedAsset.forEach((val:any, idx:any, suppliedAsset:any) => {
+      supplyTotalBalance += parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) * parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) * parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+    }, supplyTotalBalance)
+    return supplyTotalBalance
+  }
+  console.log(getSupplyTotalBalance(), 'getSupplyTotalBalance')
+
+  function getBorrowTotalBalance() {
+    let borrowTotalBalance = 0
+    suppliedAsset.forEach((val:any, idx:any, suppliedAsset:any) => {
+      borrowTotalBalance += parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) * parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+    }, borrowTotalBalance)
+    return borrowTotalBalance
+  }
+  console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
+
+  const collateralFactorMantissa = parseFloat(utils.formatEther(suppliedAsset[2]?.collateralFactorMantissa ? suppliedAsset[2]?.collateralFactorMantissa : 0)) // eth collateralFactorMantissa
+
   console.log('summary', allMarkets.length)
 
   return (
@@ -80,7 +104,7 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
           <SummaryTitle>Supply Balance</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            $0.00
+            ${(getSupplyTotalBalance()).toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
@@ -94,15 +118,15 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
           <SummaryTitle>Borrow Balance</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            $0.00
+            ${getBorrowTotalBalance().toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>Borrow Limit</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            $0.00
-            <BorrowWrap>(0.00% Used)</BorrowWrap>
+            ${(getSupplyTotalBalance() * collateralFactorMantissa).toFixed(2)}
+            <BorrowWrap>({collateralFactorMantissa ? ((getBorrowTotalBalance() / (getSupplyTotalBalance() * collateralFactorMantissa)) * 100).toFixed(2) : ''}% Used)</BorrowWrap>
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>
