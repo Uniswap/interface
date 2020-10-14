@@ -1,5 +1,5 @@
-import { CurrencyAmount, ETHER, JSBI } from '@uniswap/sdk'
-import { MIN_ETH } from '../constants'
+import { CurrencyAmount, JSBI } from '@uniswap/sdk'
+import { isProtocolCurrency, MIN_ETH } from '../constants'
 
 /**
  * Given some token amount, return the max that can be spent of it
@@ -7,7 +7,7 @@ import { MIN_ETH } from '../constants'
  */
 export function maxAmountSpend(currencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
   if (!currencyAmount) return undefined
-  if (currencyAmount.currency === ETHER) {
+  if (isProtocolCurrency(currencyAmount.currency)) {
     if (JSBI.greaterThan(currencyAmount.raw, MIN_ETH)) {
       return CurrencyAmount.ether(JSBI.subtract(currencyAmount.raw, MIN_ETH))
     } else {

@@ -1,8 +1,8 @@
-import { Currency, CurrencyAmount, ETHER, Token, TokenAmount } from '@uniswap/sdk'
-import { ChainId, WETH } from '../constants'
+import { Currency, CurrencyAmount, Token, TokenAmount } from '@uniswap/sdk'
+import { ChainId, BASE_CURRENCY, BASE_WRAPPED } from '../constants'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
-  return chainId && currency === ETHER ? WETH[chainId] : currency instanceof Token ? currency : undefined
+  return currency instanceof Token ? currency : (chainId ? BASE_WRAPPED[chainId] : undefined)
 }
 
 export function wrappedCurrencyAmount(
@@ -14,6 +14,7 @@ export function wrappedCurrencyAmount(
 }
 
 export function unwrappedToken(token: Token): Currency {
-  if (token.equals(WETH[token.chainId])) return ETHER
+  if (token.equals(BASE_WRAPPED[token.chainId])) return BASE_CURRENCY[token.chainId]
+
   return token
 }

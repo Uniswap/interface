@@ -1,13 +1,15 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { Currency, currencyEquals, ETHER, Token } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk'
 import styled from 'styled-components'
 
-import { ChainId, SUGGESTED_BASES } from '../../constants'
+import { BASE_CURRENCY, ChainId, SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
+
+import { isProtocolCurrency } from '../../constants'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -45,13 +47,14 @@ export default function CommonBases({
       <AutoRow gap="4px">
         <BaseWrapper
           onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-              onSelect(ETHER)
+            if (!selectedCurrency || !isProtocolCurrency(selectedCurrency)) {
+              onSelect(BASE_CURRENCY[chainId!])
             }
-          }}
-          disable={selectedCurrency === ETHER}
+          }
+          }
+          disable={isProtocolCurrency(selectedCurrency)}
         >
-          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
+          <CurrencyLogo currency={BASE_CURRENCY[chainId!]} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
             ETH
           </Text>

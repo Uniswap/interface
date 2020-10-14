@@ -1,4 +1,7 @@
-import { WETH as UniWETH, JSBI, Percent, Token } from '@uniswap/sdk'
+import { WETH as UniWETH, JSBI, Percent, Token, Currency, ETHER } from '@uniswap/sdk'
+import ETHLogo from '../assets/images/ethereum-logo.png'
+import RBTCLogo from '../assets/images/rbtc-logo.png'
+
 
 export const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 export const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
@@ -16,12 +19,81 @@ export enum ChainId {
   RSK_TESTNET = 31
 }
 
+//@ts-ignore
+const RBTC: Currency = new Currency(18, 'RBTC', 'Rootstock Smart Bitcoin')
+
+export interface CurrencyInfo {
+  currency: Currency,
+  logo: string,
+  predicate?: (search: string) => boolean
+}
+
+export const protocolCurrencyForId = (currencyId: string) => {
+  if (currencyId.toUpperCase() === ETHER.symbol) return ETHER
+  if (currencyId.toUpperCase() === RBTC.symbol) return RBTC
+
+  return null
+}
+
+export const isProtocolCurrencySymbol = (symbol: string) => {
+  return (symbol.toUpperCase() === ETHER.symbol) || (symbol.toUpperCase() === RBTC.symbol)
+}
+
+export const isProtocolCurrency = (currency: Currency | undefined | null) => {
+  return (currency === ETHER) || (currency === RBTC)
+}
+
+export const protocolCurrencyInfo = (currency: Currency): CurrencyInfo | undefined => {
+  if (currency === ETHER) return ETHERInfo
+  if (currency === RBTC) return RBTCInfo
+
+  return undefined
+}
+
+export function currencyId(currency: Currency): string {
+  if (currency === ETHER) return 'ETH'
+  if (currency === RBTC) return 'RBTC'
+  if (currency instanceof Token) return currency.address
+  throw new Error('invalid currency')
+}
+
+export function unwrappedCurrency(currency: Currency): Currency {
+  // Returns currency else token
+  if (currency === ETHER) return ETHER
+  if (currency === RBTC) return RBTC
+
+  if (currency.symbol === 'WETH') return ETHER
+  if (currency.symbol === 'WRBTC') return RBTC
+
+  return currency
+}
+
+const ETHERInfo: CurrencyInfo = {
+  currency: ETHER,
+  logo: ETHLogo,
+  predicate: (search: string) => {
+    const s = search.toLowerCase().trim()
+    return s === '' || s === 'e' || s === 'et' || s === 'eth'
+  }
+}
+
+const RBTCInfo: CurrencyInfo = {
+  currency: RBTC,
+  logo: RBTCLogo,
+  predicate: (search: string) => {
+    const s = search.toLowerCase().trim()
+    return s === '' || s === 'r' || s === 'rb' || s === 'rbt' || s === 'rbtc'
+  }
+}
+
+
 interface ChainIdConfig {
   NETWORK_URL: string,
   ROUTER_ADDRESS: string,
   MULTICALL_ADDRESS: string,
+  BASE_CURRENCY: Currency,
+  BASE_CURRENCY_INFO: CurrencyInfo,
   tokens: {
-    WETH: Token,
     [key: string]: Token
   },
   GOVERNANCE_ADDRESS?: string,
@@ -33,6 +105,8 @@ interface ChainIdConfig {
 
 const constants: { [chainId in ChainId]: ChainIdConfig } = {
   [ChainId.MAINNET]: {
+    BASE_CURRENCY: ETHER,
+    BASE_CURRENCY_INFO: ETHERInfo,
     NETWORK_URL: `https://mainnet.infura.io/v3/${INFURA_ID}`,
     PROPOSAL_LENGTH_IN_DAYS: 7,
     GOVERNANCE_ADDRESS: '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F',
@@ -63,6 +137,8 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     }
   },
   [ChainId.ROPSTEN]: {
+    BASE_CURRENCY: ETHER,
+    BASE_CURRENCY_INFO: ETHERInfo,
     NETWORK_URL: `https://ropsten.infura.io/v3/${INFURA_ID}`,
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
     V1_FACTORY_ADDRESS: '0x9c83dCE8CA20E9aAF9D3efc003b2ea62aBC08351',
@@ -73,6 +149,8 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     }
   },
   [ChainId.RINKEBY]: {
+    BASE_CURRENCY: ETHER,
+    BASE_CURRENCY_INFO: ETHERInfo,
     NETWORK_URL: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
     V1_FACTORY_ADDRESS: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
@@ -83,6 +161,8 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     }
   },
   [ChainId.GÖRLI]: {
+    BASE_CURRENCY: ETHER,
+    BASE_CURRENCY_INFO: ETHERInfo,
     NETWORK_URL: `https://goerli.infura.io/v3/${INFURA_ID}`,
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
     V1_FACTORY_ADDRESS: '0x6Ce570d02D73d4c384b46135E87f8C592A8c86dA',
@@ -93,6 +173,8 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     }
   },
   [ChainId.KOVAN]: {
+    BASE_CURRENCY: ETHER,
+    BASE_CURRENCY_INFO: ETHERInfo,
     NETWORK_URL: `https://kovan.infura.io/v3/${INFURA_ID}`,
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
     V1_FACTORY_ADDRESS: '0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30',
@@ -103,11 +185,13 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     }
   },
   [ChainId.RSK_MAINNET]: {
+    BASE_CURRENCY: RBTC,
+    BASE_CURRENCY_INFO: RBTCInfo,
     NETWORK_URL: 'https://public-node.rsk.co',
     ROUTER_ADDRESS: '0xf55c496bb1058690DB1401c4b9C19F3f44374961',
     MULTICALL_ADDRESS: '0x4Eeebb5580769Ba6d26bFD07bE636300076d1831',
     tokens: {
-      WETH: new Token(ChainId.RSK_MAINNET as ChainId, '0x967F8799aF07dF1534d48A95a5C9FEBE92c53AE0', 18, 'WRBTC', 'Wrapped RBTC'),
+      WRBTC: new Token(ChainId.RSK_MAINNET as ChainId, '0x967F8799aF07dF1534d48A95a5C9FEBE92c53AE0', 18, 'WRBTC', 'Wrapped RBTC'),
       RIF: new Token(ChainId.RSK_MAINNET as ChainId, '0x2AcC95758f8b5F583470ba265EB685a8F45fC9D5', 18, 'RIF', 'RIF Token'),
       DOC: new Token(ChainId.RSK_MAINNET as ChainId, '0xe700691dA7b9851F2F35f8b8182c69c53CcaD9Db', 18, 'DOC', 'Dollar on Chain'),
       BitPRO: new Token(ChainId.RSK_MAINNET as ChainId, '0x440CD83C160De5C96Ddb20246815eA44C7aBBCa8', 18, 'BPRO', 'BitPRO'),
@@ -121,11 +205,13 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     }
   },
   [ChainId.RSK_TESTNET]: {
+    BASE_CURRENCY: RBTC,
+    BASE_CURRENCY_INFO: RBTCInfo,
     NETWORK_URL: 'https://public-node.testnet.rsk.co',
     ROUTER_ADDRESS: '0xf55c496bb1058690DB1401c4b9C19F3f44374961',
     MULTICALL_ADDRESS: '0x4Eeebb5580769Ba6d26bFD07bE636300076d1831',
     tokens: {
-      WETH: new Token(ChainId.RSK_TESTNET as ChainId, '0x09B6Ca5E4496238a1F176aEA6bB607db96C2286E', 18, 'WRBTC', 'Wrapped RBTC'),
+      WRBTC: new Token(ChainId.RSK_TESTNET as ChainId, '0x09B6Ca5E4496238a1F176aEA6bB607db96C2286E', 18, 'WRBTC', 'Wrapped RBTC'),
       tRIF: new Token(ChainId.RSK_TESTNET as ChainId, '0x19F64674D8A5B4E652319F5e239eFd3bc969A1fE', 18, 'tRIF', 'tRIF Token'),
       DOC: new Token(ChainId.RSK_TESTNET as ChainId, '0xCB46c0ddc60D18eFEB0E586C17Af6ea36452Dae0', 18, 'DOC', 'Dollar on Chain'),
       BPRO: new Token(ChainId.RSK_TESTNET as ChainId, '0x4dA7997A819bb46B6758B9102234c289dD2Ad3bf', 18, 'BPRO', 'BitPRO'),
@@ -141,6 +227,8 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     }
   },
   [ChainId.LOCAL]: {
+    BASE_CURRENCY: ETHER,
+    BASE_CURRENCY_INFO: ETHERInfo,
     NETWORK_URL: 'http://localhost:7545',
     ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
     MULTICALL_ADDRESS: '0x0000000000000000000000000000000000000000',
@@ -149,6 +237,41 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     }
   },
 }
+
+export const BASE_CURRENCY_INFO: { [chainId in ChainId]: CurrencyInfo } = {
+  [ChainId.MAINNET]: constants[ChainId.MAINNET].BASE_CURRENCY_INFO,
+  [ChainId.RINKEBY]: constants[ChainId.RINKEBY].BASE_CURRENCY_INFO,
+  [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].BASE_CURRENCY_INFO,
+  [ChainId.GÖRLI]: constants[ChainId.GÖRLI].BASE_CURRENCY_INFO,
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].BASE_CURRENCY_INFO,
+  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].BASE_CURRENCY_INFO,
+  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].BASE_CURRENCY_INFO,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].BASE_CURRENCY_INFO
+}
+
+export const BASE_CURRENCY: { [chainId in ChainId]: Currency } = {
+  [ChainId.MAINNET]: constants[ChainId.MAINNET].BASE_CURRENCY,
+  [ChainId.RINKEBY]: constants[ChainId.RINKEBY].BASE_CURRENCY,
+  [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].BASE_CURRENCY,
+  [ChainId.GÖRLI]: constants[ChainId.GÖRLI].BASE_CURRENCY,
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].BASE_CURRENCY,
+  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].BASE_CURRENCY,
+  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].BASE_CURRENCY,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].BASE_CURRENCY
+}
+
+export const WETH: { [chainId in ChainId]: Token } = {
+  [ChainId.MAINNET]: constants[ChainId.MAINNET].tokens.WETH,
+  [ChainId.RINKEBY]: constants[ChainId.RINKEBY].tokens.WETH,
+  [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].tokens.WETH,
+  [ChainId.GÖRLI]: constants[ChainId.GÖRLI].tokens.WETH,
+  [ChainId.KOVAN]: constants[ChainId.KOVAN].tokens.WETH,
+  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].tokens.WRBTC,
+  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].tokens.WRBTC,
+  [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.WETH
+}
+
+export const BASE_WRAPPED = WETH;
 
 export const NETWORK_URL: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: constants[ChainId.MAINNET].NETWORK_URL,
@@ -219,17 +342,6 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.UNI
 }
 
-export const WETH: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: constants[ChainId.MAINNET].tokens.WETH,
-  [ChainId.RINKEBY]: constants[ChainId.RINKEBY].tokens.WETH,
-  [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].tokens.WETH,
-  [ChainId.GÖRLI]: constants[ChainId.GÖRLI].tokens.WETH,
-  [ChainId.KOVAN]: constants[ChainId.KOVAN].tokens.WETH,
-  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].tokens.WETH,
-  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].tokens.WETH,
-  [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.WETH
-}
-
 // TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: constants[ChainId.MAINNET].MERKLE_DISTRIBUTOR_ADDRESS
@@ -243,8 +355,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
   [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
-  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WETH, constants[ChainId.RSK_MAINNET].tokens.DOC],
-  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WETH, constants[ChainId.RSK_TESTNET].tokens.DOC],
+  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WRBTC, constants[ChainId.RSK_MAINNET].tokens.DOC],
+  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WRBTC, constants[ChainId.RSK_TESTNET].tokens.DOC],
   [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH],
 }
 
@@ -265,8 +377,8 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
   [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
-  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WETH, constants[ChainId.RSK_MAINNET].tokens.DOC],
-  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WETH, constants[ChainId.RSK_TESTNET].tokens.DOC],
+  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WRBTC, constants[ChainId.RSK_MAINNET].tokens.DOC],
+  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WRBTC, constants[ChainId.RSK_TESTNET].tokens.DOC],
   [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH]
 }
 
@@ -277,8 +389,8 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.RINKEBY]: [constants[ChainId.RINKEBY].tokens.WETH],
   [ChainId.GÖRLI]: [constants[ChainId.GÖRLI].tokens.WETH],
   [ChainId.KOVAN]: [constants[ChainId.KOVAN].tokens.WETH],
-  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WETH, constants[ChainId.RSK_MAINNET].tokens.DOC],
-  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WETH, constants[ChainId.RSK_TESTNET].tokens.DOC],
+  [ChainId.RSK_MAINNET]: [constants[ChainId.RSK_MAINNET].tokens.WRBTC, constants[ChainId.RSK_MAINNET].tokens.DOC],
+  [ChainId.RSK_TESTNET]: [constants[ChainId.RSK_TESTNET].tokens.WRBTC, constants[ChainId.RSK_TESTNET].tokens.DOC],
   [ChainId.LOCAL]: [constants[ChainId.LOCAL].tokens.WETH]
 }
 

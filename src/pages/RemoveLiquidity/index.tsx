@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent } from '@uniswap/sdk'
+import { Currency, currencyEquals, Percent } from '@uniswap/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -20,7 +20,6 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { WETH, ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
@@ -44,7 +43,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { ChainId } from '../../constants'
+import { ChainId, WETH, ROUTER_ADDRESS, BASE_CURRENCY } from '../../constants'
 
 export default function RemoveLiquidity({
   history,
@@ -211,8 +210,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER
-    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
+    const currencyBIsETH = currencyB === BASE_CURRENCY[chainId]
+    const oneCurrencyIsETH = currencyA === BASE_CURRENCY[chainId] || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -429,7 +428,7 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH = currencyA === ETHER || currencyB === ETHER
+  const oneCurrencyIsETH = currencyA === BASE_CURRENCY[chainId as ChainId] || currencyB === BASE_CURRENCY[chainId as ChainId]
   const oneCurrencyIsWETH = Boolean(
     chainId &&
     ((currencyA && currencyEquals(WETH[chainId], currencyA)) ||
@@ -565,15 +564,15 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${currencyB === ETHER ? WETH[chainId].address : currencyIdB
+                            to={`/remove/${currencyA === BASE_CURRENCY[chainId] ? WETH[chainId].address : currencyIdA}/${currencyB === BASE_CURRENCY[chainId] ? WETH[chainId].address : currencyIdB
                               }`}
                           >
                             Receive WETH
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/${currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
-                              }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
+                            to={`/remove/${currencyA && currencyEquals(currencyA, WETH[chainId]) ? BASE_CURRENCY[chainId].symbol : currencyIdA
+                              }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? BASE_CURRENCY[chainId].symbol : currencyIdB}`}
                           >
                             Receive ETH
                           </StyledInternalLink>
