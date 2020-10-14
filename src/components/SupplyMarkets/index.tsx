@@ -81,7 +81,6 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
   })
 
   const supplyAsset = supplyList.filter((item: any) => {
-    console.log(item?.cSymbol, item?.supplyBalance?.toString(), 'fffffff')
     return item && item?.supplyBalance?.toString() == 0
   })
 
@@ -103,7 +102,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                   <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
                   <div>
                     {(
-                      (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                      ((Math.pow((item?.supplyRatePerBlock / ethMantissa * blocksPerDay) + 1, daysPerYear - 1)) - 1) *
                       100
                     ).toFixed(2)}
                     %
@@ -141,7 +140,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                     <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
                     <div>
                       {(
-                        (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                        ((Math.pow((item?.supplyRatePerBlock / ethMantissa * blocksPerDay) + 1, daysPerYear - 1)) - 1) *
                         100
                       ).toFixed(2)}
                       %

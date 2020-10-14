@@ -77,12 +77,11 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
   })
 
   const borrowedAsset = borrowList.filter((item: any) => {
-    return item && item?.supplyBalance?.toString() > 0
+    return item && item?.borrowBalance?.toString() > 0
   })
 
   const borrowAsset = borrowList.filter((item: any) => {
-    console.log(item?.cSymbol, item?.supplyBalance?.toString(), 'fffffff')
-    return item && item?.supplyBalance?.toString() == 0
+    return item && item?.borrowBalance?.toString() == 0
   })
 
   console.log('supplyMarkets: ', allMarkets.length)
@@ -105,17 +104,16 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                   <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
                   <div>
                     {(
-                      (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                      ((Math.pow((item?.borrowRatePerBlock / ethMantissa * blocksPerDay) + 1, daysPerYear - 1)) - 1) *
                       100
                     ).toFixed(2)}
                     %
                   </div>
                   <div>
                     $
-                    {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
+                    {item?.borrowBalance && item?.underlyingPrice
                       ? (
-                          parseFloat(utils.formatEther(item?.supplyBalance)) *
-                          parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
+                          parseFloat(utils.formatEther(item?.borrowBalance)) *
                           parseFloat(utils.formatEther(item?.underlyingPrice))
                         ).toFixed(3)
                       : ''}
@@ -142,17 +140,16 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                     <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
                     <div>
                       {(
-                        (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                        ((Math.pow((item?.borrowRatePerBlock / ethMantissa * blocksPerDay) + 1, daysPerYear - 1)) - 1) *
                         100
                       ).toFixed(2)}
                       %
                     </div>
                     <div>
                       $
-                      {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
+                      {item?.borrowBalance && item?.underlyingPrice
                         ? (
-                            parseFloat(utils.formatEther(item?.supplyBalance)) *
-                            parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
+                            parseFloat(utils.formatEther(item?.borrowBalance)) *
                             parseFloat(utils.formatEther(item?.underlyingPrice))
                           ).toFixed(2)
                         : ''}
