@@ -68,44 +68,55 @@ const ethMantissa = 1e18
 const blocksPerDay = 4 * 60 * 24
 const daysPerYear = 365
 
-function SupplyMarkets({ allMarkets = [] }: { allMarkets: any; height?: number }) {
+function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
-
-  const suppliedAsset = allMarkets.map((item: any) => {
-    return {
-      ...item?.[1]
-    }
+  const supplyList = allMarkets.map((item: any) => {
+    return item?.[1]
   })
-  console.log('supplyMarkets: ', suppliedAsset)
+
+  const suppliedAsset = supplyList.filter((item: any) => {
+    return item && item?.supplyBalance?.toString() > 0
+  })
+
+  const supplyAsset = supplyList.filter((item: any) => {
+    console.log(item?.cSymbol, item?.supplyBalance?.toString(), 'fffffff')
+    return item && item?.supplyBalance?.toString() == 0
+  })
 
   return (
     <div>
+      {!!suppliedAsset.length && (
+        <MarketsCard style={{ marginBottom: '1rem' }}>
+          <MarketsCardHeader>Supply</MarketsCardHeader>
+          <AssetWrap>
+            <AssetWrapLabels>
+              <AssetLabel textAlign={'left'}>Asset</AssetLabel>
+              <AssetLabel textAlign={'right'}>APY / Earned</AssetLabel>
+              <AssetLabel textAlign={'right'}>Balance</AssetLabel>
+              <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
+            </AssetWrapLabels>
+            <AssetItemWrap>
+              {suppliedAsset.map((item: any) => (
+                <AssetItem key={item?.symbol}>
+                  <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
+                  <div>
+                    {(
+                      (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </div>
+                  <div> 0 {item?.symbol}</div>
+                  <Switch />
+                </AssetItem>
+              ))}
+            </AssetItemWrap>
+          </AssetWrap>
+        </MarketsCard>
+      )}
       <MarketsCard>
-        <MarketsCardHeader>Supply</MarketsCardHeader>
-        <AssetWrap>
-          <AssetWrapLabels>
-            <AssetLabel textAlign={'left'}>Asset</AssetLabel>
-            <AssetLabel textAlign={'right'}>APY / Earned</AssetLabel>
-            <AssetLabel textAlign={'right'}>Balance</AssetLabel>
-            <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
-          </AssetWrapLabels>
-          <AssetItemWrap>
-            {!!suppliedAsset.length
-              ? suppliedAsset.map((item: any) => (
-                  <AssetItem key={item?.symbol}>
-                    <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
-                    <div>{((((Math.pow(((item?.supplyRatePerBlock) / ethMantissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100).toFixed(2)}%</div>
-                    <div>${item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice ? (parseFloat(utils.formatEther(item?.supplyBalance)) * parseFloat(utils.formatEther(item?.exchangeRateMantissa)) * parseFloat(utils.formatEther(item?.underlyingPrice))).toFixed(3) : ''}</div>
-                    <Switch />
-                  </AssetItem>
-                ))
-              : ''}
-          </AssetItemWrap>
-        </AssetWrap>
-      </MarketsCard>
-      <MarketsCard style={{ marginTop: '1rem' }}>
         <MarketsCardHeader>Supply Markets</MarketsCardHeader>
         <AssetWrap>
           <AssetWrapLabels>
@@ -115,12 +126,18 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any; height?: number }
             <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
           </AssetWrapLabels>
           <AssetItemWrap>
-            {!!suppliedAsset.length
-              ? suppliedAsset.map((item: any) => (
+            {!!supplyAsset.length
+              ? supplyAsset.map((item: any) => (
                   <AssetItem key={item?.symbol}>
                     <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
-                    <div>{((((Math.pow(((item?.supplyRatePerBlock) / ethMantissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100).toFixed(2)}%</div>
-                    <div>${item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice ? (parseFloat(utils.formatEther(item?.supplyBalance)) * parseFloat(utils.formatEther(item?.exchangeRateMantissa)) * parseFloat(utils.formatEther(item?.underlyingPrice))).toFixed(2) : ''}</div>
+                    <div>
+                      {(
+                        (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                        100
+                      ).toFixed(2)}
+                      %
+                    </div>
+                    <div> 0 {item?.symbol}</div>
                     <Switch />
                   </AssetItem>
                 ))

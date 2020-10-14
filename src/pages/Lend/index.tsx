@@ -11,9 +11,9 @@ import { useCTokens } from '../../data/CToken'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1280px;
-  width: 75%;
+  width: 80%;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    width: 80%;
+    width: 86%;
   `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
