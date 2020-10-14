@@ -72,13 +72,26 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
     }
   })
   console.log(suppliedAsset, 'suppliedAsset')
-  console.log(utils.formatEther(suppliedAsset[0]?.borrowBalance ? suppliedAsset[0]?.borrowBalance : 0), 'suppliedAsset[0]?.borrowBalance')
-  console.log(parseFloat(utils.formatEther(suppliedAsset[0]?.underlyingPrice ? suppliedAsset[0]?.underlyingPrice : 0)), 'suppliedAsset[0]?.underlyingPrice')
-  
+  console.log(
+    utils.formatEther(suppliedAsset[0]?.borrowBalance ? suppliedAsset[0]?.borrowBalance : 0),
+    'suppliedAsset[0]?.borrowBalance'
+  )
+  console.log(
+    utils.formatEther(suppliedAsset[0]?.liquidity ? suppliedAsset[0]?.liquidity : 0),
+    'suppliedAsset[0]?.liquidity'
+  )
+  console.log(
+    parseFloat(utils.formatEther(suppliedAsset[0]?.underlyingPrice ? suppliedAsset[0]?.underlyingPrice : 0)),
+    'suppliedAsset[0]?.underlyingPrice'
+  )
+
   function getSupplyTotalBalance() {
     let supplyTotalBalance = 0
-    suppliedAsset.forEach((val:any, idx:any, suppliedAsset:any) => {
-      supplyTotalBalance += parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) * parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) * parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
+      supplyTotalBalance +=
+        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
+        parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
     }, supplyTotalBalance)
     return supplyTotalBalance
   }
@@ -86,8 +99,10 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
 
   function getBorrowTotalBalance() {
     let borrowTotalBalance = 0
-    suppliedAsset.forEach((val:any, idx:any, suppliedAsset:any) => {
-      borrowTotalBalance += parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) * parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
+      borrowTotalBalance +=
+        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
     }, borrowTotalBalance)
     return borrowTotalBalance
   }
@@ -95,11 +110,12 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
 
   function getLimit() {
     let collateralFactorMantissa = 0
-    suppliedAsset.forEach((val:any, idx:any, suppliedAsset:any) => {
-      collateralFactorMantissa += parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0))
-      * parseFloat(utils.formatEther(val?.exchangeRateMantissa
-      ? val?.exchangeRateMantissa : 0)) * parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
-      * parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
+    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
+      collateralFactorMantissa +=
+        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
+        parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
+        parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
     }, collateralFactorMantissa)
     return collateralFactorMantissa
   }
@@ -115,8 +131,7 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
         <SummaryElement>
           <SummaryTitle>Supply Balance</SummaryTitle>
           <SummaryContent>
-            <DotIcon />
-            ${(getSupplyTotalBalance()).toFixed(8)}
+            <DotIcon />${getSupplyTotalBalance().toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
@@ -129,15 +144,13 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
         <SummaryElement>
           <SummaryTitle>Borrow Balance</SummaryTitle>
           <SummaryContent>
-            <DotIcon />
-            ${getBorrowTotalBalance().toFixed(8)}
+            <DotIcon />${getBorrowTotalBalance().toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>Borrow Limit</SummaryTitle>
           <SummaryContent>
-            <DotIcon />
-            ${getLimit().toFixed(2)}
+            <DotIcon />${getLimit().toFixed(2)}
             <BorrowWrap>({((getBorrowTotalBalance() / getLimit()) * 100).toFixed(2)}% Used)</BorrowWrap>
           </SummaryContent>
         </SummaryElement>
