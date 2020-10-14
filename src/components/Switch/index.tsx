@@ -7,11 +7,10 @@ const ToggleWrap = styled.div`
   align-items: center;
 `
 
-const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const StyledToggle = styled.button<{ isActive: boolean }>`
   border-radius: 12px;
   border: none;
-  /* border: 1px solid ${({ theme, isActive }) => (isActive ? theme.primary5 : theme.text4)}; */
-  background: #000000;
+  background-color: ${({ isActive }) => (isActive ? '#98e8c6' : '#bfc8cd')};
   display: flex;
   position: relative;
   align-items: center;
@@ -19,38 +18,33 @@ const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean
   outline: none;
   padding: 0;
   width: 38px;
-  height: 13px;
-  border-radius: 13px;
-  opacity: .38;
-  transition: opacity 90ms cubic-bezier(0.4, 0, 0.2, 1), background-color 90ms cubic-bezier(0.4, 0, 0.2, 1), border-color 90ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: 12px;
+  border-radius: 12px;
+  transition: opacity 90ms cubic-bezier(0.4, 0, 0.2, 1), background-color 90ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 90ms cubic-bezier(0.4, 0, 0.2, 1);
 `
 
-const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
+const ToggleElement = styled.div<{ isActive: boolean }>`
   border-radius: 14px;
-  background: #ffffff;
-  color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.text2) : theme.text3)};
-  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+  background: ${({ isActive }) => (isActive ? '#05d394' : '#ffffff')};
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 3px 0px rgba(0, 0, 0, 0.12);
   border-radius: 50%;
-  font-size: 1rem;
-  font-weight: 400;
+  left: ${({ isActive }) => (isActive ? 'auto' : '-2px')};
+  right: ${({ isActive }) => (isActive ? '-2px' : 'auto')};
   position: absolute;
   padding: 0.64rem 0.64rem;
-  /* color: ${({ theme, isActive, isOnSwitch }) =>
-    isActive ? (isOnSwitch ? theme.white : theme.text2) : theme.text2}; */
-  font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};
-  ${ToggleWrap}:hover &{
-    user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
-    box-shadow: 0px 0px 0px 8px rgba(0, 0, 0, .08), 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
-    /* background: ${({ theme, isActive, isOnSwitch }) =>
-      isActive ? (isOnSwitch ? theme.primary1 : theme.text3) : 'none'}; */
-    /* color: ${({ theme, isActive, isOnSwitch }) =>
-      isActive ? (isOnSwitch ? theme.white : theme.text2) : theme.text3}; */
+  ${ToggleWrap}:hover & {
+    box-shadow: ${({ isActive }) =>
+      isActive
+        ? '0px 0px 0px 8px rgba(5, 211, 148, 0.16), 0px 2px 1px -1px rgba(0, 0, 0, 0.2),0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)'
+        : '0px 0px 0px 8px rgba(0, 0, 0, 0.08), 0px 2px 1px -1px rgba(0, 0, 0, 0.2),0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12)'};
   }
 `
 
 export interface ToggleProps {
   id?: string
-  isActive?: boolean
+  isActive: boolean
   toggle?: () => void
 }
 
@@ -58,8 +52,7 @@ export default function Switch({ id, isActive = false, toggle }: ToggleProps) {
   return (
     <ToggleWrap>
       <StyledToggle id={id} isActive={isActive} onClick={toggle}>
-        <ToggleElement isActive={isActive} isOnSwitch={true}></ToggleElement>
-        <ToggleElement isActive={!isActive} isOnSwitch={false}></ToggleElement>
+        <ToggleElement isActive={isActive}></ToggleElement>
       </StyledToggle>
     </ToggleWrap>
   )

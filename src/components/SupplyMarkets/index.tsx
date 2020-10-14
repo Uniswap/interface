@@ -117,7 +117,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                         ).toFixed(3)
                       : ''}
                   </div>
-                  <Switch />
+                  <Switch isActive={item?.canBeCollateral} />
                 </AssetItem>
               ))}
             </AssetItemWrap>
@@ -155,7 +155,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                           ).toFixed(2)
                         : ''}
                     </div>
-                    <Switch />
+                    <Switch isActive={item?.canBeCollateral} />
                   </AssetItem>
                 ))
               : ''}
