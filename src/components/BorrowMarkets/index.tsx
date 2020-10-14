@@ -1,3 +1,4 @@
+import { utils } from 'ethers'
 import React from 'react'
 // import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
@@ -62,18 +63,72 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   }
 `
 
+const ethMantissa = 1e18
+const blocksPerDay = 4 * 60 * 24
+const daysPerYear = 365
+
 function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
 
+  const borrowList = allMarkets.map((item: any) => {
+    return item?.[1]
+  })
+
+  const borrowedAsset = borrowList.filter((item: any) => {
+    return item && item?.supplyBalance?.toString() > 0
+  })
+
+  const borrowAsset = borrowList.filter((item: any) => {
+    console.log(item?.cSymbol, item?.supplyBalance?.toString(), 'fffffff')
+    return item && item?.supplyBalance?.toString() == 0
+  })
+
   console.log('supplyMarkets: ', allMarkets.length)
 
   return (
     <div>
+      {!!borrowedAsset.length && (
+        <MarketsCard style={{ marginBottom: '1rem' }}>
+          <MarketsCardHeader>Borrow</MarketsCardHeader>
+          <AssetWrap>
+            <AssetWrapLabels>
+              <AssetLabel textAlign={'left'}>Asset</AssetLabel>
+              <AssetLabel textAlign={'right'}>APY</AssetLabel>
+              <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
+              <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
+            </AssetWrapLabels>
+            <AssetItemWrap>
+              {borrowedAsset.map((item: any) => (
+                <AssetItem key={item?.symbol}>
+                  <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
+                  <div>
+                    {(
+                      (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                      100
+                    ).toFixed(2)}
+                    %
+                  </div>
+                  <div>
+                    $
+                    {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
+                      ? (
+                          parseFloat(utils.formatEther(item?.supplyBalance)) *
+                          parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
+                          parseFloat(utils.formatEther(item?.underlyingPrice))
+                        ).toFixed(3)
+                      : ''}
+                  </div>
+                </AssetItem>
+              ))}
+            </AssetItemWrap>
+          </AssetWrap>
+        </MarketsCard>
+      )}
       <MarketsCard>
-        <MarketsCardHeader>Borrow</MarketsCardHeader>
         <AssetWrap>
+          <MarketsCardHeader>Borrow Markets</MarketsCardHeader>
           <AssetWrapLabels>
             <AssetLabel textAlign={'left'}>Asset</AssetLabel>
             <AssetLabel textAlign={'right'}>APY</AssetLabel>
@@ -81,78 +136,30 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
             <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
           </AssetWrapLabels>
           <AssetItemWrap>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-          </AssetItemWrap>
-        </AssetWrap>
-      </MarketsCard>
-      <MarketsCard style={{ marginTop: '1rem' }}>
-        <AssetWrap>
-          <AssetWrapLabels>
-            <AssetLabel textAlign={'left'}>Asset</AssetLabel>
-            <AssetLabel textAlign={'right'}>APY</AssetLabel>
-            <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
-            <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
-          </AssetWrapLabels>
-          <AssetItemWrap>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
-            <AssetItem>
-              <div style={{ justifySelf: 'start' }}>BTC</div>
-              <div>0.01%</div>
-              <div>0 BTC</div>
-              <div>0.00</div>
-            </AssetItem>
+            {!!borrowAsset.length
+              ? borrowAsset.map((item: any) => (
+                  <AssetItem key={item?.symbol}>
+                    <div style={{ justifySelf: 'start' }}>{item?.symbol}</div>
+                    <div>
+                      {(
+                        (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                        100
+                      ).toFixed(2)}
+                      %
+                    </div>
+                    <div>
+                      $
+                      {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
+                        ? (
+                            parseFloat(utils.formatEther(item?.supplyBalance)) *
+                            parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
+                            parseFloat(utils.formatEther(item?.underlyingPrice))
+                          ).toFixed(2)
+                        : ''}
+                    </div>
+                  </AssetItem>
+                ))
+              : ''}
           </AssetItemWrap>
         </AssetWrap>
       </MarketsCard>
