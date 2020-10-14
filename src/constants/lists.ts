@@ -17,4 +17,5 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json',
   'https://defiprime.com/defiprime.tokenlist.json',
   'https://umaproject.org/uma.tokenlist.json'
+  'https://raw.githubusercontent.com/gnosis/conditional-tokens-list/main/conditional-token-list.json'
 ]
