@@ -93,7 +93,19 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
   }
   console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
 
-  const collateralFactorMantissa = parseFloat(utils.formatEther(suppliedAsset[2]?.collateralFactorMantissa ? suppliedAsset[2]?.collateralFactorMantissa : 0)) // eth collateralFactorMantissa
+  function getLimit() {
+    let collateralFactorMantissa = 0
+    suppliedAsset.forEach((val:any, idx:any, suppliedAsset:any) => {
+      collateralFactorMantissa += parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0))
+      * parseFloat(utils.formatEther(val?.exchangeRateMantissa
+      ? val?.exchangeRateMantissa : 0)) * parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+      * parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
+    }, collateralFactorMantissa)
+    return collateralFactorMantissa
+  }
+  console.log(getLimit(), 'getLimit')
+  console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
+  // const collateralFactorMantissa = parseFloat(utils.formatEther(suppliedAsset[2]?.collateralFactorMantissa ? suppliedAsset[2]?.collateralFactorMantissa : 0)) // eth collateralFactorMantissa
 
   console.log('summary', allMarkets.length)
 
@@ -125,8 +137,8 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
           <SummaryTitle>Borrow Limit</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            ${(getSupplyTotalBalance() * collateralFactorMantissa).toFixed(2)}
-            <BorrowWrap>({collateralFactorMantissa ? ((getBorrowTotalBalance() / (getSupplyTotalBalance() * collateralFactorMantissa)) * 100).toFixed(2) : ''}% Used)</BorrowWrap>
+            ${getLimit().toFixed(2)}
+            <BorrowWrap>({((getBorrowTotalBalance() / getLimit()) * 100).toFixed(2)}% Used)</BorrowWrap>
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>
