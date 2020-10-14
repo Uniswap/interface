@@ -108,7 +108,16 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                     ).toFixed(2)}
                     %
                   </div>
-                  <div> 0 {item?.symbol}</div>
+                  <div>
+                    $
+                    {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
+                      ? (
+                          parseFloat(utils.formatEther(item?.supplyBalance)) *
+                          parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
+                          parseFloat(utils.formatEther(item?.underlyingPrice))
+                        ).toFixed(3)
+                      : ''}
+                  </div>
                   <Switch />
                 </AssetItem>
               ))}
@@ -137,7 +146,16 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                       ).toFixed(2)}
                       %
                     </div>
-                    <div> 0 {item?.symbol}</div>
+                    <div>
+                      $
+                      {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
+                        ? (
+                            parseFloat(utils.formatEther(item?.supplyBalance)) *
+                            parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
+                            parseFloat(utils.formatEther(item?.underlyingPrice))
+                          ).toFixed(2)
+                        : ''}
+                    </div>
                     <Switch />
                   </AssetItem>
                 ))
