@@ -25,6 +25,7 @@ export class CToken extends Token {
   public readonly borrowRatePerBlock?: number
   public readonly supplyBalance?: number
   public readonly borrowBalance?: number
+  public readonly exchangeRateMantissa?: number
   public readonly liquidity?: number
   public readonly canBeCollateral?: boolean
   public readonly underlyingPrice?: number
@@ -32,7 +33,7 @@ export class CToken extends Token {
   public readonly collateralFactorMantissa?: number
 
   constructor(chainId: ChainId, cAddress: string, address: string, decimals: number, cSymbol?: string, cName?: string, symbol?: string, name?: string,
-    supplyRatePerBlock?: number, borrowRatePerBlock?: number, supplyBalance?: number, borrowBalance?: number,
+    supplyRatePerBlock?: number, borrowRatePerBlock?: number, supplyBalance?: number, borrowBalance?: number, exchangeRateMantissa?: number,
     liquidity?: number, canBeCollateral?: boolean, underlyingPrice?: number, isListed?: boolean, collateralFactorMantissa?: number) {
     super(chainId, address, decimals, symbol, name)
 
@@ -44,6 +45,7 @@ export class CToken extends Token {
     this.borrowRatePerBlock = borrowRatePerBlock
     this.supplyBalance = supplyBalance
     this.borrowBalance = borrowBalance
+    this.exchangeRateMantissa = exchangeRateMantissa
     this.liquidity = liquidity
     this.canBeCollateral = canBeCollateral
     this.underlyingPrice = underlyingPrice
@@ -122,7 +124,8 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       return [
         CTokenState.EXISTS,
         new CToken(chainId ?? ChainId.MAINNET, cTokenList[i][0], cTokenList[i][1], cTokenList[i][2], cTokenList[i][3], cTokenList[i][4], cTokenList[i][5], cTokenList[i][6],
-          supplyRatePerBlockValue[0], borrowRatePerBlockValue[0], accountSnapshotValue[1], accountSnapshotValue[2], cashValue[0], membershipValue[0], underlyingPriceValue[0], marketsValue[0], marketsValue[1]
+          supplyRatePerBlockValue[0], borrowRatePerBlockValue[0], accountSnapshotValue[1], accountSnapshotValue[2], accountSnapshotValue[3], cashValue[0], membershipValue[0],
+          underlyingPriceValue[0], marketsValue[0], marketsValue[1]
         )
       ]
     })
