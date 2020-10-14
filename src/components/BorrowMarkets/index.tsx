@@ -62,10 +62,12 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   }
 `
 
-function SupplyMarkets() {
+function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
+
+  console.log('supplyMarkets: ', allMarkets.length)
 
   return (
     <div>
@@ -158,4 +160,4 @@ function SupplyMarkets() {
   )
 }
 
-export default SupplyMarkets
+export default BorrowMarkets

@@ -61,10 +61,11 @@ const BorrowWrap = styled.div`
   color: grey;
 `
 
-function Summary() {
+function Summary({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
+  console.log('summary', allMarkets.length)
 
   return (
     <LightCard>

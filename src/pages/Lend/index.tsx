@@ -48,15 +48,15 @@ export default function Lend() {
   // `};
   // `
 
-  const result = useCTokens()
-  console.log('rrrresult', result)
+  const allMarkets = useCTokens()
+  console.log('loan', allMarkets)
 
   return (
     <PageWrapper gap="lg" justify="center">
-      <Summary></Summary>
+      <Summary allMarkets={allMarkets}></Summary>
       <MarketsWrap>
-        <SupplyMarkets></SupplyMarkets>
-        <BorrowMarkets></BorrowMarkets>
+        <SupplyMarkets allMarkets={allMarkets}></SupplyMarkets>
+        <BorrowMarkets allMarkets={allMarkets}></BorrowMarkets>
       </MarketsWrap>
     </PageWrapper>
   )
