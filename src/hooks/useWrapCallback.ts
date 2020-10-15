@@ -25,7 +25,7 @@ export default function useWrapCallback(
   outputCurrency: Currency | undefined,
   typedValue: string | undefined
 ): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: string } {
-  const { account, chainId } = useActiveHmyReact();
+  const { account, chainId, wrapper } = useActiveHmyReact();
 
   const wethContract = useWETHContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
@@ -46,7 +46,7 @@ export default function useWrapCallback(
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
+                  const txReceipt = await wethContract.methods.deposit().send({ value: inputAmount.raw.toString(), ...wrapper.gasOptions() })
                   addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ONE to WONE` })
                 } catch (error) {
                   console.error('Could not deposit', error)
@@ -63,7 +63,7 @@ export default function useWrapCallback(
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                  const txReceipt = await wethContract.methods.withdraw(inputAmount.raw.toString()).send(wrapper.gasOptions())
                   addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WONE to ONE` })
                 } catch (error) {
                   console.error('Could not withdraw', error)
@@ -75,5 +75,5 @@ export default function useWrapCallback(
     } else {
       return NOT_APPLICABLE
     }
-  }, [wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [wethContract, chainId, wrapper, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }

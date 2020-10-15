@@ -313,7 +313,8 @@ export default function RemoveLiquidity({
       let gasOptions = wrapper.gasOptions()
       //gasOptions.gasLimit = safeGasEstimate.toString()
 
-      await router.methods[methodName](...args).send(gasOptions)
+      await router.methods[methodName](...args)
+        .send(gasOptions)
         .then((response: any) => {
           setAttemptingTxn(false)
 

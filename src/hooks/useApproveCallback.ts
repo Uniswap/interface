@@ -2,7 +2,7 @@ import { MaxUint256 } from '@ethersproject/constants'
 //import { BigNumber } from '@ethersproject/bignumber'
 //import { TransactionResponse } from '@ethersproject/providers'
 import { Trade, TokenAmount, CurrencyAmount, HARMONY } from '@harmony-swoop/sdk'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
@@ -31,6 +31,7 @@ export function useApproveCallback(
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
+  const [approveTxSent, setApproveTxSent] = useState<boolean>(false)
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
@@ -41,11 +42,11 @@ export function useApproveCallback(
 
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
-      ? pendingApproval
+      ? (pendingApproval || approveTxSent)
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
-  }, [amountToApprove, currentAllowance, pendingApproval, spender])
+  }, [amountToApprove, currentAllowance, pendingApproval, spender, approveTxSent])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
@@ -87,6 +88,7 @@ export function useApproveCallback(
     let gasOptions = wrapper.gasOptions();
     //gasOptions.gasLimit = calculateGasMargin(BigNumber.from(estimatedGas)).toNumber();
 
+    setApproveTxSent(true)
     return tokenContract.methods
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256.toString()).send(gasOptions)
       .then((response: any) => {
@@ -96,6 +98,7 @@ export function useApproveCallback(
         })
       })
       .catch((error: Error) => {
+        setApproveTxSent(false)
         console.debug('Failed to approve token', error)
         throw error
       })
