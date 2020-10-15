@@ -80,7 +80,7 @@
     "@harmony-swoop/sdk": "^1.0.9",
     "@harmony-swoop/default-token-list": "^1.0.2",
     "@harmony-swoop/periphery": "^1.1.6",
-    "@harmony-swoop/utils": "^1.0.9"
+    "@harmony-swoop/utils": "^1.1.0"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"
