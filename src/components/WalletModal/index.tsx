@@ -21,7 +21,7 @@ import { injected, fortmatic, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 //import { AbstractConnector } from '@web3-react/abstract-connector'
-import { AbstractWallet } from '../../wallets/AbstractWallet';
+import { AbstractWallet } from '@harmony-swoop/utils'
 
 import {useUserWallet} from '../../state/user/hooks'
 

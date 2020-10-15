@@ -5,12 +5,11 @@ import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
-//import { AbstractWallet } from '../wallets/AbstractWallet'
 import { hmy } from '../connectors'
 
 import { useUserWallet, useUserActiveWallet } from '../state/user/hooks'
 import { UserWallet } from '../constants'
-import { Hmy } from '../blockchain'
+import { Hmy } from '@harmony-swoop/utils';
 
 const { Harmony } = require('@harmony-js/core');
 const { ChainID } = require('@harmony-js/utils');

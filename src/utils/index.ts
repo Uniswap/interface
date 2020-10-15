@@ -9,9 +9,9 @@ import { ChainID } from '@harmony-js/utils';
 import { JSBI, Percent, Token, CurrencyAmount, Currency, HARMONY } from '@harmony-swoop/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 
-import { Hmy } from '../blockchain'
+import { Hmy } from '@harmony-swoop/utils';
 import { hmy } from '../connectors'
-import { AbstractWallet } from '../wallets/AbstractWallet'
+import { AbstractWallet } from '@harmony-swoop/utils'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
