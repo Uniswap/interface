@@ -1,5 +1,5 @@
 //import { AbstractConnector } from '@web3-react/abstract-connector'
-import { AbstractWallet } from '../../wallets/AbstractWallet';
+import { AbstractWallet } from '@harmony-swoop/utils'
 import React from 'react'
 import styled from 'styled-components'
 import Option from './Option'

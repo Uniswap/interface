@@ -28,7 +28,8 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+//import { calculateGasMargin, calculateSlippageAmount, getHarmonyRouterContract } from '../../utils'
+import { calculateSlippageAmount, getHarmonyRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -45,7 +46,7 @@ export default function AddLiquidity({
   },
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
-  const { account, chainId, library } = useActiveHmyReact()
+  const { account, chainId, library, wallet, wrapper } = useActiveHmyReact()
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
@@ -123,7 +124,7 @@ export default function AddLiquidity({
 
   async function onAdd() {
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+    const router = getHarmonyRouterContract(chainId, library, wallet)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB) {
@@ -137,26 +138,27 @@ export default function AddLiquidity({
 
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
+    // todo make estimate work
+    //let estimate,
+    let method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA === HARMONY || currencyB === HARMONY) {
       const tokenBIsETH = currencyB === HARMONY
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
+
       args = [
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
-        deadlineFromNow
+        BigNumber.from(deadlineFromNow).toHexString()
       ]
+
+      //estimate = await router.methods.addLiquidityETH(...args).estimateGas(wrapper.gasOptionsForEstimation())
+      method = router.methods.addLiquidityETH
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
-      estimate = router.estimateGas.addLiquidity
-      method = router.addLiquidity
       args = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
         wrappedCurrency(currencyB, chainId)?.address ?? '',
@@ -165,18 +167,28 @@ export default function AddLiquidity({
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
         account,
-        deadlineFromNow
+        BigNumber.from(deadlineFromNow).toHexString()
       ]
+
+      // estimate = router.methods.addLiquidity(...args).estimateGas(wrapper.gasOptionsForEstimation())
+      method = router.methods.addLiquidity
       value = null
     }
 
+    let valueString: string | null = (value) ? value.toString() : null;
+
+    //see comment at Hmy.gasOptionsForEstimation()
+    //const estimatedGasLimit = BigNumber.from(1000000000)
+
     setAttemptingTxn(true)
-    await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit =>
-        method(...args, {
-          ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit)
-        }).then(response => {
+
+    method(...args)
+      // @ts-ignore
+      .send({
+        value: valueString,
+        ...wrapper.gasOptions()
+      })
+        .then(response => {
           setAttemptingTxn(false)
 
           addTransaction(response, {
@@ -191,7 +203,7 @@ export default function AddLiquidity({
               currencies[Field.CURRENCY_B]?.symbol
           })
 
-          setTxHash(response.hash)
+          setTxHash(response.transaction.receipt.transactionHash)
 
           ReactGA.event({
             category: 'Liquidity',
@@ -199,7 +211,6 @@ export default function AddLiquidity({
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
           })
         })
-      )
       .catch(error => {
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
@@ -288,7 +299,7 @@ export default function AddLiquidity({
           history.push(`/add/${newCurrencyIdB}`)
         }
       } else {
-        history.push(`/add/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
+        history.push(`/add/${currencyIdA ? currencyIdA : 'ONE'}/${newCurrencyIdB}`)
       }
     },
     [currencyIdA, history, currencyIdB]

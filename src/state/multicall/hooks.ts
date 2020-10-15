@@ -15,7 +15,6 @@ import {
 } from './actions'
 
 import { useActiveHmyReact } from '../../hooks'
-import {MULTICALL_INTERFACE} from '../../constants/multicall/index';
 
 export interface Result extends ReadonlyArray<any> {
   readonly [key: string]: any
@@ -166,10 +165,9 @@ export function useSingleContractMultipleData(
   callInputs: OptionalMethodInputs[],
   options?: ListenerOptions
 ): CallState[] {
-  // TODO: update this to use hmy's contract interaction version
-
   // todo put it to eth hook
-  const contractInterface = MULTICALL_INTERFACE
+  const contractInterface = (contract) ? new Interface(contract.abi) : null;
+
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
 
   const calls = useMemo(
@@ -241,23 +239,26 @@ export function useSingleCallResult(
   inputs?: OptionalMethodInputs,
   options?: ListenerOptions
 ): CallState {
-  const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
+  const contractInterface = (contract) ? new Interface(contract.abi) : null;
+
+  const fragment = useMemo(() => contractInterface?.getFunction(methodName), [contractInterface, methodName])
 
   const calls = useMemo<Call[]>(() => {
-    return contract && fragment && isValidMethodArgs(inputs)
+    return contract && contractInterface && fragment && isValidMethodArgs(inputs)
       ? [
           {
             address: contract.address,
-            callData: contract.interface.encodeFunctionData(fragment, inputs)
+            callData: contractInterface.encodeFunctionData(fragment, inputs)
           }
         ]
       : []
-  }, [contract, fragment, inputs])
+  }, [contract, contractInterface, fragment, inputs])
 
   const result = useCallsData(calls, options)[0]
+
   const latestBlockNumber = useBlockNumber()
 
   return useMemo(() => {
-    return toCallState(result, contract?.interface, fragment, latestBlockNumber)
-  }, [result, contract, fragment, latestBlockNumber])
+    return toCallState(result, contractInterface, fragment, latestBlockNumber)
+  }, [result, contractInterface, fragment, latestBlockNumber])
 }

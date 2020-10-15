@@ -5,12 +5,15 @@ import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
+// import { calculateGasMargin, getHarmonyRouterContract, isAddress, shortenAddress } from '../utils'
+import { getHarmonyRouterContract, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import v1SwapArguments from '../utils/v1SwapArguments'
 import { useV1ExchangeContract } from './useContract'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
+
+import { hexToNumber } from '@harmony-js/utils';
 
 import { useActiveHmyReact } from '../hooks'
 
@@ -50,7 +53,7 @@ function useSwapCallArguments(
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
-  const { account, chainId, library } = useActiveHmyReact()
+  const { account, chainId, library, wallet } = useActiveHmyReact()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
@@ -62,7 +65,7 @@ function useSwapCallArguments(
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId) return []
 
     const contract: Contract | null =
-      tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
+      tradeVersion === Version.v2 ? getHarmonyRouterContract(chainId, library, wallet) : v1Exchange
     if (!contract) {
       return []
     }
@@ -102,7 +105,7 @@ function useSwapCallArguments(
         break
     }
     return swapMethods.map(parameters => ({ parameters, contract }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, v1Exchange])
+  }, [account, allowedSlippage, chainId, deadline, library, wallet, recipient, trade, v1Exchange])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -113,7 +116,7 @@ export function useSwapCallback(
   deadline: number = DEFAULT_DEADLINE_FROM_NOW, // in seconds from now
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
-  const { account, chainId, library } = useActiveHmyReact()
+  const { account, chainId, library, wrapper } = useActiveHmyReact()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, deadline, recipientAddressOrName)
 
@@ -145,10 +148,13 @@ export function useSwapCallback(
               parameters: { methodName, args, value },
               contract
             } = call
-            const options = !value || isZero(value) ? {} : { value }
 
-            return contract.estimateGas[methodName](...args, options)
-              .then(gasEstimate => {
+            //const options = !value || isZero(value) ? {} : { value }
+
+            //return contract.estimateGas[methodName](...args, options)
+            return contract.methods[methodName](...args).estimateGas(wrapper.gasOptionsForEstimation())
+              .then(gasEstimateResponse => {
+                let gasEstimate = BigNumber.from(gasEstimateResponse)
                 return {
                   call,
                   gasEstimate
@@ -157,7 +163,13 @@ export function useSwapCallback(
               .catch(gasError => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return contract.callStatic[methodName](...args, options)
+                let opts = wrapper.gasOptions()
+                if (value && !isZero(value)) {
+                  opts.value = hexToNumber(value);
+                }
+
+                //return contract.callStatic[methodName](...args, options)
+                return contract.methods[methodName](...args).send(opts)
                   .then(result => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
@@ -197,13 +209,25 @@ export function useSwapCallback(
             contract,
             parameters: { methodName, args, value }
           },
-          gasEstimate
+          //gasEstimate
         } = successfulEstimation
 
-        return contract[methodName](...args, {
+        /*
+          Original implementation:
+          return contract[methodName](...args, {
           gasLimit: calculateGasMargin(gasEstimate),
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
-        })
+        }).then ...
+        */
+
+        let opts = wrapper.gasOptions()
+        //opts.gasLimit = calculateGasMargin(gasEstimate).toNumber()
+        if (value && !isZero(value)) {
+          opts.value = hexToNumber(value);
+        }
+        opts.from = account
+
+        return contract.methods[methodName](...args).send(opts)
           .then((response: any) => {
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
@@ -227,7 +251,7 @@ export function useSwapCallback(
               summary: withVersion
             })
 
-            return response.hash
+            return response.transaction.receipt.transactionHash
           })
           .catch((error: any) => {
             // if the user rejected the tx, pass this along
@@ -242,5 +266,5 @@ export function useSwapCallback(
       },
       error: null
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, library, account, wrapper, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
 }

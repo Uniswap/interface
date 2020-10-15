@@ -32,9 +32,8 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
-
   const srcs: string[] = useMemo(() => {
-    if (currency === HARMONY) return []
+    if (currency === HARMONY || currency?.symbol === 'WONE') return []
 
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
@@ -46,7 +45,7 @@ export default function CurrencyLogo({
     return []
   }, [currency, uriLocations])
 
-  if (currency === HARMONY) {
+  if (currency === HARMONY || currency?.symbol === 'WONE') {
     return <StyledHarmonyLogo src={HarmonyLogo} size={size} style={style} />
   }
 

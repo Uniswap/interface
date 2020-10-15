@@ -1,14 +1,15 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { TransactionResponse } from '@ethersproject/providers'
+//import { BigNumber } from '@ethersproject/bignumber'
+//import { TransactionResponse } from '@ethersproject/providers'
 import { Trade, TokenAmount, CurrencyAmount, HARMONY } from '@harmony-swoop/sdk'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
-import { calculateGasMargin } from '../utils'
+//import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { Version } from './useToggledVersion'
 
@@ -26,10 +27,11 @@ export function useApproveCallback(
   amountToApprove?: CurrencyAmount,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
-  const { account } = useActiveHmyReact()
+  const { account, wrapper } = useActiveHmyReact()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
+  const [approveTxSent, setApproveTxSent] = useState<boolean>(false)
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
@@ -40,11 +42,11 @@ export function useApproveCallback(
 
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
-      ? pendingApproval
+      ? (pendingApproval || approveTxSent)
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
-  }, [amountToApprove, currentAllowance, pendingApproval, spender])
+  }, [amountToApprove, currentAllowance, pendingApproval, spender, approveTxSent])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
@@ -75,27 +77,32 @@ export function useApproveCallback(
     }
 
     let useExact = false
-    const estimatedGas = await tokenContract.estimateGas.approve(spender, MaxUint256).catch(() => {
+    // There seems to be an issue with gas estimations - the estimation appear to be correct but the txs won't properly propagate/get accepted
+    // When using the default high gas limit of 6721900 txs will get confirmed tho
+    /*const estimatedGas = await tokenContract.methods.approve(spender, MaxUint256.toString()).estimateGas(wrapper.gasOptionsForEstimation()).catch(() => {
       // general fallback for tokens who restrict approval amounts
       useExact = true
-      return tokenContract.estimateGas.approve(spender, amountToApprove.raw.toString())
-    })
+      return tokenContract.methods.approve(spender, amountToApprove.raw.toString()).estimateGas(wrapper.gasOptionsForEstimation())
+    })*/
 
-    return tokenContract
-      .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas)
-      })
-      .then((response: TransactionResponse) => {
+    let gasOptions = wrapper.gasOptions();
+    //gasOptions.gasLimit = calculateGasMargin(BigNumber.from(estimatedGas)).toNumber();
+
+    setApproveTxSent(true)
+    return tokenContract.methods
+      .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256.toString()).send(gasOptions)
+      .then((response: any) => {
         addTransaction(response, {
           summary: 'Approve ' + amountToApprove.currency.symbol,
           approval: { tokenAddress: token.address, spender: spender }
         })
       })
       .catch((error: Error) => {
+        setApproveTxSent(false)
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, wrapper, addTransaction])
 
   return [approvalState, approve]
 }

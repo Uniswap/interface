@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
-
 import { useActiveHmyReact } from '../../hooks'
+import { hexToNumber } from '@harmony-js/utils';
 
 export function shouldCheck(
   lastBlockNumber: number,
@@ -46,9 +46,13 @@ export default function Updater(): null {
     Object.keys(transactions)
       .filter(hash => shouldCheck(lastBlockNumber, transactions[hash]))
       .forEach(hash => {
-        library
-          .getTransactionReceipt(hash)
-          .then((receipt: any) => {
+        //console.log({library, transactions, hash})
+        library.blockchain
+          .getTransactionReceipt({txnHash: hash})
+          .then((response: any) => {
+            let receipt: any = response.result
+            let status: number | undefined = (receipt?.status !== '') ? Number(hexToNumber(receipt.status)) : undefined
+
             if (receipt) {
               dispatch(
                 finalizeTransaction({
@@ -59,7 +63,7 @@ export default function Updater(): null {
                     blockNumber: receipt.blockNumber,
                     contractAddress: receipt.contractAddress,
                     from: receipt.from,
-                    status: receipt.status,
+                    status: status,
                     to: receipt.to,
                     transactionHash: receipt.transactionHash,
                     transactionIndex: receipt.transactionIndex
@@ -71,7 +75,7 @@ export default function Updater(): null {
                 {
                   txn: {
                     hash,
-                    success: receipt.status === 1,
+                    success: status === 1,
                     summary: transactions[hash]?.summary
                   }
                 },
