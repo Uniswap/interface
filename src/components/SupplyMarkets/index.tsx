@@ -25,6 +25,7 @@ const MarketsCardHeader = styled.div`
 `
 
 const AssetWrap = styled.div`
+  cursor: pointer;
   font-size: 1rem;
 `
 
@@ -53,6 +54,7 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   grid-template-columns: 4fr 3fr 3fr 2fr;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding: 1.25rem 1.75rem;
+  height: 82px;
   border-left: 2px solid transparent;
   padding-left: 1.625rem;
   text-transform: none;
@@ -70,6 +72,19 @@ const AssetLogo = styled.div`
   display: flex;
   align-items: center;
   justify-self: start;
+`
+
+const ItemWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  align-self: center;
+  text-align: right;
+`
+
+const ItemBottomWrap = styled.div`
+  color: #aab8c1;
+  font-size: 0.9em;
 `
 
 const ethMantissa = 1e18
@@ -111,23 +126,29 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                     <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
                     {item?.symbol}
                   </AssetLogo>
-                  <div>
-                    {(
-                      (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
-                      100
-                    ).toFixed(2)}
-                    %
-                  </div>
-                  <div>
-                    $
-                    {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
-                      ? (
-                          parseFloat(utils.formatEther(item?.supplyBalance)) *
-                          parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
-                          parseFloat(utils.formatEther(item?.underlyingPrice))
-                        ).toFixed(3)
-                      : ''}
-                  </div>
+                  <ItemWrap>
+                    <div>
+                      {(
+                        (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                        100
+                      ).toFixed(2)}
+                      %
+                    </div>
+                    <ItemBottomWrap>111111</ItemBottomWrap>
+                  </ItemWrap>
+                  <ItemWrap>
+                    <div>
+                      $
+                      {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
+                        ? (
+                            parseFloat(utils.formatEther(item?.supplyBalance)) *
+                            parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
+                            parseFloat(utils.formatEther(item?.underlyingPrice))
+                          ).toFixed(3)
+                        : ''}
+                    </div>
+                    <ItemBottomWrap>111111</ItemBottomWrap>
+                  </ItemWrap>
                   <Switch isActive={item?.canBeCollateral} />
                 </AssetItem>
               ))}
@@ -152,14 +173,16 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                       <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
                       {item?.symbol}
                     </AssetLogo>
-                    <div>
-                      {(
-                        (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
-                        100
-                      ).toFixed(2)}
-                      %
-                    </div>
-                    <div>
+                    <ItemWrap>
+                      <div>
+                        {(
+                          (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                          100
+                        ).toFixed(2)}
+                        %
+                      </div>
+                    </ItemWrap>
+                    <ItemWrap>
                       $
                       {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
                         ? (
@@ -168,7 +191,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                             parseFloat(utils.formatEther(item?.underlyingPrice))
                           ).toFixed(2)
                         : ''}
-                    </div>
+                    </ItemWrap>
                     <Switch isActive={item?.canBeCollateral} />
                   </AssetItem>
                 ))

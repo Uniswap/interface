@@ -23,6 +23,7 @@ const MarketsCardHeader = styled.div`
 `
 
 const AssetWrap = styled.div`
+  cursor: pointer;
   font-size: 1rem;
 `
 
@@ -53,6 +54,7 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   padding: 1.25rem 1.75rem;
   border-left: 2px solid transparent;
   padding-left: 1.625rem;
+  height: 82px;
   text-transform: none;
   font-size: 1rem;
   font-weight: 500;
@@ -68,6 +70,19 @@ const AssetLogo = styled.div`
   display: flex;
   align-items: center;
   justify-self: start;
+`
+
+const ItemWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: right;
+  align-self: center;
+  text-align: right;
+`
+
+const ItemBottomWrap = styled.div`
+  color: #aab8c1;
+  font-size: 0.9em;
 `
 
 const ethMantissa = 1e18
@@ -124,24 +139,30 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                     <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
                     {item?.symbol}
                   </AssetLogo>
-                  <div>
-                    {(
-                      (Math.pow((item?.borrowRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
-                      100
-                    ).toFixed(2)}
-                    %
-                  </div>
-                  <div>
-                    $
-                    {item?.borrowBalance && item?.underlyingPrice
-                      ? (
-                          parseFloat(utils.formatEther(item?.borrowBalance)) *
-                          parseFloat(utils.formatEther(item?.underlyingPrice))
-                        ).toFixed(2)
-                      : ''}
-                  </div>
-                  <div>
-                    {item?.borrowBalance && item?.underlyingPrice && getLimit()
+                  <ItemWrap>
+                    <div>
+                      {(
+                        (Math.pow((item?.borrowRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
+                        100
+                      ).toFixed(2)}
+                      %
+                    </div>
+                    <ItemBottomWrap>11111111</ItemBottomWrap>
+                  </ItemWrap>
+                  <ItemWrap>
+                    <div>
+                      $
+                      {item?.borrowBalance && item?.underlyingPrice
+                        ? (
+                            parseFloat(utils.formatEther(item?.borrowBalance)) *
+                            parseFloat(utils.formatEther(item?.underlyingPrice))
+                          ).toFixed(3)
+                        : ''}
+                    </div>
+                    <ItemBottomWrap>11111111</ItemBottomWrap>
+                  </ItemWrap>
+                  <ItemWrap>
+                    {item?.liquidity && item?.underlyingPrice
                       ? (
                           ((parseFloat(utils.formatEther(item?.borrowBalance)) *
                             parseFloat(utils.formatEther(item?.underlyingPrice))) /
@@ -150,7 +171,7 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                         ).toFixed(1)
                       : ''}
                     %
-                  </div>
+                  </ItemWrap>
                 </AssetItem>
               ))}
             </AssetItemWrap>
@@ -174,14 +195,14 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                       <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
                       {item?.symbol}
                     </AssetLogo>
-                    <div>
+                    <ItemWrap>
                       {(
                         (Math.pow((item?.borrowRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
                         100
                       ).toFixed(2)}
                       %
-                    </div>
-                    <div>
+                    </ItemWrap>
+                    <ItemWrap>
                       $
                       {item?.borrowBalance && item?.underlyingPrice
                         ? (
@@ -189,8 +210,8 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                             parseFloat(utils.formatEther(item?.underlyingPrice))
                           ).toFixed(2)
                         : ''}
-                    </div>
-                    <div>
+                    </ItemWrap>
+                    <ItemWrap>
                       {item?.liquidity && item?.underlyingPrice
                         ? (parseFloat(utils.formatEther(item?.liquidity)) *
                             parseFloat(utils.formatEther(item?.underlyingPrice))) /
@@ -204,7 +225,7 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                           : '< 0.1'
                         : ''}
                       K
-                    </div>
+                    </ItemWrap>
                   </AssetItem>
                 ))
               : ''}
