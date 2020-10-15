@@ -134,7 +134,12 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                       ).toFixed(2)}
                       %
                     </div>
-                    <ItemBottomWrap>111111</ItemBottomWrap>
+                    <ItemBottomWrap>
+                      {item?.supplyBalance && item?.symbol
+                        ? parseFloat(utils.formatEther(item?.supplyBalance)).toFixed(4)
+                        : ''}
+                      {' ' + item?.symbol}
+                    </ItemBottomWrap>
                   </ItemWrap>
                   <ItemWrap>
                     <div>
@@ -147,7 +152,12 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                           ).toFixed(3)
                         : ''}
                     </div>
-                    <ItemBottomWrap>111111</ItemBottomWrap>
+                    <ItemBottomWrap>
+                      {item?.supplyBalance && item?.symbol
+                        ? parseFloat(utils.formatEther(item?.supplyBalance)).toFixed(4)
+                        : ''}
+                      {' ' + item?.symbol}
+                    </ItemBottomWrap>
                   </ItemWrap>
                   <Switch isActive={item?.canBeCollateral} />
                 </AssetItem>

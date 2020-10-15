@@ -118,7 +118,7 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
     return item && item?.borrowBalance?.toString() == 0 && item?.supplyBalance?.toString() == 0
   })
 
-  console.log('supplyMarkets: ', allMarkets.length)
+  console.log('supplyMarkets: ', allMarkets)
 
   return (
     <div>
@@ -129,7 +129,7 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
             <AssetWrapLabels>
               <AssetLabel textAlign={'left'}>Asset</AssetLabel>
               <AssetLabel textAlign={'right'}>APY</AssetLabel>
-              <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
+              <AssetLabel textAlign={'right'}>Balance</AssetLabel>
               <AssetLabel textAlign={'right'}>% Of Limit</AssetLabel>
             </AssetWrapLabels>
             <AssetItemWrap>
@@ -147,7 +147,12 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                       ).toFixed(2)}
                       %
                     </div>
-                    <ItemBottomWrap>11111111</ItemBottomWrap>
+                    <ItemBottomWrap>
+                      {item?.borrowBalance && item?.symbol
+                        ? parseFloat(utils.formatEther(item?.borrowBalance)).toFixed(4)
+                        : ''}
+                      {' ' + item?.symbol}
+                    </ItemBottomWrap>
                   </ItemWrap>
                   <ItemWrap>
                     <div>
@@ -159,7 +164,12 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                           ).toFixed(3)
                         : ''}
                     </div>
-                    <ItemBottomWrap>11111111</ItemBottomWrap>
+                    <ItemBottomWrap>
+                      {item?.borrowBalance && item?.symbol
+                        ? parseFloat(utils.formatEther(item?.borrowBalance)).toFixed(4)
+                        : ''}
+                      {' ' + item?.symbol}
+                    </ItemBottomWrap>
                   </ItemWrap>
                   <ItemWrap>
                     {item?.liquidity && item?.underlyingPrice
