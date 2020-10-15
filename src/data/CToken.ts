@@ -1,11 +1,11 @@
-import { ChainId, Token } from "@uniswap/sdk";
-import { useMemo } from "react";
-import { useActiveWeb3React } from "../hooks";
-import { useMultipleContractSingleData, useSingleContractMultipleData } from "../state/multicall/hooks";
+import { ChainId, Token } from '@uniswap/sdk'
+import { useMemo } from 'react'
+import { useActiveWeb3React } from '../hooks'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { abi as ICTokenABI } from '../constants/abis/ctoken.json'
 import { Interface } from '@ethersproject/abi'
-import { useComptrollerContract, useOracleContract } from "../hooks/useContract";
-import { CTOKEN_LISTS } from "../constants/lend";
+import { useComptrollerContract, useOracleContract } from '../hooks/useContract'
+import { CTOKEN_LISTS } from '../constants/lend'
 
 const CTOKEN_INTERFACE = new Interface(ICTokenABI)
 
@@ -32,9 +32,26 @@ export class CToken extends Token {
   public readonly isListed?: boolean
   public readonly collateralFactorMantissa?: number
 
-  constructor(chainId: ChainId, cAddress: string, address: string, decimals: number, cSymbol?: string, cName?: string, symbol?: string, name?: string,
-    supplyRatePerBlock?: number, borrowRatePerBlock?: number, supplyBalance?: number, borrowBalance?: number, exchangeRateMantissa?: number,
-    liquidity?: number, canBeCollateral?: boolean, underlyingPrice?: number, isListed?: boolean, collateralFactorMantissa?: number) {
+  constructor(
+    chainId: ChainId,
+    cAddress: string,
+    address: string,
+    decimals: number,
+    cSymbol?: string,
+    cName?: string,
+    symbol?: string,
+    name?: string,
+    supplyRatePerBlock?: number,
+    borrowRatePerBlock?: number,
+    supplyBalance?: number,
+    borrowBalance?: number,
+    exchangeRateMantissa?: number,
+    liquidity?: number,
+    canBeCollateral?: boolean,
+    underlyingPrice?: number,
+    isListed?: boolean,
+    collateralFactorMantissa?: number
+  ) {
     super(chainId, address, decimals, symbol, name)
 
     this.cAddress = cAddress
@@ -70,7 +87,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
 
   const cTokenAddresses = useMemo(
     () =>
-      cTokenList.map((cTokenInfo) => {
+      cTokenList.map(cTokenInfo => {
         return cTokenInfo[0]
       }),
     [cTokenList]
@@ -78,7 +95,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
 
   const membershipArgs = useMemo(
     () =>
-      cTokenList.map((cTokenInfo) => {
+      cTokenList.map(cTokenInfo => {
         return [account ?? '0x0000000000000000000000000000000000000000', cTokenInfo[0]]
       }),
     [cTokenList, account]
@@ -87,23 +104,46 @@ export function useCTokens(): [CTokenState, CToken | null][] {
   const comptroller = useComptrollerContract()
   const oracle = useOracleContract()
 
-  const supplyRatePerBlockResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'supplyRatePerBlock')
-  const borrowRatePerBlockResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'borrowRatePerBlock')
-  const accountSnapshotResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'getAccountSnapshot', accountArg)
+  const supplyRatePerBlockResults = useMultipleContractSingleData(
+    cTokenAddresses,
+    CTOKEN_INTERFACE,
+    'supplyRatePerBlock'
+  )
+  const borrowRatePerBlockResults = useMultipleContractSingleData(
+    cTokenAddresses,
+    CTOKEN_INTERFACE,
+    'borrowRatePerBlock'
+  )
+  const accountSnapshotResults = useMultipleContractSingleData(
+    cTokenAddresses,
+    CTOKEN_INTERFACE,
+    'getAccountSnapshot',
+    accountArg
+  )
   const cashResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'getCash')
   const membershipResults = useSingleContractMultipleData(comptroller, 'checkMembership', membershipArgs)
-  const underlyingPriceResults = useSingleContractMultipleData(oracle, 'getUnderlyingPrice', cTokenAddresses.map(cTokenAddress => [cTokenAddress]))
-  const marketsResults = useSingleContractMultipleData(comptroller, 'markets', cTokenAddresses.map(cTokenAddress => [cTokenAddress]))
+  const underlyingPriceResults = useSingleContractMultipleData(
+    oracle,
+    'getUnderlyingPrice',
+    cTokenAddresses.map(cTokenAddress => [cTokenAddress])
+  )
+  const marketsResults = useSingleContractMultipleData(
+    comptroller,
+    'markets',
+    cTokenAddresses.map(cTokenAddress => [cTokenAddress])
+  )
 
   return useMemo(() => {
     return supplyRatePerBlockResults.map((supplyRatePerBlockResult, i) => {
       const { result: supplyRatePerBlockValue, loading: supplyRatePerBlockResultLoading } = supplyRatePerBlockResult
       const { result: borrowRatePerBlockValue, loading: borrowRatePerBlockResultLoading } = borrowRatePerBlockResults[i]
-      const { result: accountSnapshotValue, loading: accountSnapshotResultLoading } = accountSnapshotResults.length !== 0 ? accountSnapshotResults[i] : { result: [0, 0, 0, 0], loading: false }
+      const { result: accountSnapshotValue, loading: accountSnapshotResultLoading } =
+        accountSnapshotResults.length !== 0 ? accountSnapshotResults[i] : { result: [0, 0, 0, 0], loading: false }
       const { result: cashValue, loading: cashResultLoading } = cashResults[i]
       const { result: membershipValue, loading: membershipLoading } = membershipResults[i]
       const { result: underlyingPriceValue, loading: underlyingPriceLoading } = underlyingPriceResults[i]
-      const { result: marketsValue, loading: marketsResultLoading } = marketsResults.length !== 0 ? marketsResults[i] : { result: [0, 0, 0], loading: false }
+      const { result: marketsValue, loading: marketsResultLoading } =
+        marketsResults.length !== 0 ? marketsResults[i] : { result: [0, 0, 0], loading: false }
 
       if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, null]
       if (borrowRatePerBlockResultLoading) return [CTokenState.LOADING, null]
@@ -123,11 +163,37 @@ export function useCTokens(): [CTokenState, CToken | null][] {
 
       return [
         CTokenState.EXISTS,
-        new CToken(chainId ?? ChainId.MAINNET, cTokenList[i][0], cTokenList[i][1], cTokenList[i][2], cTokenList[i][3], cTokenList[i][4], cTokenList[i][5], cTokenList[i][6],
-          supplyRatePerBlockValue[0], borrowRatePerBlockValue[0], accountSnapshotValue[1], accountSnapshotValue[2], accountSnapshotValue[3], cashValue[0], membershipValue[0],
-          underlyingPriceValue[0], marketsValue[0], marketsValue[1]
+        new CToken(
+          chainId ?? ChainId.MAINNET,
+          cTokenList[i][0],
+          cTokenList[i][1],
+          cTokenList[i][2],
+          cTokenList[i][3],
+          cTokenList[i][4],
+          cTokenList[i][5],
+          cTokenList[i][6],
+          supplyRatePerBlockValue[0],
+          borrowRatePerBlockValue[0],
+          accountSnapshotValue[1],
+          accountSnapshotValue[2],
+          accountSnapshotValue[3],
+          cashValue[0],
+          membershipValue[0],
+          underlyingPriceValue[0],
+          marketsValue[0],
+          marketsValue[1]
         )
       ]
     })
-  }, [supplyRatePerBlockResults, borrowRatePerBlockResults, accountSnapshotResults, cashResults, membershipResults, underlyingPriceResults, marketsResults, cTokenList, chainId])
+  }, [
+    supplyRatePerBlockResults,
+    borrowRatePerBlockResults,
+    accountSnapshotResults,
+    cashResults,
+    membershipResults,
+    underlyingPriceResults,
+    marketsResults,
+    cTokenList,
+    chainId
+  ])
 }

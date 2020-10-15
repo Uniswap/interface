@@ -83,6 +83,18 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
     return item?.[1]
   })
 
+  function getLimit() {
+    let collateralFactorMantissa = 0
+    borrowList.forEach((val: any, idx: any, borrowList: any) => {
+      collateralFactorMantissa +=
+        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
+        parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
+        parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
+    }, collateralFactorMantissa)
+    return collateralFactorMantissa
+  }
+
   const borrowedAsset = borrowList.filter((item: any) => {
     return item && item?.borrowBalance?.toString() > 0
   })
@@ -103,7 +115,7 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
               <AssetLabel textAlign={'left'}>Asset</AssetLabel>
               <AssetLabel textAlign={'right'}>APY</AssetLabel>
               <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
-              <AssetLabel textAlign={'right'}>Liquidity</AssetLabel>
+              <AssetLabel textAlign={'right'}>% Of Limit</AssetLabel>
             </AssetWrapLabels>
             <AssetItemWrap>
               {borrowedAsset.map((item: any) => (
@@ -125,16 +137,19 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                       ? (
                           parseFloat(utils.formatEther(item?.borrowBalance)) *
                           parseFloat(utils.formatEther(item?.underlyingPrice))
-                        ).toFixed(3)
+                        ).toFixed(2)
                       : ''}
                   </div>
                   <div>
-                    {item?.liquidity && item?.underlyingPrice
+                    {item?.borrowBalance && item?.underlyingPrice && getLimit()
                       ? (
-                          parseFloat(utils.formatEther(item?.liquidity)) /
-                          parseFloat(utils.formatEther(item?.underlyingPrice))
+                          ((parseFloat(utils.formatEther(item?.borrowBalance)) *
+                            parseFloat(utils.formatEther(item?.underlyingPrice))) /
+                            getLimit()) *
+                          100
                         ).toFixed(1)
                       : ''}
+                    %
                   </div>
                 </AssetItem>
               ))}
@@ -177,11 +192,18 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                     </div>
                     <div>
                       {item?.liquidity && item?.underlyingPrice
-                        ? (
-                            parseFloat(utils.formatEther(item?.liquidity)) /
-                            parseFloat(utils.formatEther(item?.underlyingPrice))
-                          ).toFixed(1)
+                        ? (parseFloat(utils.formatEther(item?.liquidity)) *
+                            parseFloat(utils.formatEther(item?.underlyingPrice))) /
+                            1000 <
+                          100
+                          ? (
+                              (parseFloat(utils.formatEther(item?.liquidity)) *
+                                parseFloat(utils.formatEther(item?.underlyingPrice))) /
+                              1000
+                            ).toFixed(1)
+                          : '< 0.1'
                         : ''}
+                      K
                     </div>
                   </AssetItem>
                 ))
