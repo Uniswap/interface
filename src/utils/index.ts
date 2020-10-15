@@ -4,7 +4,8 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { abi as ICTokenABI } from '../constants/abis/ctoken.json'
+import { abi as ICERC20ABI } from '../constants/lend/c_erc20_interface.json'
+import { abi as ICEtherABI } from '../constants/lend/c_ether.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -104,8 +105,12 @@ export function getRouterContract(_: number, library: Web3Provider, account?: st
   return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
 }
 
-export function getCTokenContract(_: number, cTokenAddress: string, library: Web3Provider, account?: string): Contract {
-  return getContract(cTokenAddress, ICTokenABI, library, account)
+export function getCERC20Contract(_: number, cTokenAddress: string, library: Web3Provider, account?: string): Contract {
+  return getContract(cTokenAddress, ICERC20ABI, library, account)
+}
+
+export function getCEtherContract(_: number, cTokenAddress: string, library: Web3Provider, account?: string): Contract {
+  return getContract(cTokenAddress, ICEtherABI, library, account)
 }
 
 export function getComptrollerContract(chainId: number, library: Web3Provider, account?: string): Contract {
