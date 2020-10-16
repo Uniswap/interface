@@ -308,15 +308,21 @@ export default function Header() {
           >
             {t('pool')}
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            UNI
+          {
+            //Hide Mainnet-specific features
+            chainId === ChainId.MAINNET ? <>
+              <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
+                UNI
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            Vote
+              <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+                Vote
           </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={UNISWAP_INFO_URL}>
-            Charts <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledExternalLink>
+              <StyledExternalLink id={`stake-nav-link`} href={UNISWAP_INFO_URL}>
+                Charts <span style={{ fontSize: '11px' }}>↗</span>
+              </StyledExternalLink>
+            </>
+              : ''
+          }
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
