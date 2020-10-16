@@ -323,6 +323,12 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.UNI
 }
 
+export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
+  [UNI_ADDRESS]: 'UNI',
+  [GOVERNANCE_ADDRESS]: 'Governance',
+  [TIMELOCK_ADDRESS]: 'Timelock'
+}
+
 // TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: constants[ChainId.MAINNET].MERKLE_DISTRIBUTOR_ADDRESS
