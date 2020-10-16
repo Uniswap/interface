@@ -50,8 +50,8 @@ export interface ToggleProps {
 
 export default function Switch({ id, isActive = false, toggle }: ToggleProps) {
   return (
-    <ToggleWrap>
-      <StyledToggle id={id} isActive={isActive} onClick={toggle}>
+    <ToggleWrap onClick={toggle}>
+      <StyledToggle id={id} isActive={isActive}>
         <ToggleElement isActive={isActive}></ToggleElement>
       </StyledToggle>
     </ToggleWrap>

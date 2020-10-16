@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 // import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
 
@@ -6,6 +6,25 @@ import Switch from '../Switch'
 import styled from 'styled-components'
 import { utils } from 'ethers'
 import CurrencyIcon from '../CurrencyIcon'
+import Modal from '../Modal'
+import { AutoColumn } from '../Column'
+import { Text } from 'rebass'
+import { RowBetween } from '../Row'
+import { X } from 'react-feather'
+import { CToken } from '../../data/CToken'
+import { ButtonLight } from '../Button'
+
+const StyledCloseIcon = styled(X)`
+  height: 20px;
+  width: 20px;
+  :hover {
+    cursor: pointer;
+  }
+
+  > * {
+    stroke: ${({ theme }) => theme.text1};
+  }
+`
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -87,6 +106,21 @@ const ItemBottomWrap = styled.div`
   font-size: 0.9em;
 `
 
+const Break = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.bg3};
+`
+
+const ModalContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
+  background-color: ${({ theme }) => theme.bg2};
+  border-radius: 20px;
+`
+
 const ethMantissa = 1e18
 const blocksPerDay = 4 * 60 * 24
 const daysPerYear = 365
@@ -95,6 +129,14 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
+
+  // show confirmation view before turning on
+  const [showCollateralConfirmation, setShowCollateralConfirmation] = useState(false)
+
+  const [collateralToken, setCollateralToken] = useState<CToken>()
+
+  const [isSuppliedMarkets, setIsSuppliedMarkets] = useState(false)
+
   const supplyList = allMarkets.map((item: any) => {
     return item?.[1]
   })
@@ -109,6 +151,42 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
 
   return (
     <div>
+      <Modal isOpen={showCollateralConfirmation} onDismiss={() => setShowCollateralConfirmation(false)}>
+        <ModalContentWrapper>
+          <AutoColumn gap="lg">
+            <RowBetween style={{ padding: '0 2rem' }}>
+              <div />
+              <Text fontWeight={500} fontSize={'1.1rem'}>
+                {isSuppliedMarkets ? 'Collateral Required' : 'Enable as Collateral'}
+              </Text>
+              <StyledCloseIcon onClick={() => setShowCollateralConfirmation(false)} />
+            </RowBetween>
+            <Break />
+            <AutoColumn gap="md" style={{ padding: '0 2rem' }}>
+              {isSuppliedMarkets ? (
+                <Text fontWeight={400} fontSize={'1rem'}>
+                  This asset is required to support your borrowed assets. Either repay borrowed assets, or supply
+                  another asset as collateral.
+                </Text>
+              ) : (
+                <Text fontWeight={400} fontSize={'1rem'}>
+                  Each asset used as collateral increases your borrowing limit. Be careful, this can subject the asset
+                  to being seized in liquidation.
+                </Text>
+              )}
+            </AutoColumn>
+            <AutoColumn gap="md" style={{ padding: '0 2rem' }}>
+              <ButtonLight
+                onClick={() => {
+                  return
+                }}
+              >
+                {collateralToken?.symbol}
+              </ButtonLight>
+            </AutoColumn>
+          </AutoColumn>
+        </ModalContentWrapper>
+      </Modal>
       {!!suppliedAsset.length && (
         <MarketsCard style={{ marginBottom: '1rem' }}>
           <MarketsCardHeader>Supply</MarketsCardHeader>
@@ -202,7 +280,14 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                           ).toFixed(2)
                         : ''}
                     </ItemWrap>
-                    <Switch isActive={item?.canBeCollateral} />
+                    <Switch
+                      isActive={item?.canBeCollateral}
+                      toggle={() => {
+                        setCollateralToken(item)
+                        setIsSuppliedMarkets(false)
+                        setShowCollateralConfirmation(true)
+                      }}
+                    />
                   </AssetItem>
                 ))
               : ''}
