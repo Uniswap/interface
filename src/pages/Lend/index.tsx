@@ -64,7 +64,10 @@ export default function Lend() {
   const [txHash, setTxHash] = useState<string>('')
 
   // check whether the user has approved the router on the tokens
-  const [approvalCToken, approveCTokenCallback] = useApproveCallback(CurrencyAmount.ether(BigInt(1)), '0x6c8c6b02e7b2be14d4fa6022dfd6d75921d90e4e')
+  const [approvalCToken, approveCTokenCallback] = useApproveCallback(
+    CurrencyAmount.ether(BigInt(1)),
+    '0x6c8c6b02e7b2be14d4fa6022dfd6d75921d90e4e'
+  )
 
   const addTransaction = useTransactionAdder()
 
@@ -78,9 +81,7 @@ export default function Lend() {
       value: BigNumber | null
     estimate = comptroller.estimateGas.enterMarkets
     method = comptroller.enterMarkets
-    args = [
-      [cToken.cAddress]
-    ]
+    args = [[cToken.cAddress]]
     value = null
 
     setAttemptingTxn(true)
@@ -93,10 +94,7 @@ export default function Lend() {
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary:
-              'Enter ' +
-              cToken.symbol +
-              ' as Collateral'
+            summary: 'Enter ' + cToken.symbol + ' as Collateral'
           })
 
           setTxHash(response.hash)
@@ -127,9 +125,7 @@ export default function Lend() {
       value: BigNumber | null
     estimate = comptroller.estimateGas.exitMarket
     method = comptroller.exitMarket
-    args = [
-      cToken.cAddress
-    ]
+    args = [cToken.cAddress]
     value = null
 
     setAttemptingTxn(true)
@@ -142,10 +138,7 @@ export default function Lend() {
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary:
-              'Exit ' +
-              cToken.symbol +
-              ' as Collateral'
+            summary: 'Exit ' + cToken.symbol + ' as Collateral'
           })
 
           setTxHash(response.hash)
@@ -184,9 +177,7 @@ export default function Lend() {
       const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
       estimate = cTokenContract.estimateGas.mint
       method = cTokenContract.mint
-      args = [
-        amount
-      ]
+      args = [amount]
       value = null
     }
 
@@ -200,11 +191,7 @@ export default function Lend() {
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary:
-              'Add ' +
-              amount +
-              ' ' +
-              cToken.symbol
+            summary: 'Add ' + amount + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -235,9 +222,7 @@ export default function Lend() {
       value: BigNumber | null
     estimate = cTokenContract.estimateGas.redeemUnderlying
     method = cTokenContract.redeemUnderlying
-    args = [
-      amount
-    ]
+    args = [amount]
     value = null
 
     setAttemptingTxn(true)
@@ -250,11 +235,7 @@ export default function Lend() {
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary:
-              'Redeem ' +
-              amount +
-              ' ' +
-              cToken.symbol
+            summary: 'Redeem ' + amount + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -285,9 +266,7 @@ export default function Lend() {
       value: BigNumber | null
     estimate = cTokenContract.estimateGas.borrow
     method = cTokenContract.borrow
-    args = [
-      amount
-    ]
+    args = [amount]
     value = null
 
     setAttemptingTxn(true)
@@ -300,11 +279,7 @@ export default function Lend() {
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary:
-              'Borrow ' +
-              amount +
-              ' ' +
-              cToken.symbol
+            summary: 'Borrow ' + amount + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -342,9 +317,7 @@ export default function Lend() {
       const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
       estimate = cTokenContract.estimateGas.repayBorrow
       method = cTokenContract.repayBorrow
-      args = [
-        amount
-      ]
+      args = [amount]
       value = null
     }
 
@@ -358,11 +331,7 @@ export default function Lend() {
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary:
-              'Repay ' +
-              amount +
-              ' ' +
-              cToken.symbol
+            summary: 'Repay ' + amount + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -405,10 +374,18 @@ export default function Lend() {
   return (
     <PageWrapper gap="lg" justify="center">
       <Summary allMarkets={allMarkets}></Summary>
-      <button onClick={() => cToken && onRepayBorrow(cToken, '1000000000000000000', false)}>Click me</button>
+      {/* <button onClick={() => cToken && onRepayBorrow(cToken, '1000000000000000000', false)}>Click me</button> */}
       <MarketsWrap>
-        <SupplyMarkets allMarkets={allMarkets}></SupplyMarkets>
-        <BorrowMarkets allMarkets={allMarkets}></BorrowMarkets>
+        <SupplyMarkets
+          allMarkets={allMarkets}
+          onEnterMarkets={onEnterMarkets}
+          onExitMarkets={onExitMarkets}
+        ></SupplyMarkets>
+        <BorrowMarkets
+          allMarkets={allMarkets}
+          onEnterMarkets={onEnterMarkets}
+          onExitMarkets={onExitMarkets}
+        ></BorrowMarkets>
       </MarketsWrap>
     </PageWrapper>
   )

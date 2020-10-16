@@ -122,7 +122,15 @@ const ModalContentWrapper = styled.div`
   border-radius: 20px;
 `
 
-function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
+function SupplyMarkets({
+  allMarkets = [],
+  onEnterMarkets,
+  onExitMarkets
+}: {
+  allMarkets: any
+  onEnterMarkets: (cToken: CToken) => void
+  onExitMarkets: (cToken: CToken) => void
+}) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
@@ -154,13 +162,21 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
               <Text fontWeight={500} fontSize={'1.1rem'}>
-                {isSuppliedMarkets ? 'Collateral Required' : 'Enable as Collateral'}
+                {collateralToken?.canBeCollateral
+                  ? 'Disable As Collateral'
+                  : isSuppliedMarkets
+                  ? 'Collateral Required'
+                  : 'Enable As Collateral'}
               </Text>
               <StyledCloseIcon onClick={() => setShowCollateralConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="md" style={{ padding: '0 2rem' }}>
-              {isSuppliedMarkets ? (
+              {collateralToken?.canBeCollateral ? (
+                <Text fontWeight={400} fontSize={'1rem'}>
+                  This asset will no longer be used towards your borrowing limit, and can’t be seized in liquidation.
+                </Text>
+              ) : isSuppliedMarkets ? (
                 <Text fontWeight={400} fontSize={'1rem'}>
                   This asset is required to support your borrowed assets. Either repay borrowed assets, or supply
                   another asset as collateral.
@@ -175,10 +191,22 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
             <AutoColumn gap="md" style={{ padding: '0 2rem' }}>
               <ButtonLight
                 onClick={() => {
-                  return
+                  if (collateralToken) {
+                    if (collateralToken.canBeCollateral) {
+                      onExitMarkets(collateralToken)
+                      setShowCollateralConfirmation(false)
+                    } else {
+                      onEnterMarkets(collateralToken)
+                      setShowCollateralConfirmation(false)
+                    }
+                  } else {
+                    return
+                  }
                 }}
               >
-                {suppliedAsset?.length == 1 ? 'DIMSS' : 'DISABLE ' + collateralToken?.symbol}
+                {collateralToken?.canBeCollateral
+                  ? 'DISABLE ' + collateralToken?.symbol
+                  : 'USE ' + collateralToken?.symbol + ' AS COLLATEERAL'}
               </ButtonLight>
             </AutoColumn>
           </AutoColumn>
