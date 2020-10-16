@@ -1,5 +1,5 @@
 import React from 'react'
-import { LightCard } from '../../components/Card'
+// import { LightCard } from '../../components/Card'
 // import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
 
@@ -9,6 +9,13 @@ import { utils } from 'ethers'
 // import { YellowCard } from '../Card'
 
 // import Row, { RowFixed } from '../Row'
+
+const SummaryCard = styled.div`
+  background: #ffffff;
+  box-shadow: 0px 2px 4px rgba(16, 21, 24, 0.05);
+  border-radius: 4px;
+  width: 100%;
+`
 
 const SummaryFrame = styled.div`
   display: grid;
@@ -28,6 +35,7 @@ const SummaryFrame = styled.div`
 const SummaryElement = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 24px 28px;
 `
 
 const SummaryTitle = styled.div`
@@ -162,7 +170,7 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
   console.log('summary', allMarkets.length)
 
   return (
-    <LightCard>
+    <SummaryCard>
       <SummaryFrame>
         <SummaryElement>
           <SummaryTitle>Supply Balance</SummaryTitle>
@@ -191,7 +199,7 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>
-    </LightCard>
+    </SummaryCard>
   )
 }
 
