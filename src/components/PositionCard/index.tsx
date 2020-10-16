@@ -24,6 +24,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
+import { UNISWAP_INFO_URL } from '../../constants'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -280,7 +281,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             <ButtonSecondary padding="8px" borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`https://uniswap.info/account/${account}`}
+                href={`${UNISWAP_INFO_URL}/account/${account}`}
               >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>

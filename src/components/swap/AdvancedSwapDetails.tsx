@@ -1,6 +1,7 @@
 import { Trade, TradeType } from '@multiswap/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { UNISWAP_INFO_URL } from '../../constants'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
@@ -105,7 +106,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             </>
           )}
           <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
+            <InfoLink href={UNISWAP_INFO_URL + '/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
               View pair analytics ↗
             </InfoLink>
           </AutoColumn>

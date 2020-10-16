@@ -2,6 +2,8 @@ import { ChainId, WETH, JSBI, Percent, Token, Currency } from '@multiswap/sdk'
 import ETHLogo from '../assets/images/ethereum-logo.png'
 import RBTCLogo from '../assets/images/rbtc-logo.png'
 
+export const UNISWAP_INFO_URL = 'https://uniswap.info'
+
 const ETHER = Currency.ETHER
 const RBTC = Currency.RBTC
 

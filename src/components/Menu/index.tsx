@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
+import { UNISWAP_INFO_URL } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
@@ -121,7 +122,7 @@ export default function Menu() {
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
+          <MenuItem id="link" href={UNISWAP_INFO_URL}>
             <PieChart size={14} />
             Analytics
           </MenuItem>
