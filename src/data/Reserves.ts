@@ -1,6 +1,6 @@
 import { TokenAmount, Pair, Currency } from 'dxswap-sdk'
 import { useMemo } from 'react'
-import { abi as IDXswapPairABI } from 'dxswap-core/build/contracts/IDXswapPair.json'
+import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from '../hooks'
 

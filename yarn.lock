@@ -6416,32 +6416,27 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-"dxswap-core@git://github.com/levelkdev/dxswap-core.git#ca021f47415d3f35360e136946fb97cdafb5163e":
-  version "0.1.0"
-  resolved "git://github.com/levelkdev/dxswap-core.git#ca021f47415d3f35360e136946fb97cdafb5163e"
-  dependencies:
-    typescript "^3.9.5"
-
-"dxswap-core@git://github.com/levelkdev/dxswap-core.git#v0.1.1":
-  version "0.1.0"
-  resolved "git://github.com/levelkdev/dxswap-core.git#e65f12f2cad0930958aca87df345c55fd9bf104a"
+"dxswap-core@git://github.com/levelkdev/dxswap-core.git#3598b8b97fed373bb69db3344b7853adeefb0f9a":
+  version "0.1.1"
+  resolved "git://github.com/levelkdev/dxswap-core.git#3598b8b97fed373bb69db3344b7853adeefb0f9a"
   dependencies:
     typescript "^3.9.5"
 
 "dxswap-periphery@git://github.com/levelkdev/dxswap-periphery.git#v0.2.1":
   version "0.2.1"
-  resolved "git://github.com/levelkdev/dxswap-periphery.git#7a00d6ba40887e38b5867b96a90d31e23ac07698"
+  resolved "git://github.com/levelkdev/dxswap-periphery.git#6c7bf71f909835adf27d3e6f528f413d2e6902f0"
   dependencies:
-    dxswap-core "git://github.com/levelkdev/dxswap-core.git#ca021f47415d3f35360e136946fb97cdafb5163e"
+    dxswap-core "git://github.com/levelkdev/dxswap-core.git#3598b8b97fed373bb69db3344b7853adeefb0f9a"
 
 "dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#v0.2.1":
   version "0.2.1"
-  resolved "git://github.com/levelkdev/dxswap-sdk.git#8f9a6099e5463023b2f326e9968d736db7fcb35a"
+  resolved "git://github.com/levelkdev/dxswap-sdk.git#0d9850beb19fda7c63a60afd5618cae9944db9a9"
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
-    dxswap-core "git://github.com/levelkdev/dxswap-core.git#ca021f47415d3f35360e136946fb97cdafb5163e"
+    dxswap-core "git://github.com/levelkdev/dxswap-core.git#3598b8b97fed373bb69db3344b7853adeefb0f9a"
+    dxswap-periphery "git://github.com/levelkdev/dxswap-periphery.git#v0.2.1"
     jsbi "^3.1.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"

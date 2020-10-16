@@ -1,6 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { ChainId, WETH } from 'dxswap-sdk'
-import { abi as IDXswapPairABI } from 'dxswap-core/build/contracts/IDXswapPair.json'
+import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { useMemo } from 'react'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
