@@ -13,6 +13,7 @@ import { RowBetween } from '../Row'
 import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
+import { blocksPerDay, daysPerYear, ethMantissa } from '../Summary'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -121,10 +122,6 @@ const ModalContentWrapper = styled.div`
   border-radius: 20px;
 `
 
-const ethMantissa = 1e18
-const blocksPerDay = 4 * 60 * 24
-const daysPerYear = 365
-
 function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
@@ -232,7 +229,10 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                     </div>
                     <ItemBottomWrap>
                       {item?.supplyBalance && item?.symbol
-                        ? parseFloat(utils.formatEther(item?.supplyBalance)).toFixed(4)
+                        ? (
+                            parseFloat(utils.formatEther(item?.supplyBalance)) *
+                            parseFloat(utils.formatEther(item?.exchangeRateMantissa))
+                          ).toFixed(4)
                         : ''}
                       {' ' + item?.symbol}
                     </ItemBottomWrap>

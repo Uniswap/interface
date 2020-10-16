@@ -5,6 +5,7 @@ import React from 'react'
 
 import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
+import { blocksPerDay, daysPerYear, ethMantissa } from '../Summary'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -85,10 +86,6 @@ const ItemBottomWrap = styled.div`
   font-size: 0.9em;
 `
 
-const ethMantissa = 1e18
-const blocksPerDay = 4 * 60 * 24
-const daysPerYear = 365
-
 function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
@@ -128,7 +125,7 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
           <AssetWrap>
             <AssetWrapLabels>
               <AssetLabel textAlign={'left'}>Asset</AssetLabel>
-              <AssetLabel textAlign={'right'}>APY</AssetLabel>
+              <AssetLabel textAlign={'right'}>APY / Accrued</AssetLabel>
               <AssetLabel textAlign={'right'}>Balance</AssetLabel>
               <AssetLabel textAlign={'right'}>% Of Limit</AssetLabel>
             </AssetWrapLabels>
@@ -165,8 +162,11 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
                         : ''}
                     </div>
                     <ItemBottomWrap>
-                      {item?.borrowBalance && item?.symbol
-                        ? parseFloat(utils.formatEther(item?.borrowBalance)).toFixed(4)
+                      {item?.borrowBalance && item?.symbol && item?.cAddress
+                        ? (item?.cAddress.toLowerCase() === '0x4a92e71227d294f041bd82dd8f78591b75140d63'
+                            ? parseFloat(item?.borrowBalance) / (10 * Math.pow(10, 5))
+                            : parseFloat(utils.formatEther(item?.borrowBalance))
+                          ).toFixed(4)
                         : ''}
                       {' ' + item?.symbol}
                     </ItemBottomWrap>

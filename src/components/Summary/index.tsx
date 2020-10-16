@@ -61,6 +61,9 @@ const BorrowWrap = styled.div`
   margin: 0px 0px 0px 10px;
   color: grey;
 `
+export const ethMantissa = 1e18
+export const blocksPerDay = 4 * 60 * 24
+export const daysPerYear = 365
 
 function Summary({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
@@ -121,7 +124,40 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
   }
   console.log(getLimit(), 'getLimit')
   console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
-  // const collateralFactorMantissa = parseFloat(utils.formatEther(suppliedAsset[2]?.collateralFactorMantissa ? suppliedAsset[2]?.collateralFactorMantissa : 0)) // eth collateralFactorMantissa
+
+  function sumUnderlyingAssets() {
+    let sumUnderlyingAssets = 0
+    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
+      sumUnderlyingAssets +=
+        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
+          parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
+          parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
+          (Math.pow(
+            ((val?.supplyRatePerBlock ? val?.supplyRatePerBlock : 0) / ethMantissa) * blocksPerDay + 1,
+            daysPerYear - 1
+          ) -
+            1) -
+        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
+          parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
+          (Math.pow(
+            ((val?.borrowRatePerBlock ? val?.borrowRatePerBlock : 0) / ethMantissa) * blocksPerDay + 1,
+            daysPerYear - 1
+          ) -
+            1)
+    }, sumUnderlyingAssets)
+    return sumUnderlyingAssets
+  }
+
+  function getNetApy() {
+    let allBorrowUnderlyingAssets = 0
+    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
+      allBorrowUnderlyingAssets +=
+        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+    }, allBorrowUnderlyingAssets)
+    console.log(sumUnderlyingAssets(), 'sumUnderlyingAssets()')
+    return sumUnderlyingAssets() / allBorrowUnderlyingAssets
+  }
 
   console.log('summary', allMarkets.length)
 
@@ -138,7 +174,7 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
           <SummaryTitle>Net APY</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            0.00%
+            {(100 * getNetApy()).toFixed(2)}%
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
