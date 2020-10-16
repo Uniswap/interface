@@ -1,14 +1,13 @@
 import useENS from '../../hooks/useENS'
 import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
-import { ChainId, Currency, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from '@multiswap/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
-//@ts-ignore
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
@@ -80,7 +79,7 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
     if (typedValueParsed !== '0') {
       return currency instanceof Token
         ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+        : CurrencyAmount.base(JSBI.BigInt(typedValueParsed), currency)
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -117,7 +116,7 @@ export function useDerivedSwapInfo(): {
   inputError?: string
   v1Trade: Trade | undefined
 } {
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
   const toggledVersion = useToggledVersion()
 
@@ -134,7 +133,7 @@ export function useDerivedSwapInfo(): {
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
-  const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
+  const relevantTokenBalances = useCurrencyBalances(chainId as ChainId, account ?? undefined, [
     inputCurrency ?? undefined,
     outputCurrency ?? undefined
   ])
@@ -143,22 +142,9 @@ export function useDerivedSwapInfo(): {
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
   const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  //const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const v2Trade = isExactIn ? bestTradeExactIn : null//bestTradeExactOut
-  /*
-  console.debug({
-    inputCurrency,
-    outputCurrency,
-    inputCurrencyId,
-    outputCurrencyId,
-    parsedAmount,
-    isExactIn,
-    bestTradeExactIn,
-    //bestTradeExactOut,
-    v2Trade
-  })
-  */
+  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],

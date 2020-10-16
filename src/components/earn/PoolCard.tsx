@@ -4,7 +4,7 @@ import { RowBetween } from '../Row'
 import styled from 'styled-components'
 import { TYPE, StyledInternalLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { JSBI, TokenAmount } from '@uniswap/sdk'
+import { JSBI, TokenAmount, Currency } from '@multiswap/sdk'
 import { ButtonPrimary } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
@@ -15,7 +15,6 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 
-import { isProtocolCurrency } from '../../constants'
 
 const StatContainer = styled.div`
   display: flex;
@@ -84,8 +83,8 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
   // get the color of the token
-  const token = isProtocolCurrency(currency0) ? token1 : token0
-  const WETH = isProtocolCurrency(currency0) ? token0 : token1
+  const token = Currency.isBaseCurrency(currency0) ? token1 : token0
+  const WETH = Currency.isBaseCurrency(currency0) ? token0 : token1
   const backgroundColor = useColor(token)
 
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.token)

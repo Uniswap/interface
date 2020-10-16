@@ -1,5 +1,5 @@
 import { Interface } from '@ethersproject/abi'
-import { ChainId } from '../../constants'
+import { ChainId } from '@multiswap/sdk'
 import V1_EXCHANGE_ABI from './v1_exchange.json'
 import V1_FACTORY_ABI from './v1_factory.json'
 

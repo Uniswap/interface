@@ -1,4 +1,4 @@
-import { TokenAmount } from '@uniswap/sdk'
+import { ChainId, TokenAmount } from '@multiswap/sdk'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
@@ -262,7 +262,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const userEthBalance = useETHBalances(chainId as ChainId, account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()

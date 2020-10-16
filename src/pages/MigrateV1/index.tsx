@@ -1,4 +1,4 @@
-import { JSBI, Token } from '@uniswap/sdk'
+import { JSBI, Token } from '@multiswap/sdk'
 import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
@@ -95,21 +95,21 @@ export default function MigrateV1() {
             </TYPE.body>
           </LightCard>
         ) : (
-          <>
-            <AutoRow>
-              <SearchInput
-                value={tokenSearch}
-                onChange={handleTokenSearchChange}
-                placeholder="Enter a token address to find liquidity"
-              />
-            </AutoRow>
-            {allV1PairsWithLiquidity?.length > 0 ? (
-              <>{allV1PairsWithLiquidity}</>
-            ) : (
-              <EmptyState message="No V1 Liquidity found." />
+              <>
+                <AutoRow>
+                  <SearchInput
+                    value={tokenSearch}
+                    onChange={handleTokenSearchChange}
+                    placeholder="Enter a token address to find liquidity"
+                  />
+                </AutoRow>
+                {allV1PairsWithLiquidity?.length > 0 ? (
+                  <>{allV1PairsWithLiquidity}</>
+                ) : (
+                    <EmptyState message="No V1 Liquidity found." />
+                  )}
+              </>
             )}
-          </>
-        )}
       </AutoColumn>
     </BodyWrapper>
   )

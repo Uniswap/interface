@@ -1,5 +1,5 @@
 import React from 'react'
-import { Price } from '@uniswap/sdk'
+import { Price } from '@multiswap/sdk'
 import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -37,8 +37,8 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
           </StyledBalanceMaxMini>
         </>
       ) : (
-        '-'
-      )}
+          '-'
+        )}
     </Text>
   )
 }

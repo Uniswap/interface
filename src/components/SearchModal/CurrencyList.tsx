@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, currencyEquals, Token } from '@uniswap/sdk'
+import { ChainId, Currency, CurrencyAmount, currencyEquals, Token } from '@multiswap/sdk'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -16,7 +16,7 @@ import { MouseoverTooltip } from '../Tooltip'
 import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
-import { BASE_CURRENCY, currencyId } from '../../constants'
+import { BASE_CURRENCY, currencyId, isValidChainId } from '../../constants'
 import { useWeb3React } from '@web3-react/core'
 
 const StyledBalanceText = styled(Text)`
@@ -96,7 +96,7 @@ function CurrencyRow({
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
-  const balance = useCurrencyBalance(account ?? undefined, currency)
+  const balance = useCurrencyBalance(chainId as ChainId, account ?? undefined, currency)
 
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
@@ -171,7 +171,7 @@ export default function CurrencyList({
 }) {
 
   const { chainId } = useWeb3React()
-  const itemData = useMemo(() => (showETH ? [BASE_CURRENCY[chainId as ChainId], ...currencies] : currencies), [currencies, showETH, chainId])
+  const itemData = useMemo(() => (isValidChainId(chainId) ? (showETH ? [BASE_CURRENCY[chainId as ChainId], ...currencies] : currencies) : []), [currencies, showETH, chainId])
 
   const Row = useCallback(
     ({ data, index, style }) => {
@@ -192,7 +192,7 @@ export default function CurrencyList({
     [onCurrencySelect, otherCurrency, selectedCurrency]
   )
 
-  const itemKey = useCallback((index: number, data: any) => currencyId(data[index]), [])
+  const itemKey = useCallback((index: number, data: Currency[]) => currencyId(data[index]), [])
 
   return (
     <FixedSizeList

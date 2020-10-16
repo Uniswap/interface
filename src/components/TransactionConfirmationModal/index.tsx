@@ -1,4 +1,4 @@
-import { ChainId } from '../../constants'
+import { ChainId } from '@multiswap/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'

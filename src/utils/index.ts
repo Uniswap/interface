@@ -4,8 +4,8 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ChainId, isProtocolCurrency, ROUTER_ADDRESS } from '../constants'
-import { JSBI, Percent, Token, CurrencyAmount, Currency } from '@uniswap/sdk'
+import { ROUTER_ADDRESS } from '../constants'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency } from '@multiswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -17,14 +17,14 @@ export function isAddress(value: any): string | false {
   }
 }
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: 'ropsten.',
-  [ChainId.RINKEBY]: 'rinkeby.',
-  [ChainId.GÖRLI]: 'goerli.',
-  [ChainId.KOVAN]: 'kovan.',
-  [ChainId.RSK_MAINNET]: '',
-  [ChainId.RSK_TESTNET]: '',
+const EXPLORER_BASE_PATH: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: 'https://etherscan.io',
+  [ChainId.ROPSTEN]: 'https://ropsten.etherscan.io',
+  [ChainId.RINKEBY]: 'https://rinkeby.etherscan.io.',
+  [ChainId.GÖRLI]: 'https://goerli.etherscan.io',
+  [ChainId.KOVAN]: 'https://kovan.etherscan.io',
+  [ChainId.RSK_MAINNET]: 'https://explorer.rsk.co',
+  [ChainId.RSK_TESTNET]: 'https://explorer.testnet.rsk.co',
   [ChainId.LOCAL]: ''
 }
 
@@ -33,7 +33,7 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+  const prefix = EXPLORER_BASE_PATH[chainId]
 
   switch (type) {
     case 'transaction': {
@@ -110,6 +110,6 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (isProtocolCurrency(currency)) return true
+  if (Currency.isBaseCurrency(currency)) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }

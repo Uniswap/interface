@@ -8,7 +8,7 @@ import { fetchTokenList } from '../state/lists/actions'
 import getTokenList from '../utils/getTokenList'
 import resolveENSContentHash from '../utils/resolveENSContentHash'
 import { useActiveWeb3React } from './index'
-import { ChainId } from '../constants'
+import { ChainId } from '@multiswap/sdk'
 
 export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> {
   const { chainId, library } = useActiveWeb3React()

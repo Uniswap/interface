@@ -1,4 +1,4 @@
-import { Currency, JSBI, TokenAmount } from '@uniswap/sdk'
+import { ChainId, Currency, JSBI, TokenAmount } from '@multiswap/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
@@ -18,7 +18,7 @@ import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
-import { ChainId, BASE_CURRENCY } from '../../constants'
+import { BASE_CURRENCY } from '../../constants'
 
 enum Fields {
   TOKEN0 = 0,

@@ -1,4 +1,4 @@
-import { Currency, Pair } from '@uniswap/sdk'
+import { ChainId, Currency, Pair } from '@multiswap/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
@@ -152,8 +152,8 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const { account } = useActiveWeb3React()
-  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+  const { chainId, account } = useActiveWeb3React()
+  const selectedCurrencyBalance = useCurrencyBalance(chainId as ChainId, account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {

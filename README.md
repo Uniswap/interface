@@ -66,7 +66,7 @@ All required contracts must already be deployed on your network. See [Uniswap/un
 
 To add your custom network (eg. local blockchain or L2 chain), you will have to edit [constants/index.ts](./src/constants/index.ts) to update the `ChainId` enum. Once you've added the new ChainId value, make sure to update all required parameters (eg. tokens, ROUTER_ADDRESS, NETWORK_URL etc...).
 
-For Typescript to work you will also have to patch the `@uniswap/sdk` module by editing [types/@uniswap/sdk.d.ts](./src/types/@uniswap/sdk.d.ts).
+You will also have to patch the `@multiswap/sdk` module by editing [types/@multiswap/sdk.d.ts](./src/types/@multiswap/sdk.d.ts).
 
 ## Contributions
 

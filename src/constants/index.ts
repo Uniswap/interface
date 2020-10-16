@@ -1,26 +1,19 @@
-import { WETH as UniWETH, JSBI, Percent, Token, Currency, ETHER } from '@uniswap/sdk'
+import { ChainId, WETH, JSBI, Percent, Token, Currency } from '@multiswap/sdk'
 import ETHLogo from '../assets/images/ethereum-logo.png'
 import RBTCLogo from '../assets/images/rbtc-logo.png'
 
+const ETHER = Currency.ETHER
+const RBTC = Currency.RBTC
 
 export const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 export const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 const INFURA_ID = process.env.REACT_APP_INFURA_ID
 
-//Patches runtime ChainId, for type customization, see types/@uniswap/sdk.d.ts
-export enum ChainId {
-  MAINNET = 1,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GÖRLI = 5,
-  KOVAN = 42,
-  LOCAL = 5777,
-  RSK_MAINNET = 30,
-  RSK_TESTNET = 31
-}
+export const isValidChainId = (chainId: number | undefined) => {
+  if (!chainId) return false
 
-//@ts-ignore
-const RBTC: Currency = new Currency(18, 'RBTC', 'Rootstock Smart Bitcoin')
+  return chainId in ChainId
+}
 
 export interface CurrencyInfo {
   currency: Currency,
@@ -39,10 +32,6 @@ export const isProtocolCurrencySymbol = (symbol: string) => {
   return (symbol.toUpperCase() === ETHER.symbol) || (symbol.toUpperCase() === RBTC.symbol)
 }
 
-export const isProtocolCurrency = (currency: Currency | undefined | null) => {
-  return (currency === ETHER) || (currency === RBTC)
-}
-
 export const protocolCurrencyInfo = (currency: Currency): CurrencyInfo | undefined => {
   if (currency === ETHER) return ETHERInfo
   if (currency === RBTC) return RBTCInfo
@@ -54,7 +43,7 @@ export function currencyId(currency: Currency): string {
   if (currency === ETHER) return 'ETH'
   if (currency === RBTC) return 'RBTC'
   if (currency instanceof Token) return currency.address
-  throw new Error('invalid currency')
+  throw new Error(`invalid currency: ${currency}`)
 }
 
 export function unwrappedCurrency(currency: Currency): Currency {
@@ -115,7 +104,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0xc0a47dFe034B400B47bDaD5FecDa2621de6c4d95',
     MULTICALL_ADDRESS: '0xeefBa1e63905eF1D7ACbA5a8513c70307C1cE441',
     tokens: {
-      WETH: UniWETH[ChainId.MAINNET],
+      WETH: WETH[ChainId.MAINNET],
       UNI: new Token(ChainId.MAINNET, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
       DAI: new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin'),
       USDC: new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'),
@@ -144,7 +133,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0x9c83dCE8CA20E9aAF9D3efc003b2ea62aBC08351',
     MULTICALL_ADDRESS: '0x53C43764255c17BD724F74c4eF150724AC50a3ed',
     tokens: {
-      WETH: UniWETH[ChainId.ROPSTEN],
+      WETH: WETH[ChainId.ROPSTEN],
       UNI: new Token(ChainId.RINKEBY, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
@@ -156,7 +145,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0xf5D915570BC477f9B8D6C0E980aA81757A3AaC36',
     MULTICALL_ADDRESS: '0x42Ad527de7d4e9d9d011aC45B31D8551f8Fe9821',
     tokens: {
-      WETH: UniWETH[ChainId.RINKEBY],
+      WETH: WETH[ChainId.RINKEBY],
       UNI: new Token(ChainId.RINKEBY, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
@@ -168,7 +157,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0x6Ce570d02D73d4c384b46135E87f8C592A8c86dA',
     MULTICALL_ADDRESS: '0x77dCa2C955b15e9dE4dbBCf1246B4B85b651e50e',
     tokens: {
-      WETH: UniWETH[ChainId.GÖRLI],
+      WETH: WETH[ChainId.GÖRLI],
       UNI: new Token(ChainId.GÖRLI, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
@@ -180,7 +169,7 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     V1_FACTORY_ADDRESS: '0xD3E51Ef092B2845f10401a0159B2B96e8B6c3D30',
     MULTICALL_ADDRESS: '0x2cc8688C5f75E365aaEEb4ea8D6a480405A48D2A',
     tokens: {
-      WETH: UniWETH[ChainId.KOVAN],
+      WETH: WETH[ChainId.KOVAN],
       UNI: new Token(ChainId.KOVAN, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap'),
     }
   },
@@ -230,10 +219,11 @@ const constants: { [chainId in ChainId]: ChainIdConfig } = {
     BASE_CURRENCY: ETHER,
     BASE_CURRENCY_INFO: ETHERInfo,
     NETWORK_URL: 'http://localhost:7545',
-    ROUTER_ADDRESS: '0x0000000000000000000000000000000000000000',
-    MULTICALL_ADDRESS: '0x0000000000000000000000000000000000000000',
+    ROUTER_ADDRESS: '0xB64210346c90173450A43bb31156113FD89bD97c',
+    MULTICALL_ADDRESS: '0x7c26b4843AccA0C65166da159FeF3671F4FC3264',
     tokens: {
-      WETH: new Token(ChainId.LOCAL as ChainId, '0x0000000000000000000000000000000000000000', 18, 'WETH', 'Wrapped Ether'),
+      WETH: new Token(ChainId.LOCAL as ChainId, '0x35B6bca8B9A1aB0ae7356BBCE446Ef2F29f73bb2', 18, 'WETH', 'Wrapped Ether'),
+      Token1: new Token(ChainId.LOCAL as ChainId, '0x94322cf27DA70B81b3a1DD0d089F548005b72Afc', 18, 'TOK1', 'Token1'),
     }
   },
 }
@@ -258,17 +248,6 @@ export const BASE_CURRENCY: { [chainId in ChainId]: Currency } = {
   [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].BASE_CURRENCY,
   [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].BASE_CURRENCY,
   [ChainId.LOCAL]: constants[ChainId.LOCAL].BASE_CURRENCY
-}
-
-export const WETH: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: constants[ChainId.MAINNET].tokens.WETH,
-  [ChainId.RINKEBY]: constants[ChainId.RINKEBY].tokens.WETH,
-  [ChainId.ROPSTEN]: constants[ChainId.ROPSTEN].tokens.WETH,
-  [ChainId.GÖRLI]: constants[ChainId.GÖRLI].tokens.WETH,
-  [ChainId.KOVAN]: constants[ChainId.KOVAN].tokens.WETH,
-  [ChainId.RSK_MAINNET]: constants[ChainId.RSK_MAINNET].tokens.WRBTC,
-  [ChainId.RSK_TESTNET]: constants[ChainId.RSK_TESTNET].tokens.WRBTC,
-  [ChainId.LOCAL]: constants[ChainId.LOCAL].tokens.WETH
 }
 
 export const BASE_WRAPPED = WETH;

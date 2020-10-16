@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@multiswap/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { usePair } from '../../data/Reserves'
@@ -50,23 +50,23 @@ export function useDerivedBurnInfo(
   const totalSupply = useTotalSupply(pair?.liquidityToken)
   const liquidityValueA =
     pair &&
-    totalSupply &&
-    userLiquidity &&
-    tokenA &&
-    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
+      totalSupply &&
+      userLiquidity &&
+      tokenA &&
+      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+      JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
       ? new TokenAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity, false).raw)
       : undefined
   const liquidityValueB =
     pair &&
-    totalSupply &&
-    userLiquidity &&
-    tokenB &&
-    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
+      totalSupply &&
+      userLiquidity &&
+      tokenB &&
+      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+      JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
       ? new TokenAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity, false).raw)
       : undefined
-  const liquidityValues: { [Field.CURRENCY_A]?: TokenAmount; [Field.CURRENCY_B]?: TokenAmount } = {
+  const liquidityValues: { [Field.CURRENCY_A]?: TokenAmount;[Field.CURRENCY_B]?: TokenAmount } = {
     [Field.CURRENCY_A]: liquidityValueA,
     [Field.CURRENCY_B]: liquidityValueB
   }

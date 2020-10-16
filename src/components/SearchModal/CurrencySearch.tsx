@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk'
+import { ChainId, Currency, Token } from '@multiswap/sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
@@ -22,7 +22,7 @@ import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { BASE_CURRENCY_INFO, ChainId } from '../../constants'
+import { BASE_CURRENCY_INFO } from '../../constants'
 
 interface CurrencySearchProps {
   isOpen: boolean

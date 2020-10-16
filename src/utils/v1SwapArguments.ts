@@ -1,6 +1,5 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { CurrencyAmount, SwapParameters, Token, Trade, TradeOptionsDeadline, TradeType } from '@uniswap/sdk'
-import { isProtocolCurrency } from '../constants'
+import { CurrencyAmount, SwapParameters, Token, Trade, TradeOptionsDeadline, TradeType, Currency } from '@multiswap/sdk'
 import { getTradeVersion } from '../data/V1'
 import { Version } from '../hooks/useToggledVersion'
 
@@ -24,8 +23,8 @@ export default function v1SwapArguments(
     throw new Error('too many pairs')
   }
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-  const inputETH = isProtocolCurrency(trade.inputAmount.currency)
-  const outputETH = isProtocolCurrency(trade.outputAmount.currency)
+  const inputETH = Currency.isBaseCurrency(trade.inputAmount.currency)
+  const outputETH = Currency.isBaseCurrency(trade.outputAmount.currency)
   if (inputETH && outputETH) throw new Error('ETHER to ETHER')
   const minimumAmountOut = toHex(trade.minimumAmountOut(options.allowedSlippage))
   const maximumAmountIn = toHex(trade.maximumAmountIn(options.allowedSlippage))

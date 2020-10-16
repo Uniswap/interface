@@ -14,7 +14,7 @@ import { useTimestampFromBlock } from '../../hooks/useTimestampFromBlock'
 import { DateTime } from 'luxon'
 import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
-import { TokenAmount, JSBI } from '@uniswap/sdk'
+import { TokenAmount, JSBI } from '@multiswap/sdk'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { UNI, ZERO_ADDRESS, PROPOSAL_LENGTH_IN_DAYS } from '../../constants'
@@ -162,8 +162,8 @@ export default function VotePage({
               {endDate && endDate < now
                 ? 'Voting ended ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
                 : proposalData
-                ? 'Voting ends approximately' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
-                : ''}
+                  ? 'Voting ends approximately' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
+                  : ''}
             </TYPE.main>
             {showUnlockVoting && endDate && endDate > now && (
               <ButtonPrimary
@@ -178,35 +178,35 @@ export default function VotePage({
           </RowBetween>
         </AutoColumn>
         {!showUnlockVoting &&
-        availableVotes &&
-        JSBI.greaterThan(availableVotes?.raw, JSBI.BigInt(0)) &&
-        endDate &&
-        endDate > now ? (
-          <RowFixed style={{ width: '100%', gap: '12px' }}>
-            <ButtonPrimary
-              padding="8px"
-              borderRadius="8px"
-              onClick={() => {
-                setSupport(true)
-                setShowModal(true)
-              }}
-            >
-              Vote For
+          availableVotes &&
+          JSBI.greaterThan(availableVotes?.raw, JSBI.BigInt(0)) &&
+          endDate &&
+          endDate > now ? (
+            <RowFixed style={{ width: '100%', gap: '12px' }}>
+              <ButtonPrimary
+                padding="8px"
+                borderRadius="8px"
+                onClick={() => {
+                  setSupport(true)
+                  setShowModal(true)
+                }}
+              >
+                Vote For
             </ButtonPrimary>
-            <ButtonPrimary
-              padding="8px"
-              borderRadius="8px"
-              onClick={() => {
-                setSupport(false)
-                setShowModal(true)
-              }}
-            >
-              Vote Against
+              <ButtonPrimary
+                padding="8px"
+                borderRadius="8px"
+                onClick={() => {
+                  setSupport(false)
+                  setShowModal(true)
+                }}
+              >
+                Vote Against
             </ButtonPrimary>
-          </RowFixed>
-        ) : (
-          ''
-        )}
+            </RowFixed>
+          ) : (
+            ''
+          )}
         <CardWrapper>
           <StyledDataCard>
             <CardSection>

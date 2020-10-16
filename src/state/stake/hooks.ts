@@ -1,10 +1,10 @@
-import { CurrencyAmount, JSBI, Token, TokenAmount, Pair } from '@uniswap/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair } from '@multiswap/sdk'
 import { useMemo } from 'react'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
-import constants, { ChainId } from '../../constants'
+import constants from '../../constants'
 
 export const STAKING_GENESIS = 1600387200
 

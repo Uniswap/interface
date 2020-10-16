@@ -1,5 +1,5 @@
-import { Currency, CurrencyAmount, Token, TokenAmount } from '@uniswap/sdk'
-import { ChainId, BASE_CURRENCY, BASE_WRAPPED } from '../constants'
+import { ChainId, Currency, CurrencyAmount, Token, TokenAmount } from '@multiswap/sdk'
+import { BASE_CURRENCY, BASE_WRAPPED } from '../constants'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
   return currency instanceof Token ? currency : (chainId ? BASE_WRAPPED[chainId] : undefined)

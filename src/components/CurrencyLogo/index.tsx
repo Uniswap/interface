@@ -1,11 +1,11 @@
-import { Currency, Token } from '@uniswap/sdk'
+import { Currency, Token } from '@multiswap/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
-import { isProtocolCurrency, protocolCurrencyInfo } from '../../constants'
+import { protocolCurrencyInfo } from '../../constants'
 
 const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
@@ -36,7 +36,7 @@ export default function CurrencyLogo({
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
-    if (isProtocolCurrency(currency)) return []
+    if (Currency.isBaseCurrency(currency)) return []
 
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
@@ -48,7 +48,7 @@ export default function CurrencyLogo({
     return []
   }, [currency, uriLocations])
 
-  if (isProtocolCurrency(currency)) {
+  if (Currency.isBaseCurrency(currency)) {
     const currencyInfo = protocolCurrencyInfo(currency!)
     return <StyledEthereumLogo src={currencyInfo!.logo} size={size} style={style} />
   }

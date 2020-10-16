@@ -12,7 +12,7 @@ import Circle from '../../assets/images/blue-loader.svg'
 import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme/components'
-import { TokenAmount } from '@uniswap/sdk'
+import { TokenAmount } from '@multiswap/sdk'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -87,16 +87,14 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <TYPE.mediumHeader fontWeight={500}>{`Vote ${
-                support ? 'for ' : 'against'
-              } proposal ${proposalId}`}</TYPE.mediumHeader>
+              <TYPE.mediumHeader fontWeight={500}>{`Vote ${support ? 'for ' : 'against'
+                } proposal ${proposalId}`}</TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
             <TYPE.largeHeader>{availableVotes?.toSignificant(4)} Votes</TYPE.largeHeader>
             <ButtonPrimary onClick={onVote}>
-              <TYPE.mediumHeader color="white">{`Vote ${
-                support ? 'for ' : 'against'
-              } proposal  ${proposalId}`}</TYPE.mediumHeader>
+              <TYPE.mediumHeader color="white">{`Vote ${support ? 'for ' : 'against'
+                } proposal  ${proposalId}`}</TYPE.mediumHeader>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>

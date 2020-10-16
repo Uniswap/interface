@@ -1,8 +1,8 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount } from '@uniswap/sdk'
+import { ChainId, Trade, TokenAmount, CurrencyAmount, Currency } from '@multiswap/sdk'
 import { useCallback, useMemo } from 'react'
-import { ChainId, ROUTER_ADDRESS, isProtocolCurrency } from '../constants'
+import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { Field } from '../state/swap/actions'
@@ -33,7 +33,7 @@ export function useApproveCallback(
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
-    if (isProtocolCurrency(amountToApprove.currency)) return ApprovalState.APPROVED
+    if (Currency.isBaseCurrency(amountToApprove.currency)) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 

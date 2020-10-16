@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk'
+import { Currency } from '@multiswap/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import useLast from '../../hooks/useLast'
@@ -60,16 +60,16 @@ export default function CurrencySearchModal({
       {listView ? (
         <ListSelect onDismiss={onDismiss} onBack={handleClickBack} />
       ) : (
-        <CurrencySearch
-          isOpen={isOpen}
-          onDismiss={onDismiss}
-          onCurrencySelect={handleCurrencySelect}
-          onChangeList={handleClickChangeList}
-          selectedCurrency={selectedCurrency}
-          otherSelectedCurrency={otherSelectedCurrency}
-          showCommonBases={showCommonBases}
-        />
-      )}
+          <CurrencySearch
+            isOpen={isOpen}
+            onDismiss={onDismiss}
+            onCurrencySelect={handleCurrencySelect}
+            onChangeList={handleClickChangeList}
+            selectedCurrency={selectedCurrency}
+            otherSelectedCurrency={otherSelectedCurrency}
+            showCommonBases={showCommonBases}
+          />
+        )}
     </Modal>
   )
 }

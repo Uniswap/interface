@@ -1,4 +1,4 @@
-import { Trade, TradeType } from '@uniswap/sdk'
+import { Trade, TradeType } from '@multiswap/sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
@@ -67,8 +67,8 @@ export default function SwapModalHeader({
               priceImpactSeverity > 2
                 ? theme.red1
                 : showAcceptChanges && trade.tradeType === TradeType.EXACT_INPUT
-                ? theme.primary1
-                : ''
+                  ? theme.primary1
+                  : ''
             }
           >
             {trade.outputAmount.toSignificant(6)}
@@ -106,14 +106,14 @@ export default function SwapModalHeader({
             {' or the transaction will revert.'}
           </TYPE.italic>
         ) : (
-          <TYPE.italic textAlign="left" style={{ width: '100%' }}>
-            {`Input is estimated. You will sell at most `}
-            <b>
-              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {trade.inputAmount.currency.symbol}
-            </b>
-            {' or the transaction will revert.'}
-          </TYPE.italic>
-        )}
+            <TYPE.italic textAlign="left" style={{ width: '100%' }}>
+              {`Input is estimated. You will sell at most `}
+              <b>
+                {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {trade.inputAmount.currency.symbol}
+              </b>
+              {' or the transaction will revert.'}
+            </TYPE.italic>
+          )}
       </AutoColumn>
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>

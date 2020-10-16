@@ -1,6 +1,6 @@
-import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import { ChainId, JSBI, Token, TokenAmount } from '@multiswap/sdk'
 import { BigNumber } from 'ethers'
-import { ChainId, ZERO_ADDRESS } from '../constants'
+import { ZERO_ADDRESS } from '../constants'
 import { computeUniCirculation } from './computeUniCirculation'
 
 describe('computeUniCirculation', () => {

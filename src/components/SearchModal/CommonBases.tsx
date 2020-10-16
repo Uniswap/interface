@@ -1,15 +1,13 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { Currency, Token } from '@uniswap/sdk'
+import { ChainId, Currency, Token } from '@multiswap/sdk'
 import styled from 'styled-components'
 
-import { BASE_CURRENCY, ChainId, SUGGESTED_BASES } from '../../constants'
+import { BASE_CURRENCY, SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-
-import { isProtocolCurrency } from '../../constants'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -47,12 +45,12 @@ export default function CommonBases({
       <AutoRow gap="4px">
         <BaseWrapper
           onClick={() => {
-            if (!selectedCurrency || !isProtocolCurrency(selectedCurrency)) {
+            if (!selectedCurrency || !Currency.isBaseCurrency(selectedCurrency)) {
               onSelect(BASE_CURRENCY[chainId!])
             }
           }
           }
-          disable={isProtocolCurrency(selectedCurrency)}
+          disable={Currency.isBaseCurrency(selectedCurrency!)}
         >
           <CurrencyLogo currency={BASE_CURRENCY[chainId!]} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>

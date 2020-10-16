@@ -1,4 +1,4 @@
-import { JSBI, TokenAmount } from '@uniswap/sdk'
+import { JSBI, TokenAmount } from '@multiswap/sdk'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
@@ -164,8 +164,8 @@ export default function ClaimModal() {
             {!claimConfirmed ? (
               <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
             ) : (
-              <UniTokenAnimated width="72px" src={tokenLogo} />
-            )}
+                <UniTokenAnimated width="72px" src={tokenLogo} />
+              )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>

@@ -1,8 +1,10 @@
-import { CurrencyAmount, ETHER, Percent, Route, TokenAmount, Trade } from '@uniswap/sdk'
-import constants, { ChainId } from '../constants'
+import { ChainId, Currency, CurrencyAmount, Percent, Route, TokenAmount, Trade } from '@multiswap/sdk'
+import { chainFns } from 'react-use-gesture/dist/utils'
+import constants from '../constants'
 import { MockV1Pair } from '../data/V1'
 import v1SwapArguments from './v1SwapArguments'
 
+const ETHER = Currency.ETHER
 describe('v1SwapArguments', () => {
   const USDC_WETH = new MockV1Pair('1000000', new TokenAmount(constants[ChainId.MAINNET].tokens.USDC, '1000000'))
   const DAI_WETH = new MockV1Pair('1000000', new TokenAmount(constants[ChainId.MAINNET].tokens.DAI, '1000000'))
@@ -11,7 +13,7 @@ describe('v1SwapArguments', () => {
   const TEST_RECIPIENT_ADDRESS = USDC_WETH.liquidityToken.address
 
   it('exact eth to token', () => {
-    const trade = Trade.exactIn(new Route([USDC_WETH], ETHER), CurrencyAmount.ether('100'))
+    const trade = Trade.exactIn(new Route([USDC_WETH], ETHER), CurrencyAmount.baseForId('100', ChainId.MAINNET))
     const result = v1SwapArguments(trade, {
       recipient: TEST_RECIPIENT_ADDRESS,
       allowedSlippage: new Percent('1', '100'),
@@ -65,7 +67,7 @@ describe('v1SwapArguments', () => {
     expect(result.value).toEqual('0x66')
   })
   it('token to exact eth', () => {
-    const trade = Trade.exactOut(new Route([USDC_WETH], constants[ChainId.MAINNET].tokens.USDC, ETHER), CurrencyAmount.ether('100'))
+    const trade = Trade.exactOut(new Route([USDC_WETH], constants[ChainId.MAINNET].tokens.USDC, ETHER), CurrencyAmount.baseForId('100', ChainId.MAINNET))
     const result = v1SwapArguments(trade, {
       recipient: TEST_RECIPIENT_ADDRESS,
       allowedSlippage: new Percent('1', '100'),

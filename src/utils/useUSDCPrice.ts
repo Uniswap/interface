@@ -1,6 +1,6 @@
-import { Currency, currencyEquals, JSBI, Price } from '@uniswap/sdk'
+import { ChainId, WETH, Currency, currencyEquals, JSBI, Price } from '@multiswap/sdk'
 import { useMemo } from 'react'
-import constants, { ChainId, WETH } from '../constants'
+import constants from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
 import { useActiveWeb3React } from '../hooks'
 import { wrappedCurrency } from './wrappedCurrency'
@@ -10,7 +10,7 @@ import { wrappedCurrency } from './wrappedCurrency'
  * @param currency currency to compute the USDC price of
  */
 export default function useUSDCPrice(currency?: Currency): Price | undefined {
-  const { chainId } = useActiveWeb3React()
+  const chainId = useActiveWeb3React().chainId as ChainId
   const wrapped = wrappedCurrency(currency, chainId)
   const tokenPairs: [Currency | undefined, Currency | undefined][] = useMemo(
     () => [

@@ -1,12 +1,11 @@
-import { Currency, currencyEquals } from '@uniswap/sdk'
+import { ChainId, Currency, currencyEquals, WETH } from '@multiswap/sdk'
 import { useMemo } from 'react'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useActiveWeb3React } from './index'
 import { useWETHContract } from './useContract'
-
-import { WETH, BASE_CURRENCY } from '../constants'
+import { BASE_CURRENCY } from '../constants'
 
 export enum WrapType {
   NOT_APPLICABLE,
@@ -28,7 +27,7 @@ export default function useWrapCallback(
 ): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: string } {
   const { chainId, account } = useActiveWeb3React()
   const wethContract = useWETHContract()
-  const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
+  const balance = useCurrencyBalance(chainId as ChainId, account ?? undefined, inputCurrency)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
   const addTransaction = useTransactionAdder()
@@ -38,7 +37,7 @@ export default function useWrapCallback(
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency === BASE_CURRENCY[chainId] && currencyEquals(WETH[chainId], outputCurrency)) {
+    if (inputCurrency === Currency.forChainId[chainId as ChainId] && currencyEquals(WETH[chainId as ChainId], outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:

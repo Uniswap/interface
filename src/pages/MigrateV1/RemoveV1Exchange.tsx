@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { JSBI, Token, TokenAmount, Fraction, Percent, CurrencyAmount } from '@uniswap/sdk'
+import { JSBI, Token, TokenAmount, Fraction, Percent, CurrencyAmount, ChainId } from '@multiswap/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -25,7 +25,7 @@ import { Dots } from '../../components/swap/styleds'
 import { Contract } from '@ethersproject/contracts'
 import { useTotalSupply } from '../../data/TotalSupply'
 
-import { WETH } from '../../constants'
+import { WETH } from '@multiswap/sdk'
 
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
@@ -43,7 +43,7 @@ function V1PairRemoval({
 }) {
   const { chainId } = useActiveWeb3React()
   const totalSupply = useTotalSupply(liquidityTokenAmount.token)
-  const exchangeETHBalance = useETHBalances([liquidityTokenAmount.token.address])?.[liquidityTokenAmount.token.address]
+  const exchangeETHBalance = useETHBalances(chainId as ChainId, [liquidityTokenAmount.token.address])?.[liquidityTokenAmount.token.address]
   const exchangeTokenBalance = useTokenBalance(liquidityTokenAmount.token.address, token)
 
   const [confirmingRemoval, setConfirmingRemoval] = useState<boolean>(false)
@@ -52,8 +52,8 @@ function V1PairRemoval({
   const shareFraction: Fraction = totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
 
   const ethWorth: CurrencyAmount = exchangeETHBalance
-    ? CurrencyAmount.ether(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient)
-    : CurrencyAmount.ether(ZERO)
+    ? CurrencyAmount.baseForId(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient, chainId as ChainId)
+    : CurrencyAmount.baseForId(ZERO, chainId as ChainId)
 
   const tokenWorth: TokenAmount = exchangeTokenBalance
     ? new TokenAmount(token, shareFraction.multiply(exchangeTokenBalance.raw).quotient)

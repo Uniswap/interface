@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { Pair } from '@uniswap/sdk'
+import { Pair } from '@multiswap/sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -186,12 +186,12 @@ export default function Pool() {
                 ))}
               </>
             ) : (
-              <EmptyProposals>
-                <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
+                    <EmptyProposals>
+                      <TYPE.body color={theme.text3} textAlign="center">
+                        No liquidity found.
                 </TYPE.body>
-              </EmptyProposals>
-            )}
+                    </EmptyProposals>
+                  )}
 
             <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>

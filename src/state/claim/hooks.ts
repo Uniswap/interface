@@ -1,4 +1,4 @@
-import { TokenAmount, JSBI } from '@uniswap/sdk'
+import { ChainId, TokenAmount, JSBI } from '@multiswap/sdk'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useEffect, useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
@@ -6,7 +6,7 @@ import { useMerkleDistributorContract } from '../../hooks/useContract'
 import { useSingleCallResult } from '../multicall/hooks'
 import { calculateGasMargin, isAddress } from '../../utils'
 import { useTransactionAdder } from '../transactions/hooks'
-import { ChainId, UNI } from './../../constants/index'
+import { UNI } from './../../constants/index'
 
 interface UserClaimData {
   index: number

@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, JSBI, Pair, Percent, Price, TokenAmount } from '@uniswap/sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Pair, Percent, Price, TokenAmount } from '@multiswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { BASE_CURRENCY } from '../../constants'
@@ -57,7 +57,7 @@ export function useDerivedMintInfo(
     pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
 
   // balances
-  const balances = useCurrencyBalances(account ?? undefined, [
+  const balances = useCurrencyBalances(chainId as ChainId, account ?? undefined, [
     currencies[Field.CURRENCY_A],
     currencies[Field.CURRENCY_B]
   ])
@@ -84,7 +84,7 @@ export function useDerivedMintInfo(
           dependentField === Field.CURRENCY_B
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
-        return dependentCurrency === BASE_CURRENCY[chainId as ChainId] ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
+        return dependentCurrency === BASE_CURRENCY[chainId as ChainId] ? CurrencyAmount.baseForId(dependentTokenAmount.raw, chainId as ChainId) : dependentTokenAmount
       }
       return undefined
     } else {

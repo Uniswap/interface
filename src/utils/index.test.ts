@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
-import { TokenAmount, Token, Percent, JSBI } from '@uniswap/sdk'
-import { ChainId } from '../constants'
+import { TokenAmount, Token, Percent, JSBI } from '@multiswap/sdk'
+import { ChainId } from '@multiswap/sdk'
 
 import {
   getEtherscanLink,
