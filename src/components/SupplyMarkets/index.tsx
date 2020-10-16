@@ -178,7 +178,7 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                   return
                 }}
               >
-                {collateralToken?.symbol}
+                {suppliedAsset?.length == 1 ? 'DIMSS' : 'DISABLE ' + collateralToken?.symbol}
               </ButtonLight>
             </AutoColumn>
           </AutoColumn>
@@ -237,7 +237,14 @@ function SupplyMarkets({ allMarkets = [] }: { allMarkets: any }) {
                       {' ' + item?.symbol}
                     </ItemBottomWrap>
                   </ItemWrap>
-                  <Switch isActive={item?.canBeCollateral} />
+                  <Switch
+                    isActive={item?.canBeCollateral}
+                    toggle={() => {
+                      setCollateralToken(item)
+                      setIsSuppliedMarkets(true)
+                      setShowCollateralConfirmation(true)
+                    }}
+                  />
                 </AssetItem>
               ))}
             </AssetItemWrap>
