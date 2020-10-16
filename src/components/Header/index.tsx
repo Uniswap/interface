@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-import { NETWORK_LABELS, UNISWAP_INFO_URL } from '../../constants'
+import { BASE_CURRENCY, NETWORK_LABELS, UNISWAP_INFO_URL } from '../../constants'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -365,7 +365,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
+                {userEthBalance?.toSignificant(4)} {BASE_CURRENCY[chainId as ChainId].symbol}
               </BalanceText>
             ) : null}
             <Web3Status />
