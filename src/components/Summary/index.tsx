@@ -69,11 +69,20 @@ const BorrowWrap = styled.div`
   margin: 0px 0px 0px 10px;
   color: grey;
 `
-export const ethMantissa = 1e18
-export const blocksPerDay = 4 * 60 * 24
-export const daysPerYear = 365
 
-function Summary({ allMarkets = [] }: { allMarkets: any }) {
+function Summary({
+  allMarkets = [],
+  supplyTotalBalance,
+  borrowTotalBalance,
+  limit,
+  netApy
+}: {
+  allMarkets: any
+  supplyTotalBalance: any
+  borrowTotalBalance: any
+  limit: any
+  netApy: any
+}) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
@@ -96,106 +105,33 @@ function Summary({ allMarkets = [] }: { allMarkets: any }) {
     'suppliedAsset[0]?.underlyingPrice'
   )
 
-  function getSupplyTotalBalance() {
-    let supplyTotalBalance = 0
-    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
-      supplyTotalBalance +=
-        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
-        parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
-        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
-    }, supplyTotalBalance)
-    return supplyTotalBalance
-  }
-  console.log(getSupplyTotalBalance(), 'getSupplyTotalBalance')
-
-  function getBorrowTotalBalance() {
-    let borrowTotalBalance = 0
-    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
-      borrowTotalBalance +=
-        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
-        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
-    }, borrowTotalBalance)
-    return borrowTotalBalance
-  }
-  console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
-
-  function getLimit() {
-    let collateralFactorMantissa = 0
-    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
-      collateralFactorMantissa +=
-        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
-        parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
-        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
-        parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
-    }, collateralFactorMantissa)
-    return collateralFactorMantissa
-  }
-  console.log(getLimit(), 'getLimit')
-  console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
-
-  function sumUnderlyingAssets() {
-    let sumUnderlyingAssets = 0
-    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
-      sumUnderlyingAssets +=
-        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
-          parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
-          parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
-          (Math.pow(
-            ((val?.supplyRatePerBlock ? val?.supplyRatePerBlock : 0) / ethMantissa) * blocksPerDay + 1,
-            daysPerYear - 1
-          ) -
-            1) -
-        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
-          parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
-          (Math.pow(
-            ((val?.borrowRatePerBlock ? val?.borrowRatePerBlock : 0) / ethMantissa) * blocksPerDay + 1,
-            daysPerYear - 1
-          ) -
-            1)
-    }, sumUnderlyingAssets)
-    return sumUnderlyingAssets
-  }
-
-  function getNetApy() {
-    let allBorrowUnderlyingAssets = 0
-    suppliedAsset.forEach((val: any, idx: any, suppliedAsset: any) => {
-      allBorrowUnderlyingAssets +=
-        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
-        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
-    }, allBorrowUnderlyingAssets)
-    console.log(sumUnderlyingAssets(), 'sumUnderlyingAssets()')
-    return sumUnderlyingAssets() / allBorrowUnderlyingAssets
-  }
-
-  console.log('summary', allMarkets.length)
-
   return (
     <SummaryCard>
       <SummaryFrame>
         <SummaryElement>
           <SummaryTitle>Supply Balance</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${getSupplyTotalBalance().toFixed(8)}
+            <DotIcon />${supplyTotalBalance?.toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>Net APY</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            {(100 * getNetApy()).toFixed(2)}%
+            {(100 * netApy).toFixed(2)}%
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>Borrow Balance</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${getBorrowTotalBalance().toFixed(8)}
+            <DotIcon />${borrowTotalBalance.toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>Borrow Limit</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${getLimit().toFixed(2)}
-            <BorrowWrap>({((getBorrowTotalBalance() / getLimit()) * 100).toFixed(2)}% Used)</BorrowWrap>
+            <DotIcon />${limit?.toFixed(2)}
+            <BorrowWrap>({((borrowTotalBalance / limit) * 100).toFixed(2)}% Used)</BorrowWrap>
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>

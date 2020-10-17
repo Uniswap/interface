@@ -14,8 +14,13 @@ import { calculateGasMargin, getComptrollerContract, getCERC20Contract, getCEthe
 import { useApproveCallback } from '../../hooks/useApproveCallback'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { CurrencyAmount } from '@uniswap/sdk'
+import { utils } from 'ethers'
 // import { RowBetween } from '../../components/Row'
 // import Loader from '../../components/Loader'
+
+export const ethMantissa = 1e18
+export const blocksPerDay = 4 * 60 * 24
+export const daysPerYear = 365
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1280px;
@@ -371,21 +376,104 @@ export default function Lend() {
   }
   console.log('this to ignore not used warning ', attemptingTxn, txHash, approvalCToken, approveCTokenCallback)
 
+  const allMarketsAsset = allMarkets.map((item: any) => {
+    return {
+      ...item?.[1]
+    }
+  })
+
+  function getSupplyTotalBalance() {
+    let supplyTotalBalance = 0
+    allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
+      supplyTotalBalance +=
+        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
+        parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+    }, supplyTotalBalance)
+    return supplyTotalBalance
+  }
+  console.log(getSupplyTotalBalance(), 'getSupplyTotalBalance')
+
+  function getBorrowTotalBalance() {
+    let borrowTotalBalance = 0
+    allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
+      borrowTotalBalance +=
+        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+    }, borrowTotalBalance)
+    return borrowTotalBalance
+  }
+  console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
+
+  function getLimit() {
+    let collateralFactorMantissa = 0
+    allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
+      collateralFactorMantissa +=
+        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
+        parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
+        parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
+    }, collateralFactorMantissa)
+    return collateralFactorMantissa
+  }
+  console.log(getLimit(), 'getLimit')
+  console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
+
+  function sumUnderlyingAssets() {
+    let sumUnderlyingAssets = 0
+    allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
+      sumUnderlyingAssets +=
+        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
+          parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
+          parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
+          (Math.pow(
+            ((val?.supplyRatePerBlock ? val?.supplyRatePerBlock : 0) / ethMantissa) * blocksPerDay + 1,
+            daysPerYear - 1
+          ) -
+            1) -
+        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
+          parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
+          (Math.pow(
+            ((val?.borrowRatePerBlock ? val?.borrowRatePerBlock : 0) / ethMantissa) * blocksPerDay + 1,
+            daysPerYear - 1
+          ) -
+            1)
+    }, sumUnderlyingAssets)
+    return sumUnderlyingAssets
+  }
+
+  function getNetApy() {
+    let allBorrowUnderlyingAssets = 0
+    allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
+      allBorrowUnderlyingAssets +=
+        parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
+        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
+    }, allBorrowUnderlyingAssets)
+    console.log(sumUnderlyingAssets(), 'sumUnderlyingAssets()')
+    return sumUnderlyingAssets() / allBorrowUnderlyingAssets
+  }
+
+  console.log('summary', allMarkets.length)
+
   return (
     <PageWrapper gap="lg" justify="center">
-      <Summary allMarkets={allMarkets}></Summary>
+      <Summary
+        allMarkets={allMarkets}
+        supplyTotalBalance={getSupplyTotalBalance()}
+        borrowTotalBalance={getBorrowTotalBalance()}
+        limit={getLimit()}
+        netApy={getNetApy()}
+      ></Summary>
       {/* <button onClick={() => cToken && onRepayBorrow(cToken, '1000000000000000000', false)}>Click me</button> */}
       <MarketsWrap>
         <SupplyMarkets
           allMarkets={allMarkets}
           onEnterMarkets={onEnterMarkets}
           onExitMarkets={onExitMarkets}
+          borrowTotalBalance={getBorrowTotalBalance()}
+          limit={getLimit()}
         ></SupplyMarkets>
-        <BorrowMarkets
-          allMarkets={allMarkets}
-          onEnterMarkets={onEnterMarkets}
-          onExitMarkets={onExitMarkets}
-        ></BorrowMarkets>
+        <BorrowMarkets allMarkets={allMarkets}></BorrowMarkets>
       </MarketsWrap>
     </PageWrapper>
   )

@@ -13,7 +13,7 @@ import { RowBetween } from '../Row'
 import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
-import { blocksPerDay, daysPerYear, ethMantissa } from '../Summary'
+import { blocksPerDay, daysPerYear, ethMantissa } from '../../pages/Lend'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -125,11 +125,15 @@ const ModalContentWrapper = styled.div`
 function SupplyMarkets({
   allMarkets = [],
   onEnterMarkets,
-  onExitMarkets
+  onExitMarkets,
+  borrowTotalBalance,
+  limit
 }: {
   allMarkets: any
   onEnterMarkets: (cToken: CToken) => void
   onExitMarkets: (cToken: CToken) => void
+  borrowTotalBalance: number
+  limit: number
 }) {
   // const { t } = useTranslation()
 
@@ -154,6 +158,32 @@ function SupplyMarkets({
     return item && item?.supplyBalance?.toString() == 0 && item?.borrowBalance?.toString() == 0
   })
 
+  function canExitMarkets(): boolean {
+    if (
+      collateralToken &&
+      collateralToken.supplyBalance &&
+      collateralToken?.exchangeRateMantissa &&
+      collateralToken?.underlyingPrice &&
+      collateralToken?.collateralFactorMantissa
+    ) {
+      if (
+        limit -
+          parseFloat(utils.formatEther(collateralToken.supplyBalance)) *
+            parseFloat(utils.formatEther(collateralToken.exchangeRateMantissa)) *
+            parseFloat(utils.formatEther(collateralToken.underlyingPrice)) *
+            parseFloat(utils.formatEther(collateralToken.collateralFactorMantissa)) <
+        borrowTotalBalance
+      ) {
+        return false
+      } else {
+        return true
+      }
+    } else {
+      return false
+    }
+  }
+
+  console.log(canExitMarkets(), 'canExitMarkets')
   return (
     <div>
       <Modal isOpen={showCollateralConfirmation} onDismiss={() => setShowCollateralConfirmation(false)}>
@@ -172,11 +202,11 @@ function SupplyMarkets({
             </RowBetween>
             <Break />
             <AutoColumn gap="md" style={{ padding: '0 2rem' }}>
-              {collateralToken?.canBeCollateral ? (
+              {collateralToken?.canBeCollateral && canExitMarkets() ? (
                 <Text fontWeight={400} fontSize={'1rem'}>
                   This asset will no longer be used towards your borrowing limit, and can’t be seized in liquidation.
                 </Text>
-              ) : isSuppliedMarkets ? (
+              ) : collateralToken?.canBeCollateral ? (
                 <Text fontWeight={400} fontSize={'1rem'}>
                   This asset is required to support your borrowed assets. Either repay borrowed assets, or supply
                   another asset as collateral.
@@ -193,8 +223,12 @@ function SupplyMarkets({
                 onClick={() => {
                   if (collateralToken) {
                     if (collateralToken.canBeCollateral) {
-                      onExitMarkets(collateralToken)
-                      setShowCollateralConfirmation(false)
+                      if (canExitMarkets()) {
+                        onExitMarkets(collateralToken)
+                        setShowCollateralConfirmation(false)
+                      } else {
+                        return setShowCollateralConfirmation(false)
+                      }
                     } else {
                       onEnterMarkets(collateralToken)
                       setShowCollateralConfirmation(false)
@@ -204,8 +238,10 @@ function SupplyMarkets({
                   }
                 }}
               >
-                {collateralToken?.canBeCollateral
+                {collateralToken?.canBeCollateral && canExitMarkets()
                   ? 'DISABLE ' + collateralToken?.symbol
+                  : collateralToken?.canBeCollateral
+                  ? 'DISMISS'
                   : 'USE ' + collateralToken?.symbol + ' AS COLLATEERAL'}
               </ButtonLight>
             </AutoColumn>

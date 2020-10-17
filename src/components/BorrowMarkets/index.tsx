@@ -4,9 +4,8 @@ import React from 'react'
 // import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
-import { CToken } from '../../data/CToken'
 import CurrencyIcon from '../CurrencyIcon'
-import { blocksPerDay, daysPerYear, ethMantissa } from '../Summary'
+import { blocksPerDay, daysPerYear, ethMantissa } from '../../pages/Lend'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -87,15 +86,7 @@ const ItemBottomWrap = styled.div`
   font-size: 0.9em;
 `
 
-function BorrowMarkets({
-  allMarkets = [],
-  onEnterMarkets,
-  onExitMarkets
-}: {
-  allMarkets: any
-  onEnterMarkets: (cToken: CToken) => void
-  onExitMarkets: (cToken: CToken) => void
-}) {
+function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
