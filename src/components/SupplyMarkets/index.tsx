@@ -13,7 +13,12 @@ import { RowBetween } from '../Row'
 import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
+<<<<<<< HEAD
 import { blocksPerDay, daysPerYear, ethMantissa } from '../../pages/Lend'
+=======
+import { blocksPerDay, daysPerYear, ethMantissa } from '../Summary'
+import LendModal from '../LendModal'
+>>>>>>> Add lend modal
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -144,6 +149,10 @@ function SupplyMarkets({
 
   const [collateralToken, setCollateralToken] = useState<CToken>()
 
+  const [lendToken, setLendToken] = useState<CToken>({} as CToken)
+
+  const [showLendConfirmation, setShowLendConfirmation] = useState(false)
+
   const [isSuppliedMarkets, setIsSuppliedMarkets] = useState(false)
 
   const supplyList = allMarkets.map((item: any) => {
@@ -186,6 +195,11 @@ function SupplyMarkets({
   console.log(canExitMarkets(), 'canExitMarkets')
   return (
     <div>
+      <LendModal
+        lendToken={lendToken}
+        showLendConfirmation={showLendConfirmation}
+        setShowLendConfirmation={setShowLendConfirmation}
+      />
       <Modal isOpen={showCollateralConfirmation} onDismiss={() => setShowCollateralConfirmation(false)}>
         <ModalContentWrapper>
           <AutoColumn gap="lg">
@@ -258,7 +272,7 @@ function SupplyMarkets({
               <AssetLabel textAlign={'right'}>Balance</AssetLabel>
               <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
             </AssetWrapLabels>
-            <AssetItemWrap>
+            <AssetItemWrap onClick={() => setShowLendConfirmation(true)}>
               {suppliedAsset.map((item: any) => (
                 <AssetItem key={item?.symbol}>
                   <AssetLogo>
@@ -327,7 +341,13 @@ function SupplyMarkets({
           <AssetItemWrap>
             {!!supplyAsset.length
               ? supplyAsset.map((item: any) => (
-                  <AssetItem key={item?.symbol}>
+                  <AssetItem
+                    key={item?.symbol}
+                    onClick={() => {
+                      setLendToken(item)
+                      setShowLendConfirmation(true)
+                    }}
+                  >
                     <AssetLogo>
                       <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
                       {item?.symbol}
