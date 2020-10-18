@@ -22,6 +22,13 @@ export const ethMantissa = 1e18
 export const blocksPerDay = 4 * 60 * 24
 export const daysPerYear = 365
 
+export enum LendField {
+  SUPPLY = 'SUPPLY',
+  BORROW = 'BORROW',
+  WITHDRAW = 'WITHDRAW',
+  REPAY = 'REPAY'
+}
+
 const PageWrapper = styled(AutoColumn)`
   max-width: 1280px;
   width: 80%;
@@ -382,6 +389,8 @@ export default function Lend() {
     }
   })
 
+  console.log(allMarketsAsset, 'allMarketsAsset')
+
   function getSupplyTotalBalance() {
     let supplyTotalBalance = 0
     allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
@@ -470,6 +479,8 @@ export default function Lend() {
           allMarkets={allMarkets}
           onEnterMarkets={onEnterMarkets}
           onExitMarkets={onExitMarkets}
+          onMint={onMint}
+          onRedeemUnderlying={onRedeemUnderlying}
           borrowTotalBalance={getBorrowTotalBalance()}
           limit={getLimit()}
         ></SupplyMarkets>

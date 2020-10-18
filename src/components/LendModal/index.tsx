@@ -12,6 +12,8 @@ import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
+import { utils } from 'ethers'
+import { LendField } from '../../pages/Lend'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -106,25 +108,22 @@ const RateCalculation = styled.div`
   color: #141e27;
 `
 
-enum LendField {
-  SUPPLY = 'SUPPLY',
-  BORROW = 'BORROW',
-  WITHDRAW = 'WITHDRAW',
-  REPAY = 'REPAY'
-}
-
 export interface LendModalProps {
   lendToken: CToken
   showLendConfirmation: boolean
   setShowLendConfirmation: Function
   lendMarket?: LendField
+  onMint?: (cToken: CToken, amount: string, isETH: boolean) => void
+  onRedeemUnderlying?: (cToken: CToken, amount: string) => void
 }
 
 function LendModal({
   lendToken,
   showLendConfirmation,
   setShowLendConfirmation,
-  lendMarket = LendField.SUPPLY
+  lendMarket = LendField.SUPPLY,
+  onMint,
+  onRedeemUnderlying
 }: LendModalProps) {
   // const { t } = useTranslation()
 
@@ -165,7 +164,7 @@ function LendModal({
                     value={lendInputValue}
                     onUserInput={setLendInputValue}
                     onMax={() => {
-                      setLendInputValue(lendToken?.address)
+                      setLendInputValue(lendToken?.supplyBalance ? utils.formatEther(lendToken?.supplyBalance) : '')
                     }}
                     label={'Amount'}
                     showMaxButton={true}
@@ -237,14 +236,19 @@ function LendModal({
             <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>
               <ButtonLight
                 onClick={() => {
-                  if (lendToken) {
-                    console.log(lendInputValue, tabItemActive)
+                  if (lendToken && onMint && onRedeemUnderlying) {
+                    if (tabItemActive === LendField.SUPPLY) {
+                      console.log(onMint, 'onMint')
+                      onMint(lendToken, lendInputValue, false)
+                    } else if (tabItemActive === LendField.WITHDRAW) {
+                      onRedeemUnderlying(lendToken, lendInputValue)
+                    }
                   } else {
                     return
                   }
                 }}
               >
-                ENABLE
+                {lendMarket}
               </ButtonLight>
             </AutoColumn>
           </AutoColumn>

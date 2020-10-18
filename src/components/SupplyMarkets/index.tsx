@@ -13,12 +13,8 @@ import { RowBetween } from '../Row'
 import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
-<<<<<<< HEAD
-import { blocksPerDay, daysPerYear, ethMantissa } from '../../pages/Lend'
-=======
-import { blocksPerDay, daysPerYear, ethMantissa } from '../Summary'
+import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
 import LendModal from '../LendModal'
->>>>>>> Add lend modal
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -131,12 +127,16 @@ function SupplyMarkets({
   allMarkets = [],
   onEnterMarkets,
   onExitMarkets,
+  onMint,
+  onRedeemUnderlying,
   borrowTotalBalance,
   limit
 }: {
   allMarkets: any
   onEnterMarkets: (cToken: CToken) => void
   onExitMarkets: (cToken: CToken) => void
+  onMint: (cToken: CToken, amount: string, isETH: boolean) => void
+  onRedeemUnderlying: (cToken: CToken, amount: string) => void
   borrowTotalBalance: number
   limit: number
 }) {
@@ -199,6 +199,9 @@ function SupplyMarkets({
         lendToken={lendToken}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
+        lendMarket={LendField.SUPPLY}
+        onMint={onMint}
+        onRedeemUnderlying={onRedeemUnderlying}
       />
       <Modal isOpen={showCollateralConfirmation} onDismiss={() => setShowCollateralConfirmation(false)}>
         <ModalContentWrapper>
@@ -274,7 +277,13 @@ function SupplyMarkets({
             </AssetWrapLabels>
             <AssetItemWrap onClick={() => setShowLendConfirmation(true)}>
               {suppliedAsset.map((item: any) => (
-                <AssetItem key={item?.symbol}>
+                <AssetItem
+                  key={item?.symbol}
+                  onClick={() => {
+                    setLendToken(item)
+                    setShowLendConfirmation(true)
+                  }}
+                >
                   <AssetLogo>
                     <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
                     {item?.symbol}
