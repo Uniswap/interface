@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
 
@@ -59,6 +59,7 @@ const TabWrap = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
+  user-select: none;
 `
 
 const TabItem = styled.div<{ isActive: boolean }>`
@@ -144,6 +145,14 @@ function LendModal({
 
   const [lendInputValue, setLendInputValue] = useState('0')
 
+  useEffect(() => {
+    if (showLendConfirmation) {
+      lendMarket === LendField.SUPPLY ? setTabItemActive(LendField.SUPPLY) : setTabItemActive(LendField.BORROW)
+    } else {
+      setLendInputValue('0')
+    }
+  }, [lendMarket, showLendConfirmation])
+
   return (
     <div>
       <Modal isOpen={showLendConfirmation} onDismiss={() => setShowLendConfirmation(false)}>
@@ -193,7 +202,16 @@ function LendModal({
                       : LendField.BORROW === tabItemActive
                   }
                   onClick={() => {
-                    setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
+                    if (
+                      lendMarket === LendField.SUPPLY
+                        ? LendField.SUPPLY === tabItemActive
+                        : LendField.BORROW === tabItemActive
+                    ) {
+                      setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
+                    } else {
+                      setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
+                      setLendInputValue('0')
+                    }
                   }}
                 >
                   {lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW}
@@ -205,7 +223,16 @@ function LendModal({
                       : LendField.REPAY === tabItemActive
                   }
                   onClick={() => {
-                    setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
+                    if (
+                      lendMarket === LendField.SUPPLY
+                        ? LendField.WITHDRAW === tabItemActive
+                        : LendField.REPAY === tabItemActive
+                    ) {
+                      setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
+                    } else {
+                      setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
+                      setLendInputValue('0')
+                    }
                   }}
                 >
                   {lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY}
