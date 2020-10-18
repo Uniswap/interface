@@ -322,7 +322,7 @@ function LendModal({
                   }
                 }}
               >
-                {lendMarket}
+                {tabItemActive}
               </ButtonLight>
             </AutoColumn>
             <AutoColumn gap={'0'} style={{ padding: '0.6rem 2rem 0' }}>
@@ -330,7 +330,7 @@ function LendModal({
                 <Text color={'#AAB8C1'} fontWeight={500}>
                   Wallet Balance
                 </Text>
-                <Text>0 {lendToken?.symbol}</Text>
+                {tokenBalances?.[lendToken?.address]?.toSignificant()} {' ' + lendToken?.symbol}
               </AutoRow>
             </AutoColumn>
           </AutoColumn>
