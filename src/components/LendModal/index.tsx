@@ -298,6 +298,14 @@ function LendModal({
                 {lendMarket}
               </ButtonLight>
             </AutoColumn>
+            <AutoColumn gap={'0'} style={{ padding: '0.6rem 2rem 0' }}>
+              <AutoRow justify={'space-between'}>
+                <Text color={'#AAB8C1'} fontWeight={500}>
+                  Wallet Balance
+                </Text>
+                <Text>0 {lendToken?.symbol}</Text>
+              </AutoRow>
+            </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
