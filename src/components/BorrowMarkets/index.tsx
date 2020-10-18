@@ -8,6 +8,7 @@ import CurrencyIcon from '../CurrencyIcon'
 import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
+import { TokenAmount } from '@uniswap/sdk'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -90,10 +91,12 @@ const ItemBottomWrap = styled.div`
 
 function BorrowMarkets({
   allMarkets = [],
+  tokenBalances,
   onBorrow,
   onRepayBorrow
 }: {
   allMarkets: any
+  tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   onBorrow: (cToken: CToken, amount: string) => void
   onRepayBorrow: (cToken: CToken, amount: string, isETH: boolean) => void
 }) {
@@ -135,6 +138,7 @@ function BorrowMarkets({
     <div>
       <LendModal
         lendToken={lendToken}
+        tokenBalances={tokenBalances}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
         lendMarket={LendField.BORROW}
@@ -247,13 +251,8 @@ function BorrowMarkets({
                       %
                     </ItemWrap>
                     <ItemWrap>
-                      $
-                      {item?.borrowBalance && item?.underlyingPrice
-                        ? (
-                            parseFloat(utils.formatEther(item?.borrowBalance)) *
-                            parseFloat(utils.formatEther(item?.underlyingPrice))
-                          ).toFixed(2)
-                        : ''}
+                      {tokenBalances?.[item?.address]?.toSignificant()}
+                      {' ' + item?.symbol}
                     </ItemWrap>
                     <ItemWrap>
                       {item?.liquidity && item?.underlyingPrice

@@ -13,7 +13,8 @@ import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
 import { utils } from 'ethers'
-import { LendField } from '../../pages/Lend'
+import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
+import { TokenAmount } from '@uniswap/sdk'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -111,6 +112,7 @@ const RateCalculation = styled.div`
 
 export interface LendModalProps {
   lendToken: CToken
+  tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   showLendConfirmation: boolean
   setShowLendConfirmation: Function
   lendMarket?: LendField
@@ -122,6 +124,7 @@ export interface LendModalProps {
 
 function LendModal({
   lendToken,
+  tokenBalances,
   showLendConfirmation,
   setShowLendConfirmation,
   lendMarket,
@@ -170,7 +173,7 @@ function LendModal({
             </RowBetween>
             <Break />
             <AutoColumn gap={'sm'} style={{ backgroundColor: '#f9fafb' }}>
-              {lendToken?.canBeCollateral ? (
+              {lendToken?.canBeCollateral && tokenBalances && lendToken?.address ? (
                 <ApproveWrap>
                   <div />
                   <LendInputPanel
@@ -178,6 +181,7 @@ function LendModal({
                     onUserInput={setLendInputValue}
                     onMax={() => {
                       setLendInputValue(lendToken?.supplyBalance ? utils.formatEther(lendToken?.supplyBalance) : '')
+                      // setLendInputValue(tokenBalances?.[lendToken?.address]?.toSignificant())
                     }}
                     label={'Amount'}
                     showMaxButton={true}
@@ -250,10 +254,33 @@ function LendModal({
                       {lendToken?.symbol}
                     </Text>
                   </AutoRow>
-                  <RateCalculation>10.53%</RateCalculation>
+                  <RateCalculation>
+                    {lendMarket === LendField.SUPPLY
+                      ? (
+                          (Math.pow(
+                            ((lendToken?.supplyRatePerBlock ? lendToken?.supplyRatePerBlock : 0) / ethMantissa) *
+                              blocksPerDay +
+                              1,
+                            daysPerYear - 1
+                          ) -
+                            1) *
+                          100
+                        ).toFixed(2)
+                      : (
+                          (Math.pow(
+                            ((lendToken?.borrowRatePerBlock ? lendToken?.borrowRatePerBlock : 0) / ethMantissa) *
+                              blocksPerDay +
+                              1,
+                            daysPerYear - 1
+                          ) -
+                            1) *
+                          100
+                        ).toFixed(2)}
+                    %
+                  </RateCalculation>
                 </RatePanel>
                 <Break />
-                <RatePanel>
+                {/* <RatePanel>
                   <AutoRow>
                     <CurrencyIcon address={lendToken?.address} style={{ marginRight: '6px' }} />
                     <Text color={'#AAB8C1;'} lineHeight={'24px'}>
@@ -261,7 +288,7 @@ function LendModal({
                     </Text>
                   </AutoRow>
                   <RateCalculation>10.53%</RateCalculation>
-                </RatePanel>
+                </RatePanel> */}
               </RateWrap>
             </AutoColumn>
             <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>

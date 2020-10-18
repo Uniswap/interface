@@ -15,6 +15,7 @@ import { useApproveCallback } from '../../hooks/useApproveCallback'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { CurrencyAmount } from '@uniswap/sdk'
 import { utils } from 'ethers'
+import { useAllLendBalances } from '../../state/wallet/hooks'
 // import { RowBetween } from '../../components/Row'
 // import Loader from '../../components/Loader'
 
@@ -82,6 +83,8 @@ export default function Lend() {
   )
 
   const addTransaction = useTransactionAdder()
+
+  const tokenBalances = useAllLendBalances()
 
   async function onEnterMarkets(cToken: CToken) {
     if (!chainId || !library || !account) return
@@ -477,6 +480,7 @@ export default function Lend() {
       <MarketsWrap>
         <SupplyMarkets
           allMarkets={allMarkets}
+          tokenBalances={tokenBalances}
           onEnterMarkets={onEnterMarkets}
           onExitMarkets={onExitMarkets}
           onMint={onMint}
@@ -484,7 +488,12 @@ export default function Lend() {
           borrowTotalBalance={getBorrowTotalBalance()}
           limit={getLimit()}
         ></SupplyMarkets>
-        <BorrowMarkets allMarkets={allMarkets} onBorrow={onBorrow} onRepayBorrow={onRepayBorrow}></BorrowMarkets>
+        <BorrowMarkets
+          allMarkets={allMarkets}
+          tokenBalances={tokenBalances}
+          onBorrow={onBorrow}
+          onRepayBorrow={onRepayBorrow}
+        ></BorrowMarkets>
       </MarketsWrap>
     </PageWrapper>
   )

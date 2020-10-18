@@ -1,6 +1,7 @@
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, ETHER, Token, currencyEquals } from '@uniswap/sdk'
 import { useMemo } from 'react'
+import { CToken, useCTokens } from '../data/CToken'
 import { useSelectedTokenList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
@@ -31,6 +32,25 @@ export function useAllTokens(): { [address: string]: Token } {
         )
     )
   }, [chainId, userAddedTokens, allTokens])
+}
+
+export function useAllCTokens(): { [address: string]: CToken } {
+  const { chainId } = useActiveWeb3React()
+  const allCTokens = useCTokens()
+
+  return useMemo(() => {
+    if (!chainId) return {}
+    const data = allCTokens.map((item: any) => {
+      return {
+        ...item?.[1]
+      }
+    })
+    const allData: any = {}
+    data.forEach((item: CToken) => {
+      allData[item.address] = { ...item }
+    })
+    return allData
+  }, [chainId, allCTokens])
 }
 
 // Check if currency is included in custom list from user storage

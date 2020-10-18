@@ -15,6 +15,7 @@ import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
 import LendModal from '../LendModal'
+import { TokenAmount } from '@uniswap/sdk'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -125,6 +126,7 @@ const ModalContentWrapper = styled.div`
 
 function SupplyMarkets({
   allMarkets = [],
+  tokenBalances,
   onEnterMarkets,
   onExitMarkets,
   onMint,
@@ -133,6 +135,7 @@ function SupplyMarkets({
   limit
 }: {
   allMarkets: any
+  tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   onEnterMarkets: (cToken: CToken) => void
   onExitMarkets: (cToken: CToken) => void
   onMint: (cToken: CToken, amount: string, isETH: boolean) => void
@@ -197,6 +200,7 @@ function SupplyMarkets({
     <div>
       <LendModal
         lendToken={lendToken}
+        tokenBalances={tokenBalances}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
         lendMarket={LendField.SUPPLY}
@@ -371,14 +375,8 @@ function SupplyMarkets({
                       </div>
                     </ItemWrap>
                     <ItemWrap>
-                      $
-                      {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
-                        ? (
-                            parseFloat(utils.formatEther(item?.supplyBalance)) *
-                            parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
-                            parseFloat(utils.formatEther(item?.underlyingPrice))
-                          ).toFixed(2)
-                        : ''}
+                      {tokenBalances?.[item?.address]?.toSignificant()}
+                      {' ' + item?.symbol}
                     </ItemWrap>
                     <Switch
                       isActive={item?.canBeCollateral}
