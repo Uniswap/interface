@@ -113,17 +113,21 @@ export interface LendModalProps {
   showLendConfirmation: boolean
   setShowLendConfirmation: Function
   lendMarket?: LendField
-  onMint?: (cToken: CToken, amount: string, isETH: boolean) => void
-  onRedeemUnderlying?: (cToken: CToken, amount: string) => void
+  onMint?: (cToken: CToken, amount: string, isETH: boolean) => void | null
+  onRedeemUnderlying?: (cToken: CToken, amount: string) => void | null
+  onBorrow?: (cToken: CToken, amount: string) => void | null
+  onRepayBorrow?: (cToken: CToken, amount: string, isETH: boolean) => void | null
 }
 
 function LendModal({
   lendToken,
   showLendConfirmation,
   setShowLendConfirmation,
-  lendMarket = LendField.SUPPLY,
+  lendMarket,
   onMint,
-  onRedeemUnderlying
+  onRedeemUnderlying,
+  onBorrow,
+  onRepayBorrow
 }: LendModalProps) {
   // const { t } = useTranslation()
 
@@ -236,12 +240,28 @@ function LendModal({
             <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>
               <ButtonLight
                 onClick={() => {
-                  if (lendToken && onMint && onRedeemUnderlying) {
-                    if (tabItemActive === LendField.SUPPLY) {
-                      console.log(onMint, 'onMint')
-                      onMint(lendToken, lendInputValue, false)
-                    } else if (tabItemActive === LendField.WITHDRAW) {
-                      onRedeemUnderlying(lendToken, lendInputValue)
+                  if (lendToken) {
+                    switch (lendMarket) {
+                      case LendField.SUPPLY:
+                        if (onMint && onRedeemUnderlying) {
+                          if (tabItemActive === LendField.SUPPLY) {
+                            onMint(lendToken, lendInputValue, false)
+                          } else if (tabItemActive === LendField.WITHDRAW) {
+                            onRedeemUnderlying(lendToken, lendInputValue)
+                          }
+                        }
+                        break
+                      case LendField.BORROW:
+                        if (onBorrow && onRepayBorrow) {
+                          if (tabItemActive === LendField.BORROW) {
+                            onBorrow(lendToken, lendInputValue)
+                          } else if (tabItemActive === LendField.REPAY) {
+                            onRepayBorrow(lendToken, lendInputValue, false)
+                          }
+                        }
+                        break
+                      default:
+                        break
                     }
                   } else {
                     return

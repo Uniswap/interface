@@ -1,11 +1,13 @@
 import { utils } from 'ethers'
-import React from 'react'
+import React, { useState } from 'react'
 // import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
-import { blocksPerDay, daysPerYear, ethMantissa } from '../../pages/Lend'
+import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
+import LendModal from '../LendModal'
+import { CToken } from '../../data/CToken'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -86,10 +88,22 @@ const ItemBottomWrap = styled.div`
   font-size: 0.9em;
 `
 
-function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
+function BorrowMarkets({
+  allMarkets = [],
+  onBorrow,
+  onRepayBorrow
+}: {
+  allMarkets: any
+  onBorrow: (cToken: CToken, amount: string) => void
+  onRepayBorrow: (cToken: CToken, amount: string, isETH: boolean) => void
+}) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
+
+  const [lendToken, setLendToken] = useState<CToken>({} as CToken)
+
+  const [showLendConfirmation, setShowLendConfirmation] = useState(false)
 
   const borrowList = allMarkets.map((item: any) => {
     return item?.[1]
@@ -119,6 +133,14 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
 
   return (
     <div>
+      <LendModal
+        lendToken={lendToken}
+        showLendConfirmation={showLendConfirmation}
+        setShowLendConfirmation={setShowLendConfirmation}
+        lendMarket={LendField.BORROW}
+        onBorrow={onBorrow}
+        onRepayBorrow={onRepayBorrow}
+      />
       {!!borrowedAsset.length && (
         <MarketsCard style={{ marginBottom: '1rem' }}>
           <MarketsCardHeader>Borrow</MarketsCardHeader>
@@ -131,7 +153,13 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
             </AssetWrapLabels>
             <AssetItemWrap>
               {borrowedAsset.map((item: any) => (
-                <AssetItem key={item?.symbol}>
+                <AssetItem
+                  key={item?.symbol}
+                  onClick={() => {
+                    setLendToken(item)
+                    setShowLendConfirmation(true)
+                  }}
+                >
                   <AssetLogo>
                     <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
                     {item?.symbol}
@@ -200,7 +228,13 @@ function BorrowMarkets({ allMarkets = [] }: { allMarkets: any }) {
           <AssetItemWrap>
             {!!borrowAsset.length
               ? borrowAsset.map((item: any) => (
-                  <AssetItem key={item?.symbol}>
+                  <AssetItem
+                    key={item?.symbol}
+                    onClick={() => {
+                      setLendToken(item)
+                      setShowLendConfirmation(true)
+                    }}
+                  >
                     <AssetLogo>
                       <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
                       {item?.symbol}

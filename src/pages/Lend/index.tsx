@@ -484,7 +484,7 @@ export default function Lend() {
           borrowTotalBalance={getBorrowTotalBalance()}
           limit={getLimit()}
         ></SupplyMarkets>
-        <BorrowMarkets allMarkets={allMarkets}></BorrowMarkets>
+        <BorrowMarkets allMarkets={allMarkets} onBorrow={onBorrow} onRepayBorrow={onRepayBorrow}></BorrowMarkets>
       </MarketsWrap>
     </PageWrapper>
   )
