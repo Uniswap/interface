@@ -462,7 +462,7 @@ export default function Lend() {
         parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
     }, allBorrowUnderlyingAssets)
     console.log(sumUnderlyingAssets(), 'sumUnderlyingAssets()')
-    return sumUnderlyingAssets() / allBorrowUnderlyingAssets
+    return allBorrowUnderlyingAssets ? sumUnderlyingAssets() / allBorrowUnderlyingAssets : 0
   }
 
   console.log('summary', allMarkets.length)

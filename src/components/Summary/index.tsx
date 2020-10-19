@@ -111,7 +111,7 @@ function Summary({
         <SummaryElement>
           <SummaryTitle>Supply Balance</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${supplyTotalBalance?.toFixed(8)}
+            <DotIcon />${supplyTotalBalance?.toFixed(2)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
@@ -124,14 +124,14 @@ function Summary({
         <SummaryElement>
           <SummaryTitle>Borrow Balance</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${borrowTotalBalance.toFixed(8)}
+            <DotIcon />${borrowTotalBalance.toFixed(2)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>Borrow Limit</SummaryTitle>
           <SummaryContent>
             <DotIcon />${limit?.toFixed(2)}
-            <BorrowWrap>({((borrowTotalBalance / limit) * 100).toFixed(2)}% Used)</BorrowWrap>
+            <BorrowWrap>({limit ? ((borrowTotalBalance / limit) * 100).toFixed(2) : '0.00'}% Used)</BorrowWrap>
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>
