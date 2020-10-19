@@ -12,9 +12,10 @@ import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
-import { utils } from 'ethers'
+// import { utils } from 'ethers'
 import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
 import { TokenAmount } from '@uniswap/sdk'
+import { utils } from 'ethers'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -181,7 +182,6 @@ function LendModal({
                     onUserInput={setLendInputValue}
                     onMax={() => {
                       setLendInputValue(lendToken?.supplyBalance ? utils.formatEther(lendToken?.supplyBalance) : '')
-                      // setLendInputValue(tokenBalances?.[lendToken?.address]?.toSignificant())
                     }}
                     label={'Amount'}
                     showMaxButton={true}

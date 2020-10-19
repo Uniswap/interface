@@ -321,8 +321,9 @@ function SupplyMarkets({
                     <ItemBottomWrap>
                       {item?.supplyBalance && item?.symbol
                         ? (
-                            parseFloat(utils.formatEther(item?.supplyBalance)) *
-                            parseFloat(utils.formatEther(item?.exchangeRateMantissa))
+                            (parseFloat(item?.supplyBalance) *
+                              parseFloat(utils.formatEther(item?.exchangeRateMantissa))) /
+                            Math.pow(10, item?.decimals)
                           ).toFixed(4)
                         : ''}
                       {' ' + item?.symbol}

@@ -194,11 +194,8 @@ function BorrowMarkets({
                         : ''}
                     </div>
                     <ItemBottomWrap>
-                      {item?.borrowBalance && item?.symbol && item?.cAddress
-                        ? (item?.cAddress.toLowerCase() === '0x4a92e71227d294f041bd82dd8f78591b75140d63'
-                            ? parseFloat(item?.borrowBalance) / (10 * Math.pow(10, 5))
-                            : parseFloat(utils.formatEther(item?.borrowBalance))
-                          ).toFixed(4)
+                      {item?.borrowBalance && item?.symbol
+                        ? (parseFloat(item?.borrowBalance) / Math.pow(10, item?.decimals)).toFixed(4)
                         : ''}
                       {' ' + item?.symbol}
                     </ItemBottomWrap>
