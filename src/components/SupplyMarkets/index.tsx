@@ -275,7 +275,7 @@ function SupplyMarkets({
           <AssetWrap>
             <AssetWrapLabels>
               <AssetLabel textAlign={'left'}>Asset</AssetLabel>
-              <AssetLabel textAlign={'right'}>APY / Earned</AssetLabel>
+              <AssetLabel textAlign={'right'}>APY</AssetLabel>
               <AssetLabel textAlign={'right'}>Balance</AssetLabel>
               <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
             </AssetWrapLabels>
@@ -300,12 +300,6 @@ function SupplyMarkets({
                       ).toFixed(2)}
                       %
                     </div>
-                    <ItemBottomWrap>
-                      {item?.supplyBalance && item?.symbol
-                        ? parseFloat(utils.formatEther(item?.supplyBalance)).toFixed(4)
-                        : ''}
-                      {' ' + item?.symbol}
-                    </ItemBottomWrap>
                   </ItemWrap>
                   <ItemWrap>
                     <div>

@@ -151,7 +151,7 @@ function BorrowMarkets({
           <AssetWrap>
             <AssetWrapLabels>
               <AssetLabel textAlign={'left'}>Asset</AssetLabel>
-              <AssetLabel textAlign={'right'}>APY / Accrued</AssetLabel>
+              <AssetLabel textAlign={'right'}>APY</AssetLabel>
               <AssetLabel textAlign={'right'}>Balance</AssetLabel>
               <AssetLabel textAlign={'right'}>% Of Limit</AssetLabel>
             </AssetWrapLabels>
@@ -176,12 +176,6 @@ function BorrowMarkets({
                       ).toFixed(2)}
                       %
                     </div>
-                    <ItemBottomWrap>
-                      {item?.borrowBalance && item?.symbol
-                        ? parseFloat(utils.formatEther(item?.borrowBalance)).toFixed(4)
-                        : ''}
-                      {' ' + item?.symbol}
-                    </ItemBottomWrap>
                   </ItemWrap>
                   <ItemWrap>
                     <div>
