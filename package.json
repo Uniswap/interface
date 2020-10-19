@@ -39,7 +39,7 @@
     "cypress": "^4.11.0",
     "dxswap-core": "git://github.com/levelkdev/dxswap-core.git#v0.1.1",
     "dxswap-periphery": "git://github.com/levelkdev/dxswap-periphery.git#v0.2.1",
-    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.2.1",
+    "dxswap-sdk": "git://github.com/luzzif/dxswap-sdk.git#token-list",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
@@ -114,7 +114,6 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@uniswap/token-lists": "^1.0.0-beta.11",
     "react-use": "^15.3.3"
   }
 }

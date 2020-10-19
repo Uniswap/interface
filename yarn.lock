@@ -1125,10 +1125,17 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.4", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.10.2", "@babel/runtime@^7.10.3", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.7.2", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.11.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
   integrity sha512-TeWkU52so0mPtDcaCTxNBI/IHiz0pZgr8VEFqXFtZWpYD08ZB6FaSwVAS8MKRQAP3bYKiVjwysOJgMFY28o6Tw==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.7.4":
+  version "7.12.1"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.1.tgz#b4116a6b6711d010b2dad3b7b6e43bf1b9954740"
+  integrity sha512-J5AIf3vPj3UwXaAzb5j1xM4WAQDX3EMgemF8rjCP3SoW09LfRKAXQKt6CoVYl230P6iWdRcBbnLDDdnqWxZSCA==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -2744,11 +2751,6 @@
     lodash "^4.17.15"
     semver "^7.3.2"
     tsutils "^3.17.1"
-
-"@uniswap/token-lists@^1.0.0-beta.11":
-  version "1.0.0-beta.17"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.17.tgz#a861fe96a0f3de91b01eae05dec05a6a2018b38e"
-  integrity sha512-UVRmSsP/ghJ7Dg8BHYjAZmZL96jHlZKrFoIEuKD3g1E4FbahfwS2j2KAaf6iQuLx6RWo8PQmDZ99rfK6T2xi8w==
 
 "@walletconnect/client@^1.1.1-alpha.0":
   version "1.2.2"
@@ -6434,9 +6436,9 @@ duplexify@^3.4.2, duplexify@^3.6.0:
   dependencies:
     dxswap-core "git://github.com/levelkdev/dxswap-core.git#ca021f47415d3f35360e136946fb97cdafb5163e"
 
-"dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#v0.2.1":
+"dxswap-sdk@git://github.com/luzzif/dxswap-sdk.git#token-list":
   version "0.2.1"
-  resolved "git://github.com/levelkdev/dxswap-sdk.git#8f9a6099e5463023b2f326e9968d736db7fcb35a"
+  resolved "git://github.com/luzzif/dxswap-sdk.git#bd0966b2b11c02320b1b1fc742abe08fe1a6f239"
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     big.js "^5.2.2"
