@@ -9,10 +9,10 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 - Website: [uniswap.org](https://uniswap.org/)
 - Interface: [app.uniswap.org](https://app.uniswap.org)
 - Docs: [uniswap.org/docs/](https://uniswap.org/docs/)
-- Twitter: [@UniswapProtocol](https://twitter.com/UniswapProtocol)
+- Twitter: [@UniswapProtocol](https://twitter.com/deerfi_com)
 - Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
 - Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.gg/Y7TF6QA)
+- Discord: [Uniswap](https://discord.gg/JtrTSE)
 - Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
 
 ## Accessing the Uniswap Interface
