@@ -5,6 +5,7 @@
   "installWeb3MobileBrowser": "請安裝含有 web3 瀏覽器的手機錢包，如 Trust Wallet 或 Coinbase Wallet。",
   "installMetamask": "請使用 Chrome 或 Brave 瀏覽器安裝 Metamask。",
   "disconnected": "未連接",
+  "lending": "借貸",
   "swap": "兌換",
   "send": "發送",
   "pool": "資金池",

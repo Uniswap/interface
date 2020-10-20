@@ -29,7 +29,7 @@ import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redir
 import Swap from './Swap'
 import {
   OpenClaimAddressModalAndRedirectToSwap,
-  RedirectPathToLendOnly,
+  RedirectPathToLendingOnly,
   RedirectPathToSwapOnly,
   RedirectToSwap
 } from './Swap/redirects'
@@ -96,7 +96,7 @@ export default function App() {
           <TopLevelModals />
           <Web3ReactManager>
             <Switch>
-              <Route exact strict path="/lend" component={Lend} />
+              <Route exact strict path="/lending" component={Lend} />
               <Route exact strict path="/swap" component={Swap} />
               <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
@@ -119,7 +119,7 @@ export default function App() {
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
-              <Route component={RedirectPathToLendOnly} />
+              <Route component={RedirectPathToLendingOnly} />
             </Switch>
           </Web3ReactManager>
           <Marginer />

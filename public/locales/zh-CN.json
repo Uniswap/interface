@@ -5,6 +5,7 @@
   "installWeb3MobileBrowser": "请从支持web3的移动端浏览器，如 Trust Wallet 或 Coinbase Wallet 访问。",
   "installMetamask": "请从安装了 Metamask 插件的 Chrome 或 Brave 访问。",
   "disconnected": "未连接",
+  "lending": "借贷",
   "swap": "兑换",
   "send": "发送",
   "pool": "资金池",

@@ -247,32 +247,14 @@ function Header({ history }: { history: any }) {
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => history.location.pathname.includes('/swap')}>
-            {t('swap')}
+          <StyledNavLink id={`lending-nav-link`} to={'/lending'}>
+            {t('lending')}
           </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={() =>
-              history.location.pathname.includes('/pool') ||
-              history.location.pathname.includes('/add') ||
-              history.location.pathname.includes('/remove')
-            }
-          >
-            {t('pool')}
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/uni'} isActive={() => history.location.pathname.includes('/uni')}>
-            Rewards
-          </StyledNavLink>
-          <StyledNavLink
-            id={`stake-nav-link`}
-            to={'/vote'}
-            isActive={() => history.location.pathname.includes('/vote')}
-          >
+          <StyledExternalLink id={`twitter-nav-link`} href={'https://twitter.com/deerfi_com'}>
             Twitter <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Medium <span style={{ fontSize: '11px' }}>↗</span>
+          </StyledExternalLink>
+          <StyledExternalLink id={`discord-nav-link`} href={'https://discord.gg/qTQTFF'}>
+            Discord <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
         </HeaderLinks>
       </HeaderRow>

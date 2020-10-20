@@ -5,8 +5,8 @@ import { AppDispatch } from '../../state'
 import { ApplicationModal, setOpenModal } from '../../state/application/actions'
 
 // Redirects to lend but only replace the pathname
-export function RedirectPathToLendOnly({ location }: RouteComponentProps) {
-  return <Redirect to={{ ...location, pathname: '/lend' }} />
+export function RedirectPathToLendingOnly({ location }: RouteComponentProps) {
+  return <Redirect to={{ ...location, pathname: '/lending' }} />
 }
 
 // Redirects to swap but only replace the pathname
