@@ -304,7 +304,7 @@ function SupplyMarkets({
                   <ItemWrap>
                     <div>${getSupplyTotalBalance([item]).toFixed(2) ?? ''}</div>
                     <ItemBottomWrap>
-                      {getSupplyBalanceAmount(item).toFixed(4) ?? ''}
+                      {parseFloat(getSupplyBalanceAmount(item)).toFixed(4) ?? ''}
                       {' ' + item?.symbol}
                     </ItemBottomWrap>
                   </ItemWrap>

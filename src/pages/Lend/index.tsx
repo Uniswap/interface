@@ -117,22 +117,18 @@ export function getBorrowTotalBalance(allMarketsAsset: CToken[]) {
 }
 
 export function getSupplyBalanceAmount(ctoken: CToken) {
-  return parseFloat(
-    ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals
-      ? new Fraction(
-          JSBI.multiply(JSBI.BigInt(ctoken.supplyBalance ?? 0), JSBI.BigInt(ctoken.exchangeRateMantissa ?? 0)),
-          JSBI.multiply(balanceFormat(ctoken?.decimals), COLLATERAL_FACTOR_MANTISSA)
-        ).toSignificant(18)
-      : JSBI.BigInt('0').toString()
-  )
+  return ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals
+    ? new Fraction(
+        JSBI.multiply(JSBI.BigInt(ctoken.supplyBalance ?? 0), JSBI.BigInt(ctoken.exchangeRateMantissa ?? 0)),
+        JSBI.multiply(balanceFormat(ctoken?.decimals), COLLATERAL_FACTOR_MANTISSA)
+      ).toSignificant(18)
+    : JSBI.BigInt('0').toString()
 }
 
 export function getBorrowBalanceAmount(ctoken: CToken) {
-  return parseFloat(
-    ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals
-      ? new Fraction(JSBI.BigInt(ctoken.borrowBalance ?? 0), balanceFormat(ctoken?.decimals)).toSignificant(18)
-      : JSBI.BigInt('0').toString()
-  )
+  return ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals
+    ? new Fraction(JSBI.BigInt(ctoken.borrowBalance ?? 0), balanceFormat(ctoken?.decimals)).toSignificant(18)
+    : JSBI.BigInt('0').toString()
 }
 
 export function getSupplyApy(ctoken: CToken) {
@@ -141,6 +137,23 @@ export function getSupplyApy(ctoken: CToken) {
 
 export function getBorrowApy(ctoken: CToken) {
   return (Math.pow(((ctoken?.borrowRatePerBlock ?? 0) / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) * 100
+}
+
+export function getSupplyBalance(ctoken: CToken) {
+  return parseFloat(
+    ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals && ctoken?.underlyingPrice
+      ? new Fraction(
+          JSBI.multiply(
+            JSBI.multiply(JSBI.BigInt(ctoken.supplyBalance ?? 0), JSBI.BigInt(ctoken.exchangeRateMantissa ?? 0)),
+            JSBI.BigInt(ctoken?.underlyingPrice ?? 0)
+          ),
+          JSBI.multiply(
+            JSBI.multiply(balanceFormat(ctoken?.decimals), EXCHANGE_RATE_MANTISSA),
+            underlyingPriceFormat(ctoken?.decimals)
+          )
+        ).toSignificant(18)
+      : JSBI.BigInt('0').toString()
+  )
 }
 
 export function getLimit(allMarketsAsset: CToken[]) {
@@ -587,6 +600,7 @@ export default function Lend() {
   //   return supplyTotalBalance
   // }
   console.log(getSupplyTotalBalance(allMarketsAsset), 'getSupplyTotalBalance')
+  console.log(getSupplyBalanceAmount(allMarketsAsset[0]), 'getSupplyBalanceAmount')
 
   // function getBorrowTotalBalance() {
   //   let borrowTotalBalance = 0
@@ -615,23 +629,6 @@ export default function Lend() {
 
   console.log(getLimit(allMarketsAsset), 'getLimit')
   console.log(getBorrowTotalBalance(allMarketsAsset), 'getBorrowTotalBalance')
-
-  function getSupplyBalance(ctoken: CToken) {
-    return parseFloat(
-      ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals && ctoken?.underlyingPrice
-        ? new Fraction(
-            JSBI.multiply(
-              JSBI.multiply(JSBI.BigInt(ctoken.supplyBalance ?? 0), JSBI.BigInt(ctoken.exchangeRateMantissa ?? 0)),
-              JSBI.BigInt(ctoken?.underlyingPrice ?? 0)
-            ),
-            JSBI.multiply(
-              JSBI.multiply(balanceFormat(ctoken?.decimals), EXCHANGE_RATE_MANTISSA),
-              underlyingPriceFormat(ctoken?.decimals)
-            )
-          ).toSignificant(18)
-        : JSBI.BigInt('0').toString()
-    )
-  }
 
   function getBorrowBalance(ctoken: CToken) {
     return parseFloat(

@@ -13,9 +13,17 @@ import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
 // import { utils } from 'ethers'
-import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
+import {
+  blocksPerDay,
+  daysPerYear,
+  ethMantissa,
+  getBorrowBalanceAmount,
+  // getSupplyBalance,
+  getSupplyBalanceAmount,
+  LendField
+} from '../../pages/Lend'
 import { TokenAmount } from '@uniswap/sdk'
-import { utils } from 'ethers'
+// import { utils } from 'ethers'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -181,7 +189,25 @@ function LendModal({
                     value={lendInputValue}
                     onUserInput={setLendInputValue}
                     onMax={() => {
-                      setLendInputValue(lendToken?.supplyBalance ? utils.formatEther(lendToken?.supplyBalance) : '')
+                      if (lendToken) {
+                        switch (tabItemActive) {
+                          case LendField.SUPPLY:
+                            setLendInputValue(tokenBalances?.[lendToken?.address]?.toSignificant(6) ?? '0')
+                            break
+                          case LendField.WITHDRAW:
+                            setLendInputValue(getSupplyBalanceAmount(lendToken) ?? '0')
+                            break
+                          case LendField.BORROW:
+                            break
+                          case LendField.REPAY:
+                            setLendInputValue(getBorrowBalanceAmount(lendToken) ?? '0')
+                            break
+                          default:
+                            break
+                        }
+                      } else {
+                        return
+                      }
                     }}
                     label={'Amount'}
                     showMaxButton={true}
@@ -297,20 +323,35 @@ function LendModal({
                   if (lendToken) {
                     switch (lendMarket) {
                       case LendField.SUPPLY:
-                        if (onMint && onRedeemUnderlying) {
+                        if (onMint && onRedeemUnderlying && lendInputValue) {
                           if (tabItemActive === LendField.SUPPLY) {
-                            onMint(lendToken, lendInputValue, false)
+                            // console.log(parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals), '123456')
+                            onMint(
+                              lendToken,
+                              (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
+                              false
+                            )
                           } else if (tabItemActive === LendField.WITHDRAW) {
-                            onRedeemUnderlying(lendToken, lendInputValue)
+                            onRedeemUnderlying(
+                              lendToken,
+                              (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString()
+                            )
                           }
                         }
                         break
                       case LendField.BORROW:
-                        if (onBorrow && onRepayBorrow) {
+                        if (onBorrow && onRepayBorrow && lendInputValue) {
                           if (tabItemActive === LendField.BORROW) {
-                            onBorrow(lendToken, lendInputValue)
+                            onBorrow(
+                              lendToken,
+                              (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString()
+                            )
                           } else if (tabItemActive === LendField.REPAY) {
-                            onRepayBorrow(lendToken, lendInputValue, false)
+                            onRepayBorrow(
+                              lendToken,
+                              (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
+                              false
+                            )
                           }
                         }
                         break
