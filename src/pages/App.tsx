@@ -6,7 +6,6 @@ import AddressClaimModal from '../components/claim/AddressClaimModal'
 import Header from '../components/StableHeader'
 import Polling from '../components/Header/Polling'
 import URLWarning from '../components/Header/URLWarning'
-// import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import { ApplicationModal } from '../state/application/actions'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
@@ -91,7 +90,6 @@ export default function App() {
           <Header />
         </HeaderWrapper>
         <BodyWrapper>
-          {/* <Popups /> */}
           <Polling />
           <TopLevelModals />
           <Web3ReactManager>
