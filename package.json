@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@deerfi/interface",
+  "description": "Deerfi Lending",
   "homepage": ".",
   "private": true,
   "devDependencies": {
