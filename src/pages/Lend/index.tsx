@@ -13,7 +13,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { calculateGasMargin, getComptrollerContract, getCERC20Contract, getCEtherContract } from '../../utils'
 import { useApproveCallback } from '../../hooks/useApproveCallback'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { CurrencyAmount } from '@uniswap/sdk'
+import { CurrencyAmount, JSBI, Fraction } from '@uniswap/sdk'
 import { utils } from 'ethers'
 import { useAllLendBalances } from '../../state/wallet/hooks'
 // import { RowBetween } from '../../components/Row'
@@ -28,6 +28,21 @@ export enum LendField {
   BORROW = 'BORROW',
   WITHDRAW = 'WITHDRAW',
   REPAY = 'REPAY'
+}
+
+export const ONE = JSBI.BigInt(1)
+// export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+export const EXCHANGE_RATE_MANTISSA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+
+export function balanceFormat(digits: number): JSBI {
+  return JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(digits))
+}
+
+export function underlyingPriceFormat(digits: number): JSBI {
+  return JSBI.exponentiate(
+    JSBI.BigInt(10),
+    JSBI.add(JSBI.subtract(JSBI.BigInt(18), JSBI.BigInt(digits)), JSBI.BigInt(18))
+  )
 }
 
 const PageWrapper = styled(AutoColumn)`
@@ -386,14 +401,30 @@ export default function Lend() {
   }
   console.log('this to ignore not used warning ', attemptingTxn, txHash, approvalCToken, approveCTokenCallback)
 
-  const allMarketsAsset = allMarkets.map((item: any) => {
+  const allMarketsAsset: CToken[] = allMarkets.map((item: any) => {
     return {
       ...item?.[1]
     }
   })
 
-  console.log(allMarketsAsset, 'allMarketsAsset')
-
+  console.log(
+    allMarketsAsset[0]?.exchangeRateMantissa && allMarketsAsset[0]?.supplyBalance && allMarketsAsset[0]?.decimals
+      ? new Fraction(
+          JSBI.multiply(
+            JSBI.BigInt(allMarketsAsset[0]?.supplyBalance),
+            JSBI.BigInt(allMarketsAsset[0]?.exchangeRateMantissa)
+          ),
+          JSBI.multiply(balanceFormat(allMarketsAsset[0]?.decimals), EXCHANGE_RATE_MANTISSA_BASE)
+        ).toSignificant(18)
+      : JSBI.BigInt('0'),
+    'jsbi'
+  )
+  console.log(allMarketsAsset[0]?.supplyBalance?.toString(), 'supplyBalance')
+  console.log(allMarketsAsset[0]?.exchangeRateMantissa?.toString(), 'exchangeRateMantissa')
+  console.log(allMarketsAsset[0]?.supplyBalance?.toString(), 'supplyBalance')
+  console.log(allMarketsAsset[0]?.exchangeRateMantissa?.toString(), 'exchangeRateMantissa')
+  console.log(allMarketsAsset[0]?.underlyingPrice?.toString(), 'underlyingPrice')
+  console.log(allMarketsAsset[1]?.collateralFactorMantissa?.toString(), 'collateralFactorMantissa')
   function getSupplyTotalBalance() {
     let supplyTotalBalance = 0
     allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
