@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, HARMONY, Token, TokenAmount, WONE } from '@harmony-swoop/sdk'
+import { Currency, CurrencyAmount, HARMONY, Token, TokenAmount, WONE } from '@swoop-exchange/sdk'
 
 const { ChainID } = require("@harmony-js/utils");
 

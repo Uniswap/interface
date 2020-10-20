@@ -3,15 +3,15 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { abi as IUniswapV2Router02ABI } from '@harmony-swoop/periphery/build/contracts/IUniswapV2Router02.json'
+import { abi as IUniswapV2Router02ABI } from '@swoop-exchange/periphery/build/contracts/IUniswapV2Router02.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainID } from '@harmony-js/utils';
-import { JSBI, Percent, Token, CurrencyAmount, Currency, HARMONY } from '@harmony-swoop/sdk'
+import { JSBI, Percent, Token, CurrencyAmount, Currency, HARMONY } from '@swoop-exchange/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 
-import { Hmy } from '@harmony-swoop/utils';
+import { Hmy } from '@swoop-exchange/utils';
 import { hmy } from '../connectors'
-import { AbstractWallet } from '@harmony-swoop/utils'
+import { AbstractWallet } from '@swoop-exchange/utils'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {

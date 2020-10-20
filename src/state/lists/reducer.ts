@@ -4,7 +4,7 @@ import { TokenList } from '@uniswap/token-lists/dist/types'
 import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
-import SWOOP_DEFAULT_LIST from '@harmony-swoop/default-token-list'
+import SWOOP_DEFAULT_LIST from '@swoop-exchange/default-token-list'
 
 export interface ListsState {
   readonly byUrl: {

@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent } from '@harmony-swoop/sdk'
+import { JSBI, Pair, Percent } from '@swoop-exchange/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -221,6 +221,15 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}
+              </Text>
+            </FixedHeightRow>
+
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                Total pool tokens:
+              </Text>
+              <Text fontSize={16} fontWeight={500}>
+                {totalPoolTokens ? totalPoolTokens.toSignificant(4) : '-'}
               </Text>
             </FixedHeightRow>
 

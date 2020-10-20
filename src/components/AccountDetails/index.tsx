@@ -22,7 +22,7 @@ import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 
 import { useUserWallet, useUserActiveWallet } from '../../state/user/hooks'
-import { AbstractWallet } from '@harmony-swoop/utils'
+import { AbstractWallet } from '@swoop-exchange/utils'
 
 import { useActiveHmyReact } from '../../hooks'
 

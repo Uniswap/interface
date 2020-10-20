@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@harmony-swoop/sdk'
+import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
@@ -223,35 +223,43 @@ export function useSwapCallback(
         let opts = wrapper.gasOptions()
         //opts.gasLimit = calculateGasMargin(gasEstimate).toNumber()
         if (value && !isZero(value)) {
-          opts.value = hexToNumber(value);
+          opts.value = value;
         }
         opts.from = account
 
         return contract.methods[methodName](...args).send(opts)
           .then((response: any) => {
-            const inputSymbol = trade.inputAmount.currency.symbol
-            const outputSymbol = trade.outputAmount.currency.symbol
-            const inputAmount = trade.inputAmount.toSignificant(3)
-            const outputAmount = trade.outputAmount.toSignificant(3)
+            let receipt = response?.transaction?.receipt
+            let status: number | undefined = (receipt?.status === '0x0' || receipt?.status === '0x1') ? Number(hexToNumber(receipt.status)) : undefined
 
-            const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
-            const withRecipient =
-              recipient === account
-                ? base
-                : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
-                  }`
+            if (status === 1) {
+              const inputSymbol = trade.inputAmount.currency.symbol
+              const outputSymbol = trade.outputAmount.currency.symbol
+              const inputAmount = trade.inputAmount.toSignificant(3)
+              const outputAmount = trade.outputAmount.toSignificant(3)
+  
+              const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
+              const withRecipient =
+                recipient === account
+                  ? base
+                  : `${base} to ${
+                      recipientAddressOrName && isAddress(recipientAddressOrName)
+                        ? shortenAddress(recipientAddressOrName)
+                        : recipientAddressOrName
+                    }`
+  
+              const withVersion =
+                tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
+  
+              addTransaction(response, {
+                summary: withVersion
+              })
+            } else {
+              console.error(`Swap failed`, methodName, args, value)
+              throw new Error(`Pair might lack sufficient liquidity - use another swap amount and please try again!`)
+            }
 
-            const withVersion =
-              tradeVersion === Version.v2 ? withRecipient : `${withRecipient} on ${(tradeVersion as any).toUpperCase()}`
-
-            addTransaction(response, {
-              summary: withVersion
-            })
-
-            return response.transaction.receipt.transactionHash
+            return receipt.transactionHash
           })
           .catch((error: any) => {
             // if the user rejected the tx, pass this along
@@ -260,7 +268,7 @@ export function useSwapCallback(
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, methodName, args, value)
-              throw new Error(`Swap failed: ${error.message}`)
+              throw new Error(`Swap failed`)
             }
           })
       },

@@ -45,7 +45,7 @@ export default function Updater(): null {
       .then(r => +library.utils.hexToNumber(r.result))
       .then(blockNumberCallback)
       .catch((error: any) => console.error(`Failed to get block number for chainId: ${chainId}`, error))
-      .finally(() => timeoutId = setTimeout(getLatestBlockNumber, 15000))
+      .finally(() => timeoutId = setTimeout(getLatestBlockNumber, 3000)) // Use 3 seconds for Harmony
     }
 
     getLatestBlockNumber()
