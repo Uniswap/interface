@@ -6,8 +6,11 @@ import { PortisConnector } from '@web3-react/portis-connector'
 
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
+import { ChainId } from 'uniswap-fuse-sdk'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
+const ROPSTEN_NETWORK_URL = process.env.REACT_APP_ROPSTEN_NETWORK_URL
+const MAINNET_NETWORK_URL = process.env.REACT_APP_MAINNET_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
@@ -17,6 +20,14 @@ if (typeof NETWORK_URL === 'undefined') {
   throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)
 }
 
+if (typeof ROPSTEN_NETWORK_URL === 'undefined') {
+  throw new Error(`REACT_APP_ROPSTEN_NETWORK_URL must be a defined environment variable`)
+}
+
+if (typeof MAINNET_NETWORK_URL === 'undefined') {
+  throw new Error(`REACT_APP_MAINNET_NETWORK_URL must be a defined environment variable`)
+}
+
 export const network = new NetworkConnector({
   urls: { [NETWORK_CHAIN_ID]: NETWORK_URL }
 })
@@ -24,6 +35,22 @@ export const network = new NetworkConnector({
 let networkLibrary: Web3Provider | undefined
 export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
+}
+
+export const getNetworkLibraryByChain = (chainId: number) => {
+  if (chainId === ChainId.ROPSTEN) {
+    const network = new NetworkConnector({
+      urls: { [chainId]: ROPSTEN_NETWORK_URL }
+    })
+    return new Web3Provider(network.provider as any)
+  } else if (chainId === ChainId.FUSE) {
+    const network = new NetworkConnector({
+      urls: { [chainId]: MAINNET_NETWORK_URL }
+    })
+    return new Web3Provider(network.provider as any)
+  } else {
+    return getNetworkLibrary()
+  }
 }
 
 export const injected = new InjectedConnector({

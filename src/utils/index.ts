@@ -8,7 +8,9 @@ import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'uniswap-fuse-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
+import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
+import { getNetworkLibrary, getNetworkLibraryByChain } from '../connectors'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -165,6 +167,10 @@ export function getBridgeForeignAddress(chainId?: number): string {
   }
 }
 
+export function getHomeBridgeContract(library: Web3Provider, account?: string): Contract {
+  return getContract('0xc2220646E1E76D5fF3a441eDd9E8EFF0e4A8EF03', HomeMultiAMBErc20ToErc677ABI, library, account)
+}
+
 export function getForiegnBridgeContract(chainId: number, library: Web3Provider, account?: string): Contract {
   const address = getBridgeForeignAddress(chainId)
   return getContract(address, ForeignMultiAMBErc20ToErc677ABI, library, account)
@@ -182,6 +188,35 @@ export function getCurrencySymbol(currency: Currency | null | undefined, chainId
   }
 }
 
+export function getBridgeContractWithRpc(chainId: number): Contract {
+  if (chainId === ChainId.MAINNET) {
+    const bridgeAddress = '0xc2220646E1E76D5fF3a441eDd9E8EFF0e4A8EF03'
+    const networkLibrary = getNetworkLibrary()
+    return getContract(bridgeAddress, HomeMultiAMBErc20ToErc677ABI, networkLibrary)
+  } else if (chainId === ChainId.ROPSTEN) {
+    const bridgeAddress = '0xAEBC2058780eb0372e7Ee75c11019d26E36894ad'
+    const networkLibrary = getNetworkLibrary()
+    return getContract(bridgeAddress, HomeMultiAMBErc20ToErc677ABI, networkLibrary)
+  } else if (chainId === ChainId.FUSE) {
+    const bridgeAddress = '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
+    const networkLibrary = getNetworkLibraryByChain(chainId)
+    return getContract(bridgeAddress, ForeignMultiAMBErc20ToErc677ABI, networkLibrary)
+  } else {
+    throw new Error('Unsupported chainId')
+  }
+}
+
 export function getDefaultMainnetCurrency() {
   return '0x970b9bb2c0444f5e81e9d0efb84c8ccdcdcaf84d'
+}
+
+export const confirmHomeTokenTransfer = async (tokenAddress: string, library: Web3Provider, account: string) => {
+  const contract = getHomeBridgeContract(library, account)
+  const foreignTokenAddress = await contract.foreignTokenAddress(tokenAddress)
+  return tokenAddress === foreignTokenAddress
+}
+
+export const confirmForeignTokenTransfer = async (tokenAddress: string, contract: Contract) => {
+  const foreignTokenAddress = await contract.foreignTokenAddress(tokenAddress)
+  return tokenAddress === foreignTokenAddress
 }

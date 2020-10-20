@@ -15,3 +15,7 @@ export const BottomGrouping = styled.div`
 export const Logo = styled.img`
   width: 100px;
 `
+
+export const Loader = styled.img`
+  margin-right: 5px;
+`

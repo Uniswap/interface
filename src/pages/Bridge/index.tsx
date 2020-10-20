@@ -12,13 +12,14 @@ import { useBridgeActionHandlers, useBridgeState, useDerivedBridgeInfo } from '.
 import { Field } from '../../state/bridge/actions'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { Wrapper, Logo, ArrowWrapper } from '../../components/bridge/styleds'
+import { Wrapper, Logo, ArrowWrapper, Loader } from '../../components/bridge/styleds'
 import { ArrowDown } from 'react-feather'
 import { ThemeContext } from 'styled-components'
 import { BottomGrouping } from '../../components/bridge/styleds'
 import { ButtonLight, ButtonPrimary, ButtonError } from '../../components/Button'
 import { DarkBlueCard } from '../../components/Card'
 import fuseLogo from '../../assets/images/fuse-logo-wordmark.svg'
+import loader from '../../assets/svg/loader.svg'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { RowBetween } from '../../components/Row'
@@ -30,7 +31,11 @@ import {
   getBridgeHomeAddress,
   getBridgeForeignAddress,
   calculateGasMargin,
-  getERC677TokenContract
+  getERC677TokenContract,
+  getBridgeContractWithRpc,
+  getHomeBridgeContract,
+  confirmHomeTokenTransfer,
+  confirmForeignTokenTransfer
 } from '../../utils'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 
@@ -58,6 +63,8 @@ export default function Bridge({
   // txn values
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [, setTxHash] = useState<string>('')
+
+  const [loadingText, setLoadingText] = useState<string>('')
 
   const handleInputCurrencySelect = useCallback(
     (inputCurrency: Currency) => {
@@ -87,18 +94,12 @@ export default function Bridge({
 
   const toggleWalletModal = useWalletModalToggle()
 
+  const isHome = chainId === ChainId.FUSE
+
   // set bridge and approval address
   const homeBridgeChain = ChainId.MAINNET
-  let bridgeAddress: string
-  let approvalAddress
-
-  if (chainId === ChainId.FUSE) {
-    bridgeAddress = getBridgeHomeAddress(homeBridgeChain ?? undefined)
-    approvalAddress = inputCurrencyId
-  } else {
-    bridgeAddress = getBridgeForeignAddress(chainId)
-    approvalAddress = bridgeAddress
-  }
+  const bridgeAddress = isHome ? getBridgeHomeAddress(homeBridgeChain ?? undefined) : getBridgeForeignAddress(chainId)
+  const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
 
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)
 
@@ -115,16 +116,18 @@ export default function Bridge({
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
-      value: BigNumber | null
+      value: BigNumber | null,
+      confirmations: number | null
 
     // home
-    if (chainId === ChainId.FUSE) {
+    if (isHome) {
       const tokenContract = getERC677TokenContract(inputCurrencyId, library, account)
 
       estimate = tokenContract.estimateGas.transferAndCall
       method = tokenContract.transferAndCall
       args = [bridgeAddress, parsedAmountInput.raw.toString(), []]
       value = null
+      confirmations = null
 
       // foreign
     } else {
@@ -134,16 +137,40 @@ export default function Bridge({
       method = bridgeContract['relayTokens(address,uint256)']
       args = [inputCurrencyId, parsedAmountInput.raw.toString()]
       value = null
+      confirmations = 2
     }
 
     setAttemptingTxn(true)
 
-    await estimate(...args, value ? { value } : {}).then((estimatedGas: BigNumber) => {
-      method(...args, {
+    try {
+      const estimatedGas = await estimate(...args, value ? { value } : {})
+
+      setLoadingText('Transfering...')
+      const response = await method(...args, {
         ...(value ? { value } : {}),
         gasLimit: calculateGasMargin(estimatedGas)
       })
-        .then(response => {
+
+      // waiting for confirmation
+      if (confirmations) {
+        setLoadingText('Waiting for 0/2 Confirmations')
+        await response.wait(confirmations)
+      }
+
+      // waiting for bridge
+      setLoadingText(isHome ? 'Moving Funds to Ethereum' : 'Moving Funds to Fuse')
+
+      const contract = getBridgeContractWithRpc(chainId)
+
+      const listener = async (tokenAddress: any, recipient: string) => {
+        const isUserAccount = recipient === account
+        const isTokenConfirmed = isHome
+          ? await confirmHomeTokenTransfer(inputCurrencyId, library, account)
+          : await confirmForeignTokenTransfer(tokenAddress, contract)
+
+        if ((isUserAccount && isTokenConfirmed) || isUserAccount) {
+          contract.removeListener('TokensBridged', listener)
+
           setAttemptingTxn(false)
 
           addTransaction(response, {
@@ -151,15 +178,21 @@ export default function Bridge({
           })
 
           setTxHash(response.hash)
-        })
-        .catch(error => {
-          setAttemptingTxn(false)
+          onFieldInput('')
+          setLoadingText('')
+        }
+      }
 
-          if (error?.code !== 4001) {
-            console.log(error)
-          }
-        })
-    })
+      contract.on('TokensBridged', listener)
+    } catch (error) {
+      setAttemptingTxn(false)
+
+      setLoadingText('')
+
+      if (error?.code !== 4001) {
+        console.log(error)
+      }
+    }
   }
 
   return (
@@ -219,9 +252,18 @@ export default function Bridge({
                   disabled={approval !== ApprovalState.APPROVED || !!inputError}
                   error={!!inputError}
                 >
-                  <Text fontSize={20} fontWeight={500}>
-                    {inputError ?? 'Transfer'}
-                  </Text>
+                  {loadingText ? (
+                    <>
+                      <Loader src={loader} />
+                      <Text fontSize={20} fontWeight={500}>
+                        {loadingText}
+                      </Text>
+                    </>
+                  ) : (
+                    <Text fontSize={20} fontWeight={500}>
+                      {inputError ?? 'Transfer'}
+                    </Text>
+                  )}
                 </ButtonError>
               </AutoColumn>
             )}
