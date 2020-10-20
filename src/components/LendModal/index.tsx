@@ -12,18 +12,16 @@ import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
-// import { utils } from 'ethers'
 import {
   blocksPerDay,
   daysPerYear,
   ethMantissa,
   getBorrowBalanceAmount,
-  // getSupplyBalance,
   getSupplyBalanceAmount,
   LendField
 } from '../../pages/Lend'
 import { TokenAmount } from '@uniswap/sdk'
-// import { utils } from 'ethers'
+import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -146,16 +144,11 @@ function LendModal({
 
   // const [isDark] = useDarkModeManager()
 
-  // show confirmation view before turning on
-  // const [showLendConfirmation, setShowLendConfirmation] = useState(false)
-
-  // const [lendToken, setLendToken] = useState<CToken>()
-
-  // const [isSuppliedMarkets, setIsSuppliedMarkets] = useState(false)
-
   const [tabItemActive, setTabItemActive] = useState<LendField>()
 
   const [lendInputValue, setLendInputValue] = useState('0')
+
+  const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken.cAddress)
 
   useEffect(() => {
     if (showLendConfirmation) {
@@ -182,7 +175,9 @@ function LendModal({
             </RowBetween>
             <Break />
             <AutoColumn gap={'sm'} style={{ backgroundColor: '#f9fafb' }}>
-              {lendToken?.canBeCollateral && tokenBalances && lendToken?.address ? (
+              {tabItemActive === LendField.WITHDRAW ||
+              tabItemActive === LendField.BORROW ||
+              (approvalTokenStatus === ApprovalState.APPROVED && tokenBalances && lendToken.address) ? (
                 <ApproveWrap>
                   <div />
                   <LendInputPanel
@@ -306,65 +301,56 @@ function LendModal({
                   </RateCalculation>
                 </RatePanel>
                 <Break />
-                {/* <RatePanel>
-                  <AutoRow>
-                    <CurrencyIcon address={lendToken?.address} style={{ marginRight: '6px' }} />
-                    <Text color={'#AAB8C1;'} lineHeight={'24px'}>
-                      {lendToken?.symbol}
-                    </Text>
-                  </AutoRow>
-                  <RateCalculation>10.53%</RateCalculation>
-                </RatePanel> */}
               </RateWrap>
             </AutoColumn>
             <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>
-              <ButtonLight
-                onClick={() => {
-                  if (lendToken) {
-                    switch (lendMarket) {
-                      case LendField.SUPPLY:
-                        if (onMint && onRedeemUnderlying && lendInputValue) {
-                          if (tabItemActive === LendField.SUPPLY) {
-                            // console.log(parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals), '123456')
-                            onMint(
-                              lendToken,
-                              (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
-                              false
-                            )
-                          } else if (tabItemActive === LendField.WITHDRAW) {
-                            onRedeemUnderlying(
-                              lendToken,
-                              (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString()
-                            )
-                          }
+              {tabItemActive === LendField.SUPPLY || tabItemActive === LendField.REPAY ? (
+                <>
+                  {approvalTokenStatus === ApprovalState.APPROVED ? (
+                    <ButtonLight
+                      onClick={() => {
+                        if (onMint && onRedeemUnderlying && tabItemActive === LendField.SUPPLY) {
+                          onMint(
+                            lendToken,
+                            (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
+                            false
+                          )
                         }
-                        break
-                      case LendField.BORROW:
-                        if (onBorrow && onRepayBorrow && lendInputValue) {
-                          if (tabItemActive === LendField.BORROW) {
-                            onBorrow(
-                              lendToken,
-                              (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString()
-                            )
-                          } else if (tabItemActive === LendField.REPAY) {
-                            onRepayBorrow(
-                              lendToken,
-                              (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
-                              false
-                            )
-                          }
+                        if (onBorrow && onRepayBorrow && tabItemActive === LendField.REPAY) {
+                          onRepayBorrow(
+                            lendToken,
+                            (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
+                            false
+                          )
                         }
-                        break
-                      default:
-                        break
+                      }}
+                    >
+                      {tabItemActive}
+                    </ButtonLight>
+                  ) : (
+                    <ButtonLight disabled={approvalTokenStatus === ApprovalState.PENDING} onClick={approveCallback}>
+                      ENABLE
+                    </ButtonLight>
+                  )}
+                </>
+              ) : (
+                <ButtonLight
+                  onClick={() => {
+                    if (onMint && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
+                      onRedeemUnderlying(
+                        lendToken,
+                        (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString()
+                      )
                     }
-                  } else {
-                    return
-                  }
-                }}
-              >
-                {tabItemActive}
-              </ButtonLight>
+
+                    if (onBorrow && onRepayBorrow && tabItemActive === LendField.BORROW) {
+                      onBorrow(lendToken, (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString())
+                    }
+                  }}
+                >
+                  {tabItemActive}
+                </ButtonLight>
+              )}
             </AutoColumn>
             <AutoColumn gap={'0'} style={{ padding: '0.6rem 2rem 0' }}>
               <AutoRow justify={'space-between'}>
