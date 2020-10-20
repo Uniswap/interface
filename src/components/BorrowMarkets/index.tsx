@@ -142,7 +142,7 @@ function BorrowMarkets({
   })
 
   const borrowAsset = borrowList.filter((item: any) => {
-    return item && item?.borrowBalance?.toString() == 0 && item?.supplyBalance?.toString() == 0
+    return item && item?.borrowBalance?.toString() === 0 && item?.supplyBalance?.toString() === 0
   })
 
   console.log('supplyMarkets: ', allMarkets)

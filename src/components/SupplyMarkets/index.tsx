@@ -180,7 +180,7 @@ function SupplyMarkets({
   })
 
   const supplyAsset = supplyList.filter((item: any) => {
-    return item && item?.supplyBalance?.toString() == 0 && item?.borrowBalance?.toString() == 0
+    return item && item?.supplyBalance?.toString() === 0 && item?.borrowBalance?.toString() === 0
   })
 
   function canExitMarkets(): boolean {

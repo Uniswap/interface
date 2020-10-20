@@ -549,7 +549,7 @@ export default function Lend() {
   let cToken: CToken | null
   const index = 0
   if (allMarkets && allMarkets.length > index) {
-    if (allMarkets[index] && allMarkets[index][0] == CTokenState.EXISTS && allMarkets[index][1]) {
+    if (allMarkets[index] && allMarkets[index][0] === CTokenState.EXISTS && allMarkets[index][1]) {
       cToken = allMarkets[index][1]
       if (cToken && allMarkets.length > 1000) {
         onEnterMarkets(cToken)
