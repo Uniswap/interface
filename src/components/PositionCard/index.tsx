@@ -212,7 +212,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 Your pool tokens:
               </Text>
               <Text fontSize={16} fontWeight={500}>
-                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
+                {userPoolBalance ? userPoolBalance.toSignificant(6) : '-'}
               </Text>
             </FixedHeightRow>
             <FixedHeightRow>
@@ -229,7 +229,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 Total pool tokens:
               </Text>
               <Text fontSize={16} fontWeight={500}>
-                {totalPoolTokens ? totalPoolTokens.toSignificant(4) : '-'}
+                {totalPoolTokens ? totalPoolTokens.toSignificant(6) : '-'}
               </Text>
             </FixedHeightRow>
 
