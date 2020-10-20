@@ -4,6 +4,11 @@ import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { AppDispatch } from '../../state'
 import { ApplicationModal, setOpenModal } from '../../state/application/actions'
 
+// Redirects to lend but only replace the pathname
+export function RedirectPathToLendOnly({ location }: RouteComponentProps) {
+  return <Redirect to={{ ...location, pathname: '/lend' }} />
+}
+
 // Redirects to swap but only replace the pathname
 export function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/swap' }} />
