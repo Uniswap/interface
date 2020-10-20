@@ -1,5 +1,5 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { CurrencyAmount, HARMONY, SwapParameters, Token, Trade, TradeOptions, TradeType } from '@harmony-swoop/sdk'
+import { CurrencyAmount, HARMONY, SwapParameters, Token, Trade, TradeOptions, TradeType } from '@swoop-exchange/sdk'
 import { getTradeVersion } from '../data/V1'
 import { Version } from '../hooks/useToggledVersion'
 

@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components'
-import { Pair } from '@harmony-swoop/sdk'
+import { Pair } from '@swoop-exchange/sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -62,7 +62,7 @@ export default function Pool() {
       <AppBody>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
-          <ButtonPrimary id="join-pool-button" as={Link} style={{ padding: 16 }} to="/add/ETH">
+          <ButtonPrimary id="join-pool-button" as={Link} style={{ padding: 16 }} to="/add/ONE">
             <Text fontWeight={500} fontSize={20}>
               Add Liquidity
             </Text>

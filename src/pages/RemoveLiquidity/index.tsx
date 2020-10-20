@@ -1,7 +1,7 @@
 //import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 //import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, HARMONY, Percent, WONE } from '@harmony-swoop/sdk'
+import { Currency, currencyEquals, HARMONY, Percent, WONE } from '@swoop-exchange/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'

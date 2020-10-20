@@ -51,7 +51,7 @@ export default function Updater(): null {
           .getTransactionReceipt({txnHash: hash})
           .then((response: any) => {
             let receipt: any = response.result
-            let status: number | undefined = (receipt?.status !== '') ? Number(hexToNumber(receipt.status)) : undefined
+            let status: number | undefined = (receipt?.status === '0x0' || receipt?.status === '0x1') ? Number(hexToNumber(receipt.status)) : undefined
 
             if (receipt) {
               dispatch(

@@ -1,4 +1,4 @@
-import { Token } from '@harmony-swoop/sdk'
+import { Token } from '@swoop-exchange/sdk'
 import { transparentize } from 'polished'
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'

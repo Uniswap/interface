@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
-import { Token, TokenAmount, WONE } from '@harmony-swoop/sdk'
+import { Token, TokenAmount, WONE } from '@swoop-exchange/sdk'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 import { ButtonSecondary } from '../Button'

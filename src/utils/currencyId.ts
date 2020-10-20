@@ -1,4 +1,4 @@
-import { Currency, HARMONY, Token } from '@harmony-swoop/sdk'
+import { Currency, HARMONY, Token } from '@swoop-exchange/sdk'
 
 export function currencyId(currency: Currency): string {
   if (currency === HARMONY) return 'ONE'

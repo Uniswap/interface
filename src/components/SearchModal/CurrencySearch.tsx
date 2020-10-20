@@ -1,4 +1,4 @@
-import { Currency, HARMONY, Token } from '@harmony-swoop/sdk'
+import { Currency, HARMONY, Token } from '@swoop-exchange/sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'

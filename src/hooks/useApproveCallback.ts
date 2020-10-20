@@ -1,7 +1,7 @@
 import { MaxUint256 } from '@ethersproject/constants'
 //import { BigNumber } from '@ethersproject/bignumber'
 //import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, HARMONY } from '@harmony-swoop/sdk'
+import { Trade, TokenAmount, CurrencyAmount, HARMONY } from '@swoop-exchange/sdk'
 import { useCallback, useMemo, useState } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
@@ -76,7 +76,7 @@ export function useApproveCallback(
       return
     }
 
-    let useExact = false
+    let useExact = true
     // There seems to be an issue with gas estimations - the estimation appear to be correct but the txs won't properly propagate/get accepted
     // When using the default high gas limit of 6721900 txs will get confirmed tho
     /*const estimatedGas = await tokenContract.methods.approve(spender, MaxUint256.toString()).estimateGas(wrapper.gasOptionsForEstimation()).catch(() => {
@@ -87,7 +87,7 @@ export function useApproveCallback(
 
     let gasOptions = wrapper.gasOptions();
     //gasOptions.gasLimit = calculateGasMargin(BigNumber.from(estimatedGas)).toNumber();
-
+    
     setApproveTxSent(true)
     return tokenContract.methods
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256.toString()).send(gasOptions)

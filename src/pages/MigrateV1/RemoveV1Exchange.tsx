@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { JSBI, Token, TokenAmount, WONE, Fraction, Percent, CurrencyAmount } from '@harmony-swoop/sdk'
+import { JSBI, Token, TokenAmount, WONE, Fraction, Percent, CurrencyAmount } from '@swoop-exchange/sdk'
 import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'

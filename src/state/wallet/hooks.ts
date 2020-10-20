@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, HARMONY, JSBI, Token, TokenAmount } from '@harmony-swoop/sdk'
+import { Currency, CurrencyAmount, HARMONY, JSBI, Token, TokenAmount } from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'

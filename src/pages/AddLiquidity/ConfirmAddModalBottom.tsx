@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from '@harmony-swoop/sdk'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@swoop-exchange/sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../../components/Button'

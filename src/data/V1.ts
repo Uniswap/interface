@@ -14,7 +14,7 @@ import {
   Trade,
   TradeType,
   WONE
-} from '@harmony-swoop/sdk'
+} from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
 import { useAllTokens } from '../hooks/Tokens'
 import { useV1FactoryContract } from '../hooks/useContract'
