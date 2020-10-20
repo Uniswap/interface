@@ -1,4 +1,4 @@
-import { Currency, currencyEquals, HARMONY, WONE } from '@harmony-swoop/sdk'
+import { Currency, currencyEquals, HARMONY, WONE } from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'

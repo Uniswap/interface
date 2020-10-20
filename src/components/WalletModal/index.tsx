@@ -7,7 +7,7 @@ import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { UserWallet } from '../../constants'
 
-//import { JSBI, CurrencyAmount } from '@harmony-swoop/sdk'
+//import { JSBI, CurrencyAmount } from '@swoop-exchange/sdk'
 
 import Modal from '../Modal'
 import AccountDetails from '../AccountDetails'
@@ -21,7 +21,7 @@ import { injected, fortmatic, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 //import { AbstractConnector } from '@web3-react/abstract-connector'
-import { AbstractWallet } from '@harmony-swoop/utils'
+import { AbstractWallet } from '@swoop-exchange/utils'
 
 import {useUserWallet} from '../../state/user/hooks'
 

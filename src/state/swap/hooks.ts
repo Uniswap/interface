@@ -1,7 +1,7 @@
 import useENS from '../../hooks/useENS'
 import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, HARMONY, JSBI, Token, TokenAmount, Trade } from '@harmony-swoop/sdk'
+import { Currency, CurrencyAmount, HARMONY, JSBI, Token, TokenAmount, Trade } from '@swoop-exchange/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

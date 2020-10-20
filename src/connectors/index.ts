@@ -8,8 +8,8 @@ import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 
 import config from "../config";
-import { OneWallet, MathWallet } from '@harmony-swoop/utils'
-import { Hmy } from '@harmony-swoop/utils';
+import { OneWallet, MathWallet } from '@swoop-exchange/utils'
+import { Hmy } from '@swoop-exchange/utils';
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY

@@ -1,4 +1,4 @@
-import { Currency, HARMONY, Token } from '@harmony-swoop/sdk'
+import { Currency, HARMONY, Token } from '@swoop-exchange/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 

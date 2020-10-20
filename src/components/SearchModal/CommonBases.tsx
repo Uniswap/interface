@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from 'rebass'
 import { ChainID } from '@harmony-js/utils';
-import { Currency, currencyEquals, HARMONY, Token } from '@harmony-swoop/sdk'
+import { Currency, currencyEquals, HARMONY, Token } from '@swoop-exchange/sdk'
 import styled from 'styled-components'
 
 import { SUGGESTED_BASES } from '../../constants'

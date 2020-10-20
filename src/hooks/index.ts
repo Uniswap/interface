@@ -9,7 +9,7 @@ import { hmy } from '../connectors'
 
 import { useUserWallet, useUserActiveWallet } from '../state/user/hooks'
 import { UserWallet } from '../constants'
-import { Hmy } from '@harmony-swoop/utils';
+import { Hmy } from '@swoop-exchange/utils';
 
 const { Harmony } = require('@harmony-js/core');
 const { ChainID } = require('@harmony-js/utils');

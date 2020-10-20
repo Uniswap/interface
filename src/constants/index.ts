@@ -1,12 +1,12 @@
-import { JSBI, Percent, Token, WONE, CurrencyAmount } from '@harmony-swoop/sdk'
+import { JSBI, Percent, Token, WONE, CurrencyAmount } from '@swoop-exchange/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { injected, oneWallet, mathWallet } from '../connectors'
 
 const { ChainID } = require("@harmony-js/utils");
 
-// Testnet address: 0xebe433f7e80efc33994453dec51cf0522f2ebbec - deployed 2020-10-07 21:11 UTC
-export const ROUTER_ADDRESS = '0xebe433f7e80efc33994453dec51cf0522f2ebbec'
+// Testnet address: 0x59B10fc63c01F6CD4cBcaeB4A5638F23542A6926 - deployed 2020-10-20 13:35 UTC
+export const ROUTER_ADDRESS = '0x59B10fc63c01F6CD4cBcaeB4A5638F23542A6926'
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -30,7 +30,7 @@ const WONE_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WONE_ONLY,
-  [ChainID.HmyMainnet]: [...WONE_ONLY[ChainID.HmyMainnet], DAI, USDC, USDT, COMP, MKR]
+  [ChainID.HmyMainnet]: [...WONE_ONLY[ChainID.HmyMainnet]]//, DAI, USDC, USDT, COMP, MKR]
 }
 
 /**
@@ -38,33 +38,33 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  * tokens.
  */
 export const CUSTOM_BASES: { [chainId in typeof ChainID]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainID.HmyMainnet]: {
+  /*[ChainID.HmyMainnet]: {
     // @ts-ignore
     [AMPL.address]: [DAI, WONE[ChainID.HmyMainnet]]
-  }
+  }*/
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WONE_ONLY,
-  [ChainID.HmyMainnet]: [...WONE_ONLY[ChainID.HmyMainnet], DAI, USDC, USDT]
+  [ChainID.HmyMainnet]: [...WONE_ONLY[ChainID.HmyMainnet]]//, DAI, USDC, USDT]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WONE_ONLY,
-  [ChainID.HmyMainnet]: [...WONE_ONLY[ChainID.HmyMainnet], DAI, USDC, USDT]
+  [ChainID.HmyMainnet]: [...WONE_ONLY[ChainID.HmyMainnet]]//, DAI, USDC, USDT]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in typeof ChainID]?: [Token, Token][] } = {
-  [ChainID.HmyMainnet]: [
+  /*[ChainID.HmyMainnet]: [
     [
       new Token(ChainID.HmyMainnet, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
       new Token(ChainID.HmyMainnet, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')
     ],
     [USDC, USDT],
     [DAI, USDT]
-  ]
+  ]*/
 }
 
 export interface UserWallet {

@@ -1,4 +1,4 @@
-import { JSBI } from '@harmony-swoop/sdk'
+import { JSBI } from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useSocksController } from './useContract'

@@ -1,6 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
-import { WONE } from '@harmony-swoop/sdk'
-import { abi as IUniswapV2PairABI } from '@harmony-swoop/core/build/contracts/IUniswapV2Pair.json'
+import { WONE } from '@swoop-exchange/sdk'
+import { abi as IUniswapV2PairABI } from '@swoop-exchange/core/build/contracts/IUniswapV2Pair.json'
 import { useMemo } from 'react'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'

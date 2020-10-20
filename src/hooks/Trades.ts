@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from '@harmony-swoop/sdk'
+import { Currency, CurrencyAmount, Pair, Token, Trade } from '@swoop-exchange/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 

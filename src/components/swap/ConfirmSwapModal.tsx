@@ -1,4 +1,4 @@
-import { currencyEquals, Trade } from '@harmony-swoop/sdk'
+import { currencyEquals, Trade } from '@swoop-exchange/sdk'
 import React, { useCallback, useMemo } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,

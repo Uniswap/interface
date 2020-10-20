@@ -1,4 +1,4 @@
-import { Token, TokenAmount } from '@harmony-swoop/sdk'
+import { Token, TokenAmount } from '@swoop-exchange/sdk'
 import { useMemo } from 'react'
 import { useAllTokenBalances } from '../../state/wallet/hooks'
 

@@ -1,5 +1,5 @@
 import { isAddress } from '../../utils'
-import { Token } from '@harmony-swoop/sdk'
+import { Token } from '@swoop-exchange/sdk'
 
 export function filterTokens(tokens: Token[], search: string): Token[] {
   if (search.length === 0) return tokens
