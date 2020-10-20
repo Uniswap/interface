@@ -10,7 +10,7 @@ describe('#contenthashToUri', () => {
     )
   })
   it('uniswap.eth contenthash', () => {
-    expect(contenthashToUri('0xe5010170000f6170702e756e69737761702e6f7267')).toEqual('ipns://app.uniswap.org')
+    expect(contenthashToUri('0xe5010170000f6170702e756e69737761702e6f7267')).toEqual('ipns://app.deerfi.com')
   })
 })
 

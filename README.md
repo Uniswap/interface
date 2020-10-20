@@ -7,7 +7,7 @@
 An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
 
 - Website: [uniswap.org](https://uniswap.org/)
-- Interface: [app.uniswap.org](https://app.uniswap.org)
+- Interface: [app.deerfi.com](https://app.deerfi.com)
 - Docs: [uniswap.org/docs/](https://uniswap.org/docs/)
 - Twitter: [@UniswapProtocol](https://twitter.com/deerfi_com)
 - Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
@@ -19,7 +19,7 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 
 To access the Deerfi Lending Interface, use an IPFS gateway link from the
 [latest release](https://github.com/Uniswap/uniswap-interface/releases/latest), 
-or visit [app.uniswap.org](https://app.uniswap.org).
+or visit [app.deerfi.com](https://app.deerfi.com).
 
 ## Listing a token
 
