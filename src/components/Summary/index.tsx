@@ -118,7 +118,7 @@ function Summary({
           <SummaryTitle>Net APY</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            {(100 * netApy).toFixed(2)}%
+            {netApy?.toFixed(2)}%
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>

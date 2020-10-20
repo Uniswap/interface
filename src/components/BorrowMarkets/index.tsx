@@ -1,11 +1,20 @@
-import { utils } from 'ethers'
+// import { utils } from 'ethers'
 import React, { useState } from 'react'
 // import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
-import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
+import {
+  // blocksPerDay,
+  // daysPerYear,
+  // ethMantissa,
+  getBorrowApy,
+  getBorrowBalanceAmount,
+  getBorrowTotalBalance,
+  getLiquidity,
+  LendField
+} from '../../pages/Lend'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
 import { TokenAmount } from '@uniswap/sdk'
@@ -92,11 +101,13 @@ const ItemBottomWrap = styled.div`
 function BorrowMarkets({
   allMarkets = [],
   tokenBalances,
+  limit,
   onBorrow,
   onRepayBorrow
 }: {
   allMarkets: any
   tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
+  limit: number
   onBorrow: (cToken: CToken, amount: string) => void
   onRepayBorrow: (cToken: CToken, amount: string, isETH: boolean) => void
 }) {
@@ -109,20 +120,22 @@ function BorrowMarkets({
   const [showLendConfirmation, setShowLendConfirmation] = useState(false)
 
   const borrowList = allMarkets.map((item: any) => {
-    return item?.[1]
+    return {
+      ...item?.[1]
+    }
   })
 
-  function getLimit() {
-    let collateralFactorMantissa = 0
-    borrowList.forEach((val: any, idx: any, borrowList: any) => {
-      collateralFactorMantissa +=
-        parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
-        parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
-        parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
-        parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
-    }, collateralFactorMantissa)
-    return collateralFactorMantissa
-  }
+  // function getLimit() {
+  //   let collateralFactorMantissa = 0
+  //   borrowList.forEach((val: any, idx: any, borrowList: any) => {
+  //     collateralFactorMantissa +=
+  //       parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
+  //       parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
+  //       parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
+  //       parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
+  //   }, collateralFactorMantissa)
+  //   return collateralFactorMantissa
+  // }
 
   const borrowedAsset = borrowList.filter((item: any) => {
     return item && item?.borrowBalance?.toString() > 0
@@ -169,42 +182,16 @@ function BorrowMarkets({
                     {item?.symbol}
                   </AssetLogo>
                   <ItemWrap>
-                    <div>
-                      {(
-                        (Math.pow((item?.borrowRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
-                        100
-                      ).toFixed(2)}
-                      %
-                    </div>
+                    <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
                   </ItemWrap>
                   <ItemWrap>
-                    <div>
-                      $
-                      {item?.borrowBalance && item?.underlyingPrice
-                        ? (
-                            parseFloat(utils.formatEther(item?.borrowBalance)) *
-                            parseFloat(utils.formatEther(item?.underlyingPrice))
-                          ).toFixed(3)
-                        : ''}
-                    </div>
+                    <div>${getBorrowTotalBalance([item]).toFixed(2) ?? ''}</div>
                     <ItemBottomWrap>
-                      {item?.borrowBalance && item?.symbol
-                        ? (parseFloat(item?.borrowBalance) / Math.pow(10, item?.decimals)).toFixed(4)
-                        : ''}
+                      {getBorrowBalanceAmount(item).toFixed(4) ?? ''}
                       {' ' + item?.symbol}
                     </ItemBottomWrap>
                   </ItemWrap>
-                  <ItemWrap>
-                    {item?.liquidity && item?.underlyingPrice
-                      ? (
-                          ((parseFloat(utils.formatEther(item?.borrowBalance)) *
-                            parseFloat(utils.formatEther(item?.underlyingPrice))) /
-                            getLimit()) *
-                          100
-                        ).toFixed(1)
-                      : ''}
-                    %
-                  </ItemWrap>
+                  <ItemWrap>{((getBorrowTotalBalance([item]) / limit) * 100).toFixed(0) ?? ''}%</ItemWrap>
                 </AssetItem>
               ))}
             </AssetItemWrap>
@@ -235,31 +222,13 @@ function BorrowMarkets({
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
-                      {(
-                        (Math.pow((item?.borrowRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
-                        100
-                      ).toFixed(2)}
-                      %
+                      <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
                       {tokenBalances?.[item?.address]?.toSignificant()}
                       {' ' + item?.symbol}
                     </ItemWrap>
-                    <ItemWrap>
-                      {item?.liquidity && item?.underlyingPrice
-                        ? (parseFloat(utils.formatEther(item?.liquidity)) *
-                            parseFloat(utils.formatEther(item?.underlyingPrice))) /
-                            1000 <
-                          100
-                          ? (
-                              (parseFloat(utils.formatEther(item?.liquidity)) *
-                                parseFloat(utils.formatEther(item?.underlyingPrice))) /
-                              1000
-                            ).toFixed(1)
-                          : '< 0.1'
-                        : ''}
-                      K
-                    </ItemWrap>
+                    <ItemWrap>{getLiquidity(item) < 100 ? getLiquidity(item).toFixed(1) : '< 0.1'}K</ItemWrap>
                   </AssetItem>
                 ))
               : ''}

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 
 import Switch from '../Switch'
 import styled from 'styled-components'
-import { utils } from 'ethers'
+// import { utils } from 'ethers'
 import CurrencyIcon from '../CurrencyIcon'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -13,7 +13,20 @@ import { RowBetween } from '../Row'
 import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
-import { blocksPerDay, daysPerYear, ethMantissa, LendField } from '../../pages/Lend'
+import {
+  // balanceFormat,
+  // blocksPerDay,
+  // COLLATERAL_FACTOR_MANTISSA,
+  // daysPerYear,
+  // ethMantissa,
+  // EXCHANGE_RATE_MANTISSA,
+  getSuppliedValue,
+  getSupplyApy,
+  getSupplyBalanceAmount,
+  getSupplyTotalBalance,
+  LendField
+  // underlyingPriceFormat
+} from '../../pages/Lend'
 import LendModal from '../LendModal'
 import { TokenAmount } from '@uniswap/sdk'
 
@@ -178,14 +191,7 @@ function SupplyMarkets({
       collateralToken?.underlyingPrice &&
       collateralToken?.collateralFactorMantissa
     ) {
-      if (
-        limit -
-          parseFloat(utils.formatEther(collateralToken.supplyBalance)) *
-            parseFloat(utils.formatEther(collateralToken.exchangeRateMantissa)) *
-            parseFloat(utils.formatEther(collateralToken.underlyingPrice)) *
-            parseFloat(utils.formatEther(collateralToken.collateralFactorMantissa)) <
-        borrowTotalBalance
-      ) {
+      if (limit - getSuppliedValue(collateralToken) ?? 0 < borrowTotalBalance) {
         return false
       } else {
         return true
@@ -293,33 +299,12 @@ function SupplyMarkets({
                     {item?.symbol}
                   </AssetLogo>
                   <ItemWrap>
-                    <div>
-                      {(
-                        (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
-                        100
-                      ).toFixed(2)}
-                      %
-                    </div>
+                    <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
                   </ItemWrap>
                   <ItemWrap>
-                    <div>
-                      $
-                      {item?.supplyBalance && item?.exchangeRateMantissa && item?.underlyingPrice
-                        ? (
-                            parseFloat(utils.formatEther(item?.supplyBalance)) *
-                            parseFloat(utils.formatEther(item?.exchangeRateMantissa)) *
-                            parseFloat(utils.formatEther(item?.underlyingPrice))
-                          ).toFixed(3)
-                        : ''}
-                    </div>
+                    <div>${getSupplyTotalBalance([item]).toFixed(2) ?? ''}</div>
                     <ItemBottomWrap>
-                      {item?.supplyBalance && item?.symbol
-                        ? (
-                            (parseFloat(item?.supplyBalance) *
-                              parseFloat(utils.formatEther(item?.exchangeRateMantissa))) /
-                            Math.pow(10, item?.decimals)
-                          ).toFixed(4)
-                        : ''}
+                      {getSupplyBalanceAmount(item).toFixed(4) ?? ''}
                       {' ' + item?.symbol}
                     </ItemBottomWrap>
                   </ItemWrap>
@@ -361,13 +346,7 @@ function SupplyMarkets({
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
-                      <div>
-                        {(
-                          (Math.pow((item?.supplyRatePerBlock / ethMantissa) * blocksPerDay + 1, daysPerYear - 1) - 1) *
-                          100
-                        ).toFixed(2)}
-                        %
-                      </div>
+                      <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
                       {tokenBalances?.[item?.address]?.toSignificant()}
