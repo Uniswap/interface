@@ -9,7 +9,8 @@ import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
 import { TokenAmount } from '@uniswap/sdk'
 import { LendField } from '../../state/lending/actions'
-import { getBorrowApy, getBorrowBalanceAmount, getBorrowTotalBalance, getLiquidity } from '../../utils'
+import { getBorrowTotalBalance } from '../../utils'
+import { BigNumber } from '@ethersproject/bignumber'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -91,11 +92,11 @@ const ItemBottomWrap = styled.div`
 `
 
 function BorrowMarkets({
-  allMarkets = [],
+  allMarketCTokens = [],
   tokenBalances,
   limit
 }: {
-  allMarkets: any
+  allMarketCTokens: CToken[]
   tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   limit: number
 }) {
@@ -107,33 +108,13 @@ function BorrowMarkets({
 
   const [showLendConfirmation, setShowLendConfirmation] = useState(false)
 
-  const borrowList = allMarkets.map((item: any) => {
-    return {
-      ...item?.[1]
-    }
+  const borrowedAsset = allMarketCTokens.filter((item: CToken) => {
+    return item.borrowBalance && BigNumber.from(0).lt(item.borrowBalance)
   })
 
-  // function getLimit() {
-  //   let collateralFactorMantissa = 0
-  //   borrowList.forEach((val: any, idx: any, borrowList: any) => {
-  //     collateralFactorMantissa +=
-  //       parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
-  //       parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
-  //       parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
-  //       parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
-  //   }, collateralFactorMantissa)
-  //   return collateralFactorMantissa
-  // }
-
-  const borrowedAsset = borrowList.filter((item: any) => {
-    return item && item?.borrowBalance?.toString() > 0
+  const borrowAsset = allMarketCTokens.filter((item: CToken) => {
+    return item.borrowBalance && BigNumber.from(0).eq(item.borrowBalance) && item.supplyBalance && BigNumber.from(0).eq(item.supplyBalance)
   })
-
-  const borrowAsset = borrowList.filter((item: any) => {
-    return item && item?.borrowBalance?.toString() === '0' && item?.supplyBalance?.toString() === '0'
-  })
-
-  console.log('supplyMarkets: ', allMarkets)
 
   return (
     <div>
@@ -168,12 +149,12 @@ function BorrowMarkets({
                     {item?.symbol}
                   </AssetLogo>
                   <ItemWrap>
-                    <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
+                    <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
                   </ItemWrap>
                   <ItemWrap>
                     <div>${getBorrowTotalBalance([item]).toFixed(2) ?? ''}</div>
                     <ItemBottomWrap>
-                      {parseFloat(getBorrowBalanceAmount(item)).toFixed(4) ?? ''}
+                      {parseFloat(item.getBorrowBalanceAmount()).toFixed(4) ?? ''}
                       {' ' + item?.symbol}
                     </ItemBottomWrap>
                   </ItemWrap>
@@ -208,13 +189,13 @@ function BorrowMarkets({
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
-                      <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
+                      <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
                       {tokenBalances?.[item?.address]?.toSignificant()}
                       {' ' + item?.symbol}
                     </ItemWrap>
-                    <ItemWrap>{getLiquidity(item) < 100 ? getLiquidity(item).toFixed(1) : '< 0.1'}K</ItemWrap>
+                    <ItemWrap>{item.getLiquidity() < 100 ? item.getLiquidity().toFixed(1) : '< 0.1'}K</ItemWrap>
                   </AssetItem>
                 ))
               : ''}

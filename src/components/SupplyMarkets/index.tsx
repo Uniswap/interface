@@ -15,7 +15,7 @@ import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import LendModal from '../LendModal'
 import { TokenAmount } from '@uniswap/sdk'
-import { calculateGasMargin, getComptrollerContract, getSuppliedValue, getSupplyApy, getSupplyBalanceAmount, getSupplyTotalBalance } from '../../utils'
+import { calculateGasMargin, getComptrollerContract, getSupplyTotalBalance } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -131,12 +131,12 @@ const ModalContentWrapper = styled.div`
 `
 
 function SupplyMarkets({
-  allMarkets = [],
+  allMarketCTokens = [],
   tokenBalances,
   borrowTotalBalance,
   limit
 }: {
-  allMarkets: any
+  allMarketCTokens: CToken[]
   tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   borrowTotalBalance: number
   limit: number
@@ -255,17 +255,15 @@ function SupplyMarkets({
 
   const [isSuppliedMarkets, setIsSuppliedMarkets] = useState(false)
 
-  const supplyList = allMarkets.map((item: any) => {
-    return item?.[1]
+  const suppliedAsset = allMarketCTokens.filter((item: CToken) => {
+    return item.supplyBalance && BigNumber.from(0).lt(item.supplyBalance)
   })
 
-  const suppliedAsset = supplyList.filter((item: any) => {
-    return item && item?.supplyBalance?.toString() > 0
+  const supplyAsset = allMarketCTokens.filter((item: CToken) => {
+    return item.supplyBalance && BigNumber.from(0).eq(item.supplyBalance) && item.borrowBalance && BigNumber.from(0).eq(item.borrowBalance)
   })
 
-  const supplyAsset = supplyList.filter((item: any) => {
-    return item && item?.supplyBalance?.toString() === '0' && item?.borrowBalance?.toString() === '0'
-  })
+  console.log('check--', allMarketCTokens, suppliedAsset, supplyAsset)
 
   function canExitMarkets(): boolean {
     if (
@@ -275,7 +273,7 @@ function SupplyMarkets({
       collateralToken?.underlyingPrice &&
       collateralToken?.collateralFactorMantissa
     ) {
-      if (limit - getSuppliedValue(collateralToken) ?? 0 < borrowTotalBalance) {
+      if (limit - collateralToken.getSuppliedValue() ?? 0 < borrowTotalBalance) {
         return false
       } else {
         return true
@@ -381,12 +379,12 @@ function SupplyMarkets({
                     {item?.symbol}
                   </AssetLogo>
                   <ItemWrap>
-                    <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
+                    <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
                   </ItemWrap>
                   <ItemWrap>
                     <div>${getSupplyTotalBalance([item]).toFixed(2) ?? ''}</div>
                     <ItemBottomWrap>
-                      {parseFloat(getSupplyBalanceAmount(item)).toFixed(4) ?? ''}
+                      {parseFloat(item.getSupplyBalanceAmount()).toFixed(4) ?? ''}
                       {' ' + item?.symbol}
                     </ItemBottomWrap>
                   </ItemWrap>
@@ -428,7 +426,7 @@ function SupplyMarkets({
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
-                      <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
+                      <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
                       {tokenBalances?.[item?.address]?.toSignificant()}

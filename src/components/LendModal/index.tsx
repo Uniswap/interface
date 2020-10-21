@@ -14,7 +14,7 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
 import { TokenAmount } from '@uniswap/sdk'
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import { BLOCKS_PER_DAY, calculateGasMargin, DAYS_PER_YEAR, ETH_MANTISSA, getBorrowBalanceAmount, getCERC20Contract, getCEtherContract, getSupplyBalanceAmount } from '../../utils'
+import { BLOCKS_PER_DAY, calculateGasMargin, DAYS_PER_YEAR, ETH_MANTISSA, getCERC20Contract, getCEtherContract } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -387,12 +387,12 @@ function LendModal({
                             setLendInputValue(tokenBalances?.[lendToken?.address]?.toSignificant(6) ?? '0')
                             break
                           case LendField.WITHDRAW:
-                            setLendInputValue(getSupplyBalanceAmount(lendToken) ?? '0')
+                            setLendInputValue(lendToken.getSupplyBalanceAmount() ?? '0')
                             break
                           case LendField.BORROW:
                             break
                           case LendField.REPAY:
-                            setLendInputValue(getBorrowBalanceAmount(lendToken) ?? '0')
+                            setLendInputValue(lendToken.getBorrowBalanceAmount() ?? '0')
                             break
                           default:
                             break

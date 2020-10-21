@@ -4,7 +4,6 @@ import React from 'react'
 // import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
-import { utils } from 'ethers'
 
 // import { YellowCard } from '../Card'
 
@@ -71,39 +70,17 @@ const BorrowWrap = styled.div`
 `
 
 function Summary({
-  allMarkets = [],
   supplyTotalBalance,
   borrowTotalBalance,
   limit,
   netApy
 }: {
-  allMarkets: any
   supplyTotalBalance: any
   borrowTotalBalance: any
   limit: any
   netApy: any
 }) {
   // const { t } = useTranslation()
-
-  // const [isDark] = useDarkModeManager()
-  const suppliedAsset = allMarkets.map((item: any) => {
-    return {
-      ...item?.[1]
-    }
-  })
-  console.log(suppliedAsset, 'suppliedAsset')
-  console.log(
-    utils.formatEther(suppliedAsset[0]?.borrowBalance ? suppliedAsset[0]?.borrowBalance : 0),
-    'suppliedAsset[0]?.borrowBalance'
-  )
-  console.log(
-    utils.formatEther(suppliedAsset[0]?.liquidity ? suppliedAsset[0]?.liquidity : 0),
-    'suppliedAsset[0]?.liquidity'
-  )
-  console.log(
-    parseFloat(utils.formatEther(suppliedAsset[0]?.underlyingPrice ? suppliedAsset[0]?.underlyingPrice : 0)),
-    'suppliedAsset[0]?.underlyingPrice'
-  )
 
   return (
     <SummaryCard>

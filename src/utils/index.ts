@@ -148,27 +148,6 @@ export function underlyingPriceFormat(digits: number): JSBI {
   )
 }
 
-export function getSuppliedValue(ctoken: CToken) {
-  return parseFloat(
-    ctoken?.exchangeRateMantissa &&
-      ctoken?.supplyBalance &&
-      ctoken?.decimals &&
-      ctoken?.underlyingPrice &&
-      ctoken?.collateralFactorMantissa
-      ? new Fraction(
-          JSBI.multiply(
-            JSBI.multiply(JSBI.BigInt(ctoken.supplyBalance ?? 0), JSBI.BigInt(ctoken.exchangeRateMantissa ?? 0)),
-            JSBI.multiply(JSBI.BigInt(ctoken.underlyingPrice ?? 0), JSBI.BigInt(ctoken.collateralFactorMantissa ?? 0))
-          ),
-          JSBI.multiply(
-            JSBI.multiply(balanceFormat(ctoken?.decimals), EXCHANGE_RATE_MANTISSA),
-            JSBI.multiply(underlyingPriceFormat(ctoken?.decimals), COLLATERAL_FACTOR_MANTISSA)
-          )
-        ).toSignificant(18)
-      : JSBI.BigInt('0').toString()
-  )
-}
-
 export function getSupplyTotalBalance(allMarketsAsset: CToken[]) {
   let supplyTotalBalance = 0
   for (let i = 0; i < allMarketsAsset.length; i++) {
@@ -217,46 +196,6 @@ export function getBorrowTotalBalance(allMarketsAsset: CToken[]) {
   return borrowTotalBalance
 }
 
-export function getSupplyBalanceAmount(ctoken: CToken) {
-  return ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals
-    ? new Fraction(
-        JSBI.multiply(JSBI.BigInt(ctoken.supplyBalance ?? 0), JSBI.BigInt(ctoken.exchangeRateMantissa ?? 0)),
-        JSBI.multiply(balanceFormat(ctoken?.decimals), COLLATERAL_FACTOR_MANTISSA)
-      ).toSignificant(18)
-    : JSBI.BigInt('0').toString()
-}
-
-export function getBorrowBalanceAmount(ctoken: CToken) {
-  return ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals
-    ? new Fraction(JSBI.BigInt(ctoken.borrowBalance ?? 0), balanceFormat(ctoken?.decimals)).toSignificant(18)
-    : JSBI.BigInt('0').toString()
-}
-
-export function getSupplyApy(ctoken: CToken) {
-  return (Math.pow(((ctoken?.supplyRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) * 100
-}
-
-export function getBorrowApy(ctoken: CToken) {
-  return (Math.pow(((ctoken?.borrowRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) * 100
-}
-
-export function getSupplyBalance(ctoken: CToken) {
-  return parseFloat(
-    ctoken?.exchangeRateMantissa && ctoken?.supplyBalance && ctoken?.decimals && ctoken?.underlyingPrice
-      ? new Fraction(
-          JSBI.multiply(
-            JSBI.multiply(JSBI.BigInt(ctoken.supplyBalance ?? 0), JSBI.BigInt(ctoken.exchangeRateMantissa ?? 0)),
-            JSBI.BigInt(ctoken?.underlyingPrice ?? 0)
-          ),
-          JSBI.multiply(
-            JSBI.multiply(balanceFormat(ctoken?.decimals), EXCHANGE_RATE_MANTISSA),
-            underlyingPriceFormat(ctoken?.decimals)
-          )
-        ).toSignificant(18)
-      : JSBI.BigInt('0').toString()
-  )
-}
-
 export function getLimit(allMarketsAsset: CToken[]) {
   let borrowLimit = 0
   for (let i = 0; i < allMarketsAsset.length; i++) {
@@ -289,34 +228,12 @@ export function getLimit(allMarketsAsset: CToken[]) {
   return borrowLimit
 }
 
-export function getLiquidity(ctoken: CToken) {
-  return ctoken?.liquidity && ctoken?.decimals && ctoken?.underlyingPrice
-    ? parseFloat(
-        new Fraction(
-          JSBI.multiply(JSBI.BigInt(ctoken.liquidity), JSBI.BigInt(ctoken.underlyingPrice)),
-          JSBI.multiply(LIQUIDITY, underlyingPriceFormat(ctoken.decimals))
-        ).toSignificant(18)
-      ) / 1000
-    : 0
-}
-
-export function getBorrowBalance(ctoken: CToken) {
-  return parseFloat(
-    ctoken?.borrowBalance && ctoken?.decimals && ctoken?.underlyingPrice
-      ? new Fraction(
-          JSBI.multiply(JSBI.BigInt(ctoken.borrowBalance ?? 0), JSBI.BigInt(ctoken?.underlyingPrice ?? 0)),
-          JSBI.multiply(balanceFormat(ctoken?.decimals), underlyingPriceFormat(ctoken?.decimals))
-        ).toSignificant(18)
-      : JSBI.BigInt('0').toString()
-  )
-}
-
 export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
   let sumUnderlyingAssets = 0
   for (let i = 0; i < allMarketsAsset.length; i++) {
     sumUnderlyingAssets += allMarketsAsset[i]
-      ? getSupplyBalance(allMarketsAsset[i]) * getSupplyApy(allMarketsAsset[i]) -
-        getBorrowBalance(allMarketsAsset[i]) * getBorrowApy(allMarketsAsset[i])
+      ? allMarketsAsset[i].getSupplyBalance() * allMarketsAsset[i].getSupplyApy() -
+      allMarketsAsset[i].getBorrowBalance() * allMarketsAsset[i].getBorrowApy()
       : 0
   }
   return sumUnderlyingAssets

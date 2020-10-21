@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 
 import Summary from '../../components/Summary'
 import SupplyMarkets from '../../components/SupplyMarkets'
 import BorrowMarkets from '../../components/BorrowMarkets'
-import { CToken, useCTokens } from '../../data/CToken'
+import { CToken, CTokenState, useCTokens } from '../../data/CToken'
 // import { utils } from 'ethers'
 import { useAllLendBalances } from '../../state/wallet/hooks'
 import { getBorrowTotalBalance, getLimit, getNetApy, getSupplyTotalBalance } from '../../utils'
@@ -38,38 +38,50 @@ const MarketsWrap = styled.div`
   `};
 `
 
+function useAllMarketCTokens(markets: [CTokenState, CToken | null][]): CToken[] {
+  return useMemo(
+    () =>
+      Object.values(
+        markets
+          // filter out invalid ctokens
+          .filter((result): result is [CTokenState.EXISTS, CToken] => Boolean(result[0] === CTokenState.EXISTS && result[1]))
+          // filter out duplicated ctokens
+          .reduce<{ [pairAddress: string]: CToken }>((memo, [, curr]) => {
+            memo[curr.cAddress] = memo[curr.cAddress] ?? curr
+            return memo
+          }, {})
+      ),
+    [markets]
+  )
+}
+
 export default function Lend() {
   const tokenBalances = useAllLendBalances()
 
   const allMarkets = useCTokens()
 
-  const allMarketsAsset: CToken[] = allMarkets.map((item: any) => {
-    return {
-      ...item?.[1]
-    }
-  })
+  const allMarketCTokens: CToken[] = useAllMarketCTokens(allMarkets)
 
   return (
     <>
       <PageWrapper gap="lg" justify="center">
         <Summary
-          allMarkets={allMarkets}
-          supplyTotalBalance={getSupplyTotalBalance(allMarketsAsset)}
-          borrowTotalBalance={getBorrowTotalBalance(allMarketsAsset)}
-          limit={getLimit(allMarketsAsset)}
-          netApy={getNetApy(allMarketsAsset)}
+          supplyTotalBalance={getSupplyTotalBalance(allMarketCTokens)}
+          borrowTotalBalance={getBorrowTotalBalance(allMarketCTokens)}
+          limit={getLimit(allMarketCTokens)}
+          netApy={getNetApy(allMarketCTokens)}
         ></Summary>
         <MarketsWrap>
           <SupplyMarkets
-            allMarkets={allMarkets}
+            allMarketCTokens={allMarketCTokens}
             tokenBalances={tokenBalances}
-            borrowTotalBalance={getBorrowTotalBalance(allMarketsAsset)}
-            limit={getLimit(allMarketsAsset)}
+            borrowTotalBalance={getBorrowTotalBalance(allMarketCTokens)}
+            limit={getLimit(allMarketCTokens)}
           ></SupplyMarkets>
           <BorrowMarkets
-            allMarkets={allMarkets}
+            allMarketCTokens={allMarketCTokens}
             tokenBalances={tokenBalances}
-            limit={getLimit(allMarketsAsset)}
+            limit={getLimit(allMarketCTokens)}
           ></BorrowMarkets>
         </MarketsWrap>
       </PageWrapper>

@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk'
+import { ChainId, Fraction, JSBI, Token } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
@@ -6,6 +6,7 @@ import { abi as ICTokenABI } from '../constants/abis/ctoken.json'
 import { Interface } from '@ethersproject/abi'
 import { useComptrollerContract, useOracleContract } from '../hooks/useContract'
 import { CTOKEN_LISTS } from '../constants/lend'
+import { balanceFormat, underlyingPriceFormat } from '../utils'
 
 const CTOKEN_INTERFACE = new Interface(ICTokenABI)
 
@@ -15,6 +16,16 @@ export enum CTokenState {
   EXISTS,
   INVALID
 }
+
+export const ETH_MANTISSA = 1e18
+export const BLOCKS_PER_DAY = 4 * 60 * 24
+export const DAYS_PER_YEAR = 365
+
+export const ONE = JSBI.BigInt(1)
+// export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 
 export class CToken extends Token {
   public readonly cAddress: string
@@ -75,6 +86,90 @@ export class CToken extends Token {
       return true
     }
     return this.chainId === other.chainId && this.cAddress === other.cAddress
+  }
+
+  public getBorrowBalanceAmount(): string {
+    return this.exchangeRateMantissa && this.supplyBalance && this.decimals
+    ? new Fraction(JSBI.BigInt(this.borrowBalance ?? 0), balanceFormat(this.decimals)).toSignificant(18)
+    : JSBI.BigInt('0').toString()
+  }
+
+  public getSupplyApy(): number {
+    return (Math.pow(((this.supplyRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) * 100
+  }
+
+  public getBorrowApy() {
+    return (Math.pow(((this.borrowRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) * 100
+  }
+
+  public getSupplyBalanceAmount() {
+    return this.exchangeRateMantissa && this.supplyBalance && this.decimals
+      ? new Fraction(
+          JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+          JSBI.multiply(balanceFormat(this.decimals), COLLATERAL_FACTOR_MANTISSA)
+        ).toSignificant(18)
+      : JSBI.BigInt('0').toString()
+  }
+
+  public getSupplyBalance() {
+    return parseFloat(
+      this.exchangeRateMantissa && this.supplyBalance && this.decimals && this.underlyingPrice
+        ? new Fraction(
+            JSBI.multiply(
+              JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+              JSBI.BigInt(this.underlyingPrice ?? 0)
+            ),
+            JSBI.multiply(
+              JSBI.multiply(balanceFormat(this.decimals), EXCHANGE_RATE_MANTISSA),
+              underlyingPriceFormat(this.decimals)
+            )
+          ).toSignificant(18)
+        : JSBI.BigInt('0').toString()
+    )
+  }
+
+  public getBorrowBalance() {
+    return parseFloat(
+      this.borrowBalance && this.decimals && this.underlyingPrice
+        ? new Fraction(
+            JSBI.multiply(JSBI.BigInt(this.borrowBalance ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
+            JSBI.multiply(balanceFormat(this.decimals), underlyingPriceFormat(this.decimals))
+          ).toSignificant(18)
+        : JSBI.BigInt('0').toString()
+    )
+  }
+
+  public getLiquidity() {
+    return this.liquidity && this.decimals && this.underlyingPrice
+      ? parseFloat(
+          new Fraction(
+            JSBI.multiply(JSBI.BigInt(this.liquidity), JSBI.BigInt(this.underlyingPrice)),
+            JSBI.multiply(LIQUIDITY, underlyingPriceFormat(this.decimals))
+          ).toSignificant(18)
+        ) / 1000
+      : 0
+  }
+  
+
+  public getSuppliedValue() {
+    return parseFloat(
+      this.exchangeRateMantissa &&
+        this.supplyBalance &&
+        this.decimals &&
+        this.underlyingPrice &&
+        this.collateralFactorMantissa
+        ? new Fraction(
+            JSBI.multiply(
+              JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+              JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), JSBI.BigInt(this.collateralFactorMantissa ?? 0))
+            ),
+            JSBI.multiply(
+              JSBI.multiply(balanceFormat(this.decimals), EXCHANGE_RATE_MANTISSA),
+              JSBI.multiply(underlyingPriceFormat(this.decimals), COLLATERAL_FACTOR_MANTISSA)
+            )
+          ).toSignificant(18)
+        : JSBI.BigInt('0').toString()
+    )
   }
 }
 
