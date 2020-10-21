@@ -1,12 +1,12 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ChainId, JSBI, Percent, Token, WETH, DXD } from 'dxswap-sdk'
-import { proxies as kovanProxies } from 'dxswap-periphery/.openzeppelin/kovan.json'
+import { rinkeby } from 'dxswap-periphery/.contracts.json'
 import { tokens } from './tokens'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const ROUTER_ADDRESS = kovanProxies['dxswap-periphery/DXswapRouter'][0].address
-
+export const ROUTER_ADDRESS = rinkeby.router
+console.log(ROUTER_ADDRESS)
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 // a list of tokens by chain
@@ -33,22 +33,19 @@ const WETH_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN], DXD[ChainId.KOVAN]]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN], DXD[ChainId.KOVAN]]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN], DXD[ChainId.KOVAN]]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
@@ -59,8 +56,7 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
     ],
     [USDC, USDT],
     [DAI, USDT]
-  ],
-  [ChainId.KOVAN]: [[WETH[ChainId.KOVAN], DXD[ChainId.KOVAN]]]
+  ]
 }
 
 export interface WalletInfo {
