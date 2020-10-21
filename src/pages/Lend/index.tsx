@@ -721,34 +721,35 @@ export default function Lend() {
   console.log('summary', allMarkets.length)
 
   return (
-    <PageWrapper gap="lg" justify="center">
-      <Summary
-        allMarkets={allMarkets}
-        supplyTotalBalance={getSupplyTotalBalance(allMarketsAsset)}
-        borrowTotalBalance={getBorrowTotalBalance(allMarketsAsset)}
-        limit={getLimit(allMarketsAsset)}
-        netApy={getNetApy()}
-      ></Summary>
-      {/* <button onClick={() => cToken && onRepayBorrow(cToken, '1000000000000000000', false)}>Click me</button> */}
-      <MarketsWrap>
-        <SupplyMarkets
+    <>
+      <PageWrapper gap="lg" justify="center">
+        <Summary
           allMarkets={allMarkets}
-          tokenBalances={tokenBalances}
-          onEnterMarkets={onEnterMarkets}
-          onExitMarkets={onExitMarkets}
-          onMint={onMint}
-          onRedeemUnderlying={onRedeemUnderlying}
+          supplyTotalBalance={getSupplyTotalBalance(allMarketsAsset)}
           borrowTotalBalance={getBorrowTotalBalance(allMarketsAsset)}
           limit={getLimit(allMarketsAsset)}
-        ></SupplyMarkets>
-        <BorrowMarkets
-          allMarkets={allMarkets}
-          tokenBalances={tokenBalances}
-          limit={getLimit(allMarketsAsset)}
-          onBorrow={onBorrow}
-          onRepayBorrow={onRepayBorrow}
-        ></BorrowMarkets>
-      </MarketsWrap>
-    </PageWrapper>
+          netApy={getNetApy()}
+        ></Summary>
+        <MarketsWrap>
+          <SupplyMarkets
+            allMarkets={allMarkets}
+            tokenBalances={tokenBalances}
+            onEnterMarkets={onEnterMarkets}
+            onExitMarkets={onExitMarkets}
+            onMint={onMint}
+            onRedeemUnderlying={onRedeemUnderlying}
+            borrowTotalBalance={getBorrowTotalBalance(allMarketsAsset)}
+            limit={getLimit(allMarketsAsset)}
+          ></SupplyMarkets>
+          <BorrowMarkets
+            allMarkets={allMarkets}
+            tokenBalances={tokenBalances}
+            limit={getLimit(allMarketsAsset)}
+            onBorrow={onBorrow}
+            onRepayBorrow={onRepayBorrow}
+          ></BorrowMarkets>
+        </MarketsWrap>
+      </PageWrapper>
+    </>
   )
 }
