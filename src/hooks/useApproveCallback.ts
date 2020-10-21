@@ -64,7 +64,7 @@ export function useApproveCallback(
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
-  }, [amountToApprove, currentAllowance, pendingApproval, spender, approveTxSent])
+  }, [amountToApprove, currentAllowance, pendingApproval, spender, approveTxSent, operationHash])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
@@ -120,7 +120,7 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, wrapper, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, wrapper, addTransaction, operationHash, approveTxSent])
 
   return [approvalState, approve]
 }
