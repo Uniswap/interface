@@ -44,7 +44,7 @@ function useAllMarketCTokens(markets: [CTokenState, CToken | null][]): CToken[] 
             Boolean(result[0] === CTokenState.EXISTS && result[1])
           )
           // filter out duplicated ctokens
-          .reduce<{ [pairAddress: string]: CToken }>((memo, [, curr]) => {
+          .reduce<{ [cAddress: string]: CToken }>((memo, [, curr]) => {
             memo[curr.cAddress] = memo[curr.cAddress] ?? curr
             return memo
           }, {})
