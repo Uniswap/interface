@@ -129,10 +129,6 @@ export interface LendModalProps {
   borrowTotalBalance: number
   limit: number
   lendMarket?: LendField
-  onMint?: (cToken: CToken, amount: string, isETH: boolean) => void | null
-  onRedeemUnderlying?: (cToken: CToken, amount: string) => void | null
-  onBorrow?: (cToken: CToken, amount: string) => void | null
-  onRepayBorrow?: (cToken: CToken, amount: string, isETH: boolean) => void | null
 }
 
 function LendModal({
