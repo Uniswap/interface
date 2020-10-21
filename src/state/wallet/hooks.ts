@@ -9,6 +9,7 @@ import { isAddress } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 import { useUserUnclaimedAmount } from '../claim/hooks'
 import { useTotalUniEarned } from '../stake/hooks'
+import { CToken } from '../../data/CToken'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -142,6 +143,33 @@ export function useAllLendBalances(): { [tokenAddress: string]: TokenAmount | un
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
   console.log(balances, 'balances')
   return balances ?? {}
+}
+
+export function useAllCTokenBalances(cTokens?: (CToken | undefined)[]): (CurrencyAmount | undefined)[] {
+  const { account } = useActiveWeb3React()
+
+  const notETHctokens = useMemo(() => cTokens?.filter((ctoken): ctoken is CToken => !ctoken?.isETH() ?? false) ?? [], [
+    cTokens
+  ])
+
+  const tokenBalances = useTokenBalances(account ?? undefined, notETHctokens)
+  const containsETH: boolean = useMemo(() => cTokens?.some(item => item?.isETH()) ?? false, [cTokens])
+  const ethBalance = useETHBalances(containsETH ? [account ?? undefined] : [])
+
+  return useMemo(
+    () =>
+      cTokens?.map(cToken => {
+        if (!account || !cToken) return undefined
+        if (cToken.isETH()) return ethBalance[account]
+        if (cToken instanceof CToken) return tokenBalances[cToken.address]
+        return undefined
+      }) ?? [],
+    [account, cTokens, ethBalance, tokenBalances]
+  )
+}
+
+export function useCTokenBalance(ctoken?: CToken): CurrencyAmount | undefined {
+  return useAllCTokenBalances([ctoken])[0]
 }
 
 // get the total owned, unclaimed, and unharvested UNI for account
