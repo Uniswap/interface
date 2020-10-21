@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
-// import { darken } from 'polished'
-// import { useTranslation } from 'react-i18next'
-
 import Switch from '../Switch'
 import styled from 'styled-components'
-// import { utils } from 'ethers'
 import CurrencyIcon from '../CurrencyIcon'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -14,7 +10,6 @@ import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import LendModal from '../LendModal'
-import { TokenAmount } from '@uniswap/sdk'
 import { calculateGasMargin, getComptrollerContract, getSupplyTotalBalance } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -133,12 +128,10 @@ const ModalContentWrapper = styled.div`
 
 function SupplyMarkets({
   allMarketCTokens = [],
-  tokenBalances,
   borrowTotalBalance,
   limit
 }: {
   allMarketCTokens: CToken[]
-  tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   borrowTotalBalance: number
   limit: number
 }) {

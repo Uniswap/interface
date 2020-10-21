@@ -6,11 +6,7 @@ import Summary from '../../components/Summary'
 import SupplyMarkets from '../../components/SupplyMarkets'
 import BorrowMarkets from '../../components/BorrowMarkets'
 import { CToken, CTokenState, useCTokens } from '../../data/CToken'
-// import { utils } from 'ethers'
-import { useAllLendBalances } from '../../state/wallet/hooks'
 import { getBorrowTotalBalance, getLimit, getNetApy, getSupplyTotalBalance } from '../../utils'
-// import { RowBetween } from '../../components/Row'
-// import Loader from '../../components/Loader'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1280px;
@@ -58,8 +54,6 @@ function useAllMarketCTokens(markets: [CTokenState, CToken | null][]): CToken[] 
 }
 
 export default function Lend() {
-  const tokenBalances = useAllLendBalances()
-
   const allMarkets = useCTokens()
 
   const allMarketCTokens: CToken[] = useAllMarketCTokens(allMarkets)
@@ -76,13 +70,11 @@ export default function Lend() {
         <MarketsWrap>
           <SupplyMarkets
             allMarketCTokens={allMarketCTokens}
-            tokenBalances={tokenBalances}
             borrowTotalBalance={getBorrowTotalBalance(allMarketCTokens)}
             limit={getLimit(allMarketCTokens)}
           ></SupplyMarkets>
           <BorrowMarkets
             allMarketCTokens={allMarketCTokens}
-            tokenBalances={tokenBalances}
             borrowTotalBalance={getBorrowTotalBalance(allMarketCTokens)}
             limit={getLimit(allMarketCTokens)}
           ></BorrowMarkets>

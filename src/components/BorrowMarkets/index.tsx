@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
-import { TokenAmount } from '@uniswap/sdk'
 import { LendField } from '../../state/lending/actions'
 import { getBorrowTotalBalance } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -92,17 +91,7 @@ const ItemBottomWrap = styled.div`
   font-size: 0.9em;
 `
 
-function BorrowMarkets({
-  allMarketCTokens = [],
-  tokenBalances,
-  borrowTotalBalance,
-  limit
-}: {
-  allMarketCTokens: CToken[]
-  tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
-  borrowTotalBalance: number
-  limit: number
-}) {
+function BorrowMarkets({ allMarketCTokens = [], borrowTotalBalance, limit}: { allMarketCTokens: CToken[]; borrowTotalBalance: number; limit: number }) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()

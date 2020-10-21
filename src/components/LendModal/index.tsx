@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import { darken } from 'polished'
-// import { useTranslation } from 'react-i18next'
-
 import styled from 'styled-components'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -127,7 +124,6 @@ const RateCalculation = styled.div`
 
 export interface LendModalProps {
   lendToken: CToken | undefined
-  // tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   showLendConfirmation: boolean
   setShowLendConfirmation: Function
   borrowTotalBalance: number
@@ -141,7 +137,6 @@ export interface LendModalProps {
 
 function LendModal({
   lendToken,
-  // tokenBalances,
   showLendConfirmation,
   setShowLendConfirmation,
   borrowTotalBalance,
@@ -391,7 +386,6 @@ function LendModal({
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
                             setLendInputValue(lendTokenBalance?.toSignificant(6) ?? '0')
-                            // setLendInputValue(tokenBalances?.[lendToken?.address]?.toSignificant(6) ?? '0')
                             break
                           case LendField.WITHDRAW:
                             setLendInputValue(lendToken.getSupplyBalanceAmount() ?? '0')
