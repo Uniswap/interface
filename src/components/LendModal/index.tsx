@@ -569,9 +569,15 @@ function LendModal({
             <AutoColumn gap={'0'} style={{ padding: '0.6rem 2rem 0' }}>
               <AutoRow justify={'space-between'}>
                 <Text color={'#AAB8C1'} fontWeight={500}>
-                  Wallet Balance
+                  {tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW
+                    ? 'Protocol Balance'
+                    : 'Wallet Balance'}
                 </Text>
-                {lendTokenBalance?.toSignificant()} {' ' + lendToken?.symbol}
+                {(lendToken && tabItemActive === LendField.WITHDRAW) ||
+                (lendToken && tabItemActive === LendField.BORROW)
+                  ? Number(parseFloat(lendToken.getSupplyBalanceAmount()).toFixed(2)) || '0'
+                  : lendTokenBalance?.toSignificant() || '0'}
+                {' ' + lendToken?.symbol}
               </AutoRow>
             </AutoColumn>
           </AutoColumn>
