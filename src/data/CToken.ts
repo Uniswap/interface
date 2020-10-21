@@ -90,8 +90,8 @@ export class CToken extends Token {
 
   public getBorrowBalanceAmount(): string {
     return this.exchangeRateMantissa && this.supplyBalance && this.decimals
-    ? new Fraction(JSBI.BigInt(this.borrowBalance ?? 0), balanceFormat(this.decimals)).toSignificant(18)
-    : JSBI.BigInt('0').toString()
+      ? new Fraction(JSBI.BigInt(this.borrowBalance ?? 0), balanceFormat(this.decimals)).toSignificant(18)
+      : JSBI.BigInt('0').toString()
   }
 
   public getSupplyApy(): number {
@@ -149,7 +149,6 @@ export class CToken extends Token {
         ) / 1000
       : 0
   }
-  
 
   public getSuppliedValue() {
     return parseFloat(
