@@ -22,6 +22,18 @@ export enum ApprovalState {
   APPROVED
 }
 
+type approvedTokens = Record<string, boolean>
+
+const makeHashFromCurrencyAmount = (currencyAmount: CurrencyAmount | undefined) => {
+  if (!(currencyAmount instanceof TokenAmount)) {
+     return ''
+  }
+
+  return currencyAmount.denominator.toString() + currencyAmount.currency.symbol
+}
+
+const makeOperationHash = (amount1, amount2, spender) =>  makeHashFromCurrencyAmount(amount1) + makeHashFromCurrencyAmount(amount2) + spender
+
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
   amountToApprove?: CurrencyAmount,
@@ -31,7 +43,9 @@ export function useApproveCallback(
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
-  const [approveTxSent, setApproveTxSent] = useState<boolean>(false)
+  const [approveTxSent, setApproveTxSent] = useState<approvedTokens>({})
+
+  const operationHash = makeOperationHash(amountToApprove, currentAllowance, spender)
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
@@ -40,9 +54,13 @@ export function useApproveCallback(
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
+    if (approveTxSent[operationHash] && !currentAllowance.lessThan(amountToApprove)) {
+      setApproveTxSent({...approveTxSent, [operationHash]: false})
+    }
+
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
-      ? (pendingApproval || approveTxSent)
+      ? (pendingApproval || approveTxSent[operationHash])
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
@@ -88,7 +106,7 @@ export function useApproveCallback(
     let gasOptions = wrapper.gasOptions();
     //gasOptions.gasLimit = calculateGasMargin(BigNumber.from(estimatedGas)).toNumber();
     
-    setApproveTxSent(true)
+    setApproveTxSent({...approveTxSent, [operationHash]: true})
     return tokenContract.methods
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256.toString()).send(gasOptions)
       .then((response: any) => {
@@ -98,7 +116,7 @@ export function useApproveCallback(
         })
       })
       .catch((error: Error) => {
-        setApproveTxSent(false)
+        setApproveTxSent({...approveTxSent, [operationHash]: false})
         console.debug('Failed to approve token', error)
         throw error
       })
