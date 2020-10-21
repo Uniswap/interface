@@ -114,7 +114,6 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@uniswap/token-lists": "^1.0.0-beta.11",
     "react-use": "^15.3.3"
   }
 }

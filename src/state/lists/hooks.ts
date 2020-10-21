@@ -1,6 +1,6 @@
-import { ChainId, Token } from 'dxswap-sdk'
-import { TokenInfo } from '@uniswap/token-lists'
-import { DEFAULT_TOKEN_LIST } from '../../constants'
+import { ChainId, Token, TokenInfo, TokenList } from 'dxswap-sdk'
+import { useSelector } from 'react-redux'
+import { AppState } from '../index'
 
 /**
  * Token instances created from token info.
@@ -10,9 +10,6 @@ export class WrappedTokenInfo extends Token {
   constructor(tokenInfo: TokenInfo) {
     super(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)
     this.tokenInfo = tokenInfo
-  }
-  public get logoURI(): string | undefined {
-    return this.tokenInfo.logoURI
   }
 }
 
@@ -33,11 +30,12 @@ export function tokenListToTokenMap(list: TokenInfo[]): TokenAddressMap {
   const map = EMPTY_LIST
   list.forEach(tokenInfo => {
     const token = new WrappedTokenInfo(tokenInfo)
-    if (map[token.chainId][token.address] == undefined) map[token.chainId][token.address] = token
+    if (!map[token.chainId][token.address]) map[token.chainId][token.address] = token
   })
   return map
 }
 
-export function useDefaultTokenList(): TokenAddressMap {
-  return tokenListToTokenMap(DEFAULT_TOKEN_LIST)
+export function useTokenList(): TokenAddressMap {
+  const tokenList: TokenList = useSelector<AppState, AppState['tokenList']>(state => state.tokenList)
+  return tokenListToTokenMap(tokenList.tokens)
 }
