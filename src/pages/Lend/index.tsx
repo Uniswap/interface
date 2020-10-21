@@ -353,7 +353,6 @@ export default function Lend() {
 
   async function onMint(cToken: CToken, amount: string, isETH: boolean) {
     if (!chainId || !library || !account) return
-    console.log(cToken.symbol, 'yoyo')
 
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
@@ -545,90 +544,12 @@ export default function Lend() {
   }
 
   const allMarkets = useCTokens()
-  console.log('loan', allMarkets)
-  let cToken: CToken | null
-  const index = 0
-  if (allMarkets && allMarkets.length > index) {
-    if (allMarkets[index] && allMarkets[index][0] === CTokenState.EXISTS && allMarkets[index][1]) {
-      cToken = allMarkets[index][1]
-      if (cToken && allMarkets.length > 1000) {
-        onEnterMarkets(cToken)
-        onExitMarkets(cToken)
-        onMint(cToken, '1000000000000000000', false)
-        onRedeemUnderlying(cToken, '1000000000000000000')
-        onBorrow(cToken, '1000000000000000000')
-        onRepayBorrow(cToken, '1000000000000000000', false)
-      }
-    }
-  }
-  console.log('this to ignore not used warning ', attemptingTxn, txHash, approvalCToken, approveCTokenCallback)
 
   const allMarketsAsset: CToken[] = allMarkets.map((item: any) => {
     return {
       ...item?.[1]
     }
   })
-
-  console.log(
-    allMarketsAsset[0]?.exchangeRateMantissa && allMarketsAsset[0]?.supplyBalance && allMarketsAsset[0]?.decimals
-      ? new Fraction(
-          JSBI.multiply(
-            JSBI.BigInt(allMarketsAsset[0]?.supplyBalance),
-            JSBI.BigInt(allMarketsAsset[0]?.exchangeRateMantissa)
-          ),
-          JSBI.multiply(balanceFormat(allMarketsAsset[0]?.decimals), EXCHANGE_RATE_MANTISSA)
-        ).toSignificant(18)
-      : JSBI.BigInt('0'),
-    'jsbi'
-  )
-  console.log(allMarketsAsset[0]?.supplyBalance?.toString(), 'supplyBalance')
-  console.log(allMarketsAsset[0]?.exchangeRateMantissa?.toString(), 'exchangeRateMantissa')
-  console.log(allMarketsAsset[0]?.supplyBalance?.toString(), 'supplyBalance')
-  console.log(allMarketsAsset[0]?.exchangeRateMantissa?.toString(), 'exchangeRateMantissa')
-  console.log(allMarketsAsset[1]?.underlyingPrice?.toString(), 'underlyingPrice')
-  console.log(allMarketsAsset[1]?.collateralFactorMantissa?.toString(), 'collateralFactorMantissa')
-  console.log(allMarketsAsset[1]?.liquidity?.toString(), 'liquidity')
-
-  // function getSupplyTotalBalance() {
-  //   let supplyTotalBalance = 0
-  //   allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
-  //     supplyTotalBalance +=
-  //       parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
-  //       parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
-  //       parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
-  //   }, supplyTotalBalance)
-  //   return supplyTotalBalance
-  // }
-  console.log(getSupplyTotalBalance(allMarketsAsset), 'getSupplyTotalBalance')
-  console.log(getSupplyBalanceAmount(allMarketsAsset[0]), 'getSupplyBalanceAmount')
-
-  // function getBorrowTotalBalance() {
-  //   let borrowTotalBalance = 0
-  //   allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
-  //     borrowTotalBalance +=
-  //       parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
-  //       parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
-  //   }, borrowTotalBalance)
-  //   return borrowTotalBalance
-  // }
-  // console.log(getBorrowTotalBalance(), 'getBorrowTotalBalance')
-
-  console.log(getBorrowTotalBalance(allMarketsAsset), 'getBorrowTotalBalance')
-
-  // function getLimit() {
-  //   let collateralFactorMantissa = 0
-  //   allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
-  //     collateralFactorMantissa +=
-  //       parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
-  //       parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
-  //       parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
-  //       parseFloat(utils.formatEther(val?.collateralFactorMantissa ? val?.collateralFactorMantissa : 0))
-  //   }, collateralFactorMantissa)
-  //   return collateralFactorMantissa
-  // }
-
-  console.log(getLimit(allMarketsAsset), 'getLimit')
-  console.log(getBorrowTotalBalance(allMarketsAsset), 'getBorrowTotalBalance')
 
   function getBorrowBalance(ctoken: CToken) {
     return parseFloat(
@@ -640,29 +561,6 @@ export default function Lend() {
         : JSBI.BigInt('0').toString()
     )
   }
-
-  // function sumUnderlyingAssets() {
-  //   let sumUnderlyingAssets = 0
-  //   allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
-  //     sumUnderlyingAssets +=
-  //       parseFloat(utils.formatEther(val?.supplyBalance ? val?.supplyBalance : 0)) *
-  //         parseFloat(utils.formatEther(val?.exchangeRateMantissa ? val?.exchangeRateMantissa : 0)) *
-  //         parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
-  //         (Math.pow(
-  //           ((val?.supplyRatePerBlock ? val?.supplyRatePerBlock : 0) / ethMantissa) * blocksPerDay + 1,
-  //           daysPerYear - 1
-  //         ) -
-  //           1) -
-  //       parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
-  //         parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0)) *
-  //         (Math.pow(
-  //           ((val?.borrowRatePerBlock ? val?.borrowRatePerBlock : 0) / ethMantissa) * blocksPerDay + 1,
-  //           daysPerYear - 1
-  //         ) -
-  //           1)
-  //   }, sumUnderlyingAssets)
-  //   return sumUnderlyingAssets
-  // }
 
   function sumUnderlyingAssets() {
     let sumUnderlyingAssets = 0
@@ -693,32 +591,17 @@ export default function Lend() {
           : JSBI.BigInt('0').toString()
       )
     }
-    console.log(sumUnderlyingAssets(), 'sumUnderlyingAssets')
-    console.log(allBorrowUnderlyingAssets, 'allBorrowUnderlyingAssets')
 
-    if (sumUnderlyingAssets() && sumUnderlyingAssets() > 0 && getSupplyTotalBalance(allMarketsAsset)) {
-      return sumUnderlyingAssets() / getSupplyTotalBalance(allMarketsAsset)
-    } else if (allBorrowUnderlyingAssets && sumUnderlyingAssets() && sumUnderlyingAssets() < 0) {
-      return sumUnderlyingAssets() / allBorrowUnderlyingAssets
+    const sumAssets = sumUnderlyingAssets()
+    const supplyTotalBalance = getSupplyTotalBalance(allMarketsAsset)
+    if (sumAssets && sumAssets > 0 && supplyTotalBalance) {
+      return sumAssets / supplyTotalBalance
+    } else if (allBorrowUnderlyingAssets && sumAssets && sumAssets < 0) {
+      return sumAssets / allBorrowUnderlyingAssets
     } else {
       return 0
     }
-    // return sumUnderlyingAssets() ?? 0 / allBorrowUnderlyingAssets ?? 1
   }
-
-  // function getNetApy() {
-  //   let allBorrowUnderlyingAssets = 0
-  //   allMarketsAsset.forEach((val: any, idx: any, allMarketsAsset: any) => {
-  //     allBorrowUnderlyingAssets +=
-  //       parseFloat(utils.formatEther(val?.borrowBalance ? val?.borrowBalance : 0)) *
-  //       parseFloat(utils.formatEther(val?.underlyingPrice ? val?.underlyingPrice : 0))
-  //   }, allBorrowUnderlyingAssets)
-  //   console.log(sumUnderlyingAssets(), 'sumUnderlyingAssets()')
-  //   return allBorrowUnderlyingAssets ? sumUnderlyingAssets() / allBorrowUnderlyingAssets : 0
-  // }
-
-  console.log(getNetApy(), 'getNetApy')
-  console.log('summary', allMarkets.length)
 
   return (
     <>
