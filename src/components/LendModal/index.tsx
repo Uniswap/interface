@@ -12,7 +12,7 @@ import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
-import { TokenAmount } from '@uniswap/sdk'
+
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import {
   BLOCKS_PER_DAY,
@@ -29,6 +29,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import MarketBar from '../MarketBar'
+import { useCTokenBalance } from '../../state/wallet/hooks'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -125,8 +126,8 @@ const RateCalculation = styled.div`
 `
 
 export interface LendModalProps {
-  lendToken: CToken
-  tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
+  lendToken: CToken | undefined
+  // tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   showLendConfirmation: boolean
   setShowLendConfirmation: Function
   borrowTotalBalance: number
@@ -140,7 +141,7 @@ export interface LendModalProps {
 
 function LendModal({
   lendToken,
-  tokenBalances,
+  // tokenBalances,
   showLendConfirmation,
   setShowLendConfirmation,
   borrowTotalBalance,
@@ -159,6 +160,7 @@ function LendModal({
 
   console.log('use txHash and attemptingTxn later like Add Liquidity', attemptingTxn, txHash)
 
+  const lendTokenBalance = useCTokenBalance(lendToken)
   const addTransaction = useTransactionAdder()
 
   async function onMint(cToken: CToken, amount: string, isETH: boolean) {
@@ -349,7 +351,7 @@ function LendModal({
 
   const [lendInputValue, setLendInputValue] = useState('0')
 
-  const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken.cAddress)
+  const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken?.cAddress)
 
   useEffect(() => {
     if (showLendConfirmation) {
@@ -367,7 +369,7 @@ function LendModal({
             <RowBetween style={{ padding: '0 2rem 1.2rem' }}>
               <div />
               <AssetLogo>
-                <CurrencyIcon address={lendToken?.address} style={{ marginRight: '10px' }} />
+                <CurrencyIcon address={lendToken?.address ?? ''} style={{ marginRight: '10px' }} />
                 <Text fontWeight={500} fontSize={'1.1rem'}>
                   {lendToken?.symbol}
                 </Text>
@@ -378,7 +380,7 @@ function LendModal({
             <AutoColumn gap={'sm'} style={{ backgroundColor: '#f9fafb' }}>
               {tabItemActive === LendField.WITHDRAW ||
               tabItemActive === LendField.BORROW ||
-              (approvalTokenStatus === ApprovalState.APPROVED && tokenBalances && lendToken.address) ? (
+              (approvalTokenStatus === ApprovalState.APPROVED && lendToken?.address) ? (
                 <ApproveWrap>
                   <div />
                   <LendInputPanel
@@ -388,7 +390,8 @@ function LendModal({
                       if (lendToken) {
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
-                            setLendInputValue(tokenBalances?.[lendToken?.address]?.toSignificant(6) ?? '0')
+                            setLendInputValue(lendTokenBalance?.toSignificant(6) ?? '0')
+                            // setLendInputValue(tokenBalances?.[lendToken?.address]?.toSignificant(6) ?? '0')
                             break
                           case LendField.WITHDRAW:
                             setLendInputValue(lendToken.getSupplyBalanceAmount() ?? '0')
@@ -412,7 +415,7 @@ function LendModal({
                 </ApproveWrap>
               ) : (
                 <ApproveWrap>
-                  <CurrencyIcon address={lendToken?.address} size={'4.4rem'} style={{ marginBottom: '2rem' }} />
+                  <CurrencyIcon address={lendToken?.address ?? ''} size={'4.4rem'} style={{ marginBottom: '2rem' }} />
                   <Text fontWeight={400} fontSize={'0.9rem'} color={'#AAB8C1'} textAlign={'center'} lineHeight={'1rem'}>
                     To Supply or Repay Tether to the Compound Protocol, you need to enable it first.
                   </Text>
@@ -471,7 +474,7 @@ function LendModal({
                 <RateTitle>Supply Rates</RateTitle>
                 <RatePanel>
                   <AutoRow>
-                    <CurrencyIcon address={lendToken?.address} style={{ marginRight: '6px' }} />
+                    <CurrencyIcon address={lendToken?.address ?? ''} style={{ marginRight: '6px' }} />
                     <Text color={'#AAB8C1;'} lineHeight={'24px'}>
                       {lendToken?.symbol} APY
                     </Text>
@@ -530,18 +533,18 @@ function LendModal({
                   {approvalTokenStatus === ApprovalState.APPROVED ? (
                     <ButtonLight
                       onClick={() => {
-                        if (onMint && onRedeemUnderlying && tabItemActive === LendField.SUPPLY) {
+                        if (lendToken && onMint && tabItemActive === LendField.SUPPLY) {
                           onMint(
                             lendToken,
                             (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
-                            false
+                            lendToken.isETH()
                           )
                         }
-                        if (onBorrow && onRepayBorrow && tabItemActive === LendField.REPAY) {
+                        if (lendToken && onRepayBorrow && tabItemActive === LendField.REPAY) {
                           onRepayBorrow(
                             lendToken,
                             (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
-                            false
+                            lendToken.isETH()
                           )
                         }
                       }}
@@ -557,14 +560,14 @@ function LendModal({
               ) : (
                 <ButtonLight
                   onClick={() => {
-                    if (onMint && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
+                    if (lendToken && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
                       onRedeemUnderlying(
                         lendToken,
                         (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString()
                       )
                     }
 
-                    if (onBorrow && onRepayBorrow && tabItemActive === LendField.BORROW) {
+                    if (lendToken && onBorrow && tabItemActive === LendField.BORROW) {
                       onBorrow(lendToken, (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString())
                     }
                   }}
@@ -578,7 +581,7 @@ function LendModal({
                 <Text color={'#AAB8C1'} fontWeight={500}>
                   Wallet Balance
                 </Text>
-                {tokenBalances?.[lendToken?.address]?.toSignificant()} {' ' + lendToken?.symbol}
+                {lendTokenBalance?.toSignificant()} {' ' + lendToken?.symbol}
               </AutoRow>
             </AutoColumn>
           </AutoColumn>

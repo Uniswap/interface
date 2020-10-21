@@ -11,6 +11,7 @@ import { TokenAmount } from '@uniswap/sdk'
 import { LendField } from '../../state/lending/actions'
 import { getBorrowTotalBalance } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useAllCTokenBalances } from '../../state/wallet/hooks'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -106,7 +107,7 @@ function BorrowMarkets({
 
   // const [isDark] = useDarkModeManager()
 
-  const [lendToken, setLendToken] = useState<CToken>({} as CToken)
+  const [lendToken, setLendToken] = useState<CToken>()
 
   const [showLendConfirmation, setShowLendConfirmation] = useState(false)
 
@@ -123,11 +124,12 @@ function BorrowMarkets({
     )
   })
 
+  const borrowAssetCurrencyAmount = useAllCTokenBalances(borrowAsset)
+
   return (
     <div>
       <LendModal
         lendToken={lendToken}
-        tokenBalances={tokenBalances}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
         borrowTotalBalance={borrowTotalBalance}
@@ -185,7 +187,7 @@ function BorrowMarkets({
           </AssetWrapLabels>
           <AssetItemWrap>
             {!!borrowAsset.length
-              ? borrowAsset.map((item: any) => (
+              ? borrowAsset.map((item: any, index) => (
                   <AssetItem
                     key={item?.symbol}
                     onClick={() => {
@@ -201,7 +203,7 @@ function BorrowMarkets({
                       <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
-                      {tokenBalances?.[item?.address]?.toSignificant()}
+                      {borrowAssetCurrencyAmount?.[index]?.toSignificant(4)}
                       {' ' + item?.symbol}
                     </ItemWrap>
                     <ItemWrap>{item.getLiquidity() < 100 ? item.getLiquidity().toFixed(1) : '< 0.1'}K</ItemWrap>

@@ -22,6 +22,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
+import { useAllCTokenBalances } from '../../state/wallet/hooks'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -241,7 +242,7 @@ function SupplyMarkets({
 
   const [collateralToken, setCollateralToken] = useState<CToken>()
 
-  const [lendToken, setLendToken] = useState<CToken>({} as CToken)
+  const [lendToken, setLendToken] = useState<CToken>()
 
   const [showLendConfirmation, setShowLendConfirmation] = useState(false)
 
@@ -259,6 +260,8 @@ function SupplyMarkets({
       BigNumber.from(0).eq(item.borrowBalance)
     )
   })
+
+  const supplyAssetCurrencyAmount = useAllCTokenBalances(supplyAsset)
 
   console.log('check--', allMarketCTokens, suppliedAsset, supplyAsset)
 
@@ -285,7 +288,6 @@ function SupplyMarkets({
     <div>
       <LendModal
         lendToken={lendToken}
-        tokenBalances={tokenBalances}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
         borrowTotalBalance={borrowTotalBalance}
@@ -412,7 +414,7 @@ function SupplyMarkets({
           </AssetWrapLabels>
           <AssetItemWrap>
             {!!supplyAsset.length
-              ? supplyAsset.map((item: any) => (
+              ? supplyAsset.map((item: any, index) => (
                   <AssetItem
                     key={item?.symbol}
                     onClick={() => {
@@ -428,7 +430,7 @@ function SupplyMarkets({
                       <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
-                      {tokenBalances?.[item?.address]?.toSignificant()}
+                      {supplyAssetCurrencyAmount?.[index]?.toSignificant(4)}
                       {' ' + item?.symbol}
                     </ItemWrap>
                     <Switch
