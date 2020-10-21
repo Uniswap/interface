@@ -41,10 +41,10 @@ export const tokens = [
   },
   {
     "name": "DXDao",
-    "address": "0xDd25BaE0659fC06a8d00CD06C7f5A98D71bfB715",
+    "address": "0x554898A0BF98aB0C03ff86C7DccBE29269cc4d29",
     "symbol": "DXD",
     "decimals": 18,
-    "chainId": 42,
+    "chainId": 4,
     "logoURI": "https://gateway.pinata.cloud/ipfs/QmPhoeL14E5SBFBaC4bA3nuRpg3MpxdWVYdPrdXHdQ3EHY/brand/dxdao-blue.png"
   },
   {
