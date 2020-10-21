@@ -5,19 +5,11 @@ import React, { useState } from 'react'
 
 import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
-import {
-  // blocksPerDay,
-  // daysPerYear,
-  // ethMantissa,
-  getBorrowApy,
-  getBorrowBalanceAmount,
-  getBorrowTotalBalance,
-  getLiquidity,
-  LendField
-} from '../../pages/Lend'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
 import { TokenAmount } from '@uniswap/sdk'
+import { LendField } from '../../state/lending/actions'
+import { getBorrowApy, getBorrowBalanceAmount, getBorrowTotalBalance, getLiquidity } from '../../utils'
 
 const MarketsCard = styled.div`
   background: #ffffff;

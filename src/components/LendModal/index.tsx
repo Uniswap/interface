@@ -12,22 +12,15 @@ import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
-import {
-  blocksPerDay,
-  daysPerYear,
-  ethMantissa,
-  getBorrowBalanceAmount,
-  getSupplyBalanceAmount,
-  LendField
-} from '../../pages/Lend'
 import { TokenAmount } from '@uniswap/sdk'
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import { calculateGasMargin, getCERC20Contract, getCEtherContract } from '../../utils'
+import { BLOCKS_PER_DAY, calculateGasMargin, DAYS_PER_YEAR, ETH_MANTISSA, getBorrowBalanceAmount, getCERC20Contract, getCEtherContract, getSupplyBalanceAmount } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
+import { LendField } from '../../state/lending/actions'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -483,20 +476,20 @@ function LendModal({
                     {lendMarket === LendField.SUPPLY
                       ? (
                           (Math.pow(
-                            ((lendToken?.supplyRatePerBlock ? lendToken?.supplyRatePerBlock : 0) / ethMantissa) *
-                              blocksPerDay +
+                            ((lendToken?.supplyRatePerBlock ? lendToken?.supplyRatePerBlock : 0) / ETH_MANTISSA) *
+                              BLOCKS_PER_DAY +
                               1,
-                            daysPerYear - 1
+                            DAYS_PER_YEAR - 1
                           ) -
                             1) *
                           100
                         ).toFixed(2)
                       : (
                           (Math.pow(
-                            ((lendToken?.borrowRatePerBlock ? lendToken?.borrowRatePerBlock : 0) / ethMantissa) *
-                              blocksPerDay +
+                            ((lendToken?.borrowRatePerBlock ? lendToken?.borrowRatePerBlock : 0) / ETH_MANTISSA) *
+                              BLOCKS_PER_DAY +
                               1,
-                            daysPerYear - 1
+                            DAYS_PER_YEAR - 1
                           ) -
                             1) *
                           100

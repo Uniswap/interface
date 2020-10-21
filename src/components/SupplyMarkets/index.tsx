@@ -13,21 +13,15 @@ import { RowBetween } from '../Row'
 import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
-import {
-  getSuppliedValue,
-  getSupplyApy,
-  getSupplyBalanceAmount,
-  getSupplyTotalBalance,
-  LendField
-} from '../../pages/Lend'
 import LendModal from '../LendModal'
 import { TokenAmount } from '@uniswap/sdk'
-import { calculateGasMargin, getComptrollerContract } from '../../utils'
+import { calculateGasMargin, getComptrollerContract, getSuppliedValue, getSupplyApy, getSupplyBalanceAmount, getSupplyTotalBalance } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
+import { LendField } from '../../state/lending/actions'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
