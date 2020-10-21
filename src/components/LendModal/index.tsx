@@ -14,13 +14,21 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
 import { TokenAmount } from '@uniswap/sdk'
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import { BLOCKS_PER_DAY, calculateGasMargin, DAYS_PER_YEAR, ETH_MANTISSA, getCERC20Contract, getCEtherContract } from '../../utils'
+import {
+  BLOCKS_PER_DAY,
+  calculateGasMargin,
+  DAYS_PER_YEAR,
+  ETH_MANTISSA,
+  getCERC20Contract,
+  getCEtherContract
+} from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
+import MarketBar from '../MarketBar'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -59,7 +67,7 @@ const ApproveWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3.5rem 1.75rem 3.5rem 1.75rem;
+  padding: 2.5rem 1.75rem;
 `
 
 const TabWrap = styled.div`
@@ -91,7 +99,7 @@ const TabItem = styled.div<{ isActive: boolean }>`
 `
 
 const RateWrap = styled.div`
-  padding: 1.4rem 1.75rem;
+  padding: 1.2rem 1.75rem 0;
   width: 100%;
 `
 
@@ -121,6 +129,8 @@ export interface LendModalProps {
   tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   showLendConfirmation: boolean
   setShowLendConfirmation: Function
+  borrowTotalBalance: number
+  limit: number
   lendMarket?: LendField
   onMint?: (cToken: CToken, amount: string, isETH: boolean) => void | null
   onRedeemUnderlying?: (cToken: CToken, amount: string) => void | null
@@ -133,7 +143,9 @@ function LendModal({
   tokenBalances,
   showLendConfirmation,
   setShowLendConfirmation,
-  lendMarket,
+  borrowTotalBalance,
+  limit,
+  lendMarket
 }: LendModalProps) {
   // const { t } = useTranslation()
 
@@ -205,14 +217,10 @@ function LendModal({
     if (!chainId || !library || !account) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null
-    estimate = cTokenContract.estimateGas.redeemUnderlying
-    method = cTokenContract.redeemUnderlying
-    args = [amount]
-    value = null
+    const estimate = cTokenContract.estimateGas.redeemUnderlying
+    const method: (...args: any) => Promise<TransactionResponse> = cTokenContract.redeemUnderlying
+    const args: Array<string | string[] | number> = [amount]
+    const value: BigNumber | null = null
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
@@ -249,14 +257,10 @@ function LendModal({
     if (!chainId || !library || !account) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null
-    estimate = cTokenContract.estimateGas.borrow
-    method = cTokenContract.borrow
-    args = [amount]
-    value = null
+    const estimate = cTokenContract.estimateGas.borrow
+    const method: (...args: any) => Promise<TransactionResponse> = cTokenContract.borrow
+    const args: Array<string | string[] | number> = [amount]
+    const value: BigNumber | null = null
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
@@ -469,7 +473,7 @@ function LendModal({
                   <AutoRow>
                     <CurrencyIcon address={lendToken?.address} style={{ marginRight: '6px' }} />
                     <Text color={'#AAB8C1;'} lineHeight={'24px'}>
-                      {lendToken?.symbol}
+                      {lendToken?.symbol} APY
                     </Text>
                   </AutoRow>
                   <RateCalculation>
@@ -497,7 +501,27 @@ function LendModal({
                     %
                   </RateCalculation>
                 </RatePanel>
+              </RateWrap>
+              <RateWrap>
+                <RateTitle>Borrow Limit</RateTitle>
+                <RatePanel>
+                  <AutoRow>
+                    <Text color={'#AAB8C1;'} lineHeight={'24px'}>
+                      Borrow Limit
+                    </Text>
+                  </AutoRow>
+                  <RateCalculation>${limit?.toFixed(2)}</RateCalculation>
+                </RatePanel>
                 <Break />
+                <RatePanel>
+                  <AutoRow>
+                    <Text color={'#AAB8C1;'} lineHeight={'24px'}>
+                      Borrow Limit Used
+                    </Text>
+                  </AutoRow>
+                  <RateCalculation>{limit ? ((borrowTotalBalance / limit) * 100).toFixed(2) : '0.00'}%</RateCalculation>
+                </RatePanel>
+                <MarketBar rate={Number(((borrowTotalBalance / limit) * 100).toFixed(2))} />
               </RateWrap>
             </AutoColumn>
             <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>

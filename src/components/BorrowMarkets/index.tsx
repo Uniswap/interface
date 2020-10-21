@@ -94,10 +94,12 @@ const ItemBottomWrap = styled.div`
 function BorrowMarkets({
   allMarketCTokens = [],
   tokenBalances,
+  borrowTotalBalance,
   limit
 }: {
   allMarketCTokens: CToken[]
   tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
+  borrowTotalBalance: number
   limit: number
 }) {
   // const { t } = useTranslation()
@@ -113,7 +115,12 @@ function BorrowMarkets({
   })
 
   const borrowAsset = allMarketCTokens.filter((item: CToken) => {
-    return item.borrowBalance && BigNumber.from(0).eq(item.borrowBalance) && item.supplyBalance && BigNumber.from(0).eq(item.supplyBalance)
+    return (
+      item.borrowBalance &&
+      BigNumber.from(0).eq(item.borrowBalance) &&
+      item.supplyBalance &&
+      BigNumber.from(0).eq(item.supplyBalance)
+    )
   })
 
   return (
@@ -123,6 +130,8 @@ function BorrowMarkets({
         tokenBalances={tokenBalances}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
+        borrowTotalBalance={borrowTotalBalance}
+        limit={limit}
         lendMarket={LendField.BORROW}
       />
       {!!borrowedAsset.length && (

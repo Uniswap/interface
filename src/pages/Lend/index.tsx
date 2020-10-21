@@ -44,7 +44,9 @@ function useAllMarketCTokens(markets: [CTokenState, CToken | null][]): CToken[] 
       Object.values(
         markets
           // filter out invalid ctokens
-          .filter((result): result is [CTokenState.EXISTS, CToken] => Boolean(result[0] === CTokenState.EXISTS && result[1]))
+          .filter((result): result is [CTokenState.EXISTS, CToken] =>
+            Boolean(result[0] === CTokenState.EXISTS && result[1])
+          )
           // filter out duplicated ctokens
           .reduce<{ [pairAddress: string]: CToken }>((memo, [, curr]) => {
             memo[curr.cAddress] = memo[curr.cAddress] ?? curr
@@ -81,6 +83,7 @@ export default function Lend() {
           <BorrowMarkets
             allMarketCTokens={allMarketCTokens}
             tokenBalances={tokenBalances}
+            borrowTotalBalance={getBorrowTotalBalance(allMarketCTokens)}
             limit={getLimit(allMarketCTokens)}
           ></BorrowMarkets>
         </MarketsWrap>

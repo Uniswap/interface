@@ -161,14 +161,10 @@ function SupplyMarkets({
     if (!chainId || !library || !account) return
     const comptroller = getComptrollerContract(chainId, library, account)
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null
-    estimate = comptroller.estimateGas.enterMarkets
-    method = comptroller.enterMarkets
-    args = [[cToken.cAddress]]
-    value = null
+    const estimate = comptroller.estimateGas.enterMarkets
+    const method: (...args: any) => Promise<TransactionResponse> = comptroller.enterMarkets
+    const args: Array<string | string[] | number> = [[cToken.cAddress]]
+    const value: BigNumber | null = null
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
@@ -205,14 +201,10 @@ function SupplyMarkets({
     if (!chainId || !library || !account) return
     const comptroller = getComptrollerContract(chainId, library, account)
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null
-    estimate = comptroller.estimateGas.exitMarket
-    method = comptroller.exitMarket
-    args = [cToken.cAddress]
-    value = null
+    const estimate = comptroller.estimateGas.exitMarket
+    const method: (...args: any) => Promise<TransactionResponse> = comptroller.exitMarket
+    const args: Array<string | string[] | number> = [cToken.cAddress]
+    const value: BigNumber | null = null
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
@@ -260,7 +252,12 @@ function SupplyMarkets({
   })
 
   const supplyAsset = allMarketCTokens.filter((item: CToken) => {
-    return item.supplyBalance && BigNumber.from(0).eq(item.supplyBalance) && item.borrowBalance && BigNumber.from(0).eq(item.borrowBalance)
+    return (
+      item.supplyBalance &&
+      BigNumber.from(0).eq(item.supplyBalance) &&
+      item.borrowBalance &&
+      BigNumber.from(0).eq(item.borrowBalance)
+    )
   })
 
   console.log('check--', allMarketCTokens, suppliedAsset, supplyAsset)
@@ -291,6 +288,8 @@ function SupplyMarkets({
         tokenBalances={tokenBalances}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
+        borrowTotalBalance={borrowTotalBalance}
+        limit={limit}
         lendMarket={LendField.SUPPLY}
       />
       <Modal isOpen={showCollateralConfirmation} onDismiss={() => setShowCollateralConfirmation(false)}>
