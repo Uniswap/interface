@@ -96,6 +96,7 @@ export default function AddLiquidity({
     [independentField]: typedValue,
     [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
+
   const { protocolFee, protocolFeeAmount: protocolFeeAmountIndependantField } = calculateProtocolFee(
     pair,
     parsedAmounts[independentField]

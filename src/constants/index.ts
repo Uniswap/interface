@@ -6,7 +6,6 @@ import { tokens } from './tokens'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 export const ROUTER_ADDRESS = rinkeby.router
-console.log(ROUTER_ADDRESS)
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 // a list of tokens by chain

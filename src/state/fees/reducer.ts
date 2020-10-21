@@ -14,7 +14,7 @@ export interface FeesState {
 
 const initialState: FeesState = {
   swapFees: undefined,
-  protocolFeeDenominator: 9,
+  protocolFeeDenominator: 10,
   protocolFeeTo: undefined
 }
 

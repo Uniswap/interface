@@ -55,7 +55,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       const swapFee =
         swapFees && swapFees[Pair.getAddress(token0, token1)].fee
           ? swapFees[Pair.getAddress(token0, token1)].fee
-          : BigInt(30)
+          : BigInt(15)
       return [
         PairState.EXISTS,
         new Pair(

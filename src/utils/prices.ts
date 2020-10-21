@@ -61,8 +61,8 @@ export function calculateProtocolFee(
   // the amount of the input that accrues to LPs
   const protocolFeeAmount = (protocolFee && amount) 
     ? (amount instanceof TokenAmount
-      ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).quotient)
-      : CurrencyAmount.ether(protocolFee.multiply(amount.raw).quotient))
+      ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).divide(JSBI.BigInt(100)).quotient)
+      : CurrencyAmount.ether(protocolFee.multiply(amount.raw).divide(JSBI.BigInt(100)).quotient))
     : undefined
 
   return { protocolFee, protocolFeeAmount }
