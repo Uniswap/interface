@@ -22,6 +22,12 @@ import {
 } from '../../pages/Lend'
 import { TokenAmount } from '@uniswap/sdk'
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
+import { calculateGasMargin, getCERC20Contract, getCEtherContract } from '../../utils'
+import { useActiveWeb3React } from '../../hooks'
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import ReactGA from 'react-ga'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -135,14 +141,212 @@ function LendModal({
   showLendConfirmation,
   setShowLendConfirmation,
   lendMarket,
-  onMint,
-  onRedeemUnderlying,
-  onBorrow,
-  onRepayBorrow
 }: LendModalProps) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
+
+  const { account, chainId, library } = useActiveWeb3React()
+
+  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
+
+  const [txHash, setTxHash] = useState<string>('')
+
+  console.log('use txHash and attemptingTxn later like Add Liquidity', attemptingTxn, txHash)
+
+  const addTransaction = useTransactionAdder()
+
+  async function onMint(cToken: CToken, amount: string, isETH: boolean) {
+    if (!chainId || !library || !account) return
+
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+    if (isETH) {
+      const cTokenContract = getCEtherContract(chainId, cToken.cAddress, library, account)
+      estimate = cTokenContract.estimateGas.mint
+      method = cTokenContract.mint
+      args = []
+      value = BigNumber.from(amount)
+    } else {
+      const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
+      estimate = cTokenContract.estimateGas.mint
+      method = cTokenContract.mint
+      args = [amount]
+      value = null
+    }
+
+    setAttemptingTxn(true)
+    await estimate(...args, value ? { value } : {})
+      .then(estimatedGasLimit =>
+        method(...args, {
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then(response => {
+          setAttemptingTxn(false)
+
+          addTransaction(response, {
+            summary: 'Add ' + amount + ' ' + cToken.symbol
+          })
+
+          setTxHash(response.hash)
+
+          ReactGA.event({
+            category: 'Liquidity',
+            action: 'Add',
+            label: cToken.symbol
+          })
+        })
+      )
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
+  }
+
+  async function onRedeemUnderlying(cToken: CToken, amount: string) {
+    if (!chainId || !library || !account) return
+    const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
+
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+    estimate = cTokenContract.estimateGas.redeemUnderlying
+    method = cTokenContract.redeemUnderlying
+    args = [amount]
+    value = null
+
+    setAttemptingTxn(true)
+    await estimate(...args, value ? { value } : {})
+      .then(estimatedGasLimit =>
+        method(...args, {
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then(response => {
+          setAttemptingTxn(false)
+
+          addTransaction(response, {
+            summary: 'Redeem ' + amount + ' ' + cToken.symbol
+          })
+
+          setTxHash(response.hash)
+
+          ReactGA.event({
+            category: 'Liquidity',
+            action: 'Remove',
+            label: cToken.symbol
+          })
+        })
+      )
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
+  }
+
+  async function onBorrow(cToken: CToken, amount: string) {
+    if (!chainId || !library || !account) return
+    const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
+
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+    estimate = cTokenContract.estimateGas.borrow
+    method = cTokenContract.borrow
+    args = [amount]
+    value = null
+
+    setAttemptingTxn(true)
+    await estimate(...args, value ? { value } : {})
+      .then(estimatedGasLimit =>
+        method(...args, {
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then(response => {
+          setAttemptingTxn(false)
+
+          addTransaction(response, {
+            summary: 'Borrow ' + amount + ' ' + cToken.symbol
+          })
+
+          setTxHash(response.hash)
+
+          ReactGA.event({
+            category: 'Lend',
+            action: 'Borrow',
+            label: cToken.symbol
+          })
+        })
+      )
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
+  }
+
+  async function onRepayBorrow(cToken: CToken, amount: string, isETH: boolean) {
+    if (!chainId || !library || !account) return
+
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+    if (isETH) {
+      const cTokenContract = getCEtherContract(chainId, cToken.cAddress, library, account)
+      estimate = cTokenContract.estimateGas.repayBorrow
+      method = cTokenContract.repayBorrow
+      args = []
+      value = BigNumber.from(BigInt(1).toString())
+    } else {
+      const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
+      estimate = cTokenContract.estimateGas.repayBorrow
+      method = cTokenContract.repayBorrow
+      args = [amount]
+      value = null
+    }
+
+    setAttemptingTxn(true)
+    await estimate(...args, value ? { value } : {})
+      .then(estimatedGasLimit =>
+        method(...args, {
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then(response => {
+          setAttemptingTxn(false)
+
+          addTransaction(response, {
+            summary: 'Repay ' + amount + ' ' + cToken.symbol
+          })
+
+          setTxHash(response.hash)
+
+          ReactGA.event({
+            category: 'Lend',
+            action: 'Repay',
+            label: cToken.symbol
+          })
+        })
+      )
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
+  }
 
   const [tabItemActive, setTabItemActive] = useState<LendField>()
 

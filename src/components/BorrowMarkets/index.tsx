@@ -101,15 +101,11 @@ const ItemBottomWrap = styled.div`
 function BorrowMarkets({
   allMarkets = [],
   tokenBalances,
-  limit,
-  onBorrow,
-  onRepayBorrow
+  limit
 }: {
   allMarkets: any
   tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
   limit: number
-  onBorrow: (cToken: CToken, amount: string) => void
-  onRepayBorrow: (cToken: CToken, amount: string, isETH: boolean) => void
 }) {
   // const { t } = useTranslation()
 
@@ -155,8 +151,6 @@ function BorrowMarkets({
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
         lendMarket={LendField.BORROW}
-        onBorrow={onBorrow}
-        onRepayBorrow={onRepayBorrow}
       />
       {!!borrowedAsset.length && (
         <MarketsCard style={{ marginBottom: '1rem' }}>

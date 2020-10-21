@@ -14,21 +14,20 @@ import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import {
-  // balanceFormat,
-  // blocksPerDay,
-  // COLLATERAL_FACTOR_MANTISSA,
-  // daysPerYear,
-  // ethMantissa,
-  // EXCHANGE_RATE_MANTISSA,
   getSuppliedValue,
   getSupplyApy,
   getSupplyBalanceAmount,
   getSupplyTotalBalance,
   LendField
-  // underlyingPriceFormat
 } from '../../pages/Lend'
 import LendModal from '../LendModal'
 import { TokenAmount } from '@uniswap/sdk'
+import { calculateGasMargin, getComptrollerContract } from '../../utils'
+import { useActiveWeb3React } from '../../hooks'
+import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import ReactGA from 'react-ga'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -140,19 +139,11 @@ const ModalContentWrapper = styled.div`
 function SupplyMarkets({
   allMarkets = [],
   tokenBalances,
-  onEnterMarkets,
-  onExitMarkets,
-  onMint,
-  onRedeemUnderlying,
   borrowTotalBalance,
   limit
 }: {
   allMarkets: any
   tokenBalances: { [tokenAddress: string]: TokenAmount | undefined }
-  onEnterMarkets: (cToken: CToken) => void
-  onExitMarkets: (cToken: CToken) => void
-  onMint: (cToken: CToken, amount: string, isETH: boolean) => void
-  onRedeemUnderlying: (cToken: CToken, amount: string) => void
   borrowTotalBalance: number
   limit: number
 }) {
@@ -161,6 +152,105 @@ function SupplyMarkets({
   // const [isDark] = useDarkModeManager()
 
   // show confirmation view before turning on
+
+  const { account, chainId, library } = useActiveWeb3React()
+
+  const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
+
+  const [txHash, setTxHash] = useState<string>('')
+
+  console.log('use txHash and attemptingTxn later like Add Liquidity', attemptingTxn, txHash)
+
+  const addTransaction = useTransactionAdder()
+
+  async function onEnterMarkets(cToken: CToken) {
+    if (!chainId || !library || !account) return
+    const comptroller = getComptrollerContract(chainId, library, account)
+
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+    estimate = comptroller.estimateGas.enterMarkets
+    method = comptroller.enterMarkets
+    args = [[cToken.cAddress]]
+    value = null
+
+    setAttemptingTxn(true)
+    await estimate(...args, value ? { value } : {})
+      .then(estimatedGasLimit =>
+        method(...args, {
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then(response => {
+          setAttemptingTxn(false)
+
+          addTransaction(response, {
+            summary: 'Enter ' + cToken.symbol + ' as Collateral'
+          })
+
+          setTxHash(response.hash)
+
+          ReactGA.event({
+            category: 'Collateral',
+            action: 'Enter',
+            label: cToken.symbol
+          })
+        })
+      )
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
+  }
+
+  async function onExitMarkets(cToken: CToken) {
+    if (!chainId || !library || !account) return
+    const comptroller = getComptrollerContract(chainId, library, account)
+
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+    estimate = comptroller.estimateGas.exitMarket
+    method = comptroller.exitMarket
+    args = [cToken.cAddress]
+    value = null
+
+    setAttemptingTxn(true)
+    await estimate(...args, value ? { value } : {})
+      .then(estimatedGasLimit =>
+        method(...args, {
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGasLimit)
+        }).then(response => {
+          setAttemptingTxn(false)
+
+          addTransaction(response, {
+            summary: 'Exit ' + cToken.symbol + ' as Collateral'
+          })
+
+          setTxHash(response.hash)
+
+          ReactGA.event({
+            category: 'Collateral',
+            action: 'Exit',
+            label: cToken.symbol
+          })
+        })
+      )
+      .catch(error => {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        if (error?.code !== 4001) {
+          console.error(error)
+        }
+      })
+  }
+
   const [showCollateralConfirmation, setShowCollateralConfirmation] = useState(false)
 
   const [collateralToken, setCollateralToken] = useState<CToken>()
@@ -210,8 +300,6 @@ function SupplyMarkets({
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
         lendMarket={LendField.SUPPLY}
-        onMint={onMint}
-        onRedeemUnderlying={onRedeemUnderlying}
       />
       <Modal isOpen={showCollateralConfirmation} onDismiss={() => setShowCollateralConfirmation(false)}>
         <ModalContentWrapper>
