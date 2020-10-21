@@ -135,16 +135,6 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
   return balances ?? {}
 }
 
-// useAllLendBalances
-export function useAllLendBalances(): { [tokenAddress: string]: TokenAmount | undefined } {
-  const { account } = useActiveWeb3React()
-  const allTokens = useAllCTokens()
-  const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
-  const balances = useTokenBalances(account ?? undefined, allTokensArray)
-  console.log(balances, 'balances')
-  return balances ?? {}
-}
-
 export function useAllCTokenBalances(cTokens?: (CToken | undefined)[]): (CurrencyAmount | undefined)[] {
   const { account } = useActiveWeb3React()
 
