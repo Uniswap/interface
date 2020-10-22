@@ -11,6 +11,7 @@ import { LendField } from '../../state/lending/actions'
 import { getBorrowTotalBalance } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
+import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -91,7 +92,20 @@ const ItemBottomWrap = styled.div`
   font-size: 0.9em;
 `
 
-function BorrowMarkets({ allMarketCTokens = [], borrowTotalBalance, limit}: { allMarketCTokens: CToken[]; borrowTotalBalance: number; limit: number }) {
+function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children: React.ReactNode }) {
+  useCTokenApproveCallback(marketCToken, marketCToken?.cAddress)
+  return <>{children}</>
+}
+
+function BorrowMarkets({
+  allMarketCTokens = [],
+  borrowTotalBalance,
+  limit
+}: {
+  allMarketCTokens: CToken[]
+  borrowTotalBalance: number
+  limit: number
+}) {
   // const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
@@ -106,10 +120,8 @@ function BorrowMarkets({ allMarketCTokens = [], borrowTotalBalance, limit}: { al
 
   const borrowAsset = allMarketCTokens.filter((item: CToken) => {
     return (
-      (!item.borrowBalance ||
-      BigNumber.from(0).eq(item.borrowBalance)) &&
-      (!item.supplyBalance ||
-      BigNumber.from(0).eq(item.supplyBalance))
+      (!item.borrowBalance || BigNumber.from(0).eq(item.borrowBalance)) &&
+      (!item.supplyBalance || BigNumber.from(0).eq(item.supplyBalance))
     )
   })
 
@@ -137,29 +149,31 @@ function BorrowMarkets({ allMarketCTokens = [], borrowTotalBalance, limit}: { al
             </AssetWrapLabels>
             <AssetItemWrap>
               {borrowedAsset.map((item: any) => (
-                <AssetItem
-                  key={item?.symbol}
-                  onClick={() => {
-                    setLendToken(item)
-                    setShowLendConfirmation(true)
-                  }}
-                >
-                  <AssetLogo>
-                    <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
-                    {item?.symbol}
-                  </AssetLogo>
-                  <ItemWrap>
-                    <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
-                  </ItemWrap>
-                  <ItemWrap>
-                    <div>${getBorrowTotalBalance([item]).toFixed(2) ?? ''}</div>
-                    <ItemBottomWrap>
-                      {parseFloat(item.getBorrowBalanceAmount()).toFixed(4) ?? ''}
-                      {' ' + item?.symbol}
-                    </ItemBottomWrap>
-                  </ItemWrap>
-                  <ItemWrap>{((getBorrowTotalBalance([item]) / limit) * 100).toFixed(0) ?? ''}%</ItemWrap>
-                </AssetItem>
+                <ItemPannel marketCToken={item} key={item?.symbol}>
+                  <AssetItem
+                    key={item?.symbol}
+                    onClick={() => {
+                      setLendToken(item)
+                      setShowLendConfirmation(true)
+                    }}
+                  >
+                    <AssetLogo>
+                      <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                      {item?.symbol}
+                    </AssetLogo>
+                    <ItemWrap>
+                      <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
+                    </ItemWrap>
+                    <ItemWrap>
+                      <div>${getBorrowTotalBalance([item]).toFixed(2) ?? ''}</div>
+                      <ItemBottomWrap>
+                        {parseFloat(item.getBorrowBalanceAmount()).toFixed(4) ?? ''}
+                        {' ' + item?.symbol}
+                      </ItemBottomWrap>
+                    </ItemWrap>
+                    <ItemWrap>{((getBorrowTotalBalance([item]) / limit) * 100).toFixed(0) ?? ''}%</ItemWrap>
+                  </AssetItem>
+                </ItemPannel>
               ))}
             </AssetItemWrap>
           </AssetWrap>
@@ -177,26 +191,28 @@ function BorrowMarkets({ allMarketCTokens = [], borrowTotalBalance, limit}: { al
           <AssetItemWrap>
             {!!borrowAsset.length
               ? borrowAsset.map((item: any, index) => (
-                  <AssetItem
-                    key={item?.symbol}
-                    onClick={() => {
-                      setLendToken(item)
-                      setShowLendConfirmation(true)
-                    }}
-                  >
-                    <AssetLogo>
-                      <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
-                      {item?.symbol}
-                    </AssetLogo>
-                    <ItemWrap>
-                      <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
-                    </ItemWrap>
-                    <ItemWrap>
-                      {borrowAssetCurrencyAmount?.[index]?.toSignificant(4)}
-                      {' ' + item?.symbol}
-                    </ItemWrap>
-                    <ItemWrap>{item.getLiquidity() < 100 ? item.getLiquidity().toFixed(1) : '< 0.1'}K</ItemWrap>
-                  </AssetItem>
+                  <ItemPannel marketCToken={item} key={item?.symbol}>
+                    <AssetItem
+                      key={item?.symbol}
+                      onClick={() => {
+                        setLendToken(item)
+                        setShowLendConfirmation(true)
+                      }}
+                    >
+                      <AssetLogo>
+                        <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                        {item?.symbol}
+                      </AssetLogo>
+                      <ItemWrap>
+                        <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
+                      </ItemWrap>
+                      <ItemWrap>
+                        {borrowAssetCurrencyAmount?.[index]?.toSignificant(4)}
+                        {' ' + item?.symbol}
+                      </ItemWrap>
+                      <ItemWrap>{item.getLiquidity() < 100 ? item.getLiquidity().toFixed(1) : '< 0.1'}K</ItemWrap>
+                    </AssetItem>
+                  </ItemPannel>
                 ))
               : ''}
           </AssetItemWrap>

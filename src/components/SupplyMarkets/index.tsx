@@ -18,6 +18,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
+import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -125,6 +126,11 @@ const ModalContentWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 20px;
 `
+
+function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children: React.ReactNode }) {
+  useCTokenApproveCallback(marketCToken, marketCToken?.cAddress)
+  return <>{children}</>
+}
 
 function SupplyMarkets({
   allMarketCTokens = [],
@@ -359,36 +365,38 @@ function SupplyMarkets({
             </AssetWrapLabels>
             <AssetItemWrap onClick={() => setShowLendConfirmation(true)}>
               {suppliedAsset.map((item: any) => (
-                <AssetItem
-                  key={item?.symbol}
-                  onClick={() => {
-                    setLendToken(item)
-                    setShowLendConfirmation(true)
-                  }}
-                >
-                  <AssetLogo>
-                    <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
-                    {item?.symbol}
-                  </AssetLogo>
-                  <ItemWrap>
-                    <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
-                  </ItemWrap>
-                  <ItemWrap>
-                    <div>${getSupplyTotalBalance([item]).toFixed(2) ?? ''}</div>
-                    <ItemBottomWrap>
-                      {parseFloat(item.getSupplyBalanceAmount()).toFixed(4) ?? ''}
-                      {' ' + item?.symbol}
-                    </ItemBottomWrap>
-                  </ItemWrap>
-                  <Switch
-                    isActive={item?.canBeCollateral}
-                    toggle={() => {
-                      setCollateralToken(item)
-                      setIsSuppliedMarkets(true)
-                      setShowCollateralConfirmation(true)
+                <ItemPannel marketCToken={item} key={item?.symbol}>
+                  <AssetItem
+                    key={item?.symbol}
+                    onClick={() => {
+                      setLendToken(item)
+                      setShowLendConfirmation(true)
                     }}
-                  />
-                </AssetItem>
+                  >
+                    <AssetLogo>
+                      <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                      {item?.symbol}
+                    </AssetLogo>
+                    <ItemWrap>
+                      <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
+                    </ItemWrap>
+                    <ItemWrap>
+                      <div>${getSupplyTotalBalance([item]).toFixed(2) ?? ''}</div>
+                      <ItemBottomWrap>
+                        {parseFloat(item.getSupplyBalanceAmount()).toFixed(4) ?? ''}
+                        {' ' + item?.symbol}
+                      </ItemBottomWrap>
+                    </ItemWrap>
+                    <Switch
+                      isActive={item?.canBeCollateral}
+                      toggle={() => {
+                        setCollateralToken(item)
+                        setIsSuppliedMarkets(true)
+                        setShowCollateralConfirmation(true)
+                      }}
+                    />
+                  </AssetItem>
+                </ItemPannel>
               ))}
             </AssetItemWrap>
           </AssetWrap>
@@ -405,34 +413,35 @@ function SupplyMarkets({
           </AssetWrapLabels>
           <AssetItemWrap>
             {!!supplyAsset.length
-              ? supplyAsset.map((item: any, index) => (
-                  <AssetItem
-                    key={item?.symbol}
-                    onClick={() => {
-                      setLendToken(item)
-                      setShowLendConfirmation(true)
-                    }}
-                  >
-                    <AssetLogo>
-                      <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
-                      {item?.symbol}
-                    </AssetLogo>
-                    <ItemWrap>
-                      <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
-                    </ItemWrap>
-                    <ItemWrap>
-                      {supplyAssetCurrencyAmount?.[index]?.toSignificant(4)}
-                      {' ' + item?.symbol}
-                    </ItemWrap>
-                    <Switch
-                      isActive={item?.canBeCollateral}
-                      toggle={() => {
-                        setCollateralToken(item)
-                        setIsSuppliedMarkets(false)
-                        setShowCollateralConfirmation(true)
+              ? supplyAsset.map((item: CToken, index) => (
+                  <ItemPannel marketCToken={item} key={item?.symbol}>
+                    <AssetItem
+                      onClick={() => {
+                        setLendToken(item)
+                        setShowLendConfirmation(true)
                       }}
-                    />
-                  </AssetItem>
+                    >
+                      <AssetLogo>
+                        <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                        {item?.symbol}
+                      </AssetLogo>
+                      <ItemWrap>
+                        <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
+                      </ItemWrap>
+                      <ItemWrap>
+                        {supplyAssetCurrencyAmount?.[index]?.toSignificant(4)}
+                        {' ' + item?.symbol}
+                      </ItemWrap>
+                      <Switch
+                        isActive={item?.canBeCollateral ?? false}
+                        toggle={() => {
+                          setCollateralToken(item)
+                          setIsSuppliedMarkets(false)
+                          setShowCollateralConfirmation(true)
+                        }}
+                      />
+                    </AssetItem>
+                  </ItemPannel>
                 ))
               : ''}
           </AssetItemWrap>
