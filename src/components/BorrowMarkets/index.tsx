@@ -1,8 +1,4 @@
-// import { utils } from 'ethers'
 import React, { useState } from 'react'
-// import { darken } from 'polished'
-// import { useTranslation } from 'react-i18next'
-
 import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
 import LendModal from '../LendModal'

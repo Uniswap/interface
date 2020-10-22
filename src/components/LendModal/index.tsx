@@ -28,6 +28,7 @@ import { LendField } from '../../state/lending/actions'
 import MarketBar from '../MarketBar'
 import { useCTokenBalance } from '../../state/wallet/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
+import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -153,6 +154,9 @@ function LendModal({
   console.log('use txHash and attemptingTxn later like Add Liquidity', attemptingTxn, txHash)
 
   const lendTokenBalance = useCTokenBalance(lendToken)
+
+  const maxSupplyAmount = cTokenMaxAmountSpend(lendTokenBalance)
+
   const addTransaction = useTransactionAdder()
 
   async function onMint(cToken: CToken, amount: string, isETH: boolean) {
@@ -384,7 +388,7 @@ function LendModal({
                       if (lendToken) {
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
-                            setLendInputValue(lendTokenBalance?.toSignificant(6) ?? '0')
+                            setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '0')
                             break
                           case LendField.WITHDRAW:
                             setLendInputValue(lendToken.getSupplyBalanceAmount() ?? '0')
