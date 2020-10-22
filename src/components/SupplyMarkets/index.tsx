@@ -247,10 +247,10 @@ function SupplyMarkets({
 
   const supplyAsset = allMarketCTokens.filter((item: CToken) => {
     return (
-      item.supplyBalance &&
-      BigNumber.from(0).eq(item.supplyBalance) &&
-      item.borrowBalance &&
-      BigNumber.from(0).eq(item.borrowBalance)
+      (!item.supplyBalance ||
+      BigNumber.from(0).eq(item.supplyBalance)) &&
+      (!item.borrowBalance ||
+      BigNumber.from(0).eq(item.borrowBalance))
     )
   })
 

@@ -106,10 +106,10 @@ function BorrowMarkets({ allMarketCTokens = [], borrowTotalBalance, limit}: { al
 
   const borrowAsset = allMarketCTokens.filter((item: CToken) => {
     return (
-      item.borrowBalance &&
-      BigNumber.from(0).eq(item.borrowBalance) &&
-      item.supplyBalance &&
-      BigNumber.from(0).eq(item.supplyBalance)
+      (!item.borrowBalance ||
+      BigNumber.from(0).eq(item.borrowBalance)) &&
+      (!item.supplyBalance ||
+      BigNumber.from(0).eq(item.supplyBalance))
     )
   })
 
