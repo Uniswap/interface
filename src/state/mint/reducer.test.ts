@@ -1,7 +1,6 @@
-import { ChainId, WETH } from 'dxswap-sdk'
 import { createStore, Store } from 'redux'
 
-import { Field, setDefaultsFromURLMatchParams } from './actions'
+import { Field, typeInput } from './actions'
 import reducer, { MintState } from './reducer'
 
 describe('mint reducer', () => {
@@ -9,32 +8,21 @@ describe('mint reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, {
-      independentField: Field.TOKEN_A,
+      independentField: Field.CURRENCY_A,
       typedValue: '',
-      otherTypedValue: '',
-      [Field.TOKEN_A]: { address: '' },
-      [Field.TOKEN_B]: { address: '' }
+      otherTypedValue: ''
     })
   })
 
-  describe('setDefaultsFromURLMatchParams', () => {
-    test('ETH to DAI', () => {
-      store.dispatch(
-        setDefaultsFromURLMatchParams({
-          chainId: ChainId.MAINNET,
-          params: {
-            tokens: 'ETH-0x6b175474e89094c44da98b954eedeac495271d0f'
-          }
-        })
-      )
-
-      expect(store.getState()).toEqual({
-        independentField: Field.TOKEN_A,
-        typedValue: '',
-        otherTypedValue: '',
-        [Field.TOKEN_A]: { address: WETH[ChainId.MAINNET].address },
-        [Field.TOKEN_B]: { address: '0x6b175474e89094c44da98b954eedeac495271d0f' }
-      })
+  describe('typeInput', () => {
+    it('sets typed value', () => {
+      store.dispatch(typeInput({ field: Field.CURRENCY_A, typedValue: '1.0', noLiquidity: false }))
+      expect(store.getState()).toEqual({ independentField: Field.CURRENCY_A, typedValue: '1.0', otherTypedValue: '' })
+    })
+    it('clears other value', () => {
+      store.dispatch(typeInput({ field: Field.CURRENCY_A, typedValue: '1.0', noLiquidity: false }))
+      store.dispatch(typeInput({ field: Field.CURRENCY_B, typedValue: '1.0', noLiquidity: false }))
+      expect(store.getState()).toEqual({ independentField: Field.CURRENCY_B, typedValue: '1.0', otherTypedValue: '' })
     })
   })
 })

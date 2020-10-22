@@ -15,7 +15,7 @@ const InfoCard = styled.button<{ active?: boolean }>`
   border-color: ${({ theme, active }) => (active ? 'transparent' : theme.bg3)};
 `
 
-const OptionCard = styled(InfoCard)`
+const OptionCard = styled(InfoCard as any)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -30,7 +30,7 @@ const OptionCardLeft = styled.div`
   height: 100%;
 `
 
-const OptionCardClickable = styled(OptionCard)<{ clickable?: boolean }>`
+const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   margin-top: 0;
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
@@ -73,7 +73,7 @@ const SubHeader = styled.div`
   font-size: 12px;
 `
 
-const IconWrapper = styled.div<{ size?: number }>`
+const IconWrapper = styled.div<{ size?: number | null }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
@@ -90,7 +90,7 @@ const IconWrapper = styled.div<{ size?: number }>`
 export default function Option({
   link = null,
   clickable = true,
-  size = null,
+  size,
   onClick = null,
   color,
   header,
@@ -114,7 +114,6 @@ export default function Option({
     <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
       <OptionCardLeft>
         <HeaderText color={color}>
-          {' '}
           {active ? (
             <CircleWrapper>
               <GreenCircle>

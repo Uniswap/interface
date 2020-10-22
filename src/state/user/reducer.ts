@@ -1,25 +1,26 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from './../../constants/index'
+import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
+import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
   addSerializedToken,
-  dismissTokenWarning,
   removeSerializedPair,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
   updateMatchesDarkMode,
   updateUserDarkMode,
-  updateVersion,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  updateUserDeadline
+  updateUserDeadline,
+  toggleURLWarning
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
 
-interface UserState {
-  lastVersion: string
+export interface UserState {
+  // the timestamp of the last updateVersion action
+  lastUpdateVersionTimestamp?: number
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
@@ -38,13 +39,6 @@ interface UserState {
     }
   }
 
-  // the token warnings that the user has dismissed
-  dismissedTokenWarnings?: {
-    [chainId: number]: {
-      [tokenAddress: string]: true
-    }
-  }
-
   pairs: {
     [chainId: number]: {
       // keyed by token0Address:token1Address
@@ -53,14 +47,14 @@ interface UserState {
   }
 
   timestamp: number
+  URLWarningVisible: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
   return `${token0Address};${token1Address}`
 }
 
-const initialState: UserState = {
-  lastVersion: '',
+export const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
@@ -68,28 +62,26 @@ const initialState: UserState = {
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
-  timestamp: currentTimestamp()
+  timestamp: currentTimestamp(),
+  URLWarningVisible: true
 }
-
-const GIT_COMMIT_HASH: string | undefined = process.env.REACT_APP_GIT_COMMIT_HASH
 
 export default createReducer(initialState, builder =>
   builder
     .addCase(updateVersion, state => {
-      if (GIT_COMMIT_HASH && state.lastVersion !== GIT_COMMIT_HASH) {
-        state.lastVersion = GIT_COMMIT_HASH
-
-        // slippage isnt being tracked in local storage, reset to default
-        if (typeof state.userSlippageTolerance !== 'number') {
-          state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
-        }
-
-        // deadline isnt being tracked in local storage, reset to default
-        if (typeof state.userDeadline !== 'number') {
-          state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
-        }
+      // slippage isnt being tracked in local storage, reset to default
+      // noinspection SuspiciousTypeOfGuard
+      if (typeof state.userSlippageTolerance !== 'number') {
+        state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
       }
-      state.timestamp = currentTimestamp()
+
+      // deadline isnt being tracked in local storage, reset to default
+      // noinspection SuspiciousTypeOfGuard
+      if (typeof state.userDeadline !== 'number') {
+        state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
+      }
+
+      state.lastUpdateVersionTimestamp = currentTimestamp()
     })
     .addCase(updateUserDarkMode, (state, action) => {
       state.userDarkMode = action.payload.userDarkMode
@@ -121,11 +113,6 @@ export default createReducer(initialState, builder =>
       delete state.tokens[chainId][address]
       state.timestamp = currentTimestamp()
     })
-    .addCase(dismissTokenWarning, (state, { payload: { chainId, tokenAddress } }) => {
-      state.dismissedTokenWarnings = state.dismissedTokenWarnings ?? {}
-      state.dismissedTokenWarnings[chainId] = state.dismissedTokenWarnings[chainId] ?? {}
-      state.dismissedTokenWarnings[chainId][tokenAddress] = true
-    })
     .addCase(addSerializedPair, (state, { payload: { serializedPair } }) => {
       if (
         serializedPair.token0.chainId === serializedPair.token1.chainId &&
@@ -144,5 +131,8 @@ export default createReducer(initialState, builder =>
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
+    })
+    .addCase(toggleURLWarning, state => {
+      state.URLWarningVisible = !state.URLWarningVisible
     })
 )

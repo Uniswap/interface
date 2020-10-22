@@ -1,8 +1,10 @@
-import React, { useRef, useEffect } from 'react'
-import { Info, BookOpen, Code, PieChart, MessageCircle } from 'react-feather'
+import React, { useRef } from 'react'
+import { Info, Code } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
-import useToggle from '../../hooks/useToggle'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+import { ApplicationModal } from '../../state/application/actions'
+import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { ExternalLink } from '../../theme'
 
@@ -52,15 +54,19 @@ const MenuFlyout = styled.span`
   background-color: ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 0.5rem;
+  border-radius: 12px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 3rem;
+  top: 4rem;
   right: 0rem;
   z-index: 100;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    top: -17.25rem;
+  `};
 `
 
 const MenuItem = styled(ExternalLink)`
@@ -83,32 +89,17 @@ const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
-  const [open, toggle] = useToggle(false)
-
-  useEffect(() => {
-    const handleClickOutside = e => {
-      if (node.current?.contains(e.target) ?? false) {
-        return
-      }
-      toggle()
-    }
-
-    if (open) {
-      document.addEventListener('mousedown', handleClickOutside)
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [open, toggle])
+  const open = useModalOpen(ApplicationModal.MENU)
+  const toggle = useToggleModal(ApplicationModal.MENU)
+  useOnClickOutside(node, open ? toggle : undefined)
 
   return (
-    <StyledMenu ref={node}>
+    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
+    <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
+
       {open && (
         <MenuFlyout>
           <MenuItem id="link" href="https://dxdao.eth.link/">

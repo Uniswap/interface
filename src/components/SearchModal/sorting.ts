@@ -1,8 +1,6 @@
-import { Token, TokenAmount, WETH, Pair } from 'dxswap-sdk'
+import { Token, TokenAmount } from 'dxswap-sdk'
 import { useMemo } from 'react'
-import { useActiveWeb3React } from '../../hooks'
-import { useAllTokenBalancesTreatingWETHasETH } from '../../state/wallet/hooks'
-import { DUMMY_PAIRS_TO_PIN } from '../../constants'
+import { useAllTokenBalances } from '../../state/wallet/hooks'
 
 // compare two token amounts with highest one coming first
 function balanceComparator(balanceA?: TokenAmount, balanceB?: TokenAmount) {
@@ -16,39 +14,12 @@ function balanceComparator(balanceA?: TokenAmount, balanceB?: TokenAmount) {
   return 0
 }
 
-// compare two pairs, favoring "pinned" pairs, and falling back to balances
-export function pairComparator(pairA: Pair, pairB: Pair, balanceA?: TokenAmount, balanceB?: TokenAmount) {
-  const aShouldBePinned =
-    DUMMY_PAIRS_TO_PIN[pairA?.token0?.chainId]?.some(
-      dummyPairToPin => dummyPairToPin.liquidityToken.address === pairA?.liquidityToken?.address
-    ) ?? false
-  const bShouldBePinned =
-    DUMMY_PAIRS_TO_PIN[pairB?.token0?.chainId]?.some(
-      dummyPairToPin => dummyPairToPin.liquidityToken.address === pairB?.liquidityToken?.address
-    ) ?? false
-
-  if (aShouldBePinned && !bShouldBePinned) {
-    return -1
-  } else if (!aShouldBePinned && bShouldBePinned) {
-    return 1
-  } else {
-    return balanceComparator(balanceA, balanceB)
-  }
-}
-
-function getTokenComparator(
-  weth: Token | undefined,
-  balances: { [tokenAddress: string]: TokenAmount }
-): (tokenA: Token, tokenB: Token) => number {
+function getTokenComparator(balances: {
+  [tokenAddress: string]: TokenAmount | undefined
+}): (tokenA: Token, tokenB: Token) => number {
   return function sortTokens(tokenA: Token, tokenB: Token): number {
     // -1 = a is first
     // 1 = b is first
-
-    // sort ETH first
-    if (weth) {
-      if (tokenA.equals(weth)) return -1
-      if (tokenB.equals(weth)) return 1
-    }
 
     // sort by balances
     const balanceA = balances[tokenA.address]
@@ -57,16 +28,18 @@ function getTokenComparator(
     const balanceComp = balanceComparator(balanceA, balanceB)
     if (balanceComp !== 0) return balanceComp
 
-    // sort by symbol
-    return tokenA.symbol.toLowerCase() < tokenB.symbol.toLowerCase() ? -1 : 1
+    if (tokenA.symbol && tokenB.symbol) {
+      // sort by symbol
+      return tokenA.symbol.toLowerCase() < tokenB.symbol.toLowerCase() ? -1 : 1
+    } else {
+      return tokenA.symbol ? -1 : tokenB.symbol ? -1 : 0
+    }
   }
 }
 
 export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: Token) => number {
-  const { chainId } = useActiveWeb3React()
-  const weth = WETH[chainId]
-  const balances = useAllTokenBalancesTreatingWETHasETH()
-  const comparator = useMemo(() => getTokenComparator(weth, balances ?? {}), [balances, weth])
+  const balances = useAllTokenBalances()
+  const comparator = useMemo(() => getTokenComparator(balances ?? {}), [balances])
   return useMemo(() => {
     if (inverted) {
       return (tokenA: Token, tokenB: Token) => comparator(tokenA, tokenB) * -1

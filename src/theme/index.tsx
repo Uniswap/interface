@@ -14,7 +14,7 @@ export * from './components'
 
 const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
-  upToSmall: 600,
+  upToSmall: 720,
   upToMedium: 960,
   upToLarge: 1280
 }
@@ -52,10 +52,10 @@ export function colors(darkMode: boolean): Colors {
     bg2: darkMode ? '#2C2F36' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#565A69' : '#888D9B',
+    bg5: darkMode ? '#6C7284' : '#888D9B',
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,0.85)' : 'rgba(0,0,0,0.6)',
+    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
@@ -75,9 +75,11 @@ export function colors(darkMode: boolean): Colors {
 
     // other
     red1: '#FF6871',
+    red2: '#F82D3A',
     green1: '#27AE60',
     yellow1: '#FFE270',
-    yellow2: '#F3841E'
+    yellow2: '#F3841E',
+    blue1: '#2172E5'
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
@@ -135,6 +137,9 @@ export const TYPE = {
   black(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text1'} {...props} />
   },
+  white(props: TextProps) {
+    return <TextWrapper fontWeight={500} color={'white'} {...props} />
+  },
   body(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
   },
@@ -146,6 +151,9 @@ export const TYPE = {
   },
   subHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
+  },
+  small(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={11} {...props} />
   },
   blue(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
@@ -168,11 +176,9 @@ export const TYPE = {
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
-@import url('https://rsms.me/inter/inter.css');
-
 html, input, textarea, button {
   font-family: 'Inter', sans-serif;
-  letter-spacing: -0.018em;
+  font-display: fallback;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
@@ -190,12 +196,18 @@ body {
   box-sizing: border-box;
 }
 
+button {
+  user-select: none;
+}
+
 html {
   font-size: 16px;
   font-variant: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
+  
 }
 `
 

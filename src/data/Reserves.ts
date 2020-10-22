@@ -1,18 +1,34 @@
-import { Token, TokenAmount, Pair, FACTORY_ADDRESS } from 'dxswap-sdk'
+import { TokenAmount, Pair, Currency } from 'dxswap-sdk'
 import { useMemo } from 'react'
-import { abi as IDXswapPairABI } from 'dxswap-core/build/contracts/IDXswapPair.json'
+import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
+import { useActiveWeb3React } from '../hooks'
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
+import { useFeesState } from '../state/fees/hooks'
+import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
-/*
- * if loading, return undefined
- * if no pair created yet, return null
- * if pair already created (even if 0 reserves), return pair
- */
-export function usePairs(tokens: [Token | undefined, Token | undefined][]): (undefined | Pair | null)[] {
+export enum PairState {
+  LOADING,
+  NOT_EXISTS,
+  EXISTS,
+  INVALID
+}
+
+export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
+  const { chainId } = useActiveWeb3React()
+
+  const tokens = useMemo(
+    () =>
+      currencies.map(([currencyA, currencyB]) => [
+        wrappedCurrency(currencyA, chainId),
+        wrappedCurrency(currencyB, chainId)
+      ]),
+    [chainId, currencies]
+  )
+
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
@@ -20,6 +36,8 @@ export function usePairs(tokens: [Token | undefined, Token | undefined][]): (und
       }),
     [tokens]
   )
+
+  const { swapFees, protocolFeeDenominator } = useFeesState()
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
 
@@ -29,15 +47,28 @@ export function usePairs(tokens: [Token | undefined, Token | undefined][]): (und
       const tokenA = tokens[i][0]
       const tokenB = tokens[i][1]
 
-      if (loading || !tokenA || !tokenB) return undefined
-      if (!reserves) return null
+      if (loading) return [PairState.LOADING, null]
+      if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
+      if (!reserves) return [PairState.NOT_EXISTS, null]
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
-      return new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
+      const swapFee =
+        swapFees && swapFees[Pair.getAddress(token0, token1)].fee
+          ? swapFees[Pair.getAddress(token0, token1)].fee
+          : BigInt(15)
+      return [
+        PairState.EXISTS,
+        new Pair(
+          new TokenAmount(token0, reserve0.toString()),
+          new TokenAmount(token1, reserve1.toString()),
+          swapFee,
+          protocolFeeDenominator ? BigInt(protocolFeeDenominator) : BigInt(0)
+        )
+      ]
     })
-  }, [results, tokens])
+  }, [protocolFeeDenominator, results, swapFees, tokens])
 }
 
-export function usePair(tokenA?: Token, tokenB?: Token): undefined | Pair | null {
+export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {
   return usePairs([[tokenA, tokenB]])[0]
 }

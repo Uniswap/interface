@@ -1,7 +1,7 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { ChainId, Token, WETH } from 'dxswap-sdk'
+import { Currency, ETHER, Token, currencyEquals } from 'dxswap-sdk'
 import { useMemo } from 'react'
-import { ALL_TOKENS } from '../constants/tokens'
+import { useTokenList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
@@ -12,30 +12,30 @@ import { useBytes32TokenContract, useTokenContract } from './useContract'
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
+  const allTokens = useTokenList()
 
   return useMemo(() => {
     if (!chainId) return {}
-    const tokens = userAddedTokens
-      // reduce into all ALL_TOKENS filtered by the current chain
-      .reduce<{ [address: string]: Token }>(
-        (tokenMap, token) => {
-          tokenMap[token.address] = token
-          return tokenMap
-        },
-        // must make a copy because reduce modifies the map, and we do not
-        // want to make a copy in every iteration
-        { ...ALL_TOKENS[chainId as ChainId] }
-      )
+    return (
+      userAddedTokens
+        // reduce into all ALL_TOKENS filtered by the current chain
+        .reduce<{ [address: string]: Token }>(
+          (tokenMap, token) => {
+            tokenMap[token.address] = token
+            return tokenMap
+          },
+          // must make a copy because reduce modifies the map, and we do not
+          // want to make a copy in every iteration
+          { ...allTokens[chainId] }
+        )
+    )
+  }, [chainId, userAddedTokens, allTokens])
+}
 
-    const weth = WETH[chainId as ChainId]
-    if (weth) {
-      // we have to replace it as a workaround because if it is automatically
-      // fetched by address it will cause an invariant when used in constructing
-      // pairs since we replace the name and symbol with 'ETH' and 'Ether'
-      tokens[weth.address] = weth
-    }
-    return tokens
-  }, [userAddedTokens, chainId])
+// Check if currency is included in custom list from user storage
+export function useIsUserAddedToken(currency: Currency): boolean {
+  const userAddedTokens = useUserAddedTokens()
+  return !!userAddedTokens.find(token => currencyEquals(currency, token))
 }
 
 // parse a name or symbol from a token response
@@ -99,4 +99,10 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     tokenName.result,
     tokenNameBytes32.result
   ])
+}
+
+export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
+  const isETH = currencyId?.toUpperCase() === 'ETH'
+  const token = useToken(isETH ? undefined : currencyId)
+  return isETH ? ETHER : token
 }

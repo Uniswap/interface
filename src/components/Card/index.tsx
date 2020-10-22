@@ -19,11 +19,11 @@ export const LightCard = styled(Card)`
 `
 
 export const GreyCard = styled(Card)`
-  background-color: ${({ theme }) => theme.advancedBG};
+  background-color: ${({ theme }) => theme.bg3};
 `
 
 export const OutlineCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.advancedBG};
+  border: 1px solid ${({ theme }) => theme.bg3};
 `
 
 export const YellowCard = styled(Card)`
