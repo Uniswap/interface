@@ -94,7 +94,7 @@ export function useApproveCallback(
       return
     }
 
-    let useExact = true
+    let useExact = false
     // There seems to be an issue with gas estimations - the estimation appear to be correct but the txs won't properly propagate/get accepted
     // When using the default high gas limit of 6721900 txs will get confirmed tho
     /*const estimatedGas = await tokenContract.methods.approve(spender, MaxUint256.toString()).estimateGas(wrapper.gasOptionsForEstimation()).catch(() => {
