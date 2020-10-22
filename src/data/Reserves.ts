@@ -53,7 +53,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       const swapFee =
-        swapFees && swapFees[Pair.getAddress(token0, token1)].fee
+        swapFees && swapFees[Pair.getAddress(token0, token1)] && swapFees[Pair.getAddress(token0, token1)].fee
           ? swapFees[Pair.getAddress(token0, token1)].fee
           : BigInt(15)
       return [
