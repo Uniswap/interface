@@ -191,7 +191,7 @@ function SupplyMarkets({
       })
   }
 
-  async function onExitMarkets(cToken: CToken) {
+  async function onExitMarket(cToken: CToken) {
     if (!chainId || !library || !account) return
     const comptroller = getComptrollerContract(chainId, library, account)
 
@@ -247,10 +247,8 @@ function SupplyMarkets({
 
   const supplyAsset = allMarketCTokens.filter((item: CToken) => {
     return (
-      (!item.supplyBalance ||
-      BigNumber.from(0).eq(item.supplyBalance)) &&
-      (!item.borrowBalance ||
-      BigNumber.from(0).eq(item.borrowBalance))
+      (!item.supplyBalance || BigNumber.from(0).eq(item.supplyBalance)) &&
+      (!item.borrowBalance || BigNumber.from(0).eq(item.borrowBalance))
     )
   })
 
@@ -325,7 +323,7 @@ function SupplyMarkets({
                   if (collateralToken) {
                     if (collateralToken.canBeCollateral) {
                       if (canExitMarkets()) {
-                        onExitMarkets(collateralToken)
+                        onExitMarket(collateralToken)
                         setShowCollateralConfirmation(false)
                       } else {
                         return setShowCollateralConfirmation(false)
