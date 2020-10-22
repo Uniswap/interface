@@ -92,10 +92,8 @@ export class CToken extends Token {
     return this.chainId && this.symbol === 'ETH' && this.cSymbol === 'cETH'
   }
 
-  public getBorrowBalanceAmount(): string {
-    return this.exchangeRateMantissa && this.supplyBalance && this.decimals
-      ? new Fraction(JSBI.BigInt(this.borrowBalance ?? 0), balanceFormat(this.decimals)).toSignificant(18)
-      : JSBI.BigInt('0').toString()
+  public getBorrowBalanceAmount(): JSBI {
+    return this.borrowBalance ? JSBI.BigInt(this.borrowBalance) : JSBI.BigInt('0')
   }
 
   public getSupplyApy(): number {

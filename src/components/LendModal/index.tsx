@@ -29,6 +29,7 @@ import MarketBar from '../MarketBar'
 import { useCTokenBalance } from '../../state/wallet/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
+import { TokenAmount } from '@uniswap/sdk'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -396,7 +397,9 @@ function LendModal({
                           case LendField.BORROW:
                             break
                           case LendField.REPAY:
-                            setLendInputValue(lendToken.getBorrowBalanceAmount() ?? '0')
+                            setLendInputValue(
+                              new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toSignificant() ?? '0'
+                            )
                             break
                           default:
                             break
