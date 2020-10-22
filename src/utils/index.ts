@@ -233,7 +233,7 @@ export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
   for (let i = 0; i < allMarketsAsset.length; i++) {
     sumUnderlyingAssets += allMarketsAsset[i]
       ? allMarketsAsset[i].getSupplyBalance() * allMarketsAsset[i].getSupplyApy() -
-      allMarketsAsset[i].getBorrowBalance() * allMarketsAsset[i].getBorrowApy()
+        allMarketsAsset[i].getBorrowBalance() * allMarketsAsset[i].getBorrowApy()
       : 0
   }
   return sumUnderlyingAssets

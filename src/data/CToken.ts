@@ -143,15 +143,13 @@ export class CToken extends Token {
     )
   }
 
-  public getLiquidity() {
+  public getLiquidity(): JSBI {
     return this.liquidity && this.decimals && this.underlyingPrice
-      ? parseFloat(
-          new Fraction(
-            JSBI.multiply(JSBI.BigInt(this.liquidity), JSBI.BigInt(this.underlyingPrice)),
-            JSBI.multiply(LIQUIDITY, underlyingPriceFormat(this.decimals))
-          ).toSignificant(18)
-        ) / 1000
-      : 0
+      ? JSBI.divide(
+          JSBI.multiply(JSBI.BigInt(this.liquidity), JSBI.BigInt(this.underlyingPrice)),
+          JSBI.multiply(underlyingPriceFormat(this.decimals), JSBI.BigInt('1000'))
+        )
+      : JSBI.BigInt('0')
   }
 
   public getSuppliedValue() {

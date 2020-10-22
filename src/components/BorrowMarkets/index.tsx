@@ -8,10 +8,11 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
 import { LendField } from '../../state/lending/actions'
-import { getBorrowTotalBalance } from '../../utils'
+import { balanceFormat, getBorrowTotalBalance } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
+import { JSBI, TokenAmount } from '@uniswap/sdk'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -171,7 +172,20 @@ function BorrowMarkets({
                         {' ' + item?.symbol}
                       </ItemBottomWrap>
                     </ItemWrap>
-                    <ItemWrap>{((getBorrowTotalBalance([item]) / limit) * 100).toFixed(0) ?? ''}%</ItemWrap>
+                    <ItemWrap>
+                      {JSBI.greaterThan(
+                        item?.getLiquidity(),
+                        JSBI.multiply(JSBI.BigInt('1000'), balanceFormat(item?.decimals))
+                      )
+                        ? '> 1000'
+                        : JSBI.lessThan(
+                            item?.getLiquidity(),
+                            JSBI.multiply(JSBI.BigInt('1'), balanceFormat(item?.decimals))
+                          )
+                        ? '< 1'
+                        : new TokenAmount(item, item?.getLiquidity()).toSignificant()}
+                      K
+                    </ItemWrap>
                   </AssetItem>
                 </ItemPannel>
               ))}
