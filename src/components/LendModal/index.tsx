@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -27,6 +27,7 @@ import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import MarketBar from '../MarketBar'
 import { useCTokenBalance } from '../../state/wallet/hooks'
+import { tryParseAmount } from '../../state/swap/hooks'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -344,6 +345,8 @@ function LendModal({
 
   const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken?.cAddress)
 
+  const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
+
   useEffect(() => {
     if (showLendConfirmation) {
       lendMarket === LendField.SUPPLY ? setTabItemActive(LendField.SUPPLY) : setTabItemActive(LendField.BORROW)
@@ -523,19 +526,11 @@ function LendModal({
                   {approvalTokenStatus === ApprovalState.APPROVED ? (
                     <ButtonLight
                       onClick={() => {
-                        if (lendToken && onMint && tabItemActive === LendField.SUPPLY) {
-                          onMint(
-                            lendToken,
-                            (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
-                            lendToken.isETH()
-                          )
+                        if (lendToken && inputAmount && onMint && tabItemActive === LendField.SUPPLY) {
+                          onMint(lendToken, inputAmount.raw.toString(), lendToken.isETH())
                         }
-                        if (lendToken && onRepayBorrow && tabItemActive === LendField.REPAY) {
-                          onRepayBorrow(
-                            lendToken,
-                            (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString(),
-                            lendToken.isETH()
-                          )
+                        if (lendToken && inputAmount && onRepayBorrow && tabItemActive === LendField.REPAY) {
+                          onRepayBorrow(lendToken, inputAmount.raw.toString(), lendToken.isETH())
                         }
                       }}
                     >
@@ -550,15 +545,12 @@ function LendModal({
               ) : (
                 <ButtonLight
                   onClick={() => {
-                    if (lendToken && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
-                      onRedeemUnderlying(
-                        lendToken,
-                        (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString()
-                      )
+                    if (lendToken && inputAmount && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
+                      onRedeemUnderlying(lendToken, inputAmount.raw.toString())
                     }
 
-                    if (lendToken && onBorrow && tabItemActive === LendField.BORROW) {
-                      onBorrow(lendToken, (parseFloat(lendInputValue) * Math.pow(10, lendToken.decimals)).toString())
+                    if (lendToken && inputAmount && onBorrow && tabItemActive === LendField.BORROW) {
+                      onBorrow(lendToken, inputAmount.raw.toString())
                     }
                   }}
                 >
