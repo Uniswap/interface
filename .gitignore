@@ -10,6 +10,9 @@
 /build
 build.tar.gz
 
+# temp deployment
+/scripts
+
 # misc
 .DS_Store
 .env.local
