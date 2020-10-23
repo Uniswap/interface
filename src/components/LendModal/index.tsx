@@ -30,6 +30,7 @@ import { useAllCTokenBalances, useCTokenBalance } from '../../state/wallet/hooks
 import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
 import { TokenAmount } from '@uniswap/sdk'
+import { useLendingInfo } from '../../state/lending/hooks'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -170,11 +171,13 @@ function LendModal({
 
   const walletBalanceAmount = useAllCTokenBalances([lendToken])
 
+  const { inputError, inputText } = useLendingInfo(lendInputValue, lendToken, tabItemActive)
+
   useEffect(() => {
     if (showLendConfirmation) {
       lendMarket === LendField.SUPPLY ? setTabItemActive(LendField.SUPPLY) : setTabItemActive(LendField.BORROW)
     } else {
-      setLendInputValue('0')
+      setLendInputValue('')
     }
   }, [lendMarket, showLendConfirmation])
 
@@ -549,6 +552,7 @@ function LendModal({
                 <>
                   {approvalTokenStatus === ApprovalState.APPROVED ? (
                     <ButtonLight
+                      disabled={inputError}
                       onClick={() => {
                         if (lendToken && inputAmount && onMint && tabItemActive === LendField.SUPPLY) {
                           onMint(lendToken, lendInputValue, lendToken.isETH())
@@ -558,7 +562,7 @@ function LendModal({
                         }
                       }}
                     >
-                      {tabItemActive}
+                      {inputText?.toLocaleUpperCase()}
                     </ButtonLight>
                   ) : (
                     <ButtonLight disabled={approvalTokenStatus === ApprovalState.PENDING} onClick={approveCallback}>
@@ -568,6 +572,7 @@ function LendModal({
                 </>
               ) : (
                 <ButtonLight
+                  disabled={inputError}
                   onClick={() => {
                     if (lendToken && inputAmount && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
                       onRedeemUnderlying(lendToken, lendInputValue)
@@ -578,7 +583,7 @@ function LendModal({
                     }
                   }}
                 >
-                  {tabItemActive}
+                  {inputText?.toLocaleUpperCase()}
                 </ButtonLight>
               )}
             </AutoColumn>
