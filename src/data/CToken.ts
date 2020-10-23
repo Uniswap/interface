@@ -151,7 +151,10 @@ export class CToken extends Token {
   }
 
   public getUnderlyingPrice(): JSBI {
-    return JSBI.BigInt(this.underlyingPrice ?? 0)
+    return JSBI.divide(
+      JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), balanceFormat(this.decimals)),
+      underlyingPriceFormat(this.decimals)
+    )
   }
 
   public getSuppliedValue() {
