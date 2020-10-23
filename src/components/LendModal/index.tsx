@@ -160,9 +160,33 @@ function LendModal({
 
   const addTransaction = useTransactionAdder()
 
-  async function onMint(cToken: CToken, amount: string, isETH: boolean) {
-    if (!chainId || !library || !account) return
+  const [tabItemActive, setTabItemActive] = useState<LendField>()
 
+  const [lendInputValue, setLendInputValue] = useState('')
+
+  const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken?.cAddress)
+
+  const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
+
+  const walletBalanceAmount = useAllCTokenBalances([lendToken])
+
+  useEffect(() => {
+    if (showLendConfirmation) {
+      lendMarket === LendField.SUPPLY ? setTabItemActive(LendField.SUPPLY) : setTabItemActive(LendField.BORROW)
+    } else {
+      setLendInputValue('0')
+    }
+  }, [lendMarket, showLendConfirmation])
+
+  function onBorrowMax(lendToken: CToken): string {
+    const price = parseFloat(new TokenAmount(lendToken, lendToken.getUnderlyingPrice()).toSignificant())
+    return ((0.8 * limit - borrowTotalBalance) / price).toString()
+  }
+
+  async function onMint(cToken: CToken, lendInputValue: string, isETH: boolean) {
+    const inputAmount = tryParseAmount(lendInputValue, cToken)
+    const amount = inputAmount?.raw.toString()
+    if (!chainId || !library || !account || !amount) return
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
@@ -191,7 +215,7 @@ function LendModal({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Add ' + amount + ' ' + cToken.symbol
+            summary: 'Add ' + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -212,8 +236,10 @@ function LendModal({
       })
   }
 
-  async function onRedeemUnderlying(cToken: CToken, amount: string) {
-    if (!chainId || !library || !account) return
+  async function onRedeemUnderlying(cToken: CToken, lendInputValue: string) {
+    const inputAmount = tryParseAmount(lendInputValue, cToken)
+    const amount = inputAmount?.raw.toString()
+    if (!chainId || !library || !account || !amount) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
 
     const estimate = cTokenContract.estimateGas.redeemUnderlying
@@ -231,7 +257,7 @@ function LendModal({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Redeem ' + amount + ' ' + cToken.symbol
+            summary: 'Redeem ' + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -252,8 +278,10 @@ function LendModal({
       })
   }
 
-  async function onBorrow(cToken: CToken, amount: string) {
-    if (!chainId || !library || !account) return
+  async function onBorrow(cToken: CToken, lendInputValue: string) {
+    const inputAmount = tryParseAmount(lendInputValue, cToken)
+    const amount = inputAmount?.raw.toString()
+    if (!chainId || !library || !account || !amount) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
 
     const estimate = cTokenContract.estimateGas.borrow
@@ -271,7 +299,7 @@ function LendModal({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Borrow ' + amount + ' ' + cToken.symbol
+            summary: 'Borrow ' + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -292,8 +320,10 @@ function LendModal({
       })
   }
 
-  async function onRepayBorrow(cToken: CToken, amount: string, isETH: boolean) {
-    if (!chainId || !library || !account) return
+  async function onRepayBorrow(cToken: CToken, lendInputValue: string, isETH: boolean) {
+    const inputAmount = tryParseAmount(lendInputValue, cToken)
+    const amount = inputAmount?.raw.toString()
+    if (!chainId || !library || !account || !amount) return
 
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
@@ -323,7 +353,7 @@ function LendModal({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Repay ' + amount + ' ' + cToken.symbol
+            summary: 'Repay ' + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -343,29 +373,6 @@ function LendModal({
         }
       })
   }
-
-  function onBorrowMax(lendToken: CToken): string {
-    const price = parseFloat(new TokenAmount(lendToken, lendToken.getUnderlyingPrice()).toSignificant())
-    return ((0.8 * limit - borrowTotalBalance) / price).toString()
-  }
-
-  const [tabItemActive, setTabItemActive] = useState<LendField>()
-
-  const [lendInputValue, setLendInputValue] = useState('0')
-
-  const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken?.cAddress)
-
-  const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
-
-  const walletBalanceAmount = useAllCTokenBalances([lendToken])
-
-  useEffect(() => {
-    if (showLendConfirmation) {
-      lendMarket === LendField.SUPPLY ? setTabItemActive(LendField.SUPPLY) : setTabItemActive(LendField.BORROW)
-    } else {
-      setLendInputValue('0')
-    }
-  }, [lendMarket, showLendConfirmation])
 
   return (
     <div>
@@ -396,7 +403,7 @@ function LendModal({
                       if (lendToken && walletBalanceAmount[0]) {
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
-                            setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '0')
+                            setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '')
                             break
                           case LendField.WITHDRAW:
                             new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
@@ -449,7 +456,7 @@ function LendModal({
                       setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
                     } else {
                       setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
-                      setLendInputValue('0')
+                      setLendInputValue('')
                     }
                   }}
                 >
@@ -470,7 +477,7 @@ function LendModal({
                       setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
                     } else {
                       setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
-                      setLendInputValue('0')
+                      setLendInputValue('')
                     }
                   }}
                 >
@@ -544,10 +551,10 @@ function LendModal({
                     <ButtonLight
                       onClick={() => {
                         if (lendToken && inputAmount && onMint && tabItemActive === LendField.SUPPLY) {
-                          onMint(lendToken, inputAmount.raw.toString(), lendToken.isETH())
+                          onMint(lendToken, lendInputValue, lendToken.isETH())
                         }
                         if (lendToken && inputAmount && onRepayBorrow && tabItemActive === LendField.REPAY) {
-                          onRepayBorrow(lendToken, inputAmount.raw.toString(), lendToken.isETH())
+                          onRepayBorrow(lendToken, lendInputValue, lendToken.isETH())
                         }
                       }}
                     >
@@ -563,11 +570,11 @@ function LendModal({
                 <ButtonLight
                   onClick={() => {
                     if (lendToken && inputAmount && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
-                      onRedeemUnderlying(lendToken, inputAmount.raw.toString())
+                      onRedeemUnderlying(lendToken, lendInputValue)
                     }
 
                     if (lendToken && inputAmount && onBorrow && tabItemActive === LendField.BORROW) {
-                      onBorrow(lendToken, inputAmount.raw.toString())
+                      onBorrow(lendToken, lendInputValue)
                     }
                   }}
                 >
@@ -584,7 +591,13 @@ function LendModal({
                 </Text>
                 {(lendToken && tabItemActive === LendField.WITHDRAW) ||
                 (lendToken && tabItemActive === LendField.BORROW)
-                  ? new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
+                  ? Number(
+                      parseFloat(
+                        tabItemActive === LendField.WITHDRAW
+                          ? new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
+                          : new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toSignificant()
+                      ).toFixed(2)
+                    ) || '0'
                   : lendTokenBalance?.toSignificant() || '0'}
                 {' ' + lendToken?.symbol}
               </AutoRow>
