@@ -145,7 +145,7 @@ function BorrowMarkets({
               <AssetLabel textAlign={'right'}>% Of Limit</AssetLabel>
             </AssetWrapLabels>
             <AssetItemWrap>
-              {borrowedAsset.map((item: any) => (
+              {borrowedAsset.map((item: CToken) => (
                 <ItemPannel marketCToken={item} key={item?.symbol}>
                   <AssetItem
                     key={item?.symbol}
@@ -168,20 +168,7 @@ function BorrowMarkets({
                         {' ' + item?.symbol}
                       </ItemBottomWrap>
                     </ItemWrap>
-                    <ItemWrap>
-                      {JSBI.greaterThan(
-                        item?.getLiquidity(),
-                        JSBI.multiply(JSBI.BigInt('1000'), balanceFormat(item?.decimals))
-                      )
-                        ? '> 1000'
-                        : JSBI.lessThan(
-                            item?.getLiquidity(),
-                            JSBI.multiply(JSBI.BigInt('1'), balanceFormat(item?.decimals))
-                          )
-                        ? '< 1'
-                        : new TokenAmount(item, item?.getLiquidity()).toSignificant()}
-                      K
-                    </ItemWrap>
+                    <ItemWrap>{((getBorrowTotalBalance([item]) / limit) * 100).toFixed(1) ?? ''}%</ItemWrap>
                   </AssetItem>
                 </ItemPannel>
               ))}
@@ -220,7 +207,20 @@ function BorrowMarkets({
                         {borrowAssetCurrencyAmount?.[index]?.toSignificant(4)}
                         {' ' + item?.symbol}
                       </ItemWrap>
-                      <ItemWrap>{item.getLiquidity() < 100 ? item.getLiquidity().toFixed(1) : '< 0.1'}K</ItemWrap>
+                      <ItemWrap>
+                        {JSBI.greaterThan(
+                          item?.getLiquidity(),
+                          JSBI.multiply(JSBI.BigInt('1000'), balanceFormat(item?.decimals))
+                        )
+                          ? '> 1000'
+                          : JSBI.lessThan(
+                              item?.getLiquidity(),
+                              JSBI.multiply(JSBI.BigInt('1'), balanceFormat(item?.decimals))
+                            )
+                          ? '< 1'
+                          : new TokenAmount(item, item?.getLiquidity()).toSignificant()}
+                        K
+                      </ItemWrap>
                     </AssetItem>
                   </ItemPannel>
                 ))
