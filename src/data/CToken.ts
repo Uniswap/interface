@@ -150,6 +150,10 @@ export class CToken extends Token {
       : JSBI.BigInt('0')
   }
 
+  public getUnderlyingPrice(): JSBI {
+    return JSBI.BigInt(this.underlyingPrice ?? 0)
+  }
+
   public getSuppliedValue() {
     return parseFloat(
       this.exchangeRateMantissa &&

@@ -26,7 +26,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import MarketBar from '../MarketBar'
-import { useCTokenBalance } from '../../state/wallet/hooks'
+import { useAllCTokenBalances, useCTokenBalance } from '../../state/wallet/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
 import { TokenAmount } from '@uniswap/sdk'
@@ -344,6 +344,11 @@ function LendModal({
       })
   }
 
+  function onBorrowMax(lendToken: CToken): string {
+    const price = parseFloat(new TokenAmount(lendToken, lendToken.getUnderlyingPrice()).toSignificant())
+    return ((0.8 * limit - borrowTotalBalance) / price).toString()
+  }
+
   const [tabItemActive, setTabItemActive] = useState<LendField>()
 
   const [lendInputValue, setLendInputValue] = useState('0')
@@ -351,6 +356,8 @@ function LendModal({
   const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken?.cAddress)
 
   const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
+
+  const walletBalanceAmount = useAllCTokenBalances([lendToken])
 
   useEffect(() => {
     if (showLendConfirmation) {
@@ -386,7 +393,7 @@ function LendModal({
                     value={lendInputValue}
                     onUserInput={setLendInputValue}
                     onMax={() => {
-                      if (lendToken) {
+                      if (lendToken && walletBalanceAmount[0]) {
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
                             setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '0')
@@ -395,10 +402,13 @@ function LendModal({
                             new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
                             break
                           case LendField.BORROW:
+                            setLendInputValue(onBorrowMax(lendToken))
                             break
                           case LendField.REPAY:
                             setLendInputValue(
-                              new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toSignificant() ?? '0'
+                              walletBalanceAmount[0].greaterThan(lendToken.getBorrowBalanceAmount())
+                                ? new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toSignificant()
+                                : walletBalanceAmount[0].toSignificant()
                             )
                             break
                           default:
