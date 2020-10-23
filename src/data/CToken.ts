@@ -106,11 +106,11 @@ export class CToken extends Token {
 
   public getSupplyBalanceAmount() {
     return this.exchangeRateMantissa && this.supplyBalance && this.decimals
-      ? new Fraction(
+      ? JSBI.divide(
           JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-          JSBI.multiply(balanceFormat(this.decimals), COLLATERAL_FACTOR_MANTISSA)
-        ).toSignificant(18)
-      : JSBI.BigInt('0').toString()
+          COLLATERAL_FACTOR_MANTISSA
+        )
+      : JSBI.BigInt(0)
   }
 
   public getSupplyBalance() {

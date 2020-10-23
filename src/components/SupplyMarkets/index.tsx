@@ -19,6 +19,7 @@ import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
+import { TokenAmount } from '@uniswap/sdk'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -383,7 +384,7 @@ function SupplyMarkets({
                     <ItemWrap>
                       <div>${getSupplyTotalBalance([item]).toFixed(2) ?? ''}</div>
                       <ItemBottomWrap>
-                        {parseFloat(item.getSupplyBalanceAmount()).toFixed(4) ?? ''}
+                        {new TokenAmount(item, item.getSupplyBalanceAmount()).toSignificant()}
                         {' ' + item?.symbol}
                       </ItemBottomWrap>
                     </ItemWrap>

@@ -392,7 +392,7 @@ function LendModal({
                             setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '0')
                             break
                           case LendField.WITHDRAW:
-                            setLendInputValue(lendToken.getSupplyBalanceAmount() ?? '0')
+                            new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
                             break
                           case LendField.BORROW:
                             break
@@ -574,7 +574,7 @@ function LendModal({
                 </Text>
                 {(lendToken && tabItemActive === LendField.WITHDRAW) ||
                 (lendToken && tabItemActive === LendField.BORROW)
-                  ? Number(parseFloat(lendToken.getSupplyBalanceAmount()).toFixed(2)) || '0'
+                  ? new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
                   : lendTokenBalance?.toSignificant() || '0'}
                 {' ' + lendToken?.symbol}
               </AutoRow>
