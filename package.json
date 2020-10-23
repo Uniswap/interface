@@ -75,10 +75,10 @@
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
-    "@swoop-exchange/core": "^1.0.1",
-    "@swoop-exchange/sdk": "^1.0.7",
+    "@swoop-exchange/core": "^1.0.3",
+    "@swoop-exchange/sdk": "^1.1.4",
     "@swoop-exchange/default-token-list": "^1.1.0",
-    "@swoop-exchange/periphery": "^1.0.0",
+    "@swoop-exchange/periphery": "^1.0.1",
     "@swoop-exchange/utils": "^1.0.0"
   },
   "resolutions": {

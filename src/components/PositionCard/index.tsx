@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink } from '../../theme'
+//import { ExternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonSecondary } from '../Button'
@@ -17,7 +17,8 @@ import Card, { GreyCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { AutoRow, RowBetween, RowFixed } from '../Row'
+//import { AutoRow, RowBetween, RowFixed } from '../Row'
+import { RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styleds'
 
 import { useActiveHmyReact } from '../../hooks'
@@ -233,11 +234,6 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               </Text>
             </FixedHeightRow>
 
-            <AutoRow justify="center" marginTop={'10px'}>
-              <ExternalLink href={`#`}>
-                View pool information ↗
-              </ExternalLink>
-            </AutoRow>
             <RowBetween marginTop="10px">
               <ButtonSecondary as={Link} to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`} width="48%">
                 Add
