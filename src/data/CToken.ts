@@ -93,9 +93,7 @@ export class CToken extends Token {
   }
 
   public getBorrowBalanceAmount() {
-    return this.borrowBalance && this.decimals
-      ? new Fraction(JSBI.BigInt(this.borrowBalance ?? 0), balanceFormat(this.decimals)).toSignificant(18)
-      : JSBI.BigInt('0').toString()
+    return JSBI.BigInt(this.borrowBalance ?? 0)
   }
 
   public getSupplyApy(): number {

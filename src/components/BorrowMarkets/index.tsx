@@ -164,7 +164,7 @@ function BorrowMarkets({
                     <ItemWrap>
                       <div>${getBorrowTotalBalance([item]).toFixed(2) ?? ''}</div>
                       <ItemBottomWrap>
-                        {parseFloat(item.getBorrowBalanceAmount()).toFixed(4) ?? ''}
+                        {new TokenAmount(item, item.getBorrowBalanceAmount()).toSignificant()}
                         {' ' + item?.symbol}
                       </ItemBottomWrap>
                     </ItemWrap>
