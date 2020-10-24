@@ -568,16 +568,24 @@ function LendModal({
                       onClick={() => {
                         if (lendToken && inputAmount && onMint && tabItemActive === LendField.SUPPLY) {
                           onMint(lendToken, lendInputValue, lendToken.isETH())
+                          setShowLendConfirmation(false)
                         }
                         if (lendToken && inputAmount && onRepayBorrow && tabItemActive === LendField.REPAY) {
                           onRepayBorrow(lendToken, lendInputValue, lendToken.isETH())
+                          setShowLendConfirmation(false)
                         }
                       }}
                     >
                       {inputText?.toLocaleUpperCase()}
                     </ButtonLight>
                   ) : (
-                    <ButtonLight disabled={approvalTokenStatus === ApprovalState.PENDING} onClick={approveCallback}>
+                    <ButtonLight
+                      disabled={approvalTokenStatus === ApprovalState.PENDING}
+                      onClick={() => {
+                        approveCallback()
+                        setShowLendConfirmation(false)
+                      }}
+                    >
                       ENABLE
                     </ButtonLight>
                   )}
@@ -588,10 +596,12 @@ function LendModal({
                   onClick={() => {
                     if (lendToken && inputAmount && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
                       onRedeemUnderlying(lendToken, lendInputValue)
+                      setShowLendConfirmation(false)
                     }
 
                     if (lendToken && inputAmount && onBorrow && tabItemActive === LendField.BORROW) {
                       onBorrow(lendToken, lendInputValue)
+                      setShowLendConfirmation(false)
                     }
                   }}
                 >
