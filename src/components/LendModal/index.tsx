@@ -186,7 +186,9 @@ function LendModal({
     const suppliedValue = lendToken.getSuppliedValue()
     const otherSuppliedTotalValue = limit - lendToken.getSuppliedValue()
     const owedValue = Math.max(0, borrowTotalBalance / 0.8 - otherSuppliedTotalValue)
-    const factor = parseFloat(new Fraction(JSBI.BigInt(lendToken.collateralFactorMantissa ?? 0), COLLATERAL_FACTOR_MANTISSA).toFixed(8))
+    const factor = parseFloat(
+      new Fraction(JSBI.BigInt(lendToken.collateralFactorMantissa ?? 0), COLLATERAL_FACTOR_MANTISSA).toFixed(8)
+    )
     return ((suppliedValue - owedValue) / factor / price).toString()
   }
 
@@ -424,9 +426,10 @@ function LendModal({
                             setLendInputValue(onBorrowMax(lendToken))
                             break
                           case LendField.REPAY:
+                            const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
                             setLendInputValue(
-                              walletBalanceAmount[0].greaterThan(lendToken.getBorrowBalanceAmount())
-                                ? new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toSignificant()
+                              JSBI.greaterThan(walletBalanceAmount[0].raw, borrowAmount.raw)
+                                ? borrowAmount.toSignificant()
                                 : walletBalanceAmount[0].toSignificant()
                             )
                             break
