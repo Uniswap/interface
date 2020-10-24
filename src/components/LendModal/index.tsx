@@ -5,7 +5,7 @@ import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { AutoRow, RowBetween } from '../Row'
 import { X } from 'react-feather'
-import { CToken } from '../../data/CToken'
+import { COLLATERAL_FACTOR_MANTISSA, CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
@@ -29,7 +29,7 @@ import MarketBar from '../MarketBar'
 import { useAllCTokenBalances, useCTokenBalance } from '../../state/wallet/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
-import { TokenAmount } from '@uniswap/sdk'
+import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
 
 const StyledCloseIcon = styled(X)`
@@ -180,6 +180,15 @@ function LendModal({
       setLendInputValue('')
     }
   }, [lendMarket, showLendConfirmation])
+
+  function onWithdrawMax(lendToken: CToken): string {
+    const price = parseFloat(new TokenAmount(lendToken, lendToken.getUnderlyingPrice()).toSignificant())
+    const suppliedValue = lendToken.getSuppliedValue()
+    const otherSuppliedTotalValue = limit - lendToken.getSuppliedValue()
+    const owedValue = Math.max(0, borrowTotalBalance / 0.8 - otherSuppliedTotalValue)
+    const factor = parseFloat(new Fraction(JSBI.BigInt(lendToken.collateralFactorMantissa ?? 0), COLLATERAL_FACTOR_MANTISSA).toFixed(8))
+    return ((suppliedValue - owedValue) / factor / price).toString()
+  }
 
   function onBorrowMax(lendToken: CToken): string {
     const price = parseFloat(new TokenAmount(lendToken, lendToken.getUnderlyingPrice()).toSignificant())
@@ -409,7 +418,7 @@ function LendModal({
                             setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '')
                             break
                           case LendField.WITHDRAW:
-                            new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
+                            setLendInputValue(onWithdrawMax(lendToken))
                             break
                           case LendField.BORROW:
                             setLendInputValue(onBorrowMax(lendToken))
