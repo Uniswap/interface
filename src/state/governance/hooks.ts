@@ -124,7 +124,7 @@ export function useAllProposalData() {
         const formattedProposal: ProposalData = {
           id: allProposals[i]?.result?.id.toString(),
           title: formattedEvents[i].description?.split(/# |\n/g)[1] || 'Untitled',
-          description: formattedEvents[i].description?.split(/# /)[1] || 'No description.',
+          description: formattedEvents[i].description || 'No description.',
           proposer: allProposals[i]?.result?.proposer,
           status: enumerateProposalState(allProposalStates[i]?.result?.[0]) ?? 'Undetermined',
           forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString(), 18)),
