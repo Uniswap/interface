@@ -253,7 +253,7 @@ function Header({ history }: { history: any }) {
           <StyledExternalLink id={`twitter-nav-link`} href={'https://twitter.com/deerfi_com'}>
             Twitter <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
-          <StyledExternalLink id={`discord-nav-link`} href={'https://discord.gg/JtrTSE'}>
+          <StyledExternalLink id={`discord-nav-link`} href={'https://discord.gg/SHdfFgX'}>
             Discord <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
         </HeaderLinks>

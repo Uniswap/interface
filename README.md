@@ -12,7 +12,7 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 - Twitter: [@UniswapProtocol](https://twitter.com/deerfi_com)
 - Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
 - Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.gg/JtrTSE)
+- Discord: [Uniswap](https://discord.gg/SHdfFgX)
 - Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
 
 ## Accessing the Deerfi Lending Interface
