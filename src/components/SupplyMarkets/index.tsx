@@ -19,7 +19,7 @@ import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import { TokenAmount } from '@uniswap/sdk'
+import { Fraction, TokenAmount } from '@uniswap/sdk'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -136,11 +136,13 @@ function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children
 function SupplyMarkets({
   allMarketCTokens = [],
   borrowTotalBalance,
-  limit
+  limit,
+  usedLimit
 }: {
   allMarketCTokens: CToken[]
-  borrowTotalBalance: number
-  limit: number
+  borrowTotalBalance: Fraction
+  limit: Fraction
+  usedLimit: Fraction
 }) {
   // const { t } = useTranslation()
 
@@ -276,7 +278,8 @@ function SupplyMarkets({
       collateralToken?.underlyingPrice &&
       collateralToken?.collateralFactorMantissa
     ) {
-      if (limit - collateralToken.getSuppliedValue() ?? 0 < borrowTotalBalance) {
+      const canExitMarkets: boolean = limit.subtract(collateralToken.getSuppliedValue()).lessThan(borrowTotalBalance)
+      if (canExitMarkets) {
         return false
       } else {
         return true
@@ -295,6 +298,7 @@ function SupplyMarkets({
         setShowLendConfirmation={setShowLendConfirmation}
         borrowTotalBalance={borrowTotalBalance}
         limit={limit}
+        usedLimit={usedLimit}
         lendMarket={LendField.SUPPLY}
       />
       <Modal isOpen={showCollateralConfirmation} onDismiss={() => setShowCollateralConfirmation(false)}>

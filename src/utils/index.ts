@@ -148,46 +148,46 @@ export function underlyingPriceFormat(digits: number): JSBI {
   )
 }
 
-export function getSupplyTotalBalance(allMarketsAsset: CToken[]) {
-  let supplyTotalBalance = 0
-  for (let i = 0; i < allMarketsAsset.length; i++) {
-    supplyTotalBalance += parseFloat(
-      allMarketsAsset[i]?.exchangeRateMantissa &&
-        allMarketsAsset[i]?.supplyBalance &&
-        allMarketsAsset[i]?.decimals &&
-        allMarketsAsset[i]?.underlyingPrice
-        ? new Fraction(
-            JSBI.multiply(
-              JSBI.multiply(
-                JSBI.BigInt(allMarketsAsset[i].supplyBalance ?? 0),
-                JSBI.BigInt(allMarketsAsset[i].exchangeRateMantissa ?? 0)
-              ),
-              JSBI.BigInt(allMarketsAsset[i]?.underlyingPrice ?? 0)
-            ),
-            JSBI.multiply(
-              JSBI.multiply(balanceFormat(allMarketsAsset[i]?.decimals), EXCHANGE_RATE_MANTISSA),
-              underlyingPriceFormat(allMarketsAsset[i]?.decimals)
-            )
-          ).toSignificant(18)
-        : JSBI.BigInt('0').toString()
-    )
-  }
-  return supplyTotalBalance
-}
-
 // export function getSupplyTotalBalance(allMarketsAsset: CToken[]) {
-//   let supplyTotalBalance = JSBI.BigInt(0)
+//   let supplyTotalBalance = 0
 //   for (let i = 0; i < allMarketsAsset.length; i++) {
-//     supplyTotalBalance = JSBI.add(
-//       supplyTotalBalance,
-//       JSBI.divide(
-//         JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].getSuppliedValue1()), EXA_BASE),
-//         balanceFormat(allMarketsAsset[i].decimals)
-//       )
+//     supplyTotalBalance += parseFloat(
+//       allMarketsAsset[i]?.exchangeRateMantissa &&
+//         allMarketsAsset[i]?.supplyBalance &&
+//         allMarketsAsset[i]?.decimals &&
+//         allMarketsAsset[i]?.underlyingPrice
+//         ? new Fraction(
+//             JSBI.multiply(
+//               JSBI.multiply(
+//                 JSBI.BigInt(allMarketsAsset[i].supplyBalance ?? 0),
+//                 JSBI.BigInt(allMarketsAsset[i].exchangeRateMantissa ?? 0)
+//               ),
+//               JSBI.BigInt(allMarketsAsset[i]?.underlyingPrice ?? 0)
+//             ),
+//             JSBI.multiply(
+//               JSBI.multiply(balanceFormat(allMarketsAsset[i]?.decimals), EXCHANGE_RATE_MANTISSA),
+//               underlyingPriceFormat(allMarketsAsset[i]?.decimals)
+//             )
+//           ).toSignificant(18)
+//         : JSBI.BigInt('0').toString()
 //     )
 //   }
-//   return new Fraction(supplyTotalBalance, EXA_BASE)
+//   return supplyTotalBalance
 // }
+
+export function getSupplyTotalBalance(allMarketsAsset: CToken[]): Fraction {
+  let supplyTotalBalance = JSBI.BigInt(0)
+  for (let i = 0; i < allMarketsAsset.length; i++) {
+    supplyTotalBalance = JSBI.add(
+      supplyTotalBalance,
+      JSBI.divide(
+        JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].getSuppliedValue()), EXA_BASE),
+        balanceFormat(allMarketsAsset[i].decimals)
+      )
+    )
+  }
+  return new Fraction(supplyTotalBalance, EXA_BASE)
+}
 
 // public getSuppliedValue() {
 //   return parseFloat(
@@ -210,28 +210,28 @@ export function getSupplyTotalBalance(allMarketsAsset: CToken[]) {
 //   )
 // }
 
-export function getBorrowTotalBalance(allMarketsAsset: CToken[]) {
-  let borrowTotalBalance = 0
-  for (let i = 0; i < allMarketsAsset.length; i++) {
-    borrowTotalBalance += parseFloat(
-      allMarketsAsset[i]?.borrowBalance && allMarketsAsset[i]?.decimals && allMarketsAsset[i]?.underlyingPrice
-        ? new Fraction(
-            JSBI.multiply(
-              JSBI.BigInt(allMarketsAsset[i].borrowBalance ?? 0),
-              JSBI.BigInt(allMarketsAsset[i]?.underlyingPrice ?? 0)
-            ),
-            JSBI.multiply(
-              balanceFormat(allMarketsAsset[i]?.decimals),
-              underlyingPriceFormat(allMarketsAsset[i]?.decimals)
-            )
-          ).toSignificant(18)
-        : JSBI.BigInt('0').toString()
-    )
-  }
-  return borrowTotalBalance
-}
-
 // export function getBorrowTotalBalance(allMarketsAsset: CToken[]) {
+//   let borrowTotalBalance = 0
+//   for (let i = 0; i < allMarketsAsset.length; i++) {
+//     borrowTotalBalance += parseFloat(
+//       allMarketsAsset[i]?.borrowBalance && allMarketsAsset[i]?.decimals && allMarketsAsset[i]?.underlyingPrice
+//         ? new Fraction(
+//             JSBI.multiply(
+//               JSBI.BigInt(allMarketsAsset[i].borrowBalance ?? 0),
+//               JSBI.BigInt(allMarketsAsset[i]?.underlyingPrice ?? 0)
+//             ),
+//             JSBI.multiply(
+//               balanceFormat(allMarketsAsset[i]?.decimals),
+//               underlyingPriceFormat(allMarketsAsset[i]?.decimals)
+//             )
+//           ).toSignificant(18)
+//         : JSBI.BigInt('0').toString()
+//     )
+//   }
+//   return borrowTotalBalance
+// }
+
+// export function getBorrowTotalBalance(allMarketsAsset: CToken[]): Fraction {
 //   let borrowTotalBalance = JSBI.BigInt(0)
 //   for (let i = 0; i < allMarketsAsset.length; i++) {
 //     borrowTotalBalance = JSBI.add(
@@ -252,38 +252,58 @@ export function getBorrowTotalBalance(allMarketsAsset: CToken[]) {
 //   return new Fraction(borrowTotalBalance, EXA_BASE)
 // }
 
-export function getLimit(allMarketsAsset: CToken[]) {
-  let borrowLimit = 0
+export function getBorrowTotalBalance(allMarketsAsset: CToken[]): Fraction {
+  let borrowTotalBalance = JSBI.BigInt(0)
   for (let i = 0; i < allMarketsAsset.length; i++) {
-    borrowLimit +=
-      allMarketsAsset[i]?.exchangeRateMantissa &&
-      allMarketsAsset[i]?.supplyBalance &&
-      allMarketsAsset[i]?.decimals &&
-      allMarketsAsset[i]?.underlyingPrice &&
-      allMarketsAsset[1]?.collateralFactorMantissa &&
-      allMarketsAsset[i]?.canBeCollateral
-        ? parseFloat(
-            new Fraction(
-              JSBI.multiply(
-                JSBI.multiply(
-                  JSBI.BigInt(allMarketsAsset[i].supplyBalance ?? 0),
-                  JSBI.BigInt(allMarketsAsset[i].exchangeRateMantissa ?? 0)
-                ),
-                JSBI.multiply(
-                  JSBI.BigInt(allMarketsAsset[i].underlyingPrice ?? 0),
-                  JSBI.BigInt(allMarketsAsset[i].collateralFactorMantissa ?? 0)
-                )
-              ),
-              JSBI.multiply(
-                JSBI.multiply(balanceFormat(allMarketsAsset[i]?.decimals), EXCHANGE_RATE_MANTISSA),
-                JSBI.multiply(underlyingPriceFormat(allMarketsAsset[i]?.decimals), COLLATERAL_FACTOR_MANTISSA)
-              )
-            ).toSignificant(18)
-          )
-        : 0
+    borrowTotalBalance = JSBI.add(
+      borrowTotalBalance,
+      JSBI.multiply(
+        JSBI.divide(
+          JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].borrowBalance ?? 0), EXA_BASE),
+          balanceFormat(allMarketsAsset[i]?.decimals)
+        ),
+        JSBI.divide(
+          JSBI.multiply(JSBI.BigInt(allMarketsAsset[i]?.underlyingPrice ?? 0), EXA_BASE),
+          underlyingPriceFormat(allMarketsAsset[i]?.decimals)
+        )
+      )
+    )
   }
-  return borrowLimit
+
+  return new Fraction(borrowTotalBalance, JSBI.multiply(EXA_BASE, EXA_BASE))
 }
+
+// export function getLimit(allMarketsAsset: CToken[]) {
+//   let borrowLimit = 0
+//   for (let i = 0; i < allMarketsAsset.length; i++) {
+//     borrowLimit +=
+//       allMarketsAsset[i]?.exchangeRateMantissa &&
+//       allMarketsAsset[i]?.supplyBalance &&
+//       allMarketsAsset[i]?.decimals &&
+//       allMarketsAsset[i]?.underlyingPrice &&
+//       allMarketsAsset[1]?.collateralFactorMantissa
+//         ? parseFloat(
+//             new Fraction(
+//               JSBI.multiply(
+//                 JSBI.multiply(
+//                   JSBI.BigInt(allMarketsAsset[i].supplyBalance ?? 0),
+//                   JSBI.BigInt(allMarketsAsset[i].exchangeRateMantissa ?? 0)
+//                 ),
+//                 JSBI.multiply(
+//                   JSBI.BigInt(allMarketsAsset[i].underlyingPrice ?? 0),
+//                   JSBI.BigInt(allMarketsAsset[i].collateralFactorMantissa ?? 0)
+//                 )
+//               ),
+//               JSBI.multiply(
+//                 JSBI.multiply(balanceFormat(allMarketsAsset[i]?.decimals), EXCHANGE_RATE_MANTISSA),
+//                 JSBI.multiply(underlyingPriceFormat(allMarketsAsset[i]?.decimals), COLLATERAL_FACTOR_MANTISSA)
+//               )
+//             ).toSignificant(18)
+//           )
+//         : 0
+//   }
+//   return borrowLimit
+// }
 
 export function withLimit(ctoken: CToken, value: JSBI) {
   return JSBI.divide(
@@ -292,23 +312,23 @@ export function withLimit(ctoken: CToken, value: JSBI) {
   )
 }
 
-// export function getLimit(allMarketsAsset: CToken[]): Fraction {
-//   let totalLimit = JSBI.BigInt(0)
+export function getLimit(allMarketsAsset: CToken[]): Fraction {
+  let totalLimit = JSBI.BigInt(0)
 
-//   for (let i = 0; i < allMarketsAsset.length; i++) {
-//     if (allMarketsAsset[i].canBeCollateral) {
-//       totalLimit = JSBI.add(
-//         totalLimit,
-//         JSBI.divide(
-//           JSBI.multiply(withLimit(allMarketsAsset[i], allMarketsAsset[i].getSuppliedValue()), EXA_BASE),
-//           balanceFormat(allMarketsAsset[i].decimals)
-//         )
-//       )
-//     }
-//   }
+  for (let i = 0; i < allMarketsAsset.length; i++) {
+    if (allMarketsAsset[i].canBeCollateral) {
+      totalLimit = JSBI.add(
+        totalLimit,
+        JSBI.divide(
+          JSBI.multiply(withLimit(allMarketsAsset[i], allMarketsAsset[i].getSuppliedValue()), EXA_BASE),
+          balanceFormat(allMarketsAsset[i].decimals)
+        )
+      )
+    }
+  }
 
-//   return new Fraction(totalLimit, EXA_BASE)
-// }
+  return new Fraction(totalLimit, EXA_BASE)
+}
 
 export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
   let sumUnderlyingAssets = 0
@@ -343,7 +363,7 @@ export function getNetApy(allMarketsAsset: CToken[]) {
   const sumAssets = sumUnderlyingAssets(allMarketsAsset)
   const supplyTotalBalance = getSupplyTotalBalance(allMarketsAsset)
   if (sumAssets && sumAssets > 0 && supplyTotalBalance) {
-    return sumAssets / supplyTotalBalance
+    return sumAssets / parseFloat(supplyTotalBalance.toSignificant(6))
   } else if (allBorrowUnderlyingAssets && sumAssets && sumAssets < 0) {
     return sumAssets / allBorrowUnderlyingAssets
   } else {

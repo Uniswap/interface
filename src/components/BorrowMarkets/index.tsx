@@ -8,7 +8,7 @@ import { balanceFormat, getBorrowTotalBalance } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import { JSBI, TokenAmount } from '@uniswap/sdk'
+import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -97,11 +97,13 @@ function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children
 function BorrowMarkets({
   allMarketCTokens = [],
   borrowTotalBalance,
-  limit
+  limit,
+  usedLimit
 }: {
   allMarketCTokens: CToken[]
-  borrowTotalBalance: number
-  limit: number
+  borrowTotalBalance: Fraction
+  limit: Fraction
+  usedLimit: Fraction
 }) {
   // const { t } = useTranslation()
 
@@ -137,6 +139,7 @@ function BorrowMarkets({
         setShowLendConfirmation={setShowLendConfirmation}
         borrowTotalBalance={borrowTotalBalance}
         limit={limit}
+        usedLimit={usedLimit}
         lendMarket={LendField.BORROW}
       />
       {!!borrowedAsset.length && (
@@ -173,7 +176,13 @@ function BorrowMarkets({
                         {' ' + item?.symbol}
                       </ItemBottomWrap>
                     </ItemWrap>
-                    <ItemWrap>{((getBorrowTotalBalance([item]) / limit) * 100).toFixed(1) ?? ''}%</ItemWrap>
+                    <ItemWrap>
+                      {getBorrowTotalBalance([item])
+                        .divide(limit)
+                        .multiply(JSBI.BigInt(100))
+                        .toFixed(1) ?? ''}
+                      %
+                    </ItemWrap>
                   </AssetItem>
                 </ItemPannel>
               ))}

@@ -157,36 +157,36 @@ export class CToken extends Token {
     )
   }
 
-  public getSuppliedValue() {
-    return parseFloat(
-      this.exchangeRateMantissa &&
-        this.supplyBalance &&
-        this.decimals &&
-        this.underlyingPrice &&
-        this.collateralFactorMantissa
-        ? new Fraction(
-            JSBI.multiply(
-              JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-              JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), JSBI.BigInt(this.collateralFactorMantissa ?? 0))
-            ),
-            JSBI.multiply(
-              JSBI.multiply(balanceFormat(this.decimals), EXCHANGE_RATE_MANTISSA),
-              JSBI.multiply(underlyingPriceFormat(this.decimals), COLLATERAL_FACTOR_MANTISSA)
-            )
-          ).toSignificant(18)
-        : JSBI.BigInt('0').toString()
-    )
-  }
-
   // public getSuppliedValue() {
-  //   return JSBI.divide(
-  //     JSBI.multiply(
-  //       JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-  //       JSBI.BigInt(this.underlyingPrice ?? 0)
-  //     ),
-  //     JSBI.multiply(underlyingPriceFormat(this.decimals), EXCHANGE_RATE_MANTISSA)
+  //   return parseFloat(
+  //     this.exchangeRateMantissa &&
+  //       this.supplyBalance &&
+  //       this.decimals &&
+  //       this.underlyingPrice &&
+  //       this.collateralFactorMantissa
+  //       ? new Fraction(
+  //           JSBI.multiply(
+  //             JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+  //             JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), JSBI.BigInt(this.collateralFactorMantissa ?? 0))
+  //           ),
+  //           JSBI.multiply(
+  //             JSBI.multiply(balanceFormat(this.decimals), EXCHANGE_RATE_MANTISSA),
+  //             JSBI.multiply(underlyingPriceFormat(this.decimals), COLLATERAL_FACTOR_MANTISSA)
+  //           )
+  //         ).toSignificant(18)
+  //       : JSBI.BigInt('0').toString()
   //   )
   // }
+
+  public getSuppliedValue(): JSBI {
+    return JSBI.divide(
+      JSBI.multiply(
+        JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+        JSBI.BigInt(this.underlyingPrice ?? 0)
+      ),
+      JSBI.multiply(underlyingPriceFormat(this.decimals), EXCHANGE_RATE_MANTISSA)
+    )
+  }
 }
 
 export function useCTokens(): [CTokenState, CToken | null][] {

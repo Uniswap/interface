@@ -1,3 +1,4 @@
+import { Fraction } from '@uniswap/sdk'
 import React from 'react'
 // import { LightCard } from '../../components/Card'
 // import { darken } from 'polished'
@@ -73,14 +74,17 @@ function Summary({
   supplyTotalBalance,
   borrowTotalBalance,
   limit,
+  usedLimit,
   netApy
 }: {
-  supplyTotalBalance: any
-  borrowTotalBalance: any
-  limit: any
+  supplyTotalBalance: Fraction
+  borrowTotalBalance: Fraction
+  limit: Fraction
+  usedLimit: Fraction
   netApy: any
 }) {
   // const { t } = useTranslation()
+  // limit ? ((borrowTotalBalance / limit) * 100).toFixed(2)
 
   return (
     <SummaryCard>
@@ -108,7 +112,7 @@ function Summary({
           <SummaryTitle>Borrow Limit</SummaryTitle>
           <SummaryContent>
             <DotIcon />${limit?.toFixed(2)}
-            <BorrowWrap>({limit ? ((borrowTotalBalance / limit) * 100).toFixed(2) : '0.00'}% Used)</BorrowWrap>
+            <BorrowWrap>({usedLimit.toSignificant(2) ?? '0.00'}% Used)</BorrowWrap>
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>
