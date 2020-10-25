@@ -20,7 +20,8 @@ import {
   EXA_BASE,
   getCERC20Contract,
   getCEtherContract,
-  withLimit
+  withLimit,
+  transferCurrencyAmount
 } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -182,8 +183,6 @@ function LendModal({
 
   const walletBalanceAmount = useAllCTokenBalances([lendToken])
 
-  const { inputError, inputText } = useLendingInfo(lendInputValue, lendToken, tabItemActive)
-
   useEffect(() => {
     if (showLendConfirmation) {
       lendMarket === LendField.SUPPLY ? setTabItemActive(LendField.SUPPLY) : setTabItemActive(LendField.BORROW)
@@ -192,43 +191,64 @@ function LendModal({
     }
   }, [lendMarket, showLendConfirmation])
 
-  function onWithdrawMax(lendToken: CToken): string {
-    const collateralFactorMantissa = lendToken.getCollateralFactorMantissa()
-    if (JSBI.equal(collateralFactorMantissa, ZERO)) {
-      return ZERO_FRACTION.toSignificant(6)
-    } else {
-      const supplyBalance = lendToken.getSupplyBalanceJSBI()
-      if (!lendToken.canBeCollateral) {
-        return new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant(6)
+  function onWithdrawMax(lendToken: CToken | undefined, safe = true): Fraction {
+    if (lendToken) {
+      const collateralFactorMantissa = lendToken.getCollateralFactorMantissa()
+      if (JSBI.equal(collateralFactorMantissa, ZERO)) {
+        return ZERO_FRACTION
       } else {
-        const price = lendToken.getUnderlyingPrice()
-        const suppliedValue = withLimit(lendToken, lendToken.getSupplyBalanceJSBI())
-        const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
-        const remainValue: JSBI = JSBI.subtract(
-          // divide 8/10
-          JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), EIGHT),
-          otherSuppliedTotalValue
-        )
-        const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
-        const safeValue = JSBI.subtract(
-          supplyBalance,
-          JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
-        )
-        return new Fraction(safeValue, price).toFixed(6)
+        const supplyBalance = lendToken.getSupplyBalanceJSBI()
+        if (!lendToken.canBeCollateral) {
+          return new Fraction(
+            transferCurrencyAmount(new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount())),
+            EXA_BASE
+          )
+        } else {
+          const price = lendToken.getUnderlyingPrice()
+          const suppliedValue = withLimit(lendToken, lendToken.getSupplyBalanceJSBI())
+          const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
+          const remainValue: JSBI = JSBI.subtract(
+            // divide 8/10
+            JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), safe ? EIGHT : TEN),
+            otherSuppliedTotalValue
+          )
+          const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
+          const safeValue = JSBI.subtract(
+            supplyBalance,
+            JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
+          )
+          return new Fraction(safeValue, price)
+        }
       }
     }
+    return ZERO_FRACTION
   }
 
-  function onBorrowMax(lendToken: CToken): string {
-    const price = lendToken.getUnderlyingPrice()
-    const borrowMaxValue = JSBI.subtract(JSBI.divide(JSBI.multiply(limit, EIGHT), TEN), borrowTotalBalance)
-    const numerator = JSBI.greaterThan(borrowMaxValue, ZERO) ? borrowMaxValue : ZERO
-    return new Fraction(
-      // multiply 8/10
-      numerator,
-      price
-    ).toFixed(6)
+  function onBorrowMax(lendToken: CToken | undefined, safe = true): Fraction {
+    if (lendToken) {
+      const price = lendToken.getUnderlyingPrice()
+      const borrowMaxValue = JSBI.subtract(
+        JSBI.divide(JSBI.multiply(limit, safe ? EIGHT : TEN), TEN),
+        borrowTotalBalance
+      )
+      const numerator = JSBI.greaterThan(borrowMaxValue, ZERO) ? borrowMaxValue : ZERO
+      return new Fraction(
+        // multiply 8/10
+        numerator,
+        price
+      )
+    }
+    return ZERO_FRACTION
   }
+
+  const { inputError, inputText } = useLendingInfo(
+    lendInputValue,
+    lendToken,
+    tabItemActive,
+    limit,
+    onWithdrawMax(lendToken, false),
+    onBorrowMax(lendToken, false)
+  )
 
   async function onMint(cToken: CToken, lendInputValue: string, isETH: boolean) {
     const inputAmount = tryParseAmount(lendInputValue, cToken)
@@ -454,10 +474,10 @@ function LendModal({
                             setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '')
                             break
                           case LendField.WITHDRAW:
-                            setLendInputValue(onWithdrawMax(lendToken))
+                            setLendInputValue(onWithdrawMax(lendToken).toFixed(6))
                             break
                           case LendField.BORROW:
-                            setLendInputValue(onBorrowMax(lendToken))
+                            setLendInputValue(onBorrowMax(lendToken).toFixed(6))
                             break
                           case LendField.REPAY:
                             const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())

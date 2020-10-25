@@ -2,15 +2,18 @@ import { CToken } from '../../data/CToken'
 import { useCTokenBalance } from '../wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { LendField } from './actions'
-import { CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk'
+import { CurrencyAmount, Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import { tryParseAmount } from '../swap/hooks'
-// import { onBorrowMax } from '../../components/LendModal'
+import { EXA_BASE, transferCurrencyAmount } from '../../utils'
 
 // based on typed value
 export function useLendingInfo(
   lendInputValue: string,
   lendToken: CToken | undefined,
-  lendMarket: LendField | undefined
+  lendMarket: LendField | undefined,
+  limit: JSBI,
+  withdrawMax?: Fraction,
+  borrowMax?: Fraction
 ): {
   inputError?: boolean
   inputText?: string
@@ -59,7 +62,13 @@ export function useLendingInfo(
       if (JSBI.equal(protocolSuppleyBalance.raw, JSBI.BigInt(0))) {
         inputError = true
         inputText = 'No Balance to Withdraw'
-      } else if (parseInputValue && JSBI.greaterThan(parseInputValue?.raw, protocolSuppleyBalance.raw)) {
+      } else if (!parseInputValue) {
+        inputError = true
+        inputText = lendMarket
+      } else if (
+        parseInputValue &&
+        withdrawMax?.lessThan(new Fraction(transferCurrencyAmount(parseInputValue), EXA_BASE))
+      ) {
         inputError = true
         inputText = 'Insufficient Liquidity'
       } else {
@@ -72,34 +81,39 @@ export function useLendingInfo(
   }
 
   if (lendMarket === LendField.REPAY && !inputError) {
-    if (protocolBorrowBalance) {
-      if (JSBI.equal(protocolBorrowBalance.raw, JSBI.BigInt(0))) {
-        inputError = true
-        inputText = 'No Balance to Repay'
-      } else if (parseInputValue && JSBI.greaterThan(parseInputValue?.raw, protocolBorrowBalance.raw)) {
-        inputError = true
-        inputText = 'Insufficient Liquidity'
-      } else {
-        inputText = lendMarket
-      }
-
-      if (Number(lendInputValue) === 0 || !parseInputValue) {
-        inputError = true
-        inputText = lendMarket
-      } else if (JSBI.greaterThan(parseInputValue.raw, protocolBorrowBalance.raw)) {
-        inputError = true
-        inputText = 'No funds available'
-      } else {
-        inputText = lendMarket
-      }
-    } else {
+    if (!protocolBorrowBalance) {
       inputError = true
       inputText = 'No Balance to Repay'
+    } else if (JSBI.equal(protocolBorrowBalance.raw, JSBI.BigInt(0))) {
+      inputError = true
+      inputText = 'No Balance to Repay'
+    } else if (parseInputValue && JSBI.greaterThan(parseInputValue?.raw, protocolBorrowBalance.raw)) {
+      inputError = true
+    } else if (Number(lendInputValue) === 0 || !parseInputValue) {
+      inputError = true
+      inputText = lendMarket
+    } else if (JSBI.greaterThan(parseInputValue.raw, walletBalance?.raw ?? JSBI.BigInt(0))) {
+      inputError = true
+      inputText = 'No funds available'
+    } else {
+      inputText = lendMarket
     }
   }
 
   if (lendMarket === LendField.BORROW && !inputError) {
-    // const borrowMax = onBorrowMax(lendToken)
+    if (Number(limit) === 0) {
+      inputError = true
+      inputText = 'Borrowing limit reached'
+    } else if (Number(lendInputValue) === 0 || !parseInputValue) {
+      inputError = true
+      inputText = lendMarket
+    } else if (
+      parseInputValue &&
+      !borrowMax?.greaterThan(new Fraction(transferCurrencyAmount(parseInputValue), EXA_BASE))
+    ) {
+      inputError = true
+      inputText = 'Insufficient Collateral'
+    }
   }
 
   inputText = inputText ?? lendMarket
