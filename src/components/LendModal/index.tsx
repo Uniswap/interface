@@ -189,35 +189,17 @@ function LendModal({
   }, [lendMarket, showLendConfirmation])
 
   function onWithdrawMax(lendToken: CToken): string {
-    // const price = parseFloat(new TokenAmount(lendToken, lendToken.getUnderlyingPrice()).toSignificant())
     const price = new TokenAmount(lendToken, lendToken.getUnderlyingPrice())
-
-    // console.log(price, 'priceprice')
-    // const getSuppliedValue1 = new TokenAmount(lendToken, lendToken.getSuppliedValue1()).toSignificant()
-    // const testlimit = new TokenAmount(lendToken, withLimit(lendToken, lendToken.getSuppliedValue1()))
-    // console.log(getSuppliedValue1, 'getSuppliedValue1')
-    // console.log(testlimit.toSignificant(), 'testlimit')
     const suppliedValue = lendToken.getSuppliedValue()
-    // console.log(suppliedValue, 'suppliedValue')
     const otherSuppliedTotalValue: Fraction = limit.subtract(lendToken.getSuppliedValue())
-    // console.log(limit, 'limit')
-    // const otherSuppliedTotalValue = testlimit.console.log(otherSuppliedTotalValue, 'otherSuppliedTotalValue')
-    // console.log(otherSuppliedTotalValue1, 'otherSuppliedTotalValue1')
-    // const owedValue = Math.max(0, borrowTotalBalance / 0.8 - otherSuppliedTotalValue)
     const remainValue: Fraction = borrowTotalBalance.divide(safeFractor).subtract(otherSuppliedTotalValue)
     const owedValue = remainValue.greaterThan(JSBI.BigInt(0)) ? remainValue : ZERO_FRACTION
-    // const factor = parseFloat(
-    // const factor = parseFloat(
-    //   new Fraction(JSBI.BigInt(lendToken.collateralFactorMantissa ?? 0), COLLATERAL_FACTOR_MANTISSA).toFixed(8)
-    // )
-    // return ((suppliedValue - owedValue) / factor / price).toString()
     const safeValue = JSBI.subtract(suppliedValue, JSBI.BigInt(owedValue))
+
     return new Fraction(safeValue, price.raw).toSignificant(6)
   }
 
   function onBorrowMax(lendToken: CToken): string {
-    // const price = parseFloat(new TokenAmount(lendToken, lendToken.getUnderlyingPrice()).toSignificant())
-    // return ((0.8 * limit - borrowTotalBalance) / price).toString()
     const price = new TokenAmount(lendToken, lendToken.getUnderlyingPrice())
 
     return new Fraction(JSBI.BigInt(safeFractor.multiply(limit).subtract(borrowTotalBalance)), price.raw).toSignificant(
@@ -585,9 +567,9 @@ function LendModal({
                       Borrow Limit Used
                     </Text>
                   </AutoRow>
-                  <RateCalculation>{usedLimit.toSignificant(2) ?? '0.00'}%</RateCalculation>
+                  <RateCalculation>{usedLimit.toSignificant(4) ?? '0.00'}%</RateCalculation>
                 </RatePanel>
-                <MarketBar rate={Number(usedLimit.toSignificant(2))} />
+                <MarketBar rate={Number(usedLimit.toSignificant(4))} />
               </RateWrap>
             </AutoColumn>
             <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>

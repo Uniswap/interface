@@ -6,7 +6,7 @@ import Summary from '../../components/Summary'
 import SupplyMarkets from '../../components/SupplyMarkets'
 import BorrowMarkets from '../../components/BorrowMarkets'
 import { CToken, CTokenState, useCTokens } from '../../data/CToken'
-import { getBorrowTotalBalance, getLimit, getNetApy, getSupplyTotalBalance } from '../../utils'
+import { getBorrowTotalBalance, getLimit, getNetApy, getSupplyTotalBalance, LIMIT_BASE, ONE_HUNDRED } from '../../utils'
 import { Fraction, JSBI } from '@uniswap/sdk'
 
 const PageWrapper = styled(AutoColumn)`
@@ -58,15 +58,17 @@ export default function Lend() {
   const allMarkets = useCTokens()
 
   const allMarketCTokens: CToken[] = useAllMarketCTokens(allMarkets)
-  // console.log(getSupplyTotalBalance1(allMarketCTokens).toSignificant(6), 'getSupplyTotalBalance1')
 
   const supplyTotalBalance = getSupplyTotalBalance(allMarketCTokens)
   const borrowTotalBalance = getBorrowTotalBalance(allMarketCTokens)
   const limit = getLimit(allMarketCTokens)
 
-  const usedLimt: Fraction = getSupplyTotalBalance(allMarketCTokens)
-    .divide(getLimit(allMarketCTokens))
-    .multiply(JSBI.BigInt(100))
+  const usedLimit: Fraction = new Fraction(
+    JSBI.multiply(borrowTotalBalance.numerator, borrowTotalBalance.denominator),
+    JSBI.multiply(JSBI.multiply(limit.numerator, limit.denominator), LIMIT_BASE)
+  )
+
+  const usedLimtPercent = usedLimit.multiply(ONE_HUNDRED)
 
   return (
     <>
@@ -75,7 +77,7 @@ export default function Lend() {
           supplyTotalBalance={supplyTotalBalance}
           borrowTotalBalance={borrowTotalBalance}
           limit={limit}
-          usedLimit={usedLimt}
+          usedLimit={usedLimtPercent}
           netApy={getNetApy(allMarketCTokens)}
         ></Summary>
         <MarketsWrap>
@@ -83,13 +85,13 @@ export default function Lend() {
             allMarketCTokens={allMarketCTokens}
             borrowTotalBalance={borrowTotalBalance}
             limit={limit}
-            usedLimit={usedLimt}
+            usedLimit={usedLimtPercent}
           ></SupplyMarkets>
           <BorrowMarkets
             allMarketCTokens={allMarketCTokens}
             borrowTotalBalance={borrowTotalBalance}
             limit={limit}
-            usedLimit={usedLimt}
+            usedLimit={usedLimtPercent}
           ></BorrowMarkets>
         </MarketsWrap>
       </PageWrapper>
