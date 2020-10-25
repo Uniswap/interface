@@ -132,7 +132,7 @@ export const BLOCKS_PER_DAY = 4 * 60 * 24
 export const DAYS_PER_YEAR = 365
 
 export const ONE = JSBI.BigInt(1)
-// export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
@@ -175,6 +175,41 @@ export function getSupplyTotalBalance(allMarketsAsset: CToken[]) {
   return supplyTotalBalance
 }
 
+// export function getSupplyTotalBalance(allMarketsAsset: CToken[]) {
+//   let supplyTotalBalance = JSBI.BigInt(0)
+//   for (let i = 0; i < allMarketsAsset.length; i++) {
+//     supplyTotalBalance = JSBI.add(
+//       supplyTotalBalance,
+//       JSBI.divide(
+//         JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].getSuppliedValue1()), EXA_BASE),
+//         balanceFormat(allMarketsAsset[i].decimals)
+//       )
+//     )
+//   }
+//   return new Fraction(supplyTotalBalance, EXA_BASE)
+// }
+
+// public getSuppliedValue() {
+//   return parseFloat(
+//     this.exchangeRateMantissa &&
+//       this.supplyBalance &&
+//       this.decimals &&
+//       this.underlyingPrice &&
+//       this.collateralFactorMantissa
+//       ? new Fraction(
+//           JSBI.multiply(
+//             JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+//             JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), JSBI.BigInt(this.collateralFactorMantissa ?? 0))
+//           ),
+//           JSBI.multiply(
+//             JSBI.multiply(balanceFormat(this.decimals), EXCHANGE_RATE_MANTISSA),
+//             JSBI.multiply(underlyingPriceFormat(this.decimals), COLLATERAL_FACTOR_MANTISSA)
+//           )
+//         ).toSignificant(18)
+//       : JSBI.BigInt('0').toString()
+//   )
+// }
+
 export function getBorrowTotalBalance(allMarketsAsset: CToken[]) {
   let borrowTotalBalance = 0
   for (let i = 0; i < allMarketsAsset.length; i++) {
@@ -195,6 +230,27 @@ export function getBorrowTotalBalance(allMarketsAsset: CToken[]) {
   }
   return borrowTotalBalance
 }
+
+// export function getBorrowTotalBalance(allMarketsAsset: CToken[]) {
+//   let borrowTotalBalance = JSBI.BigInt(0)
+//   for (let i = 0; i < allMarketsAsset.length; i++) {
+//     borrowTotalBalance = JSBI.add(
+//       borrowTotalBalance,
+//       JSBI.multiply(
+//         JSBI.divide(
+//           JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].borrowBalance ?? 0), EXA_BASE),
+//           balanceFormat(allMarketsAsset[i]?.decimals)
+//         ),
+//         JSBI.divide(
+//           JSBI.multiply(JSBI.BigInt(allMarketsAsset[i]?.underlyingPrice ?? 0), EXA_BASE),
+//           underlyingPriceFormat(allMarketsAsset[i]?.decimals)
+//         )
+//       )
+//     )
+//   }
+
+//   return new Fraction(borrowTotalBalance, EXA_BASE)
+// }
 
 export function getLimit(allMarketsAsset: CToken[]) {
   let borrowLimit = 0
@@ -228,6 +284,31 @@ export function getLimit(allMarketsAsset: CToken[]) {
   }
   return borrowLimit
 }
+
+export function withLimit(ctoken: CToken, value: JSBI) {
+  return JSBI.divide(
+    JSBI.multiply(JSBI.BigInt(ctoken.collateralFactorMantissa ?? 0), value ?? 0),
+    COLLATERAL_FACTOR_MANTISSA
+  )
+}
+
+// export function getLimit(allMarketsAsset: CToken[]): Fraction {
+//   let totalLimit = JSBI.BigInt(0)
+
+//   for (let i = 0; i < allMarketsAsset.length; i++) {
+//     if (allMarketsAsset[i].canBeCollateral) {
+//       totalLimit = JSBI.add(
+//         totalLimit,
+//         JSBI.divide(
+//           JSBI.multiply(withLimit(allMarketsAsset[i], allMarketsAsset[i].getSuppliedValue()), EXA_BASE),
+//           balanceFormat(allMarketsAsset[i].decimals)
+//         )
+//       )
+//     }
+//   }
+
+//   return new Fraction(totalLimit, EXA_BASE)
+// }
 
 export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
   let sumUnderlyingAssets = 0

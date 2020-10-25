@@ -252,6 +252,11 @@ function SupplyMarkets({
     return item.supplyBalance && BigNumber.from(0).lt(item.supplyBalance)
   })
 
+  // const testsupplylimit = getLimit1(suppliedAsset)
+
+  // testsupplylimit.add()
+  // new TokenAmount()
+  // console.log(testsupplylimit.toSignificant(6), 'testsupplylimit')
   const supplyAsset = allMarketCTokens.filter((item: CToken) => {
     return (
       (!item.supplyBalance || BigNumber.from(0).eq(item.supplyBalance)) &&

@@ -57,6 +57,7 @@ export default function Lend() {
   const allMarkets = useCTokens()
 
   const allMarketCTokens: CToken[] = useAllMarketCTokens(allMarkets)
+  // console.log(getSupplyTotalBalance1(allMarketCTokens).toSignificant(6), 'getSupplyTotalBalance1')
 
   return (
     <>

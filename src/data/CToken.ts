@@ -177,6 +177,16 @@ export class CToken extends Token {
         : JSBI.BigInt('0').toString()
     )
   }
+
+  // public getSuppliedValue() {
+  //   return JSBI.divide(
+  //     JSBI.multiply(
+  //       JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+  //       JSBI.BigInt(this.underlyingPrice ?? 0)
+  //     ),
+  //     JSBI.multiply(underlyingPriceFormat(this.decimals), EXCHANGE_RATE_MANTISSA)
+  //   )
+  // }
 }
 
 export function useCTokens(): [CTokenState, CToken | null][] {

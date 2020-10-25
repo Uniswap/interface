@@ -122,6 +122,11 @@ function BorrowMarkets({
     )
   })
 
+  // console.log(borrowedAsset, 'borrowedAsset')
+  // const testtotalbalance = getBorrowTotalBalance(borrowedAsset)
+
+  // console.log(testtotalbalance.toSignificant(6), 'testtotalbalance')
+
   const borrowAssetCurrencyAmount = useAllCTokenBalances(borrowAsset)
 
   return (

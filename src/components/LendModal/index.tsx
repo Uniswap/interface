@@ -18,6 +18,7 @@ import {
   ETH_MANTISSA,
   getCERC20Contract,
   getCEtherContract
+  // withLimit
 } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -183,8 +184,17 @@ function LendModal({
 
   function onWithdrawMax(lendToken: CToken): string {
     const price = parseFloat(new TokenAmount(lendToken, lendToken.getUnderlyingPrice()).toSignificant())
+    // console.log(price, 'priceprice')
+    // const getSuppliedValue1 = new TokenAmount(lendToken, lendToken.getSuppliedValue1()).toSignificant()
+    // const testlimit = new TokenAmount(lendToken, withLimit(lendToken, lendToken.getSuppliedValue1()))
+    // console.log(getSuppliedValue1, 'getSuppliedValue1')
+    // console.log(testlimit.toSignificant(), 'testlimit')
     const suppliedValue = lendToken.getSuppliedValue()
+    // console.log(suppliedValue, 'suppliedValue')
     const otherSuppliedTotalValue = limit - lendToken.getSuppliedValue()
+    // console.log(limit, 'limit')
+    // const otherSuppliedTotalValue = testlimit.console.log(otherSuppliedTotalValue, 'otherSuppliedTotalValue')
+    // console.log(otherSuppliedTotalValue1, 'otherSuppliedTotalValue1')
     const owedValue = Math.max(0, borrowTotalBalance / 0.8 - otherSuppliedTotalValue)
     const factor = parseFloat(
       new Fraction(JSBI.BigInt(lendToken.collateralFactorMantissa ?? 0), COLLATERAL_FACTOR_MANTISSA).toFixed(8)
