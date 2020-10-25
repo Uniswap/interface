@@ -204,7 +204,8 @@ export function getLimit(allMarketsAsset: CToken[]) {
       allMarketsAsset[i]?.supplyBalance &&
       allMarketsAsset[i]?.decimals &&
       allMarketsAsset[i]?.underlyingPrice &&
-      allMarketsAsset[1]?.collateralFactorMantissa
+      allMarketsAsset[1]?.collateralFactorMantissa &&
+      allMarketsAsset[i]?.canBeCollateral
         ? parseFloat(
             new Fraction(
               JSBI.multiply(
