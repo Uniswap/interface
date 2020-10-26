@@ -89,7 +89,7 @@ export class CToken extends Token {
   }
 
   public isETH(): boolean {
-    return this.chainId && this.symbol === 'ETH' && this.cSymbol === 'cETH'
+    return this.chainId && this.symbol === 'ETH'
   }
 
   public getBorrowBalanceAmount() {
