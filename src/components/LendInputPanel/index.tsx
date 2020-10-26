@@ -69,6 +69,7 @@ interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
   onMax?: () => void
+  safeMax?: boolean
   showMaxButton: boolean
   label?: string
   disableCurrencySelect?: boolean
@@ -80,6 +81,7 @@ export default function CurrencyInputPanel({
   value,
   onUserInput,
   onMax,
+  safeMax = false,
   showMaxButton,
   label = 'Input',
   disableCurrencySelect = false,
@@ -112,7 +114,9 @@ export default function CurrencyInputPanel({
                   onUserInput(val)
                 }}
               />
-              {showMaxButton && label !== 'To' && <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>}
+              {showMaxButton && label !== 'To' && (
+                <StyledBalanceMax onClick={onMax}>{safeMax ? 'SAFE MAX' : 'MAX'}</StyledBalanceMax>
+              )}
             </>
           )}
         </InputRow>

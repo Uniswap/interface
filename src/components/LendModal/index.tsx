@@ -412,6 +412,7 @@ function LendModal({
                   <div />
                   <LendInputPanel
                     value={lendInputValue}
+                    safeMax={tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW}
                     onUserInput={setLendInputValue}
                     onMax={() => {
                       if (lendToken && walletBalanceAmount[0]) {
@@ -542,10 +543,12 @@ function LendModal({
                 <RatePanel>
                   <AutoRow>
                     <Text color={'#AAB8C1;'} lineHeight={'24px'}>
-                      Borrow Limit
+                      {lendMarket === LendField.BORROW ? 'Borrow Balance' : 'Borrow Limit'}
                     </Text>
                   </AutoRow>
-                  <RateCalculation>${limit?.toFixed(2)}</RateCalculation>
+                  <RateCalculation>
+                    ${lendMarket === LendField.BORROW ? borrowTotalBalance.toFixed(2) : limit?.toFixed(2)}
+                  </RateCalculation>
                 </RatePanel>
                 <Break />
                 <RatePanel>
@@ -613,7 +616,9 @@ function LendModal({
               <AutoRow justify={'space-between'}>
                 <Text color={'#AAB8C1'} fontWeight={500}>
                   {tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW
-                    ? 'Protocol Balance'
+                    ? tabItemActive === LendField.WITHDRAW
+                      ? 'Currently Supplying'
+                      : 'Currently Borrowing'
                     : 'Wallet Balance'}
                 </Text>
                 {(lendToken && tabItemActive === LendField.WITHDRAW) ||
