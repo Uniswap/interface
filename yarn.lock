@@ -2314,10 +2314,10 @@
   resolved "https://registry.yarnpkg.com/@swoop-exchange/periphery/-/periphery-1.0.1.tgz#0c05c12f6e402d5a6145e254d303f175d0bb23fa"
   integrity sha512-KqREmAuZALEn5PP4mBcnIchVtoiALxExx1wADhcD+Tb1sWp5kop6yzP8+f9t+YIrC8sj8Ey6+PqiRb5MViYwKQ==
 
-"@swoop-exchange/sdk@^1.1.9":
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/@swoop-exchange/sdk/-/sdk-1.1.9.tgz#63f0fd764efee678664746d46519dba07fdf0d83"
-  integrity sha512-vrBhoLMQptdHm36BcUl68t1K2xQibX99qFX2kcbd/aetOLeHrszJgbXqyiYuG5xMvIyfTHOgij6YKgjVQiLA9g==
+"@swoop-exchange/sdk@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@swoop-exchange/sdk/-/sdk-1.2.0.tgz#aba775b0f225a71981fd318654040bf6e790f057"
+  integrity sha512-hK+P+gzVCPrX+VQGpNDvkzWRHTxDRdTLXVVRER6jnDPtvg6EbC4B3ccvsLjZ/3xD5cokw4EafBzDwyQQZZqfQw==
   dependencies:
     "@harmony-js/core" "^0.1.55"
     "@swoop-exchange/core" "^1.0.3"

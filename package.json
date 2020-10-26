@@ -11,7 +11,7 @@
     "@reach/portal": "^0.10.3",
     "@reduxjs/toolkit": "^1.3.5",
     "@swoop-exchange/core": "^1.0.3",
-    "@swoop-exchange/sdk": "^1.1.9",
+    "@swoop-exchange/sdk": "^1.2.0",
     "@swoop-exchange/default-token-list": "^1.1.0",
     "@swoop-exchange/periphery": "^1.0.1",
     "@swoop-exchange/utils": "^1.0.0",
