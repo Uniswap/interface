@@ -16,6 +16,7 @@ import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
+import {Disclaimer} from './components/HarmonyDisclaimer/Disclaimer'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -43,6 +44,7 @@ window.addEventListener('error', error => {
 function Updaters() {
   return (
     <>
+      <Disclaimer/>
       <ListsUpdater />
       <UserUpdater />
       <ApplicationUpdater />
