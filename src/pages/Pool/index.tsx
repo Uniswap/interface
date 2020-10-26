@@ -77,6 +77,7 @@ export default function Pool() {
 
   // fetch the user's balances of all tracked DXSwap LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
+
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map(tokens => ({ liquidityToken: toDXSwapLiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
@@ -99,15 +100,18 @@ export default function Pool() {
   )
 
   const dxSwapPairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-  const dxSwapIsLoading =
-    fetchingDXSwapPairBalances ||
-    dxSwapPairs?.length < liquidityTokensWithBalances.length ||
-    dxSwapPairs?.some(DXSwapPair => !DXSwapPair)
 
   const allDXSwapPairsWithLiquidity = dxSwapPairs
     .map(([, pair]) => pair)
     .filter((dxSwapPair): dxSwapPair is Pair => Boolean(dxSwapPair))
-
+  
+  const dxSwapIsLoading =
+  fetchingDXSwapPairBalances ||
+  trackedTokenPairs.length === 0 ||
+  dxSwapPairs?.length < liquidityTokensWithBalances.length ||
+  dxSwapPairs?.some(DXSwapPair => !DXSwapPair) ||
+  !allDXSwapPairsWithLiquidity.length
+  
   return (
     <>
       <PageWrapper>
@@ -173,7 +177,7 @@ export default function Pool() {
             ) : (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
+                No liquidity found.
                 </TYPE.body>
               </EmptyProposals>
             )}
