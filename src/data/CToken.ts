@@ -23,6 +23,7 @@ export const DAYS_PER_YEAR = 365
 
 export const ONE = JSBI.BigInt(1)
 export const EIGHT = JSBI.BigInt(8)
+export const TEN = JSBI.BigInt(8)
 // export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
@@ -163,9 +164,12 @@ export class CToken extends Token {
     return JSBI.divide(
       JSBI.multiply(
         JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-        JSBI.BigInt(this.underlyingPrice ?? 0)
+        JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), JSBI.BigInt(this.collateralFactorMantissa ?? 0))
       ),
-      JSBI.multiply(underlyingPriceFormat(this.decimals), EXCHANGE_RATE_MANTISSA)
+      JSBI.multiply(
+        underlyingPriceFormat(this.decimals),
+        JSBI.multiply(EXCHANGE_RATE_MANTISSA, COLLATERAL_FACTOR_MANTISSA)
+      )
     )
   }
 }

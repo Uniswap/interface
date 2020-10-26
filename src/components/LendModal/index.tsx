@@ -5,7 +5,7 @@ import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { AutoRow, RowBetween } from '../Row'
 import { X } from 'react-feather'
-import { CToken, ZERO_POINT_EIGHT } from '../../data/CToken'
+import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
@@ -194,7 +194,11 @@ function LendModal({
     const price = new TokenAmount(lendToken, lendToken.getUnderlyingPrice())
     const suppliedValue = lendToken.getSuppliedValue()
     const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, lendToken.getSuppliedValue())
-    const remainValue: JSBI = JSBI.subtract(JSBI.divide(borrowTotalBalance, ZERO_POINT_EIGHT), otherSuppliedTotalValue)
+    console.log(borrowTotalBalance.toString(), 'borrowTotalBalance')
+    const remainValue: JSBI = JSBI.subtract(
+      JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), EIGHT),
+      otherSuppliedTotalValue
+    )
     const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
     const safeValue = JSBI.subtract(suppliedValue, owedValue)
     return new Fraction(safeValue, price.raw).toFixed(6)
