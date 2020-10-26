@@ -35,7 +35,6 @@ export default function CurrencyLogo({
     if (currency === ETHER) return []
 
     if (currency instanceof Token) {
-      console.log(currency.name)
       if (currency.name === "DXdao") {
         return ["https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa1d65E8fB6e87b60FECCBc582F7f97804B725521/logo.png"]
       } else if ((currency.name === "Weenus 💪") || (currency.name === "Yeenus 💪") || (currency.name === "Xeenus 💪") || (currency.name === "Zeenus 💪")){
