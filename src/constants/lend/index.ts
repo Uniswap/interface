@@ -6,7 +6,7 @@ import CHAINLINK_PRICE_ORACLE_PROXY_ABI from './chainlink_price_oracle_proxy.jso
 const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b',
   [ChainId.ROPSTEN]: '0x54188bbedd7b68228fa89cbdda5e3e930459c6c6',
-  [ChainId.RINKEBY]: '0x2eaa9d77ae4d8f9cdd9faacd44016e746485bddb',
+  [ChainId.RINKEBY]: '0x94b796C701B65F840d819365055b865dA1Fcb099', // deerfi unitroller
   [ChainId.GÖRLI]: '0x627ea49279fd0de89186a58b8758ad02b6be2867',
   [ChainId.KOVAN]: '0x5eae89dc1c671724a672ff0630122ee834098657'
 }
@@ -14,7 +14,7 @@ const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
 const ORACLE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x922018674c12a7f0d394ebeef9b58f186cde13c1',
   [ChainId.ROPSTEN]: '0xb2b3d5b4e35881d518fa2062325f118a6ebb6c4a',
-  [ChainId.RINKEBY]: '0xD2B1eCa822550d9358e97e72c6C1a93AE28408d0', // not working due to lack of oracle
+  [ChainId.RINKEBY]: '0x88dE90d48c4d5785d6b2C8FD82dF5301Ca5C44f1', // deerfi oracle
   [ChainId.GÖRLI]: '0x9A536Ed5C97686988F93C9f7C2A390bF3B59c0ec', // not working due to lack of oracle
   [ChainId.KOVAN]: '0xbBdE93962Ca9fe39537eeA7380550ca6845F8db7'
 }
@@ -179,67 +179,31 @@ const CTOKEN_LISTS: { [chainId in ChainId]: [string, string, number, string, str
   ],
   [ChainId.RINKEBY]: [
     [
-      '0xebf1a11532b93a529b5bc942b4baa98647913002',
-      '0xbf7a7169562078c96f0ec1a8afd6ae50f12e5a99',
+      '0x5aE6e29b6d886CaA2958516fAf9A149D3883017e',
+      '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735',
       18,
-      'cBAT',
-      'Compound BAT',
-      'BAT',
-      'BAT'
-    ],
-    [
-      '0x6d7f0754ffeb405d23c51ce938289d4835be3b14',
-      '0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea',
-      18,
-      'cDAI',
-      'Compound DAI',
+      'dDAI',
+      'Deerfi DAI',
       'DAI',
       'Dai Stablecoin'
     ],
     [
-      '0xd6801a1dffcd0a410336ef88def4320d6df1883e',
+      '0x0Adf34a06EFAd1cB072c9864fa871f2b8289d355',
       '0xc778417E063141139Fce010982780140Aa0cD5Ab',
       18,
-      'cETH',
-      'Compound ETH',
+      'dETH',
+      'Deerfi ETH',
       'ETH',
       'Ether'
     ],
     [
-      '0x5b281a6dda0b271e91ae35de655ad301c976edb1',
-      '0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b',
-      6,
-      'cUSDC',
-      'Compound USDC',
-      'USDC',
-      'USD Coin'
-    ],
-    [
-      '0x2fb298bdbef468638ad6653ff8376575ea41e768',
-      '0xd9ba894e0097f8cc2bbc9d24d308b98e36dc6d02',
-      6,
-      'cUSDT',
-      'Compound USDT',
-      'USDT',
-      'Tether USD'
-    ],
-    [
-      '0x0014f450b8ae7708593f4a46f8fa6e5d50620f96',
-      '0x577d296678535e4903d59a4c929b718e1d575e0a',
-      8,
-      'cWBTC',
-      'Compound WBTC',
-      'WBTC',
-      'Wrapped BTC'
-    ],
-    [
-      '0x52201ff1720134bbbbb2f6bc97bf3715490ec19b',
-      '0xddea378a6ddc8afec82c36e9b0078826bf9e68b6',
+      '0x63d82F481fE776A0767D1ce0D0B218dAbF37Ca4A',
+      '0x8B22F85d0c844Cf793690F6D9DFE9F11Ddb35449',
       18,
-      'cZRX',
-      'Compound 0x',
-      'ZRX',
-      '0x'
+      'dETH-DAI',
+      'Deerfi ETH-DAI',
+      'ETH-DAI',
+      'ETH-DAI LP'
     ]
   ],
   [ChainId.GÖRLI]: [
