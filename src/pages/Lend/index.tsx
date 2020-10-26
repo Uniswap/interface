@@ -6,7 +6,7 @@ import Summary from '../../components/Summary'
 import SupplyMarkets from '../../components/SupplyMarkets'
 import BorrowMarkets from '../../components/BorrowMarkets'
 import { CToken, CTokenState, useCTokens } from '../../data/CToken'
-import { getBorrowTotalBalance, getLimit, getNetApy, getSupplyTotalBalance, LIMIT_BASE, ONE_HUNDRED } from '../../utils'
+import { getBorrowTotalBalance, getLimit, getNetApy, getSupplyTotalBalance, ONE_HUNDRED } from '../../utils'
 import { Fraction, JSBI } from '@uniswap/sdk'
 
 const PageWrapper = styled(AutoColumn)`
@@ -61,12 +61,9 @@ export default function Lend() {
 
   const supplyTotalBalance = getSupplyTotalBalance(allMarketCTokens)
   const borrowTotalBalance = getBorrowTotalBalance(allMarketCTokens)
-  const limit = getLimit(allMarketCTokens)
+  const limit: JSBI = getLimit(allMarketCTokens)
 
-  const usedLimit: Fraction = new Fraction(
-    JSBI.multiply(borrowTotalBalance.numerator, borrowTotalBalance.denominator),
-    JSBI.multiply(JSBI.multiply(limit.numerator, limit.denominator), LIMIT_BASE)
-  )
+  const usedLimit: Fraction = new Fraction(borrowTotalBalance, limit)
 
   const usedLimtPercent = usedLimit.multiply(ONE_HUNDRED)
 

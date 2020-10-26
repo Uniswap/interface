@@ -151,7 +151,7 @@ export function underlyingPriceFormat(digits: number): JSBI {
   )
 }
 
-export function getSupplyTotalBalance(allMarketsAsset: CToken[]): Fraction {
+export function getSupplyTotalBalance(allMarketsAsset: CToken[]): JSBI {
   let supplyTotalBalance = JSBI.BigInt(0)
   for (let i = 0; i < allMarketsAsset.length; i++) {
     supplyTotalBalance = JSBI.add(
@@ -162,10 +162,10 @@ export function getSupplyTotalBalance(allMarketsAsset: CToken[]): Fraction {
       )
     )
   }
-  return new Fraction(supplyTotalBalance, EXA_BASE)
+  return supplyTotalBalance
 }
 
-export function getBorrowTotalBalance(allMarketsAsset: CToken[]): Fraction {
+export function getBorrowTotalBalance(allMarketsAsset: CToken[]): JSBI {
   let borrowTotalBalance = JSBI.BigInt(0)
   for (let i = 0; i < allMarketsAsset.length; i++) {
     borrowTotalBalance = JSBI.add(
@@ -183,17 +183,17 @@ export function getBorrowTotalBalance(allMarketsAsset: CToken[]): Fraction {
     )
   }
 
-  return new Fraction(borrowTotalBalance, JSBI.multiply(EXA_BASE, EXA_BASE))
+  return JSBI.divide(borrowTotalBalance, EXA_BASE)
 }
 
-export function withLimit(ctoken: CToken, value: JSBI) {
+export function withLimit(ctoken: CToken, value: JSBI): JSBI {
   return JSBI.divide(
     JSBI.multiply(JSBI.BigInt(ctoken.collateralFactorMantissa ?? 0), value ?? 0),
     COLLATERAL_FACTOR_MANTISSA
   )
 }
 
-export function getLimit(allMarketsAsset: CToken[]): Fraction {
+export function getLimit(allMarketsAsset: CToken[]): JSBI {
   let totalLimit = JSBI.BigInt(0)
 
   for (let i = 0; i < allMarketsAsset.length; i++) {
@@ -208,7 +208,7 @@ export function getLimit(allMarketsAsset: CToken[]): Fraction {
     }
   }
 
-  return new Fraction(totalLimit, EXA_BASE)
+  return totalLimit
 }
 
 export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
@@ -220,6 +220,10 @@ export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
       : 0
   }
   return sumUnderlyingAssets
+}
+
+export function formatData(val: JSBI): Fraction {
+  return new Fraction(val, EXA_BASE)
 }
 
 export function getNetApy(allMarketsAsset: CToken[]) {
@@ -244,7 +248,7 @@ export function getNetApy(allMarketsAsset: CToken[]) {
   const sumAssets = sumUnderlyingAssets(allMarketsAsset)
   const supplyTotalBalance = getSupplyTotalBalance(allMarketsAsset)
   if (sumAssets && sumAssets > 0 && supplyTotalBalance) {
-    return sumAssets / parseFloat(supplyTotalBalance.toSignificant(6))
+    return sumAssets / parseFloat(formatData(supplyTotalBalance).toSignificant(6))
   } else if (allBorrowUnderlyingAssets && sumAssets && sumAssets < 0) {
     return sumAssets / allBorrowUnderlyingAssets
   } else {

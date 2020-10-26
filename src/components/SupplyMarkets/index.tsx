@@ -10,7 +10,7 @@ import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import LendModal from '../LendModal'
-import { calculateGasMargin, getComptrollerContract, getSupplyTotalBalance } from '../../utils'
+import { calculateGasMargin, formatData, getComptrollerContract, getSupplyTotalBalance } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -19,7 +19,7 @@ import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import { Fraction, TokenAmount } from '@uniswap/sdk'
+import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -140,8 +140,8 @@ function SupplyMarkets({
   usedLimit
 }: {
   allMarketCTokens: CToken[]
-  borrowTotalBalance: Fraction
-  limit: Fraction
+  borrowTotalBalance: JSBI
+  limit: JSBI
   usedLimit: Fraction
 }) {
   // const { t } = useTranslation()
@@ -278,7 +278,10 @@ function SupplyMarkets({
       collateralToken?.underlyingPrice &&
       collateralToken?.collateralFactorMantissa
     ) {
-      const canExitMarkets: boolean = limit.subtract(collateralToken.getSuppliedValue()).lessThan(borrowTotalBalance)
+      const canExitMarkets: boolean = JSBI.lessThan(
+        JSBI.subtract(limit, collateralToken.getSuppliedValue()),
+        borrowTotalBalance
+      )
       if (canExitMarkets) {
         return false
       } else {
@@ -391,7 +394,7 @@ function SupplyMarkets({
                       <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
-                      <div>${getSupplyTotalBalance([item]).toFixed(2) ?? ''}</div>
+                      <div>${formatData(getSupplyTotalBalance([item])).toFixed(2) ?? ''}</div>
                       <ItemBottomWrap>
                         {new TokenAmount(item, item.getSupplyBalanceAmount()).toSignificant()}
                         {' ' + item?.symbol}

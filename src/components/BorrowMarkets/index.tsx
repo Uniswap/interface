@@ -4,7 +4,7 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
 import { LendField } from '../../state/lending/actions'
-import { balanceFormat, getBorrowTotalBalance } from '../../utils'
+import { balanceFormat, formatData, getBorrowTotalBalance } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
@@ -101,8 +101,8 @@ function BorrowMarkets({
   usedLimit
 }: {
   allMarketCTokens: CToken[]
-  borrowTotalBalance: Fraction
-  limit: Fraction
+  borrowTotalBalance: JSBI
+  limit: JSBI
   usedLimit: Fraction
 }) {
   // const { t } = useTranslation()
@@ -165,14 +165,14 @@ function BorrowMarkets({
                       <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
-                      <div>${getBorrowTotalBalance([item]).toFixed(2) ?? ''}</div>
+                      <div>${formatData(getBorrowTotalBalance([item])).toFixed(2) ?? ''}</div>
                       <ItemBottomWrap>
                         {new TokenAmount(item, item.getBorrowBalanceAmount()).toSignificant()}
                         {' ' + item?.symbol}
                       </ItemBottomWrap>
                     </ItemWrap>
                     <ItemWrap>
-                      {getBorrowTotalBalance([item])
+                      {formatData(getBorrowTotalBalance([item]))
                         .divide(limit)
                         .multiply(JSBI.BigInt(100))
                         .toFixed(1) ?? ''}

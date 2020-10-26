@@ -1,10 +1,11 @@
-import { Fraction } from '@uniswap/sdk'
+import { Fraction, JSBI } from '@uniswap/sdk'
 import React from 'react'
 // import { LightCard } from '../../components/Card'
 // import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
+import { formatData } from '../../utils'
 
 // import { YellowCard } from '../Card'
 
@@ -77,11 +78,11 @@ function Summary({
   usedLimit,
   netApy
 }: {
-  supplyTotalBalance: Fraction
-  borrowTotalBalance: Fraction
-  limit: Fraction
+  supplyTotalBalance: JSBI
+  borrowTotalBalance: JSBI
+  limit: JSBI
   usedLimit: Fraction
-  netApy: any
+  netApy: number
 }) {
   // const { t } = useTranslation()
   // limit ? ((borrowTotalBalance / limit) * 100).toFixed(2)
@@ -92,7 +93,7 @@ function Summary({
         <SummaryElement>
           <SummaryTitle>Supply Balance</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${supplyTotalBalance?.toFixed(8)}
+            <DotIcon />${formatData(supplyTotalBalance).toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
@@ -105,13 +106,13 @@ function Summary({
         <SummaryElement>
           <SummaryTitle>Borrow Balance</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${borrowTotalBalance.toFixed(8)}
+            <DotIcon />${formatData(borrowTotalBalance).toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>Borrow Limit</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${limit?.toFixed(2)}
+            <DotIcon />${formatData(limit).toFixed(2)}
             <BorrowWrap>({usedLimit.toSignificant(4) ?? '0.00'}% Used)</BorrowWrap>
           </SummaryContent>
         </SummaryElement>

@@ -22,10 +22,12 @@ export const BLOCKS_PER_DAY = 4 * 60 * 24
 export const DAYS_PER_YEAR = 365
 
 export const ONE = JSBI.BigInt(1)
+export const EIGHT = JSBI.BigInt(8)
 // export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+export const ZERO_POINT_EIGHT = JSBI.multiply(EIGHT, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(17)))
 
 export class CToken extends Token {
   public readonly cAddress: string

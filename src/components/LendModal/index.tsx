@@ -5,7 +5,7 @@ import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { AutoRow, RowBetween } from '../Row'
 import { X } from 'react-feather'
-import { CToken } from '../../data/CToken'
+import { CToken, ZERO_POINT_EIGHT } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
@@ -16,6 +16,8 @@ import {
   calculateGasMargin,
   DAYS_PER_YEAR,
   ETH_MANTISSA,
+  formatData,
+  // EXA_BASE,
   getCERC20Contract,
   getCEtherContract
   // withLimit
@@ -34,9 +36,9 @@ import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
 
 const ZERO = JSBI.BigInt(0)
-const ONE = JSBI.BigInt(1)
-const ZERO_FRACTION = new Fraction(ZERO, ONE)
-const safeFractor: Fraction = new Fraction(JSBI.BigInt(800), JSBI.BigInt(1000))
+const EIGHT = JSBI.BigInt(8)
+const TEN = JSBI.BigInt(10)
+
 const StyledCloseIcon = styled(X)`
   height: 20px;
   width: 20px;
@@ -135,8 +137,8 @@ export interface LendModalProps {
   lendToken: CToken | undefined
   showLendConfirmation: boolean
   setShowLendConfirmation: Function
-  borrowTotalBalance: Fraction
-  limit: Fraction
+  borrowTotalBalance: JSBI
+  limit: JSBI
   usedLimit: Fraction
   lendMarket?: LendField
 }
@@ -191,20 +193,20 @@ function LendModal({
   function onWithdrawMax(lendToken: CToken): string {
     const price = new TokenAmount(lendToken, lendToken.getUnderlyingPrice())
     const suppliedValue = lendToken.getSuppliedValue()
-    const otherSuppliedTotalValue: Fraction = limit.subtract(lendToken.getSuppliedValue())
-    const remainValue: Fraction = borrowTotalBalance.divide(safeFractor).subtract(otherSuppliedTotalValue)
-    const owedValue = remainValue.greaterThan(JSBI.BigInt(0)) ? remainValue : ZERO_FRACTION
-    const safeValue = JSBI.subtract(suppliedValue, JSBI.BigInt(owedValue))
-
-    return new Fraction(safeValue, price.raw).toSignificant(6)
+    const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, lendToken.getSuppliedValue())
+    const remainValue: JSBI = JSBI.subtract(JSBI.divide(borrowTotalBalance, ZERO_POINT_EIGHT), otherSuppliedTotalValue)
+    const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
+    const safeValue = JSBI.subtract(suppliedValue, owedValue)
+    return new Fraction(safeValue, price.raw).toFixed(6)
   }
 
   function onBorrowMax(lendToken: CToken): string {
     const price = new TokenAmount(lendToken, lendToken.getUnderlyingPrice())
 
-    return new Fraction(JSBI.BigInt(safeFractor.multiply(limit).subtract(borrowTotalBalance)), price.raw).toSignificant(
-      6
-    )
+    return new Fraction(
+      JSBI.subtract(JSBI.divide(JSBI.multiply(limit, EIGHT), TEN), borrowTotalBalance),
+      price.raw
+    ).toFixed(6)
   }
 
   async function onMint(cToken: CToken, lendInputValue: string, isETH: boolean) {
@@ -557,7 +559,10 @@ function LendModal({
                     </Text>
                   </AutoRow>
                   <RateCalculation>
-                    ${lendMarket === LendField.BORROW ? borrowTotalBalance.toFixed(2) : limit?.toFixed(2)}
+                    $
+                    {lendMarket === LendField.BORROW
+                      ? formatData(borrowTotalBalance)?.toFixed(2)
+                      : formatData(limit).toFixed(2)}
                   </RateCalculation>
                 </RatePanel>
                 <Break />
