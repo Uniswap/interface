@@ -322,11 +322,11 @@ export default function RemoveLiquidity({
           addTransaction(response, {
             summary:
               'Remove ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+              parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
               ' ' +
               currencyA?.symbol +
               ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+              parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
               ' ' +
               currencyB?.symbol
           })

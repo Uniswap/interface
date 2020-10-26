@@ -76,8 +76,8 @@ export default function SwapModalFooter({
           <RowFixed>
             <TYPE.black fontSize={14}>
               {trade.tradeType === TradeType.EXACT_INPUT
-                ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
-                : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
+                ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6) ?? '-'
+                : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6) ?? '-'}
             </TYPE.black>
             <TYPE.black fontSize={14} marginLeft={'4px'}>
               {trade.tradeType === TradeType.EXACT_INPUT

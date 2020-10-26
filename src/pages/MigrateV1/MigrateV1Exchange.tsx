@@ -42,8 +42,8 @@ function FormattedPoolCurrencyAmount({ currencyAmount }: { currencyAmount: Curre
       {currencyAmount.equalTo(JSBI.BigInt(0))
         ? '0'
         : currencyAmount.greaterThan(POOL_CURRENCY_AMOUNT_MIN)
-        ? currencyAmount.toSignificant(4)
-        : `<${POOL_CURRENCY_AMOUNT_MIN.toSignificant(1)}`}
+        ? currencyAmount.toSignificant(6)
+        : `<${POOL_CURRENCY_AMOUNT_MIN.toSignificant(6)}`}
     </>
   )
 }
@@ -82,7 +82,7 @@ export function V1LiquidityInfo({
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            {tokenWorth.toSignificant(4)}
+            {tokenWorth.toSignificant(6)}
           </Text>
           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={token} />
         </RowFixed>
@@ -250,7 +250,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
 
             <RowBetween>
               <TYPE.body color="inherit">Price Difference:</TYPE.body>
-              <TYPE.black color="inherit">{priceDifferenceAbs?.toSignificant(4)}%</TYPE.black>
+              <TYPE.black color="inherit">{priceDifferenceAbs?.toSignificant(6)}%</TYPE.black>
             </RowBetween>
           </AutoColumn>
         </YellowCard>
