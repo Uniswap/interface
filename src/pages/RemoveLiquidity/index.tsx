@@ -322,11 +322,11 @@ export default function RemoveLiquidity({
           addTransaction(response, {
             summary:
               'Remove ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+              parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) +
               ' ' +
               currencyA?.symbol +
               ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+              parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) +
               ' ' +
               currencyB?.symbol
           })
@@ -389,7 +389,7 @@ export default function RemoveLiquidity({
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
+            {'SWOOP ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />

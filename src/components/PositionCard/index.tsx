@@ -84,7 +84,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
               </RowFixed>
               <RowFixed>
                 <Text fontWeight={500} fontSize={20}>
-                  {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
+                  {userPoolBalance ? userPoolBalance.toSignificant(6) : '-'}
                 </Text>
               </RowFixed>
             </FixedHeightRow>
