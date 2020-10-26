@@ -3,9 +3,9 @@ import CookieBanner from 'react-cookie-banner';
 
 const styles = {
   banner: {
-    height: 80,
-    background: 'rgba(31, 39, 49, 0.88)',
-    backgroundSize: '30px 30px',
+    height: 60,
+    background: '#EDEEF2',
+    backgroundSize: '20px 20px',
     backgroundColor: '',
     fontSize: '16px',
     fontWeight: 600,
@@ -22,12 +22,12 @@ const styles = {
   },
   button: {
     position: 'static',
-    border: '1px solid white',
+    border: '1px solid #888D9B',
     borderRadius: 4,
     width: 120,
     height: 40,
     background: 'transparent',
-    color: 'white',
+    color: '#888D9B',
     fontSize: '14px',
     fontWeight: 600,
     opacity: 1,
@@ -41,7 +41,7 @@ const styles = {
     display: 'block',
     lineHeight: 1.5,
     textAlign: 'left',
-    color: 'red',
+    color: '#888D9B',
     marginLeft: 32,
     // fontWeight: "bold"
     fontSize: '17px',
@@ -55,9 +55,9 @@ const styles = {
 export const Disclaimer = () => (
   <CookieBanner
     styles={styles}
-    message="DISCLAIMER: This site is for technology demonstration. We do NOT own or licence the trademarks of any of the following digital assets"
+    message="This project is a tech demo in beta. Use at your own risk."
     onAccept={() => {}}
-    cookie="soccerplayers-accept-no-commerce"
+    cookie="swoop-accept"
     dismissOnScroll={false}
     dismissOnClick={false}
   />
