@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@uniswap/sdk'
+import { Trade, TokenAmount, CurrencyAmount, ETHER, JSBI } from '@uniswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
@@ -13,6 +13,9 @@ import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import { Version } from './useToggledVersion'
 import { CToken } from '../data/CToken'
+import { useAllCTokenBalances } from '../state/wallet/hooks'
+
+const ZERO = JSBI.BigInt(0)
 
 export enum ApprovalState {
   UNKNOWN,
@@ -109,20 +112,23 @@ export function useCTokenApproveCallback(
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
 
+  const approveTokenWalletBalance = useAllCTokenBalances([amountToApprove])[0]
+  console.log(approveTokenWalletBalance?.toSignificant(4), 'approveTokenWalletBalance')
+
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
-    if (amountToApprove.symbol === ETHER.symbol) return ApprovalState.APPROVED
+    if (amountToApprove.isETH()) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
     // amountToApprove will be defined if currentAllowance is
-    return currentAllowance.greaterThan('0')
+    return currentAllowance.greaterThan(approveTokenWalletBalance?.raw ?? ZERO)
       ? ApprovalState.APPROVED
       : pendingApproval
       ? ApprovalState.PENDING
       : ApprovalState.NOT_APPROVED
-  }, [amountToApprove, currentAllowance, pendingApproval, spender])
+  }, [amountToApprove, approveTokenWalletBalance?.raw, currentAllowance, pendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
