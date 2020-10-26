@@ -7,7 +7,7 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { LightCard } from '../../components/Card'
-import { ExternalLink, TYPE, HideSmall } from '../../theme'
+import { TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
@@ -123,16 +123,9 @@ export default function Pool() {
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  {`Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.`}
+                  Liquidity providers earn a swap fee (0.15% by default) on all trades proportional to their share of the pool.<br/> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.<br/> The swap fee value is decided by DXdao and liquidty providers, it can be between 0% and 10% and it uses 0.15% as default value that is assigned when the pair is created.
                 </TYPE.white>
               </RowBetween>
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                target="_blank"
-                href="https://uniswap.org/docs/v2/core-concepts/pools/"
-              >
-                <TYPE.white fontSize={14}>Read more about providing liquidity</TYPE.white>
-              </ExternalLink>
             </AutoColumn>
           </CardSection>
           <CardBGImage />
