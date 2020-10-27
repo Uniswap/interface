@@ -102,7 +102,7 @@ export class CToken extends Token {
     return (Math.pow(((this.supplyRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) * 100
   }
 
-  public getBorrowApy() {
+  public getBorrowApy(): number {
     return (Math.pow(((this.borrowRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) * 100
   }
 
@@ -166,16 +166,17 @@ export class CToken extends Token {
     )
   }
 
+  public getCollateralFactorMantissa(): JSBI {
+    return JSBI.BigInt(this.collateralFactorMantissa ?? 0)
+  }
+
   public getSuppliedValue(): JSBI {
     return JSBI.divide(
       JSBI.multiply(
         JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
         JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), JSBI.BigInt(this.collateralFactorMantissa ?? 0))
       ),
-      JSBI.multiply(
-        underlyingPriceFormat(this.decimals),
-        JSBI.multiply(EXCHANGE_RATE_MANTISSA, COLLATERAL_FACTOR_MANTISSA)
-      )
+      JSBI.multiply(JSBI.multiply(underlyingPriceFormat(this.decimals), balanceFormat(this.decimals)), EXA_BASE)
     )
   }
 
@@ -185,7 +186,7 @@ export class CToken extends Token {
         JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
         JSBI.BigInt(this.underlyingPrice ?? 0)
       ),
-      JSBI.multiply(underlyingPriceFormat(this.decimals), EXCHANGE_RATE_MANTISSA)
+      JSBI.multiply(underlyingPriceFormat(this.decimals), balanceFormat(this.decimals))
     )
   }
 }

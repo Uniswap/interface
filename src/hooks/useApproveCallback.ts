@@ -111,9 +111,7 @@ export function useCTokenApproveCallback(
   const token = amountToApprove instanceof CToken ? amountToApprove : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
-
   const approveTokenWalletBalance = useAllCTokenBalances([amountToApprove])[0]
-  console.log(approveTokenWalletBalance?.toSignificant(4), 'approveTokenWalletBalance')
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {

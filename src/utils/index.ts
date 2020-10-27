@@ -139,6 +139,7 @@ export const LIMIT_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(36))
 export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+// export const FACTOR_MANTISSA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
 
 export function balanceFormat(digits: number): JSBI {
   return JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(digits))
@@ -154,13 +155,7 @@ export function underlyingPriceFormat(digits: number): JSBI {
 export function getSupplyTotalBalance(allMarketsAsset: CToken[]): JSBI {
   let supplyTotalBalance = JSBI.BigInt(0)
   for (let i = 0; i < allMarketsAsset.length; i++) {
-    supplyTotalBalance = JSBI.add(
-      supplyTotalBalance,
-      JSBI.divide(
-        JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].getSupplyBalanceJSBI()), EXA_BASE),
-        balanceFormat(allMarketsAsset[i].decimals)
-      )
-    )
+    supplyTotalBalance = JSBI.add(supplyTotalBalance, JSBI.BigInt(allMarketsAsset[i].getSupplyBalanceJSBI()))
   }
   return supplyTotalBalance
 }
@@ -187,10 +182,7 @@ export function getBorrowTotalBalance(allMarketsAsset: CToken[]): JSBI {
 }
 
 export function withLimit(ctoken: CToken, value: JSBI): JSBI {
-  return JSBI.divide(
-    JSBI.multiply(JSBI.BigInt(ctoken.collateralFactorMantissa ?? 0), value ?? 0),
-    COLLATERAL_FACTOR_MANTISSA
-  )
+  return JSBI.divide(JSBI.multiply(JSBI.BigInt(ctoken.collateralFactorMantissa ?? 0), value ?? 0), EXA_BASE)
 }
 
 export function getLimit(allMarketsAsset: CToken[]): JSBI {
@@ -198,13 +190,7 @@ export function getLimit(allMarketsAsset: CToken[]): JSBI {
 
   for (let i = 0; i < allMarketsAsset.length; i++) {
     if (allMarketsAsset[i].canBeCollateral) {
-      totalLimit = JSBI.add(
-        totalLimit,
-        JSBI.divide(
-          JSBI.multiply(allMarketsAsset[i].getSuppliedValue(), EXA_BASE),
-          balanceFormat(allMarketsAsset[i].decimals)
-        )
-      )
+      totalLimit = JSBI.add(totalLimit, allMarketsAsset[i].getSuppliedValue())
     }
   }
 

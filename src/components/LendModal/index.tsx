@@ -17,10 +17,10 @@ import {
   DAYS_PER_YEAR,
   ETH_MANTISSA,
   formatData,
-  // EXA_BASE,
+  EXA_BASE,
   getCERC20Contract,
-  getCEtherContract
-  // withLimit
+  getCEtherContract,
+  withLimit
 } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -36,8 +36,10 @@ import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
 
 const ZERO = JSBI.BigInt(0)
+const ONE = JSBI.BigInt(1)
 const EIGHT = JSBI.BigInt(8)
 const TEN = JSBI.BigInt(10)
+const ZERO_FRACTION = new Fraction(ZERO, ONE)
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -191,26 +193,40 @@ function LendModal({
   }, [lendMarket, showLendConfirmation])
 
   function onWithdrawMax(lendToken: CToken): string {
-    const price = new TokenAmount(lendToken, lendToken.getUnderlyingPrice())
-    const suppliedValue = lendToken.getSuppliedValue()
-    const supplyTotalBalance = lendToken.getSupplyBalanceJSBI()
-    const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
-    const remainValue: JSBI = JSBI.subtract(
-      JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), EIGHT),
-      otherSuppliedTotalValue
-    )
-    const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
-    const safeValue = JSBI.subtract(supplyTotalBalance, owedValue)
-
-    return new Fraction(safeValue, price.raw).toFixed(6)
+    const collateralFactorMantissa = lendToken.getCollateralFactorMantissa()
+    if (JSBI.equal(collateralFactorMantissa, ZERO)) {
+      return ZERO_FRACTION.toSignificant(6)
+    } else {
+      const supplyBalance = lendToken.getSupplyBalanceJSBI()
+      if (!lendToken.canBeCollateral) {
+        return new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant(6)
+      } else {
+        const price = lendToken.getUnderlyingPrice()
+        const suppliedValue = withLimit(lendToken, lendToken.getSupplyBalanceJSBI())
+        const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
+        const remainValue: JSBI = JSBI.subtract(
+          // divide 8/10
+          JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), EIGHT),
+          otherSuppliedTotalValue
+        )
+        const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
+        const safeValue = JSBI.subtract(
+          supplyBalance,
+          JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
+        )
+        return new Fraction(safeValue, price).toFixed(6)
+      }
+    }
   }
 
   function onBorrowMax(lendToken: CToken): string {
-    const price = new TokenAmount(lendToken, lendToken.getUnderlyingPrice())
-
+    const price = lendToken.getUnderlyingPrice()
+    const borrowMaxValue = JSBI.subtract(JSBI.divide(JSBI.multiply(limit, EIGHT), TEN), borrowTotalBalance)
+    const numerator = JSBI.greaterThan(borrowMaxValue, ZERO) ? borrowMaxValue : ZERO
     return new Fraction(
-      JSBI.subtract(JSBI.divide(JSBI.multiply(limit, EIGHT), TEN), borrowTotalBalance),
-      price.raw
+      // multiply 8/10
+      numerator,
+      price
     ).toFixed(6)
   }
 
@@ -648,7 +664,7 @@ function LendModal({
                         tabItemActive === LendField.WITHDRAW
                           ? new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
                           : new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toSignificant()
-                      ).toFixed(2)
+                      ).toFixed(4)
                     ) || '0'
                   : lendTokenBalance?.toSignificant() || '0'}
                 {' ' + lendToken?.symbol}

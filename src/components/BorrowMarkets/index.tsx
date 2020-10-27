@@ -172,11 +172,7 @@ function BorrowMarkets({
                       </ItemBottomWrap>
                     </ItemWrap>
                     <ItemWrap>
-                      {formatData(getBorrowTotalBalance([item]))
-                        .divide(limit)
-                        .multiply(JSBI.BigInt(100))
-                        .toFixed(1) ?? ''}
-                      %
+                      {new Fraction(getBorrowTotalBalance([item]), limit).multiply(JSBI.BigInt(100)).toFixed(1) ?? ''}%
                     </ItemWrap>
                   </AssetItem>
                 </ItemPannel>

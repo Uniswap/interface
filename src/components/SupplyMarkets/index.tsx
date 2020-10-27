@@ -254,11 +254,6 @@ function SupplyMarkets({
     return item.supplyBalance && BigNumber.from(0).lt(item.supplyBalance)
   })
 
-  // const testsupplylimit = getLimit1(suppliedAsset)
-
-  // testsupplylimit.add()
-  // new TokenAmount()
-  // console.log(testsupplylimit.toSignificant(6), 'testsupplylimit')
   const supplyAsset = allMarketCTokens.filter((item: CToken) => {
     return (
       (!item.supplyBalance || BigNumber.from(0).eq(item.supplyBalance)) &&
@@ -292,7 +287,6 @@ function SupplyMarkets({
     }
   }
 
-  console.log(canExitMarkets(), 'canExitMarkets')
   return (
     <div>
       <LendModal
@@ -377,7 +371,7 @@ function SupplyMarkets({
               <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
             </AssetWrapLabels>
             <AssetItemWrap onClick={() => setShowLendConfirmation(true)}>
-              {suppliedAsset.map((item: any) => (
+              {suppliedAsset.map((item: CToken) => (
                 <ItemPannel marketCToken={item} key={item?.symbol}>
                   <AssetItem
                     key={item?.symbol}
@@ -401,7 +395,7 @@ function SupplyMarkets({
                       </ItemBottomWrap>
                     </ItemWrap>
                     <Switch
-                      isActive={item?.canBeCollateral}
+                      isActive={item.canBeCollateral ?? false}
                       toggle={() => {
                         setCollateralToken(item)
                         setIsSuppliedMarkets(true)
