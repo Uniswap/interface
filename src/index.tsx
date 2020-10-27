@@ -44,7 +44,6 @@ window.addEventListener('error', error => {
 function Updaters() {
   return (
     <>
-      <Disclaimer/>
       <ListsUpdater />
       <UserUpdater />
       <ApplicationUpdater />
@@ -63,6 +62,7 @@ ReactDOM.render(
           <Updaters />
           <ThemeProvider>
             <ThemedGlobalStyle />
+            <Disclaimer/>
             <App />
           </ThemeProvider>
         </Provider>

@@ -1,8 +1,21 @@
 import * as React from 'react';
 import CookieBanner from 'react-cookie-banner';
+import Modal from '../Modal';
+import {RowBetween} from '../Row';
+import {Text} from 'rebass';
+import styled from 'styled-components';
+import {AutoColumn} from '../Column';
+
+const Wrapper = styled.div`
+  width: 100%;
+`;
+const Section = styled(AutoColumn)`
+  padding: 24px;
+`;
 
 const styles = {
   banner: {
+    cursor: 'pointer',
     height: 60,
     background: '#EDEEF2',
     backgroundSize: '20px 20px',
@@ -52,13 +65,41 @@ const styles = {
   },
 };
 
-export const Disclaimer = () => (
-  <CookieBanner
-    styles={styles}
-    message="This project is a tech demo in beta. Use at your own risk."
-    onAccept={() => {}}
-    cookie="swoop-accept"
-    dismissOnScroll={false}
-    dismissOnClick={false}
-  />
-);
+// drop cookie document.cookie = 'swoop-accept=; Max-Age=0'
+export const Disclaimer = () => {
+  const [isAccepted, setIsAccepted] = React.useState(false);
+  const [isModalOpen, setModalState] = React.useState(false);
+
+  return (<>
+      <div onClick={() => !isAccepted && setModalState(true)}>
+        <CookieBanner
+          styles={styles}
+          message="This project is a tech demo in beta. Use at your own risk."
+          onAccept={()=>setIsAccepted(true)}
+          cookie="swoop-accept"
+          dismissOnScroll={false}
+          dismissOnClick={false}
+        />
+      </div>
+      <Modal isOpen={!isAccepted && isModalOpen} onDismiss={() => setModalState(false)} maxHeight={90}>
+        <Wrapper>
+          <Section>
+            <RowBetween>
+              <Text fontWeight={500} fontSize={15}>
+                <p><strong>This project is a tech demo in beta.</strong></p>
+                  
+                <p>You understand and expressly accept that the beta version of SWOOP is provided to you at your own risk on an “AS IS” and “UNDER DEVELOPMENT” basis.</p>
+                
+                <p>THE DEVELOPERS OF SWOOP MAKE NO WARRANTY WHATSOEVER WITH RESPECT TO THE BETA DEMO, INCLUDING ANY (A) WARRANTY OF MERCHANTABILITY; (B) WARRANTY OF FITNESS FOR A PARTICULAR PURPOSE; (C) WARRANTY OF TITLE; OR (D) WARRANTY AGAINST INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS OF A THIRD PARTY; WHETHER ARISING BY LAW, COURSE OF DEALING, COURSE OF PERFORMANCE, USAGE OF TRADE, OR OTHERWISE.</p>
+
+                <p>Nationals and residents of the following countries are restricted from participation: Afghanistan, Cuba, Democratic Republic of the Congo, Guinea-Bissau, Iran, Iraq, Lebanon, Libya, Myanmar, North Korea, Somalia, Sudan, Syria, Yemen, Zimbabwe, and the Crimea region of Ukraine.</p>
+
+                <p>The project is operated by Pangaea Community around the globe and Hemenglian Technology outside the United States.</p>
+              </Text>
+            </RowBetween>
+          </Section>
+        </Wrapper>
+      </Modal>
+    </>
+  );
+};
