@@ -109,8 +109,7 @@ export default function Pool() {
   fetchingDXSwapPairBalances ||
   trackedTokenPairs.length === 0 ||
   dxSwapPairs?.length < liquidityTokensWithBalances.length ||
-  dxSwapPairs?.some(DXSwapPair => !DXSwapPair) ||
-  !allDXSwapPairsWithLiquidity.length
+  dxSwapPairs?.some(DXSwapPair => !DXSwapPair)
   
   return (
     <>
