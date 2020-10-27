@@ -51,6 +51,5 @@ export default function CurrencyLogo({
     return <StyledHarmonyLogo src={HarmonyLogo} size={size} style={style} />;
   }
 
-  //console.log('logo',currency?.symbol, {srcs})
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />;
 }
