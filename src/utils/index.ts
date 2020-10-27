@@ -157,7 +157,7 @@ export function getSupplyTotalBalance(allMarketsAsset: CToken[]): JSBI {
     supplyTotalBalance = JSBI.add(
       supplyTotalBalance,
       JSBI.divide(
-        JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].getSuppliedValue()), EXA_BASE),
+        JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].getSupplyBalanceJSBI()), EXA_BASE),
         balanceFormat(allMarketsAsset[i].decimals)
       )
     )
@@ -201,7 +201,7 @@ export function getLimit(allMarketsAsset: CToken[]): JSBI {
       totalLimit = JSBI.add(
         totalLimit,
         JSBI.divide(
-          JSBI.multiply(withLimit(allMarketsAsset[i], allMarketsAsset[i].getSuppliedValue()), EXA_BASE),
+          JSBI.multiply(allMarketsAsset[i].getSuppliedValue(), EXA_BASE),
           balanceFormat(allMarketsAsset[i].decimals)
         )
       )

@@ -193,14 +193,15 @@ function LendModal({
   function onWithdrawMax(lendToken: CToken): string {
     const price = new TokenAmount(lendToken, lendToken.getUnderlyingPrice())
     const suppliedValue = lendToken.getSuppliedValue()
-    const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, lendToken.getSuppliedValue())
-    console.log(borrowTotalBalance.toString(), 'borrowTotalBalance')
+    const supplyTotalBalance = lendToken.getSupplyBalanceJSBI()
+    const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
     const remainValue: JSBI = JSBI.subtract(
       JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), EIGHT),
       otherSuppliedTotalValue
     )
     const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
-    const safeValue = JSBI.subtract(suppliedValue, owedValue)
+    const safeValue = JSBI.subtract(supplyTotalBalance, owedValue)
+
     return new Fraction(safeValue, price.raw).toFixed(6)
   }
 
