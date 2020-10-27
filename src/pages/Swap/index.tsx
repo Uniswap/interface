@@ -270,6 +270,22 @@ export default function Swap() {
     onCurrencySelection
   ])
 
+  // Custom wrapping progress workaround
+  const [wrapInProgress, setWrapInProgress] = useState<boolean>(false)
+
+  const handleWrap = useCallback(() => {
+    setWrapInProgress(true)
+    onWrap()
+    .then(() => {
+      setWrapInProgress(false)
+    })
+    .catch((error: any) => {
+      setWrapInProgress(false)
+    })
+  }, [onWrap])
+
+  useEffect(() => {}, [wrapInProgress])
+
   return (
     <>
       <TokenWarningModal
@@ -385,9 +401,16 @@ export default function Swap() {
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : showWrap ? (
-              <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+              <ButtonPrimary
+              disabled={Boolean(wrapInputError)}
+              onClick={handleWrap}>
                 {wrapInputError ??
-                  (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                  (
+                    wrapType === WrapType.WRAP ? (wrapInProgress ? <Dots>Wrapping</Dots> : 'Wrap') : 
+                    wrapType === WrapType.UNWRAP ? (wrapInProgress ? <Dots>Unwrapping</Dots> : 'Unwrap') :
+                    null
+                  )
+                }
               </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
