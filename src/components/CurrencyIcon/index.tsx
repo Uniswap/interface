@@ -1,10 +1,7 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import Logo from '../Logo'
-
-const getTokenLogoURL = (address: string) =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
 const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
@@ -14,17 +11,13 @@ const StyledLogo = styled(Logo)<{ size: string }>`
 `
 
 export default function CurrencyLogo({
-  address,
+  logo0,
   size = '24px',
   style
 }: {
-  address: string
+  logo0?: string
   size?: string
   style?: React.CSSProperties
 }) {
-  const srcs: string[] = useMemo(() => {
-    return [getTokenLogoURL(address)]
-  }, [address])
-
-  return <StyledLogo size={size} srcs={srcs} alt={`${address ?? 'token'} logo`} style={style} />
+  return <StyledLogo size={size} srcs={[logo0 ?? '']} alt={`${logo0 ?? 'token'} logo`} style={style} />
 }

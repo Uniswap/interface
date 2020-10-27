@@ -20,6 +20,7 @@ import { LendField } from '../../state/lending/actions'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
+import DoubleAssetLogo from '../DoubleAssetLogo'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -381,7 +382,9 @@ function SupplyMarkets({
                     }}
                   >
                     <AssetLogo>
-                      <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                      {item.logo1
+                        ? <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
+                        : <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />}
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
@@ -429,7 +432,9 @@ function SupplyMarkets({
                       }}
                     >
                       <AssetLogo>
-                        <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                        {item.logo1
+                          ? <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
+                          : <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />}
                         {item?.symbol}
                       </AssetLogo>
                       <ItemWrap>

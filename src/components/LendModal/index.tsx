@@ -35,6 +35,7 @@ import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
+import DoubleAssetLogo from '../DoubleAssetLogo'
 
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
@@ -449,7 +450,9 @@ function LendModal({
             <RowBetween style={{ padding: '0 2rem 1.2rem' }}>
               <div />
               <AssetLogo>
-                <CurrencyIcon address={lendToken?.address ?? ''} style={{ marginRight: '10px' }} />
+                {lendToken?.logo1
+                  ? <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
+                  : <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '10px' }} />}
                 <Text fontWeight={500} fontSize={'1.1rem'}>
                   {lendToken?.symbol}
                 </Text>
@@ -501,7 +504,9 @@ function LendModal({
                 </ApproveWrap>
               ) : (
                 <ApproveWrap>
-                  <CurrencyIcon address={lendToken?.address ?? ''} size={'4.4rem'} style={{ marginBottom: '2rem' }} />
+                  {lendToken?.logo1
+                    ? <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
+                    : <CurrencyIcon logo0={lendToken?.logo0} size={'4.4rem'} style={{ marginBottom: '2rem' }} />}
                   <Text fontWeight={400} fontSize={'0.9rem'} color={'#AAB8C1'} textAlign={'center'} lineHeight={'1rem'}>
                     To Supply or Repay Tether to the Compound Protocol, you need to enable it first.
                   </Text>
@@ -560,7 +565,9 @@ function LendModal({
                 <RateTitle>Supply Rates</RateTitle>
                 <RatePanel>
                   <AutoRow>
-                    <CurrencyIcon address={lendToken?.address ?? ''} style={{ marginRight: '6px' }} />
+                    {lendToken?.logo1
+                      ? <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
+                      : <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '6px' }} />}
                     <Text color={'#AAB8C1;'} lineHeight={'24px'}>
                       {lendToken?.symbol} APY
                     </Text>

@@ -9,6 +9,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
+import DoubleAssetLogo from '../DoubleAssetLogo'
 
 const MarketsCard = styled.div`
   background: #ffffff;
@@ -158,7 +159,9 @@ function BorrowMarkets({
                     }}
                   >
                     <AssetLogo>
-                      <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                      {item.logo1
+                        ? <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
+                        : <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />}
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
@@ -192,7 +195,7 @@ function BorrowMarkets({
           </AssetWrapLabels>
           <AssetItemWrap>
             {!!borrowAsset.length
-              ? borrowAsset.map((item: any, index) => (
+              ? borrowAsset.map((item: CToken, index) => (
                   <ItemPannel marketCToken={item} key={item?.symbol}>
                     <AssetItem
                       key={item?.symbol}
@@ -202,7 +205,9 @@ function BorrowMarkets({
                       }}
                     >
                       <AssetLogo>
-                        <CurrencyIcon address={item?.address} style={{ marginRight: '10px' }} />
+                        {item.logo1
+                          ? <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
+                          : <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />}
                         {item?.symbol}
                       </AssetLogo>
                       <ItemWrap>
