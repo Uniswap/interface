@@ -23,7 +23,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 //import { AbstractConnector } from '@web3-react/abstract-connector'
 import { AbstractWallet } from '@swoop-exchange/utils'
 
-import {useUserWallet} from '../../state/user/hooks'
+import { useUserWallet } from '../../state/user/hooks'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -197,25 +197,32 @@ export default function WalletModal({
       connector.walletConnectProvider = undefined
     }
 
-    connector && connector.signIn()
-    .then(() => {
-      let wallet: UserWallet = {
-        type: connector.sessionType,
-        address: connector.base16Address,
-        bech32Address: connector.address,
-        active: true
-      };
+    await connector.signOut()
 
-      setPendingError(false);
-      setAccount(connector.address);
-      setActive(true);
-      setUserWallet(wallet);
-      setWalletView(WALLET_VIEWS.ACCOUNT);
-      //toggleWalletModal();
-    })
-    .catch((error: any) => {
-      setPendingError(true)
-    });
+    setUserWallet({} as UserWallet);
+    toggleWalletModal();
+
+    connector &&
+      connector
+        .signIn()
+        .then(() => {
+          let wallet: UserWallet = {
+            type: connector.sessionType,
+            address: connector.base16Address,
+            bech32Address: connector.address,
+            active: true
+          }
+
+          setPendingError(false)
+          setAccount(connector.address)
+          setActive(true)
+          setUserWallet(wallet)
+          setWalletView(WALLET_VIEWS.ACCOUNT)
+          //toggleWalletModal();
+        })
+        .catch((error: any) => {
+          setPendingError(true)
+        })
 
     /*connector &&
       activate(connector, undefined, true).catch(error => {
