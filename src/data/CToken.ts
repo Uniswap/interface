@@ -44,6 +44,8 @@ export class CToken extends Token {
   public readonly underlyingPrice?: number
   public readonly isListed?: boolean
   public readonly collateralFactorMantissa?: number
+  public readonly logo0?: string
+  public readonly logo1?: string
 
   constructor(
     chainId: ChainId,
@@ -63,7 +65,9 @@ export class CToken extends Token {
     canBeCollateral?: boolean,
     underlyingPrice?: number,
     isListed?: boolean,
-    collateralFactorMantissa?: number
+    collateralFactorMantissa?: number,
+    logo0?: string,
+    logo1?: string
   ) {
     super(chainId, address, decimals, symbol, name)
 
@@ -81,6 +85,8 @@ export class CToken extends Token {
     this.underlyingPrice = underlyingPrice
     this.isListed = isListed
     this.collateralFactorMantissa = collateralFactorMantissa
+    this.logo0 = logo0
+    this.logo1 = logo1
   }
 
   public equals(other: CToken): boolean {
@@ -294,7 +300,9 @@ export function useCTokens(): [CTokenState, CToken | null][] {
           membershipValue[0],
           underlyingPriceValue[0],
           marketsValue[0],
-          marketsValue[1]
+          marketsValue[1],
+          cTokenList[i][7],
+          cTokenList[i][8],
         )
       ]
     })
