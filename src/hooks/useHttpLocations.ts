@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import contenthashToUri from '../utils/contenthashToUri'
-import { parseENSAddress } from '../utils/parseENSAddress'
-import uriToHttp from '../utils/uriToHttp'
+import contenthashToUri from 'utils/contenthashToUri'
+import { parseENSAddress } from 'utils/parseENSAddress'
+import uriToHttp from 'utils/uriToHttp'
 import useENSContentHash from './useENSContentHash'
 
 export default function useHttpLocations(uri: string | undefined): string[] {

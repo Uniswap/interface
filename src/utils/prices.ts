@@ -1,7 +1,7 @@
-import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
+import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from 'constants/index'
 import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade } from '@uniswap/sdk'
-import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
-import { Field } from '../state/swap/actions'
+import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from 'constants/index'
+import { Field } from 'state/swap/actions'
 import { basisPointsToPercent } from './index'
 
 const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))

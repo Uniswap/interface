@@ -1,6 +1,6 @@
 import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
 import { BigNumber } from 'ethers'
-import { STAKING_GENESIS } from '../state/stake/hooks'
+import { STAKING_GENESIS } from 'state/stake/hooks'
 
 const STAKING_END = STAKING_GENESIS + 60 * 60 * 24 * 60
 

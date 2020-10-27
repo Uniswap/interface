@@ -1,14 +1,14 @@
 import React from 'react'
-import { AutoColumn } from '../../components/Column'
+import { AutoColumn } from 'components/Column'
 import styled from 'styled-components'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { TYPE, ExternalLink } from '../../theme'
-import PoolCard from '../../components/earn/PoolCard'
-import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+import { STAKING_REWARDS_INFO, useStakingInfo } from 'state/stake/hooks'
+import { TYPE, ExternalLink } from 'theme'
+import PoolCard from 'components/earn/PoolCard'
+import { RowBetween } from 'components/Row'
+import { CardSection, DataCard, CardNoise, CardBGImage } from 'components/earn/styled'
 import { Countdown } from './Countdown'
-import Loader from '../../components/Loader'
-import { useActiveWeb3React } from '../../hooks'
+import Loader from 'components/Loader'
+import { useActiveWeb3React } from 'hooks'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;

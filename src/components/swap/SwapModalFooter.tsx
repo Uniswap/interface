@@ -3,14 +3,14 @@ import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { Field } from '../../state/swap/actions'
-import { TYPE } from '../../theme'
+import { Field } from 'state/swap/actions'
+import { TYPE } from 'theme'
 import {
   computeSlippageAdjustedAmounts,
   computeTradePriceBreakdown,
   formatExecutionPrice,
   warningSeverity
-} from '../../utils/prices'
+} from 'utils/prices'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'

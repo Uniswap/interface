@@ -1,17 +1,17 @@
 import React, { useState, useContext } from 'react'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from 'hooks'
 
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
 import styled, { ThemeContext } from 'styled-components'
 import { RowBetween } from '../Row'
-import { TYPE, CustomLightSpinner } from '../../theme'
+import { TYPE, CustomLightSpinner } from 'theme'
 import { X, ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary } from '../Button'
-import Circle from '../../assets/images/blue-loader.svg'
-import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
-import { getEtherscanLink } from '../../utils'
-import { ExternalLink } from '../../theme/components'
+import Circle from 'assets/images/blue-loader.svg'
+import { useVoteCallback, useUserVotes } from 'state/governance/hooks'
+import { getEtherscanLink } from 'utils'
+import { ExternalLink } from 'theme/components'
 import { TokenAmount } from '@uniswap/sdk'
 
 const ContentWrapper = styled(AutoColumn)`

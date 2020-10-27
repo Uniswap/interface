@@ -2,16 +2,16 @@ import React, { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import {
   useDarkModeManager,
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance
-} from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+} from 'state/user/hooks'
+import { TYPE } from 'theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'

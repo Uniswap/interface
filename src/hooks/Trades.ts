@@ -2,9 +2,9 @@ import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
-import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
-import { PairState, usePairs } from '../data/Reserves'
-import { wrappedCurrency } from '../utils/wrappedCurrency'
+import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from 'constants/index'
+import { PairState, usePairs } from 'data/Reserves'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
 

@@ -1,6 +1,6 @@
 import { CurrencyAmount, ETHER, Percent, Route, TokenAmount, Trade } from '@uniswap/sdk'
-import { DAI, USDC } from '../constants'
-import { MockV1Pair } from '../data/V1'
+import { DAI, USDC } from 'constants/index'
+import { MockV1Pair } from 'data/V1'
 import v1SwapArguments from './v1SwapArguments'
 
 describe('v1SwapArguments', () => {

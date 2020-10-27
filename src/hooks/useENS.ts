@@ -1,4 +1,4 @@
-import { isAddress } from '../utils'
+import { isAddress } from 'utils'
 import useENSAddress from './useENSAddress'
 import useENSName from './useENSName'
 

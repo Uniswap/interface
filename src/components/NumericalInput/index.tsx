@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { escapeRegExp } from '../../utils'
+import { escapeRegExp } from 'utils'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
   color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};

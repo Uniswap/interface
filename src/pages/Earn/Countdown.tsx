@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { STAKING_GENESIS, REWARDS_DURATION_DAYS } from '../../state/stake/hooks'
-import { TYPE } from '../../theme'
+import { STAKING_GENESIS, REWARDS_DURATION_DAYS } from 'state/stake/hooks'
+import { TYPE } from 'theme'
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
