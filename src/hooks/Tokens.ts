@@ -11,24 +11,22 @@ import { useBytes32TokenContract, useTokenContract } from './useContract'
 
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
-  const userAddedTokens = useUserAddedTokens()
   const allTokens = useTokenList()
-
+  const userAddedTokens = useUserAddedTokens()
+    // reduce into all ALL_TOKENS filtered by the current chain
+    .reduce<{ [address: string]: Token }>(
+      (tokenMap, token) => {
+        tokenMap[token.address] = token
+        return tokenMap
+      },
+      // must make a copy because reduce modifies the map, and we do not
+      // want to make a copy in every iteration
+      {}
+    )
   return useMemo(() => {
     if (!chainId) return {}
-    return (
-      userAddedTokens
-        // reduce into all ALL_TOKENS filtered by the current chain
-        .reduce<{ [address: string]: Token }>(
-          (tokenMap, token) => {
-            tokenMap[token.address] = token
-            return tokenMap
-          },
-          // must make a copy because reduce modifies the map, and we do not
-          // want to make a copy in every iteration
-          { ...allTokens[chainId] }
-        )
-    )
+    if (Object.keys(allTokens[chainId]).length === 0) return {}
+    return ({ ...userAddedTokens , ...allTokens[chainId] })
   }, [chainId, userAddedTokens, allTokens])
 }
 
