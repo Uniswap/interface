@@ -63,40 +63,35 @@ function CurrencyRow({
       disabled={isSelected}
       selected={otherSelected}
     >
-      <CurrencyLogo currency={currency} size={'24px'} />
+      <CurrencyLogo currency={currency} size={'20px'} />
       <Column>
         <Text title={currency.name} fontWeight={500}>
           {currency.symbol}
         </Text>
         <FadedSpan>
-          {!isOnSelectedList && customAdded ? (
-            <TYPE.main fontWeight={500}>
-              Added by user
+          {!isOnSelectedList && (
+            <TYPE.main fontWeight={500} fontSize='12px'>
+              {customAdded ? 'Added by user' : 'Found by address'}
               <LinkStyledButton
                 onClick={event => {
                   event.stopPropagation()
-                  if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
+                  if (!chainId || !(currency instanceof Token)) {
+                    return;
+                  }
+                  if (customAdded) {
+                    removeToken(chainId, currency.address)
+                  } else {
+                    addToken(currency)
+                  }
                 }}
               >
-                (Remove)
+                ({customAdded ? 'Remove' : 'Add'})
               </LinkStyledButton>
             </TYPE.main>
-          ) : null}
-          {!isOnSelectedList && !customAdded ? (
-            <TYPE.main fontWeight={500}>
-              Found by address
-              <LinkStyledButton
-                onClick={event => {
-                  event.stopPropagation()
-                  if (currency instanceof Token) addToken(currency)
-                }}
-              >
-                (Add)
-              </LinkStyledButton>
-            </TYPE.main>
-          ) : null}
+          )}
         </FadedSpan>
       </Column>
+      <div />
       <RowFixed style={{ justifySelf: 'flex-end' }}>
         {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
       </RowFixed>

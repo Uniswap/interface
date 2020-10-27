@@ -3,13 +3,11 @@ import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRe
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { CloseIcon } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
@@ -132,12 +130,11 @@ export function CurrencySearch({
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
-      <PaddedColumn gap="14px">
+      <PaddedColumn gap="16px">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
+          <TYPE.purple3 fontWeight={500} fontSize={16} color='purple3'>
             Select a token
-            <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
-          </Text>
+          </TYPE.purple3>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <SearchInput
@@ -153,9 +150,9 @@ export function CurrencySearch({
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
         <RowBetween>
-          <Text fontSize={14} fontWeight={500}>
-            Token Name
-          </Text>
+          <TYPE.purple3 fontSize={12} fontWeight={500}>
+            NAME
+          </TYPE.purple3>
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
         </RowBetween>
       </PaddedColumn>
@@ -177,7 +174,7 @@ export function CurrencySearch({
           )}
         </AutoSizer>
       </div>
-      
+
     </Column>
   )
 }

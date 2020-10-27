@@ -1,3 +1,4 @@
+import { transparentize } from 'polished'
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
@@ -27,7 +28,7 @@ export const MenuItem = styled(RowBetween)`
   height: 56px;
   display: grid;
   grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
-  grid-gap: 16px;
+  grid-gap: 8px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
@@ -39,34 +40,32 @@ export const MenuItem = styled(RowBetween)`
 export const SearchInput = styled.input`
   position: relative;
   display: flex;
-  padding: 16px;
+  padding: 16px 12px;
   align-items: center;
   width: 100%;
+  height: 44px;
   white-space: nowrap;
-  background: none;
-  border: none;
+  background: ${({ theme }) => transparentize(0.75, theme.purpleBase)};
+  border: 1px solid;
+  border-image-slice: 1;
+  border-width: 1px;
+  border-image-source: linear-gradient(180deg, rgba(41, 38, 67, 0) 0%, rgba(41, 38, 67, 0.65) 100%);
+  /* FIXME: not working */
+  border-radius: 8px;
   outline: none;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.text1};
-  border-style: solid;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  color: ${({ theme }) => theme.white};
   -webkit-appearance: none;
 
-  font-size: 18px;
+  font-size: 16px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.text3};
-  }
-  transition: border 100ms;
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-    outline: none;
+    color: ${({ theme }) => theme.purple5};
   }
 `
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => transparentize(.5, theme.purple5)};
 `
 
 export const SeparatorDark = styled.div`
