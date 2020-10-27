@@ -126,7 +126,7 @@ export function useCTokenApproveCallback(
       : pendingApproval
       ? ApprovalState.PENDING
       : ApprovalState.NOT_APPROVED
-  }, [amountToApprove, approveTokenWalletBalance?.raw, currentAllowance, pendingApproval, spender])
+  }, [amountToApprove, approveTokenWalletBalance, currentAllowance, pendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
