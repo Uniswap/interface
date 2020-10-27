@@ -33,9 +33,9 @@ import {
   calculateGasMargin,
   getERC677TokenContract,
   getBridgeContractWithRpc,
-  getHomeBridgeContract,
   confirmHomeTokenTransfer,
-  confirmForeignTokenTransfer
+  confirmForeignTokenTransfer,
+  waitForTransaction
 } from '../../utils'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 
@@ -97,8 +97,7 @@ export default function Bridge({
   const isHome = chainId === ChainId.FUSE
 
   // set bridge and approval address
-  const homeBridgeChain = ChainId.MAINNET
-  const bridgeAddress = isHome ? getBridgeHomeAddress(homeBridgeChain ?? undefined) : getBridgeForeignAddress(chainId)
+  const bridgeAddress = isHome ? getBridgeHomeAddress(ChainId.MAINNET ?? undefined) : getBridgeForeignAddress(chainId)
   const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
 
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)
@@ -153,8 +152,9 @@ export default function Bridge({
 
       // waiting for confirmation
       if (confirmations) {
-        setLoadingText('Waiting for 0/2 Confirmations')
-        await response.wait(confirmations)
+        await waitForTransaction(response, confirmations, library, (confirmationCount: number) =>
+          setLoadingText(`Waiting for ${confirmationCount}/${confirmations} Confirmations`)
+        )
       }
 
       // waiting for bridge
@@ -164,6 +164,7 @@ export default function Bridge({
 
       const listener = async (tokenAddress: any, recipient: string) => {
         const isUserAccount = recipient === account
+
         const isTokenConfirmed = isHome
           ? await confirmHomeTokenTransfer(inputCurrencyId, library, account)
           : await confirmForeignTokenTransfer(tokenAddress, contract)

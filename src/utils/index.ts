@@ -11,6 +11,7 @@ import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBEr
 import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
 import { getNetworkLibrary, getNetworkLibraryByChain } from '../connectors'
+import { TransactionResponse, TransactionReceipt } from '@ethersproject/providers'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -219,4 +220,32 @@ export const confirmHomeTokenTransfer = async (tokenAddress: string, library: We
 export const confirmForeignTokenTransfer = async (tokenAddress: string, contract: Contract) => {
   const foreignTokenAddress = await contract.foreignTokenAddress(tokenAddress)
   return tokenAddress === foreignTokenAddress
+}
+
+export const waitForTransaction = async (
+  transaction: TransactionResponse,
+  confirmations: number,
+  library: Web3Provider,
+  callbackFn: Function
+) => {
+  transaction.wait()
+
+  const transactionHash = transaction.hash
+  const receipt = await library.getTransactionReceipt(transactionHash)
+
+  if ((receipt ? receipt.confirmations : 0) >= confirmations) return receipt
+
+  callbackFn(receipt ? receipt.confirmations : 0)
+
+  return new Promise(resolve => {
+    const handler = (receipt: TransactionReceipt) => {
+      callbackFn(receipt.confirmations >= confirmations ? confirmations : receipt.confirmations)
+
+      if (receipt.confirmations < confirmations) return
+
+      library.removeListener(transactionHash, handler)
+      resolve(receipt)
+    }
+    library.on(transactionHash, handler)
+  })
 }
