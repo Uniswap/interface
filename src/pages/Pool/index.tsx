@@ -32,6 +32,7 @@ export default function Pool() {
     () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
+
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
