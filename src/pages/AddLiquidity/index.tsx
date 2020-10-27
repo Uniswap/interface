@@ -18,7 +18,8 @@ import {MinimalPositionCard} from '../../components/PositionCard';
 import Row, {RowBetween, RowFlat} from '../../components/Row';
 
 import {ROUTER_ADDRESS} from '../../constants';
-import {PairState, usePair} from '../../data/Reserves';
+//import {PairState, usePair} from '../../data/Reserves';
+import {PairState} from '../../data/Reserves';
 import {useCurrency} from '../../hooks/Tokens';
 import {ApprovalState, useApproveCallback} from '../../hooks/useApproveCallback';
 import {useWalletModalToggle} from '../../state/application/hooks';
@@ -95,11 +96,10 @@ export default function AddLiquidity({
   useEffect(() => {
     //if (noLiquidity && canAddPair) {
     if (canAddPair) {
-      console.log('add user pair')
       addPair(pair);
       setCanAddPair(false)
     }
-  }, [pair, addPair]);
+  }, [pair, addPair, canAddPair]);
 
   // get formatted amounts
   const formattedAmounts = {
