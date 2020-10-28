@@ -38,6 +38,7 @@ import {
   waitForTransaction
 } from '../../utils'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+import { HOME_BRIDGE_CHAIN } from '../../constants'
 
 export default function Bridge({
   match: {
@@ -97,7 +98,7 @@ export default function Bridge({
   const isHome = chainId === ChainId.FUSE
 
   // set bridge and approval address
-  const bridgeAddress = isHome ? getBridgeHomeAddress(ChainId.MAINNET ?? undefined) : getBridgeForeignAddress(chainId)
+  const bridgeAddress = isHome ? getBridgeHomeAddress(HOME_BRIDGE_CHAIN) : getBridgeForeignAddress(chainId)
   const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
 
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)
@@ -116,27 +117,30 @@ export default function Bridge({
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null,
-      confirmations: number | null
+      confirmations: number | null,
+      waitingBridgeText: string
 
     // home
     if (isHome) {
-      const tokenContract = getERC677TokenContract(inputCurrencyId, library, account)
+      const contract = getERC677TokenContract(inputCurrencyId, library, account)
 
-      estimate = tokenContract.estimateGas.transferAndCall
-      method = tokenContract.transferAndCall
+      estimate = contract.estimateGas.transferAndCall
+      method = contract.transferAndCall
       args = [bridgeAddress, parsedAmountInput.raw.toString(), []]
       value = null
       confirmations = null
+      waitingBridgeText = 'Moving Funds to Ethereum'
 
       // foreign
     } else {
-      const bridgeContract = getForiegnBridgeContract(chainId, library, account)
+      const contract = getForiegnBridgeContract(chainId, library, account)
 
-      estimate = bridgeContract.estimateGas['relayTokens(address,uint256)']
-      method = bridgeContract['relayTokens(address,uint256)']
+      estimate = contract.estimateGas['relayTokens(address,uint256)']
+      method = contract['relayTokens(address,uint256)']
       args = [inputCurrencyId, parsedAmountInput.raw.toString()]
       value = null
       confirmations = 2
+      waitingBridgeText = 'Moving Funds to Fuse'
     }
 
     setAttemptingTxn(true)
@@ -158,18 +162,19 @@ export default function Bridge({
       }
 
       // waiting for bridge
-      setLoadingText(isHome ? 'Moving Funds to Ethereum' : 'Moving Funds to Fuse')
+      setLoadingText(waitingBridgeText)
 
       const contract = getBridgeContractWithRpc(chainId)
 
-      const listener = async (tokenAddress: any, recipient: string) => {
-        const isUserAccount = recipient === account
-
+      const listener = async (tokenAddress: string, recipient: string) => {
         const isTokenConfirmed = isHome
-          ? await confirmHomeTokenTransfer(inputCurrencyId, library, account)
-          : await confirmForeignTokenTransfer(tokenAddress, contract)
+          ? await confirmHomeTokenTransfer(inputCurrencyId, tokenAddress, library, account)
+          : await confirmForeignTokenTransfer(inputCurrencyId, tokenAddress, contract)
 
-        if ((isUserAccount && isTokenConfirmed) || isUserAccount) {
+        // safe to assume by the time the event is emitted
+        // if token is bridged for the first time, an address is created
+        // before emitting the event
+        if (recipient === account && isTokenConfirmed) {
           contract.removeListener('TokensBridged', listener)
 
           setAttemptingTxn(false)
@@ -179,6 +184,7 @@ export default function Bridge({
           })
 
           setTxHash(response.hash)
+
           onFieldInput('')
           setLoadingText('')
         }
@@ -250,7 +256,7 @@ export default function Bridge({
                 )}
                 <ButtonError
                   onClick={onTransfer}
-                  disabled={approval !== ApprovalState.APPROVED || !!inputError}
+                  disabled={approval !== ApprovalState.APPROVED || !!inputError || !!loadingText}
                   error={!!inputError}
                 >
                   {loadingText ? (

@@ -44,6 +44,8 @@ export function useDerivedBridgeInfo(
 
   const parsedAmount = tryParseAmount(typedValue, inputCurrency)
 
+  const { [Field.INPUT]: inputAmount } = parsedAmounts
+
   let inputError: string | undefined
   if (!account) {
     inputError = 'Connect Wallet'
@@ -59,6 +61,10 @@ export function useDerivedBridgeInfo(
 
   if (Number(typedValue) < 0.5) {
     inputError = inputError ?? 'Below minimum limit'
+  }
+
+  if (inputAmount && currencyBalances?.[Field.INPUT]?.lessThan(inputAmount)) {
+    inputError = 'Insufficient ' + currencies[Field.INPUT]?.symbol + ' balance'
   }
 
   return {

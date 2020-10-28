@@ -4,7 +4,14 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS } from '../constants'
+import {
+  ROUTER_ADDRESS,
+  MAINNET_FOREIGN_BRIDGE_ADDRESS,
+  ROPSTEN_FOREIGN_BRIDGE_ADDRESS,
+  FUSE_MAINNET_HOME_BRIDGE_ADDRESS,
+  FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS,
+  HOME_BRIDGE_CHAIN
+} from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'uniswap-fuse-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
@@ -149,9 +156,9 @@ export function getERC677TokenContract(address: string, library: Web3Provider, a
 export function getBridgeHomeAddress(chainId?: number): string {
   switch (chainId) {
     case ChainId.MAINNET:
-      return '0xc2220646E1E76D5fF3a441eDd9E8EFF0e4A8EF03'
+      return FUSE_MAINNET_HOME_BRIDGE_ADDRESS
     case ChainId.ROPSTEN:
-      return '0xAEBC2058780eb0372e7Ee75c11019d26E36894ad'
+      return FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS
     default:
       throw new Error('Unsupported chainId')
   }
@@ -160,16 +167,18 @@ export function getBridgeHomeAddress(chainId?: number): string {
 export function getBridgeForeignAddress(chainId?: number): string {
   switch (chainId) {
     case ChainId.MAINNET:
-      return '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
+      return MAINNET_FOREIGN_BRIDGE_ADDRESS
     case ChainId.ROPSTEN:
-      return '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419'
+      return ROPSTEN_FOREIGN_BRIDGE_ADDRESS
     default:
       throw new Error('Unsupported chainId')
   }
 }
 
 export function getHomeBridgeContract(library: Web3Provider, account?: string): Contract {
-  return getContract('0xc2220646E1E76D5fF3a441eDd9E8EFF0e4A8EF03', HomeMultiAMBErc20ToErc677ABI, library, account)
+  const address =
+    HOME_BRIDGE_CHAIN === ChainId.ROPSTEN ? FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS : FUSE_MAINNET_HOME_BRIDGE_ADDRESS
+  return getContract(address, HomeMultiAMBErc20ToErc677ABI, library, account)
 }
 
 export function getForiegnBridgeContract(chainId: number, library: Web3Provider, account?: string): Contract {
@@ -191,35 +200,49 @@ export function getCurrencySymbol(currency: Currency | null | undefined, chainId
 
 export function getBridgeContractWithRpc(chainId: number): Contract {
   if (chainId === ChainId.MAINNET) {
-    const bridgeAddress = '0xc2220646E1E76D5fF3a441eDd9E8EFF0e4A8EF03'
-    const networkLibrary = getNetworkLibrary()
-    return getContract(bridgeAddress, HomeMultiAMBErc20ToErc677ABI, networkLibrary)
+    return getContract(FUSE_MAINNET_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
   } else if (chainId === ChainId.ROPSTEN) {
-    const bridgeAddress = '0xAEBC2058780eb0372e7Ee75c11019d26E36894ad'
-    const networkLibrary = getNetworkLibrary()
-    return getContract(bridgeAddress, HomeMultiAMBErc20ToErc677ABI, networkLibrary)
+    return getContract(FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
   } else if (chainId === ChainId.FUSE) {
-    const bridgeAddress = '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
-    const networkLibrary = getNetworkLibraryByChain(chainId)
-    return getContract(bridgeAddress, ForeignMultiAMBErc20ToErc677ABI, networkLibrary)
+    const address =
+      HOME_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
+    return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
   } else {
     throw new Error('Unsupported chainId')
   }
 }
 
-export function getDefaultMainnetCurrency() {
-  return '0x970b9bb2c0444f5e81e9d0efb84c8ccdcdcaf84d'
-}
-
-export const confirmHomeTokenTransfer = async (tokenAddress: string, library: Web3Provider, account: string) => {
+/**
+ *
+ * @param homeTokenAddress home address of token been transferred
+ * @param foreignTokenAddress foreign address of token been transferred
+ * @param library
+ * @param account user address
+ */
+export const confirmHomeTokenTransfer = async (
+  homeTokenAddress: string,
+  foreignTokenAddress: string,
+  library: Web3Provider,
+  account: string
+) => {
   const contract = getHomeBridgeContract(library, account)
-  const foreignTokenAddress = await contract.foreignTokenAddress(tokenAddress)
-  return tokenAddress === foreignTokenAddress
+  const address = await contract.foreignTokenAddress(homeTokenAddress)
+  return foreignTokenAddress === address
 }
 
-export const confirmForeignTokenTransfer = async (tokenAddress: string, contract: Contract) => {
-  const foreignTokenAddress = await contract.foreignTokenAddress(tokenAddress)
-  return tokenAddress === foreignTokenAddress
+/**
+ *
+ * @param foreignTokenAddress foreign address of token been transferred
+ * @param HomeTokenAddress home address of token that was transferred
+ * @param contract
+ */
+export const confirmForeignTokenTransfer = async (
+  foreignTokenAddress: string,
+  HomeTokenAddress: string,
+  contract: Contract
+) => {
+  const address = await contract.foreignTokenAddress(HomeTokenAddress)
+  return foreignTokenAddress === address
 }
 
 export const waitForTransaction = async (

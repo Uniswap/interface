@@ -3,7 +3,15 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
+export const HOME_BRIDGE_CHAIN: number = parseInt(process.env.REACT_APP_HOME_BRIDGE_CHAIN ?? '1')
+console.debug('HOME_BRIDGE_CHAIN set to :', HOME_BRIDGE_CHAIN)
+
 export const ROUTER_ADDRESS = '0xFB76e9E7d88E308aB530330eD90e84a952570319'
+
+export const MAINNET_FOREIGN_BRIDGE_ADDRESS = '0xf301d525da003e874DF574BCdd309a6BF0535bb6'
+export const ROPSTEN_FOREIGN_BRIDGE_ADDRESS = '0x68b762A7a68F6D87Fcf2E2EaF7eF48D00cAa2419'
+export const FUSE_MAINNET_HOME_BRIDGE_ADDRESS = '0xc2220646E1E76D5fF3a441eDd9E8EFF0e4A8EF03'
+export const FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS = '0xAEBC2058780eb0372e7Ee75c11019d26E36894ad'
 
 // a list of tokens by chain
 type ChainTokenList = {

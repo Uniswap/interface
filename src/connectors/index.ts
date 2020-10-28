@@ -7,6 +7,7 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 import { ChainId } from 'uniswap-fuse-sdk'
+import { HOME_BRIDGE_CHAIN } from '../constants'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const ROPSTEN_NETWORK_URL = process.env.REACT_APP_ROPSTEN_NETWORK_URL
@@ -44,8 +45,9 @@ export const getNetworkLibraryByChain = (chainId: number) => {
     })
     return new Web3Provider(network.provider as any)
   } else if (chainId === ChainId.FUSE) {
+    const networkUrl = HOME_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_NETWORK_URL : MAINNET_NETWORK_URL
     const network = new NetworkConnector({
-      urls: { [chainId]: MAINNET_NETWORK_URL }
+      urls: { [chainId]: networkUrl }
     })
     return new Web3Provider(network.provider as any)
   } else {
