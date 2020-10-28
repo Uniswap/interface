@@ -229,15 +229,19 @@ function LendModal({
     if (lendToken) {
       const price = lendToken.getUnderlyingPrice()
       const borrowMaxValue = JSBI.subtract(
+        // multiply 8/10
         JSBI.divide(JSBI.multiply(limit, safe ? EIGHT : TEN), TEN),
         borrowTotalBalance
       )
       const numerator = JSBI.greaterThan(borrowMaxValue, ZERO) ? borrowMaxValue : ZERO
-      return new Fraction(
-        // multiply 8/10
-        numerator,
-        price
-      )
+      const liquidity = lendToken.getLiquidity()
+      const borrowMaxAmount = JSBI.divide(JSBI.multiply(numerator, EXA_BASE), price)
+
+      if (JSBI.greaterThan(borrowMaxAmount, liquidity)) {
+        return new Fraction(liquidity, price)
+      } else {
+        return new Fraction(numerator, price)
+      }
     }
     return ZERO_FRACTION
   }
@@ -450,9 +454,11 @@ function LendModal({
             <RowBetween style={{ padding: '0 2rem 1.2rem' }}>
               <div />
               <AssetLogo>
-                {lendToken?.logo1
-                  ? <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
-                  : <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '10px' }} />}
+                {lendToken?.logo1 ? (
+                  <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
+                ) : (
+                  <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '10px' }} />
+                )}
                 <Text fontWeight={500} fontSize={'1.1rem'}>
                   {lendToken?.symbol}
                 </Text>
@@ -504,9 +510,11 @@ function LendModal({
                 </ApproveWrap>
               ) : (
                 <ApproveWrap>
-                  {lendToken?.logo1
-                    ? <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
-                    : <CurrencyIcon logo0={lendToken?.logo0} size={'4.4rem'} style={{ marginBottom: '2rem' }} />}
+                  {lendToken?.logo1 ? (
+                    <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
+                  ) : (
+                    <CurrencyIcon logo0={lendToken?.logo0} size={'4.4rem'} style={{ marginBottom: '2rem' }} />
+                  )}
                   <Text fontWeight={400} fontSize={'0.9rem'} color={'#AAB8C1'} textAlign={'center'} lineHeight={'1rem'}>
                     To Supply or Repay Tether to the Compound Protocol, you need to enable it first.
                   </Text>
@@ -565,9 +573,11 @@ function LendModal({
                 <RateTitle>Supply Rates</RateTitle>
                 <RatePanel>
                   <AutoRow>
-                    {lendToken?.logo1
-                      ? <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
-                      : <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '6px' }} />}
+                    {lendToken?.logo1 ? (
+                      <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
+                    ) : (
+                      <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '6px' }} />
+                    )}
                     <Text color={'#AAB8C1;'} lineHeight={'24px'}>
                       {lendToken?.symbol} APY
                     </Text>
