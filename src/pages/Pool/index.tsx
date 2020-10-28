@@ -22,6 +22,7 @@ import { CardSection } from '../../components/earn/styled'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
+  margin-top: -30px;
 `
 
 const VoteCard = styled.div`
