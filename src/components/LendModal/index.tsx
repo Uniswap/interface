@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -36,6 +36,7 @@ import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
 import DoubleAssetLogo from '../DoubleAssetLogo'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../TransactionConfirmationModal'
 
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
@@ -162,6 +163,8 @@ function LendModal({
 
   const { account, chainId, library } = useActiveWeb3React()
 
+  // modal and confirm
+  const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
 
   const [txHash, setTxHash] = useState<string>('')
@@ -178,11 +181,22 @@ function LendModal({
 
   const [lendInputValue, setLendInputValue] = useState('')
 
+  const [pendingText, setPendingText] = useState('')
+
   const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken?.cAddress)
 
   const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
 
   const walletBalanceAmount = useAllCTokenBalances([lendToken])
+
+  const handleDismissConfirmation = useCallback(() => {
+    setShowConfirm(false)
+    // if there was a tx hash, we want to clear the input
+    if (txHash) {
+      setLendInputValue('')
+    }
+    setTxHash('')
+  }, [setLendInputValue, txHash])
 
   useEffect(() => {
     if (showLendConfirmation) {
@@ -285,9 +299,10 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
+          setPendingText('Add ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
-            summary: 'Add ' + lendInputValue + ' ' + cToken.symbol
+            summary: pendingText
           })
 
           setTxHash(response.hash)
@@ -327,9 +342,10 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
+          setPendingText('Redeem ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
-            summary: 'Redeem ' + lendInputValue + ' ' + cToken.symbol
+            summary: pendingText
           })
 
           setTxHash(response.hash)
@@ -369,9 +385,10 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
+          setPendingText('Borrow ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
-            summary: 'Borrow ' + lendInputValue + ' ' + cToken.symbol
+            summary: pendingText
           })
 
           setTxHash(response.hash)
@@ -423,9 +440,10 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
+          setPendingText('Repay ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
-            summary: 'Repay ' + lendInputValue + ' ' + cToken.symbol
+            summary: pendingText
           })
 
           setTxHash(response.hash)
@@ -448,6 +466,21 @@ function LendModal({
 
   return (
     <div>
+      <TransactionConfirmationModal
+        isOpen={showConfirm}
+        onDismiss={handleDismissConfirmation}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={() => (
+          <ConfirmationModalContent
+            title={'Confirm Transaction'}
+            onDismiss={handleDismissConfirmation}
+            topContent={() => <div>top content</div>}
+            bottomContent={() => <div>bottom content</div>}
+          />
+        )}
+        pendingText={pendingText}
+      />
       <Modal isOpen={showLendConfirmation} onDismiss={() => setShowLendConfirmation(false)}>
         <ModalContentWrapper>
           <AutoColumn gap={'0'} style={{ width: '100%' }}>
@@ -642,6 +675,7 @@ function LendModal({
                     <ButtonLight
                       disabled={inputError}
                       onClick={() => {
+                        setShowConfirm(true)
                         if (lendToken && inputAmount && onMint && tabItemActive === LendField.SUPPLY) {
                           onMint(lendToken, lendInputValue, lendToken.isETH())
                           setShowLendConfirmation(false)
@@ -658,7 +692,9 @@ function LendModal({
                     <ButtonLight
                       disabled={approvalTokenStatus === ApprovalState.PENDING}
                       onClick={() => {
+                        setPendingText('')
                         approveCallback()
+                        setShowConfirm(true)
                         setShowLendConfirmation(false)
                       }}
                     >
@@ -670,6 +706,7 @@ function LendModal({
                 <ButtonLight
                   disabled={inputError}
                   onClick={() => {
+                    setShowConfirm(true)
                     if (lendToken && inputAmount && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
                       onRedeemUnderlying(lendToken, lendInputValue)
                       setShowLendConfirmation(false)
