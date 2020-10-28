@@ -92,7 +92,8 @@ const TitleText = styled(Row)<{ isDark: boolean }>`
   `};
   a {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 18px !important;
+    padding: 1rem 0 1rem 0;
     color: ${({ theme, isDark }) => (isDark ? theme.white : theme.primaryText1)};
   }
 `
@@ -103,7 +104,7 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
   `};
   a {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     color: ${({ theme, isDark }) => (isDark ? theme.white : theme.primaryText1)};
   }
 `
@@ -185,10 +186,11 @@ const Title = styled.a`
   }
 `
 
-const UniIcon = styled.div`
+const DXswapIcon = styled.div`
   img {
-    height: 30px;
+    height: 36px;
     margin-right: 5px;
+    margin-left: 5px;
   }
 `
 
@@ -267,12 +269,12 @@ function Header({ history }: { history: any }) {
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
         <Title href=".">
-          <UniIcon>
+          <DXswapIcon>
             <img src={isDark ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
+          </DXswapIcon>
           <TitleText isDark={isDark}>
             <Link id="link" to="/">
-              DXswap
+              <span style={{ fontWeight: 900 }}>DX</span>swap
             </Link>
           </TitleText>
         </Title>
@@ -291,10 +293,10 @@ function Header({ history }: { history: any }) {
           >
             {t('pool')}
           </StyledNavLink>
-          <a style={{ top: '7px',position: "relative", margin: "0px 12px" }}>
+          <Link to="/" style={{ top: '7px',position: "relative", margin: "0px 12px" }}>
             Governance
             <ComingSoonBadge>COMMING SOON</ComingSoonBadge>
-          </a>
+          </Link>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
