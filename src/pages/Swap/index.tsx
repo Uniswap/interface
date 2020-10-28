@@ -37,13 +37,15 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance, useUserState } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import SwitchNetwork from '../../components/swap/SwitchNetwork'
+import BridgeInfo from '../../components/swap/BridgeInfo'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -76,6 +78,8 @@ export default function Swap() {
   // get custom setting values for user
   const [deadline] = useUserDeadline()
   const [allowedSlippage] = useUserSlippageTolerance()
+
+  const { completedBridgeTransfer } = useUserState()
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
@@ -277,8 +281,7 @@ export default function Swap() {
         <AppBody>
           <Wrapper>
             <SwapPoolTabs active={'swap'} />
-            Trading available only on Fuse network, use the bridge tab to move tokens to the Fuse network, then change
-            the network to Fuse to trade them
+            {completedBridgeTransfer ? <SwitchNetwork /> : <BridgeInfo />}
           </Wrapper>
         </AppBody>
       </>

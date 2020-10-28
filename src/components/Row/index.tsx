@@ -20,6 +20,11 @@ export const RowFlat = styled.div`
   align-items: flex-end;
 `
 
+export const RowCenter = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
 export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   flex-wrap: wrap;
   margin: ${({ gap }) => gap && `-${gap}`};

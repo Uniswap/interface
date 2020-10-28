@@ -39,6 +39,7 @@ import {
 } from '../../utils'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { HOME_BRIDGE_CHAIN } from '../../constants'
+import { useUserActionHandlers } from '../../state/user/hooks'
 
 export default function Bridge({
   match: {
@@ -50,6 +51,8 @@ export default function Bridge({
   const theme = useContext(ThemeContext)
 
   const inputCurrency = useCurrency(inputCurrencyId)
+
+  const { updateCompletedBridgeTransfer } = useUserActionHandlers()
 
   const { independentField, typedValue } = useBridgeState()
 
@@ -184,6 +187,8 @@ export default function Bridge({
           })
 
           setTxHash(response.hash)
+
+          updateCompletedBridgeTransfer()
 
           onFieldInput('')
           setLoadingText('')
