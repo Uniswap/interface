@@ -117,6 +117,18 @@ const HeaderLinks = styled(Row)`
 `};
 `
 
+const ComingSoonBadge = styled.div`
+  self-align: center;
+  font-size: 9px;
+  text-align:center;
+  background-color: ${({ theme }) => (theme.bg4)};
+  border-radius: 3px;
+  
+  width: fit-content;
+  margin: auto;
+  padding: 2px 5px;
+`
+
 const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
@@ -280,6 +292,10 @@ function Header({ history }: { history: any }) {
           >
             {t('pool')}
           </StyledNavLink>
+          <a style={{ top: '7px',position: "relative", margin: "0px 12px" }}>
+            Governance
+            <ComingSoonBadge>COMMING SOON</ComingSoonBadge>
+          </a>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
