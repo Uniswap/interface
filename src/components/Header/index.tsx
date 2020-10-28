@@ -13,7 +13,6 @@ import { useETHBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
-import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
@@ -304,7 +303,6 @@ function Header({ history }: { history: any }) {
         </HeaderElement>
         <HeaderElementWrap>
           <Settings />
-          <Menu />
         </HeaderElementWrap>
       </HeaderControls>
     </HeaderFrame>

@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react'
-import { Settings, X } from 'react-feather'
+import { Settings, X, Info, Code } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -11,7 +11,7 @@ import {
   useUserTransactionTTL,
   useUserSlippageTolerance
 } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { TYPE, ExternalLink } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -83,8 +83,17 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span`
+const MenuContainer = styled.span`
   min-width: 20.125rem;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 4rem;
+  right: 0rem;
+  z-index: 100;
+`
+
+const MenuFlyout = styled.span`
   background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -92,10 +101,7 @@ const MenuFlyout = styled.span`
   display: flex;
   flex-direction: column;
   font-size: 1rem;
-  position: absolute;
-  top: 4rem;
-  right: 0rem;
-  z-index: 100;
+  height: auto;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     min-width: 18.125rem;
@@ -106,6 +112,14 @@ const MenuFlyout = styled.span`
     min-width: 18.125rem;
     top: -22rem;
   `};
+`
+
+const MenuFlyoutBottom = styled(MenuFlyout)`
+   margin-top: 1rem;
+   align-items: right;
+   flex-direction: row;
+   justify-content: center;
+   padding: 0.5rem;
 `
 
 const Break = styled.div`
@@ -122,6 +136,22 @@ const ModalContentWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 20px;
 `
+const MenuItem = styled(ExternalLink)`
+  padding: 0.5rem 0.5rem;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  > svg {
+    margin-right: 8px;
+  }
+`
+
+const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
+  ? `https://github.com/levelkdev/dxswap-dapp/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`
+  : 'https://github.com/levelkdev/dxswap-dapp'
 
 export default function SettingsTab() {
   const node = useRef<HTMLDivElement>()
@@ -193,53 +223,67 @@ export default function SettingsTab() {
         ) : null}
       </StyledMenuButton>
       {open && (
-        <MenuFlyout>
-          <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14}>
-              Transaction Settings
-            </Text>
-            <TransactionSettings
-              rawSlippage={userSlippageTolerance}
-              setRawSlippage={setUserslippageTolerance}
-              deadline={ttl}
-              setDeadline={setTtl}
-            />
-            <Text fontWeight={600} fontSize={14}>
-              Interface Settings
-            </Text>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Expert Mode
-                </TYPE.black>
-                <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
-              </RowFixed>
-              <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
+        <MenuContainer>
+          <MenuFlyout>
+            <AutoColumn gap="md" style={{ padding: '1rem' }}>
+              <Text fontWeight={600} fontSize={14}>
+                Transaction Settings
+              </Text>
+              <TransactionSettings
+                rawSlippage={userSlippageTolerance}
+                setRawSlippage={setUserslippageTolerance}
+                deadline={ttl}
+                setDeadline={setTtl}
               />
-            </RowBetween>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Dark Mode
-                </TYPE.black>
-              </RowFixed>
-              <Toggle isActive={darkMode} toggle={toggleDarkMode} />
-            </RowBetween>
-          </AutoColumn>
-        </MenuFlyout>
+              <Text fontWeight={600} fontSize={14}>
+                Interface Settings
+              </Text>
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                    Toggle Expert Mode
+                  </TYPE.black>
+                  <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                </RowFixed>
+                <Toggle
+                  id="toggle-expert-mode-button"
+                  isActive={expertMode}
+                  toggle={
+                    expertMode
+                      ? () => {
+                          toggleExpertMode()
+                          setShowConfirmation(false)
+                        }
+                      : () => {
+                          toggle()
+                          setShowConfirmation(true)
+                        }
+                  }
+                />
+              </RowBetween>
+              <RowBetween>
+                <RowFixed>
+                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                    Toggle Dark Mode
+                  </TYPE.black>
+                </RowFixed>
+                <Toggle isActive={darkMode} toggle={toggleDarkMode} />
+              </RowBetween>
+            </AutoColumn>
+          </MenuFlyout>
+          <RowFixed style={{ alignSelf: "flex-end" }}>
+            <MenuFlyoutBottom>
+              <MenuItem id="link" href="https://dxdao.eth.link/">
+                <Info size={14} />
+                About
+              </MenuItem>
+              <MenuItem id="link" href={CODE_LINK}>
+                <Code size={14} />
+                Code
+              </MenuItem>
+            </MenuFlyoutBottom>
+          </RowFixed>
+        </MenuContainer>
       )}
     </StyledMenu>
   )
