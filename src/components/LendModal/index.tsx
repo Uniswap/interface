@@ -641,32 +641,34 @@ function LendModal({
                   </RateCalculation>
                 </RatePanel>
               </RateWrap>
-              <RateWrap>
-                <RateTitle>Borrow Limit</RateTitle>
-                <RatePanel>
-                  <AutoRow>
-                    <Text color={'#AAB8C1;'} lineHeight={'24px'}>
-                      {lendMarket === LendField.BORROW ? 'Borrow Balance' : 'Borrow Limit'}
-                    </Text>
-                  </AutoRow>
-                  <RateCalculation>
-                    $
-                    {lendMarket === LendField.BORROW
-                      ? formatData(borrowTotalBalance)?.toFixed(2)
-                      : formatData(limit).toFixed(2)}
-                  </RateCalculation>
-                </RatePanel>
-                <Break />
-                <RatePanel>
-                  <AutoRow>
-                    <Text color={'#AAB8C1;'} lineHeight={'24px'}>
-                      Borrow Limit Used
-                    </Text>
-                  </AutoRow>
-                  <RateCalculation>{usedLimit.toSignificant(4) ?? '0.00'}%</RateCalculation>
-                </RatePanel>
-                <MarketBar rate={Number(usedLimit.toSignificant(4))} />
-              </RateWrap>
+              {lendToken?.canBeCollateral && (
+                <RateWrap>
+                  <RateTitle>Borrow Limit</RateTitle>
+                  <RatePanel>
+                    <AutoRow>
+                      <Text color={'#AAB8C1;'} lineHeight={'24px'}>
+                        {lendMarket === LendField.BORROW ? 'Borrow Balance' : 'Borrow Limit'}
+                      </Text>
+                    </AutoRow>
+                    <RateCalculation>
+                      $
+                      {lendMarket === LendField.BORROW
+                        ? formatData(borrowTotalBalance)?.toFixed(2)
+                        : formatData(limit).toFixed(2)}
+                    </RateCalculation>
+                  </RatePanel>
+                  <Break />
+                  <RatePanel>
+                    <AutoRow>
+                      <Text color={'#AAB8C1;'} lineHeight={'24px'}>
+                        Borrow Limit Used
+                      </Text>
+                    </AutoRow>
+                    <RateCalculation>{usedLimit.toSignificant(4) ?? '0.00'}%</RateCalculation>
+                  </RatePanel>
+                  <MarketBar rate={Number(usedLimit.toSignificant(4))} />
+                </RateWrap>
+              )}
             </AutoColumn>
             <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>
               {tabItemActive === LendField.SUPPLY || tabItemActive === LendField.REPAY ? (
