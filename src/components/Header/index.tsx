@@ -295,7 +295,7 @@ function Header({ history }: { history: any }) {
           </StyledNavLink>
           <Link to="/" style={{ top: '7px',position: "relative", margin: "0px 12px" }}>
             Governance
-            <ComingSoonBadge>COMMING SOON</ComingSoonBadge>
+            <ComingSoonBadge>COMING SOON</ComingSoonBadge>
           </Link>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
