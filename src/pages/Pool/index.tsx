@@ -17,16 +17,17 @@ import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+import { CardSection } from '../../components/earn/styled'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
 `
 
-const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+const VoteCard = styled.div`
   overflow: hidden;
+  border: 1px solid ${({ theme }) => theme.text4};
+  border-radius: 8px;
 `
 
 const TitleRow = styled(RowBetween)`
@@ -63,8 +64,8 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.text4};
-  padding: 16px 12px;
-  border-radius: 12px;
+  border-radius: 16px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -116,25 +117,6 @@ export default function Pool() {
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
 
-        <VoteCard>
-          <CardBGImage />
-          <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={600}>Liquidity provider rewards</TYPE.white>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.white fontSize={14}>
-                  Liquidity providers earn a swap fee (0.15% by default) on all trades proportional to their share of the pool.<br/> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.<br/> The swap fee value is decided by DXdao and liquidty providers, it can be between 0% and 10% and it uses 0.15% as default value that is assigned when the pair is created.
-                </TYPE.white>
-              </RowBetween>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </VoteCard>
-
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
@@ -144,12 +126,14 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create">
-                  Create a pair
+                <ResponsiveButtonSecondary as={Link} padding="6px 10px" to="/create">
+                  <Text fontWeight={500} fontSize={12}>
+                    CREATE PAIR
+                  </Text>
                 </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
-                  <Text fontWeight={500} fontSize={16}>
-                    Add Liquidity
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 10px" to="/add/ETH">
+                  <Text fontWeight={500} fontSize={12}>
+                    ADD LIQUIDITY
                   </Text>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -176,12 +160,28 @@ export default function Pool() {
             ) : (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                No liquidity found.
+                No liquidity found
                 </TYPE.body>
               </EmptyProposals>
             )}
           </AutoColumn>
         </AutoColumn>
+        
+        <VoteCard style={{ marginTop: '1rem' }} >
+          <CardSection>
+            <AutoColumn gap="md">
+              <RowBetween>
+                <TYPE.main fontWeight={600}>Liquidity provider rewards</TYPE.main>
+              </RowBetween>
+              <RowBetween>
+                <TYPE.main fontSize={14}>
+                  Liquidity providers earn a swap fee (0.15% by default) on all trades proportional to their share of the pool.<br/> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.<br/> The swap fee value is decided by DXdao and liquidty providers, it can be between 0% and 10% and it uses 0.15% as default value that is assigned when the pair is created.
+                </TYPE.main>
+              </RowBetween>
+            </AutoColumn>
+          </CardSection>
+        </VoteCard>
+        
       </PageWrapper>
     </>
   )
