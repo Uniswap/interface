@@ -299,7 +299,7 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
-          setPendingText('Add ' + lendInputValue + ' ' + cToken.symbol)
+          setPendingText('Supply ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
             summary: pendingText
@@ -342,7 +342,7 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
-          setPendingText('Redeem ' + lendInputValue + ' ' + cToken.symbol)
+          setPendingText('Withdraw ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
             summary: pendingText
