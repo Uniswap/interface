@@ -1,4 +1,4 @@
-import { ChainId, Fraction, JSBI, Token } from '@uniswap/sdk'
+import { ChainId, JSBI, Token } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
@@ -135,41 +135,6 @@ export class CToken extends Token {
         )
       : JSBI.BigInt(0)
   }
-
-  public getSupplyBalance() {
-    return parseFloat(
-      this.exchangeRateMantissa && this.supplyBalance && this.decimals && this.underlyingPrice
-        ? new Fraction(
-            JSBI.multiply(
-              JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-              JSBI.BigInt(this.underlyingPrice ?? 0)
-            ),
-            JSBI.multiply(
-              JSBI.multiply(balanceFormat(this.decimals), EXCHANGE_RATE_MANTISSA),
-              underlyingPriceFormat(this.decimals)
-            )
-          ).toSignificant(18)
-        : JSBI.BigInt('0').toString()
-    )
-  }
-
-  public getBorrowBalance() {
-    return parseFloat(
-      this.borrowBalance && this.decimals && this.underlyingPrice
-        ? new Fraction(
-            JSBI.multiply(JSBI.BigInt(this.borrowBalance ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
-            JSBI.multiply(balanceFormat(this.decimals), underlyingPriceFormat(this.decimals))
-          ).toSignificant(18)
-        : JSBI.BigInt('0').toString()
-    )
-  }
-
-  // public getBorrowBalance(): JSBI {
-  //   return (
-  //     JSBI.multiply(JSBI.BigInt(this.borrowBalance ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
-  //     JSBI.multiply(balanceFormat(this.decimals), underlyingPriceFormat(this.decimals))
-  //   )
-  // }
 
   public getLiquidity(): JSBI {
     return JSBI.divide(JSBI.multiply(JSBI.BigInt(this.liquidity ?? 0), EXA_BASE), balanceFormat(this.decimals))

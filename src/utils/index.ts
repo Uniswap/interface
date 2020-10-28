@@ -211,17 +211,6 @@ export function getLimit(allMarketsAsset: CToken[]): JSBI {
   return totalLimit
 }
 
-// export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
-//   let sumUnderlyingAssets = 0
-//   for (let i = 0; i < allMarketsAsset.length; i++) {
-//     sumUnderlyingAssets += allMarketsAsset[i]
-//       ? allMarketsAsset[i].getSupplyBalance() * allMarketsAsset[i].getSupplyApy() -
-//         allMarketsAsset[i].getBorrowBalance() * allMarketsAsset[i].getBorrowApy()
-//       : 0
-//   }
-//   return sumUnderlyingAssets
-// }
-
 export function sumUnderlyingAssets(allMarketsAsset: CToken[]): JSBI {
   let sumUnderlyingAssets = ZERO
   for (let i = 0; i < allMarketsAsset.length; i++) {
@@ -252,7 +241,6 @@ export function getNetApy(allMarketsAsset: CToken[]): Fraction {
 
   const sumAssets = sumUnderlyingAssets(allMarketsAsset)
   const supplyTotalBalance = getSupplyTotalBalance(allMarketsAsset)
-  console.log(supplyTotalBalance.toString(), 'supplyTotalBalance')
 
   if (JSBI.greaterThan(sumAssets, ZERO)) {
     return new Fraction(sumAssets, supplyTotalBalance)
