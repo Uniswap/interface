@@ -4,7 +4,7 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
 import { LendField } from '../../state/lending/actions'
-import { balanceFormat, formatData, getBorrowTotalBalance } from '../../utils'
+import { formatData, getBorrowTotalBalance, showLiquidityValue } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
@@ -140,7 +140,7 @@ function BorrowMarkets({
       />
       {!!borrowedAsset.length && (
         <MarketsCard style={{ marginBottom: '1rem' }}>
-          <MarketsCardHeader>Borrow</MarketsCardHeader>
+          <MarketsCardHeader>Borrowing</MarketsCardHeader>
           <AssetWrap>
             <AssetWrapLabels>
               <AssetLabel textAlign={'left'}>Asset</AssetLabel>
@@ -159,9 +159,11 @@ function BorrowMarkets({
                     }}
                   >
                     <AssetLogo>
-                      {item.logo1
-                        ? <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
-                        : <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />}
+                      {item.logo1 ? (
+                        <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
+                      ) : (
+                        <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
+                      )}
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
@@ -205,9 +207,11 @@ function BorrowMarkets({
                       }}
                     >
                       <AssetLogo>
-                        {item.logo1
-                          ? <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
-                          : <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />}
+                        {item.logo1 ? (
+                          <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
+                        ) : (
+                          <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
+                        )}
                         {item?.symbol}
                       </AssetLogo>
                       <ItemWrap>
@@ -217,20 +221,7 @@ function BorrowMarkets({
                         {borrowAssetCurrencyAmount?.[index]?.toSignificant(4)}
                         {' ' + item?.symbol}
                       </ItemWrap>
-                      <ItemWrap>
-                        {JSBI.greaterThan(
-                          item?.getLiquidity(),
-                          JSBI.multiply(JSBI.BigInt('1000'), balanceFormat(item?.decimals))
-                        )
-                          ? '> 1000'
-                          : JSBI.lessThan(
-                              item?.getLiquidity(),
-                              JSBI.multiply(JSBI.BigInt('1'), balanceFormat(item?.decimals))
-                            )
-                          ? '< 1'
-                          : new TokenAmount(item, item?.getLiquidity()).toSignificant()}
-                        K
-                      </ItemWrap>
+                      <ItemWrap>${showLiquidityValue(item?.getLiquidityValue())}</ItemWrap>
                     </AssetItem>
                   </ItemPannel>
                 ))

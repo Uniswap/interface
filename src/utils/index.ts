@@ -130,16 +130,28 @@ export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currenc
 export const ETH_MANTISSA = 1e18
 export const BLOCKS_PER_DAY = 4 * 60 * 24
 export const DAYS_PER_YEAR = 365
-
 export const ONE = JSBI.BigInt(1)
 export const ONE_HUNDRED = JSBI.BigInt(100)
+export const ONE_THOUSAND = JSBI.BigInt(1000)
+export const ONE_MILLION = JSBI.BigInt(1000000)
+export const ONE_BILLION = JSBI.BigInt(1000000000)
+export const ONE_TRILLION = JSBI.BigInt(1000000000000)
 
 export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+export const THOUSAND_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(21))
+export const MILLION_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(24))
+export const BILLION_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(27))
+export const TRILLION_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(30))
+
 export const LIMIT_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(36))
 export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
-// export const FACTOR_MANTISSA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
+export const UNDERLYING_ASSETS_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
+export const ONE_THOUSAND_LIQUIDITY = JSBI.multiply(ONE_THOUSAND, EXA_BASE)
+export const ONE_MILLION_LIQUIDITY = JSBI.multiply(ONE_MILLION, EXA_BASE)
+export const ONE_BILLION_LIQUIDITY = JSBI.multiply(ONE_BILLION, EXA_BASE)
+export const ONE_TRILLION_LIQUIDITY = JSBI.multiply(ONE_TRILLION, EXA_BASE)
 
 export function balanceFormat(digits: number): JSBI {
   return JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(digits))
@@ -250,4 +262,20 @@ export function transferCurrencyAmount(token: CurrencyAmount | undefined): JSBI 
     return result
   }
   return JSBI.BigInt('0')
+}
+
+export function showLiquidityValue(val: JSBI): string {
+  if (JSBI.lessThan(val, ONE_THOUSAND_LIQUIDITY)) {
+    return new Fraction(val, EXA_BASE).toFixed(2)
+  } else if (JSBI.greaterThanOrEqual(val, ONE_THOUSAND_LIQUIDITY) && JSBI.lessThanOrEqual(val, ONE_MILLION_LIQUIDITY)) {
+    return new Fraction(val, THOUSAND_BASE).toFixed(2) + 'K'
+  } else if (JSBI.greaterThan(val, ONE_MILLION_LIQUIDITY) && JSBI.lessThanOrEqual(val, ONE_BILLION_LIQUIDITY)) {
+    return new Fraction(val, MILLION_BASE).toFixed(2) + 'M'
+  } else if (JSBI.greaterThan(val, ONE_BILLION_LIQUIDITY) && JSBI.lessThanOrEqual(val, ONE_TRILLION_LIQUIDITY)) {
+    return new Fraction(val, BILLION_BASE).toFixed(2) + 'B'
+  } else if (JSBI.greaterThan(val, ONE_TRILLION_LIQUIDITY)) {
+    return ' > 1T'
+  } else {
+    return '0'
+  }
 }

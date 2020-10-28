@@ -157,12 +157,20 @@ export class CToken extends Token {
   // }
 
   public getLiquidity(): JSBI {
-    return this.liquidity && this.decimals && this.underlyingPrice
-      ? JSBI.divide(
-          JSBI.multiply(JSBI.BigInt(this.liquidity), JSBI.BigInt(this.underlyingPrice)),
-          JSBI.multiply(underlyingPriceFormat(this.decimals), JSBI.BigInt('1000'))
+    return JSBI.divide(JSBI.multiply(JSBI.BigInt(this.liquidity ?? 0), EXA_BASE), balanceFormat(this.decimals))
+  }
+
+  public getLiquidityValue(): JSBI {
+    return JSBI.divide(
+      JSBI.multiply(
+        this.getLiquidity(),
+        JSBI.divide(
+          JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), EXA_BASE),
+          underlyingPriceFormat(this.decimals)
         )
-      : JSBI.BigInt(0)
+      ),
+      EXA_BASE
+    )
   }
 
   public getUnderlyingPrice(): JSBI {
@@ -302,7 +310,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
           marketsValue[0],
           marketsValue[1],
           cTokenList[i][7],
-          cTokenList[i][8],
+          cTokenList[i][8]
         )
       ]
     })
