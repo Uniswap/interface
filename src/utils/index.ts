@@ -130,7 +130,9 @@ export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currenc
 export const ETH_MANTISSA = 1e18
 export const BLOCKS_PER_DAY = 4 * 60 * 24
 export const DAYS_PER_YEAR = 365
+const ZERO = JSBI.BigInt(0)
 export const ONE = JSBI.BigInt(1)
+const ZERO_FRACTION = new Fraction(ZERO, ONE)
 export const ONE_HUNDRED = JSBI.BigInt(100)
 export const ONE_THOUSAND = JSBI.BigInt(1000)
 export const ONE_MILLION = JSBI.BigInt(1000000)
@@ -209,48 +211,55 @@ export function getLimit(allMarketsAsset: CToken[]): JSBI {
   return totalLimit
 }
 
-export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
-  let sumUnderlyingAssets = 0
+// export function sumUnderlyingAssets(allMarketsAsset: CToken[]) {
+//   let sumUnderlyingAssets = 0
+//   for (let i = 0; i < allMarketsAsset.length; i++) {
+//     sumUnderlyingAssets += allMarketsAsset[i]
+//       ? allMarketsAsset[i].getSupplyBalance() * allMarketsAsset[i].getSupplyApy() -
+//         allMarketsAsset[i].getBorrowBalance() * allMarketsAsset[i].getBorrowApy()
+//       : 0
+//   }
+//   return sumUnderlyingAssets
+// }
+
+export function sumUnderlyingAssets(allMarketsAsset: CToken[]): JSBI {
+  let sumUnderlyingAssets = ZERO
   for (let i = 0; i < allMarketsAsset.length; i++) {
-    sumUnderlyingAssets += allMarketsAsset[i]
-      ? allMarketsAsset[i].getSupplyBalance() * allMarketsAsset[i].getSupplyApy() -
-        allMarketsAsset[i].getBorrowBalance() * allMarketsAsset[i].getBorrowApy()
-      : 0
+    const supplyAssets: JSBI = JSBI.multiply(
+      getSupplyTotalBalance([allMarketsAsset[i]]),
+      allMarketsAsset[i].getSupplyApyJSBI()
+    )
+    const borrowAssets: JSBI = JSBI.multiply(
+      getBorrowTotalBalance([allMarketsAsset[i]]),
+      allMarketsAsset[i].getBorrowApyJSBI()
+    )
+
+    sumUnderlyingAssets = JSBI.add(sumUnderlyingAssets, JSBI.subtract(supplyAssets, borrowAssets))
   }
-  return sumUnderlyingAssets
+  return JSBI.divide(sumUnderlyingAssets, UNDERLYING_ASSETS_BASE)
 }
 
 export function formatData(val: JSBI): Fraction {
   return new Fraction(val, EXA_BASE)
 }
 
-export function getNetApy(allMarketsAsset: CToken[]) {
-  let allBorrowUnderlyingAssets = 0
+export function getNetApy(allMarketsAsset: CToken[]): Fraction {
+  let allBorrowUnderlyingAssets = ZERO
+
   for (let i = 0; i < allMarketsAsset.length; i++) {
-    allBorrowUnderlyingAssets += parseFloat(
-      allMarketsAsset[i]?.borrowBalance && allMarketsAsset[i]?.decimals && allMarketsAsset[i]?.underlyingPrice
-        ? new Fraction(
-            JSBI.multiply(
-              JSBI.BigInt(allMarketsAsset[i].borrowBalance ?? 0),
-              JSBI.BigInt(allMarketsAsset[i]?.underlyingPrice ?? 0)
-            ),
-            JSBI.multiply(
-              balanceFormat(allMarketsAsset[i]?.decimals),
-              underlyingPriceFormat(allMarketsAsset[i]?.decimals)
-            )
-          ).toSignificant(18)
-        : JSBI.BigInt('0').toString()
-    )
+    allBorrowUnderlyingAssets = JSBI.add(allBorrowUnderlyingAssets, getBorrowTotalBalance([allMarketsAsset[i]]))
   }
 
   const sumAssets = sumUnderlyingAssets(allMarketsAsset)
   const supplyTotalBalance = getSupplyTotalBalance(allMarketsAsset)
-  if (sumAssets && sumAssets > 0 && supplyTotalBalance) {
-    return sumAssets / parseFloat(formatData(supplyTotalBalance).toSignificant(6))
-  } else if (allBorrowUnderlyingAssets && sumAssets && sumAssets < 0) {
-    return sumAssets / allBorrowUnderlyingAssets
+  console.log(supplyTotalBalance.toString(), 'supplyTotalBalance')
+
+  if (JSBI.greaterThan(sumAssets, ZERO)) {
+    return new Fraction(sumAssets, supplyTotalBalance)
+  } else if (JSBI.lessThan(sumAssets, ZERO)) {
+    return new Fraction(sumAssets, allBorrowUnderlyingAssets)
   } else {
-    return 0
+    return ZERO_FRACTION
   }
 }
 

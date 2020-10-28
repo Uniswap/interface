@@ -82,7 +82,7 @@ function Summary({
   borrowTotalBalance: JSBI
   limit: JSBI
   usedLimit: Fraction
-  netApy: number
+  netApy: Fraction
 }) {
   // const { t } = useTranslation()
   // limit ? ((borrowTotalBalance / limit) * 100).toFixed(2)
@@ -100,7 +100,7 @@ function Summary({
           <SummaryTitle>Net APY</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            {netApy?.toFixed(2)}%
+            {netApy.toFixed(2)}%
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>

@@ -28,6 +28,7 @@ export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.Bi
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const ZERO_POINT_EIGHT = JSBI.multiply(EIGHT, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(17)))
+export const EXA_NUMBER = Math.pow(10, 18)
 
 export class CToken extends Token {
   public readonly cAddress: string
@@ -108,8 +109,22 @@ export class CToken extends Token {
     return (Math.pow(((this.supplyRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) * 100
   }
 
+  public getSupplyApyJSBI(): JSBI {
+    return JSBI.BigInt(
+      (Math.pow(((this.supplyRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) *
+        EXA_NUMBER
+    )
+  }
+
   public getBorrowApy(): number {
     return (Math.pow(((this.borrowRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) * 100
+  }
+
+  public getBorrowApyJSBI(): JSBI {
+    return JSBI.BigInt(
+      (Math.pow(((this.borrowRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) *
+        EXA_NUMBER
+    )
   }
 
   public getSupplyBalanceAmount() {
