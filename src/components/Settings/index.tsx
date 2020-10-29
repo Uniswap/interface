@@ -84,7 +84,7 @@ const StyledMenu = styled.div`
 `
 
 const MenuContainer = styled.span`
-  min-width: 20.125rem;
+  min-width: 18.125rem;
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -92,7 +92,11 @@ const MenuContainer = styled.span`
   right: 0rem;
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -34.5rem;
+    position: fixed;
+    width: 100%;
+    padding-left: 25%;
+    padding-right: 25%;
+    align-items: center;
   `};
 `
 
@@ -123,6 +127,16 @@ const MenuFlyoutBottom = styled(MenuFlyout)`
    flex-direction: row;
    justify-content: center;
    padding: 0.5rem;
+   
+   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+     min-width: 0;
+     right: -46px;
+   `};
+
+   ${({ theme }) => theme.mediaWidth.upToMedium`
+     min-width: 0;
+     top: -22rem;
+   `};
 `
 
 const Break = styled.div`
