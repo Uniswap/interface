@@ -48,6 +48,7 @@ export interface Colors {
   // new UI refactor colors, taken from ZeroHeight
   mainPurple: Color,
   purpleBase: Color,
+  purpleOverlay: Color,
   purple2: Color,
   purple3: Color,
   purple4: Color,

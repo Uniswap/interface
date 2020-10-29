@@ -88,6 +88,7 @@ export function colors(darkMode: boolean): Colors {
     // new UI refactor colors
     mainPurple: '#2E17F2',
     purpleBase: '#101016',
+    purpleOverlay: '#111018',
     purple2: '#C0BAF6',
     purple3: '#8780BF',
     purple4: '#685EC6',
