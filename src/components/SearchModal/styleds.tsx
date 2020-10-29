@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { Flex } from 'rebass'
+import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
 export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -47,17 +48,15 @@ export const TokenPickerItem = styled(Flex)`
 export const SearchInput = styled.input`
   position: relative;
   display: flex;
-  padding: 16px 12px;
+  padding: 0px 8px;
   align-items: center;
   width: 100%;
   height: 44px;
   white-space: nowrap;
-  border: 1px solid transparent;
+  background: ${({ theme }) => transparentize(0.75, theme.purpleBase)};
+  border: 8px solid transparent;
   border-radius: 8px;
-  background: linear-gradient(to right, ${({ theme }) => theme.purpleBase}, ${({ theme }) => theme.purpleBase}),
-    linear-gradient(180deg, rgba(41, 38, 67, 0) 0%, rgba(41, 38, 67, 0.65) 100%);
-  background-clip: padding-box, border-box;
-  background-origin: padding-box, border-box;
+  border-image: url(${border8pxRadius}) 8;
   outline: none;
   color: ${({ theme }) => theme.white};
   -webkit-appearance: none;
