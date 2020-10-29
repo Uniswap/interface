@@ -4,7 +4,7 @@ import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { AutoRow, RowBetween } from '../Row'
-import { AlertTriangle, X } from 'react-feather'
+import { AlertTriangle, ArrowRight, X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
@@ -20,7 +20,9 @@ import {
   EXA_BASE,
   getCERC20Contract,
   getCEtherContract,
-  withLimit
+  withLimit,
+  transferCurrencyAmount,
+  LIMIT_BASE
 } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -133,6 +135,8 @@ const RatePanel = styled.div`
 `
 
 const RateCalculation = styled.div`
+  display: flex;
+  align-items: center;
   font-weight: 500;
   color: #141e27;
 `
@@ -194,6 +198,57 @@ function LendModal({
   const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
 
   const walletBalanceAmount = useAllCTokenBalances([lendToken])
+
+  const changedBorrowLimit = useMemo(() => {
+    if (lendToken && lendInputValue) {
+      const price = lendToken.getUnderlyingPrice()
+      const parseInputAmount = transferCurrencyAmount(inputAmount)
+      let borrowLimit = JSBI.divide(JSBI.multiply(price, parseInputAmount), EXA_BASE)
+      let changedBorrowLimit
+      if (lendMarket === LendField.SUPPLY) {
+        borrowLimit = JSBI.divide(
+          JSBI.multiply(JSBI.multiply(price, parseInputAmount), lendToken.getCollateralFactorMantissa()),
+          LIMIT_BASE
+        )
+        if (tabItemActive === LendField.SUPPLY) {
+          changedBorrowLimit = JSBI.add(limit, borrowLimit)
+        } else {
+          changedBorrowLimit = JSBI.subtract(limit, borrowLimit)
+        }
+      } else {
+        if (tabItemActive === LendField.BORROW) {
+          changedBorrowLimit = JSBI.add(borrowTotalBalance, borrowLimit)
+        } else {
+          changedBorrowLimit = JSBI.subtract(borrowTotalBalance, borrowLimit)
+        }
+      }
+      return formatData(changedBorrowLimit)
+    }
+    return ZERO_FRACTION
+  }, [lendToken, lendInputValue, inputAmount, lendMarket, tabItemActive, limit, borrowTotalBalance])
+
+  const changedBorrowLimitUsed = useMemo(() => {
+    if (lendToken && lendInputValue) {
+      let changedBorrowLimitUsed
+      const fraOne = new Fraction(EXA_BASE, ONE)
+      if (lendMarket === LendField.SUPPLY) {
+        changedBorrowLimitUsed = fraOne
+          .divide(changedBorrowLimit.multiply(JSBI.divide(LIMIT_BASE, borrowTotalBalance)))
+          .multiply('100')
+      } else {
+        changedBorrowLimitUsed = changedBorrowLimit
+          .multiply(EXA_BASE)
+          .divide(limit)
+          .multiply('100')
+      }
+      return changedBorrowLimitUsed.greaterThan('100')
+        ? new Fraction('100', '1')
+        : changedBorrowLimitUsed.lessThan('0')
+        ? ZERO_FRACTION
+        : changedBorrowLimitUsed
+    }
+    return ZERO_FRACTION
+  }, [borrowTotalBalance, changedBorrowLimit, lendInputValue, lendMarket, lendToken, limit])
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
@@ -693,28 +748,48 @@ function LendModal({
                 <RateWrap>
                   <RateTitle>Borrow Limit</RateTitle>
                   <RatePanel>
-                    <AutoRow>
-                      <Text color={'#AAB8C1;'} lineHeight={'24px'}>
-                        {lendMarket === LendField.BORROW ? 'Borrow Balance' : 'Borrow Limit'}
-                      </Text>
-                    </AutoRow>
+                    <Text color={'#AAB8C1'} lineHeight={'24px'}>
+                      {lendMarket === LendField.BORROW ? 'Borrow Balance' : 'Borrow Limit'}
+                    </Text>
                     <RateCalculation>
-                      $
-                      {lendMarket === LendField.BORROW
-                        ? formatData(borrowTotalBalance)?.toFixed(2)
-                        : formatData(limit).toFixed(2)}
+                      <Text>
+                        $
+                        {lendMarket === LendField.BORROW
+                          ? formatData(borrowTotalBalance)?.toFixed(2)
+                          : formatData(limit).toFixed(2)}
+                      </Text>
+                      {lendInputValue && (
+                        <>
+                          <ArrowRight color={'#ff007a'} size={16} />
+                          <Text>${changedBorrowLimit.toFixed(2)}</Text>
+                        </>
+                      )}
                     </RateCalculation>
                   </RatePanel>
                   <Break />
                   <RatePanel>
                     <AutoRow>
-                      <Text color={'#AAB8C1;'} lineHeight={'24px'}>
+                      <Text color={'#AAB8C1'} lineHeight={'24px'}>
                         Borrow Limit Used
                       </Text>
                     </AutoRow>
-                    <RateCalculation>{usedLimit.toSignificant(4) ?? '0.00'}%</RateCalculation>
+                    <RateCalculation>
+                      <Text>{usedLimit.toSignificant(4) ?? '0.00'}%</Text>
+                      {lendInputValue && (
+                        <>
+                          <ArrowRight color={'#ff007a'} size={16} />
+                          <Text>{changedBorrowLimitUsed.toFixed(2)}%</Text>
+                        </>
+                      )}
+                    </RateCalculation>
                   </RatePanel>
-                  <MarketBar rate={Number(usedLimit.toSignificant(4))} />
+                  <MarketBar
+                    rate={
+                      lendInputValue && changedBorrowLimitUsed
+                        ? Number(changedBorrowLimitUsed.toFixed(2))
+                        : Number(usedLimit.toSignificant(4))
+                    }
+                  />
                 </RateWrap>
               )}
             </AutoColumn>
