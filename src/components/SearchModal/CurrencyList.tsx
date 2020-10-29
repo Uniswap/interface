@@ -1,20 +1,19 @@
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'dxswap-sdk'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
-import Column from '../Column'
-import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
 import { useTokenList } from '../../state/lists/hooks'
+import Badge from '../Badge'
+import { TokenPickerItem } from './styleds'
+import { Plus, X } from 'react-feather'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -56,51 +55,48 @@ function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   return (
-    <MenuItem
+    <TokenPickerItem
       style={style}
       className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
       selected={otherSelected}
+      alignItems="center"
+      px="20px"
     >
-      <CurrencyLogo currency={currency} size={'24px'} />
-      <Column>
+      <Box mr="8px">
+        <CurrencyLogo currency={currency} size={'20px'} />
+      </Box>
+      <Box>
         <Text title={currency.name} fontWeight={500}>
           {currency.symbol}
         </Text>
-        <FadedSpan>
-          {!isOnSelectedList && customAdded ? (
-            <TYPE.main fontWeight={500}>
-              Added by user
-              <LinkStyledButton
-                onClick={event => {
-                  event.stopPropagation()
-                  if (chainId && currency instanceof Token) removeToken(chainId, currency.address)
-                }}
-              >
-                (Remove)
-              </LinkStyledButton>
-            </TYPE.main>
-          ) : null}
-          {!isOnSelectedList && !customAdded ? (
-            <TYPE.main fontWeight={500}>
-              Found by address
-              <LinkStyledButton
-                onClick={event => {
-                  event.stopPropagation()
-                  if (currency instanceof Token) addToken(currency)
-                }}
-              >
-                (Add)
-              </LinkStyledButton>
-            </TYPE.main>
-          ) : null}
-        </FadedSpan>
-      </Column>
-      <RowFixed style={{ justifySelf: 'flex-end' }}>
+      </Box>
+      <Flex flex="1" px="20px">
+        {!isOnSelectedList && (
+          <Box>
+            <Badge
+              label={customAdded ? 'Added by user' : 'Found by address'}
+              icon={customAdded ? X : Plus}
+              onIconClick={event => {
+                event.stopPropagation()
+                if (!chainId || !(currency instanceof Token)) {
+                  return
+                }
+                if (customAdded) {
+                  removeToken(chainId, currency.address)
+                } else {
+                  addToken(currency)
+                }
+              }}
+            />
+          </Box>
+        )}
+      </Flex>
+      <Box style={{ justifySelf: 'flex-end' }}>
         {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
-      </RowFixed>
-    </MenuItem>
+      </Box>
+    </TokenPickerItem>
   )
 }
 

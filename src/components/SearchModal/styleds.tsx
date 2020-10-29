@@ -1,6 +1,9 @@
+import { transparentize } from 'polished'
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
+import { RowBetween } from '../Row'
+import { Flex } from 'rebass'
+import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
 export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -10,11 +13,6 @@ export const ModalInfo = styled.div`
   justify-content: center;
   flex: 1;
   user-select: none;
-`
-
-export const FadedSpan = styled(RowFixed)`
-  color: ${({ theme }) => theme.primary1};
-  font-size: 14px;
 `
 
 export const PaddedColumn = styled(AutoColumn)`
@@ -27,7 +25,18 @@ export const MenuItem = styled(RowBetween)`
   height: 56px;
   display: grid;
   grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
-  grid-gap: 16px;
+  grid-gap: 8px;
+  cursor: ${({ disabled }) => !disabled && 'pointer'};
+  pointer-events: ${({ disabled }) => disabled && 'none'};
+  :hover {
+    background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+  }
+  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
+`
+
+export const TokenPickerItem = styled(Flex)`
+  padding: 20px 0;
+  height: 56px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
@@ -39,34 +48,29 @@ export const MenuItem = styled(RowBetween)`
 export const SearchInput = styled.input`
   position: relative;
   display: flex;
-  padding: 16px;
+  padding: 0px 8px;
   align-items: center;
   width: 100%;
+  height: 44px;
   white-space: nowrap;
-  background: none;
-  border: none;
+  background: ${({ theme }) => transparentize(0.75, theme.purpleBase)};
+  border: 8px solid transparent;
+  border-radius: 8px;
+  border-image: url(${border8pxRadius}) 8;
   outline: none;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.text1};
-  border-style: solid;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  color: ${({ theme }) => theme.white};
   -webkit-appearance: none;
 
-  font-size: 18px;
+  font-size: 16px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.text3};
-  }
-  transition: border 100ms;
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-    outline: none;
+    color: ${({ theme }) => theme.purple5};
   }
 `
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => transparentize(0.5, theme.purple5)};
 `
 
 export const SeparatorDark = styled.div`

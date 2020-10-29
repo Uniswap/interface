@@ -1,21 +1,10 @@
 import React from 'react'
-import { Text } from 'rebass'
-import styled from 'styled-components'
-import { RowFixed } from '../Row'
+import styled from 'styled-components';
+import { TYPE } from '../../theme'
 
-export const FilterWrapper = styled(RowFixed)`
-  padding: 8px;
-  background-color: ${({ theme }) => theme.bg2};
-  color: ${({ theme }) => theme.text1};
-  border-radius: 8px;
-  user-select: none;
-  & > * {
-    user-select: none;
-  }
-  :hover {
-    cursor: pointer;
-  }
-`
+const StyledPurple3Text = styled(TYPE.purple3)`
+  cursor: pointer;
+`;
 
 export default function SortButton({
   toggleSortOrder,
@@ -25,10 +14,8 @@ export default function SortButton({
   ascending: boolean
 }) {
   return (
-    <FilterWrapper onClick={toggleSortOrder}>
-      <Text fontSize={14} fontWeight={500}>
-        {ascending ? '↑' : '↓'}
-      </Text>
-    </FilterWrapper>
+    <StyledPurple3Text fontSize={14} fontWeight={500} onClick={toggleSortOrder}>
+      {ascending ? '↑' : '↓'}
+    </StyledPurple3Text>
   )
 }

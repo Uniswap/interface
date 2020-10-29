@@ -35,7 +35,10 @@ export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColo
   }
 `
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
+export const CloseIcon = styled(X) <{ onClick: () => void }>`
+  color: ${({ theme }) => theme.purple3};
+  width: 16px;
+  height: 16px;
   cursor: pointer;
 `
 
