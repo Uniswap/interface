@@ -13,7 +13,6 @@ import { useETHBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
-import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
@@ -31,7 +30,6 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -94,7 +92,8 @@ const TitleText = styled(Row)<{ isDark: boolean }>`
   `};
   a {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 18px !important;
+    padding: 1rem 0 1rem 0;
     color: ${({ theme, isDark }) => (isDark ? theme.white : theme.primaryText1)};
   }
 `
@@ -105,7 +104,7 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
   `};
   a {
     font-weight: 600;
-    font-size: 18px;
+    font-size: 16px;
     color: ${({ theme, isDark }) => (isDark ? theme.white : theme.primaryText1)};
   }
 `
@@ -114,8 +113,23 @@ const HeaderLinks = styled(Row)`
   justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 0 1rem 1rem;
-    justify-content: flex-end;
-`};
+    justify-content: flex-start;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    padding: 1rem 0 1rem 0;
+  `};
+`
+// TODO: Convert this badge to a component
+const ComingSoonBadge = styled.div`
+  self-align: center;
+  font-size: 9px;
+  text-align:center;
+  background-color: ${({ theme }) => (theme.bg4)};
+  border-radius: 3px;
+  
+  width: fit-content;
+  margin: auto;
+  padding: 2px 5px;
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -136,16 +150,10 @@ const AccountElement = styled.div<{ active: boolean }>`
   } */
 `
 
-const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-
 const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     margin: 0;
     margin-right: 0.5rem;
     width: initial;
@@ -153,9 +161,6 @@ const NetworkCard = styled(YellowCard)`
     text-overflow: ellipsis;
     flex-shrink: 1;
   `};
-`
-
-const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
@@ -170,16 +175,25 @@ const Title = styled.a`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    margin-right: 0px;
+  `};
   :hover {
     cursor: pointer;
   }
 `
 
-const UniIcon = styled.div`
+const DXswapIcon = styled.div`
   img {
-    height: 30px;
-    margin-right: 5px;
+    height: 36px;
+    margin-right: 10px;
+    margin-left: 5px;
   }
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    img {
+      margin-right: 5px;
+    }
+  `};
 `
 
 const activeClassName = 'ACTIVE'
@@ -211,6 +225,16 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
+const StyledNavLinkWithBadge = styled.a`
+  top: 7px;
+  position: relative;
+  margin: 0px 12px;
+  cursor:default;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName
 })<{ isActive?: boolean }>`
@@ -234,9 +258,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      display: none;
-`}
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -257,12 +278,12 @@ function Header({ history }: { history: any }) {
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
         <Title href=".">
-          <UniIcon>
+          <DXswapIcon>
             <img src={isDark ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
+          </DXswapIcon>
           <TitleText isDark={isDark}>
             <Link id="link" to="/">
-              DXswap
+              <span style={{ fontWeight: 900 }}>DX</span>swap
             </Link>
           </TitleText>
         </Title>
@@ -281,6 +302,10 @@ function Header({ history }: { history: any }) {
           >
             {t('pool')}
           </StyledNavLink>
+          <StyledNavLinkWithBadge href="/#">
+            Governance
+            <ComingSoonBadge>COMING SOON</ComingSoonBadge>
+          </StyledNavLinkWithBadge>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
@@ -288,23 +313,20 @@ function Header({ history }: { history: any }) {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
-          </HideSmall>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+              <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                 {userEthBalance?.toSignificant(4)} ETH
-              </BalanceText>
+              </Text>
             ) : null}
             <Web3Status />
           </AccountElement>
         </HeaderElement>
         <HeaderElementWrap>
           <Settings />
-          <Menu />
         </HeaderElementWrap>
       </HeaderControls>
     </HeaderFrame>
