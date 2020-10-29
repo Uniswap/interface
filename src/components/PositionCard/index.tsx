@@ -1,5 +1,4 @@
 import { JSBI, Pair, Percent } from 'dxswap-sdk'
-import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -12,12 +11,8 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { calculateProtocolFee } from '../../utils/prices'
-import { ButtonPrimary, ButtonEmpty } from '../Button'
-import { transparentize } from 'polished'
+import { ButtonEmpty, ButtonSecondary } from '../Button'
 import { CardNoise } from '../earn/styled'
-
-import { useColor } from '../../hooks/useColor'
 
 import Card, { GreyCard, LightCard } from '../Card'
 import { AutoColumn } from '../Column'
@@ -32,14 +27,11 @@ export const FixedHeightRow = styled(RowBetween)`
 
 export const HoverCard = styled(Card)`
   border: 1px solid transparent;
-  :hover {
-    border: 1px solid ${({ theme }) => darken(0.06, theme.bg2)};
-  }
 `
-const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
+const StyledPositionCard = styled(LightCard)`
   border: none;
-  background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.bg3} 100%) `};
+  color: white;
+  background: ${({ theme }) => theme.primary1};
   position: relative;
   overflow: hidden;
 `
@@ -176,10 +168,6 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
 
   const pairSwapFee = new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000))
 
-  const { protocolFee: pairProtocolFee } = calculateProtocolFee(
-    pair
-  )
-
   const [token0Deposited, token1Deposited] =
     !!pair &&
     !!totalPoolTokens &&
@@ -192,10 +180,8 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(pair?.token0)
-
   return (
-    <StyledPositionCard border={border} bgColor={backgroundColor}>
+    <StyledPositionCard border={border}>
       <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
@@ -212,6 +198,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               borderRadius="12px"
               width="fit-content"
               onClick={() => setShowMore(!showMore)}
+              style={{ color: 'white' }}
             >
               {showMore ? (
                 <>
@@ -221,7 +208,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 </>
               ) : (
                 <>
-                  Manage
+                  Expand
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                 </>
               )}
@@ -291,34 +278,28 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 {pairSwapFee ? pairSwapFee.toSignificant(3) + '%' : '-'}
               </Text>
             </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
-                Pool Protocol Fee:
-              </Text>
-              <Text fontSize={16} fontWeight={500}>
-                {pairProtocolFee ? pairProtocolFee.toSignificant(3) + '%' : '-'}
-              </Text>
-            </FixedHeightRow>
 
             <RowBetween marginTop="10px">
-              <ButtonPrimary
+              <ButtonSecondary
                 padding="8px"
                 borderRadius="8px"
                 as={Link}
                 to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
+                style={{ color: 'white', fontSize: '12px', fontWeight: 'bold' }}
                 width="48%"
               >
-                Add
-              </ButtonPrimary>
-              <ButtonPrimary
+                ADD
+              </ButtonSecondary>
+              <ButtonSecondary
                 padding="8px"
                 borderRadius="8px"
                 as={Link}
                 width="48%"
                 to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+                style={{ color: 'white', fontSize: '12px', fontWeight: 'bold' }}
               >
-                Remove
-              </ButtonPrimary>
+                REMOVE
+              </ButtonSecondary>
             </RowBetween>
           </AutoColumn>
         )}
