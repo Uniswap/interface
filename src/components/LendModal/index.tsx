@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { AutoRow, RowBetween } from '../Row'
-import { X } from 'react-feather'
+import { AlertTriangle, X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
@@ -135,6 +135,13 @@ const RatePanel = styled.div`
 const RateCalculation = styled.div`
   font-weight: 500;
   color: #141e27;
+`
+
+const Wrapper = styled.div`
+  width: 100%;
+`
+const Section = styled(AutoColumn)`
+  padding: 24px;
 `
 
 export interface LendModalProps {
@@ -287,6 +294,7 @@ function LendModal({
       value = null
     }
 
+    setPendingText('Supply ' + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -295,10 +303,9 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
-          setPendingText('Supply ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
-            summary: pendingText
+            summary: 'Supply ' + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -330,6 +337,7 @@ function LendModal({
     const args: Array<string | string[] | number> = [amount]
     const value: BigNumber | null = null
 
+    setPendingText('Withdraw ' + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -338,10 +346,9 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
-          setPendingText('Withdraw ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
-            summary: pendingText
+            summary: 'Withdraw ' + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -373,6 +380,7 @@ function LendModal({
     const args: Array<string | string[] | number> = [amount]
     const value: BigNumber | null = null
 
+    setPendingText('Borrow ' + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -381,10 +389,9 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
-          setPendingText('Borrow ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
-            summary: pendingText
+            summary: 'Borrow ' + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -428,6 +435,7 @@ function LendModal({
       value = null
     }
 
+    setPendingText('Repay ' + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -436,10 +444,9 @@ function LendModal({
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
-          setPendingText('Repay ' + lendInputValue + ' ' + cToken.symbol)
 
           addTransaction(response, {
-            summary: pendingText
+            summary: 'Repay ' + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -460,6 +467,26 @@ function LendModal({
       })
   }
 
+  const ConfirmModalTop = () => {
+    const theme = useContext(ThemeContext)
+    return (
+      <Wrapper>
+        <Section>
+          <AutoColumn gap="12px" justify={'center'}>
+            <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
+            <Text fontWeight={500} fontSize={16} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
+              Transaction rejected.
+            </Text>
+          </AutoColumn>
+        </Section>
+      </Wrapper>
+    )
+  }
+
+  const ConfirmModalBottom = () => {
+    return <ButtonLight onClick={handleDismissConfirmation}>Dismiss</ButtonLight>
+  }
+
   function setShowDecimails(ctoken: CToken): number {
     return ctoken.decimals > 8 ? 8 : ctoken.decimals
   }
@@ -473,10 +500,10 @@ function LendModal({
         hash={txHash}
         content={() => (
           <ConfirmationModalContent
-            title={'Confirm Transaction'}
+            title={'Error'}
             onDismiss={handleDismissConfirmation}
-            topContent={() => <div>top content</div>}
-            bottomContent={() => <div>bottom content</div>}
+            topContent={ConfirmModalTop}
+            bottomContent={ConfirmModalBottom}
           />
         )}
         pendingText={pendingText}
