@@ -2,7 +2,6 @@ import { transparentize } from 'polished'
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import border8pxRadius from '../../assets/svg/border-8px-radius.svg'
 import { Flex } from 'rebass'
 
 export const ModalInfo = styled.div`
@@ -53,10 +52,12 @@ export const SearchInput = styled.input`
   width: 100%;
   height: 44px;
   white-space: nowrap;
-  background: ${({ theme }) => transparentize(0.75, theme.purpleBase)};
-  border: 5px solid transparent;
-  border-image: url(${border8pxRadius}) 8 stretch;
+  border: 1px solid transparent;
   border-radius: 8px;
+  background: linear-gradient(to right, ${({ theme }) => theme.purpleBase}, ${({ theme }) => theme.purpleBase}),
+    linear-gradient(180deg, rgba(41, 38, 67, 0) 0%, rgba(41, 38, 67, 0.65) 100%);
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
   outline: none;
   color: ${({ theme }) => theme.white};
   -webkit-appearance: none;
