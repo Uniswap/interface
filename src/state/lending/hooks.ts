@@ -40,8 +40,8 @@ export function useLendingInfo(
   const protocolBorrowBalance = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
   const protocolSuppleyBalance = new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount())
   if (lendMarket === LendField.SUPPLY && !inputError) {
-    if (walletBalance && parseInputValue) {
-      if (JSBI.equal(parseInputValue.raw, ZERO) || !parseInputValue) {
+    if (walletBalance) {
+      if (!lendInputValue || !parseInputValue) {
         inputError = true
         inputText = lendMarket
       } else if (JSBI.equal(walletBalance.raw, ZERO) || JSBI.greaterThan(parseInputValue.raw, walletBalance.raw)) {

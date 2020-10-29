@@ -460,6 +460,10 @@ function LendModal({
       })
   }
 
+  function setShowDecemails(ctoken: CToken): number {
+    return ctoken.decimals > 8 ? 8 : ctoken.decimals
+  }
+
   return (
     <div>
       <TransactionConfirmationModal
@@ -509,20 +513,39 @@ function LendModal({
                       if (lendToken && walletBalanceAmount[0]) {
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
-                            setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '')
+                            setLendInputValue(
+                              maxSupplyAmount?.toFixed(setShowDecemails(lendToken), undefined, Rounding.ROUND_DOWN) ??
+                                ''
+                            )
                             break
                           case LendField.WITHDRAW:
-                            setLendInputValue(onWithdrawMax(lendToken).toFixed(6, undefined, Rounding.ROUND_DOWN))
+                            setLendInputValue(
+                              onWithdrawMax(lendToken).toFixed(
+                                setShowDecemails(lendToken),
+                                undefined,
+                                Rounding.ROUND_DOWN
+                              )
+                            )
                             break
                           case LendField.BORROW:
-                            setLendInputValue(onBorrowMax(lendToken).toFixed(6))
+                            setLendInputValue(
+                              onBorrowMax(lendToken).toFixed(
+                                setShowDecemails(lendToken),
+                                undefined,
+                                Rounding.ROUND_DOWN
+                              )
+                            )
                             break
                           case LendField.REPAY:
                             const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
                             setLendInputValue(
                               JSBI.greaterThan(walletBalanceAmount[0].raw, borrowAmount.raw)
-                                ? borrowAmount.toSignificant()
-                                : walletBalanceAmount[0].toSignificant()
+                                ? borrowAmount.toFixed(setShowDecemails(lendToken), undefined, Rounding.ROUND_DOWN)
+                                : walletBalanceAmount[0].toFixed(
+                                    setShowDecemails(lendToken),
+                                    undefined,
+                                    Rounding.ROUND_DOWN
+                                  )
                             )
                             break
                           default:
