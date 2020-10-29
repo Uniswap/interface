@@ -94,6 +94,8 @@ const MenuContainer = styled.span`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
     width: 100%;
+    height: 100%;
+    padding-top: 50px;
     padding-left: 25%;
     padding-right: 25%;
     align-items: center;
