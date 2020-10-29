@@ -168,6 +168,12 @@ export default function Pool() {
           </AutoColumn>
         </AutoColumn>
         
+        <ButtonSecondary id="join-pool-button" as={Link} style={{ marginTop: '1rem', padding: "10px 0px", borderRadius: "8px" }} to="/pool">
+          <Text fontWeight={'bold'} fontSize={12}>
+            ACCOUNT ANALYTICS AND ACCRUED FEES <span style={{ fontSize: '11px' }}>↗</span>
+          </Text>
+        </ButtonSecondary>
+        
         <VoteCard style={{ marginTop: '1rem' }} >
           <CardSection>
             <AutoColumn gap="md">
