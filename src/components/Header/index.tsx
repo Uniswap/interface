@@ -225,6 +225,16 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
+const StyledNavLinkWithBadge = styled.a`
+  top: 7px;
+  position: relative;
+  margin: 0px 12px;
+  cursor:default;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName
 })<{ isActive?: boolean }>`
@@ -248,9 +258,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      display: none;
-`}
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -295,10 +302,10 @@ function Header({ history }: { history: any }) {
           >
             {t('pool')}
           </StyledNavLink>
-          <a href="/#" style={{ top: '7px',position: "relative", margin: "0px 12px", cursor:"default" }}>
+          <StyledNavLinkWithBadge href="/#">
             Governance
             <ComingSoonBadge>COMING SOON</ComingSoonBadge>
-          </a>
+          </StyledNavLinkWithBadge>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
