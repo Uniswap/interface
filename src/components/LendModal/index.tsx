@@ -460,7 +460,7 @@ function LendModal({
       })
   }
 
-  function setShowDecemails(ctoken: CToken): number {
+  function setShowDecimails(ctoken: CToken): number {
     return ctoken.decimals > 8 ? 8 : ctoken.decimals
   }
 
@@ -514,14 +514,14 @@ function LendModal({
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
                             setLendInputValue(
-                              maxSupplyAmount?.toFixed(setShowDecemails(lendToken), undefined, Rounding.ROUND_DOWN) ??
+                              maxSupplyAmount?.toFixed(setShowDecimails(lendToken), undefined, Rounding.ROUND_DOWN) ??
                                 ''
                             )
                             break
                           case LendField.WITHDRAW:
                             setLendInputValue(
                               onWithdrawMax(lendToken).toFixed(
-                                setShowDecemails(lendToken),
+                                setShowDecimails(lendToken),
                                 undefined,
                                 Rounding.ROUND_DOWN
                               )
@@ -530,7 +530,7 @@ function LendModal({
                           case LendField.BORROW:
                             setLendInputValue(
                               onBorrowMax(lendToken).toFixed(
-                                setShowDecemails(lendToken),
+                                setShowDecimails(lendToken),
                                 undefined,
                                 Rounding.ROUND_DOWN
                               )
@@ -540,9 +540,9 @@ function LendModal({
                             const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
                             setLendInputValue(
                               JSBI.greaterThan(walletBalanceAmount[0].raw, borrowAmount.raw)
-                                ? borrowAmount.toFixed(setShowDecemails(lendToken), undefined, Rounding.ROUND_DOWN)
+                                ? borrowAmount.toFixed(setShowDecimails(lendToken), undefined, Rounding.ROUND_DOWN)
                                 : walletBalanceAmount[0].toFixed(
-                                    setShowDecemails(lendToken),
+                                    setShowDecimails(lendToken),
                                     undefined,
                                     Rounding.ROUND_DOWN
                                   )
