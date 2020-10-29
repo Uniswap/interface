@@ -119,7 +119,7 @@ const HeaderLinks = styled(Row)`
     padding: 1rem 0 1rem 0;
   `};
 `
-
+// TODO: Convert this badge to a component
 const ComingSoonBadge = styled.div`
   self-align: center;
   font-size: 9px;
