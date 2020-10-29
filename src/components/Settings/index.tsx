@@ -91,6 +91,9 @@ const MenuContainer = styled.span`
   top: 4rem;
   right: 0rem;
   z-index: 100;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    top: -34.5rem;
+  `};
 `
 
 const MenuFlyout = styled.span`

@@ -113,8 +113,11 @@ const HeaderLinks = styled(Row)`
   justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 0 1rem 1rem;
-    justify-content: flex-end;
-`};
+    justify-content: flex-start;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    padding: 1rem 0 1rem 0;
+  `};
 `
 
 const ComingSoonBadge = styled.div`
@@ -147,16 +150,10 @@ const AccountElement = styled.div<{ active: boolean }>`
   } */
 `
 
-const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;
-  `};
-`
-
 const NetworkCard = styled(YellowCard)`
   border-radius: 12px;
   padding: 8px 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     margin: 0;
     margin-right: 0.5rem;
     width: initial;
@@ -164,9 +161,6 @@ const NetworkCard = styled(YellowCard)`
     text-overflow: ellipsis;
     flex-shrink: 1;
   `};
-`
-
-const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
@@ -181,6 +175,9 @@ const Title = styled.a`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    margin-right: 0px;
+  `};
   :hover {
     cursor: pointer;
   }
@@ -189,9 +186,14 @@ const Title = styled.a`
 const DXswapIcon = styled.div`
   img {
     height: 36px;
-    margin-right: 5px;
+    margin-right: 10px;
     margin-left: 5px;
   }
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    img {
+      margin-right: 5px;
+    }
+  `};
 `
 
 const activeClassName = 'ACTIVE'
@@ -304,16 +306,14 @@ function Header({ history }: { history: any }) {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
-          </HideSmall>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+              <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
                 {userEthBalance?.toSignificant(4)} ETH
-              </BalanceText>
+              </Text>
             ) : null}
             <Web3Status />
           </AccountElement>
