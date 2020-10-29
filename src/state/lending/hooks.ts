@@ -33,19 +33,18 @@ export function useLendingInfo(
     inputText = inputText ?? 'Data Error'
     return { inputError, inputText }
   }
+
+  const ZERO = JSBI.BigInt(0)
   // Protocol Balance
   const parseInputValue: CurrencyAmount | undefined = tryParseAmount(lendInputValue, lendToken)
   const protocolBorrowBalance = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
   const protocolSuppleyBalance = new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount())
   if (lendMarket === LendField.SUPPLY && !inputError) {
-    if (walletBalance) {
-      if (Number(lendInputValue) === 0 || !parseInputValue) {
+    if (walletBalance && parseInputValue) {
+      if (JSBI.equal(parseInputValue.raw, ZERO) || !parseInputValue) {
         inputError = true
         inputText = lendMarket
-      } else if (
-        JSBI.equal(walletBalance?.raw ?? JSBI.BigInt(0), JSBI.BigInt(0)) ||
-        JSBI.greaterThan(parseInputValue.raw, walletBalance.raw)
-      ) {
+      } else if (JSBI.equal(walletBalance.raw, ZERO) || JSBI.greaterThan(parseInputValue.raw, walletBalance.raw)) {
         inputError = true
         inputText = 'No funds available'
       } else {
@@ -59,7 +58,7 @@ export function useLendingInfo(
 
   if (lendMarket === LendField.WITHDRAW && !inputError) {
     if (protocolSuppleyBalance) {
-      if (JSBI.equal(protocolSuppleyBalance.raw, JSBI.BigInt(0))) {
+      if (JSBI.equal(protocolSuppleyBalance.raw, ZERO)) {
         inputError = true
         inputText = 'No Balance to Withdraw'
       } else if (!parseInputValue) {
@@ -84,7 +83,7 @@ export function useLendingInfo(
     if (!protocolBorrowBalance) {
       inputError = true
       inputText = 'No Balance to Repay'
-    } else if (JSBI.equal(protocolBorrowBalance.raw, JSBI.BigInt(0))) {
+    } else if (JSBI.equal(protocolBorrowBalance.raw, ZERO)) {
       inputError = true
       inputText = 'No Balance to Repay'
     } else if (parseInputValue && JSBI.greaterThan(parseInputValue?.raw, protocolBorrowBalance.raw)) {
@@ -92,7 +91,7 @@ export function useLendingInfo(
     } else if (Number(lendInputValue) === 0 || !parseInputValue) {
       inputError = true
       inputText = lendMarket
-    } else if (JSBI.greaterThan(parseInputValue.raw, walletBalance?.raw ?? JSBI.BigInt(0))) {
+    } else if (JSBI.greaterThan(parseInputValue.raw, walletBalance?.raw ?? ZERO)) {
       inputError = true
       inputText = 'No funds available'
     } else {

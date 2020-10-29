@@ -20,8 +20,7 @@ import {
   EXA_BASE,
   getCERC20Contract,
   getCEtherContract,
-  withLimit,
-  transferCurrencyAmount
+  withLimit
 } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -33,7 +32,7 @@ import MarketBar from '../MarketBar'
 import { useAllCTokenBalances, useCTokenBalance } from '../../state/wallet/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
-import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
+import { Fraction, JSBI, Rounding, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
 import DoubleAssetLogo from '../DoubleAssetLogo'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../TransactionConfirmationModal'
@@ -214,10 +213,7 @@ function LendModal({
       } else {
         const supplyBalance = lendToken.getSupplyBalanceJSBI()
         if (!lendToken.canBeCollateral) {
-          return new Fraction(
-            transferCurrencyAmount(new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount())),
-            EXA_BASE
-          )
+          return new Fraction(lendToken.getSupplyBalanceAmount(), EXA_BASE)
         } else {
           const price = lendToken.getUnderlyingPrice()
           const suppliedValue = withLimit(lendToken, lendToken.getSupplyBalanceJSBI())
@@ -516,7 +512,7 @@ function LendModal({
                             setLendInputValue(maxSupplyAmount?.toSignificant(6) ?? '')
                             break
                           case LendField.WITHDRAW:
-                            setLendInputValue(onWithdrawMax(lendToken).toFixed(6))
+                            setLendInputValue(onWithdrawMax(lendToken).toFixed(6, undefined, Rounding.ROUND_DOWN))
                             break
                           case LendField.BORROW:
                             setLendInputValue(onBorrowMax(lendToken).toFixed(6))
