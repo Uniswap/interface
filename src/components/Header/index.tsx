@@ -295,10 +295,10 @@ function Header({ history }: { history: any }) {
           >
             {t('pool')}
           </StyledNavLink>
-          <Link to="/" style={{ top: '7px',position: "relative", margin: "0px 12px" }}>
+          <a href="/#" style={{ top: '7px',position: "relative", margin: "0px 12px", cursor:"default" }}>
             Governance
             <ComingSoonBadge>COMING SOON</ComingSoonBadge>
-          </Link>
+          </a>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
