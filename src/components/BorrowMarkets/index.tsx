@@ -4,7 +4,7 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
 import { LendField } from '../../state/lending/actions'
-import { formatData, getBorrowTotalBalance, showLiquidityValue } from '../../utils'
+import { formatData, getBorrowTotalBalance, showLiquidityValue, UNDERLYING_ASSETS_BASE } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
@@ -127,6 +127,10 @@ function BorrowMarkets({
 
   const borrowAssetCurrencyAmount = useAllCTokenBalances(borrowAsset)
 
+  function getBorrowApy(ctoken: CToken): Fraction {
+    return new Fraction(ctoken.getBorrowApy(), UNDERLYING_ASSETS_BASE)
+  }
+
   return (
     <div>
       <LendModal
@@ -167,7 +171,7 @@ function BorrowMarkets({
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
-                      <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
+                      <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
                       <div>${formatData(getBorrowTotalBalance([item])).toFixed(2) ?? ''}</div>
@@ -215,7 +219,7 @@ function BorrowMarkets({
                         {item?.symbol}
                       </AssetLogo>
                       <ItemWrap>
-                        <div>{item.getBorrowApy().toFixed(2) ?? 0}%</div>
+                        <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
                       </ItemWrap>
                       <ItemWrap>
                         {borrowAssetCurrencyAmount?.[index]?.toSignificant(4)}

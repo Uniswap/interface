@@ -10,7 +10,13 @@ import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import LendModal from '../LendModal'
-import { calculateGasMargin, formatData, getComptrollerContract, getSupplyTotalBalance } from '../../utils'
+import {
+  calculateGasMargin,
+  formatData,
+  getComptrollerContract,
+  getSupplyTotalBalance,
+  UNDERLYING_ASSETS_BASE
+} from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -288,6 +294,10 @@ function SupplyMarkets({
     }
   }
 
+  function getSupplyApy(ctoken: CToken): Fraction {
+    return new Fraction(ctoken.getSupplyApy(), UNDERLYING_ASSETS_BASE)
+  }
+
   return (
     <div>
       <LendModal
@@ -382,13 +392,15 @@ function SupplyMarkets({
                     }}
                   >
                     <AssetLogo>
-                      {item.logo1
-                        ? <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
-                        : <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />}
+                      {item.logo1 ? (
+                        <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
+                      ) : (
+                        <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
+                      )}
                       {item?.symbol}
                     </AssetLogo>
                     <ItemWrap>
-                      <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
+                      <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
                       <div>${formatData(getSupplyTotalBalance([item])).toFixed(2) ?? ''}</div>
@@ -432,13 +444,15 @@ function SupplyMarkets({
                       }}
                     >
                       <AssetLogo>
-                        {item.logo1
-                          ? <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
-                          : <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />}
+                        {item.logo1 ? (
+                          <DoubleAssetLogo logo0={item.logo0} logo1={item.logo1} size={24} />
+                        ) : (
+                          <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
+                        )}
                         {item?.symbol}
                       </AssetLogo>
                       <ItemWrap>
-                        <div>{item.getSupplyApy().toFixed(2) ?? 0}%</div>
+                        <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
                       </ItemWrap>
                       <ItemWrap>
                         {supplyAssetCurrencyAmount?.[index]?.toSignificant(4)}

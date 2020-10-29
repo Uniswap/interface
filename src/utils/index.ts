@@ -149,7 +149,7 @@ export const LIMIT_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(36))
 export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
-export const UNDERLYING_ASSETS_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
+export const UNDERLYING_ASSETS_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(36))
 export const ONE_THOUSAND_LIQUIDITY = JSBI.multiply(ONE_THOUSAND, EXA_BASE)
 export const ONE_MILLION_LIQUIDITY = JSBI.multiply(ONE_MILLION, EXA_BASE)
 export const ONE_BILLION_LIQUIDITY = JSBI.multiply(ONE_BILLION, EXA_BASE)
@@ -216,11 +216,11 @@ export function sumUnderlyingAssets(allMarketsAsset: CToken[]): JSBI {
   for (let i = 0; i < allMarketsAsset.length; i++) {
     const supplyAssets: JSBI = JSBI.multiply(
       getSupplyTotalBalance([allMarketsAsset[i]]),
-      allMarketsAsset[i].getSupplyApyJSBI()
+      allMarketsAsset[i].getSupplyApy()
     )
     const borrowAssets: JSBI = JSBI.multiply(
       getBorrowTotalBalance([allMarketsAsset[i]]),
-      allMarketsAsset[i].getBorrowApyJSBI()
+      allMarketsAsset[i].getBorrowApy()
     )
 
     sumUnderlyingAssets = JSBI.add(sumUnderlyingAssets, JSBI.subtract(supplyAssets, borrowAssets))
