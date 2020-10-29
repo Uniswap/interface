@@ -622,7 +622,7 @@ function LendModal({
             </AutoColumn>
             <AutoColumn gap={'0'}>
               <RateWrap>
-                <RateTitle>Supply Rates</RateTitle>
+                <RateTitle>{lendMarket === LendField.BORROW ? 'Borrow Rates' : 'Supply Rates'}</RateTitle>
                 <RatePanel>
                   <AutoRow>
                     {lendToken?.logo1 ? (
@@ -660,7 +660,9 @@ function LendModal({
                   </RateCalculation>
                 </RatePanel>
               </RateWrap>
-              {lendToken?.canBeCollateral && (
+              {(lendToken?.canBeCollateral ||
+                tabItemActive === LendField.WITHDRAW ||
+                tabItemActive === LendField.BORROW) && (
                 <RateWrap>
                   <RateTitle>Borrow Limit</RateTitle>
                   <RatePanel>
