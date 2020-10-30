@@ -38,13 +38,19 @@ const AssetWrapLabels = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   align-items: center;
   grid-template-columns: 4fr 3fr 3fr 2fr;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: 4fr 4fr 3fr;
+  `};
 `
 
-const AssetLabel = styled.div<{ textAlign?: string }>`
+const AssetLabel = styled.div<{ textAlign?: string; mobileHide?: boolean }>`
   font-size: 12px;
   font-weight: 500;
   color: #aab8c1;
   text-align: ${({ textAlign }) => (textAlign ? textAlign : 'center')};
+  ${({ theme, mobileHide }) => theme.mediaWidth.upToMedium`
+    display: ${mobileHide ? 'none' : 'block'};
+  `};
 `
 
 const AssetItemWrap = styled.div`
@@ -54,7 +60,6 @@ const AssetItemWrap = styled.div`
 const AssetItem = styled.div<{ justifyItems?: string }>`
   display: grid;
   justify-items: ${({ justifyItems }) => (justifyItems ? justifyItems : 'end')};
-  grid-template-columns: 4fr 3fr 3fr 2fr;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding: 1.25rem 1.75rem;
   border-left: 2px solid transparent;
@@ -65,6 +70,10 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   font-weight: 500;
   letter-spacing: 0;
   transition: none;
+  grid-template-columns: 4fr 3fr 3fr 2fr;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: 4fr 4fr 3fr;
+  `};
   :hover {
     border-left: 2px solid #1de9b6;
     background: rgba(4, 169, 245, 0.05);
@@ -77,17 +86,29 @@ const AssetLogo = styled.div`
   justify-self: start;
 `
 
-const ItemWrap = styled.div`
+const ItemWrap = styled.div<{ mobileHide?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: right;
   align-self: center;
   text-align: right;
+  ${({ theme, mobileHide }) => theme.mediaWidth.upToMedium`
+    display: ${mobileHide ? 'none' : 'flex'};
+  `};
 `
 
 const ItemBottomWrap = styled.div`
   color: #aab8c1;
   font-size: 0.9em;
+`
+
+const MobileWrap = styled.div`
+  display: none;
+  color: #aab8c1;
+  font-size: 0.9em;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: block;
+  `};
 `
 
 function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children: React.ReactNode }) {
@@ -148,7 +169,9 @@ function BorrowMarkets({
           <AssetWrap>
             <AssetWrapLabels>
               <AssetLabel textAlign={'left'}>Asset</AssetLabel>
-              <AssetLabel textAlign={'right'}>APY</AssetLabel>
+              <AssetLabel textAlign={'right'} mobileHide={true}>
+                APY
+              </AssetLabel>
               <AssetLabel textAlign={'right'}>Balance</AssetLabel>
               <AssetLabel textAlign={'right'}>% Of Limit</AssetLabel>
             </AssetWrapLabels>
@@ -168,9 +191,12 @@ function BorrowMarkets({
                       ) : (
                         <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                       )}
-                      {item?.symbol}
+                      <ItemWrap>
+                        <div>{item?.symbol}</div>
+                        <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
+                      </ItemWrap>
                     </AssetLogo>
-                    <ItemWrap>
+                    <ItemWrap mobileHide={true}>
                       <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
                     </ItemWrap>
                     <ItemWrap>
@@ -195,7 +221,9 @@ function BorrowMarkets({
           <MarketsCardHeader>Borrow Markets</MarketsCardHeader>
           <AssetWrapLabels>
             <AssetLabel textAlign={'left'}>Asset</AssetLabel>
-            <AssetLabel textAlign={'right'}>APY</AssetLabel>
+            <AssetLabel textAlign={'right'} mobileHide={true}>
+              APY
+            </AssetLabel>
             <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
             <AssetLabel textAlign={'right'}>Liquidity</AssetLabel>
           </AssetWrapLabels>
@@ -216,9 +244,12 @@ function BorrowMarkets({
                         ) : (
                           <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                         )}
-                        {item?.symbol}
+                        <ItemWrap>
+                          <div>{item?.symbol}</div>
+                          <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
+                        </ItemWrap>
                       </AssetLogo>
-                      <ItemWrap>
+                      <ItemWrap mobileHide={true}>
                         <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
                       </ItemWrap>
                       <ItemWrap>
