@@ -14,74 +14,71 @@ import SwapRoute from './SwapRoute'
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  padding: 6px 6px;
+  border: 1px solid ${({ theme }) => theme.purple3};
+  padding: 8px;
   border-radius: 8px;
   text-align: center;
-  font-size: 14px;
-  color: ${({ theme }) => theme.text1};
+  font-size: 12px;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.purple3};
 `
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
-  const theme = useContext(ThemeContext)
   const { priceImpactWithoutFee, realizedLPFee, realizedLPFeeAmount } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
   return (
     <>
-      <AutoColumn style={{ padding: '0 20px' }}>
+      <AutoColumn style={{ padding: '0 20px' }} gap="4px">
         <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+          <RowFixed align="center">
+            <TYPE.purple3 fontSize={12} fontWeight={400}>
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
-            </TYPE.black>
+            </TYPE.purple3>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
           <RowFixed>
-            <TYPE.black color={theme.text1} fontSize={14}>
+            <TYPE.purple3 fontSize={12}>
               {isExactIn
                 ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
                   '-'
                 : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.currency.symbol}` ??
                   '-'}
-            </TYPE.black>
+            </TYPE.purple3>
           </RowFixed>
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.purple3 fontSize={12} fontWeight={400}>
               Price Impact
-            </TYPE.black>
+            </TYPE.purple3>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>
-        
+
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.purple3 fontSize={12} fontWeight={400}>
               Swap Fee %
-            </TYPE.black>
+            </TYPE.purple3>
             <QuestionHelper text="A portion of each trade (between 0% - 0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
-          <TYPE.black fontSize={14} color={theme.text1}>
-            {realizedLPFee ? `${realizedLPFee.toSignificant(2)} %` : '-'}
-          </TYPE.black>
+          <TYPE.purple3 fontSize={12}>{realizedLPFee ? `${realizedLPFee.toSignificant(2)} %` : '-'}</TYPE.purple3>
         </RowBetween>
-        
+
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.purple3 fontSize={12} fontWeight={400}>
               Swap Fee Amount
-            </TYPE.black>
+            </TYPE.purple3>
             <QuestionHelper text="The token amount of the swap fee." />
           </RowFixed>
-          <TYPE.black fontSize={14} color={theme.text1}>
+          <TYPE.purple3 fontSize={12}>
             {realizedLPFeeAmount ? `${realizedLPFeeAmount.toSignificant(2)} ${trade.inputAmount.currency.symbol}` : '-'}
-          </TYPE.black>
+          </TYPE.purple3>
         </RowBetween>
-        
       </AutoColumn>
     </>
   )

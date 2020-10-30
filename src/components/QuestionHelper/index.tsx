@@ -7,14 +7,9 @@ const QuestionWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.2rem;
-  border: none;
   background: none;
-  outline: none;
-  cursor: default;
-  border-radius: 36px;
-  background-color: ${({ theme }) => theme.bg2};
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.purple3};
+  transition: opacity 0.3s ease;
 
   :hover,
   :focus {
@@ -23,19 +18,9 @@ const QuestionWrapper = styled.div`
 `
 
 const LightQuestionWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.2rem;
-  border: none;
-  background: none;
-  outline: none;
-  cursor: default;
-  border-radius: 36px;
-  width: 24px;
-  height: 24px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: ${({ theme }) => theme.white};
+  background-color: none;
+  color: ${({ theme }) => theme.purple3};
+  transition: opacity 0.3s ease;
 
   :hover,
   :focus {

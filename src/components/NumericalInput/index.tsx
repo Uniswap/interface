@@ -10,8 +10,8 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   outline: none;
   border: none;
   flex: 1 1 auto;
-  background-color: ${({ theme }) => theme.bg1};
-  font-size: ${({ fontSize }) => fontSize ?? '24px'};
+  background-color: transparent;
+  font-size: ${({ fontSize }) => fontSize ?? '22px'};
   text-align: ${({ align }) => align && align};
   white-space: nowrap;
   overflow: hidden;

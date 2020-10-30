@@ -5,8 +5,8 @@ import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
-import Card, { GreyCard } from '../../components/Card'
+import { ButtonError, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
+import Card from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -273,7 +273,7 @@ export default function Swap() {
               id="swap-currency-input"
             />
             <AutoColumn justify="space-between">
-              <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
+              <AutoRow justify="center" style={{ padding: '0 1rem' }}>
                 <ArrowWrapper clickable>
                   <ArrowDown
                     size="16"
@@ -281,14 +281,9 @@ export default function Swap() {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
                       onSwitchTokens()
                     }}
-                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.purple3 : theme.text2}
                   />
                 </ArrowWrapper>
-                {recipient === null && !showWrap && isExpertMode ? (
-                  <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                    + Add a send (optional)
-                  </LinkStyledButton>
-                ) : null}
               </AutoRow>
             </AutoColumn>
             <CurrencyInputPanel
@@ -318,12 +313,10 @@ export default function Swap() {
 
             {showWrap ? null : (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-                <AutoColumn gap="4px">
+                <AutoColumn gap="8px">
                   {Boolean(trade) && (
                     <RowBetween align="center">
-                      <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                        Price
-                      </Text>
+                      <TYPE.purple3 fontSize={12}>Price</TYPE.purple3>
                       <TradePrice
                         price={trade?.executionPrice}
                         showInverted={showInverted}
@@ -333,10 +326,10 @@ export default function Swap() {
                   )}
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                     <RowBetween align="center">
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                      <ClickableText fontSize={12} onClick={toggleSettings}>
                         Slippage Tolerance
                       </ClickableText>
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                      <ClickableText fontSize={12} onClick={toggleSettings}>
                         {allowedSlippage / 100}%
                       </ClickableText>
                     </RowBetween>
@@ -347,16 +340,16 @@ export default function Swap() {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              <ButtonPrimary onClick={toggleWalletModal}>Connect Wallet</ButtonPrimary>
             ) : showWrap ? (
               <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
                   (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
               </ButtonPrimary>
             ) : noRoute && userHasSpecifiedInputOutput ? (
-              <GreyCard style={{ textAlign: 'center' }}>
-                <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-              </GreyCard>
+              <ButtonPrimary style={{ textAlign: 'center' }} disabled>
+                Insufficient liquidity
+              </ButtonPrimary>
             ) : showApproveFlow ? (
               <RowBetween>
                 <ButtonConfirmed
@@ -397,15 +390,13 @@ export default function Swap() {
                   }
                   error={isValid && priceImpactSeverity > 2}
                 >
-                  <Text fontSize={16} fontWeight={500}>
-                    {priceImpactSeverity > 3 && !isExpertMode
-                      ? `Price Impact High`
-                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                  </Text>
+                  {priceImpactSeverity > 3 && !isExpertMode
+                    ? `Price Impact High`
+                    : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                 </ButtonError>
               </RowBetween>
             ) : (
-              <ButtonError
+              <ButtonPrimary
                 onClick={() => {
                   if (isExpertMode) {
                     handleSwap()
@@ -421,16 +412,15 @@ export default function Swap() {
                 }}
                 id="swap-button"
                 disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
               >
-                <Text fontSize={20} fontWeight={500}>
+                <Text>
                   {swapInputError
                     ? swapInputError
                     : priceImpactSeverity > 3 && !isExpertMode
                     ? `Price Impact Too High`
                     : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                 </Text>
-              </ButtonError>
+              </ButtonPrimary>
             )}
             {showApproveFlow && (
               <Column style={{ marginTop: '1rem' }}>
