@@ -1,10 +1,10 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { AutoRow, RowBetween } from '../Row'
-import { AlertTriangle, ArrowRight, X } from 'react-feather'
+import { ArrowRight, X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
@@ -34,7 +34,7 @@ import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
 import { Fraction, JSBI, Rounding, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
 import DoubleAssetLogo from '../DoubleAssetLogo'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../TransactionConfirmationModal'
+import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 import { getSupplyApy } from '../SupplyMarkets'
 import { getBorrowApy } from '../BorrowMarkets'
 
@@ -138,13 +138,6 @@ const RateCalculation = styled.div`
   align-items: center;
   font-weight: 500;
   color: #141e27;
-`
-
-const Wrapper = styled.div`
-  width: 100%;
-`
-const Section = styled(AutoColumn)`
-  padding: 24px;
 `
 
 export interface LendModalProps {
@@ -263,12 +256,7 @@ function LendModal({
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
-    // if there was a tx hash, we want to clear the input
-    if (txHash) {
-      setLendInputValue('')
-    }
-    setTxHash('')
-  }, [setLendInputValue, txHash])
+  }, [])
 
   useEffect(() => {
     if (showLendConfirmation) {
@@ -533,29 +521,19 @@ function LendModal({
       })
   }
 
-  const ConfirmModalTop = () => {
-    const theme = useContext(ThemeContext)
-    return (
-      <Wrapper>
-        <Section>
-          <AutoColumn gap="12px" justify={'center'}>
-            <AlertTriangle color={theme.red1} style={{ strokeWidth: 1.5 }} size={64} />
-            <Text fontWeight={500} fontSize={16} color={theme.red1} style={{ textAlign: 'center', width: '85%' }}>
-              Transaction rejected.
-            </Text>
-          </AutoColumn>
-        </Section>
-      </Wrapper>
-    )
-  }
-
-  const ConfirmModalBottom = () => {
-    return <ButtonLight onClick={handleDismissConfirmation}>Dismiss</ButtonLight>
-  }
-
   function setShowDecimails(ctoken: CToken): number {
     return ctoken.decimals > 8 ? 8 : ctoken.decimals
   }
+
+  const confirmationContent = useCallback(
+    () =>
+      txHash ? (
+        <></>
+      ) : (
+        <TransactionErrorContent onDismiss={handleDismissConfirmation} message={'Transaction rejected.'} />
+      ),
+    [handleDismissConfirmation, txHash]
+  )
 
   return (
     <div>
@@ -564,14 +542,7 @@ function LendModal({
         onDismiss={handleDismissConfirmation}
         attemptingTxn={attemptingTxn}
         hash={txHash}
-        content={() => (
-          <ConfirmationModalContent
-            title={'Error'}
-            onDismiss={handleDismissConfirmation}
-            topContent={ConfirmModalTop}
-            bottomContent={ConfirmModalBottom}
-          />
-        )}
+        content={confirmationContent}
         pendingText={pendingText}
       />
       <Modal isOpen={showLendConfirmation} onDismiss={() => setShowLendConfirmation(false)}>
@@ -793,6 +764,7 @@ function LendModal({
                     <ButtonLight
                       disabled={inputError}
                       onClick={() => {
+                        setTxHash('')
                         setShowConfirm(true)
                         if (lendToken && inputAmount && onMint && tabItemActive === LendField.SUPPLY) {
                           onMint(lendToken, lendInputValue, lendToken.isETH())
@@ -812,7 +784,6 @@ function LendModal({
                       onClick={() => {
                         setPendingText('')
                         approveCallback()
-                        setShowConfirm(true)
                         setShowLendConfirmation(false)
                       }}
                     >
@@ -824,6 +795,7 @@ function LendModal({
                 <ButtonLight
                   disabled={inputError}
                   onClick={() => {
+                    setTxHash('')
                     setShowConfirm(true)
                     if (lendToken && inputAmount && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
                       onRedeemUnderlying(lendToken, lendInputValue)
