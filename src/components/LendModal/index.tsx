@@ -231,14 +231,26 @@ function LendModal({
       let changedBorrowLimitUsed
       const fraOne = new Fraction(EXA_BASE, ONE)
       if (lendMarket === LendField.SUPPLY) {
-        changedBorrowLimitUsed = fraOne
-          .divide(changedBorrowLimit.multiply(JSBI.divide(LIMIT_BASE, borrowTotalBalance)))
-          .multiply('100')
+        if (JSBI.equal(borrowTotalBalance, ZERO)) {
+          if (tabItemActive === LendField.WITHDRAW) {
+            changedBorrowLimitUsed = new Fraction(ZERO, ONE)
+          } else {
+            changedBorrowLimitUsed = new Fraction('100', ONE)
+          }
+        } else {
+          changedBorrowLimitUsed = fraOne
+            .divide(changedBorrowLimit.multiply(JSBI.divide(LIMIT_BASE, borrowTotalBalance)))
+            .multiply('100')
+        }
       } else {
-        changedBorrowLimitUsed = changedBorrowLimit
-          .multiply(EXA_BASE)
-          .divide(limit)
-          .multiply('100')
+        if (JSBI.equal(limit, ZERO)) {
+          changedBorrowLimitUsed = new Fraction(ZERO, ONE)
+        } else {
+          changedBorrowLimitUsed = changedBorrowLimit
+            .multiply(EXA_BASE)
+            .divide(limit)
+            .multiply('100')
+        }
       }
       return changedBorrowLimitUsed.greaterThan('100')
         ? new Fraction('100', '1')
@@ -247,7 +259,7 @@ function LendModal({
         : changedBorrowLimitUsed
     }
     return ZERO_FRACTION
-  }, [borrowTotalBalance, changedBorrowLimit, lendInputValue, lendMarket, lendToken, limit])
+  }, [borrowTotalBalance, changedBorrowLimit, lendInputValue, lendMarket, lendToken, limit, tabItemActive])
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
