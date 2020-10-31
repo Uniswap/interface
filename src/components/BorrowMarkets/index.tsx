@@ -116,6 +116,12 @@ function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children
   return <>{children}</>
 }
 
+const ZERO = JSBI.BigInt(0)
+
+export function getBorrowApy(ctoken: CToken | undefined): Fraction {
+  return new Fraction(ctoken?.getBorrowApy() ?? ZERO, APY_BASE)
+}
+
 function BorrowMarkets({
   allMarketCTokens = [],
   borrowTotalBalance,
@@ -147,10 +153,6 @@ function BorrowMarkets({
   })
 
   const borrowAssetCurrencyAmount = useAllCTokenBalances(borrowAsset)
-
-  function getBorrowApy(ctoken: CToken): Fraction {
-    return new Fraction(ctoken.getBorrowApy(), APY_BASE)
-  }
 
   return (
     <div>

@@ -12,10 +12,7 @@ import LendInputPanel from '../LendInputPanel'
 
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import {
-  BLOCKS_PER_DAY,
   calculateGasMargin,
-  DAYS_PER_YEAR,
-  ETH_MANTISSA,
   formatData,
   EXA_BASE,
   getCERC20Contract,
@@ -38,6 +35,8 @@ import { Fraction, JSBI, Rounding, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
 import DoubleAssetLogo from '../DoubleAssetLogo'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../TransactionConfirmationModal'
+import { getSupplyApy } from '../SupplyMarkets'
+import { getBorrowApy } from '../BorrowMarkets'
 
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
@@ -718,26 +717,8 @@ function LendModal({
                   </AutoRow>
                   <RateCalculation>
                     {lendMarket === LendField.SUPPLY
-                      ? (
-                          (Math.pow(
-                            ((lendToken?.supplyRatePerBlock ? lendToken?.supplyRatePerBlock : 0) / ETH_MANTISSA) *
-                              BLOCKS_PER_DAY +
-                              1,
-                            DAYS_PER_YEAR - 1
-                          ) -
-                            1) *
-                          100
-                        ).toFixed(2)
-                      : (
-                          (Math.pow(
-                            ((lendToken?.borrowRatePerBlock ? lendToken?.borrowRatePerBlock : 0) / ETH_MANTISSA) *
-                              BLOCKS_PER_DAY +
-                              1,
-                            DAYS_PER_YEAR - 1
-                          ) -
-                            1) *
-                          100
-                        ).toFixed(2)}
+                      ? getSupplyApy(lendToken).toFixed(2)
+                      : getBorrowApy(lendToken).toFixed(2)}
                     %
                   </RateCalculation>
                 </RatePanel>

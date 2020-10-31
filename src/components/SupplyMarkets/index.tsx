@@ -155,6 +155,12 @@ function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children
   return <>{children}</>
 }
 
+const ZERO = JSBI.BigInt(0)
+
+export function getSupplyApy(ctoken: CToken | undefined): Fraction {
+  return new Fraction(ctoken?.getSupplyApy() ?? ZERO, APY_BASE)
+}
+
 function SupplyMarkets({
   allMarketCTokens = [],
   borrowTotalBalance,
@@ -307,10 +313,6 @@ function SupplyMarkets({
     } else {
       return false
     }
-  }
-
-  function getSupplyApy(ctoken: CToken): Fraction {
-    return new Fraction(ctoken.getSupplyApy(), APY_BASE)
   }
 
   return (
