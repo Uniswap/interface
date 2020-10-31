@@ -18,12 +18,11 @@ export enum CTokenState {
 }
 
 export const ETH_MANTISSA = 1e18
-export const BLOCKS_PER_DAY = 4 * 60 * 24
+export const BLOCKS_PER_DAY = 5760 // 4 * 60 * 24
 export const DAYS_PER_YEAR = 365
 
 export const ONE = JSBI.BigInt(1)
 export const EIGHT = JSBI.BigInt(8)
-// export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
@@ -106,17 +105,19 @@ export class CToken extends Token {
   }
 
   public getSupplyApy(): JSBI {
-    return JSBI.BigInt(
-      (Math.pow(((this.supplyRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) *
-        APY_BASE_NUMBER
+    const totalRate = Math.floor(
+      Math.pow(((this.supplyRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) * ETH_MANTISSA
     )
+
+    return JSBI.subtract(JSBI.BigInt(totalRate), EXA_BASE)
   }
 
   public getBorrowApy(): JSBI {
-    return JSBI.BigInt(
-      (Math.pow(((this.borrowRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) - 1) *
-        APY_BASE_NUMBER
+    const totalRate = Math.floor(
+      Math.pow(((this.borrowRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) * ETH_MANTISSA
     )
+
+    return JSBI.subtract(JSBI.BigInt(totalRate), EXA_BASE)
   }
 
   public getSupplyBalanceAmount() {

@@ -139,6 +139,7 @@ export const ONE_MILLION = JSBI.BigInt(1000000)
 export const ONE_BILLION = JSBI.BigInt(1000000000)
 export const ONE_TRILLION = JSBI.BigInt(1000000000000)
 
+export const APY_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
 export const EXA_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const THOUSAND_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(21))
 export const MILLION_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(24))
@@ -225,7 +226,7 @@ export function sumUnderlyingAssets(allMarketsAsset: CToken[]): JSBI {
 
     sumUnderlyingAssets = JSBI.add(sumUnderlyingAssets, JSBI.subtract(supplyAssets, borrowAssets))
   }
-  return JSBI.divide(sumUnderlyingAssets, UNDERLYING_ASSETS_BASE)
+  return JSBI.divide(sumUnderlyingAssets, APY_BASE)
 }
 
 export function formatData(val: JSBI): Fraction {

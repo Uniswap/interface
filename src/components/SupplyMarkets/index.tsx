@@ -10,13 +10,7 @@ import { X } from 'react-feather'
 import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import LendModal from '../LendModal'
-import {
-  calculateGasMargin,
-  formatData,
-  getComptrollerContract,
-  getSupplyTotalBalance,
-  UNDERLYING_ASSETS_BASE
-} from '../../utils'
+import { APY_BASE, calculateGasMargin, formatData, getComptrollerContract, getSupplyTotalBalance } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -316,7 +310,7 @@ function SupplyMarkets({
   }
 
   function getSupplyApy(ctoken: CToken): Fraction {
-    return new Fraction(ctoken.getSupplyApy(), UNDERLYING_ASSETS_BASE)
+    return new Fraction(ctoken.getSupplyApy(), APY_BASE)
   }
 
   return (
