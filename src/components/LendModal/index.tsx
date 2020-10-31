@@ -175,8 +175,6 @@ function LendModal({
 
   const lendTokenBalance = useCTokenBalance(lendToken)
 
-  const maxSupplyAmount = cTokenMaxAmountSpend(lendTokenBalance)
-
   const addTransaction = useTransactionAdder()
 
   const [tabItemActive, setTabItemActive] = useState<LendField>()
@@ -266,6 +264,14 @@ function LendModal({
     }
   }, [lendMarket, showLendConfirmation])
 
+  function onSupplyMax(lendToken: CToken | undefined): Fraction {
+    const maxSupplyAmount = cTokenMaxAmountSpend(lendTokenBalance)
+    if (lendToken && maxSupplyAmount) {
+      return new Fraction(maxSupplyAmount.numerator, maxSupplyAmount.denominator)
+    }
+    return ZERO_FRACTION
+  }
+
   function onWithdrawMax(lendToken: CToken | undefined, safe = true): Fraction {
     if (lendToken) {
       const collateralFactorMantissa = lendToken.getCollateralFactorMantissa()
@@ -316,6 +322,18 @@ function LendModal({
         return new Fraction(liquidity, price)
       } else {
         return new Fraction(numerator, price)
+      }
+    }
+    return ZERO_FRACTION
+  }
+
+  function onRepayMax(lendToken: CToken | undefined): Fraction {
+    if (lendToken && walletBalanceAmount && walletBalanceAmount[0]) {
+      const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
+      if (JSBI.greaterThan(walletBalanceAmount[0].raw, borrowAmount.raw)) {
+        return new Fraction(borrowAmount.numerator, borrowAmount.denominator)
+      } else {
+        return new Fraction(walletBalanceAmount[0].numerator, walletBalanceAmount[0].denominator)
       }
     }
     return ZERO_FRACTION
@@ -582,8 +600,11 @@ function LendModal({
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
                             setLendInputValue(
-                              maxSupplyAmount?.toFixed(setShowDecimails(lendToken), undefined, Rounding.ROUND_DOWN) ??
-                                ''
+                              onSupplyMax(lendToken).toFixed(
+                                setShowDecimails(lendToken),
+                                undefined,
+                                Rounding.ROUND_DOWN
+                              )
                             )
                             break
                           case LendField.WITHDRAW:
@@ -605,15 +626,12 @@ function LendModal({
                             )
                             break
                           case LendField.REPAY:
-                            const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
                             setLendInputValue(
-                              JSBI.greaterThan(walletBalanceAmount[0].raw, borrowAmount.raw)
-                                ? borrowAmount.toFixed(setShowDecimails(lendToken), undefined, Rounding.ROUND_DOWN)
-                                : walletBalanceAmount[0].toFixed(
-                                    setShowDecimails(lendToken),
-                                    undefined,
-                                    Rounding.ROUND_DOWN
-                                  )
+                              onRepayMax(lendToken).toFixed(
+                                setShowDecimails(lendToken),
+                                undefined,
+                                Rounding.ROUND_DOWN
+                              )
                             )
                             break
                           default:
