@@ -273,10 +273,10 @@ function LendModal({
         return ZERO_FRACTION
       } else {
         const supplyBalance = lendToken.getSupplyBalanceJSBI()
+        const price = lendToken.getUnderlyingPrice()
         if (!lendToken.canBeCollateral) {
-          return new Fraction(lendToken.getSupplyBalanceAmount(), EXA_BASE)
+          return new Fraction(supplyBalance, price)
         } else {
-          const price = lendToken.getUnderlyingPrice()
           const suppliedValue = withLimit(lendToken, lendToken.getSupplyBalanceJSBI())
           const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
           const remainValue: JSBI = JSBI.subtract(
@@ -285,11 +285,15 @@ function LendModal({
             otherSuppliedTotalValue
           )
           const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
-          const safeValue = JSBI.subtract(
-            supplyBalance,
-            JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
-          )
-          return new Fraction(safeValue, price)
+          if (JSBI.greaterThan(remainValue, ZERO)) {
+            const safeValue = JSBI.subtract(
+              supplyBalance,
+              JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
+            )
+            return new Fraction(safeValue, price)
+          } else {
+            return new Fraction(supplyBalance, price)
+          }
         }
       }
     }
@@ -766,11 +770,11 @@ function LendModal({
                       onClick={() => {
                         setTxHash('')
                         setShowConfirm(true)
-                        if (lendToken && inputAmount && onMint && tabItemActive === LendField.SUPPLY) {
+                        if (lendToken && inputAmount && tabItemActive === LendField.SUPPLY) {
                           onMint(lendToken, lendInputValue, lendToken.isETH())
                           setShowLendConfirmation(false)
                         }
-                        if (lendToken && inputAmount && onRepayBorrow && tabItemActive === LendField.REPAY) {
+                        if (lendToken && inputAmount && tabItemActive === LendField.REPAY) {
                           onRepayBorrow(lendToken, lendInputValue, lendToken.isETH())
                           setShowLendConfirmation(false)
                         }
@@ -797,12 +801,12 @@ function LendModal({
                   onClick={() => {
                     setTxHash('')
                     setShowConfirm(true)
-                    if (lendToken && inputAmount && onRedeemUnderlying && tabItemActive === LendField.WITHDRAW) {
+                    if (lendToken && inputAmount && tabItemActive === LendField.WITHDRAW) {
                       onRedeemUnderlying(lendToken, lendInputValue)
                       setShowLendConfirmation(false)
                     }
 
-                    if (lendToken && inputAmount && onBorrow && tabItemActive === LendField.BORROW) {
+                    if (lendToken && inputAmount && tabItemActive === LendField.BORROW) {
                       onBorrow(lendToken, lendInputValue)
                       setShowLendConfirmation(false)
                     }

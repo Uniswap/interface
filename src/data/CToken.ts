@@ -120,13 +120,23 @@ export class CToken extends Token {
     return JSBI.subtract(JSBI.BigInt(totalRate), EXA_BASE)
   }
 
-  public getSupplyBalanceAmount() {
+  public getSupplyBalanceAmount(): JSBI {
     return this.exchangeRateMantissa && this.supplyBalance && this.decimals
       ? JSBI.divide(
           JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
           COLLATERAL_FACTOR_MANTISSA
         )
       : JSBI.BigInt(0)
+  }
+
+  public getSupplyBalanceJSBI(): JSBI {
+    return JSBI.divide(
+      JSBI.multiply(
+        JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+        JSBI.BigInt(this.underlyingPrice ?? 0)
+      ),
+      JSBI.multiply(underlyingPriceFormat(this.decimals), balanceFormat(this.decimals))
+    )
   }
 
   public getLiquidity(): JSBI {
@@ -164,16 +174,6 @@ export class CToken extends Token {
         JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), JSBI.BigInt(this.collateralFactorMantissa ?? 0))
       ),
       JSBI.multiply(JSBI.multiply(underlyingPriceFormat(this.decimals), balanceFormat(this.decimals)), EXA_BASE)
-    )
-  }
-
-  public getSupplyBalanceJSBI(): JSBI {
-    return JSBI.divide(
-      JSBI.multiply(
-        JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-        JSBI.BigInt(this.underlyingPrice ?? 0)
-      ),
-      JSBI.multiply(underlyingPriceFormat(this.decimals), balanceFormat(this.decimals))
     )
   }
 }
