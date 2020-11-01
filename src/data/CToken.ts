@@ -124,7 +124,7 @@ export class CToken extends Token {
   public getSupplyBalanceAmount(): JSBI {
     return JSBI.divide(
       JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-      COLLATERAL_FACTOR_MANTISSA
+      EXA_BASE
     )
   }
 
@@ -138,7 +138,7 @@ export class CToken extends Token {
   public getSuppliedValue(): JSBI {
     return JSBI.divide(
       JSBI.multiply(this.getSupplyBalanceJSBI(), JSBI.BigInt(this.collateralFactorMantissa ?? 0)),
-      EXA_BASE
+      COLLATERAL_FACTOR_MANTISSA
     )
   }
 

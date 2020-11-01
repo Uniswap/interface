@@ -17,7 +17,6 @@ import {
   EXA_BASE,
   getCERC20Contract,
   getCEtherContract,
-  withLimit,
   transferCurrencyAmount,
   LIMIT_BASE
 } from '../../utils'
@@ -274,13 +273,12 @@ function LendModal({
       if (JSBI.equal(collateralFactorMantissa, ZERO)) {
         return new TokenAmount(lendToken, ZERO)
       } else {
-        const supplyBalance = lendToken.getSupplyBalanceJSBI()
         const price = lendToken.getUnderlyingPrice()
         if (!lendToken.canBeCollateral) {
-          const amount = JSBI.divide(JSBI.multiply(supplyBalance, EXA_BASE), price)
+          const amount = lendToken.getSupplyBalanceAmount()
           return new TokenAmount(lendToken, amount)
         } else {
-          const suppliedValue = withLimit(lendToken, lendToken.getSupplyBalanceJSBI())
+          const suppliedValue = lendToken.getSuppliedValue()
           const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
           const remainValue: JSBI = JSBI.subtract(
             // divide 8/10
@@ -290,13 +288,13 @@ function LendModal({
           const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
           if (JSBI.greaterThan(remainValue, ZERO)) {
             const safeValue = JSBI.subtract(
-              supplyBalance,
+              lendToken.getSupplyBalanceJSBI(),
               JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
             )
             const amount = JSBI.divide(JSBI.multiply(safeValue, EXA_BASE), price)
             return new TokenAmount(lendToken, amount)
           } else {
-            const amount = JSBI.divide(JSBI.multiply(supplyBalance, EXA_BASE), price)
+            const amount = lendToken.getSupplyBalanceAmount()
             return new TokenAmount(lendToken, amount)
           }
         }
@@ -406,6 +404,7 @@ function LendModal({
   async function onRedeemUnderlying(cToken: CToken, lendInputValue: string) {
     const inputAmount = tryParseAmount(lendInputValue, cToken)
     const amount = inputAmount?.raw.toString()
+
     if (!chainId || !library || !account || !amount) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
 

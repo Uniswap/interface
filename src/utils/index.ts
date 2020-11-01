@@ -172,10 +172,6 @@ export function getBorrowTotalBalance(allMarketsAsset: CToken[]): JSBI {
   return borrowTotalBalance
 }
 
-export function withLimit(ctoken: CToken, value: JSBI): JSBI {
-  return JSBI.divide(JSBI.multiply(JSBI.BigInt(ctoken.collateralFactorMantissa ?? 0), value ?? 0), EXA_BASE)
-}
-
 export function getLimit(allMarketsAsset: CToken[]): JSBI {
   let totalLimit = JSBI.BigInt(0)
 
