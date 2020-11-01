@@ -31,7 +31,7 @@ import MarketBar from '../MarketBar'
 import { useAllCTokenBalances, useCTokenBalance } from '../../state/wallet/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
-import { Fraction, JSBI, Rounding, TokenAmount } from '@uniswap/sdk'
+import { CurrencyAmount, Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import { useLendingInfo } from '../../state/lending/hooks'
 import DoubleAssetLogo from '../DoubleAssetLogo'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
@@ -264,24 +264,21 @@ function LendModal({
     }
   }, [lendMarket, showLendConfirmation])
 
-  function onSupplyMax(lendToken: CToken | undefined): Fraction {
-    const maxSupplyAmount = cTokenMaxAmountSpend(lendTokenBalance)
-    if (lendToken && maxSupplyAmount) {
-      return new Fraction(maxSupplyAmount.numerator, maxSupplyAmount.denominator)
-    }
-    return ZERO_FRACTION
+  function onSupplyMax(): CurrencyAmount | undefined {
+    return cTokenMaxAmountSpend(lendTokenBalance)
   }
 
-  function onWithdrawMax(lendToken: CToken | undefined, safe = true): Fraction {
+  function onWithdrawMax(lendToken: CToken | undefined, safe = true): CurrencyAmount | undefined {
     if (lendToken) {
       const collateralFactorMantissa = lendToken.getCollateralFactorMantissa()
       if (JSBI.equal(collateralFactorMantissa, ZERO)) {
-        return ZERO_FRACTION
+        return new TokenAmount(lendToken, ZERO)
       } else {
         const supplyBalance = lendToken.getSupplyBalanceJSBI()
         const price = lendToken.getUnderlyingPrice()
         if (!lendToken.canBeCollateral) {
-          return new Fraction(supplyBalance, price)
+          const amount = JSBI.divide(JSBI.multiply(supplyBalance, EXA_BASE), price)
+          return new TokenAmount(lendToken, amount)
         } else {
           const suppliedValue = withLimit(lendToken, lendToken.getSupplyBalanceJSBI())
           const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
@@ -296,17 +293,19 @@ function LendModal({
               supplyBalance,
               JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
             )
-            return new Fraction(safeValue, price)
+            const amount = JSBI.divide(JSBI.multiply(safeValue, EXA_BASE), price)
+            return new TokenAmount(lendToken, amount)
           } else {
-            return new Fraction(supplyBalance, price)
+            const amount = JSBI.divide(JSBI.multiply(supplyBalance, EXA_BASE), price)
+            return new TokenAmount(lendToken, amount)
           }
         }
       }
     }
-    return ZERO_FRACTION
+    return undefined
   }
 
-  function onBorrowMax(lendToken: CToken | undefined, safe = true): Fraction {
+  function onBorrowMax(lendToken: CToken | undefined, safe = true): CurrencyAmount | undefined {
     if (lendToken) {
       const price = lendToken.getUnderlyingPrice()
       const borrowMaxValue = JSBI.subtract(
@@ -319,24 +318,26 @@ function LendModal({
       const borrowMaxAmount = JSBI.divide(JSBI.multiply(numerator, EXA_BASE), price)
 
       if (JSBI.greaterThan(borrowMaxAmount, liquidity)) {
-        return new Fraction(liquidity, price)
+        const amount = JSBI.divide(JSBI.multiply(liquidity, EXA_BASE), price)
+        return new TokenAmount(lendToken, amount)
       } else {
-        return new Fraction(numerator, price)
+        const amount = JSBI.divide(JSBI.multiply(numerator, EXA_BASE), price)
+        return new TokenAmount(lendToken, amount)
       }
     }
-    return ZERO_FRACTION
+    return undefined
   }
 
-  function onRepayMax(lendToken: CToken | undefined): Fraction {
+  function onRepayMax(lendToken: CToken | undefined): CurrencyAmount | undefined {
     if (lendToken && walletBalanceAmount && walletBalanceAmount[0]) {
       const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
       if (JSBI.greaterThan(walletBalanceAmount[0].raw, borrowAmount.raw)) {
-        return new Fraction(borrowAmount.numerator, borrowAmount.denominator)
+        return borrowAmount
       } else {
-        return new Fraction(walletBalanceAmount[0].numerator, walletBalanceAmount[0].denominator)
+        return walletBalanceAmount[0]
       }
     }
-    return ZERO_FRACTION
+    return undefined
   }
 
   const { inputError, inputText } = useLendingInfo(
@@ -543,10 +544,6 @@ function LendModal({
       })
   }
 
-  function setShowDecimails(ctoken: CToken): number {
-    return ctoken.decimals > 8 ? 8 : ctoken.decimals
-  }
-
   const confirmationContent = useCallback(
     () =>
       txHash ? (
@@ -600,38 +597,22 @@ function LendModal({
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
                             setLendInputValue(
-                              onSupplyMax(lendToken).toFixed(
-                                setShowDecimails(lendToken),
-                                undefined,
-                                Rounding.ROUND_DOWN
-                              )
+                              onSupplyMax()?.toExact() ?? ''
                             )
                             break
                           case LendField.WITHDRAW:
                             setLendInputValue(
-                              onWithdrawMax(lendToken).toFixed(
-                                setShowDecimails(lendToken),
-                                undefined,
-                                Rounding.ROUND_DOWN
-                              )
+                              onWithdrawMax(lendToken, true)?.toExact() ?? ''
                             )
                             break
                           case LendField.BORROW:
                             setLendInputValue(
-                              onBorrowMax(lendToken).toFixed(
-                                setShowDecimails(lendToken),
-                                undefined,
-                                Rounding.ROUND_DOWN
-                              )
+                              onBorrowMax(lendToken, true)?.toExact() ?? ''
                             )
                             break
                           case LendField.REPAY:
                             setLendInputValue(
-                              onRepayMax(lendToken).toFixed(
-                                setShowDecimails(lendToken),
-                                undefined,
-                                Rounding.ROUND_DOWN
-                              )
+                              onRepayMax(lendToken)?.toExact() ?? ''
                             )
                             break
                           default:

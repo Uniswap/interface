@@ -2,9 +2,8 @@ import { CToken } from '../../data/CToken'
 import { useCTokenBalance } from '../wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { LendField } from './actions'
-import { CurrencyAmount, Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
+import { CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk'
 import { tryParseAmount } from '../swap/hooks'
-import { EXA_BASE, transferCurrencyAmount } from '../../utils'
 
 // based on typed value
 export function useLendingInfo(
@@ -12,8 +11,8 @@ export function useLendingInfo(
   lendToken: CToken | undefined,
   lendMarket: LendField | undefined,
   limit: JSBI,
-  withdrawMax?: Fraction,
-  borrowMax?: Fraction
+  withdrawMax: CurrencyAmount | undefined,
+  borrowMax: CurrencyAmount | undefined
 ): {
   inputError?: boolean
   inputText?: string
@@ -66,7 +65,7 @@ export function useLendingInfo(
         inputText = lendMarket
       } else if (
         parseInputValue &&
-        withdrawMax?.lessThan(new Fraction(transferCurrencyAmount(parseInputValue), EXA_BASE))
+        withdrawMax?.lessThan(parseInputValue)
       ) {
         inputError = true
         inputText = 'Insufficient Liquidity'
@@ -108,7 +107,7 @@ export function useLendingInfo(
       inputText = lendMarket
     } else if (
       parseInputValue &&
-      !borrowMax?.greaterThan(new Fraction(transferCurrencyAmount(parseInputValue), EXA_BASE))
+      !borrowMax?.greaterThan(parseInputValue)
     ) {
       inputError = true
       inputText = 'Insufficient Collateral'
