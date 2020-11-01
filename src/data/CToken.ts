@@ -6,7 +6,7 @@ import { abi as ICTokenABI } from '../constants/abis/ctoken.json'
 import { Interface } from '@ethersproject/abi'
 import { useComptrollerContract, useOracleContract } from '../hooks/useContract'
 import { CTOKEN_LISTS } from '../constants/lend'
-import { balanceFormat, EXA_BASE, underlyingPriceFormat } from '../utils'
+import { EXA_BASE } from '../utils'
 
 const CTOKEN_INTERFACE = new Interface(ICTokenABI)
 
@@ -25,6 +25,7 @@ export const ONE = JSBI.BigInt(1)
 export const EIGHT = JSBI.BigInt(8)
 export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+export const UNDERLYING_PRICE_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const ZERO_POINT_EIGHT = JSBI.multiply(EIGHT, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(17)))
 export const APY_BASE_NUMBER = Math.pow(10, 38)
@@ -121,60 +122,50 @@ export class CToken extends Token {
   }
 
   public getSupplyBalanceAmount(): JSBI {
-    return this.exchangeRateMantissa && this.supplyBalance && this.decimals
-      ? JSBI.divide(
-          JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-          COLLATERAL_FACTOR_MANTISSA
-        )
-      : JSBI.BigInt(0)
+    return JSBI.divide(
+      JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+      COLLATERAL_FACTOR_MANTISSA
+    )
   }
 
   public getSupplyBalanceJSBI(): JSBI {
     return JSBI.divide(
-      JSBI.multiply(
-        JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-        JSBI.BigInt(this.underlyingPrice ?? 0)
-      ),
-      JSBI.multiply(underlyingPriceFormat(this.decimals), balanceFormat(this.decimals))
+      JSBI.multiply(this.getSupplyBalanceAmount(), JSBI.BigInt(this.underlyingPrice ?? 0)),
+      UNDERLYING_PRICE_BASE
+    )
+  }
+
+  public getSuppliedValue(): JSBI {
+    return JSBI.divide(
+      JSBI.multiply(this.getSupplyBalanceJSBI(), JSBI.BigInt(this.collateralFactorMantissa ?? 0)),
+      EXA_BASE
+    )
+  }
+
+  public getBorrowBalanceJSBI(): JSBI {
+    return JSBI.divide(
+      JSBI.multiply(JSBI.BigInt(this.borrowBalance ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
+      UNDERLYING_PRICE_BASE
     )
   }
 
   public getLiquidity(): JSBI {
-    return JSBI.divide(JSBI.multiply(JSBI.BigInt(this.liquidity ?? 0), EXA_BASE), balanceFormat(this.decimals))
+    return JSBI.BigInt(this.liquidity ?? 0)
   }
 
   public getLiquidityValue(): JSBI {
     return JSBI.divide(
-      JSBI.multiply(
-        this.getLiquidity(),
-        JSBI.divide(
-          JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), EXA_BASE),
-          underlyingPriceFormat(this.decimals)
-        )
-      ),
+      JSBI.multiply(JSBI.BigInt(this.liquidity ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
       EXA_BASE
     )
   }
 
   public getUnderlyingPrice(): JSBI {
-    return JSBI.divide(
-      JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), EXA_BASE),
-      underlyingPriceFormat(this.decimals)
-    )
+    return JSBI.BigInt(this.underlyingPrice ?? 0)
   }
 
   public getCollateralFactorMantissa(): JSBI {
     return JSBI.BigInt(this.collateralFactorMantissa ?? 0)
-  }
-
-  public getSuppliedValue(): JSBI {
-    return JSBI.divide(
-      JSBI.multiply(
-        JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-        JSBI.multiply(JSBI.BigInt(this.underlyingPrice ?? 0), JSBI.BigInt(this.collateralFactorMantissa ?? 0))
-      ),
-      JSBI.multiply(JSBI.multiply(underlyingPriceFormat(this.decimals), balanceFormat(this.decimals)), EXA_BASE)
-    )
   }
 }
 

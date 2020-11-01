@@ -309,7 +309,7 @@ function LendModal({
     if (lendToken) {
       const price = lendToken.getUnderlyingPrice()
       const borrowMaxValue = JSBI.subtract(
-        // multiply 8/10
+        // multiply 0.8
         JSBI.divide(JSBI.multiply(limit, safe ? EIGHT : TEN), TEN),
         borrowTotalBalance
       )

@@ -156,21 +156,10 @@ export const ONE_MILLION_LIQUIDITY = JSBI.multiply(ONE_MILLION, EXA_BASE)
 export const ONE_BILLION_LIQUIDITY = JSBI.multiply(ONE_BILLION, EXA_BASE)
 export const ONE_TRILLION_LIQUIDITY = JSBI.multiply(ONE_TRILLION, EXA_BASE)
 
-export function balanceFormat(digits: number): JSBI {
-  return JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(digits))
-}
-
-export function underlyingPriceFormat(digits: number): JSBI {
-  return JSBI.exponentiate(
-    JSBI.BigInt(10),
-    JSBI.add(JSBI.subtract(JSBI.BigInt(18), JSBI.BigInt(digits)), JSBI.BigInt(18))
-  )
-}
-
 export function getSupplyTotalBalance(allMarketsAsset: CToken[]): JSBI {
   let supplyTotalBalance = JSBI.BigInt(0)
   for (let i = 0; i < allMarketsAsset.length; i++) {
-    supplyTotalBalance = JSBI.add(supplyTotalBalance, JSBI.BigInt(allMarketsAsset[i].getSupplyBalanceJSBI()))
+    supplyTotalBalance = JSBI.add(supplyTotalBalance, allMarketsAsset[i].getSupplyBalanceJSBI())
   }
   return supplyTotalBalance
 }
@@ -178,22 +167,9 @@ export function getSupplyTotalBalance(allMarketsAsset: CToken[]): JSBI {
 export function getBorrowTotalBalance(allMarketsAsset: CToken[]): JSBI {
   let borrowTotalBalance = JSBI.BigInt(0)
   for (let i = 0; i < allMarketsAsset.length; i++) {
-    borrowTotalBalance = JSBI.add(
-      borrowTotalBalance,
-      JSBI.multiply(
-        JSBI.divide(
-          JSBI.multiply(JSBI.BigInt(allMarketsAsset[i].borrowBalance ?? 0), EXA_BASE),
-          balanceFormat(allMarketsAsset[i]?.decimals)
-        ),
-        JSBI.divide(
-          JSBI.multiply(JSBI.BigInt(allMarketsAsset[i]?.underlyingPrice ?? 0), EXA_BASE),
-          underlyingPriceFormat(allMarketsAsset[i]?.decimals)
-        )
-      )
-    )
+    borrowTotalBalance = JSBI.add(borrowTotalBalance, allMarketsAsset[i].getBorrowBalanceJSBI())
   }
-
-  return JSBI.divide(borrowTotalBalance, EXA_BASE)
+  return borrowTotalBalance
 }
 
 export function withLimit(ctoken: CToken, value: JSBI): JSBI {
