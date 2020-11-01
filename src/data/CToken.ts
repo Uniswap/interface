@@ -47,6 +47,8 @@ export class CToken extends Token {
   public readonly collateralFactorMantissa?: number
   public readonly logo0?: string
   public readonly logo1?: string
+  public readonly borrowBalanceCurrent?: number
+  public readonly balanceOfUnderlying?: number
 
   constructor(
     chainId: ChainId,
@@ -68,7 +70,9 @@ export class CToken extends Token {
     isListed?: boolean,
     collateralFactorMantissa?: number,
     logo0?: string,
-    logo1?: string
+    logo1?: string,
+    borrowBalanceCurrent?: number,
+    balanceOfUnderlying?: number
   ) {
     super(chainId, address, decimals, symbol, name)
 
@@ -88,6 +92,8 @@ export class CToken extends Token {
     this.collateralFactorMantissa = collateralFactorMantissa
     this.logo0 = logo0
     this.logo1 = logo1
+    this.borrowBalanceCurrent = borrowBalanceCurrent
+    this.balanceOfUnderlying = balanceOfUnderlying
   }
 
   public equals(other: CToken): boolean {
@@ -223,6 +229,18 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     'markets',
     cTokenAddresses.map(cTokenAddress => [cTokenAddress])
   )
+  const borrowBalanceCurrentResults = useMultipleContractSingleData(
+    cTokenAddresses,
+    CTOKEN_INTERFACE,
+    'borrowBalanceCurrent',
+    accountArg
+  )
+  const balanceOfUnderlyingResults = useMultipleContractSingleData(
+    cTokenAddresses,
+    CTOKEN_INTERFACE,
+    'balanceOfUnderlying',
+    accountArg
+  )
 
   return useMemo(() => {
     return supplyRatePerBlockResults.map((supplyRatePerBlockResult, i) => {
@@ -235,6 +253,8 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       const { result: underlyingPriceValue, loading: underlyingPriceLoading } = underlyingPriceResults[i]
       const { result: marketsValue, loading: marketsResultLoading } =
         marketsResults.length !== 0 ? marketsResults[i] : { result: [0, 0, 0], loading: false }
+      const { result: borrowBalanceCurrentValue, loading: borrowBalanceCurrentLoading } = borrowBalanceCurrentResults[i]
+      const { result: balanceOfUnderlyingValue, loading: balanceOfUnderlyingLoading } = balanceOfUnderlyingResults[i]
 
       if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, null]
       if (borrowRatePerBlockResultLoading) return [CTokenState.LOADING, null]
@@ -243,6 +263,8 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       if (membershipLoading) return [CTokenState.LOADING, null]
       if (underlyingPriceLoading) return [CTokenState.LOADING, null]
       if (marketsResultLoading) return [CTokenState.LOADING, null]
+      if (borrowBalanceCurrentLoading) return [CTokenState.LOADING, null]
+      if (balanceOfUnderlyingLoading) return [CTokenState.LOADING, null]
 
       if (!supplyRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]
       if (!borrowRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]
@@ -251,6 +273,8 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       if (!membershipValue) return [CTokenState.NOT_EXISTS, null]
       if (!underlyingPriceValue) return [CTokenState.NOT_EXISTS, null]
       if (!marketsValue) return [CTokenState.NOT_EXISTS, null]
+      if (!borrowBalanceCurrentValue) return [CTokenState.NOT_EXISTS, null]
+      if (!balanceOfUnderlyingValue) return [CTokenState.NOT_EXISTS, null]
 
       return [
         CTokenState.EXISTS,
@@ -274,7 +298,9 @@ export function useCTokens(): [CTokenState, CToken | null][] {
           marketsValue[0],
           marketsValue[1],
           cTokenList[i][7],
-          cTokenList[i][8]
+          cTokenList[i][8],
+          borrowBalanceCurrentValue[0],
+          balanceOfUnderlyingValue[0]
         )
       ]
     })
@@ -286,7 +312,9 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     membershipResults,
     underlyingPriceResults,
     marketsResults,
-    cTokenList,
-    chainId
+    borrowBalanceCurrentResults,
+    balanceOfUnderlyingResults,
+    chainId,
+    cTokenList
   ])
 }
