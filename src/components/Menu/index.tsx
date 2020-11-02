@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Code, MessageCircle } from 'react-feather'
+import { Code, Globe, MessageCircle } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -108,6 +108,10 @@ export default function Menu() {
           <MenuItem id="link" href="https://t.me/deerfi">
             <MessageCircle size={14} />
             Telegram
+          </MenuItem>
+          <MenuItem id="link" href="https://long.deerfi.com">
+            <Globe size={14} />
+            Long
           </MenuItem>
         </MenuFlyout>
       )}
