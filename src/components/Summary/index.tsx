@@ -12,7 +12,7 @@ import { formatData } from '../../utils'
 // import Row, { RowFixed } from '../Row'
 
 const SummaryCard = styled.div`
-  background: #ffffff;
+  background: ${({ theme }) => theme.bg1};
   box-shadow: 0px 2px 4px rgba(16, 21, 24, 0.05);
   border-radius: 4px;
   width: 100%;
@@ -45,7 +45,7 @@ const SummaryElement = styled.div`
 const SummaryTitle = styled.div`
   margin-bottom: 1.2rem;
   font-size: 14px;
-  color: black;
+  color: ${({ theme }) => theme.text1};
   font-weight: 600;
 `
 
@@ -53,7 +53,7 @@ const SummaryContent = styled.div`
   display: flex;
   align-items: center;
   font-size: 20px;
-  color: #111;
+  color: ${({ theme }) => theme.text1};
   font-weight: 400;
 `
 

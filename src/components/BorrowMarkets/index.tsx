@@ -12,7 +12,8 @@ import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
 
 const MarketsCard = styled.div`
-  background: #ffffff;
+  background: ${({ theme }) => theme.bg1};
+  color: ${({ theme }) => theme.text1};
   box-shadow: 0px 2px 4px rgba(16, 21, 24, 0.05);
   border-radius: 4px;
 `

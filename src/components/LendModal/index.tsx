@@ -77,6 +77,7 @@ const ModalContentWrapper = styled.div`
 `
 
 const ApproveWrap = styled.div`
+  background: ${({ theme }) => theme.bg1};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -84,6 +85,7 @@ const ApproveWrap = styled.div`
 `
 
 const TabWrap = styled.div`
+  background: ${({ theme }) => theme.bg1};
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
@@ -96,11 +98,11 @@ const TabItem = styled.div<{ isActive: boolean }>`
   position: relative;
   cursor: pointer;
   text-transform: uppercase;
-  color: ${({ isActive }) => (isActive ? '#ff007a' : '#AAB8C1')};
+  color: ${({ isActive, theme }) => (isActive ? theme.primary1 : '#AAB8C1')};
   padding-bottom: 0.8rem;
   font-weight: 600;
   :after {
-    background: ${({ isActive }) => (isActive ? '#ff007a' : 'none')};
+    background: ${({ isActive, theme }) => (isActive ? theme.primary1 : 'none')};
     content: '';
     position: absolute;
     bottom: 0;
@@ -126,6 +128,7 @@ const RateTitle = styled.div`
 
 const RatePanel = styled.div`
   display: flex;
+  color: ${({ theme }) => theme.text2};
   justify-content: space-between;
   align-items: center;
   width: 100%;
@@ -136,7 +139,7 @@ const RateCalculation = styled.div`
   display: flex;
   align-items: center;
   font-weight: 500;
-  color: #141e27;
+  color: ${({ theme }) => theme.text2};
 `
 
 export interface LendModalProps {
@@ -607,7 +610,7 @@ function LendModal({
               <StyledCloseIcon onClick={() => setShowLendConfirmation(false)} />
             </RowBetween>
             <Break />
-            <AutoColumn gap={'sm'} style={{ backgroundColor: '#f9fafb' }}>
+            <AutoColumn gap={'sm'}>
               {tabItemActive === LendField.WITHDRAW ||
               tabItemActive === LendField.BORROW ||
               (approvalTokenStatus === ApprovalState.APPROVED && lendToken?.address) ? (
@@ -651,13 +654,13 @@ function LendModal({
                   ) : (
                     <CurrencyIcon logo0={lendToken?.logo0} size={'4.4rem'} style={{ marginBottom: '2rem' }} />
                   )}
-                  <Text fontWeight={400} fontSize={'0.9rem'} color={'#AAB8C1'} textAlign={'center'} lineHeight={'1rem'}>
+                  <Text fontWeight={400} fontSize={'0.9rem'} textAlign={'center'} lineHeight={'1rem'}>
                     To Supply or Repay Tether to the Compound Protocol, you need to enable it first.
                   </Text>
                 </ApproveWrap>
               )}
             </AutoColumn>
-            <AutoColumn gap={'0'} style={{ backgroundColor: '#f9fafb' }}>
+            <AutoColumn gap={'0'}>
               <TabWrap>
                 <TabItem
                   isActive={
@@ -714,9 +717,7 @@ function LendModal({
                     ) : (
                       <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '6px' }} />
                     )}
-                    <Text color={'#AAB8C1;'} lineHeight={'24px'}>
-                      {lendToken?.symbol} APY
-                    </Text>
+                    <Text lineHeight={'24px'}>{lendToken?.symbol} APY</Text>
                   </AutoRow>
                   <RateCalculation>
                     {lendMarket === LendField.SUPPLY
@@ -732,7 +733,7 @@ function LendModal({
                 <RateWrap>
                   <RateTitle>Borrow Limit</RateTitle>
                   <RatePanel>
-                    <Text color={'#AAB8C1'} lineHeight={'24px'}>
+                    <Text lineHeight={'24px'}>
                       {lendMarket === LendField.BORROW ? 'Borrow Balance' : 'Borrow Limit'}
                     </Text>
                     <RateCalculation>
@@ -753,9 +754,7 @@ function LendModal({
                   <Break />
                   <RatePanel>
                     <AutoRow>
-                      <Text color={'#AAB8C1'} lineHeight={'24px'}>
-                        Borrow Limit Used
-                      </Text>
+                      <Text lineHeight={'24px'}>Borrow Limit Used</Text>
                     </AutoRow>
                     <RateCalculation>
                       <Text>{usedLimit.toSignificant(4) ?? '0.00'}%</Text>
@@ -834,7 +833,7 @@ function LendModal({
             </AutoColumn>
             <AutoColumn gap={'0'} style={{ padding: '0.6rem 2rem 0' }}>
               <AutoRow justify={'space-between'}>
-                <Text color={'#AAB8C1'} fontWeight={500}>
+                <Text fontWeight={500}>
                   {tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW
                     ? tabItemActive === LendField.WITHDRAW
                       ? 'Currently Supplying'
