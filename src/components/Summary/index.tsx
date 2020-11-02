@@ -37,13 +37,16 @@ const SummaryElement = styled.div`
   display: flex;
   flex-direction: column;
   padding: 24px 28px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
 `
 
 const SummaryTitle = styled.div`
   margin-bottom: 1.2rem;
   font-size: 14px;
-  color: #111;
-  font-weight: 400;
+  color: black;
+  font-weight: 600;
 `
 
 const SummaryContent = styled.div`
@@ -51,7 +54,7 @@ const SummaryContent = styled.div`
   align-items: center;
   font-size: 20px;
   color: #111;
-  font-weight: 300;
+  font-weight: 400;
 `
 
 const DotIcon = styled.div`
@@ -63,6 +66,10 @@ const DotIcon = styled.div`
   &::before {
     content: '●';
   }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 6px;
+    margin-right: 4px;
+  `};
 `
 
 const BorrowWrap = styled.div`

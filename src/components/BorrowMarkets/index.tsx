@@ -25,6 +25,9 @@ const MarketsCardHeader = styled.div`
   font-size: 1.1rem;
   padding: 1rem 1.75rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
 `
 
 const AssetWrap = styled.div`
@@ -37,9 +40,10 @@ const AssetWrapLabels = styled.div`
   padding: 1rem 1.75rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   align-items: center;
-  grid-template-columns: 4fr 3fr 3fr 2fr;
+  grid-template-columns: 4fr 2fr 4fr 3fr;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 4fr 4fr 3fr;
+    padding: 1rem;
   `};
 `
 
@@ -70,9 +74,10 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   font-weight: 500;
   letter-spacing: 0;
   transition: none;
-  grid-template-columns: 4fr 3fr 3fr 2fr;
+  grid-template-columns: 4fr 2fr 4fr 3fr;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 4fr 4fr 3fr;
+    padding: 1rem;
   `};
   :hover {
     border-left: 2px solid #1de9b6;
