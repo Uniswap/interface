@@ -11,15 +11,7 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
 
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import {
-  calculateGasMargin,
-  formatData,
-  EXA_BASE,
-  getCERC20Contract,
-  getCEtherContract,
-  transferCurrencyAmount,
-  LIMIT_BASE
-} from '../../utils'
+import { calculateGasMargin, formatData, EXA_BASE, getCERC20Contract, getCEtherContract, LIMIT_BASE } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -189,9 +181,9 @@ function LendModal({
   const walletBalanceAmount = useAllCTokenBalances([lendToken])
 
   const changedBorrowLimit = useMemo(() => {
-    if (lendToken && lendInputValue) {
+    if (lendToken && inputAmount) {
       const price = lendToken.getUnderlyingPrice()
-      const parseInputAmount = transferCurrencyAmount(inputAmount)
+      const parseInputAmount = JSBI.BigInt(inputAmount?.raw.toString())
       let borrowLimit = JSBI.divide(JSBI.multiply(price, parseInputAmount), EXA_BASE)
       let changedBorrowLimit
       if (lendMarket === LendField.SUPPLY) {
@@ -214,7 +206,7 @@ function LendModal({
       return formatData(changedBorrowLimit)
     }
     return ZERO_FRACTION
-  }, [lendToken, lendInputValue, inputAmount, lendMarket, tabItemActive, limit, borrowTotalBalance])
+  }, [lendToken, inputAmount, lendMarket, tabItemActive, limit, borrowTotalBalance])
 
   const changedBorrowLimitUsed = useMemo(() => {
     if (lendToken && lendInputValue) {
@@ -595,24 +587,16 @@ function LendModal({
                       if (lendToken && walletBalanceAmount[0]) {
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
-                            setLendInputValue(
-                              onSupplyMax()?.toExact() ?? ''
-                            )
+                            setLendInputValue(onSupplyMax()?.toExact() ?? '')
                             break
                           case LendField.WITHDRAW:
-                            setLendInputValue(
-                              onWithdrawMax(lendToken, true)?.toExact() ?? ''
-                            )
+                            setLendInputValue(onWithdrawMax(lendToken, true)?.toExact() ?? '')
                             break
                           case LendField.BORROW:
-                            setLendInputValue(
-                              onBorrowMax(lendToken, true)?.toExact() ?? ''
-                            )
+                            setLendInputValue(onBorrowMax(lendToken, true)?.toExact() ?? '')
                             break
                           case LendField.REPAY:
-                            setLendInputValue(
-                              onRepayMax(lendToken)?.toExact() ?? ''
-                            )
+                            setLendInputValue(onRepayMax(lendToken)?.toExact() ?? '')
                             break
                           default:
                             break

@@ -224,16 +224,6 @@ export function getNetApy(allMarketsAsset: CToken[]): Fraction {
   }
 }
 
-export function transferCurrencyAmount(token: CurrencyAmount | undefined): JSBI {
-  if (token) {
-    const base = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
-    const tranfer = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(token.currency.decimals))
-    const result = JSBI.divide(JSBI.multiply(token.raw, base), tranfer)
-    return result
-  }
-  return JSBI.BigInt('0')
-}
-
 export function showLiquidityValue(val: JSBI): string {
   if (JSBI.lessThan(val, ONE_THOUSAND_LIQUIDITY)) {
     return new Fraction(val, EXA_BASE).toFixed(2)
