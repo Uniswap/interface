@@ -37,6 +37,7 @@ export class CToken extends Token {
   public readonly cName?: string
   public readonly supplyRatePerBlock?: number
   public readonly borrowRatePerBlock?: number
+  public readonly balanceUnderlying?: number
   public readonly supplyBalance?: number
   public readonly borrowBalance?: number
   public readonly exchangeRateMantissa?: number
@@ -47,8 +48,6 @@ export class CToken extends Token {
   public readonly collateralFactorMantissa?: number
   public readonly logo0?: string
   public readonly logo1?: string
-  public readonly borrowBalanceCurrent?: number
-  public readonly balanceOfUnderlying?: number
 
   constructor(
     chainId: ChainId,
@@ -61,6 +60,7 @@ export class CToken extends Token {
     name?: string,
     supplyRatePerBlock?: number,
     borrowRatePerBlock?: number,
+    balanceUnderlying?: number,
     supplyBalance?: number,
     borrowBalance?: number,
     exchangeRateMantissa?: number,
@@ -70,9 +70,7 @@ export class CToken extends Token {
     isListed?: boolean,
     collateralFactorMantissa?: number,
     logo0?: string,
-    logo1?: string,
-    borrowBalanceCurrent?: number,
-    balanceOfUnderlying?: number
+    logo1?: string
   ) {
     super(chainId, address, decimals, symbol, name)
 
@@ -82,6 +80,7 @@ export class CToken extends Token {
     this.cName = cName
     this.supplyRatePerBlock = supplyRatePerBlock
     this.borrowRatePerBlock = borrowRatePerBlock
+    this.balanceUnderlying = balanceUnderlying
     this.supplyBalance = supplyBalance
     this.borrowBalance = borrowBalance
     this.exchangeRateMantissa = exchangeRateMantissa
@@ -92,8 +91,6 @@ export class CToken extends Token {
     this.collateralFactorMantissa = collateralFactorMantissa
     this.logo0 = logo0
     this.logo1 = logo1
-    this.borrowBalanceCurrent = borrowBalanceCurrent
-    this.balanceOfUnderlying = balanceOfUnderlying
   }
 
   public equals(other: CToken): boolean {
@@ -128,7 +125,10 @@ export class CToken extends Token {
   }
 
   public getSupplyBalanceAmount(): JSBI {
-    return JSBI.divide(JSBI.multiply(JSBI.BigInt(this.balanceOfUnderlying ?? 0), EXA_BASE), EXA_BASE)
+    return JSBI.divide(
+      JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+      EXA_BASE
+    )
   }
 
   public getSupplyBalanceJSBI(): JSBI {
@@ -147,7 +147,7 @@ export class CToken extends Token {
 
   public getBorrowBalanceJSBI(): JSBI {
     return JSBI.divide(
-      JSBI.multiply(JSBI.BigInt(this.borrowBalanceCurrent ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
+      JSBI.multiply(JSBI.BigInt(this.borrowBalance ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
       UNDERLYING_PRICE_BASE
     )
   }
@@ -208,6 +208,18 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     CTOKEN_INTERFACE,
     'borrowRatePerBlock'
   )
+  const balanceOfUnderlyingResults = useMultipleContractSingleData(
+    cTokenAddresses,
+    CTOKEN_INTERFACE,
+    'balanceOfUnderlying',
+    accountArg
+  )
+  const borrowBalanceCurrentResults = useMultipleContractSingleData(
+    cTokenAddresses,
+    CTOKEN_INTERFACE,
+    'borrowBalanceCurrent',
+    accountArg
+  )
   const accountSnapshotResults = useMultipleContractSingleData(
     cTokenAddresses,
     CTOKEN_INTERFACE,
@@ -226,23 +238,13 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     'markets',
     cTokenAddresses.map(cTokenAddress => [cTokenAddress])
   )
-  const borrowBalanceCurrentResults = useMultipleContractSingleData(
-    cTokenAddresses,
-    CTOKEN_INTERFACE,
-    'borrowBalanceCurrent',
-    accountArg
-  )
-  const balanceOfUnderlyingResults = useMultipleContractSingleData(
-    cTokenAddresses,
-    CTOKEN_INTERFACE,
-    'balanceOfUnderlying',
-    accountArg
-  )
 
   return useMemo(() => {
     return supplyRatePerBlockResults.map((supplyRatePerBlockResult, i) => {
       const { result: supplyRatePerBlockValue, loading: supplyRatePerBlockResultLoading } = supplyRatePerBlockResult
       const { result: borrowRatePerBlockValue, loading: borrowRatePerBlockResultLoading } = borrowRatePerBlockResults[i]
+      const { result: balanceUnderlyingValue, loading: balanceUnderlyingResultLoading } = balanceOfUnderlyingResults[i]
+      const { result: borrowBalanceValue, loading: borrowBalanceResultLoading } = borrowBalanceCurrentResults[i]
       const { result: accountSnapshotValue, loading: accountSnapshotResultLoading } =
         accountSnapshotResults.length !== 0 ? accountSnapshotResults[i] : { result: [0, 0, 0, 0], loading: false }
       const { result: cashValue, loading: cashResultLoading } = cashResults[i]
@@ -250,28 +252,26 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       const { result: underlyingPriceValue, loading: underlyingPriceLoading } = underlyingPriceResults[i]
       const { result: marketsValue, loading: marketsResultLoading } =
         marketsResults.length !== 0 ? marketsResults[i] : { result: [0, 0, 0], loading: false }
-      const { result: borrowBalanceCurrentValue, loading: borrowBalanceCurrentLoading } = borrowBalanceCurrentResults[i]
-      const { result: balanceOfUnderlyingValue, loading: balanceOfUnderlyingLoading } = balanceOfUnderlyingResults[i]
 
       if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, null]
       if (borrowRatePerBlockResultLoading) return [CTokenState.LOADING, null]
+      if (balanceUnderlyingResultLoading) return [CTokenState.LOADING, null]
+      if (borrowBalanceResultLoading) return [CTokenState.LOADING, null]
       if (accountSnapshotResultLoading) return [CTokenState.LOADING, null]
       if (cashResultLoading) return [CTokenState.LOADING, null]
       if (membershipLoading) return [CTokenState.LOADING, null]
       if (underlyingPriceLoading) return [CTokenState.LOADING, null]
       if (marketsResultLoading) return [CTokenState.LOADING, null]
-      if (borrowBalanceCurrentLoading) return [CTokenState.LOADING, null]
-      if (balanceOfUnderlyingLoading) return [CTokenState.LOADING, null]
 
       if (!supplyRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]
       if (!borrowRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]
+      if (!balanceUnderlyingValue) return [CTokenState.NOT_EXISTS, null]
+      if (!borrowBalanceValue) return [CTokenState.NOT_EXISTS, null]
       if (!accountSnapshotValue) return [CTokenState.NOT_EXISTS, null]
       if (!cashValue) return [CTokenState.NOT_EXISTS, null]
       if (!membershipValue) return [CTokenState.NOT_EXISTS, null]
       if (!underlyingPriceValue) return [CTokenState.NOT_EXISTS, null]
       if (!marketsValue) return [CTokenState.NOT_EXISTS, null]
-      if (!borrowBalanceCurrentValue) return [CTokenState.NOT_EXISTS, null]
-      if (!balanceOfUnderlyingValue) return [CTokenState.NOT_EXISTS, null]
 
       return [
         CTokenState.EXISTS,
@@ -286,8 +286,9 @@ export function useCTokens(): [CTokenState, CToken | null][] {
           cTokenList[i][6],
           supplyRatePerBlockValue[0],
           borrowRatePerBlockValue[0],
+          balanceUnderlyingValue[0],
           accountSnapshotValue[1],
-          accountSnapshotValue[2],
+          borrowBalanceValue[0],
           accountSnapshotValue[3],
           cashValue[0],
           membershipValue[0],
@@ -295,23 +296,21 @@ export function useCTokens(): [CTokenState, CToken | null][] {
           marketsValue[0],
           marketsValue[1],
           cTokenList[i][7],
-          cTokenList[i][8],
-          borrowBalanceCurrentValue[0],
-          balanceOfUnderlyingValue[0]
+          cTokenList[i][8]
         )
       ]
     })
   }, [
     supplyRatePerBlockResults,
     borrowRatePerBlockResults,
+    balanceOfUnderlyingResults,
+    borrowBalanceCurrentResults,
     accountSnapshotResults,
     cashResults,
     membershipResults,
     underlyingPriceResults,
     marketsResults,
-    borrowBalanceCurrentResults,
-    balanceOfUnderlyingResults,
-    chainId,
-    cTokenList
+    cTokenList,
+    chainId
   ])
 }
