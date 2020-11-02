@@ -319,11 +319,9 @@ function LendModal({
       const borrowMaxAmount = JSBI.divide(JSBI.multiply(numerator, EXA_BASE), price)
 
       if (JSBI.greaterThan(borrowMaxAmount, liquidity)) {
-        const amount = JSBI.divide(JSBI.multiply(liquidity, EXA_BASE), price)
-        return new TokenAmount(lendToken, amount)
+        return new TokenAmount(lendToken, liquidity)
       } else {
-        const amount = JSBI.divide(JSBI.multiply(numerator, EXA_BASE), price)
-        return new TokenAmount(lendToken, amount)
+        return new TokenAmount(lendToken, borrowMaxAmount)
       }
     }
     return undefined
