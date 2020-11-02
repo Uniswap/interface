@@ -29,7 +29,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
   return (
     <>
-      <AutoColumn style={{ padding: '0 20px' }} gap="4px">
+      <AutoColumn style={{ padding: '0 20px' }} gap="8px">
         <RowBetween>
           <RowFixed align="center">
             <TYPE.purple3 fontSize={12} fontWeight={400}>
@@ -50,7 +50,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
         <RowBetween>
           <RowFixed>
             <TYPE.purple3 fontSize={12} fontWeight={400}>
-              Price Impact
+              Price impact
             </TYPE.purple3>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
           </RowFixed>
@@ -60,7 +60,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
         <RowBetween>
           <RowFixed>
             <TYPE.purple3 fontSize={12} fontWeight={400}>
-              Swap Fee %
+              Swap fee %
             </TYPE.purple3>
             <QuestionHelper text="A portion of each trade (between 0% - 0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
@@ -70,7 +70,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
         <RowBetween>
           <RowFixed>
             <TYPE.purple3 fontSize={12} fontWeight={400}>
-              Swap Fee Amount
+              Swap fee amount
             </TYPE.purple3>
             <QuestionHelper text="The token amount of the swap fee." />
           </RowFixed>
@@ -108,7 +108,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
               <SwapRoute trade={trade} />
             </AutoColumn>
           )}
-          <AutoColumn style={{ padding: '0 24px' }}>
+          <AutoColumn style={{ padding: '0 24px', marginTop: '4px' }}>
             <InfoLink href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
               View pair analytics ↗
             </InfoLink>

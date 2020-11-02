@@ -10,6 +10,8 @@ const QuestionWrapper = styled.div`
   background: none;
   color: ${({ theme }) => theme.purple3};
   transition: opacity 0.3s ease;
+  width: 16px;
+  height: 16px;
 
   :hover,
   :focus {
@@ -39,7 +41,7 @@ export default function QuestionHelper({ text }: { text: string }) {
   const close = useCallback(() => setShow(false), [setShow])
 
   return (
-    <span style={{ marginLeft: 4 }}>
+    <span style={{ marginLeft: 4, width: 16, height: 16 }}>
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
           <Question size={16} />
