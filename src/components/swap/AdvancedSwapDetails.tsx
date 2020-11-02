@@ -1,6 +1,6 @@
 import { Trade, TradeType } from 'dxswap-sdk'
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React from 'react'
+import styled from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
@@ -9,7 +9,6 @@ import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
 
 const InfoLink = styled(ExternalLink)`
@@ -89,8 +88,6 @@ export interface AdvancedSwapDetailsProps {
 }
 
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
-  const theme = useContext(ThemeContext)
-
   const [allowedSlippage] = useUserSlippageTolerance()
 
   const showRoute = Boolean(trade && trade.route.path.length > 2)
@@ -101,18 +98,15 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
         <>
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
           {showRoute && (
-            <>
-              <SectionBreak />
-              <AutoColumn style={{ padding: '0 24px' }}>
-                <RowFixed>
-                  <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                    Route
-                  </TYPE.black>
-                  <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-                </RowFixed>
-                <SwapRoute trade={trade} />
-              </AutoColumn>
-            </>
+            <AutoColumn style={{ padding: '0 20px' }}>
+              <RowFixed>
+                <TYPE.purple3 fontSize={16} fontWeight={400}>
+                  Route
+                </TYPE.purple3>
+                <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
+              </RowFixed>
+              <SwapRoute trade={trade} />
+            </AutoColumn>
           )}
           <AutoColumn style={{ padding: '0 24px' }}>
             <InfoLink href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">

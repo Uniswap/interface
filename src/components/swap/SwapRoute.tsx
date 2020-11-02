@@ -10,10 +10,8 @@ export default memo(function SwapRoute({ trade }: { trade: Trade }) {
   const theme = useContext(ThemeContext)
   return (
     <Flex
-      px="1rem"
-      py="0.5rem"
-      my="0.5rem"
-      style={{ border: `1px solid ${theme.bg3}`, borderRadius: '1rem' }}
+      px="20px"
+      my="8px"
       flexWrap="wrap"
       width="100%"
       justifyContent="space-evenly"
@@ -29,7 +27,7 @@ export default memo(function SwapRoute({ trade }: { trade: Trade }) {
                 {token.symbol}
               </TYPE.black>
             </Flex>
-            {isLastItem ? null : <ChevronRight color={theme.text2} />}
+            {isLastItem ? null : <ChevronRight color={theme.purple3} />}
           </Fragment>
         )
       })}
