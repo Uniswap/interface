@@ -128,10 +128,7 @@ export class CToken extends Token {
   }
 
   public getSupplyBalanceAmount(): JSBI {
-    return JSBI.divide(
-      JSBI.multiply(JSBI.BigInt(this.supplyBalance ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
-      EXA_BASE
-    )
+    return JSBI.divide(JSBI.multiply(JSBI.BigInt(this.balanceOfUnderlying ?? 0), EXA_BASE), EXA_BASE)
   }
 
   public getSupplyBalanceJSBI(): JSBI {
@@ -150,7 +147,7 @@ export class CToken extends Token {
 
   public getBorrowBalanceJSBI(): JSBI {
     return JSBI.divide(
-      JSBI.multiply(JSBI.BigInt(this.borrowBalance ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
+      JSBI.multiply(JSBI.BigInt(this.borrowBalanceCurrent ?? 0), JSBI.BigInt(this.underlyingPrice ?? 0)),
       UNDERLYING_PRICE_BASE
     )
   }
