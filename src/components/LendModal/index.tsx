@@ -192,9 +192,9 @@ function LendModal({
   const walletBalanceAmount = useAllCTokenBalances([lendToken])
 
   const changedBorrowLimit = useMemo(() => {
-    if (lendToken && inputAmount) {
+    if (lendToken && lendInputValue) {
       const price = lendToken.getUnderlyingPrice()
-      const parseInputAmount = JSBI.BigInt(inputAmount?.raw.toString())
+      const parseInputAmount = JSBI.BigInt(inputAmount ? inputAmount.raw.toString() : ZERO)
       let borrowLimit = JSBI.divide(JSBI.multiply(price, parseInputAmount), EXA_BASE)
       let changedBorrowLimit
       if (lendMarket === LendField.SUPPLY) {
@@ -217,7 +217,7 @@ function LendModal({
       return formatData(changedBorrowLimit)
     }
     return ZERO_FRACTION
-  }, [lendToken, inputAmount, lendMarket, tabItemActive, limit, borrowTotalBalance])
+  }, [lendToken, lendInputValue, inputAmount, lendMarket, tabItemActive, limit, borrowTotalBalance])
 
   const changedBorrowLimitUsed = useMemo(() => {
     if (lendToken && lendInputValue) {
