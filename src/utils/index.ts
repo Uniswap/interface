@@ -6,10 +6,11 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { abi as ICERC20ABI } from '../constants/lend/c_erc20_interface.json'
 import { abi as ICEtherABI } from '../constants/lend/c_ether.json'
+import { abi as IMaximillionABI } from '../constants/lend/maximillion.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, Fraction } from '@uniswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
-import { COMPTROLLER_ABI, COMPTROLLER_ADDRESSES } from '../constants/lend'
+import { COMPTROLLER_ABI, COMPTROLLER_ADDRESSES, MAXIMILLION_ADDRESSES } from '../constants/lend'
 import { CToken } from '../data/CToken'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -112,6 +113,10 @@ export function getCERC20Contract(_: number, cTokenAddress: string, library: Web
 
 export function getCEtherContract(_: number, cTokenAddress: string, library: Web3Provider, account?: string): Contract {
   return getContract(cTokenAddress, ICEtherABI, library, account)
+}
+
+export function getMaximillionContract(chainId: number, library: Web3Provider, account?: string): Contract {
+  return getContract(MAXIMILLION_ADDRESSES[chainId as ChainId], IMaximillionABI, library, account)
 }
 
 export function getComptrollerContract(chainId: number, library: Web3Provider, account?: string): Contract {

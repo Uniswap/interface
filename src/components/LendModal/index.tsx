@@ -11,7 +11,15 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
 
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import { calculateGasMargin, formatData, EXA_BASE, getCERC20Contract, getCEtherContract, LIMIT_BASE } from '../../utils'
+import {
+  calculateGasMargin,
+  formatData,
+  EXA_BASE,
+  getCERC20Contract,
+  getCEtherContract,
+  LIMIT_BASE,
+  getMaximillionContract
+} from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -393,17 +401,29 @@ function LendModal({
       })
   }
 
-  async function onRedeemUnderlying(cToken: CToken, lendInputValue: string) {
+  async function onRedeem(cToken: CToken, lendInputValue: string) {
     const inputAmount = tryParseAmount(lendInputValue, cToken)
     const amount = inputAmount?.raw.toString()
 
     if (!chainId || !library || !account || !amount) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
 
-    const estimate = cTokenContract.estimateGas.redeemUnderlying
-    const method: (...args: any) => Promise<TransactionResponse> = cTokenContract.redeemUnderlying
-    const args: Array<string | string[] | number> = [amount]
-    const value: BigNumber | null = null
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
+      args: Array<string | string[] | number>,
+      value: BigNumber | null
+
+    const supplyBalanceAmount = new TokenAmount(cToken, cToken.getSupplyBalanceAmount()).toExact() ?? ''
+    if (lendInputValue === supplyBalanceAmount) {
+      estimate = cTokenContract.estimateGas.redeem
+      method = cTokenContract.redeem
+      args = [JSBI.BigInt(cToken.supplyBalance ?? 0).toString()]
+    } else {
+      estimate = cTokenContract.estimateGas.redeemUnderlying
+      method = cTokenContract.redeemUnderlying
+      args = [amount]
+    }
+    value = null
 
     setPendingText('Withdraw ' + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
@@ -489,17 +509,31 @@ function LendModal({
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
+
+    const borrowBlanceAmount = cToken.getBorrowBalanceAmount()
+    const borrowAmount = new TokenAmount(cToken, borrowBlanceAmount).toExact() ?? ''
     if (isETH) {
-      const cTokenContract = getCEtherContract(chainId, cToken.cAddress, library, account)
-      estimate = cTokenContract.estimateGas.repayBorrow
-      method = cTokenContract.repayBorrow
-      args = []
-      value = BigNumber.from(BigInt(1).toString())
+      const maximillionContract = getMaximillionContract(chainId, library, account)
+      estimate = maximillionContract.estimateGas.repayBehalf
+      method = maximillionContract.repayBehalf
+      args = [account]
+      if (lendInputValue === borrowAmount) {
+        // pay max eth with 0.35% extra ETH
+        value = BigNumber.from(
+          JSBI.divide(JSBI.multiply(borrowBlanceAmount, JSBI.BigInt(10035)), JSBI.BigInt(10000)).toString()
+        )
+      } else {
+        value = BigNumber.from(amount) // TODO: consider use cTokenMaxAmountSpend to substract tx fee
+      }
     } else {
       const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
       estimate = cTokenContract.estimateGas.repayBorrow
       method = cTokenContract.repayBorrow
-      args = [amount]
+      if (lendInputValue === borrowAmount) {
+        args = ['0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff']
+      } else {
+        args = [amount]
+      }
       value = null
     }
 
@@ -784,7 +818,7 @@ function LendModal({
                     setTxHash('')
                     setShowConfirm(true)
                     if (lendToken && inputAmount && tabItemActive === LendField.WITHDRAW) {
-                      onRedeemUnderlying(lendToken, lendInputValue)
+                      onRedeem(lendToken, lendInputValue)
                       setShowLendConfirmation(false)
                     }
 

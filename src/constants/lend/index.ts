@@ -19,6 +19,14 @@ const ORACLE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: '0xbBdE93962Ca9fe39537eeA7380550ca6845F8db7'
 }
 
+const MAXIMILLION_ADDRESSES: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '0xf859A1AD94BcF445A406B892eF0d3082f4174088',
+  [ChainId.ROPSTEN]: '0x0000000000000000000000000000000000000000',
+  [ChainId.RINKEBY]: '0xFdC42cE083c54aB50f61518CED9CFB9504A42389', // deerfi maximillion
+  [ChainId.GÖRLI]: '0x0000000000000000000000000000000000000000', // not working due to lack of oracle
+  [ChainId.KOVAN]: '0xC363f83902Ac614F318b04771d21D25aC0d73be5'
+}
+
 const CTOKEN_LISTS: { [chainId in ChainId]: [string, string, number, string, string, string, string, string, string][] } = {
   [ChainId.MAINNET]: [
     [
@@ -401,6 +409,7 @@ const CHAINLINK_PRICE_ORACLE_PROXY = new Interface(CHAINLINK_PRICE_ORACLE_PROXY_
 export {
   COMPTROLLER_ADDRESSES,
   ORACLE_ADDRESSES,
+  MAXIMILLION_ADDRESSES,
   CTOKEN_LISTS,
   COMPTROLLER_INTERFACE,
   CHAINLINK_PRICE_ORACLE_PROXY,

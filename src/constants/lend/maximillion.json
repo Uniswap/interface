@@ -1,0 +1,104 @@
+{
+  "contractName": "Maximillion",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract CEther",
+          "name": "cEther_",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "cEther",
+      "outputs": [
+        {
+          "internalType": "contract CEther",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        }
+      ],
+      "name": "repayBehalf",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "contract CEther",
+          "name": "cEther_",
+          "type": "address"
+        }
+      ],
+      "name": "repayBehalfExplicit",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.2.0",
+  "updatedAt": "2020-10-08T21:59:21.541Z",
+  "devdoc": {
+    "author": "Compound",
+    "methods": {
+      "repayBehalf(address)": {
+        "details": "The provided Ether is applied towards the borrow balance, any excess is refunded",
+        "params": {
+          "borrower": "The address of the borrower account to repay on behalf of"
+        }
+      },
+      "repayBehalfExplicit(address,address)": {
+        "details": "The provided Ether is applied towards the borrow balance, any excess is refunded",
+        "params": {
+          "borrower": "The address of the borrower account to repay on behalf of",
+          "cEther_": "The address of the cEther contract to repay in"
+        }
+      }
+    },
+    "title": "Compound's Maximillion Contract"
+  },
+  "userdoc": {
+    "methods": {
+      "constructor": "Construct a Maximillion to repay max in a CEther market",
+      "repayBehalf(address)": {
+        "notice": "msg.sender sends Ether to repay an account's borrow in the cEther market"
+      },
+      "repayBehalfExplicit(address,address)": {
+        "notice": "msg.sender sends Ether to repay an account's borrow in a cEther market"
+      }
+    }
+  }
+}
