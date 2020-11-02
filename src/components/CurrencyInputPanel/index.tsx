@@ -71,7 +71,6 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
 
 const Container = styled.div<{ hideInput: boolean }>`
   background-color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
-  border-radius: 8px;
   border: 8px solid;
   border-radius: 8px;
   border-image: url(${border8pxRadius}) 8;
