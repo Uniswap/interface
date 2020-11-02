@@ -14,7 +14,7 @@ const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
 const ORACLE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x922018674c12a7f0d394ebeef9b58f186cde13c1',
   [ChainId.ROPSTEN]: '0xb2b3d5b4e35881d518fa2062325f118a6ebb6c4a',
-  [ChainId.RINKEBY]: '0x88dE90d48c4d5785d6b2C8FD82dF5301Ca5C44f1', // deerfi oracle
+  [ChainId.RINKEBY]: '0xBB1e4126bc8AE55850335a7c126fEA1315b987b7', // deerfi oracle
   [ChainId.GÖRLI]: '0x9A536Ed5C97686988F93C9f7C2A390bF3B59c0ec', // not working due to lack of oracle
   [ChainId.KOVAN]: '0xbBdE93962Ca9fe39537eeA7380550ca6845F8db7'
 }
@@ -251,6 +251,17 @@ const CTOKEN_LISTS: { [chainId in ChainId]: [string, string, number, string, str
       'ETH-DAI',
       'ETH-DAI LP',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png'
+    ],
+    [
+      '0x709a3b48536d766E4A57887aBe7fB47c1428a178',
+      '0x0Af7f38fE8C9F98d132D4fBf27FeC89a648451f9',
+      18,
+      'dUS8D-US6D',
+      'Deerfi US8D-US6D',
+      'US8D-US6D',
+      'US8D-US6D LP',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png'
     ]
   ],
