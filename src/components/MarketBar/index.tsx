@@ -3,14 +3,14 @@ import React from 'react'
 import styled from 'styled-components'
 
 const MarketBarWrap = styled.div<{ barColor?: string; width?: string; height?: string }>`
-  background: ${({ barColor }) => barColor ?? 'rgba(40, 49, 55, 0.1)'};
+  background: ${({ barColor, theme }) => barColor ?? theme.bg3};
   height: ${({ height }) => height ?? '4px'};
   width: ${({ width }) => width ?? '100%'};
   border-radius: 2px;
 `
 
 const FillBar = styled.div<{ rate: number; fillColor?: string }>`
-  background: ${({ fillColor }) => fillColor ?? '#ff007a'};
+  background: ${({ fillColor, theme }) => fillColor ?? theme.primary1};
   width: ${({ rate }) => rate}%;
   height: 100%;
   border-radius: 2px;
