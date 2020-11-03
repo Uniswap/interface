@@ -9,7 +9,17 @@ const MarketBarWrap = styled.div<{ barColor?: string; width?: string; height?: s
   border-radius: 2px;
 `
 
+const RateWrap = styled.div`
+  position: absolute;
+  width: 100%;
+  font-weight: 600;
+  font-size: 0.7rem;
+  margin-top: -0.35rem;
+  text-align: right;
+`
+
 const FillBar = styled.div<{ rate: number; fillColor?: string }>`
+  position: relative;
   background: ${({ fillColor, theme }) => fillColor ?? theme.primary1};
   width: ${({ rate }) => rate}%;
   height: 100%;
@@ -18,16 +28,19 @@ const FillBar = styled.div<{ rate: number; fillColor?: string }>`
 
 interface MarketBarProps {
   rate: number
+  showRate?: boolean
   barColor?: string
   fillColor?: string
   width?: string
   height?: string
 }
 
-export default function MarketBar({ rate, barColor, fillColor, width, height }: MarketBarProps) {
+export default function MarketBar({ rate, showRate = false, barColor, fillColor, width, height }: MarketBarProps) {
   return (
     <MarketBarWrap barColor={barColor} width={width} height={height}>
-      <FillBar rate={rate} fillColor={fillColor}></FillBar>
+      <FillBar rate={rate} fillColor={fillColor}>
+        {showRate && <RateWrap>{rate}%</RateWrap>}
+      </FillBar>
     </MarketBarWrap>
   )
 }

@@ -1,15 +1,9 @@
 import { Fraction, JSBI } from '@uniswap/sdk'
 import React from 'react'
-// import { LightCard } from '../../components/Card'
-// import { darken } from 'polished'
 // import { useTranslation } from 'react-i18next'
-
 import styled from 'styled-components'
 import { formatData } from '../../utils'
-
-// import { YellowCard } from '../Card'
-
-// import Row, { RowFixed } from '../Row'
+import MarketBar from '../MarketBar'
 
 const SummaryCard = styled.div`
   background: ${({ theme }) => theme.bg1};
@@ -72,10 +66,18 @@ const DotIcon = styled.div`
   `};
 `
 
-const BorrowWrap = styled.div`
-  font-size: 50%;
-  margin: 0px 0px 0px 10px;
-  color: grey;
+const MarketBarWrap = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 24px 28px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
+`
+
+const MarketBarTitle = styled.div`
+  font-size: 0.8rem;
+  white-space: nowrap;
 `
 
 function Summary({
@@ -117,13 +119,18 @@ function Summary({
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
-          <SummaryTitle>Borrow Limit</SummaryTitle>
+          <SummaryTitle>Total Market Size</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${formatData(limit).toFixed(2)}
-            <BorrowWrap>({usedLimit.toSignificant(4) ?? '0.00'}% Used)</BorrowWrap>
+            <DotIcon />
+            $0.00
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>
+      <MarketBarWrap>
+        <MarketBarTitle style={{ paddingRight: '6px' }}>Borrow Limit</MarketBarTitle>
+        <MarketBar rate={Number(usedLimit.toSignificant(4)) ?? 0} showRate={true} />
+        <MarketBarTitle style={{ paddingLeft: '6px' }}>${formatData(limit).toFixed(2)}</MarketBarTitle>
+      </MarketBarWrap>
     </SummaryCard>
   )
 }
