@@ -19,6 +19,7 @@ import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
 import { darken } from 'polished'
 import { ExternalLink } from '../../theme'
+import MobileOptions from './MobileOptions'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -79,6 +80,13 @@ const HeaderElement = styled.div`
   `};
 `
 
+const MoreLinksIcon = styled(HeaderElement)`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: flex;
+  `};
+`
+
 const HeaderElementWrap = styled.div`
   display: flex;
   align-items: center;
@@ -113,7 +121,7 @@ const HeaderLinks = styled(Row)`
   justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 0 1rem 1rem;
-    justify-content: flex-start;
+    justify-content: flex-end;
   `};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     padding: 1rem 0 1rem 0;
@@ -258,6 +266,9 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -309,6 +320,9 @@ function Header({ history }: { history: any }) {
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
+          <MoreLinksIcon>
+            <MobileOptions/>
+          </MoreLinksIcon>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
