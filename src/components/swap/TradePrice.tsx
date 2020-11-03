@@ -19,7 +19,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
     : `${price?.baseCurrency?.symbol} per ${price?.quoteCurrency?.symbol}`
 
   return (
-    <TYPE.purple3
+    <TYPE.body
       fontSize="12px"
       lineHeight="15px"
       fontWeight="400"
@@ -35,6 +35,6 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       ) : (
         '-'
       )}
-    </TYPE.purple3>
+    </TYPE.body>
   )
 }

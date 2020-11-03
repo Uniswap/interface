@@ -316,9 +316,9 @@ export default function Swap() {
                 <AutoColumn gap="8px">
                   {Boolean(trade) && (
                     <RowBetween align="center">
-                      <TYPE.purple3 fontSize="12px" lineHeight="15px" fontWeight="400">
+                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
                         Price
-                      </TYPE.purple3>
+                      </TYPE.body>
                       <TradePrice
                         price={trade?.executionPrice}
                         showInverted={showInverted}

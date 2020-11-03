@@ -26,17 +26,17 @@ const Badge = ({ icon: FeatherIcon, label, onIconClick }: BadgeProps) => {
     <Root alignItems="center">
       {label && (
         <Box>
-          <TYPE.purple3 fontWeight="600" fontSize="8px">
+          <TYPE.body fontWeight="600" fontSize="8px">
             {label}
-          </TYPE.purple3>
+          </TYPE.body>
         </Box>
       )}
       {FeatherIcon && (
         <Flex ml="4px" onClick={onIconClick} alignItems="center">
           <IconBox>
-            <TYPE.purple3>
+            <TYPE.body>
               <FeatherIcon size="12px" />
-            </TYPE.purple3>
+            </TYPE.body>
           </IconBox>
         </Flex>
       )}

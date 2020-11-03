@@ -153,11 +153,11 @@ export default function CurrencyInputPanel({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.purple3 fontWeight="500" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
+              <TYPE.body fontWeight="500" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
                 <UppercaseHelper>{label}</UppercaseHelper>
-              </TYPE.purple3>
+              </TYPE.body>
               {account && (
-                <TYPE.purple3
+                <TYPE.body
                   onClick={onMax}
                   fontWeight="500"
                   fontSize="11px"
@@ -170,7 +170,7 @@ export default function CurrencyInputPanel({
                       ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
                       : ' -'}
                   </UppercaseHelper>
-                </TYPE.purple3>
+                </TYPE.body>
               )}
             </RowBetween>
           </LabelRow>

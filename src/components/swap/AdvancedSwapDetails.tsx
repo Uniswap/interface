@@ -34,26 +34,26 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
       <AutoColumn style={{ padding: '0 20px' }} gap="8px">
         <RowBetween>
           <RowFixed align="center">
-            <TYPE.purple3 fontSize="12px" lineHeight="15px" fontWeight="400">
+            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
-            </TYPE.purple3>
+            </TYPE.body>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
           <RowFixed>
-            <TYPE.purple3 fontSize="12px" lineHeight="15px" fontWeight="400">
+            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
               {isExactIn
                 ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
                   '-'
                 : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.currency.symbol}` ??
                   '-'}
-            </TYPE.purple3>
+            </TYPE.body>
           </RowFixed>
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.purple3 fontSize="12px" lineHeight="15px" fontWeight="400">
+            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
               Price impact
-            </TYPE.purple3>
+            </TYPE.body>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
@@ -61,26 +61,26 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
         <RowBetween>
           <RowFixed>
-            <TYPE.purple3 fontSize="12px" lineHeight="15px" fontWeight="400">
+            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
               Swap fee %
-            </TYPE.purple3>
+            </TYPE.body>
             <QuestionHelper text="A portion of each trade (between 0% - 0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
-          <TYPE.purple3 fontSize="12px" lineHeight="15px" fontWeight="400">
+          <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
             {realizedLPFee ? `${realizedLPFee.toSignificant(2)} %` : '-'}
-          </TYPE.purple3>
+          </TYPE.body>
         </RowBetween>
 
         <RowBetween>
           <RowFixed>
-            <TYPE.purple3 fontSize="12px" lineHeight="15px" fontWeight="400">
+            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
               Swap fee amount
-            </TYPE.purple3>
+            </TYPE.body>
             <QuestionHelper text="The token amount of the swap fee." />
           </RowFixed>
-          <TYPE.purple3 fontSize="12px" lineHeight="15px" fontWeight="400">
+          <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
             {realizedLPFeeAmount ? `${realizedLPFeeAmount.toSignificant(2)} ${trade.inputAmount.currency.symbol}` : '-'}
-          </TYPE.purple3>
+          </TYPE.body>
         </RowBetween>
       </AutoColumn>
     </>
@@ -104,9 +104,9 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           {showRoute && (
             <AutoColumn style={{ padding: '0 20px' }}>
               <RowFixed>
-                <TYPE.purple3 fontSize="14px" lineHeight="17px" fontWeight="400">
+                <TYPE.body fontSize="14px" lineHeight="17px" fontWeight="400">
                   Route
-                </TYPE.purple3>
+                </TYPE.body>
                 <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
               </RowFixed>
               <SwapRoute trade={trade} />

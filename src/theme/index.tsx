@@ -21,7 +21,7 @@ const MEDIA_WIDTHS = {
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    (accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -41,18 +41,18 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#6C7284' : '#888D9B',
-    text4: darkMode ? '#565A69' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text1: darkMode ? '#FFFFFF' : '#14131D',
+    text2: darkMode ? '#EBE9F8' : '#464366',
+    text3: darkMode ? '#DDDAF8' : '#8E89C6',
+    text4: darkMode ? '#C0BAF6' : '#A7A0E4',
+    text5: darkMode ? '#8780BF' : '#C0BAF6',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
-    bg3: darkMode ? '#40444F' : '#EDEEF2',
-    bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
+    bg1: darkMode ? '#14131D' : '#FFFFFF',
+    bg2: darkMode ? '#26243B' : '#EBE9F8',
+    bg3: darkMode ? '#444163' : '#DDDAF8',
+    bg4: darkMode ? '#5C5886' : '#C0BBE9',
+    bg5: darkMode ? '#7873A4' : '#7873A4',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
@@ -92,7 +92,7 @@ export function colors(darkMode: boolean): Colors {
     purple2: '#C0BAF6',
     purple3: '#8780BF',
     purple4: '#685EC6',
-    purple5: '#464366',
+    purple5: '#464366'
   }
 }
 
@@ -132,7 +132,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text) <{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -150,7 +150,7 @@ export const TYPE = {
     return <TextWrapper fontWeight={500} color={'white'} {...props} />
   },
   body(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={16} color={'text5'} {...props} />
   },
   largeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
@@ -181,10 +181,7 @@ export const TYPE = {
   },
   error({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
-  },
-  purple3(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'purple3'} {...props} />
-  },
+  }
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
@@ -225,17 +222,18 @@ a {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
 }
 
 body {
   min-height: 100vh;
-  background-position: 0 -30vh;
+  background-position: 0 -20vh;
   background-repeat: no-repeat;
   background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%)`};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    background-position: 0 -10vh;
+    background-image: radial-gradient(100% 50% at 40% 50%, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%);
+  `};
 }
 `
