@@ -174,7 +174,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
 
   const cTokenList = CTOKEN_LISTS[chainId ?? ChainId.MAINNET]
 
-  const accountArg = useMemo(() => [account ?? undefined], [account])
+  const accountArg = useMemo(() => [account ?? '0x0000000000000000000000000000000000000000'], [account])
 
   const cTokenAddresses = useMemo(
     () =>
