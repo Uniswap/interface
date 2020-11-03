@@ -1,6 +1,6 @@
 ---
-name: Feature Request
-about: Suggest an idea for improving the UX of the Uniswap Interface
+name: Feature request
+about: Suggest an idea for this project
 title: ''
 labels: ''
 assignees: ''
