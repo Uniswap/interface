@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import Switch from '../Switch'
 import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
@@ -21,6 +21,7 @@ import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
+import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -188,7 +189,11 @@ function SupplyMarkets({
 
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
 
+  const [showConfirm, setShowConfirm] = useState<boolean>(false)
+
   const [txHash, setTxHash] = useState<string>('')
+
+  const [pendingText, setPendingText] = useState('')
 
   console.log('use txHash and attemptingTxn later like Add Liquidity', attemptingTxn, txHash)
 
@@ -203,6 +208,7 @@ function SupplyMarkets({
     const args: Array<string | string[] | number> = [[cToken.cAddress]]
     const value: BigNumber | null = null
 
+    setPendingText('Enter ' + cToken.symbol + ' as Collateral')
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -243,6 +249,7 @@ function SupplyMarkets({
     const args: Array<string | string[] | number> = [cToken.cAddress]
     const value: BigNumber | null = null
 
+    setPendingText('Exit ' + cToken.symbol + ' as Collateral')
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -321,6 +328,20 @@ function SupplyMarkets({
     }
   }
 
+  const handleDismissConfirmation = useCallback(() => {
+    setShowConfirm(false)
+  }, [])
+
+  const confirmationContent = useCallback(
+    () =>
+      txHash ? (
+        <></>
+      ) : (
+        <TransactionErrorContent onDismiss={handleDismissConfirmation} message={'Collateral rejected.'} />
+      ),
+    [handleDismissConfirmation, txHash]
+  )
+
   return (
     <div>
       <LendModal
@@ -331,6 +352,14 @@ function SupplyMarkets({
         limit={limit}
         usedLimit={usedLimit}
         lendMarket={LendField.SUPPLY}
+      />
+      <TransactionConfirmationModal
+        isOpen={showConfirm}
+        onDismiss={handleDismissConfirmation}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={confirmationContent}
+        pendingText={pendingText}
       />
       <Modal isOpen={showCollateralConfirmation} onDismiss={() => setShowCollateralConfirmation(false)}>
         <ModalContentWrapper>
@@ -370,12 +399,18 @@ function SupplyMarkets({
                   if (collateralToken) {
                     if (collateralToken.canBeCollateral) {
                       if (canExitMarkets()) {
+                        setPendingText('')
+                        setTxHash('')
+                        setShowConfirm(true)
                         onExitMarket(collateralToken)
                         setShowCollateralConfirmation(false)
                       } else {
                         return setShowCollateralConfirmation(false)
                       }
                     } else {
+                      setPendingText('')
+                      setTxHash('')
+                      setShowConfirm(true)
                       onEnterMarkets(collateralToken)
                       setShowCollateralConfirmation(false)
                     }
