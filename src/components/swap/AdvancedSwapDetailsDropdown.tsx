@@ -5,7 +5,7 @@ import { AdvancedSwapDetails, AdvancedSwapDetailsProps } from './AdvancedSwapDet
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
-  padding-top: 12px;
+  padding-top: 8px;
   padding-bottom: 16px;
   width: 100%;
   max-width: 400px;

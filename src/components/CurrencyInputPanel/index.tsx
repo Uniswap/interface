@@ -153,13 +153,13 @@ export default function CurrencyInputPanel({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.body fontWeight="500" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
+              <TYPE.body fontWeight="600" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
                 <UppercaseHelper>{label}</UppercaseHelper>
               </TYPE.body>
               {account && (
                 <TYPE.body
                   onClick={onMax}
-                  fontWeight="500"
+                  fontWeight="600"
                   fontSize="11px"
                   lineHeight="13px"
                   letterSpacing="0.08em"

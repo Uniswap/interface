@@ -316,7 +316,7 @@ export default function Swap() {
                 <AutoColumn gap="8px">
                   {Boolean(trade) && (
                     <RowBetween align="center">
-                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="400">
+                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
                         Price
                       </TYPE.body>
                       <TradePrice
@@ -328,10 +328,10 @@ export default function Swap() {
                   )}
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                     <RowBetween align="center">
-                      <ClickableText fontSize="12px" lineHeight="15px" fontWeight="400" onClick={toggleSettings}>
+                      <ClickableText fontSize="12px" lineHeight="15px" fontWeight="500" onClick={toggleSettings}>
                         Slippage Tolerance
                       </ClickableText>
-                      <ClickableText fontSize="12px" lineHeight="15px" fontWeight="400" onClick={toggleSettings}>
+                      <ClickableText fontSize="12px" lineHeight="15px" fontWeight="500" onClick={toggleSettings}>
                         {allowedSlippage / 100}%
                       </ClickableText>
                     </RowBetween>

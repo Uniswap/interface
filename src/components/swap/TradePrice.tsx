@@ -22,13 +22,13 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
     <TYPE.body
       fontSize="12px"
       lineHeight="15px"
-      fontWeight="400"
+      fontWeight="500"
       style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
     >
       {show ? (
         <>
           {formattedPrice ?? '-'} {label}
-          <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
+          <StyledBalanceMaxMini style={{ marginLeft: 6 }} onClick={() => setShowInverted(!showInverted)}>
             <Repeat size={12} />
           </StyledBalanceMaxMini>
         </>

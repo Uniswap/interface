@@ -50,6 +50,9 @@ export const StyledBalanceMaxMini = styled.button`
   border: none;
   background: transparent;
   color: ${({ theme }) => theme.purple3};
+  display: flex;
+  align-items: center;
+  padding: 0;
 `
 
 export const TruncatedText = styled(Text)`
