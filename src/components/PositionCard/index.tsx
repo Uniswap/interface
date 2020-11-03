@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent } from '@uniswap/sdk'
+import { JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -18,7 +18,7 @@ import { CardNoise } from '../earn/styled'
 
 import { useColor } from '../../hooks/useColor'
 
-import Card, { GreyCard, LightCard } from '../Card'
+import Card, { GreyCard, LightCard, OutlineCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -27,6 +27,14 @@ import { Dots } from '../swap/styleds'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
+`
+
+const StakedFlag = styled(OutlineCard)<{ bgColor: string }>`
+  border: 1px solid ${({ bgColor }) => bgColor};
+  margin-left: 1rem;
+  border-radius: 6px;
+  width: fit-content;
+  padding: 2px 6px;
 `
 
 export const HoverCard = styled(Card)`
@@ -47,6 +55,7 @@ interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
   border?: string
+  userBalanceOverwrite?: TokenAmount
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
@@ -157,7 +166,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ pair, border }: PositionCardProps) {
+export default function FullPositionCard({ pair, border, userBalanceOverwrite }: PositionCardProps) {
   const { account } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
@@ -165,8 +174,11 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
+
+  // if overwrite balance provided, use instead of fetched balance from pool
+  const userPoolBalance = userBalanceOverwrite ?? userDefaultPoolBalance
 
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
@@ -197,6 +209,16 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             <Text fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>
+            {userBalanceOverwrite && (
+              <StakedFlag bgColor={backgroundColor}>
+                <TYPE.body>
+                  Earning UNI{' '}
+                  <span role="img" aria-label="bolt">
+                    ⚡
+                  </span>
+                </TYPE.body>
+              </StakedFlag>
+            )}
           </RowFixed>
 
           <RowFixed gap="8px">
@@ -285,26 +307,40 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary>
-            <RowBetween marginTop="10px">
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                as={Link}
-                to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
-                width="48%"
-              >
-                Add
-              </ButtonPrimary>
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                as={Link}
-                width="48%"
-                to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
-              >
-                Remove
-              </ButtonPrimary>
-            </RowBetween>
+            {userBalanceOverwrite ? (
+              <RowBetween marginTop="10px">
+                <ButtonPrimary
+                  padding="8px"
+                  borderRadius="8px"
+                  as={Link}
+                  to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  width="100%"
+                >
+                  Manage Deposited Liquidity
+                </ButtonPrimary>
+              </RowBetween>
+            ) : (
+              <RowBetween marginTop="10px">
+                <ButtonPrimary
+                  padding="8px"
+                  borderRadius="8px"
+                  as={Link}
+                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  width="48%"
+                >
+                  Add
+                </ButtonPrimary>
+                <ButtonPrimary
+                  padding="8px"
+                  borderRadius="8px"
+                  as={Link}
+                  width="48%"
+                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+                >
+                  Remove
+                </ButtonPrimary>
+              </RowBetween>
+            )}
           </AutoColumn>
         )}
       </AutoColumn>
