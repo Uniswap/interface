@@ -15,7 +15,8 @@ const Base = styled(RebassButton)<{
   padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 600;
-  font-size: 16px;
+  font-size: 13px;
+  line-height: 16px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;

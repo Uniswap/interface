@@ -27,7 +27,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   background-color: ${({ selected, theme }) => (selected ? 'transparent' : theme.mainPurple)};
   border-radius: 8px;
   height: 28px;
-  padding: 0 12px;
+  padding: ${({ selected }) => (selected ? '0' : '0 12px')};
   color: ${({ theme }) => theme.white};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
@@ -54,8 +54,9 @@ const Aligner = styled.span`
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
-  margin: 0 0.25rem 0 0.5rem;
-  height: 35%;
+  margin: 0 0 0 5px;
+  height: 11px;
+  width: 11px;
 
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
@@ -78,12 +79,15 @@ const Container = styled.div<{ hideInput: boolean }>`
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
-  margin: ${({ active }) => (active ? '0 0 0 8px' : '0')};
-  font-size: ${({ active }) => (active ? '20px' : '16px')};
+  margin: ${({ active }) => (active ? '0 0 0 6px' : '0')};
+  font-size: ${({ active }) => (active ? '16px' : '11px')};
+  line-height: ${({ active }) => (active ? '20px' : '13px')};
+  letter-spacing: 0.08em;
 `
 
 const StyledBalanceMax = styled.button`
-  font-size: 12px;
+  font-size: 11px;
+  line-height: 13px;
   letter-spacing: 0.08em;
   cursor: pointer;
   margin-right: 4px;
@@ -149,16 +153,17 @@ export default function CurrencyInputPanel({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.purple3 fontWeight={500} fontSize={12} letterSpacing="0.08em">
+              <TYPE.purple3 fontWeight="500" fontSize="11px" lineHeight="13px" letterSpacing="0.08em">
                 <UppercaseHelper>{label}</UppercaseHelper>
               </TYPE.purple3>
               {account && (
                 <TYPE.purple3
                   onClick={onMax}
-                  fontWeight={500}
-                  fontSize={12}
-                  style={{ display: 'inline', cursor: 'pointer' }}
+                  fontWeight="500"
+                  fontSize="11px"
+                  lineHeight="13px"
                   letterSpacing="0.08em"
+                  style={{ display: 'inline', cursor: 'pointer' }}
                 >
                   <UppercaseHelper>
                     {!hideBalance && !!currency && selectedCurrencyBalance
@@ -196,9 +201,9 @@ export default function CurrencyInputPanel({
           >
             <Aligner>
               {pair ? (
-                <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={20} margin={true} />
               ) : currency ? (
-                <CurrencyLogo currency={currency} size={'20px'} />
+                <CurrencyLogo currency={currency} size="20px" />
               ) : null}
               {pair ? (
                 <StyledTokenName className="pair-name-container">

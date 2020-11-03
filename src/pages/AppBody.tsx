@@ -7,8 +7,6 @@ export const BodyWrapper = styled.div`
   max-width: 420px;
   width: 100%;
   background: #181520;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px hsla(0, 0%, 0%, 0.01);
   border: 8px solid transparent;
   border-radius: 8px;
   border-image: url(${border8pxRadius}) 8;

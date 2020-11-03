@@ -3,7 +3,7 @@ import { ChainId, JSBI, Percent, Token, WETH, DXD } from 'dxswap-sdk'
 import { rinkeby } from 'dxswap-periphery/.contracts.json'
 import { tokens } from './tokens'
 
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { injected } from '../connectors'
 
 export const ROUTER_ADDRESS = rinkeby.router
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -87,8 +87,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Easy-to-use browser extension.',
     href: null,
     color: '#E8831D'
-  },
-  WALLET_CONNECT: {
+  }
+  /* WALLET_CONNECT: {
     connector: walletconnect,
     name: 'WalletConnect',
     iconName: 'walletConnectIcon.svg',
@@ -131,7 +131,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#4A6C9B',
     mobile: true
-  }
+  } */
 }
 
 export const NetworkContextName = 'NETWORK'
