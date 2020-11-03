@@ -1,4 +1,4 @@
-import { Percent } from 'uniswap-fuse-sdk'
+import { Percent } from '@fuseio/fuse-swap-sdk'
 import React from 'react'
 import { ONE_BIPS } from '../../constants'
 import { warningSeverity } from '../../utils/prices'

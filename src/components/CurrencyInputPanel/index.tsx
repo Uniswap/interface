@@ -1,4 +1,4 @@
-import { Currency, Pair } from 'uniswap-fuse-sdk'
+import { Currency, Pair } from '@fuseio/fuse-swap-sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'

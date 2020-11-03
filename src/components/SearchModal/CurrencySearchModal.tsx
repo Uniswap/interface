@@ -1,4 +1,4 @@
-import { Currency } from 'uniswap-fuse-sdk'
+import { Currency } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import useLast from '../../hooks/useLast'

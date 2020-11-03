@@ -1,4 +1,4 @@
-import { Currency, currencyEquals, ETHER, WETH } from 'uniswap-fuse-sdk'
+import { Currency, currencyEquals, ETHER, WETH } from '@fuseio/fuse-swap-sdk'
 import { useMemo } from 'react'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'

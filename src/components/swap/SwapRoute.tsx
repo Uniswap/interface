@@ -1,4 +1,4 @@
-import { Trade } from 'uniswap-fuse-sdk'
+import { Trade } from '@fuseio/fuse-swap-sdk'
 import React, { Fragment, memo, useContext } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'

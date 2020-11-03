@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { useActiveWeb3React } from '../hooks'
-import { ChainId } from 'uniswap-fuse-sdk'
+import { ChainId } from '@fuseio/fuse-swap-sdk'
 
 export function RedirectToDefault(props: RouteComponentProps) {
   const { chainId } = useActiveWeb3React()

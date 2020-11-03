@@ -6,7 +6,7 @@ import { PortisConnector } from '@web3-react/portis-connector'
 
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
-import { ChainId } from 'uniswap-fuse-sdk'
+import { ChainId } from '@fuseio/fuse-swap-sdk'
 import { HOME_BRIDGE_CHAIN } from '../constants'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL

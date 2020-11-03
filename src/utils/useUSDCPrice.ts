@@ -1,4 +1,4 @@
-import { ChainId, Currency, currencyEquals, JSBI, Price, WETH } from 'uniswap-fuse-sdk'
+import { ChainId, Currency, currencyEquals, JSBI, Price, WETH } from '@fuseio/fuse-swap-sdk'
 import { useMemo } from 'react'
 import { USDC } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'

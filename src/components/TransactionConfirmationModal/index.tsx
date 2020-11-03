@@ -1,4 +1,4 @@
-import { ChainId } from 'uniswap-fuse-sdk'
+import { ChainId } from '@fuseio/fuse-swap-sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'

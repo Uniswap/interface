@@ -1,4 +1,4 @@
-import { CurrencyAmount, ETHER, Percent, Route, TokenAmount, Trade } from 'uniswap-fuse-sdk'
+import { CurrencyAmount, ETHER, Percent, Route, TokenAmount, Trade } from '@fuseio/fuse-swap-sdk'
 import { DAI, USDC } from '../constants'
 import { MockV1Pair } from '../data/V1'
 import v1SwapArguments from './v1SwapArguments'

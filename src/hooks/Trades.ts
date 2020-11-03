@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from 'uniswap-fuse-sdk'
+import { Currency, CurrencyAmount, Pair, Token, Trade } from '@fuseio/fuse-swap-sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 

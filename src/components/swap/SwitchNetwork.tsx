@@ -1,7 +1,7 @@
 import React from 'react'
 import { RowCenter } from '../Row'
 import { AutoColumn } from '../Column'
-import { TYPE } from '../../theme'
+import { TYPE, ExternalLink } from '../../theme'
 import icon from '../../assets/svg/fuse.svg'
 import styled from 'styled-components'
 
@@ -26,9 +26,12 @@ function SwitchNetwork() {
           </TYPE.body>
         </RowCenter>
         <RowCenter>
-          <TYPE.body fontSize={18} fontWeight={500}>
+          <ExternalLink
+            href="https://docs.fuse.io/the-fuse-studio/getting-started/how-to-add-fuse-to-your-metamask"
+            style={{ fontSize: 18, color: 'white' }}
+          >
             Click here to learn how
-          </TYPE.body>
+          </ExternalLink>
         </RowCenter>
       </AutoColumn>
     </>

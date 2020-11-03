@@ -1,4 +1,4 @@
-import { Currency, ETHER as FUSE, Token, ChainId } from 'uniswap-fuse-sdk'
+import { Currency, ETHER as FUSE, Token, ChainId } from '@fuseio/fuse-swap-sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 

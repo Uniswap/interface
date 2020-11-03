@@ -1,4 +1,4 @@
-import { Currency, Percent, Price } from 'uniswap-fuse-sdk'
+import { Currency, Percent, Price } from '@fuseio/fuse-swap-sdk'
 import React, { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'

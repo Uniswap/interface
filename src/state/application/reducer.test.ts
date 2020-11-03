@@ -1,4 +1,4 @@
-import { ChainId } from 'uniswap-fuse-sdk'
+import { ChainId } from '@fuseio/fuse-swap-sdk'
 import { createStore, Store } from 'redux'
 import { addPopup, removePopup, toggleSettingsMenu, toggleWalletModal, updateBlockNumber } from './actions'
 import reducer, { ApplicationState } from './reducer'

@@ -78,7 +78,7 @@
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "typescript": "^3.8.3",
-    "uniswap-fuse-sdk": "^3.0.3-a4"
+    "@fuseio/fuse-swap-sdk": "^3.0.4"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"

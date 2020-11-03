@@ -1676,6 +1676,19 @@
   resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-default-token-list/-/fuse-swap-default-token-list-1.0.4.tgz#7ad931ea810357e1ce4e1861ac0c7cd990b2f56d"
   integrity sha512-FdAhATkKS6MZxTe7ErIgZ+L54DTsFM3czr/5auKdUrmN9/dkhw2H+4/jd7Hy7l/czERBEaPLUeKcJE4m7NrPCg==
 
+"@fuseio/fuse-swap-sdk@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-sdk/-/fuse-swap-sdk-3.0.4.tgz#4bb33812e3cd79617c4bb93ccea7a06fc51fea96"
+  integrity sha512-/dd77cfPhcQsSHGtv+DFTlf3g4U9W22pCEGS0MZ0NnC1SSBpLc3f0JumydMhp+1RRMw5mJ+hNFCHGytg1iM3sQ==
+  dependencies:
+    "@uniswap/v2-core" "^1.0.0"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.1"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+    toformat "^2.0.0"
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -14667,19 +14680,6 @@ unique-slug@^2.0.0:
   integrity sha512-zoWr9ObaxALD3DOPfjPSqxt4fnZiWblxHIgeWqW8x7UqDzEtHEQLzji2cuJYQFCU6KmoJikOYAZlrTHHebjx2w==
   dependencies:
     imurmurhash "^0.1.4"
-
-uniswap-fuse-sdk@^3.0.3-a4:
-  version "3.0.3-a4"
-  resolved "https://registry.yarnpkg.com/uniswap-fuse-sdk/-/uniswap-fuse-sdk-3.0.3-a4.tgz#cdf3b58c819aac461979f78556508c687dbeed31"
-  integrity sha512-1SA9g9r9g2HTwShuKchl07RX8MBe0YQ2Xm44L5jDjQ1Hi4U3yP6kzxEx0+lZHkxkzUqjh6aRd51MLCG1mWOOGA==
-  dependencies:
-    "@uniswap/v2-core" "^1.0.0"
-    big.js "^5.2.2"
-    decimal.js-light "^2.5.0"
-    jsbi "^3.1.1"
-    tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
-    toformat "^2.0.0"
 
 universalify@^0.1.0:
   version "0.1.2"

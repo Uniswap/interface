@@ -17,6 +17,11 @@ export const TEST_ADDRESS_NEVER_USE = '0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a
 export const TEST_ADDRESS_NEVER_USE_SHORTENED = '0x0fF2...F4a5'
 
 class CustomizedBridge extends _Eip1193Bridge {
+  constructor(signer, provider, chainId) {
+    super(signer, provider)
+    this.chainId = chainId
+  }
+
   async sendAsync(...args) {
     console.debug('sendAsync called', ...args)
     return this.send(...args)
@@ -44,9 +49,9 @@ class CustomizedBridge extends _Eip1193Bridge {
     }
     if (method === 'eth_chainId') {
       if (isCallbackForm) {
-        callback(null, { result: '0x4' })
+        callback(null, { result: this.chainId })
       } else {
-        return Promise.resolve('0x4')
+        return Promise.resolve(this.chainId)
       }
     }
     try {
@@ -68,15 +73,39 @@ class CustomizedBridge extends _Eip1193Bridge {
 }
 
 // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
+// Cypress.Commands.overwrite('visit', (original, url, options) => {
+//   return original(url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url, {
+//     ...options,
+//     onBeforeLoad(win) {
+//       options && options.onBeforeLoad && options.onBeforeLoad(win)
+//       win.localStorage.clear()
+//       const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
+//       const signer = new Wallet(PRIVATE_KEY_TEST_NEVER_USE, provider)
+//       win.ethereum = new CustomizedBridge(signer, provider)
+//     }
+//   })
+// })
+
 Cypress.Commands.overwrite('visit', (original, url, options) => {
   return original(url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url, {
     ...options,
     onBeforeLoad(win) {
       options && options.onBeforeLoad && options.onBeforeLoad(win)
       win.localStorage.clear()
-      const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
+
+      let args, chainId
+
+      if (options && options.networkName == 'ropsten') {
+        chainId = '0x3'
+        args = ['https://ropsten.infura.io/v3/eab5c3b10b2b409e998a7528d7d81275', 3]
+      } else {
+        chainId = '0x7A'
+        args = ['https://rpc.fuse.io', 122]
+      }
+
+      const provider = new JsonRpcProvider(...args)
       const signer = new Wallet(PRIVATE_KEY_TEST_NEVER_USE, provider)
-      win.ethereum = new CustomizedBridge(signer, provider)
+      win.ethereum = new CustomizedBridge(signer, provider, chainId)
     }
   })
 })

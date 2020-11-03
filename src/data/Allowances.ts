@@ -1,4 +1,4 @@
-import { Token, TokenAmount } from 'uniswap-fuse-sdk'
+import { Token, TokenAmount } from '@fuseio/fuse-swap-sdk'
 import { useMemo } from 'react'
 
 import { useTokenContract } from '../hooks/useContract'

@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Pair, Route, Token, TokenAmount, Trade, TradeType } from 'uniswap-fuse-sdk'
+import { ChainId, JSBI, Pair, Route, Token, TokenAmount, Trade, TradeType } from '@fuseio/fuse-swap-sdk'
 import { computeTradePriceBreakdown } from './prices'
 
 describe('prices', () => {

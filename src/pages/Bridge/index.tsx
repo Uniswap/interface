@@ -1,10 +1,11 @@
 import React, { useCallback, useContext, useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import AppBody from '../AppBody'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { Currency, TokenAmount, ChainId } from 'uniswap-fuse-sdk'
+import { Currency, TokenAmount, ChainId } from '@fuseio/fuse-swap-sdk'
 import { RouteComponentProps } from 'react-router-dom'
 import { currencyId } from '../../utils/currencyId'
 import { useCurrency } from '../../hooks/Tokens'
@@ -32,14 +33,17 @@ import {
   getBridgeForeignAddress,
   calculateGasMargin,
   getERC677TokenContract,
-  getBridgeContractWithRpc,
   confirmHomeTokenTransfer,
   confirmForeignTokenTransfer,
-  waitForTransaction
+  waitForTransaction,
+  getHomeBridgeContractJsonRpc,
+  getForiegnBridgeContractJsonRpc
 } from '../../utils'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { HOME_BRIDGE_CHAIN } from '../../constants'
 import { useUserActionHandlers } from '../../state/user/hooks'
+import fuseApi from '../../api/fuseApi'
+import { TYPE } from '../../theme'
 
 export default function Bridge({
   match: {
@@ -121,7 +125,8 @@ export default function Bridge({
       args: Array<string | string[] | number>,
       value: BigNumber | null,
       confirmations: number | null,
-      waitingBridgeText: string
+      waitingBridgeText: string,
+      bridgeOtherSideContract: Contract
 
     // home
     if (isHome) {
@@ -133,6 +138,7 @@ export default function Bridge({
       value = null
       confirmations = null
       waitingBridgeText = 'Moving Funds to Ethereum'
+      bridgeOtherSideContract = getForiegnBridgeContractJsonRpc(chainId)
 
       // foreign
     } else {
@@ -144,6 +150,7 @@ export default function Bridge({
       value = null
       confirmations = 2
       waitingBridgeText = 'Moving Funds to Fuse'
+      bridgeOtherSideContract = getHomeBridgeContractJsonRpc(chainId)
     }
 
     setAttemptingTxn(true)
@@ -167,35 +174,32 @@ export default function Bridge({
       // waiting for bridge
       setLoadingText(waitingBridgeText)
 
-      const contract = getBridgeContractWithRpc(chainId)
-
       const listener = async (tokenAddress: string, recipient: string) => {
-        const isTokenConfirmed = isHome
+        const tokenTransferConfirmed = isHome
           ? await confirmHomeTokenTransfer(inputCurrencyId, tokenAddress, library, account)
-          : await confirmForeignTokenTransfer(inputCurrencyId, tokenAddress, contract)
+          : await confirmForeignTokenTransfer(inputCurrencyId, tokenAddress, bridgeOtherSideContract)
 
-        // safe to assume by the time the event is emitted
-        // if token is bridged for the first time, an address is created
-        // before emitting the event
-        if (recipient === account && isTokenConfirmed) {
-          contract.removeListener('TokensBridged', listener)
+        if (recipient === account && tokenTransferConfirmed) {
+          bridgeOtherSideContract.removeListener('TokensBridged', listener)
 
           setAttemptingTxn(false)
+          setTxHash(response.hash)
+          setLoadingText('')
+          onFieldInput('')
 
           addTransaction(response, {
             summary: 'Transfer ' + currencies[Field.INPUT]?.symbol
           })
-
-          setTxHash(response.hash)
-
           updateCompletedBridgeTransfer()
 
-          onFieldInput('')
-          setLoadingText('')
+          // reward account
+          if (chainId === ChainId.MAINNET) {
+            await fuseApi.fund(account)
+          }
         }
       }
 
-      contract.on('TokensBridged', listener)
+      bridgeOtherSideContract.on('TokensBridged', listener)
     } catch (error) {
       setAttemptingTxn(false)
 
@@ -262,7 +266,7 @@ export default function Bridge({
                 <ButtonError
                   onClick={onTransfer}
                   disabled={approval !== ApprovalState.APPROVED || !!inputError || !!loadingText}
-                  error={!!inputError}
+                  error={!loadingText && !!inputError}
                 >
                   {loadingText ? (
                     <>
@@ -277,6 +281,10 @@ export default function Bridge({
                     </Text>
                   )}
                 </ButtonError>
+                <TYPE.body fontSize={14} textAlign="center">
+                  Once you transfer your tokens using the bridge you will be gifted FUSE tokens directly to your wallet
+                  which will act as network gas. This will allow you to transact freely on FuseSwap
+                </TYPE.body>
               </AutoColumn>
             )}
           </BottomGrouping>

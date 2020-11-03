@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components'
-import { Pair, ChainId } from 'uniswap-fuse-sdk'
+import { Pair, ChainId } from '@fuseio/fuse-swap-sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -20,6 +20,7 @@ import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../../components/swap/styleds'
+import SwitchNetwork from '../../components/swap/SwitchNetwork'
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
@@ -62,8 +63,7 @@ export default function Pool() {
         <AppBody>
           <Wrapper>
             <SwapPoolTabs active={'pool'} />
-            Trading available only on Fuse network, use the bridge tab to move tokens to the Fuse network, then change
-            the network to Fuse to trade them
+            <SwitchNetwork />
           </Wrapper>
         </AppBody>
       </>

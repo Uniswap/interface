@@ -12,13 +12,13 @@ import {
   FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS,
   HOME_BRIDGE_CHAIN
 } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'uniswap-fuse-sdk'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@fuseio/fuse-swap-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
 import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
 import { getNetworkLibrary, getNetworkLibraryByChain } from '../connectors'
-import { TransactionResponse, TransactionReceipt } from '@ethersproject/providers'
+import { TransactionResponse } from '@ethersproject/providers'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -212,6 +212,19 @@ export function getBridgeContractWithRpc(chainId: number): Contract {
   }
 }
 
+export function getHomeBridgeContractJsonRpc(chainId: number): Contract {
+  if (chainId === ChainId.MAINNET) {
+    return getContract(FUSE_MAINNET_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
+  } else {
+    return getContract(FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
+  }
+}
+
+export function getForiegnBridgeContractJsonRpc(chainId: number): Contract {
+  const address =
+    HOME_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
+  return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
+}
 /**
  *
  * @param homeTokenAddress home address of token been transferred
@@ -258,17 +271,55 @@ export const waitForTransaction = async (
 
   if ((receipt ? receipt.confirmations : 0) >= confirmations) return receipt
 
-  callbackFn(receipt ? receipt.confirmations : 0)
-
   return new Promise(resolve => {
-    const handler = (receipt: TransactionReceipt) => {
-      callbackFn(receipt.confirmations >= confirmations ? confirmations : receipt.confirmations)
+    let done = false
 
-      if (receipt.confirmations < confirmations) return
+    const interval = setInterval(async () => {
+      const receipt = await library.getTransactionReceipt(transactionHash)
 
-      library.removeListener(transactionHash, handler)
+      if (!receipt) {
+        callbackFn(0)
+        return
+      }
+
+      if (!done) {
+        callbackFn(receipt.confirmations >= confirmations ? confirmations : receipt.confirmations)
+      }
+
+      if (receipt.confirmations < confirmations) {
+        return
+      }
+
+      done = true
+
+      clearInterval(interval)
       resolve(receipt)
-    }
-    library.on(transactionHash, handler)
+    }, 500)
   })
+
+  // const interval = setInterval(async () => {
+
+  // })
+
+  // const interval = setInterval(async () => {
+  //   if (count == 10) clearInterval(interval)
+  //   console.log(await library.getTransactionReceipt(transactionHash))
+  //   count++
+  // }, 1000)
+
+  // if ((receipt ? receipt.confirmations : 0) >= confirmations) return receipt
+
+  // callbackFn(receipt ? receipt.confirmations : 0)
+
+  // return new Promise(resolve => {
+  //   const handler = (receipt: TransactionReceipt) => {
+  //     callbackFn(receipt.confirmations >= confirmations ? confirmations : receipt.confirmations)
+
+  //     if (receipt.confirmations < confirmations) return
+
+  //     library.removeListener(transactionHash, handler)
+  //     resolve(receipt)
+  //   }
+  //   library.on(transactionHash, handler)
+  // })
 }

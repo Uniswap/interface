@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Percent, Token, WETH } from 'uniswap-fuse-sdk'
+import { ChainId, JSBI, Percent, Token, WETH } from '@fuseio/fuse-swap-sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'

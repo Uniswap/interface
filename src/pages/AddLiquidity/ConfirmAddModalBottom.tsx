@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from 'uniswap-fuse-sdk'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@fuseio/fuse-swap-sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../../components/Button'

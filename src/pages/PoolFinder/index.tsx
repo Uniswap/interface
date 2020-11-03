@@ -1,4 +1,4 @@
-import { Currency, ETHER, JSBI, TokenAmount } from 'uniswap-fuse-sdk'
+import { Currency, ETHER, JSBI, TokenAmount } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'

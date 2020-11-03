@@ -14,7 +14,7 @@ import {
   Trade,
   TradeType,
   WETH
-} from 'uniswap-fuse-sdk'
+} from '@fuseio/fuse-swap-sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useAllTokens } from '../hooks/Tokens'

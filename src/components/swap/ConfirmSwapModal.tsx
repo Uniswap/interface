@@ -1,4 +1,4 @@
-import { currencyEquals, Trade } from 'uniswap-fuse-sdk'
+import { currencyEquals, Trade } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useMemo } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,

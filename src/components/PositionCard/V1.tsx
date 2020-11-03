@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
-import { Token, TokenAmount, WETH } from 'uniswap-fuse-sdk'
+import { Token, TokenAmount, WETH } from '@fuseio/fuse-swap-sdk'
 
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'

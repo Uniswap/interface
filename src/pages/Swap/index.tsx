@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token, Trade, ChainId } from 'uniswap-fuse-sdk'
+import { CurrencyAmount, JSBI, Token, Trade, ChainId } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'

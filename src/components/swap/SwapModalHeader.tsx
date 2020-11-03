@@ -1,4 +1,4 @@
-import { Trade, TradeType } from 'uniswap-fuse-sdk'
+import { Trade, TradeType } from '@fuseio/fuse-swap-sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'

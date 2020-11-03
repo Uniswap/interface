@@ -1,4 +1,4 @@
-import { ChainId } from 'uniswap-fuse-sdk'
+import { ChainId } from '@fuseio/fuse-swap-sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
@@ -16,6 +16,7 @@ import Menu from '../Menu'
 import { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
 import { getNativeCurrencySymbol } from '../../utils'
+import { TYPE } from '../../theme'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -126,10 +127,13 @@ export default function Header() {
     <HeaderFrame>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
-          <Title href=".">
+          <Title href="." style={{ textDecoration: 'none' }}>
             <UniIcon>
               <img src={Logo} alt="logo" />
             </UniIcon>
+            <TYPE.body fontSize={12} fontWeight={700} marginLeft={2}>
+              BETA
+            </TYPE.body>
           </Title>
         </HeaderElement>
         <HeaderControls>
