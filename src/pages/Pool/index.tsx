@@ -191,11 +191,11 @@ export default function Pool() {
                 ))}
                 {stakingPairs.map(
                   (stakingPair, i) =>
-                    stakingPair[1] && (
+                    stakingPair[1] && ( // skip pairs that arent loaded
                       <FullPositionCard
                         key={stakingPair[1].liquidityToken.address}
                         pair={stakingPair[1]}
-                        userBalanceOverwrite={stakingInfosWithBalance[i].stakedAmount}
+                        stakedBalance={stakingInfosWithBalance[i].stakedAmount}
                       />
                     )
                 )}
