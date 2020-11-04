@@ -168,7 +168,7 @@ const Title = styled.a`
   align-items: center;
   pointer-events: auto;
   justify-self: flex-start;
-  margin-right: 12px;
+  margin-right: 35px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
@@ -206,7 +206,7 @@ const StyledNavLink = styled(NavLink).attrs({
   text-decoration: none;
   color: ${({ theme }) => theme.text5};
   width: fit-content;
-  margin: 0 12px;
+  margin: 0 16px;
   font-weight: 400;
   font-size: 16px;
   line-height: 19.5px;

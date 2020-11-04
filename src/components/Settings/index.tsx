@@ -25,7 +25,7 @@ import { transparentize } from 'polished'
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
   width: 18px;
-  margin: 0 31px;
+  margin: 0 16px;
   cursor: pointer;
 
   > * {
