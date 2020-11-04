@@ -4,7 +4,7 @@ import COMPTROLLER_ABI from './comptroller.json'
 import CHAINLINK_PRICE_ORACLE_PROXY_ABI from './chainlink_price_oracle_proxy.json'
 
 const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0x3d9819210a31b4961b30ef54be2aed79b9c9cd3b',
+  [ChainId.MAINNET]: '0x28830892870c8eC4EFE47B6d176E57c3c4aCc558',
   [ChainId.ROPSTEN]: '0x54188bbedd7b68228fa89cbdda5e3e930459c6c6',
   [ChainId.RINKEBY]: '0x94b796C701B65F840d819365055b865dA1Fcb099', // deerfi unitroller
   [ChainId.GÖRLI]: '0x627ea49279fd0de89186a58b8758ad02b6be2867',
@@ -12,7 +12,7 @@ const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
 }
 
 const ORACLE_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0x922018674c12a7f0d394ebeef9b58f186cde13c1',
+  [ChainId.MAINNET]: '0x58E447Ac116327A784b7Ecb5B7e1B3688c5B31A1',
   [ChainId.ROPSTEN]: '0xb2b3d5b4e35881d518fa2062325f118a6ebb6c4a',
   [ChainId.RINKEBY]: '0xBB1e4126bc8AE55850335a7c126fEA1315b987b7', // deerfi oracle
   [ChainId.GÖRLI]: '0x9A536Ed5C97686988F93C9f7C2A390bF3B59c0ec', // not working due to lack of oracle
@@ -20,7 +20,7 @@ const ORACLE_ADDRESSES: { [chainId in ChainId]: string } = {
 }
 
 const MAXIMILLION_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0xf859A1AD94BcF445A406B892eF0d3082f4174088',
+  [ChainId.MAINNET]: '0xd4b2474044836D8E10239cF2A0D18C92fBd49222',
   [ChainId.ROPSTEN]: '0x0000000000000000000000000000000000000000',
   [ChainId.RINKEBY]: '0xFdC42cE083c54aB50f61518CED9CFB9504A42389', // deerfi maximillion
   [ChainId.GÖRLI]: '0x0000000000000000000000000000000000000000', // not working due to lack of oracle
@@ -30,103 +30,37 @@ const MAXIMILLION_ADDRESSES: { [chainId in ChainId]: string } = {
 const CTOKEN_LISTS: { [chainId in ChainId]: [string, string, number, string, string, string, string, string, string][] } = {
   [ChainId.MAINNET]: [
     [
-      '0x6c8c6b02e7b2be14d4fa6022dfd6d75921d90e4e',
-      '0x0D8775F648430679A709E98d2b0Cb6250d2887EF',
-      18,
-      'cBAT',
-      'Compound Basic Attention Token',
-      'BAT',
-      'BAT',
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x0D8775F648430679A709E98d2b0Cb6250d2887EF/logo.png',
-      ''
-    ],
-    [
-      '0x70e36f6bf80a52b3b46b3af8e106cc0ed743e8e4',
-      '0xc00e94Cb662C3520282E6f5717214004A7f26888',
-      18,
-      'cCOMP',
-      'Compound Collateral',
-      'COMP',
-      'Compound',
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xc00e94Cb662C3520282E6f5717214004A7f26888/logo.png',
-      ''
-    ],
-    [
-      '0x5d3a536e4d6dbd6114cc1ead35777bab948e3643',
-      '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-      18,
-      'cDAI',
-      'Compound DAI',
-      'DAI',
-      'Dai Stablecoin',
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
-      ''
-    ],
-    [
-      '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5',
-      '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-      18,
-      'cETH',
-      'Compound ETH',
-      'ETH',
-      'Ether',
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
-      ''
-    ],
-    [
-      '0x35a18000230da775cac24873d00ff85bccded550',
-      '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-      18,
-      'cUNI',
-      'Compound UNI',
-      'UNI',
-      'Uniswap',
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
-      ''
-    ],
-    [
-      '0x39aa39c021dfbae8fac545936693ac917d5e7563',
+      '0x9c0ADd57D18Bf1cc5C5790330D95D600f0B571Ba',
       '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
       6,
-      'cUSDC',
-      'Compound USDC',
+      'dUSDC',
+      'Deerfi USDC',
       'USDC',
       'USD Coin',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
       ''
     ],
     [
-      '0xf650c3d88d12db855b8bf7d11be6c55a4e07dcc9',
+      '0xB9D7e2835D4157E8Ff1119007Bce5295a7e503E5',
       '0xdAC17F958D2ee523a2206206994597C13D831ec7',
       6,
-      'cUSDT',
-      'Compound USDT',
+      'dUSDT',
+      'Deerfi USDT',
       'USDT',
       'Tether USD',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
       ''
     ],
     [
-      '0xc11b1268c1a384e55c48c2391d8d480264a3a7f4',
-      '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-      8,
-      'cWBTC',
-      'Compound WBTC',
-      'WBTC',
-      'Wrapped BTC',
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
-      ''
-    ],
-    [
-      '0xb3319f5d18bc0d84dd1b4825dcde5d5f7266d407',
-      '0xE41d2489571d322189246DaFA5ebDe1F4699F498',
+      '0x906E8893ae417860A4B4fA1Cf70682429d7d523F',
+      '0x3041CbD36888bECc7bbCBc0045E3B1f144466f5f',
       18,
-      'cZRX',
-      'Compound 0x',
-      'ZRX',
-      '0x',
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xE41d2489571d322189246DaFA5ebDe1F4699F498/logo.png',
-      ''
+      'dUSDC-USDT',
+      'Deerfi USDC-USDT',
+      'USDC-USDT',
+      'USDC-USDT LP',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png'
     ]
   ],
   [ChainId.ROPSTEN]: [
