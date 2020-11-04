@@ -88,7 +88,7 @@ Cypress.Commands.overwrite('visit', (original, url, options) => {
         args = [process.env.REACT_APP_ROPSTEN_NETWORK_URL, 3]
       } else {
         chainId = '0x7A'
-        args = [process.env.REACT_APP_CHAIN_ID, 122]
+        args = [process.env.REACT_APP_NETWORK_URL, 122]
       }
 
       const provider = new JsonRpcProvider(...args)
