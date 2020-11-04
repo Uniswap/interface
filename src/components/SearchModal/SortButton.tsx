@@ -1,10 +1,10 @@
 import React from 'react'
-import styled from 'styled-components';
+import styled from 'styled-components'
 import { TYPE } from '../../theme'
 
-const StyledPurple3Text = styled(TYPE.purple3)`
+const CursorText = styled(TYPE.body)`
   cursor: pointer;
-`;
+`
 
 export default function SortButton({
   toggleSortOrder,
@@ -14,8 +14,8 @@ export default function SortButton({
   ascending: boolean
 }) {
   return (
-    <StyledPurple3Text fontSize={14} fontWeight={500} onClick={toggleSortOrder}>
+    <CursorText fontSize={14} fontWeight={500} onClick={toggleSortOrder}>
       {ascending ? '↑' : '↓'}
-    </StyledPurple3Text>
+    </CursorText>
   )
 }

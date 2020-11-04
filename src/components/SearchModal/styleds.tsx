@@ -72,9 +72,3 @@ export const Separator = styled.div`
   height: 1px;
   background-color: ${({ theme }) => transparentize(0.5, theme.purple5)};
 `
-
-export const SeparatorDark = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.bg3};
-`

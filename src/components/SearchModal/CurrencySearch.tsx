@@ -132,9 +132,9 @@ export function CurrencySearch({
     <Column style={{ width: '100%', flex: '1 1' }}>
       <PaddedColumn gap="16px">
         <RowBetween>
-          <TYPE.purple3 fontWeight={500} fontSize={16} color='purple3'>
+          <TYPE.body fontWeight={500} fontSize={16}>
             Select a token
-          </TYPE.purple3>
+          </TYPE.body>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <SearchInput
@@ -150,9 +150,9 @@ export function CurrencySearch({
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
         <RowBetween>
-          <TYPE.purple3 fontSize={12} fontWeight={500}>
+          <TYPE.body fontSize={12} fontWeight={500}>
             NAME
-          </TYPE.purple3>
+          </TYPE.body>
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
         </RowBetween>
       </PaddedColumn>
@@ -174,7 +174,6 @@ export function CurrencySearch({
           )}
         </AutoSizer>
       </div>
-
     </Column>
   )
 }

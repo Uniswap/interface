@@ -7,8 +7,8 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, GreyCard, LightCard } from '../../components/Card'
+import { ButtonPrimary } from '../../components/Button'
+import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -38,8 +38,7 @@ import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
-import { PoolPriceBar } from './PoolPriceBar'
-import { ProtocolFeeBar } from './ProtocolFeeBar'
+import TradePrice from '../../components/swap/TradePrice'
 
 export default function AddLiquidity({
   match: {
@@ -90,6 +89,7 @@ export default function AddLiquidity({
   const deadline = useTransactionDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
   const [txHash, setTxHash] = useState<string>('')
+  const [invertedPrice, setInvertedPrice] = useState<boolean>(false)
 
   // get formatted amounts
   const formattedAmounts = {
@@ -97,16 +97,8 @@ export default function AddLiquidity({
     [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
 
-  const { protocolFee, protocolFeeAmount: protocolFeeAmountIndependantField } = calculateProtocolFee(
-    pair,
-    parsedAmounts[independentField]
-  )
-  const { protocolFeeAmount: protocolFeeAmountDependantField } = calculateProtocolFee(
-    pair,
-    parsedAmounts[dependentField]
-  )
+  const { protocolFee } = calculateProtocolFee(pair, parsedAmounts[independentField])
   const swapFee = pair ? new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)) : undefined
-  const protocolFeeDenominator = pair ? Number(pair.protocolFeeDenominator) : undefined
 
   // get the max amounts user can add
   const maxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -384,43 +376,30 @@ export default function AddLiquidity({
               showCommonBases
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
-              <>
-                <LightCard padding="0px" borderRadius={'20px'}>
-                  <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
-                      {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
-                    </TYPE.subHeader>
-                  </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
-                    <PoolPriceBar
-                      currencies={currencies}
-                      poolTokenPercentage={poolTokenPercentage}
-                      noLiquidity={noLiquidity}
-                      price={price}
-                    />
-                  </LightCard>
-                  <GreyCard padding="0px" borderRadius={'20px'}>
-                    <RowBetween padding="1rem">
-                      <TYPE.subHeader fontWeight={500} fontSize={14}>
-                        Protocol Fee
-                      </TYPE.subHeader>
-                    </RowBetween>{' '}
-                    <LightCard padding="1rem" borderRadius={'20px'}>
-                      <ProtocolFeeBar
-                        feePercentage={protocolFee}
-                        swapFee={swapFee}
-                        protocolFeeDenominator={protocolFeeDenominator}
-                        feeAAmount={protocolFeeAmountIndependantField}
-                        feeBAmount={protocolFeeAmountDependantField}
-                      />
-                    </LightCard>
-                  </GreyCard>
-                </LightCard>
-              </>
+              <AutoColumn gap="8px" style={{ padding: '0 16px' }}>
+                <RowBetween align="center">
+                  <TYPE.body fontSize={12}>Price</TYPE.body>
+                  <TradePrice price={price} showInverted={invertedPrice} setShowInverted={setInvertedPrice} />
+                </RowBetween>
+                <RowBetween align="center">
+                  <TYPE.body fontSize={12}>Pool's share</TYPE.body>
+                  <TYPE.body fontSize={12}>
+                    {poolTokenPercentage ? `${poolTokenPercentage.toSignificant(2)}%` : '-'}
+                  </TYPE.body>
+                </RowBetween>
+                <RowBetween align="center">
+                  <TYPE.body fontSize={12}>Swap fee</TYPE.body>
+                  <TYPE.body fontSize={12}>{swapFee?.toSignificant(2) ?? '-'}</TYPE.body>
+                </RowBetween>
+                <RowBetween align="center">
+                  <TYPE.body fontSize={12}>Protocol fee</TYPE.body>
+                  <TYPE.body fontSize={12}>{protocolFee?.toSignificant(2) ?? '-'}</TYPE.body>
+                </RowBetween>
+              </AutoColumn>
             )}
 
             {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              <ButtonPrimary onClick={toggleWalletModal}>Connect Wallet</ButtonPrimary>
             ) : (
               <AutoColumn gap={'md'}>
                 {(approvalA === ApprovalState.NOT_APPROVED ||
@@ -457,17 +436,20 @@ export default function AddLiquidity({
                       )}
                     </RowBetween>
                   )}
-                <ButtonError
+                <ButtonPrimary
                   onClick={() => {
                     expertMode ? onAdd() : setShowConfirm(true)
                   }}
-                  disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
-                  error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                  disabled={
+                    !isValid ||
+                    approvalA !== ApprovalState.APPROVED ||
+                    approvalB !== ApprovalState.APPROVED ||
+                    !!!parsedAmounts[Field.CURRENCY_A] ||
+                    !!!parsedAmounts[Field.CURRENCY_B]
+                  }
                 >
-                  <Text fontSize={20} fontWeight={500}>
-                    {error ?? 'Supply'}
-                  </Text>
-                </ButtonError>
+                  {error ?? 'Supply'}
+                </ButtonPrimary>
               </AutoColumn>
             )}
           </AutoColumn>
