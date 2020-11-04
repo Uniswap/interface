@@ -93,6 +93,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   height: auto;
+  box-shadow: 0px 4px 42px rgba(0, 0, 0, 0.16);
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     min-width: 18.125rem;
