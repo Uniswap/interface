@@ -40,7 +40,7 @@ import {
   getForiegnBridgeContractJsonRpc
 } from '../../utils'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { HOME_BRIDGE_CHAIN } from '../../constants'
+import { FOREIGN_BRIDGE_CHAIN } from '../../constants'
 import { useUserActionHandlers } from '../../state/user/hooks'
 import fuseApi from '../../api/fuseApi'
 import { TYPE } from '../../theme'
@@ -105,7 +105,7 @@ export default function Bridge({
   const isHome = chainId === ChainId.FUSE
 
   // set bridge and approval address
-  const bridgeAddress = isHome ? getBridgeHomeAddress(HOME_BRIDGE_CHAIN) : getBridgeForeignAddress(chainId)
+  const bridgeAddress = isHome ? getBridgeHomeAddress(FOREIGN_BRIDGE_CHAIN) : getBridgeForeignAddress(chainId)
   const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
 
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)

@@ -6,6 +6,7 @@
   "devDependencies": {
     "@ethersproject/experimental": "^5.0.1",
     "@fuseio/fuse-swap-default-token-list": "^1.0.4",
+    "@fuseio/fuse-swap-sdk": "^3.0.4",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -41,6 +42,7 @@
     "copy-to-clipboard": "^3.2.0",
     "cross-env": "^7.0.2",
     "cypress": "^4.11.0",
+    "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
@@ -77,8 +79,7 @@
     "serve": "^11.3.0",
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
-    "typescript": "^3.8.3",
-    "@fuseio/fuse-swap-sdk": "^3.0.4"
+    "typescript": "^3.8.3"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"

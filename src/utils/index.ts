@@ -10,7 +10,7 @@ import {
   ROPSTEN_FOREIGN_BRIDGE_ADDRESS,
   FUSE_MAINNET_HOME_BRIDGE_ADDRESS,
   FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS,
-  HOME_BRIDGE_CHAIN
+  FOREIGN_BRIDGE_CHAIN
 } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@fuseio/fuse-swap-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -177,7 +177,7 @@ export function getBridgeForeignAddress(chainId?: number): string {
 
 export function getHomeBridgeContract(library: Web3Provider, account?: string): Contract {
   const address =
-    HOME_BRIDGE_CHAIN === ChainId.ROPSTEN ? FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS : FUSE_MAINNET_HOME_BRIDGE_ADDRESS
+    FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS : FUSE_MAINNET_HOME_BRIDGE_ADDRESS
   return getContract(address, HomeMultiAMBErc20ToErc677ABI, library, account)
 }
 
@@ -205,7 +205,7 @@ export function getBridgeContractWithRpc(chainId: number): Contract {
     return getContract(FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
   } else if (chainId === ChainId.FUSE) {
     const address =
-      HOME_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
+      FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
     return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
   } else {
     throw new Error('Unsupported chainId')
@@ -222,7 +222,7 @@ export function getHomeBridgeContractJsonRpc(chainId: number): Contract {
 
 export function getForiegnBridgeContractJsonRpc(chainId: number): Contract {
   const address =
-    HOME_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
+    FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
   return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
 }
 /**

@@ -3,8 +3,8 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const HOME_BRIDGE_CHAIN: number = parseInt(process.env.REACT_APP_HOME_BRIDGE_CHAIN ?? '1')
-console.debug('HOME_BRIDGE_CHAIN set to :', HOME_BRIDGE_CHAIN)
+export const FOREIGN_BRIDGE_CHAIN: number = parseInt(process.env.REACT_APP_FOREIGN_BRIDGE_CHAIN ?? '1')
+console.debug('FOREIGN_BRIDGE_CHAIN set to :', FOREIGN_BRIDGE_CHAIN)
 
 export const ROUTER_ADDRESS = '0xFB76e9E7d88E308aB530330eD90e84a952570319'
 

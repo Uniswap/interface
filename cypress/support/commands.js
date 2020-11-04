@@ -3,10 +3,12 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-
+import { config } from 'dotenv'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
 import { _Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
+
+config()
 
 // never send real ether to this, obviously
 const PRIVATE_KEY_TEST_NEVER_USE = '0xad20c82497421e9784f18460ad2fe84f73569068e98e270b3e63743268af5763'
@@ -72,20 +74,6 @@ class CustomizedBridge extends _Eip1193Bridge {
   }
 }
 
-// sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
-// Cypress.Commands.overwrite('visit', (original, url, options) => {
-//   return original(url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url, {
-//     ...options,
-//     onBeforeLoad(win) {
-//       options && options.onBeforeLoad && options.onBeforeLoad(win)
-//       win.localStorage.clear()
-//       const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
-//       const signer = new Wallet(PRIVATE_KEY_TEST_NEVER_USE, provider)
-//       win.ethereum = new CustomizedBridge(signer, provider)
-//     }
-//   })
-// })
-
 Cypress.Commands.overwrite('visit', (original, url, options) => {
   return original(url.startsWith('/') && url.length > 2 && !url.startsWith('/#') ? `/#${url}` : url, {
     ...options,
@@ -97,10 +85,10 @@ Cypress.Commands.overwrite('visit', (original, url, options) => {
 
       if (options && options.networkName == 'ropsten') {
         chainId = '0x3'
-        args = ['https://ropsten.infura.io/v3/eab5c3b10b2b409e998a7528d7d81275', 3]
+        args = [process.env.REACT_APP_ROPSTEN_NETWORK_URL, 3]
       } else {
         chainId = '0x7A'
-        args = ['https://rpc.fuse.io', 122]
+        args = [process.env.REACT_APP_CHAIN_ID, 122]
       }
 
       const provider = new JsonRpcProvider(...args)
