@@ -41,6 +41,7 @@ export class CToken extends Token {
   public readonly supplyBalance?: number
   public readonly borrowBalance?: number
   public readonly exchangeRateMantissa?: number
+  public readonly totalSupply?: number
   public readonly liquidity?: number
   public readonly canBeCollateral?: boolean
   public readonly underlyingPrice?: number
@@ -64,6 +65,7 @@ export class CToken extends Token {
     supplyBalance?: number,
     borrowBalance?: number,
     exchangeRateMantissa?: number,
+    totalSupply?: number,
     liquidity?: number,
     canBeCollateral?: boolean,
     underlyingPrice?: number,
@@ -84,6 +86,7 @@ export class CToken extends Token {
     this.supplyBalance = supplyBalance
     this.borrowBalance = borrowBalance
     this.exchangeRateMantissa = exchangeRateMantissa
+    this.totalSupply = totalSupply
     this.liquidity = liquidity
     this.canBeCollateral = canBeCollateral
     this.underlyingPrice = underlyingPrice
@@ -134,6 +137,20 @@ export class CToken extends Token {
   public getSupplyBalanceJSBI(): JSBI {
     return JSBI.divide(
       JSBI.multiply(this.getSupplyBalanceAmount(), JSBI.BigInt(this.underlyingPrice ?? 0)),
+      UNDERLYING_PRICE_BASE
+    )
+  }
+
+  public getTotalSupplyBalanceAmount(): JSBI {
+    return JSBI.divide(
+      JSBI.multiply(JSBI.BigInt(this.totalSupply ?? 0), JSBI.BigInt(this.exchangeRateMantissa ?? 0)),
+      EXA_BASE
+    )
+  }
+
+  public getMarketSize(): JSBI {
+    return JSBI.divide(
+      JSBI.multiply(this.getTotalSupplyBalanceAmount(), JSBI.BigInt(this.underlyingPrice ?? 0)),
       UNDERLYING_PRICE_BASE
     )
   }
@@ -226,6 +243,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     'getAccountSnapshot',
     accountArg
   )
+  const totalSupplyResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'totalSupply')
   const cashResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'getCash')
   const membershipResults = useSingleContractMultipleData(comptroller, 'checkMembership', membershipArgs)
   const underlyingPriceResults = useSingleContractMultipleData(
@@ -247,6 +265,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       const { result: borrowBalanceValue, loading: borrowBalanceResultLoading } = borrowBalanceCurrentResults[i]
       const { result: accountSnapshotValue, loading: accountSnapshotResultLoading } =
         accountSnapshotResults.length !== 0 ? accountSnapshotResults[i] : { result: [0, 0, 0, 0], loading: false }
+      const { result: totalSupplyValue, loading: totalSupplyResultLoading } = totalSupplyResults[i]
       const { result: cashValue, loading: cashResultLoading } = cashResults[i]
       const { result: membershipValue, loading: membershipLoading } = membershipResults[i]
       const { result: underlyingPriceValue, loading: underlyingPriceLoading } = underlyingPriceResults[i]
@@ -259,6 +278,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       if (borrowBalanceResultLoading) return [CTokenState.LOADING, null]
       if (accountSnapshotResultLoading) return [CTokenState.LOADING, null]
       if (cashResultLoading) return [CTokenState.LOADING, null]
+      if (totalSupplyResultLoading) return [CTokenState.LOADING, null]
       if (membershipLoading) return [CTokenState.LOADING, null]
       if (underlyingPriceLoading) return [CTokenState.LOADING, null]
       if (marketsResultLoading) return [CTokenState.LOADING, null]
@@ -268,6 +288,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       if (!balanceUnderlyingValue) return [CTokenState.NOT_EXISTS, null]
       if (!borrowBalanceValue) return [CTokenState.NOT_EXISTS, null]
       if (!accountSnapshotValue) return [CTokenState.NOT_EXISTS, null]
+      if (!totalSupplyValue) return [CTokenState.NOT_EXISTS, null]
       if (!cashValue) return [CTokenState.NOT_EXISTS, null]
       if (!membershipValue) return [CTokenState.NOT_EXISTS, null]
       if (!underlyingPriceValue) return [CTokenState.NOT_EXISTS, null]
@@ -290,6 +311,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
           accountSnapshotValue[1],
           borrowBalanceValue[0],
           accountSnapshotValue[3],
+          totalSupplyValue[0],
           cashValue[0],
           membershipValue[0],
           underlyingPriceValue[0],
@@ -306,11 +328,12 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     balanceOfUnderlyingResults,
     borrowBalanceCurrentResults,
     accountSnapshotResults,
+    totalSupplyResults,
     cashResults,
     membershipResults,
     underlyingPriceResults,
     marketsResults,
-    cTokenList,
-    chainId
+    chainId,
+    cTokenList
   ])
 }

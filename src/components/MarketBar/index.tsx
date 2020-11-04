@@ -14,7 +14,7 @@ const RateWrap = styled.div`
   width: 100%;
   font-weight: 600;
   font-size: 0.7rem;
-  margin-top: -0.35rem;
+  margin-top: -1rem;
   text-align: right;
 `
 

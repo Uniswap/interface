@@ -4,7 +4,7 @@ import CurrencyIcon from '../CurrencyIcon'
 import LendModal from '../LendModal'
 import { CToken } from '../../data/CToken'
 import { LendField } from '../../state/lending/actions'
-import { APY_BASE, formatData, getBorrowTotalBalance, showLiquidityValue } from '../../utils'
+import { APY_BASE, formatData, getBorrowTotalBalance, showDollarValue } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
@@ -264,7 +264,7 @@ function BorrowMarkets({
                         {borrowAssetCurrencyAmount?.[index]?.toSignificant(4)}
                         {' ' + item?.symbol}
                       </ItemWrap>
-                      <ItemWrap>${showLiquidityValue(item?.getLiquidityValue())}</ItemWrap>
+                      <ItemWrap>${showDollarValue(item?.getLiquidityValue())}</ItemWrap>
                     </AssetItem>
                   </ItemPannel>
                 ))

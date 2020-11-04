@@ -2,7 +2,7 @@ import { Fraction, JSBI } from '@uniswap/sdk'
 import React from 'react'
 // import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { formatData } from '../../utils'
+import { formatData, showDollarValue } from '../../utils'
 import MarketBar from '../MarketBar'
 
 const SummaryCard = styled.div`
@@ -85,13 +85,15 @@ function Summary({
   borrowTotalBalance,
   limit,
   usedLimit,
-  netApy
+  netApy,
+  totalMarketSize
 }: {
   supplyTotalBalance: JSBI
   borrowTotalBalance: JSBI
   limit: JSBI
   usedLimit: Fraction
   netApy: Fraction
+  totalMarketSize: JSBI
 }) {
   // const { t } = useTranslation()
   // limit ? ((borrowTotalBalance / limit) * 100).toFixed(2)
@@ -121,8 +123,7 @@ function Summary({
         <SummaryElement>
           <SummaryTitle>Total Market Size</SummaryTitle>
           <SummaryContent>
-            <DotIcon />
-            $0.00
+            <DotIcon />${showDollarValue(totalMarketSize)}
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>

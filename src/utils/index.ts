@@ -156,10 +156,10 @@ export const EXCHANGE_RATE_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.Bi
 export const COLLATERAL_FACTOR_MANTISSA = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const LIQUIDITY = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 export const UNDERLYING_ASSETS_BASE = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(36))
-export const ONE_THOUSAND_LIQUIDITY = JSBI.multiply(ONE_THOUSAND, EXA_BASE)
-export const ONE_MILLION_LIQUIDITY = JSBI.multiply(ONE_MILLION, EXA_BASE)
-export const ONE_BILLION_LIQUIDITY = JSBI.multiply(ONE_BILLION, EXA_BASE)
-export const ONE_TRILLION_LIQUIDITY = JSBI.multiply(ONE_TRILLION, EXA_BASE)
+export const ONE_THOUSAND_VALUE = JSBI.multiply(ONE_THOUSAND, EXA_BASE)
+export const ONE_MILLION_VALUE = JSBI.multiply(ONE_MILLION, EXA_BASE)
+export const ONE_BILLION_VALUE = JSBI.multiply(ONE_BILLION, EXA_BASE)
+export const ONE_TRILLION_VALUE = JSBI.multiply(ONE_TRILLION, EXA_BASE)
 
 export function getSupplyTotalBalance(allMarketsAsset: CToken[]): JSBI {
   let supplyTotalBalance = JSBI.BigInt(0)
@@ -229,18 +229,27 @@ export function getNetApy(allMarketsAsset: CToken[]): Fraction {
   }
 }
 
-export function showLiquidityValue(val: JSBI): string {
-  if (JSBI.lessThan(val, ONE_THOUSAND_LIQUIDITY)) {
+export function showDollarValue(val: JSBI): string {
+  if (JSBI.lessThan(val, ONE_THOUSAND_VALUE)) {
     return new Fraction(val, EXA_BASE).toFixed(2)
-  } else if (JSBI.greaterThanOrEqual(val, ONE_THOUSAND_LIQUIDITY) && JSBI.lessThanOrEqual(val, ONE_MILLION_LIQUIDITY)) {
+  } else if (JSBI.greaterThanOrEqual(val, ONE_THOUSAND_VALUE) && JSBI.lessThanOrEqual(val, ONE_MILLION_VALUE)) {
     return new Fraction(val, THOUSAND_BASE).toFixed(2) + 'K'
-  } else if (JSBI.greaterThan(val, ONE_MILLION_LIQUIDITY) && JSBI.lessThanOrEqual(val, ONE_BILLION_LIQUIDITY)) {
+  } else if (JSBI.greaterThan(val, ONE_MILLION_VALUE) && JSBI.lessThanOrEqual(val, ONE_BILLION_VALUE)) {
     return new Fraction(val, MILLION_BASE).toFixed(2) + 'M'
-  } else if (JSBI.greaterThan(val, ONE_BILLION_LIQUIDITY) && JSBI.lessThanOrEqual(val, ONE_TRILLION_LIQUIDITY)) {
+  } else if (JSBI.greaterThan(val, ONE_BILLION_VALUE) && JSBI.lessThanOrEqual(val, ONE_TRILLION_VALUE)) {
     return new Fraction(val, BILLION_BASE).toFixed(2) + 'B'
-  } else if (JSBI.greaterThan(val, ONE_TRILLION_LIQUIDITY)) {
+  } else if (JSBI.greaterThan(val, ONE_TRILLION_VALUE)) {
     return ' > 1T'
   } else {
     return '0'
   }
+}
+
+export function getTotalMarketSize(allMarketsAsset: CToken[]): JSBI {
+  let totalMarketSize = JSBI.BigInt(0)
+
+  for (let i = 0; i < allMarketsAsset.length; i++) {
+    totalMarketSize = JSBI.add(totalMarketSize, allMarketsAsset[i].getMarketSize())
+  }
+  return totalMarketSize
 }
