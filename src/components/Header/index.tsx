@@ -18,7 +18,7 @@ import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
 import { transparentize } from 'polished'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import Badge from '../Badge'
 import MobileOptions from './MobileOptions'
 
@@ -306,7 +306,10 @@ function Header({ history }: { history: any }) {
             </AbsoluteComingSoonBadgeFlex>
           </StyledNavLinkWithBadge>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Charts <Text ml="4px" fontSize="11px">↗</Text>
+            Charts{' '}
+            <Text ml="4px" fontSize="11px">
+              ↗
+            </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
             <MobileOptions />
@@ -320,7 +323,7 @@ function Header({ history }: { history: any }) {
           )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
-              <Text
+              <TYPE.white
                 style={{ flexShrink: 0 }}
                 ml="18px"
                 mr="12px"
@@ -330,7 +333,7 @@ function Header({ history }: { history: any }) {
                 letterSpacing="0.08em"
               >
                 {userEthBalance?.toSignificant(4)} ETH
-              </Text>
+              </TYPE.white>
             ) : null}
             <Web3Status />
           </AccountElement>
