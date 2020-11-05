@@ -1,50 +1,65 @@
 describe('Add Liquidity', () => {
-  it('loads the two correct tokens', () => {
-    cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85-0xc778417E063141139Fce010982780140Aa0cD5Ab')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
+  describe('Mainnet/Ropsten', () => {
+    let options: any
+
+    beforeEach(() => {
+      options = { networkName: 'ropsten' }
+    })
+
+    it('when pool is clicked should show fuse message', () => {
+      cy.visit('/pool', options)
+      cy.contains('Please switch to Fuse')
+    })
   })
 
-  it('does not crash if ETH is duplicated', () => {
-    cy.visit('/add/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xc778417E063141139Fce010982780140Aa0cD5Ab')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'ETH')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('not.contain.text', 'ETH')
-  })
+  describe('Fuse', () => {
+    it('loads the two correct tokens', () => {
+      cy.visit('/add/0x94Ba7A27c7A95863d1bdC7645AC2951E0cca06bA-0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670')
+      cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'DAI')
+      cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'WETH')
+    })
 
-  it('token not in storage is loaded', () => {
-    cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'SKL')
-    cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'MKR')
-  })
+    it('does not crash if FUSE is duplicated', () => {
+      cy.visit('/add/0x0BE9e53fd7EDaC9F859882AfdDa116645287C629-0x0BE9e53fd7EDaC9F859882AfdDa116645287C629')
+      cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'WFUSE')
+      cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('not.contain.text', 'ETH')
+    })
 
-  it('single token can be selected', () => {
-    cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'SKL')
-    cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'MKR')
-  })
+    it('token not in storage is loaded', () => {
+      cy.visit('/add/0xD93878D3b011a96C0fF97cee984cd5c76B36Afc1-0xbf0718762B7951D56C52Cc7f75e4fa665a7FF0E5')
+      cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'VOLT')
+      cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'DAIp')
+    })
 
-  it('redirects /add/token-token to add/token/token', () => {
-    cy.visit('/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.url().should(
-      'contain',
-      '/add/0xb290b2f9f8f108d03ff2af3ac5c8de6de31cdf6d/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'
-    )
-  })
+    it('single token can be selected', () => {
+      cy.visit('/add/0xD93878D3b011a96C0fF97cee984cd5c76B36Afc1')
+      cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'VOLT')
+      cy.visit('/add/0xbf0718762B7951D56C52Cc7f75e4fa665a7FF0E5')
+      cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'DAIp')
+    })
 
-  it('redirects /add/WETH-token to /add/WETH-address/token', () => {
-    cy.visit('/add/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.url().should(
-      'contain',
-      '/add/0xc778417E063141139Fce010982780140Aa0cD5Ab/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'
-    )
-  })
+    it('redirects /add/token-token to add/token/token', () => {
+      cy.visit('/add/0xD93878D3b011a96C0fF97cee984cd5c76B36Afc1-0xbf0718762B7951D56C52Cc7f75e4fa665a7FF0E5')
+      cy.url().should(
+        'contain',
+        '/add/0xD93878D3b011a96C0fF97cee984cd5c76B36Afc1/0xbf0718762B7951D56C52Cc7f75e4fa665a7FF0E5'
+      )
+    })
 
-  it('redirects /add/token-WETH to /add/token/WETH-address', () => {
-    cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85-0xc778417E063141139Fce010982780140Aa0cD5Ab')
-    cy.url().should(
-      'contain',
-      '/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab'
-    )
+    it('redirects /add/WETH-token to /add/WETH-address/token', () => {
+      cy.visit('/add/0x0BE9e53fd7EDaC9F859882AfdDa116645287C629-0xD93878D3b011a96C0fF97cee984cd5c76B36Afc1')
+      cy.url().should(
+        'contain',
+        '/add/0x0BE9e53fd7EDaC9F859882AfdDa116645287C629/0xD93878D3b011a96C0fF97cee984cd5c76B36Afc1'
+      )
+    })
+
+    it('redirects /add/token-WETH to /add/token/WETH-address', () => {
+      cy.visit('/add/0xD93878D3b011a96C0fF97cee984cd5c76B36Afc1-0x0BE9e53fd7EDaC9F859882AfdDa116645287C629')
+      cy.url().should(
+        'contain',
+        '/add/0xD93878D3b011a96C0fF97cee984cd5c76B36Afc1/0x0BE9e53fd7EDaC9F859882AfdDa116645287C629'
+      )
+    })
   })
 })

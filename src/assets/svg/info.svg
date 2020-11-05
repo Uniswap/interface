@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icons8-info (2)</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="swap2" transform="translate(-708.000000, -499.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="icons8-info-(2)" transform="translate(708.000000, 499.000000)">
+                <path d="M9,0 C4.0293,0 0,4.0293 0,9 C0,13.9707 4.0293,18 9,18 C13.9707,18 18,13.9707 18,9 C18,4.0293 13.9707,0 9,0 Z M9,13.5 L9,13.5 C8.5032,13.5 8.1,13.0968 8.1,12.6 L8.1,9 C8.1,8.5032 8.5032,8.1 9,8.1 L9,8.1 C9.4968,8.1 9.9,8.5032 9.9,9 L9.9,12.6 C9.9,13.0968 9.4968,13.5 9,13.5 Z M9.45,6.3 L8.55,6.3 C8.3016,6.3 8.1,6.0984 8.1,5.85 L8.1,4.95 C8.1,4.7016 8.3016,4.5 8.55,4.5 L9.45,4.5 C9.6984,4.5 9.9,4.7016 9.9,4.95 L9.9,5.85 C9.9,6.0984 9.6984,6.3 9.45,6.3 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

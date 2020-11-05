@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
-import { TokenAmount, Token, ChainId, Percent, JSBI } from '@uniswap/sdk'
+import { TokenAmount, Token, ChainId, Percent, JSBI } from '@fuseio/fuse-swap-sdk'
 
 import {
-  getEtherscanLink,
+  getExplorerLink,
   calculateSlippageAmount,
   isAddress,
   shortenAddress,
@@ -12,24 +12,24 @@ import {
 } from '.'
 
 describe('utils', () => {
-  describe('#getEtherscanLink', () => {
+  describe('#getExplorerLink', () => {
     it('correct for tx', () => {
-      expect(getEtherscanLink(1, 'abc', 'transaction')).toEqual('https://etherscan.io/tx/abc')
+      expect(getExplorerLink(1, 'abc', 'transaction')).toEqual('https://etherscan.io/tx/abc')
     })
     it('correct for token', () => {
-      expect(getEtherscanLink(1, 'abc', 'token')).toEqual('https://etherscan.io/token/abc')
+      expect(getExplorerLink(1, 'abc', 'token')).toEqual('https://etherscan.io/token/abc')
     })
     it('correct for address', () => {
-      expect(getEtherscanLink(1, 'abc', 'address')).toEqual('https://etherscan.io/address/abc')
+      expect(getExplorerLink(1, 'abc', 'address')).toEqual('https://etherscan.io/address/abc')
     })
     it('unrecognized chain id defaults to mainnet', () => {
-      expect(getEtherscanLink(2, 'abc', 'address')).toEqual('https://etherscan.io/address/abc')
+      expect(getExplorerLink(2, 'abc', 'address')).toEqual('https://etherscan.io/address/abc')
     })
     it('ropsten', () => {
-      expect(getEtherscanLink(3, 'abc', 'address')).toEqual('https://ropsten.etherscan.io/address/abc')
+      expect(getExplorerLink(3, 'abc', 'address')).toEqual('https://ropsten.etherscan.io/address/abc')
     })
     it('enum', () => {
-      expect(getEtherscanLink(ChainId.RINKEBY, 'abc', 'address')).toEqual('https://rinkeby.etherscan.io/address/abc')
+      expect(getExplorerLink(ChainId.RINKEBY, 'abc', 'address')).toEqual('https://rinkeby.etherscan.io/address/abc')
     })
   })
 

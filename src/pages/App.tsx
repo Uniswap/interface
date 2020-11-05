@@ -12,15 +12,16 @@ import {
   RedirectOldAddLiquidityPathStructure,
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
-import MigrateV1 from './MigrateV1'
-import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { RightFlashIcon, LeftFlashIcon } from '../components/FlashIcon'
+import Bridge from './Bridge'
+import { RedirectPathToBridge } from './Bridge/redirects'
+import { RedirectToDefault } from './redirects'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -67,6 +68,7 @@ export default function App() {
           <HeaderWrapper>
             <Header />
           </HeaderWrapper>
+          <LeftFlashIcon />
           <BodyWrapper>
             <Popups />
             <Web3ReactManager>
@@ -80,16 +82,16 @@ export default function App() {
                 <Route exact path="/add" component={AddLiquidity} />
                 <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
                 <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-                <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
                 <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
                 <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                <Route exact strict path="/migrate/v1" component={MigrateV1} />
-                <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
-                <Route component={RedirectPathToSwapOnly} />
+                <Route exact strict path="/bridge" component={Bridge} />
+                <Route exact strict path="/bridge/:inputCurrencyId" component={RedirectPathToBridge} />
+                <Route component={RedirectToDefault} />
               </Switch>
             </Web3ReactManager>
             <Marginer />
           </BodyWrapper>
+          <RightFlashIcon />
         </AppWrapper>
       </HashRouter>
     </Suspense>

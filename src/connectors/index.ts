@@ -6,8 +6,12 @@ import { PortisConnector } from '@web3-react/portis-connector'
 
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
+import { ChainId } from '@fuseio/fuse-swap-sdk'
+import { FOREIGN_BRIDGE_CHAIN } from '../constants'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
+const ROPSTEN_NETWORK_URL = process.env.REACT_APP_ROPSTEN_NETWORK_URL
+const MAINNET_NETWORK_URL = process.env.REACT_APP_MAINNET_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
@@ -15,6 +19,14 @@ export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID 
 
 if (typeof NETWORK_URL === 'undefined') {
   throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)
+}
+
+if (typeof ROPSTEN_NETWORK_URL === 'undefined') {
+  throw new Error(`REACT_APP_ROPSTEN_NETWORK_URL must be a defined environment variable`)
+}
+
+if (typeof MAINNET_NETWORK_URL === 'undefined') {
+  throw new Error(`REACT_APP_MAINNET_NETWORK_URL must be a defined environment variable`)
 }
 
 export const network = new NetworkConnector({
@@ -26,8 +38,25 @@ export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
 }
 
+export const getNetworkLibraryByChain = (chainId: number) => {
+  if (chainId === ChainId.ROPSTEN) {
+    const network = new NetworkConnector({
+      urls: { [chainId]: ROPSTEN_NETWORK_URL }
+    })
+    return new Web3Provider(network.provider as any)
+  } else if (chainId === ChainId.FUSE) {
+    const networkUrl = FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_NETWORK_URL : MAINNET_NETWORK_URL
+    const network = new NetworkConnector({
+      urls: { [chainId]: networkUrl }
+    })
+    return new Web3Provider(network.provider as any)
+  } else {
+    return getNetworkLibrary()
+  }
+}
+
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42]
+  supportedChainIds: [1, 3, 122]
 })
 
 // mainnet only

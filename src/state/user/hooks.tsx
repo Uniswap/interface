@@ -1,4 +1,4 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainId, Pair, Token } from '@fuseio/fuse-swap-sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -16,7 +16,8 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance
+  updateUserSlippageTolerance,
+  updateCompletedBridgeTransfer as updateCompletedBridgeTransferAction
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -235,4 +236,20 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
     return Object.keys(keyed).map(key => keyed[key])
   }, [combinedList])
+}
+
+export function useUserActionHandlers(): {
+  updateCompletedBridgeTransfer: () => void
+} {
+  const dispatch = useDispatch<AppDispatch>()
+
+  const updateCompletedBridgeTransfer = useCallback(() => {
+    dispatch(updateCompletedBridgeTransferAction())
+  }, [dispatch])
+
+  return { updateCompletedBridgeTransfer }
+}
+
+export function useUserState(): AppState['user'] {
+  return useSelector<AppState, AppState['user']>(state => state.user)
 }

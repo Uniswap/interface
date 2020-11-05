@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@uniswap/sdk'
+import { CurrencyAmount, JSBI, Token, Trade, ChainId } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -37,13 +37,15 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance, useUserState } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import SwitchNetwork from '../../components/swap/SwitchNetwork'
+import BridgeInfo from '../../components/swap/BridgeInfo'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -53,6 +55,7 @@ export default function Swap() {
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
+
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
@@ -62,7 +65,7 @@ export default function Swap() {
     setDismissTokenWarning(true)
   }, [])
 
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -75,6 +78,8 @@ export default function Swap() {
   // get custom setting values for user
   const [deadline] = useUserDeadline()
   const [allowedSlippage] = useUserSlippageTolerance()
+
+  const { completedBridgeTransfer } = useUserState()
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
@@ -269,6 +274,19 @@ export default function Swap() {
   const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
     onCurrencySelection
   ])
+
+  if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
+    return (
+      <>
+        <AppBody>
+          <Wrapper>
+            <SwapPoolTabs active={'swap'} />
+            {completedBridgeTransfer ? <SwitchNetwork /> : <BridgeInfo />}
+          </Wrapper>
+        </AppBody>
+      </>
+    )
+  }
 
   return (
     <>

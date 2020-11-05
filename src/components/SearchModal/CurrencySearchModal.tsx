@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk'
+import { Currency } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import useLast from '../../hooks/useLast'
@@ -15,6 +15,7 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
+  showETH: boolean
 }
 
 export default function CurrencySearchModal({
@@ -23,6 +24,7 @@ export default function CurrencySearchModal({
   onCurrencySelect,
   selectedCurrency,
   otherSelectedCurrency,
+  showETH,
   showCommonBases = false
 }: CurrencySearchModalProps) {
   const [listView, setListView] = useState<boolean>(false)
@@ -78,6 +80,7 @@ export default function CurrencySearchModal({
           selectedCurrency={selectedCurrency}
           otherSelectedCurrency={otherSelectedCurrency}
           showCommonBases={showCommonBases}
+          showETH={showETH}
         />
       )}
     </Modal>

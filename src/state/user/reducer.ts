@@ -12,7 +12,8 @@ import {
   updateUserDarkMode,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  updateUserDeadline
+  updateUserDeadline,
+  updateCompletedBridgeTransfer
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -46,6 +47,8 @@ export interface UserState {
   }
 
   timestamp: number
+
+  completedBridgeTransfer: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -60,7 +63,8 @@ export const initialState: UserState = {
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
-  timestamp: currentTimestamp()
+  timestamp: currentTimestamp(),
+  completedBridgeTransfer: false
 }
 
 export default createReducer(initialState, builder =>
@@ -128,5 +132,8 @@ export default createReducer(initialState, builder =>
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
+    })
+    .addCase(updateCompletedBridgeTransfer, state => {
+      state.completedBridgeTransfer = true
     })
 )

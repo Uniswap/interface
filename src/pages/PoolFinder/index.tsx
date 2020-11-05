@@ -1,4 +1,4 @@
-import { Currency, ETHER, JSBI, TokenAmount } from '@uniswap/sdk'
+import { Currency, ETHER, JSBI, TokenAmount } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
@@ -186,6 +186,7 @@ export default function PoolFinder() {
         onDismiss={handleSearchDismiss}
         showCommonBases
         selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
+        showETH
       />
     </AppBody>
   )

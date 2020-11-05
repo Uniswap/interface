@@ -4,9 +4,21 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk'
+import {
+  ROUTER_ADDRESS,
+  MAINNET_FOREIGN_BRIDGE_ADDRESS,
+  ROPSTEN_FOREIGN_BRIDGE_ADDRESS,
+  FUSE_MAINNET_HOME_BRIDGE_ADDRESS,
+  FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS,
+  FOREIGN_BRIDGE_CHAIN
+} from '../constants'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@fuseio/fuse-swap-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
+import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
+import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
+import Erc677TokenABI from '../constants/abis/erc677.json'
+import { getNetworkLibrary, getNetworkLibraryByChain } from '../connectors'
+import { TransactionResponse } from '@ethersproject/providers'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -22,11 +34,18 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   3: 'ropsten.',
   4: 'rinkeby.',
   5: 'goerli.',
-  42: 'kovan.'
+  42: 'kovan.',
+  122: 'fuse.'
 }
 
-export function getEtherscanLink(chainId: ChainId, data: string, type: 'transaction' | 'token' | 'address'): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+export function getExplorerLink(chainId: ChainId, data: string, type: 'transaction' | 'token' | 'address'): string {
+  let prefix
+
+  if (chainId === 122) {
+    prefix = 'https://explorer.fuse.io'
+  } else {
+    prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+  }
 
   switch (type) {
     case 'transaction': {
@@ -39,6 +58,32 @@ export function getEtherscanLink(chainId: ChainId, data: string, type: 'transact
     default: {
       return `${prefix}/address/${data}`
     }
+  }
+}
+
+export function getExplorerLinkText(chainId: number): string {
+  switch (chainId) {
+    case ChainId.FUSE:
+      return 'View on Fuse Explorer'
+    case ChainId.MAINNET:
+      return 'View on Etherscan'
+    case ChainId.ROPSTEN:
+      return 'View on Etherscan'
+    default:
+      return 'View on Etherscan'
+  }
+}
+
+export function getNativeCurrencySymbol(chainId?: number): string {
+  switch (chainId) {
+    case ChainId.FUSE:
+      return 'FUSE'
+    case ChainId.MAINNET:
+      return 'ETH'
+    case ChainId.ROPSTEN:
+      return 'ETH'
+    default:
+      return 'FUSE'
   }
 }
 
@@ -102,4 +147,179 @@ export function escapeRegExp(string: string): string {
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
+}
+
+export function getERC677TokenContract(address: string, library: Web3Provider, account?: string): Contract {
+  return getContract(address, Erc677TokenABI, library, account)
+}
+
+export function getBridgeHomeAddress(chainId?: number): string {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return FUSE_MAINNET_HOME_BRIDGE_ADDRESS
+    case ChainId.ROPSTEN:
+      return FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS
+    default:
+      throw new Error('Unsupported chainId')
+  }
+}
+
+export function getBridgeForeignAddress(chainId?: number): string {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return MAINNET_FOREIGN_BRIDGE_ADDRESS
+    case ChainId.ROPSTEN:
+      return ROPSTEN_FOREIGN_BRIDGE_ADDRESS
+    default:
+      throw new Error('Unsupported chainId')
+  }
+}
+
+export function getHomeBridgeContract(library: Web3Provider, account?: string): Contract {
+  const address =
+    FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS : FUSE_MAINNET_HOME_BRIDGE_ADDRESS
+  return getContract(address, HomeMultiAMBErc20ToErc677ABI, library, account)
+}
+
+export function getForiegnBridgeContract(chainId: number, library: Web3Provider, account?: string): Contract {
+  const address = getBridgeForeignAddress(chainId)
+  return getContract(address, ForeignMultiAMBErc20ToErc677ABI, library, account)
+}
+
+export function getCurrencySymbol(currency: Currency | null | undefined, chainId: number | undefined) {
+  if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
+    if (currency === ETHER) {
+      return 'ETH'
+    } else {
+      return currency?.symbol
+    }
+  } else {
+    return currency?.symbol
+  }
+}
+
+export function getBridgeContractWithRpc(chainId: number): Contract {
+  if (chainId === ChainId.MAINNET) {
+    return getContract(FUSE_MAINNET_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
+  } else if (chainId === ChainId.ROPSTEN) {
+    return getContract(FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
+  } else if (chainId === ChainId.FUSE) {
+    const address =
+      FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
+    return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
+  } else {
+    throw new Error('Unsupported chainId')
+  }
+}
+
+export function getHomeBridgeContractJsonRpc(chainId: number): Contract {
+  if (chainId === ChainId.MAINNET) {
+    return getContract(FUSE_MAINNET_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
+  } else {
+    return getContract(FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
+  }
+}
+
+export function getForiegnBridgeContractJsonRpc(chainId: number): Contract {
+  const address =
+    FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
+  return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
+}
+/**
+ *
+ * @param homeTokenAddress home address of token been transferred
+ * @param foreignTokenAddress foreign address of token been transferred
+ * @param library
+ * @param account user address
+ */
+export const confirmHomeTokenTransfer = async (
+  homeTokenAddress: string,
+  foreignTokenAddress: string,
+  library: Web3Provider,
+  account: string
+) => {
+  const contract = getHomeBridgeContract(library, account)
+  const address = await contract.foreignTokenAddress(homeTokenAddress)
+  return foreignTokenAddress === address
+}
+
+/**
+ *
+ * @param foreignTokenAddress foreign address of token been transferred
+ * @param HomeTokenAddress home address of token that was transferred
+ * @param contract
+ */
+export const confirmForeignTokenTransfer = async (
+  foreignTokenAddress: string,
+  HomeTokenAddress: string,
+  contract: Contract
+) => {
+  const address = await contract.foreignTokenAddress(HomeTokenAddress)
+  return foreignTokenAddress === address
+}
+
+export const waitForTransaction = async (
+  transaction: TransactionResponse,
+  confirmations: number,
+  library: Web3Provider,
+  callbackFn: Function
+) => {
+  transaction.wait()
+
+  const transactionHash = transaction.hash
+  const receipt = await library.getTransactionReceipt(transactionHash)
+
+  if ((receipt ? receipt.confirmations : 0) >= confirmations) return receipt
+
+  return new Promise(resolve => {
+    let done = false
+
+    const interval = setInterval(async () => {
+      const receipt = await library.getTransactionReceipt(transactionHash)
+
+      if (!receipt) {
+        callbackFn(0)
+        return
+      }
+
+      if (!done) {
+        callbackFn(receipt.confirmations >= confirmations ? confirmations : receipt.confirmations)
+      }
+
+      if (receipt.confirmations < confirmations) {
+        return
+      }
+
+      done = true
+
+      clearInterval(interval)
+      resolve(receipt)
+    }, 500)
+  })
+
+  // const interval = setInterval(async () => {
+
+  // })
+
+  // const interval = setInterval(async () => {
+  //   if (count == 10) clearInterval(interval)
+  //   console.log(await library.getTransactionReceipt(transactionHash))
+  //   count++
+  // }, 1000)
+
+  // if ((receipt ? receipt.confirmations : 0) >= confirmations) return receipt
+
+  // callbackFn(receipt ? receipt.confirmations : 0)
+
+  // return new Promise(resolve => {
+  //   const handler = (receipt: TransactionReceipt) => {
+  //     callbackFn(receipt.confirmations >= confirmations ? confirmations : receipt.confirmations)
+
+  //     if (receipt.confirmations < confirmations) return
+
+  //     library.removeListener(transactionHash, handler)
+  //     resolve(receipt)
+  //   }
+  //   library.on(transactionHash, handler)
+  // })
 }

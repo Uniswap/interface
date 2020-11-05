@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components'
-import { Pair } from '@uniswap/sdk'
+import { Pair, ChainId } from '@fuseio/fuse-swap-sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -12,18 +12,19 @@ import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
-import { Dots } from '../../components/swap/styleds'
+import { Dots, Wrapper } from '../../components/swap/styleds'
+import SwitchNetwork from '../../components/swap/SwitchNetwork'
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
@@ -55,6 +56,19 @@ export default function Pool() {
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+
+  if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
+    return (
+      <>
+        <AppBody>
+          <Wrapper>
+            <SwapPoolTabs active={'pool'} />
+            <SwitchNetwork />
+          </Wrapper>
+        </AppBody>
+      </>
+    )
+  }
 
   return (
     <>
@@ -112,12 +126,6 @@ export default function Pool() {
           </AutoColumn>
         </AutoColumn>
       </AppBody>
-
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
-        <ButtonSecondary as={Link} style={{ width: 'initial' }} to="/migrate/v1">
-          Migrate V1 Liquidity
-        </ButtonSecondary>
-      </div>
     </>
   )
 }

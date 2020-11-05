@@ -1,0 +1,655 @@
+[
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "relayTokens",
+    "inputs": [
+      { "type": "address", "name": "token" },
+      { "type": "uint256", "name": "_value" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setExecutionMaxPerTx",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_maxPerTx" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "maxPerTx",
+    "inputs": [{ "type": "address", "name": "_token" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "isRewardAddress",
+    "inputs": [{ "type": "address", "name": "_addr" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "fixFailedMessage",
+    "inputs": [{ "type": "bytes32", "name": "_messageId" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setBridgeContract",
+    "inputs": [{ "type": "address", "name": "_bridgeContract" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "withinLimit",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_amount" }
+    ],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "removeRewardAddress",
+    "inputs": [{ "type": "address", "name": "_addr" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "handleBridgedTokens",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "address", "name": "_recipient" },
+      { "type": "uint256", "name": "_value" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "executionMaxPerTx",
+    "inputs": [{ "type": "address", "name": "_token" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setTokenImage",
+    "inputs": [{ "type": "address", "name": "_tokenImage" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "isTokenRegistered",
+    "inputs": [{ "type": "address", "name": "_token" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setDailyLimit",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_dailyLimit" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "deployAndHandleBridgedTokens",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "string", "name": "_name" },
+      { "type": "string", "name": "_symbol" },
+      { "type": "uint8", "name": "_decimals" },
+      { "type": "address", "name": "_recipient" },
+      { "type": "uint256", "name": "_value" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "isInitialized",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "withinExecutionLimit",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_amount" }
+    ],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "getCurrentDay",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "executionDailyLimit",
+    "inputs": [{ "type": "address", "name": "_token" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "pure",
+    "payable": false,
+    "outputs": [{ "type": "bytes4", "name": "_data" }],
+    "name": "getBridgeMode",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "foreignTokenAddress",
+    "inputs": [{ "type": "address", "name": "_homeToken" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setFee",
+    "inputs": [
+      { "type": "bytes32", "name": "_feeType" },
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_fee" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "messageFixed",
+    "inputs": [{ "type": "bytes32", "name": "_messageId" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "getFee",
+    "inputs": [
+      { "type": "bytes32", "name": "_feeType" },
+      { "type": "address", "name": "_token" }
+    ],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "claimTokens",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "address", "name": "_to" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "getNextRewardAddress",
+    "inputs": [{ "type": "address", "name": "_address" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setMediatorContractOnOtherSide",
+    "inputs": [{ "type": "address", "name": "_mediatorContract" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "calculateFee",
+    "inputs": [
+      { "type": "bytes32", "name": "_feeType" },
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_value" }
+    ],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "rewardAddressCount",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "maxAvailablePerTx",
+    "inputs": [{ "type": "address", "name": "_token" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setExecutionDailyLimit",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_dailyLimit" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "mediatorContractOnOtherSide",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "owner",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "requestFailedMessageFix",
+    "inputs": [{ "type": "bytes32", "name": "_messageId" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "pure",
+    "payable": false,
+    "outputs": [
+      { "type": "uint64", "name": "major" },
+      { "type": "uint64", "name": "minor" },
+      { "type": "uint64", "name": "patch" }
+    ],
+    "name": "getBridgeInterfacesVersion",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "minPerTx",
+    "inputs": [{ "type": "address", "name": "_token" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "onTokenTransfer",
+    "inputs": [
+      { "type": "address", "name": "_from" },
+      { "type": "uint256", "name": "_value" },
+      { "type": "bytes", "name": "_data" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "totalSpentPerDay",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_day" }
+    ],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "relayTokens",
+    "inputs": [
+      { "type": "address", "name": "token" },
+      { "type": "address", "name": "_receiver" },
+      { "type": "uint256", "name": "_value" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "addRewardAddress",
+    "inputs": [{ "type": "address", "name": "_addr" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "requestGasLimit",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "tokenImage",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "F_ADDR",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "bridgeContract",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setMaxPerTx",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_maxPerTx" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "homeTokenAddress",
+    "inputs": [{ "type": "address", "name": "_foreignToken" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address[]", "name": "" }],
+    "name": "rewardAddressList",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setMinPerTx",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_minPerTx" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "initialize",
+    "inputs": [
+      { "type": "address", "name": "_bridgeContract" },
+      { "type": "address", "name": "_mediatorContract" },
+      { "type": "uint256[3]", "name": "_dailyLimitMaxPerTxMinPerTxArray" },
+      { "type": "uint256[2]", "name": "_executionDailyLimitExecutionMaxPerTxArray" },
+      { "type": "uint256", "name": "_requestGasLimit" },
+      { "type": "address", "name": "_owner" },
+      { "type": "address", "name": "_tokenImage" },
+      { "type": "address[]", "name": "_rewardAddreses" },
+      { "type": "uint256[2]", "name": "_fees" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "totalExecutedPerDay",
+    "inputs": [
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_day" }
+    ],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "transferOwnership",
+    "inputs": [{ "type": "address", "name": "newOwner" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setRequestGasLimit",
+    "inputs": [{ "type": "uint256", "name": "_requestGasLimit" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bytes32", "name": "" }],
+    "name": "FOREIGN_TO_HOME_FEE",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "dailyLimit",
+    "inputs": [{ "type": "address", "name": "_token" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bytes32", "name": "" }],
+    "name": "HOME_TO_FOREIGN_FEE",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "event",
+    "name": "NewTokenRegistered",
+    "inputs": [
+      { "type": "address", "name": "foreignToken", "indexed": true },
+      { "type": "address", "name": "homeToken", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "FeeUpdated",
+    "inputs": [
+      { "type": "bytes32", "name": "feeType", "indexed": false },
+      { "type": "address", "name": "token", "indexed": true },
+      { "type": "uint256", "name": "fee", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "FeeDistributed",
+    "inputs": [
+      { "type": "uint256", "name": "fee", "indexed": false },
+      { "type": "address", "name": "token", "indexed": true },
+      { "type": "bytes32", "name": "messageId", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "FailedMessageFixed",
+    "inputs": [
+      { "type": "bytes32", "name": "messageId", "indexed": true },
+      { "type": "address", "name": "token", "indexed": false },
+      { "type": "address", "name": "recipient", "indexed": false },
+      { "type": "uint256", "name": "value", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TokensBridged",
+    "inputs": [
+      { "type": "address", "name": "token", "indexed": true },
+      { "type": "address", "name": "recipient", "indexed": true },
+      { "type": "uint256", "name": "value", "indexed": false },
+      { "type": "bytes32", "name": "messageId", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "DailyLimitChanged",
+    "inputs": [
+      { "type": "address", "name": "token", "indexed": true },
+      { "type": "uint256", "name": "newLimit", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "ExecutionDailyLimitChanged",
+    "inputs": [
+      { "type": "address", "name": "token", "indexed": true },
+      { "type": "uint256", "name": "newLimit", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      { "type": "address", "name": "previousOwner", "indexed": false },
+      { "type": "address", "name": "newOwner", "indexed": false }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RewardAddressAdded",
+    "inputs": [{ "type": "address", "name": "addr", "indexed": true }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RewardAddressRemoved",
+    "inputs": [{ "type": "address", "name": "addr", "indexed": true }],
+    "anonymous": false
+  }
+]

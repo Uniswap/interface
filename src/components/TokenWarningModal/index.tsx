@@ -1,11 +1,11 @@
-import { Token } from '@uniswap/sdk'
+import { Token } from '@fuseio/fuse-swap-sdk'
 import { transparentize } from 'polished'
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
 import { ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink, shortenAddress } from '../../utils'
+import { getExplorerLink, shortenAddress, getExplorerLinkText } from '../../utils'
 import CurrencyLogo from '../CurrencyLogo'
 import Modal from '../Modal'
 import { AutoRow, RowBetween } from '../Row'
@@ -73,8 +73,10 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
               : token.name || token.symbol}{' '}
           </TYPE.main>
           {chainId && (
-            <ExternalLink style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'token')}>
-              <TYPE.blue title={token.address}>{shortenAddress(token.address)} (View on Etherscan)</TYPE.blue>
+            <ExternalLink style={{ fontWeight: 400 }} href={getExplorerLink(chainId, token.address, 'token')}>
+              <TYPE.blue title={token.address}>
+                {shortenAddress(token.address)} ({getExplorerLinkText(chainId)})
+              </TYPE.blue>
             </ExternalLink>
           )}
         </AutoColumn>

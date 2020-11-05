@@ -38,6 +38,11 @@ export const PinkCard = styled(Card)`
   font-weight: 500;
 `
 
+export const DarkBlueCard = styled(Card)`
+  background-color: ${({ theme }) => theme.bg11};
+  text-align: center;
+`
+
 const BlueCardStyled = styled(Card)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primary1};
