@@ -169,8 +169,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
-  // if staked balance balance provided, use instead of fetched balance from pool
-  const userPoolBalance = stakedBalance ?? userDefaultPoolBalance
+  // if staked balance balance provided, add to standard liquidity amount
+  const userPoolBalance = stakedBalance ? userDefaultPoolBalance?.add(stakedBalance) : userDefaultPoolBalance
 
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
@@ -240,12 +240,22 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           <AutoColumn gap="8px">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                Your pool tokens:
+                Your total pool tokens:
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
               </Text>
             </FixedHeightRow>
+            {stakedBalance && (
+              <FixedHeightRow>
+                <Text fontSize={16} fontWeight={500}>
+                  Pool tokens in rewards pool:
+                </Text>
+                <Text fontSize={16} fontWeight={500}>
+                  {stakedBalance.toSignificant(4)}
+                </Text>
+              </FixedHeightRow>
+            )}
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
@@ -301,39 +311,36 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary>
-            {stakedBalance ? (
-              <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  borderRadius="8px"
-                  as={Link}
-                  to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
-                  width="100%"
-                >
-                  Manage Deposited Liquidity
-                </ButtonPrimary>
-              </RowBetween>
-            ) : (
-              <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  borderRadius="8px"
-                  as={Link}
-                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
-                  width="48%"
-                >
-                  Add
-                </ButtonPrimary>
-                <ButtonPrimary
-                  padding="8px"
-                  borderRadius="8px"
-                  as={Link}
-                  width="48%"
-                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
-                >
-                  Remove
-                </ButtonPrimary>
-              </RowBetween>
+            <RowBetween marginTop="10px">
+              <ButtonPrimary
+                padding="8px"
+                borderRadius="8px"
+                as={Link}
+                to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
+                width="48%"
+              >
+                Add
+              </ButtonPrimary>
+              <ButtonPrimary
+                padding="8px"
+                borderRadius="8px"
+                as={Link}
+                width="48%"
+                to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+              >
+                Remove
+              </ButtonPrimary>
+            </RowBetween>
+            {stakedBalance && (
+              <ButtonPrimary
+                padding="8px"
+                borderRadius="8px"
+                as={Link}
+                to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
+                width="100%"
+              >
+                Manage Liquidity in Rewards Pool
+              </ButtonPrimary>
             )}
           </AutoColumn>
         )}
