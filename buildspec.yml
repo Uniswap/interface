@@ -6,5 +6,5 @@ phases:
   build:
     commands:
       - npm run build
-      - aws s3 sync ./dist "s3://${BUCKET_NAME}" --acl=public-read --exclude ".git/*" --delete
+      - aws s3 sync ./build "s3://${BUCKET_NAME}" --acl=public-read --exclude ".git/*" --delete
       - aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths "/*"
