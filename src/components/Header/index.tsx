@@ -231,7 +231,7 @@ const StyledNavLinkWithBadge = styled.a`
 `
 
 const GovernanceText = styled.span`
-  opacity: 0.4;
+  color: ${({ theme }) => transparentize(0.6, theme.text5)};
 `
 
 const AbsoluteComingSoonBadgeFlex = styled(Flex)`
