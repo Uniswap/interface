@@ -19,6 +19,7 @@ import { ThemeContext } from 'styled-components'
 import { BottomGrouping } from '../../components/bridge/styleds'
 import { ButtonLight, ButtonPrimary, ButtonError } from '../../components/Button'
 import { DarkBlueCard } from '../../components/Card'
+import ethLogo from '../../assets/images/ethereum-logo.png'
 import fuseLogo from '../../assets/images/fuse-logo-wordmark.svg'
 import loader from '../../assets/svg/loader.svg'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -40,10 +41,11 @@ import {
   getForiegnBridgeContractJsonRpc
 } from '../../utils'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { FOREIGN_BRIDGE_CHAIN } from '../../constants'
+import { FOREIGN_BRIDGE_CHAIN, UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
 import { useUserActionHandlers } from '../../state/user/hooks'
 import fuseApi from '../../api/fuseApi'
 import { TYPE } from '../../theme'
+import UnsupportedBridgeTokenModal from '../../components/UnsupportedBridgeTokenModal'
 
 export default function Bridge({
   match: {
@@ -67,6 +69,7 @@ export default function Bridge({
   // modal and loading
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [, setAttemptingTxn] = useState<boolean>(false)
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
 
   // txn values
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -76,6 +79,11 @@ export default function Bridge({
 
   const handleInputCurrencySelect = useCallback(
     (inputCurrency: Currency) => {
+      if (inputCurrency.symbol && UNSUPPORTED_BRIDGE_TOKENS.includes(inputCurrency.symbol)) {
+        setModalOpen(true)
+        return
+      }
+
       const newInputCurrency = currencyId(inputCurrency)
       history.push(`/bridge/${newInputCurrency}`)
     },
@@ -216,6 +224,7 @@ export default function Bridge({
       <AppBody>
         <SwapPoolTabs active={'bridge'} />
         <Wrapper id="bridge-page">
+          <UnsupportedBridgeTokenModal isOpen={modalOpen} setIsOpen={setModalOpen} />
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
               label="Amount"
@@ -236,9 +245,15 @@ export default function Bridge({
               <ArrowDown size="16" color={theme.text2} />
             </ArrowWrapper>
           </ColumnCenter>
-          <DarkBlueCard>
-            <Logo src={fuseLogo} alt="fuse logo" />
-          </DarkBlueCard>
+          {isHome ? (
+            <DarkBlueCard padding="0.75rem 1.25rem">
+              <Logo src={ethLogo} style={{ width: 45 }} alt="eth logo" />
+            </DarkBlueCard>
+          ) : (
+            <DarkBlueCard>
+              <Logo src={fuseLogo} alt="fuse logo" />
+            </DarkBlueCard>
+          )}
           <BottomGrouping>
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
