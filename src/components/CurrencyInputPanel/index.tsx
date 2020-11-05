@@ -24,7 +24,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   align-items: center;
   font-size: ${({ selected }) => (selected ? '26px' : '12px')};
   font-weight: ${({ selected }) => (selected ? 600 : 700)};
-  background-color: ${({ selected, theme }) => (selected ? 'transparent' : theme.mainPurple)};
+  background-color: ${({ selected, theme }) => (selected ? 'transparent' : theme.primary1)};
   border-radius: 8px;
   height: 28px;
   padding: ${({ selected }) => (selected ? '0' : '0 12px')};

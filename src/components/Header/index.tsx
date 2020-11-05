@@ -1,6 +1,6 @@
 import { ChainId } from 'dxswap-sdk'
 import React from 'react'
-import { Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import { Link, NavLink, withRouter } from 'react-router-dom'
 
 import styled from 'styled-components'
@@ -17,8 +17,9 @@ import Settings from '../Settings'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
-import { darken } from 'polished'
-import { ExternalLink } from '../../theme'
+import { transparentize } from 'polished'
+import { ExternalLink, TYPE } from '../../theme'
+import Badge from '../Badge'
 import MobileOptions from './MobileOptions'
 
 const HeaderFrame = styled.div`
@@ -110,11 +111,6 @@ const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
    width: 100%;
   `};
-  a {
-    font-weight: 600;
-    font-size: 16px;
-    color: ${({ theme, isDark }) => (isDark ? theme.white : theme.primaryText1)};
-  }
 `
 
 const HeaderLinks = styled(Row)`
@@ -127,40 +123,33 @@ const HeaderLinks = styled(Row)`
     padding: 1rem 0 1rem 0;
   `};
 `
-// TODO: Convert this badge to a component
-const ComingSoonBadge = styled.div`
-  self-align: center;
-  font-size: 9px;
-  text-align:center;
-  background-color: ${({ theme }) => (theme.bg4)};
-  border-radius: 3px;
-  
-  width: fit-content;
-  margin: auto;
-  padding: 2px 5px;
-`
 
 const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
-  border-radius: 12px;
+  background-color: ${({ theme, active }) => (active ? transparentize(0.45, theme.bg1) : 'transparent')};
+  border: solid 2px transparent;
+  box-sizing: border-box;
+  color: ${({ theme }) => theme.text4};
+  border-radius: 8px;
   white-space: nowrap;
   width: 100%;
   cursor: pointer;
 
   :focus {
-    border: 1px solid blue;
+    border: solid 2px transparent;
   }
-  /* :hover {
-    background-color: ${({ theme, active }) => (!active ? theme.bg2 : theme.bg4)};
-  } */
 `
 
 const NetworkCard = styled(YellowCard)`
-  border-radius: 12px;
-  padding: 8px 12px;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -179,7 +168,7 @@ const Title = styled.a`
   align-items: center;
   pointer-events: auto;
   justify-self: flex-start;
-  margin-right: 12px;
+  margin-right: 35px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
@@ -215,32 +204,39 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
+  color: ${({ theme }) => theme.text5};
   width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
+  margin: 0 16px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19.5px;
 
   &.${activeClassName} {
-    border-radius: 12px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text1};
-  }
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => theme.white};
   }
 `
 
 const StyledNavLinkWithBadge = styled.a`
-  top: 7px;
   position: relative;
   margin: 0px 12px;
-  cursor:default;
+  cursor: not-allowed;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19.5px;
+  color: ${({ theme }) => transparentize(0.4, theme.text5)};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
+`
+
+const GovernanceText = styled.span`
+  color: ${({ theme }) => transparentize(0.6, theme.text5)};
+`
+
+const AbsoluteComingSoonBadgeFlex = styled(Flex)`
+  position: absolute;
+  top: 20px;
 `
 
 const StyledExternalLink = styled(ExternalLink).attrs({
@@ -248,27 +244,15 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 })<{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
-  border-radius: 3rem;
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
+  color: ${({ theme }) => theme.text5};
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19.5px;
   width: fit-content;
   margin: 0 12px;
-  font-weight: 500;
-  &.${activeClassName} {
-    border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.text1};
-  }
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
-  }
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -314,27 +298,42 @@ function Header({ history }: { history: any }) {
             {t('pool')}
           </StyledNavLink>
           <StyledNavLinkWithBadge href="/#">
-            Governance
-            <ComingSoonBadge>COMING SOON</ComingSoonBadge>
+            <GovernanceText>Governance</GovernanceText>
+            <AbsoluteComingSoonBadgeFlex justifyContent="center" width="100%">
+              <Box>
+                <Badge label="COMING SOON" />
+              </Box>
+            </AbsoluteComingSoonBadgeFlex>
           </StyledNavLinkWithBadge>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Charts <span style={{ fontSize: '11px' }}>↗</span>
+            Charts{' '}
+            <Text ml="4px" fontSize="11px">
+              ↗
+            </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
-            <MobileOptions/>
+            <MobileOptions />
           </MoreLinksIcon>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-            {chainId && NETWORK_LABELS[chainId] && (
-              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-            )}
+          {chainId && NETWORK_LABELS[chainId] && (
+            <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+          )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
-              <Text style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+              <TYPE.white
+                style={{ flexShrink: 0 }}
+                ml="18px"
+                mr="12px"
+                fontWeight={700}
+                fontSize="12px"
+                lineHeight="15px"
+                letterSpacing="0.08em"
+              >
                 {userEthBalance?.toSignificant(4)} ETH
-              </Text>
+              </TYPE.white>
             ) : null}
             <Web3Status />
           </AccountElement>

@@ -1,15 +1,15 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Settings, X, Info, Code } from 'react-feather'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
-  useDarkModeManager,
   useExpertModeManager,
   useUserTransactionTTL,
-  useUserSlippageTolerance
+  useUserSlippageTolerance,
+  useDarkModeManager
 } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import { ButtonError } from '../Button'
@@ -19,13 +19,17 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import { transparentize } from 'polished'
 
 const StyledMenuIcon = styled(Settings)`
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
+  margin: 0 16px;
+  cursor: pointer;
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.text4};
   }
 `
 
@@ -38,32 +42,6 @@ const StyledCloseIcon = styled(X)`
 
   > * {
     stroke: ${({ theme }) => theme.text1};
-  }
-`
-
-const StyledMenuButton = styled.button`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
-
-  padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
-
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.bg4};
-  }
-
-  svg {
-    margin-top: 2px;
   }
 `
 const EmojiWrapper = styled.div`
@@ -84,11 +62,11 @@ const StyledMenu = styled.div`
 `
 
 const MenuContainer = styled.span`
-  min-width: 18.125rem;
+  min-width: 322px;
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 4rem;
+  top: 48px;
   right: 0rem;
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -104,13 +82,18 @@ const MenuContainer = styled.span`
 
 const MenuFlyout = styled.span`
   background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(16px);
+  background-color: ${({ theme }) => transparentize(0.6, theme.purpleBase)};
+  border-radius: 8px;
+  border: 8px solid;
+  border-radius: 8px;
+  border-image: url(${border8pxRadius}) 8;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
   height: auto;
+  box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     min-width: 18.125rem;
@@ -124,18 +107,17 @@ const MenuFlyout = styled.span`
 `
 
 const MenuFlyoutBottom = styled(MenuFlyout)`
-   margin-top: 1rem;
-   align-items: right;
-   flex-direction: row;
-   justify-content: center;
-   padding: 0.5rem;
-   
-   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  margin-top: 1rem;
+  align-items: right;
+  flex-direction: row;
+  justify-content: center;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
      min-width: 0;
      right: -46px;
    `};
 
-   ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
      min-width: 0;
      top: -22rem;
    `};
@@ -177,7 +159,6 @@ export default function SettingsTab() {
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
 
-  const theme = useContext(ThemeContext)
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
 
   const [ttl, setTtl] = useUserTransactionTTL()
@@ -196,7 +177,7 @@ export default function SettingsTab() {
     <StyledMenu ref={node as any}>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
-          <AutoColumn gap="lg">
+          <AutoColumn gap="8px">
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
               <Text fontWeight={500} fontSize={20}>
@@ -231,22 +212,21 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
-        {expertMode ? (
+      <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button">
+        {expertMode && (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
               😎
             </span>
           </EmojiWrapper>
-        ) : null}
-      </StyledMenuButton>
+        )}
+      </StyledMenuIcon>
       {open && (
         <MenuContainer>
           <MenuFlyout>
-            <AutoColumn gap="md" style={{ padding: '1rem' }}>
+            <AutoColumn gap="md" style={{ padding: '8px' }}>
               <Text fontWeight={600} fontSize={14}>
-                Transaction Settings
+                Transaction settings
               </Text>
               <TransactionSettings
                 rawSlippage={userSlippageTolerance}
@@ -255,13 +235,13 @@ export default function SettingsTab() {
                 setDeadline={setTtl}
               />
               <Text fontWeight={600} fontSize={14}>
-                Interface Settings
+                Interface settings
               </Text>
               <RowBetween>
                 <RowFixed>
-                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                    Toggle Expert Mode
-                  </TYPE.black>
+                  <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                    Toggle expert mode
+                  </TYPE.body>
                   <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
                 </RowFixed>
                 <Toggle
@@ -280,17 +260,19 @@ export default function SettingsTab() {
                   }
                 />
               </RowBetween>
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                    Toggle Dark Mode
-                  </TYPE.black>
-                </RowFixed>
-                <Toggle isActive={darkMode} toggle={toggleDarkMode} />
-              </RowBetween>
+              {
+                <RowBetween>
+                  <RowFixed>
+                    <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                      Toggle Dark Mode
+                    </TYPE.body>
+                  </RowFixed>
+                  <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
+                </RowBetween>
+              }
             </AutoColumn>
           </MenuFlyout>
-          <RowFixed style={{ alignSelf: "flex-end" }}>
+          <RowFixed alignSelf="flex-end">
             <MenuFlyoutBottom>
               <MenuItem id="link" href="https://dxdao.eth.link/">
                 <Info size={14} />

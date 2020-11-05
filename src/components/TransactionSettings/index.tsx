@@ -1,12 +1,13 @@
-import React, { useState, useRef, useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React, { useState, useRef } from 'react'
+import styled from 'styled-components'
 
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 
-import { darken } from 'polished'
+import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import { Text } from 'rebass'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -22,33 +23,30 @@ const FancyButton = styled.button`
   color: ${({ theme }) => theme.text1};
   align-items: center;
   height: 2rem;
-  border-radius: 36px;
-  font-size: 1rem;
+  border-radius: 8px;
+  font-size: 15px;
+  line-height: 18px;
   width: auto;
   min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 8px solid;
+  border-radius: 8px;
+  border-image: url(${border8pxRadius}) 8;
+  background: ${({ theme }) => theme.bg2};
   outline: none;
-  background: ${({ theme }) => theme.bg1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-  }
 `
 
 const Option = styled(FancyButton)<{ active: boolean }>`
   margin-right: 8px;
-  :hover {
-    cursor: pointer;
-  }
-  background-color: ${({ active, theme }) => active && theme.primary1};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
+  cursor: pointer;
+  border: none;
+  background-color: ${({ active, theme }) => (active ? theme.primary1 : theme.bg2)};
+  color: ${({ theme }) => theme.white};
 `
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.bg1};
-  font-size: 16px;
+  background: ${({ theme }) => theme.bg2};
+  font-size: 15px;
+  line-height: 18px;
   width: auto;
   outline: none;
   &::-webkit-outer-spin-button,
@@ -57,24 +55,26 @@ const Input = styled.input`
   }
   color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
   text-align: right;
+  display: flex;
 `
 
 const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }>`
-  height: 2rem;
   position: relative;
-  padding: 0 0.75rem;
+  padding: 0px 4px;
   flex: 1;
-  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
+  display: flex;
+
   :hover {
-    border: ${({ theme, active, warning }) =>
-      active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)}`};
+    border: 8px solid;
+    border-radius: 8px;
+    border-image: url(${border8pxRadius}) 8;
   }
 
   input {
     width: 100%;
     height: 100%;
     border: 0px;
-    border-radius: 2rem;
+    border-radius: 8px;
   }
 `
 
@@ -93,8 +93,6 @@ export interface SlippageTabsProps {
 }
 
 export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
-  const theme = useContext(ThemeContext)
-
   const inputRef = useRef<HTMLInputElement>()
 
   const [slippageInput, setSlippageInput] = useState('')
@@ -145,12 +143,12 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
   }
 
   return (
-    <AutoColumn gap="md">
-      <AutoColumn gap="sm">
+    <AutoColumn gap="16px">
+      <AutoColumn gap="12px">
         <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+          <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
             Slippage tolerance
-          </TYPE.black>
+          </TYPE.body>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
         </RowFixed>
         <RowBetween>
@@ -207,27 +205,28 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
           </OptionCustom>
         </RowBetween>
         {!!slippageError && (
-          <RowBetween
-            style={{
-              fontSize: '14px',
-              paddingTop: '7px',
-              color: slippageError === SlippageError.InvalidInput ? 'red' : '#F3841E'
-            }}
-          >
-            {slippageError === SlippageError.InvalidInput
-              ? 'Enter a valid slippage percentage'
-              : slippageError === SlippageError.RiskyLow
-              ? 'Your transaction may fail'
-              : 'Your transaction may be frontrun'}
+          <RowBetween mt="8px">
+            <Text
+              fontWeight={500}
+              fontSize="12px"
+              lineHeight="15px"
+              color={slippageError === SlippageError.InvalidInput ? 'red' : '#F3841E'}
+            >
+              {slippageError === SlippageError.InvalidInput
+                ? 'Enter a valid slippage percentage'
+                : slippageError === SlippageError.RiskyLow
+                ? 'Your transaction may fail'
+                : 'Your transaction may be frontrun'}
+            </Text>
           </RowBetween>
         )}
       </AutoColumn>
 
-      <AutoColumn gap="sm">
+      <AutoColumn gap="12px">
         <RowFixed>
-          <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+          <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
             Transaction deadline
-          </TYPE.black>
+          </TYPE.body>
           <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
         </RowFixed>
         <RowFixed>
