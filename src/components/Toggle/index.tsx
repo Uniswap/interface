@@ -2,8 +2,9 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
-const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
+const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean; disabled?: boolean }>`
   border-radius: 8px;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'none')};
   ${({ isActive }) =>
     isActive
       ? css`
@@ -14,8 +15,13 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
       : css`
           padding: 8px 10px;
         `}
-  background: ${({ theme, isActive }) => (isActive ? theme.primary1 : 'none')};
-  color: ${({ theme, isActive }) => (isActive ? theme.white : theme.text3)};
+  background: ${({ theme, disabled, isActive }) => {
+    if (isActive) {
+      return disabled ? theme.bg4 : theme.primary1
+    }
+    return theme.bg3
+  }};
+  color: ${({ theme, disabled, isActive }) => (!disabled && isActive ? theme.white : theme.text3)};
   font-size: 16px;
   line-height: 19px;
   font-weight: 500;
@@ -24,7 +30,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   }
 `
 
-const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean; disabled?: boolean }>`
   border-radius: 8px;
   border: none;
   background: ${({ theme }) => theme.bg3};
@@ -38,16 +44,17 @@ const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean
 export interface ToggleProps {
   id?: string
   isActive: boolean
+  disabled?: boolean
   toggle: () => void
 }
 
-export default function Toggle({ id, isActive, toggle }: ToggleProps) {
+export default function Toggle({ id, isActive, disabled, toggle }: ToggleProps) {
   return (
-    <StyledToggle id={id} isActive={isActive} onClick={toggle}>
-      <ToggleElement isActive={isActive} isOnSwitch={true}>
+    <StyledToggle disabled={disabled} id={id} isActive={isActive} onClick={toggle}>
+      <ToggleElement disabled={disabled} isActive={isActive} isOnSwitch={true}>
         On
       </ToggleElement>
-      <ToggleElement isActive={!isActive} isOnSwitch={false}>
+      <ToggleElement disabled={disabled} isActive={!isActive} isOnSwitch={false}>
         Off
       </ToggleElement>
     </StyledToggle>

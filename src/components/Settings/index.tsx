@@ -6,10 +6,10 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
-  useDarkModeManager,
   useExpertModeManager,
   useUserTransactionTTL,
-  useUserSlippageTolerance
+  useUserSlippageTolerance,
+  useDarkModeManager
 } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import { ButtonError } from '../Button'
@@ -93,7 +93,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   height: auto;
-  box-shadow: 0px 4px 42px rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     min-width: 18.125rem;
@@ -260,14 +260,16 @@ export default function SettingsTab() {
                   }
                 />
               </RowBetween>
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
-                    Toggle Dark Mode
-                  </TYPE.body>
-                </RowFixed>
-                <Toggle isActive={darkMode} toggle={toggleDarkMode} />
-              </RowBetween>
+              {
+                <RowBetween>
+                  <RowFixed>
+                    <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                      Toggle Dark Mode
+                    </TYPE.body>
+                  </RowFixed>
+                  <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
+                </RowBetween>
+              }
             </AutoColumn>
           </MenuFlyout>
           <RowFixed alignSelf="flex-end">
