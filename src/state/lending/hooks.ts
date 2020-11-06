@@ -40,7 +40,7 @@ export function useLendingInfo(
   const protocolSuppleyBalance = new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount())
   if (lendMarket === LendField.SUPPLY && !inputError) {
     if (walletBalance) {
-      if (!lendInputValue || !parseInputValue) {
+      if (!parseInputValue) {
         inputError = true
         inputText = lendMarket
       } else if (JSBI.equal(walletBalance.raw, ZERO) || JSBI.greaterThan(parseInputValue.raw, walletBalance.raw)) {
@@ -63,10 +63,7 @@ export function useLendingInfo(
       } else if (!parseInputValue) {
         inputError = true
         inputText = lendMarket
-      } else if (
-        parseInputValue &&
-        withdrawMax?.lessThan(parseInputValue)
-      ) {
+      } else if (parseInputValue && withdrawMax?.lessThan(parseInputValue)) {
         inputError = true
         inputText = 'Insufficient Liquidity'
       } else {
@@ -79,15 +76,13 @@ export function useLendingInfo(
   }
 
   if (lendMarket === LendField.REPAY && !inputError) {
-    if (!protocolBorrowBalance) {
-      inputError = true
-      inputText = 'No Balance to Repay'
-    } else if (JSBI.equal(protocolBorrowBalance.raw, ZERO)) {
+    if (!protocolBorrowBalance || JSBI.equal(protocolBorrowBalance.raw, ZERO)) {
       inputError = true
       inputText = 'No Balance to Repay'
     } else if (parseInputValue && JSBI.greaterThan(parseInputValue?.raw, protocolBorrowBalance.raw)) {
       inputError = true
-    } else if (Number(lendInputValue) === 0 || !parseInputValue) {
+      inputText = 'Exceed borrow balance'
+    } else if (parseInputValue?.raw === ZERO || !parseInputValue) {
       inputError = true
       inputText = lendMarket
     } else if (JSBI.greaterThan(parseInputValue.raw, walletBalance?.raw ?? ZERO)) {
@@ -99,18 +94,17 @@ export function useLendingInfo(
   }
 
   if (lendMarket === LendField.BORROW && !inputError) {
-    if (Number(limit) === 0) {
+    if (limit === ZERO) {
       inputError = true
       inputText = 'Borrowing limit reached'
-    } else if (Number(lendInputValue) === 0 || !parseInputValue) {
+    } else if (parseInputValue?.raw === ZERO || !parseInputValue) {
       inputError = true
       inputText = lendMarket
-    } else if (
-      parseInputValue &&
-      !borrowMax?.greaterThan(parseInputValue)
-    ) {
+    } else if (parseInputValue && borrowMax?.lessThan(parseInputValue)) {
       inputError = true
       inputText = 'Insufficient Collateral'
+    } else {
+      inputText = lendMarket
     }
   }
 
