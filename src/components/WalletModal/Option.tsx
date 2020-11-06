@@ -6,7 +6,7 @@ const InfoCard = styled.button<{ active?: boolean }>`
   background-color: transparent;
   padding: 1rem;
   outline: none;
-  border: 1px solid ${({ theme, active }) => (active ? 'transparent' : theme.text5)};
+  border: 1px solid ${({ theme, active }) => (active ? 'transparent' : theme.bg3)};
   border-radius: 8px;
   width: 100% !important;
 `

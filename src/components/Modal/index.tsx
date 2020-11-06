@@ -35,7 +35,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     background: none;
-    box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
+    box-shadow: 0px 16px 42px ${({ theme }) => transparentize(0.55, theme.boxShadow)};
     padding: 0px;
     width: 50vw;
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};

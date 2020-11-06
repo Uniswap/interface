@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
+import { transparentize } from 'polished'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { fortmatic, injected, portis } from '../../connectors'
@@ -42,7 +43,7 @@ const Wrapper = styled.div`
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1rem 1rem;
+  padding: 1rem 1.125rem 0 1.125rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -51,7 +52,7 @@ const HeaderRow = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  padding: 16px;
+  padding: 16px 18px 32px 16px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 
@@ -60,6 +61,7 @@ const ContentWrapper = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
+  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
 
   h5 {
     margin: 0;
@@ -81,13 +83,19 @@ const UpperSection = styled.div`
 const Blurb = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  margin-top: 2rem;
+  margin-top: 23px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin: 1rem;
     font-size: 12px;
   `};
+`
+
+const StyledExternalLink = styled(ExternalLink)`
+  font-weight: 500;
+  font-size: 14px;
+  color: ${({ theme }) => theme.purple4};
 `
 
 const OptionGrid = styled.div`
@@ -339,7 +347,7 @@ export default function WalletModal({
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <TYPE.body fontWeight={500} fontSize={16}>
+            <TYPE.body fontWeight={500} fontSize={20} color="text4">
               Connect to a wallet
             </TYPE.body>
           </HeaderRow>
@@ -357,8 +365,10 @@ export default function WalletModal({
           )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
-              <TYPE.body>New to Ethereum? &nbsp;</TYPE.body>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
+              <TYPE.body fontWeight={500} fontSize={14} color="text5">
+                New to Ethereum? &nbsp;
+              </TYPE.body>{' '}
+              <StyledExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</StyledExternalLink>
             </Blurb>
           )}
         </ContentWrapper>
