@@ -36,6 +36,7 @@ import DoubleAssetLogo from '../DoubleAssetLogo'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 import { getSupplyApy } from '../SupplyMarkets'
 import { getBorrowApy } from '../BorrowMarkets'
+import { useTranslation } from 'react-i18next'
 
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
@@ -165,9 +166,7 @@ function LendModal({
   usedLimit,
   lendMarket
 }: LendModalProps) {
-  // const { t } = useTranslation()
-
-  // const [isDark] = useDarkModeManager()
+  const { t } = useTranslation()
 
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -413,10 +412,8 @@ function LendModal({
     if (!chainId || !library || !account || !amount) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null
+    let estimate, method: (...args: any) => Promise<TransactionResponse>, args: Array<string | string[] | number>
+    const value: BigNumber | null = null
 
     const supplyBalanceAmount = new TokenAmount(cToken, cToken.getSupplyBalanceAmount()).toExact() ?? ''
     if (lendInputValue === supplyBalanceAmount) {
@@ -428,7 +425,6 @@ function LendModal({
       method = cTokenContract.redeemUnderlying
       args = [amount]
     }
-    value = null
 
     setPendingText('Withdraw ' + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
@@ -644,7 +640,7 @@ function LendModal({
                         return
                       }
                     }}
-                    label={'Amount'}
+                    label={t('amount')}
                     showMaxButton={true}
                     id="lend-input"
                   />
@@ -657,7 +653,7 @@ function LendModal({
                     <CurrencyIcon logo0={lendToken?.logo0} size={'4.4rem'} style={{ marginBottom: '2rem' }} />
                   )}
                   <Text fontWeight={400} fontSize={'0.9rem'} textAlign={'center'} lineHeight={'1rem'}>
-                    To Supply or Repay Tether to the Compound Protocol, you need to enable it first.
+                    {t('approveQuestionHelper')}
                   </Text>
                 </ApproveWrap>
               )}
@@ -683,7 +679,9 @@ function LendModal({
                     }
                   }}
                 >
-                  {lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW}
+                  {lendMarket === LendField.SUPPLY
+                    ? t(LendField.SUPPLY.toLowerCase())
+                    : t(LendField.BORROW.toLowerCase())}
                 </TabItem>
                 <TabItem
                   isActive={
@@ -704,14 +702,16 @@ function LendModal({
                     }
                   }}
                 >
-                  {lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY}
+                  {lendMarket === LendField.SUPPLY
+                    ? t(LendField.WITHDRAW.toLowerCase())
+                    : t(LendField.REPAY.toLowerCase())}
                 </TabItem>
               </TabWrap>
               <Break />
             </AutoColumn>
             <AutoColumn gap={'0'}>
               <RateWrap>
-                <RateTitle>{lendMarket === LendField.BORROW ? 'Borrow Rates' : 'Supply Rates'}</RateTitle>
+                <RateTitle>{lendMarket === LendField.BORROW ? t('borrowRates') : t('supplyRates')}</RateTitle>
                 <RatePanel>
                   <AutoRow>
                     {lendToken?.logo1 ? (
@@ -719,7 +719,9 @@ function LendModal({
                     ) : (
                       <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '6px' }} />
                     )}
-                    <Text lineHeight={'24px'}>{lendToken?.symbol} APY</Text>
+                    <Text lineHeight={'24px'}>
+                      {lendToken?.symbol} {t('APY')}
+                    </Text>
                   </AutoRow>
                   <RateCalculation>
                     {lendMarket === LendField.SUPPLY
@@ -733,10 +735,10 @@ function LendModal({
                 tabItemActive === LendField.WITHDRAW ||
                 tabItemActive === LendField.BORROW) && (
                 <RateWrap>
-                  <RateTitle>Borrow Limit</RateTitle>
+                  <RateTitle>{t('borrowLimit')}</RateTitle>
                   <RatePanel>
                     <Text lineHeight={'24px'}>
-                      {lendMarket === LendField.BORROW ? 'Borrow Balance' : 'Borrow Limit'}
+                      {lendMarket === LendField.BORROW ? t('borrowBalance') : t('borrowLimit')}
                     </Text>
                     <RateCalculation>
                       <Text>
@@ -756,7 +758,7 @@ function LendModal({
                   <Break />
                   <RatePanel>
                     <AutoRow>
-                      <Text lineHeight={'24px'}>Borrow Limit Used</Text>
+                      <Text lineHeight={'24px'}>{t('borrowLimitUsed')}</Text>
                     </AutoRow>
                     <RateCalculation>
                       <Text>{usedLimit.toSignificant(4) ?? '0.00'}%</Text>
@@ -808,7 +810,7 @@ function LendModal({
                         setShowLendConfirmation(false)
                       }}
                     >
-                      ENABLE
+                      {t('enable')}
                     </ButtonLight>
                   )}
                 </>
@@ -838,9 +840,9 @@ function LendModal({
                 <Text fontWeight={500}>
                   {tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW
                     ? tabItemActive === LendField.WITHDRAW
-                      ? 'Currently Supplying'
-                      : 'Currently Borrowing'
-                    : 'Wallet Balance'}
+                      ? t('currentlySupplying')
+                      : t('currentlyBorrowing')
+                    : t('walletBalance')}
                 </Text>
                 {(lendToken && tabItemActive === LendField.WITHDRAW) ||
                 (lendToken && tabItemActive === LendField.BORROW)

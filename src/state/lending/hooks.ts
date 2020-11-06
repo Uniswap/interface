@@ -4,6 +4,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { LendField } from './actions'
 import { CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk'
 import { tryParseAmount } from '../swap/hooks'
+import { useTranslation } from 'react-i18next'
 
 // based on typed value
 export function useLendingInfo(
@@ -17,6 +18,7 @@ export function useLendingInfo(
   inputError?: boolean
   inputText?: string
 } {
+  const { t } = useTranslation()
   const { account } = useActiveWeb3React()
   // Wallet Balance
   const walletBalance = useCTokenBalance(lendToken)
@@ -42,16 +44,16 @@ export function useLendingInfo(
     if (walletBalance) {
       if (!parseInputValue) {
         inputError = true
-        inputText = lendMarket
+        inputText = t(lendMarket.toLowerCase())
       } else if (JSBI.equal(walletBalance.raw, ZERO) || JSBI.greaterThan(parseInputValue.raw, walletBalance.raw)) {
         inputError = true
-        inputText = 'No funds available'
+        inputText = t('noFundsAvailable')
       } else {
-        inputText = lendMarket
+        inputText = t(lendMarket.toLowerCase())
       }
     } else {
       inputError = true
-      inputText = 'No funds available'
+      inputText = t('noFundsAvailable')
     }
   }
 
@@ -59,56 +61,56 @@ export function useLendingInfo(
     if (protocolSuppleyBalance) {
       if (JSBI.equal(protocolSuppleyBalance.raw, ZERO)) {
         inputError = true
-        inputText = 'No Balance to Withdraw'
+        inputText = t('noBalanceToWithdraw')
       } else if (!parseInputValue) {
         inputError = true
-        inputText = lendMarket
+        inputText = t(lendMarket.toLowerCase())
       } else if (parseInputValue && withdrawMax?.lessThan(parseInputValue)) {
         inputError = true
-        inputText = 'Insufficient Liquidity'
+        inputText = t('insufficientLiquidity')
       } else {
-        inputText = lendMarket
+        inputText = t(lendMarket.toLowerCase())
       }
     } else {
       inputError = true
-      inputText = 'No Balance to Withdraw'
+      inputText = t('noBalanceToWithdraw')
     }
   }
 
   if (lendMarket === LendField.REPAY && !inputError) {
     if (!protocolBorrowBalance || JSBI.equal(protocolBorrowBalance.raw, ZERO)) {
       inputError = true
-      inputText = 'No Balance to Repay'
+      inputText = t('noBalanceToRepay')
     } else if (parseInputValue && JSBI.greaterThan(parseInputValue?.raw, protocolBorrowBalance.raw)) {
       inputError = true
       inputText = 'Exceed borrow balance'
     } else if (parseInputValue?.raw === ZERO || !parseInputValue) {
       inputError = true
-      inputText = lendMarket
+      inputText = t(lendMarket.toLowerCase())
     } else if (JSBI.greaterThan(parseInputValue.raw, walletBalance?.raw ?? ZERO)) {
       inputError = true
-      inputText = 'No funds available'
+      inputText = t('noFundsAvailable')
     } else {
-      inputText = lendMarket
+      inputText = t(lendMarket.toLowerCase())
     }
   }
 
   if (lendMarket === LendField.BORROW && !inputError) {
     if (limit === ZERO) {
       inputError = true
-      inputText = 'Borrowing limit reached'
+      inputText = t('borrowingLimitReached')
     } else if (parseInputValue?.raw === ZERO || !parseInputValue) {
       inputError = true
       inputText = lendMarket
     } else if (parseInputValue && borrowMax?.lessThan(parseInputValue)) {
       inputError = true
-      inputText = 'Insufficient Collateral'
+      inputText = t('insufficientCollateral')
     } else {
       inputText = lendMarket
     }
   }
 
-  inputText = inputText ?? lendMarket
+  inputText = inputText ?? t(lendMarket?.toLowerCase())
 
   return { inputError, inputText }
 }

@@ -9,6 +9,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
+import { useTranslation } from 'react-i18next'
 
 const MarketsCard = styled.div`
   background: ${({ theme }) => theme.bg1};
@@ -152,7 +153,7 @@ function BorrowMarkets({
     [tokenAddress: string]: TokenAmount | undefined
   }
 }) {
-  // const { t } = useTranslation()
+  const { t } = useTranslation()
 
   // const [isDark] = useDarkModeManager()
 
@@ -185,15 +186,15 @@ function BorrowMarkets({
       />
       {!!borrowedAsset.length && (
         <MarketsCard style={{ marginBottom: '1rem' }}>
-          <MarketsCardHeader>Borrowing</MarketsCardHeader>
+          <MarketsCardHeader>{t('borrowingMarkets')}</MarketsCardHeader>
           <AssetWrap>
             <AssetWrapLabels>
-              <AssetLabel textAlign={'left'}>Asset</AssetLabel>
+              <AssetLabel textAlign={'left'}>{t('asset')}</AssetLabel>
               <AssetLabel textAlign={'right'} mobileHide={true}>
-                APY
+                {t('APY')}
               </AssetLabel>
-              <AssetLabel textAlign={'right'}>Balance</AssetLabel>
-              <AssetLabel textAlign={'right'}>% Of Limit</AssetLabel>
+              <AssetLabel textAlign={'right'}>{t('assetBalance')}</AssetLabel>
+              <AssetLabel textAlign={'right'}>{t('percentOfLimit')}</AssetLabel>
             </AssetWrapLabels>
             <AssetItemWrap>
               {borrowedAsset.map((item: CToken) => (
@@ -238,14 +239,14 @@ function BorrowMarkets({
       )}
       <MarketsCard>
         <AssetWrap>
-          <MarketsCardHeader>Borrow Markets</MarketsCardHeader>
+          <MarketsCardHeader>{t('borrowMarkets')}</MarketsCardHeader>
           <AssetWrapLabels>
-            <AssetLabel textAlign={'left'}>Asset</AssetLabel>
+            <AssetLabel textAlign={'left'}>{t('asset')}</AssetLabel>
             <AssetLabel textAlign={'right'} mobileHide={true}>
-              APY
+              {t('APY')}
             </AssetLabel>
-            <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
-            <AssetLabel textAlign={'right'}>Liquidity</AssetLabel>
+            <AssetLabel textAlign={'right'}>{t('assetWallet')}</AssetLabel>
+            <AssetLabel textAlign={'right'}>{t('liquidity')}</AssetLabel>
           </AssetWrapLabels>
           <AssetItemWrap>
             {!!borrowAsset.length

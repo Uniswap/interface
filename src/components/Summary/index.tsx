@@ -1,6 +1,6 @@
 import { Fraction, JSBI } from '@uniswap/sdk'
 import React from 'react'
-// import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { formatData, showDollarValue } from '../../utils'
 import MarketBar from '../MarketBar'
@@ -95,40 +95,39 @@ function Summary({
   netApy: Fraction
   totalMarketSize: JSBI
 }) {
-  // const { t } = useTranslation()
-  // limit ? ((borrowTotalBalance / limit) * 100).toFixed(2)
+  const { t } = useTranslation()
 
   return (
     <SummaryCard>
       <SummaryFrame>
         <SummaryElement>
-          <SummaryTitle>Supply Balance</SummaryTitle>
+          <SummaryTitle>{t('supplyBalance')}</SummaryTitle>
           <SummaryContent>
             <DotIcon />${formatData(supplyTotalBalance).toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
-          <SummaryTitle>Net APY</SummaryTitle>
+          <SummaryTitle>{t('netAPY')}</SummaryTitle>
           <SummaryContent>
             <DotIcon />
             {netApy.toFixed(2)}%
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
-          <SummaryTitle>Borrow Balance</SummaryTitle>
+          <SummaryTitle>{t('borrowBalance')}</SummaryTitle>
           <SummaryContent>
             <DotIcon />${formatData(borrowTotalBalance).toFixed(8)}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
-          <SummaryTitle>Total Market Size</SummaryTitle>
+          <SummaryTitle>{t('totalMarketSize')}</SummaryTitle>
           <SummaryContent>
             <DotIcon />${showDollarValue(totalMarketSize)}
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>
       <MarketBarWrap>
-        <MarketBarTitle style={{ paddingRight: '6px' }}>Borrow Limit</MarketBarTitle>
+        <MarketBarTitle style={{ paddingRight: '6px' }}>{t('borrowLimit')}</MarketBarTitle>
         <MarketBar rate={Number(usedLimit.toSignificant(4)) ?? 0} showRate={true} />
         <MarketBarTitle style={{ paddingLeft: '6px' }}>${formatData(limit).toFixed(2)}</MarketBarTitle>
       </MarketBarWrap>

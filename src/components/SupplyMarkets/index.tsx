@@ -21,6 +21,7 @@ import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
+import { useTranslation } from 'react-i18next'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -192,11 +193,7 @@ function SupplyMarkets({
     [tokenAddress: string]: TokenAmount | undefined
   }
 }) {
-  // const { t } = useTranslation()
-
-  // const [isDark] = useDarkModeManager()
-
-  // show confirmation view before turning on
+  const { t } = useTranslation()
 
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -380,10 +377,10 @@ function SupplyMarkets({
               <div />
               <Text fontWeight={500} fontSize={'1.1rem'}>
                 {collateralToken?.canBeCollateral
-                  ? 'Disable As Collateral'
+                  ? t('disableAsCollateral')
                   : isSuppliedMarkets
-                  ? 'Collateral Required'
-                  : 'Enable As Collateral'}
+                  ? t('collateralRequired')
+                  : t('enableAsCollateral')}
               </Text>
               <StyledCloseIcon onClick={() => setShowCollateralConfirmation(false)} />
             </RowBetween>
@@ -391,17 +388,15 @@ function SupplyMarkets({
             <AutoColumn gap="md" style={{ padding: '0 2rem' }}>
               {collateralToken?.canBeCollateral && canExitMarkets() ? (
                 <Text fontWeight={400} fontSize={'1rem'}>
-                  This asset will no longer be used towards your borrowing limit, and can’t be seized in liquidation.
+                  {t('collateralQuestionHelperOne')}
                 </Text>
               ) : collateralToken?.canBeCollateral ? (
                 <Text fontWeight={400} fontSize={'1rem'}>
-                  This asset is required to support your borrowed assets. Either repay borrowed assets, or supply
-                  another asset as collateral.
+                  {t('collateralQuestionHelperTwo')}
                 </Text>
               ) : (
                 <Text fontWeight={400} fontSize={'1rem'}>
-                  Each asset used as collateral increases your borrowing limit. Be careful, this can subject the asset
-                  to being seized in liquidation.
+                  {t('collateralQuestionHelperThree')}
                 </Text>
               )}
             </AutoColumn>
@@ -432,10 +427,10 @@ function SupplyMarkets({
                 }}
               >
                 {collateralToken?.canBeCollateral && canExitMarkets()
-                  ? 'DISABLE ' + collateralToken?.symbol
+                  ? t('disableCollateralAsset', { symbol: collateralToken?.symbol })
                   : collateralToken?.canBeCollateral
-                  ? 'DISMISS'
-                  : 'USE ' + collateralToken?.symbol + ' AS COLLATEERAL'}
+                  ? t('dismiss')
+                  : t('useAssetAsCollateral', { symbol: collateralToken?.symbol })}
               </ButtonLight>
             </AutoColumn>
           </AutoColumn>
@@ -443,15 +438,15 @@ function SupplyMarkets({
       </Modal>
       {!!suppliedAsset.length && (
         <MarketsCard style={{ marginBottom: '1rem' }}>
-          <MarketsCardHeader>Supply</MarketsCardHeader>
+          <MarketsCardHeader>{t('suppliedMarkets')}</MarketsCardHeader>
           <AssetWrap>
             <AssetWrapLabels>
-              <AssetLabel textAlign={'left'}>Asset</AssetLabel>
+              <AssetLabel textAlign={'left'}>{t('asset')}</AssetLabel>
               <AssetLabel textAlign={'right'} mobileHide={true}>
-                APY
+                {t('APY')}
               </AssetLabel>
-              <AssetLabel textAlign={'right'}>Balance</AssetLabel>
-              <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
+              <AssetLabel textAlign={'right'}>{t('assetBalance')}</AssetLabel>
+              <AssetLabel textAlign={'right'}>{t('collateral')}</AssetLabel>
             </AssetWrapLabels>
             <AssetItemWrap onClick={() => setShowLendConfirmation(true)}>
               {suppliedAsset.map((item: CToken) => (
@@ -500,15 +495,15 @@ function SupplyMarkets({
         </MarketsCard>
       )}
       <MarketsCard>
-        <MarketsCardHeader>Supply Markets</MarketsCardHeader>
+        <MarketsCardHeader>{t('supplyMarkets')}</MarketsCardHeader>
         <AssetWrap>
           <AssetWrapLabels>
-            <AssetLabel textAlign={'left'}>Asset</AssetLabel>
+            <AssetLabel textAlign={'left'}>{t('asset')}</AssetLabel>
             <AssetLabel textAlign={'right'} mobileHide={true}>
-              APY
+              {t('APY')}
             </AssetLabel>
-            <AssetLabel textAlign={'right'}>Wallet</AssetLabel>
-            <AssetLabel textAlign={'right'}>Collateral</AssetLabel>
+            <AssetLabel textAlign={'right'}>{t('assetWallet')}</AssetLabel>
+            <AssetLabel textAlign={'right'}>{t('collateral')}</AssetLabel>
           </AssetWrapLabels>
           <AssetItemWrap>
             {!!supplyAsset.length
