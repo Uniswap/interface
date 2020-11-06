@@ -28,7 +28,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => transparentize(0.55, theme.bg2)};
+  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
 
   h5 {
     margin: 0;
@@ -93,7 +93,7 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => transparentize(0.75, theme.bg1)};
+  background-color: ${({ theme }) => transparentize(0.25, theme.bg1)};
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 

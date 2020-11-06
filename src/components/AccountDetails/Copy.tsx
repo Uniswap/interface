@@ -23,7 +23,6 @@ const CopyIcon = styled(LinkStyledButton)`
 const TransactionStatus = styled.span`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
-  align-items: center;
 `
 
 const TransactionStatusText = styled.span`
