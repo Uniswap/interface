@@ -59,7 +59,7 @@ export function useDerivedBridgeInfo(
     inputError = inputError ?? 'Enter an amount'
   }
 
-  if (Number(typedValue) < 0.5) {
+  if (Number(typedValue) < 0.01) {
     inputError = inputError ?? 'Below minimum limit'
   }
 

@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { RowCenter } from '../Row'
 import { AutoColumn } from '../Column'
-import { TYPE, ExternalLink } from '../../theme'
+import { TYPE } from '../../theme'
 import icon from '../../assets/svg/fuse.svg'
 import styled from 'styled-components'
+import ConnectFuseModal from '../ConnectFuseModal'
+import { Link } from 'rebass'
 
 const Icon = styled.img.attrs({
   src: icon
@@ -14,8 +16,12 @@ const Icon = styled.img.attrs({
 `
 
 function SwitchNetwork() {
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+
   return (
     <>
+      <ConnectFuseModal isOpen={modalOpen} setIsOpen={setModalOpen} />
+
       <AutoColumn style={{ padding: '0 20px 40px' }}>
         <RowCenter>
           <Icon />
@@ -26,12 +32,14 @@ function SwitchNetwork() {
           </TYPE.body>
         </RowCenter>
         <RowCenter>
-          <ExternalLink
-            href="https://docs.fuse.io/the-fuse-studio/getting-started/how-to-add-fuse-to-your-metamask"
-            style={{ fontSize: 18, color: 'white' }}
+          <Link
+            onClick={() => setModalOpen(true)}
+            fontSize={18}
+            color="white"
+            style={{ fontWeight: 500, cursor: 'pointer' }}
           >
             Click here to learn how
-          </ExternalLink>
+          </Link>
         </RowCenter>
       </AutoColumn>
     </>

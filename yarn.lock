@@ -1671,10 +1671,10 @@
     "@ethersproject/properties" "^5.0.3"
     "@ethersproject/strings" "^5.0.4"
 
-"@fuseio/fuse-swap-default-token-list@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-default-token-list/-/fuse-swap-default-token-list-1.0.4.tgz#7ad931ea810357e1ce4e1861ac0c7cd990b2f56d"
-  integrity sha512-FdAhATkKS6MZxTe7ErIgZ+L54DTsFM3czr/5auKdUrmN9/dkhw2H+4/jd7Hy7l/czERBEaPLUeKcJE4m7NrPCg==
+"@fuseio/fuse-swap-default-token-list@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-default-token-list/-/fuse-swap-default-token-list-1.0.6.tgz#6424eedcbb354963402e675c69f7e124a3f86270"
+  integrity sha512-ZdpwWOu3oz4SQEURQX16O6qTsPBtg9cUtD9ihDeAnXAM26FwjbCtlzKd2HwgSsiluT6O7VrnamuYBo4cB5WR2g==
 
 "@fuseio/fuse-swap-sdk@^3.0.4":
   version "3.0.4"
