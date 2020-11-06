@@ -5,7 +5,7 @@
   "private": true,
   "devDependencies": {
     "@ethersproject/experimental": "^5.0.1",
-    "@fuseio/fuse-swap-default-token-list": "^1.0.6",
+    "@fuseio/fuse-swap-default-token-list": "~1.1.1",
     "@fuseio/fuse-swap-sdk": "^3.0.4",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
