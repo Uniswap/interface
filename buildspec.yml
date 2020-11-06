@@ -6,6 +6,5 @@ phases:
   build:
     commands:
       - npm run build
-      - htpasswd -nbs `echo $BETA_USER_PASSWORD` > .htpasswd
       - aws s3 sync ./build "s3://${BUCKET_NAME}" --acl=public-read --exclude ".git/*" --delete
       - aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths "/*"
