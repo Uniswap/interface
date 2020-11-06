@@ -197,6 +197,28 @@ const CTOKEN_LISTS: { [chainId in ChainId]: [string, string, number, string, str
       'US8D-US6D LP',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png'
+    ],
+    [
+      '0xE1f5597282F62e392f48DfEFd85C10c0C6221898',
+      '0xFf62E93152FE5865810dCC982bBA715297339E5E',
+      8,
+      'dUS8D',
+      'Deerfi US8D',
+      'US8D',
+      'US8D Coin',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
+      ''
+    ],
+    [
+      '0xa222f7E9B40E8bddC35e9839f2CDaFfE6AF7AEa7',
+      '0xC788f6d4b8722da2C6E27a0E30C348ec93349dc3',
+      6,
+      'dUS6D',
+      'Deerfi US6D',
+      'US6D',
+      'US6D Coin',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
+      ''
     ]
   ],
   [ChainId.GÖRLI]: [
