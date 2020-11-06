@@ -14,7 +14,7 @@ const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
 const ORACLE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x58E447Ac116327A784b7Ecb5B7e1B3688c5B31A1',
   [ChainId.ROPSTEN]: '0xb2b3d5b4e35881d518fa2062325f118a6ebb6c4a',
-  [ChainId.RINKEBY]: '0xBB1e4126bc8AE55850335a7c126fEA1315b987b7', // deerfi oracle
+  [ChainId.RINKEBY]: '0x536426d7768b6E2E8815Fa42357FD47094071c1D', // deerfi oracle
   [ChainId.GÖRLI]: '0x9A536Ed5C97686988F93C9f7C2A390bF3B59c0ec', // not working due to lack of oracle
   [ChainId.KOVAN]: '0xbBdE93962Ca9fe39537eeA7380550ca6845F8db7'
 }
