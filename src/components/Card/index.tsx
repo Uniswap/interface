@@ -9,7 +9,7 @@ const Card = styled(Box)<{ padding?: string; border?: string; borderRadius?: str
   padding: 1.25rem;
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
-  border-radius: ${({ borderRadius }) => borderRadius};
+  border-radius: ${({ borderRadius }) => borderRadius ?? '8px'};
 `
 export default Card
 
@@ -23,7 +23,7 @@ export const GreyCard = styled(Card)`
 `
 
 export const OutlineCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.text5};
 `
 
 export const YellowCard = styled(Card)`

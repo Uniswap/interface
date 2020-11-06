@@ -45,7 +45,8 @@ const StyledNavLink = styled(NavLink).attrs({
 
 const ActiveText = styled.div`
   font-weight: 500;
-  font-size: 20px;
+  font-size: 18px;
+  line-height: 22px;
   color: ${({ theme }) => theme.purple3};
 `
 
