@@ -13,7 +13,7 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import AccountDetails from '../AccountDetails'
 
 import Modal from '../Modal'
@@ -24,16 +24,13 @@ const CloseIcon = styled.div`
   position: absolute;
   right: 1rem;
   top: 14px;
-  &:hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
+  cursor: pointer;
 `
 
 const CloseColor = styled(Close)`
-  path {
-    stroke: ${({ theme }) => theme.text4};
-  }
+  width: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.text5};
 `
 
 const Wrapper = styled.div`
@@ -54,10 +51,9 @@ const HeaderRow = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
-  padding: 2rem;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  padding: 16px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
@@ -295,13 +291,19 @@ export default function WalletModal({
           <CloseIcon onClick={toggleWalletModal}>
             <CloseColor />
           </CloseIcon>
-          <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
+          <HeaderRow>
+            <TYPE.body fontWeight={500} fontSize={16}>
+              {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
+            </TYPE.body>
+          </HeaderRow>
           <ContentWrapper>
-            {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
-            ) : (
-              'Error connecting. Try refreshing the page.'
-            )}
+            <TYPE.yellow>
+              {error instanceof UnsupportedChainIdError ? (
+                <h5>Please connect to the appropriate Ethereum network.</h5>
+              ) : (
+                'Error connecting. Try refreshing the page.'
+              )}
+            </TYPE.yellow>
           </ContentWrapper>
         </UpperSection>
       )
@@ -330,12 +332,16 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              Back
+              <TYPE.body fontWeight={500} fontSize={16}>
+                Back
+              </TYPE.body>
             </HoverText>
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>Connect to a wallet</HoverText>
+            <TYPE.body fontWeight={500} fontSize={16}>
+              Connect to a wallet
+            </TYPE.body>
           </HeaderRow>
         )}
         <ContentWrapper>
@@ -351,7 +357,7 @@ export default function WalletModal({
           )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
+              <TYPE.body>New to Ethereum? &nbsp;</TYPE.body>{' '}
               <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
             </Blurb>
           )}

@@ -1,6 +1,6 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
@@ -49,7 +49,7 @@ const UpperSection = styled.div`
 const InfoCard = styled.div`
   padding: 1rem;
   border: 1px solid ${({ theme }) => theme.bg3};
-  border-radius: 20px;
+  border-radius: 8px;
   position: relative;
   display: grid;
   grid-row-gap: 12px;
@@ -70,7 +70,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: transparent;
   padding: 0rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
@@ -92,9 +92,9 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg2};
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 20px;
+  background-color: transparent;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 
   h5 {
     margin: 0;
@@ -147,9 +147,9 @@ const CloseIcon = styled.div`
 `
 
 const CloseColor = styled(Close)`
-  path {
-    stroke: ${({ theme }) => theme.text4};
-  }
+  width: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.text5};
 `
 
 const TransactionListWrapper = styled.div`
@@ -194,7 +194,6 @@ export default function AccountDetails({
   openOptions
 }: AccountDetailsProps) {
   const { chainId, account, connector } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
   const clearAllTransactionsCallback = useCallback(() => {
@@ -207,7 +206,11 @@ export default function AccountDetails({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        <HeaderRow>Account</HeaderRow>
+        <HeaderRow>
+          <TYPE.body fontWeight={500} fontSize={16}>
+            Account
+          </TYPE.body>
+        </HeaderRow>
         <AccountSection>
           <YourAccount>
             <InfoCard>
@@ -244,7 +247,14 @@ export default function AccountDetails({
                   ) : (
                     <>
                       <div>
-                        <p> {account && shortenAddress(account)}</p>
+                        <p>
+                          {' '}
+                          {account && (
+                            <TYPE.body fontSize="20px" fontWeight="600">
+                              {shortenAddress(account)}
+                            </TYPE.body>
+                          )}
+                        </p>
                       </div>
                     </>
                   )}
@@ -312,7 +322,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
+          <TYPE.body>Your transactions will appear here...</TYPE.body>
         </LowerSection>
       )}
     </>
