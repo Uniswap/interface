@@ -13,7 +13,6 @@ import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import { Version } from './useToggledVersion'
 import { CToken } from '../data/CToken'
-import { useAllCTokenBalances } from '../state/wallet/hooks'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -105,13 +104,16 @@ export function useApproveCallback(
 
 export function useCTokenApproveCallback(
   amountToApprove?: CToken,
+  walletBalances?: {
+    [tokenAddress: string]: TokenAmount | undefined
+  },
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
   const { account } = useActiveWeb3React()
   const token = amountToApprove instanceof CToken ? amountToApprove : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
-  const approveTokenWalletBalance = useAllCTokenBalances([amountToApprove])[0]
+  const approveTokenWalletBalance = walletBalances?.[amountToApprove?.address ?? '']
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {

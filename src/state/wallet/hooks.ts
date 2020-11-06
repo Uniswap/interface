@@ -84,11 +84,62 @@ export function useTokenBalancesWithLoadingIndicator(
   ]
 }
 
+export function useCTokenBalancesWithLoadingIndicator(
+  address?: string,
+  tokens?: (CToken | undefined)[]
+): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
+  const multicallContract = useMulticallContract()
+
+  const accountArg = useMemo(() => [address ?? '0x0000000000000000000000000000000000000000'], [address])
+
+  const validatedTokens: CToken[] = useMemo(
+    () => tokens?.filter((t?: CToken): t is CToken => isAddress(t?.address) !== false) ?? [],
+    [tokens]
+  )
+
+  const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => vt.address), [validatedTokens])
+
+  const ethBalance = useSingleContractMultipleData(multicallContract, 'getEthBalance', [accountArg])
+
+  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
+
+  const anyLoading: boolean = useMemo(
+    () => ethBalance.some(callState => callState.loading) && balances.some(callState => callState.loading),
+    [balances, ethBalance]
+  )
+
+  return [
+    useMemo(
+      () =>
+        address && validatedTokens.length > 0
+          ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
+              const value = token.isETH() ? ethBalance?.[i]?.result?.[0] : balances?.[i]?.result?.[0]
+              console.log(value?.toString(), 'valuetoString')
+              const amount = value ? JSBI.BigInt(value.toString()) : undefined
+              if (amount) {
+                memo[token.address] = new TokenAmount(token, amount)
+              }
+              return memo
+            }, {})
+          : {},
+      [address, validatedTokens, ethBalance, balances]
+    ),
+    anyLoading
+  ]
+}
+
 export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[]
 ): { [tokenAddress: string]: TokenAmount | undefined } {
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
+}
+
+export function useCTokenBalances(
+  address?: string,
+  tokens?: (CToken | undefined)[]
+): { [tokenAddress: string]: TokenAmount | undefined } {
+  return useCTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 
 // get the balance for a single token/account combo

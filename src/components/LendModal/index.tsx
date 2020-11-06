@@ -27,7 +27,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import MarketBar from '../MarketBar'
-import { useAllCTokenBalances, useCTokenBalance } from '../../state/wallet/hooks'
+import { useCTokenBalance } from '../../state/wallet/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
 import { CurrencyAmount, Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
@@ -144,6 +144,9 @@ const RateCalculation = styled.div`
 
 export interface LendModalProps {
   lendToken: CToken | undefined
+  walletBalances: {
+    [tokenAddress: string]: TokenAmount | undefined
+  }
   showLendConfirmation: boolean
   setShowLendConfirmation: Function
   borrowTotalBalance: JSBI
@@ -154,6 +157,7 @@ export interface LendModalProps {
 
 function LendModal({
   lendToken,
+  walletBalances,
   showLendConfirmation,
   setShowLendConfirmation,
   borrowTotalBalance,
@@ -185,11 +189,15 @@ function LendModal({
 
   const [pendingText, setPendingText] = useState('')
 
-  const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(lendToken, lendToken?.cAddress)
+  const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(
+    lendToken,
+    walletBalances,
+    lendToken?.cAddress
+  )
 
   const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
 
-  const walletBalanceAmount = useAllCTokenBalances([lendToken])
+  const walletBalanceAmount = walletBalances[lendToken?.address ?? '']
 
   const changedBorrowLimit = useMemo(() => {
     if (lendToken && lendInputValue) {
@@ -324,12 +332,12 @@ function LendModal({
   }
 
   function onRepayMax(lendToken: CToken | undefined): CurrencyAmount | undefined {
-    if (lendToken && walletBalanceAmount && walletBalanceAmount[0]) {
+    if (lendToken && walletBalanceAmount) {
       const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
-      if (JSBI.greaterThan(walletBalanceAmount[0].raw, borrowAmount.raw)) {
+      if (JSBI.greaterThan(walletBalanceAmount.raw, borrowAmount.raw)) {
         return borrowAmount
       } else {
-        return walletBalanceAmount[0]
+        return walletBalanceAmount
       }
     }
     return undefined
@@ -615,7 +623,7 @@ function LendModal({
                     safeMax={tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW}
                     onUserInput={setLendInputValue}
                     onMax={() => {
-                      if (lendToken && walletBalanceAmount[0]) {
+                      if (lendToken) {
                         switch (tabItemActive) {
                           case LendField.SUPPLY:
                             setLendInputValue(onSupplyMax()?.toExact() ?? '')

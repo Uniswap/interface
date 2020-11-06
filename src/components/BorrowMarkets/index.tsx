@@ -6,7 +6,6 @@ import { CToken } from '../../data/CToken'
 import { LendField } from '../../state/lending/actions'
 import { APY_BASE, formatData, getBorrowTotalBalance, showDollarValue } from '../../utils'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
@@ -117,8 +116,18 @@ const MobileWrap = styled.div`
   `};
 `
 
-function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children: React.ReactNode }) {
-  useCTokenApproveCallback(marketCToken, marketCToken?.cAddress)
+function ItemPannel({
+  marketCToken,
+  walletBalances,
+  children
+}: {
+  marketCToken: CToken
+  walletBalances: {
+    [tokenAddress: string]: TokenAmount | undefined
+  }
+  children: React.ReactNode
+}) {
+  useCTokenApproveCallback(marketCToken, walletBalances, marketCToken?.cAddress)
   return <>{children}</>
 }
 
@@ -132,12 +141,16 @@ function BorrowMarkets({
   allMarketCTokens = [],
   borrowTotalBalance,
   limit,
-  usedLimit
+  usedLimit,
+  walletBalances
 }: {
   allMarketCTokens: CToken[]
   borrowTotalBalance: JSBI
   limit: JSBI
   usedLimit: Fraction
+  walletBalances: {
+    [tokenAddress: string]: TokenAmount | undefined
+  }
 }) {
   // const { t } = useTranslation()
 
@@ -158,12 +171,11 @@ function BorrowMarkets({
     )
   })
 
-  const borrowAssetCurrencyAmount = useAllCTokenBalances(borrowAsset)
-
   return (
     <div>
       <LendModal
         lendToken={lendToken}
+        walletBalances={walletBalances}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
         borrowTotalBalance={borrowTotalBalance}
@@ -185,7 +197,7 @@ function BorrowMarkets({
             </AssetWrapLabels>
             <AssetItemWrap>
               {borrowedAsset.map((item: CToken) => (
-                <ItemPannel marketCToken={item} key={item?.symbol}>
+                <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
                   <AssetItem
                     key={item?.symbol}
                     onClick={() => {
@@ -237,8 +249,8 @@ function BorrowMarkets({
           </AssetWrapLabels>
           <AssetItemWrap>
             {!!borrowAsset.length
-              ? borrowAsset.map((item: CToken, index) => (
-                  <ItemPannel marketCToken={item} key={item?.symbol}>
+              ? borrowAsset.map((item: CToken) => (
+                  <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
                     <AssetItem
                       key={item?.symbol}
                       onClick={() => {
@@ -261,7 +273,7 @@ function BorrowMarkets({
                         <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
                       </ItemWrap>
                       <ItemWrap>
-                        {borrowAssetCurrencyAmount?.[index]?.toSignificant(4)}
+                        {walletBalances[item.address]?.toSignificant(4)}
                         {' ' + item?.symbol}
                       </ItemWrap>
                       <ItemWrap>${showDollarValue(item?.getLiquidityValue())}</ItemWrap>

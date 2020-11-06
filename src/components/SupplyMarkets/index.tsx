@@ -17,7 +17,6 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
-import { useAllCTokenBalances } from '../../state/wallet/hooks'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
@@ -157,8 +156,18 @@ const ModalContentWrapper = styled.div`
   border-radius: 20px;
 `
 
-function ItemPannel({ marketCToken, children }: { marketCToken: CToken; children: React.ReactNode }) {
-  useCTokenApproveCallback(marketCToken, marketCToken?.cAddress)
+function ItemPannel({
+  marketCToken,
+  walletBalances,
+  children
+}: {
+  marketCToken: CToken
+  walletBalances: {
+    [tokenAddress: string]: TokenAmount | undefined
+  }
+  children: React.ReactNode
+}) {
+  useCTokenApproveCallback(marketCToken, walletBalances, marketCToken?.cAddress)
   return <>{children}</>
 }
 
@@ -172,12 +181,16 @@ function SupplyMarkets({
   allMarketCTokens = [],
   borrowTotalBalance,
   limit,
-  usedLimit
+  usedLimit,
+  walletBalances
 }: {
   allMarketCTokens: CToken[]
   borrowTotalBalance: JSBI
   limit: JSBI
   usedLimit: Fraction
+  walletBalances: {
+    [tokenAddress: string]: TokenAmount | undefined
+  }
 }) {
   // const { t } = useTranslation()
 
@@ -302,8 +315,6 @@ function SupplyMarkets({
     )
   })
 
-  const supplyAssetCurrencyAmount = useAllCTokenBalances(supplyAsset)
-
   console.log('check--', allMarketCTokens, suppliedAsset, supplyAsset)
 
   function canExitMarkets(): boolean {
@@ -346,6 +357,7 @@ function SupplyMarkets({
     <div>
       <LendModal
         lendToken={lendToken}
+        walletBalances={walletBalances}
         showLendConfirmation={showLendConfirmation}
         setShowLendConfirmation={setShowLendConfirmation}
         borrowTotalBalance={borrowTotalBalance}
@@ -443,7 +455,7 @@ function SupplyMarkets({
             </AssetWrapLabels>
             <AssetItemWrap onClick={() => setShowLendConfirmation(true)}>
               {suppliedAsset.map((item: CToken) => (
-                <ItemPannel marketCToken={item} key={item?.symbol}>
+                <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
                   <AssetItem
                     key={item?.symbol}
                     onClick={() => {
@@ -500,8 +512,8 @@ function SupplyMarkets({
           </AssetWrapLabels>
           <AssetItemWrap>
             {!!supplyAsset.length
-              ? supplyAsset.map((item: CToken, index) => (
-                  <ItemPannel marketCToken={item} key={item?.symbol}>
+              ? supplyAsset.map((item: CToken) => (
+                  <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
                     <AssetItem
                       onClick={() => {
                         setLendToken(item)
@@ -523,7 +535,7 @@ function SupplyMarkets({
                         <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
                       </ItemWrap>
                       <ItemWrap>
-                        {supplyAssetCurrencyAmount?.[index]?.toSignificant(4)}
+                        {walletBalances[item.address]?.toSignificant(4)}
                         {' ' + item?.symbol}
                       </ItemWrap>
                       <Switch
