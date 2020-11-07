@@ -53,7 +53,7 @@ const StyledMenuButton = styled.button`
   background-color: ${({ theme }) => theme.bg3};
 
   padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
 
   :hover,
   :focus {
@@ -91,7 +91,7 @@ const MenuFlyout = styled.span`
 
   border: 1px solid ${({ theme }) => theme.bg3};
 
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
@@ -118,7 +118,7 @@ const ModalContentWrapper = styled.div`
   justify-content: center;
   padding: 2rem 0;
   background-color: ${({ theme }) => theme.bg2};
-  border-radius: 20px;
+  border-radius: 0.25rem;
 `
 
 export default function SettingsTab() {

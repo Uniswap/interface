@@ -9,7 +9,7 @@ export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColo
   backgroundColor: warning ? theme.red1 : theme.primary1
 }))`
   padding: 1rem 2rem 1rem 2rem;
-  border-radius: 3rem;
+  border-radius: 0.25rem;
   cursor: pointer;
   user-select: none;
   font-size: 1rem;

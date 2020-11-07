@@ -74,7 +74,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   flex-direction: row;
   align-items: center;
   background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
-  border-radius: 12px;
+  border-radius: 0.25rem;
   white-space: nowrap;
   width: 100%;
 
@@ -93,7 +93,7 @@ const TestnetWrapper = styled.div`
 const NetworkCard = styled(YellowCard)`
   width: fit-content;
   margin-right: 10px;
-  border-radius: 12px;
+  border-radius: 0.25rem;
   padding: 8px 12px;
 `
 
@@ -103,7 +103,7 @@ const UniIcon = styled.div`
     transform: rotate(-5deg);
   }
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    img { 
+    img {
       width: 4.5rem;
     }
   `};

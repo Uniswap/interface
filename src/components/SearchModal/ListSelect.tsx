@@ -41,7 +41,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   color: ${({ theme }) => theme.text2};
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   padding: 1rem;
   display: grid;
   grid-template-rows: 1fr;
@@ -239,7 +239,7 @@ const AddListButton = styled(ButtonSecondary)`
   /* height: 1.8rem; */
   max-width: 4rem;
   margin-left: 1rem;
-  border-radius: 12px;
+  border-radius: 0.25rem;
   padding: 10px 18px;
 `
 
