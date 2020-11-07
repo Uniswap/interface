@@ -1,5 +1,4 @@
 import { CToken } from '../../data/CToken'
-import { useCTokenBalance } from '../wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { LendField } from './actions'
 import { CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk'
@@ -13,7 +12,8 @@ export function useLendingInfo(
   lendMarket: LendField | undefined,
   limit: JSBI,
   withdrawMax: CurrencyAmount | undefined,
-  borrowMax: CurrencyAmount | undefined
+  borrowMax: CurrencyAmount | undefined,
+  walletBalanceAmount: TokenAmount | undefined
 ): {
   inputError?: boolean
   inputText?: string
@@ -21,7 +21,7 @@ export function useLendingInfo(
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
   // Wallet Balance
-  const walletBalance = useCTokenBalance(lendToken)
+  const walletBalance = walletBalanceAmount
   let inputError = false
   let inputText: string | undefined
 

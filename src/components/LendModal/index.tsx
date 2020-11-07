@@ -27,7 +27,6 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import MarketBar from '../MarketBar'
-import { useCTokenBalance } from '../../state/wallet/hooks'
 import { tryParseAmount } from '../../state/swap/hooks'
 import { cTokenMaxAmountSpend } from '../../utils/maxAmountSpend'
 import { CurrencyAmount, Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
@@ -178,7 +177,7 @@ function LendModal({
 
   console.log('use txHash and attemptingTxn later like Add Liquidity', attemptingTxn, txHash)
 
-  const lendTokenBalance = useCTokenBalance(lendToken)
+  const walletBalanceAmount = walletBalances[lendToken?.address ?? '']
 
   const addTransaction = useTransactionAdder()
 
@@ -195,8 +194,6 @@ function LendModal({
   )
 
   const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
-
-  const walletBalanceAmount = walletBalances[lendToken?.address ?? '']
 
   const changedBorrowLimit = useMemo(() => {
     if (lendToken && lendInputValue) {
@@ -270,7 +267,7 @@ function LendModal({
   }, [lendMarket, showLendConfirmation])
 
   function onSupplyMax(): CurrencyAmount | undefined {
-    return cTokenMaxAmountSpend(lendTokenBalance)
+    return cTokenMaxAmountSpend(walletBalanceAmount)
   }
 
   function onWithdrawMax(lendToken: CToken | undefined, safe = true): CurrencyAmount | undefined {
@@ -348,7 +345,8 @@ function LendModal({
     tabItemActive,
     limit,
     onWithdrawMax(lendToken, false),
-    onBorrowMax(lendToken, false)
+    onBorrowMax(lendToken, false),
+    walletBalanceAmount
   )
 
   async function onMint(cToken: CToken, lendInputValue: string, isETH: boolean) {
@@ -853,7 +851,7 @@ function LendModal({
                           : new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toSignificant()
                       ).toFixed(4)
                     ) || '0'
-                  : lendTokenBalance?.toSignificant() || '0'}
+                  : walletBalanceAmount?.toSignificant() || '0'}
                 {' ' + lendToken?.symbol}
               </AutoRow>
             </AutoColumn>

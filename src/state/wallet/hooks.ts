@@ -113,8 +113,7 @@ export function useCTokenBalancesWithLoadingIndicator(
       () =>
         address && validatedTokens.length > 0
           ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-              const value = token.isETH() ? ethBalance?.[i]?.result?.[0] : balances?.[i]?.result?.[0]
-              console.log(value?.toString(), 'valuetoString')
+              const value = token.isETH() ? ethBalance?.[0]?.result?.[0] : balances?.[i]?.result?.[0]
               const amount = value ? JSBI.BigInt(value.toString()) : undefined
               if (amount) {
                 memo[token.address] = new TokenAmount(token, amount)
