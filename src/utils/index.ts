@@ -232,13 +232,13 @@ export function getNetApy(allMarketsAsset: CToken[]): Fraction {
 export function showDollarValue(val: JSBI): string {
   if (JSBI.lessThan(val, ONE_THOUSAND_VALUE)) {
     return new Fraction(val, EXA_BASE).toFixed(2)
-  } else if (JSBI.greaterThanOrEqual(val, ONE_THOUSAND_VALUE) && JSBI.lessThanOrEqual(val, ONE_MILLION_VALUE)) {
+  } else if (JSBI.greaterThanOrEqual(val, ONE_THOUSAND_VALUE) && JSBI.lessThan(val, ONE_MILLION_VALUE)) {
     return new Fraction(val, THOUSAND_BASE).toFixed(2) + 'K'
-  } else if (JSBI.greaterThan(val, ONE_MILLION_VALUE) && JSBI.lessThanOrEqual(val, ONE_BILLION_VALUE)) {
+  } else if (JSBI.greaterThanOrEqual(val, ONE_MILLION_VALUE) && JSBI.lessThan(val, ONE_BILLION_VALUE)) {
     return new Fraction(val, MILLION_BASE).toFixed(2) + 'M'
-  } else if (JSBI.greaterThan(val, ONE_BILLION_VALUE) && JSBI.lessThanOrEqual(val, ONE_TRILLION_VALUE)) {
+  } else if (JSBI.greaterThanOrEqual(val, ONE_BILLION_VALUE) && JSBI.lessThan(val, ONE_TRILLION_VALUE)) {
     return new Fraction(val, BILLION_BASE).toFixed(2) + 'B'
-  } else if (JSBI.greaterThan(val, ONE_TRILLION_VALUE)) {
+  } else if (JSBI.greaterThanOrEqual(val, ONE_TRILLION_VALUE)) {
     return ' > 1T'
   } else {
     return '0'
