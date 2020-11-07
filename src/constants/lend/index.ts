@@ -32,6 +32,17 @@ const CTOKEN_LISTS: {
 } = {
   [ChainId.MAINNET]: [
     [
+      '0x171edAAf4D85dC9BeD709297Ad402db68ECF7Fe9',
+      '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      18,
+      'dETH',
+      'Deerfi Ether',
+      'ETH',
+      'Ether',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+      ''
+    ],
+    [
       '0x9c0ADd57D18Bf1cc5C5790330D95D600f0B571Ba',
       '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
       6,
