@@ -133,5 +133,6 @@
   "borrowingLimitReached": "Borrowing limit reached",
   "insufficientCollateral": "Insufficient Collateral",
   "interfaceSettings": "Interface Settings",
-  "toggleDarkMode": "Toggle Dark Mode"
+  "toggleDarkMode": "Toggle Dark Mode",
+  "insufficientLiquidity ": "Insufficient liquidity"
 }

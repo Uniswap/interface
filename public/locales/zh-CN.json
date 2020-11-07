@@ -117,5 +117,6 @@
   "borrowingLimitReached": "已达借入上限",
   "insufficientCollateral": "抵押品不足",
   "interfaceSettings": "界面设置",
-  "toggleDarkMode": "切换黑夜模式"
+  "toggleDarkMode": "切换黑夜模式",
+  "insufficientLiquidity ": "流动性不足"
 }
