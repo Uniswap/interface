@@ -10,5 +10,8 @@ describe('parseENSAddress', () => {
     expect(parseENSAddress('abso.lutely.eth')).toEqual({ ensName: 'abso.lutely.eth', ensPath: undefined })
     expect(parseENSAddress('eth')).toEqual(undefined)
     expect(parseENSAddress('eth/hello-world')).toEqual(undefined)
+    expect(parseENSAddress('hello-world.eth')).toEqual({ ensName: 'hello-world.eth', ensPath: undefined })
+    expect(parseENSAddress('-prefix-dash.eth')).toEqual(undefined)
+    expect(parseENSAddress('suffix-dash-.eth')).toEqual(undefined)
   })
 })
