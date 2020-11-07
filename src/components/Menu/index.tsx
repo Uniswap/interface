@@ -86,7 +86,6 @@ const MenuItem = styled(ExternalLink)`
 const CODE_LINK = 'https://github.com/deerfi'
 
 export default function Menu() {
-
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)

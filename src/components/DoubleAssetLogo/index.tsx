@@ -24,12 +24,7 @@ const CoveredLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
   left: ${({ sizeraw }) => '-' + (sizeraw / 2).toString() + 'px'} !important;
 `
 
-export default function DoubleAssetLogo({
-  logo0,
-  logo1,
-  size = 16,
-  margin = false
-}: DoubleAssetLogoProps) {
+export default function DoubleAssetLogo({ logo0, logo1, size = 16, margin = false }: DoubleAssetLogoProps) {
   return (
     <Wrapper sizeraw={size} margin={margin}>
       {logo0 && <HigherLogo logo0={logo0} size={size.toString() + 'px'} />}

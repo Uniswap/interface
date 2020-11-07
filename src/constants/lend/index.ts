@@ -27,7 +27,9 @@ const MAXIMILLION_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: '0xC363f83902Ac614F318b04771d21D25aC0d73be5'
 }
 
-const CTOKEN_LISTS: { [chainId in ChainId]: [string, string, number, string, string, string, string, string, string][] } = {
+const CTOKEN_LISTS: {
+  [chainId in ChainId]: [string, string, number, string, string, string, string, string, string][]
+} = {
   [ChainId.MAINNET]: [
     [
       '0x9c0ADd57D18Bf1cc5C5790330D95D600f0B571Ba',
