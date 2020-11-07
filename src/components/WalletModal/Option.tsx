@@ -7,7 +7,7 @@ const InfoCard = styled.button<{ active?: boolean }>`
   padding: 1rem;
   outline: none;
   border: 1px solid;
-  border-radius: 12px;
+  border-radius: 0.25rem;
   width: 100% !important;
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.primary1};

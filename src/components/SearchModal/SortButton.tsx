@@ -7,7 +7,7 @@ export const FilterWrapper = styled(RowFixed)`
   padding: 8px;
   background-color: ${({ theme }) => theme.bg2};
   color: ${({ theme }) => theme.text1};
-  border-radius: 8px;
+  border-radius: 0.25rem;
   user-select: none;
   & > * {
     user-select: none;

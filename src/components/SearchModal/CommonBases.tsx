@@ -11,7 +11,7 @@ import CurrencyLogo from '../CurrencyLogo'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
-  border-radius: 10px;
+  border-radius: 0.25rem;
   display: flex;
   padding: 6px;
 
