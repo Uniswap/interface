@@ -8,11 +8,7 @@ import { MouseoverTooltip } from '../Tooltip'
 
 const VersionLabel = styled.span<{ enabled: boolean }>`
   padding: 0.35rem 0.6rem;
-<<<<<<< HEAD
-  border-radius: 12px;
-=======
   border-radius: 0.25rem;
->>>>>>> ee99635... Дизайн
   background: ${({ theme, enabled }) => (enabled ? theme.primary1 : 'none')};
   color: ${({ theme, enabled }) => (enabled ? theme.white : theme.text1)};
   font-size: 1rem;
@@ -30,11 +26,7 @@ interface VersionToggleProps extends React.ComponentProps<typeof Link> {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const VersionToggle = styled(({ enabled, ...rest }: VersionToggleProps) => <Link {...rest} />)<VersionToggleProps>`
-<<<<<<< HEAD
-  border-radius: 12px;
-=======
   border-radius: 0.25rem;
->>>>>>> ee99635... Дизайн
   opacity: ${({ enabled }) => (enabled ? 1 : 0.5)};
   cursor: ${({ enabled }) => (enabled ? 'pointer' : 'default')};
   background: ${({ theme }) => theme.bg3};
