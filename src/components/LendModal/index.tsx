@@ -9,6 +9,7 @@ import { CToken } from '../../data/CToken'
 import { ButtonLight } from '../Button'
 import CurrencyIcon from '../CurrencyIcon'
 import LendInputPanel from '../LendInputPanel'
+import { Dots } from '../swap/styleds'
 
 import { ApprovalState, useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import {
@@ -805,10 +806,9 @@ function LendModal({
                       onClick={() => {
                         setPendingText('')
                         approveCallback()
-                        setShowLendConfirmation(false)
                       }}
                     >
-                      {t('enable')}
+                      {approvalTokenStatus === ApprovalState.PENDING ? <Dots>{t('approvePending')}</Dots> : t('enable')}
                     </ButtonLight>
                   )}
                 </>

@@ -134,5 +134,6 @@
   "insufficientCollateral": "Insufficient Collateral",
   "interfaceSettings": "Interface Settings",
   "toggleDarkMode": "Toggle Dark Mode",
-  "insufficientLiquidity ": "Insufficient liquidity"
+  "insufficientLiquidity ": "Insufficient liquidity",
+  "approvePending": "ENABLE PENDING"
 }

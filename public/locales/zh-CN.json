@@ -118,5 +118,6 @@
   "insufficientCollateral": "抵押品不足",
   "interfaceSettings": "界面设置",
   "toggleDarkMode": "切换黑夜模式",
-  "insufficientLiquidity ": "流动性不足"
+  "insufficientLiquidity ": "流动性不足",
+  "approvePending": "授权中"
 }
