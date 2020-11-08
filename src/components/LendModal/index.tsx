@@ -188,11 +188,17 @@ function LendModal({
 
   const [pendingText, setPendingText] = useState('')
 
-  const [approvalTokenStatus, approveCallback] = useCTokenApproveCallback(
+  const [approvalTokenStatus, approveCallback, approveHash, approvePendingText] = useCTokenApproveCallback(
     lendToken,
     walletBalances,
-    lendToken?.cAddress
+    lendToken?.cAddress,
+    setAttemptingTxn
   )
+
+  useEffect(() => {
+    setTxHash(approveHash)
+    setPendingText(approvePendingText)
+  }, [approveHash, approvePendingText])
 
   const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
 
@@ -804,7 +810,9 @@ function LendModal({
                     <ButtonLight
                       disabled={approvalTokenStatus === ApprovalState.PENDING}
                       onClick={() => {
+                        setTxHash('')
                         setPendingText('')
+                        setShowConfirm(true)
                         approveCallback()
                       }}
                     >
