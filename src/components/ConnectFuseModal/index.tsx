@@ -2,10 +2,19 @@ import React, { useState, Dispatch, SetStateAction } from 'react'
 import Modal from '../Modal'
 import { Wrapper } from '../swap/styleds'
 import { ModalSection } from '../bridge/styleds'
-import { Text, Link } from 'rebass'
+import { Text, Link as RebassLink } from 'rebass'
 import step1Img from '../../assets/images/connect-step-1.png'
 import styled from 'styled-components'
 import step2Img from '../../assets/images/connect-step-2.png'
+
+const Link = styled(RebassLink)`
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
 
 const Img = styled.img`
   width: 100%;
@@ -21,9 +30,8 @@ function StepOne({ showStepTwo }: { showStepTwo: Dispatch<SetStateAction<boolean
       </Text>
       <Img src={step1Img} />
       <Text>
-        Click{' '}
-        <Link onClick={handleClick} style={{ fontWeight: 500, cursor: 'pointer' }}>
-          here
+        <Link id="fuse-connect-open-step2" onClick={handleClick} style={{ fontWeight: 500, cursor: 'pointer' }}>
+          Click here
         </Link>{' '}
         to learn how to add Fuse network to Metamask
       </Text>
@@ -87,8 +95,8 @@ export default function ConnectFuseModal({
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={80}>
-      <Wrapper>
+    <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={100}>
+      <Wrapper id="fuse-connect-modal">
         <ModalSection light>{showStepTwo ? <StepTwo /> : <StepOne showStepTwo={setShowStepTwo} />}</ModalSection>
       </Wrapper>
     </Modal>
