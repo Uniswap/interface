@@ -287,8 +287,9 @@ function LendModal({
           const amount = lendToken.getSupplyBalanceAmount()
           return new TokenAmount(lendToken, amount)
         } else {
-          const isHealth: boolean = new Fraction(limit, borrowTotalBalance).lessThan(ONE)
-          if (isHealth) {
+          const health = new Fraction(limit, borrowTotalBalance)
+          const isHealth: boolean = health.greaterThan(ONE) || health.equalTo(ONE)
+          if (!isHealth) {
             return new TokenAmount(lendToken, ZERO)
           } else {
             const price = lendToken.getUnderlyingPrice()
