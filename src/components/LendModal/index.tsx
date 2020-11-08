@@ -283,29 +283,34 @@ function LendModal({
       if (JSBI.equal(collateralFactorMantissa, ZERO)) {
         return new TokenAmount(lendToken, ZERO)
       } else {
-        const price = lendToken.getUnderlyingPrice()
         if (!lendToken.canBeCollateral) {
           const amount = lendToken.getSupplyBalanceAmount()
           return new TokenAmount(lendToken, amount)
         } else {
-          const suppliedValue = lendToken.getSuppliedValue()
-          const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
-          const remainValue: JSBI = JSBI.subtract(
-            // divide 8/10
-            JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), safe ? EIGHT : TEN),
-            otherSuppliedTotalValue
-          )
-          const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
-          if (JSBI.greaterThan(remainValue, ZERO)) {
-            const safeValue = JSBI.subtract(
-              lendToken.getSupplyBalanceJSBI(),
-              JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
-            )
-            const amount = JSBI.divide(JSBI.multiply(safeValue, EXA_BASE), price)
-            return new TokenAmount(lendToken, amount)
+          const isHealth: boolean = new Fraction(limit, borrowTotalBalance).lessThan(ONE)
+          if (isHealth) {
+            return new TokenAmount(lendToken, ZERO)
           } else {
-            const amount = lendToken.getSupplyBalanceAmount()
-            return new TokenAmount(lendToken, amount)
+            const price = lendToken.getUnderlyingPrice()
+            const suppliedValue = lendToken.getSuppliedValue()
+            const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
+            const remainValue: JSBI = JSBI.subtract(
+              // divide 8/10
+              JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), safe ? EIGHT : TEN),
+              otherSuppliedTotalValue
+            )
+            const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
+            if (JSBI.greaterThan(remainValue, ZERO)) {
+              const safeValue = JSBI.subtract(
+                lendToken.getSupplyBalanceJSBI(),
+                JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
+              )
+              const amount = JSBI.divide(JSBI.multiply(safeValue, EXA_BASE), price)
+              return new TokenAmount(lendToken, amount)
+            } else {
+              const amount = lendToken.getSupplyBalanceAmount()
+              return new TokenAmount(lendToken, amount)
+            }
           }
         }
       }
