@@ -64,13 +64,13 @@ export default function VersionSwitch() {
 
   const toggle = (
     <VersionToggle enabled={versionSwitchAvailable} to={toggleDest} onClick={handleClick}>
-      <VersionLabel enabled={version === Version.v2 || !versionSwitchAvailable}>V2</VersionLabel>
-      <VersionLabel enabled={version === Version.v1 && versionSwitchAvailable}>V1</VersionLabel>
+      <VersionLabel enabled={version === Version.v2 || !versionSwitchAvailable}>Ethereum</VersionLabel>
+      <VersionLabel enabled={version === Version.v1 && versionSwitchAvailable}>Binance Smart Chain</VersionLabel>
     </VersionToggle>
   )
   return versionSwitchAvailable ? (
     toggle
   ) : (
-    <MouseoverTooltip text="This page is only compatible with Uniswap V2.">{toggle}</MouseoverTooltip>
+    <MouseoverTooltip text="This page is currently only compatible with Ethereum Rinkeby Testnet.">{toggle}</MouseoverTooltip>
   )
 }
