@@ -1,6 +1,6 @@
 describe('Warning', () => {
   beforeEach(() => {
-    cy.visit('/swap?outputCurrency=0x0a40f26d74274b7f22b28556a27b35d97ce08e0a')
+    cy.visit('/swap?outputCurrency=0xFCFc53c4301ecD7ca6b37541be52c50a33F64d79')
   })
 
   it('Check that warning is displayed', () => {

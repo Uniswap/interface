@@ -279,9 +279,10 @@ export default function Bridge({
                   </RowBetween>
                 )}
                 <ButtonError
+                  id="bridge-transfer-button"
                   onClick={onTransfer}
                   disabled={approval !== ApprovalState.APPROVED || !!inputError || !!loadingText}
-                  error={!loadingText && !!inputError}
+                  error={approval !== ApprovalState.APPROVED || (!loadingText && !!inputError)}
                 >
                   {loadingText ? (
                     <>

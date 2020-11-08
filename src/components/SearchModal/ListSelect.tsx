@@ -351,7 +351,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             onKeyDown={handleEnterKey}
             style={{ height: '2.75rem', borderRadius: 12, padding: '12px' }}
           />
-          <AddListButton onClick={handleAddList} disabled={!validUrl}>
+          <AddListButton id="list-add-button" onClick={handleAddList} disabled={!validUrl}>
             Add
           </AddListButton>
         </Row>

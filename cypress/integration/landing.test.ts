@@ -19,6 +19,11 @@ describe('Landing Page', () => {
       cy.url().should('include', '/pool')
     })
 
+    it('allows navigation to swap', () => {
+      cy.get('#swap-nav-link').click()
+      cy.url().should('include', '/swap')
+    })
+
     it('is connected', () => {
       cy.get('#web3-status-connected').click()
       cy.get('#web3-account-identifier-row').contains(TEST_ADDRESS_NEVER_USE_SHORTENED)
@@ -38,6 +43,11 @@ describe('Landing Page', () => {
     it('allows navigation to pool', () => {
       cy.get('#pool-nav-link').click()
       cy.url().should('include', '/pool')
+    })
+
+    it('allows navigation to bridge', () => {
+      cy.get('#bridge-nav-link').click()
+      cy.url().should('include', '/bridge')
     })
 
     it('is connected', () => {

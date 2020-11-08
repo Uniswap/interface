@@ -3,12 +3,9 @@
 // commands please read more here:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-import { config } from 'dotenv'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
 import { _Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
-
-config()
 
 // never send real ether to this, obviously
 const PRIVATE_KEY_TEST_NEVER_USE = '0xad20c82497421e9784f18460ad2fe84f73569068e98e270b3e63743268af5763'
@@ -85,10 +82,10 @@ Cypress.Commands.overwrite('visit', (original, url, options) => {
 
       if (options && options.networkName == 'ropsten') {
         chainId = '0x3'
-        args = [process.env.REACT_APP_ROPSTEN_NETWORK_URL, 3]
+        args = [Cypress.env('ropsten_network_url'), 3]
       } else {
         chainId = '0x7A'
-        args = [process.env.REACT_APP_NETWORK_URL, 122]
+        args = [Cypress.env('fuse_network_url'), 122]
       }
 
       const provider = new JsonRpcProvider(...args)
