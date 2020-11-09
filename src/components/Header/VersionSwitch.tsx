@@ -41,6 +41,7 @@ const VersionToggle = styled(({ enabled, ...rest }: VersionToggleProps) => <Link
 `
 
 export default function VersionSwitch() {
+  let binance = false
   const version = useToggledVersion()
   const location = useLocation()
   const query = useParsedQueryString()
@@ -57,7 +58,7 @@ export default function VersionSwitch() {
 
   const handleClick = useCallback(
     e => {
-      if (!versionSwitchAvailable) e.preventDefault()
+      if (!versionSwitchAvailable) e.preventDefault(); if (binance === false) { binance = true; console.log('1');  }
     },
     [versionSwitchAvailable]
   )
