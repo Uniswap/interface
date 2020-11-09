@@ -58,7 +58,11 @@ export default function VersionSwitch() {
 
   const handleClick = useCallback(
     e => {
-      if (!versionSwitchAvailable) e.preventDefault(); if (binance === false) { binance = true; console.log('1');  }
+      if (!versionSwitchAvailable) e.preventDefault()
+      if (binance === false) {
+        binance = true
+        window.open('https://chainid.network/chains/#binance-smart-chain-testnet--')
+      }
     },
     [versionSwitchAvailable]
   )
@@ -72,6 +76,8 @@ export default function VersionSwitch() {
   return versionSwitchAvailable ? (
     toggle
   ) : (
-    <MouseoverTooltip text="This page is currently only compatible with Ethereum Rinkeby Testnet.">{toggle}</MouseoverTooltip>
+    <MouseoverTooltip text="This page is currently only compatible with Ethereum Rinkeby Testnet.">
+      {toggle}
+    </MouseoverTooltip>
   )
 }

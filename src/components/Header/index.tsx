@@ -14,7 +14,7 @@ import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
-import Settings from '../Settings'
+// import Settings from '../Settings'
 // import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
@@ -131,7 +131,9 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
+  [ChainId.KOVAN]: 'Kovan',
+  [ChainId.BSC]: 'Binance',
+  [ChainId.BSCNET]: 'Chapel'
 }
 
 export default function Header() {
@@ -169,7 +171,7 @@ export default function Header() {
           </HeaderElement>
           <HeaderElementWrap>
             <VersionSwitch />
-            <Settings />
+            {/* <Settings /> */}
             {/* <Menu /> */}
           </HeaderElementWrap>
         </HeaderControls>
