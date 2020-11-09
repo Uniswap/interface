@@ -185,3 +185,16 @@ export const HideSmall = styled.span`
     display: none;
   `};
 `
+
+export const HideExtraSmall = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
+export const ExtraSmallOnly = styled.span`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: block;
+  `};
+`
