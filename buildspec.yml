@@ -1,0 +1,11 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - npm install
+  build:
+    commands:
+      - npm run build
+      - echo $HTPASSWD_CONTENT > ./build/.htpasswd
+      - aws s3 sync ./build "s3://${BUCKET_NAME}" --acl=public-read --exclude ".git/*" --delete
+      - aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths "/*"
