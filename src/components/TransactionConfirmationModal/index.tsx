@@ -136,9 +136,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
-            Error
-          </Text>
+          <TYPE.mediumHeader color="text4">Error</TYPE.mediumHeader>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
