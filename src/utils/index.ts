@@ -276,17 +276,19 @@ export const waitForTransaction = async (
 
     const interval = setInterval(async () => {
       const receipt = await library.getTransactionReceipt(transactionHash)
+      const confirmedBlocks = receipt ? receipt.confirmations : 0
+      const count = confirmedBlocks + 1
 
       if (!receipt) {
-        callbackFn(0)
+        callbackFn(count)
         return
       }
 
       if (!done) {
-        callbackFn(receipt.confirmations >= confirmations ? confirmations : receipt.confirmations)
+        callbackFn(count > confirmations ? confirmations : count)
       }
 
-      if (receipt.confirmations < confirmations) {
+      if (count < confirmations + 1) {
         return
       }
 
@@ -296,30 +298,4 @@ export const waitForTransaction = async (
       resolve(receipt)
     }, 500)
   })
-
-  // const interval = setInterval(async () => {
-
-  // })
-
-  // const interval = setInterval(async () => {
-  //   if (count == 10) clearInterval(interval)
-  //   console.log(await library.getTransactionReceipt(transactionHash))
-  //   count++
-  // }, 1000)
-
-  // if ((receipt ? receipt.confirmations : 0) >= confirmations) return receipt
-
-  // callbackFn(receipt ? receipt.confirmations : 0)
-
-  // return new Promise(resolve => {
-  //   const handler = (receipt: TransactionReceipt) => {
-  //     callbackFn(receipt.confirmations >= confirmations ? confirmations : receipt.confirmations)
-
-  //     if (receipt.confirmations < confirmations) return
-
-  //     library.removeListener(transactionHash, handler)
-  //     resolve(receipt)
-  //   }
-  //   library.on(transactionHash, handler)
-  // })
 }

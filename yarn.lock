@@ -1671,15 +1671,15 @@
     "@ethersproject/properties" "^5.0.3"
     "@ethersproject/strings" "^5.0.4"
 
-"@fuseio/fuse-swap-default-token-list@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-default-token-list/-/fuse-swap-default-token-list-1.0.6.tgz#6424eedcbb354963402e675c69f7e124a3f86270"
-  integrity sha512-ZdpwWOu3oz4SQEURQX16O6qTsPBtg9cUtD9ihDeAnXAM26FwjbCtlzKd2HwgSsiluT6O7VrnamuYBo4cB5WR2g==
+"@fuseio/fuse-swap-default-token-list@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-default-token-list/-/fuse-swap-default-token-list-2.0.0.tgz#7d65484b349c26a5530130de272bcceb6454fb6d"
+  integrity sha512-toC8vo9YyHZiZJ+twKaGFrT/Y7UUKemX6nWdHjASTbjcgCGSfUgmYcLWZgA9r6j3Mo0woa3YFI3vrenBQJGSWQ==
 
-"@fuseio/fuse-swap-sdk@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-sdk/-/fuse-swap-sdk-3.0.4.tgz#4bb33812e3cd79617c4bb93ccea7a06fc51fea96"
-  integrity sha512-/dd77cfPhcQsSHGtv+DFTlf3g4U9W22pCEGS0MZ0NnC1SSBpLc3f0JumydMhp+1RRMw5mJ+hNFCHGytg1iM3sQ==
+"@fuseio/fuse-swap-sdk@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-sdk/-/fuse-swap-sdk-3.1.1.tgz#bb467b90024af9ec7328baa9095040b5149e98d2"
+  integrity sha512-zDpowimuxT8t8yGcZbe2PY+iaz72e7wTjJCM44CR/FheK+EPUwtWdt+VdiZLYXj9P+2duRASs6AnCyUj+fhVqQ==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"
@@ -6107,7 +6107,7 @@ dotenv-expand@5.1.0:
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
   integrity sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
 
-dotenv@8.2.0, dotenv@^8.2.0:
+dotenv@8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==

@@ -25,6 +25,42 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 
+export const FUSE_DAI = new Token(
+  ChainId.FUSE,
+  '0x94Ba7A27c7A95863d1bdC7645AC2951E0cca06bA',
+  18,
+  'DAI',
+  'Dai Stablecoin on Fuse'
+)
+export const FUSE_USDC = new Token(
+  ChainId.FUSE,
+  '0x620fd5fa44BE6af63715Ef4E65DDFA0387aD13F5',
+  6,
+  'USDC',
+  'USD Coin on Fuse'
+)
+export const FUSE_USDT = new Token(
+  ChainId.FUSE,
+  '0xFaDbBF8Ce7D5b7041bE672561bbA99f79c532e10',
+  6,
+  'USDT',
+  'Tether USD on Fuse'
+)
+export const FUSE_WBTC = new Token(
+  ChainId.FUSE,
+  '0x33284f95ccb7B948d9D352e1439561CF83d8d00d',
+  8,
+  'WBTC',
+  'Wrapped BTC on Fuse'
+)
+export const FUSE_WETH = new Token(
+  ChainId.FUSE,
+  '0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670',
+  18,
+  'WETH',
+  'Wrapped Ether on Fuse'
+)
+
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
   [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
@@ -37,7 +73,8 @@ const WETH_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR],
+  [ChainId.FUSE]: [...WETH_ONLY[ChainId.FUSE], FUSE_DAI, FUSE_USDC, FUSE_USDT, FUSE_WBTC, FUSE_WETH]
 }
 
 /**
@@ -172,4 +209,4 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.BigInt(10000))
 
-export const UNSUPPORTED_BRIDGE_TOKENS = ['FUSE', 'WFUSE']
+export const UNSUPPORTED_BRIDGE_TOKENS = ['FUSE', 'WFUSE', 'G$']

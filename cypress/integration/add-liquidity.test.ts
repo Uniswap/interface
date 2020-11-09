@@ -10,6 +10,14 @@ describe('Add Liquidity', () => {
       cy.visit('/pool', options)
       cy.contains('Please switch to Fuse')
     })
+
+    it('shows how to connect pop up', () => {
+      cy.visit('/pool', options)
+      cy.get('#fuse-connect-open-step1').click()
+      cy.get('#fuse-connect-modal').should('contain', 'CONNECT TO FUSE NETWORK')
+      cy.get('#fuse-connect-open-step2').click()
+      cy.get('#fuse-connect-modal').should('contain', 'ADD FUSE NETWORK TO METAMASK')
+    })
   })
 
   describe('Fuse', () => {

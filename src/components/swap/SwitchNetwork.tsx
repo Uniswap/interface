@@ -5,7 +5,16 @@ import { TYPE } from '../../theme'
 import icon from '../../assets/svg/fuse.svg'
 import styled from 'styled-components'
 import ConnectFuseModal from '../ConnectFuseModal'
-import { Link } from 'rebass'
+import { Link as RebassLink } from 'rebass'
+
+const Link = styled(RebassLink)`
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
 
 const Icon = styled.img.attrs({
   src: icon
@@ -32,14 +41,12 @@ function SwitchNetwork() {
           </TYPE.body>
         </RowCenter>
         <RowCenter>
-          <Link
-            onClick={() => setModalOpen(true)}
-            fontSize={18}
-            color="white"
-            style={{ fontWeight: 500, cursor: 'pointer' }}
-          >
-            Click here to learn how
-          </Link>
+          <TYPE.body fontSize={18} fontWeight={500}>
+            <Link id="fuse-connect-open-step1" onClick={() => setModalOpen(true)}>
+              Click here
+            </Link>{' '}
+            to learn how
+          </TYPE.body>
         </RowCenter>
       </AutoColumn>
     </>

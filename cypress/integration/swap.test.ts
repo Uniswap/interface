@@ -32,12 +32,10 @@ describe('Swap', () => {
       .should('have.value', '0.0')
   })
 
-  it('can swap ETH for DAI', () => {
+  it('can swap FUSE for DAI', () => {
     cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get('#list-introduction-choose-a-list').click()
-    cy.get('#list-row-tokens-uniswap-eth .select-button').click()
-    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').should('be.visible')
-    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').click({ force: true })
+    cy.get('.token-item-0x94Ba7A27c7A95863d1bdC7645AC2951E0cca06bA').should('be.visible')
+    cy.get('.token-item-0x94Ba7A27c7A95863d1bdC7645AC2951E0cca06bA').click({ force: true })
     cy.get('#swap-currency-input .token-amount-input').should('be.visible')
     cy.get('#swap-currency-input .token-amount-input').type('0.001', { force: true, delay: 200 })
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
@@ -47,6 +45,15 @@ describe('Swap', () => {
 
   it('add a recipient does not exist unless in expert mode', () => {
     cy.get('#add-recipient-button').should('not.exist')
+  })
+
+  it('can swap tokens which are not a direct pair', () => {
+    cy.get('#swap-currency-output .open-currency-select-button').click()
+    cy.get('.token-item-0x94Ba7A27c7A95863d1bdC7645AC2951E0cca06bA').click({ force: true })
+    cy.get('#swap-currency-input .token-amount-input').should('be.visible')
+    cy.get('#swap-currency-input .token-amount-input').type('0.001', { force: true, delay: 200 })
+    cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
+    cy.get('#swap-route').should('be.visible')
   })
 
   describe('expert mode', () => {
