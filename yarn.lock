@@ -1676,10 +1676,10 @@
   resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-default-token-list/-/fuse-swap-default-token-list-1.0.6.tgz#6424eedcbb354963402e675c69f7e124a3f86270"
   integrity sha512-ZdpwWOu3oz4SQEURQX16O6qTsPBtg9cUtD9ihDeAnXAM26FwjbCtlzKd2HwgSsiluT6O7VrnamuYBo4cB5WR2g==
 
-"@fuseio/fuse-swap-sdk@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-sdk/-/fuse-swap-sdk-3.0.4.tgz#4bb33812e3cd79617c4bb93ccea7a06fc51fea96"
-  integrity sha512-/dd77cfPhcQsSHGtv+DFTlf3g4U9W22pCEGS0MZ0NnC1SSBpLc3f0JumydMhp+1RRMw5mJ+hNFCHGytg1iM3sQ==
+"@fuseio/fuse-swap-sdk@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-sdk/-/fuse-swap-sdk-3.1.1.tgz#bb467b90024af9ec7328baa9095040b5149e98d2"
+  integrity sha512-zDpowimuxT8t8yGcZbe2PY+iaz72e7wTjJCM44CR/FheK+EPUwtWdt+VdiZLYXj9P+2duRASs6AnCyUj+fhVqQ==
   dependencies:
     "@uniswap/v2-core" "^1.0.0"
     big.js "^5.2.2"
