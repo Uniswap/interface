@@ -733,7 +733,7 @@ function LendModal({
                   </RateCalculation>
                 </RatePanel>
               </RateWrap>
-              {(lendToken?.canBeCollateral ||
+              {(approvalTokenStatus === ApprovalState.APPROVED ||
                 tabItemActive === LendField.WITHDRAW ||
                 tabItemActive === LendField.BORROW) && (
                 <RateWrap>
