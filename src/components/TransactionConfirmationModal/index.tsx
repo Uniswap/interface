@@ -1,8 +1,9 @@
 import { ChainId } from 'dxswap-sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { transparentize } from 'polished'
 import Modal from '../Modal'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { RowBetween } from '../Row'
@@ -18,11 +19,12 @@ const Wrapper = styled.div`
   width: 100%;
 `
 const Section = styled(AutoColumn)`
+  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
   padding: 24px;
 `
 
 const BottomSection = styled(Section)`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 `
@@ -118,9 +120,7 @@ export function ConfirmationModalContent({
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
-            {title}
-          </Text>
+          <TYPE.mediumHeader color="text4">{title}</TYPE.mediumHeader>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         {topContent()}
@@ -136,9 +136,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
-            Error
-          </Text>
+          <TYPE.mediumHeader color="text4">Error</TYPE.mediumHeader>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">

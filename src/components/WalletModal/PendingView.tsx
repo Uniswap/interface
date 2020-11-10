@@ -6,6 +6,7 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import { injected } from '../../connectors'
 import { darken } from 'polished'
 import Loader from '../Loader'
+import { TYPE } from '../../theme'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -25,10 +26,10 @@ const LoadingMessage = styled.div<{ error?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: flex-start;
-  border-radius: 12px;
+  border-radius: 8px;
   margin-bottom: 20px;
-  color: ${({ theme, error }) => (error ? theme.red1 : 'inherit')};
-  border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text4)};
+  color: ${({ theme, error }) => (error ? theme.red1 : theme.text1)};
+  border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text5)};
 
   & > * {
     padding: 1rem;
@@ -44,8 +45,8 @@ const ErrorGroup = styled.div`
 const ErrorButton = styled.div`
   border-radius: 8px;
   font-size: 12px;
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg4};
+  color: ${({ theme }) => theme.text5};
+  background-color: transparent;
   margin-left: 1rem;
   padding: 0.5rem;
   font-weight: 600;
@@ -82,7 +83,7 @@ export default function PendingView({
         <LoadingWrapper>
           {error ? (
             <ErrorGroup>
-              <div>Error connecting.</div>
+              <TYPE.body>Error connecting.</TYPE.body>
               <ErrorButton
                 onClick={() => {
                   setPendingError(false)
@@ -94,7 +95,7 @@ export default function PendingView({
             </ErrorGroup>
           ) : (
             <>
-              <StyledLoader />
+              <StyledLoader stroke="#FFFFFF" />
               Initializing...
             </>
           )}

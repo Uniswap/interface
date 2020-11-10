@@ -1,6 +1,7 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
+import { transparentize } from 'polished'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
@@ -12,7 +13,6 @@ import Transaction from './Transaction'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
 import { injected, walletlink } from '../../connectors'
-import { ButtonSecondary } from '../Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 
@@ -28,6 +28,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
+  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
 
   h5 {
     margin: 0;
@@ -49,7 +50,7 @@ const UpperSection = styled.div`
 const InfoCard = styled.div`
   padding: 1rem;
   border: 1px solid ${({ theme }) => theme.bg3};
-  border-radius: 20px;
+  border-radius: 8px;
   position: relative;
   display: grid;
   grid-row-gap: 12px;
@@ -70,7 +71,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: transparent;
   padding: 0rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
@@ -92,9 +93,9 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg2};
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 20px;
+  background-color: ${({ theme }) => transparentize(0.25, theme.bg1)};
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 
   h5 {
     margin: 0;
@@ -127,13 +128,17 @@ const AccountControl = styled.div`
 
 const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
   font-size: 0.825rem;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.text4};
   margin-left: 1rem;
   font-size: 0.825rem;
   display: flex;
   :hover {
     color: ${({ theme }) => theme.text2};
   }
+`
+
+const CustomLinkIcon = styled(LinkIcon)`
+  color: ${({ theme }) => theme.text5};
 `
 
 const CloseIcon = styled.div`
@@ -147,24 +152,29 @@ const CloseIcon = styled.div`
 `
 
 const CloseColor = styled(Close)`
-  path {
-    stroke: ${({ theme }) => theme.text4};
-  }
+  width: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.text5};
 `
 
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
 `
 
-const WalletAction = styled(ButtonSecondary)`
+const WalletAction = styled.button`
   width: fit-content;
-  font-weight: 400;
-  margin-left: 8px;
-  font-size: 0.825rem;
-  padding: 4px 6px;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg3};
+  padding: 8px 14px;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+
   :hover {
     cursor: pointer;
-    text-decoration: underline;
   }
 `
 
@@ -194,7 +204,6 @@ export default function AccountDetails({
   openOptions
 }: AccountDetailsProps) {
   const { chainId, account, connector } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
   const clearAllTransactionsCallback = useCallback(() => {
@@ -207,7 +216,11 @@ export default function AccountDetails({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        <HeaderRow>Account</HeaderRow>
+        <HeaderRow>
+          <TYPE.body fontWeight={500} fontSize={20} color={'text4'}>
+            Account
+          </TYPE.body>
+        </HeaderRow>
         <AccountSection>
           <YourAccount>
             <InfoCard>
@@ -215,7 +228,6 @@ export default function AccountDetails({
                 <div>
                   {connector !== injected && connector !== walletlink && (
                     <WalletAction
-                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
                         ;(connector as any).close()
                       }}
@@ -224,12 +236,11 @@ export default function AccountDetails({
                     </WalletAction>
                   )}
                   <WalletAction
-                    style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {
                       openOptions()
                     }}
                   >
-                    Change
+                    CHANGE WALLET
                   </WalletAction>
                 </div>
               </AccountGroupingRow>
@@ -244,7 +255,14 @@ export default function AccountDetails({
                   ) : (
                     <>
                       <div>
-                        <p> {account && shortenAddress(account)}</p>
+                        <p>
+                          {' '}
+                          {account && (
+                            <TYPE.body fontSize="22px" fontWeight="500" color={'text1'}>
+                              {shortenAddress(account)}
+                            </TYPE.body>
+                          )}
+                        </p>
                       </div>
                     </>
                   )}
@@ -266,7 +284,7 @@ export default function AccountDetails({
                             isENS={true}
                             href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
                           >
-                            <LinkIcon size={16} />
+                            <CustomLinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
                           </AddressLink>
                         )}
@@ -288,7 +306,7 @@ export default function AccountDetails({
                             isENS={false}
                             href={getEtherscanLink(chainId, account, 'address')}
                           >
-                            <LinkIcon size={16} />
+                            <CustomLinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
                           </AddressLink>
                         )}
@@ -304,7 +322,7 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
-            <TYPE.body>Recent Transactions</TYPE.body>
+            <TYPE.body color="text4">Recent Transactions</TYPE.body>
             <LinkStyledButton onClick={clearAllTransactionsCallback}>(clear all)</LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
@@ -312,7 +330,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
+          <TYPE.body>Your transactions will appear here...</TYPE.body>
         </LowerSection>
       )}
     </>

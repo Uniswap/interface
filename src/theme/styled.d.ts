@@ -53,6 +53,7 @@ export interface Colors {
   purple3: Color,
   purple4: Color,
   purple5: Color,
+  boxShadow: Color,
 }
 
 export interface Grids {
