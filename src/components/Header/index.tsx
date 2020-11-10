@@ -123,9 +123,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   :focus {
     border: 1px solid blue;
   }
-  /* :hover {
-    background-color: ${({ theme, active }) => (!active ? theme.bg2 : theme.bg4)};
-  } */
 `
 
 const UNIAmount = styled(AccountElement)`
