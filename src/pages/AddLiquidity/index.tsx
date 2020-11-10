@@ -8,7 +8,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard } from '../../components/Card'
+import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -333,19 +333,17 @@ export default function AddLiquidity({
             {noLiquidity ||
               (isCreate && (
                 <ColumnCenter>
-                  <BlueCard>
+                  <LightCard>
                     <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={600} color={'primaryText1'}>
+                      <TYPE.body fontWeight={500} letterSpacing="-0.2px">
                         You are the first liquidity provider.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                        <br />
                         The ratio of tokens you add will set the price of this pool.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                        <br />
                         Once you are happy with the rate click supply to review.
-                      </TYPE.link>
+                      </TYPE.body>
                     </AutoColumn>
-                  </BlueCard>
+                  </LightCard>
                 </ColumnCenter>
               ))}
             <CurrencyInputPanel
@@ -378,22 +376,34 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <AutoColumn gap="8px" style={{ padding: '0 16px' }}>
                 <RowBetween align="center">
-                  <TYPE.body fontWeight="500" fontSize={12}>Price</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>
+                    Price
+                  </TYPE.body>
                   <TradePrice price={price} showInverted={invertedPrice} setShowInverted={setInvertedPrice} />
                 </RowBetween>
                 <RowBetween align="center">
-                  <TYPE.body fontWeight="500" fontSize={12}>Pool's share</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>
+                    Pool's share
+                  </TYPE.body>
                   <TYPE.body fontWeight="500" fontSize={12}>
                     {poolTokenPercentage ? `${poolTokenPercentage.toSignificant(2)}%` : '-'}
                   </TYPE.body>
                 </RowBetween>
                 <RowBetween align="center">
-                  <TYPE.body fontWeight="500" fontSize={12}>Swap fee</TYPE.body>
-                  <TYPE.body fontWeight="500" fontSize={12}>{swapFee?.toSignificant(2) ?? '-'}</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>
+                    Swap fee
+                  </TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>
+                    {swapFee?.toSignificant(2) ?? '-'}
+                  </TYPE.body>
                 </RowBetween>
                 <RowBetween align="center">
-                  <TYPE.body fontWeight="500" fontSize={12}>Protocol fee</TYPE.body>
-                  <TYPE.body fontWeight="500" fontSize={12}>{protocolFee?.toSignificant(2) ?? '-'}</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>
+                    Protocol fee
+                  </TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>
+                    {protocolFee?.toSignificant(2) ?? '-'}
+                  </TYPE.body>
                 </RowBetween>
               </AutoColumn>
             )}
