@@ -34,6 +34,12 @@ const Base = styled(RebassButton)<{
   z-index: 1;
   &:disabled {
     cursor: auto;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
   }
 
   > * {
@@ -63,24 +69,13 @@ export const ButtonPrimary = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.primary4};
-  color: ${({ theme }) => theme.primary1};
+  border: 1px solid ${({ theme }) => theme.text5};
+  color: ${({ theme }) => theme.text5};
   background-color: transparent;
   font-size: 16px;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
-  &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
-    border: 1px solid ${({ theme }) => theme.primary3};
-  }
-  &:hover {
-    border: 1px solid ${({ theme }) => theme.primary3};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
-    border: 1px solid ${({ theme }) => theme.primary3};
-  }
   &:disabled {
     opacity: 50%;
     cursor: auto;

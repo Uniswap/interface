@@ -1,12 +1,12 @@
-import React, { useContext, useMemo } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React, { useMemo } from 'react'
+import styled from 'styled-components'
 import { Pair } from 'dxswap-sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import FullPositionCard from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { LightCard } from '../../components/Card'
+import { OutlineCard } from '../../components/Card'
 import { TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
@@ -27,7 +27,8 @@ const PageWrapper = styled(AutoColumn)`
 
 const VoteCard = styled.div`
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.text4};
+  background-color: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.bg2};
   border-radius: 8px;
 `
 
@@ -64,9 +65,9 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 `
 
 const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
-  border-radius: 16px;
-  padding: 40px;
+  border: 1px solid ${({ theme }) => theme.text5};
+  border-radius: 8px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -74,7 +75,6 @@ const EmptyProposals = styled.div`
 `
 
 export default function Pool() {
-  const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked DXSwap LP tokens
@@ -106,13 +106,13 @@ export default function Pool() {
   const allDXSwapPairsWithLiquidity = dxSwapPairs
     .map(([, pair]) => pair)
     .filter((dxSwapPair): dxSwapPair is Pair => Boolean(dxSwapPair))
-  
+
   const dxSwapIsLoading =
-  fetchingDXSwapPairBalances ||
-  trackedTokenPairs.length === 0 ||
-  dxSwapPairs?.length < liquidityTokensWithBalances.length ||
-  dxSwapPairs?.some(DXSwapPair => !DXSwapPair)
-  
+    fetchingDXSwapPairBalances ||
+    trackedTokenPairs.length === 0 ||
+    dxSwapPairs?.length < liquidityTokensWithBalances.length ||
+    dxSwapPairs?.some(DXSwapPair => !DXSwapPair)
+
   return (
     <>
       <PageWrapper>
@@ -122,18 +122,16 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your liquidity
-                </TYPE.mediumHeader>
+                <TYPE.mediumHeader lineHeight="24px">Your liquidity</TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 10px" to="/create">
-                  <Text fontWeight={500} fontSize={12}>
+                <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/create">
+                  <Text fontWeight={700} fontSize={12} lineHeight="15px">
                     CREATE PAIR
                   </Text>
                 </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 10px" to="/add/ETH">
-                  <Text fontWeight={500} fontSize={12}>
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/add/ETH">
+                  <Text fontWeight={700} fontSize={12}>
                     ADD LIQUIDITY
                   </Text>
                 </ResponsiveButtonPrimary>
@@ -141,17 +139,17 @@ export default function Pool() {
             </TitleRow>
 
             {!account ? (
-              <LightCard padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
+              <OutlineCard>
+                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
-              </LightCard>
+              </OutlineCard>
             ) : dxSwapIsLoading ? (
-              <LightCard padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
+              <OutlineCard>
+                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
                   <Dots>Loading</Dots>
                 </TYPE.body>
-              </LightCard>
+              </OutlineCard>
             ) : allDXSwapPairsWithLiquidity?.length > 0 ? (
               <>
                 {allDXSwapPairsWithLiquidity.map(dxSwapPair => (
@@ -160,35 +158,52 @@ export default function Pool() {
               </>
             ) : (
               <EmptyProposals>
-                <TYPE.body color={theme.text3} textAlign="center">
-                No liquidity found
+                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
+                  No liquidity found
                 </TYPE.body>
               </EmptyProposals>
             )}
           </AutoColumn>
         </AutoColumn>
-        
-        <ButtonSecondary id="join-pool-button" as={Link} style={{ marginTop: '1rem', padding: "10px 0px", borderRadius: "8px" }} to="/pool">
-          <Text fontWeight={'bold'} fontSize={12}>
-            ACCOUNT ANALYTICS AND ACCRUED FEES <span style={{ fontSize: '11px' }}>↗</span>
+
+        <ButtonSecondary
+          id="join-pool-button"
+          as={Link}
+          style={{ marginTop: '32px', padding: '10px 0px', borderRadius: '8px' }}
+          to="/pool"
+        >
+          <Text fontWeight={700} fontSize={12} lineHeight="15px">
+            ACCOUNT ANALYTICS AND ACCRUED FEES <span style={{ fontSize: '11px', marginLeft: '4px' }}>↗</span>
           </Text>
         </ButtonSecondary>
-        
-        <VoteCard style={{ marginTop: '1rem' }} >
+
+        <VoteCard style={{ marginTop: '32px' }}>
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.main fontWeight={600}>Liquidity provider rewards</TYPE.main>
+                <TYPE.body fontWeight={600} lineHeight="20px">
+                  Liquidity provider rewards
+                </TYPE.body>
               </RowBetween>
               <RowBetween>
-                <TYPE.main fontSize={14}>
-                  Liquidity providers earn a swap fee (0.15% by default) on all trades proportional to their share of the pool.<br/> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.<br/> The swap fee value is decided by DXdao and liquidty providers, it can be between 0% and 10% and it uses 0.15% as default value that is assigned when the pair is created.
-                </TYPE.main>
+                <TYPE.body fontWeight="500" fontSize="12px" lineHeight="20px" letterSpacing="-0.4px">
+                  Liquidity providers earn a swap fee (0.15% by default) on all trades proportional to their share of
+                  the pool.
+                  <br /> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your
+                  liquidity.
+                  <br /> The swap fee value is decided by DXdao and liquidty providers, it can be between 0% and 10% and
+                  it uses 0.15% as default value that is assigned when the pair is created.
+                </TYPE.body>
+              </RowBetween>
+              <RowBetween>
+                {/* TODO: this should be a link to a blog post or something */}
+                <TYPE.body fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>
+                  Read more about providing liquidity
+                </TYPE.body>
               </RowBetween>
             </AutoColumn>
           </CardSection>
         </VoteCard>
-        
       </PageWrapper>
     </>
   )

@@ -8,6 +8,7 @@ import { RowBetween, RowFixed } from '../Row'
 
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import { Text } from 'rebass'
+import { Option } from '../Option'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -18,30 +19,6 @@ enum SlippageError {
 enum DeadlineError {
   InvalidInput = 'InvalidInput'
 }
-
-const FancyButton = styled.button`
-  color: ${({ theme }) => theme.text1};
-  align-items: center;
-  height: 2rem;
-  border-radius: 8px;
-  font-size: 15px;
-  line-height: 18px;
-  width: auto;
-  min-width: 3.5rem;
-  border: 8px solid;
-  border-radius: 8px;
-  border-image: url(${border8pxRadius}) 8;
-  background: ${({ theme }) => theme.bg2};
-  outline: none;
-`
-
-const Option = styled(FancyButton)<{ active: boolean }>`
-  margin-right: 8px;
-  cursor: pointer;
-  border: none;
-  background-color: ${({ active, theme }) => (active ? theme.primary1 : theme.bg2)};
-  color: ${({ theme }) => theme.white};
-`
 
 const Input = styled.input`
   background: ${({ theme }) => theme.bg2};
@@ -58,17 +35,14 @@ const Input = styled.input`
   display: flex;
 `
 
-const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }>`
+const OptionCustom = styled(Option)<{ active?: boolean; warning?: boolean }>`
   position: relative;
   padding: 0px 4px;
   flex: 1;
   display: flex;
-
-  :hover {
-    border: 8px solid;
-    border-radius: 8px;
-    border-image: url(${border8pxRadius}) 8;
-  }
+  border: 8px solid;
+  border-radius: 8px;
+  border-image: url(${border8pxRadius}) 8;
 
   input {
     width: 100%;
