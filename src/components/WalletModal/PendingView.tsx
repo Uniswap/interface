@@ -28,7 +28,7 @@ const LoadingMessage = styled.div<{ error?: boolean }>`
   justify-content: flex-start;
   border-radius: 8px;
   margin-bottom: 20px;
-  color: ${({ theme, error }) => (error ? theme.red1 : theme.text5)};
+  color: ${({ theme, error }) => (error ? theme.red1 : theme.text1)};
   border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text5)};
 
   & > * {
@@ -95,7 +95,7 @@ export default function PendingView({
             </ErrorGroup>
           ) : (
             <>
-              <StyledLoader />
+              <StyledLoader stroke="#FFFFFF" />
               Initializing...
             </>
           )}
