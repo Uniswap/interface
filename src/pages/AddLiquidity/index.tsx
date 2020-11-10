@@ -378,22 +378,22 @@ export default function AddLiquidity({
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <AutoColumn gap="8px" style={{ padding: '0 16px' }}>
                 <RowBetween align="center">
-                  <TYPE.body fontSize={12}>Price</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>Price</TYPE.body>
                   <TradePrice price={price} showInverted={invertedPrice} setShowInverted={setInvertedPrice} />
                 </RowBetween>
                 <RowBetween align="center">
-                  <TYPE.body fontSize={12}>Pool's share</TYPE.body>
-                  <TYPE.body fontSize={12}>
+                  <TYPE.body fontWeight="500" fontSize={12}>Pool's share</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>
                     {poolTokenPercentage ? `${poolTokenPercentage.toSignificant(2)}%` : '-'}
                   </TYPE.body>
                 </RowBetween>
                 <RowBetween align="center">
-                  <TYPE.body fontSize={12}>Swap fee</TYPE.body>
-                  <TYPE.body fontSize={12}>{swapFee?.toSignificant(2) ?? '-'}</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>Swap fee</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>{swapFee?.toSignificant(2) ?? '-'}</TYPE.body>
                 </RowBetween>
                 <RowBetween align="center">
-                  <TYPE.body fontSize={12}>Protocol fee</TYPE.body>
-                  <TYPE.body fontSize={12}>{protocolFee?.toSignificant(2) ?? '-'}</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>Protocol fee</TYPE.body>
+                  <TYPE.body fontWeight="500" fontSize={12}>{protocolFee?.toSignificant(2) ?? '-'}</TYPE.body>
                 </RowBetween>
               </AutoColumn>
             )}

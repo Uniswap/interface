@@ -686,7 +686,7 @@ export default function RemoveLiquidity({
             {pair && tokenA && (
               <AutoColumn gap="8px" style={{ padding: '.25rem .75rem 0 .75rem' }}>
                 <RowBetween align="center">
-                  <TYPE.body fontSize="12px" lineHeight="15px">
+                  <TYPE.body fontWeight="500" fontSize="12px" lineHeight="15px">
                     Price
                   </TYPE.body>
                   <TradePrice
@@ -696,18 +696,18 @@ export default function RemoveLiquidity({
                   />
                 </RowBetween>
                 <RowBetween align="center">
-                  <TYPE.body fontSize="12px" lineHeight="15px">
+                  <TYPE.body fontWeight="500" fontSize="12px" lineHeight="15px">
                     Swap fee
                   </TYPE.body>
-                  <TYPE.body fontSize="12px" lineHeight="15px">
+                  <TYPE.body fontWeight="500" fontSize="12px" lineHeight="15px">
                     {swapFee?.toSignificant(2)}%
                   </TYPE.body>
                 </RowBetween>
                 <RowBetween align="center">
-                  <TYPE.body fontSize="12px" lineHeight="15px">
+                  <TYPE.body fontWeight="500" fontSize="12px" lineHeight="15px">
                     Protocol fee
                   </TYPE.body>
-                  <TYPE.body fontSize="12px" lineHeight="15px">
+                  <TYPE.body fontWeight="500" fontSize="12px" lineHeight="15px">
                     {protocolFee?.toSignificant(2)}%
                   </TYPE.body>
                 </RowBetween>
@@ -734,16 +734,14 @@ export default function RemoveLiquidity({
                       'Approve'
                     )}
                   </ButtonConfirmed>
-                  <ButtonError
+                  <ButtonError 
                     onClick={() => {
                       setShowConfirm(true)
                     }}
                     disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
-                    <Text fontSize={16} fontWeight={500}>
-                      {error || 'Remove'}
-                    </Text>
+                    {error || 'Remove'}
                   </ButtonError>
                 </RowBetween>
               )}

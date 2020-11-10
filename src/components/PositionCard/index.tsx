@@ -29,7 +29,7 @@ export const HoverCard = styled(Card)`
   border: 1px solid transparent;
 `
 
-const PointableRowFixed = styled(RowFixed)`
+const PointableFixedHeightRow = styled(FixedHeightRow)`
   cursor: pointer;
 `
 
@@ -143,7 +143,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
         </OutlineCard>
       ) : (
         <OutlineCard>
-          <TYPE.body fontSize="14px" lineHeight="17px" style={{ textAlign: 'center' }}>
+          <TYPE.body fontWeight="500" fontSize="12px" lineHeight="20px">
             By adding liquidity you&apos;ll earn 0.3% of all trades on this pair proportional to your share of the pool.
             Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
           </TYPE.body>
@@ -187,7 +187,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
   return (
     <StyledPositionCard border={border}>
       <AutoColumn gap="12px">
-        <FixedHeightRow>
+        <PointableFixedHeightRow onClick={() => setShowMore(!showMore)}>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
             <Text fontWeight={600} fontSize="16px" lineHeight="20px">
@@ -195,7 +195,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             </Text>
           </RowFixed>
 
-          <PointableRowFixed gap="8px" onClick={() => setShowMore(!showMore)}>
+          <RowFixed gap="8px">
             {showMore ? (
               <>
                 <TYPE.body fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>
@@ -211,8 +211,8 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 <ChevronDown color={theme.text5} size="20" style={{ marginLeft: '10px' }} />
               </>
             )}
-          </PointableRowFixed>
-        </FixedHeightRow>
+          </RowFixed>
+        </PointableFixedHeightRow>
 
         {showMore && (
           <AutoColumn gap="11px">

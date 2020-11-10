@@ -186,7 +186,7 @@ export default function Pool() {
                 </TYPE.body>
               </RowBetween>
               <RowBetween>
-                <TYPE.body fontSize="12px" lineHeight="15px">
+                <TYPE.body fontWeight="500" fontSize="12px" lineHeight="20px" letterSpacing="-0.4px">
                   Liquidity providers earn a swap fee (0.15% by default) on all trades proportional to their share of
                   the pool.
                   <br /> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your

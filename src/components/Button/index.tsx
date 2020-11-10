@@ -34,6 +34,12 @@ const Base = styled(RebassButton)<{
   z-index: 1;
   &:disabled {
     cursor: auto;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
   }
 
   > * {
