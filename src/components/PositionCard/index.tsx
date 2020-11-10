@@ -83,7 +83,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <TYPE.body color="text4" fontSize="16px" lineHeight="19px">
+                <TYPE.body color="text4" fontSize="15px" lineHeight="19px">
                   Your position
                 </TYPE.body>
               </RowFixed>
@@ -91,27 +91,27 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
               <RowFixed>
                 <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
-                <TYPE.body color="text4" fontSize="19px" lineHeight="22px">
+                <TYPE.white fontSize="16px" lineHeight="20px">
                   {currency0.symbol}/{currency1.symbol}
-                </TYPE.body>
+                </TYPE.white>
               </RowFixed>
               <RowFixed>
-                <TYPE.body color="text4" fontSize="19px" lineHeight="22px">
+                <TYPE.white fontSize="16px" lineHeight="22px">
                   {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
-                </TYPE.body>
+                </TYPE.white>
               </RowFixed>
             </FixedHeightRow>
             <AutoColumn gap="4px">
               <FixedHeightRow>
-                <TYPE.body color="text4" fontSize="14px" lineHeight="17px">
-                  Your pool share:
+                <TYPE.body color="text4" fontSize="15px" lineHeight="19px">
+                  Your pool's share:
                 </TYPE.body>
-                <TYPE.body color="text4" fontSize="14px" lineHeight="17px">
+                <TYPE.body color="text4" fontSize="15px" lineHeight="19px">
                   {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
                 </TYPE.body>
               </FixedHeightRow>
               <FixedHeightRow>
-                <TYPE.body color="text4" fontSize="14px" lineHeight="17px">
+                <TYPE.body color="text4" fontSize="15px" lineHeight="19px">
                   {currency0.symbol}:
                 </TYPE.body>
                 {token0Deposited ? (
@@ -125,12 +125,12 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 )}
               </FixedHeightRow>
               <FixedHeightRow>
-                <TYPE.body color="text4" fontSize="14px" lineHeight="17px">
+                <TYPE.body color="text4" fontSize="15px" lineHeight="19px">
                   {currency1.symbol}:
                 </TYPE.body>
                 {token1Deposited ? (
                   <RowFixed>
-                    <TYPE.body color="text4" fontSize="14px" lineHeight="17px" marginLeft={'6px'}>
+                    <TYPE.body color="text4" fontSize="15px" lineHeight="19px" marginLeft={'6px'}>
                       {token1Deposited?.toSignificant(6)}
                     </TYPE.body>
                   </RowFixed>
