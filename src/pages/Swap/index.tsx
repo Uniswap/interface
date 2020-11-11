@@ -326,7 +326,7 @@ export default function Swap() {
                       />
                     </RowBetween>
                   )}
-                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && Boolean(trade) && (
                     <RowBetween align="center">
                       <ClickableText fontSize="12px" lineHeight="15px" fontWeight="500" onClick={toggleSettings}>
                         Slippage Tolerance
