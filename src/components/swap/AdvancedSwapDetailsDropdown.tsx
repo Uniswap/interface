@@ -10,7 +10,8 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   width: 100%;
   max-width: 400px;
   color: ${({ theme }) => theme.purple3};
-  background-color: #181520;
+  background-color: ${({ theme }) => theme.bg1};
+  box-shadow: 0px 40px 36px -24px rgba(0, 0, 0, 0.32);
   z-index: -1;
   border: 8px solid transparent;
   border-bottom-left-radius: 8px;
