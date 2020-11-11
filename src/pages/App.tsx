@@ -24,10 +24,9 @@ const AppWrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
-  position: fixed;
-  top: 0;
   width: 100%;
   z-index: 4;
+  height: 86px;
   justify-content: space-between;
 `
 
@@ -35,7 +34,7 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100vh;
+  min-height: calc(100vh - 172px);
   width: 100%;
   padding-top: 50px;
   align-items: center;
