@@ -159,7 +159,7 @@ export function CurrencySearch({
             <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
           )}
           <RowBetween>
-            <TYPE.body fontSize={12} fontWeight={500}>
+            <TYPE.body fontSize="11px" lineHeight="13px" letterSpacing="0.06em">
               NAME
             </TYPE.body>
             <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />

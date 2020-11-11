@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
-const FancyButton = styled.button`
+export const Option = styled.button<{ active?: boolean; width?: string; transparent?: boolean }>`
   color: ${({ theme }) => theme.text1};
   align-items: center;
   height: 2rem;
@@ -10,17 +10,18 @@ const FancyButton = styled.button`
   line-height: 18px;
   width: auto;
   min-width: 3.5rem;
-  border: 8px solid;
+  border: ${({ transparent }) => (transparent ? 'none' : '8px solid')};
   border-radius: 8px;
-  border-image: url(${border8pxRadius}) 8;
-  background: ${({ theme }) => theme.bg2};
+  border-image: ${({ transparent }) => (transparent ? 'none' : `url(${border8pxRadius}) 8`)};
   outline: none;
-`
-
-export const Option = styled(FancyButton)<{ active?: boolean; width?: string }>`
   margin-right: 8px;
   cursor: pointer;
   border: none;
-  background-color: ${({ active, theme }) => (active ? theme.primary1 : theme.bg2)};
+  background-color: ${({ active, theme, transparent }) => {
+    if (transparent) {
+      return 'transparent'
+    }
+    return active ? theme.primary1 : theme.bg2
+  }};
   color: ${({ theme }) => theme.white};
 `
