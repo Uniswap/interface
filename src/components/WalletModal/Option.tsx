@@ -6,7 +6,7 @@ const InfoCard = styled.button<{ active?: boolean }>`
   background-color: transparent;
   padding: 1rem;
   outline: none;
-  border: 1px solid ${({ theme, active }) => (active ? 'transparent' : theme.bg3)};
+  border: none;
   border-radius: 8px;
   width: 100% !important;
 `
@@ -30,9 +30,7 @@ const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   margin-top: 0;
   cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
   transition: border 0.3s ease;
-  &:hover {
-    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.primary1}` : ``)};
-  }
+  background-color: ${({ theme }) => theme.primary1};
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
 
