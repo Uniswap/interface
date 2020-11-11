@@ -7,10 +7,7 @@ import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
-import {
-  RedirectDuplicateTokenIds,
-  RedirectOldAddLiquidityPathStructure,
-} from './AddLiquidity/redirects'
+import { RedirectDuplicateTokenIds, RedirectOldAddLiquidityPathStructure } from './AddLiquidity/redirects'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -27,13 +24,18 @@ const AppWrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
+  position: fixed;
+  top: 0;
   width: 100%;
+  z-index: 4;
   justify-content: space-between;
 `
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
   width: 100%;
   padding-top: 50px;
   align-items: center;
