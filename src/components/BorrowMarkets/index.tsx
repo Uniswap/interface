@@ -288,7 +288,7 @@ function BorrowMarkets({
                         <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
                       </ItemWrap>
                       <ItemWrap>
-                        {walletBalances[item.address]?.toSignificant(4)}
+                        {walletBalances[item.address]?.toSignificant(4) ?? '0'}
                         {' ' + item?.symbol}
                       </ItemWrap>
                       <ItemWrap>${showDollarValue(item?.getLiquidityValue())}</ItemWrap>

@@ -546,7 +546,7 @@ function SupplyMarkets({
                         <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
                       </ItemWrap>
                       <ItemWrap>
-                        {walletBalances[item.address]?.toSignificant(4)}
+                        {walletBalances[item.address]?.toSignificant(4) ?? '0'}
                         {' ' + item?.symbol}
                       </ItemWrap>
                       <Switch
