@@ -195,7 +195,7 @@ const StyledNavLink = styled(NavLink).attrs({
 
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName
-})<{ isActive?: boolean }>`
+})<{ isActive?: boolean; smallHide?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
@@ -219,9 +219,9 @@ const StyledExternalLink = styled(ExternalLink).attrs({
     color: ${({ theme }) => darken(0.1, theme.text1)};
   }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-      display: none;
-`}
+  ${({ theme, smallHide }) => theme.mediaWidth.upToExtraSmall`
+      display: ${smallHide ? 'none' : 'block'};
+  `}
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -250,10 +250,10 @@ function Header({ history }: { history: any }) {
           <StyledNavLink id={`lending-nav-link`} to={'/lending'}>
             {t('lending')}
           </StyledNavLink>
-          <StyledExternalLink id={`twitter-nav-link`} href={'https://twitter.com/deerfi_com'}>
+          <StyledExternalLink id={`twitter-nav-link`} href={'https://twitter.com/deerfi_com'} smallHide={false}>
             Twitter <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
-          <StyledExternalLink id={`discord-nav-link`} href={'https://discord.gg/SHdfFgX'}>
+          <StyledExternalLink id={`discord-nav-link`} href={'https://discord.gg/SHdfFgX'} smallHide={false}>
             Discord <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
         </HeaderLinks>
