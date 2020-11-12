@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Code, Globe, MessageCircle } from 'react-feather'
+import { Code, Globe, MessageCircle, BookOpen } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -111,6 +111,10 @@ export default function Menu() {
           <MenuItem id="link" href="https://long.deerfi.com">
             <Globe size={14} />
             Long
+          </MenuItem>
+          <MenuItem id="link" href="https://medium.com/deerfi">
+            <BookOpen size={14} />
+            Medium
           </MenuItem>
         </MenuFlyout>
       )}
