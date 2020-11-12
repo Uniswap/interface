@@ -90,7 +90,18 @@ export function useCTokenBalancesWithLoadingIndicator(
 ): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
   const multicallContract = useMulticallContract()
 
-  const accountArg = useMemo(() => [address ?? '0x0000000000000000000000000000000000000000'], [address])
+  const uncheckedAddresses = address ? [address] : []
+
+  const accounts: string[] = useMemo(
+    () =>
+      uncheckedAddresses
+        ? uncheckedAddresses
+            .map(isAddress)
+            .filter((a): a is string => a !== false)
+            .sort()
+        : [],
+    [uncheckedAddresses]
+  )
 
   const validatedTokens: CToken[] = useMemo(
     () => tokens?.filter((t?: CToken): t is CToken => isAddress(t?.address) !== false) ?? [],
@@ -99,7 +110,11 @@ export function useCTokenBalancesWithLoadingIndicator(
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => vt.address), [validatedTokens])
 
-  const ethBalance = useSingleContractMultipleData(multicallContract, 'getEthBalance', [accountArg])
+  const ethBalance = useSingleContractMultipleData(
+    multicallContract,
+    'getEthBalance',
+    accounts.map(account => [account])
+  )
 
   const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
 

@@ -194,7 +194,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
 
   const cTokenList = CTOKEN_LISTS[chainId ?? ChainId.MAINNET]
 
-  const accountArg = useMemo(() => [account ?? '0x0000000000000000000000000000000000000000'], [account])
+  const accountArg = useMemo(() => [account ?? undefined], [account])
 
   const cTokenAddresses = useMemo(
     () =>
@@ -204,14 +204,15 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     [cTokenList]
   )
 
-  const membershipArgs = useMemo(
+  const hasAccountMembershipArgs = useMemo(
     () =>
-      cTokenList.map(cTokenInfo => {
-        return [account ?? '0x0000000000000000000000000000000000000000', cTokenInfo[0]]
+      cTokenAddresses.map(cTokenAddress => {
+        return [account ?? undefined, cTokenAddress]
       }),
-    [cTokenList, account]
+    [cTokenAddresses, account]
   )
 
+  const membershipArgs = useMemo(() => (account ? hasAccountMembershipArgs : []), [account, hasAccountMembershipArgs])
   const comptroller = useComptrollerContract()
   const oracle = useOracleContract()
 
@@ -261,13 +262,16 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     return supplyRatePerBlockResults.map((supplyRatePerBlockResult, i) => {
       const { result: supplyRatePerBlockValue, loading: supplyRatePerBlockResultLoading } = supplyRatePerBlockResult
       const { result: borrowRatePerBlockValue, loading: borrowRatePerBlockResultLoading } = borrowRatePerBlockResults[i]
-      const { result: balanceUnderlyingValue, loading: balanceUnderlyingResultLoading } = balanceOfUnderlyingResults[i]
-      const { result: borrowBalanceValue, loading: borrowBalanceResultLoading } = borrowBalanceCurrentResults[i]
+      const { result: balanceUnderlyingValue, loading: balanceUnderlyingResultLoading } =
+        balanceOfUnderlyingResults.length !== 0 ? balanceOfUnderlyingResults[i] : { result: [0], loading: false }
+      const { result: borrowBalanceValue, loading: borrowBalanceResultLoading } =
+        borrowBalanceCurrentResults.length !== 0 ? borrowBalanceCurrentResults[i] : { result: [0], loading: false }
       const { result: accountSnapshotValue, loading: accountSnapshotResultLoading } =
         accountSnapshotResults.length !== 0 ? accountSnapshotResults[i] : { result: [0, 0, 0, 0], loading: false }
       const { result: totalSupplyValue, loading: totalSupplyResultLoading } = totalSupplyResults[i]
       const { result: cashValue, loading: cashResultLoading } = cashResults[i]
-      const { result: membershipValue, loading: membershipLoading } = membershipResults[i]
+      const { result: membershipValue, loading: membershipLoading } =
+        membershipResults.length !== 0 ? membershipResults[i] : { result: [0], loading: false }
       const { result: underlyingPriceValue, loading: underlyingPriceLoading } = underlyingPriceResults[i]
       const { result: marketsValue, loading: marketsResultLoading } =
         marketsResults.length !== 0 ? marketsResults[i] : { result: [0, 0, 0], loading: false }
