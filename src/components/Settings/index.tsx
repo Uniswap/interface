@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { Settings, X, Info, Code } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import { transparentize } from 'polished'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -11,16 +12,15 @@ import {
   useUserSlippageTolerance,
   useDarkModeManager
 } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { TYPE, ExternalLink, LinkStyledButton } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
-import { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
-import { transparentize } from 'polished'
 
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
@@ -34,14 +34,17 @@ const StyledMenuIcon = styled(Settings)`
 `
 
 const StyledCloseIcon = styled(X)`
+  position: absolute;
+  right: 18px;
   height: 20px;
   width: 20px;
+
   :hover {
     cursor: pointer;
   }
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.bg5};
   }
 `
 const EmojiWrapper = styled.div`
@@ -123,19 +126,12 @@ const MenuFlyoutBottom = styled(MenuFlyout)`
    `};
 `
 
-const Break = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.bg3};
-`
-
 const ModalContentWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 0;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 20px;
+  padding: 26px 0;
+  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
 `
 const MenuItem = styled(ExternalLink)`
   padding: 0.5rem 0.5rem;
@@ -148,6 +144,12 @@ const MenuItem = styled(ExternalLink)`
   > svg {
     margin-right: 8px;
   }
+`
+
+const CloseTextButton = styled(LinkStyledButton)`
+  color: ${({ theme }) => theme.text4};
+  font-size: 13px;
+  text-decoration: underline;
 `
 
 const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
@@ -177,37 +179,36 @@ export default function SettingsTab() {
     <StyledMenu ref={node as any}>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
-          <AutoColumn gap="8px">
-            <RowBetween style={{ padding: '0 2rem' }}>
-              <div />
-              <Text fontWeight={500} fontSize={20}>
+          <AutoColumn gap="25px">
+            <Row style={{ padding: '0 25px', justifyContent: 'center' }}>
+              <TYPE.body fontWeight={500} fontSize="20px" color="text3">
                 Are you sure?
-              </Text>
+              </TYPE.body>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
-            </RowBetween>
-            <Break />
-            <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <Text fontWeight={500} fontSize={20}>
+            </Row>
+            <AutoColumn gap="24px" style={{ padding: '0 24px' }}>
+              <TYPE.body fontWeight={400} fontSize="16px" lineHeight="20px" color="text1" textAlign="center">
                 Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
                 in bad rates and lost funds.
-              </Text>
-              <Text fontWeight={600} fontSize={20}>
+              </TYPE.body>
+              <TYPE.body fontWeight={600} fontSize="13px" color="text1" textAlign="center">
                 ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
-              </Text>
+              </TYPE.body>
               <ButtonError
                 error={true}
-                padding={'12px'}
+                padding={'18px'}
                 onClick={() => {
-                  if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
-                    toggleExpertMode()
-                    setShowConfirmation(false)
-                  }
+                  toggleExpertMode()
+                  setShowConfirmation(false)
                 }}
               >
-                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
-                  Turn On Expert Mode
-                </Text>
+                <TYPE.body fontSize="13px" fontWeight={600} color="text1" id="confirm-expert-mode">
+                  Turn on Expert mode
+                </TYPE.body>
               </ButtonError>
+              <Row style={{ justifyContent: 'center' }}>
+                <CloseTextButton onClick={() => setShowConfirmation(false)}>Cancel</CloseTextButton>
+              </Row>
             </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>
