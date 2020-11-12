@@ -1,5 +1,5 @@
 import { Fraction, JSBI } from '@uniswap/sdk'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { formatData, showDollarValue } from '../../utils'
@@ -97,39 +97,63 @@ function Summary({
 }) {
   const { t } = useTranslation()
 
+  const formaterSupplyTotalBalance = useMemo(() => {
+    return formatData(supplyTotalBalance).toFixed(8)
+  }, [supplyTotalBalance])
+
+  const formaterNetAPY = useMemo(() => {
+    return netApy.toFixed(2)
+  }, [netApy])
+
+  const formaterBorrowTotalBalance = useMemo(() => {
+    return formatData(borrowTotalBalance).toFixed(8)
+  }, [borrowTotalBalance])
+
+  const formaterMarketSize = useMemo(() => {
+    return showDollarValue(totalMarketSize)
+  }, [totalMarketSize])
+
+  const formaterRate = useMemo((): number => {
+    return Number(usedLimit.toSignificant(4)) ?? 0
+  }, [usedLimit])
+
+  const formaterLimit = useMemo(() => {
+    return formatData(limit).toFixed(2)
+  }, [limit])
+
   return (
     <SummaryCard>
       <SummaryFrame>
         <SummaryElement>
           <SummaryTitle>{t('supplyBalance')}</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${formatData(supplyTotalBalance).toFixed(8)}
+            <DotIcon />${formaterSupplyTotalBalance}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>{t('netAPY')}</SummaryTitle>
           <SummaryContent>
             <DotIcon />
-            {netApy.toFixed(2)}%
+            {formaterNetAPY}%
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>{t('borrowBalance')}</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${formatData(borrowTotalBalance).toFixed(8)}
+            <DotIcon />${formaterBorrowTotalBalance}
           </SummaryContent>
         </SummaryElement>
         <SummaryElement>
           <SummaryTitle>{t('totalMarketSize')}</SummaryTitle>
           <SummaryContent>
-            <DotIcon />${showDollarValue(totalMarketSize)}
+            <DotIcon />${formaterMarketSize}
           </SummaryContent>
         </SummaryElement>
       </SummaryFrame>
       <MarketBarWrap>
         <MarketBarTitle style={{ paddingRight: '6px' }}>{t('borrowLimit')}</MarketBarTitle>
-        <MarketBar rate={Number(usedLimit.toSignificant(4)) ?? 0} showRate={true} />
-        <MarketBarTitle style={{ paddingLeft: '6px' }}>${formatData(limit).toFixed(2)}</MarketBarTitle>
+        <MarketBar rate={formaterRate} showRate={true} />
+        <MarketBarTitle style={{ paddingLeft: '6px' }}>${formaterLimit}</MarketBarTitle>
       </MarketBarWrap>
     </SummaryCard>
   )
