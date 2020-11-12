@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Switch from '../Switch'
 import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
@@ -301,6 +301,16 @@ function SupplyMarkets({
 
   const [isSuppliedMarkets, setIsSuppliedMarkets] = useState(false)
 
+  const [TokenLoadState, setTokenLoadState] = useState(false)
+
+  useEffect(() => {
+    if (allMarketCTokens[0].underlyingPrice) {
+      setTokenLoadState(true)
+    } else {
+      setTokenLoadState(false)
+    }
+  }, [allMarketCTokens])
+
   const suppliedAsset = allMarketCTokens.filter((item: CToken) => {
     return item.supplyBalance && BigNumber.from(0).lt(item.supplyBalance)
   })
@@ -454,8 +464,10 @@ function SupplyMarkets({
                   <AssetItem
                     key={item?.symbol}
                     onClick={() => {
-                      setLendToken(item)
-                      setShowLendConfirmation(true)
+                      if (TokenLoadState) {
+                        setLendToken(item)
+                        setShowLendConfirmation(true)
+                      }
                     }}
                   >
                     <AssetLogo>
@@ -482,9 +494,11 @@ function SupplyMarkets({
                     <Switch
                       isActive={item.canBeCollateral ?? false}
                       toggle={() => {
-                        setCollateralToken(item)
-                        setIsSuppliedMarkets(true)
-                        setShowCollateralConfirmation(true)
+                        if (TokenLoadState) {
+                          setCollateralToken(item)
+                          setIsSuppliedMarkets(true)
+                          setShowCollateralConfirmation(true)
+                        }
                       }}
                     />
                   </AssetItem>
@@ -511,8 +525,10 @@ function SupplyMarkets({
                   <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
                     <AssetItem
                       onClick={() => {
-                        setLendToken(item)
-                        setShowLendConfirmation(true)
+                        if (TokenLoadState) {
+                          setLendToken(item)
+                          setShowLendConfirmation(true)
+                        }
                       }}
                     >
                       <AssetLogo>
@@ -536,9 +552,11 @@ function SupplyMarkets({
                       <Switch
                         isActive={item?.canBeCollateral ?? false}
                         toggle={() => {
-                          setCollateralToken(item)
-                          setIsSuppliedMarkets(false)
-                          setShowCollateralConfirmation(true)
+                          if (TokenLoadState) {
+                            setCollateralToken(item)
+                            setIsSuppliedMarkets(false)
+                            setShowCollateralConfirmation(true)
+                          }
                         }}
                       />
                     </AssetItem>

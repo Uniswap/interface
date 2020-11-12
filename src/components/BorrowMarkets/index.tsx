@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import CurrencyIcon from '../CurrencyIcon'
 import LendModal from '../LendModal'
@@ -161,6 +161,16 @@ function BorrowMarkets({
 
   const [showLendConfirmation, setShowLendConfirmation] = useState(false)
 
+  const [TokenLoadState, setTokenLoadState] = useState(false)
+
+  useEffect(() => {
+    if (allMarketCTokens[0].underlyingPrice) {
+      setTokenLoadState(true)
+    } else {
+      setTokenLoadState(false)
+    }
+  }, [allMarketCTokens])
+
   const borrowedAsset = allMarketCTokens.filter((item: CToken) => {
     return item.borrowBalance && BigNumber.from(0).lt(item.borrowBalance)
   })
@@ -202,8 +212,10 @@ function BorrowMarkets({
                   <AssetItem
                     key={item?.symbol}
                     onClick={() => {
-                      setLendToken(item)
-                      setShowLendConfirmation(true)
+                      if (TokenLoadState) {
+                        setLendToken(item)
+                        setShowLendConfirmation(true)
+                      }
                     }}
                   >
                     <AssetLogo>
@@ -255,8 +267,10 @@ function BorrowMarkets({
                     <AssetItem
                       key={item?.symbol}
                       onClick={() => {
-                        setLendToken(item)
-                        setShowLendConfirmation(true)
+                        if (TokenLoadState) {
+                          setLendToken(item)
+                          setShowLendConfirmation(true)
+                        }
                       }}
                     >
                       <AssetLogo>

@@ -276,16 +276,41 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       const { result: marketsValue, loading: marketsResultLoading } =
         marketsResults.length !== 0 ? marketsResults[i] : { result: [0, 0, 0], loading: false }
 
-      if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, null]
-      if (borrowRatePerBlockResultLoading) return [CTokenState.LOADING, null]
-      if (balanceUnderlyingResultLoading) return [CTokenState.LOADING, null]
-      if (borrowBalanceResultLoading) return [CTokenState.LOADING, null]
-      if (accountSnapshotResultLoading) return [CTokenState.LOADING, null]
-      if (cashResultLoading) return [CTokenState.LOADING, null]
-      if (totalSupplyResultLoading) return [CTokenState.LOADING, null]
-      if (membershipLoading) return [CTokenState.LOADING, null]
-      if (underlyingPriceLoading) return [CTokenState.LOADING, null]
-      if (marketsResultLoading) return [CTokenState.LOADING, null]
+      const loadingCToken = new CToken(
+        chainId ?? ChainId.MAINNET,
+        cTokenList[i][0],
+        cTokenList[i][1],
+        cTokenList[i][2],
+        cTokenList[i][3],
+        cTokenList[i][4],
+        cTokenList[i][5],
+        cTokenList[i][6],
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        cTokenList[i][7],
+        cTokenList[i][8]
+      )
+
+      if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, loadingCToken]
+      if (borrowRatePerBlockResultLoading) return [CTokenState.LOADING, loadingCToken]
+      if (balanceUnderlyingResultLoading) return [CTokenState.LOADING, loadingCToken]
+      if (borrowBalanceResultLoading) return [CTokenState.LOADING, loadingCToken]
+      if (accountSnapshotResultLoading) return [CTokenState.LOADING, loadingCToken]
+      if (cashResultLoading) return [CTokenState.LOADING, loadingCToken]
+      if (totalSupplyResultLoading) return [CTokenState.LOADING, loadingCToken]
+      if (membershipLoading) return [CTokenState.LOADING, loadingCToken]
+      if (underlyingPriceLoading) return [CTokenState.LOADING, loadingCToken]
+      if (marketsResultLoading) return [CTokenState.LOADING, loadingCToken]
 
       if (!supplyRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]
       if (!borrowRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]

@@ -50,8 +50,8 @@ function useAllMarketCTokens(markets: [CTokenState, CToken | null][]): CToken[] 
       Object.values(
         markets
           // filter out invalid ctokens
-          .filter((result): result is [CTokenState.EXISTS, CToken] =>
-            Boolean(result[0] === CTokenState.EXISTS && result[1])
+          .filter((result): result is [CTokenState.EXISTS | CTokenState.LOADING, CToken] =>
+            Boolean(result[0] === CTokenState.EXISTS || (result[0] === CTokenState.LOADING && result[1]))
           )
           // filter out duplicated ctokens
           .reduce<{ [cAddress: string]: CToken }>((memo, [, curr]) => {
