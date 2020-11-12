@@ -1,29 +1,14 @@
 import React from 'react'
 import { Text } from 'rebass'
 import { ChainId, Currency, currencyEquals, ETHER, Token } from 'dxswap-sdk'
-import styled from 'styled-components'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
-import { AutoRow } from '../Row'
+import { AutoRow, RowBetween } from '../Row'
+import { Option } from '../../components/Option'
 import CurrencyLogo from '../CurrencyLogo'
-
-const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
-  border-radius: 10px;
-  display: flex;
-  padding: 6px;
-
-  align-items: center;
-  :hover {
-    cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
-  }
-
-  background-color: ${({ theme, disable }) => disable && theme.bg3};
-  opacity: ${({ disable }) => disable && '0.4'};
-`
+import { TYPE } from '../../theme'
 
 export default function CommonBases({
   chainId,
@@ -37,34 +22,39 @@ export default function CommonBases({
   return (
     <AutoColumn gap="md">
       <AutoRow>
-        <Text fontWeight={500} fontSize={14}>
-          Common bases
-        </Text>
+        <TYPE.body fontWeight={500} fontSize="11px" lineHeight="13px" letterSpacing="0.06em">
+          COMMON BASES
+        </TYPE.body>
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
-        <BaseWrapper
+        <Option
+          transparent
           onClick={() => {
             if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
               onSelect(ETHER)
             }
           }}
-          disable={selectedCurrency === ETHER}
+          disabled={selectedCurrency === ETHER}
         >
-          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
-          <Text fontWeight={500} fontSize={16}>
-            ETH
-          </Text>
-        </BaseWrapper>
+          <RowBetween>
+            <CurrencyLogo size="20px" currency={ETHER} style={{ marginRight: 8 }} />
+            <Text fontWeight={500} fontSize={16}>
+              ETH
+            </Text>
+          </RowBetween>
+        </Option>
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {
           const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
           return (
-            <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
-              <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
-              <Text fontWeight={500} fontSize={16}>
-                {token.symbol}
-              </Text>
-            </BaseWrapper>
+            <Option transparent onClick={() => !selected && onSelect(token)} disabled={selected} key={token.address}>
+              <RowBetween>
+                <CurrencyLogo size="20px" currency={token} style={{ marginRight: 8 }} />
+                <Text fontWeight={500} fontSize={16}>
+                  {token.symbol}
+                </Text>
+              </RowBetween>
+            </Option>
           )
         })}
       </AutoRow>
