@@ -79,11 +79,16 @@ export function colors(darkMode: boolean): Colors {
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
-    blue1: '#2172E5'
+    blue1: '#2172E5',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+
+    // skeleton screen
+    SkeletonBG: darkMode
+      ? 'linear-gradient(to right, rgba(20, 30, 39, 0.7) 8%, #141e27 18%, rgba(20, 30, 39, 0.7) 33%)'
+      : 'linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%)'
   }
 }
 
