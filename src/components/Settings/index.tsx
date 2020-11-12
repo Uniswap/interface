@@ -198,10 +198,8 @@ export default function SettingsTab() {
                 error={true}
                 padding={'18px'}
                 onClick={() => {
-                  if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
-                    toggleExpertMode()
-                    setShowConfirmation(false)
-                  }
+                  toggleExpertMode()
+                  setShowConfirmation(false)
                 }}
               >
                 <TYPE.body fontSize="13px" fontWeight={600} color="text1" id="confirm-expert-mode">
