@@ -24,6 +24,7 @@ const SummaryFrame = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
     grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
   `};
 `
 
@@ -38,9 +39,14 @@ const SummaryElement = styled.div`
 
 const SummaryTitle = styled.div`
   margin-bottom: 1.2rem;
-  font-size: 14px;
+  font-size: 0.9rem;
   color: ${({ theme }) => theme.text1};
   font-weight: 600;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+  `};
 `
 
 const SummaryContent = styled.div`
@@ -49,6 +55,10 @@ const SummaryContent = styled.div`
   font-size: 20px;
   color: ${({ theme }) => theme.text1};
   font-weight: 400;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+  `};
 `
 
 const DotIcon = styled.div`

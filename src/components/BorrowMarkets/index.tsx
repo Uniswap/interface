@@ -28,6 +28,7 @@ const MarketsCardHeader = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
+    font-size: 1rem;
   `};
 `
 
@@ -44,7 +45,7 @@ const AssetWrapLabels = styled.div`
   grid-template-columns: 4fr 2fr 4fr 3fr;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 4fr 4fr 3fr;
-    padding: 1rem;
+    padding: 0.8rem 1rem;
   `};
 `
 
@@ -69,7 +70,7 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   padding: 1.25rem 1.75rem;
   border-left: 2px solid transparent;
   padding-left: 1.625rem;
-  height: 82px;
+  height: 78px;
   text-transform: none;
   font-size: 1rem;
   font-weight: 500;
@@ -78,7 +79,7 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   grid-template-columns: 4fr 2fr 4fr 3fr;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 4fr 4fr 3fr;
-    padding: 1rem;
+    padding: 0.8rem 1rem;
   `};
   :hover {
     border-left: 2px solid #1de9b6;
@@ -100,6 +101,7 @@ const ItemWrap = styled.div<{ mobileHide?: boolean }>`
   text-align: right;
   ${({ theme, mobileHide }) => theme.mediaWidth.upToMedium`
     display: ${mobileHide ? 'none' : 'flex'};
+    font-size: 0.8rem;
   `};
 `
 
@@ -111,10 +113,19 @@ const ItemBottomWrap = styled.div`
 const MobileWrap = styled.div`
   display: none;
   color: #aab8c1;
+  text-align: left;
   font-size: 0.9em;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: block;
   `};
+`
+
+const SymbolWrap = styled.div`
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 6rem;
 `
 
 function ItemPannel({
@@ -225,7 +236,7 @@ function BorrowMarkets({
                         <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                       )}
                       <ItemWrap>
-                        <div>{item?.symbol}</div>
+                        <SymbolWrap>{item?.symbol}</SymbolWrap>
                         <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
                       </ItemWrap>
                     </AssetLogo>
@@ -280,7 +291,7 @@ function BorrowMarkets({
                           <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                         )}
                         <ItemWrap>
-                          <div>{item?.symbol}</div>
+                          <SymbolWrap>{item?.symbol}</SymbolWrap>
                           <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
                         </ItemWrap>
                       </AssetLogo>
