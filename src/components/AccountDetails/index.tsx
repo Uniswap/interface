@@ -12,7 +12,7 @@ import Transaction from './Transaction'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
-import { injected, walletlink } from '../../connectors'
+import { injected } from '../../connectors'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 
@@ -226,7 +226,7 @@ export default function AccountDetails({
             <InfoCard>
               <AccountGroupingRow>
                 <div>
-                  {connector !== injected && connector !== walletlink && (
+                  {connector !== injected && (
                     <WalletAction
                       onClick={() => {
                         ;(connector as any).close()
