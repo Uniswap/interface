@@ -17,13 +17,15 @@ export default function ListUpdatePopup({
   listUrl,
   oldList,
   newList,
-  auto
+  auto,
+  listType
 }: {
   popKey: string
   listUrl: string
   oldList: TokenList
   newList: TokenList
   auto: boolean
+  listType: CurrencyListType
 }) {
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
@@ -36,9 +38,9 @@ export default function ListUpdatePopup({
       action: 'Update List from Popup',
       label: listUrl
     })
-    dispatch(acceptListUpdate(listUrl))
+    dispatch(acceptListUpdate({ url: listUrl, listType }))
     removeThisPopup()
-  }, [auto, dispatch, listUrl, removeThisPopup])
+  }, [auto, dispatch, listUrl, removeThisPopup, listType])
 
   const { added: tokensAdded, changed: tokensChanged, removed: tokensRemoved } = useMemo(() => {
     return diffTokenLists(oldList.tokens, newList.tokens)

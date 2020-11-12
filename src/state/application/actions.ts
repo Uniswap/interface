@@ -15,6 +15,7 @@ export type PopupContent =
         oldList: TokenList
         newList: TokenList
         auto: boolean
+        listType: CurrencyListType
       }
     }
 

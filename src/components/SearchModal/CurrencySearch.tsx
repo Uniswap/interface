@@ -6,8 +6,8 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useSelectedListInfo } from '../../state/lists/hooks'
+import { useAllSwapTokens, useToken, useAllBridgeTokens } from '../../hooks/Tokens'
+import { useSelectedSwapListInfo, useSelectedBridgeListInfo } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Card from '../Card'
@@ -32,6 +32,7 @@ interface CurrencySearchProps {
   showCommonBases?: boolean
   onChangeList: () => void
   showETH: boolean
+  listType: CurrencyListType
 }
 
 export function CurrencySearch({
@@ -42,7 +43,8 @@ export function CurrencySearch({
   onDismiss,
   isOpen,
   onChangeList,
-  showETH: showETHToken
+  showETH: showETHToken,
+  listType
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -51,6 +53,7 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
+  const useAllTokens = listType === 'Swap' ? useAllSwapTokens : useAllBridgeTokens
   const allTokens = useAllTokens()
 
   // if they input an address, use it
@@ -132,6 +135,7 @@ export function CurrencySearch({
     [filteredSortedTokens, handleCurrencySelect, searchQuery]
   )
 
+  const useSelectedListInfo = listType === 'Swap' ? useSelectedSwapListInfo : useSelectedBridgeListInfo
   const selectedListInfo = useSelectedListInfo()
 
   return (
@@ -177,6 +181,7 @@ export function CurrencySearch({
               otherCurrency={otherSelectedCurrency}
               selectedCurrency={selectedCurrency}
               fixedListRef={fixedList}
+              listType={listType}
             />
           )}
         </AutoSizer>

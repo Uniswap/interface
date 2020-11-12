@@ -10,7 +10,7 @@ import getTokenList from '../utils/getTokenList'
 import resolveENSContentHash from '../utils/resolveENSContentHash'
 import { useActiveWeb3React } from './index'
 
-export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> {
+export function useFetchListCallback(): (listUrl: string, listType: CurrencyListType) => Promise<TokenList> {
   const { chainId, library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
 
@@ -31,17 +31,17 @@ export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> 
   )
 
   return useCallback(
-    async (listUrl: string) => {
+    async (listUrl: string, listType: CurrencyListType) => {
       const requestId = nanoid()
-      dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
+      dispatch(fetchTokenList.pending({ requestId, listType, url: listUrl }))
       return getTokenList(listUrl, ensResolver)
         .then(tokenList => {
-          dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
+          dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId, listType }))
           return tokenList
         })
         .catch(error => {
           console.debug(`Failed to get list at url ${listUrl}`, error)
-          dispatch(fetchTokenList.rejected({ url: listUrl, requestId, errorMessage: error.message }))
+          dispatch(fetchTokenList.rejected({ url: listUrl, requestId, listType, errorMessage: error.message }))
           throw error
         })
     },

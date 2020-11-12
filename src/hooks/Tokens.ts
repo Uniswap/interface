@@ -1,7 +1,7 @@
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, ETHER, Token, currencyEquals } from '@fuseio/fuse-swap-sdk'
 import { useMemo } from 'react'
-import { useSelectedTokenList } from '../state/lists/hooks'
+import { useSelectedSwapTokenList, useSelectedBridgeTokenList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
@@ -9,10 +9,33 @@ import { isAddress } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 
-export function useAllTokens(): { [address: string]: Token } {
+export function useAllSwapTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
-  const allTokens = useSelectedTokenList()
+  const allTokens = useSelectedSwapTokenList()
+
+  return useMemo(() => {
+    if (!chainId) return {}
+    return (
+      userAddedTokens
+        // reduce into all ALL_TOKENS filtered by the current chain
+        .reduce<{ [address: string]: Token }>(
+          (tokenMap, token) => {
+            tokenMap[token.address] = token
+            return tokenMap
+          },
+          // must make a copy because reduce modifies the map, and we do not
+          // want to make a copy in every iteration
+          { ...allTokens[chainId] }
+        )
+    )
+  }, [chainId, userAddedTokens, allTokens])
+}
+
+export function useAllBridgeTokens(): { [address: string]: Token } {
+  const { chainId } = useActiveWeb3React()
+  const userAddedTokens = useUserAddedTokens()
+  const allTokens = useSelectedBridgeTokenList()
 
   return useMemo(() => {
     if (!chainId) return {}
@@ -51,8 +74,9 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
 // undefined if invalid or does not exist
 // null if loading
 // otherwise returns the token
-export function useToken(tokenAddress?: string): Token | undefined | null {
+export function useToken(tokenAddress?: string, listType?: CurrencyListType): Token | undefined | null {
   const { chainId } = useActiveWeb3React()
+  const useAllTokens = listType === 'Swap' ? useAllSwapTokens : useAllBridgeTokens
   const tokens = useAllTokens()
 
   const address = isAddress(tokenAddress)
@@ -101,8 +125,11 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
   ])
 }
 
-export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
+export function useCurrency(
+  currencyId: string | undefined,
+  listType: CurrencyListType = 'Swap'
+): Currency | null | undefined {
   const isETH = currencyId?.toUpperCase() === 'ETH'
-  const token = useToken(isETH ? undefined : currencyId)
+  const token = useToken(isETH ? undefined : currencyId, listType)
   return isETH ? ETHER : token
 }

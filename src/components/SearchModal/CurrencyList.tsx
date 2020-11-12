@@ -4,7 +4,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
+import { WrappedTokenInfo, useSelectedSwapTokenList, useSelectedBridgeTokenList } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -85,16 +85,19 @@ function CurrencyRow({
   onSelect,
   isSelected,
   otherSelected,
-  style
+  style,
+  listType
 }: {
   currency: Currency
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
+  listType: CurrencyListType
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
+  const useSelectedTokenList = listType === 'Swap' ? useSelectedSwapTokenList : useSelectedBridgeTokenList
   const selectedTokenList = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
@@ -161,7 +164,8 @@ export default function CurrencyList({
   onCurrencySelect,
   otherCurrency,
   fixedListRef,
-  showETH
+  showETH,
+  listType
 }: {
   height: number
   currencies: Currency[]
@@ -170,6 +174,7 @@ export default function CurrencyList({
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
+  listType: CurrencyListType
 }) {
   const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
 
@@ -186,10 +191,11 @@ export default function CurrencyList({
           isSelected={isSelected}
           onSelect={handleSelect}
           otherSelected={otherSelected}
+          listType={listType}
         />
       )
     },
-    [onCurrencySelect, otherCurrency, selectedCurrency]
+    [listType, onCurrencySelect, otherCurrency, selectedCurrency]
   )
 
   const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])

@@ -106,5 +106,8 @@
       "last 1 safari version"
     ]
   },
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@fuseswap/default-token-list": "^1.0.0"
+  }
 }

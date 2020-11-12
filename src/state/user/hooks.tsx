@@ -5,7 +5,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens } from '../../hooks/Tokens'
+import { useAllSwapTokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -175,7 +175,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
-  const tokens = useAllTokens()
+  const tokens = useAllSwapTokens()
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])

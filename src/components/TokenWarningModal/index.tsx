@@ -3,7 +3,7 @@ import { transparentize } from 'polished'
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens } from '../../hooks/Tokens'
+import { useAllSwapTokens } from '../../hooks/Tokens'
 import { ExternalLink, TYPE } from '../../theme'
 import { getExplorerLink, shortenAddress, getExplorerLinkText } from '../../utils'
 import CurrencyLogo from '../CurrencyLogo'
@@ -43,7 +43,7 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
   const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
   const tokenName = token?.name?.toLowerCase() ?? ''
 
-  const allTokens = useAllTokens()
+  const allTokens = useAllSwapTokens()
 
   const duplicateNameOrSymbol = useMemo(() => {
     if (!token || !chainId) return false

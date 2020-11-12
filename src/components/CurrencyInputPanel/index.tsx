@@ -128,6 +128,7 @@ interface CurrencyInputPanelProps {
   id: string
   showCommonBases?: boolean
   showETH?: boolean
+  listType?: CurrencyListType
 }
 
 export default function CurrencyInputPanel({
@@ -145,7 +146,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  showETH = true
+  showETH = true,
+  listType = 'Swap'
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -240,6 +242,7 @@ export default function CurrencyInputPanel({
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
           showETH={showETH}
+          listType={listType}
         />
       )}
     </InputPanel>
