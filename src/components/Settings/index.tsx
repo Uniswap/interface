@@ -196,7 +196,7 @@ export default function SettingsTab() {
               </TYPE.body>
               <ButtonError
                 error={true}
-                padding={'21px'}
+                padding={'18px'}
                 onClick={() => {
                   if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
                     toggleExpertMode()
