@@ -17,7 +17,7 @@ import {
 } from '@fuseio/fuse-swap-sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
-import { useAllTokens } from '../hooks/Tokens'
+import { useAllSwapTokens } from '../hooks/Tokens'
 import { useV1FactoryContract } from '../hooks/useContract'
 import { Version } from '../hooks/useToggledVersion'
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
@@ -53,7 +53,7 @@ function useMockV1Pair(inputCurrency?: Currency): MockV1Pair | undefined {
 
 // returns all v1 exchange addresses in the user's token list
 export function useAllTokenV1Exchanges(): { [exchangeAddress: string]: Token } {
-  const allTokens = useAllTokens()
+  const allTokens = useAllSwapTokens()
   const factory = useV1FactoryContract()
   const args = useMemo(() => Object.keys(allTokens).map(tokenAddress => [tokenAddress]), [allTokens])
 

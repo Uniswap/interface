@@ -12,7 +12,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, selectList } from '../../state/lists/actions'
-import { useSelectedListUrl } from '../../state/lists/hooks'
+import { useSelectedSwapListUrl, useSelectedBridgeListUrl } from '../../state/lists/hooks'
 import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
@@ -89,9 +89,24 @@ function listUrlRowHTMLId(listUrl: string) {
   return `list-row-${listUrl.replace(/\./g, '-')}`
 }
 
-const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; onBack: () => void }) {
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+const ListRow = memo(function ListRow({
+  listUrl,
+  onBack,
+  listType
+}: {
+  listUrl: string
+  onBack: () => void
+  listType: CurrencyListType
+}) {
+  const bridgeListsByUrl = useSelector<AppState, AppState['lists']['Bridge']['byUrl']>(
+    state => state.lists.Bridge.byUrl
+  )
+  const swapListsByUrl = useSelector<AppState, AppState['lists']['Swap']['byUrl']>(state => state.lists.Swap.byUrl)
+  const listsByUrl = listType === 'Swap' ? swapListsByUrl : bridgeListsByUrl
+
+  const useSelectedListUrl = listType === 'Swap' ? useSelectedSwapListUrl : useSelectedBridgeListUrl
   const selectedListUrl = useSelectedListUrl()
+
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
@@ -118,9 +133,9 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
       label: listUrl
     })
 
-    dispatch(selectList(listUrl))
+    dispatch(selectList({ url: listUrl, listType }))
     onBack()
-  }, [dispatch, isSelected, listUrl, onBack])
+  }, [dispatch, isSelected, listUrl, onBack, listType])
 
   const handleAcceptListUpdate = useCallback(() => {
     if (!pending) return
@@ -129,8 +144,8 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
       action: 'Update List from List Select',
       label: listUrl
     })
-    dispatch(acceptListUpdate(listUrl))
-  }, [dispatch, listUrl, pending])
+    dispatch(acceptListUpdate({ url: listUrl, listType }))
+  }, [dispatch, listUrl, pending, listType])
 
   const handleRemoveList = useCallback(() => {
     ReactGA.event({
@@ -144,9 +159,9 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
         action: 'Confirm Remove List',
         label: listUrl
       })
-      dispatch(removeList(listUrl))
+      dispatch(removeList({ url: listUrl, listType }))
     }
-  }, [dispatch, listUrl])
+  }, [dispatch, listUrl, listType])
 
   if (!list) return null
 
@@ -248,11 +263,21 @@ const ListContainer = styled.div`
   overflow: auto;
 `
 
-export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
+export function ListSelect({
+  onDismiss,
+  onBack,
+  listType
+}: {
+  onDismiss: () => void
+  onBack: () => void
+  listType: CurrencyListType
+}) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
   const dispatch = useDispatch<AppDispatch>()
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const bridgeLists = useSelector<AppState, AppState['lists']['Bridge']['byUrl']>(state => state.lists.Bridge.byUrl)
+  const swapLists = useSelector<AppState, AppState['lists']['Swap']['byUrl']>(state => state.lists.Swap.byUrl)
+  const lists = listType === 'Swap' ? swapLists : bridgeLists
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
   const [addError, setAddError] = useState<string | null>(null)
 
@@ -265,7 +290,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const handleAddList = useCallback(() => {
     if (adding) return
     setAddError(null)
-    fetchList(listUrlInput)
+    fetchList(listUrlInput, listType)
       .then(() => {
         setListUrlInput('')
         ReactGA.event({
@@ -281,9 +306,9 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           label: listUrlInput
         })
         setAddError(error.message)
-        dispatch(removeList(listUrlInput))
+        dispatch(removeList({ url: listUrlInput, listType }))
       })
-  }, [adding, dispatch, fetchList, listUrlInput])
+  }, [adding, dispatch, fetchList, listUrlInput, listType])
 
   const validUrl: boolean = useMemo(() => {
     return uriToHttp(listUrlInput).length > 0 || Boolean(parseENSAddress(listUrlInput))
@@ -366,7 +391,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
       <ListContainer>
         {sortedLists.map(listUrl => (
-          <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} />
+          <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} listType={listType} />
         ))}
       </ListContainer>
       <Separator />

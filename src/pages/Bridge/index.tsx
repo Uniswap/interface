@@ -56,7 +56,7 @@ export default function Bridge({
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
-  const inputCurrency = useCurrency(inputCurrencyId)
+  const inputCurrency = useCurrency(inputCurrencyId, 'Bridge')
 
   const { updateCompletedBridgeTransfer } = useUserActionHandlers()
 
@@ -238,6 +238,7 @@ export default function Bridge({
               showMaxButton={!atMaxAmounts[Field.INPUT]}
               id="bridge-input-token"
               showETH={false}
+              listType="Bridge"
             />
           </AutoColumn>
           <ColumnCenter>

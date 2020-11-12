@@ -6,8 +6,8 @@ import { AutoRow } from '../../components/Row'
 import { SearchInput } from '../../components/SearchModal/styleds'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useSelectedTokenList } from '../../state/lists/hooks'
+import { useAllSwapTokens, useToken } from '../../hooks/Tokens'
+import { useSelectedSwapTokenList } from '../../state/lists/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { BackArrow, TYPE } from '../../theme'
 import { LightCard } from '../../components/Card'
@@ -28,9 +28,9 @@ export default function MigrateV1() {
 
   // automatically add the search token
   const token = useToken(tokenSearch)
-  const selectedTokenListTokens = useSelectedTokenList()
+  const selectedTokenListTokens = useSelectedSwapTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token ?? undefined)
-  const allTokens = useAllTokens()
+  const allTokens = useAllSwapTokens()
   const addToken = useAddUserToken()
   useEffect(() => {
     if (token && !isOnSelectedList && !allTokens[token.address]) {

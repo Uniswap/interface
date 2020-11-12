@@ -1,12 +1,18 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
-import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
+import {
+  BRIDGE_DEFAULT_LIST_OF_LISTS,
+  BRIDGE_DEFAULT_TOKEN_LIST_URL,
+  SWAP_DEFAULT_LIST_OF_LISTS,
+  SWAP_DEFAULT_TOKEN_LIST_URL
+} from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
-import UNISWAP_DEFAULT_LIST from '@fuseio/fuse-swap-default-token-list'
+import BRIDGE_DEFAULT_LIST from '@fuseio/fuse-swap-default-token-list'
+import SWAP_DEFAULT_LIST from '@fuseswap/default-token-list'
 
-export interface ListsState {
+interface ListState {
   readonly byUrl: {
     readonly [url: string]: {
       readonly current: TokenList | null
@@ -20,7 +26,11 @@ export interface ListsState {
   readonly selectedListUrl: string | undefined
 }
 
-const NEW_LIST_STATE: ListsState['byUrl'][string] = {
+export type ListsState = {
+  readonly [listType in CurrencyListType]: ListState
+}
+
+const NEW_LIST_STATE: ListState['byUrl'][string] = {
   error: null,
   current: null,
   loadingRequestId: null,
@@ -30,44 +40,62 @@ const NEW_LIST_STATE: ListsState['byUrl'][string] = {
 type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
 const initialState: ListsState = {
-  lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
-  byUrl: {
-    ...DEFAULT_LIST_OF_LISTS.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
-      memo[listUrl] = NEW_LIST_STATE
-      return memo
-    }, {}),
-    [DEFAULT_TOKEN_LIST_URL]: {
-      error: null,
-      current: UNISWAP_DEFAULT_LIST,
-      loadingRequestId: null,
-      pendingUpdate: null
-    }
+  Swap: {
+    lastInitializedDefaultListOfLists: SWAP_DEFAULT_LIST_OF_LISTS,
+    byUrl: {
+      ...SWAP_DEFAULT_LIST_OF_LISTS.reduce<Mutable<ListState['byUrl']>>((memo, listUrl) => {
+        memo[listUrl] = NEW_LIST_STATE
+        return memo
+      }, {}),
+      [SWAP_DEFAULT_TOKEN_LIST_URL]: {
+        error: null,
+        current: SWAP_DEFAULT_LIST,
+        loadingRequestId: null,
+        pendingUpdate: null
+      }
+    },
+    selectedListUrl: SWAP_DEFAULT_TOKEN_LIST_URL
   },
-  selectedListUrl: DEFAULT_TOKEN_LIST_URL
+  Bridge: {
+    lastInitializedDefaultListOfLists: BRIDGE_DEFAULT_LIST_OF_LISTS,
+    byUrl: {
+      ...BRIDGE_DEFAULT_LIST_OF_LISTS.reduce<Mutable<ListState['byUrl']>>((memo, listUrl) => {
+        memo[listUrl] = NEW_LIST_STATE
+        return memo
+      }, {}),
+      [BRIDGE_DEFAULT_TOKEN_LIST_URL]: {
+        error: null,
+        current: BRIDGE_DEFAULT_LIST,
+        loadingRequestId: null,
+        pendingUpdate: null
+      }
+    },
+    selectedListUrl: BRIDGE_DEFAULT_TOKEN_LIST_URL
+  }
 }
 
 export default createReducer(initialState, builder =>
   builder
-    .addCase(fetchTokenList.pending, (state, { payload: { requestId, url } }) => {
-      state.byUrl[url] = {
+    .addCase(fetchTokenList.pending, (state, { payload: { requestId, url, listType } }) => {
+      state[listType].byUrl[url] = {
         current: null,
         pendingUpdate: null,
-        ...state.byUrl[url],
+        ...state[listType].byUrl[url],
         loadingRequestId: requestId,
         error: null
       }
     })
-    .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url } }) => {
-      const current = state.byUrl[url]?.current
-      const loadingRequestId = state.byUrl[url]?.loadingRequestId
+    .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, url, listType } }) => {
+      const current = state[listType].byUrl[url]?.current
+      const loadingRequestId = state[listType].byUrl[url]?.loadingRequestId
 
       // no-op if update does nothing
       if (current) {
         const upgradeType = getVersionUpgrade(current.version, tokenList.version)
         if (upgradeType === VersionUpgrade.NONE) return
         if (loadingRequestId === null || loadingRequestId === requestId) {
-          state.byUrl[url] = {
-            ...state.byUrl[url],
+          state[listType].byUrl[url] = {
+            ...state[listType].byUrl[url],
             loadingRequestId: null,
             error: null,
             current: current,
@@ -75,8 +103,8 @@ export default createReducer(initialState, builder =>
           }
         }
       } else {
-        state.byUrl[url] = {
-          ...state.byUrl[url],
+        state[listType].byUrl[url] = {
+          ...state[listType].byUrl[url],
           loadingRequestId: null,
           error: null,
           current: tokenList,
@@ -84,75 +112,86 @@ export default createReducer(initialState, builder =>
         }
       }
     })
-    .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {
-      if (state.byUrl[url]?.loadingRequestId !== requestId) {
+    .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage, listType } }) => {
+      if (state[listType].byUrl[url]?.loadingRequestId !== requestId) {
         // no-op since it's not the latest request
         return
       }
 
-      state.byUrl[url] = {
-        ...state.byUrl[url],
+      state[listType].byUrl[url] = {
+        ...state[listType].byUrl[url],
         loadingRequestId: null,
         error: errorMessage,
         current: null,
         pendingUpdate: null
       }
     })
-    .addCase(selectList, (state, { payload: url }) => {
-      state.selectedListUrl = url
+    .addCase(selectList, (state, { payload: { url, listType } }) => {
+      state[listType].selectedListUrl = url
       // automatically adds list
-      if (!state.byUrl[url]) {
-        state.byUrl[url] = NEW_LIST_STATE
+      if (!state[listType].byUrl[url]) {
+        state[listType].byUrl[url] = NEW_LIST_STATE
       }
     })
-    .addCase(addList, (state, { payload: url }) => {
-      if (!state.byUrl[url]) {
-        state.byUrl[url] = NEW_LIST_STATE
+    .addCase(addList, (state, { payload: { url, listType } }) => {
+      if (!state[listType].byUrl[url]) {
+        state[listType].byUrl[url] = NEW_LIST_STATE
       }
     })
-    .addCase(removeList, (state, { payload: url }) => {
-      if (state.byUrl[url]) {
-        delete state.byUrl[url]
+    .addCase(removeList, (state, { payload: { url, listType } }) => {
+      if (state[listType].byUrl[url]) {
+        delete state[listType].byUrl[url]
       }
-      if (state.selectedListUrl === url) {
-        state.selectedListUrl = Object.keys(state.byUrl)[0]
+      if (state[listType].selectedListUrl === url) {
+        state[listType].selectedListUrl = Object.keys(state[listType].byUrl)[0]
       }
     })
-    .addCase(acceptListUpdate, (state, { payload: url }) => {
-      if (!state.byUrl[url]?.pendingUpdate) {
+    .addCase(acceptListUpdate, (state, { payload: { url, listType } }) => {
+      if (!state[listType].byUrl[url]?.pendingUpdate) {
         throw new Error('accept list update called without pending update')
       }
-      state.byUrl[url] = {
-        ...state.byUrl[url],
+      state[listType].byUrl[url] = {
+        ...state[listType].byUrl[url],
         pendingUpdate: null,
-        current: state.byUrl[url].pendingUpdate
+        current: state[listType].byUrl[url].pendingUpdate
       }
     })
     .addCase(updateVersion, state => {
+      const listTypes: CurrencyListType[] = ['Swap', 'Bridge']
       // state loaded from localStorage, but new lists have never been initialized
-      if (!state.lastInitializedDefaultListOfLists) {
-        state.byUrl = initialState.byUrl
-        state.selectedListUrl = undefined
-      } else if (state.lastInitializedDefaultListOfLists) {
-        const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
-          (s, l) => s.add(l),
-          new Set()
-        )
-        const newListOfListsSet = DEFAULT_LIST_OF_LISTS.reduce<Set<string>>((s, l) => s.add(l), new Set())
+      for (const listType of listTypes) {
+        if (!state[listType]) {
+          state[listType] = initialState[listType]
+          continue
+        }
 
-        DEFAULT_LIST_OF_LISTS.forEach(listUrl => {
-          if (!lastInitializedSet.has(listUrl)) {
-            state.byUrl[listUrl] = NEW_LIST_STATE
-          }
-        })
+        if (!state[listType]?.lastInitializedDefaultListOfLists) {
+          state[listType].byUrl = initialState[listType]?.byUrl
+          state[listType].selectedListUrl = undefined
+        } else if (state[listType].lastInitializedDefaultListOfLists) {
+          const lastInitializedSet = state[listType].lastInitializedDefaultListOfLists?.reduce<Set<string>>(
+            (s, l) => s.add(l),
+            new Set()
+          )
+          const DEFAULT_LISTS = listType === 'Swap' ? SWAP_DEFAULT_LIST_OF_LISTS : BRIDGE_DEFAULT_LIST_OF_LISTS
 
-        state.lastInitializedDefaultListOfLists.forEach(listUrl => {
-          if (!newListOfListsSet.has(listUrl)) {
-            delete state.byUrl[listUrl]
-          }
-        })
+          const newListOfListsSet = DEFAULT_LISTS.reduce<Set<string>>((s, l) => s.add(l), new Set())
+
+          DEFAULT_LISTS.forEach(listUrl => {
+            if (!lastInitializedSet?.has(listUrl)) {
+              state[listType].byUrl[listUrl] = NEW_LIST_STATE
+            }
+          })
+
+          state[listType].lastInitializedDefaultListOfLists?.forEach(listUrl => {
+            if (!newListOfListsSet.has(listUrl)) {
+              delete state[listType].byUrl[listUrl]
+            }
+          })
+        }
+
+        state[listType].lastInitializedDefaultListOfLists =
+          listType === 'Swap' ? SWAP_DEFAULT_LIST_OF_LISTS : BRIDGE_DEFAULT_LIST_OF_LISTS
       }
-
-      state.lastInitializedDefaultListOfLists = DEFAULT_LIST_OF_LISTS
     })
 )

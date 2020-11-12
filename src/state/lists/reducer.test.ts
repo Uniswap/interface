@@ -1,5 +1,5 @@
 import { createStore, Store } from 'redux'
-import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
+import { BRIDGE_DEFAULT_LIST_OF_LISTS, BRIDGE_DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { fetchTokenList, acceptListUpdate, addList, removeList, selectList } from './actions'
 import reducer, { ListsState } from './reducer'
@@ -441,12 +441,12 @@ describe('list reducer', () => {
       })
 
       it('puts in all the new lists', () => {
-        expect(Object.keys(store.getState().byUrl)).toEqual(DEFAULT_LIST_OF_LISTS)
+        expect(Object.keys(store.getState().byUrl)).toEqual(BRIDGE_DEFAULT_LIST_OF_LISTS)
       })
       it('all lists are empty', () => {
         const s = store.getState()
         Object.keys(s.byUrl).forEach(url => {
-          if (url === DEFAULT_TOKEN_LIST_URL) {
+          if (url === BRIDGE_DEFAULT_TOKEN_LIST_URL) {
             expect(s.byUrl[url]).toEqual({
               error: null,
               current: UNISWAP_DEFAULT_TOKEN_LIST,
@@ -464,7 +464,7 @@ describe('list reducer', () => {
         })
       })
       it('sets initialized lists', () => {
-        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(DEFAULT_LIST_OF_LISTS)
+        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(BRIDGE_DEFAULT_LIST_OF_LISTS)
       })
     })
     describe('initialized with a different set of lists', () => {
@@ -505,7 +505,7 @@ describe('list reducer', () => {
       })
 
       it('adds all the lists in the default list of lists', () => {
-        expect(Object.keys(store.getState().byUrl)).toContain(DEFAULT_TOKEN_LIST_URL)
+        expect(Object.keys(store.getState().byUrl)).toContain(BRIDGE_DEFAULT_TOKEN_LIST_URL)
       })
 
       it('each of those initialized lists is empty', () => {
@@ -525,7 +525,7 @@ describe('list reducer', () => {
       })
 
       it('sets initialized lists', () => {
-        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(DEFAULT_LIST_OF_LISTS)
+        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(BRIDGE_DEFAULT_LIST_OF_LISTS)
       })
     })
   })

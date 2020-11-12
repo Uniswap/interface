@@ -1671,7 +1671,7 @@
     "@ethersproject/properties" "^5.0.3"
     "@ethersproject/strings" "^5.0.4"
 
-"@fuseio/fuse-swap-default-token-list@^2.0.0":
+"@fuseio/fuse-swap-default-token-list@~2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@fuseio/fuse-swap-default-token-list/-/fuse-swap-default-token-list-2.0.0.tgz#7d65484b349c26a5530130de272bcceb6454fb6d"
   integrity sha512-toC8vo9YyHZiZJ+twKaGFrT/Y7UUKemX6nWdHjASTbjcgCGSfUgmYcLWZgA9r6j3Mo0woa3YFI3vrenBQJGSWQ==
@@ -1688,6 +1688,11 @@
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
+
+"@fuseswap/default-token-list@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@fuseswap/default-token-list/-/default-token-list-1.0.0.tgz#981deb4a71ee81ce74bdb354dd91fd847a3b6894"
+  integrity sha512-d6SaqWAyzxeXHZTyniP9g979jXK2jehvJOhHsuxIS+wwu+jeKiKuO4vpeTHM1SUBF2i7RpgSbAZq0at+4QpqPQ==
 
 "@hapi/address@2.x.x":
   version "2.1.4"

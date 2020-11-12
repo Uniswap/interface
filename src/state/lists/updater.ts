@@ -12,7 +12,8 @@ import { acceptListUpdate } from './actions'
 export default function Updater(): null {
   const { library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const swapLists = useSelector<AppState, AppState['lists']['Swap']['byUrl']>(state => state.lists.Swap.byUrl)
+  const bridgeLists = useSelector<AppState, AppState['lists']['Bridge']['byUrl']>(state => state.lists.Bridge.byUrl)
 
   const isWindowVisible = useIsWindowVisible()
 
@@ -20,29 +21,40 @@ export default function Updater(): null {
 
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    Object.keys(lists).forEach(url =>
-      fetchList(url).catch(error => console.debug('interval list fetching error', error))
+    Object.keys(swapLists).forEach(url =>
+      fetchList(url, 'Swap').catch(error => console.debug('interval swap list fetching error', error))
     )
-  }, [fetchList, isWindowVisible, lists])
+    Object.keys(bridgeLists).forEach(url =>
+      fetchList(url, 'Bridge').catch(error => console.debug('interval swap list fetching error', error))
+    )
+  }, [fetchList, isWindowVisible, swapLists, bridgeLists])
 
   // fetch all lists every 10 minutes, but only after we initialize library
   useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null)
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {
-    Object.keys(lists).forEach(listUrl => {
-      const list = lists[listUrl]
+    Object.keys(swapLists).forEach(listUrl => {
+      const list = swapLists[listUrl]
 
       if (!list.current && !list.loadingRequestId && !list.error) {
-        fetchList(listUrl).catch(error => console.debug('list added fetching error', error))
+        fetchList(listUrl, 'Swap').catch(error => console.debug('list added fetching error', error))
       }
     })
-  }, [dispatch, fetchList, library, lists])
+
+    Object.keys(bridgeLists).forEach(listUrl => {
+      const list = bridgeLists[listUrl]
+
+      if (!list.current && !list.loadingRequestId && !list.error) {
+        fetchList(listUrl, 'Bridge').catch(error => console.debug('list added fetching error', error))
+      }
+    })
+  }, [dispatch, fetchList, library, swapLists, bridgeLists])
 
   // automatically update lists if versions are minor/patch
   useEffect(() => {
-    Object.keys(lists).forEach(listUrl => {
-      const list = lists[listUrl]
+    Object.keys(swapLists).forEach(listUrl => {
+      const list = swapLists[listUrl]
       if (list.current && list.pendingUpdate) {
         const bump = getVersionUpgrade(list.current.version, list.pendingUpdate.version)
         switch (bump) {
@@ -53,7 +65,7 @@ export default function Updater(): null {
             const min = minVersionBump(list.current.tokens, list.pendingUpdate.tokens)
             // automatically update minor/patch as long as bump matches the min update
             if (bump >= min) {
-              dispatch(acceptListUpdate(listUrl))
+              dispatch(acceptListUpdate({ url: listUrl, listType: 'Swap' }))
               dispatch(
                 addPopup({
                   key: listUrl,
@@ -62,7 +74,8 @@ export default function Updater(): null {
                       listUrl,
                       oldList: list.current,
                       newList: list.pendingUpdate,
-                      auto: true
+                      auto: true,
+                      listType: 'Swap'
                     }
                   }
                 })
@@ -83,7 +96,8 @@ export default function Updater(): null {
                     listUrl,
                     auto: false,
                     oldList: list.current,
-                    newList: list.pendingUpdate
+                    newList: list.pendingUpdate,
+                    listType: 'Swap'
                   }
                 },
                 removeAfterMs: null
@@ -92,7 +106,61 @@ export default function Updater(): null {
         }
       }
     })
-  }, [dispatch, lists])
+
+    Object.keys(bridgeLists).forEach(listUrl => {
+      const list = bridgeLists[listUrl]
+      if (list.current && list.pendingUpdate) {
+        const bump = getVersionUpgrade(list.current.version, list.pendingUpdate.version)
+        switch (bump) {
+          case VersionUpgrade.NONE:
+            throw new Error('unexpected no version bump')
+          case VersionUpgrade.PATCH:
+          case VersionUpgrade.MINOR:
+            const min = minVersionBump(list.current.tokens, list.pendingUpdate.tokens)
+            // automatically update minor/patch as long as bump matches the min update
+            if (bump >= min) {
+              dispatch(acceptListUpdate({ url: listUrl, listType: 'Bridge' }))
+              dispatch(
+                addPopup({
+                  key: listUrl,
+                  content: {
+                    listUpdate: {
+                      listUrl,
+                      oldList: list.current,
+                      newList: list.pendingUpdate,
+                      auto: true,
+                      listType: 'Bridge'
+                    }
+                  }
+                })
+              )
+            } else {
+              console.error(
+                `List at url ${listUrl} could not automatically update because the version bump was only PATCH/MINOR while the update had breaking changes and should have been MAJOR`
+              )
+            }
+            break
+
+          case VersionUpgrade.MAJOR:
+            dispatch(
+              addPopup({
+                key: listUrl,
+                content: {
+                  listUpdate: {
+                    listUrl,
+                    auto: false,
+                    oldList: list.current,
+                    newList: list.pendingUpdate,
+                    listType: 'Bridge'
+                  }
+                },
+                removeAfterMs: null
+              })
+            )
+        }
+      }
+    })
+  }, [dispatch, swapLists, bridgeLists])
 
   return null
 }

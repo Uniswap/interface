@@ -71,8 +71,8 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-export function useTokenList(url: string | undefined): TokenAddressMap {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+export function useSwapTokenList(url: string | undefined): TokenAddressMap {
+  const lists = useSelector<AppState, AppState['lists']['Swap']['byUrl']>(state => state.lists.Swap.byUrl)
   return useMemo(() => {
     if (!url) return EMPTY_LIST
     const current = lists[url]?.current
@@ -86,17 +86,57 @@ export function useTokenList(url: string | undefined): TokenAddressMap {
   }, [lists, url])
 }
 
-export function useSelectedListUrl(): string | undefined {
-  return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
+export function useBridgeTokenList(url: string | undefined): TokenAddressMap {
+  const lists = useSelector<AppState, AppState['lists']['Bridge']['byUrl']>(state => state.lists.Bridge.byUrl)
+  return useMemo(() => {
+    if (!url) return EMPTY_LIST
+    const current = lists[url]?.current
+    if (!current) return EMPTY_LIST
+    try {
+      return listToTokenMap(current)
+    } catch (error) {
+      console.error('Could not show token list due to error', error)
+      return EMPTY_LIST
+    }
+  }, [lists, url])
 }
 
-export function useSelectedTokenList(): TokenAddressMap {
-  return useTokenList(useSelectedListUrl())
+export function useSelectedSwapListUrl(): string | undefined {
+  return useSelector<AppState, AppState['lists']['Swap']['selectedListUrl']>(state => state.lists.Swap.selectedListUrl)
 }
 
-export function useSelectedListInfo(): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
-  const selectedUrl = useSelectedListUrl()
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+export function useSelectedBridgeListUrl(): string | undefined {
+  return useSelector<AppState, AppState['lists']['Bridge']['selectedListUrl']>(
+    state => state.lists.Bridge.selectedListUrl
+  )
+}
+
+export function useSelectedSwapTokenList(): TokenAddressMap {
+  return useSwapTokenList(useSelectedSwapListUrl())
+}
+
+export function useSelectedBridgeTokenList(): TokenAddressMap {
+  return useBridgeTokenList(useSelectedBridgeListUrl())
+}
+
+export function useSelectedSwapListInfo(): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
+  const selectedUrl = useSelectedSwapListUrl()
+  const listsByUrl = useSelector<AppState, AppState['lists']['Swap']['byUrl']>(state => state.lists.Swap.byUrl)
+  const list = selectedUrl ? listsByUrl[selectedUrl] : undefined
+  return {
+    current: list?.current ?? null,
+    pending: list?.pendingUpdate ?? null,
+    loading: list?.loadingRequestId !== null
+  }
+}
+
+export function useSelectedBridgeListInfo(): {
+  current: TokenList | null
+  pending: TokenList | null
+  loading: boolean
+} {
+  const selectedUrl = useSelectedBridgeListUrl()
+  const listsByUrl = useSelector<AppState, AppState['lists']['Bridge']['byUrl']>(state => state.lists.Bridge.byUrl)
   const list = selectedUrl ? listsByUrl[selectedUrl] : undefined
   return {
     current: list?.current ?? null,
@@ -106,8 +146,20 @@ export function useSelectedListInfo(): { current: TokenList | null; pending: Tok
 }
 
 // returns all downloaded current lists
-export function useAllLists(): TokenList[] {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+export function useAllSwapLists(): TokenList[] {
+  const lists = useSelector<AppState, AppState['lists']['Swap']['byUrl']>(state => state.lists.Swap.byUrl)
+
+  return useMemo(
+    () =>
+      Object.keys(lists)
+        .map(url => lists[url].current)
+        .filter((l): l is TokenList => Boolean(l)),
+    [lists]
+  )
+}
+
+export function useAllBridgeLists(): TokenList[] {
+  const lists = useSelector<AppState, AppState['lists']['Bridge']['byUrl']>(state => state.lists.Bridge.byUrl)
 
   return useMemo(
     () =>
