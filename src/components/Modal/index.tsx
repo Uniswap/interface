@@ -98,11 +98,12 @@ export default function Modal({
     leave: { opacity: 0 }
   })
 
-  const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
+  const [{ y }, set] = useSpring(() => ({ y: -72, config: { mass: 1, tension: 210, friction: 20 } }))
   const bind = useGesture({
     onDrag: state => {
+      console.log(state)
       set({
-        y: state.down ? state.movement[1] : 0
+        y: state.down ? state.movement[1] - 72 : -72
       })
       if (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) {
         onDismiss()
@@ -120,7 +121,7 @@ export default function Modal({
                 {...(isMobile
                   ? {
                       ...bind(),
-                      style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
+                      style: { transform: y.interpolate(y => `translateY(${y > -72 ? y : -72}px)`) }
                     }
                   : {})}
                 aria-label="dialog content"

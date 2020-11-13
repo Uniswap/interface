@@ -72,3 +72,11 @@ export const Separator = styled.div`
   height: 1px;
   background-color: ${({ theme }) => transparentize(0.5, theme.purple5)};
 `
+export const TokenListContainer = styled(Flex)`
+  min-height: 448px;
+  max-height: 448px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    min-height: 280px;
+    max-height: 280px;
+  `}
+`

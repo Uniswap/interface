@@ -17,7 +17,6 @@ import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import { isMobile } from 'react-device-detect'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -168,13 +167,11 @@ export function CurrencySearch({
 
         <div style={{ flex: '1' }}>
           <CurrencyList
-            height={isMobile ? 280 : 448}
             showETH={showETH}
             currencies={filteredSortedTokens}
             onCurrencySelect={handleCurrencySelect}
             otherCurrency={otherSelectedCurrency}
             selectedCurrency={selectedCurrency}
-            fixedListRef={fixedList}
           />
         </div>
       </Column>
