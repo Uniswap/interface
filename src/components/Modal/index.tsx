@@ -11,14 +11,14 @@ const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   &[data-reach-dialog-overlay] {
-    z-index: 2;
+    z-index: 4;
     overflow: hidden;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background-color: ${({ theme }) => transparentize(0.68, theme.purpleOverlay)};
+    background-color: ${({ theme }) => transparentize(0.65, theme.black)};
   }
 `
 
