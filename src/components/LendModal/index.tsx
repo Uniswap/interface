@@ -375,7 +375,7 @@ function LendModal({
       value = null
     }
 
-    setPendingText('Supply ' + lendInputValue + ' ' + cToken.symbol)
+    setPendingText(t('supplyUppercase') + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -386,7 +386,7 @@ function LendModal({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Supply ' + lendInputValue + ' ' + cToken.symbol
+            summary: t('supplyUppercase') + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -428,7 +428,7 @@ function LendModal({
       args = [amount]
     }
 
-    setPendingText('Withdraw ' + lendInputValue + ' ' + cToken.symbol)
+    setPendingText(t('withdrawUppercase') + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -439,7 +439,7 @@ function LendModal({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Withdraw ' + lendInputValue + ' ' + cToken.symbol
+            summary: t('withdrawUppercase') + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -471,7 +471,7 @@ function LendModal({
     const args: Array<string | string[] | number> = [amount]
     const value: BigNumber | null = null
 
-    setPendingText('Borrow ' + lendInputValue + ' ' + cToken.symbol)
+    setPendingText(t('borrowUppercase') + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -482,7 +482,7 @@ function LendModal({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Borrow ' + lendInputValue + ' ' + cToken.symbol
+            summary: t('borrowUppercase') + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -540,7 +540,7 @@ function LendModal({
       value = null
     }
 
-    setPendingText('Repay ' + lendInputValue + ' ' + cToken.symbol)
+    setPendingText(t('repayUppercase') + lendInputValue + ' ' + cToken.symbol)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -551,7 +551,7 @@ function LendModal({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Repay ' + lendInputValue + ' ' + cToken.symbol
+            summary: t('repayUppercase') + lendInputValue + ' ' + cToken.symbol
           })
 
           setTxHash(response.hash)
@@ -577,9 +577,9 @@ function LendModal({
       txHash ? (
         <></>
       ) : (
-        <TransactionErrorContent onDismiss={handleDismissConfirmation} message={'Transaction rejected.'} />
+        <TransactionErrorContent onDismiss={handleDismissConfirmation} message={t('transactionRejected')} />
       ),
-    [handleDismissConfirmation, txHash]
+    [handleDismissConfirmation, t, txHash]
   )
 
   return (

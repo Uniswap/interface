@@ -4,6 +4,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -138,6 +139,8 @@ export default function WalletModal({
   const toggleWalletModal = useWalletModalToggle()
 
   const previousAccount = usePrevious(account)
+
+  const { t } = useTranslation()
 
   // close on connection, when logged out before
   useEffect(() => {
@@ -330,12 +333,12 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              Back
+              {t('back')}
             </HoverText>
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>Connect to a wallet</HoverText>
+            <HoverText>{t('connectToWallet')}</HoverText>
           </HeaderRow>
         )}
         <ContentWrapper>
@@ -351,8 +354,8 @@ export default function WalletModal({
           )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
+              <span>{t('newToEthereum')} &nbsp;</span>{' '}
+              <ExternalLink href="https://ethereum.org/wallets/">{t('learnMoreWallets')}</ExternalLink>
             </Blurb>
           )}
         </ContentWrapper>

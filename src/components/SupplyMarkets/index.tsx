@@ -229,7 +229,7 @@ function SupplyMarkets({
     const args: Array<string | string[] | number> = [[cToken.cAddress]]
     const value: BigNumber | null = null
 
-    setPendingText('Enter ' + cToken.symbol + ' as Collateral')
+    setPendingText(t('enter') + cToken.symbol + t('asCollateral'))
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -240,7 +240,7 @@ function SupplyMarkets({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Enter ' + cToken.symbol + ' as Collateral'
+            summary: t('enter') + cToken.symbol + t('asCollateral')
           })
 
           setTxHash(response.hash)
@@ -270,7 +270,7 @@ function SupplyMarkets({
     const args: Array<string | string[] | number> = [cToken.cAddress]
     const value: BigNumber | null = null
 
-    setPendingText('Exit ' + cToken.symbol + ' as Collateral')
+    setPendingText(t('exit') + cToken.symbol + t('asCollateral'))
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -281,7 +281,7 @@ function SupplyMarkets({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: 'Exit ' + cToken.symbol + ' as Collateral'
+            summary: t('exit') + cToken.symbol + t('asCollateral')
           })
 
           setTxHash(response.hash)
