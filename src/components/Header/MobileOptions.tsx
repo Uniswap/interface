@@ -7,6 +7,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { MoreHorizontal, X } from 'react-feather'
 import { RowFixed } from '../Row'
 import { darken } from 'polished'
+import { GovernanceText } from './styleds'
 
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
@@ -52,10 +53,10 @@ const MenuFlyout = styled.span`
 const ComingSoonBadge = styled.div`
   self-align: center;
   font-size: 9px;
-  text-align:center;
-  background-color: ${({ theme }) => (theme.bg4)};
+  text-align: center;
+  background-color: ${({ theme }) => theme.bg4};
   border-radius: 3px;
-  
+
   width: fit-content;
   margin: auto;
   padding: 2px 5px;
@@ -65,7 +66,7 @@ const StyledNavLinkWithBadge = styled.a`
   top: 7px;
   position: relative;
   margin: 0px 12px;
-  cursor:default;
+  cursor: default;
 `
 
 const StyledExternalLink = styled(ExternalLink)<{ isActive?: boolean }>`
@@ -100,18 +101,18 @@ export default function MobileOptions() {
       {open && (
         <MenuContainer>
           <MenuFlyout>
-            <RowFixed style={{ alignSelf: "center", margin: "1rem" }}>
+            <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
               <StyledNavLinkWithBadge href="/#">
-                Governance
+                <GovernanceText>Governance</GovernanceText>
                 <ComingSoonBadge>COMING SOON</ComingSoonBadge>
               </StyledNavLinkWithBadge>
             </RowFixed>
-            <RowFixed style={{ alignSelf: "center", margin: "1rem" }}>
+            <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
               <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
                 Charts <span style={{ fontSize: '11px' }}>↗</span>
               </StyledExternalLink>
             </RowFixed>
-            <RowFixed style={{ alignSelf: "center", margin: "1rem" }}>
+            <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
               <X size={24} onClick={toggle} />
             </RowFixed>
           </MenuFlyout>
