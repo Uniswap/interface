@@ -8,8 +8,7 @@ import styled from 'styled-components'
 import { transparentize } from 'polished'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis } from '../../connectors'
-import { OVERLAY_READY } from '../../connectors/Fortmatic'
+import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
@@ -199,13 +198,6 @@ export default function WalletModal({
       })
   }
 
-  // close wallet modal if fortmatic modal is active
-  useEffect(() => {
-    fortmatic.on(OVERLAY_READY, () => {
-      toggleWalletModal()
-    })
-  }, [toggleWalletModal])
-
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
@@ -213,11 +205,6 @@ export default function WalletModal({
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
-        //disable portis on mobile for now
-        if (option.connector === portis) {
-          return null
-        }
-
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
@@ -340,7 +327,7 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              <TYPE.body fontWeight={500} fontSize={16}>
+              <TYPE.body color="text4" fontWeight={500} fontSize="20px" lineHeight="24px" letterSpacing="-0.01em">
                 Back
               </TYPE.body>
             </HoverText>
@@ -363,14 +350,12 @@ export default function WalletModal({
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
-          {walletView !== WALLET_VIEWS.PENDING && (
-            <Blurb>
-              <TYPE.body fontWeight={500} fontSize={14} color="text5">
-                New to Ethereum? &nbsp;
-              </TYPE.body>{' '}
-              <StyledExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</StyledExternalLink>
-            </Blurb>
-          )}
+          <Blurb>
+            <TYPE.body fontWeight={500} fontSize={14} color="text5">
+              New to Ethereum? &nbsp;
+            </TYPE.body>{' '}
+            <StyledExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</StyledExternalLink>
+          </Blurb>
         </ContentWrapper>
       </UpperSection>
     )

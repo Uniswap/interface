@@ -30,7 +30,7 @@ const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   margin-top: 0;
   cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
   transition: border 0.3s ease;
-  background-color: ${({ theme }) => theme.primary1};
+  background-color: ${({ theme, clickable }) => (!clickable ? 'transparent' : theme.primary1)};
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
 

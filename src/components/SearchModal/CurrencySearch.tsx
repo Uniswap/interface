@@ -17,7 +17,6 @@ import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import AutoSizer from 'react-virtualized-auto-sizer'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -26,7 +25,6 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
-  onChangeList: () => void
 }
 
 const Wrapper = styled.div`
@@ -41,8 +39,7 @@ export function CurrencySearch({
   otherSelectedCurrency,
   showCommonBases,
   onDismiss,
-  isOpen,
-  onChangeList
+  isOpen
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -169,19 +166,13 @@ export function CurrencySearch({
         <Separator />
 
         <div style={{ flex: '1' }}>
-          <AutoSizer disableWidth>
-            {({ height }) => (
-              <CurrencyList
-                height={height}
-                showETH={showETH}
-                currencies={filteredSortedTokens}
-                onCurrencySelect={handleCurrencySelect}
-                otherCurrency={otherSelectedCurrency}
-                selectedCurrency={selectedCurrency}
-                fixedListRef={fixedList}
-              />
-            )}
-          </AutoSizer>
+          <CurrencyList
+            showETH={showETH}
+            currencies={filteredSortedTokens}
+            onCurrencySelect={handleCurrencySelect}
+            otherCurrency={otherSelectedCurrency}
+            selectedCurrency={selectedCurrency}
+          />
         </div>
       </Column>
     </Wrapper>
