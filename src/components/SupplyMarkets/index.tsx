@@ -179,14 +179,12 @@ function ItemPannel({
   }
   children: React.ReactNode
 }) {
-  useCTokenApproveCallback(marketCToken, walletBalances, marketCToken?.cAddress)
+  useCTokenApproveCallback(marketCToken, walletBalances, marketCToken.cAddress)
   return <>{children}</>
 }
 
-const ZERO = JSBI.BigInt(0)
-
-export function getSupplyApy(ctoken: CToken | undefined): Fraction {
-  return new Fraction(ctoken?.getSupplyApy() ?? ZERO, APY_BASE)
+export function getSupplyApy(ctoken: CToken): Fraction {
+  return new Fraction(ctoken.getSupplyApy(), APY_BASE)
 }
 
 function SupplyMarkets({
@@ -336,13 +334,7 @@ function SupplyMarkets({
   console.log('check--', allMarketCTokens, suppliedAsset, supplyAsset)
 
   function canExitMarkets(): boolean {
-    if (
-      collateralToken &&
-      collateralToken.supplyBalance &&
-      collateralToken?.exchangeRateMantissa &&
-      collateralToken?.underlyingPrice &&
-      collateralToken?.collateralFactorMantissa
-    ) {
+    if (collateralToken) {
       const canExitMarkets: boolean = JSBI.lessThan(
         JSBI.subtract(limit, collateralToken.getSuppliedValue()),
         borrowTotalBalance
@@ -471,9 +463,9 @@ function SupplyMarkets({
             </AssetWrapLabels>
             <AssetItemWrap onClick={() => setShowLendConfirmation(true)}>
               {suppliedAsset.map((item: CToken) => (
-                <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
+                <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item.symbol}>
                   <AssetItem
-                    key={item?.symbol}
+                    key={item.symbol}
                     onClick={() => {
                       if (TokenLoadState) {
                         setLendToken(item)
@@ -488,7 +480,7 @@ function SupplyMarkets({
                         <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                       )}
                       <ItemWrap>
-                        <SymbolWrap>{item?.symbol}</SymbolWrap>
+                        <SymbolWrap>{item.symbol}</SymbolWrap>
                         <MobileWrap>{getSupplyApy(item).toFixed(2) ?? 0}%</MobileWrap>
                       </ItemWrap>
                     </AssetLogo>
@@ -499,7 +491,7 @@ function SupplyMarkets({
                       <div>${formatData(getSupplyTotalBalance([item])).toFixed(2) ?? ''}</div>
                       <ItemBottomWrap>
                         {new TokenAmount(item, item.getSupplyBalanceAmount()).toSignificant()}
-                        {' ' + item?.symbol}
+                        {' ' + item.symbol}
                       </ItemBottomWrap>
                     </ItemWrap>
                     <Switch
@@ -533,7 +525,7 @@ function SupplyMarkets({
           <AssetItemWrap>
             {!!supplyAsset.length
               ? supplyAsset.map((item: CToken) => (
-                  <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
+                  <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item.symbol}>
                     <AssetItem
                       onClick={() => {
                         if (TokenLoadState) {
@@ -549,7 +541,7 @@ function SupplyMarkets({
                           <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                         )}
                         <ItemWrap>
-                          <SymbolWrap>{item?.symbol}</SymbolWrap>
+                          <SymbolWrap>{item.symbol}</SymbolWrap>
                           <MobileWrap>{getSupplyApy(item).toFixed(2) ?? 0}%</MobileWrap>
                         </ItemWrap>
                       </AssetLogo>
@@ -558,10 +550,10 @@ function SupplyMarkets({
                       </ItemWrap>
                       <ItemWrap>
                         {walletBalances[item.address]?.toSignificant(4) ?? '0'}
-                        {' ' + item?.symbol}
+                        {' ' + item.symbol}
                       </ItemWrap>
                       <Switch
-                        isActive={item?.canBeCollateral ?? false}
+                        isActive={item.canBeCollateral ?? false}
                         toggle={() => {
                           if (TokenLoadState) {
                             setCollateralToken(item)

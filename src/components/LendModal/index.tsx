@@ -178,7 +178,10 @@ function LendModal({
 
   console.log('use txHash and attemptingTxn later like Add Liquidity', attemptingTxn, txHash)
 
-  const walletBalanceAmount = walletBalances[lendToken?.address ?? '']
+  const walletBalanceAmount = useMemo(() => walletBalances[lendToken?.address ?? ''], [
+    walletBalances,
+    lendToken?.address
+  ])
 
   const addTransaction = useTransactionAdder()
 
@@ -203,13 +206,12 @@ function LendModal({
   const inputAmount = useMemo(() => tryParseAmount(lendInputValue, lendToken), [lendToken, lendInputValue])
 
   const changedBorrowLimit = useMemo(() => {
-    if (lendToken && lendInputValue) {
+    if (lendToken) {
       const price = lendToken.getUnderlyingPrice()
-      const parseInputAmount = JSBI.BigInt(inputAmount ? inputAmount.raw.toString() : ZERO)
-      let borrowLimit = JSBI.divide(JSBI.multiply(price, parseInputAmount), EXA_BASE)
-      let changedBorrowLimit
+      const parseInputAmount = inputAmount?.raw ?? ZERO
+      let changedBorrowLimit: JSBI = ZERO
       if (lendMarket === LendField.SUPPLY) {
-        borrowLimit = JSBI.divide(
+        const borrowLimit = JSBI.divide(
           JSBI.multiply(JSBI.multiply(price, parseInputAmount), lendToken.getCollateralFactorMantissa()),
           LIMIT_BASE
         )
@@ -219,6 +221,7 @@ function LendModal({
           changedBorrowLimit = JSBI.subtract(limit, borrowLimit)
         }
       } else {
+        const borrowLimit = JSBI.divide(JSBI.multiply(price, parseInputAmount), EXA_BASE)
         if (tabItemActive === LendField.BORROW) {
           changedBorrowLimit = JSBI.add(borrowTotalBalance, borrowLimit)
         } else {
@@ -228,7 +231,7 @@ function LendModal({
       return formatData(changedBorrowLimit)
     }
     return ZERO_FRACTION
-  }, [lendToken, lendInputValue, inputAmount, lendMarket, tabItemActive, limit, borrowTotalBalance])
+  }, [lendToken, inputAmount, lendMarket, tabItemActive, limit, borrowTotalBalance])
 
   const changedBorrowLimitUsed = useMemo(() => {
     if (lendToken && lendInputValue) {
@@ -277,85 +280,81 @@ function LendModal({
     return cTokenMaxAmountSpend(walletBalanceAmount)
   }
 
-  function onWithdrawMax(lendToken: CToken | undefined, safe = true): CurrencyAmount | undefined {
-    if (lendToken) {
-      const collateralFactorMantissa = lendToken.getCollateralFactorMantissa()
-      if (!lendToken.canBeCollateral) {
-        const amount = lendToken.getSupplyBalanceAmount()
+  function onWithdrawMax(lendToken: CToken, safe = true): CurrencyAmount {
+    const collateralFactorMantissa = lendToken.getCollateralFactorMantissa()
+    if (!lendToken.canBeCollateral) {
+      const amount = lendToken.getSupplyBalanceAmount()
+      return new TokenAmount(lendToken, amount)
+    } else {
+      const price = lendToken.getUnderlyingPrice()
+      const suppliedValue = lendToken.getSuppliedValue()
+      const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
+      const expectTotalBalnce = JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), safe ? EIGHT : TEN)
+      const remainValue: JSBI = JSBI.subtract(
+        // divide 8/10
+        JSBI.greaterThan(expectTotalBalnce, limit) ? limit : expectTotalBalnce,
+        otherSuppliedTotalValue
+      )
+      const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
+      if (JSBI.greaterThan(remainValue, ZERO)) {
+        const safeValue = JSBI.subtract(
+          lendToken.getSupplyBalanceJSBI(),
+          JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
+        )
+        const amount = JSBI.divide(JSBI.multiply(safeValue, EXA_BASE), price)
         return new TokenAmount(lendToken, amount)
       } else {
-        const price = lendToken.getUnderlyingPrice()
-        const suppliedValue = lendToken.getSuppliedValue()
-        const otherSuppliedTotalValue: JSBI = JSBI.subtract(limit, suppliedValue)
-        const expectTotalBalnce = JSBI.divide(JSBI.multiply(borrowTotalBalance, TEN), safe ? EIGHT : TEN)
-        const remainValue: JSBI = JSBI.subtract(
-          // divide 8/10
-          JSBI.greaterThan(expectTotalBalnce, limit) ? limit : expectTotalBalnce,
-          otherSuppliedTotalValue
-        )
-        const owedValue = JSBI.greaterThan(remainValue, ZERO) ? remainValue : ZERO
-        if (JSBI.greaterThan(remainValue, ZERO)) {
-          const safeValue = JSBI.subtract(
-            lendToken.getSupplyBalanceJSBI(),
-            JSBI.divide(JSBI.multiply(owedValue, EXA_BASE), collateralFactorMantissa)
-          )
-          const amount = JSBI.divide(JSBI.multiply(safeValue, EXA_BASE), price)
-          return new TokenAmount(lendToken, amount)
-        } else {
-          const amount = lendToken.getSupplyBalanceAmount()
-          return new TokenAmount(lendToken, amount)
-        }
+        const amount = lendToken.getSupplyBalanceAmount()
+        return new TokenAmount(lendToken, amount)
       }
     }
-    return undefined
   }
 
-  function onBorrowMax(lendToken: CToken | undefined, safe = true): CurrencyAmount | undefined {
-    if (lendToken) {
-      const price = lendToken.getUnderlyingPrice()
-      const borrowMaxValue = JSBI.subtract(
-        // multiply 0.8
-        JSBI.divide(JSBI.multiply(limit, safe ? EIGHT : TEN), TEN),
-        borrowTotalBalance
-      )
-      const numerator = JSBI.greaterThan(borrowMaxValue, ZERO) ? borrowMaxValue : ZERO
-      const liquidity = lendToken.getLiquidity()
-      const borrowMaxAmount = JSBI.divide(JSBI.multiply(numerator, EXA_BASE), price)
+  function onBorrowMax(lendToken: CToken, safe = true): CurrencyAmount {
+    const price = lendToken.getUnderlyingPrice()
+    const borrowMaxValue = JSBI.subtract(
+      // multiply 0.8
+      JSBI.divide(JSBI.multiply(limit, safe ? EIGHT : TEN), TEN),
+      borrowTotalBalance
+    )
+    const numerator = JSBI.greaterThan(borrowMaxValue, ZERO) ? borrowMaxValue : ZERO
+    const liquidity = lendToken.getLiquidity()
+    const borrowMaxAmount = JSBI.divide(JSBI.multiply(numerator, EXA_BASE), price)
 
-      if (JSBI.greaterThan(borrowMaxAmount, liquidity)) {
-        return new TokenAmount(lendToken, liquidity)
-      } else {
-        return new TokenAmount(lendToken, borrowMaxAmount)
-      }
+    if (JSBI.greaterThan(borrowMaxAmount, liquidity)) {
+      return new TokenAmount(lendToken, liquidity)
+    } else {
+      return new TokenAmount(lendToken, borrowMaxAmount)
     }
-    return undefined
   }
 
-  function onRepayMax(lendToken: CToken | undefined): CurrencyAmount | undefined {
-    if (lendToken && walletBalanceAmount) {
-      const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
-      if (JSBI.greaterThan(walletBalanceAmount.raw, borrowAmount.raw)) {
-        return borrowAmount
-      } else {
-        return walletBalanceAmount
-      }
+  function onRepayMax(lendToken: CToken): TokenAmount | undefined {
+    const borrowAmount = new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount())
+    if (walletBalanceAmount && JSBI.greaterThan(walletBalanceAmount.raw, borrowAmount.raw)) {
+      return borrowAmount
+    } else {
+      return walletBalanceAmount
     }
-    return undefined
   }
+
+  const lendingInfoWithdrawMax = lendToken ? onWithdrawMax(lendToken, false) : undefined
+  const lendingInfoOnBorrowMax = lendToken ? onBorrowMax(lendToken, false) : undefined
 
   const { inputError, inputText } = useLendingInfo(
     lendInputValue,
     lendToken,
     tabItemActive,
     limit,
-    onWithdrawMax(lendToken, false),
-    onBorrowMax(lendToken, false),
-    walletBalanceAmount
+    lendingInfoWithdrawMax,
+    lendingInfoOnBorrowMax,
+    walletBalanceAmount?.raw
   )
 
   async function onMint(cToken: CToken, lendInputValue: string, isETH: boolean) {
     const inputAmount = tryParseAmount(lendInputValue, cToken)
-    const amount = inputAmount?.raw.toString()
+    if (!inputAmount) throw new Error('missing input amount')
+
+    const amount = inputAmount.raw.toString()
     if (!chainId || !library || !account || !amount) return
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
@@ -409,7 +408,9 @@ function LendModal({
 
   async function onRedeem(cToken: CToken, lendInputValue: string) {
     const inputAmount = tryParseAmount(lendInputValue, cToken)
-    const amount = inputAmount?.raw.toString()
+    if (!inputAmount) throw new Error('missing input amount')
+
+    const amount = inputAmount.raw.toString()
 
     if (!chainId || !library || !account || !amount) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
@@ -462,7 +463,9 @@ function LendModal({
 
   async function onBorrow(cToken: CToken, lendInputValue: string) {
     const inputAmount = tryParseAmount(lendInputValue, cToken)
-    const amount = inputAmount?.raw.toString()
+    if (!inputAmount) throw new Error('missing input amount')
+
+    const amount = inputAmount.raw.toString()
     if (!chainId || !library || !account || !amount) return
     const cTokenContract = getCERC20Contract(chainId, cToken.cAddress, library, account)
 
@@ -505,7 +508,9 @@ function LendModal({
 
   async function onRepayBorrow(cToken: CToken, lendInputValue: string, isETH: boolean) {
     const inputAmount = tryParseAmount(lendInputValue, cToken)
-    const amount = inputAmount?.raw.toString()
+    if (!inputAmount) throw new Error('missing input amount')
+
+    const amount = inputAmount.raw.toString()
     if (!chainId || !library || !account || !amount) return
 
     let estimate,
@@ -627,10 +632,10 @@ function LendModal({
                             setLendInputValue(onSupplyMax()?.toExact() ?? '')
                             break
                           case LendField.WITHDRAW:
-                            setLendInputValue(onWithdrawMax(lendToken, true)?.toExact() ?? '')
+                            setLendInputValue(onWithdrawMax(lendToken, true).toExact() ?? '')
                             break
                           case LendField.BORROW:
-                            setLendInputValue(onBorrowMax(lendToken, true)?.toExact() ?? '')
+                            setLendInputValue(onBorrowMax(lendToken, true).toExact() ?? '')
                             break
                           case LendField.REPAY:
                             setLendInputValue(onRepayMax(lendToken)?.toExact() ?? '')
@@ -726,9 +731,9 @@ function LendModal({
                     </Text>
                   </AutoRow>
                   <RateCalculation>
-                    {lendMarket === LendField.SUPPLY
+                    {lendToken && lendMarket === LendField.SUPPLY
                       ? getSupplyApy(lendToken).toFixed(2)
-                      : getBorrowApy(lendToken).toFixed(2)}
+                      : lendToken && getBorrowApy(lendToken).toFixed(2)}
                     %
                   </RateCalculation>
                 </RatePanel>
@@ -746,7 +751,7 @@ function LendModal({
                       <Text>
                         $
                         {lendMarket === LendField.BORROW
-                          ? formatData(borrowTotalBalance)?.toFixed(2)
+                          ? formatData(borrowTotalBalance).toFixed(2)
                           : formatData(limit).toFixed(2)}
                       </Text>
                       {lendInputValue && (
@@ -849,14 +854,10 @@ function LendModal({
                 </Text>
                 {(lendToken && tabItemActive === LendField.WITHDRAW) ||
                 (lendToken && tabItemActive === LendField.BORROW)
-                  ? Number(
-                      parseFloat(
-                        tabItemActive === LendField.WITHDRAW
-                          ? new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toSignificant()
-                          : new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toSignificant()
-                      ).toFixed(4)
-                    ) || '0'
-                  : walletBalanceAmount?.toSignificant() || '0'}
+                  ? tabItemActive === LendField.WITHDRAW
+                    ? new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toFixed(4)
+                    : new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toFixed(4)
+                  : (walletBalanceAmount && walletBalanceAmount.toSignificant()) || '0'}
                 {' ' + lendToken?.symbol}
               </AutoRow>
             </AutoColumn>

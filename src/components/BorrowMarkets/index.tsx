@@ -145,8 +145,8 @@ function ItemPannel({
 
 const ZERO = JSBI.BigInt(0)
 
-export function getBorrowApy(ctoken: CToken | undefined): Fraction {
-  return new Fraction(ctoken?.getBorrowApy() ?? ZERO, APY_BASE)
+export function getBorrowApy(ctoken: CToken): Fraction {
+  return new Fraction(ctoken.getBorrowApy() ?? ZERO, APY_BASE)
 }
 
 function BorrowMarkets({
@@ -219,9 +219,9 @@ function BorrowMarkets({
             </AssetWrapLabels>
             <AssetItemWrap>
               {borrowedAsset.map((item: CToken) => (
-                <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
+                <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item.symbol}>
                   <AssetItem
-                    key={item?.symbol}
+                    key={item.symbol}
                     onClick={() => {
                       if (TokenLoadState) {
                         setLendToken(item)
@@ -236,7 +236,7 @@ function BorrowMarkets({
                         <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                       )}
                       <ItemWrap>
-                        <SymbolWrap>{item?.symbol}</SymbolWrap>
+                        <SymbolWrap>{item.symbol}</SymbolWrap>
                         <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
                       </ItemWrap>
                     </AssetLogo>
@@ -247,7 +247,7 @@ function BorrowMarkets({
                       <div>${formatData(getBorrowTotalBalance([item])).toFixed(2) ?? ''}</div>
                       <ItemBottomWrap>
                         {new TokenAmount(item, item.getBorrowBalanceAmount()).toSignificant()}
-                        {' ' + item?.symbol}
+                        {' ' + item.symbol}
                       </ItemBottomWrap>
                     </ItemWrap>
                     <ItemWrap>
@@ -274,9 +274,9 @@ function BorrowMarkets({
           <AssetItemWrap>
             {!!borrowAsset.length
               ? borrowAsset.map((item: CToken) => (
-                  <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item?.symbol}>
+                  <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item.symbol}>
                     <AssetItem
-                      key={item?.symbol}
+                      key={item.symbol}
                       onClick={() => {
                         if (TokenLoadState) {
                           setLendToken(item)
@@ -291,7 +291,7 @@ function BorrowMarkets({
                           <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                         )}
                         <ItemWrap>
-                          <SymbolWrap>{item?.symbol}</SymbolWrap>
+                          <SymbolWrap>{item.symbol}</SymbolWrap>
                           <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
                         </ItemWrap>
                       </AssetLogo>
@@ -300,9 +300,9 @@ function BorrowMarkets({
                       </ItemWrap>
                       <ItemWrap>
                         {walletBalances[item.address]?.toSignificant(4) ?? '0'}
-                        {' ' + item?.symbol}
+                        {' ' + item.symbol}
                       </ItemWrap>
-                      <ItemWrap>${showDollarValue(item?.getLiquidityValue())}</ItemWrap>
+                      <ItemWrap>${showDollarValue(item.getLiquidityValue())}</ItemWrap>
                     </AssetItem>
                   </ItemPannel>
                 ))
