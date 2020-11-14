@@ -480,7 +480,7 @@ function SupplyMarkets({
                         <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                       )}
                       <ItemWrap>
-                        <SymbolWrap>{item.symbol}</SymbolWrap>
+                        <SymbolWrap>{item.name}</SymbolWrap>
                         <MobileWrap>{getSupplyApy(item).toFixed(2) ?? 0}%</MobileWrap>
                       </ItemWrap>
                     </AssetLogo>
@@ -541,7 +541,7 @@ function SupplyMarkets({
                           <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                         )}
                         <ItemWrap>
-                          <SymbolWrap>{item.symbol}</SymbolWrap>
+                          <SymbolWrap>{item.name}</SymbolWrap>
                           <MobileWrap>{getSupplyApy(item).toFixed(2) ?? 0}%</MobileWrap>
                         </ItemWrap>
                       </AssetLogo>

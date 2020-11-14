@@ -236,7 +236,7 @@ function BorrowMarkets({
                         <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                       )}
                       <ItemWrap>
-                        <SymbolWrap>{item.symbol}</SymbolWrap>
+                        <SymbolWrap>{item.name}</SymbolWrap>
                         <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
                       </ItemWrap>
                     </AssetLogo>
@@ -291,7 +291,7 @@ function BorrowMarkets({
                           <CurrencyIcon logo0={item.logo0} style={{ marginRight: '10px' }} />
                         )}
                         <ItemWrap>
-                          <SymbolWrap>{item.symbol}</SymbolWrap>
+                          <SymbolWrap>{item.name}</SymbolWrap>
                           <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
                         </ItemWrap>
                       </AssetLogo>

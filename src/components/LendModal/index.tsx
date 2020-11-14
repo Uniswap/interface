@@ -611,7 +611,7 @@ function LendModal({
                   <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '10px' }} />
                 )}
                 <Text fontWeight={500} fontSize={'1.1rem'}>
-                  {lendToken?.symbol}
+                  {lendToken?.name}
                 </Text>
               </AssetLogo>
               <StyledCloseIcon onClick={() => setShowLendConfirmation(false)} />
