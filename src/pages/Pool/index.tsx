@@ -7,7 +7,7 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { OutlineCard } from '../../components/Card'
-import { TYPE, HideSmall } from '../../theme'
+import { TYPE, HideSmall, StyledInternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
@@ -176,6 +176,13 @@ export default function Pool() {
             ACCOUNT ANALYTICS AND ACCRUED FEES <span style={{ fontSize: '11px', marginLeft: '4px' }}>↗</span>
           </Text>
         </ButtonSecondary>
+
+        <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
+          Don't see a pool you joined?{' '}
+          <StyledInternalLink color="text5" id="import-pool-link" to="/find">
+            Import it.
+          </StyledInternalLink>
+        </TYPE.body>
 
         <VoteCard style={{ marginTop: '32px' }}>
           <CardSection>

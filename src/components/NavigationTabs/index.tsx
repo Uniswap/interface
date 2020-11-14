@@ -71,7 +71,7 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
 export function FindPoolTabs() {
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
+      <RowBetween mb="16px">
         <HistoryLink to="/pool">
           <StyledArrowLeft />
         </HistoryLink>

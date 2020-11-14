@@ -5,6 +5,7 @@ import { darken, lighten, transparentize } from 'polished'
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
 const Base = styled(RebassButton)<{
   padding?: string
@@ -86,22 +87,16 @@ export const ButtonSecondary = styled(Base)`
 `
 
 export const ButtonOutlined = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: transparent;
+  border: 8px solid;
+  border-radius: 8px;
+  border-image: url(${border8pxRadius}) 8;
+  background-color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
   color: ${({ theme }) => theme.text1};
-
-  &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
-  }
-  &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
-  }
-  &:active {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
-  }
+  text-transform: initial;
+  cursor: pointer;
   &:disabled {
     opacity: 50%;
-    cursor: auto;
+    cursor: not-allowed;
   }
 `
 
@@ -212,12 +207,16 @@ export function ButtonDropdown({ disabled = false, children, ...rest }: { disabl
   )
 }
 
+const StyledChevronDown = styled(ChevronDown)`
+  color: ${({ theme }) => theme.text5};
+`
+
 export function ButtonDropdownLight({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
   return (
     <ButtonOutlined {...rest} disabled={disabled}>
       <RowBetween>
         <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
-        <ChevronDown size={24} />
+        <StyledChevronDown size={20} />
       </RowBetween>
     </ButtonOutlined>
   )
