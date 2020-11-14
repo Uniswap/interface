@@ -42,6 +42,8 @@ const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
 const EIGHT = JSBI.BigInt(8)
 const TEN = JSBI.BigInt(10)
+const ONE_HUNDRED = JSBI.BigInt(100)
+
 const ZERO_FRACTION = new Fraction(ZERO, ONE)
 
 const StyledCloseIcon = styled(X)`
@@ -234,35 +236,35 @@ function LendModal({
   }, [lendToken, inputAmount, lendMarket, tabItemActive, limit, borrowTotalBalance])
 
   const changedBorrowLimitUsed = useMemo(() => {
-    if (lendToken && lendInputValue) {
-      let changedBorrowLimitUsed
+    if (lendToken) {
+      let changedBorrowLimitUsed: Fraction
       const fraOne = new Fraction(EXA_BASE, ONE)
       if (lendMarket === LendField.SUPPLY) {
         if (JSBI.equal(borrowTotalBalance, ZERO)) {
-          changedBorrowLimitUsed = new Fraction(ZERO, ONE)
+          changedBorrowLimitUsed = ZERO_FRACTION
         } else {
           changedBorrowLimitUsed = fraOne
             .divide(changedBorrowLimit.multiply(JSBI.divide(LIMIT_BASE, borrowTotalBalance)))
-            .multiply('100')
+            .multiply(ONE_HUNDRED)
         }
       } else {
         if (JSBI.equal(limit, ZERO)) {
-          changedBorrowLimitUsed = new Fraction(ZERO, ONE)
+          changedBorrowLimitUsed = ZERO_FRACTION
         } else {
           changedBorrowLimitUsed = changedBorrowLimit
             .multiply(EXA_BASE)
             .divide(limit)
-            .multiply('100')
+            .multiply(ONE_HUNDRED)
         }
       }
-      return changedBorrowLimitUsed.greaterThan('100')
-        ? new Fraction('100', '1')
-        : changedBorrowLimitUsed.lessThan('0')
+      return changedBorrowLimitUsed.greaterThan(ONE_HUNDRED)
+        ? new Fraction(ONE_HUNDRED, ONE)
+        : changedBorrowLimitUsed.lessThan(ZERO)
         ? ZERO_FRACTION
         : changedBorrowLimitUsed
     }
     return ZERO_FRACTION
-  }, [borrowTotalBalance, changedBorrowLimit, lendInputValue, lendMarket, lendToken, limit])
+  }, [borrowTotalBalance, changedBorrowLimit, lendMarket, lendToken, limit])
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
