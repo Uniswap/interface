@@ -20,9 +20,9 @@ import { useActiveWeb3React } from '../../hooks'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1280px;
-  width: 80%;
+  width: 90%;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    width: 86%;
+    width: 90%;
   `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;

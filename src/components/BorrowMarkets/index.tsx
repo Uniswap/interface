@@ -42,9 +42,9 @@ const AssetWrapLabels = styled.div`
   padding: 1rem 1.75rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   align-items: center;
-  grid-template-columns: 4fr 2fr 4fr 3fr;
+  grid-template-columns: 200px 2fr 4fr 90px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 4fr 4fr 3fr;
+    grid-template-columns: 140px 4fr 70px;
     padding: 0.8rem 1rem;
   `};
 `
@@ -76,9 +76,9 @@ const AssetItem = styled.div<{ justifyItems?: string }>`
   font-weight: 500;
   letter-spacing: 0;
   transition: none;
-  grid-template-columns: 4fr 2fr 4fr 3fr;
+  grid-template-columns: 200px 2fr 4fr 90px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 4fr 4fr 3fr;
+    grid-template-columns: 140px 4fr 70px;
     padding: 0.8rem 1rem;
   `};
   :hover {
@@ -99,6 +99,7 @@ const ItemWrap = styled.div<{ mobileHide?: boolean }>`
   align-items: right;
   align-self: center;
   text-align: right;
+  font-size: 0.95rem;
   ${({ theme, mobileHide }) => theme.mediaWidth.upToMedium`
     display: ${mobileHide ? 'none' : 'flex'};
     font-size: 0.8rem;
@@ -125,7 +126,10 @@ const SymbolWrap = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 6rem;
+  width: 8rem;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 6rem;
+  `};
 `
 
 function ItemPannel({
