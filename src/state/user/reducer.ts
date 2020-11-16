@@ -84,7 +84,8 @@ export default createReducer(initialState, builder =>
       state.lastUpdateVersionTimestamp = currentTimestamp()
     })
     .addCase(updateUserDarkMode, (state, action) => {
-      state.userDarkMode = action.payload.userDarkMode
+      // TODO: set this properly once light mode is a thing
+      state.userDarkMode = true //action.payload.userDarkMode
       state.timestamp = currentTimestamp()
     })
     .addCase(updateMatchesDarkMode, (state, action) => {
