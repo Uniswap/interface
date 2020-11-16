@@ -46,6 +46,7 @@
     "ethers": "^5.0.7",
     "fontsource-montserrat": "^3.0.9",
     "git-revision-webpack-plugin": "^3.0.6",
+    "http-server": "^0.12.3",
     "i18next": "^15.0.9",
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
@@ -93,7 +94,8 @@
     "ipfs-build": "cross-env PUBLIC_URL=\".\" GENERATE_SOURCEMAP=false react-app-rewired build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'"
+    "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
+    "build-test": "http-server build"
   },
   "eslintConfig": {
     "extends": "react-app",
