@@ -180,10 +180,7 @@ function LendModal({
 
   console.log('use txHash and attemptingTxn later like Add Liquidity', attemptingTxn, txHash)
 
-  const walletBalanceAmount = useMemo(() => walletBalances[lendToken?.address ?? ''], [
-    walletBalances,
-    lendToken?.address
-  ])
+  const walletBalanceAmount = useMemo(() => walletBalances[lendToken?.address ?? ''], [walletBalances, lendToken])
 
   const addTransaction = useTransactionAdder()
 
