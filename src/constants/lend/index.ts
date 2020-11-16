@@ -43,6 +43,17 @@ const CTOKEN_LISTS: {
       ''
     ],
     [
+      '0x453bED86c774a7c00EbBB1F74A0Ff1a38C8812ae',
+      '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+      18,
+      'dUNI',
+      'Deerfi UNI',
+      'UNI',
+      'Uniswap',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
+      ''
+    ],
+    [
       '0x9c0ADd57D18Bf1cc5C5790330D95D600f0B571Ba',
       '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
       6,
@@ -63,6 +74,17 @@ const CTOKEN_LISTS: {
       'Tether USD',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
       ''
+    ],
+    [
+      '0x14387D32df1381445bDD1b8E8916598367523A8a',
+      '0xd3d2E2692501A5c9Ca623199D38826e513033a17',
+      18,
+      'dETH-UNI',
+      'Deerfi ETH-UNI',
+      'ETH-UNI',
+      'ETH-UNI LP',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png'
     ],
     [
       '0x906E8893ae417860A4B4fA1Cf70682429d7d523F',
