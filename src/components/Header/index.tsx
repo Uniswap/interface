@@ -5,8 +5,8 @@ import { Link, NavLink, withRouter } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
+import Logo from '../../assets/svg/swapr.svg'
+import LogoDark from '../../assets/svg/swapr_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
@@ -94,20 +94,6 @@ const HeaderElementWrap = styled.div`
   align-items: center;
 `
 
-const TitleText = styled(Row)<{ isDark: boolean }>`
-  width: fit-content;
-  white-space: nowrap;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-  a {
-    font-weight: 600;
-    font-size: 18px !important;
-    padding: 1rem 0 1rem 0;
-    color: ${({ theme, isDark }) => (isDark ? theme.white : theme.primaryText1)};
-  }
-`
-
 const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
    width: 100%;
@@ -183,15 +169,9 @@ const Title = styled.a`
 
 const DXswapIcon = styled.div`
   img {
-    height: 36px;
-    margin-right: 10px;
     margin-left: 5px;
+    margin-bottom: -5px;
   }
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    img {
-      margin-right: 5px;
-    }
-  `};
 `
 
 const activeClassName = 'ACTIVE'
@@ -270,14 +250,11 @@ function Header({ history }: { history: any }) {
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
         <Title href=".">
-          <DXswapIcon>
-            <img src={isDark ? LogoDark : Logo} alt="logo" />
-          </DXswapIcon>
-          <TitleText isDark={isDark}>
-            <Link id="link" to="/">
-              <span style={{ fontWeight: 900 }}>DX</span>swap
-            </Link>
-          </TitleText>
+          <Link id="link" to="/">
+            <DXswapIcon>
+              <img src={isDark ? LogoDark : Logo} alt="logo" />
+            </DXswapIcon>
+          </Link>
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => history.location.pathname.includes('/swap')}>
