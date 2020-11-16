@@ -14,6 +14,7 @@ import tokenList from './lists/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions']
 
+const persistenceNamespace = 'swapr'
 const store = configureStore({
   reducer: {
     application,
@@ -26,8 +27,11 @@ const store = configureStore({
     multicall,
     tokenList
   },
-  middleware: [...getDefaultMiddleware({ thunk: false }), save({ states: PERSISTED_KEYS })],
-  preloadedState: load({ states: PERSISTED_KEYS })
+  middleware: [
+    ...getDefaultMiddleware({ thunk: false }),
+    save({ states: PERSISTED_KEYS, namespace: persistenceNamespace })
+  ],
+  preloadedState: load({ states: PERSISTED_KEYS, namespace: persistenceNamespace })
 })
 
 store.dispatch(updateVersion())
