@@ -21,6 +21,7 @@ import { transparentize } from 'polished'
 import { ExternalLink, TYPE } from '../../theme'
 import Badge from '../Badge'
 import MobileOptions from './MobileOptions'
+import { GovernanceText } from './styleds'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -228,10 +229,6 @@ const StyledNavLinkWithBadge = styled.a`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
-`
-
-const GovernanceText = styled.span`
-  color: ${({ theme }) => transparentize(0.6, theme.text5)};
 `
 
 const AbsoluteComingSoonBadgeFlex = styled(Flex)`

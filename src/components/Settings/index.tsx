@@ -21,6 +21,21 @@ import Row, { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import { useTransition, animated } from 'react-spring'
+
+const StyledDialogOverlay = animated(styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => transparentize(0.65, theme.black)};
+`)
 
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
@@ -64,30 +79,31 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuContainer = styled.span`
-  min-width: 322px;
+const MenuContainer = styled.span<{ ref: any }>`
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 48px;
-  right: 0rem;
+  top: 80px;
+  right: 20px;
+  width: 322px;
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    width: 100%;
     height: 100%;
-    padding-top: 50px;
-    padding-left: 25%;
-    padding-right: 25%;
+    width: 100%;
+    top: initial;
+    right: initial;
+    justify-content: center;
     align-items: center;
   `};
 `
 
 const MenuFlyout = styled.span`
-  background-color: ${({ theme }) => theme.bg2};
+  min-width: 322px;
+  max-width: 322px;
+  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
   border-radius: 8px;
   backdrop-filter: blur(16px);
-  background-color: ${({ theme }) => transparentize(0.6, theme.purpleBase)};
   border-radius: 8px;
   border: 8px solid;
   border-radius: 8px;
@@ -97,33 +113,27 @@ const MenuFlyout = styled.span`
   font-size: 1rem;
   height: auto;
   box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    min-width: 18.125rem;
-    right: -46px;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    min-width: 18.125rem;
-    top: -22rem;
-  `};
 `
 
-const MenuFlyoutBottom = styled(MenuFlyout)`
-  margin-top: 1rem;
-  align-items: right;
+const MenuFlyoutBottom = styled.span`
+  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  backdrop-filter: blur(16px);
+  border: 8px solid;
+  border-radius: 8px;
+  border-image: url(${border8pxRadius}) 8;
+  display: flex;
   flex-direction: row;
-  justify-content: center;
+  font-size: 1rem;
+  box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
+  margin-top: 16px;
+`
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-     min-width: 0;
-     right: -46px;
-   `};
-
+const FlyoutBottomAligner = styled.span`
+  display: flex;
+  justify-content: flex-end;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-     min-width: 0;
-     top: -22rem;
-   `};
+    justify-content: center;
+  `};
 `
 
 const ModalContentWrapper = styled.div`
@@ -157,8 +167,15 @@ const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
   : 'https://github.com/levelkdev/dxswap-dapp'
 
 export default function SettingsTab() {
-  const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
+  const fadeTransition = useTransition(open, null, {
+    config: { duration: 200 },
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
+  })
+
+  const node = useRef<HTMLDivElement>()
   const toggle = useToggleSettingsMenu()
 
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
@@ -222,70 +239,77 @@ export default function SettingsTab() {
           </EmojiWrapper>
         )}
       </StyledMenuIcon>
-      {open && (
-        <MenuContainer>
-          <MenuFlyout>
-            <AutoColumn gap="md" style={{ padding: '8px' }}>
-              <Text fontWeight={600} fontSize={14}>
-                Transaction settings
-              </Text>
-              <TransactionSettings
-                rawSlippage={userSlippageTolerance}
-                setRawSlippage={setUserslippageTolerance}
-                deadline={ttl}
-                setDeadline={setTtl}
-              />
-              <Text fontWeight={600} fontSize={14}>
-                Interface settings
-              </Text>
-              <RowBetween>
-                <RowFixed>
-                  <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
-                    Toggle expert mode
-                  </TYPE.body>
-                  <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
-                </RowFixed>
-                <Toggle
-                  id="toggle-expert-mode-button"
-                  isActive={expertMode}
-                  toggle={
-                    expertMode
-                      ? () => {
-                          toggleExpertMode()
-                          setShowConfirmation(false)
-                        }
-                      : () => {
-                          toggle()
-                          setShowConfirmation(true)
-                        }
-                  }
-                />
-              </RowBetween>
-              {
-                <RowBetween>
-                  <RowFixed>
-                    <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
-                      Toggle Dark Mode
-                    </TYPE.body>
-                  </RowFixed>
-                  <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
-                </RowBetween>
-              }
-            </AutoColumn>
-          </MenuFlyout>
-          <RowFixed alignSelf="flex-end">
-            <MenuFlyoutBottom>
-              <MenuItem id="link" href="https://dxdao.eth.link/">
-                <Info size={14} />
-                About
-              </MenuItem>
-              <MenuItem id="link" href={CODE_LINK}>
-                <Code size={14} />
-                Code
-              </MenuItem>
-            </MenuFlyoutBottom>
-          </RowFixed>
-        </MenuContainer>
+      {fadeTransition.map(
+        ({ item, key, props }) =>
+          item && (
+            <>
+              <StyledDialogOverlay key={key} style={props}>
+                <MenuContainer ref={node}>
+                  <MenuFlyout>
+                    <AutoColumn gap="md" style={{ padding: '8px' }}>
+                      <Text fontWeight={600} fontSize={14}>
+                        Transaction settings
+                      </Text>
+                      <TransactionSettings
+                        rawSlippage={userSlippageTolerance}
+                        setRawSlippage={setUserslippageTolerance}
+                        deadline={ttl}
+                        setDeadline={setTtl}
+                      />
+                      <Text fontWeight={600} fontSize={14}>
+                        Interface settings
+                      </Text>
+                      <RowBetween>
+                        <RowFixed>
+                          <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                            Toggle expert mode
+                          </TYPE.body>
+                          <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                        </RowFixed>
+                        <Toggle
+                          id="toggle-expert-mode-button"
+                          isActive={expertMode}
+                          toggle={
+                            expertMode
+                              ? () => {
+                                  toggleExpertMode()
+                                  setShowConfirmation(false)
+                                }
+                              : () => {
+                                  toggle()
+                                  setShowConfirmation(true)
+                                }
+                          }
+                        />
+                      </RowBetween>
+                      {
+                        <RowBetween>
+                          <RowFixed>
+                            <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                              Toggle Dark Mode
+                            </TYPE.body>
+                          </RowFixed>
+                          <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
+                        </RowBetween>
+                      }
+                    </AutoColumn>
+                  </MenuFlyout>
+                  <FlyoutBottomAligner>
+                    <MenuFlyoutBottom>
+                      <MenuItem id="link" href="https://dxdao.eth.link/">
+                        <Info size={14} />
+                        About
+                      </MenuItem>
+                      <MenuItem id="link" href={CODE_LINK}>
+                        <Code size={14} />
+                        Code
+                      </MenuItem>
+                    </MenuFlyoutBottom>
+                  </FlyoutBottomAligner>
+                </MenuContainer>
+              </StyledDialogOverlay>
+            </>
+          )
       )}
     </StyledMenu>
   )

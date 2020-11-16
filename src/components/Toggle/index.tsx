@@ -4,7 +4,7 @@ import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean; disabled?: boolean }>`
   border-radius: 8px;
-  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'none')};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   ${({ isActive }) =>
     isActive
       ? css`
