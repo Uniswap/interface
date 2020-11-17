@@ -10,6 +10,7 @@ import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
 import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
 import { useTranslation } from 'react-i18next'
+import Skeleton from 'components/Skeleton'
 
 const MarketsCard = styled.div`
   background: ${({ theme }) => theme.bg1};
@@ -296,17 +297,25 @@ function BorrowMarkets({
                         )}
                         <ItemWrap>
                           <SymbolWrap>{item.name}</SymbolWrap>
-                          <MobileWrap>{getBorrowApy(item).toFixed(2) ?? 0}%</MobileWrap>
+                          <MobileWrap>
+                            <Skeleton loading={TokenLoadState}>{getBorrowApy(item).toFixed(2) ?? 0}%</Skeleton>
+                          </MobileWrap>
                         </ItemWrap>
                       </AssetLogo>
                       <ItemWrap mobileHide={true}>
-                        <div>{getBorrowApy(item).toFixed(2) ?? 0}%</div>
+                        <div>
+                          <Skeleton loading={TokenLoadState}>{getBorrowApy(item).toFixed(2) ?? 0}%</Skeleton>
+                        </div>
                       </ItemWrap>
                       <ItemWrap>
-                        {walletBalances[item.address]?.toSignificant(4) ?? '0'}
-                        {' ' + item.symbol}
+                        <Skeleton loading={TokenLoadState}>
+                          {walletBalances[item.address]?.toSignificant(4) ?? '0'}
+                          {' ' + item.symbol}
+                        </Skeleton>
                       </ItemWrap>
-                      <ItemWrap>${showDollarValue(item.getLiquidityValue())}</ItemWrap>
+                      <ItemWrap>
+                        <Skeleton loading={TokenLoadState}>${showDollarValue(item.getLiquidityValue())}</Skeleton>
+                      </ItemWrap>
                     </AssetItem>
                   </ItemPannel>
                 ))

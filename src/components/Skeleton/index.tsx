@@ -3,9 +3,8 @@ import React from 'react'
 import styled from 'styled-components'
 
 const SkeletonWrap = styled.div`
-  height: 2.1rem;
-  width: 11.25rem;
-  transform: translateX(58%);
+  height: 1rem;
+  width: 4rem;
   animation-duration: 2s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
@@ -24,8 +23,11 @@ const SkeletonWrap = styled.div`
 `
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface SkeletonProps {}
+interface SkeletonProps {
+  loading: boolean
+  children: React.ReactNode
+}
 
-export default function Skeleton({}: SkeletonProps) {
-  return <SkeletonWrap></SkeletonWrap>
+export default function Skeleton({ loading, children }: SkeletonProps) {
+  return <>{loading ? children : <SkeletonWrap></SkeletonWrap>}</>
 }

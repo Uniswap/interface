@@ -22,6 +22,7 @@ import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 import { useTranslation } from 'react-i18next'
+import Skeleton from 'components/Skeleton'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -546,15 +547,21 @@ function SupplyMarkets({
                         )}
                         <ItemWrap>
                           <SymbolWrap>{item.name}</SymbolWrap>
-                          <MobileWrap>{getSupplyApy(item).toFixed(2) ?? 0}%</MobileWrap>
+                          <MobileWrap>
+                            <Skeleton loading={TokenLoadState}>{getSupplyApy(item).toFixed(2) ?? 0}%</Skeleton>
+                          </MobileWrap>
                         </ItemWrap>
                       </AssetLogo>
                       <ItemWrap mobileHide={true}>
-                        <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
+                        <div>
+                          <Skeleton loading={TokenLoadState}>{getSupplyApy(item).toFixed(2) ?? 0}%</Skeleton>
+                        </div>
                       </ItemWrap>
                       <ItemWrap>
-                        {walletBalances[item.address]?.toSignificant(4) ?? '0'}
-                        {' ' + item.symbol}
+                        <Skeleton loading={TokenLoadState}>
+                          {walletBalances[item.address]?.toSignificant(4) ?? '0'}
+                          {' ' + item.symbol}
+                        </Skeleton>
                       </ItemWrap>
                       <Switch
                         isActive={item.canBeCollateral ?? false}
