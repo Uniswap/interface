@@ -196,6 +196,8 @@ export function useCTokens(): [CTokenState, CToken | null][] {
 
   const accountArg = useMemo(() => [account ?? undefined], [account])
 
+  const accountSnapshotaccountArg = useMemo(() => [account ?? '0x0000000000000000000000000000000000000000'], [account])
+
   const cTokenAddresses = useMemo(
     () =>
       cTokenList.map(cTokenInfo => {
@@ -242,7 +244,7 @@ export function useCTokens(): [CTokenState, CToken | null][] {
     cTokenAddresses,
     CTOKEN_INTERFACE,
     'getAccountSnapshot',
-    accountArg
+    accountSnapshotaccountArg
   )
   const totalSupplyResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'totalSupply')
   const cashResults = useMultipleContractSingleData(cTokenAddresses, CTOKEN_INTERFACE, 'getCash')
