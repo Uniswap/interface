@@ -110,6 +110,9 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
+  // detect if staking is ended
+  const active = stakingInfo?.periodFinish ? stakingInfo.periodFinish.getMilliseconds() > Date.now() : true
+
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <CardBGImage desaturate />
@@ -139,9 +142,15 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         </RowBetween>
         <RowBetween>
           <TYPE.white> Pool rate </TYPE.white>
-          <TYPE.white>{`${stakingInfo.totalRewardRate
-            ?.multiply(`${60 * 60 * 24 * 7}`)
-            ?.toFixed(0, { groupSeparator: ',' })} UNI / week`}</TYPE.white>
+          <TYPE.white>
+            {stakingInfo
+              ? active
+                ? `${stakingInfo.totalRewardRate
+                    ?.multiply(`${60 * 60 * 24 * 7}`)
+                    ?.toFixed(0, { groupSeparator: ',' })} UNI / week`
+                : '0 UNI / week'
+              : '-'}
+          </TYPE.white>
         </RowBetween>
       </StatContainer>
 
@@ -157,9 +166,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
               </span>
-              {`${stakingInfo.rewardRate
-                ?.multiply(`${60 * 60 * 24 * 7}`)
-                ?.toSignificant(4, { groupSeparator: ',' })} UNI / week`}
+              {stakingInfo
+                ? active
+                  ? `${stakingInfo.rewardRate
+                      ?.multiply(`${60 * 60 * 24 * 7}`)
+                      ?.toSignificant(4, { groupSeparator: ',' })} UNI / week`
+                  : '0 UNI / week'
+                : '-'}
             </TYPE.black>
           </BottomSection>
         </>

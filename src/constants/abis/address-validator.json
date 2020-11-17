@@ -1,0 +1,44 @@
+[
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "contentURL",
+        "type": "string"
+      }
+    ],
+    "name": "NewAttestation",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "contentURL",
+        "type": "string"
+      }
+    ],
+    "name": "verifyContent",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  }
+]
