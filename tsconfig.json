@@ -11,7 +11,7 @@
     "strict": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
