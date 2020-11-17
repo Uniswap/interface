@@ -256,6 +256,9 @@ function Header({ history }: { history: any }) {
           <StyledExternalLink id={`discord-nav-link`} href={'https://discord.gg/SHdfFgX'} smallHide={false}>
             Discord <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
+          <StyledExternalLink id={`discord-nav-link`} href={'https://defipulse.com/defi-list'} smallHide={true}>
+            DeFi Pulse <span style={{ fontSize: '11px' }}>↗</span>
+          </StyledExternalLink>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>
