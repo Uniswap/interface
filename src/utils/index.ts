@@ -16,9 +16,11 @@ import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '
 import { TokenAddressMap } from '../state/lists/hooks'
 import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
 import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
+import AMBErc677To677ABI from '../constants/abis/ambErc677ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
 import { getNetworkLibrary, getNetworkLibraryByChain } from '../connectors'
 import { TransactionResponse } from '@ethersproject/providers'
+import { BASIC_BRIDGE_TOKENS } from '../constants/bridge'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -153,6 +155,14 @@ export function getERC677TokenContract(address: string, library: Web3Provider, a
   return getContract(address, Erc677TokenABI, library, account)
 }
 
+export function getAMBErc677To677Contract(address: string, library: Web3Provider, account?: string): Contract {
+  return getContract(address, AMBErc677To677ABI, library, account)
+}
+
+export function getAMBErc20ToErc677Contract(address: string, library: Web3Provider, account?: string): Contract {
+  return getContract(address, HomeMultiAMBErc20ToErc677ABI, library, account)
+}
+
 export function getBridgeHomeAddress(chainId?: number): string {
   switch (chainId) {
     case ChainId.MAINNET:
@@ -225,6 +235,47 @@ export function getForiegnBridgeContractJsonRpc(chainId: number): Contract {
     FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
   return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
 }
+
+export function getBasicForeignBridgeAddress(tokenAddress: string, chainId: number) {
+  const formattedTokenAddress = tokenAddress.toLowerCase()
+  const list = chainId === ChainId.MAINNET ? BASIC_BRIDGE_TOKENS[ChainId.MAINNET] : BASIC_BRIDGE_TOKENS[ChainId.ROPSTEN]
+  const token = list.find(
+    token =>
+      token.FOREIGN_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress ||
+      token.HOME_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress
+  )
+  return token ? token.FOREIGN_BRIDGE_MEDIATOR : null
+}
+
+export function getBasicHomeBridgeAddress(tokenAddress: string) {
+  const formattedTokenAddress = tokenAddress.toLowerCase()
+
+  const list =
+    FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET
+      ? BASIC_BRIDGE_TOKENS[ChainId.MAINNET]
+      : BASIC_BRIDGE_TOKENS[ChainId.ROPSTEN]
+
+  const token = list.find(
+    token =>
+      token.HOME_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress ||
+      token.FOREIGN_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress
+  )
+
+  return token ? token.HOME_BRIDGE_MEDIATOR : null
+}
+
+export function isBasicBridgeToken(tokenAddress?: string) {
+  if (!tokenAddress) return
+
+  const formattedTokenAddress = tokenAddress.toLowerCase()
+
+  const addresses = [...BASIC_BRIDGE_TOKENS[ChainId.MAINNET], ...BASIC_BRIDGE_TOKENS[ChainId.ROPSTEN]]
+    .flatMap(token => [token.FOREIGN_TOKEN_ADDRESS, token.HOME_TOKEN_ADDRESS])
+    .map(token => token.toLowerCase())
+
+  return addresses.includes(formattedTokenAddress)
+}
+
 /**
  *
  * @param homeTokenAddress home address of token been transferred

@@ -1,4 +1,17 @@
-import { Field, selectCurrency, typeInput } from './actions'
+import {
+  Field,
+  selectCurrency,
+  typeInput,
+  BridgeTransactionStatus,
+  tokenTransferPending,
+  tokenTransferSuccess,
+  confirmTransactionPending,
+  updateConfirmationsCount,
+  confirmTransactionSuccess,
+  confirmTokenTransferPending,
+  confirmTokenTransferSuccess,
+  transferError
+} from './actions'
 import { createReducer } from '@reduxjs/toolkit'
 
 export interface BridgeState {
@@ -7,6 +20,8 @@ export interface BridgeState {
   readonly [Field.INPUT]: {
     readonly currencyId: string | undefined
   }
+  readonly bridgeTransactionStatus: BridgeTransactionStatus
+  readonly confirmations: number
 }
 
 const initialState: BridgeState = {
@@ -14,7 +29,9 @@ const initialState: BridgeState = {
   typedValue: '',
   [Field.INPUT]: {
     currencyId: ''
-  }
+  },
+  bridgeTransactionStatus: BridgeTransactionStatus.INITIAL,
+  confirmations: 0
 }
 
 export default createReducer<BridgeState>(initialState, builder =>
@@ -30,6 +47,56 @@ export default createReducer<BridgeState>(initialState, builder =>
         ...state,
         independentField: field,
         typedValue
+      }
+    })
+    .addCase(tokenTransferPending, state => {
+      return {
+        ...state,
+        bridgeTransactionStatus: BridgeTransactionStatus.TOKEN_TRANSFER_PENDING
+      }
+    })
+    .addCase(tokenTransferSuccess, state => {
+      return {
+        ...state,
+        bridgeTransactionStatus: BridgeTransactionStatus.TOKEN_TRANSFER_SUCCESS
+      }
+    })
+    .addCase(confirmTransactionPending, state => {
+      return {
+        ...state,
+        bridgeTransactionStatus: BridgeTransactionStatus.CONFIRMATION_TRANSACTION_PENDING
+      }
+    })
+    .addCase(confirmTransactionSuccess, state => {
+      return {
+        ...state,
+        bridgeTransactionStatus: BridgeTransactionStatus.CONFIRMATION_TRANSACTION_SUCCESS
+      }
+    })
+    .addCase(updateConfirmationsCount, (state, { payload: { confirmations } }) => {
+      return {
+        ...state,
+        confirmations
+      }
+    })
+    .addCase(confirmTokenTransferPending, state => {
+      return {
+        ...state,
+        bridgeTransactionStatus: BridgeTransactionStatus.CONFIRM_TOKEN_TRANSFER_PENDING
+      }
+    })
+    .addCase(confirmTokenTransferSuccess, state => {
+      return {
+        ...state,
+        bridgeTransactionStatus: BridgeTransactionStatus.INITIAL,
+        confirmations: 0
+      }
+    })
+    .addCase(transferError, state => {
+      return {
+        ...state,
+        bridgeTransactionStatus: BridgeTransactionStatus.INITIAL,
+        confirmations: 0
       }
     })
 )
