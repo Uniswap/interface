@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import FuseLogo from '../../assets/images/fuse-logo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
-import { WrappedTokenInfo } from '../../state/lists/hooks'
+import { WrappedTokenInfo, useSelectedSwapTokenList } from '../../state/lists/hooks'
 import Logo from '../Logo'
 import { useActiveWeb3React } from '../../hooks'
 
@@ -35,19 +35,28 @@ export default function CurrencyLogo({
 }) {
   const { chainId } = useActiveWeb3React()
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
+  const list = useSelectedSwapTokenList()
 
   const srcs: string[] = useMemo(() => {
     if (currency === FUSE) return []
+
+    if (!chainId) return []
 
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, getTokenLogoURL(currency.address)]
       }
 
-      return [getTokenLogoURL(currency.address)]
+      if (list[chainId][currency.address]) {
+        const {
+          tokenInfo: { logoURI }
+        } = list[chainId][currency.address]
+
+        return logoURI ? [logoURI] : []
+      }
     }
     return []
-  }, [currency, uriLocations])
+  }, [chainId, currency, list, uriLocations])
 
   if (currency === FUSE) {
     if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
