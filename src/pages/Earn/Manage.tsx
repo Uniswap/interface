@@ -28,7 +28,7 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import useUSDCPrice from '../../utils/useUSDCPrice'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO, BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -179,7 +179,7 @@ export default function Manage({
             <TYPE.body fontSize={24} fontWeight={500}>
               {stakingInfo?.active
                 ? stakingInfo?.totalRewardRate
-                    ?.multiply((60 * 60 * 24 * 7).toString())
+                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                     ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
                 : '0'}
               {' UNI / week'}
@@ -297,7 +297,7 @@ export default function Manage({
                   </span>
                   {stakingInfo?.active
                     ? stakingInfo?.rewardRate
-                        ?.multiply((60 * 60 * 24 * 7).toString())
+                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                         ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
                     : '0'}
                   {' UNI / week'}
