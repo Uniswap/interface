@@ -5773,23 +5773,11 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-"dxswap-core@git://github.com/levelkdev/dxswap-core.git#v0.2.0":
-  version "0.2.0"
-  resolved "git://github.com/levelkdev/dxswap-core.git#e38a768f309067e7df54a6417dc53927f4e6c767"
-  dependencies:
-    typescript "^3.9.5"
-
 "dxswap-core@git://github.com/levelkdev/dxswap-core.git#v0.3.1":
   version "0.3.0"
   resolved "git://github.com/levelkdev/dxswap-core.git#ea38ac67256e514eaf3acd0cfc84d7135e59e64e"
   dependencies:
     typescript "^3.9.5"
-
-"dxswap-periphery@git://github.com/levelkdev/dxswap-periphery.git#v0.3.0":
-  version "0.3.0"
-  resolved "git://github.com/levelkdev/dxswap-periphery.git#44a212659ddb46a6e0c57581793729a0a4e0d2a1"
-  dependencies:
-    dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.2.0"
 
 "dxswap-periphery@git://github.com/levelkdev/dxswap-periphery.git#v0.3.2":
   version "0.3.1"
