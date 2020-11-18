@@ -1,15 +1,17 @@
 import React, { useCallback, useContext, useState } from 'react'
-import { BigNumber } from '@ethersproject/bignumber'
-import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse } from '@ethersproject/providers'
 import AppBody from '../AppBody'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { Currency, TokenAmount, ChainId } from '@fuseio/fuse-swap-sdk'
+import { Currency, TokenAmount } from '@fuseio/fuse-swap-sdk'
 import { RouteComponentProps } from 'react-router-dom'
 import { currencyId } from '../../utils/currencyId'
 import { useCurrency } from '../../hooks/Tokens'
-import { useBridgeActionHandlers, useBridgeState, useDerivedBridgeInfo } from '../../state/bridge/hooks'
+import {
+  useBridgeActionHandlers,
+  useBridgeState,
+  useDerivedBridgeInfo,
+  useBridgeStatus
+} from '../../state/bridge/hooks'
 import { Field } from '../../state/bridge/actions'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -27,25 +29,13 @@ import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallbac
 import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
 import { Text } from 'rebass'
-import { useActiveWeb3React } from '../../hooks'
-import {
-  getForiegnBridgeContract,
-  getBridgeHomeAddress,
-  getBridgeForeignAddress,
-  calculateGasMargin,
-  getERC677TokenContract,
-  confirmHomeTokenTransfer,
-  confirmForeignTokenTransfer,
-  waitForTransaction,
-  getHomeBridgeContractJsonRpc,
-  getForiegnBridgeContractJsonRpc
-} from '../../utils'
-import { useTransactionAdder } from '../../state/transactions/hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
+import { getBridgeHomeAddress, getBridgeForeignAddress, isBasicBridgeToken } from '../../utils'
 import { FOREIGN_BRIDGE_CHAIN, UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
-import { useUserActionHandlers } from '../../state/user/hooks'
-import fuseApi from '../../api/fuseApi'
 import { TYPE } from '../../theme'
 import UnsupportedBridgeTokenModal from '../../components/UnsupportedBridgeTokenModal'
+import { useUserActionHandlers } from '../../state/user/hooks'
+import fuseApi from '../../api/fuseApi'
 
 export default function Bridge({
   match: {
@@ -58,24 +48,18 @@ export default function Bridge({
 
   const inputCurrency = useCurrency(inputCurrencyId, 'Bridge')
 
-  const { updateCompletedBridgeTransfer } = useUserActionHandlers()
-
   const { independentField, typedValue } = useBridgeState()
 
-  const { currencies, currencyBalances, parsedAmounts, inputError } = useDerivedBridgeInfo(inputCurrency ?? undefined)
+  const { currencies, currencyBalances, parsedAmounts, inputError, bridgeTransactionStatus } = useDerivedBridgeInfo(
+    inputCurrency ?? undefined
+  )
 
-  const { onFieldInput } = useBridgeActionHandlers()
+  const { updateCompletedBridgeTransfer } = useUserActionHandlers()
+
+  const { onFieldInput, transferToHome, transferToForeign } = useBridgeActionHandlers()
 
   // modal and loading
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [, setAttemptingTxn] = useState<boolean>(false)
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-
-  // txn values
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [, setTxHash] = useState<string>('')
-
-  const [loadingText, setLoadingText] = useState<string>('')
 
   const handleInputCurrencySelect = useCallback(
     (inputCurrency: Currency) => {
@@ -110,114 +94,42 @@ export default function Bridge({
 
   const toggleWalletModal = useWalletModalToggle()
 
-  const isHome = chainId === ChainId.FUSE
+  const { isHome, isForeign } = useChain()
 
-  // set bridge and approval address
   const bridgeAddress = isHome ? getBridgeHomeAddress(FOREIGN_BRIDGE_CHAIN) : getBridgeForeignAddress(chainId)
   const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
 
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)
 
-  const addTransaction = useTransactionAdder()
-
   async function onTransfer() {
     if (!chainId || !library || !account) return
 
-    const { [Field.INPUT]: parsedAmountInput } = parsedAmounts
-    if (!parsedAmountInput || !inputCurrencyId) {
-      return
-    }
-
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null,
-      confirmations: number | null,
-      waitingBridgeText: string,
-      bridgeOtherSideContract: Contract
-
-    // home
-    if (isHome) {
-      const contract = getERC677TokenContract(inputCurrencyId, library, account)
-
-      estimate = contract.estimateGas.transferAndCall
-      method = contract.transferAndCall
-      args = [bridgeAddress, parsedAmountInput.raw.toString(), []]
-      value = null
-      confirmations = null
-      waitingBridgeText = 'Moving Funds to Ethereum'
-      bridgeOtherSideContract = getForiegnBridgeContractJsonRpc(chainId)
-
-      // foreign
-    } else {
-      const contract = getForiegnBridgeContract(chainId, library, account)
-
-      estimate = contract.estimateGas['relayTokens(address,uint256)']
-      method = contract['relayTokens(address,uint256)']
-      args = [inputCurrencyId, parsedAmountInput.raw.toString()]
-      value = null
-      confirmations = 2
-      waitingBridgeText = 'Moving Funds to Fuse'
-      bridgeOtherSideContract = getHomeBridgeContractJsonRpc(chainId)
-    }
-
-    setAttemptingTxn(true)
-
     try {
-      const estimatedGas = await estimate(...args, value ? { value } : {})
+      const { [Field.INPUT]: parsedAmountInput } = parsedAmounts
+      const symbol = currencies[Field.INPUT]?.symbol ?? ''
+      const isMultiBridge = !isBasicBridgeToken(inputCurrencyId)
 
-      setLoadingText('Transfering...')
-      const response = await method(...args, {
-        ...(value ? { value } : {}),
-        gasLimit: calculateGasMargin(estimatedGas)
-      })
-
-      // waiting for confirmation
-      if (confirmations) {
-        await waitForTransaction(response, confirmations, library, (confirmationCount: number) =>
-          setLoadingText(`Waiting for ${confirmationCount}/${confirmations} Confirmations`)
-        )
+      if (!parsedAmountInput || !inputCurrencyId) {
+        return
       }
+      if (isHome) {
+        await transferToForeign(inputCurrencyId, bridgeAddress, parsedAmountInput, symbol, isMultiBridge)
+      } else {
+        await transferToHome(inputCurrencyId, parsedAmountInput, symbol, isMultiBridge)
 
-      // waiting for bridge
-      setLoadingText(waitingBridgeText)
-
-      const listener = async (tokenAddress: string, recipient: string) => {
-        const tokenTransferConfirmed = isHome
-          ? await confirmHomeTokenTransfer(inputCurrencyId, tokenAddress, library, account)
-          : await confirmForeignTokenTransfer(inputCurrencyId, tokenAddress, bridgeOtherSideContract)
-
-        if (recipient === account && tokenTransferConfirmed) {
-          bridgeOtherSideContract.removeListener('TokensBridged', listener)
-
-          setAttemptingTxn(false)
-          setTxHash(response.hash)
-          setLoadingText('')
-          onFieldInput('')
-
-          addTransaction(response, {
-            summary: 'Transfer ' + currencies[Field.INPUT]?.symbol
-          })
-          updateCompletedBridgeTransfer()
-
-          // reward account
-          if (chainId === ChainId.MAINNET) {
-            await fuseApi.fund(account)
-          }
+        if (isForeign) {
+          await fuseApi.fund(account)
         }
       }
 
-      bridgeOtherSideContract.on('TokensBridged', listener)
+      onFieldInput('')
+      updateCompletedBridgeTransfer()
     } catch (error) {
-      setAttemptingTxn(false)
-
-      setLoadingText('')
-
-      if (error?.code !== 4001) {
-        console.log(error)
-      }
+      console.log(error)
     }
   }
+
+  const bridgeStatus = useBridgeStatus(bridgeTransactionStatus)
 
   return (
     <>
@@ -282,14 +194,14 @@ export default function Bridge({
                 <ButtonError
                   id="bridge-transfer-button"
                   onClick={onTransfer}
-                  disabled={approval !== ApprovalState.APPROVED || !!inputError || !!loadingText}
-                  error={approval !== ApprovalState.APPROVED || (!loadingText && !!inputError)}
+                  disabled={approval !== ApprovalState.APPROVED || !!inputError || !!bridgeStatus}
+                  error={approval !== ApprovalState.APPROVED || (!bridgeStatus && !!inputError)}
                 >
-                  {loadingText ? (
+                  {bridgeStatus ? (
                     <>
                       <Loader src={loader} />
                       <Text fontSize={20} fontWeight={500}>
-                        {loadingText}
+                        {bridgeStatus}
                       </Text>
                     </>
                   ) : (

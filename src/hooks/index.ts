@@ -2,7 +2,7 @@ import { Web3Provider } from '@ethersproject/providers'
 import { ChainId } from '@fuseio/fuse-swap-sdk'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
@@ -84,4 +84,16 @@ export function useInactiveListener(suppress = false) {
     }
     return undefined
   }, [active, error, suppress, activate])
+}
+
+export function useChain() {
+  const { chainId } = useActiveWeb3React()
+
+  return useMemo(() => {
+    const isHome = chainId === ChainId.FUSE
+    const isEtheruem = chainId === ChainId.MAINNET
+    const isForeign = chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN
+
+    return { isHome, isEtheruem, isForeign }
+  }, [chainId])
 }
