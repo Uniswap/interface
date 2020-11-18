@@ -153,9 +153,6 @@ export default function Manage({
     }
   }, [account, toggleWalletModal])
 
-  // detect if staking is ended
-  const active = stakingInfo?.periodFinish ? stakingInfo.periodFinish.getMilliseconds() > Date.now() : true
-
   return (
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
@@ -180,7 +177,7 @@ export default function Manage({
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {active
+              {stakingInfo?.active
                 ? stakingInfo?.totalRewardRate
                     ?.multiply((60 * 60 * 24 * 7).toString())
                     ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
@@ -298,7 +295,7 @@ export default function Manage({
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                     ⚡
                   </span>
-                  {active
+                  {stakingInfo?.active
                     ? stakingInfo?.rewardRate
                         ?.multiply((60 * 60 * 24 * 7).toString())
                         ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
@@ -318,7 +315,7 @@ export default function Manage({
 
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
-            {stakingInfo && active && (
+            {stakingInfo && stakingInfo.active && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit UNI-V2 LP Tokens'}
               </ButtonPrimary>
@@ -338,7 +335,7 @@ export default function Manage({
             )}
           </DataRow>
         )}
-        {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !active ? null : (
+        {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
           <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} UNI-V2 LP tokens available</TYPE.main>
         )}
       </PositionInfo>

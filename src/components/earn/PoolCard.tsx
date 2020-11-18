@@ -14,6 +14,7 @@ import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import useUSDCPrice from '../../utils/useUSDCPrice'
+import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 
 const StatContainer = styled.div`
   display: flex;
@@ -55,11 +56,6 @@ const TopSection = styled.div`
     grid-template-columns: 48px 1fr 96px;
   `};
 `
-
-// const APR = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-// `
 
 const BottomSection = styled.div<{ showBackground: boolean }>`
   padding: 12px 16px;
@@ -110,9 +106,6 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const valueOfTotalStakedAmountInUSDC =
     valueOfTotalStakedAmountInWETH && USDPrice?.quote(valueOfTotalStakedAmountInWETH)
 
-  // detect if staking is ended
-  const active = stakingInfo?.periodFinish ? stakingInfo.periodFinish.getMilliseconds() > Date.now() : true
-
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <CardBGImage desaturate />
@@ -144,9 +137,9 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           <TYPE.white> Pool rate </TYPE.white>
           <TYPE.white>
             {stakingInfo
-              ? active
+              ? stakingInfo.active
                 ? `${stakingInfo.totalRewardRate
-                    ?.multiply(`${60 * 60 * 24 * 7}`)
+                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                     ?.toFixed(0, { groupSeparator: ',' })} UNI / week`
                 : '0 UNI / week'
               : '-'}
@@ -167,9 +160,9 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
                 ⚡
               </span>
               {stakingInfo
-                ? active
+                ? stakingInfo.active
                   ? `${stakingInfo.rewardRate
-                      ?.multiply(`${60 * 60 * 24 * 7}`)
+                      ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                       ?.toSignificant(4, { groupSeparator: ',' })} UNI / week`
                   : '0 UNI / week'
                 : '-'}
