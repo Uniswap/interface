@@ -23,7 +23,7 @@ export const CUSTOM_BRIDGE_TOKENS: { [chainId in ChainId]: BridgeToken[] | [] } 
       SYMBOL: 'G$',
       DAILY_LIMIT: 30000000000,
       MAX_AMOUNT_PER_TX: 1500000000,
-      MIN_AMOUNT_PER_TX: 100
+      MIN_AMOUNT_PER_TX: 5000000
     }
   ],
   [ChainId.ROPSTEN]: [

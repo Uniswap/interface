@@ -15,7 +15,7 @@ import {
   BridgeTransactionStatus,
   transferError
 } from './actions'
-import { Currency, CurrencyAmount } from '@fuseio/fuse-swap-sdk'
+import { Currency, CurrencyAmount, ChainId } from '@fuseio/fuse-swap-sdk'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { tryParseAmount } from '../swap/hooks'
@@ -35,6 +35,7 @@ import { getNetworkLibrary, getNetworkLibraryByChain } from '../../connectors'
 import { AnyAction } from '@reduxjs/toolkit'
 import { DEFAULT_CONFIRMATIONS_LIMIT, CUSTOM_BRIDGE_TOKENS } from '../../constants/bridge'
 import { formatUnits } from 'ethers/lib/utils'
+import { FOREIGN_BRIDGE_CHAIN } from '../../constants'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -82,7 +83,14 @@ export function useDerivedBridgeInfo(
 
     if (!chainId) return { minAmount: defaultMin }
 
-    const token = CUSTOM_BRIDGE_TOKENS[chainId].find(token => token.SYMBOL === inputCurrency?.symbol)
+    const chain =
+      chainId === ChainId.FUSE
+        ? FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET
+          ? ChainId.MAINNET
+          : ChainId.ROPSTEN
+        : chainId
+
+    const token = CUSTOM_BRIDGE_TOKENS[chain].find(token => token.SYMBOL === inputCurrency?.symbol)
 
     if (token) {
       const decimals = inputCurrency?.decimals
