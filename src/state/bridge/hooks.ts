@@ -33,7 +33,8 @@ import {
 import { useTransactionAdder } from '../transactions/hooks'
 import { getNetworkLibrary, getNetworkLibraryByChain } from '../../connectors'
 import { AnyAction } from '@reduxjs/toolkit'
-import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../constants/bridge'
+import { DEFAULT_CONFIRMATIONS_LIMIT, CUSTOM_BRIDGE_TOKENS } from '../../constants/bridge'
+import { formatUnits } from 'ethers/lib/utils'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -49,7 +50,7 @@ export function useDerivedBridgeInfo(
   bridgeTransactionStatus: BridgeTransactionStatus
   confirmations: number
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const { independentField, typedValue, bridgeTransactionStatus, confirmations } = useBridgeState()
 
@@ -76,6 +77,31 @@ export function useDerivedBridgeInfo(
 
   const { [Field.INPUT]: inputAmount } = parsedAmounts
 
+  const { minAmount, maxAmount } = useMemo(() => {
+    const defaultMin = 0.01
+
+    if (!chainId) return { minAmount: defaultMin }
+
+    const token = CUSTOM_BRIDGE_TOKENS[chainId].find(token => token.SYMBOL === inputCurrency?.symbol)
+
+    if (token) {
+      const decimals = inputCurrency?.decimals
+      const parsedMin = formatUnits(token.MIN_AMOUNT_PER_TX.toString(), decimals)
+      const parsedMax = formatUnits(token.MAX_AMOUNT_PER_TX.toString(), decimals)
+      const minAmount = Number(parsedMin)
+      const maxAmount = Number(parsedMax)
+
+      return {
+        minAmount,
+        maxAmount
+      }
+    } else {
+      return {
+        minAmount: defaultMin
+      }
+    }
+  }, [chainId, inputCurrency])
+
   let inputError: string | undefined
   if (!account) {
     inputError = 'Connect Wallet'
@@ -89,12 +115,16 @@ export function useDerivedBridgeInfo(
     inputError = inputError ?? 'Enter an amount'
   }
 
-  if (Number(typedValue) < 0.01) {
+  if (Number(typedValue) < minAmount) {
     inputError = inputError ?? 'Below minimum limit'
   }
 
   if (inputAmount && currencyBalances?.[Field.INPUT]?.lessThan(inputAmount)) {
     inputError = 'Insufficient ' + currencies[Field.INPUT]?.symbol + ' balance'
+  }
+
+  if (maxAmount && Number(typedValue) > maxAmount) {
+    inputError = inputError ?? 'Above maximum limit'
   }
 
   return {
@@ -408,15 +438,9 @@ export function useBridgeActionHandlers(): {
     tokenAddress: string,
     bridgeAddress: string,
     amount: CurrencyAmount,
-    symbol: string,
     isMultiBridge: boolean
   ) => Promise<void>
-  transferToHome: (
-    tokenAddress: string,
-    amount: CurrencyAmount,
-    symbol: string,
-    isMultiBridge: boolean
-  ) => Promise<void>
+  transferToHome: (tokenAddress: string, amount: CurrencyAmount, isMultiBridge: boolean) => Promise<void>
 } {
   const dispatch = useDispatch<AppDispatch>()
   const waitForTransaction = useWaitForTransaction()
@@ -434,13 +458,7 @@ export function useBridgeActionHandlers(): {
   )
 
   const transferToForeign = useCallback(
-    async (
-      tokenAddress: string,
-      bridgeAddress: string,
-      amount: CurrencyAmount,
-      symbol: string,
-      isMultiBridge: boolean
-    ) => {
+    async (tokenAddress: string, bridgeAddress: string, amount: CurrencyAmount, isMultiBridge: boolean) => {
       const response = await sendToForeignTransaction(tokenAddress, bridgeAddress, amount, isMultiBridge)
 
       if (!response) return
@@ -448,14 +466,14 @@ export function useBridgeActionHandlers(): {
       await watchForForeignBridgeEvent(tokenAddress, isMultiBridge)
 
       addTransaction(response, {
-        summary: 'Transfer ' + symbol
+        summary: 'Your tokens were transferred successfully to Ethereum please switch to Ethereum to use them'
       })
     },
     [addTransaction, sendToForeignTransaction, watchForForeignBridgeEvent]
   )
 
   const transferToHome = useCallback(
-    async (tokenAddress: string, amount: CurrencyAmount, symbol: string, isMultiBridge: boolean) => {
+    async (tokenAddress: string, amount: CurrencyAmount, isMultiBridge: boolean) => {
       const response = await sendToHomeTransaction(tokenAddress, amount, isMultiBridge)
 
       if (!response) return
@@ -463,7 +481,7 @@ export function useBridgeActionHandlers(): {
       await waitForTransaction(response.hash, DEFAULT_CONFIRMATIONS_LIMIT)
       await watchForHomeBridgeEvent(tokenAddress, isMultiBridge)
       addTransaction(response, {
-        summary: 'Your tokens were transferred successfully to Fuse/Ethereum please switch to Fuse/Ethereum to use them'
+        summary: 'Your tokens were transferred successfully to Fuse please switch to Fuse to use them'
       })
     },
     [addTransaction, sendToHomeTransaction, waitForTransaction, watchForHomeBridgeEvent]

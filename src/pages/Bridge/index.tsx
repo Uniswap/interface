@@ -94,7 +94,7 @@ export default function Bridge({
 
   const toggleWalletModal = useWalletModalToggle()
 
-  const { isHome, isForeign } = useChain()
+  const { isHome, isEtheruem } = useChain()
 
   const bridgeAddress = isHome ? getBridgeHomeAddress(FOREIGN_BRIDGE_CHAIN) : getBridgeForeignAddress(chainId)
   const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
@@ -106,18 +106,17 @@ export default function Bridge({
 
     try {
       const { [Field.INPUT]: parsedAmountInput } = parsedAmounts
-      const symbol = currencies[Field.INPUT]?.symbol ?? ''
       const isMultiBridge = !isBasicBridgeToken(inputCurrencyId)
 
       if (!parsedAmountInput || !inputCurrencyId) {
         return
       }
       if (isHome) {
-        await transferToForeign(inputCurrencyId, bridgeAddress, parsedAmountInput, symbol, isMultiBridge)
+        await transferToForeign(inputCurrencyId, bridgeAddress, parsedAmountInput, isMultiBridge)
       } else {
-        await transferToHome(inputCurrencyId, parsedAmountInput, symbol, isMultiBridge)
+        await transferToHome(inputCurrencyId, parsedAmountInput, isMultiBridge)
 
-        if (isForeign) {
+        if (isEtheruem) {
           await fuseApi.fund(account)
         }
       }

@@ -1,8 +1,19 @@
 import { ChainId } from '@fuseio/fuse-swap-sdk'
 
+type BridgeToken = {
+  HOME_BRIDGE_MEDIATOR: string
+  HOME_TOKEN_ADDRESS: string
+  FOREIGN_BRIDGE_MEDIATOR: string
+  FOREIGN_TOKEN_ADDRESS: string
+  SYMBOL: string
+  DAILY_LIMIT: number
+  MAX_AMOUNT_PER_TX: number
+  MIN_AMOUNT_PER_TX: number
+}
+
 export const DEFAULT_CONFIRMATIONS_LIMIT = 2
 
-export const BASIC_BRIDGE_TOKENS = {
+export const CUSTOM_BRIDGE_TOKENS: { [chainId in ChainId]: BridgeToken[] | [] } = {
   [ChainId.MAINNET]: [
     {
       HOME_BRIDGE_MEDIATOR: '0xD39021DB018E2CAEadb4B2e6717D31550e7918D0',
@@ -26,5 +37,9 @@ export const BASIC_BRIDGE_TOKENS = {
       MAX_AMOUNT_PER_TX: 1500000000,
       MIN_AMOUNT_PER_TX: 100
     }
-  ]
+  ],
+  [ChainId.FUSE]: [],
+  [ChainId.RINKEBY]: [],
+  [ChainId.GÖRLI]: [],
+  [ChainId.KOVAN]: []
 }

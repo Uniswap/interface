@@ -20,7 +20,7 @@ import AMBErc677To677ABI from '../constants/abis/ambErc677ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
 import { getNetworkLibrary, getNetworkLibraryByChain } from '../connectors'
 import { TransactionResponse } from '@ethersproject/providers'
-import { BASIC_BRIDGE_TOKENS } from '../constants/bridge'
+import { CUSTOM_BRIDGE_TOKENS } from '../constants/bridge'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -238,7 +238,8 @@ export function getForiegnBridgeContractJsonRpc(chainId: number): Contract {
 
 export function getBasicForeignBridgeAddress(tokenAddress: string, chainId: number) {
   const formattedTokenAddress = tokenAddress.toLowerCase()
-  const list = chainId === ChainId.MAINNET ? BASIC_BRIDGE_TOKENS[ChainId.MAINNET] : BASIC_BRIDGE_TOKENS[ChainId.ROPSTEN]
+  const list =
+    chainId === ChainId.MAINNET ? CUSTOM_BRIDGE_TOKENS[ChainId.MAINNET] : CUSTOM_BRIDGE_TOKENS[ChainId.ROPSTEN]
   const token = list.find(
     token =>
       token.FOREIGN_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress ||
@@ -252,8 +253,8 @@ export function getBasicHomeBridgeAddress(tokenAddress: string) {
 
   const list =
     FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET
-      ? BASIC_BRIDGE_TOKENS[ChainId.MAINNET]
-      : BASIC_BRIDGE_TOKENS[ChainId.ROPSTEN]
+      ? CUSTOM_BRIDGE_TOKENS[ChainId.MAINNET]
+      : CUSTOM_BRIDGE_TOKENS[ChainId.ROPSTEN]
 
   const token = list.find(
     token =>
@@ -269,7 +270,7 @@ export function isBasicBridgeToken(tokenAddress?: string) {
 
   const formattedTokenAddress = tokenAddress.toLowerCase()
 
-  const addresses = [...BASIC_BRIDGE_TOKENS[ChainId.MAINNET], ...BASIC_BRIDGE_TOKENS[ChainId.ROPSTEN]]
+  const addresses = [...CUSTOM_BRIDGE_TOKENS[ChainId.MAINNET], ...CUSTOM_BRIDGE_TOKENS[ChainId.ROPSTEN]]
     .flatMap(token => [token.FOREIGN_TOKEN_ADDRESS, token.HOME_TOKEN_ADDRESS])
     .map(token => token.toLowerCase())
 
