@@ -118,17 +118,16 @@ export function useCTokenApproveCallback(
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
-    if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
+    if (!amountToApprove || !spender || !approveTokenWalletBalance) return ApprovalState.UNKNOWN
     if (amountToApprove.isETH()) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
-    // amountToApprove will be defined if currentAllowance is
-    return currentAllowance.greaterThan(approveTokenWalletBalance?.raw ?? ZERO)
-      ? ApprovalState.APPROVED
-      : pendingApproval
+    return pendingApproval
       ? ApprovalState.PENDING
-      : ApprovalState.NOT_APPROVED
+      : currentAllowance.equalTo(ZERO) || currentAllowance.lessThan(approveTokenWalletBalance)
+      ? ApprovalState.NOT_APPROVED
+      : ApprovalState.APPROVED
   }, [amountToApprove, approveTokenWalletBalance, currentAllowance, pendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
