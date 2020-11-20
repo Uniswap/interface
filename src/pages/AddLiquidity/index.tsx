@@ -388,7 +388,7 @@ export default function AddLiquidity({
                     Swap fee
                   </TYPE.body>
                   <TYPE.body fontWeight="500" fontSize={12}>
-                    {swapFee?.toSignificant(2) ?? '-'}
+                    {`${swapFee?.toSignificant(2)}%` ?? '-'}
                   </TYPE.body>
                 </RowBetween>
                 <RowBetween align="center">
@@ -396,7 +396,7 @@ export default function AddLiquidity({
                     Protocol fee
                   </TYPE.body>
                   <TYPE.body fontWeight="500" fontSize={12}>
-                    {protocolFee?.toSignificant(2) ?? '-'}
+                    {`${protocolFee?.toSignificant(2)}%` ?? '-'}
                   </TYPE.body>
                 </RowBetween>
               </AutoColumn>
