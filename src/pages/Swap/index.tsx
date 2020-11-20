@@ -272,7 +272,7 @@ export default function Swap() {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
                       onSwitchTokens()
                     }}
-                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.purple3 : theme.text2}
+                    color={theme.text4}
                   />
                 </ArrowWrapper>
               </AutoRow>
