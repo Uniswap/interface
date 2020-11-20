@@ -1,8 +1,8 @@
 import { CurrencyAmount, JSBI, Trade, Token } from 'dxswap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
+import { ArrowDown, Repeat } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import Card from '../../components/Card'
@@ -39,6 +39,10 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+
+const RotatedRepeat = styled(Repeat)`
+  transform: rotate(90deg);
+`
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -262,7 +266,7 @@ export default function Swap() {
             <AutoColumn justify="space-between">
               <AutoRow justify="center" style={{ padding: '0 1rem' }}>
                 <ArrowWrapper clickable>
-                  <ArrowDown
+                  <RotatedRepeat
                     size="16"
                     onClick={() => {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
