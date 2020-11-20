@@ -50,15 +50,19 @@ export const TokenPickerItem = styled(Flex)`
 export const SearchInput = styled.input`
   position: relative;
   display: flex;
-  padding: 0px 8px;
   align-items: center;
   width: 100%;
   height: 44px;
   white-space: nowrap;
   background: ${({ theme }) => transparentize(0.75, theme.purpleBase)};
-  border: 8px solid transparent;
   border-radius: 8px;
+  border: 8px solid transparent;
   border-image: url(${border8pxRadius}) 8;
+  padding: 8px 12px;
+  :focus {
+    border: solid 1px ${({ theme }) => theme.bg5};
+    padding: 15px 19px;
+  }
   outline: none;
   color: ${({ theme }) => theme.white};
   -webkit-appearance: none;

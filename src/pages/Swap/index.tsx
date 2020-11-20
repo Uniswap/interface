@@ -305,18 +305,22 @@ export default function Swap() {
             {showWrap ? null : (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="8px">
-                  {Boolean(trade) && (
-                    <RowBetween align="center">
-                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-                        Price
-                      </TYPE.body>
+                  <RowBetween align="center">
+                    <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                      Price
+                    </TYPE.body>
+                    {!!trade ? (
                       <TradePrice
                         price={trade?.executionPrice}
                         showInverted={showInverted}
                         setShowInverted={setShowInverted}
                       />
-                    </RowBetween>
-                  )}
+                    ) : (
+                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                        -
+                      </TYPE.body>
+                    )}
+                  </RowBetween>
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && Boolean(trade) && (
                     <RowBetween align="center">
                       <ClickableText fontSize="12px" lineHeight="15px" fontWeight="500" onClick={toggleSettings}>

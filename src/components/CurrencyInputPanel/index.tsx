@@ -1,6 +1,6 @@
 import { Currency, Pair } from 'dxswap-sdk'
 import React, { useState, useCallback } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { transparentize } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
@@ -70,12 +70,20 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   z-index: 1;
 `
 
-const Container = styled.div<{ hideInput: boolean }>`
+const Container = styled.div<{ hideInput: boolean; focused: boolean }>`
   background-color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
-  border: 8px solid;
   border-radius: 8px;
-  border-image: url(${border8pxRadius}) 8;
-  padding: 8px 12px;
+  ${({ focused }) =>
+    focused
+      ? css`
+          border: solid 1px ${({ theme }) => theme.bg5};
+          padding: 15px 19px;
+        `
+      : css`
+          border: 8px solid transparent;
+          border-image: url(${border8pxRadius}) 8;
+          padding: 8px 12px;
+        `};
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -140,6 +148,7 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [focused, setFocused] = useState(false)
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
 
@@ -147,9 +156,17 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
+  const handleFocus = useCallback(() => {
+    setFocused(true)
+  }, [])
+
+  const handleBlur = useCallback(() => {
+    setFocused(false)
+  }, [])
+
   return (
     <InputPanel id={id}>
-      <Container hideInput={hideInput}>
+      <Container hideInput={hideInput} focused={focused}>
         {!hideInput && (
           <LabelRow>
             <RowBetween>
@@ -181,6 +198,8 @@ export default function CurrencyInputPanel({
               <NumericalInput
                 className="token-amount-input"
                 value={value}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 onUserInput={val => {
                   onUserInput(val)
                 }}

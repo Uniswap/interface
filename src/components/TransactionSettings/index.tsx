@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react'
-import styled from 'styled-components'
+import React, { useState, useRef, useCallback } from 'react'
+import styled, { css } from 'styled-components'
 
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
@@ -35,14 +35,23 @@ const Input = styled.input`
   display: flex;
 `
 
-const OptionCustom = styled(Option)<{ active?: boolean; warning?: boolean }>`
+const OptionCustom = styled(Option)<{ active?: boolean; warning?: boolean; focused?: boolean }>`
   position: relative;
-  padding: 0px 4px;
   flex: 1;
   display: flex;
   border: 8px solid;
   border-radius: 8px;
-  border-image: url(${border8pxRadius}) 8;
+  ${({ focused }) =>
+    focused
+      ? css`
+          border: solid 1px ${({ theme }) => theme.bg5};
+          padding: 7px 11px;
+        `
+      : css`
+          border: 8px solid transparent;
+          border-image: url(${border8pxRadius}) 8;
+          padding: 0px 4px;
+        `};
 
   input {
     width: 100%;
@@ -70,7 +79,9 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
   const inputRef = useRef<HTMLInputElement>()
 
   const [slippageInput, setSlippageInput] = useState('')
+  const [slippageFocused, setSlippageFocused] = useState(false)
   const [deadlineInput, setDeadlineInput] = useState('')
+  const [deadlineFocused, setDeadlineFocused] = useState(false)
 
   const slippageInputIsValid =
     slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
@@ -116,6 +127,14 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     } catch {}
   }
 
+  const handleSlippageFocus = useCallback(() => {
+    setSlippageFocused(true)
+  }, [])
+
+  const handleDeadlineFocus = useCallback(() => {
+    setDeadlineFocused(true)
+  }, [])
+
   return (
     <AutoColumn gap="16px">
       <AutoColumn gap="12px">
@@ -153,7 +172,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
           >
             1%
           </Option>
-          <OptionCustom active={![10, 50, 100].includes(rawSlippage)} warning={!slippageInputIsValid} tabIndex={-1}>
+          <OptionCustom focused={slippageFocused} warning={!slippageInputIsValid} tabIndex={-1}>
             <RowBetween>
               {!!slippageInput &&
               (slippageError === SlippageError.RiskyLow || slippageError === SlippageError.RiskyHigh) ? (
@@ -168,7 +187,9 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
                 ref={inputRef as any}
                 placeholder={(rawSlippage / 100).toFixed(2)}
                 value={slippageInput}
+                onFocus={handleSlippageFocus}
                 onBlur={() => {
+                  setSlippageFocused(false)
                   parseCustomSlippage((rawSlippage / 100).toFixed(2))
                 }}
                 onChange={e => parseCustomSlippage(e.target.value)}
@@ -204,10 +225,12 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
           <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
         </RowFixed>
         <RowFixed>
-          <OptionCustom style={{ width: '80px' }} tabIndex={-1}>
+          <OptionCustom focused={deadlineFocused} style={{ width: '80px' }} tabIndex={-1}>
             <Input
               color={!!deadlineError ? 'red' : undefined}
+              onFocus={handleDeadlineFocus}
               onBlur={() => {
+                setDeadlineFocused(false)
                 parseCustomDeadline((deadline / 60).toString())
               }}
               placeholder={(deadline / 60).toString()}
