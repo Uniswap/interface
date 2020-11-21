@@ -1,7 +1,7 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, ETHER, Token } from '@uniswap/sdk'
+import { Currency, ETHER, Token, currencyEquals } from '@uniswap/sdk'
 import { useMemo } from 'react'
-import { useDefaultTokenList } from '../state/lists/hooks'
+import { useSelectedTokenList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
@@ -12,7 +12,7 @@ import { useBytes32TokenContract, useTokenContract } from './useContract'
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
-  const allTokens = useDefaultTokenList()
+  const allTokens = useSelectedTokenList()
 
   return useMemo(() => {
     if (!chainId) return {}
@@ -30,6 +30,12 @@ export function useAllTokens(): { [address: string]: Token } {
         )
     )
   }, [chainId, userAddedTokens, allTokens])
+}
+
+// Check if currency is included in custom list from user storage
+export function useIsUserAddedToken(currency: Currency): boolean {
+  const userAddedTokens = useUserAddedTokens()
+  return !!userAddedTokens.find(token => currencyEquals(currency, token))
 }
 
 // parse a name or symbol from a token response

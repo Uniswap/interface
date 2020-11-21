@@ -1,4 +1,4 @@
-import { ChainId, Pair, Token, Currency } from '@uniswap/sdk'
+import { ChainId, Pair, Token } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -10,17 +10,15 @@ import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
-  dismissTokenWarning,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance
+  updateUserSlippageTolerance,
+  toggleURLWarning
 } from './actions'
-import { useDefaultTokenList } from '../lists/hooks'
-import { isDefaultToken } from '../../utils'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -99,7 +97,7 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
   return [userSlippageTolerance, setUserSlippageTolerance]
 }
 
-export function useUserDeadline(): [number, (slippage: number) => void] {
+export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userDeadline = useSelector<AppState, AppState['user']['userDeadline']>(state => {
     return state.user.userDeadline
@@ -163,34 +161,13 @@ export function usePairAdder(): (pair: Pair) => void {
   )
 }
 
-/**
- * Returns whether a token warning has been dismissed and a callback to dismiss it,
- * iff it has not already been dismissed and is a valid token.
- */
-export function useTokenWarningDismissal(chainId?: number, token?: Currency): [boolean, null | (() => void)] {
-  const dismissalState = useSelector<AppState, AppState['user']['dismissedTokenWarnings']>(
-    state => state.user.dismissedTokenWarnings
-  )
+export function useURLWarningVisible(): boolean {
+  return useSelector((state: AppState) => state.user.URLWarningVisible)
+}
 
-  const dispatch = useDispatch<AppDispatch>()
-
-  // get default list, mark as dismissed if on list
-  const defaultList = useDefaultTokenList()
-  const isDefault = isDefaultToken(defaultList, token)
-
-  return useMemo(() => {
-    if (!chainId || !token) return [false, null]
-
-    const dismissed: boolean =
-      token instanceof Token ? dismissalState?.[chainId]?.[token.address] === true || isDefault : true
-
-    const callback =
-      dismissed || !(token instanceof Token)
-        ? null
-        : () => dispatch(dismissTokenWarning({ chainId, tokenAddress: token.address }))
-
-    return [dismissed, callback]
-  }, [chainId, token, dismissalState, isDefault, dispatch])
+export function useURLWarningToggle(): () => void {
+  const dispatch = useDispatch()
+  return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
 }
 
 /**

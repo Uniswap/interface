@@ -1,18 +1,24 @@
 import { ChainId, Token } from '@uniswap/sdk'
-import { TokenInfo, TokenList } from '@uniswap/token-lists'
+import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { DEFAULT_TOKEN_LIST_URL } from '../../constants'
 import { AppState } from '../index'
+
+type TagDetails = Tags[keyof Tags]
+export interface TagInfo extends TagDetails {
+  id: string
+}
 
 /**
  * Token instances created from token info.
  */
 export class WrappedTokenInfo extends Token {
   public readonly tokenInfo: TokenInfo
-  constructor(tokenInfo: TokenInfo) {
+  public readonly tags: TagInfo[]
+  constructor(tokenInfo: TokenInfo, tags: TagInfo[]) {
     super(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)
     this.tokenInfo = tokenInfo
+    this.tags = tags
   }
   public get logoURI(): string | undefined {
     return this.tokenInfo.logoURI
@@ -33,7 +39,7 @@ const EMPTY_LIST: TokenAddressMap = {
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
-  'WeakMap' in window ? new WeakMap<TokenList, TokenAddressMap>() : null
+  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
 export function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list)
@@ -41,7 +47,14 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
 
   const map = list.tokens.reduce<TokenAddressMap>(
     (tokenMap, tokenInfo) => {
-      const token = new WrappedTokenInfo(tokenInfo)
+      const tags: TagInfo[] =
+        tokenInfo.tags
+          ?.map(tagId => {
+            if (!list.tags?.[tagId]) return undefined
+            return { ...list.tags[tagId], id: tagId }
+          })
+          ?.filter((x): x is TagInfo => Boolean(x)) ?? []
+      const token = new WrappedTokenInfo(tokenInfo, tags)
       if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
       return {
         ...tokenMap,
@@ -57,17 +70,38 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-export function useTokenList(url: string): TokenAddressMap {
+export function useTokenList(url: string | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   return useMemo(() => {
+    if (!url) return EMPTY_LIST
     const current = lists[url]?.current
     if (!current) return EMPTY_LIST
-    return listToTokenMap(current)
+    try {
+      return listToTokenMap(current)
+    } catch (error) {
+      console.error('Could not show token list due to error', error)
+      return EMPTY_LIST
+    }
   }, [lists, url])
 }
 
-export function useDefaultTokenList(): TokenAddressMap {
-  return useTokenList(DEFAULT_TOKEN_LIST_URL)
+export function useSelectedListUrl(): string | undefined {
+  return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
+}
+
+export function useSelectedTokenList(): TokenAddressMap {
+  return useTokenList(useSelectedListUrl())
+}
+
+export function useSelectedListInfo(): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
+  const selectedUrl = useSelectedListUrl()
+  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const list = selectedUrl ? listsByUrl[selectedUrl] : undefined
+  return {
+    current: list?.current ?? null,
+    pending: list?.pendingUpdate ?? null,
+    loading: list?.loadingRequestId !== null
+  }
 }
 
 // returns all downloaded current lists

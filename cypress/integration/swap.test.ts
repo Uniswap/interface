@@ -1,5 +1,7 @@
 describe('Swap', () => {
-  beforeEach(() => cy.visit('/swap'))
+  beforeEach(() => {
+    cy.visit('/swap')
+  })
   it('can enter an amount into input', () => {
     cy.get('#swap-currency-input .token-amount-input')
       .type('0.001', { delay: 200 })
@@ -54,6 +56,7 @@ describe('Swap', () => {
       cy.get('#toggle-expert-mode-button').click()
       cy.get('#confirm-expert-mode').click()
     })
+
     it('add a recipient is visible', () => {
       cy.get('#add-recipient-button').should('be.visible')
     })

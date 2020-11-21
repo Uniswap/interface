@@ -7,7 +7,7 @@ import { SearchInput } from '../../components/SearchModal/styleds'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useDefaultTokenList } from '../../state/lists/hooks'
+import { useSelectedTokenList } from '../../state/lists/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { BackArrow, TYPE } from '../../theme'
 import { LightCard } from '../../components/Card'
@@ -17,7 +17,7 @@ import V1PositionCard from '../../components/PositionCard/V1'
 import QuestionHelper from '../../components/QuestionHelper'
 import { Dots } from '../../components/swap/styleds'
 import { useAddUserToken } from '../../state/user/hooks'
-import { isDefaultToken } from '../../utils'
+import { isTokenOnList } from '../../utils'
 
 export default function MigrateV1() {
   const theme = useContext(ThemeContext)
@@ -28,40 +28,39 @@ export default function MigrateV1() {
 
   // automatically add the search token
   const token = useToken(tokenSearch)
-  const defaultTokens = useDefaultTokenList()
-  const isDefault = isDefaultToken(defaultTokens, token)
+  const selectedTokenListTokens = useSelectedTokenList()
+  const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token ?? undefined)
   const allTokens = useAllTokens()
   const addToken = useAddUserToken()
   useEffect(() => {
-    if (token && !isDefault && !allTokens[token.address]) {
+    if (token && !isOnSelectedList && !allTokens[token.address]) {
       addToken(token)
     }
-  }, [token, isDefault, addToken, allTokens])
+  }, [token, isOnSelectedList, addToken, allTokens])
 
   // get V1 LP balances
   const V1Exchanges = useAllTokenV1Exchanges()
   const V1LiquidityTokens: Token[] = useMemo(() => {
-    return Object.keys(V1Exchanges).map(
-      exchangeAddress => new Token(chainId, exchangeAddress, 18, 'UNI-V1', 'Uniswap V1')
-    )
+    return chainId
+      ? Object.keys(V1Exchanges).map(exchangeAddress => new Token(chainId, exchangeAddress, 18, 'UNI-V1', 'Uniswap V1'))
+      : []
   }, [chainId, V1Exchanges])
   const [V1LiquidityBalances, V1LiquidityBalancesLoading] = useTokenBalancesWithLoadingIndicator(
-    account,
+    account ?? undefined,
     V1LiquidityTokens
   )
   const allV1PairsWithLiquidity = V1LiquidityTokens.filter(V1LiquidityToken => {
-    return (
-      V1LiquidityBalances?.[V1LiquidityToken.address] &&
-      JSBI.greaterThan(V1LiquidityBalances[V1LiquidityToken.address].raw, JSBI.BigInt(0))
-    )
+    const balance = V1LiquidityBalances?.[V1LiquidityToken.address]
+    return balance && JSBI.greaterThan(balance.raw, JSBI.BigInt(0))
   }).map(V1LiquidityToken => {
-    return (
+    const balance = V1LiquidityBalances[V1LiquidityToken.address]
+    return balance ? (
       <V1PositionCard
         key={V1LiquidityToken.address}
         token={V1Exchanges[V1LiquidityToken.address]}
-        V1LiquidityBalance={V1LiquidityBalances[V1LiquidityToken.address]}
+        V1LiquidityBalance={balance}
       />
-    )
+    ) : null
   })
 
   // should never always be false, because a V1 exhchange exists for WETH on all testnets

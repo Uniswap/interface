@@ -126,10 +126,10 @@ interface CurrencyInputPanelProps {
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
-  showSendWithSwap?: boolean
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
+  customBalanceText?: string
 }
 
 export default function CurrencyInputPanel({
@@ -138,22 +138,22 @@ export default function CurrencyInputPanel({
   onMax,
   showMaxButton,
   label = 'Input',
-  onCurrencySelect = null,
-  currency = null,
+  onCurrencySelect,
+  currency,
   disableCurrencySelect = false,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
-  showSendWithSwap = false,
-  otherCurrency = null,
+  otherCurrency,
   id,
-  showCommonBases
+  showCommonBases,
+  customBalanceText
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
-  const selectedCurrencyBalance = useCurrencyBalance(account, currency)
+  const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {
@@ -178,7 +178,7 @@ export default function CurrencyInputPanel({
                   style={{ display: 'inline', cursor: 'pointer' }}
                 >
                   {!hideBalance && !!currency && selectedCurrencyBalance
-                    ? 'Balance: ' + selectedCurrencyBalance?.toSignificant(6)
+                    ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
                     : ' -'}
                 </TYPE.body>
               )}
@@ -233,13 +233,12 @@ export default function CurrencyInputPanel({
           </CurrencySelect>
         </InputRow>
       </Container>
-      {!disableCurrencySelect && (
+      {!disableCurrencySelect && onCurrencySelect && (
         <CurrencySearchModal
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
           onCurrencySelect={onCurrencySelect}
-          showSendWithSwap={showSendWithSwap}
-          hiddenCurrency={currency}
+          selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
           showCommonBases={showCommonBases}
         />

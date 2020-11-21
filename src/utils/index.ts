@@ -25,7 +25,11 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   42: 'kovan.'
 }
 
-export function getEtherscanLink(chainId: ChainId, data: string, type: 'transaction' | 'token' | 'address'): string {
+export function getEtherscanLink(
+  chainId: ChainId,
+  data: string,
+  type: 'transaction' | 'token' | 'address' | 'block'
+): string {
   const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
 
   switch (type) {
@@ -34,6 +38,9 @@ export function getEtherscanLink(chainId: ChainId, data: string, type: 'transact
     }
     case 'token': {
       return `${prefix}/token/${data}`
+    }
+    case 'block': {
+      return `${prefix}/block/${data}`
     }
     case 'address':
     default: {
@@ -99,7 +106,7 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export function isDefaultToken(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
+export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }

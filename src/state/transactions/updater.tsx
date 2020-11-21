@@ -26,7 +26,7 @@ export function shouldCheck(
   }
 }
 
-export default function Updater() {
+export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React()
 
   const lastBlockNumber = useBlockNumber()
