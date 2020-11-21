@@ -63,7 +63,7 @@ export const torus = new TorusConnector({
   chainId: Number(process.env.REACT_APP_CHAIN_ID),
   initOptions: {
     showTorusButton: true,
-    buildEnv: "beta",
-    enableLogging: true,
+    buildEnv: 'beta',
+    enableLogging: true
   }
 })
