@@ -62,6 +62,8 @@ export const walletlink = new WalletLinkConnector({
 export const torus = new TorusConnector({
   chainId: Number(process.env.REACT_APP_CHAIN_ID),
   initOptions: {
-    showTorusButton: false
+    showTorusButton: true,
+    buildEnv: "beta",
+    enableLogging: true,
   }
 })
