@@ -70,9 +70,7 @@ const Break = styled.div`
 `
 
 const ModalContentWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow-y: scroll;
   padding: 2rem 0;
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 4px;
