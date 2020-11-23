@@ -30,7 +30,7 @@ import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
 import { Text } from 'rebass'
 import { useActiveWeb3React, useChain } from '../../hooks'
-import { getBridgeHomeAddress, getBridgeForeignAddress, isBasicBridgeToken } from '../../utils'
+import { getMultiBridgeHomeAddress, getBridgeForeignAddress, isBasicBridgeToken } from '../../utils'
 import { FOREIGN_BRIDGE_CHAIN, UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
 import { TYPE } from '../../theme'
 import UnsupportedBridgeTokenModal from '../../components/UnsupportedBridgeTokenModal'
@@ -51,7 +51,7 @@ export default function Bridge({
   const { independentField, typedValue } = useBridgeState()
 
   const { currencies, currencyBalances, parsedAmounts, inputError, bridgeTransactionStatus } = useDerivedBridgeInfo(
-    inputCurrency ?? undefined
+    inputCurrencyId
   )
 
   const { updateCompletedBridgeTransfer } = useUserActionHandlers()
@@ -96,7 +96,7 @@ export default function Bridge({
 
   const { isHome, isEtheruem } = useChain()
 
-  const bridgeAddress = isHome ? getBridgeHomeAddress(FOREIGN_BRIDGE_CHAIN) : getBridgeForeignAddress(chainId)
+  const bridgeAddress = isHome ? getMultiBridgeHomeAddress(FOREIGN_BRIDGE_CHAIN) : getBridgeForeignAddress(chainId)
   const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
 
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)

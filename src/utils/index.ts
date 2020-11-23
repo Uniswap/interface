@@ -21,6 +21,7 @@ import Erc677TokenABI from '../constants/abis/erc677.json'
 import { getNetworkLibrary, getNetworkLibraryByChain } from '../connectors'
 import { TransactionResponse } from '@ethersproject/providers'
 import { CUSTOM_BRIDGE_TOKENS } from '../constants/bridge'
+import { formatUnits } from 'ethers/lib/utils'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -163,7 +164,7 @@ export function getAMBErc20ToErc677Contract(address: string, library: Web3Provid
   return getContract(address, HomeMultiAMBErc20ToErc677ABI, library, account)
 }
 
-export function getBridgeHomeAddress(chainId?: number): string {
+export function getMultiBridgeHomeAddress(chainId?: number): string {
   switch (chainId) {
     case ChainId.MAINNET:
       return FUSE_MAINNET_HOME_BRIDGE_ADDRESS
@@ -185,7 +186,7 @@ export function getBridgeForeignAddress(chainId?: number): string {
   }
 }
 
-export function getHomeBridgeContract(library: Web3Provider, account?: string): Contract {
+export function getHomeMultiBridgeContract(library: Web3Provider, account?: string): Contract {
   const address =
     FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS : FUSE_MAINNET_HOME_BRIDGE_ADDRESS
   return getContract(address, HomeMultiAMBErc20ToErc677ABI, library, account)
@@ -290,7 +291,7 @@ export const confirmHomeTokenTransfer = async (
   library: Web3Provider,
   account: string
 ) => {
-  const contract = getHomeBridgeContract(library, account)
+  const contract = getHomeMultiBridgeContract(library, account)
   const address = await contract.foreignTokenAddress(homeTokenAddress)
   return foreignTokenAddress === address
 }
@@ -350,4 +351,158 @@ export const waitForTransaction = async (
       resolve(receipt)
     }, 500)
   })
+}
+
+export const tryFormatAmount = (amount?: string, deciamls?: number) => {
+  if (!amount || !deciamls) return undefined
+
+  try {
+    const parsedAmount = formatUnits(amount, deciamls)
+    if (parsedAmount !== '0') return parsedAmount
+  } catch (error) {
+    console.debug(`Failed to parse input amount: "${amount}"`, error)
+  }
+
+  return undefined
+}
+
+export const getHomeMinPerTxn = async (
+  tokenAddress: string,
+  isMultiBridge: boolean,
+  library: Web3Provider,
+  account?: string
+) => {
+  let method, args: string[]
+
+  if (isMultiBridge) {
+    const contract = getHomeMultiBridgeContract(library, account)
+    method = contract.minPerTx
+    args = [tokenAddress]
+  } else {
+    const address = getBasicHomeBridgeAddress(tokenAddress)
+    const contract = getAMBErc677To677Contract(address ?? '', library, account)
+    method = contract.minPerTx
+    args = []
+  }
+
+  return await method(...args)
+}
+
+export const getHomeMaxPerTxn = async (
+  tokenAddress: string,
+  isMultiBridge: boolean,
+  library: Web3Provider,
+  account?: string
+) => {
+  let method, args: string[]
+
+  if (isMultiBridge) {
+    const contract = getHomeMultiBridgeContract(library, account)
+    method = contract.maxPerTx
+    args = [tokenAddress]
+  } else {
+    const address = getBasicHomeBridgeAddress(tokenAddress)
+    const contract = getAMBErc677To677Contract(address ?? '', library, account)
+    method = contract.maxPerTx
+    args = []
+  }
+
+  return await method(...args)
+}
+
+export const getForeignMinPerTxn = async (
+  tokenAddress: string,
+  isMultiBridge: boolean,
+  chainId?: number,
+  library?: Web3Provider,
+  account?: string
+) => {
+  if (!library || !chainId || !account) return
+
+  let method, args: string[]
+
+  if (isMultiBridge) {
+    const contract = getForiegnBridgeContract(chainId, library, account)
+    method = contract.minPerTx
+    args = [tokenAddress]
+  } else {
+    const address = getBasicForeignBridgeAddress(tokenAddress, chainId)
+    const contract = getAMBErc677To677Contract(address ?? '', library, account)
+    method = contract.minPerTx
+    args = []
+  }
+
+  return await method(...args)
+}
+
+export const getForeignMaxPerTxn = async (
+  tokenAddress: string,
+  isMultiBridge: boolean,
+  chainId?: number,
+  library?: Web3Provider,
+  account?: string
+) => {
+  if (!library || !chainId || !account) return
+
+  let method, args: string[]
+
+  if (isMultiBridge) {
+    const contract = getForiegnBridgeContract(chainId, library, account)
+    method = contract.maxPerTx
+    args = [tokenAddress]
+  } else {
+    const address = getBasicForeignBridgeAddress(tokenAddress, chainId)
+    const contract = getAMBErc677To677Contract(address ?? '', library, account)
+    method = contract.maxPerTx
+    args = []
+  }
+
+  return await method(...args)
+}
+
+export const getMinMaxPerTxn = async (
+  tokenAddress: string,
+  decimals: number | undefined,
+  isHome: boolean,
+  chainId: number,
+  library: Web3Provider,
+  account: string
+) => {
+  let minAmount: string | undefined,
+    maxAmount: string | undefined,
+    minPerTxn: (...args: any) => Promise<any>,
+    maxPerTxn: (...args: any) => Promise<any>,
+    args: any,
+    defaultAmountArgs: any
+
+  const isMultiBridge = !isBasicBridgeToken(tokenAddress)
+
+  if (isHome) {
+    minPerTxn = getHomeMinPerTxn
+    maxPerTxn = getHomeMaxPerTxn
+    args = [tokenAddress, isMultiBridge, library, account]
+    defaultAmountArgs = ['0x0000000000000000000000000000000000000000', true, library, account]
+  } else {
+    minPerTxn = getForeignMinPerTxn
+    maxPerTxn = getForeignMaxPerTxn
+    args = [tokenAddress, isMultiBridge, chainId, library, account]
+    defaultAmountArgs = ['0x0000000000000000000000000000000000000000', true, chainId, library, account]
+  }
+
+  const rawMinAmount = await minPerTxn(...args)
+  const rawMaxAmount = await maxPerTxn(...args)
+  const rawDefaultAmount = await maxPerTxn(...defaultAmountArgs)
+
+  // eslint-disable-next-line prefer-const
+  minAmount = tryFormatAmount(rawMinAmount, decimals)
+
+  if (isMultiBridge) {
+    const amount = tryFormatAmount(rawMaxAmount, decimals)
+    const defaultAmount = tryFormatAmount(rawDefaultAmount, decimals)
+    maxAmount = amount === '0.0' ? defaultAmount : amount
+  } else {
+    maxAmount = tryFormatAmount(rawMaxAmount, decimals)
+  }
+
+  return { minAmount, maxAmount }
 }

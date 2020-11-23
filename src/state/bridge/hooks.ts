@@ -2,6 +2,7 @@ import { AppState, AppDispatch } from '../index'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useSelector, useDispatch } from 'react-redux'
 import { useCallback, useMemo, Dispatch } from 'react'
+import { useAsyncMemo } from 'use-async-memo'
 import {
   typeInput,
   Field,
@@ -15,7 +16,7 @@ import {
   BridgeTransactionStatus,
   transferError
 } from './actions'
-import { Currency, CurrencyAmount, ChainId } from '@fuseio/fuse-swap-sdk'
+import { Currency, CurrencyAmount } from '@fuseio/fuse-swap-sdk'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { tryParseAmount } from '../swap/hooks'
@@ -25,24 +26,24 @@ import {
   getHomeBridgeContractJsonRpc,
   getForiegnBridgeContract,
   getForiegnBridgeContractJsonRpc,
-  getHomeBridgeContract,
+  getHomeMultiBridgeContract,
   getBasicForeignBridgeAddress,
   getAMBErc677To677Contract,
-  getBasicHomeBridgeAddress
+  getBasicHomeBridgeAddress,
+  getMinMaxPerTxn
 } from '../../utils'
 import { useTransactionAdder } from '../transactions/hooks'
 import { getNetworkLibrary, getNetworkLibraryByChain } from '../../connectors'
 import { AnyAction } from '@reduxjs/toolkit'
-import { DEFAULT_CONFIRMATIONS_LIMIT, CUSTOM_BRIDGE_TOKENS } from '../../constants/bridge'
-import { formatUnits } from 'ethers/lib/utils'
-import { FOREIGN_BRIDGE_CHAIN } from '../../constants'
+import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../constants/bridge'
+import { useCurrency } from '../../hooks/Tokens'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
 }
 
 export function useDerivedBridgeInfo(
-  inputCurrency: Currency | undefined
+  tokenAddress: string | undefined
 ): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
@@ -51,7 +52,11 @@ export function useDerivedBridgeInfo(
   bridgeTransactionStatus: BridgeTransactionStatus
   confirmations: number
 } {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
+
+  const { isHome } = useChain()
+
+  const inputCurrency = useCurrency(tokenAddress)
 
   const { independentField, typedValue, bridgeTransactionStatus, confirmations } = useBridgeState()
 
@@ -74,41 +79,14 @@ export function useDerivedBridgeInfo(
     [Field.INPUT]: independentAmount
   }
 
-  const parsedAmount = tryParseAmount(typedValue, inputCurrency)
+  const parsedAmount = tryParseAmount(typedValue, inputCurrency ?? undefined)
 
   const { [Field.INPUT]: inputAmount } = parsedAmounts
 
-  const { minAmount, maxAmount } = useMemo(() => {
-    const defaultMin = 0.01
-
-    if (!chainId) return { minAmount: defaultMin }
-
-    const chain =
-      chainId === ChainId.FUSE
-        ? FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET
-          ? ChainId.MAINNET
-          : ChainId.ROPSTEN
-        : chainId
-
-    const token = CUSTOM_BRIDGE_TOKENS[chain].find(token => token.SYMBOL === inputCurrency?.symbol)
-
-    if (token) {
-      const decimals = inputCurrency?.decimals
-      const parsedMin = formatUnits(token.MIN_AMOUNT_PER_TX.toString(), decimals)
-      const parsedMax = formatUnits(token.MAX_AMOUNT_PER_TX.toString(), decimals)
-      const minAmount = Number(parsedMin)
-      const maxAmount = Number(parsedMax)
-
-      return {
-        minAmount,
-        maxAmount
-      }
-    } else {
-      return {
-        minAmount: defaultMin
-      }
-    }
-  }, [chainId, inputCurrency])
+  const minMaxAmount = useAsyncMemo(async () => {
+    if (!tokenAddress || !chainId || !library || !account) return
+    return await getMinMaxPerTxn(tokenAddress, inputCurrency?.decimals, isHome, chainId, library, account)
+  }, [tokenAddress, inputCurrency])
 
   let inputError: string | undefined
   if (!account) {
@@ -123,7 +101,7 @@ export function useDerivedBridgeInfo(
     inputError = inputError ?? 'Enter an amount'
   }
 
-  if (Number(typedValue) < minAmount) {
+  if (minMaxAmount && Number(typedValue) < Number(minMaxAmount.minAmount)) {
     inputError = inputError ?? 'Below minimum limit'
   }
 
@@ -131,7 +109,7 @@ export function useDerivedBridgeInfo(
     inputError = 'Insufficient ' + currencies[Field.INPUT]?.symbol + ' balance'
   }
 
-  if (maxAmount && Number(typedValue) > maxAmount) {
+  if (minMaxAmount && Number(typedValue) > Number(minMaxAmount.maxAmount)) {
     inputError = inputError ?? 'Above maximum limit'
   }
 
@@ -291,7 +269,7 @@ function watchForeignMultiBridge(
     dispatch(confirmTokenTransferPending())
 
     const listener = async (tokenAddress: string, recipient: string) => {
-      const contract = getHomeBridgeContract(library, account)
+      const contract = getHomeMultiBridgeContract(library, account)
       const address = await contract.foreignTokenAddress(homeTokenAddress)
 
       if (recipient === account && tokenAddress === address) {
