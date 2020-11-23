@@ -20,7 +20,6 @@ const StyledMenu = styled.div`
 `
 
 const MenuContainer = styled.span`
-  min-width: 18.125rem;
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -29,11 +28,8 @@ const MenuContainer = styled.span`
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    width: 100%;
-    height: 100%;
-    padding-top: 50px;
-    padding-left: 25%;
-    padding-right: 25%;
+    top: calc(4rem + 50px);
+    left: calc(50vw - 50%);
     align-items: center;
   `};
 `

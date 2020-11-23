@@ -12,7 +12,7 @@ import {
   useUserSlippageTolerance,
   useDarkModeManager
 } from '../../state/user/hooks'
-import { TYPE, ExternalLink, LinkStyledButton } from '../../theme'
+import { TYPE, ExternalLink, LinkStyledButton, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -89,8 +89,6 @@ const MenuContainer = styled.span<{ ref: any }>`
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    height: 100%;
-    width: 100%;
     top: initial;
     right: initial;
     justify-content: center;
@@ -247,9 +245,12 @@ export default function SettingsTab() {
                 <MenuContainer ref={node}>
                   <MenuFlyout>
                     <AutoColumn gap="md" style={{ padding: '8px' }}>
-                      <Text fontWeight={600} fontSize={14}>
-                        Transaction settings
-                      </Text>
+                      <RowBetween>
+                        <Text fontWeight={600} fontSize={14}>
+                          Transaction settings
+                        </Text>
+                        <CloseIcon onClick={toggle} />
+                      </RowBetween>
                       <TransactionSettings
                         rawSlippage={userSlippageTolerance}
                         setRawSlippage={setUserslippageTolerance}
