@@ -380,7 +380,10 @@ export const getHomeMinPerTxn = async (
     args = [tokenAddress]
   } else {
     const address = getBasicHomeBridgeAddress(tokenAddress)
-    const contract = getAMBErc677To677Contract(address ?? '', library, account)
+
+    if (!address) return undefined
+
+    const contract = getAMBErc677To677Contract(address, library, account)
     method = contract.minPerTx
     args = []
   }
@@ -402,7 +405,10 @@ export const getHomeMaxPerTxn = async (
     args = [tokenAddress]
   } else {
     const address = getBasicHomeBridgeAddress(tokenAddress)
-    const contract = getAMBErc677To677Contract(address ?? '', library, account)
+
+    if (!address) return undefined
+
+    const contract = getAMBErc677To677Contract(address, library, account)
     method = contract.maxPerTx
     args = []
   }

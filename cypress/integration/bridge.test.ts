@@ -41,12 +41,6 @@ describe('Bridge', () => {
       cy.get('#bridge-transfer-button').should('be.disabled')
     })
 
-    it('can not transfer when amount is below minimum', () => {
-      cy.visit('/bridge/0xE0A41ecBC3C2EF1b356dD14fDE17330d72093fbc')
-      cy.get('.token-amount-input').type('0.001', { force: true, delay: 200 })
-      cy.get('#bridge-transfer-button').should('contain', 'Below minimum limit')
-    })
-
     it('loads token from storage', () => {
       cy.visit('/bridge')
       cy.get('.open-currency-select-button').click()
