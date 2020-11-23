@@ -3,7 +3,6 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH, Percent, JSBI } from 'dxswap-sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
-import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -196,12 +195,6 @@ export default function AddLiquidity({
           })
 
           setTxHash(response.hash)
-
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Add',
-            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
-          })
         })
       )
       .catch(error => {
@@ -303,9 +296,10 @@ export default function AddLiquidity({
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onFieldAInput('')
+      onFieldBInput('')
     }
     setTxHash('')
-  }, [onFieldAInput, txHash])
+  }, [onFieldAInput, onFieldBInput, txHash])
 
   const isCreate = history.location.pathname.includes('/create')
 
@@ -394,7 +388,7 @@ export default function AddLiquidity({
                     Swap fee
                   </TYPE.body>
                   <TYPE.body fontWeight="500" fontSize={12}>
-                    {swapFee?.toSignificant(2) ?? '-'}
+                    {`${swapFee?.toSignificant(2)}%` ?? '-'}
                   </TYPE.body>
                 </RowBetween>
                 <RowBetween align="center">
@@ -402,7 +396,7 @@ export default function AddLiquidity({
                     Protocol fee
                   </TYPE.body>
                   <TYPE.body fontWeight="500" fontSize={12}>
-                    {protocolFee?.toSignificant(2) ?? '-'}
+                    {`${protocolFee?.toSignificant(2)}%` ?? '-'}
                   </TYPE.body>
                 </RowBetween>
               </AutoColumn>

@@ -1,6 +1,5 @@
 import { Currency, ETHER, Token } from 'dxswap-sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
@@ -52,16 +51,6 @@ export function CurrencySearch({
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
-
-  useEffect(() => {
-    if (isAddressSearch) {
-      ReactGA.event({
-        category: 'Currency Select',
-        action: 'Search by address',
-        label: isAddressSearch
-      })
-    }
-  }, [isAddressSearch])
 
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()

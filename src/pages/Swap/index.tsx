@@ -1,9 +1,8 @@
 import { CurrencyAmount, JSBI, Trade, Token } from 'dxswap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
-import ReactGA from 'react-ga'
+import { ArrowDown, Repeat } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import Card from '../../components/Card'
@@ -23,7 +22,6 @@ import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
-import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
@@ -41,6 +39,10 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+
+const RotatedRepeat = styled(Repeat)`
+  transform: rotate(90deg);
+`
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -81,7 +83,6 @@ export default function Swap() {
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const { address: recipientAddress } = useENSAddress(recipient)
 
   const parsedAmounts = showWrap
     ? {
@@ -170,17 +171,6 @@ export default function Swap() {
     swapCallback()
       .then(hash => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
-
-        ReactGA.event({
-          category: 'Swap',
-          action:
-            recipient === null
-              ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
-          label: [trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'DXswap'].join('/')
-        })
       })
       .catch(error => {
         setSwapState({
@@ -191,7 +181,7 @@ export default function Swap() {
           txHash: undefined
         })
       })
-  }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
+  }, [tradeToConfirm, priceImpactWithoutFee, showConfirm, swapCallback])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -213,6 +203,7 @@ export default function Swap() {
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
+      onUserInput(Field.OUTPUT, '')
     }
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
@@ -275,13 +266,13 @@ export default function Swap() {
             <AutoColumn justify="space-between">
               <AutoRow justify="center" style={{ padding: '0 1rem' }}>
                 <ArrowWrapper clickable>
-                  <ArrowDown
+                  <RotatedRepeat
                     size="16"
                     onClick={() => {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
                       onSwitchTokens()
                     }}
-                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.purple3 : theme.text2}
+                    color={theme.text4}
                   />
                 </ArrowWrapper>
               </AutoRow>
@@ -314,18 +305,22 @@ export default function Swap() {
             {showWrap ? null : (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="8px">
-                  {Boolean(trade) && (
-                    <RowBetween align="center">
-                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-                        Price
-                      </TYPE.body>
+                  <RowBetween align="center">
+                    <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                      Price
+                    </TYPE.body>
+                    {!!trade ? (
                       <TradePrice
                         price={trade?.executionPrice}
                         showInverted={showInverted}
                         setShowInverted={setShowInverted}
                       />
-                    </RowBetween>
-                  )}
+                    ) : (
+                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                        -
+                      </TYPE.body>
+                    )}
+                  </RowBetween>
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && Boolean(trade) && (
                     <RowBetween align="center">
                       <ClickableText fontSize="12px" lineHeight="15px" fontWeight="500" onClick={toggleSettings}>

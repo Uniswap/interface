@@ -63,7 +63,6 @@ export const ButtonPrimary = styled(Base)`
     color: ${({ theme }) => transparentize(0.28, theme.purpleBase)};
     cursor: not-allowed;
     box-shadow: none;
-    border: 1px solid transparent;
     outline: none;
     opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
   }
