@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Settings, X, Info, Code } from 'react-feather'
+import { Settings, X, Info, Code, BookOpen, MessageCircle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
@@ -21,6 +21,7 @@ import Row, { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import DxDao from '../../assets/svg/dxdao.svg'
 import { useTransition, animated } from 'react-spring'
 
 const StyledDialogOverlay = animated(styled.div`
@@ -116,16 +117,51 @@ const MenuFlyout = styled.span`
 `
 
 const MenuFlyoutBottom = styled.span`
+  width: 215px;
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
   backdrop-filter: blur(16px);
   border: 8px solid;
   border-radius: 8px;
   border-image: url(${border8pxRadius}) 8;
-  display: flex;
-  flex-direction: row;
   font-size: 1rem;
   box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
   margin-top: 16px;
+  padding: 21px 13px;
+`
+
+const MenuFlyoutBottomItem = styled.span`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 16px;
+`
+
+const InfoBadge = styled.span`
+  background: ${({ theme }) => theme.bg3};
+  padding: 3px 4px;
+  color: ${({ theme }) => theme.text1};
+  border-radius: 4px;
+  margin-right: 8px;
+`
+
+const MenuBanner = styled(ExternalLink)`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: ${({ theme }) => theme.primary1};
+  border-radius: 4px;
+  padding: 9px 16px;
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  img {
+    top: 0;
+    left: 10px;
+    height: 100%;
+    position: absolute;
+  }
 `
 
 const FlyoutBottomAligner = styled.span`
@@ -144,7 +180,7 @@ const ModalContentWrapper = styled.div`
   background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
 `
 const MenuItem = styled(ExternalLink)`
-  padding: 0.5rem 0.5rem;
+  width: 50%;
   color: ${({ theme }) => theme.text2};
   :hover {
     color: ${({ theme }) => theme.text1};
@@ -296,14 +332,48 @@ export default function SettingsTab() {
                   </MenuFlyout>
                   <FlyoutBottomAligner>
                     <MenuFlyoutBottom>
-                      <MenuItem id="link" href="https://dxdao.eth.link/">
-                        <Info size={14} />
-                        About
-                      </MenuItem>
-                      <MenuItem id="link" href={CODE_LINK}>
-                        <Code size={14} />
-                        Code
-                      </MenuItem>
+                      <MenuFlyoutBottomItem>
+                        <MenuItem id="link" href="https://dxdao.eth.link/">
+                          <Info size={14} />
+                          About
+                        </MenuItem>
+                        <MenuItem id="link" href={CODE_LINK}>
+                          <Code size={14} />
+                          Code
+                        </MenuItem>
+                      </MenuFlyoutBottomItem>
+                      <MenuFlyoutBottomItem>
+                        <MenuItem id="link" href="#">
+                          <BookOpen size={14} />
+                          Docs
+                        </MenuItem>
+                        <MenuItem id="link" href="#">
+                          <MessageCircle size={14} />
+                          Discord
+                        </MenuItem>
+                      </MenuFlyoutBottomItem>
+                      <MenuFlyoutBottomItem>
+                        <InfoBadge>
+                          <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
+                            V 0.0.1
+                          </TYPE.body>
+                        </InfoBadge>
+                        <InfoBadge>
+                          <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
+                            ALPHA
+                          </TYPE.body>
+                        </InfoBadge>
+                      </MenuFlyoutBottomItem>
+
+                      <MenuBanner id="link" href="https://dxdao.eth.link/">
+                        <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="text1" marginBottom="4px">
+                          A DXDAO PRODUCT
+                        </TYPE.body>
+                        <TYPE.body fontWeight={500} fontSize="8px" letterSpacing="3px" color="text1">
+                          DXDAO.ETH
+                        </TYPE.body>
+                        <img src={DxDao} alt="dxdao" />
+                      </MenuBanner>
                     </MenuFlyoutBottom>
                   </FlyoutBottomAligner>
                 </MenuContainer>
