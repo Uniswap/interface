@@ -70,7 +70,7 @@ export function CurrencySearch({
     }
   }, [isAddressSearch])
 
-  const tokenComparator = useTokenComparator(invertSearchOrder)
+  const tokenComparator = useTokenComparator(invertSearchOrder, listType)
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
