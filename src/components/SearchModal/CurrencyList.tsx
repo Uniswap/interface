@@ -74,7 +74,7 @@ function CurrencyRow({
             <Badge
               label={customAdded ? 'Added by user' : 'Found by address'}
               icon={customAdded ? X : Plus}
-              onIconClick={event => {
+              onClick={event => {
                 event.stopPropagation()
                 if (!chainId || !(currency instanceof Token)) {
                   return

@@ -18,12 +18,12 @@ const IconBox = styled(Box)`
 interface BadgeProps {
   icon?: any
   label: any
-  onIconClick?: (event: MouseEvent) => void
+  onClick?: (event: MouseEvent) => void
 }
 
-const Badge = ({ icon: FeatherIcon, label, onIconClick }: BadgeProps) => {
-  return ( 
-    <Root alignItems="center">
+const Badge = ({ icon: FeatherIcon, label, onClick }: BadgeProps) => {
+  return (
+    <Root alignItems="center" onClick={onClick}>
       {label && (
         <Box>
           <TYPE.body fontWeight="600" fontSize="8px">
@@ -32,7 +32,7 @@ const Badge = ({ icon: FeatherIcon, label, onIconClick }: BadgeProps) => {
         </Box>
       )}
       {FeatherIcon && (
-        <Flex ml="4px" onClick={onIconClick} alignItems="center">
+        <Flex ml="4px" alignItems="center">
           <IconBox>
             <TYPE.body>
               <FeatherIcon size="12px" />
