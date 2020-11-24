@@ -53,7 +53,7 @@ export default function CommonBases({
         >
           <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
-            ETH
+            FUSE
           </Text>
         </BaseWrapper>
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {
