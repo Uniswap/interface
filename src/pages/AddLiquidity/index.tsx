@@ -29,7 +29,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateSlippageAmount, getRouterContract, calculateGasMargin } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -137,12 +137,13 @@ export default function AddLiquidity({
 
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
-    let method: (...args: any) => Promise<TransactionResponse>,
+    let estimate,
+      method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA === ETHER || currencyB === ETHER) {
       const tokenBIsETH = currencyB === ETHER
-      // estimate = router.estimateGas.addLiquidityETH
+      estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
@@ -154,7 +155,7 @@ export default function AddLiquidity({
       ]
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
-      // estimate = router.estimateGas.addLiquidity
+      estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
       args = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
@@ -171,38 +172,39 @@ export default function AddLiquidity({
 
     setAttemptingTxn(true)
 
-    method(...args, {
-      ...(value ? { value } : {}),
-      gasLimit: 10000000
-    })
-      .then(response => {
-        setAttemptingTxn(false)
+    await estimate(...args, value ? { value } : {})
+      .then(estimatedGas =>
+        method(...args, {
+          ...(value ? { value } : {}),
+          gasLimit: calculateGasMargin(estimatedGas)
+        }).then(response => {
+          setAttemptingTxn(false)
 
-        addTransaction(response, {
-          summary:
-            'Add ' +
-            parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-            ' ' +
-            currencies[Field.CURRENCY_A]?.symbol +
-            ' and ' +
-            parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-            ' ' +
-            currencies[Field.CURRENCY_B]?.symbol
+          addTransaction(response, {
+            summary:
+              'Add ' +
+              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+              ' ' +
+              currencies[Field.CURRENCY_A]?.symbol +
+              ' and ' +
+              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+              ' ' +
+              currencies[Field.CURRENCY_B]?.symbol
+          })
+
+          setTxHash(response.hash)
+
+          ReactGA.event({
+            category: 'Liquidity',
+            action: 'Add',
+            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
+          })
         })
-
-        setTxHash(response.hash)
-
-        ReactGA.event({
-          category: 'Liquidity',
-          action: 'Add',
-          label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
-        })
-      })
+      )
       .catch(error => {
         setAttemptingTxn(false)
-        // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {
-          console.error(error)
+          console.log(error)
         }
       })
   }
