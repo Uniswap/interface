@@ -25,11 +25,12 @@ const MenuContainer = styled.span`
   position: absolute;
   top: 4rem;
   right: 0rem;
+  width: 169px;
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
     top: calc(4rem + 50px);
-    left: calc(50vw - 50%);
+    right: calc(50vw - 90px);
     align-items: center;
   `};
 `

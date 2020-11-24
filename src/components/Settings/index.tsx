@@ -65,8 +65,8 @@ const StyledCloseIcon = styled(X)`
 const EmojiWrapper = styled.div`
   position: absolute;
   bottom: -6px;
-  right: 0px;
-  font-size: 14px;
+  right: 3px;
+  font-size: 12px;
 `
 
 const StyledMenu = styled.div`
@@ -228,15 +228,14 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button">
-        {expertMode && (
-          <EmojiWrapper>
-            <span role="img" aria-label="wizard-icon">
-              😎
-            </span>
-          </EmojiWrapper>
-        )}
-      </StyledMenuIcon>
+      <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button"></StyledMenuIcon>
+      {expertMode && (
+        <EmojiWrapper>
+          <span role="img" aria-label="wizard-icon">
+            😎
+          </span>
+        </EmojiWrapper>
+      )}
       {fadeTransition.map(
         ({ item, key, props }) =>
           item && (
