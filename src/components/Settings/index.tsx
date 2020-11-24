@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Settings, X, Info, Code, BookOpen, MessageCircle } from 'react-feather'
+import { Settings, X, Info, Code } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
@@ -342,16 +342,7 @@ export default function SettingsTab() {
                           Code
                         </MenuItem>
                       </MenuFlyoutBottomItem>
-                      <MenuFlyoutBottomItem>
-                        <MenuItem id="link" href="#">
-                          <BookOpen size={14} />
-                          Docs
-                        </MenuItem>
-                        <MenuItem id="link" href="#">
-                          <MessageCircle size={14} />
-                          Discord
-                        </MenuItem>
-                      </MenuFlyoutBottomItem>
+
                       <MenuFlyoutBottomItem>
                         <InfoBadge>
                           <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
