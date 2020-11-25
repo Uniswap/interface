@@ -12,12 +12,13 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import AccountDetails from '../AccountDetails'
 
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
+import DxDao from '../../assets/svg/dxdao.svg'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -79,21 +80,19 @@ const UpperSection = styled.div`
 `
 
 const Blurb = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  margin-top: 23px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 1rem;
-    font-size: 12px;
-  `};
-`
+  justify-content: center;
+  background: ${({ theme }) => theme.bg1};
+  height: 76px;
+  position: relative;
+  overflow: hidden;
 
-const StyledExternalLink = styled(ExternalLink)`
-  font-weight: 500;
-  font-size: 14px;
-  color: ${({ theme }) => theme.purple4};
+  img {
+    position: absolute;
+    width: 80%;
+  }
 `
 
 const OptionGrid = styled.div`
@@ -336,13 +335,16 @@ export default function WalletModal({
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
-          <Blurb>
-            <TYPE.body fontWeight={500} fontSize={14} color="text5">
-              New to Ethereum? &nbsp;
-            </TYPE.body>{' '}
-            <StyledExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</StyledExternalLink>
-          </Blurb>
         </ContentWrapper>
+        <Blurb>
+          <TYPE.body fontWeight={700} fontSize="10px" color="text1" letterSpacing="3px" marginBottom="8px">
+            A DXDAO PRODUCT
+          </TYPE.body>
+          <TYPE.body fontWeight={600} fontSize="8px" color="text5" letterSpacing="2px">
+            DXDAO.ETH
+          </TYPE.body>
+          <img src={DxDao} alt="dxdao" />
+        </Blurb>
       </UpperSection>
     )
   }

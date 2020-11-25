@@ -229,7 +229,11 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   font-size: 16px;
   line-height: 19.5px;
   width: fit-content;
+  text-decoration: none !important;
   margin: 0 12px;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
