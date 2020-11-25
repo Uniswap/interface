@@ -12,7 +12,7 @@ import {
   useUserSlippageTolerance,
   useDarkModeManager
 } from '../../state/user/hooks'
-import { TYPE, ExternalLink, LinkStyledButton } from '../../theme'
+import { TYPE, ExternalLink, LinkStyledButton, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -66,8 +66,8 @@ const StyledCloseIcon = styled(X)`
 const EmojiWrapper = styled.div`
   position: absolute;
   bottom: -6px;
-  right: 0px;
-  font-size: 14px;
+  right: 3px;
+  font-size: 12px;
 `
 
 const StyledMenu = styled.div`
@@ -90,8 +90,6 @@ const MenuContainer = styled.span<{ ref: any }>`
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    height: 100%;
-    width: 100%;
     top: initial;
     right: initial;
     justify-content: center;
@@ -266,15 +264,14 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button">
-        {expertMode && (
-          <EmojiWrapper>
-            <span role="img" aria-label="wizard-icon">
-              😎
-            </span>
-          </EmojiWrapper>
-        )}
-      </StyledMenuIcon>
+      <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button"></StyledMenuIcon>
+      {expertMode && (
+        <EmojiWrapper>
+          <span role="img" aria-label="wizard-icon">
+            😎
+          </span>
+        </EmojiWrapper>
+      )}
       {fadeTransition.map(
         ({ item, key, props }) =>
           item && (
@@ -283,9 +280,12 @@ export default function SettingsTab() {
                 <MenuContainer ref={node}>
                   <MenuFlyout>
                     <AutoColumn gap="md" style={{ padding: '8px' }}>
-                      <Text fontWeight={600} fontSize={14}>
-                        Transaction settings
-                      </Text>
+                      <RowBetween>
+                        <Text fontWeight={600} fontSize={14}>
+                          Transaction settings
+                        </Text>
+                        <CloseIcon onClick={toggle} />
+                      </RowBetween>
                       <TransactionSettings
                         rawSlippage={userSlippageTolerance}
                         setRawSlippage={setUserslippageTolerance}

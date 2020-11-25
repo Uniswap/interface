@@ -20,20 +20,17 @@ const StyledMenu = styled.div`
 `
 
 const MenuContainer = styled.span`
-  min-width: 18.125rem;
   display: flex;
   flex-direction: column;
   position: absolute;
   top: 4rem;
   right: 0rem;
+  width: 169px;
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
-    width: 100%;
-    height: 100%;
-    padding-top: 50px;
-    padding-left: 25%;
-    padding-right: 25%;
+    top: calc(4rem + 50px);
+    right: calc(50vw - 90px);
     align-items: center;
   `};
 `
