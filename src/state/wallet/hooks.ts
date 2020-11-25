@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@fuseio/fuse-swap-sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
-import { useAllSwapTokens } from '../../hooks/Tokens'
+import { useAllSwapTokens, useAllBridgeTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
@@ -123,9 +123,10 @@ export function useCurrencyBalance(account?: string, currency?: Currency): Curre
 }
 
 // mimics useAllBalances
-export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | undefined } {
+export function useAllTokenBalances(listType: CurrencyListType): { [tokenAddress: string]: TokenAmount | undefined } {
   const { account } = useActiveWeb3React()
-  const allTokens = useAllSwapTokens()
+  const useAllTokens = listType === 'Swap' ? useAllSwapTokens : useAllBridgeTokens
+  const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
   return balances ?? {}
