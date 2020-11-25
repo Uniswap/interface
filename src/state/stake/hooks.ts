@@ -5,6 +5,7 @@ import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 
 export const STAKING_GENESIS = 1600387200
 
@@ -55,6 +56,8 @@ export interface StakingInfo {
   rewardRate: TokenAmount
   // when the period ends
   periodFinish: Date | undefined
+  // if pool is active
+  active: boolean
   // calculates a hypothetical amount of token distributed to the active account per second.
   getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
@@ -66,6 +69,9 @@ export interface StakingInfo {
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   const { chainId, account } = useActiveWeb3React()
+
+  // detect if staking is ended
+  const currentBlockTimestamp = useCurrentBlockTimestamp()
 
   const info = useMemo(
     () =>
@@ -170,7 +176,12 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
 
-        const periodFinishMs = periodFinishState.result?.[0]?.mul(1000)?.toNumber()
+        const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
+        const periodFinishMs = periodFinishSeconds * 1000
+
+        // compare period end timestamp vs current block timestamp (in seconds)
+        const active =
+          periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
 
         memo.push({
           stakingRewardAddress: rewardsAddress,
@@ -181,12 +192,24 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           totalRewardRate: totalRewardRate,
           stakedAmount: stakedAmount,
           totalStakedAmount: totalStakedAmount,
-          getHypotheticalRewardRate
+          getHypotheticalRewardRate,
+          active
         })
       }
       return memo
     }, [])
-  }, [balances, chainId, earnedAmounts, info, periodFinishes, rewardRates, rewardsAddresses, totalSupplies, uni])
+  }, [
+    balances,
+    chainId,
+    currentBlockTimestamp,
+    earnedAmounts,
+    info,
+    periodFinishes,
+    rewardRates,
+    rewardsAddresses,
+    totalSupplies,
+    uni
+  ])
 }
 
 export function useTotalUniEarned(): TokenAmount | undefined {
