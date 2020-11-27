@@ -28,7 +28,7 @@
   "enterValueCont": "Enter a {{ missingCurrencyValue }} value to continue.",
   "selectTokenCont": "Select a token to continue.",
   "noLiquidity": "No liquidity.",
-  "insufficientLiquidity": "Insufficient liquidity.",
+  "insufficientLiquidity": "Insufficient liquidity",
   "unlockTokenCont": "Please unlock token to continue.",
   "transactionDetails": "Advanced Details",
   "hideDetails": "Hide Details",
@@ -134,7 +134,6 @@
   "insufficientCollateral": "Insufficient Collateral",
   "interfaceSettings": "Interface Settings",
   "toggleDarkMode": "Toggle Dark Mode",
-  "insufficientLiquidity ": "Insufficient liquidity",
   "approvePending": "ENABLE PENDING",
   "connectToWallet": "Connect to a wallet",
   "newToEthereum": "New to Ethereum?",
@@ -166,5 +165,7 @@
   "dismissLowercase": "Dismiss",
   "initializing": "Initializing...",
   "transactionSubmitted": "Transaction Submitted",
-  "close": "Close"
+  "close": "Close",
+  "tokenInsufficientLiquidity": "Insufficient liquidity",
+  "exceedBorrowBalance": "Exceed borrow balance"
 }

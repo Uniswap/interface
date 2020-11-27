@@ -150,5 +150,7 @@
   "dismissLowercase": "忽略",
   "initializing": "初始化中...",
   "transactionSubmitted": "交易已提交",
-  "close": "关闭"
+  "close": "关闭",
+  "tokenInsufficientLiquidity": "流动性不足",
+  "exceedBorrowBalance": "超过借贷余额"
 }
