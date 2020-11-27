@@ -64,6 +64,6 @@ export const torus = new TorusConnector({
   initOptions: {
     showTorusButton: true,
     buildEnv: "testing",
-    enableLogging: true,
+    enableLogging: true
   }
 })
