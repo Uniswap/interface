@@ -138,7 +138,7 @@ export function useBridgeStatus(bridgeStatus: BridgeTransactionStatus): string {
       case BridgeTransactionStatus.CONFIRMATION_TRANSACTION_SUCCESS:
         return `Waiting for ${confirmations}/${DEFAULT_CONFIRMATIONS_LIMIT} Confirmations`
       case BridgeTransactionStatus.CONFIRM_TOKEN_TRANSFER_PENDING:
-        const network = isHome ? 'Etheruem' : 'Fuse'
+        const network = isHome ? 'Ethereum' : 'Fuse'
         return 'Moving funds to ' + network
       default:
         return ''
