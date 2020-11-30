@@ -21,6 +21,11 @@ describe('Add Liquidity', () => {
   })
 
   describe('Fuse', () => {
+    it('loads fuse token', () => {
+      cy.visit('/add/FUSE')
+      cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'FUSE')
+    })
+
     it('loads the two correct tokens', () => {
       cy.visit('/add/0x94Ba7A27c7A95863d1bdC7645AC2951E0cca06bA-0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670')
       cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'DAI')
