@@ -10,6 +10,8 @@
 /build
 
 # misc
+yarn.lock
+.yarnrc
 .DS_Store
 .env.local
 .env.development.local
