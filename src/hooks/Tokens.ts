@@ -129,7 +129,7 @@ export function useCurrency(
   currencyId: string | undefined,
   listType: CurrencyListType = 'Swap'
 ): Currency | null | undefined {
-  const isETH = currencyId?.toUpperCase() === 'ETH'
+  const isETH = currencyId?.toUpperCase() === 'FUSE'
   const token = useToken(isETH ? undefined : currencyId, listType)
   return isETH ? ETHER : token
 }

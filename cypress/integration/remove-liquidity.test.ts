@@ -7,14 +7,14 @@ describe('Remove Liquidity', () => {
     )
   })
 
-  it('eth remove', () => {
-    cy.visit('/remove/ETH/0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670')
+  it('fuse remove', () => {
+    cy.visit('/remove/FUSE/0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'FUSE')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'WETH')
   })
 
-  it('eth remove swap order', () => {
-    cy.visit('/remove/0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670/ETH')
+  it('fuse remove swap order', () => {
+    cy.visit('/remove/0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670/FUSE')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'WETH')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'FUSE')
   })
