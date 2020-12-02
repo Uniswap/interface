@@ -34,6 +34,7 @@
     "@sushi-web3-react/portis-connector": "^1.0.1",
     "@sushi-web3-react/walletconnect-connector": "^1.0.1",
     "@sushi-web3-react/walletlink-connector": "^1.0.1",
+    "@sushi-web3-react/lattice-connector": "^1.0.5",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
     "copy-to-clipboard": "^3.2.0",

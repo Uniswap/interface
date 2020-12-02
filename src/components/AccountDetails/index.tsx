@@ -12,11 +12,12 @@ import Transaction from './Transaction'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
-import { injected, walletconnect, walletlink, fortmatic, portis } from '../../connectors'
+import { injected, walletconnect, walletlink, fortmatic, portis, lattice } from '../../connectors'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
+import LatticeIcon from '../../assets/images/gridPlusWallet.png'
 import Identicon from '../Identicon'
 import { ButtonSecondary } from '../Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
@@ -252,6 +253,12 @@ export default function AccountDetails({
       return (
         <IconWrapper size={16}>
           <img src={WalletConnectIcon} alt={'wallet connect logo'} />
+        </IconWrapper>
+      )
+    } else if (connector === lattice) {
+      return (
+        <IconWrapper size={16}>
+          <img src={LatticeIcon} alt={'lattice logo'} />
         </IconWrapper>
       )
     } else if (connector === walletlink) {

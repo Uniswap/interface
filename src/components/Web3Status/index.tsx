@@ -8,8 +8,9 @@ import styled, { css } from 'styled-components'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
+import LatticeIcon from '../../assets/images/gridPlusWallet.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { fortmatic, injected, portis, walletconnect, walletlink, lattice } from '../../connectors'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
 import { useHasSocks } from '../../hooks/useSocksBalance'
@@ -137,6 +138,12 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
     return (
       <IconWrapper size={16}>
         <img src={WalletConnectIcon} alt={''} />
+      </IconWrapper>
+    )
+  } else if (connector === lattice) {
+    return (
+      <IconWrapper size={16}>
+        <img src={LatticeIcon} alt={''} />
       </IconWrapper>
     )
   } else if (connector === walletlink) {
