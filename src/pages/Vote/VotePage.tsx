@@ -98,6 +98,10 @@ const DetailText = styled.div`
   word-break: break-all;
 `
 
+const ProposerAddressLink = styled(ExternalLink)`
+  word-break: break-all;
+`
+
 export default function VotePage({
   match: {
     params: { id }
@@ -283,11 +287,11 @@ export default function VotePage({
         </AutoColumn>
         <AutoColumn gap="md">
           <TYPE.mediumHeader fontWeight={600}>Proposer</TYPE.mediumHeader>
-          <ExternalLink
+          <ProposerAddressLink
             href={proposalData?.proposer && chainId ? getEtherscanLink(chainId, proposalData?.proposer, 'address') : ''}
           >
             <ReactMarkdown source={proposalData?.proposer} />
-          </ExternalLink>
+          </ProposerAddressLink>
         </AutoColumn>
       </ProposalInfo>
     </PageWrapper>
