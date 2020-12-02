@@ -1,5 +1,5 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import { AbstractConnector } from '@sushi-web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 

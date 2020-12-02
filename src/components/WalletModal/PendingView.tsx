@@ -1,4 +1,4 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import { AbstractConnector } from '@sushi-web3-react/abstract-connector'
 import React from 'react'
 import styled from 'styled-components'
 import Option from './Option'
