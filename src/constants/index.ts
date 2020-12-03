@@ -107,7 +107,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     connector: lattice,
     name: 'Lattice',
     iconName: 'gridPlusWallet.png',
-    description: 'Connect to GridPluse Wallet.',
+    description: 'Connect to GridPlus Wallet.',
     href: null,
     color: '#40a9ff',
     mobile: true
