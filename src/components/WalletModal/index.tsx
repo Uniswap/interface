@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { UnsupportedChainIdError, useWeb3React } from '@sushi-web3-react/core'
 import usePrevious from '../../hooks/usePrevious'
 import { useWalletModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 
@@ -16,8 +16,8 @@ import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected, fortmatic, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import { WalletConnectConnector } from '@sushi-web3-react/walletconnect-connector'
+import { AbstractConnector } from '@sushi-web3-react/abstract-connector'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -124,7 +124,7 @@ export default function WalletModal({
   confirmedTransactions: string[] // hashes of confirmed
   ENSName?: string
 }) {
-  // important that these are destructed from the account-specific web3-react context
+  // important that these are destructed from the account-specific sushi-web3-react context
   const { active, account, connector, activate, error } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)

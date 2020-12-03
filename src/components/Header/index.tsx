@@ -142,6 +142,11 @@ export default function Header() {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
+  // TODO: Clean this up later
+  console.log(account)
+  console.log(chainId)
+  console.log(userEthBalance)
+
   return (
     <HeaderFrame>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
