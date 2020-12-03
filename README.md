@@ -14,6 +14,14 @@ To access the SushiSwap Exchnage, visit [exchange.sushiswapclassic.org](https://
 yarn
 ```
 
+### Copy env variables
+```bash
+cp .env.sample .env
+```
+then fill that with correct env variables
+
+*note: will not have to do this when using MetaMask wallets
+
 ### Run
 
 ```bash
