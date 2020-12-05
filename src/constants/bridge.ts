@@ -6,9 +6,9 @@ type BridgeToken = {
   FOREIGN_BRIDGE_MEDIATOR: string
   FOREIGN_TOKEN_ADDRESS: string
   SYMBOL: string
-  DAILY_LIMIT: number
-  MAX_AMOUNT_PER_TX: number
-  MIN_AMOUNT_PER_TX: number
+  DAILY_LIMIT?: number
+  MAX_AMOUNT_PER_TX?: number
+  MIN_AMOUNT_PER_TX?: number
 }
 
 export const DEFAULT_CONFIRMATIONS_LIMIT = 2
@@ -24,6 +24,13 @@ export const CUSTOM_BRIDGE_TOKENS: { [chainId in ChainId]: BridgeToken[] | [] } 
       DAILY_LIMIT: 30000000000,
       MAX_AMOUNT_PER_TX: 1500000000,
       MIN_AMOUNT_PER_TX: 5000000
+    },
+    {
+      HOME_BRIDGE_MEDIATOR: '0xd617774b9708F79187Dc7F03D3Bdce0a623F6988',
+      HOME_TOKEN_ADDRESS: 'FUSE',
+      FOREIGN_BRIDGE_MEDIATOR: '0x3014ca10b91cb3D0AD85fEf7A3Cb95BCAc9c0f79',
+      FOREIGN_TOKEN_ADDRESS: '0x970b9bb2c0444f5e81e9d0efb84c8ccdcdcaf84d',
+      SYMBOL: 'FUSE'
     }
   ],
   [ChainId.ROPSTEN]: [
