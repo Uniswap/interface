@@ -30,12 +30,20 @@ import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
 import { Text } from 'rebass'
 import { useActiveWeb3React, useChain } from '../../hooks'
-import { getMultiBridgeHomeAddress, getBridgeForeignAddress, isBasicBridgeToken } from '../../utils'
-import { FOREIGN_BRIDGE_CHAIN, UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
+import { getHomeMultiErc20ToErc677BridgeAddress, getForeignMultiErc20ToErc677BridgeAddress } from '../../utils'
+import { UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
 import { TYPE } from '../../theme'
 import UnsupportedBridgeTokenModal from '../../components/UnsupportedBridgeTokenModal'
 import { useUserActionHandlers } from '../../state/user/hooks'
 import fuseApi from '../../api/fuseApi'
+import { getBridgeMode } from '../../state/bridge/bridges/utils'
+import TokenBridge, { BridgeMode } from '../../state/bridge/bridges/tokenBridge'
+import NativeToErcBridge from '../../state/bridge/bridges/nativeToErc'
+import Erc677ToErc677Bridge from '../../state/bridge/bridges/erc677Toerc677'
+import Erc20ToErc677Bridge from '../../state/bridge/bridges/erc20Toerc677'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../state'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 
 export default function Bridge({
   match: {
@@ -45,6 +53,7 @@ export default function Bridge({
 }: RouteComponentProps<{ inputCurrencyId?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+  const dispatch = useDispatch<AppDispatch>()
 
   const inputCurrency = useCurrency(inputCurrencyId, 'Bridge')
 
@@ -56,7 +65,7 @@ export default function Bridge({
 
   const { updateCompletedBridgeTransfer } = useUserActionHandlers()
 
-  const { onFieldInput, transferToHome, transferToForeign } = useBridgeActionHandlers()
+  const { onFieldInput } = useBridgeActionHandlers()
 
   // modal and loading
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -96,29 +105,70 @@ export default function Bridge({
 
   const { isHome, isEtheruem } = useChain()
 
-  const bridgeAddress = isHome ? getMultiBridgeHomeAddress(FOREIGN_BRIDGE_CHAIN) : getBridgeForeignAddress(chainId)
+  const bridgeAddress = isHome ? getHomeMultiErc20ToErc677BridgeAddress() : getForeignMultiErc20ToErc677BridgeAddress()
   const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
 
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)
+
+  const addTransaction = useTransactionAdder()
 
   async function onTransfer() {
     if (!chainId || !library || !account) return
 
     try {
       const { [Field.INPUT]: parsedAmountInput } = parsedAmounts
-      const isMultiBridge = !isBasicBridgeToken(inputCurrencyId)
 
       if (!parsedAmountInput || !inputCurrencyId) {
         return
       }
-      if (isHome) {
-        await transferToForeign(inputCurrencyId, bridgeAddress, parsedAmountInput, isMultiBridge)
-      } else {
-        await transferToHome(inputCurrencyId, parsedAmountInput, isMultiBridge)
 
-        if (isEtheruem) {
-          await fuseApi.fund(account)
-        }
+      const mode = getBridgeMode(inputCurrencyId)
+
+      let bridge: TokenBridge
+      switch (mode) {
+        case BridgeMode.NATIVE_TO_ERC:
+          bridge = new NativeToErcBridge(
+            inputCurrencyId,
+            parsedAmountInput,
+            library,
+            chainId,
+            account,
+            dispatch,
+            isHome,
+            addTransaction
+          )
+          break
+        case BridgeMode.ERC677_TO_ERC677:
+          bridge = new Erc677ToErc677Bridge(
+            inputCurrencyId,
+            parsedAmountInput,
+            library,
+            chainId,
+            account,
+            dispatch,
+            isHome,
+            addTransaction
+          )
+          break
+        case BridgeMode.ERC20_TO_ERC677:
+          bridge = new Erc20ToErc677Bridge(
+            inputCurrencyId,
+            parsedAmountInput,
+            library,
+            chainId,
+            account,
+            dispatch,
+            isHome,
+            addTransaction,
+            bridgeAddress
+          )
+          break
+      }
+
+      await bridge.executeTransaction()
+
+      if (isEtheruem) {
+        await fuseApi.fund(account)
       }
 
       onFieldInput('')
@@ -148,7 +198,7 @@ export default function Bridge({
               currency={inputCurrency}
               showMaxButton={!atMaxAmounts[Field.INPUT]}
               id="bridge-input-token"
-              showETH={false}
+              showETH={isHome}
               listType="Bridge"
             />
           </AutoColumn>

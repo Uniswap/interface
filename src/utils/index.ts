@@ -18,8 +18,8 @@ import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBEr
 import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
 import AMBErc677To677ABI from '../constants/abis/ambErc677ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
-import { getNetworkLibrary, getNetworkLibraryByChain } from '../connectors'
-import { TransactionResponse } from '@ethersproject/providers'
+import HomeBridgeNativeToErc from '../constants/abis/homeBridgeNativeToErc.json'
+import ForeignBriddgeNativeToErc from '../constants/abis/foreignBridgeNativeToErc.json'
 import { CUSTOM_BRIDGE_TOKENS } from '../constants/bridge'
 import { formatUnits } from 'ethers/lib/utils'
 
@@ -160,41 +160,40 @@ export function getAMBErc677To677Contract(address: string, library: Web3Provider
   return getContract(address, AMBErc677To677ABI, library, account)
 }
 
-export function getAMBErc20ToErc677Contract(address: string, library: Web3Provider, account?: string): Contract {
+export function getHomeMultiAMBErc20ToErc677Contract(
+  address: string,
+  library: Web3Provider,
+  account?: string
+): Contract {
   return getContract(address, HomeMultiAMBErc20ToErc677ABI, library, account)
 }
 
-export function getMultiBridgeHomeAddress(chainId?: number): string {
-  switch (chainId) {
-    case ChainId.MAINNET:
-      return FUSE_MAINNET_HOME_BRIDGE_ADDRESS
-    case ChainId.ROPSTEN:
-      return FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS
-    default:
-      throw new Error('Unsupported chainId')
-  }
-}
-
-export function getBridgeForeignAddress(chainId?: number): string {
-  switch (chainId) {
-    case ChainId.MAINNET:
-      return MAINNET_FOREIGN_BRIDGE_ADDRESS
-    case ChainId.ROPSTEN:
-      return ROPSTEN_FOREIGN_BRIDGE_ADDRESS
-    default:
-      throw new Error('Unsupported chainId')
-  }
-}
-
-export function getHomeMultiBridgeContract(library: Web3Provider, account?: string): Contract {
-  const address =
-    FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS : FUSE_MAINNET_HOME_BRIDGE_ADDRESS
-  return getContract(address, HomeMultiAMBErc20ToErc677ABI, library, account)
-}
-
-export function getForiegnBridgeContract(chainId: number, library: Web3Provider, account?: string): Contract {
-  const address = getBridgeForeignAddress(chainId)
+export function getForeignMultiAMBErc20ToErc677Contract(
+  address: string,
+  library: Web3Provider,
+  account?: string
+): Contract {
   return getContract(address, ForeignMultiAMBErc20ToErc677ABI, library, account)
+}
+
+export function getHomeBridgeNativeToErcContract(address: string, library: Web3Provider, account?: string): Contract {
+  return getContract(address, HomeBridgeNativeToErc, library, account)
+}
+
+export function getForeignBridgeNativeToErcContract(
+  address: string,
+  library: Web3Provider,
+  account?: string
+): Contract {
+  return getContract(address, ForeignBriddgeNativeToErc, library, account)
+}
+
+export function getHomeMultiErc20ToErc677BridgeAddress(): string {
+  return FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET ? FUSE_MAINNET_HOME_BRIDGE_ADDRESS : FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS
+}
+
+export function getForeignMultiErc20ToErc677BridgeAddress(): string {
+  return FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET ? MAINNET_FOREIGN_BRIDGE_ADDRESS : ROPSTEN_FOREIGN_BRIDGE_ADDRESS
 }
 
 export function getCurrencySymbol(currency: Currency | null | undefined, chainId: number | undefined) {
@@ -209,38 +208,9 @@ export function getCurrencySymbol(currency: Currency | null | undefined, chainId
   }
 }
 
-export function getBridgeContractWithRpc(chainId: number): Contract {
-  if (chainId === ChainId.MAINNET) {
-    return getContract(FUSE_MAINNET_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
-  } else if (chainId === ChainId.ROPSTEN) {
-    return getContract(FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
-  } else if (chainId === ChainId.FUSE) {
-    const address =
-      FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
-    return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
-  } else {
-    throw new Error('Unsupported chainId')
-  }
-}
-
-export function getHomeBridgeContractJsonRpc(chainId: number): Contract {
-  if (chainId === ChainId.MAINNET) {
-    return getContract(FUSE_MAINNET_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
-  } else {
-    return getContract(FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS, HomeMultiAMBErc20ToErc677ABI, getNetworkLibrary())
-  }
-}
-
-export function getForiegnBridgeContractJsonRpc(chainId: number): Contract {
-  const address =
-    FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_FOREIGN_BRIDGE_ADDRESS : MAINNET_FOREIGN_BRIDGE_ADDRESS
-  return getContract(address, ForeignMultiAMBErc20ToErc677ABI, getNetworkLibraryByChain(chainId))
-}
-
-export function getBasicForeignBridgeAddress(tokenAddress: string, chainId: number) {
+export function getForeignBridgeNativeToErcAddress(tokenAddress: string, chainId: ChainId) {
   const formattedTokenAddress = tokenAddress.toLowerCase()
-  const list =
-    chainId === ChainId.MAINNET ? CUSTOM_BRIDGE_TOKENS[ChainId.MAINNET] : CUSTOM_BRIDGE_TOKENS[ChainId.ROPSTEN]
+  const list = CUSTOM_BRIDGE_TOKENS[chainId]
   const token = list.find(
     token =>
       token.FOREIGN_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress ||
@@ -249,7 +219,7 @@ export function getBasicForeignBridgeAddress(tokenAddress: string, chainId: numb
   return token ? token.FOREIGN_BRIDGE_MEDIATOR : null
 }
 
-export function getBasicHomeBridgeAddress(tokenAddress: string) {
+export function getHomeBridgeNativeToErcAddress(tokenAddress: string) {
   const formattedTokenAddress = tokenAddress.toLowerCase()
 
   const list =
@@ -266,7 +236,7 @@ export function getBasicHomeBridgeAddress(tokenAddress: string) {
   return token ? token.HOME_BRIDGE_MEDIATOR : null
 }
 
-export function isBasicBridgeToken(tokenAddress?: string) {
+export function isNativeOrErc677ToErc677BridgeToken(tokenAddress?: string) {
   if (!tokenAddress) return
 
   const formattedTokenAddress = tokenAddress.toLowerCase()
@@ -276,81 +246,6 @@ export function isBasicBridgeToken(tokenAddress?: string) {
     .map(token => token.toLowerCase())
 
   return addresses.includes(formattedTokenAddress)
-}
-
-/**
- *
- * @param homeTokenAddress home address of token been transferred
- * @param foreignTokenAddress foreign address of token been transferred
- * @param library
- * @param account user address
- */
-export const confirmHomeTokenTransfer = async (
-  homeTokenAddress: string,
-  foreignTokenAddress: string,
-  library: Web3Provider,
-  account: string
-) => {
-  const contract = getHomeMultiBridgeContract(library, account)
-  const address = await contract.foreignTokenAddress(homeTokenAddress)
-  return foreignTokenAddress === address
-}
-
-/**
- *
- * @param foreignTokenAddress foreign address of token been transferred
- * @param HomeTokenAddress home address of token that was transferred
- * @param contract
- */
-export const confirmForeignTokenTransfer = async (
-  foreignTokenAddress: string,
-  HomeTokenAddress: string,
-  contract: Contract
-) => {
-  const address = await contract.foreignTokenAddress(HomeTokenAddress)
-  return foreignTokenAddress === address
-}
-
-export const waitForTransaction = async (
-  transaction: TransactionResponse,
-  confirmations: number,
-  library: Web3Provider,
-  callbackFn: Function
-) => {
-  transaction.wait()
-
-  const transactionHash = transaction.hash
-  const receipt = await library.getTransactionReceipt(transactionHash)
-
-  if ((receipt ? receipt.confirmations : 0) >= confirmations) return receipt
-
-  return new Promise(resolve => {
-    let done = false
-
-    const interval = setInterval(async () => {
-      const receipt = await library.getTransactionReceipt(transactionHash)
-      const confirmedBlocks = receipt ? receipt.confirmations : 0
-      const count = confirmedBlocks + 1
-
-      if (!receipt) {
-        callbackFn(count)
-        return
-      }
-
-      if (!done) {
-        callbackFn(count > confirmations ? confirmations : count)
-      }
-
-      if (count < confirmations + 1) {
-        return
-      }
-
-      done = true
-
-      clearInterval(interval)
-      resolve(receipt)
-    }, 500)
-  })
 }
 
 export const tryFormatAmount = (amount?: string, deciamls?: number) => {
@@ -364,151 +259,4 @@ export const tryFormatAmount = (amount?: string, deciamls?: number) => {
   }
 
   return undefined
-}
-
-export const getHomeMinPerTxn = async (
-  tokenAddress: string,
-  isMultiBridge: boolean,
-  library: Web3Provider,
-  account?: string
-) => {
-  let method, args: string[]
-
-  if (isMultiBridge) {
-    const contract = getHomeMultiBridgeContract(library, account)
-    method = contract.minPerTx
-    args = [tokenAddress]
-  } else {
-    const address = getBasicHomeBridgeAddress(tokenAddress)
-
-    if (!address) return undefined
-
-    const contract = getAMBErc677To677Contract(address, library, account)
-    method = contract.minPerTx
-    args = []
-  }
-
-  return await method(...args)
-}
-
-export const getHomeMaxPerTxn = async (
-  tokenAddress: string,
-  isMultiBridge: boolean,
-  library: Web3Provider,
-  account?: string
-) => {
-  let method, args: string[]
-
-  if (isMultiBridge) {
-    const contract = getHomeMultiBridgeContract(library, account)
-    method = contract.maxPerTx
-    args = [tokenAddress]
-  } else {
-    const address = getBasicHomeBridgeAddress(tokenAddress)
-
-    if (!address) return undefined
-
-    const contract = getAMBErc677To677Contract(address, library, account)
-    method = contract.maxPerTx
-    args = []
-  }
-
-  return await method(...args)
-}
-
-export const getForeignMinPerTxn = async (
-  tokenAddress: string,
-  isMultiBridge: boolean,
-  chainId?: number,
-  library?: Web3Provider,
-  account?: string
-) => {
-  if (!library || !chainId || !account) return
-
-  let method, args: string[]
-
-  if (isMultiBridge) {
-    const contract = getForiegnBridgeContract(chainId, library, account)
-    method = contract.minPerTx
-    args = [tokenAddress]
-  } else {
-    const address = getBasicForeignBridgeAddress(tokenAddress, chainId)
-    const contract = getAMBErc677To677Contract(address ?? '', library, account)
-    method = contract.minPerTx
-    args = []
-  }
-
-  return await method(...args)
-}
-
-export const getForeignMaxPerTxn = async (
-  tokenAddress: string,
-  isMultiBridge: boolean,
-  chainId?: number,
-  library?: Web3Provider,
-  account?: string
-) => {
-  if (!library || !chainId || !account) return
-
-  let method, args: string[]
-
-  if (isMultiBridge) {
-    const contract = getForiegnBridgeContract(chainId, library, account)
-    method = contract.maxPerTx
-    args = [tokenAddress]
-  } else {
-    const address = getBasicForeignBridgeAddress(tokenAddress, chainId)
-    const contract = getAMBErc677To677Contract(address ?? '', library, account)
-    method = contract.maxPerTx
-    args = []
-  }
-
-  return await method(...args)
-}
-
-export const getMinMaxPerTxn = async (
-  tokenAddress: string,
-  decimals: number | undefined,
-  isHome: boolean,
-  chainId: number,
-  library: Web3Provider,
-  account: string
-) => {
-  let minAmount: string | undefined,
-    maxAmount: string | undefined,
-    minPerTxn: (...args: any) => Promise<any>,
-    maxPerTxn: (...args: any) => Promise<any>,
-    args: any,
-    defaultAmountArgs: any
-
-  const isMultiBridge = !isBasicBridgeToken(tokenAddress)
-
-  if (isHome) {
-    minPerTxn = getHomeMinPerTxn
-    maxPerTxn = getHomeMaxPerTxn
-    args = [tokenAddress, isMultiBridge, library, account]
-    defaultAmountArgs = ['0x0000000000000000000000000000000000000000', true, library, account]
-  } else {
-    minPerTxn = getForeignMinPerTxn
-    maxPerTxn = getForeignMaxPerTxn
-    args = [tokenAddress, isMultiBridge, chainId, library, account]
-    defaultAmountArgs = ['0x0000000000000000000000000000000000000000', true, chainId, library, account]
-  }
-
-  const rawMinAmount = await minPerTxn(...args)
-  const rawMaxAmount = await maxPerTxn(...args)
-  const rawDefaultAmount = await maxPerTxn(...defaultAmountArgs)
-
-  // eslint-disable-next-line prefer-const
-  minAmount = tryFormatAmount(rawMinAmount, decimals)
-
-  if (isMultiBridge) {
-    const amount = tryFormatAmount(rawMaxAmount, decimals)
-    const defaultAmount = tryFormatAmount(rawDefaultAmount, decimals)
-    maxAmount = amount === '0.0' ? defaultAmount : amount
-  } else {
-    maxAmount = tryFormatAmount(rawMaxAmount, decimals)
-  }
-
-  return { minAmount, maxAmount }
 }
