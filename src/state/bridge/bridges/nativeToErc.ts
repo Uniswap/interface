@@ -2,10 +2,10 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import TokenBridge from './tokenBridge'
 import {
-  getHomeBridgeNativeToErcAddress,
+  getHomeCustomBridgeAddress,
   getHomeBridgeNativeToErcContract,
   getERC677TokenContract,
-  getForeignBridgeNativeToErcAddress,
+  getForeignCustomBridgeAddress,
   calculateGasMargin,
   getForeignBridgeNativeToErcContract,
   getAMBErc677To677Contract
@@ -18,7 +18,7 @@ import {
   transferError
 } from '../actions'
 import { FOREIGN_BRIDGE_CHAIN } from '../../../constants'
-import { getNetworkLibraryByChain, getNetworkLibrary } from '../../../connectors'
+import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 
 export default class NativeToErcBridge extends TokenBridge {
@@ -26,9 +26,17 @@ export default class NativeToErcBridge extends TokenBridge {
   private readonly HOME_BRIDGE_EVENT = 'AffirmationCompleted'
 
   private get homeBridgeAddress() {
-    const address = getHomeBridgeNativeToErcAddress(this.tokenAddress)
+    const address = getHomeCustomBridgeAddress(this.tokenAddress)
     if (!address) {
       throw Error('Home bridge address not provided')
+    }
+    return address
+  }
+
+  private get foreignBridgeAddress() {
+    const address = getForeignCustomBridgeAddress(this.tokenAddress)
+    if (!address) {
+      throw Error('Foreign bridge address not provided')
     }
     return address
   }
@@ -42,7 +50,7 @@ export default class NativeToErcBridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getNetworkLibraryByChain(this.chainId)
+    return getChainNetworkLibrary(FOREIGN_BRIDGE_CHAIN)
   }
 
   private buildHomeTransaction() {
@@ -51,14 +59,6 @@ export default class NativeToErcBridge extends TokenBridge {
       from: this.account,
       value: parseUnits(formatUnits(this.amount.raw.toString()))
     }
-  }
-
-  private foreignBridgeAddress(chainId = this.chainId) {
-    const address = getForeignBridgeNativeToErcAddress(this.tokenAddress, chainId)
-    if (!address) {
-      throw Error('Foreign bridge address not provided')
-    }
-    return address
   }
 
   async transferToForeign(): Promise<TransactionResponse | null> {
@@ -75,7 +75,7 @@ export default class NativeToErcBridge extends TokenBridge {
     this.dispatch(tokenTransferPending())
 
     const contract = getERC677TokenContract(this.tokenAddress, this.library, this.account)
-    const args = [this.foreignBridgeAddress(), this.amount.raw.toString(), []]
+    const args = [this.foreignBridgeAddress, this.amount.raw.toString(), []]
 
     const estimatedGas = await contract.estimateGas.transferAndCall(...args, {})
     const response = await contract.transferAndCall(...args, { gasLimit: calculateGasMargin(estimatedGas) })
@@ -88,14 +88,17 @@ export default class NativeToErcBridge extends TokenBridge {
   watchForeignBridge(): Promise<void> {
     return new Promise(resolve => {
       const contract = getForeignBridgeNativeToErcContract(
-        this.foreignBridgeAddress(FOREIGN_BRIDGE_CHAIN),
+        this.foreignBridgeAddress,
         this.foreignNetworkLibrary,
         this.account
       )
 
+      console.log(contract, this.FOREIGN_BRIDGE_EVENT)
+
       this.dispatch(confirmTokenTransferPending())
 
       const listener = (recipient: string) => {
+        console.log(recipient)
         if (recipient === this.account) {
           contract.removeListener(this.FOREIGN_BRIDGE_EVENT, listener)
           this.dispatch(confirmTokenTransferSuccess())
@@ -136,7 +139,7 @@ export default class NativeToErcBridge extends TokenBridge {
         await this.waitForTransaction(response.hash, DEFAULT_CONFIRMATIONS_LIMIT)
         await this.watchHomeBridge()
       }
-      this.addTransaction(response, { summary: this.transactionSummary })
+      this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
     } catch (error) {
       this.dispatch(transferError())
 

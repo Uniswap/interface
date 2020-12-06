@@ -208,9 +208,9 @@ export function getCurrencySymbol(currency: Currency | null | undefined, chainId
   }
 }
 
-export function getForeignBridgeNativeToErcAddress(tokenAddress: string, chainId: ChainId) {
+export function getForeignCustomBridgeAddress(tokenAddress: string) {
   const formattedTokenAddress = tokenAddress.toLowerCase()
-  const list = CUSTOM_BRIDGE_TOKENS[chainId]
+  const list = CUSTOM_BRIDGE_TOKENS[FOREIGN_BRIDGE_CHAIN as ChainId]
   const token = list.find(
     token =>
       token.FOREIGN_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress ||
@@ -219,14 +219,9 @@ export function getForeignBridgeNativeToErcAddress(tokenAddress: string, chainId
   return token ? token.FOREIGN_BRIDGE_MEDIATOR : null
 }
 
-export function getHomeBridgeNativeToErcAddress(tokenAddress: string) {
+export function getHomeCustomBridgeAddress(tokenAddress: string) {
   const formattedTokenAddress = tokenAddress.toLowerCase()
-
-  const list =
-    FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET
-      ? CUSTOM_BRIDGE_TOKENS[ChainId.MAINNET]
-      : CUSTOM_BRIDGE_TOKENS[ChainId.ROPSTEN]
-
+  const list = CUSTOM_BRIDGE_TOKENS[FOREIGN_BRIDGE_CHAIN as ChainId]
   const token = list.find(
     token =>
       token.HOME_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress ||
@@ -236,14 +231,13 @@ export function getHomeBridgeNativeToErcAddress(tokenAddress: string) {
   return token ? token.HOME_BRIDGE_MEDIATOR : null
 }
 
-export function isNativeOrErc677ToErc677BridgeToken(tokenAddress?: string) {
+export function isCustomBridgeToken(tokenAddress?: string) {
   if (!tokenAddress) return
 
   const formattedTokenAddress = tokenAddress.toLowerCase()
-
-  const addresses = [...CUSTOM_BRIDGE_TOKENS[ChainId.MAINNET], ...CUSTOM_BRIDGE_TOKENS[ChainId.ROPSTEN]]
-    .flatMap(token => [token.FOREIGN_TOKEN_ADDRESS, token.HOME_TOKEN_ADDRESS])
-    .map(token => token.toLowerCase())
+  const addresses = [...CUSTOM_BRIDGE_TOKENS[FOREIGN_BRIDGE_CHAIN as ChainId]]
+    .flatMap((token: any) => [token.FOREIGN_TOKEN_ADDRESS, token.HOME_TOKEN_ADDRESS])
+    .map((token: string) => token.toLowerCase())
 
   return addresses.includes(formattedTokenAddress)
 }

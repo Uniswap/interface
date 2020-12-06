@@ -16,7 +16,7 @@ import {
 import { CurrencyAmount, ChainId } from '@fuseio/fuse-swap-sdk'
 import { Web3Provider } from '@ethersproject/providers'
 import { AppDispatch } from '../../index'
-import { getNetworkLibrary, getNetworkLibraryByChain } from '../../../connectors'
+import { getNetworkLibrary, getChainNetworkLibrary } from '../../../connectors'
 import {
   FOREIGN_BRIDGE_CHAIN,
   FUSE_MAINNET_HOME_BRIDGE_ADDRESS,
@@ -33,6 +33,7 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
 
   constructor(
     tokenAddress: string,
+    tokenSymbol: string,
     amount: CurrencyAmount,
     library: Web3Provider,
     chainId: number,
@@ -42,7 +43,7 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
     addTransaction: (...args: any) => void,
     bridgeAddress: string
   ) {
-    super(tokenAddress, amount, library, chainId, account, dispatch, isHome, addTransaction)
+    super(tokenAddress, tokenSymbol, amount, library, chainId, account, dispatch, isHome, addTransaction)
     this.bridgeAddress = bridgeAddress
   }
 
@@ -61,7 +62,7 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getNetworkLibraryByChain(this.chainId)
+    return getChainNetworkLibrary(FOREIGN_BRIDGE_CHAIN)
   }
 
   private get homeBridgeContract() {
@@ -159,7 +160,7 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
         await this.waitForTransaction(response.hash, DEFAULT_CONFIRMATIONS_LIMIT)
         await this.watchHomeBridge()
       }
-      this.addTransaction(response, { summary: this.transactionSummary })
+      this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
     } catch (error) {
       this.dispatch(transferError())
 
