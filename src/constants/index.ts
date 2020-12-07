@@ -30,6 +30,7 @@ export const YAM3 = new Token(ChainId.MAINNET, '0x0AaCfbeC6a24756c20D41914F2caba
 export const YUSD = new Token(ChainId.MAINNET, '0x5dbcF33D8c2E976c6b560249878e6F1491Bca25c', 18, 'yUSD', 'yUSD')
 export const GRAIN = new Token(ChainId.MAINNET, '0x6589fe1271A0F29346796C6bAf0cdF619e25e58e', 18, 'GRAIN', 'GRAIN')
 export const FARM = new Token(ChainId.MAINNET, '0xa0246c9032bC3A600820415aE600c6388619A14D', 18, 'FARM', 'FARM')
+export const BADGER = new Token(ChainId.MAINNET, '0x3472A5A71965499acd81997a54BBA8D852C6E53d', 18, 'BADGER', 'BadgerDAO')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
 
 // TODO this is only approximate, it's actually based on blocks
@@ -82,7 +83,8 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
     [AMPL.address]: [DAI, WETH[ChainId.MAINNET]],
     [BASED.address]: [SUSD, WETH[ChainId.MAINNET]],
     [YAM3.address]: [YUSD, WETH[ChainId.MAINNET]],
-    [GRAIN.address]: [FARM, USDC, WETH[ChainId.MAINNET]]
+    [GRAIN.address]: [FARM, USDC, WETH[ChainId.MAINNET]],
+    [BADGER.address]: [WBTC, WETH[ChainId.MAINNET]]
   }
 }
 
