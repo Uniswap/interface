@@ -82,7 +82,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
     [AMPL.address]: [DAI, WETH[ChainId.MAINNET]],
     [BASED.address]: [SUSD, WETH[ChainId.MAINNET]],
     [YAM3.address]: [YUSD, WETH[ChainId.MAINNET]],
-    [GRAIN.address]: [FARM, USDC, WETH[ChainId.MAINNET]],
+    [GRAIN.address]: [FARM, USDC, WETH[ChainId.MAINNET]]
   }
 }
 
