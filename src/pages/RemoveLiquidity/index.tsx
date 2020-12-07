@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent, WETH, CurrencyAmount, JSBI } from 'dxswap-sdk'
+import { Currency, currencyEquals, ETHER, Percent, WETH, CurrencyAmount, JSBI, ChainId } from 'dxswap-sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus, Repeat } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
@@ -118,7 +118,8 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  const routerAddress = ROUTER_ADDRESS[chainId ? chainId : ChainId.MAINNET]
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], routerAddress)
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -155,7 +156,7 @@ export default function RemoveLiquidity({
     ]
     const message = {
       owner: account,
-      spender: ROUTER_ADDRESS,
+      spender: routerAddress,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()
@@ -727,7 +728,7 @@ export default function RemoveLiquidity({
                       'Approve'
                     )}
                   </ButtonConfirmed>
-                  <ButtonError 
+                  <ButtonError
                     onClick={() => {
                       setShowConfirm(true)
                     }}
