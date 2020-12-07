@@ -5,7 +5,11 @@ import { tokens } from './tokens'
 
 import { authereum, injected, walletConnect } from '../connectors'
 
-export const ROUTER_ADDRESS = rinkeby.router
+if (!process.env.ROUTER_ADDRESS) {
+  throw new Error('Mainnet router address env is required')
+}
+
+export const ROUTER_ADDRESS = process.env.ROUTER_ADDRESS || rinkeby.router
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 // a list of tokens by chain
