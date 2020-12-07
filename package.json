@@ -89,12 +89,13 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "cross-env GENERATE_SOURCEMAP=false react-app-rewired  build",
-    "ipfs-build": "cross-env PUBLIC_URL=\".\" GENERATE_SOURCEMAP=false react-app-rewired build",
+    "build": "cross-env GENERATE_SOURCEMAP=false react-app-rewired build && yarn patch-factory-mainnet-address",
+    "ipfs-build": "cross-env PUBLIC_URL=\".\" GENERATE_SOURCEMAP=false react-app-rewired build && yarn patch-factory-mainnet-address",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
-    "build-test": "http-server build"
+    "build-test": "http-server build",
+    "patch-factory-mainnet-address": "./scripts/patch-factory-mainnet-address.js"
   },
   "eslintConfig": {
     "extends": "react-app",
