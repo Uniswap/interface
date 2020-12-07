@@ -5,6 +5,8 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 
 export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
@@ -28,6 +30,34 @@ export const YAM3 = new Token(ChainId.MAINNET, '0x0AaCfbeC6a24756c20D41914F2caba
 export const YUSD = new Token(ChainId.MAINNET, '0x5dbcF33D8c2E976c6b560249878e6F1491Bca25c', 18, 'yUSD', 'yUSD')
 export const GRAIN = new Token(ChainId.MAINNET, '0x6589fe1271A0F29346796C6bAf0cdF619e25e58e', 18, 'GRAIN', 'GRAIN')
 export const FARM = new Token(ChainId.MAINNET, '0xa0246c9032bC3A600820415aE600c6388619A14D', 18, 'FARM', 'FARM')
+export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
+
+// TODO this is only approximate, it's actually based on blocks
+export const PROPOSAL_LENGTH_IN_DAYS = 7
+
+export const GOVERNANCE_ADDRESS = '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F'
+
+export const TIMELOCK_ADDRESS = '0x1a9C8182C09F50C8318d769245beA52c32BE35BC'
+
+const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+export const UNI: { [chainId in ChainId]: Token } = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+}
+
+export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
+  [UNI_ADDRESS]: 'UNI',
+  [GOVERNANCE_ADDRESS]: 'Governance',
+  [TIMELOCK_ADDRESS]: 'Timelock'
+}
+
+// TODO: specify merkle distributor for mainnet
+export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
+}
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
@@ -161,6 +191,8 @@ export const NetworkContextName = 'NETWORK'
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
+
+export const BIG_INT_ZERO = JSBI.BigInt(0)
 
 // one basis point
 export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))

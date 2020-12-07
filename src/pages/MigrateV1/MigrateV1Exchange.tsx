@@ -9,6 +9,7 @@ import { ButtonConfirmed } from '../../components/Button'
 import { LightCard, PinkCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
+import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
@@ -28,24 +29,11 @@ import { getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from './EmptyState'
 
-const POOL_CURRENCY_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
 const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 const ZERO = JSBI.BigInt(0)
 const ONE = JSBI.BigInt(1)
 const ZERO_FRACTION = new Fraction(ZERO, ONE)
 const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(10000 - INITIAL_ALLOWED_SLIPPAGE), JSBI.BigInt(10000))
-
-function FormattedPoolCurrencyAmount({ currencyAmount }: { currencyAmount: CurrencyAmount }) {
-  return (
-    <>
-      {currencyAmount.equalTo(JSBI.BigInt(0))
-        ? '0'
-        : currencyAmount.greaterThan(POOL_CURRENCY_AMOUNT_MIN)
-        ? currencyAmount.toSignificant(4)
-        : `<${POOL_CURRENCY_AMOUNT_MIN.toSignificant(1)}`}
-    </>
-  )
-}
 
 export function V1LiquidityInfo({
   token,
@@ -66,7 +54,7 @@ export function V1LiquidityInfo({
         <CurrencyLogo size="24px" currency={token} />
         <div style={{ marginLeft: '.75rem' }}>
           <TYPE.mediumHeader>
-            {<FormattedPoolCurrencyAmount currencyAmount={liquidityTokenAmount} />}{' '}
+            {<FormattedCurrencyAmount currencyAmount={liquidityTokenAmount} />}{' '}
             {chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH
           </TYPE.mediumHeader>
         </div>
@@ -89,7 +77,7 @@ export function V1LiquidityInfo({
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            <FormattedPoolCurrencyAmount currencyAmount={ethWorth} />
+            <FormattedCurrencyAmount currencyAmount={ethWorth} />
           </Text>
           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={Currency.ETHER} />
         </RowFixed>

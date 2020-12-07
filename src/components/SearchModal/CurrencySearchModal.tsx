@@ -2,10 +2,8 @@ import { Currency } from '@uniswap/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import useLast from '../../hooks/useLast'
-import { useSelectedListUrl } from '../../state/lists/hooks'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
-import ListIntroduction from './ListIntroduction'
 import { ListSelect } from './ListSelect'
 
 interface CurrencySearchModalProps {
@@ -56,19 +54,11 @@ export default function CurrencySearchModal({
     })
     setListView(false)
   }, [])
-  const handleSelectListIntroduction = useCallback(() => {
-    setListView(true)
-  }, [])
-
-  const selectedListUrl = useSelectedListUrl()
-  const noListSelected = !selectedListUrl
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90} minHeight={listView ? 40 : noListSelected ? 0 : 80}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={listView ? 40 : 80}>
       {listView ? (
         <ListSelect onDismiss={onDismiss} onBack={handleClickBack} />
-      ) : noListSelected ? (
-        <ListIntroduction onSelectList={handleSelectListIntroduction} />
       ) : (
         <CurrencySearch
           isOpen={isOpen}

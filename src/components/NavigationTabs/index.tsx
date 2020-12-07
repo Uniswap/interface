@@ -55,7 +55,7 @@ const StyledArrowLeft = styled(ArrowLeft)`
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
   const { t } = useTranslation()
   return (
-    <Tabs style={{ marginBottom: '20px' }}>
+    <Tabs style={{ marginBottom: '20px', display: 'none' }}>
       <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
         {t('swap')}
       </StyledNavLink>
@@ -80,14 +80,14 @@ export function FindPoolTabs() {
   )
 }
 
-export function AddRemoveTabs({ adding }: { adding: boolean }) {
+export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
         <HistoryLink to="/pool">
           <StyledArrowLeft />
         </HistoryLink>
-        <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
+        <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
         <QuestionHelper
           text={
             adding
