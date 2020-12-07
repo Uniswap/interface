@@ -26,6 +26,8 @@ export const SUSD = new Token(
 export const BASED = new Token(ChainId.MAINNET, '0x68A118Ef45063051Eac49c7e647CE5Ace48a68a5', 18, '$BASED', '$BASED')
 export const YAM3 = new Token(ChainId.MAINNET, '0x0AaCfbeC6a24756c20D41914F2caba817C0d8521', 18, 'YAM3', 'YAM3')
 export const YUSD = new Token(ChainId.MAINNET, '0x5dbcF33D8c2E976c6b560249878e6F1491Bca25c', 18, 'yUSD', 'yUSD')
+export const GRAIN = new Token(ChainId.MAINNET, '0x6589fe1271A0F29346796C6bAf0cdF619e25e58e', 18, 'GRAIN', 'GRAIN')
+export const FARM = new Token(ChainId.MAINNET, '0xa0246c9032bC3A600820415aE600c6388619A14D', 18, 'FARM', 'FARM')
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
@@ -49,7 +51,8 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
   [ChainId.MAINNET]: {
     [AMPL.address]: [DAI, WETH[ChainId.MAINNET]],
     [BASED.address]: [SUSD, WETH[ChainId.MAINNET]],
-    [YAM3.address]: [YUSD, WETH[ChainId.MAINNET]]
+    [YAM3.address]: [YUSD, WETH[ChainId.MAINNET]],
+    [GRAIN.address]: [FARM, USDC, WETH[ChainId.MAINNET]],
   }
 }
 
