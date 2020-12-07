@@ -1,8 +1,7 @@
 name: Release
 on:
-  # every morning
   schedule:
-    - cron:  '0 12 * * 1-4'
+    - cron:  '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
 
   # manual trigger
   workflow_dispatch:
@@ -37,6 +36,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
+          always-auth: true
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
