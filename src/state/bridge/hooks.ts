@@ -58,7 +58,12 @@ export function useDerivedBridgeInfo(
 
   const minMaxAmount = useAsyncMemo(async () => {
     if (!tokenAddress || !chainId || !library || !account) return
-    return await getMinMaxPerTxn(tokenAddress, inputCurrency?.decimals, isHome, chainId, library, account)
+    try {
+      return await getMinMaxPerTxn(tokenAddress, inputCurrency?.decimals, isHome, chainId, library, account)
+    } catch (e) {
+      console.error(`Failed to fetch min max amount`)
+      return { minAmount: '0', maxAmount: '1000' }
+    }
   }, [tokenAddress, inputCurrency])
 
   let inputError: string | undefined

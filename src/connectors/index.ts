@@ -14,8 +14,6 @@ const MAINNET_NETWORK_URL = process.env.REACT_APP_MAINNET_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
-const supportedChainIds = process.env.NODE_ENV === 'development' ? [1, 3, 122] : [1, 122]
-
 export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
 
 if (typeof NETWORK_URL === 'undefined') {
@@ -59,7 +57,7 @@ export const getChainNetworkLibrary = (chainId: number) => {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds
+  supportedChainIds: [1, 3, 122]
 })
 
 // mainnet only

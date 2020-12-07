@@ -7,8 +7,7 @@ import {
   getERC677TokenContract,
   getForeignCustomBridgeAddress,
   calculateGasMargin,
-  getForeignBridgeNativeToErcContract,
-  getAMBErc677To677Contract
+  getForeignBridgeNativeToErcContract
 } from '../../../utils'
 import {
   tokenTransferSuccess,
@@ -93,12 +92,9 @@ export default class NativeToErcBridge extends TokenBridge {
         this.account
       )
 
-      console.log(contract, this.FOREIGN_BRIDGE_EVENT)
-
       this.dispatch(confirmTokenTransferPending())
 
       const listener = (recipient: string) => {
-        console.log(recipient)
         if (recipient === this.account) {
           contract.removeListener(this.FOREIGN_BRIDGE_EVENT, listener)
           this.dispatch(confirmTokenTransferSuccess())
@@ -112,7 +108,7 @@ export default class NativeToErcBridge extends TokenBridge {
 
   watchHomeBridge(): Promise<void> {
     return new Promise(resolve => {
-      const contract = getAMBErc677To677Contract(this.homeBridgeAddress, this.homeNetworkLibrary, this.account)
+      const contract = getHomeBridgeNativeToErcContract(this.homeBridgeAddress, this.homeNetworkLibrary, this.account)
 
       this.dispatch(confirmTokenTransferPending())
 

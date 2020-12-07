@@ -3,7 +3,7 @@ import { BridgeMode } from './tokenBridge'
 import { isCustomBridgeToken } from '../../../utils'
 
 const isNative = (tokenAddress: string): boolean => {
-  return tokenAddress === FUSE.symbol
+  return tokenAddress === FUSE.symbol || tokenAddress === '0x970B9bB2C0444F5E81e9d0eFb84C8ccdcdcAf84d'
 }
 
 export const getBridgeMode = (tokenAddress: string): BridgeMode => {
