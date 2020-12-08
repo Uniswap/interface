@@ -199,3 +199,11 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.BigInt(10000))
+
+// SDN OFAC addresses
+export const BLOCKED_ADDRESSES: string[] = [
+  '0x7F367cC41522cE07553e823bf3be79A889DEbe1B',
+  '0xd882cFc20F52f2599D84b8e8D58C7FB62cfE344b',
+  '0x901bb9583b24D97e995513C6778dc6888AB6870e',
+  '0xA7e5d5A720f06526557c513402f2e6B5fA20b008'
+]
