@@ -101,7 +101,6 @@ export default function Modal({
   const [{ y }, set] = useSpring(() => ({ y: -72, config: { mass: 1, tension: 210, friction: 20 } }))
   const bind = useGesture({
     onDrag: state => {
-      console.log(state)
       set({
         y: state.down ? state.movement[1] - 72 : -72
       })
