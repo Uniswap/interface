@@ -18,6 +18,7 @@ export const addTransaction = createAction<{
   from: string
   approval?: { tokenAddress: string; spender: string }
   summary?: string
+  text?: string
 }>('transactions/addTransaction')
 export const clearAllTransactions = createAction<{ chainId: ChainId }>('transactions/clearAllTransactions')
 export const finalizeTransaction = createAction<{

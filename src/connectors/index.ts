@@ -7,7 +7,6 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 import { ChainId } from '@fuseio/fuse-swap-sdk'
-import { FOREIGN_BRIDGE_CHAIN } from '../constants'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const ROPSTEN_NETWORK_URL = process.env.REACT_APP_ROPSTEN_NETWORK_URL
@@ -38,20 +37,22 @@ export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
 }
 
-export const getNetworkLibraryByChain = (chainId: number) => {
-  if (chainId === ChainId.ROPSTEN) {
-    const network = new NetworkConnector({
-      urls: { [chainId]: ROPSTEN_NETWORK_URL }
-    })
-    return new Web3Provider(network.provider as any)
-  } else if (chainId === ChainId.FUSE) {
-    const networkUrl = FOREIGN_BRIDGE_CHAIN === ChainId.ROPSTEN ? ROPSTEN_NETWORK_URL : MAINNET_NETWORK_URL
-    const network = new NetworkConnector({
-      urls: { [chainId]: networkUrl }
-    })
-    return new Web3Provider(network.provider as any)
-  } else {
-    return getNetworkLibrary()
+function buildNetworkLibrary(url: string, chainId: number) {
+  const network = new NetworkConnector({
+    urls: { [chainId]: url }
+  })
+  return new Web3Provider(network.provider as any)
+}
+
+export const getChainNetworkLibrary = (chainId: number) => {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return buildNetworkLibrary(MAINNET_NETWORK_URL, chainId)
+    case ChainId.ROPSTEN:
+      return buildNetworkLibrary(ROPSTEN_NETWORK_URL, chainId)
+    default:
+      // fuse network library
+      return getNetworkLibrary()
   }
 }
 

@@ -11,6 +11,7 @@ export enum BridgeMode {
 
 abstract class TokenBridge {
   readonly tokenAddress: string
+  readonly tokenSymbol: string
   readonly amount: CurrencyAmount
   readonly library: Web3Provider
   readonly chainId: number
@@ -21,6 +22,7 @@ abstract class TokenBridge {
 
   constructor(
     tokenAddress: string,
+    tokenSymbol: string,
     amount: CurrencyAmount,
     library: Web3Provider,
     chainId: number,
@@ -30,6 +32,7 @@ abstract class TokenBridge {
     addTransaction: (...args: any) => void
   ) {
     this.tokenAddress = tokenAddress
+    this.tokenSymbol = tokenSymbol
     this.amount = amount
     this.library = library
     this.chainId = chainId
@@ -63,6 +66,10 @@ abstract class TokenBridge {
     return this.isHome
       ? 'Your tokens were transferred successfully to Ethereum please switch to Ethereum to use them'
       : 'Your tokens were transferred successfully to Fuse please switch to Fuse to use them'
+  }
+
+  get transactionText(): string {
+    return `Transfer ${this.tokenSymbol}`
   }
 
   async waitForTransaction(transactionHash: string, confirmations: number) {

@@ -14,7 +14,7 @@ describe('Lists', () => {
       cy.get('#bridge-input-token .open-currency-select-button').click()
       cy.get('#currency-search-change-list-button').click()
       cy.get('#list-add-input').type(customListUrl)
-      cy.get('#list-add-button').click()
+      cy.get('#list-add-button').click({ force: true })
       cy.get('.sc-dxgOiQ').should('contain', 'CoinGecko DeFi 100')
     })
   })

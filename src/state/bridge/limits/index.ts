@@ -3,10 +3,10 @@ import { getBridgeMode } from '../bridges/utils'
 import { BridgeMode } from '../bridges/tokenBridge'
 import {
   getHomeBridgeNativeToErcContract,
-  getHomeBridgeNativeToErcAddress,
+  getHomeCustomBridgeAddress,
   tryFormatAmount,
   getForeignBridgeNativeToErcContract,
-  getForeignBridgeNativeToErcAddress,
+  getForeignCustomBridgeAddress,
   getAMBErc677To677Contract,
   getHomeMultiErc20ToErc677BridgeAddress,
   getHomeMultiAMBErc20ToErc677Contract,
@@ -25,7 +25,7 @@ async function getNativeToErcMinMax(
   let minAmount, maxAmount
 
   if (isHome) {
-    const address = getHomeBridgeNativeToErcAddress(tokenAddress)
+    const address = getHomeCustomBridgeAddress(tokenAddress)
 
     if (!address) throw Error('Home bridge address not provided')
 
@@ -36,7 +36,7 @@ async function getNativeToErcMinMax(
     minAmount = tryFormatAmount(min, decimals)
     maxAmount = tryFormatAmount(max, decimals)
   } else {
-    const address = getForeignBridgeNativeToErcAddress(tokenAddress, chainId)
+    const address = getForeignCustomBridgeAddress(tokenAddress)
 
     if (!address) throw Error('Foreign bridge address not provided')
 
@@ -106,7 +106,7 @@ async function getErc677ToErc677MinMax(
   let minAmount, maxAmount
 
   if (isHome) {
-    const address = getHomeBridgeNativeToErcAddress(tokenAddress)
+    const address = getHomeCustomBridgeAddress(tokenAddress)
 
     if (!address) throw Error('Home bridge address not provided')
 
@@ -117,7 +117,7 @@ async function getErc677ToErc677MinMax(
     minAmount = tryFormatAmount(min, decimals)
     maxAmount = tryFormatAmount(max, decimals)
   } else {
-    const address = getForeignBridgeNativeToErcAddress(tokenAddress, chainId)
+    const address = getForeignCustomBridgeAddress(tokenAddress)
 
     if (!address) throw Error('Foreign bridge address not provided')
 

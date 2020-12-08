@@ -2,13 +2,12 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import TokenBridge from './tokenBridge'
 import {
-  getHomeBridgeNativeToErcAddress,
+  getHomeCustomBridgeAddress,
   getHomeBridgeNativeToErcContract,
   getERC677TokenContract,
-  getForeignBridgeNativeToErcAddress,
+  getForeignCustomBridgeAddress,
   calculateGasMargin,
-  getForeignBridgeNativeToErcContract,
-  getAMBErc677To677Contract
+  pollEvent
 } from '../../../utils'
 import {
   tokenTransferSuccess,
@@ -18,17 +17,27 @@ import {
   transferError
 } from '../actions'
 import { FOREIGN_BRIDGE_CHAIN } from '../../../constants'
-import { getNetworkLibraryByChain, getNetworkLibrary } from '../../../connectors'
+import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
+import HomeBridgeABI from '../../../constants/abis/homeBridgeNativeToErc.json'
+import ForeignBridgeABI from '../../../constants/abis/foreignBridgeNativeToErc.json'
 
 export default class NativeToErcBridge extends TokenBridge {
-  private readonly FOREIGN_BRIDGE_EVENT = 'RelayedMessage'
-  private readonly HOME_BRIDGE_EVENT = 'AffirmationCompleted'
+  private readonly FOREIGN_BRIDGE_EVENT = 'RelayedMessage(address,uint256,bytes32)'
+  private readonly HOME_BRIDGE_EVENT = 'AffirmationCompleted(address,uint256,bytes32)'
 
   private get homeBridgeAddress() {
-    const address = getHomeBridgeNativeToErcAddress(this.tokenAddress)
+    const address = getHomeCustomBridgeAddress(this.tokenAddress)
     if (!address) {
       throw Error('Home bridge address not provided')
+    }
+    return address
+  }
+
+  private get foreignBridgeAddress() {
+    const address = getForeignCustomBridgeAddress(this.tokenAddress)
+    if (!address) {
+      throw Error('Foreign bridge address not provided')
     }
     return address
   }
@@ -42,7 +51,7 @@ export default class NativeToErcBridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getNetworkLibraryByChain(this.chainId)
+    return getChainNetworkLibrary(FOREIGN_BRIDGE_CHAIN)
   }
 
   private buildHomeTransaction() {
@@ -51,14 +60,6 @@ export default class NativeToErcBridge extends TokenBridge {
       from: this.account,
       value: parseUnits(formatUnits(this.amount.raw.toString()))
     }
-  }
-
-  private foreignBridgeAddress(chainId = this.chainId) {
-    const address = getForeignBridgeNativeToErcAddress(this.tokenAddress, chainId)
-    if (!address) {
-      throw Error('Foreign bridge address not provided')
-    }
-    return address
   }
 
   async transferToForeign(): Promise<TransactionResponse | null> {
@@ -75,7 +76,7 @@ export default class NativeToErcBridge extends TokenBridge {
     this.dispatch(tokenTransferPending())
 
     const contract = getERC677TokenContract(this.tokenAddress, this.library, this.account)
-    const args = [this.foreignBridgeAddress(), this.amount.raw.toString(), []]
+    const args = [this.foreignBridgeAddress, this.amount.raw.toString(), []]
 
     const estimatedGas = await contract.estimateGas.transferAndCall(...args, {})
     const response = await contract.transferAndCall(...args, { gasLimit: calculateGasMargin(estimatedGas) })
@@ -85,44 +86,38 @@ export default class NativeToErcBridge extends TokenBridge {
     return response
   }
 
-  watchForeignBridge(): Promise<void> {
-    return new Promise(resolve => {
-      const contract = getForeignBridgeNativeToErcContract(
-        this.foreignBridgeAddress(FOREIGN_BRIDGE_CHAIN),
-        this.foreignNetworkLibrary,
-        this.account
-      )
+  async watchForeignBridge() {
+    this.dispatch(confirmTokenTransferPending())
 
-      this.dispatch(confirmTokenTransferPending())
-
-      const listener = (recipient: string) => {
-        if (recipient === this.account) {
-          contract.removeListener(this.FOREIGN_BRIDGE_EVENT, listener)
-          this.dispatch(confirmTokenTransferSuccess())
-          resolve()
-        }
+    await pollEvent(
+      this.FOREIGN_BRIDGE_EVENT,
+      this.foreignBridgeAddress,
+      ForeignBridgeABI,
+      this.foreignNetworkLibrary,
+      async (eventArgs: any[]) => {
+        const [recipient] = eventArgs
+        return recipient === this.account
       }
+    )
 
-      contract.on(this.FOREIGN_BRIDGE_EVENT, listener)
-    })
+    this.dispatch(confirmTokenTransferSuccess())
   }
 
-  watchHomeBridge(): Promise<void> {
-    return new Promise(resolve => {
-      const contract = getAMBErc677To677Contract(this.homeBridgeAddress, this.homeNetworkLibrary, this.account)
+  async watchHomeBridge() {
+    this.dispatch(confirmTokenTransferPending())
 
-      this.dispatch(confirmTokenTransferPending())
-
-      const listener = (recipient: string) => {
-        if (recipient === this.account) {
-          contract.removeListener(this.HOME_BRIDGE_EVENT, listener)
-          this.dispatch(confirmTokenTransferSuccess())
-          resolve()
-        }
+    await pollEvent(
+      this.HOME_BRIDGE_EVENT,
+      this.homeBridgeAddress,
+      HomeBridgeABI,
+      this.homeNetworkLibrary,
+      async (eventArgs: any[]) => {
+        const [recipient] = eventArgs
+        return recipient === this.account
       }
+    )
 
-      contract.on(this.HOME_BRIDGE_EVENT, listener)
-    })
+    this.dispatch(confirmTokenTransferSuccess())
   }
 
   async executeTransaction() {
@@ -136,7 +131,7 @@ export default class NativeToErcBridge extends TokenBridge {
         await this.waitForTransaction(response.hash, DEFAULT_CONFIRMATIONS_LIMIT)
         await this.watchHomeBridge()
       }
-      this.addTransaction(response, { summary: this.transactionSummary })
+      this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
     } catch (error) {
       this.dispatch(transferError())
 

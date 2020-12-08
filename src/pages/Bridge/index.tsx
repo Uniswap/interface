@@ -113,7 +113,7 @@ export default function Bridge({
   const addTransaction = useTransactionAdder()
 
   async function onTransfer() {
-    if (!chainId || !library || !account) return
+    if (!chainId || !library || !account || !inputCurrency?.symbol) return
 
     try {
       const { [Field.INPUT]: parsedAmountInput } = parsedAmounts
@@ -129,6 +129,7 @@ export default function Bridge({
         case BridgeMode.NATIVE_TO_ERC:
           bridge = new NativeToErcBridge(
             inputCurrencyId,
+            inputCurrency.symbol,
             parsedAmountInput,
             library,
             chainId,
@@ -141,6 +142,7 @@ export default function Bridge({
         case BridgeMode.ERC677_TO_ERC677:
           bridge = new Erc677ToErc677Bridge(
             inputCurrencyId,
+            inputCurrency.symbol,
             parsedAmountInput,
             library,
             chainId,
@@ -153,6 +155,7 @@ export default function Bridge({
         case BridgeMode.ERC20_TO_ERC677:
           bridge = new Erc20ToErc677Bridge(
             inputCurrencyId,
+            inputCurrency.symbol,
             parsedAmountInput,
             library,
             chainId,

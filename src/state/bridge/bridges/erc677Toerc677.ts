@@ -8,20 +8,21 @@ import {
 } from '../actions'
 import {
   getERC677TokenContract,
-  getForeignBridgeNativeToErcAddress,
+  getForeignCustomBridgeAddress,
   calculateGasMargin,
-  getHomeBridgeNativeToErcAddress,
-  getAMBErc677To677Contract
+  getHomeCustomBridgeAddress,
+  pollEvent
 } from '../../../utils'
 import { FOREIGN_BRIDGE_CHAIN } from '../../../constants'
-import { getNetworkLibraryByChain, getNetworkLibrary } from '../../../connectors'
+import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
+import BridgeABI from '../../../constants/abis/ambErc677ToErc677.json'
 
 export default class Erc677ToErc677Bridge extends TokenBridge {
-  private readonly BRIDGE_EVENT = 'TokensBridged'
+  private readonly BRIDGE_EVENT = 'TokensBridged(address,uint256,bytes32)'
 
   private get homeBridgeAddress() {
-    const address = getHomeBridgeNativeToErcAddress(this.tokenAddress)
+    const address = getHomeCustomBridgeAddress(this.tokenAddress)
     if (!address) {
       throw Error('Home bridge address not provided')
     }
@@ -33,11 +34,11 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getNetworkLibraryByChain(this.chainId)
+    return getChainNetworkLibrary(FOREIGN_BRIDGE_CHAIN)
   }
 
-  private foreignBridgeAddress(chainId = this.chainId) {
-    const address = getForeignBridgeNativeToErcAddress(this.tokenAddress, chainId)
+  private get foreignBridgeAddress() {
+    const address = getForeignCustomBridgeAddress(this.tokenAddress)
     if (!address) {
       throw Error('Foreign bridge address not provided')
     }
@@ -62,7 +63,7 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
     this.dispatch(tokenTransferPending())
 
     const contract = getERC677TokenContract(this.tokenAddress, this.library, this.account)
-    const args = [this.foreignBridgeAddress(), this.amount.raw.toString(), []]
+    const args = [this.foreignBridgeAddress, this.amount.raw.toString(), []]
 
     const estimatedGas = await contract.estimateGas.transferAndCall(...args, {})
     const response = await contract.transferAndCall(...args, { gasLimit: calculateGasMargin(estimatedGas) })
@@ -72,44 +73,38 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
     return response
   }
 
-  watchForeignBridge() {
-    return new Promise(resolve => {
-      const contract = getAMBErc677To677Contract(
-        this.foreignBridgeAddress(FOREIGN_BRIDGE_CHAIN),
-        this.foreignNetworkLibrary,
-        this.account
-      )
+  async watchForeignBridge() {
+    this.dispatch(confirmTokenTransferPending())
 
-      this.dispatch(confirmTokenTransferPending())
-
-      const listener = (recipient: string) => {
-        if (recipient === this.account) {
-          contract.removeListener(this.BRIDGE_EVENT, listener)
-          this.dispatch(confirmTokenTransferSuccess())
-          resolve()
-        }
+    await pollEvent(
+      this.BRIDGE_EVENT,
+      this.foreignBridgeAddress,
+      BridgeABI,
+      this.foreignNetworkLibrary,
+      async (eventArgs: any[]) => {
+        const [recipient] = eventArgs
+        return recipient === this.account
       }
+    )
 
-      contract.on(this.BRIDGE_EVENT, listener)
-    })
+    this.dispatch(confirmTokenTransferSuccess())
   }
 
-  watchHomeBridge() {
-    return new Promise(resolve => {
-      const contract = getAMBErc677To677Contract(this.homeBridgeAddress, this.homeNetworkLibrary, this.account)
+  async watchHomeBridge() {
+    this.dispatch(confirmTokenTransferPending())
 
-      this.dispatch(confirmTokenTransferPending())
-
-      const listener = (recipient: string) => {
-        if (recipient === this.account) {
-          contract.removeListener(this.BRIDGE_EVENT, listener)
-          this.dispatch(confirmTokenTransferSuccess())
-          resolve()
-        }
+    await pollEvent(
+      this.BRIDGE_EVENT,
+      this.homeBridgeAddress,
+      BridgeABI,
+      this.homeNetworkLibrary,
+      async (eventArgs: any[]) => {
+        const [recipient] = eventArgs
+        return recipient === this.account
       }
+    )
 
-      contract.on(this.BRIDGE_EVENT, listener)
-    })
+    this.dispatch(confirmTokenTransferSuccess())
   }
 
   async executeTransaction() {
@@ -123,7 +118,7 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
         await this.waitForTransaction(response.hash, DEFAULT_CONFIRMATIONS_LIMIT)
         await this.watchHomeBridge()
       }
-      this.addTransaction(response, { summary: this.transactionSummary })
+      this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
     } catch (error) {
       this.dispatch(transferError())
 
