@@ -32,6 +32,6 @@ module.exports = (config, env) => {
     'static/media/[name].[ext]'
   config.module.rules[2].oneOf.find(rule => rule.loader.includes('babel-loader')).options.cacheDirectory = false
   config.optimization.minimize = false
-  config.optimization.moduleIds = 'hashed'
+  config.optimization.moduleIds = 'named'
   return config
 }
