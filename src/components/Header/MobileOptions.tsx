@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleMobileMenu } from '../../state/application/hooks'
@@ -91,6 +91,10 @@ export default function MobileOptions() {
   const toggle = useToggleMobileMenu()
   useOnClickOutside(node, open ? toggle : undefined)
 
+  const handleDisabledAnchorClick = useCallback(event => {
+    event.preventDefault()
+  }, [])
+
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
@@ -99,7 +103,7 @@ export default function MobileOptions() {
         <MenuContainer>
           <MenuFlyout>
             <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
-              <StyledNavLinkWithBadge href="/#">
+              <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
                 <GovernanceText>Governance</GovernanceText>
                 <ComingSoonBadge>COMING SOON</ComingSoonBadge>
               </StyledNavLinkWithBadge>
