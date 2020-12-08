@@ -21,7 +21,7 @@ import Erc677TokenABI from '../constants/abis/erc677.json'
 import HomeBridgeNativeToErc from '../constants/abis/homeBridgeNativeToErc.json'
 import ForeignBriddgeNativeToErc from '../constants/abis/foreignBridgeNativeToErc.json'
 import { CUSTOM_BRIDGE_TOKENS } from '../constants/bridge'
-import { formatUnits } from 'ethers/lib/utils'
+import { formatUnits, Interface, id } from 'ethers/lib/utils'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -253,4 +253,31 @@ export const tryFormatAmount = (amount?: string, deciamls?: number) => {
   }
 
   return undefined
+}
+
+export async function pollEvent(
+  event: string,
+  address: string,
+  abi: any,
+  library: Web3Provider,
+  fn: (...args: any) => Promise<boolean>
+) {
+  return new Promise(async resolve => {
+    const fromBlock = await library.getBlockNumber()
+    const toBlock = 'latest'
+    const contractInterface = new Interface(abi)
+
+    const interval = setInterval(async () => {
+      const logs = await library.getLogs({ address, fromBlock, toBlock, topics: [id(event)] })
+
+      for (const log of logs) {
+        const { args } = contractInterface.parseLog(log)
+
+        if (await fn(args)) {
+          clearInterval(interval)
+          resolve()
+        }
+      }
+    }, 5000)
+  })
 }

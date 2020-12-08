@@ -11,14 +11,15 @@ import {
   getForeignCustomBridgeAddress,
   calculateGasMargin,
   getHomeCustomBridgeAddress,
-  getAMBErc677To677Contract
+  pollEvent
 } from '../../../utils'
 import { FOREIGN_BRIDGE_CHAIN } from '../../../constants'
 import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
+import BridgeABI from '../../../constants/abis/ambErc677ToErc677.json'
 
 export default class Erc677ToErc677Bridge extends TokenBridge {
-  private readonly BRIDGE_EVENT = 'TokensBridged'
+  private readonly BRIDGE_EVENT = 'TokensBridged(address,uint256,bytes32)'
 
   private get homeBridgeAddress() {
     const address = getHomeCustomBridgeAddress(this.tokenAddress)
@@ -72,40 +73,38 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
     return response
   }
 
-  watchForeignBridge() {
-    return new Promise(resolve => {
-      const contract = getAMBErc677To677Contract(this.foreignBridgeAddress, this.foreignNetworkLibrary, this.account)
+  async watchForeignBridge() {
+    this.dispatch(confirmTokenTransferPending())
 
-      this.dispatch(confirmTokenTransferPending())
-
-      const listener = (recipient: string) => {
-        if (recipient === this.account) {
-          contract.removeListener(this.BRIDGE_EVENT, listener)
-          this.dispatch(confirmTokenTransferSuccess())
-          resolve()
-        }
+    await pollEvent(
+      this.BRIDGE_EVENT,
+      this.foreignBridgeAddress,
+      BridgeABI,
+      this.foreignNetworkLibrary,
+      async (eventArgs: any[]) => {
+        const [recipient] = eventArgs
+        return recipient === this.account
       }
+    )
 
-      contract.on(this.BRIDGE_EVENT, listener)
-    })
+    this.dispatch(confirmTokenTransferSuccess())
   }
 
-  watchHomeBridge() {
-    return new Promise(resolve => {
-      const contract = getAMBErc677To677Contract(this.homeBridgeAddress, this.homeNetworkLibrary, this.account)
+  async watchHomeBridge() {
+    this.dispatch(confirmTokenTransferPending())
 
-      this.dispatch(confirmTokenTransferPending())
-
-      const listener = (recipient: string) => {
-        if (recipient === this.account) {
-          contract.removeListener(this.BRIDGE_EVENT, listener)
-          this.dispatch(confirmTokenTransferSuccess())
-          resolve()
-        }
+    await pollEvent(
+      this.BRIDGE_EVENT,
+      this.homeBridgeAddress,
+      BridgeABI,
+      this.homeNetworkLibrary,
+      async (eventArgs: any[]) => {
+        const [recipient] = eventArgs
+        return recipient === this.account
       }
+    )
 
-      contract.on(this.BRIDGE_EVENT, listener)
-    })
+    this.dispatch(confirmTokenTransferSuccess())
   }
 
   async executeTransaction() {
