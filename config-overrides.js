@@ -30,6 +30,7 @@ module.exports = (config, env) => {
     'static/media/[name].[ext]'
   config.module.rules[2].oneOf.find(rule => rule.loader === require.resolve('url-loader')).options.name =
     'static/media/[name].[ext]'
+  config.module.rules[2].oneOf.find(rule => rule.loader.includes('babel-loader')).options.cacheDirectory = false
   config.optimization.moduleIds = 'hashed'
   return config
 }
