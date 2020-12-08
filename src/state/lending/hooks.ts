@@ -1,9 +1,13 @@
-import { CToken } from '../../data/CToken'
+import { CToken, CTokenState, useCTokens } from '../../data/CToken'
 import { useActiveWeb3React } from '../../hooks'
-import { LendField } from './actions'
-import { CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk'
+import { LendField, updateLendingToken } from './actions'
+import { ChainId, CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk'
 import { tryParseAmount } from '../swap/hooks'
 import { useTranslation } from 'react-i18next'
+import store from 'state'
+import { useMemo } from 'react'
+import { BigNumber } from 'ethers'
+import { LendingState } from './reducer'
 
 // based on typed value
 export function useLendingInfo(
@@ -120,4 +124,58 @@ export function useLendingInfo(
   inputText = inputText ?? t(lendMarket?.toLowerCase())
 
   return { inputError, inputText }
+}
+
+export function listToCTokenMap(state: LendingState, chainId: ChainId): [CTokenState, CToken | null][] {
+  return state[chainId].map(i => {
+    const token = i[1] as CToken
+    return [
+      i[0],
+      new CToken(
+        chainId,
+        token.cAddress,
+        token.address,
+        token.decimals,
+        token.cSymbol,
+        token.cName,
+        token.symbol,
+        token.name,
+        BigNumber.from((token.supplyRatePerBlock as BigNumber)._hex),
+        BigNumber.from((token.borrowRatePerBlock as BigNumber)._hex),
+        BigNumber.from((token.balanceUnderlying as BigNumber)._hex),
+        BigNumber.from((token.supplyBalance as BigNumber)._hex),
+        BigNumber.from((token.borrowBalance as BigNumber)._hex),
+        BigNumber.from((token.exchangeRateMantissa as BigNumber)._hex),
+        BigNumber.from((token.totalSupply as BigNumber)._hex),
+        BigNumber.from((token.liquidity as BigNumber)._hex),
+        token.canBeCollateral,
+        BigNumber.from((token.underlyingPrice as BigNumber)._hex),
+        token.isListed,
+        BigNumber.from((token.collateralFactorMantissa as BigNumber)._hex),
+        token.logo0,
+        token.logo1
+      )
+    ]
+  })
+}
+
+export function useAllLendingMarket(): [CTokenState, CToken | null][] {
+  const { chainId, account } = useActiveWeb3React()
+  const markets = useCTokens()
+  const state = store.getState().lending
+  return useMemo(() => {
+    if (account && chainId && markets[0][0] === CTokenState.EXISTS) {
+      store.dispatch(updateLendingToken({ chainId, markets }))
+      return markets
+    }
+    if (account && chainId && state[chainId].length) {
+      try {
+        return listToCTokenMap(state, chainId)
+      } catch (error) {
+        console.error('Could not show lending list due to error', error)
+        return markets
+      }
+    }
+    return markets
+  }, [account, chainId, markets, state])
 }

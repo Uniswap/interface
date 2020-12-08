@@ -7,6 +7,7 @@ import { Interface } from '@ethersproject/abi'
 import { useComptrollerContract, useOracleContract } from '../hooks/useContract'
 import { CTOKEN_LISTS } from '../constants/lend'
 import { EXA_BASE } from '../utils'
+import { BigNumber } from 'ethers'
 
 const CTOKEN_INTERFACE = new Interface(ICTokenABI)
 
@@ -35,18 +36,18 @@ export class CToken extends Token {
   public readonly cDecimals: number
   public readonly cSymbol?: string
   public readonly cName?: string
-  public readonly supplyRatePerBlock?: number
-  public readonly borrowRatePerBlock?: number
-  public readonly balanceUnderlying?: number
-  public readonly supplyBalance?: number
-  public readonly borrowBalance?: number
-  public readonly exchangeRateMantissa?: number
-  public readonly totalSupply?: number
-  public readonly liquidity?: number
+  public readonly supplyRatePerBlock?: number | BigNumber
+  public readonly borrowRatePerBlock?: number | BigNumber
+  public readonly balanceUnderlying?: number | BigNumber
+  public readonly supplyBalance?: number | BigNumber
+  public readonly borrowBalance?: number | BigNumber
+  public readonly exchangeRateMantissa?: number | BigNumber
+  public readonly totalSupply?: number | BigNumber
+  public readonly liquidity?: number | BigNumber
   public readonly canBeCollateral?: boolean
-  public readonly underlyingPrice?: number
+  public readonly underlyingPrice?: number | BigNumber
   public readonly isListed?: boolean
-  public readonly collateralFactorMantissa?: number
+  public readonly collateralFactorMantissa?: number | BigNumber
   public readonly logo0?: string
   public readonly logo1?: string
 
@@ -59,18 +60,18 @@ export class CToken extends Token {
     cName?: string,
     symbol?: string,
     name?: string,
-    supplyRatePerBlock?: number,
-    borrowRatePerBlock?: number,
-    balanceUnderlying?: number,
-    supplyBalance?: number,
-    borrowBalance?: number,
-    exchangeRateMantissa?: number,
-    totalSupply?: number,
-    liquidity?: number,
+    supplyRatePerBlock?: number | BigNumber,
+    borrowRatePerBlock?: number | BigNumber,
+    balanceUnderlying?: number | BigNumber,
+    supplyBalance?: number | BigNumber,
+    borrowBalance?: number | BigNumber,
+    exchangeRateMantissa?: number | BigNumber,
+    totalSupply?: number | BigNumber,
+    liquidity?: number | BigNumber,
     canBeCollateral?: boolean,
-    underlyingPrice?: number,
+    underlyingPrice?: number | BigNumber,
     isListed?: boolean,
-    collateralFactorMantissa?: number,
+    collateralFactorMantissa?: number | BigNumber,
     logo0?: string,
     logo1?: string
   ) {
@@ -113,7 +114,8 @@ export class CToken extends Token {
 
   public getSupplyApy(): JSBI {
     const totalRate = Math.floor(
-      Math.pow(((this.supplyRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) * ETH_MANTISSA
+      Math.pow((((this.supplyRatePerBlock as number) ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) *
+        ETH_MANTISSA
     )
 
     return JSBI.subtract(JSBI.BigInt(totalRate), EXA_BASE)
@@ -121,7 +123,8 @@ export class CToken extends Token {
 
   public getBorrowApy(): JSBI {
     const totalRate = Math.floor(
-      Math.pow(((this.borrowRatePerBlock ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) * ETH_MANTISSA
+      Math.pow((((this.borrowRatePerBlock as number) ?? 0) / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR - 1) *
+        ETH_MANTISSA
     )
 
     return JSBI.subtract(JSBI.BigInt(totalRate), EXA_BASE)
@@ -278,41 +281,16 @@ export function useCTokens(): [CTokenState, CToken | null][] {
       const { result: marketsValue, loading: marketsResultLoading } =
         marketsResults.length !== 0 ? marketsResults[i] : { result: [0, 0, 0], loading: false }
 
-      const loadingCToken = new CToken(
-        chainId ?? ChainId.MAINNET,
-        cTokenList[i][0],
-        cTokenList[i][1],
-        cTokenList[i][2],
-        cTokenList[i][3],
-        cTokenList[i][4],
-        cTokenList[i][5],
-        cTokenList[i][6],
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        cTokenList[i][7],
-        cTokenList[i][8]
-      )
-
-      if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, loadingCToken]
-      if (borrowRatePerBlockResultLoading) return [CTokenState.LOADING, loadingCToken]
-      if (balanceUnderlyingResultLoading) return [CTokenState.LOADING, loadingCToken]
-      if (borrowBalanceResultLoading) return [CTokenState.LOADING, loadingCToken]
-      if (accountSnapshotResultLoading) return [CTokenState.LOADING, loadingCToken]
-      if (cashResultLoading) return [CTokenState.LOADING, loadingCToken]
-      if (totalSupplyResultLoading) return [CTokenState.LOADING, loadingCToken]
-      if (membershipLoading) return [CTokenState.LOADING, loadingCToken]
-      if (underlyingPriceLoading) return [CTokenState.LOADING, loadingCToken]
-      if (marketsResultLoading) return [CTokenState.LOADING, loadingCToken]
+      if (supplyRatePerBlockResultLoading) return [CTokenState.LOADING, null]
+      if (borrowRatePerBlockResultLoading) return [CTokenState.LOADING, null]
+      if (balanceUnderlyingResultLoading) return [CTokenState.LOADING, null]
+      if (borrowBalanceResultLoading) return [CTokenState.LOADING, null]
+      if (accountSnapshotResultLoading) return [CTokenState.LOADING, null]
+      if (cashResultLoading) return [CTokenState.LOADING, null]
+      if (totalSupplyResultLoading) return [CTokenState.LOADING, null]
+      if (membershipLoading) return [CTokenState.LOADING, null]
+      if (underlyingPriceLoading) return [CTokenState.LOADING, null]
+      if (marketsResultLoading) return [CTokenState.LOADING, null]
 
       if (!supplyRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]
       if (!borrowRatePerBlockValue) return [CTokenState.NOT_EXISTS, null]

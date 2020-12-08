@@ -25,7 +25,7 @@ const SkeletonWrap = styled.div`
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface SkeletonProps {
   loading: boolean
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 export default function Skeleton({ loading, children }: SkeletonProps) {

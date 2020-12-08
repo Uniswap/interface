@@ -18,11 +18,12 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { LendField } from '../../state/lending/actions'
 import { useCTokenApproveCallback } from '../../hooks/useApproveCallback'
-import { Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
+import { ChainId, Fraction, JSBI, TokenAmount } from '@uniswap/sdk'
 import DoubleAssetLogo from '../DoubleAssetLogo'
 import TransactionConfirmationModal, { TransactionErrorContent } from '../TransactionConfirmationModal'
 import { useTranslation } from 'react-i18next'
 import Skeleton from 'components/Skeleton'
+import { CTOKEN_LISTS } from 'constants/lend'
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -211,6 +212,8 @@ function SupplyMarkets({
 
   const { account, chainId, library } = useActiveWeb3React()
 
+  const cTokenList = CTOKEN_LISTS[chainId ?? ChainId.MAINNET]
+
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -318,7 +321,7 @@ function SupplyMarkets({
   const [TokenLoadState, setTokenLoadState] = useState(false)
 
   useEffect(() => {
-    if (allMarketCTokens[0].underlyingPrice) {
+    if (allMarketCTokens.length > 0) {
       setTokenLoadState(true)
     } else {
       setTokenLoadState(false)
@@ -470,7 +473,6 @@ function SupplyMarkets({
               {suppliedAsset.map((item: CToken) => (
                 <ItemPannel marketCToken={item} walletBalances={walletBalances} key={item.symbol}>
                   <AssetItem
-                    key={item.symbol}
                     onClick={() => {
                       if (TokenLoadState) {
                         setLendToken(item)
@@ -486,18 +488,24 @@ function SupplyMarkets({
                       )}
                       <ItemWrap>
                         <SymbolWrap>{item.name}</SymbolWrap>
-                        <MobileWrap>{getSupplyApy(item).toFixed(2) ?? 0}%</MobileWrap>
+                        <MobileWrap>
+                          <Skeleton loading={TokenLoadState}>{getSupplyApy(item).toFixed(2) ?? 0}%</Skeleton>
+                        </MobileWrap>
                       </ItemWrap>
                     </AssetLogo>
                     <ItemWrap mobileHide={true}>
-                      <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
+                      <Skeleton loading={TokenLoadState}>
+                        <div>{getSupplyApy(item).toFixed(2) ?? 0}%</div>
+                      </Skeleton>
                     </ItemWrap>
                     <ItemWrap>
-                      <div>${formatData(getSupplyTotalBalance([item])).toFixed(2) ?? ''}</div>
-                      <ItemBottomWrap>
-                        {new TokenAmount(item, item.getSupplyBalanceAmount()).toSignificant()}
-                        {' ' + item.symbol}
-                      </ItemBottomWrap>
+                      <Skeleton loading={TokenLoadState}>
+                        <div>${formatData(getSupplyTotalBalance([item])).toFixed(2) ?? ''}</div>
+                        <ItemBottomWrap>
+                          {new TokenAmount(item, item.getSupplyBalanceAmount()).toSignificant()}
+                          {' ' + item.symbol}
+                        </ItemBottomWrap>
+                      </Skeleton>
                     </ItemWrap>
                     <Switch
                       isActive={item.canBeCollateral ?? false}
@@ -576,7 +584,34 @@ function SupplyMarkets({
                     </AssetItem>
                   </ItemPannel>
                 ))
-              : ''}
+              : cTokenList.map((item: any, index) => (
+                  <AssetWrap key={index}>
+                    <AssetItem>
+                      <AssetLogo>
+                        {item[8] ? (
+                          <DoubleAssetLogo logo0={item[7]} logo1={item[8]} size={24} />
+                        ) : (
+                          <CurrencyIcon logo0={item[7]} style={{ marginRight: '10px' }} />
+                        )}
+                        <ItemWrap>
+                          <SymbolWrap>{item[6]}</SymbolWrap>
+                          <MobileWrap>
+                            <Skeleton loading={TokenLoadState}></Skeleton>
+                          </MobileWrap>
+                        </ItemWrap>
+                      </AssetLogo>
+                      <ItemWrap mobileHide={true}>
+                        <div>
+                          <Skeleton loading={TokenLoadState}></Skeleton>
+                        </div>
+                      </ItemWrap>
+                      <ItemWrap>
+                        <Skeleton loading={TokenLoadState}></Skeleton>
+                      </ItemWrap>
+                      <Switch isActive={false} />
+                    </AssetItem>
+                  </AssetWrap>
+                ))}
           </AssetItemWrap>
         </AssetWrap>
       </MarketsCard>
