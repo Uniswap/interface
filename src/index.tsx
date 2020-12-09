@@ -1,3 +1,6 @@
+// should always be imported and executed first
+import './set-mainnet-factory-address'
+
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import 'fontsource-montserrat/400.css'
 import 'fontsource-montserrat/500.css'
@@ -22,7 +25,7 @@ import getLibrary from './utils/getLibrary'
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 if ('ethereum' in window) {
-  (window.ethereum as any).autoRefreshOnNetworkChange = false
+  ;(window.ethereum as any).autoRefreshOnNetworkChange = false
 }
 
 window.addEventListener('error', error => {

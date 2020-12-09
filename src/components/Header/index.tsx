@@ -1,5 +1,5 @@
 import { ChainId } from 'dxswap-sdk'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { Link, NavLink, withRouter } from 'react-router-dom'
 
@@ -250,6 +250,10 @@ function Header({ history }: { history: any }) {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
+  const handleDisabledAnchorClick = useCallback(event => {
+    event.preventDefault()
+  }, [])
+
   return (
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
@@ -276,7 +280,7 @@ function Header({ history }: { history: any }) {
           >
             {t('pool')}
           </StyledNavLink>
-          <StyledNavLinkWithBadge href="/#">
+          <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
             <GovernanceText>Governance</GovernanceText>
             <AbsoluteComingSoonBadgeFlex justifyContent="center" width="100%">
               <Box>
@@ -284,7 +288,7 @@ function Header({ history }: { history: any }) {
               </Box>
             </AbsoluteComingSoonBadgeFlex>
           </StyledNavLinkWithBadge>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
+          <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link'}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">
               ↗
