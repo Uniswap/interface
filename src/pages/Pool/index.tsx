@@ -168,9 +168,11 @@ export default function Pool() {
 
         <ButtonSecondary
           id="join-pool-button"
-          as={Link}
+          as="a"
           style={{ marginTop: '32px', padding: '10px 0px', borderRadius: '8px' }}
-          to="/pool"
+          href={`https://dxstats.eth.link/account/${account}`}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <Text fontWeight={700} fontSize={12} lineHeight="15px">
             ACCOUNT ANALYTICS AND ACCRUED FEES <span style={{ fontSize: '11px', marginLeft: '4px' }}>↗</span>
@@ -194,7 +196,7 @@ export default function Pool() {
               </RowBetween>
               <RowBetween>
                 <TYPE.body fontWeight="500" fontSize="12px" lineHeight="20px" letterSpacing="-0.4px">
-                  Liquidity providers earn a swap fee (0.15% by default) on all trades proportional to their share of
+                  Liquidity providers earn a swap fee (0.25% by default) on all trades proportional to their share of
                   the pool.
                   <br /> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your
                   liquidity.
@@ -202,12 +204,12 @@ export default function Pool() {
                   it uses 0.15% as default value that is assigned when the pair is created.
                 </TYPE.body>
               </RowBetween>
-              <RowBetween>
-                {/* TODO: this should be a link to a blog post or something */}
-                <TYPE.body fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>
-                  Read more about providing liquidity
-                </TYPE.body>
-              </RowBetween>
+              {/*<RowBetween>*/}
+              {/*  /!* TODO: this should be a link to a blog post or something *!/*/}
+              {/*  <TYPE.body fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>*/}
+              {/*    Read more about providing liquidity*/}
+              {/*  </TYPE.body>*/}
+              {/*</RowBetween>*/}
             </AutoColumn>
           </CardSection>
         </VoteCard>
