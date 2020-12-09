@@ -5,12 +5,12 @@ import { useDispatch } from 'react-redux'
 import { Fetcher, TokenList } from 'dxswap-sdk'
 
 export default function Updater() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (chainId)
-      Fetcher.fetchDxDaoTokenList(chainId)
+      Fetcher.fetchDxDaoTokenList(chainId, library)
         .then((tokenList: TokenList) => {
           if (tokenList) dispatch(setTokenList(tokenList))
         })
@@ -18,7 +18,7 @@ export default function Updater() {
           console.error('Error fetching the default token list. error:', error)
           return
         })
-  }, [chainId, dispatch])
+  }, [chainId, dispatch, library])
 
   return null
 }
