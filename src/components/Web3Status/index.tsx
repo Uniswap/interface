@@ -82,7 +82,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   }
 `
 
-const Text = styled.p`
+const Text = styled.p<{ fontSize?: number }>`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -91,6 +91,8 @@ const Text = styled.p`
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
+  float: left;
+  ${({ fontSize }) => (fontSize ? `font-size:${fontSize}px` : '')};
 `
 
 const NetworkIcon = styled(Activity)`

@@ -102,7 +102,7 @@ const MenuFlyout = styled.span`
   max-width: 322px;
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
   border-radius: 8px;
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px) !important;
   border-radius: 8px;
   border: 8px solid;
   border-radius: 8px;
@@ -333,7 +333,7 @@ export default function SettingsTab() {
                   <FlyoutBottomAligner>
                     <MenuFlyoutBottom>
                       <MenuFlyoutBottomItem>
-                        <MenuItem id="link" href="https://dxdao.eth.link/">
+                        <MenuItem id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
                           <Info size={14} />
                           About
                         </MenuItem>
@@ -356,7 +356,7 @@ export default function SettingsTab() {
                         </InfoBadge>
                       </MenuFlyoutBottomItem>
 
-                      <MenuBanner id="link" href="https://dxdao.eth.link/">
+                      <MenuBanner id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
                         <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="text1" marginBottom="4px">
                           A DXDAO PRODUCT
                         </TYPE.body>
