@@ -109,7 +109,7 @@ export default function MobileOptions() {
               </StyledNavLinkWithBadge>
             </RowFixed>
             <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
-              <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link'}>
+              <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link/'}>
                 Charts <span style={{ fontSize: '11px' }}>↗</span>
               </StyledExternalLink>
             </RowFixed>
