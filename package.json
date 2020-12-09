@@ -1,6 +1,6 @@
 {
   "name": "dxswap-dapp",
-  "version": "0.2.0",
+  "version": "1.0.0-alpha.0",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@ethersproject/experimental": "^5.0.1",
