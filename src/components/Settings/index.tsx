@@ -23,6 +23,7 @@ import TransactionSettings from '../TransactionSettings'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import DxDao from '../../assets/svg/dxdao.svg'
 import { useTransition, animated } from 'react-spring'
+import { version } from '../../../package.json'
 
 const StyledDialogOverlay = animated(styled.div`
   position: fixed;
@@ -346,7 +347,7 @@ export default function SettingsTab() {
                       <MenuFlyoutBottomItem>
                         <InfoBadge>
                           <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
-                            V 0.0.1
+                            v{version}
                           </TYPE.body>
                         </InfoBadge>
                         <InfoBadge>
