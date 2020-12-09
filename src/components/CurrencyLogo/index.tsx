@@ -35,11 +35,18 @@ export default function CurrencyLogo({
     if (currency === ETHER) return []
 
     if (currency instanceof Token) {
-      console.log(currency.name)
       if (currency.name === "DXdao") {
         return ["https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa1d65E8fB6e87b60FECCBc582F7f97804B725521/logo.png"]
       } else if ((currency.name === "Weenus 💪") || (currency.name === "Yeenus 💪") || (currency.name === "Xeenus 💪") || (currency.name === "Zeenus 💪")){
         return ["https://github.githubassets.com/images/icons/emoji/unicode/1f4b8.png"]
+      } else if (currency.name === "Mate"){
+        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f9c9.png"]
+      } else if (currency.name === "Chair"){
+        return ["https://github.githubassets.com/images/icons/emoji/unicode/1fa91.png"]
+      } else if (currency.name === "Sponge"){
+        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f9fd.png"]
+      } else if (currency.name === "Antarctica Flag"){
+        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f1e6.png"]
       } else {
         return [getTokenLogoURL(currency.address)]
       }

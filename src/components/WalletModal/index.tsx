@@ -3,37 +3,34 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import ReactGA from 'react-ga'
 import styled from 'styled-components'
+import { transparentize } from 'polished'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis } from '../../connectors'
-import { OVERLAY_READY } from '../../connectors/Fortmatic'
+import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
+import { TYPE } from '../../theme'
 import AccountDetails from '../AccountDetails'
 
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
+import DxDao from '../../assets/svg/dxdao.svg'
 
 const CloseIcon = styled.div`
   position: absolute;
   right: 1rem;
   top: 14px;
-  &:hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
+  cursor: pointer;
 `
 
 const CloseColor = styled(Close)`
-  path {
-    stroke: ${({ theme }) => theme.text4};
-  }
+  width: 16px;
+  height: 16px;
+  color: ${({ theme }) => theme.text5};
 `
 
 const Wrapper = styled.div`
@@ -45,7 +42,7 @@ const Wrapper = styled.div`
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1rem 1rem;
+  padding: 1rem 1.125rem 0 1.125rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -54,16 +51,16 @@ const HeaderRow = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
-  padding: 2rem;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  padding: 16px 18px 32px 16px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
 const UpperSection = styled.div`
   position: relative;
+  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
 
   h5 {
     margin: 0;
@@ -83,15 +80,19 @@ const UpperSection = styled.div`
 `
 
 const Blurb = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 1rem;
-    font-size: 12px;
-  `};
+  background: ${({ theme }) => theme.bg1};
+  height: 76px;
+  position: relative;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    width: 80%;
+  }
 `
 
 const OptionGrid = styled.div`
@@ -164,19 +165,6 @@ export default function WalletModal({
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
-    let name = ''
-    Object.keys(SUPPORTED_WALLETS).map(key => {
-      if (connector === SUPPORTED_WALLETS[key].connector) {
-        return (name = SUPPORTED_WALLETS[key].name)
-      }
-      return true
-    })
-    // log selected wallet
-    ReactGA.event({
-      category: 'Wallet',
-      action: 'Change Wallet',
-      label: name
-    })
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
@@ -195,13 +183,6 @@ export default function WalletModal({
       })
   }
 
-  // close wallet modal if fortmatic modal is active
-  useEffect(() => {
-    fortmatic.on(OVERLAY_READY, () => {
-      toggleWalletModal()
-    })
-  }, [toggleWalletModal])
-
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
@@ -209,11 +190,6 @@ export default function WalletModal({
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
-        //disable portis on mobile for now
-        if (option.connector === portis) {
-          return null
-        }
-
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
@@ -295,13 +271,19 @@ export default function WalletModal({
           <CloseIcon onClick={toggleWalletModal}>
             <CloseColor />
           </CloseIcon>
-          <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
+          <HeaderRow>
+            <TYPE.body fontWeight={500} fontSize={16}>
+              {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
+            </TYPE.body>
+          </HeaderRow>
           <ContentWrapper>
-            {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
-            ) : (
-              'Error connecting. Try refreshing the page.'
-            )}
+            <TYPE.yellow>
+              {error instanceof UnsupportedChainIdError ? (
+                <h5>Please connect to the appropriate Ethereum network.</h5>
+              ) : (
+                'Error connecting. Try refreshing the page.'
+              )}
+            </TYPE.yellow>
           </ContentWrapper>
         </UpperSection>
       )
@@ -330,12 +312,16 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              Back
+              <TYPE.body color="text4" fontWeight={500} fontSize="20px" lineHeight="24px" letterSpacing="-0.01em">
+                Back
+              </TYPE.body>
             </HoverText>
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>Connect to a wallet</HoverText>
+            <TYPE.body fontWeight={500} fontSize={20} color="text4">
+              Connect to a wallet
+            </TYPE.body>
           </HeaderRow>
         )}
         <ContentWrapper>
@@ -349,13 +335,16 @@ export default function WalletModal({
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
-          {walletView !== WALLET_VIEWS.PENDING && (
-            <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
-            </Blurb>
-          )}
         </ContentWrapper>
+        <Blurb as="a" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
+          <TYPE.body fontWeight={700} fontSize="10px" color="text1" letterSpacing="3px" marginBottom="8px">
+            A DXDAO PRODUCT
+          </TYPE.body>
+          <TYPE.body fontWeight={600} fontSize="8px" color="text5" letterSpacing="2px">
+            DXDAO.ETH
+          </TYPE.body>
+          <img src={DxDao} alt="dxdao" />
+        </Blurb>
       </UpperSection>
     )
   }

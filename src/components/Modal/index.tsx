@@ -11,15 +11,14 @@ const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   &[data-reach-dialog-overlay] {
-    z-index: 2;
-    background-color: transparent;
+    z-index: 4;
     overflow: hidden;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    background-color: ${({ theme }) => theme.modalBG};
+    background-color: ${({ theme }) => transparentize(0.65, theme.black)};
   }
 `
 
@@ -35,8 +34,8 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    background-color: ${({ theme }) => theme.bg1};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
+    background: none;
+    box-shadow: 0px 16px 12px ${({ theme }) => transparentize(0.55, theme.boxShadow)};
     padding: 0px;
     width: 50vw;
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
@@ -44,7 +43,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
 
-    max-width: 420px;
+    max-width: 460px;
     ${({ maxHeight }) =>
       maxHeight &&
       css`
@@ -56,7 +55,8 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
         min-height: ${minHeight}vh;
       `}
     display: flex;
-    border-radius: 20px;
+    border-radius: 8px;
+    backdrop-filter: blur(16px);
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;
       margin: 0;
@@ -98,11 +98,11 @@ export default function Modal({
     leave: { opacity: 0 }
   })
 
-  const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
+  const [{ y }, set] = useSpring(() => ({ y: -72, config: { mass: 1, tension: 210, friction: 20 } }))
   const bind = useGesture({
     onDrag: state => {
       set({
-        y: state.down ? state.movement[1] : 0
+        y: state.down ? state.movement[1] - 72 : -72
       })
       if (state.movement[1] > 300 || (state.velocity > 3 && state.direction[1] > 0)) {
         onDismiss()
@@ -120,7 +120,7 @@ export default function Modal({
                 {...(isMobile
                   ? {
                       ...bind(),
-                      style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
+                      style: { transform: y.interpolate(y => `translateY(${y > -72 ? y : -72}px)`) }
                     }
                   : {})}
                 aria-label="dialog content"

@@ -35,7 +35,7 @@ export function ProtocolFeeBar({
           <TYPE.black>{protocolFeeDenominator?.toString() ?? '-'}</TYPE.black>
           <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
             Protocol Fee Denominator
-            <QuestionHelper text="The number to wich the swap fee is divided to get the protocol fee" />
+            <QuestionHelper text="The number to which the swap fee is divided to get the protocol fee" />
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">

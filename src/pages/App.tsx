@@ -1,17 +1,12 @@
 import React, { Suspense } from 'react'
 import { Route, Switch, HashRouter } from 'react-router-dom'
 import styled from 'styled-components'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
-import {
-  RedirectDuplicateTokenIds,
-  RedirectOldAddLiquidityPathStructure,
-  RedirectToAddLiquidity
-} from './AddLiquidity/redirects'
+import { RedirectDuplicateTokenIds, RedirectOldAddLiquidityPathStructure } from './AddLiquidity/redirects'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -29,14 +24,18 @@ const AppWrapper = styled.div`
 const HeaderWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
+  z-index: 4;
+  height: 86px;
   justify-content: space-between;
 `
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 172px);
   width: 100%;
-  padding-top: 100px;
+  padding-top: 50px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -59,7 +58,6 @@ export default function App() {
   return (
     <Suspense fallback={null}>
       <HashRouter>
-        <Route component={GoogleAnalyticsReporter} />
         <Route component={DarkModeQueryParamReader} />
         <AppWrapper>
           <HeaderWrapper>
@@ -74,7 +72,7 @@ export default function App() {
                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                 <Route exact strict path="/find" component={PoolFinder} />
                 <Route exact strict path="/pool" component={Pool} />
-                <Route exact strict path="/create" component={RedirectToAddLiquidity} />
+                <Route exact strict path="/create" component={AddLiquidity} />
                 <Route exact path="/add" component={AddLiquidity} />
                 <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
                 <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />

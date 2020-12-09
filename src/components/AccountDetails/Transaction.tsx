@@ -29,7 +29,7 @@ const TransactionState = styled(ExternalLink)<{ pending: boolean; success?: bool
   padding: 0.25rem 0rem;
   font-weight: 500;
   font-size: 0.825rem;
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.text5};
 `
 
 const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`

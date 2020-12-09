@@ -1,9 +1,9 @@
 import React, { HTMLProps, useCallback } from 'react'
-import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { ArrowLeft, X } from 'react-feather'
+import { Colors } from './styled'
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1
@@ -36,6 +36,9 @@ export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColo
 `
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
+  color: ${({ theme }) => theme.purple3};
+  width: 16px;
+  height: 16px;
   cursor: pointer;
 `
 
@@ -46,7 +49,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   background: none;
 
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.primary1)};
+  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.purple4)};
   font-weight: 500;
 
   :hover {
@@ -64,10 +67,10 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
 `
 
 // An internal link from the react-router-dom library that is correctly styled
-export const StyledInternalLink = styled(Link)`
+export const StyledInternalLink = styled(Link)<{ color?: keyof Colors }>`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme, color }) => theme[color || 'primary1']};
   font-weight: 500;
 
   :hover {
@@ -87,7 +90,7 @@ export const StyledInternalLink = styled(Link)`
 const StyledLink = styled.a`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.text4};
   font-weight: 500;
 
   :hover {
@@ -132,19 +135,11 @@ export function ExternalLink({
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
-      if (target === '_blank' || event.ctrlKey || event.metaKey) {
-        ReactGA.outboundLink({ label: href }, () => {
-          console.debug('Fired outbound link event', href)
-        })
-      } else {
+      if (target !== '_blank' && !event.ctrlKey && !event.metaKey) {
         event.preventDefault()
-        // send a ReactGA event and then trigger a location change
-        ReactGA.outboundLink({ label: href }, () => {
-          window.location.href = href
-        })
       }
     },
-    [href, target]
+    [target]
   )
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }

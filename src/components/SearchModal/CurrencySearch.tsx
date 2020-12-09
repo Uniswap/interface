@@ -1,15 +1,14 @@
 import { Currency, ETHER, Token } from 'dxswap-sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import ReactGA from 'react-ga'
+import styled from 'styled-components'
+import { transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { CloseIcon } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
@@ -17,7 +16,6 @@ import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import AutoSizer from 'react-virtualized-auto-sizer'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -26,8 +24,13 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
-  onChangeList: () => void
 }
+
+const Wrapper = styled.div`
+  width: 100%;
+
+  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+`
 
 export function CurrencySearch({
   selectedCurrency,
@@ -35,8 +38,7 @@ export function CurrencySearch({
   otherSelectedCurrency,
   showCommonBases,
   onDismiss,
-  isOpen,
-  onChangeList
+  isOpen
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -49,16 +51,6 @@ export function CurrencySearch({
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
-
-  useEffect(() => {
-    if (isAddressSearch) {
-      ReactGA.event({
-        category: 'Currency Select',
-        action: 'Search by address',
-        label: isAddressSearch
-      })
-    }
-  }, [isAddressSearch])
 
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
@@ -131,53 +123,47 @@ export function CurrencySearch({
   )
 
   return (
-    <Column style={{ width: '100%', flex: '1 1' }}>
-      <PaddedColumn gap="14px">
-        <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
-            Select a token
-            <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-        <SearchInput
-          type="text"
-          id="token-search-input"
-          placeholder={t('tokenSearchPlaceholder')}
-          value={searchQuery}
-          ref={inputRef as RefObject<HTMLInputElement>}
-          onChange={handleInput}
-          onKeyDown={handleEnter}
-        />
-        {showCommonBases && (
-          <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
-        )}
-        <RowBetween>
-          <Text fontSize={14} fontWeight={500}>
-            Token Name
-          </Text>
-          <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
-        </RowBetween>
-      </PaddedColumn>
-
-      <Separator />
-
-      <div style={{ flex: '1' }}>
-        <AutoSizer disableWidth>
-          {({ height }) => (
-            <CurrencyList
-              height={height}
-              showETH={showETH}
-              currencies={filteredSortedTokens}
-              onCurrencySelect={handleCurrencySelect}
-              otherCurrency={otherSelectedCurrency}
-              selectedCurrency={selectedCurrency}
-              fixedListRef={fixedList}
-            />
+    <Wrapper>
+      <Column style={{ width: '100%', height: '100%', flex: '1 1' }}>
+        <PaddedColumn gap="16px">
+          <RowBetween>
+            <TYPE.body fontWeight={500} fontSize={16}>
+              Select a token
+            </TYPE.body>
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+          <SearchInput
+            type="text"
+            id="token-search-input"
+            placeholder={t('tokenSearchPlaceholder')}
+            value={searchQuery}
+            ref={inputRef as RefObject<HTMLInputElement>}
+            onChange={handleInput}
+            onKeyDown={handleEnter}
+          />
+          {showCommonBases && (
+            <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
           )}
-        </AutoSizer>
-      </div>
-      
-    </Column>
+          <RowBetween>
+            <TYPE.body fontSize="11px" lineHeight="13px" letterSpacing="0.06em">
+              NAME
+            </TYPE.body>
+            <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
+          </RowBetween>
+        </PaddedColumn>
+
+        <Separator />
+
+        <div style={{ flex: '1' }}>
+          <CurrencyList
+            showETH={showETH}
+            currencies={filteredSortedTokens}
+            onCurrencySelect={handleCurrencySelect}
+            otherCurrency={otherSelectedCurrency}
+            selectedCurrency={selectedCurrency}
+          />
+        </div>
+      </Column>
+    </Wrapper>
   )
 }
