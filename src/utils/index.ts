@@ -98,8 +98,8 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS, IDXswapRouterABI, library, account)
+export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(ROUTER_ADDRESS[chainId ? chainId : ChainId.MAINNET] as string, IDXswapRouterABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {

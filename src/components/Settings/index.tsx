@@ -1,76 +1,74 @@
-import React, { useContext, useRef, useState } from 'react'
-import { Settings, X } from 'react-feather'
+import React, { useRef, useState } from 'react'
+import { Settings, X, Info, Code } from 'react-feather'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
+import { transparentize } from 'polished'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
-  useDarkModeManager,
   useExpertModeManager,
   useUserTransactionTTL,
-  useUserSlippageTolerance
+  useUserSlippageTolerance,
+  useDarkModeManager
 } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { TYPE, ExternalLink, LinkStyledButton, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
-import { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import DxDao from '../../assets/svg/dxdao.svg'
+import { useTransition, animated } from 'react-spring'
+import { version } from '../../../package.json'
+
+const StyledDialogOverlay = animated(styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => transparentize(0.65, theme.black)};
+`)
 
 const StyledMenuIcon = styled(Settings)`
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
+  margin: 0 16px;
+  cursor: pointer;
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.text4};
   }
 `
 
 const StyledCloseIcon = styled(X)`
+  position: absolute;
+  right: 18px;
   height: 20px;
   width: 20px;
+
   :hover {
     cursor: pointer;
   }
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
-`
-
-const StyledMenuButton = styled.button`
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
-
-  padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
-
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.bg4};
-  }
-
-  svg {
-    margin-top: 2px;
+    stroke: ${({ theme }) => theme.bg5};
   }
 `
 const EmojiWrapper = styled.div`
   position: absolute;
   bottom: -6px;
-  right: 0px;
-  font-size: 14px;
+  right: 3px;
+  font-size: 12px;
 `
 
 const StyledMenu = styled.div`
@@ -83,52 +81,138 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span`
-  min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+const MenuContainer = styled.span<{ ref: any }>`
   display: flex;
   flex-direction: column;
-  font-size: 1rem;
   position: absolute;
-  top: 4rem;
-  right: 0rem;
+  top: 80px;
+  right: 20px;
+  width: 322px;
   z-index: 100;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    min-width: 18.125rem;
-    right: -46px;
-  `};
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    min-width: 18.125rem;
-    top: -22rem;
+    position: fixed;
+    top: initial;
+    right: initial;
+    justify-content: center;
+    align-items: center;
   `};
 `
 
-const Break = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.bg3};
+const MenuFlyout = styled.span`
+  min-width: 322px;
+  max-width: 322px;
+  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  border-radius: 8px;
+  backdrop-filter: blur(16px);
+  border-radius: 8px;
+  border: 8px solid;
+  border-radius: 8px;
+  border-image: url(${border8pxRadius}) 8;
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  height: auto;
+  box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
+`
+
+const MenuFlyoutBottom = styled.span`
+  width: 215px;
+  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  backdrop-filter: blur(16px);
+  border: 8px solid;
+  border-radius: 8px;
+  border-image: url(${border8pxRadius}) 8;
+  font-size: 1rem;
+  box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
+  margin-top: 16px;
+  padding: 21px 13px;
+`
+
+const MenuFlyoutBottomItem = styled.span`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 16px;
+`
+
+const InfoBadge = styled.span`
+  background: ${({ theme }) => theme.bg3};
+  padding: 3px 4px;
+  color: ${({ theme }) => theme.text1};
+  border-radius: 4px;
+  margin-right: 8px;
+`
+
+const MenuBanner = styled(ExternalLink)`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: ${({ theme }) => theme.primary1};
+  border-radius: 4px;
+  padding: 9px 16px;
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  img {
+    top: 0;
+    left: 10px;
+    height: 100%;
+    position: absolute;
+  }
+`
+
+const FlyoutBottomAligner = styled.span`
+  display: flex;
+  justify-content: flex-end;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    justify-content: center;
+  `};
 `
 
 const ModalContentWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 0;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 20px;
+  padding: 26px 0;
+  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
+`
+const MenuItem = styled(ExternalLink)`
+  width: 50%;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  > svg {
+    margin-right: 8px;
+  }
 `
 
+const CloseTextButton = styled(LinkStyledButton)`
+  color: ${({ theme }) => theme.text4};
+  font-size: 13px;
+  text-decoration: underline;
+`
+
+const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
+  ? `https://github.com/levelkdev/dxswap-dapp/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`
+  : 'https://github.com/levelkdev/dxswap-dapp'
+
 export default function SettingsTab() {
-  const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
+  const fadeTransition = useTransition(open, null, {
+    config: { duration: 200 },
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }
+  })
+
+  const node = useRef<HTMLDivElement>()
   const toggle = useToggleSettingsMenu()
 
-  const theme = useContext(ThemeContext)
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
 
   const [ttl, setTtl] = useUserTransactionTTL()
@@ -147,99 +231,147 @@ export default function SettingsTab() {
     <StyledMenu ref={node as any}>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
-          <AutoColumn gap="lg">
-            <RowBetween style={{ padding: '0 2rem' }}>
-              <div />
-              <Text fontWeight={500} fontSize={20}>
+          <AutoColumn gap="25px">
+            <Row style={{ padding: '0 25px', justifyContent: 'center' }}>
+              <TYPE.body fontWeight={500} fontSize="20px" color="text3">
                 Are you sure?
-              </Text>
+              </TYPE.body>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
-            </RowBetween>
-            <Break />
-            <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <Text fontWeight={500} fontSize={20}>
+            </Row>
+            <AutoColumn gap="24px" style={{ padding: '0 24px' }}>
+              <TYPE.body fontWeight={400} fontSize="16px" lineHeight="20px" color="text1" textAlign="center">
                 Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
                 in bad rates and lost funds.
-              </Text>
-              <Text fontWeight={600} fontSize={20}>
+              </TYPE.body>
+              <TYPE.body fontWeight={600} fontSize="13px" color="text1" textAlign="center">
                 ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
-              </Text>
+              </TYPE.body>
               <ButtonError
                 error={true}
-                padding={'12px'}
+                padding={'18px'}
                 onClick={() => {
-                  if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
-                    toggleExpertMode()
-                    setShowConfirmation(false)
-                  }
+                  toggleExpertMode()
+                  setShowConfirmation(false)
                 }}
               >
-                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
-                  Turn On Expert Mode
-                </Text>
+                <TYPE.body fontSize="13px" fontWeight={600} color="text1" id="confirm-expert-mode">
+                  Turn on Expert mode
+                </TYPE.body>
               </ButtonError>
+              <Row style={{ justifyContent: 'center' }}>
+                <CloseTextButton onClick={() => setShowConfirmation(false)}>Cancel</CloseTextButton>
+              </Row>
             </AutoColumn>
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
-        {expertMode ? (
-          <EmojiWrapper>
-            <span role="img" aria-label="wizard-icon">
-              🧙
-            </span>
-          </EmojiWrapper>
-        ) : null}
-      </StyledMenuButton>
-      {open && (
-        <MenuFlyout>
-          <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14}>
-              Transaction Settings
-            </Text>
-            <TransactionSettings
-              rawSlippage={userSlippageTolerance}
-              setRawSlippage={setUserslippageTolerance}
-              deadline={ttl}
-              setDeadline={setTtl}
-            />
-            <Text fontWeight={600} fontSize={14}>
-              Interface Settings
-            </Text>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Expert Mode
-                </TYPE.black>
-                <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
-              </RowFixed>
-              <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
+      <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button"></StyledMenuIcon>
+      {expertMode && (
+        <EmojiWrapper>
+          <span role="img" aria-label="wizard-icon">
+            😎
+          </span>
+        </EmojiWrapper>
+      )}
+      {fadeTransition.map(
+        ({ item, key, props }) =>
+          item && (
+            <>
+              <StyledDialogOverlay key={key} style={props}>
+                <MenuContainer ref={node}>
+                  <MenuFlyout>
+                    <AutoColumn gap="md" style={{ padding: '8px' }}>
+                      <RowBetween>
+                        <Text fontWeight={600} fontSize={14}>
+                          Transaction settings
+                        </Text>
+                        <CloseIcon onClick={toggle} />
+                      </RowBetween>
+                      <TransactionSettings
+                        rawSlippage={userSlippageTolerance}
+                        setRawSlippage={setUserslippageTolerance}
+                        deadline={ttl}
+                        setDeadline={setTtl}
+                      />
+                      <Text fontWeight={600} fontSize={14}>
+                        Interface settings
+                      </Text>
+                      <RowBetween>
+                        <RowFixed>
+                          <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                            Toggle expert mode
+                          </TYPE.body>
+                          <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                        </RowFixed>
+                        <Toggle
+                          id="toggle-expert-mode-button"
+                          isActive={expertMode}
+                          toggle={
+                            expertMode
+                              ? () => {
+                                  toggleExpertMode()
+                                  setShowConfirmation(false)
+                                }
+                              : () => {
+                                  toggle()
+                                  setShowConfirmation(true)
+                                }
+                          }
+                        />
+                      </RowBetween>
+                      {
+                        <RowBetween>
+                          <RowFixed>
+                            <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                              Toggle Dark Mode
+                            </TYPE.body>
+                          </RowFixed>
+                          <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
+                        </RowBetween>
                       }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
-              />
-            </RowBetween>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Dark Mode
-                </TYPE.black>
-              </RowFixed>
-              <Toggle isActive={darkMode} toggle={toggleDarkMode} />
-            </RowBetween>
-          </AutoColumn>
-        </MenuFlyout>
+                    </AutoColumn>
+                  </MenuFlyout>
+                  <FlyoutBottomAligner>
+                    <MenuFlyoutBottom>
+                      <MenuFlyoutBottomItem>
+                        <MenuItem id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
+                          <Info size={14} />
+                          About
+                        </MenuItem>
+                        <MenuItem id="link" href={CODE_LINK}>
+                          <Code size={14} />
+                          Code
+                        </MenuItem>
+                      </MenuFlyoutBottomItem>
+
+                      <MenuFlyoutBottomItem>
+                        <InfoBadge>
+                          <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
+                            v{version}
+                          </TYPE.body>
+                        </InfoBadge>
+                        <InfoBadge>
+                          <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
+                            ALPHA
+                          </TYPE.body>
+                        </InfoBadge>
+                      </MenuFlyoutBottomItem>
+
+                      <MenuBanner id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
+                        <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="text1" marginBottom="4px">
+                          A DXDAO PRODUCT
+                        </TYPE.body>
+                        <TYPE.body fontWeight={500} fontSize="8px" letterSpacing="3px" color="text1">
+                          DXDAO.ETH
+                        </TYPE.body>
+                        <img src={DxDao} alt="dxdao" />
+                      </MenuBanner>
+                    </MenuFlyoutBottom>
+                  </FlyoutBottomAligner>
+                </MenuContainer>
+              </StyledDialogOverlay>
+            </>
+          )
       )}
     </StyledMenu>
   )

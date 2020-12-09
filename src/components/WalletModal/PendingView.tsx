@@ -1,16 +1,20 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import React from 'react'
 import styled from 'styled-components'
-import Option from './Option'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { injected } from '../../connectors'
-import { darken } from 'polished'
 import Loader from '../Loader'
+import { TYPE } from '../../theme'
+import { ButtonPrimary } from '../Button'
+import { Box, Flex } from 'rebass'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
+  border: solid 1px ${({ theme }) => theme.text5};
+  border-radius: 8px;
   align-items: center;
   justify-content: center;
+  padding: 20px;
   width: 100%;
   & > * {
     width: 100%;
@@ -19,48 +23,30 @@ const PendingSection = styled.div`
 
 const StyledLoader = styled(Loader)`
   margin-right: 1rem;
+  path {
+    stroke: ${({ theme }) => theme.text5};
+  }
 `
 
 const LoadingMessage = styled.div<{ error?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
+  width: 100%;
   align-items: center;
   justify-content: flex-start;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  color: ${({ theme, error }) => (error ? theme.red1 : 'inherit')};
-  border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text4)};
-
-  & > * {
-    padding: 1rem;
-  }
+  color: ${({ theme, error }) => (error ? theme.red1 : theme.text1)};
 `
 
 const ErrorGroup = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  align-items: center;
-  justify-content: flex-start;
-`
-
-const ErrorButton = styled.div`
-  border-radius: 8px;
-  font-size: 12px;
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg4};
-  margin-left: 1rem;
-  padding: 0.5rem;
-  font-weight: 600;
-  user-select: none;
-
-  &:hover {
-    cursor: pointer;
-    background-color: ${({ theme }) => darken(0.1, theme.text4)};
-  }
+  flex-direction: column;
+  justify-content: center;
 `
 
 const LoadingWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: center;
+  width: 100%;
 `
 
 export default function PendingView({
@@ -78,28 +64,6 @@ export default function PendingView({
 
   return (
     <PendingSection>
-      <LoadingMessage error={error}>
-        <LoadingWrapper>
-          {error ? (
-            <ErrorGroup>
-              <div>Error connecting.</div>
-              <ErrorButton
-                onClick={() => {
-                  setPendingError(false)
-                  connector && tryActivation(connector)
-                }}
-              >
-                Try Again
-              </ErrorButton>
-            </ErrorGroup>
-          ) : (
-            <>
-              <StyledLoader />
-              Initializing...
-            </>
-          )}
-        </LoadingWrapper>
-      </LoadingMessage>
       {Object.keys(SUPPORTED_WALLETS).map(key => {
         const option = SUPPORTED_WALLETS[key]
         if (option.connector === connector) {
@@ -112,19 +76,54 @@ export default function PendingView({
             }
           }
           return (
-            <Option
-              id={`connect-${key}`}
-              key={key}
-              clickable={false}
-              color={option.color}
-              header={option.name}
-              subheader={option.description}
-              icon={require('../../assets/images/' + option.iconName)}
-            />
+            <Flex mb="28px" justifyContent="center">
+              <Box mr="10px">
+                <img src={require('../../assets/images/' + option.iconName)} alt="logo" width="24px" height="24px" />
+              </Box>
+              <Box>
+                <TYPE.body color="white" fontWeight="500" fontSize="22px" lineHeight="27px">
+                  {option.name}
+                </TYPE.body>
+              </Box>
+            </Flex>
           )
         }
         return null
       })}
+      <LoadingMessage error={error}>
+        <LoadingWrapper>
+          {error ? (
+            <ErrorGroup>
+              <TYPE.body
+                color="red1"
+                fontWeight="500"
+                fontSize="20px"
+                lineHeight="24px"
+                letterSpacing="-0.01em"
+                marginBottom="24px"
+              >
+                Error connecting.
+              </TYPE.body>
+              <ButtonPrimary
+                padding="8px 14px"
+                onClick={() => {
+                  setPendingError(false)
+                  connector && tryActivation(connector)
+                }}
+              >
+                Try Again
+              </ButtonPrimary>
+            </ErrorGroup>
+          ) : (
+            <>
+              <StyledLoader />
+              <TYPE.body color="text4" fontWeight="500" fontSize="20px" lineHeight="24px" letterSpacing="-0.01em">
+                Initializing...
+              </TYPE.body>
+            </>
+          )}
+        </LoadingWrapper>
+      </LoadingMessage>
     </PendingSection>
   )
 }

@@ -185,6 +185,9 @@ export function toDXSwapLiquidityToken([tokenA, tokenB]: [Token, Token]): Token 
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
+  
+  // get user added tokens to be used as base
+  const userAddedTokens = useUserAddedTokens()
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
@@ -198,7 +201,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
             // for each token on the current chain,
             return (
               // loop though all bases on the current chain
-              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId].concat(userAddedTokens) ?? [])
                 // to construct pairs of the given token with each base
                 .map(base => {
                   if (base.address === token.address) {
@@ -211,7 +214,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
             )
           })
         : [],
-    [tokens, chainId]
+    [tokens, userAddedTokens, chainId]
   )
 
   // pairs saved by users

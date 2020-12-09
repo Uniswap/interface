@@ -41,25 +41,25 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#6C7284' : '#888D9B',
-    text4: darkMode ? '#565A69' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text1: darkMode ? '#FFFFFF' : '#14131D',
+    text2: darkMode ? '#EBE9F8' : '#464366',
+    text3: darkMode ? '#DDDAF8' : '#8E89C6',
+    text4: darkMode ? '#C0BAF6' : '#A7A0E4',
+    text5: darkMode ? '#8780BF' : '#C0BAF6',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
-    bg3: darkMode ? '#40444F' : '#EDEEF2',
-    bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
+    bg1: darkMode ? '#14131D' : '#FFFFFF',
+    bg2: darkMode ? '#26243B' : '#EBE9F8',
+    bg3: darkMode ? '#444163' : '#DDDAF8',
+    bg4: darkMode ? '#5C5886' : '#C0BBE9',
+    bg5: darkMode ? '#7873A4' : '#7873A4',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#551a8b',
+    primary1: darkMode ? '#2E17F2' : '#551a8b',
     primary2: darkMode ? '#3680E7' : '#F9F5FF',
     primary3: darkMode ? '#4D8FEA' : '#D4C2FC',
     primary4: darkMode ? '#376bad70' : '#998FC7',
@@ -74,16 +74,26 @@ export function colors(darkMode: boolean): Colors {
     secondary3: darkMode ? '#17000b26' : '#D4C2FC',
 
     // other
-    red1: '#FF6871',
+    red1: '#F02E51',
     red2: '#F82D3A',
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
-    blue1: '#2172E5'
+    blue1: '#2172E5',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+
+    // new UI refactor colors
+    mainPurple: '#2E17F2',
+    purpleBase: '#101016',
+    purpleOverlay: '#111018',
+    purple2: '#C0BAF6',
+    purple3: '#8780BF',
+    purple4: '#685EC6',
+    purple5: '#464366',
+    boxShadow: '#0A0A0F'
   }
 }
 
@@ -141,7 +151,7 @@ export const TYPE = {
     return <TextWrapper fontWeight={500} color={'white'} {...props} />
   },
   body(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={16} color={'text5'} {...props} />
   },
   largeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
@@ -177,13 +187,8 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-display: fallback;
-}
-@supports (font-variation-settings: normal) {
-  html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
-  }
 }
 
 html,
@@ -209,22 +214,27 @@ html {
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
   
 }
+
+a {
+  text-decoration: none;
+}
 `
 
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
 }
 
 body {
   min-height: 100vh;
-  background-position: 0 -30vh;
+  background-position: 0 -20vh;
   background-repeat: no-repeat;
   background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+    `radial-gradient(80% 100% at 50% 0%, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%)`};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    background-position: 0 -10vh;
+    background-image: radial-gradient(100% 50% at 40% 50%, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%);
+  `};
 }
 `

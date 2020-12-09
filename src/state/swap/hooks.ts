@@ -153,7 +153,7 @@ export function useDerivedSwapInfo(): {
   }
 
   if (!parsedAmount) {
-    inputError = inputError ?? 'Enter an amount'
+    inputError = inputError ?? 'Enter amount'
   }
 
   if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
@@ -180,9 +180,7 @@ export function useDerivedSwapInfo(): {
   // compare input balance to MAx input based on version
   const [balanceIn, amountIn] = [
     currencyBalances[Field.INPUT],
-    slippageAdjustedAmounts
-      ? slippageAdjustedAmounts[Field.INPUT]
-      : null
+    slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
@@ -194,7 +192,7 @@ export function useDerivedSwapInfo(): {
     currencyBalances,
     parsedAmount,
     trade,
-    inputError,
+    inputError
   }
 }
 
@@ -227,7 +225,9 @@ function validatedRecipient(recipient: any): string | null {
   return null
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs): {
+export function queryParametersToSwapState(
+  parsedQs: ParsedQs
+): {
   independentField: Field
   typedValue: string
   [Field.INPUT]: {

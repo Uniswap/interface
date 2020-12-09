@@ -3,9 +3,16 @@ import { ChainId, JSBI, Percent, Token, WETH, DXD } from 'dxswap-sdk'
 import { rinkeby } from 'dxswap-periphery/.contracts.json'
 import { tokens } from './tokens'
 
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { authereum, injected, walletConnect } from '../connectors'
 
-export const ROUTER_ADDRESS = rinkeby.router
+if (!process.env.REACT_APP_MAINNET_ROUTER_ADDRESS) {
+  throw new Error('Mainnet router address env is required')
+}
+
+export const ROUTER_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.RINKEBY]: process.env.REACT_APP_RINKEBY_ROUTER_ADDRESS || rinkeby.router,
+  [ChainId.MAINNET]: process.env.REACT_APP_MAINNET_ROUTER_ADDRESS
+}
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 // a list of tokens by chain
@@ -89,47 +96,21 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#E8831D'
   },
   WALLET_CONNECT: {
-    connector: walletconnect,
+    connector: walletConnect,
     name: 'WalletConnect',
-    iconName: 'walletConnectIcon.svg',
+    iconName: 'wallet-connect.svg',
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
     color: '#4196FC',
     mobile: true
   },
-  WALLET_LINK: {
-    connector: walletlink,
-    name: 'Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
-    description: 'Use Coinbase Wallet app on mobile device',
+  AUTHEREUM: {
+    connector: authereum,
+    name: 'Authereum',
+    iconName: 'authereum.svg',
+    description: 'Connect using Authereum.',
     href: null,
-    color: '#315CF5'
-  },
-  COINBASE_LINK: {
-    name: 'Open in Coinbase Wallet',
-    iconName: 'coinbaseWalletIcon.svg',
-    description: 'Open in Coinbase Wallet app.',
-    href: 'https://go.cb-w.com/mtUDhEZPy1',
-    color: '#315CF5',
-    mobile: true,
-    mobileOnly: true
-  },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true
-  },
-  Portis: {
-    connector: portis,
-    name: 'Portis',
-    iconName: 'portisIcon.png',
-    description: 'Login using Portis hosted wallet',
-    href: null,
-    color: '#4A6C9B',
+    color: '#4196FC',
     mobile: true
   }
 }
