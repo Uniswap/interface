@@ -91,7 +91,6 @@ const Text = styled.p<{ fontSize?: number }>`
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
-  float: left;
   ${({ fontSize }) => (fontSize ? `font-size:${fontSize}px` : '')};
 `
 

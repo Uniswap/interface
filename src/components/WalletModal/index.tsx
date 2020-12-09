@@ -345,7 +345,6 @@ export default function WalletModal({
           </TYPE.body>
           <img src={DxDao} alt="dxdao" />
         </Blurb>
-        \
       </UpperSection>
     )
   }

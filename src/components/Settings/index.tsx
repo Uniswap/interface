@@ -102,7 +102,7 @@ const MenuFlyout = styled.span`
   max-width: 322px;
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
   border-radius: 8px;
-  backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px);
   border-radius: 8px;
   border: 8px solid;
   border-radius: 8px;
