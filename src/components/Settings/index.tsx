@@ -333,7 +333,7 @@ export default function SettingsTab() {
                   <FlyoutBottomAligner>
                     <MenuFlyoutBottom>
                       <MenuFlyoutBottomItem>
-                        <MenuItem id="link" href="https://dxdao.eth.link/">
+                        <MenuItem id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
                           <Info size={14} />
                           About
                         </MenuItem>
@@ -356,7 +356,7 @@ export default function SettingsTab() {
                         </InfoBadge>
                       </MenuFlyoutBottomItem>
 
-                      <MenuBanner id="link" href="https://dxdao.eth.link/">
+                      <MenuBanner id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
                         <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="text1" marginBottom="4px">
                           A DXDAO PRODUCT
                         </TYPE.body>

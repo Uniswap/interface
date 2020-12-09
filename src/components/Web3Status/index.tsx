@@ -82,7 +82,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   }
 `
 
-const Text = styled.p`
+const Text = styled.p<{ fontSize?: number }>`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -91,6 +91,7 @@ const Text = styled.p`
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
+  ${({ fontSize }) => (fontSize ? `font-size:${fontSize}px` : '')};
 `
 
 const NetworkIcon = styled(Activity)`
@@ -128,7 +129,7 @@ function Web3StatusInner() {
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
-            <Text>{pending?.length} Pending</Text> <Loader />
+            <Text fontSize={13}>{pending?.length} Pending</Text> <Loader />
           </RowBetween>
         ) : (
           ENSName || shortenAddress(account)
