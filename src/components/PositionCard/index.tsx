@@ -198,9 +198,6 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
           <RowFixed gap="8px">
             {showMore ? (
               <>
-                <TYPE.body fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>
-                  Manage
-                </TYPE.body>
                 <ChevronUp color={theme.text5} size="20" style={{ marginLeft: '10px' }} />
               </>
             ) : (
