@@ -4,7 +4,7 @@ Forked from [Uniswap/uniswap-interface](https://github.com/Uniswap/uniswap-inter
 
 ## Accessing the SushiSwap Classic Exchange Interface
 
-To access the SushiSwap Exchnage, visit [exchange.sushiswapclassic.org](https://exchange.sushiswapclassic.org/#/).
+To access the SushiSwap Exchange, visit [exchange.sushiswapclassic.org](https://exchange.sushiswapclassic.org/#/) or [exchange.sushiswap.fi](https://exchange.sushiswap.fi/#/).
 
 ## Development
 
