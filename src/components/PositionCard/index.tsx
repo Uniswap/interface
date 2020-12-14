@@ -144,8 +144,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
       ) : (
         <OutlineCard>
           <TYPE.body fontWeight="500" fontSize="12px" lineHeight="20px">
-            By adding liquidity you&apos;ll earn 0.3% of all trades on this pair proportional to your share of the pool.
-            Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+            By adding liquidity you&apos;ll earn 0.25% of all trades on this pair proportional to your share of the
+            pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
           </TYPE.body>
         </OutlineCard>
       )}
