@@ -55,7 +55,8 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       const swapFee =
         swapFees && swapFees[Pair.getAddress(token0, token1)] && swapFees[Pair.getAddress(token0, token1)].fee
           ? swapFees[Pair.getAddress(token0, token1)].fee
-          : BigInt(15)
+          : // default to 0.25% in case the "real" swap fee is not ready to be queried (https://github.com/levelkdev/dxswap-dapp/issues/150)
+            BigInt(25)
       return [
         PairState.EXISTS,
         new Pair(
