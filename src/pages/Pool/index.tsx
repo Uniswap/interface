@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Pair } from 'dxswap-sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
+import { PageWrapper } from './styleds'
 
 import FullPositionCard from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
@@ -10,7 +11,7 @@ import { OutlineCard } from '../../components/Card'
 import { TYPE, HideSmall, StyledInternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary, ButtonWithLink } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -18,12 +19,6 @@ import { usePairs } from '../../data/Reserves'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
 import { CardSection } from '../../components/earn/styled'
-
-const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
-  width: 100%;
-  margin-top: -30px;
-`
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -165,20 +160,10 @@ export default function Pool() {
             )}
           </AutoColumn>
         </AutoColumn>
-
-        <ButtonSecondary
-          id="join-pool-button"
-          as="a"
-          style={{ marginTop: '32px', padding: '10px 0px', borderRadius: '8px' }}
-          href={`https://dxstats.eth.link/account/${account}`}
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <Text fontWeight={700} fontSize={12} lineHeight="15px">
-            ACCOUNT ANALYTICS AND ACCRUED FEES <span style={{ fontSize: '11px', marginLeft: '4px' }}>↗</span>
-          </Text>
-        </ButtonSecondary>
-
+        <ButtonWithLink
+          link={`https://dxstats.eth.link/account/${account}`}
+          text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
+        />
         <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
           Don't see a pool you joined?{' '}
           <StyledInternalLink color="text5" id="import-pool-link" to="/find">

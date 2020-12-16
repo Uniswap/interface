@@ -1,6 +1,6 @@
 import { ChainId } from 'dxswap-sdk'
-import React, { useCallback } from 'react'
-import { Box, Flex, Text } from 'rebass'
+import React from 'react'
+import { Text } from 'rebass'
 import { Link, NavLink, withRouter } from 'react-router-dom'
 
 import styled from 'styled-components'
@@ -19,9 +19,7 @@ import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
 import { transparentize } from 'polished'
 import { ExternalLink, TYPE } from '../../theme'
-import Badge from '../Badge'
 import MobileOptions from './MobileOptions'
-import { GovernanceText } from './styleds'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -198,24 +196,6 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
-const StyledNavLinkWithBadge = styled.a`
-  position: relative;
-  margin: 0px 12px;
-  cursor: not-allowed;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 19.5px;
-  color: ${({ theme }) => transparentize(0.4, theme.text5)};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`
-
-const AbsoluteComingSoonBadgeFlex = styled(Flex)`
-  position: absolute;
-  top: 20px;
-`
-
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName
 })<{ isActive?: boolean }>`
@@ -250,9 +230,9 @@ function Header({ history }: { history: any }) {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
-  const handleDisabledAnchorClick = useCallback(event => {
-    event.preventDefault()
-  }, [])
+  // const handleDisabledAnchorClick = useCallback(event => {
+  //   event.preventDefault()
+  // }, [])
 
   return (
     <HeaderFrame>
@@ -280,14 +260,13 @@ function Header({ history }: { history: any }) {
           >
             {t('pool')}
           </StyledNavLink>
-          <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
-            <GovernanceText>Governance</GovernanceText>
-            <AbsoluteComingSoonBadgeFlex justifyContent="center" width="100%">
-              <Box>
-                <Badge label="COMING SOON" />
-              </Box>
-            </AbsoluteComingSoonBadgeFlex>
-          </StyledNavLinkWithBadge>
+          <StyledNavLink
+            id={`governance-nav-link`}
+            to={'/governance'}
+            isActive={() => history.location.pathname.includes('/governance')}
+          >
+            {t('governance')}
+          </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link/'}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">
