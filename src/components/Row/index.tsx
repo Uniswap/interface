@@ -28,7 +28,12 @@ export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
     margin: ${({ gap }) => gap} !important;
   }
 `
-
+export const AutoRowCleanGap = styled.div<{ gap: number }>`
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: ${({ gap }) => `${gap}px`};
+  justify-content: space-evenly;
+`
 export const RowFixed = styled(Row)<{ gap?: string; justify?: string }>`
   width: fit-content;
   margin: ${({ gap }) => gap && `-${gap}`};

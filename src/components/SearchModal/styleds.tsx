@@ -1,9 +1,11 @@
 import { transparentize } from 'polished'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { Flex } from 'rebass'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import React, { useContext } from 'react'
+import { Search } from 'react-feather'
 
 export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -47,12 +49,12 @@ export const TokenPickerItem = styled(Flex)`
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
-export const SearchInput = styled.input`
+export const SearchInput = styled.input<{ fontSize?: string; fontWeight?: number }>`
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;
-  height: 44px;
+  width: ${({ width }) => (width ? width : '100%')};
+  height: ${({ height }) => (height ? height : '44px')};
   white-space: nowrap;
   background: ${({ theme }) => transparentize(0.75, theme.purpleBase)};
   border-radius: 8px;
@@ -67,7 +69,8 @@ export const SearchInput = styled.input`
   color: ${({ theme }) => theme.white};
   -webkit-appearance: none;
 
-  font-size: 16px;
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : '16px')};
+  font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : 'normal')};
 
   ::placeholder {
     color: ${({ theme }) => theme.purple5};
@@ -90,3 +93,51 @@ export const TokenListContainer = styled(Flex)`
     max-height: 280px;
   `}
 `
+
+const SearchInputWrapper = styled.div<{ width?: string; height?: string }>`
+  display: flex;
+  justify-content: end;
+  border-radius: 8px;
+  padding: 8px 14px;
+  justify-content: flex-end;
+  align-items: center;
+  white-space: nowrap;
+  border-image: url(${border8pxRadius}) 8;
+  background: ${({ theme }) => transparentize(0.75, theme.purpleBase)};
+  width: ${({ width }) => (width ? width : '100%')};
+  height: ${({ height }) => (height ? height : '44px')};
+  outline: none;
+  border: 1px solid ${({ theme }) => theme.bg5};
+`
+const SearchExpandedInput = styled.input<{ fontWeight?: number; fontSize?: string }>`
+  width: 62px;
+  background: transparent;
+  border: transparent;
+  outline: none;
+  color: ${({ theme }) => theme.text4};
+  font-weight: ${({ fontWeight }) => (fontWeight ? fontWeight : 'normal')};
+  ::placeholder {
+    color: ${({ theme }) => theme.text4};
+  }
+`
+
+export default function SearchInputWithIcon({
+  fontWeight,
+  width,
+  height,
+  fontSize
+}: {
+  fontWeight?: number
+  width?: string
+  height?: string
+  fontSize?: string
+}) {
+  const theme = useContext(ThemeContext)
+
+  return (
+    <SearchInputWrapper width={width} height={height}>
+      <SearchExpandedInput placeholder="SEARCH" fontSize={fontSize} fontWeight={fontWeight} />
+      <Search color={theme.text4} size={14} />
+    </SearchInputWrapper>
+  )
+}
