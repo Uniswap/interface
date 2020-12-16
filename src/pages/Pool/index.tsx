@@ -107,7 +107,7 @@ export default function Pool() {
     trackedTokenPairs.length === 0 ||
     dxSwapPairs?.length < liquidityTokensWithBalances.length ||
     dxSwapPairs?.some(DXSwapPair => !DXSwapPair)
-
+  console.log(dxSwapPairs)
   return (
     <>
       <PageWrapper>
@@ -163,6 +163,7 @@ export default function Pool() {
         <ButtonWithLink
           link={`https://dxstats.eth.link/account/${account}`}
           text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
+          marginTop="32px"
         />
         <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
           Don't see a pool you joined?{' '}

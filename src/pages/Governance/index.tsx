@@ -12,6 +12,7 @@ import { LightCard } from '../../components/Card'
 
 import { Info } from 'react-feather'
 import SearchInputWithIcon from '../../components/SearchModal/styleds'
+import { GovernanceCard } from './styles'
 
 const ButtonRow = styled(RowFixed)`
   gap: 8px;
@@ -29,10 +30,6 @@ const TitleRow = styled(RowBetween)`
     width: 100%;
     flex-direction: column-reverse;
   `};
-`
-
-const ItemCard = styled(LightCard)`
-  width: 154px;
 `
 
 export default function Governance() {
@@ -57,14 +54,15 @@ export default function Governance() {
           </TitleRow>
         </AutoColumn>
         <AutoRowCleanGap gap={8}>
-          <ItemCard>Milansssss</ItemCard>
-          <ItemCard>Milan</ItemCard>
-          <ItemCard>Milan</ItemCard>
-          <ItemCard>Milan</ItemCard>
-          <ItemCard>Milan</ItemCard>
+          <GovernanceCard />
+          <GovernanceCard />
+          <GovernanceCard />
+          <GovernanceCard />
+          <GovernanceCard />
+          <GovernanceCard />
         </AutoRowCleanGap>
         <ButtonWithLink link={'swapr.eth'} text={'GOVERNANCE STATISTICS'} />
-        <LightCard style={{ marginTop: '32px' }}>
+        <LightCard>
           <AutoColumn gap="md">
             <Flex>
               <Info color={theme.text4} size={18} />

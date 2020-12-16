@@ -196,12 +196,12 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   }
 }
 
-export function ButtonWithLink({ link, text }: { link: string; text: string }) {
+export function ButtonWithLink({ link, text, marginTop }: { link: string; text: string; marginTop?: string }) {
   return (
     <ButtonSecondary
       id="join-pool-button"
       as="a"
-      style={{ marginTop: '32px', padding: '10px 0px', borderRadius: '8px' }}
+      style={{ marginTop: marginTop ? marginTop : '0', padding: '10px 0px', borderRadius: '8px' }}
       href={link}
       rel="noopener noreferrer"
       target="_blank"
