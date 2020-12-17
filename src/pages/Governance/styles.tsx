@@ -31,7 +31,7 @@ export const GovernanceCard = () => {
   return (
     <LightCardWrap>
       <AutoRow justify="center">
-        {shittyCounter !== 2 ? <DoubleCurrencyLogo overlap={9} size={26.25} /> : <CurrencyLogo size="20px" />}
+        {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" />}
 
         {shittyCounter !== 2 ? (
           <Text width="100%" marginTop="8px" fontWeight={600} fontSize="16px" lineHeight="20px">
