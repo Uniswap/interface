@@ -26,14 +26,13 @@ const LightCardWrap = styled(Card)`
 const StyledText = styled(Text)`
   text-wrap: none;
 `
-export const GovernanceCard = () => {
+export const DynamicContentCard = () => {
   const theme = useContext(ThemeContext)
   const shittyCounter = 2
   return (
     <LightCardWrap>
       <AutoRow align="flex-end" justify="center">
         {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" />}
-
         <Text
           width={shittyCounter !== 2 ? '100%' : 'auto'}
           marginTop={shittyCounter !== 2 ? '8px' : '0'}

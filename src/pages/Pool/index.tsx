@@ -107,7 +107,7 @@ export default function Pool() {
     trackedTokenPairs.length === 0 ||
     dxSwapPairs?.length < liquidityTokensWithBalances.length ||
     dxSwapPairs?.some(DXSwapPair => !DXSwapPair)
-  console.log(dxSwapPairs)
+
   return (
     <>
       <PageWrapper>

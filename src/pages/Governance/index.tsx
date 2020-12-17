@@ -12,7 +12,7 @@ import { LightCard } from '../../components/Card'
 
 import { Info } from 'react-feather'
 import SearchInputWithIcon from '../../components/SearchModal/styleds'
-import { GovernanceCard } from './styles'
+import { DynamicContentCard } from './styles'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -52,12 +52,12 @@ export default function Governance() {
           </TitleRow>
         </AutoColumn>
         <AutoRowCleanGap gap={8}>
-          <GovernanceCard />
-          <GovernanceCard />
-          <GovernanceCard />
-          <GovernanceCard />
-          <GovernanceCard />
-          <GovernanceCard />
+          <DynamicContentCard />
+          <DynamicContentCard />
+          <DynamicContentCard />
+          <DynamicContentCard />
+          <DynamicContentCard />
+          <DynamicContentCard />
         </AutoRowCleanGap>
         <ButtonWithLink link={'swapr.eth'} text={'GOVERNANCE STATISTICS'} />
         <LightCard>
