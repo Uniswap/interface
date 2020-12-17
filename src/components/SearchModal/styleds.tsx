@@ -125,17 +125,19 @@ export default function SearchInputWithIcon({
   fontWeight,
   width,
   height,
-  fontSize
+  fontSize,
+  className
 }: {
   fontWeight?: number
   width?: string
   height?: string
   fontSize?: string
+  className?: string
 }) {
   const theme = useContext(ThemeContext)
 
   return (
-    <SearchInputWrapper width={width} height={height}>
+    <SearchInputWrapper className={className} width={width} height={height}>
       <SearchExpandedInput placeholder="SEARCH" fontSize={fontSize} fontWeight={fontWeight} />
       <Search color={theme.text4} size={14} />
     </SearchInputWrapper>

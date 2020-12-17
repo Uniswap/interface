@@ -13,7 +13,8 @@ const LightCardWrap = styled(Card)`
   padding: 0.8rem;
   width: calc(25% - 6px);
   height: 96px;
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: calc(33% - 4px);
   `};
@@ -30,7 +31,7 @@ export const GovernanceCard = () => {
   const shittyCounter = 2
   return (
     <LightCardWrap>
-      <AutoRow justify="center">
+      <AutoRow align="flex-end" justify="center">
         {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" />}
 
         <Text
@@ -44,10 +45,10 @@ export const GovernanceCard = () => {
           DXD
         </Text>
       </AutoRow>
-      <AutoRow justify="center">
+      <AutoRow align="flex-start" justify="center">
         <StyledText
-          marginTop={shittyCounter !== 2 ? '10px' : '0x'}
-          color={theme.text3}
+          marginTop={shittyCounter !== 2 ? '10px' : '7px'}
+          color={theme.text4}
           letterSpacing="0.02em"
           fontWeight={600}
           fontSize="9px"
