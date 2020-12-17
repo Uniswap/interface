@@ -33,15 +33,16 @@ export const GovernanceCard = () => {
       <AutoRow justify="center">
         {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" />}
 
-        {shittyCounter !== 2 ? (
-          <Text width="100%" marginTop="8px" fontWeight={600} fontSize="16px" lineHeight="20px">
-            DXD
-          </Text>
-        ) : (
-          <Text marginLeft="6px" fontWeight={600} fontSize="16px" lineHeight="20px">
-            DXD
-          </Text>
-        )}
+        <Text
+          width={shittyCounter !== 2 ? '100%' : 'auto'}
+          marginTop={shittyCounter !== 2 ? '8px' : '0'}
+          marginLeft={shittyCounter !== 2 ? '0' : '6px'}
+          fontWeight={600}
+          fontSize="16px"
+          lineHeight="20px"
+        >
+          DXD
+        </Text>
       </AutoRow>
       <AutoRow justify="center">
         <StyledText
