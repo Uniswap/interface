@@ -1,27 +1,56 @@
 import { Currency, ETHER, Token } from '@uniswap/sdk'
-import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { useSelectedListInfo } from '../../state/lists/hooks'
-import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
+import { CloseIcon, TYPE, ButtonText } from '../../theme'
 import { isAddress } from '../../utils'
-import Card from '../Card'
-import Column from '../Column'
-import ListLogo from '../ListLogo'
+import { GreyCard } from '../Card'
+import Column, { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
-import Row, { RowBetween } from '../Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { PaddedColumn, SearchInput, Separator, StyledMenu } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { PlusCircle, List } from 'react-feather'
+import { ButtonDropdownGrey } from 'components/Button'
+import styled from 'styled-components'
+import useToggle from 'hooks/useToggle'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+
+const MenuWrapper = styled.div`
+  position: absolute;
+  top: 74px;
+  right: 0;
+  background: #f7f8fa;
+  box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 0px 1px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  z-index: 4;
+`
+
+const BlueIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & > * {
+    stroke: ${({ theme }) => theme.blue1};
+  }
+`
+
+const MenuItem = styled(ButtonText)`
+  :hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+`
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -44,7 +73,6 @@ export function CurrencySearch({
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
 
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -135,7 +163,10 @@ export function CurrencySearch({
     [filteredSortedTokens, handleCurrencySelect, searchQuery]
   )
 
-  const selectedListInfo = useSelectedListInfo()
+  // menu ui
+  const [open, toggle] = useToggle(false)
+  const node = useRef<HTMLDivElement>()
+  useOnClickOutside(node, open ? toggle : undefined)
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
@@ -147,15 +178,48 @@ export function CurrencySearch({
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        <SearchInput
-          type="text"
-          id="token-search-input"
-          placeholder={t('tokenSearchPlaceholder')}
-          value={searchQuery}
-          ref={inputRef as RefObject<HTMLInputElement>}
-          onChange={handleInput}
-          onKeyDown={handleEnter}
-        />
+        <Row>
+          <SearchInput
+            type="text"
+            id="token-search-input"
+            placeholder={t('tokenSearchPlaceholder')}
+            value={searchQuery}
+            ref={inputRef as RefObject<HTMLInputElement>}
+            onChange={handleInput}
+            onKeyDown={handleEnter}
+          />
+          <StyledMenu ref={node as any}>
+            <ButtonDropdownGrey width="60px" ml="10px" onClick={toggle} />
+            {open && (
+              <MenuWrapper>
+                <GreyCard>
+                  <AutoColumn gap="md">
+                    <MenuItem>
+                      <RowFixed>
+                        <BlueIcon>
+                          <PlusCircle />
+                        </BlueIcon>
+                        <TYPE.blue ml="10px" style={{ whiteSpace: 'nowrap' }}>
+                          Import Token
+                        </TYPE.blue>
+                      </RowFixed>
+                    </MenuItem>
+                    <MenuItem onClick={onChangeList}>
+                      <RowFixed>
+                        <BlueIcon>
+                          <List />
+                        </BlueIcon>
+                        <TYPE.blue ml="10px" style={{ whiteSpace: 'nowrap' }}>
+                          Manage Lists
+                        </TYPE.blue>
+                      </RowFixed>
+                    </MenuItem>
+                  </AutoColumn>
+                </GreyCard>
+              </MenuWrapper>
+            )}
+          </StyledMenu>
+        </Row>
         {showCommonBases && (
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
@@ -184,31 +248,6 @@ export function CurrencySearch({
           )}
         </AutoSizer>
       </div>
-
-      <Separator />
-      <Card>
-        <RowBetween>
-          {selectedListInfo.current ? (
-            <Row>
-              {selectedListInfo.current.logoURI ? (
-                <ListLogo
-                  style={{ marginRight: 12 }}
-                  logoURI={selectedListInfo.current.logoURI}
-                  alt={`${selectedListInfo.current.name} list logo`}
-                />
-              ) : null}
-              <TYPE.main id="currency-search-selected-list-name">{selectedListInfo.current.name}</TYPE.main>
-            </Row>
-          ) : null}
-          <LinkStyledButton
-            style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }}
-            onClick={onChangeList}
-            id="currency-search-change-list-button"
-          >
-            {selectedListInfo.current ? 'Change' : 'Select a list'}
-          </LinkStyledButton>
-        </RowBetween>
-      </Card>
     </Column>
   )
 }

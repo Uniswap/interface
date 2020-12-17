@@ -89,6 +89,15 @@ export function useSelectedListUrl(): string | undefined {
   return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
 }
 
+export function useSelectedListUrls(): string[] | undefined {
+  return useSelector<AppState, AppState['lists']['selectedListUrls']>(state => state.lists.selectedListUrls)
+}
+
+export function useIsListActive(url: string): boolean {
+  const allActiveLists = useSelectedListUrls()
+  return Boolean(allActiveLists?.includes(url))
+}
+
 export function useSelectedTokenList(): TokenAddressMap {
   return useTokenList(useSelectedListUrl())
 }
@@ -115,4 +124,56 @@ export function useAllLists(): TokenList[] {
         .filter((l): l is TokenList => Boolean(l)),
     [lists]
   )
+}
+
+/**
+ *
+ *  TOKEN LIST UPDATES
+ *
+ */
+
+export function useCombinedListFromUrls(urls: string[] | undefined): TokenAddressMap {
+  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+
+  return useMemo(() => {
+    if (!urls) return EMPTY_LIST
+    const x = urls.reduce((allTokens, currentUrl) => {
+      const current = lists[currentUrl]?.current
+      if (!current) return allTokens
+      try {
+        // need priority here for addresses
+        // @TODO
+        const newTokens = Object.assign(listToTokenMap(current))
+        return {
+          1: { ...allTokens[1], ...newTokens[1] },
+          3: { ...allTokens[3], ...newTokens[3] },
+          4: { ...allTokens[4], ...newTokens[4] },
+          5: { ...allTokens[5], ...newTokens[5] },
+          42: { ...allTokens[42], ...newTokens[42] }
+        }
+      } catch (error) {
+        console.error('Could not show token list due to error', error)
+        return allTokens
+      }
+    }, EMPTY_LIST)
+    return x
+  }, [lists, urls])
+}
+
+// get all the tokens from active lists
+export function useCombinedActiveList(): TokenAddressMap {
+  const allActiveListUrls = useSelectedListUrls()
+  const x = useCombinedListFromUrls(allActiveListUrls)
+  return x
+}
+
+export function useCombinedInactiveList(): TokenAddressMap {
+  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const allActiveListUrls = useSelector<AppState, AppState['lists']['selectedListUrls']>(
+    state => state.lists.selectedListUrls
+  )
+  const allInactiveListUrls: string[] = Object.keys(lists).filter(url => !allActiveListUrls?.includes(url))
+
+  const x = useCombinedListFromUrls(allInactiveListUrls)
+  return x
 }

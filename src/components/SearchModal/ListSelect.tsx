@@ -1,29 +1,30 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, Settings } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
-import { acceptListUpdate, removeList, selectList } from '../../state/lists/actions'
-import { useSelectedListUrl } from '../../state/lists/hooks'
+import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
+import { useSelectedListUrls, useIsListActive } from '../../state/lists/hooks'
 import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../Button'
+import { ButtonSecondary, ButtonEmpty } from '../Button'
 
-import Column from '../Column'
+import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
-import Row, { RowBetween } from '../Row'
+import Row, { RowBetween, RowFixed } from '../Row'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
+import { useListColor } from 'hooks/useColor'
+import ListToggle from 'components/Toggle/ListToggle'
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;
@@ -58,13 +59,30 @@ const StyledMenu = styled.div`
   border: none;
 `
 
-const StyledListUrlText = styled.div`
+const StyledTitleText = styled.div<{ active: boolean }>`
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
+`
+
+const StyledListUrlText = styled.div<{ active: boolean }>`
   max-width: 160px;
   opacity: 0.6;
   margin-right: 0.5rem;
   font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
+  color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
+`
+
+const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
+  background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.bg2)};
+  align=center;
+  padding: 1rem;
+  border-radius: 20px;
 `
 
 function ListOrigin({ listUrl }: { listUrl: string }) {
@@ -89,13 +107,14 @@ function listUrlRowHTMLId(listUrl: string) {
   return `list-row-${listUrl.replace(/\./g, '-')}`
 }
 
-const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; onBack: () => void }) {
+const ListRow = memo(function ListRow({ listUrl }: { listUrl: string; onBack: () => void }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const selectedListUrl = useSelectedListUrl()
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
-  const isSelected = listUrl === selectedListUrl
+  const listColor = useListColor(list?.logoURI)
+
+  const isActive = useIsListActive(listUrl)
 
   const [open, toggle] = useToggle(false)
   const node = useRef<HTMLDivElement>()
@@ -109,18 +128,6 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
   })
 
   useOnClickOutside(node, open ? toggle : undefined)
-
-  const selectThisList = useCallback(() => {
-    if (isSelected) return
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Select List',
-      label: listUrl
-    })
-
-    dispatch(selectList(listUrl))
-    onBack()
-  }, [dispatch, isSelected, listUrl, onBack])
 
   const handleAcceptListUpdate = useCallback(() => {
     if (!pending) return
@@ -151,87 +158,48 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
   if (!list) return null
 
   return (
-    <Row key={listUrl} align="center" padding="16px" id={listUrlRowHTMLId(listUrl)}>
+    <RowWrapper active={isActive} bgColor={listColor} key={listUrl} id={listUrlRowHTMLId(listUrl)}>
       {list.logoURI ? (
-        <ListLogo style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
+        <ListLogo size="40px" style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
       ) : (
         <div style={{ width: '24px', height: '24px', marginRight: '1rem' }} />
       )}
       <Column style={{ flex: '1' }}>
         <Row>
-          <Text
-            fontWeight={isSelected ? 500 : 400}
-            fontSize={16}
-            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-          >
-            {list.name}
-          </Text>
+          <StyledTitleText active={isActive}>{list.name}</StyledTitleText>
         </Row>
-        <Row
-          style={{
-            marginTop: '4px'
-          }}
-        >
-          <StyledListUrlText title={listUrl}>
+        <RowFixed mt="4px">
+          <StyledListUrlText title={listUrl} active={isActive}>
             <ListOrigin listUrl={listUrl} />
           </StyledListUrlText>
-        </Row>
-      </Column>
-      <StyledMenu ref={node as any}>
-        <ButtonOutlined
-          style={{
-            width: '2rem',
-            padding: '.8rem .35rem',
-            borderRadius: '12px',
-            fontSize: '14px',
-            marginRight: '0.5rem'
-          }}
-          onClick={toggle}
-          ref={setReferenceElement}
-        >
-          <DropDown />
-        </ButtonOutlined>
-
-        {open && (
-          <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
-            <div>{list && listVersionLabel(list.version)}</div>
-            <SeparatorDark />
-            <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>View list</ExternalLink>
-            <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
-              Remove list
-            </UnpaddedLinkStyledButton>
-            {pending && (
-              <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>Update list</UnpaddedLinkStyledButton>
+          <StyledMenu ref={node as any}>
+            <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
+              <Settings stroke="white" size={16} />
+            </ButtonEmpty>
+            {open && (
+              <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+                <div>{list && listVersionLabel(list.version)}</div>
+                <SeparatorDark />
+                <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>View list</ExternalLink>
+                <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
+                  Remove list
+                </UnpaddedLinkStyledButton>
+                {pending && (
+                  <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>Update list</UnpaddedLinkStyledButton>
+                )}
+              </PopoverContainer>
             )}
-          </PopoverContainer>
-        )}
-      </StyledMenu>
-      {isSelected ? (
-        <ButtonPrimary
-          disabled={true}
-          className="select-button"
-          style={{ width: '5rem', minWidth: '5rem', padding: '0.5rem .35rem', borderRadius: '12px', fontSize: '14px' }}
-        >
-          Selected
-        </ButtonPrimary>
-      ) : (
-        <>
-          <ButtonPrimary
-            className="select-button"
-            style={{
-              width: '5rem',
-              minWidth: '4.5rem',
-              padding: '0.5rem .35rem',
-              borderRadius: '12px',
-              fontSize: '14px'
-            }}
-            onClick={selectThisList}
-          >
-            Select
-          </ButtonPrimary>
-        </>
-      )}
-    </Row>
+          </StyledMenu>
+        </RowFixed>
+      </Column>
+      <ListToggle
+        isActive={isActive}
+        bgColor={listColor}
+        toggle={() => {
+          isActive ? dispatch(disableList(listUrl)) : dispatch(enableList(listUrl))
+        }}
+      />
+    </RowWrapper>
   )
 })
 
@@ -243,6 +211,7 @@ const AddListButton = styled(ButtonSecondary)`
 `
 
 const ListContainer = styled.div`
+  padding: 1rem;
   flex: 1;
   overflow: auto;
 `
@@ -252,6 +221,9 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+
+  const activeListUrls = useSelectedListUrls()
+
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
   const [addError, setAddError] = useState<string | null>(null)
 
@@ -306,6 +278,15 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       .sort((u1, u2) => {
         const { current: l1 } = lists[u1]
         const { current: l2 } = lists[u2]
+
+        // first filter on active lists
+        if (activeListUrls?.includes(u1) && !activeListUrls?.includes(u2)) {
+          return -1
+        }
+        if (!activeListUrls?.includes(u1) && activeListUrls?.includes(u2)) {
+          return 1
+        }
+
         if (l1 && l2) {
           return l1.name.toLowerCase() < l2.name.toLowerCase()
             ? -1
@@ -317,7 +298,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
         if (l2) return 1
         return 0
       })
-  }, [lists])
+  }, [activeListUrls, lists])
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
@@ -362,17 +343,13 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       </PaddedColumn>
 
       <Separator />
-
       <ListContainer>
-        {sortedLists.map(listUrl => (
-          <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} />
-        ))}
+        <AutoColumn gap="md">
+          {sortedLists.map(listUrl => (
+            <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} />
+          ))}
+        </AutoColumn>
       </ListContainer>
-      <Separator />
-
-      <div style={{ padding: '16px', textAlign: 'center' }}>
-        <ExternalLink href="https://tokenlists.org">Browse lists</ExternalLink>
-      </div>
     </Column>
   )
 }

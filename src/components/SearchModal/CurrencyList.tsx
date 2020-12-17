@@ -4,7 +4,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
+import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
@@ -95,7 +95,7 @@ function CurrencyRow({
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
-  const selectedTokenList = useSelectedTokenList()
+  const selectedTokenList = useCombinedActiveList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
@@ -194,7 +194,7 @@ export default function CurrencyList({
 
   const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])
 
-  return (
+  return itemData?.length > 0 ? (
     <FixedSizeList
       height={height}
       ref={fixedListRef as any}
@@ -206,5 +206,7 @@ export default function CurrencyList({
     >
       {Row}
     </FixedSizeList>
+  ) : (
+    <TYPE.main>No results</TYPE.main>
   )
 }

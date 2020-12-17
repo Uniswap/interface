@@ -13,6 +13,10 @@ export const fetchTokenList: Readonly<{
 
 export const acceptListUpdate = createAction<string>('lists/acceptListUpdate')
 export const addList = createAction<string>('lists/addList')
+
 export const removeList = createAction<string>('lists/removeList')
 export const selectList = createAction<string>('lists/selectList')
 export const rejectVersionUpdate = createAction<Version>('lists/rejectVersionUpdate')
+
+export const enableList = createAction<string>('lists/enableList')
+export const disableList = createAction<string>('lists/disableList')

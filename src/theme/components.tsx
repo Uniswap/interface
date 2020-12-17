@@ -5,6 +5,18 @@ import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { ArrowLeft, X } from 'react-feather'
 
+export const ButtonText = styled.button`
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+
+  :focus {
+    text-decoration: underline;
+  }
+`
+
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1
 }))`
