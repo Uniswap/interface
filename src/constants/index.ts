@@ -32,6 +32,8 @@ export const GRAIN = new Token(ChainId.MAINNET, '0x6589fe1271A0F29346796C6bAf0cd
 export const FARM = new Token(ChainId.MAINNET, '0xa0246c9032bC3A600820415aE600c6388619A14D', 18, 'FARM', 'FARM')
 export const BADGER = new Token(ChainId.MAINNET, '0x3472A5A71965499acd81997a54BBA8D852C6E53d', 18, 'BADGER', 'BadgerDAO')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
+export const ESD = new Token(ChainId.MAINNET, '0x36F3FD68E7325a35EB768F1AedaAe9EA0689d723', 18, 'ESD', 'Empty Set Dollar')
+export const SFI = new Token(ChainId.MAINNET, '0xb753428af26E81097e7fD17f40c88aaA3E04902c', 18, 'SFI', 'Saffron Spice')
 
 // TODO this is only approximate, it's actually based on blocks
 export const PROPOSAL_LENGTH_IN_DAYS = 7
@@ -84,7 +86,9 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
     [BASED.address]: [SUSD, WETH[ChainId.MAINNET]],
     [YAM3.address]: [YUSD, WETH[ChainId.MAINNET]],
     [GRAIN.address]: [FARM, USDC, WETH[ChainId.MAINNET]],
-    [BADGER.address]: [WBTC, WETH[ChainId.MAINNET]]
+    [BADGER.address]: [WBTC, WETH[ChainId.MAINNET]],
+    [ESD.address]: [USDC, SFI, WETH[ChainId.MAINNET]],
+    [SFI.address]: [ESD, WETH[ChainId.MAINNET]]
   }
 }
 
