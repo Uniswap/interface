@@ -18,7 +18,7 @@ import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
 import { transparentize } from 'polished'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, HideSmall, TYPE } from '../../theme'
 import MobileOptions from './MobileOptions'
 
 const HeaderFrame = styled.div`
@@ -174,7 +174,7 @@ const DXswapIcon = styled.div`
 
 const activeClassName = 'ACTIVE'
 
-const StyledNavLink = styled(NavLink).attrs({
+export const StyledNavLink = styled(NavLink).attrs({
   activeClassName
 })`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -260,13 +260,15 @@ function Header({ history }: { history: any }) {
           >
             {t('pool')}
           </StyledNavLink>
-          <StyledNavLink
-            id={`governance-nav-link`}
-            to={'/governance'}
-            isActive={() => history.location.pathname.includes('/governance')}
-          >
-            {t('governance')}
-          </StyledNavLink>
+          <HideSmall>
+            <StyledNavLink
+              id={`governance-nav-link`}
+              to={'/governance'}
+              isActive={() => history.location.pathname.includes('/governance')}
+            >
+              {t('governance')}
+            </StyledNavLink>
+          </HideSmall>
           <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link/'}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">
@@ -274,7 +276,7 @@ function Header({ history }: { history: any }) {
             </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
-            <MobileOptions />
+            <MobileOptions history={history} />
           </MoreLinksIcon>
         </HeaderLinks>
       </HeaderRow>
