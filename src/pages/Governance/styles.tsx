@@ -1,16 +1,27 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { LightCard } from '../../components/Card'
+import Card from '../../components/Card'
 import { AutoRow } from '../../components/Row'
 import { Text } from 'rebass'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
+import { transparentize } from 'polished'
 
-const LightCardWrap = styled(LightCard)`
-  width: 155.5px;
+const LightCardWrap = styled(Card)`
+  border: 1px solid ${({ theme }) => transparentize(0.3, theme.bg2)};
+  background-color: ${({ theme }) => transparentize(0.3, theme.bg1)};
+  padding: 0.8rem;
+  width: calc(25% - 6px);
   height: 96px;
   display: grid;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: calc(33% - 4px);
+  `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    width: calc(50% - 4px);
+  `};
 `
+
 const StyledText = styled(Text)`
   text-wrap: none;
 `
@@ -23,7 +34,7 @@ export const GovernanceCard = () => {
         {shittyCounter !== 2 ? <DoubleCurrencyLogo overlap={9} size={26.25} /> : <CurrencyLogo size="20px" />}
 
         {shittyCounter !== 2 ? (
-          <Text width="100%" textAlign="center" marginTop="8px" fontWeight={600} fontSize="16px" lineHeight="20px">
+          <Text width="100%" marginTop="8px" fontWeight={600} fontSize="16px" lineHeight="20px">
             DXD
           </Text>
         ) : (
@@ -34,12 +45,13 @@ export const GovernanceCard = () => {
       </AutoRow>
       <AutoRow justify="center">
         <StyledText
-          marginTop={shittyCounter !== 2 ? '10px' : '0'}
+          marginTop={shittyCounter !== 2 ? '10px' : '0x'}
           color={theme.text3}
           letterSpacing="0.02em"
           fontWeight={600}
           fontSize="9px"
           lineHeight="11px"
+          textAlign="center"
         >
           5 PAIRS | 3 PROPOSALS
         </StyledText>
