@@ -1,4 +1,4 @@
-import { UNI } from './../../constants/index'
+import { UNI, PRELOADED_PROPOSALS } from './../../constants/index'
 import { TokenAmount } from '@uniswap/sdk'
 import { isAddress } from 'ethers/lib/utils'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
@@ -121,10 +121,11 @@ export function useAllProposalData() {
         return Boolean(p.result) && Boolean(allProposalStates[i]?.result) && Boolean(formattedEvents[i])
       })
       .map((p, i) => {
+        const description = PRELOADED_PROPOSALS.get(allProposals.length - i - 1) || formattedEvents[i].description
         const formattedProposal: ProposalData = {
           id: allProposals[i]?.result?.id.toString(),
-          title: formattedEvents[i].description?.split(/# |\n/g)[1] || 'Untitled',
-          description: formattedEvents[i].description || 'No description.',
+          title: description?.split(/# |\n/g)[1] || 'Untitled',
+          description: description || 'No description.',
           proposer: allProposals[i]?.result?.proposer,
           status: enumerateProposalState(allProposalStates[i]?.result?.[0]) ?? 'Undetermined',
           forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString(), 18)),
