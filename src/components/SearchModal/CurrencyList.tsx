@@ -194,7 +194,7 @@ export default function CurrencyList({
 
   const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])
 
-  return itemData?.length > 0 ? (
+  return (
     <FixedSizeList
       height={height}
       ref={fixedListRef as any}
@@ -206,7 +206,5 @@ export default function CurrencyList({
     >
       {Row}
     </FixedSizeList>
-  ) : (
-    <TYPE.main>No results</TYPE.main>
   )
 }

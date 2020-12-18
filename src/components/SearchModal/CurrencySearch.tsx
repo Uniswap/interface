@@ -24,6 +24,7 @@ import { ButtonDropdownGrey } from 'components/Button'
 import styled from 'styled-components'
 import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { EmptyState } from './EmptyState'
 
 const MenuWrapper = styled.div`
   position: absolute;
@@ -230,24 +231,26 @@ export function CurrencySearch({
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
         </RowBetween>
       </PaddedColumn>
-
       <Separator />
-
-      <div style={{ flex: '1' }}>
-        <AutoSizer disableWidth>
-          {({ height }) => (
-            <CurrencyList
-              height={height}
-              showETH={showETH}
-              currencies={filteredSortedTokens}
-              onCurrencySelect={handleCurrencySelect}
-              otherCurrency={otherSelectedCurrency}
-              selectedCurrency={selectedCurrency}
-              fixedListRef={fixedList}
-            />
-          )}
-        </AutoSizer>
-      </div>
+      {filteredSortedTokens?.length > 0 ? (
+        <div style={{ flex: '1' }}>
+          <AutoSizer disableWidth>
+            {({ height }) => (
+              <CurrencyList
+                height={height}
+                showETH={showETH}
+                currencies={filteredSortedTokens}
+                onCurrencySelect={handleCurrencySelect}
+                otherCurrency={otherSelectedCurrency}
+                selectedCurrency={selectedCurrency}
+                fixedListRef={fixedList}
+              />
+            )}
+          </AutoSizer>
+        </div>
+      ) : (
+        <EmptyState searchQuery={searchQuery} />
+      )}
     </Column>
   )
 }

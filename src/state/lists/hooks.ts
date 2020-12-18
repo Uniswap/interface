@@ -3,6 +3,9 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
+import { useActiveWeb3React } from 'hooks'
+import { filterTokens } from 'components/SearchModal/filtering'
+import { useAllInactiveTokens } from 'hooks/Tokens'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -89,12 +92,12 @@ export function useSelectedListUrl(): string | undefined {
   return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
 }
 
-export function useSelectedListUrls(): string[] | undefined {
+export function useActiveListUrls(): string[] | undefined {
   return useSelector<AppState, AppState['lists']['selectedListUrls']>(state => state.lists.selectedListUrls)
 }
 
 export function useIsListActive(url: string): boolean {
-  const allActiveLists = useSelectedListUrls()
+  const allActiveLists = useActiveListUrls()
   return Boolean(allActiveLists?.includes(url))
 }
 
@@ -162,18 +165,29 @@ export function useCombinedListFromUrls(urls: string[] | undefined): TokenAddres
 
 // get all the tokens from active lists
 export function useCombinedActiveList(): TokenAddressMap {
-  const allActiveListUrls = useSelectedListUrls()
-  const x = useCombinedListFromUrls(allActiveListUrls)
+  const activeListUrls = useActiveListUrls()
+  const x = useCombinedListFromUrls(activeListUrls)
   return x
 }
 
 export function useCombinedInactiveList(): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const allActiveListUrls = useSelector<AppState, AppState['lists']['selectedListUrls']>(
-    state => state.lists.selectedListUrls
-  )
+  const allActiveListUrls = useActiveListUrls()
   const allInactiveListUrls: string[] = Object.keys(lists).filter(url => !allActiveListUrls?.includes(url))
-
   const x = useCombinedListFromUrls(allInactiveListUrls)
   return x
+}
+
+export function useFoundOnInactiveList(searchQuery: string): Token | undefined {
+  const { chainId } = useActiveWeb3React()
+  const inactiveTokens = useAllInactiveTokens()
+
+  return useMemo(() => {
+    if (!chainId) {
+      return undefined
+    } else {
+      const token = filterTokens(Object.values(inactiveTokens), searchQuery)
+      return token[0]
+    }
+  }, [chainId, inactiveTokens, searchQuery])
 }
