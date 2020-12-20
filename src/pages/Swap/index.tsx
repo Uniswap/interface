@@ -76,13 +76,20 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const { trade, currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
+  const {
+    trade: potentialTrade,
+    currencyBalances,
+    parsedAmount,
+    currencies,
+    inputError: swapInputError
+  } = useDerivedSwapInfo()
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
+  const trade = showWrap ? undefined : potentialTrade
 
   const parsedAmounts = showWrap
     ? {
