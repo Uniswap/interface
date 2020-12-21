@@ -10,19 +10,20 @@ import { ArrowLeft } from 'react-feather'
 import { ButtonPrimary } from '../../components/Button'
 import { ProposalStatus } from './styled'
 import { useProposalData, useUserVotesAsOfBlock, ProposalData, useUserDelegatee } from '../../state/governance/hooks'
-import { useTimestampFromBlock } from '../../hooks/useTimestampFromBlock'
 import { DateTime } from 'luxon'
 import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
 import { TokenAmount, JSBI } from '@uniswap/sdk'
 import { useActiveWeb3React } from '../../hooks'
-import { PROPOSAL_LENGTH_IN_SECS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
+import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
 import { isAddress, getEtherscanLink } from '../../utils'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
+import { useModalOpen, useToggleDelegateModal, useToggleVoteModal, useBlockNumber } from '../../state/application/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
 import { GreyCard } from '../../components/Card'
 import { useTokenBalance } from '../../state/wallet/hooks'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { BigNumber } from 'ethers'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -124,10 +125,16 @@ export default function VotePage({
   const toggelDelegateModal = useToggleDelegateModal()
 
   // get and format date from data
-  const startTimestamp: number | undefined = useTimestampFromBlock(proposalData?.startBlock)
-  const endDate: DateTime | undefined = startTimestamp
-    ? DateTime.fromSeconds(startTimestamp).plus({ seconds: PROPOSAL_LENGTH_IN_SECS })
-    : undefined
+  const currentTimestamp = useCurrentBlockTimestamp()
+  const currentBlock = useBlockNumber()
+  const endDate: DateTime | undefined =
+    proposalData && currentTimestamp && currentBlock
+      ? DateTime.fromSeconds(
+          currentTimestamp
+            .add(BigNumber.from(AVERAGE_BLOCK_TIME_IN_SECS).mul(BigNumber.from(proposalData.endBlock - currentBlock)))
+            .toNumber()
+        )
+      : undefined
   const now: DateTime = DateTime.local()
 
   // get total votes and format percentages for UI
