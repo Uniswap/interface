@@ -80,7 +80,7 @@ export default function Governance() {
                 color={'text4'}
                 fontSize="17px"
                 lineHeight="17px"
-                style={{ textDecoration: 'underline' }}
+                style={{ textDecoration: 'underline', cursor: 'pointer' }}
               >
                 Read more about Swapr Governance
               </TYPE.body>
