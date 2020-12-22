@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { TYPE } from 'theme'
+import { TYPE } from '../../theme'
 
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   border-radius: 20px;
   border: none;
-  background: ${({ theme }) => theme.white};
+  background: ${({ theme }) => theme.bg1};
   display: flex;
   width: fit-content;
   cursor: pointer;

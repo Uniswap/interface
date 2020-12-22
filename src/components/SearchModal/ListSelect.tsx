@@ -24,7 +24,8 @@ import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween, RowFixed } from '../Row'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 import { useListColor } from 'hooks/useColor'
-import ListToggle from 'components/Toggle/ListToggle'
+import useTheme from '../../hooks/useTheme'
+import ListToggle from '../Toggle/ListToggle'
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;
@@ -80,6 +81,7 @@ const StyledListUrlText = styled.div<{ active: boolean }>`
 
 const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
   background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.bg2)};
+  transition: 200ms;
   align=center;
   padding: 1rem;
   border-radius: 20px;
@@ -112,8 +114,8 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string; onBack: ()
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
+  const theme = useTheme()
   const listColor = useListColor(list?.logoURI)
-
   const isActive = useIsListActive(listUrl)
 
   const [open, toggle] = useToggle(false)
@@ -174,7 +176,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string; onBack: ()
           </StyledListUrlText>
           <StyledMenu ref={node as any}>
             <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
-              <Settings stroke="white" size={16} />
+              <Settings stroke={theme.text1} size={16} />
             </ButtonEmpty>
             {open && (
               <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
@@ -269,6 +271,15 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     [handleAddList, validUrl]
   )
 
+  // const [activeCopy, setActiveCopy] = useState<string[] | undefined>()
+  // const prevList = usePrevious(activeListUrls)
+  // useEffect(() => {
+  //   if (activeListUrls && !prevList) {
+  //     setActiveCopy(activeListUrls)
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
+
   const sortedLists = useMemo(() => {
     const listUrls = Object.keys(lists)
     return listUrls
@@ -280,12 +291,12 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
         const { current: l2 } = lists[u2]
 
         // first filter on active lists
-        if (activeListUrls?.includes(u1) && !activeListUrls?.includes(u2)) {
-          return -1
-        }
-        if (!activeListUrls?.includes(u1) && activeListUrls?.includes(u2)) {
-          return 1
-        }
+        // if (activeCopy?.includes(u1) && !activeCopy?.includes(u2)) {
+        //   return -1
+        // }
+        // if (!activeCopy?.includes(u1) && activeCopy?.includes(u2)) {
+        //   return 1
+        // }
 
         if (l1 && l2) {
           return l1.name.toLowerCase() < l2.name.toLowerCase()
@@ -298,7 +309,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
         if (l2) return 1
         return 0
       })
-  }, [activeListUrls, lists])
+  }, [lists])
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>

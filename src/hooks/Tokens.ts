@@ -8,12 +8,12 @@ import { isAddress } from '../utils'
 
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { filterTokens } from '../components/SearchModal/filtering'
 
-export function useAllTokens(): { [address: string]: Token } {
+// reduce token map into standard address <-> Token mapping
+function useTokensFromMap(tokenMap: { [x: string]: { [address: string]: Token } }): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
-
-  const allTokens = useCombinedActiveList()
 
   return useMemo(() => {
     if (!chainId) return {}
@@ -27,34 +27,35 @@ export function useAllTokens(): { [address: string]: Token } {
           },
           // must make a copy because reduce modifies the map, and we do not
           // want to make a copy in every iteration
-          { ...allTokens[chainId] }
+          { ...tokenMap[chainId] }
         )
     )
-  }, [chainId, userAddedTokens, allTokens])
+  }, [chainId, userAddedTokens, tokenMap])
+}
+
+export function useAllTokens(): { [address: string]: Token } {
+  const allTokens = useCombinedActiveList()
+  return useTokensFromMap(allTokens)
 }
 
 export function useAllInactiveTokens(): { [address: string]: Token } {
-  const { chainId } = useActiveWeb3React()
-  const userAddedTokens = useUserAddedTokens()
+  const inactiveTokensMap = useCombinedInactiveList()
+  return useTokensFromMap(inactiveTokensMap)
+}
 
-  const allTokens = useCombinedInactiveList()
+// used to detect extra search results
+export function useFoundOnInactiveList(searchQuery: string): Token[] | undefined {
+  const { chainId } = useActiveWeb3React()
+  const inactiveTokens = useAllInactiveTokens()
 
   return useMemo(() => {
-    if (!chainId) return {}
-    return (
-      userAddedTokens
-        // reduce into all ALL_TOKENS filtered by the current chain
-        .reduce<{ [address: string]: Token }>(
-          (tokenMap, token) => {
-            tokenMap[token.address] = token
-            return tokenMap
-          },
-          // must make a copy because reduce modifies the map, and we do not
-          // want to make a copy in every iteration
-          { ...allTokens[chainId] }
-        )
-    )
-  }, [chainId, userAddedTokens, allTokens])
+    if (!chainId) {
+      return undefined
+    } else {
+      const tokens = filterTokens(Object.values(inactiveTokens), searchQuery)
+      return tokens
+    }
+  }, [chainId, inactiveTokens, searchQuery])
 }
 
 // Check if currency is included in custom list from user storage

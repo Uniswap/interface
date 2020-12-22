@@ -3,9 +3,6 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
-import { useActiveWeb3React } from 'hooks'
-import { filterTokens } from 'components/SearchModal/filtering'
-import { useAllInactiveTokens } from 'hooks/Tokens'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -73,74 +70,17 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-export function useTokenList(url: string | undefined): TokenAddressMap {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  return useMemo(() => {
-    if (!url) return EMPTY_LIST
-    const current = lists[url]?.current
-    if (!current) return EMPTY_LIST
-    try {
-      return listToTokenMap(current)
-    } catch (error) {
-      console.error('Could not show token list due to error', error)
-      return EMPTY_LIST
-    }
-  }, [lists, url])
-}
-
-export function useSelectedListUrl(): string | undefined {
-  return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
-}
-
 export function useActiveListUrls(): string[] | undefined {
-  return useSelector<AppState, AppState['lists']['selectedListUrls']>(state => state.lists.selectedListUrls)
+  return useSelector<AppState, AppState['lists']['activeListUrls']>(state => state.lists.activeListUrls)
 }
 
-export function useIsListActive(url: string): boolean {
-  const allActiveLists = useActiveListUrls()
-  return Boolean(allActiveLists?.includes(url))
-}
-
-export function useSelectedTokenList(): TokenAddressMap {
-  return useTokenList(useSelectedListUrl())
-}
-
-export function useSelectedListInfo(): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
-  const selectedUrl = useSelectedListUrl()
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const list = selectedUrl ? listsByUrl[selectedUrl] : undefined
-  return {
-    current: list?.current ?? null,
-    pending: list?.pendingUpdate ?? null,
-    loading: list?.loadingRequestId !== null
-  }
-}
-
-// returns all downloaded current lists
-export function useAllLists(): TokenList[] {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-
-  return useMemo(
-    () =>
-      Object.keys(lists)
-        .map(url => lists[url].current)
-        .filter((l): l is TokenList => Boolean(l)),
-    [lists]
-  )
-}
-
-/**
- *
- *  TOKEN LIST UPDATES
- *
- */
-
-export function useCombinedListFromUrls(urls: string[] | undefined): TokenAddressMap {
+// merge tokens contained within lists from urls
+export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 
   return useMemo(() => {
     if (!urls) return EMPTY_LIST
-    const x = urls.reduce((allTokens, currentUrl) => {
+    return urls.reduce((allTokens, currentUrl) => {
       const current = lists[currentUrl]?.current
       if (!current) return allTokens
       try {
@@ -159,35 +99,24 @@ export function useCombinedListFromUrls(urls: string[] | undefined): TokenAddres
         return allTokens
       }
     }, EMPTY_LIST)
-    return x
   }, [lists, urls])
 }
 
 // get all the tokens from active lists
 export function useCombinedActiveList(): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
-  const x = useCombinedListFromUrls(activeListUrls)
-  return x
+  return useCombinedTokenMapFromUrls(activeListUrls)
 }
 
+// all tokens from inactive lists
 export function useCombinedInactiveList(): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const allActiveListUrls = useActiveListUrls()
   const allInactiveListUrls: string[] = Object.keys(lists).filter(url => !allActiveListUrls?.includes(url))
-  const x = useCombinedListFromUrls(allInactiveListUrls)
-  return x
+  return useCombinedTokenMapFromUrls(allInactiveListUrls)
 }
 
-export function useFoundOnInactiveList(searchQuery: string): Token | undefined {
-  const { chainId } = useActiveWeb3React()
-  const inactiveTokens = useAllInactiveTokens()
-
-  return useMemo(() => {
-    if (!chainId) {
-      return undefined
-    } else {
-      const token = filterTokens(Object.values(inactiveTokens), searchQuery)
-      return token[0]
-    }
-  }, [chainId, inactiveTokens, searchQuery])
+export function useIsListActive(url: string): boolean {
+  const allActiveLists = useActiveListUrls()
+  return Boolean(allActiveLists?.includes(url))
 }

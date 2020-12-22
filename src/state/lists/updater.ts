@@ -8,14 +8,13 @@ import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
 import { acceptListUpdate } from './actions'
+import { useActiveListUrls } from './hooks'
 
 export default function Updater(): null {
   const { library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const selectedListUrl = useSelector<AppState, AppState['lists']['selectedListUrl']>(
-    state => state.lists.selectedListUrl
-  )
+  const activeListUrls = useActiveListUrls()
 
   const isWindowVisible = useIsWindowVisible()
 
@@ -57,7 +56,7 @@ export default function Updater(): null {
             // automatically update minor/patch as long as bump matches the min update
             if (bump >= min) {
               dispatch(acceptListUpdate(listUrl))
-              if (listUrl === selectedListUrl) {
+              if (activeListUrls?.includes(listUrl)) {
                 dispatch(
                   addPopup({
                     key: listUrl,
@@ -80,7 +79,7 @@ export default function Updater(): null {
             break
 
           case VersionUpgrade.MAJOR:
-            if (listUrl === selectedListUrl) {
+            if (activeListUrls?.includes(listUrl)) {
               dispatch(
                 addPopup({
                   key: listUrl,
@@ -99,7 +98,7 @@ export default function Updater(): null {
         }
       }
     })
-  }, [dispatch, lists, selectedListUrl])
+  }, [dispatch, lists, activeListUrls])
 
   return null
 }

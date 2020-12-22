@@ -15,6 +15,12 @@ interface CurrencySearchModalProps {
   showCommonBases?: boolean
 }
 
+export enum CurrencyModalView {
+  search,
+  listMange,
+  import
+}
+
 export default function CurrencySearchModal({
   isOpen,
   onDismiss,
@@ -23,12 +29,12 @@ export default function CurrencySearchModal({
   otherSelectedCurrency,
   showCommonBases = false
 }: CurrencySearchModalProps) {
-  const [listView, setListView] = useState<boolean>(false)
+  const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
-      setListView(false)
+      setModalView(CurrencyModalView.search)
     }
   }, [isOpen, lastOpen])
 
@@ -45,21 +51,27 @@ export default function CurrencySearchModal({
       category: 'Lists',
       action: 'Change Lists'
     })
-    setListView(true)
+    setModalView(CurrencyModalView.listMange)
   }, [])
+
   const handleClickBack = useCallback(() => {
     ReactGA.event({
       category: 'Lists',
       action: 'Back'
     })
-    setListView(false)
+    setModalView(CurrencyModalView.search)
   }, [])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={listView ? 40 : 80}>
-      {listView ? (
+    <Modal
+      isOpen={true}
+      onDismiss={onDismiss}
+      maxHeight={80}
+      minHeight={modalView === CurrencyModalView.listMange ? 40 : 80}
+    >
+      {modalView === CurrencyModalView.listMange ? (
         <ListSelect onDismiss={onDismiss} onBack={handleClickBack} />
-      ) : (
+      ) : modalView === CurrencyModalView.search ? (
         <CurrencySearch
           isOpen={isOpen}
           onDismiss={onDismiss}
@@ -69,6 +81,8 @@ export default function CurrencySearchModal({
           otherSelectedCurrency={otherSelectedCurrency}
           showCommonBases={showCommonBases}
         />
+      ) : (
+        ''
       )}
     </Modal>
   )

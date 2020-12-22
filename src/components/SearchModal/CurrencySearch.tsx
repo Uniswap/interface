@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { CloseIcon, TYPE, ButtonText } from '../../theme'
+import { useAllTokens, useToken, useFoundOnInactiveList } from '../../hooks/Tokens'
+import { CloseIcon, TYPE, ButtonText, ExternalLink } from '../../theme'
 import { isAddress } from '../../utils'
-import { GreyCard } from '../Card'
+import { StyledMenu, LinkIcon } from './styleds'
 import Column, { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween, RowFixed } from '../Row'
@@ -17,40 +17,74 @@ import CurrencyList from './CurrencyList'
 import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator, StyledMenu } from './styleds'
+import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { PlusCircle, List } from 'react-feather'
-import { ButtonDropdownGrey } from 'components/Button'
+import { ButtonDropdownGrey } from '../Button'
 import styled from 'styled-components'
 import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { EmptyState } from './EmptyState'
+import TLLogo from '../../assets/images/token-list-logo.png'
+import Card, { GreyCard, OutlineCard } from 'components/Card'
+import { ButtonPrimary } from 'components/Button'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { Import } from './Import'
 
 const MenuWrapper = styled.div`
   position: absolute;
   top: 74px;
   right: 0;
-  background: #f7f8fa;
+  background: ${({ theme }) => theme.bg1};
   box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
     0px 0px 1px rgba(0, 0, 0, 0.04);
   border-radius: 12px;
   z-index: 4;
 `
 
-const BlueIcon = styled.div`
+const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   & > * {
-    stroke: ${({ theme }) => theme.blue1};
+    stroke: ${({ theme }) => theme.text1};
   }
 `
 
 const MenuItem = styled(ButtonText)`
+  background: ${({ theme }) => theme.bg3};
   :hover {
     opacity: 0.8;
     cursor: pointer;
   }
+`
+
+const Wrapper = styled.div`
+  position: relative;
+  border-radius: 20px;
+  padding: 1rem;
+`
+
+const Footer = styled.div`
+  position: absolute;
+  bottom: 1rem;
+  width: calc(100% - 2rem);
+  border-radius: 20px;
+`
+
+const BottomWrapper = styled(GreyCard)`
+  border-radius: 20px;
+  padding: 0;
+`
+
+const TokenSection = styled(OutlineCard)`
+  border-radius: 20px;
+  padding: 1rem;
+  border: 2px solid ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.bg1};
+`
+
+const WrappedLogo = styled.img`
+  height: 20px;
 `
 
 interface CurrencySearchProps {
@@ -76,7 +110,7 @@ export function CurrencySearch({
   const { chainId } = useActiveWeb3React()
 
   const fixedList = useRef<FixedSizeList>()
-  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('YFI')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
   const allTokens = useAllTokens()
 
@@ -169,6 +203,15 @@ export function CurrencySearch({
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
 
+  const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
+
+  const [showImport, setShowImport] = useState(true)
+  const [importToken, setImportToken] = useState<Token | undefined>()
+
+  if (showImport && importToken) {
+    return <Import onBack={() => setShowImport(false)} token={importToken} />
+  }
+
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
       <PaddedColumn gap="14px">
@@ -197,22 +240,22 @@ export function CurrencySearch({
                   <AutoColumn gap="md">
                     <MenuItem>
                       <RowFixed>
-                        <BlueIcon>
+                        <IconWrapper>
                           <PlusCircle />
-                        </BlueIcon>
-                        <TYPE.blue ml="10px" style={{ whiteSpace: 'nowrap' }}>
+                        </IconWrapper>
+                        <TYPE.body ml="10px" style={{ whiteSpace: 'nowrap' }}>
                           Import Token
-                        </TYPE.blue>
+                        </TYPE.body>
                       </RowFixed>
                     </MenuItem>
                     <MenuItem onClick={onChangeList}>
                       <RowFixed>
-                        <BlueIcon>
+                        <IconWrapper>
                           <List />
-                        </BlueIcon>
-                        <TYPE.blue ml="10px" style={{ whiteSpace: 'nowrap' }}>
+                        </IconWrapper>
+                        <TYPE.body ml="10px" style={{ whiteSpace: 'nowrap' }}>
                           Manage Lists
-                        </TYPE.blue>
+                        </TYPE.body>
                       </RowFixed>
                     </MenuItem>
                   </AutoColumn>
@@ -249,7 +292,46 @@ export function CurrencySearch({
           </AutoSizer>
         </div>
       ) : (
-        <EmptyState searchQuery={searchQuery} />
+        <Wrapper>
+          <Card>
+            <TYPE.main textAlign="center">No result found on active lists.</TYPE.main>
+          </Card>
+          {inactiveTokens?.[0] && (
+            <Footer>
+              <BottomWrapper>
+                <AutoColumn>
+                  <RowBetween padding="1rem">
+                    <WrappedLogo src={TLLogo} alt="token lists" />
+                    <TYPE.body fontWeight={500}>1 result</TYPE.body>
+                  </RowBetween>
+                  <TokenSection>
+                    <RowBetween>
+                      <AutoColumn gap="sm">
+                        <RowFixed>
+                          <CurrencyLogo currency={inactiveTokens[0]} size={'24px'} />
+                          <TYPE.body ml="10px" fontWeight={500}>
+                            {inactiveTokens[0]?.symbol}
+                          </TYPE.body>
+                          <LinkIcon href={''} />
+                        </RowFixed>
+                      </AutoColumn>
+                      <ButtonPrimary
+                        width="fit-content"
+                        padding="8px 10px"
+                        onClick={() => {
+                          setImportToken(inactiveTokens[0])
+                          setShowImport(true)
+                        }}
+                      >
+                        Add
+                      </ButtonPrimary>
+                    </RowBetween>
+                  </TokenSection>
+                </AutoColumn>
+              </BottomWrapper>
+            </Footer>
+          )}
+        </Wrapper>
       )}
     </Column>
   )
