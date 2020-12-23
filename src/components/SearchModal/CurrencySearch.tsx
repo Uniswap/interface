@@ -1,11 +1,20 @@
 import { Currency, ETHER, Token } from '@uniswap/sdk'
-import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  KeyboardEvent,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  CSSProperties
+} from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken, useFoundOnInactiveList } from '../../hooks/Tokens'
+import { useAllTokens, useToken, useFoundOnInactiveList, useIsUserAddedToken } from '../../hooks/Tokens'
 import { CloseIcon, TYPE, ButtonText } from '../../theme'
 import { isAddress } from '../../utils'
 import { StyledMenu } from './styleds'
@@ -26,12 +35,9 @@ import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import TLLogo from '../../assets/images/token-list-logo.png'
 import Card, { GreyCard } from 'components/Card'
-import { ButtonPrimary } from 'components/Button'
-import CurrencyLogo from 'components/CurrencyLogo'
 import { Import } from './Import'
 import useTheme from 'hooks/useTheme'
-import { useCombinedInactiveList } from 'state/lists/hooks'
-import ListLogo from 'components/ListLogo'
+import ImportRow from './ImportRow'
 
 const MenuWrapper = styled.div`
   position: absolute;
@@ -62,14 +68,8 @@ const MenuItem = styled(ButtonText)`
 `
 
 const Wrapper = styled.div`
-  position: relative;
-  padding: 1rem;
-`
-
-const TokenSection = styled.div`
-  border-radius: 20px;
-  padding: 0.25rem 0;
-  background-color: ${({ theme }) => theme.bg1};
+  padding: 20px;
+  height: 100%;
 `
 
 const WrappedLogo = styled.img`
@@ -97,20 +97,22 @@ export function CurrencySearch({
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
-
   const theme = useTheme()
 
+  // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
+  const fixedImportList = useRef<FixedSizeList>()
+
   const [searchQuery, setSearchQuery] = useState<string>('YFI')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
-
   const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
 
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
+  const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   useEffect(() => {
     if (isAddressSearch) {
@@ -130,12 +132,12 @@ export function CurrencySearch({
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
-    if (isAddressSearch) return searchToken ? [searchToken] : []
+    // if (isAddressSearch) return searchToken ? [searchToken] : []
     return filterTokens(Object.values(allTokens), searchQuery)
-  }, [isAddressSearch, searchToken, allTokens, searchQuery])
+  }, [allTokens, searchQuery])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
-    if (searchToken) return [searchToken]
+    // if (searchToken) return [searchToken]
     const sorted = filteredTokens.sort(tokenComparator)
     const symbolMatch = searchQuery
       .toLowerCase()
@@ -144,12 +146,11 @@ export function CurrencySearch({
     if (symbolMatch.length > 1) return sorted
 
     return [
-      ...(searchToken ? [searchToken] : []),
       // sort any exact symbol matches first
       ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
       ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0])
     ]
-  }, [filteredTokens, searchQuery, searchToken, tokenComparator])
+  }, [filteredTokens, searchQuery, tokenComparator])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -200,9 +201,15 @@ export function CurrencySearch({
   const [showImport, setShowImport] = useState(true)
   const [importToken, setImportToken] = useState<Token | undefined>()
 
-  // use for showing import source on inactive tokens
-  const inactiveTokenList = useCombinedInactiveList()
+  const ImportDataRow = useCallback(
+    ({ data, index, style }: { data: Token[]; index: number; style: CSSProperties }) => {
+      const token: Token = data[index]
+      return <ImportRow token={token} style={style} setShowImport={setShowImport} setImportToken={setImportToken} />
+    },
+    []
+  )
 
+  // UI for token import
   if (showImport && importToken) {
     return (
       <Import onBack={() => setShowImport(false)} token={importToken} handleCurrencySelect={handleCurrencySelect} />
@@ -272,7 +279,11 @@ export function CurrencySearch({
         </RowBetween>
       </PaddedColumn>
       <Separator />
-      {filteredSortedTokens?.length > 0 ? (
+      {searchToken && !searchTokenIsAdded ? (
+        <Wrapper>
+          <ImportRow token={searchToken} setShowImport={setShowImport} setImportToken={setImportToken} />
+        </Wrapper>
+      ) : filteredSortedTokens?.length > 0 ? (
         <div style={{ flex: '1' }}>
           <AutoSizer disableWidth>
             {({ height }) => (
@@ -290,8 +301,8 @@ export function CurrencySearch({
         </div>
       ) : inactiveTokens && inactiveTokens.length > 0 ? (
         <Wrapper>
-          <AutoColumn gap="md">
-            <Card borderRadius="8px" backgroundColor={theme.bg2} padding="6px 8px">
+          <AutoColumn>
+            <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="6px 8px">
               <RowBetween>
                 <TYPE.main fontWeight={500}>Showing expanded results via</TYPE.main>
                 <Card borderRadius="8px" backgroundColor={theme.bg3} padding="4px 6px" width="fit-content">
@@ -299,44 +310,23 @@ export function CurrencySearch({
                 </Card>
               </RowBetween>
             </Card>
-            {inactiveTokens.map(token => {
-              const list = chainId && inactiveTokenList?.[chainId]?.[token.address].list
-              return (
-                <TokenSection key={token.address}>
-                  <RowBetween>
-                    <AutoColumn gap="sm">
-                      <RowFixed>
-                        <CurrencyLogo currency={token} size={'24px'} />
-                        <TYPE.body ml="10px" fontWeight={500}>
-                          {token.symbol}
-                        </TYPE.body>
-                        {list && list.logoURI && (
-                          <RowFixed style={{ marginLeft: '16px' }}>
-                            <ListLogo logoURI={list.logoURI} size="12px" />
-                            <TYPE.small ml="4px" color={theme.text3}>
-                              via {list.name}
-                            </TYPE.small>
-                          </RowFixed>
-                        )}
-                      </RowFixed>
-                    </AutoColumn>
-                    <ButtonPrimary
-                      width="fit-content"
-                      padding="6px 8px"
-                      fontWeight={500}
-                      fontSize="12px"
-                      onClick={() => {
-                        setImportToken(token)
-                        setShowImport(true)
-                      }}
-                    >
-                      + Import
-                    </ButtonPrimary>
-                  </RowBetween>
-                </TokenSection>
-              )
-            })}
           </AutoColumn>
+          <div style={{ flex: '1', height: '100%' }}>
+            <AutoSizer disableWidth>
+              {({ height }) => (
+                <FixedSizeList
+                  height={height}
+                  ref={fixedImportList as any}
+                  width="100%"
+                  itemData={inactiveTokens}
+                  itemCount={inactiveTokens.length}
+                  itemSize={56}
+                >
+                  {ImportDataRow}
+                </FixedSizeList>
+              )}
+            </AutoSizer>
+          </div>
         </Wrapper>
       ) : (
         <Wrapper>

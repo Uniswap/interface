@@ -71,8 +71,13 @@ export function useFoundOnInactiveList(searchQuery: string): Token[] | undefined
 }
 
 // Check if currency is included in custom list from user storage
-export function useIsUserAddedToken(currency: Currency): boolean {
+export function useIsUserAddedToken(currency: Currency | undefined | null): boolean {
   const userAddedTokens = useUserAddedTokens()
+
+  if (!currency) {
+    return false
+  }
+
   return !!userAddedTokens.find(token => currencyEquals(currency, token))
 }
 

@@ -57,7 +57,7 @@ export function Import({ onBack, handleCurrencySelect, token }: ImportProps) {
   // use for showing import source on inactive tokens
   const inactiveTokenList = useCombinedInactiveList()
 
-  const list = chainId && inactiveTokenList?.[chainId]?.[token.address].list
+  const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
 
   return (
     <Wrapper>
