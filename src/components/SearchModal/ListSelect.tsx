@@ -11,7 +11,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
-import { useIsListActive, useActiveListUrls } from '../../state/lists/hooks'
+import { useIsListActive } from '../../state/lists/hooks'
 import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
@@ -224,8 +224,6 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 
-  const activeListUrls = useActiveListUrls()
-
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
   const [addError, setAddError] = useState<string | null>(null)
 
@@ -270,15 +268,6 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     },
     [handleAddList, validUrl]
   )
-
-  // const [activeCopy, setActiveCopy] = useState<string[] | undefined>()
-  // const prevList = usePrevious(activeListUrls)
-  // useEffect(() => {
-  //   if (activeListUrls && !prevList) {
-  //     setActiveCopy(activeListUrls)
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
 
   const sortedLists = useMemo(() => {
     const listUrls = Object.keys(lists)

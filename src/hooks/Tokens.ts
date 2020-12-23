@@ -1,3 +1,4 @@
+import { TokenAddressMap } from './../state/lists/hooks'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, ETHER, Token, currencyEquals } from '@uniswap/sdk'
 import { useMemo } from 'react'
@@ -11,36 +12,47 @@ import { useBytes32TokenContract, useTokenContract } from './useContract'
 import { filterTokens } from '../components/SearchModal/filtering'
 
 // reduce token map into standard address <-> Token mapping
-function useTokensFromMap(tokenMap: { [x: string]: { [address: string]: Token } }): { [address: string]: Token } {
+function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {
     if (!chainId) return {}
-    return (
-      userAddedTokens
-        // reduce into all ALL_TOKENS filtered by the current chain
-        .reduce<{ [address: string]: Token }>(
-          (tokenMap, token) => {
-            tokenMap[token.address] = token
-            return tokenMap
-          },
-          // must make a copy because reduce modifies the map, and we do not
-          // want to make a copy in every iteration
-          { ...tokenMap[chainId] }
-        )
-    )
-  }, [chainId, userAddedTokens, tokenMap])
+
+    // reduce to just tokens
+    const mapWithoutUrls = Object.keys(tokenMap[chainId]).reduce<{ [address: string]: Token }>((newMap, address) => {
+      newMap[address] = tokenMap[chainId][address].token
+      return newMap
+    }, {})
+
+    if (includeUserAdded) {
+      return (
+        userAddedTokens
+          // reduce into all ALL_TOKENS filtered by the current chain
+          .reduce<{ [address: string]: Token }>(
+            (tokenMap, token) => {
+              tokenMap[token.address] = token
+              return tokenMap
+            },
+            // must make a copy because reduce modifies the map, and we do not
+            // want to make a copy in every iteration
+            { ...mapWithoutUrls }
+          )
+      )
+    }
+
+    return mapWithoutUrls
+  }, [chainId, userAddedTokens, tokenMap, includeUserAdded])
 }
 
 export function useAllTokens(): { [address: string]: Token } {
   const allTokens = useCombinedActiveList()
-  return useTokensFromMap(allTokens)
+  return useTokensFromMap(allTokens, true)
 }
 
 export function useAllInactiveTokens(): { [address: string]: Token } {
   const inactiveTokensMap = useCombinedInactiveList()
-  return useTokensFromMap(inactiveTokensMap)
+  return useTokensFromMap(inactiveTokensMap, false)
 }
 
 // used to detect extra search results

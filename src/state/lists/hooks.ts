@@ -25,7 +25,9 @@ export class WrappedTokenInfo extends Token {
   }
 }
 
-export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [tokenAddress: string]: WrappedTokenInfo }> }>
+export type TokenAddressMap = Readonly<
+  { [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
+>
 
 /**
  * An empty result, useful as a default.
@@ -60,7 +62,10 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
         ...tokenMap,
         [token.chainId]: {
           ...tokenMap[token.chainId],
-          [token.address]: token
+          [token.address]: {
+            token,
+            list: list
+          }
         }
       }
     },
@@ -102,18 +107,33 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAd
   }, [lists, urls])
 }
 
-// get all the tokens from active lists
-export function useCombinedActiveList(): TokenAddressMap {
-  const activeListUrls = useActiveListUrls()
-  return useCombinedTokenMapFromUrls(activeListUrls)
+export function useAllLists(): {
+  readonly [url: string]: {
+    readonly current: TokenList | null
+    readonly pendingUpdate: TokenList | null
+    readonly loadingRequestId: string | null
+    readonly error: string | null
+  }
+} {
+  return useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+}
+
+export function useInactiveListUrls(): string[] {
+  const lists = useAllLists()
+  const allActiveListUrls = useActiveListUrls()
+  return Object.keys(lists).filter(url => !allActiveListUrls?.includes(url))
 }
 
 // all tokens from inactive lists
 export function useCombinedInactiveList(): TokenAddressMap {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const allActiveListUrls = useActiveListUrls()
-  const allInactiveListUrls: string[] = Object.keys(lists).filter(url => !allActiveListUrls?.includes(url))
+  const allInactiveListUrls: string[] = useInactiveListUrls()
   return useCombinedTokenMapFromUrls(allInactiveListUrls)
+}
+
+// get all the tokens from active lists
+export function useCombinedActiveList(): TokenAddressMap {
+  const activeListUrls = useActiveListUrls()
+  return useCombinedTokenMapFromUrls(activeListUrls)
 }
 
 export function useIsListActive(url: string): boolean {
