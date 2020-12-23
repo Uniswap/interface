@@ -1,9 +1,8 @@
 import { Token } from 'dxswap-sdk'
 import { transparentize } from 'polished'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens } from '../../hooks/Tokens'
 import { ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink, shortenAddress } from '../../utils'
 import CurrencyLogo from '../CurrencyLogo'
@@ -13,24 +12,26 @@ import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
 import { ButtonError } from '../Button'
 
-const Wrapper = styled.div<{ error: boolean }>`
-  background: ${({ theme }) => transparentize(0.6, theme.bg3)};
-  padding: 0.75rem;
-  border-radius: 20px;
-`
-
 const WarningContainer = styled.div`
-  max-width: 420px;
   width: 100%;
-  padding: 1rem;
-  background: rgba(242, 150, 2, 0.05);
-  border: 1px solid #f3841e;
-  border-radius: 20px;
   overflow: auto;
 `
 
+const OuterContainer = styled.div`
+  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+`
+
+const UpperSectionContainer = styled.div`
+  padding: 20px;
+`
+
+const BottomSectionContainer = styled.div`
+  background: ${({ theme }) => theme.bg1};
+  padding: 20px;
+`
+
 const StyledWarningIcon = styled(AlertTriangle)`
-  stroke: ${({ theme }) => theme.red2};
+  stroke: ${({ theme }) => theme.text3};
 `
 
 interface TokenWarningCardProps {
@@ -40,46 +41,33 @@ interface TokenWarningCardProps {
 function TokenWarningCard({ token }: TokenWarningCardProps) {
   const { chainId } = useActiveWeb3React()
 
-  const tokenSymbol = token?.symbol?.toLowerCase() ?? ''
-  const tokenName = token?.name?.toLowerCase() ?? ''
-
-  const allTokens = useAllTokens()
-
-  const duplicateNameOrSymbol = useMemo(() => {
-    if (!token || !chainId) return false
-
-    return Object.keys(allTokens).some(tokenAddress => {
-      const userToken = allTokens[tokenAddress]
-      if (userToken.equals(token)) {
-        return false
-      }
-      return userToken.symbol?.toLowerCase() === tokenSymbol || userToken.name?.toLowerCase() === tokenName
-    })
-  }, [token, chainId, allTokens, tokenSymbol, tokenName])
-
   if (!token) return null
 
   return (
-    <Wrapper error={duplicateNameOrSymbol}>
-      <AutoRow gap="6px">
-        <AutoColumn gap="24px">
-          <CurrencyLogo currency={token} size={'16px'} />
-          <div> </div>
-        </AutoColumn>
-        <AutoColumn gap="10px" justify="flex-start">
-          <TYPE.main>
-            {token && token.name && token.symbol && token.name !== token.symbol
-              ? `${token.name} (${token.symbol})`
-              : token.name || token.symbol}{' '}
-          </TYPE.main>
-          {chainId && (
-            <ExternalLink style={{ fontWeight: 400 }} href={getEtherscanLink(chainId, token.address, 'token')}>
-              <TYPE.blue title={token.address}>{shortenAddress(token.address)} (View on Etherscan)</TYPE.blue>
-            </ExternalLink>
-          )}
-        </AutoColumn>
-      </AutoRow>
-    </Wrapper>
+    <AutoRow gap="6px">
+      <AutoColumn gap="24px">
+        <CurrencyLogo currency={token} size={'16px'} />
+        <div> </div>
+      </AutoColumn>
+      <AutoColumn gap="11px" justify="flex-start">
+        <TYPE.main fontSize="16px" lineHeight="20px">
+          {token && token.name && token.symbol && token.name !== token.symbol
+            ? `${token.name} (${token.symbol})`
+            : token.name || token.symbol}{' '}
+        </TYPE.main>
+        {chainId && (
+          <ExternalLink
+            color="purple4"
+            style={{ fontWeight: 400 }}
+            href={getEtherscanLink(chainId, token.address, 'token')}
+          >
+            <TYPE.main color="purple4" fontSize="14px" lineHeight="17px" title={token.address}>
+              {shortenAddress(token.address)} (View on Etherscan)
+            </TYPE.main>
+          </ExternalLink>
+        )}
+      </AutoColumn>
+    </AutoRow>
   )
 }
 
@@ -92,62 +80,66 @@ export default function TokenWarningModal({
   tokens: Token[]
   onConfirm: () => void
 }) {
-  const [understandChecked, setUnderstandChecked] = useState(false)
-  const toggleUnderstand = useCallback(() => setUnderstandChecked(uc => !uc), [])
-
   const handleDismiss = useCallback(() => null, [])
   return (
     <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={90}>
-      <WarningContainer className="token-warning-container">
-        <AutoColumn gap="lg">
-          <AutoRow gap="6px">
-            <StyledWarningIcon />
-            <TYPE.main color={'red2'}>Token imported</TYPE.main>
-          </AutoRow>
-          <TYPE.body color={'red2'}>
-            Anyone can create an ERC20 token on Ethereum with <em>any</em> name, including creating fake versions of
-            existing tokens and tokens that claim to represent projects that do not have a token.
-          </TYPE.body>
-          <TYPE.body color={'red2'}>
-            This interface can load arbitrary tokens by token addresses. Please take extra caution and do your research
-            when interacting with arbitrary ERC20 tokens.
-          </TYPE.body>
-          <TYPE.body color={'red2'}>
-            If you purchase an arbitrary token, <strong>you may be unable to sell it back.</strong>
-          </TYPE.body>
-          {tokens.map(token => {
-            return <TokenWarningCard key={token.address} token={token} />
-          })}
-          <RowBetween>
-            <div>
-              <label style={{ cursor: 'pointer', userSelect: 'none' }}>
-                <input
-                  type="checkbox"
-                  className="understand-checkbox"
-                  checked={understandChecked}
-                  onChange={toggleUnderstand}
-                />{' '}
-                I understand
-              </label>
-            </div>
-            <ButtonError
-              disabled={!understandChecked}
-              error={true}
-              width={'140px'}
-              padding="0.5rem 1rem"
-              className="token-dismiss-button"
-              style={{
-                borderRadius: '10px'
-              }}
-              onClick={() => {
-                onConfirm()
-              }}
-            >
-              <TYPE.body color="white">Continue</TYPE.body>
-            </ButtonError>
-          </RowBetween>
-        </AutoColumn>
-      </WarningContainer>
+      <OuterContainer>
+        <WarningContainer className="token-warning-container">
+          <AutoColumn>
+            <UpperSectionContainer>
+              <AutoRow gap="6px">
+                <StyledWarningIcon size="20px" />
+                <TYPE.main fontSize="16px" lineHeight="20px" color={'text3'}>
+                  Token imported
+                </TYPE.main>
+              </AutoRow>
+              <TYPE.body
+                marginY="20px"
+                fontSize="14px"
+                fontWeight="700"
+                lineHeight="20px"
+                letterSpacing="-0.02em"
+                color="text4"
+              >
+                Anyone can create an ERC20 token on Ethereum with <em>any</em> name, including creating fake versions of
+                existing tokens and tokens that claim to represent projects that do not have a token.
+              </TYPE.body>
+              <TYPE.body
+                marginBottom="20px"
+                fontSize="14px"
+                fontWeight="700"
+                lineHeight="20px"
+                letterSpacing="-0.02em"
+                color="text4"
+              >
+                This interface can load arbitrary tokens by token addresses. Please take extra caution and do your
+                research when interacting with arbitrary ERC20 tokens.
+              </TYPE.body>
+              <TYPE.body fontSize="14px" fontWeight="700" lineHeight="20px" letterSpacing="-0.02em" color="text4">
+                If you purchase an arbitrary token, <strong>you may be unable to sell it back.</strong>
+              </TYPE.body>
+            </UpperSectionContainer>
+            <BottomSectionContainer>
+              {tokens.map(token => {
+                return <TokenWarningCard key={token.address} token={token} />
+              })}
+              <RowBetween marginTop="24px">
+                <ButtonError
+                  error={true}
+                  padding="0.5rem 1rem"
+                  height={58}
+                  className="token-dismiss-button"
+                  onClick={() => {
+                    onConfirm()
+                  }}
+                >
+                  <TYPE.body color="white">I understand</TYPE.body>
+                </ButtonError>
+              </RowBetween>
+            </BottomSectionContainer>
+          </AutoColumn>
+        </WarningContainer>
+      </OuterContainer>
     </Modal>
   )
 }
