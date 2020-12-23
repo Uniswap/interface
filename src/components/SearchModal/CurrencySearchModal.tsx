@@ -64,7 +64,7 @@ export default function CurrencySearchModal({
 
   return (
     <Modal
-      isOpen={true}
+      isOpen={isOpen}
       onDismiss={onDismiss}
       maxHeight={80}
       minHeight={modalView === CurrencyModalView.listMange ? 40 : 80}
