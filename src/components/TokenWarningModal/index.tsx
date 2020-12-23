@@ -89,15 +89,15 @@ export default function TokenWarningModal({
             <UpperSectionContainer>
               <AutoRow gap="6px">
                 <StyledWarningIcon size="20px" />
-                <TYPE.main fontSize="16px" lineHeight="20px" color={'text3'}>
+                <TYPE.main fontSize="16px" lineHeight="22px" color={'text3'}>
                   Token imported
                 </TYPE.main>
               </AutoRow>
               <TYPE.body
                 marginY="20px"
                 fontSize="14px"
-                fontWeight="700"
-                lineHeight="20px"
+                fontWeight="400"
+                lineHeight="22px"
                 letterSpacing="-0.02em"
                 color="text4"
               >
@@ -107,15 +107,15 @@ export default function TokenWarningModal({
               <TYPE.body
                 marginBottom="20px"
                 fontSize="14px"
-                fontWeight="700"
-                lineHeight="20px"
+                fontWeight="400"
+                lineHeight="22px"
                 letterSpacing="-0.02em"
                 color="text4"
               >
                 This interface can load arbitrary tokens by token addresses. Please take extra caution and do your
                 research when interacting with arbitrary ERC20 tokens.
               </TYPE.body>
-              <TYPE.body fontSize="14px" fontWeight="700" lineHeight="20px" letterSpacing="-0.02em" color="text4">
+              <TYPE.body fontSize="14px" fontWeight="400" lineHeight="22px" letterSpacing="-0.02em" color="text4">
                 If you purchase an arbitrary token, <strong>you may be unable to sell it back.</strong>
               </TYPE.body>
             </UpperSectionContainer>
