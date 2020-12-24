@@ -3,7 +3,7 @@ import { Redirect, RouteComponentProps } from 'react-router-dom'
 import AddLiquidity from './index'
 
 export function RedirectToAddLiquidity() {
-  return <Redirect to="/add/" />
+  return <Redirect to="/uniswap/add/" />
 }
 
 const OLD_PATH_STRUCTURE = /^(0x[a-fA-F0-9]{40})-(0x[a-fA-F0-9]{40})$/
@@ -15,7 +15,7 @@ export function RedirectOldAddLiquidityPathStructure(props: RouteComponentProps<
   } = props
   const match = currencyIdA.match(OLD_PATH_STRUCTURE)
   if (match?.length) {
-    return <Redirect to={`/add/${match[1]}/${match[2]}`} />
+    return <Redirect to={`/uniswap/add/${match[1]}/${match[2]}`} />
   }
 
   return <AddLiquidity {...props} />
@@ -28,7 +28,7 @@ export function RedirectDuplicateTokenIds(props: RouteComponentProps<{ currencyI
     }
   } = props
   if (currencyIdA.toLowerCase() === currencyIdB.toLowerCase()) {
-    return <Redirect to={`/add/${currencyIdA}`} />
+    return <Redirect to={`/uniswap/add/${currencyIdA}`} />
   }
   return <AddLiquidity {...props} />
 }

@@ -88,7 +88,23 @@ export function colors(darkMode: boolean): Colors {
     // skeleton screen
     SkeletonBG: darkMode
       ? 'linear-gradient(to right, rgba(20, 30, 39, 0.7) 8%, #141e27 18%, rgba(20, 30, 39, 0.7) 33%)'
-      : 'linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%)'
+      : 'linear-gradient(to right, #f6f6f6 8%, #f0f0f0 18%, #f6f6f6 33%)',
+
+    // farms
+    green500: '#00D110',
+    red100: '#FFFDFE',
+    red200: '#FFA8C7',
+    red500: '#D1004B',
+    grey100: '#f7f2f4',
+    grey200: '#F0E7EA',
+    grey300: '#e2cfd5',
+    grey400: '#AA8592',
+    grey500: '#80495D',
+    grey600: '#5B2639',
+    grey800: '#2D121B',
+    primaryLight: '#FFA8C7',
+    primaryMain: '#D1004B',
+    secondaryMain: '#00D110'
   }
 }
 
@@ -107,6 +123,21 @@ export function theme(darkMode: boolean): DefaultTheme {
 
     // media queries
     mediaWidth: mediaWidthTemplates,
+
+    // farms
+    borderRadius: 12,
+    siteWidth: 1200,
+    breakpointsMobile: 400,
+    spacing: {
+      1: 4,
+      2: 8,
+      3: 16,
+      4: 24,
+      5: 32,
+      6: 48,
+      7: 64
+    },
+    topBarSize: 72,
 
     // css snippets
     flexColumnNoWrap: css`

@@ -150,7 +150,7 @@ export default function RemoveV1Exchange({
   // redirect for invalid url params
   if (!validatedAddress || tokenAddress === AddressZero) {
     console.error('Invalid address in path', address)
-    return <Redirect to="/migrate/v1" />
+    return <Redirect to="/uniswap/migrate/v1" />
   }
 
   return (

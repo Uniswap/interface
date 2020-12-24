@@ -9,9 +9,9 @@ export function RedirectOldRemoveLiquidityPathStructure({
   }
 }: RouteComponentProps<{ tokens: string }>) {
   if (!OLD_PATH_STRUCTURE.test(tokens)) {
-    return <Redirect to="/pool" />
+    return <Redirect to="/uniswap/pool" />
   }
   const [currency0, currency1] = tokens.split('-')
 
-  return <Redirect to={`/remove/${currency0}/${currency1}`} />
+  return <Redirect to={`/uniswap/remove/${currency0}/${currency1}`} />
 }
