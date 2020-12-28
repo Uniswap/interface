@@ -4,10 +4,9 @@ import styled from 'styled-components'
 import { TYPE, CloseIcon } from 'theme'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed, AutoRow } from 'components/Row'
+import Row, { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { ArrowLeft, AlertTriangle } from 'react-feather'
-import { LinkIcon } from './styleds'
 import { lighten } from 'polished'
 import useTheme from 'hooks/useTheme'
 import { ButtonPrimary } from 'components/Button'
@@ -15,17 +14,14 @@ import { SectionBreak } from 'components/swap/styleds'
 import { useAddUserToken } from 'state/user/hooks'
 import { getEtherscanLink } from 'utils'
 import { useActiveWeb3React } from 'hooks'
-import { ExternalLink as Link } from '../../theme/components'
+import { ExternalLink } from '../../theme/components'
 import { useCombinedInactiveList } from 'state/lists/hooks'
 import ListLogo from 'components/ListLogo'
+import { PaddedColumn } from './styleds'
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-`
-
-const PaddedColumn = styled(AutoColumn)`
-  padding: 20px;
 `
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
@@ -37,15 +33,24 @@ const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
 const Checkbox = styled.input`
   border: 1px solid ${({ theme }) => theme.red3};
   height: 20px;
+  margin: 0;
+`
+
+const AddressText = styled(TYPE.blue)`
+  font-size: 12px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 10px;
+`}
 `
 
 interface ImportProps {
+  token: Token
   onBack: () => void
   handleCurrencySelect: (currency: Currency) => void
-  token: Token
 }
 
-export function Import({ onBack, handleCurrencySelect, token }: ImportProps) {
+export function Import({ token, onBack, handleCurrencySelect }: ImportProps) {
   const theme = useTheme()
 
   const { chainId } = useActiveWeb3React()
@@ -75,51 +80,66 @@ export function Import({ onBack, handleCurrencySelect, token }: ImportProps) {
             <AutoRow gap="5px" align="center">
               <CurrencyLogo currency={token} size={'24px'} />
               <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
-              <Link href={getEtherscanLink(chainId ?? 1, token.address, 'address')}>
-                <LinkIcon style={{ cursor: 'pointer', marginLeft: '0' }} />
-              </Link>
-            </AutoRow>
-            {list !== undefined ? (
-              <RowFixed>
-                {list.logoURI && <ListLogo logoURI={list.logoURI} size="12px" />}
-                <TYPE.small ml="10px" color={theme.text3}>
-                  Found via {list.name}
-                </TYPE.small>
-              </RowFixed>
-            ) : (
-              <WarningWrapper borderRadius="4px" padding="4px" highWarning={true}>
+              {list !== undefined ? (
                 <RowFixed>
-                  <AlertTriangle stroke={theme.red3} size="10px" />
-                  <TYPE.body color={theme.red3} ml="4px" fontSize="10px" fontWeight={500}>
-                    Unkown Source
-                  </TYPE.body>
+                  {list.logoURI && <ListLogo logoURI={list.logoURI} size="12px" />}
+                  <TYPE.small ml="10px" color={theme.text3}>
+                    Found via {list.name}
+                  </TYPE.small>
                 </RowFixed>
-              </WarningWrapper>
+              ) : (
+                <WarningWrapper borderRadius="4px" padding="4px" highWarning={true}>
+                  <RowFixed>
+                    <AlertTriangle stroke={theme.red3} size="10px" />
+                    <TYPE.body color={theme.red3} ml="4px" fontSize="10px" fontWeight={500}>
+                      Unkown Source
+                    </TYPE.body>
+                  </RowFixed>
+                </WarningWrapper>
+              )}
+            </AutoRow>
+            {chainId && (
+              <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+                <AddressText>{token.address}</AddressText>
+              </ExternalLink>
             )}
           </AutoColumn>
         </OutlineCard>
-        <WarningWrapper borderRadius="20px" width="100%" highWarning={!list}>
-          <AutoColumn gap="sm">
-            <TYPE.body color={!list ? theme.red3 : theme.yellow2} ml="4px" fontSize="16px" fontWeight={500}>
-              This interface can load arbitrary tokens by token addresses. Please take extra caution and do your
-              research when interacting with arbitrary ERC20 tokens.
-            </TYPE.body>
-            <TYPE.body color={!list ? theme.red3 : theme.yellow2} ml="4px" fontSize="16px" fontWeight={500}>
-              If you purchase an arbitrary token, you may be unable to sell it back.
-            </TYPE.body>
-            <RowFixed style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
-              <Checkbox
-                name="confirmed"
-                type="checkbox"
-                checked={confirmed}
-                onChange={() => setConfirmed(!confirmed)}
-              />
-              <TYPE.body color={!list ? theme.red3 : theme.yellow2} ml="4px" fontSize="16px" fontWeight={500}>
-                I understand
+        <Card bg={theme.bg3}>
+          <AutoColumn gap="md" justify="center">
+            <AlertTriangle stroke={list ? theme.yellow2 : theme.red1} size="32px" />
+            <TYPE.largeHeader color={list ? theme.text1 : theme.red1}>
+              {list ? 'Custom Token' : 'Unknown Token'}
+            </TYPE.largeHeader>
+            {list ? (
+              <TYPE.body>
+                You are importing a token from the <ExternalLink href={''}>{list.name}</ExternalLink> list.
               </TYPE.body>
-            </RowFixed>
+            ) : (
+              <TYPE.body>This interface can load arbitrary tokens by token addresses.</TYPE.body>
+            )}
+            <TYPE.body>
+              Please take extra caution and do your research when interacting with imported ERC20 tokens.
+            </TYPE.body>
+            <TYPE.body fontWeight={600} color={list ? theme.text1 : theme.red1}>
+              If you purchase an imported token, you may be unable to sell it back.
+            </TYPE.body>
+            <Row>
+              <RowFixed style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
+                <Checkbox
+                  name="confirmed"
+                  type="checkbox"
+                  checked={confirmed}
+                  onChange={() => setConfirmed(!confirmed)}
+                />
+                <TYPE.body ml="10px" fontSize="16px" fontWeight={500}>
+                  I understand
+                </TYPE.body>
+              </RowFixed>
+            </Row>
             <ButtonPrimary
               disabled={!confirmed}
+              altDisabledStyle={true}
               borderRadius="20px"
               padding="10px 1rem"
               onClick={() => {
@@ -130,7 +150,7 @@ export function Import({ onBack, handleCurrencySelect, token }: ImportProps) {
               Import
             </ButtonPrimary>
           </AutoColumn>
-        </WarningWrapper>
+        </Card>
       </PaddedColumn>
     </Wrapper>
   )

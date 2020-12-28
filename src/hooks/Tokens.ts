@@ -55,6 +55,16 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
   return useTokensFromMap(inactiveTokensMap, false)
 }
 
+export function useIsTokenActive(token: Token | undefined | null): boolean {
+  const activeTokens = useAllTokens()
+
+  if (!activeTokens || !token) {
+    return false
+  }
+
+  return !!activeTokens[token.address]
+}
+
 // used to detect extra search results
 export function useFoundOnInactiveList(searchQuery: string): Token[] | undefined {
   const { chainId } = useActiveWeb3React()

@@ -304,18 +304,14 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     <Column style={{ width: '100%', flex: '1 1' }}>
       <PaddedColumn>
         <RowBetween>
-          <div>
-            <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
-          </div>
+          <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
           <Text fontWeight={500} fontSize={20}>
             Manage Lists
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>
-
       <Separator />
-
       <PaddedColumn gap="14px">
         <Text fontWeight={600}>
           Add a list{' '}

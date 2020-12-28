@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import { ExternalLink } from 'react-feather'
 
 export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -18,13 +17,6 @@ export const StyledMenu = styled.div`
   align-items: center;
   position: relative;
   border: none;
-`
-
-export const LinkIcon = styled(ExternalLink)`
-  height: 16px;
-  width: 18px;
-  margin-left: 10px;
-  stroke: ${({ theme }) => theme.blue1};
 `
 
 export const PopoverContainer = styled.div<{ show: boolean }>`
@@ -53,8 +45,7 @@ export const FadedSpan = styled(RowFixed)`
 `
 
 export const PaddedColumn = styled(AutoColumn)`
-  padding: 20px;
-  padding-bottom: 12px;
+  padding: 24px;
 `
 
 export const MenuItem = styled(RowBetween)`

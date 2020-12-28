@@ -17,7 +17,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken, useFoundOnInactiveList, useIsUserAddedToken } from '../../hooks/Tokens'
 import { CloseIcon, TYPE, ButtonText } from '../../theme'
 import { isAddress } from '../../utils'
-import { StyledMenu } from './styleds'
 import Column, { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween, RowFixed } from '../Row'
@@ -29,25 +28,30 @@ import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { PlusCircle, List } from 'react-feather'
-import { ButtonDropdownGrey } from '../Button'
 import styled from 'styled-components'
 import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import TLLogo from '../../assets/images/token-list-logo.png'
-import Card, { GreyCard } from 'components/Card'
-import { Import } from './Import'
+import Card, { OutlineCard } from 'components/Card'
 import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
 
-const MenuWrapper = styled.div`
+const ContentWrapper = styled(Column)`
+  width: 100%;
+  flex: 1 1;
+  position: relative;
+  padding-bottom: 80px;
+`
+
+const Footer = styled.div`
   position: absolute;
-  top: 74px;
-  right: 0;
-  background: ${({ theme }) => theme.bg1};
-  box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 0px 1px rgba(0, 0, 0, 0.04);
-  border-radius: 12px;
-  z-index: 4;
+  width: 100%;
+  bottom: 0;
+  border-radius: 20px;
+  padding: 20px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-color: ${({ theme }) => theme.bg2};
 `
 
 const IconWrapper = styled.div`
@@ -55,15 +59,7 @@ const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
   & > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
-`
-
-const MenuItem = styled(ButtonText)`
-  background: ${({ theme }) => theme.bg3};
-  :hover {
-    opacity: 0.8;
-    cursor: pointer;
+    stroke: ${({ theme }) => theme.blue1};
   }
 `
 
@@ -83,7 +79,10 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
-  onChangeList: () => void
+  showManageListView: () => void
+  showManageTokensView: () => void
+  showImportView: () => void
+  setImportToken: (token: Token) => void
 }
 
 export function CurrencySearch({
@@ -93,7 +92,10 @@ export function CurrencySearch({
   showCommonBases,
   onDismiss,
   isOpen,
-  onChangeList
+  showManageListView,
+  showManageTokensView,
+  showImportView,
+  setImportToken
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -103,7 +105,7 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
   const fixedImportList = useRef<FixedSizeList>()
 
-  const [searchQuery, setSearchQuery] = useState<string>('YFI')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
@@ -198,26 +200,16 @@ export function CurrencySearch({
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
 
-  const [showImport, setShowImport] = useState(true)
-  const [importToken, setImportToken] = useState<Token | undefined>()
-
   const ImportDataRow = useCallback(
     ({ data, index, style }: { data: Token[]; index: number; style: CSSProperties }) => {
       const token: Token = data[index]
-      return <ImportRow token={token} style={style} setShowImport={setShowImport} setImportToken={setImportToken} />
+      return <ImportRow token={token} style={style} showImportView={showImportView} setImportToken={setImportToken} />
     },
-    []
+    [setImportToken, showImportView]
   )
 
-  // UI for token import
-  if (showImport && importToken) {
-    return (
-      <Import onBack={() => setShowImport(false)} token={importToken} handleCurrencySelect={handleCurrencySelect} />
-    )
-  }
-
   return (
-    <Column style={{ width: '100%', flex: '1 1' }}>
+    <ContentWrapper>
       <PaddedColumn gap="14px">
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
@@ -236,37 +228,6 @@ export function CurrencySearch({
             onChange={handleInput}
             onKeyDown={handleEnter}
           />
-          <StyledMenu ref={node as any}>
-            <ButtonDropdownGrey width="60px" ml="10px" onClick={toggle} />
-            {open && (
-              <MenuWrapper>
-                <GreyCard>
-                  <AutoColumn gap="md">
-                    <MenuItem>
-                      <RowFixed>
-                        <IconWrapper>
-                          <PlusCircle />
-                        </IconWrapper>
-                        <TYPE.body ml="10px" style={{ whiteSpace: 'nowrap' }}>
-                          Import Token
-                        </TYPE.body>
-                      </RowFixed>
-                    </MenuItem>
-                    <MenuItem onClick={onChangeList}>
-                      <RowFixed>
-                        <IconWrapper>
-                          <List />
-                        </IconWrapper>
-                        <TYPE.body ml="10px" style={{ whiteSpace: 'nowrap' }}>
-                          Manage Lists
-                        </TYPE.body>
-                      </RowFixed>
-                    </MenuItem>
-                  </AutoColumn>
-                </GreyCard>
-              </MenuWrapper>
-            )}
-          </StyledMenu>
         </Row>
         {showCommonBases && (
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
@@ -281,7 +242,7 @@ export function CurrencySearch({
       <Separator />
       {searchToken && !searchTokenIsAdded ? (
         <Wrapper>
-          <ImportRow token={searchToken} setShowImport={setShowImport} setImportToken={setImportToken} />
+          <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Wrapper>
       ) : filteredSortedTokens?.length > 0 ? (
         <div style={{ flex: '1' }}>
@@ -302,6 +263,11 @@ export function CurrencySearch({
       ) : inactiveTokens && inactiveTokens.length > 0 ? (
         <Wrapper>
           <AutoColumn>
+            <Card paddingTop="0 !important;">
+              <TYPE.main color={theme.text3} textAlign="center">
+                No results found in active lists.
+              </TYPE.main>
+            </Card>
             <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="6px 8px">
               <RowBetween>
                 <TYPE.main fontWeight={500}>Showing expanded results via</TYPE.main>
@@ -311,7 +277,7 @@ export function CurrencySearch({
               </RowBetween>
             </Card>
           </AutoColumn>
-          <div style={{ flex: '1', height: '100%' }}>
+          <div style={{ flex: '1', height: '100%', paddingBottom: '40px' }}>
             <AutoSizer disableWidth>
               {({ height }) => (
                 <FixedSizeList
@@ -333,6 +299,34 @@ export function CurrencySearch({
           <TYPE.main>No results</TYPE.main>
         </Wrapper>
       )}
-    </Column>
+      <Footer>
+        <RowBetween width="100%">
+          <OutlineCard padding="8px 20px" width="48%">
+            <ButtonText onClick={showManageTokensView}>
+              <RowFixed>
+                <IconWrapper>
+                  <PlusCircle size="16px" />
+                </IconWrapper>
+                <TYPE.body ml="6px" color={theme.blue1}>
+                  Import Token
+                </TYPE.body>
+              </RowFixed>
+            </ButtonText>
+          </OutlineCard>
+          <OutlineCard padding="8px 20px" width="48%">
+            <ButtonText onClick={showManageListView}>
+              <RowFixed>
+                <IconWrapper>
+                  <List size="16px" />
+                </IconWrapper>
+                <TYPE.body ml="6px" color={theme.blue1}>
+                  Manage Lists
+                </TYPE.body>
+              </RowFixed>
+            </ButtonText>
+          </OutlineCard>
+        </RowBetween>
+      </Footer>
+    </ContentWrapper>
   )
 }

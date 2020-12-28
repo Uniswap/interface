@@ -10,6 +10,8 @@ import { useCombinedInactiveList } from 'state/lists/hooks'
 import useTheme from 'hooks/useTheme'
 import { ButtonPrimary } from 'components/Button'
 import styled from 'styled-components'
+import { useIsUserAddedToken, useIsTokenActive } from 'hooks/Tokens'
+import { CheckCircle } from 'react-feather'
 
 const TokenSection = styled.div`
   background-color: ${({ theme }) => theme.bg1};
@@ -17,23 +19,35 @@ const TokenSection = styled.div`
   height: 56px;
 `
 
+const CheckIcon = styled(CheckCircle)`
+  height: 16px;
+  width: 16px;
+  margin-right: 6px;
+  stroke: ${({ theme }) => theme.green1};
+`
+
 export default function ImportRow({
   token,
   style,
-  setShowImport,
+  showImportView,
   setImportToken
 }: {
   token: Token
   style?: CSSProperties
-  setShowImport: (val: boolean) => void
+  showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
+  // gloabls
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 
+  // check if token comes from list
   const inactiveTokenList = useCombinedInactiveList()
-
   const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
+
+  // check if already active on list or local storage tokens
+  const isAdded = useIsUserAddedToken(token)
+  const isActive = useIsTokenActive(token)
 
   return (
     <TokenSection style={style}>
@@ -54,18 +68,25 @@ export default function ImportRow({
             )}
           </RowFixed>
         </AutoColumn>
-        <ButtonPrimary
-          width="fit-content"
-          padding="6px 8px"
-          fontWeight={500}
-          fontSize="12px"
-          onClick={() => {
-            setImportToken(token)
-            setShowImport(true)
-          }}
-        >
-          + Import
-        </ButtonPrimary>
+        {!isActive && !isAdded ? (
+          <ButtonPrimary
+            width="fit-content"
+            padding="6px 8px"
+            fontWeight={500}
+            fontSize="12px"
+            onClick={() => {
+              setImportToken && setImportToken(token)
+              showImportView()
+            }}
+          >
+            + Import
+          </ButtonPrimary>
+        ) : (
+          <RowFixed>
+            <CheckIcon />
+            <TYPE.main color={theme.green1}>Active</TYPE.main>
+          </RowFixed>
+        )}
       </RowBetween>
     </TokenSection>
   )
