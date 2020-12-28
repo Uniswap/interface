@@ -232,12 +232,14 @@ export function CurrencySearch({
         {showCommonBases && (
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
-        <RowBetween>
-          <Text fontSize={14} fontWeight={500}>
-            Token Name
-          </Text>
-          <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
-        </RowBetween>
+        {filteredSortedTokens.length > 0 && (
+          <RowBetween>
+            <Text fontSize={14} fontWeight={500}>
+              Token Name
+            </Text>
+            <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
+          </RowBetween>
+        )}
       </PaddedColumn>
       <Separator />
       {searchToken && !searchTokenIsAdded ? (
