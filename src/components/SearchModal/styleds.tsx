@@ -45,7 +45,7 @@ export const FadedSpan = styled(RowFixed)`
 `
 
 export const PaddedColumn = styled(AutoColumn)`
-  padding: 24px;
+  padding: 20px;
 `
 
 export const MenuItem = styled(RowBetween)`

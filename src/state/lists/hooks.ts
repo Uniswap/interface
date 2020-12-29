@@ -91,7 +91,7 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAd
       try {
         // need priority here for addresses
         // @TODO
-        const newTokens = Object.assign(listToTokenMap(current))
+        const newTokens = listToTokenMap(current)
         return {
           1: { ...allTokens[1], ...newTokens[1] },
           3: { ...allTokens[3], ...newTokens[3] },

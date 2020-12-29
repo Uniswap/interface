@@ -9,6 +9,7 @@ import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
 import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
+import { useAllInactiveTokens } from 'hooks/Tokens'
 
 export default function Updater(): null {
   const { library } = useActiveWeb3React()
@@ -17,6 +18,9 @@ export default function Updater(): null {
   const activeListUrls = useActiveListUrls()
 
   const isWindowVisible = useIsWindowVisible()
+
+  // initiate loading
+  useAllInactiveTokens()
 
   const fetchList = useFetchListCallback()
 

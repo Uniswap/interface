@@ -2,9 +2,7 @@ import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
 import Column from 'components/Column'
 import { PaddedColumn, Separator, SearchInput } from './styleds'
 import Row, { RowBetween, RowFixed } from 'components/Row'
-import { ArrowLeft } from 'react-feather'
-import { Text } from 'rebass'
-import { CloseIcon, TYPE, ExternalLinkIcon, TrashIcon, ButtonText } from 'theme'
+import { TYPE, ExternalLinkIcon, TrashIcon, ButtonText } from 'theme'
 import { useToken } from 'hooks/Tokens'
 import styled from 'styled-components'
 import { useUserAddedTokens, useRemoveUserAddedToken } from 'state/user/hooks'
@@ -17,7 +15,9 @@ import ImportRow from './ImportRow'
 
 const Wrapper = styled.div`
   width: 100%;
+  height: calc(100% - 80px);
   position: relative;
+  padding-bottom: 80px;
 `
 
 const Footer = styled.div`
@@ -32,14 +32,10 @@ const Footer = styled.div`
   text-align: center;
 `
 
-export default function ManageLocal({
-  onDismiss,
-  onBack,
+export default function ManageTokens({
   showImportView,
   setImportToken
 }: {
-  onDismiss: () => void
-  onBack: () => void
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
@@ -94,18 +90,7 @@ export default function ManageLocal({
   return (
     <Wrapper>
       <Column style={{ width: '100%', flex: '1 1' }}>
-        <PaddedColumn>
-          <RowBetween>
-            <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
-            <Text fontWeight={500} fontSize={20}>
-              Import Tokens
-            </Text>
-            <CloseIcon onClick={onDismiss} />
-          </RowBetween>
-        </PaddedColumn>
-        <Separator />
         <PaddedColumn gap="14px">
-          <Text fontWeight={600}>Add a token</Text>
           <Row>
             <SearchInput
               type="text"

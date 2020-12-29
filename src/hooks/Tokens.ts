@@ -71,7 +71,7 @@ export function useFoundOnInactiveList(searchQuery: string): Token[] | undefined
   const inactiveTokens = useAllInactiveTokens()
 
   return useMemo(() => {
-    if (!chainId) {
+    if (!chainId || searchQuery === '') {
       return undefined
     } else {
       const tokens = filterTokens(Object.values(inactiveTokens), searchQuery)

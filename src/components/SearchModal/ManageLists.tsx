@@ -1,9 +1,8 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
-import { ArrowLeft, Settings } from 'react-feather'
+import { Settings } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
-import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -12,7 +11,7 @@ import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
 import { useIsListActive } from '../../state/lists/hooks'
-import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
@@ -20,12 +19,16 @@ import { ButtonSecondary, ButtonEmpty } from '../Button'
 
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
-import QuestionHelper from '../QuestionHelper'
-import Row, { RowBetween, RowFixed } from '../Row'
+import Row, { RowFixed } from '../Row'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 import { useListColor } from 'hooks/useColor'
 import useTheme from '../../hooks/useTheme'
 import ListToggle from '../Toggle/ListToggle'
+
+const Wrapper = styled(Column)`
+  width: 100%;
+  height: 100%;
+`
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;
@@ -214,11 +217,12 @@ const AddListButton = styled(ButtonSecondary)`
 
 const ListContainer = styled.div`
   padding: 1rem;
-  flex: 1;
+  height: 100%;
   overflow: auto;
+  padding-bottom: 80px;
 `
 
-export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
+export function ManageLists({ onBack }: { onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
   const dispatch = useDispatch<AppDispatch>()
@@ -301,22 +305,8 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   }, [lists])
 
   return (
-    <Column style={{ width: '100%', flex: '1 1' }}>
-      <PaddedColumn>
-        <RowBetween>
-          <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
-          <Text fontWeight={500} fontSize={20}>
-            Manage Lists
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-      </PaddedColumn>
-      <Separator />
+    <Wrapper>
       <PaddedColumn gap="14px">
-        <Text fontWeight={600}>
-          Add a list{' '}
-          <QuestionHelper text="Token lists are an open specification for lists of ERC20 tokens. You can use any token list by entering its URL below. Beware that third party token lists can contain fake or malicious ERC20 tokens." />
-        </Text>
         <Row>
           <SearchInput
             type="text"
@@ -325,7 +315,6 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             value={listUrlInput}
             onChange={handleInput}
             onKeyDown={handleEnterKey}
-            style={{ height: '2.75rem', borderRadius: 12, padding: '12px' }}
           />
           <AddListButton onClick={handleAddList} disabled={!validUrl}>
             Add
@@ -337,7 +326,6 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           </TYPE.error>
         ) : null}
       </PaddedColumn>
-
       <Separator />
       <ListContainer>
         <AutoColumn gap="md">
@@ -346,6 +334,6 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           ))}
         </AutoColumn>
       </ListContainer>
-    </Column>
+    </Wrapper>
   )
 }

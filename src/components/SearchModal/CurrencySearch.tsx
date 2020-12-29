@@ -1,23 +1,14 @@
 import { Currency, ETHER, Token } from '@uniswap/sdk'
-import React, {
-  KeyboardEvent,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  CSSProperties
-} from 'react'
+import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken, useFoundOnInactiveList, useIsUserAddedToken } from '../../hooks/Tokens'
-import { CloseIcon, TYPE, ButtonText } from '../../theme'
+import { useAllTokens, useToken, useIsUserAddedToken } from '../../hooks/Tokens'
+import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
-import Column, { AutoColumn } from '../Column'
+import Column from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
@@ -27,14 +18,13 @@ import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { PlusCircle, List } from 'react-feather'
 import styled from 'styled-components'
 import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import TLLogo from '../../assets/images/token-list-logo.png'
-import Card, { OutlineCard } from 'components/Card'
 import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
+import ExpandedSearch from './ExpandedSearch'
+import { Edit } from 'react-feather'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -54,22 +44,9 @@ const Footer = styled.div`
   background-color: ${({ theme }) => theme.bg2};
 `
 
-const IconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  & > * {
-    stroke: ${({ theme }) => theme.blue1};
-  }
-`
-
 const Wrapper = styled.div`
   padding: 20px;
   height: 100%;
-`
-
-const WrappedLogo = styled.img`
-  height: 20px;
 `
 
 interface CurrencySearchProps {
@@ -79,8 +56,7 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
-  showManageListView: () => void
-  showManageTokensView: () => void
+  showManageView: () => void
   showImportView: () => void
   setImportToken: (token: Token) => void
 }
@@ -92,8 +68,7 @@ export function CurrencySearch({
   showCommonBases,
   onDismiss,
   isOpen,
-  showManageListView,
-  showManageTokensView,
+  showManageView,
   showImportView,
   setImportToken
 }: CurrencySearchProps) {
@@ -103,13 +78,12 @@ export function CurrencySearch({
 
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
-  const fixedImportList = useRef<FixedSizeList>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
-  const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
+  // const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
 
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
@@ -200,13 +174,7 @@ export function CurrencySearch({
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
 
-  const ImportDataRow = useCallback(
-    ({ data, index, style }: { data: Token[]; index: number; style: CSSProperties }) => {
-      const token: Token = data[index]
-      return <ImportRow token={token} style={style} showImportView={showImportView} setImportToken={setImportToken} />
-    },
-    [setImportToken, showImportView]
-  )
+  const [showExpanded, setShowExpanded] = useState(false)
 
   return (
     <ContentWrapper>
@@ -262,72 +230,29 @@ export function CurrencySearch({
             )}
           </AutoSizer>
         </div>
-      ) : inactiveTokens && inactiveTokens.length > 0 ? (
-        <Wrapper>
-          <AutoColumn>
-            <Card paddingTop="0 !important;">
-              <TYPE.main color={theme.text3} textAlign="center">
-                No results found in active lists.
-              </TYPE.main>
-            </Card>
-            <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="6px 8px">
-              <RowBetween>
-                <TYPE.main fontWeight={500}>Showing expanded results via</TYPE.main>
-                <Card borderRadius="8px" backgroundColor={theme.bg3} padding="4px 6px" width="fit-content">
-                  <WrappedLogo src={TLLogo} alt="token lists" />
-                </Card>
-              </RowBetween>
-            </Card>
-          </AutoColumn>
-          <div style={{ flex: '1', height: '100%', paddingBottom: '40px' }}>
-            <AutoSizer disableWidth>
-              {({ height }) => (
-                <FixedSizeList
-                  height={height}
-                  ref={fixedImportList as any}
-                  width="100%"
-                  itemData={inactiveTokens}
-                  itemCount={inactiveTokens.length}
-                  itemSize={56}
-                >
-                  {ImportDataRow}
-                </FixedSizeList>
-              )}
-            </AutoSizer>
-          </div>
-        </Wrapper>
       ) : (
-        <Wrapper>
-          <TYPE.main>No results</TYPE.main>
-        </Wrapper>
+        <Column style={{ padding: '20px', height: '100%' }}>
+          <TYPE.main color={theme.text3} textAlign="center" mb="20px">
+            No results found in active lists.
+          </TYPE.main>
+          {showExpanded ? (
+            <ExpandedSearch searchQuery={searchQuery} showImportView={showImportView} setImportToken={setImportToken} />
+          ) : (
+            <ButtonText onClick={() => setShowExpanded(true)}>+ Expand search</ButtonText>
+          )}
+        </Column>
       )}
       <Footer>
-        <RowBetween width="100%">
-          <OutlineCard padding="8px 20px" width="48%">
-            <ButtonText onClick={showManageTokensView}>
-              <RowFixed>
-                <IconWrapper>
-                  <PlusCircle size="16px" />
-                </IconWrapper>
-                <TYPE.body ml="6px" color={theme.blue1}>
-                  Import Token
-                </TYPE.body>
-              </RowFixed>
-            </ButtonText>
-          </OutlineCard>
-          <OutlineCard padding="8px 20px" width="48%">
-            <ButtonText onClick={showManageListView}>
-              <RowFixed>
-                <IconWrapper>
-                  <List size="16px" />
-                </IconWrapper>
-                <TYPE.body ml="6px" color={theme.blue1}>
-                  Manage Lists
-                </TYPE.body>
-              </RowFixed>
-            </ButtonText>
-          </OutlineCard>
-        </RowBetween>
+        <Row justify="center">
+          <ButtonText onClick={showManageView} color={theme.blue1}>
+            <RowFixed>
+              <IconWrapper size="16px" marginRight="6px">
+                <Edit />
+              </IconWrapper>
+              <TYPE.main color={theme.blue1}>Manage</TYPE.main>
+            </RowFixed>
+          </ButtonText>
+        </Row>
       </Footer>
     </ContentWrapper>
   )
