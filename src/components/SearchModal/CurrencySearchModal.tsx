@@ -69,15 +69,14 @@ export default function CurrencySearchModal({
   // for token import view
   const prevView = usePrevious(modalView)
 
+  // used for import dlow
   const [importToken, setImportToken] = useState<Token | undefined>()
 
+  // change min height if not searching
+  const minHeight = modalView === CurrencyModalView.search ? 80 : 40
+
   return (
-    <Modal
-      isOpen={isOpen}
-      onDismiss={onDismiss}
-      maxHeight={80}
-      minHeight={modalView === CurrencyModalView.listManage ? 40 : 80}
-    >
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
       {modalView === CurrencyModalView.listManage ? (
         <ListSelect onDismiss={onDismiss} onBack={handleClickBack} />
       ) : modalView === CurrencyModalView.search ? (
