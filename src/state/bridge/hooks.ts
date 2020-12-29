@@ -80,7 +80,7 @@ export function useDerivedBridgeInfo(
   }
 
   if (minMaxAmount && Number(typedValue) < Number(minMaxAmount.minAmount)) {
-    inputError = inputError ?? 'Below minimum limit'
+    inputError = inputError ?? `Below minimum limit (${minMaxAmount.minAmount})`
   }
 
   if (inputAmount && currencyBalances?.[Field.INPUT]?.lessThan(inputAmount)) {
@@ -88,7 +88,7 @@ export function useDerivedBridgeInfo(
   }
 
   if (minMaxAmount && Number(typedValue) > Number(minMaxAmount.maxAmount)) {
-    inputError = inputError ?? 'Above maximum limit'
+    inputError = inputError ?? `Above maximum limit (${minMaxAmount.maxAmount})`
   }
 
   return {
