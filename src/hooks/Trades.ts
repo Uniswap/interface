@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, Pair, Token, Trade, JSBI, Percent } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
@@ -78,6 +78,15 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   )
 }
 
+const OUTPUT_PERCENT_DIFFERENCE_MAX_BIPS = 50 // 0.5% difference at most in output amount
+const ONE_IN_BIPS = 10000
+
+// no hop output amount must be > 99.5% of trade with hops output amount
+const PERCENT_THRESHOLD = new Percent(
+  JSBI.BigInt(ONE_IN_BIPS - OUTPUT_PERCENT_DIFFERENCE_MAX_BIPS),
+  JSBI.BigInt(ONE_IN_BIPS)
+)
+
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
@@ -85,9 +94,20 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-      return (
+      const trade =
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
-      )
+      const tradeFixed =
+        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ?? null
+
+      // if output amount difference is within threshold, return single hop trade instead - only check if valid trades
+      if (tradeFixed && trade) {
+        const percent = new Percent(tradeFixed.outputAmount.raw, trade.outputAmount.raw)
+        if (percent.greaterThan(PERCENT_THRESHOLD)) {
+          return tradeFixed
+        }
+      }
+
+      return trade
     }
     return null
   }, [allowedPairs, currencyAmountIn, currencyOut])
@@ -101,10 +121,23 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
 
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-      return (
+      const trade =
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
         null
-      )
+
+      const tradeFixed =
+        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
+        null
+
+      // if output amount difference is within threshold, return single hop trade instead - only check if valid trades
+      if (tradeFixed && trade) {
+        const percent = new Percent(tradeFixed.outputAmount.raw, trade.outputAmount.raw)
+        if (percent.greaterThan(PERCENT_THRESHOLD)) {
+          return tradeFixed
+        }
+      }
+
+      return trade
     }
     return null
   }, [allowedPairs, currencyIn, currencyAmountOut])
