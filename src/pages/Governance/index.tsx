@@ -5,14 +5,14 @@ import { TYPE } from '../../theme'
 import { Flex, Text } from 'rebass'
 
 import styled, { ThemeContext } from 'styled-components'
-import { AutoRowCleanGap, RowBetween } from '../../components/Row'
+import { RowBetween } from '../../components/Row'
 import { ButtonPrimary, ButtonWithLink } from '../../components/Button'
 import { useTranslation } from 'react-i18next'
 import { LightCard } from '../../components/Card'
 
 import { Info } from 'react-feather'
 import SearchInputWithIcon from '../../components/SearchModal/styleds'
-import { GovernanceCard } from './styles'
+import Container from './Container'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -51,15 +51,8 @@ export default function Governance() {
             </ResponsiveButtonPrimary>
           </TitleRow>
         </AutoColumn>
-        <AutoRowCleanGap gap={8}>
-          <GovernanceCard />
-          <GovernanceCard />
-          <GovernanceCard />
-          <GovernanceCard />
-          <GovernanceCard />
-          <GovernanceCard />
-        </AutoRowCleanGap>
-        <ButtonWithLink link={'swapr.eth'} text={'GOVERNANCE STATISTICS'} />
+        <Container />
+        <ButtonWithLink link={'https://swapr.eth.link'} text={'GOVERNANCE STATISTICS'} />
         <LightCard>
           <AutoColumn gap="md">
             <Flex>

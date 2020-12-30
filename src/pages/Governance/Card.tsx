@@ -23,17 +23,21 @@ const LightCardWrap = styled(Card)`
   `};
 `
 
-const StyledText = styled(Text)`
-  text-wrap: none;
-`
-export const GovernanceCard = () => {
+const StyledText = styled(Text)``
+
+interface CardProps {
+  name: string
+  pairs: number
+  proposals?: number
+}
+
+export const GovernanceCard = ({ name, pairs, proposals }: CardProps) => {
   const theme = useContext(ThemeContext)
   const shittyCounter = 2
   return (
     <LightCardWrap>
       <AutoRow align="flex-end" justify="center">
         {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" />}
-
         <Text
           width={shittyCounter !== 2 ? '100%' : 'auto'}
           marginTop={shittyCounter !== 2 ? '8px' : '0'}
@@ -42,7 +46,7 @@ export const GovernanceCard = () => {
           fontSize="16px"
           lineHeight="20px"
         >
-          DXD
+          {name}
         </Text>
       </AutoRow>
       <AutoRow align="flex-start" justify="center">
@@ -55,7 +59,8 @@ export const GovernanceCard = () => {
           lineHeight="11px"
           textAlign="center"
         >
-          5 PAIRS | 3 PROPOSALS
+          {pairs + (pairs > 1 ? ' PAIRS' : ' PAIR')}
+          {proposals && ' | ' + proposals + (proposals > 1 ? ' PROPOSALS' : ' PROPOSAL')}
         </StyledText>
       </AutoRow>
     </LightCardWrap>
