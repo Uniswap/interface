@@ -24,7 +24,7 @@ const RightIconWrapper = styled.div`
   position: absolute;
   top: 125px;
   left: calc(50% + 230px);
-  z-index: 0;
+  z-index: 1;
 `
 
 export function LeftFlashIcon() {
