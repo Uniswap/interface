@@ -39,13 +39,10 @@ const ContentWrapper = styled(Column)`
   width: 100%;
   flex: 1 1;
   position: relative;
-  padding-bottom: 80px;
 `
 
 const Footer = styled.div`
-  position: absolute;
   width: 100%;
-  bottom: 0;
   border-radius: 20px;
   padding: 20px;
   border-top-left-radius: 0;
@@ -117,23 +114,37 @@ export function CurrencySearch({
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
-    // if (isAddressSearch) return searchToken ? [searchToken] : []
     return filterTokens(Object.values(allTokens), searchQuery)
   }, [allTokens, searchQuery])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
-    // if (searchToken) return [searchToken]
     const sorted = filteredTokens.sort(tokenComparator)
     const symbolMatch = searchQuery
       .toLowerCase()
       .split(/\s+/)
       .filter(s => s.length > 0)
-    if (symbolMatch.length > 1) return sorted
+
+    if (symbolMatch.length > 1) {
+      return sorted
+    }
 
     return [
       // sort any exact symbol matches first
       ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
-      ...sorted.filter(token => token.symbol?.toLowerCase() !== symbolMatch[0])
+
+      // sort by tokens whos symbols start with search substrng
+      ...sorted.filter(
+        token =>
+          token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
+          token.symbol?.toLowerCase() !== symbolMatch[0]
+      ),
+
+      // rest that dont match upove
+      ...sorted.filter(
+        token =>
+          !token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
+          token.symbol?.toLowerCase() !== symbolMatch[0]
+      )
     ]
   }, [filteredTokens, searchQuery, tokenComparator])
 

@@ -1,6 +1,19 @@
 // the Uniswap Default token list lives here
 export const DEFAULT_TOKEN_LIST_URL = 'tokens.uniswap.eth'
 
+/**
+ * sort priority for merging tokens
+ * lower number == higher priority
+ * lists not in list are sorted to bottom
+ */
+
+export const LIST_MERGE_PRIORITY: {
+  [url: string]: number
+} = {
+  [DEFAULT_TOKEN_LIST_URL]: 1
+}
+
+// all lists to load initially
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   DEFAULT_TOKEN_LIST_URL,
   // 't2crtokens.eth', // kleros
@@ -19,4 +32,5 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   'https://umaproject.org/uma.tokenlist.json'
 ]
 
+// lists to be turned 'on' initially
 export const DEFAULT_ACTIVE_LIST_URLS: string[] = [DEFAULT_TOKEN_LIST_URL]

@@ -39,6 +39,13 @@ export const PopoverContainer = styled.div<{ show: boolean }>`
   top: 80px;
 `
 
+export const TextDot = styled.div`
+  height: 3px;
+  width: 3px;
+  background-color: ${({ theme }) => theme.text2};
+  border-radius: 50%;
+`
+
 export const FadedSpan = styled(RowFixed)`
   color: ${({ theme }) => theme.primary1};
   font-size: 14px;

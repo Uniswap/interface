@@ -23,7 +23,7 @@ import ProgressSteps from '../../components/ProgressSteps'
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
+import { useCurrency, useDefaultTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -61,6 +61,14 @@ export default function Swap() {
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
+
+  // dismiss warning if all imported tokens are in default list
+  const defaultTokens = useDefaultTokens()
+  const importTokensNotInDefault =
+    urlLoadedTokens &&
+    urlLoadedTokens.filter((token: Token) => {
+      return !Boolean(token.address in defaultTokens)
+    }).length > 0
 
   const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -267,7 +275,7 @@ export default function Swap() {
   return (
     <>
       <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
+        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning && importTokensNotInDefault}
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />

@@ -12,6 +12,7 @@ import { getEtherscanLink, isAddress } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { OutlineCard } from 'components/Card'
 import ImportRow from './ImportRow'
+import { CurrencyModalView } from './CurrencySearchModal'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -33,10 +34,10 @@ const Footer = styled.div`
 `
 
 export default function ManageTokens({
-  showImportView,
+  setModalView,
   setImportToken
 }: {
-  showImportView: () => void
+  setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
 }) {
   const { chainId } = useActiveWeb3React()
@@ -106,7 +107,7 @@ export default function ManageTokens({
             <OutlineCard padding="1rem">
               <ImportRow
                 token={searchToken}
-                showImportView={showImportView}
+                showImportView={() => setModalView(CurrencyModalView.importToken)}
                 setImportToken={setImportToken}
                 style={{ height: 'fit-content' }}
               />

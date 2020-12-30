@@ -1,8 +1,10 @@
+import { DEFAULT_TOKEN_LIST_URL } from 'constants/lists'
 import { ChainId, Token } from '@uniswap/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
+import sortByListPriority from 'utils/listSort'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -85,25 +87,29 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAd
 
   return useMemo(() => {
     if (!urls) return EMPTY_LIST
-    return urls.reduce((allTokens, currentUrl) => {
-      const current = lists[currentUrl]?.current
-      if (!current) return allTokens
-      try {
-        // need priority here for addresses
-        // @TODO
-        const newTokens = listToTokenMap(current)
-        return {
-          1: { ...allTokens[1], ...newTokens[1] },
-          3: { ...allTokens[3], ...newTokens[3] },
-          4: { ...allTokens[4], ...newTokens[4] },
-          5: { ...allTokens[5], ...newTokens[5] },
-          42: { ...allTokens[42], ...newTokens[42] }
+
+    return urls
+      .slice()
+      .sort(sortByListPriority)
+      .reduce((allTokens, currentUrl) => {
+        const current = lists[currentUrl]?.current
+        if (!current) return allTokens
+        try {
+          // need priority here for addresses
+          // @TODO
+          const newTokens = Object.assign(listToTokenMap(current))
+          return {
+            1: { ...allTokens[1], ...newTokens[1] },
+            3: { ...allTokens[3], ...newTokens[3] },
+            4: { ...allTokens[4], ...newTokens[4] },
+            5: { ...allTokens[5], ...newTokens[5] },
+            42: { ...allTokens[42], ...newTokens[42] }
+          }
+        } catch (error) {
+          console.error('Could not show token list due to error', error)
+          return allTokens
         }
-      } catch (error) {
-        console.error('Could not show token list due to error', error)
-        return allTokens
-      }
-    }, EMPTY_LIST)
+      }, EMPTY_LIST)
   }, [lists, urls])
 }
 
@@ -139,4 +145,8 @@ export function useCombinedActiveList(): TokenAddressMap {
 export function useIsListActive(url: string): boolean {
   const allActiveLists = useActiveListUrls()
   return Boolean(allActiveLists?.includes(url))
+}
+
+export function useDefaultTokenList(): TokenAddressMap {
+  return useCombinedTokenMapFromUrls([DEFAULT_TOKEN_LIST_URL])
 }

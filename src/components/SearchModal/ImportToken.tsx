@@ -45,7 +45,7 @@ interface ImportProps {
   handleCurrencySelect: (currency: Currency) => void
 }
 
-export function Import({ token, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
+export function ImportToken({ token, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
   const theme = useTheme()
 
   const { chainId } = useActiveWeb3React()

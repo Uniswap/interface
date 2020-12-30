@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useMemo, useRef, useState, useEffect } from 'react'
-import { Settings, CheckCircle, AlertTriangle } from 'react-feather'
+import { Settings, CheckCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,11 +21,13 @@ import { ButtonEmpty, ButtonPrimary } from '../Button'
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
 import Row, { RowFixed, RowBetween } from '../Row'
-import { PaddedColumn, SearchInput, Separator, SeparatorDark, Checkbox } from './styleds'
+import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 import { useListColor } from 'hooks/useColor'
 import useTheme from '../../hooks/useTheme'
 import ListToggle from '../Toggle/ListToggle'
-import Card, { OutlineCard } from 'components/Card'
+import { OutlineCard } from 'components/Card'
+import { CurrencyModalView } from './CurrencySearchModal'
+import { DEFAULT_TOKEN_LIST_URL } from 'constants/lists'
 
 const Wrapper = styled(Column)`
   width: 100%;
@@ -73,14 +75,8 @@ const StyledTitleText = styled.div<{ active: boolean }>`
   color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
 `
 
-const StyledListUrlText = styled.div<{ active: boolean }>`
-  max-width: 160px;
-  opacity: 0.6;
-  margin-right: 0.5rem;
-  font-size: 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 500;
+const StyledListUrlText = styled(TYPE.main)<{ active: boolean }>`
+  font-size: 12px;
   color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
 `
 
@@ -92,29 +88,11 @@ const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
   border-radius: 20px;
 `
 
-function ListOrigin({ listUrl }: { listUrl: string }) {
-  const ensName = useMemo(() => parseENSAddress(listUrl)?.ensName, [listUrl])
-  const host = useMemo(() => {
-    if (ensName) return undefined
-    const lowerListUrl = listUrl.toLowerCase()
-    if (lowerListUrl.startsWith('ipfs://') || lowerListUrl.startsWith('ipns://')) {
-      return listUrl
-    }
-    try {
-      const url = new URL(listUrl)
-      return url.host
-    } catch (error) {
-      return undefined
-    }
-  }, [listUrl, ensName])
-  return <>{ensName ?? host}</>
-}
-
 function listUrlRowHTMLId(listUrl: string) {
   return `list-row-${listUrl.replace(/\./g, '-')}`
 }
 
-const ListRow = memo(function ListRow({ listUrl }: { listUrl: string; onBack: () => void }) {
+const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
@@ -176,8 +154,8 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string; onBack: ()
           <StyledTitleText active={isActive}>{list.name}</StyledTitleText>
         </Row>
         <RowFixed mt="4px">
-          <StyledListUrlText title={listUrl} active={isActive}>
-            <ListOrigin listUrl={listUrl} />
+          <StyledListUrlText active={isActive} mr="6px">
+            {list.tokens.length} tokens
           </StyledListUrlText>
           <StyledMenu ref={node as any}>
             <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
@@ -217,64 +195,36 @@ const ListContainer = styled.div`
   padding-bottom: 80px;
 `
 
-export function ManageLists({ onBack }: { onBack: () => void }) {
+export function ManageLists({
+  setModalView,
+  setImportList,
+  setListUrl
+}: {
+  setModalView: (view: CurrencyModalView) => void
+  setImportList: (list: TokenList) => void
+  setListUrl: (url: string) => void
+}) {
   const theme = useTheme()
 
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
-  const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-
-  const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
-  const [addError, setAddError] = useState<string | null>(null)
 
   const handleInput = useCallback(e => {
     setListUrlInput(e.target.value)
-    setAddError(null)
   }, [])
-  const fetchList = useFetchListCallback()
 
-  const handleAddList = useCallback(() => {
-    if (adding) return
-    setAddError(null)
-    fetchList(listUrlInput)
-      .then(() => {
-        setListUrlInput('')
-        ReactGA.event({
-          category: 'Lists',
-          action: 'Add List',
-          label: listUrlInput
-        })
-      })
-      .catch(error => {
-        ReactGA.event({
-          category: 'Lists',
-          action: 'Add List Failed',
-          label: listUrlInput
-        })
-        setAddError(error.message)
-        dispatch(removeList(listUrlInput))
-      })
-  }, [adding, dispatch, fetchList, listUrlInput])
+  const fetchList = useFetchListCallback()
 
   const validUrl: boolean = useMemo(() => {
     return uriToHttp(listUrlInput).length > 0 || Boolean(parseENSAddress(listUrlInput))
   }, [listUrlInput])
 
-  const handleEnterKey = useCallback(
-    e => {
-      if (validUrl && e.key === 'Enter') {
-        handleAddList()
-      }
-    },
-    [handleAddList, validUrl]
-  )
-
   const sortedLists = useMemo(() => {
     const listUrls = Object.keys(lists)
     return listUrls
       .filter(listUrl => {
-        return Boolean(lists[listUrl].current)
+        return Boolean(lists[listUrl].current) && !Boolean(listUrl === DEFAULT_TOKEN_LIST_URL)
       })
       .sort((u1, u2) => {
         const { current: l1 } = lists[u1]
@@ -303,81 +253,38 @@ export function ManageLists({ onBack }: { onBack: () => void }) {
 
   // temporary fetched list for import flow
   const [tempList, setTempList] = useState<TokenList>()
-  const isLoaded = Object.keys(lists).includes(listUrlInput)
+  const [addError, setAddError] = useState<string | undefined>()
 
   useEffect(() => {
     async function fetchTempList() {
       fetchList(listUrlInput, false)
         .then(list => setTempList(list))
-        .catch(() => console.log('error'))
+        .catch(() => setAddError('Error importing list'))
     }
+    // if valid url, fetch details for card
     if (validUrl) {
       fetchTempList()
     } else {
       setTempList(undefined)
+      listUrlInput !== '' && setAddError('Enter valid list location')
+    }
+
+    // reset error
+    if (listUrlInput === '') {
+      setAddError(undefined)
     }
   }, [fetchList, listUrlInput, validUrl])
 
-  // for list import UI
-  const [showImportView, setShowImportView] = useState(false)
-  const [confirmed, setConfirmed] = useState(false)
+  // check if list is already imported
+  const isImported = Object.keys(lists).includes(listUrlInput)
 
-  if (showImportView && tempList) {
-    return (
-      <Wrapper>
-        <PaddedColumn gap="md">
-          <Card bg={theme.bg3}>
-            <AutoColumn gap="md" justify="center">
-              <IconWrapper stroke={theme.red1} size="32px">
-                <AlertTriangle />
-              </IconWrapper>
-              <TYPE.largeHeader color={theme.red1}>Custom List</TYPE.largeHeader>
-              <TYPE.body>
-                Please take extra caution and do your research when interacting with imported lists.
-              </TYPE.body>
-              <TYPE.body fontWeight={600} color={theme.red1}>
-                By adding this list you are implicity trusting that the data is corerct.
-              </TYPE.body>
-              <TYPE.body>If you purchase a token form this list, you may be unable to sell it back.</TYPE.body>
-              <Row>
-                <RowFixed style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
-                  <Checkbox
-                    name="confirmed"
-                    type="checkbox"
-                    checked={confirmed}
-                    onChange={() => setConfirmed(!confirmed)}
-                  />
-                  <TYPE.body ml="10px" fontSize="16px" fontWeight={500}>
-                    I understand
-                  </TYPE.body>
-                </RowFixed>
-              </Row>
-              <ButtonPrimary
-                disabled={!confirmed}
-                altDisabledStyle={true}
-                borderRadius="20px"
-                padding="10px 1rem"
-                onClick={handleAddList}
-              >
-                Import
-              </ButtonPrimary>
-            </AutoColumn>
-          </Card>
-          <OutlineCard padding="12px 20px">
-            <RowBetween>
-              <RowFixed>
-                {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
-                <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
-                  <TYPE.body fontWeight={600}>{tempList.name}</TYPE.body>
-                  <TYPE.main fontSize={'12px'}>{tempList.tokens.length} tokens</TYPE.main>
-                </AutoColumn>
-              </RowFixed>
-            </RowBetween>
-          </OutlineCard>
-        </PaddedColumn>
-      </Wrapper>
-    )
-  }
+  // set list values and have parent modal switch to import list view
+  const handleImport = useCallback(() => {
+    if (!tempList) return
+    setImportList(tempList)
+    setModalView(CurrencyModalView.importList)
+    setListUrl(listUrlInput)
+  }, [listUrlInput, setImportList, setListUrl, setModalView, tempList])
 
   return (
     <Wrapper>
@@ -389,7 +296,6 @@ export function ManageLists({ onBack }: { onBack: () => void }) {
             placeholder="https:// or ipfs:// or ENS name"
             value={listUrlInput}
             onChange={handleInput}
-            onKeyDown={handleEnterKey}
           />
         </Row>
         {addError ? (
@@ -409,7 +315,7 @@ export function ManageLists({ onBack }: { onBack: () => void }) {
                   <TYPE.main fontSize={'12px'}>{tempList.tokens.length} tokens</TYPE.main>
                 </AutoColumn>
               </RowFixed>
-              {isLoaded ? (
+              {isImported ? (
                 <RowFixed>
                   <IconWrapper stroke={theme.text2} size="16px" marginRight={'10px'}>
                     <CheckCircle />
@@ -417,7 +323,7 @@ export function ManageLists({ onBack }: { onBack: () => void }) {
                   <TYPE.body color={theme.text2}>Loaded</TYPE.body>
                 </RowFixed>
               ) : (
-                <ButtonPrimary padding="6px 8px" width="fit-content" onClick={() => setShowImportView(true)}>
+                <ButtonPrimary padding="6px 8px" width="fit-content" onClick={handleImport}>
                   Import
                 </ButtonPrimary>
               )}
@@ -429,7 +335,7 @@ export function ManageLists({ onBack }: { onBack: () => void }) {
       <ListContainer>
         <AutoColumn gap="md">
           {sortedLists.map(listUrl => (
-            <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} />
+            <ListRow key={listUrl} listUrl={listUrl} />
           ))}
         </AutoColumn>
       </ListContainer>

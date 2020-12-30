@@ -5,7 +5,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
 import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
@@ -60,21 +59,6 @@ export default function Updater(): null {
             // automatically update minor/patch as long as bump matches the min update
             if (bump >= min) {
               dispatch(acceptListUpdate(listUrl))
-              if (activeListUrls?.includes(listUrl)) {
-                dispatch(
-                  addPopup({
-                    key: listUrl,
-                    content: {
-                      listUpdate: {
-                        listUrl,
-                        oldList: list.current,
-                        newList: list.pendingUpdate,
-                        auto: true
-                      }
-                    }
-                  })
-                )
-              }
             } else {
               console.error(
                 `List at url ${listUrl} could not automatically update because the version bump was only PATCH/MINOR while the update had breaking changes and should have been MAJOR`
@@ -83,21 +67,9 @@ export default function Updater(): null {
             break
 
           case VersionUpgrade.MAJOR:
+            // accept update if list is active
             if (activeListUrls?.includes(listUrl)) {
-              dispatch(
-                addPopup({
-                  key: listUrl,
-                  content: {
-                    listUpdate: {
-                      listUrl,
-                      auto: false,
-                      oldList: list.current,
-                      newList: list.pendingUpdate
-                    }
-                  },
-                  removeAfterMs: null
-                })
-              )
+              dispatch(acceptListUpdate(listUrl))
             }
         }
       }

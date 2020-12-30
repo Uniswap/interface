@@ -8,6 +8,8 @@ import styled from 'styled-components'
 import { Token } from '@uniswap/sdk'
 import { ManageLists } from './ManageLists'
 import ManageTokens from './ManageTokens'
+import { TokenList } from '@uniswap/token-lists'
+import { CurrencyModalView } from './CurrencySearchModal'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -31,6 +33,7 @@ const ToggleOption = styled.div<{ active?: boolean }>`
   font-weight: 600;
   background-color: ${({ theme, active }) => (active ? theme.bg1 : theme.bg3)};
   color: ${({ theme, active }) => (active ? theme.text1 : theme.text2)};
+  user-select: none;
 
   :hover {
     cursor: pointer;
@@ -40,23 +43,25 @@ const ToggleOption = styled.div<{ active?: boolean }>`
 
 export default function Manage({
   onDismiss,
-  onBack,
-  showImportView,
-  setImportToken
+  setModalView,
+  setImportList,
+  setImportToken,
+  setListUrl
 }: {
   onDismiss: () => void
-  onBack: () => void
-  showImportView: () => void
+  setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
+  setImportList: (list: TokenList) => void
+  setListUrl: (url: string) => void
 }) {
   // toggle between tokens and lists
-  const [showLists, setShowLists] = useState(false)
+  const [showLists, setShowLists] = useState(true)
 
   return (
     <Wrapper>
       <PaddedColumn>
         <RowBetween>
-          <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
+          <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.search)} />
           <Text fontWeight={500} fontSize={20}>
             Manage
           </Text>
@@ -66,18 +71,18 @@ export default function Manage({
       <Separator />
       <PaddedColumn style={{ paddingBottom: 0 }}>
         <ToggleWrapper>
-          <ToggleOption onClick={() => setShowLists(!showLists)} active={!showLists}>
-            Tokens
-          </ToggleOption>
           <ToggleOption onClick={() => setShowLists(!showLists)} active={showLists}>
             Lists
+          </ToggleOption>
+          <ToggleOption onClick={() => setShowLists(!showLists)} active={!showLists}>
+            Tokens
           </ToggleOption>
         </ToggleWrapper>
       </PaddedColumn>
       {showLists ? (
-        <ManageLists onBack={onBack} />
+        <ManageLists setModalView={setModalView} setImportList={setImportList} setListUrl={setListUrl} />
       ) : (
-        <ManageTokens showImportView={showImportView} setImportToken={setImportToken} />
+        <ManageTokens setModalView={setModalView} setImportToken={setImportToken} />
       )}
     </Wrapper>
   )
