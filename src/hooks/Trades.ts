@@ -129,9 +129,9 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
         null
 
-      // if output amount difference is within threshold, return single hop trade instead - only check if valid trades
+      // if input amount difference is within threshold, return single hop trade instead - only check if valid trades
       if (tradeFixed && trade) {
-        const percent = new Percent(tradeFixed.outputAmount.raw, trade.outputAmount.raw)
+        const percent = new Percent(trade.inputAmount.raw, tradeFixed.inputAmount.raw)
         if (percent.greaterThan(PERCENT_THRESHOLD)) {
           return tradeFixed
         }
