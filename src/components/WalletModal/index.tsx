@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { fortmatic, injected, portis } from '../../connectors'
@@ -127,6 +128,8 @@ export default function WalletModal({
 }) {
   // important that these are destructed from the account-specific web3-react context
   const { active, account, connector, activate, error } = useWeb3React()
+
+  const { t } = useTranslation()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -300,8 +303,8 @@ export default function WalletModal({
             {error instanceof UnsupportedChainIdError ? (
               <h5>Please connect to the appropriate Ethereum network.</h5>
             ) : (
-              'Error connecting. Try refreshing the page.'
-            )}
+                'Error connecting. Try refreshing the page.'
+              )}
           </ContentWrapper>
         </UpperSection>
       )
@@ -334,10 +337,10 @@ export default function WalletModal({
             </HoverText>
           </HeaderRow>
         ) : (
-          <HeaderRow>
-            <HoverText>Connect to a wallet</HoverText>
-          </HeaderRow>
-        )}
+            <HeaderRow>
+              <HoverText>{t('ConnectToAWallet')}</HoverText>
+            </HeaderRow>
+          )}
         <ContentWrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
@@ -347,8 +350,8 @@ export default function WalletModal({
               tryActivation={tryActivation}
             />
           ) : (
-            <OptionGrid>{getOptions()}</OptionGrid>
-          )}
+              <OptionGrid>{getOptions()}</OptionGrid>
+            )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
               <span>New to Ethereum? &nbsp;</span>{' '}

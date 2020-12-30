@@ -1,6 +1,8 @@
 import React from 'react'
-import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
+
+import { AutoColumn } from '../../components/Column'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
@@ -39,6 +41,7 @@ flex-direction: column;
 `
 
 export default function Earn() {
+  const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
 
   // staking info for connected account
@@ -62,11 +65,11 @@ export default function Earn() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Uniswap liquidity mining</TYPE.white>
+                <TYPE.white fontWeight={600}>{t('uniLiqMining')}</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
+                  {t('uniLiqMiningDesc')}
                 </TYPE.white>
               </RowBetween>{' '}
               <ExternalLink
@@ -74,7 +77,7 @@ export default function Earn() {
                 href="https://uniswap.org/blog/uni/"
                 target="_blank"
               >
-                <TYPE.white fontSize={14}>Read more about UNI</TYPE.white>
+                <TYPE.white fontSize={14}>{t('readMoreAboutUni')}</TYPE.white>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -85,7 +88,7 @@ export default function Earn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>{t('participartingPools')} </TYPE.mediumHeader>
           <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
         </DataRow>
 
@@ -93,15 +96,15 @@ export default function Earn() {
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
           ) : !stakingRewardsExist ? (
-            <OutlineCard>No active pools</OutlineCard>
+            <OutlineCard>{t('noActivePools')}</OutlineCard>
           ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
-            <OutlineCard>No active pools</OutlineCard>
+            <OutlineCard>{t('noActivePools')}</OutlineCard>
           ) : (
-            stakingInfosWithBalance?.map(stakingInfo => {
-              // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-            })
-          )}
+                  stakingInfosWithBalance?.map(stakingInfo => {
+                    // need to sort by added liquidity here
+                    return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
+                  })
+                )}
         </PoolSection>
       </AutoColumn>
     </PageWrapper>

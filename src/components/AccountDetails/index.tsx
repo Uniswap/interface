@@ -1,6 +1,7 @@
 import React, { useCallback, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import styled, { ThemeContext } from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
@@ -8,7 +9,6 @@ import { shortenAddress } from '../../utils'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
-
 import { SUPPORTED_WALLETS } from '../../constants'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { getEtherscanLink } from '../../utils'
@@ -131,7 +131,7 @@ const AccountControl = styled.div`
   }
 `
 
-const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
+const AddressLink = styled(ExternalLink) <{ hasENS: boolean; isENS: boolean }>`
   font-size: 0.825rem;
   color: ${({ theme }) => theme.text3};
   margin-left: 1rem;
@@ -227,6 +227,7 @@ export default function AccountDetails({
 }: AccountDetailsProps) {
   const { chainId, account, connector } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+  const { t } = useTranslation()
   const dispatch = useDispatch<AppDispatch>()
 
   function formatConnectorName() {
@@ -295,7 +296,7 @@ export default function AccountDetails({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        <HeaderRow>Account</HeaderRow>
+        <HeaderRow>{t('account')}</HeaderRow>
         <AccountSection>
           <YourAccount>
             <InfoCard>
@@ -306,10 +307,11 @@ export default function AccountDetails({
                     <WalletAction
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
-                        ;(connector as any).close()
+                        ; (connector as any).close()
                       }}
                     >
-                      Disconnect
+                      {t('disconnect')}
+
                     </WalletAction>
                   )}
                   <WalletAction
@@ -318,7 +320,7 @@ export default function AccountDetails({
                       openOptions()
                     }}
                   >
-                    Change
+                    {t('change')}
                   </WalletAction>
                 </div>
               </AccountGroupingRow>
@@ -332,13 +334,13 @@ export default function AccountDetails({
                       </div>
                     </>
                   ) : (
-                    <>
-                      <div>
-                        {getStatusIcon()}
-                        <p> {account && shortenAddress(account)}</p>
-                      </div>
-                    </>
-                  )}
+                      <>
+                        <div>
+                          {getStatusIcon()}
+                          <p> {account && shortenAddress(account)}</p>
+                        </div>
+                      </>
+                    )}
                 </AccountControl>
               </AccountGroupingRow>
               <AccountGroupingRow>
@@ -348,7 +350,7 @@ export default function AccountDetails({
                       <div>
                         {account && (
                           <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                            <span style={{ marginLeft: '4px' }}>{t('copyAddress')}</span>
                           </Copy>
                         )}
                         {chainId && account && (
@@ -365,28 +367,28 @@ export default function AccountDetails({
                     </AccountControl>
                   </>
                 ) : (
-                  <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                          </Copy>
-                        )}
-                        {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={false}
-                            href={getEtherscanLink(chainId, account, 'address')}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
-                          </AddressLink>
-                        )}
-                      </div>
-                    </AccountControl>
-                  </>
-                )}
+                    <>
+                      <AccountControl>
+                        <div>
+                          {account && (
+                            <Copy toCopy={account}>
+                              <span style={{ marginLeft: '4px' }}>{t('copyAddress')}</span>
+                            </Copy>
+                          )}
+                          {chainId && account && (
+                            <AddressLink
+                              hasENS={!!ENSName}
+                              isENS={false}
+                              href={getEtherscanLink(chainId, account, 'address')}
+                            >
+                              <LinkIcon size={16} />
+                              <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            </AddressLink>
+                          )}
+                        </div>
+                      </AccountControl>
+                    </>
+                  )}
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
@@ -395,17 +397,17 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
-            <TYPE.body>Recent Transactions</TYPE.body>
-            <LinkStyledButton onClick={clearAllTransactionsCallback}>(clear all)</LinkStyledButton>
+            <TYPE.body>{t('recentTransactions')} </TYPE.body>
+            <LinkStyledButton onClick={clearAllTransactionsCallback}>({t('clearAll')})</LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}
         </LowerSection>
       ) : (
-        <LowerSection>
-          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
-        </LowerSection>
-      )}
+          <LowerSection>
+            <TYPE.body color={theme.text1}>{t('yourTxWillAppearHere')}...</TYPE.body>
+          </LowerSection>
+        )}
     </>
   )
 }

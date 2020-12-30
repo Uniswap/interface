@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { STAKING_GENESIS, REWARDS_DURATION_DAYS } from '../../state/stake/hooks'
 import { TYPE } from '../../theme'
 
@@ -8,6 +9,7 @@ const DAY = HOUR * 24
 const REWARDS_DURATION = DAY * REWARDS_DURATION_DAYS
 
 export function Countdown({ exactEnd }: { exactEnd?: Date }) {
+  const { t } = useTranslation()
   // get end/beginning times
   const end = useMemo(() => (exactEnd ? Math.floor(exactEnd.getTime() / 1000) : STAKING_GENESIS + REWARDS_DURATION), [
     exactEnd
@@ -40,7 +42,7 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
       message = 'Rewards end in'
       timeRemaining = timeUntilEnd
     } else {
-      message = 'Rewards have ended!'
+      message = t('rewardsHaveEnded')
       timeRemaining = Infinity
     }
   }

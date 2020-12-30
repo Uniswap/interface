@@ -5,6 +5,7 @@ import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -92,6 +93,7 @@ function listUrlRowHTMLId(listUrl: string) {
 const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; onBack: () => void }) {
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const selectedListUrl = useSelectedListUrl()
+  const { t } = useTranslation()
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
@@ -155,8 +157,8 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
       {list.logoURI ? (
         <ListLogo style={{ marginRight: '1rem' }} logoURI={list.logoURI} alt={`${list.name} list logo`} />
       ) : (
-        <div style={{ width: '24px', height: '24px', marginRight: '1rem' }} />
-      )}
+          <div style={{ width: '24px', height: '24px', marginRight: '1rem' }} />
+        )}
       <Column style={{ flex: '1' }}>
         <Row>
           <Text
@@ -212,25 +214,25 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
           className="select-button"
           style={{ width: '5rem', minWidth: '5rem', padding: '0.5rem .35rem', borderRadius: '12px', fontSize: '14px' }}
         >
-          Selected
+          {t('selected')}
         </ButtonPrimary>
       ) : (
-        <>
-          <ButtonPrimary
-            className="select-button"
-            style={{
-              width: '5rem',
-              minWidth: '4.5rem',
-              padding: '0.5rem .35rem',
-              borderRadius: '12px',
-              fontSize: '14px'
-            }}
-            onClick={selectThisList}
-          >
-            Select
-          </ButtonPrimary>
-        </>
-      )}
+          <>
+            <ButtonPrimary
+              className="select-button"
+              style={{
+                width: '5rem',
+                minWidth: '4.5rem',
+                padding: '0.5rem .35rem',
+                borderRadius: '12px',
+                fontSize: '14px'
+              }}
+              onClick={selectThisList}
+            >
+              {t('select')}
+            </ButtonPrimary>
+          </>
+        )}
     </Row>
   )
 })
@@ -249,7 +251,7 @@ const ListContainer = styled.div`
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
   const [listUrlInput, setListUrlInput] = useState<string>('')
-
+  const { t } = useTranslation()
   const dispatch = useDispatch<AppDispatch>()
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
@@ -310,8 +312,8 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           return l1.name.toLowerCase() < l2.name.toLowerCase()
             ? -1
             : l1.name.toLowerCase() === l2.name.toLowerCase()
-            ? 0
-            : 1
+              ? 0
+              : 1
         }
         if (l1) return -1
         if (l2) return 1
@@ -327,7 +329,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
           </div>
           <Text fontWeight={500} fontSize={20}>
-            Manage Lists
+            {t('manageList')}
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -351,7 +353,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
             style={{ height: '2.75rem', borderRadius: 12, padding: '12px' }}
           />
           <AddListButton onClick={handleAddList} disabled={!validUrl}>
-            Add
+            {t('add')}
           </AddListButton>
         </Row>
         {addError ? (
@@ -371,7 +373,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       <Separator />
 
       <div style={{ padding: '16px', textAlign: 'center' }}>
-        <ExternalLink href="https://tokenlists.org">Browse lists</ExternalLink>
+        <ExternalLink href="https://tokenlists.org">{t('browseList')}</ExternalLink>
       </div>
     </Column>
   )

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 
 import { RouteComponentProps } from 'react-router-dom'
 import { TYPE, StyledInternalLink, ExternalLink } from '../../theme'
@@ -108,6 +109,7 @@ export default function VotePage({
     params: { id }
   }
 }: RouteComponentProps<{ id: string }>) {
+  const { t } = useTranslation()
   const { chainId, account } = useActiveWeb3React()
 
   // get data for this specific proposal
@@ -130,10 +132,10 @@ export default function VotePage({
   const endDate: DateTime | undefined =
     proposalData && currentTimestamp && currentBlock
       ? DateTime.fromSeconds(
-          currentTimestamp
-            .add(BigNumber.from(AVERAGE_BLOCK_TIME_IN_SECS).mul(BigNumber.from(proposalData.endBlock - currentBlock)))
-            .toNumber()
-        )
+        currentTimestamp
+          .add(BigNumber.from(AVERAGE_BLOCK_TIME_IN_SECS).mul(BigNumber.from(proposalData.endBlock - currentBlock)))
+          .toNumber()
+      )
       : undefined
   const now: DateTime = DateTime.local()
 
@@ -179,7 +181,7 @@ export default function VotePage({
       <ProposalInfo gap="lg" justify="start">
         <RowBetween style={{ width: '100%' }}>
           <ArrowWrapper to="/vote">
-            <ArrowLeft size={20} /> All Proposals
+            <ArrowLeft size={20} /> {t('allProposals')}
           </ArrowWrapper>
           {proposalData && <ProposalStatus status={proposalData?.status ?? ''}>{proposalData?.status}</ProposalStatus>}
         </RowBetween>
@@ -190,8 +192,8 @@ export default function VotePage({
               {endDate && endDate < now
                 ? 'Voting ended ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
                 : proposalData
-                ? 'Voting ends approximately ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
-                : ''}
+                  ? 'Voting ends approximately ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
+                  : ''}
             </TYPE.main>
           </RowBetween>
           {proposalData && proposalData.status === 'active' && !showVotingButtons && (
@@ -232,8 +234,8 @@ export default function VotePage({
             </ButtonPrimary>
           </RowFixed>
         ) : (
-          ''
-        )}
+            ''
+          )}
         <CardWrapper>
           <StyledDataCard>
             <CardSection>
@@ -268,7 +270,7 @@ export default function VotePage({
           </StyledDataCard>
         </CardWrapper>
         <AutoColumn gap="md">
-          <TYPE.mediumHeader fontWeight={600}>Details</TYPE.mediumHeader>
+          <TYPE.mediumHeader fontWeight={600}>{t('details')}</TYPE.mediumHeader>
           {proposalData?.details?.map((d, i) => {
             return (
               <DetailText key={i}>
@@ -287,13 +289,13 @@ export default function VotePage({
           })}
         </AutoColumn>
         <AutoColumn gap="md">
-          <TYPE.mediumHeader fontWeight={600}>Description</TYPE.mediumHeader>
+          <TYPE.mediumHeader fontWeight={600}>{t('description')}</TYPE.mediumHeader>
           <MarkDownWrapper>
             <ReactMarkdown source={proposalData?.description} />
           </MarkDownWrapper>
         </AutoColumn>
         <AutoColumn gap="md">
-          <TYPE.mediumHeader fontWeight={600}>Proposer</TYPE.mediumHeader>
+          <TYPE.mediumHeader fontWeight={600}>{t('proposer')}</TYPE.mediumHeader>
           <ProposerAddressLink
             href={proposalData?.proposer && chainId ? getEtherscanLink(chainId, proposalData?.proposer, 'address') : ''}
           >

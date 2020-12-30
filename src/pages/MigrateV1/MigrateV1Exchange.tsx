@@ -5,6 +5,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
+import { useTranslation } from 'react-i18next'
 import { ButtonConfirmed } from '../../components/Button'
 import { LightCard, PinkCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -120,9 +121,9 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const priceDifferenceFraction: Fraction | undefined =
     v1SpotPrice && v2SpotPrice
       ? v1SpotPrice
-          .divide(v2SpotPrice)
-          .multiply('100')
-          .subtract('100')
+        .divide(v2SpotPrice)
+        .multiply('100')
+        .subtract('100')
       : undefined
 
   const priceDifferenceAbs: Fraction | undefined = priceDifferenceFraction?.lessThan(ZERO)
@@ -132,17 +133,17 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
   const minAmountETH: JSBI | undefined =
     v2SpotPrice && tokenWorth
       ? tokenWorth
-          .divide(v2SpotPrice)
-          .multiply(WEI_DENOM)
-          .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
+        .divide(v2SpotPrice)
+        .multiply(WEI_DENOM)
+        .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
       : ethWorth?.numerator
 
   const minAmountToken: JSBI | undefined =
     v2SpotPrice && ethWorth
       ? ethWorth
-          .multiply(v2SpotPrice)
-          .multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(token.decimals)))
-          .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
+        .multiply(v2SpotPrice)
+        .multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(token.decimals)))
+        .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
       : tokenWorth?.numerator
 
   const addTransaction = useTransactionAdder()
@@ -282,8 +283,8 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
               ) : approval === ApprovalState.APPROVED ? (
                 'Approved'
               ) : (
-                'Approve'
-              )}
+                    'Approve'
+                  )}
             </ButtonConfirmed>
           </AutoColumn>
           <AutoColumn gap="12px" style={{ flex: '1' }}>
@@ -316,6 +317,7 @@ export default function MigrateV1Exchange({
     params: { address }
   }
 }: RouteComponentProps<{ address: string }>) {
+  const { t } = useTranslation()
   const validatedAddress = isAddress(address)
   const { chainId, account } = useActiveWeb3React()
 
@@ -344,7 +346,7 @@ export default function MigrateV1Exchange({
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v1" />
-          <TYPE.mediumHeader>Migrate V1 Liquidity</TYPE.mediumHeader>
+          <TYPE.mediumHeader>{t('migrateV1Liquidity')}</TYPE.mediumHeader>
           <div>
             <QuestionHelper text="Migrate your liquidity tokens from Uniswap V1 to Uniswap V2." />
           </div>
@@ -364,14 +366,14 @@ export default function MigrateV1Exchange({
                 history.push(`/remove/v1/${validatedAddress}`)
               }}
             >
-              Remove
+              {t('remove')}
             </ButtonConfirmed>
           </>
         ) : userLiquidityBalance && token ? (
           <V1PairMigration liquidityTokenAmount={userLiquidityBalance} token={token} />
         ) : (
-          <EmptyState message="Loading..." />
-        )}
+                <EmptyState message="Loading..." />
+              )}
       </AutoColumn>
     </BodyWrapper>
   )

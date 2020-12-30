@@ -1,6 +1,8 @@
 import React, { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
+
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -89,6 +91,7 @@ const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
 export default function Menu() {
   const { account } = useActiveWeb3React()
+  const { t } = useTranslation()
 
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
@@ -107,15 +110,15 @@ export default function Menu() {
         <MenuFlyout>
           <MenuItem id="link" href="https://uniswap.org/">
             <Info size={14} />
-            About
+            {t('about')}
           </MenuItem>
           <MenuItem id="link" href="https://uniswap.org/docs/v2">
             <BookOpen size={14} />
-            Docs
+            {t('docs')}
           </MenuItem>
           <MenuItem id="link" href={CODE_LINK}>
             <Code size={14} />
-            Code
+            {t('code')}
           </MenuItem>
           <MenuItem id="link" href="https://discord.gg/EwFs3Pp">
             <MessageCircle size={14} />
@@ -123,11 +126,11 @@ export default function Menu() {
           </MenuItem>
           <MenuItem id="link" href="https://uniswap.info/">
             <PieChart size={14} />
-            Analytics
+            {t('analytics')}
           </MenuItem>
           {account && (
             <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              Claim UNI
+              {t('claim')} UNI
             </ButtonPrimary>
           )}
         </MenuFlyout>

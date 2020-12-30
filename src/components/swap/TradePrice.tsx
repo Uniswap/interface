@@ -4,6 +4,7 @@ import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { StyledBalanceMaxMini } from './styleds'
 
 interface TradePriceProps {
@@ -14,13 +15,14 @@ interface TradePriceProps {
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
+  const { t } = useTranslation()
 
   const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
 
   const show = Boolean(price?.baseCurrency && price?.quoteCurrency)
   const label = showInverted
-    ? `${price?.quoteCurrency?.symbol} per ${price?.baseCurrency?.symbol}`
-    : `${price?.baseCurrency?.symbol} per ${price?.quoteCurrency?.symbol}`
+    ? `${price?.quoteCurrency?.symbol} ${t('per')} ${price?.baseCurrency?.symbol}`
+    : `${price?.baseCurrency?.symbol} ${t('per')} ${price?.quoteCurrency?.symbol}`
 
   return (
     <Text
@@ -37,8 +39,8 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
           </StyledBalanceMaxMini>
         </>
       ) : (
-        '-'
-      )}
+          '-'
+        )}
     </Text>
   )
 }
