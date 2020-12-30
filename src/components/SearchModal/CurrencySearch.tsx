@@ -1,14 +1,23 @@
 import { Currency, ETHER, Token } from '@uniswap/sdk'
-import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  KeyboardEvent,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  CSSProperties
+} from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken, useIsUserAddedToken } from '../../hooks/Tokens'
+import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } from '../../hooks/Tokens'
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
-import Column from '../Column'
+import Column, { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
@@ -23,8 +32,8 @@ import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
-import ExpandedSearch from './ExpandedSearch'
 import { Edit } from 'react-feather'
+import Card from 'components/Card'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -174,7 +183,26 @@ export function CurrencySearch({
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
 
+  // if no results on main list, show option to expand into inactive
   const [showExpanded, setShowExpanded] = useState(false)
+  const inactiveTokens = useFoundOnInactiveList(searchQuery)
+  const fixedImportList = useRef<FixedSizeList>()
+
+  // reset expanded results on query reset
+  useEffect(() => {
+    if (searchQuery === '') {
+      setShowExpanded(false)
+    }
+  }, [setShowExpanded, searchQuery])
+
+  // row for virtualized inactive list
+  const ImportDataRow = useCallback(
+    ({ data, index, style }: { data: Token[]; index: number; style: CSSProperties }) => {
+      const token: Token = data[index]
+      return <ImportRow token={token} style={style} showImportView={showImportView} setImportToken={setImportToken} />
+    },
+    [setImportToken, showImportView]
+  )
 
   return (
     <ContentWrapper>
@@ -236,9 +264,40 @@ export function CurrencySearch({
             No results found in active lists.
           </TYPE.main>
           {showExpanded ? (
-            <ExpandedSearch searchQuery={searchQuery} showImportView={showImportView} setImportToken={setImportToken} />
+            <Wrapper style={{ padding: 0 }}>
+              <AutoColumn>
+                <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="6px 8px">
+                  <TYPE.main fontWeight={500}>Showing inactive results</TYPE.main>
+                </Card>
+              </AutoColumn>
+              {inactiveTokens && (
+                <div style={{ flex: '1', height: '100%' }}>
+                  <AutoSizer disableWidth>
+                    {({ height }) => (
+                      <FixedSizeList
+                        height={height}
+                        ref={fixedImportList as any}
+                        width="100%"
+                        itemData={inactiveTokens}
+                        itemCount={inactiveTokens.length}
+                        itemSize={56}
+                      >
+                        {ImportDataRow}
+                      </FixedSizeList>
+                    )}
+                  </AutoSizer>
+                </div>
+              )}
+            </Wrapper>
           ) : (
-            <ButtonText onClick={() => setShowExpanded(true)}>+ Expand search</ButtonText>
+            inactiveTokens &&
+            inactiveTokens.length > 0 && (
+              <ButtonText onClick={() => setShowExpanded(true)}>
+                <TYPE.main color={theme.blue1} fontWeight={500}>
+                  + Show {inactiveTokens.length} inactive {inactiveTokens.length === 1 ? 'token' : 'tokens'}
+                </TYPE.main>
+              </ButtonText>
+            )
           )}
         </Column>
       )}

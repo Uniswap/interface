@@ -43,6 +43,11 @@ export const FadedSpan = styled(RowFixed)`
   color: ${({ theme }) => theme.primary1};
   font-size: 14px;
 `
+export const Checkbox = styled.input`
+  border: 1px solid ${({ theme }) => theme.red3};
+  height: 20px;
+  margin: 0;
+`
 
 export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;

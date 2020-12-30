@@ -1,29 +1,31 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
-import { Settings } from 'react-feather'
+import React, { memo, useCallback, useMemo, useRef, useState, useEffect } from 'react'
+import { Settings, CheckCircle, AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+import { TokenList } from '@uniswap/token-lists'
 
 import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
 import { useIsListActive } from '../../state/lists/hooks'
-import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { ExternalLink, LinkStyledButton, TYPE, IconWrapper } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonSecondary, ButtonEmpty } from '../Button'
+import { ButtonEmpty, ButtonPrimary } from '../Button'
 
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
-import Row, { RowFixed } from '../Row'
-import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
+import Row, { RowFixed, RowBetween } from '../Row'
+import { PaddedColumn, SearchInput, Separator, SeparatorDark, Checkbox } from './styleds'
 import { useListColor } from 'hooks/useColor'
 import useTheme from '../../hooks/useTheme'
 import ListToggle from '../Toggle/ListToggle'
+import Card, { OutlineCard } from 'components/Card'
 
 const Wrapper = styled(Column)`
   width: 100%;
@@ -208,13 +210,6 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string; onBack: ()
   )
 })
 
-const AddListButton = styled(ButtonSecondary)`
-  max-width: 4rem;
-  margin-left: 1rem;
-  border-radius: 12px;
-  padding: 10px 18px;
-`
-
 const ListContainer = styled.div`
   padding: 1rem;
   height: 100%;
@@ -223,6 +218,8 @@ const ListContainer = styled.div`
 `
 
 export function ManageLists({ onBack }: { onBack: () => void }) {
+  const theme = useTheme()
+
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
   const dispatch = useDispatch<AppDispatch>()
@@ -304,6 +301,84 @@ export function ManageLists({ onBack }: { onBack: () => void }) {
       })
   }, [lists])
 
+  // temporary fetched list for import flow
+  const [tempList, setTempList] = useState<TokenList>()
+  const isLoaded = Object.keys(lists).includes(listUrlInput)
+
+  useEffect(() => {
+    async function fetchTempList() {
+      fetchList(listUrlInput, false)
+        .then(list => setTempList(list))
+        .catch(() => console.log('error'))
+    }
+    if (validUrl) {
+      fetchTempList()
+    } else {
+      setTempList(undefined)
+    }
+  }, [fetchList, listUrlInput, validUrl])
+
+  // for list import UI
+  const [showImportView, setShowImportView] = useState(false)
+  const [confirmed, setConfirmed] = useState(false)
+
+  if (showImportView && tempList) {
+    return (
+      <Wrapper>
+        <PaddedColumn gap="md">
+          <Card bg={theme.bg3}>
+            <AutoColumn gap="md" justify="center">
+              <IconWrapper stroke={theme.red1} size="32px">
+                <AlertTriangle />
+              </IconWrapper>
+              <TYPE.largeHeader color={theme.red1}>Custom List</TYPE.largeHeader>
+              <TYPE.body>
+                Please take extra caution and do your research when interacting with imported lists.
+              </TYPE.body>
+              <TYPE.body fontWeight={600} color={theme.red1}>
+                By adding this list you are implicity trusting that the data is corerct.
+              </TYPE.body>
+              <TYPE.body>If you purchase a token form this list, you may be unable to sell it back.</TYPE.body>
+              <Row>
+                <RowFixed style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
+                  <Checkbox
+                    name="confirmed"
+                    type="checkbox"
+                    checked={confirmed}
+                    onChange={() => setConfirmed(!confirmed)}
+                  />
+                  <TYPE.body ml="10px" fontSize="16px" fontWeight={500}>
+                    I understand
+                  </TYPE.body>
+                </RowFixed>
+              </Row>
+              <ButtonPrimary
+                disabled={!confirmed}
+                altDisabledStyle={true}
+                borderRadius="20px"
+                padding="10px 1rem"
+                onClick={handleAddList}
+              >
+                Import
+              </ButtonPrimary>
+            </AutoColumn>
+          </Card>
+          <OutlineCard padding="12px 20px">
+            <RowBetween>
+              <RowFixed>
+                {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
+                <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
+                  <TYPE.body fontWeight={600}>{tempList.name}</TYPE.body>
+                  <TYPE.main fontSize={'12px'}>{tempList.tokens.length} tokens</TYPE.main>
+                </AutoColumn>
+              </RowFixed>
+            </RowBetween>
+          </OutlineCard>
+        </PaddedColumn>
+      </Wrapper>
+    )
+  }
+
   return (
     <Wrapper>
       <PaddedColumn gap="14px">
@@ -316,9 +391,6 @@ export function ManageLists({ onBack }: { onBack: () => void }) {
             onChange={handleInput}
             onKeyDown={handleEnterKey}
           />
-          <AddListButton onClick={handleAddList} disabled={!validUrl}>
-            Add
-          </AddListButton>
         </Row>
         {addError ? (
           <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
@@ -326,6 +398,33 @@ export function ManageLists({ onBack }: { onBack: () => void }) {
           </TYPE.error>
         ) : null}
       </PaddedColumn>
+      {tempList && (
+        <PaddedColumn style={{ paddingTop: 0 }}>
+          <OutlineCard padding="12px 20px">
+            <RowBetween>
+              <RowFixed>
+                {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
+                <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
+                  <TYPE.body fontWeight={600}>{tempList.name}</TYPE.body>
+                  <TYPE.main fontSize={'12px'}>{tempList.tokens.length} tokens</TYPE.main>
+                </AutoColumn>
+              </RowFixed>
+              {isLoaded ? (
+                <RowFixed>
+                  <IconWrapper stroke={theme.text2} size="16px" marginRight={'10px'}>
+                    <CheckCircle />
+                  </IconWrapper>
+                  <TYPE.body color={theme.text2}>Loaded</TYPE.body>
+                </RowFixed>
+              ) : (
+                <ButtonPrimary padding="6px 8px" width="fit-content" onClick={() => setShowImportView(true)}>
+                  Import
+                </ButtonPrimary>
+              )}
+            </RowBetween>
+          </OutlineCard>
+        </PaddedColumn>
+      )}
       <Separator />
       <ListContainer>
         <AutoColumn gap="md">

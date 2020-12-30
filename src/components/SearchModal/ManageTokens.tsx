@@ -119,9 +119,11 @@ export default function ManageTokens({
             <TYPE.main fontWeight={600}>
               {userAddedTokens?.length} Custom {userAddedTokens.length === 1 ? 'Token' : 'Tokens'}
             </TYPE.main>
-            <ButtonText onClick={handleRemoveAll}>
-              <TYPE.blue>Clear all</TYPE.blue>
-            </ButtonText>
+            {userAddedTokens.length > 0 && (
+              <ButtonText onClick={handleRemoveAll}>
+                <TYPE.blue>Clear all</TYPE.blue>
+              </ButtonText>
+            )}
           </RowBetween>
           {tokenList}
         </PaddedColumn>

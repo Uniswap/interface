@@ -17,7 +17,7 @@ import { useActiveWeb3React } from 'hooks'
 import { ExternalLink } from '../../theme/components'
 import { useCombinedInactiveList } from 'state/lists/hooks'
 import ListLogo from 'components/ListLogo'
-import { PaddedColumn } from './styleds'
+import { PaddedColumn, Checkbox } from './styleds'
 
 const Wrapper = styled.div`
   position: relative;
@@ -28,12 +28,6 @@ const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
   background-color: ${({ theme, highWarning }) =>
     highWarning ? lighten(0.2, theme.red1) : lighten(0.35, theme.yellow2)};
   width: fit-content;
-`
-
-const Checkbox = styled.input`
-  border: 1px solid ${({ theme }) => theme.red3};
-  height: 20px;
-  margin: 0;
 `
 
 const AddressText = styled(TYPE.blue)`
@@ -47,10 +41,11 @@ const AddressText = styled(TYPE.blue)`
 interface ImportProps {
   token: Token
   onBack: () => void
+  onDismiss: () => void
   handleCurrencySelect: (currency: Currency) => void
 }
 
-export function Import({ token, onBack, handleCurrencySelect }: ImportProps) {
+export function Import({ token, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
   const theme = useTheme()
 
   const { chainId } = useActiveWeb3React()
@@ -70,41 +65,11 @@ export function Import({ token, onBack, handleCurrencySelect }: ImportProps) {
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
           <TYPE.mediumHeader>Confirm Token</TYPE.mediumHeader>
-          <CloseIcon onClick={onBack} />
+          <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
       <PaddedColumn gap="md">
-        <OutlineCard>
-          <AutoColumn gap="10px">
-            <AutoRow gap="5px" align="center">
-              <CurrencyLogo currency={token} size={'24px'} />
-              <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
-              {list !== undefined ? (
-                <RowFixed>
-                  {list.logoURI && <ListLogo logoURI={list.logoURI} size="12px" />}
-                  <TYPE.small ml="10px" color={theme.text3}>
-                    Found via {list.name}
-                  </TYPE.small>
-                </RowFixed>
-              ) : (
-                <WarningWrapper borderRadius="4px" padding="4px" highWarning={true}>
-                  <RowFixed>
-                    <AlertTriangle stroke={theme.red3} size="10px" />
-                    <TYPE.body color={theme.red3} ml="4px" fontSize="10px" fontWeight={500}>
-                      Unkown Source
-                    </TYPE.body>
-                  </RowFixed>
-                </WarningWrapper>
-              )}
-            </AutoRow>
-            {chainId && (
-              <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
-                <AddressText>{token.address}</AddressText>
-              </ExternalLink>
-            )}
-          </AutoColumn>
-        </OutlineCard>
         <Card bg={theme.bg3}>
           <AutoColumn gap="md" justify="center">
             <AlertTriangle stroke={list ? theme.yellow2 : theme.red1} size="32px" />
@@ -151,6 +116,36 @@ export function Import({ token, onBack, handleCurrencySelect }: ImportProps) {
             </ButtonPrimary>
           </AutoColumn>
         </Card>
+        <OutlineCard>
+          <AutoColumn gap="10px">
+            <AutoRow gap="5px" align="center">
+              <CurrencyLogo currency={token} size={'24px'} />
+              <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
+              {list !== undefined ? (
+                <RowFixed>
+                  {list.logoURI && <ListLogo logoURI={list.logoURI} size="12px" />}
+                  <TYPE.small ml="10px" color={theme.text3}>
+                    Found via {list.name}
+                  </TYPE.small>
+                </RowFixed>
+              ) : (
+                <WarningWrapper borderRadius="4px" padding="4px" highWarning={true}>
+                  <RowFixed>
+                    <AlertTriangle stroke={theme.red3} size="10px" />
+                    <TYPE.body color={theme.red3} ml="4px" fontSize="10px" fontWeight={500}>
+                      Unkown Source
+                    </TYPE.body>
+                  </RowFixed>
+                </WarningWrapper>
+              )}
+            </AutoRow>
+            {chainId && (
+              <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+                <AddressText>{token.address}</AddressText>
+              </ExternalLink>
+            )}
+          </AutoColumn>
+        </OutlineCard>
       </PaddedColumn>
     </Wrapper>
   )
