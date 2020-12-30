@@ -10,7 +10,7 @@ export default function Updater() {
 
   useEffect(() => {
     if (library && chainId)
-      Promise.all([Fetcher.fetchAllSwapFees(chainId, {}), Fetcher.fetchProtocolFee(chainId)])
+      Promise.all([Fetcher.fetchAllSwapFees(chainId, {}, library), Fetcher.fetchProtocolFee(chainId, library)])
         .then(([swapFees, protocolFee]) => {
           if (swapFees) dispatch(setSwapFees({ swapFees }))
           if (protocolFee)
