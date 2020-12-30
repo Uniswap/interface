@@ -374,11 +374,6 @@ export default function SettingsTab() {
                           v{version}
                         </TYPE.body>
                       </InfoBadge>
-                      <InfoBadge>
-                        <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
-                          ALPHA
-                        </TYPE.body>
-                      </InfoBadge>
                     </MenuFlyoutBottomItem>
 
                     <MenuBanner id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
