@@ -7,11 +7,12 @@ import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUnisw
 import { abi as ICERC20ABI } from '../constants/lend/c_erc20_interface.json'
 import { abi as ICEtherABI } from '../constants/lend/c_ether.json'
 import { abi as IMaximillionABI } from '../constants/lend/maximillion.json'
-import { ROUTER_ADDRESS } from '../constants'
+import { SUSHISWAP_ROUTER_ADDRESS, UNISWAP_ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, Fraction } from '@uniswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { COMPTROLLER_ABI, COMPTROLLER_ADDRESSES, MAXIMILLION_ADDRESSES } from '../constants/lend'
 import { CToken } from '../data/CToken'
+import { PageFields } from 'data/Reserves'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -103,8 +104,13 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
+export function getRouterContract(_: number, library: Web3Provider, account?: string, router?: string): Contract {
+  return getContract(
+    router === PageFields.SUSHISWAP ? SUSHISWAP_ROUTER_ADDRESS : UNISWAP_ROUTER_ADDRESS,
+    IUniswapV2Router02ABI,
+    library,
+    account
+  )
 }
 
 export function getCERC20Contract(_: number, cTokenAddress: string, library: Web3Provider, account?: string): Contract {

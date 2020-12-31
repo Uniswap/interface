@@ -20,7 +20,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { ROUTER_ADDRESS } from '../../constants'
+import { SUSHISWAP_ROUTER_ADDRESS, UNISWAP_ROUTER_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
@@ -43,6 +43,8 @@ import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
+import { useRouteMatch } from 'react-router-dom'
+import { PageFields } from 'data/Reserves'
 
 export default function RemoveLiquidity({
   history,
@@ -57,6 +59,8 @@ export default function RemoveLiquidity({
     currencyB,
     chainId
   ])
+
+  const router: string = useRouteMatch().url.split('/')[1]
 
   const theme = useContext(ThemeContext)
 
@@ -100,7 +104,10 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  const [approval, approveCallback] = useApproveCallback(
+    parsedAmounts[Field.LIQUIDITY],
+    router === PageFields.SUSHISWAP ? SUSHISWAP_ROUTER_ADDRESS : UNISWAP_ROUTER_ADDRESS
+  )
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -137,7 +144,7 @@ export default function RemoveLiquidity({
     ]
     const message = {
       owner: account,
-      spender: ROUTER_ADDRESS,
+      spender: router === PageFields.SUSHISWAP ? SUSHISWAP_ROUTER_ADDRESS : UNISWAP_ROUTER_ADDRESS,
       value: liquidityAmount.raw.toString(),
       nonce: nonce.toHexString(),
       deadline: deadline.toNumber()

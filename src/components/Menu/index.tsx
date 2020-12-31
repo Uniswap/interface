@@ -1,4 +1,4 @@
-import { PageFields } from 'components/Header'
+import { PageFields } from 'data/Reserves'
 import React, { useRef } from 'react'
 import { Code } from 'react-feather'
 import { useLocation } from 'react-router-dom'
@@ -7,10 +7,9 @@ import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
-import { useActiveWeb3React } from '../../hooks'
-
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
+import { useActiveWeb3React } from '../../hooks'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -91,8 +90,10 @@ const CODE_LINK = 'https://github.com/osfinance/os-finance'
 
 export default function Menu() {
   const { account } = useActiveWeb3React()
+
   const location = useLocation()
   const page = location.pathname.split('/')[1]
+
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
@@ -125,15 +126,11 @@ export default function Menu() {
           {/*
           <MenuItem id="link" href="https://discord.gg/EwFs3Pp">
             <MessageCircle size={14} />
-            Telegram
+            Discord
           </MenuItem>
-          <MenuItem id="link" href="https://long.deerfi.com">
-            <Globe size={14} />
-            Long
-          </MenuItem>
-          <MenuItem id="link" href="https://medium.com/deerfi">
-            <BookOpen size={14} />
-            Medium
+          <MenuItem id="link" href="https://uniswap.info/">
+            <PieChart size={14} />
+            Analytics
           </MenuItem>
            */}
           {account && PageFields.UNISWAP === page && (

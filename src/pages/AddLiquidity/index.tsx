@@ -4,7 +4,7 @@ import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@uniswap/sdk
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -17,8 +17,8 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESS } from '../../constants'
-import { PairState } from '../../data/Reserves'
+import { SUSHISWAP_ROUTER_ADDRESS, UNISWAP_ROUTER_ADDRESS } from '../../constants'
+import { PageFields, PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -51,6 +51,7 @@ export default function AddLiquidity({
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
+  const router: string = useLocation().pathname.split('/')[1]
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
@@ -117,8 +118,14 @@ export default function AddLiquidity({
   )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(
+    parsedAmounts[Field.CURRENCY_A],
+    router === PageFields.SUSHISWAP ? SUSHISWAP_ROUTER_ADDRESS : UNISWAP_ROUTER_ADDRESS
+  )
+  const [approvalB, approveBCallback] = useApproveCallback(
+    parsedAmounts[Field.CURRENCY_B],
+    router === PageFields.SUSHISWAP ? SUSHISWAP_ROUTER_ADDRESS : UNISWAP_ROUTER_ADDRESS
+  )
 
   const addTransaction = useTransactionAdder()
 

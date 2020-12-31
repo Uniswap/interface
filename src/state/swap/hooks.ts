@@ -18,6 +18,7 @@ import { SwapState } from './reducer'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { PageFields } from 'data/Reserves'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -88,10 +89,16 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
   return undefined
 }
 
-const BAD_RECIPIENT_ADDRESSES: string[] = [
+const UNISWAP_BAD_RECIPIENT_ADDRESSES: string[] = [
   '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f', // v2 factory
   '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a', // v2 router 01
   '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' // v2 router 02
+]
+
+const SUSHISWAP_BAD_RECIPIENT_ADDRESSES: string[] = [
+  '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac', // v2 factory
+  '0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F', // v2 router 02
+  '0xc2edad668740f1aa35e4d8f227fb8e17dca888cd' // masterchef
 ]
 
 /**
@@ -107,7 +114,9 @@ function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(): {
+export function useDerivedSwapInfo(
+  router: string
+): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
@@ -140,8 +149,8 @@ export function useDerivedSwapInfo(): {
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, router)
+  const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined, router)
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
@@ -175,6 +184,8 @@ export function useDerivedSwapInfo(): {
   if (!to || !formattedTo) {
     inputError = inputError ?? 'Enter a recipient'
   } else {
+    const BAD_RECIPIENT_ADDRESSES =
+      router === PageFields.SUSHISWAP ? SUSHISWAP_BAD_RECIPIENT_ADDRESSES : UNISWAP_BAD_RECIPIENT_ADDRESSES
     if (
       BAD_RECIPIENT_ADDRESSES.indexOf(formattedTo) !== -1 ||
       (bestTradeExactIn && involvesAddress(bestTradeExactIn, formattedTo)) ||

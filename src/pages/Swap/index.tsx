@@ -44,11 +44,13 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import { useRouteMatch } from 'react-router-dom'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
+  const router: string = useRouteMatch().url.split('/')[1]
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId)
@@ -83,8 +85,8 @@ export default function Swap() {
     currencyBalances,
     parsedAmount,
     currencies,
-    inputError: swapInputError
-  } = useDerivedSwapInfo()
+    inputError: swapInputError,
+  } = useDerivedSwapInfo(router)
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -163,7 +165,7 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage, router)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -179,7 +181,7 @@ export default function Swap() {
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient, router)
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 

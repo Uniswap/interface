@@ -30,6 +30,7 @@ import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import UniBalanceContent from './UniBalanceContent'
 import usePrevious from '../../hooks/usePrevious'
+import { PageFields } from 'data/Reserves'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -253,13 +254,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
       display: ${smallShow ? 'block' : 'none'};
   `}
 `
-
-export enum PageFields {
-  HOME = 'home',
-  UNISWAP = 'uniswap',
-  SUSHISWAP = 'sushiswap',
-  COMPOUND = 'compound'
-}
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
