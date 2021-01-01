@@ -7,7 +7,7 @@ import { ApplicationModal, setOpenModal } from '../../state/application/actions'
 // Redirects to swap but only replace the pathname
 export function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
   const [pathName, setPathName] = useState<string>('')
-  const router = useRouteMatch().url;
+  const router = useRouteMatch().url
 
   useEffect(() => {
     if (router) {
@@ -28,14 +28,14 @@ export function RedirectToSwap(props: RouteComponentProps<{ outputCurrency: stri
   } = props
 
   const [pathName, setPathName] = useState<string>('')
-  const router = useRouteMatch().url;
+  const router = useRouteMatch().url
 
   useEffect(() => {
     if (router) {
       setPathName(router)
     }
   }, [router])
-  
+
   return (
     <Redirect
       to={{

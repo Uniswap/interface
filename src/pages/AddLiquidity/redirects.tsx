@@ -4,7 +4,7 @@ import AddLiquidity from './index'
 
 export function RedirectToAddLiquidity() {
   const [pathName, setPathName] = useState<string>('')
-  const router = useRouteMatch().url;
+  const router = useRouteMatch().url
 
   useEffect(() => {
     if (router) {
@@ -24,7 +24,7 @@ export function RedirectOldAddLiquidityPathStructure(props: RouteComponentProps<
   } = props
 
   const [pathName, setPathName] = useState<string>('')
-  const router = useRouteMatch().url;
+  const router = useRouteMatch().url
 
   useEffect(() => {
     if (router) {
@@ -48,14 +48,13 @@ export function RedirectDuplicateTokenIds(props: RouteComponentProps<{ currencyI
   } = props
 
   const [pathName, setPathName] = useState<string>('')
-  const router = useRouteMatch().url;
+  const router = useRouteMatch().url
 
   useEffect(() => {
     if (router) {
       setPathName(router)
     }
   }, [router])
-
 
   if (currencyIdA.toLowerCase() === currencyIdB.toLowerCase()) {
     return <Redirect to={`/${pathName}/add/${currencyIdA}`} />

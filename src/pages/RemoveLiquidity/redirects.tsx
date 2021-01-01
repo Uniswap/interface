@@ -9,7 +9,7 @@ export function RedirectOldRemoveLiquidityPathStructure({
   }
 }: RouteComponentProps<{ tokens: string }>) {
   const [pathName, setPathName] = useState<string>('')
-  const router = useRouteMatch().url;
+  const router = useRouteMatch().url
 
   useEffect(() => {
     if (router) {
