@@ -11,7 +11,7 @@ const NAME_FOR_DEX: { [key: string]: string } = {
 
 const ICON_FOR_DEX: { [key: string]: string } = {
   UNISWAP_DEX: '🦄',
-  COMPOUND_DEX: '👨‍🌾',
+  COMPOUND_DEX: '',
   SUSHISWAP_DEX: '🍣'
 }
 

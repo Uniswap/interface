@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
@@ -7,10 +6,12 @@ import Card from './Card'
 import CardIcon from '../../../components/CardIcon'
 import IconLoader from '../../../components/IconLoader'
 import Spacer from '../../../components/Spacer'
+import CompoundIcon from '../../../assets/svg/logo_compound.svg'
 
 import useHome from '../../../hooks/useHome'
 
 import { Home } from '../../../contexts/home'
+import { PageFields } from 'data/Reserves'
 
 const StyledCardContent = styled.div`
   display: flex;
@@ -120,6 +121,17 @@ function CardContent({ children }: { children: ReactNode }) {
   return <StyledCardContent>{children}</StyledCardContent>
 }
 
+function DefiIcon({ name }: { name: string }) {
+  const iconName = name.toLocaleLowerCase()
+
+  switch (iconName) {
+    case PageFields.COMPOUND:
+      return <img width={'60px'} src={CompoundIcon} alt={iconName} />
+    default:
+      return <></>
+  }
+}
+
 function HomeCard({ home }: { home: Home }) {
   return (
     <StyledCardWrapper>
@@ -127,13 +139,13 @@ function HomeCard({ home }: { home: Home }) {
       <Card>
         <CardContent>
           <StyledContent>
-            <CardIcon>{home.icon}</CardIcon>
+            <CardIcon>{home.icon ? home.icon : <DefiIcon name={home.name} />}</CardIcon>
             <StyledTitle>{home.name}</StyledTitle>
             <StyledDetails>
               <StyledDetail>{home.description}</StyledDetail>
             </StyledDetails>
             <Spacer />
-            <Button to={`/${home.id}${home.home}`} text={'Select'}></Button>
+            <Button to={`/${home.id}${home.home}`} text={'Enter'}></Button>
           </StyledContent>
         </CardContent>
       </Card>
