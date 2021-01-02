@@ -70,7 +70,6 @@ const Break = styled.div`
 `
 
 const ModalContentWrapper = styled.div`
-  overflow-y: scroll;
   padding: 2rem 0;
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 4px;
@@ -596,7 +595,7 @@ function LendModal({
       />
       <Modal isOpen={showLendConfirmation} onDismiss={() => setShowLendConfirmation(false)}>
         <ModalContentWrapper>
-          <AutoColumn gap={'0'} style={{ width: '100%' }}>
+          <AutoColumn gap={'0'} style={{ width: '100%', height: '100%' }}>
             <RowBetween style={{ padding: '0 2rem 1.2rem' }}>
               <div />
               <AssetLogo>
@@ -612,252 +611,258 @@ function LendModal({
               <StyledCloseIcon onClick={() => setShowLendConfirmation(false)} />
             </RowBetween>
             <Break />
-            <AutoColumn gap={'sm'}>
-              {tabItemActive === LendField.WITHDRAW ||
-              tabItemActive === LendField.BORROW ||
-              (approvalTokenStatus === ApprovalState.APPROVED && lendToken?.address) ? (
-                <ApproveWrap>
-                  <div />
-                  <LendInputPanel
-                    value={lendInputValue}
-                    safeMax={tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW}
-                    onUserInput={setLendInputValue}
-                    onMax={() => {
-                      if (lendToken) {
-                        switch (tabItemActive) {
-                          case LendField.SUPPLY:
-                            setLendInputValue(onSupplyMax()?.toExact() ?? '')
-                            break
-                          case LendField.WITHDRAW:
-                            setLendInputValue(onWithdrawMax(lendToken, true).toExact() ?? '')
-                            break
-                          case LendField.BORROW:
-                            setLendInputValue(onBorrowMax(lendToken, true).toExact() ?? '')
-                            break
-                          case LendField.REPAY:
-                            setLendInputValue(onRepayMax(lendToken)?.toExact() ?? '')
-                            break
-                          default:
-                            break
+            <div style={{ overflowY: 'scroll' }}>
+              <AutoColumn gap={'sm'}>
+                {tabItemActive === LendField.WITHDRAW ||
+                tabItemActive === LendField.BORROW ||
+                (approvalTokenStatus === ApprovalState.APPROVED && lendToken?.address) ? (
+                  <ApproveWrap>
+                    <div />
+                    <LendInputPanel
+                      value={lendInputValue}
+                      safeMax={tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW}
+                      onUserInput={setLendInputValue}
+                      onMax={() => {
+                        if (lendToken) {
+                          switch (tabItemActive) {
+                            case LendField.SUPPLY:
+                              setLendInputValue(onSupplyMax()?.toExact() ?? '')
+                              break
+                            case LendField.WITHDRAW:
+                              setLendInputValue(onWithdrawMax(lendToken, true).toExact() ?? '')
+                              break
+                            case LendField.BORROW:
+                              setLendInputValue(onBorrowMax(lendToken, true).toExact() ?? '')
+                              break
+                            case LendField.REPAY:
+                              setLendInputValue(onRepayMax(lendToken)?.toExact() ?? '')
+                              break
+                            default:
+                              break
+                          }
+                        } else {
+                          return
                         }
-                      } else {
-                        return
-                      }
-                    }}
-                    label={t('amount')}
-                    showMaxButton={true}
-                    id="lend-input"
-                  />
-                </ApproveWrap>
-              ) : (
-                <ApproveWrap>
-                  {lendToken?.logo1 ? (
-                    <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
-                  ) : (
-                    <CurrencyIcon logo0={lendToken?.logo0} size={'4.4rem'} style={{ marginBottom: '2rem' }} />
-                  )}
-                  <Text fontWeight={400} fontSize={'0.9rem'} textAlign={'center'} lineHeight={'1rem'}>
-                    {t('approveQuestionHelper')}
-                  </Text>
-                </ApproveWrap>
-              )}
-            </AutoColumn>
-            <AutoColumn gap={'0'}>
-              <TabWrap>
-                <TabItem
-                  isActive={
-                    lendMarket === LendField.SUPPLY
-                      ? LendField.SUPPLY === tabItemActive
-                      : LendField.BORROW === tabItemActive
-                  }
-                  onClick={() => {
-                    if (
-                      lendMarket === LendField.SUPPLY
-                        ? LendField.SUPPLY === tabItemActive
-                        : LendField.BORROW === tabItemActive
-                    ) {
-                      setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
-                    } else {
-                      setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
-                      setLendInputValue('')
-                    }
-                  }}
-                >
-                  {lendMarket === LendField.SUPPLY
-                    ? t(LendField.SUPPLY.toLowerCase())
-                    : t(LendField.BORROW.toLowerCase())}
-                </TabItem>
-                <TabItem
-                  isActive={
-                    lendMarket === LendField.SUPPLY
-                      ? LendField.WITHDRAW === tabItemActive
-                      : LendField.REPAY === tabItemActive
-                  }
-                  onClick={() => {
-                    if (
-                      lendMarket === LendField.SUPPLY
-                        ? LendField.WITHDRAW === tabItemActive
-                        : LendField.REPAY === tabItemActive
-                    ) {
-                      setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
-                    } else {
-                      setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
-                      setLendInputValue('')
-                    }
-                  }}
-                >
-                  {lendMarket === LendField.SUPPLY
-                    ? t(LendField.WITHDRAW.toLowerCase())
-                    : t(LendField.REPAY.toLowerCase())}
-                </TabItem>
-              </TabWrap>
-              <Break />
-            </AutoColumn>
-            <AutoColumn gap={'0'}>
-              <RateWrap>
-                <RateTitle>{lendMarket === LendField.BORROW ? t('borrowRates') : t('supplyRates')}</RateTitle>
-                <RatePanel>
-                  <AutoRow>
+                      }}
+                      label={t('amount')}
+                      showMaxButton={true}
+                      id="lend-input"
+                    />
+                  </ApproveWrap>
+                ) : (
+                  <ApproveWrap>
                     {lendToken?.logo1 ? (
                       <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
                     ) : (
-                      <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '6px' }} />
+                      <CurrencyIcon logo0={lendToken?.logo0} size={'4.4rem'} style={{ marginBottom: '2rem' }} />
                     )}
-                    <Text lineHeight={'24px'}>
-                      {lendToken?.symbol} {t('APY')}
+                    <Text fontWeight={400} fontSize={'0.9rem'} textAlign={'center'} lineHeight={'1rem'}>
+                      {t('approveQuestionHelper')}
                     </Text>
-                  </AutoRow>
-                  <RateCalculation>
-                    {lendToken && lendMarket === LendField.SUPPLY
-                      ? getSupplyApy(lendToken).toFixed(2)
-                      : lendToken && getBorrowApy(lendToken).toFixed(2)}
-                    %
-                  </RateCalculation>
-                </RatePanel>
-              </RateWrap>
-              {(approvalTokenStatus === ApprovalState.APPROVED ||
-                tabItemActive === LendField.WITHDRAW ||
-                tabItemActive === LendField.BORROW) && (
+                  </ApproveWrap>
+                )}
+              </AutoColumn>
+              <AutoColumn gap={'0'}>
+                <TabWrap>
+                  <TabItem
+                    isActive={
+                      lendMarket === LendField.SUPPLY
+                        ? LendField.SUPPLY === tabItemActive
+                        : LendField.BORROW === tabItemActive
+                    }
+                    onClick={() => {
+                      if (
+                        lendMarket === LendField.SUPPLY
+                          ? LendField.SUPPLY === tabItemActive
+                          : LendField.BORROW === tabItemActive
+                      ) {
+                        setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
+                      } else {
+                        setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.SUPPLY : LendField.BORROW)
+                        setLendInputValue('')
+                      }
+                    }}
+                  >
+                    {lendMarket === LendField.SUPPLY
+                      ? t(LendField.SUPPLY.toLowerCase())
+                      : t(LendField.BORROW.toLowerCase())}
+                  </TabItem>
+                  <TabItem
+                    isActive={
+                      lendMarket === LendField.SUPPLY
+                        ? LendField.WITHDRAW === tabItemActive
+                        : LendField.REPAY === tabItemActive
+                    }
+                    onClick={() => {
+                      if (
+                        lendMarket === LendField.SUPPLY
+                          ? LendField.WITHDRAW === tabItemActive
+                          : LendField.REPAY === tabItemActive
+                      ) {
+                        setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
+                      } else {
+                        setTabItemActive(lendMarket === LendField.SUPPLY ? LendField.WITHDRAW : LendField.REPAY)
+                        setLendInputValue('')
+                      }
+                    }}
+                  >
+                    {lendMarket === LendField.SUPPLY
+                      ? t(LendField.WITHDRAW.toLowerCase())
+                      : t(LendField.REPAY.toLowerCase())}
+                  </TabItem>
+                </TabWrap>
+                <Break />
+              </AutoColumn>
+              <AutoColumn gap={'0'}>
                 <RateWrap>
-                  <RateTitle>{t('borrowLimit')}</RateTitle>
-                  <RatePanel>
-                    <Text lineHeight={'24px'}>
-                      {lendMarket === LendField.BORROW ? t('borrowBalance') : t('borrowLimit')}
-                    </Text>
-                    <RateCalculation>
-                      <Text>
-                        $
-                        {lendMarket === LendField.BORROW
-                          ? formatData(borrowTotalBalance).toFixed(2)
-                          : formatData(limit).toFixed(2)}
-                      </Text>
-                      {lendInputValue && (
-                        <>
-                          <ArrowRight color={'#ff007a'} size={16} />
-                          <Text>${changedBorrowLimit.toFixed(2)}</Text>
-                        </>
-                      )}
-                    </RateCalculation>
-                  </RatePanel>
-                  <Break />
+                  <RateTitle>{lendMarket === LendField.BORROW ? t('borrowRates') : t('supplyRates')}</RateTitle>
                   <RatePanel>
                     <AutoRow>
-                      <Text lineHeight={'24px'}>{t('borrowLimitUsed')}</Text>
+                      {lendToken?.logo1 ? (
+                        <DoubleAssetLogo logo0={lendToken?.logo0} logo1={lendToken?.logo1} size={24} />
+                      ) : (
+                        <CurrencyIcon logo0={lendToken?.logo0} style={{ marginRight: '6px' }} />
+                      )}
+                      <Text lineHeight={'24px'}>
+                        {lendToken?.symbol} {t('APY')}
+                      </Text>
                     </AutoRow>
                     <RateCalculation>
-                      <Text>{usedLimit.toSignificant(4) ?? '0.00'}%</Text>
-                      {lendInputValue && (
-                        <>
-                          <ArrowRight color={'#ff007a'} size={16} />
-                          <Text>{changedBorrowLimitUsed.toFixed(2)}%</Text>
-                        </>
-                      )}
+                      {lendToken && lendMarket === LendField.SUPPLY
+                        ? getSupplyApy(lendToken).toFixed(2)
+                        : lendToken && getBorrowApy(lendToken).toFixed(2)}
+                      %
                     </RateCalculation>
                   </RatePanel>
-                  <MarketBar
-                    rate={
-                      lendInputValue && changedBorrowLimitUsed
-                        ? Number(changedBorrowLimitUsed.toFixed(2))
-                        : Number(usedLimit.toSignificant(4))
-                    }
-                  />
                 </RateWrap>
-              )}
-            </AutoColumn>
-            <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>
-              {tabItemActive === LendField.SUPPLY || tabItemActive === LendField.REPAY ? (
-                <>
-                  {approvalTokenStatus === ApprovalState.APPROVED ? (
-                    <ButtonLight
-                      disabled={inputError}
-                      onClick={() => {
-                        setTxHash('')
-                        setShowConfirm(true)
-                        if (lendToken && inputAmount && tabItemActive === LendField.SUPPLY) {
-                          onMint(lendToken, lendInputValue, lendToken.isETH())
-                          setShowLendConfirmation(false)
-                        }
-                        if (lendToken && inputAmount && tabItemActive === LendField.REPAY) {
-                          onRepayBorrow(lendToken, lendInputValue, lendToken.isETH())
-                          setShowLendConfirmation(false)
-                        }
-                      }}
-                    >
-                      {inputText?.toLocaleUpperCase()}
-                    </ButtonLight>
-                  ) : (
-                    <ButtonLight
-                      disabled={approvalTokenStatus === ApprovalState.PENDING}
-                      onClick={() => {
-                        setTxHash('')
-                        setPendingText('')
-                        setShowConfirm(true)
-                        approveCallback()
-                      }}
-                    >
-                      {approvalTokenStatus === ApprovalState.PENDING ? <Dots>{t('approvePending')}</Dots> : t('enable')}
-                    </ButtonLight>
-                  )}
-                </>
-              ) : (
-                <ButtonLight
-                  disabled={inputError}
-                  onClick={() => {
-                    setTxHash('')
-                    setShowConfirm(true)
-                    if (lendToken && inputAmount && tabItemActive === LendField.WITHDRAW) {
-                      onRedeem(lendToken, lendInputValue)
-                      setShowLendConfirmation(false)
-                    }
+                {(approvalTokenStatus === ApprovalState.APPROVED ||
+                  tabItemActive === LendField.WITHDRAW ||
+                  tabItemActive === LendField.BORROW) && (
+                  <RateWrap>
+                    <RateTitle>{t('borrowLimit')}</RateTitle>
+                    <RatePanel>
+                      <Text lineHeight={'24px'}>
+                        {lendMarket === LendField.BORROW ? t('borrowBalance') : t('borrowLimit')}
+                      </Text>
+                      <RateCalculation>
+                        <Text>
+                          $
+                          {lendMarket === LendField.BORROW
+                            ? formatData(borrowTotalBalance).toFixed(2)
+                            : formatData(limit).toFixed(2)}
+                        </Text>
+                        {lendInputValue && (
+                          <>
+                            <ArrowRight color={'#ff007a'} size={16} />
+                            <Text>${changedBorrowLimit.toFixed(2)}</Text>
+                          </>
+                        )}
+                      </RateCalculation>
+                    </RatePanel>
+                    <Break />
+                    <RatePanel>
+                      <AutoRow>
+                        <Text lineHeight={'24px'}>{t('borrowLimitUsed')}</Text>
+                      </AutoRow>
+                      <RateCalculation>
+                        <Text>{usedLimit.toSignificant(4) ?? '0.00'}%</Text>
+                        {lendInputValue && (
+                          <>
+                            <ArrowRight color={'#ff007a'} size={16} />
+                            <Text>{changedBorrowLimitUsed.toFixed(2)}%</Text>
+                          </>
+                        )}
+                      </RateCalculation>
+                    </RatePanel>
+                    <MarketBar
+                      rate={
+                        lendInputValue && changedBorrowLimitUsed
+                          ? Number(changedBorrowLimitUsed.toFixed(2))
+                          : Number(usedLimit.toSignificant(4))
+                      }
+                    />
+                  </RateWrap>
+                )}
+              </AutoColumn>
+              <AutoColumn gap="md" style={{ padding: '1.4rem 2rem 0' }}>
+                {tabItemActive === LendField.SUPPLY || tabItemActive === LendField.REPAY ? (
+                  <>
+                    {approvalTokenStatus === ApprovalState.APPROVED ? (
+                      <ButtonLight
+                        disabled={inputError}
+                        onClick={() => {
+                          setTxHash('')
+                          setShowConfirm(true)
+                          if (lendToken && inputAmount && tabItemActive === LendField.SUPPLY) {
+                            onMint(lendToken, lendInputValue, lendToken.isETH())
+                            setShowLendConfirmation(false)
+                          }
+                          if (lendToken && inputAmount && tabItemActive === LendField.REPAY) {
+                            onRepayBorrow(lendToken, lendInputValue, lendToken.isETH())
+                            setShowLendConfirmation(false)
+                          }
+                        }}
+                      >
+                        {inputText?.toLocaleUpperCase()}
+                      </ButtonLight>
+                    ) : (
+                      <ButtonLight
+                        disabled={approvalTokenStatus === ApprovalState.PENDING}
+                        onClick={() => {
+                          setTxHash('')
+                          setPendingText('')
+                          setShowConfirm(true)
+                          approveCallback()
+                        }}
+                      >
+                        {approvalTokenStatus === ApprovalState.PENDING ? (
+                          <Dots>{t('approvePending')}</Dots>
+                        ) : (
+                          t('enable')
+                        )}
+                      </ButtonLight>
+                    )}
+                  </>
+                ) : (
+                  <ButtonLight
+                    disabled={inputError}
+                    onClick={() => {
+                      setTxHash('')
+                      setShowConfirm(true)
+                      if (lendToken && inputAmount && tabItemActive === LendField.WITHDRAW) {
+                        onRedeem(lendToken, lendInputValue)
+                        setShowLendConfirmation(false)
+                      }
 
-                    if (lendToken && inputAmount && tabItemActive === LendField.BORROW) {
-                      onBorrow(lendToken, lendInputValue)
-                      setShowLendConfirmation(false)
-                    }
-                  }}
-                >
-                  {inputText?.toLocaleUpperCase()}
-                </ButtonLight>
-              )}
-            </AutoColumn>
-            <AutoColumn gap={'0'} style={{ padding: '0.6rem 2rem 0' }}>
-              <AutoRow justify={'space-between'}>
-                <Text fontWeight={500}>
-                  {tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW
+                      if (lendToken && inputAmount && tabItemActive === LendField.BORROW) {
+                        onBorrow(lendToken, lendInputValue)
+                        setShowLendConfirmation(false)
+                      }
+                    }}
+                  >
+                    {inputText?.toLocaleUpperCase()}
+                  </ButtonLight>
+                )}
+              </AutoColumn>
+              <AutoColumn gap={'0'} style={{ padding: '0.6rem 2rem 0' }}>
+                <AutoRow justify={'space-between'}>
+                  <Text fontWeight={500}>
+                    {tabItemActive === LendField.WITHDRAW || tabItemActive === LendField.BORROW
+                      ? tabItemActive === LendField.WITHDRAW
+                        ? t('currentlySupplying')
+                        : t('currentlyBorrowing')
+                      : t('walletBalance')}
+                  </Text>
+                  {(lendToken && tabItemActive === LendField.WITHDRAW) ||
+                  (lendToken && tabItemActive === LendField.BORROW)
                     ? tabItemActive === LendField.WITHDRAW
-                      ? t('currentlySupplying')
-                      : t('currentlyBorrowing')
-                    : t('walletBalance')}
-                </Text>
-                {(lendToken && tabItemActive === LendField.WITHDRAW) ||
-                (lendToken && tabItemActive === LendField.BORROW)
-                  ? tabItemActive === LendField.WITHDRAW
-                    ? new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toFixed(4)
-                    : new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toFixed(4)
-                  : (walletBalanceAmount && walletBalanceAmount.toSignificant()) || '0'}
-                {' ' + lendToken?.symbol}
-              </AutoRow>
-            </AutoColumn>
+                      ? new TokenAmount(lendToken, lendToken.getSupplyBalanceAmount()).toFixed(4)
+                      : new TokenAmount(lendToken, lendToken.getBorrowBalanceAmount()).toFixed(4)
+                    : (walletBalanceAmount && walletBalanceAmount.toSignificant()) || '0'}
+                  {' ' + lendToken?.symbol}
+                </AutoRow>
+              </AutoColumn>
+            </div>
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
