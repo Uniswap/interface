@@ -96,6 +96,28 @@ const CTOKEN_LISTS: {
       'USDC-USDT LP',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png'
+    ],
+    [
+      '0x37dbf0C87457A18C872633577526833CfB4688a0',
+      '0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc',
+      18,
+      'dETH-USDC',
+      'Deerfi ETH-USDC',
+      'ETH-USDC',
+      'ETH-USDC LP',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png'
+    ],
+    [
+      '0x7427e678E8231589126411c393BDa8c85D70387f',
+      '0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852',
+      18,
+      'dETH-USDT',
+      'Deerfi ETH-USDT',
+      'ETH-USDT',
+      'ETH-USDT LP',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png'
     ]
   ],
   [ChainId.ROPSTEN]: [
