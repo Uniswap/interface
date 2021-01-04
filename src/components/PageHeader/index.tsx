@@ -22,7 +22,7 @@ const StyledIcon = styled.div`
 `
 
 const StyledTitle = styled.h1`
-  color: ${({ theme }) => theme.grey600};
+  color: ${({ theme }) => theme.text1};
   font-size: 36px;
   font-weight: 700;
   margin: 0;
@@ -30,7 +30,7 @@ const StyledTitle = styled.h1`
 `
 
 const StyledSubtitle = styled.h3`
-  color: ${({ theme }) => theme.grey400};
+  color: ${({ theme }) => theme.text2};
   font-size: 18px;
   font-weight: 400;
   margin: 0;
