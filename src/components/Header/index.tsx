@@ -1,7 +1,7 @@
 import { ChainId } from 'dxswap-sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { Link, NavLink, withRouter } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 
 import styled from 'styled-components'
 
@@ -94,7 +94,7 @@ const HeaderElementWrap = styled.div`
 
 const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
+    width: 100%;
   `};
 `
 
@@ -238,11 +238,9 @@ function Header({ history }: { history: any }) {
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
         <Title href=".">
-          <Link id="link" to="/">
-            <DXswapIcon>
-              <img src={isDark ? LogoDark : Logo} alt="logo" />
-            </DXswapIcon>
-          </Link>
+          <DXswapIcon>
+            <img src={isDark ? LogoDark : Logo} alt="logo" />
+          </DXswapIcon>
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => history.location.pathname.includes('/swap')}>
