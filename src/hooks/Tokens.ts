@@ -10,6 +10,7 @@ import { isAddress } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 import { filterTokens } from '../components/SearchModal/filtering'
+import { arrayify } from 'ethers/lib/utils'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -103,10 +104,12 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
+
 function parseStringOrBytes32(str: string | undefined, bytes32: string | undefined, defaultValue: string): string {
   return str && str.length > 0
     ? str
-    : bytes32 && BYTES32_REGEX.test(bytes32)
+    : // need to check for proper bytes string and valid terminator
+    bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
     ? parseBytes32String(bytes32)
     : defaultValue
 }
