@@ -11,7 +11,7 @@ import { TokenList } from '@uniswap/token-lists'
 import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
-import { useIsListActive } from '../../state/lists/hooks'
+import { useIsListActive, useAllLists, useActiveListUrls } from '../../state/lists/hooks'
 import { ExternalLink, LinkStyledButton, TYPE, IconWrapper } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
@@ -27,7 +27,7 @@ import useTheme from '../../hooks/useTheme'
 import ListToggle from '../Toggle/ListToggle'
 import { OutlineCard } from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
-import { DEFAULT_TOKEN_LIST_URL } from 'constants/lists'
+import { DEFAULT_TOKEN_LIST_URL, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 
 const Wrapper = styled(Column)`
   width: 100%;
@@ -208,7 +208,16 @@ export function ManageLists({
 
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const lists = useAllLists()
+
+  // sort by active but only if not visible
+  const activeListUrls = useActiveListUrls()
+  const [activeCopy, setActiveCopy] = useState<string[] | undefined>()
+  useEffect(() => {
+    if (!activeCopy && activeListUrls) {
+      setActiveCopy(activeListUrls)
+    }
+  }, [activeCopy, activeListUrls])
 
   const handleInput = useCallback(e => {
     setListUrlInput(e.target.value)
@@ -224,19 +233,25 @@ export function ManageLists({
     const listUrls = Object.keys(lists)
     return listUrls
       .filter(listUrl => {
-        return Boolean(lists[listUrl].current) && !Boolean(listUrl === DEFAULT_TOKEN_LIST_URL)
+        // only show loaded lists
+        // dont show default list or unsupported lists, used for background logic
+        return (
+          Boolean(lists[listUrl].current) &&
+          !Boolean(listUrl === DEFAULT_TOKEN_LIST_URL) &&
+          !Boolean(UNSUPPORTED_LIST_URLS.includes(listUrl))
+        )
       })
       .sort((u1, u2) => {
         const { current: l1 } = lists[u1]
         const { current: l2 } = lists[u2]
 
         // first filter on active lists
-        // if (activeCopy?.includes(u1) && !activeCopy?.includes(u2)) {
-        //   return -1
-        // }
-        // if (!activeCopy?.includes(u1) && activeCopy?.includes(u2)) {
-        //   return 1
-        // }
+        if (activeCopy?.includes(u1) && !activeCopy?.includes(u2)) {
+          return -1
+        }
+        if (!activeCopy?.includes(u1) && activeCopy?.includes(u2)) {
+          return 1
+        }
 
         if (l1 && l2) {
           return l1.name.toLowerCase() < l2.name.toLowerCase()
@@ -249,7 +264,7 @@ export function ManageLists({
         if (l2) return 1
         return 0
       })
-  }, [lists])
+  }, [lists, activeCopy])
 
   // temporary fetched list for import flow
   const [tempList, setTempList] = useState<TokenList>()

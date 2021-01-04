@@ -1,3 +1,4 @@
+import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -67,8 +68,8 @@ export default function Updater(): null {
             break
 
           case VersionUpgrade.MAJOR:
-            // accept update if list is active
-            if (activeListUrls?.includes(listUrl)) {
+            // accept update if list is active or list in background
+            if (activeListUrls?.includes(listUrl) || UNSUPPORTED_LIST_URLS.includes(listUrl)) {
               dispatch(acceptListUpdate(listUrl))
             }
         }

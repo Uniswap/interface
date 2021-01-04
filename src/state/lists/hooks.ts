@@ -1,3 +1,4 @@
+import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 import { DEFAULT_TOKEN_LIST_URL } from 'constants/lists'
 import { ChainId, Token } from '@uniswap/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
@@ -77,10 +78,6 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-export function useActiveListUrls(): string[] | undefined {
-  return useSelector<AppState, AppState['lists']['activeListUrls']>(state => state.lists.activeListUrls)
-}
-
 // merge tokens contained within lists from urls
 export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
@@ -124,10 +121,16 @@ export function useAllLists(): {
   return useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
 }
 
+export function useActiveListUrls(): string[] | undefined {
+  return useSelector<AppState, AppState['lists']['activeListUrls']>(state => state.lists.activeListUrls)?.filter(
+    url => !UNSUPPORTED_LIST_URLS.includes(url)
+  )
+}
+
 export function useInactiveListUrls(): string[] {
   const lists = useAllLists()
   const allActiveListUrls = useActiveListUrls()
-  return Object.keys(lists).filter(url => !allActiveListUrls?.includes(url))
+  return Object.keys(lists).filter(url => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url))
 }
 
 // all tokens from inactive lists
@@ -143,10 +146,14 @@ export function useCombinedActiveList(): TokenAddressMap {
 }
 
 export function useIsListActive(url: string): boolean {
-  const allActiveLists = useActiveListUrls()
-  return Boolean(allActiveLists?.includes(url))
+  const activeListUrls = useActiveListUrls()
+  return Boolean(activeListUrls?.includes(url))
 }
 
 export function useDefaultTokenList(): TokenAddressMap {
   return useCombinedTokenMapFromUrls([DEFAULT_TOKEN_LIST_URL])
+}
+
+export function useBlockedTokenList(): TokenAddressMap {
+  return useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 }

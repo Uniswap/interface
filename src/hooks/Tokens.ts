@@ -1,4 +1,4 @@
-import { TokenAddressMap, useDefaultTokenList } from './../state/lists/hooks'
+import { TokenAddressMap, useDefaultTokenList, useBlockedTokenList } from './../state/lists/hooks'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, ETHER, Token, currencyEquals } from '@uniswap/sdk'
 import { useMemo } from 'react'
@@ -11,7 +11,7 @@ import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 import { filterTokens } from '../components/SearchModal/filtering'
 
-// reduce token map into standard address <-> Token mapping
+// reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
@@ -58,6 +58,11 @@ export function useAllTokens(): { [address: string]: Token } {
 export function useAllInactiveTokens(): { [address: string]: Token } {
   const inactiveTokensMap = useCombinedInactiveList()
   return useTokensFromMap(inactiveTokensMap, false)
+}
+
+export function useBlockedTokens(): { [address: string]: Token } {
+  const blockedTokensMap = useBlockedTokenList()
+  return useTokensFromMap(blockedTokensMap, false)
 }
 
 export function useIsTokenActive(token: Token | undefined | null): boolean {

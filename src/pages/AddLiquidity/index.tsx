@@ -38,6 +38,8 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
+import { useIsTransactionUnsupported } from 'hooks/Trades'
+import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 
 export default function AddLiquidity({
   match: {
@@ -304,6 +306,8 @@ export default function AddLiquidity({
 
   const isCreate = history.location.pathname.includes('/create')
 
+  const addIsUnsupported = useIsTransactionUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
+
   return (
     <>
       <AppBody>
@@ -392,6 +396,10 @@ export default function AddLiquidity({
 
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+            ) : addIsUnsupported ? (
+              <ButtonPrimary disabled={true}>
+                <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
+              </ButtonPrimary>
             ) : (
               <AutoColumn gap={'md'}>
                 {(approvalA === ApprovalState.NOT_APPROVED ||
@@ -444,12 +452,15 @@ export default function AddLiquidity({
           </AutoColumn>
         </Wrapper>
       </AppBody>
-
-      {pair && !noLiquidity && pairState !== PairState.INVALID ? (
-        <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
-          <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
-        </AutoColumn>
-      ) : null}
+      {!addIsUnsupported ? (
+        pair && !noLiquidity && pairState !== PairState.INVALID ? (
+          <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
+            <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
+          </AutoColumn>
+        ) : null
+      ) : (
+        <UnsupportedCurrencyFooter show={addIsUnsupported} />
+      )}
     </>
   )
 }

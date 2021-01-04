@@ -44,6 +44,8 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import { useIsTransactionUnsupported } from 'hooks/Trades'
+import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -272,6 +274,8 @@ export default function Swap() {
     onCurrencySelection
   ])
 
+  const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
+
   return (
     <>
       <TokenWarningModal
@@ -384,6 +388,10 @@ export default function Swap() {
           <BottomGrouping>
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+            ) : swapIsUnsupported ? (
+              <ButtonPrimary disabled={true}>
+                <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
+              </ButtonPrimary>
             ) : showWrap ? (
               <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
@@ -482,7 +490,11 @@ export default function Swap() {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
-      <AdvancedSwapDetailsDropdown trade={trade} />
+      {!swapIsUnsupported ? (
+        <AdvancedSwapDetailsDropdown trade={trade} />
+      ) : (
+        <UnsupportedCurrencyFooter show={swapIsUnsupported} />
+      )}
     </>
   )
 }

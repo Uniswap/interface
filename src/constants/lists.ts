@@ -1,6 +1,9 @@
 // the Uniswap Default token list lives here
 export const DEFAULT_TOKEN_LIST_URL = 'tokens.uniswap.eth'
 
+// used to mark unsupported tokens
+export const UNSUPPORTED_LIST_URLS = ['https://app.tryroll.com/tokens.json']
+
 /**
  * sort priority for merging tokens
  * lower number == higher priority
@@ -16,6 +19,7 @@ export const LIST_MERGE_PRIORITY: {
 // all lists to load initially
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   DEFAULT_TOKEN_LIST_URL,
+  ...UNSUPPORTED_LIST_URLS,
   // 't2crtokens.eth', // kleros
   // 'tokens.1inch.eth', // 1inch
   // 'synths.snx.eth',
@@ -26,7 +30,7 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
   'tokenlist.zerion.eth',
   'tokenlist.aave.eth',
   // 'https://tokens.coingecko.com/uniswap/all.json',
-  'https://app.tryroll.com/tokens.json',
+  // 'https://app.tryroll.com/tokens.json',
   'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json',
   // 'https://defiprime.com/defiprime.tokenlist.json',
   'https://umaproject.org/uma.tokenlist.json'

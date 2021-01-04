@@ -208,10 +208,10 @@ export const ButtonEmpty = styled(Base)`
     text-decoration: underline;
   }
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
   }
   &:active {
-    text-decoration: underline;
+    text-decoration: none;
   }
   &:disabled {
     opacity: 50%;
