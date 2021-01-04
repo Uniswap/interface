@@ -16,7 +16,7 @@ import {
   confirmTokenTransferSuccess,
   transferError
 } from '../actions'
-import { FOREIGN_BRIDGE_CHAIN } from '../../../constants'
+import { FOREIGN_BRIDGE_CHAIN, GAS_PRICE } from '../../../constants'
 import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 import HomeBridgeABI from '../../../constants/abis/homeBridgeNativeToErc.json'
@@ -58,7 +58,8 @@ export default class NativeToErcBridge extends TokenBridge {
     return {
       to: this.homeBridgeAddress,
       from: this.account,
-      value: parseUnits(formatUnits(this.amount.raw.toString()))
+      value: parseUnits(formatUnits(this.amount.raw.toString())),
+      ...(GAS_PRICE && { gasPrice: GAS_PRICE })
     }
   }
 

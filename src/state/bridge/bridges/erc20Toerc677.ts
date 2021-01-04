@@ -23,7 +23,8 @@ import {
   FUSE_MAINNET_HOME_BRIDGE_ADDRESS,
   FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS,
   ROPSTEN_FOREIGN_BRIDGE_ADDRESS,
-  MAINNET_FOREIGN_BRIDGE_ADDRESS
+  MAINNET_FOREIGN_BRIDGE_ADDRESS,
+  GAS_PRICE
 } from '../../../constants'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 import HomeBridgeABI from '../../../constants/abis/homeMultiAMBErc20ToErc677.json'
@@ -87,7 +88,10 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
     const args = [this.bridgeAddress, this.amount.raw.toString(), []]
 
     const estimatedGas = await contract.estimateGas.transferAndCall(...args, {})
-    const response = await contract.transferAndCall(...args, { gasLimit: calculateGasMargin(estimatedGas) })
+    const response = await contract.transferAndCall(...args, {
+      ...(GAS_PRICE && { gasPrice: GAS_PRICE }),
+      gasLimit: calculateGasMargin(estimatedGas)
+    })
 
     this.dispatch(tokenTransferSuccess())
 
