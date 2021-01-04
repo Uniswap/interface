@@ -386,12 +386,12 @@ export default function Swap() {
             )}
           </AutoColumn>
           <BottomGrouping>
-            {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-            ) : swapIsUnsupported ? (
+            {swapIsUnsupported ? (
               <ButtonPrimary disabled={true}>
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
+            ) : !account ? (
+              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : showWrap ? (
               <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??

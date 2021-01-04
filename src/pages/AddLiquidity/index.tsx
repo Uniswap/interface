@@ -394,12 +394,12 @@ export default function AddLiquidity({
               </>
             )}
 
-            {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-            ) : addIsUnsupported ? (
+            {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
+            ) : !account ? (
+              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : (
               <AutoColumn gap={'md'}>
                 {(approvalA === ApprovalState.NOT_APPROVED ||
