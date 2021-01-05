@@ -139,7 +139,11 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
-            <ExternalLink style={{ width: 175 }} target="_blank" href="http://info.fuseswap.com">
+            <ExternalLink
+              style={{ width: 175, fontWeight: 400, color: 'white' }}
+              target="_blank"
+              href="http://info.fuseswap.com"
+            >
               Analytics <ExternalLinkIcon size={14} />
             </ExternalLink>
             <TestnetWrapper>
