@@ -6,6 +6,7 @@ import { Text } from 'rebass'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { transparentize } from 'polished'
+import { Currency } from 'dxswap-sdk'
 
 const LightCardWrap = styled(Card)`
   border: 1px solid ${({ theme }) => transparentize(0.3, theme.bg2)};
@@ -29,15 +30,16 @@ interface CardProps {
   name: string
   pairs: number
   proposals?: number
+  currency?: Currency
 }
 
-export const GovernanceCard = ({ name, pairs, proposals }: CardProps) => {
+export const GovernanceCard = ({ name, pairs, proposals, currency }: CardProps) => {
   const theme = useContext(ThemeContext)
   const shittyCounter = 2
   return (
     <LightCardWrap>
       <AutoRow align="flex-end" justify="center">
-        {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" />}
+        {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" currency={currency} />}
         <Text
           width={shittyCounter !== 2 ? '100%' : 'auto'}
           marginTop={shittyCounter !== 2 ? '8px' : '0'}
