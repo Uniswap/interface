@@ -9,7 +9,7 @@ export const UNSUPPORTED_LIST_URLS = [
 /**
  * sort priority for merging tokens
  * lower number == higher priority
- * lists not in list are sorted to bottom
+ * custom imported lists are sorted to bottom
  */
 
 export const LIST_MERGE_PRIORITY: {

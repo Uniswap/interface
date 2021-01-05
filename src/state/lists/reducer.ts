@@ -5,6 +5,7 @@ import { TokenList } from '@uniswap/token-lists/dist/types'
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, enableList, disableList } from './actions'
+import { stat } from 'fs'
 
 export interface ListsState {
   readonly byUrl: {
@@ -117,6 +118,10 @@ export default createReducer(initialState, builder =>
 
       if (state.activeListUrls && !state.activeListUrls.includes(url)) {
         state.activeListUrls.push(url)
+      }
+
+      if (!state.activeListUrls) {
+        state.activeListUrls = [url]
       }
     })
     .addCase(disableList, (state, { payload: url }) => {
