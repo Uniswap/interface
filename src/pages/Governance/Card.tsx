@@ -7,6 +7,7 @@ import CurrencyLogo from '../../components/CurrencyLogo'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { transparentize } from 'polished'
 import { Currency } from 'dxswap-sdk'
+import { useRouter } from '../../hooks/useRouter'
 
 const LightCardWrap = styled(Card)`
   border: 1px solid ${({ theme }) => transparentize(0.3, theme.bg2)};
@@ -16,6 +17,7 @@ const LightCardWrap = styled(Card)`
   height: 96px;
   display: flex;
   flex-wrap: wrap;
+  cursor: pointer;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: calc(33% - 4px);
   `};
@@ -30,14 +32,17 @@ interface CardProps {
   name: string
   pairs: number
   proposals?: number
-  currency?: Currency
+  currency: Currency
 }
 
 export const GovernanceCard = ({ name, pairs, proposals, currency }: CardProps) => {
   const theme = useContext(ThemeContext)
   const shittyCounter = 2
+  const router = useRouter()
+  const onClick = () => router.push(`/governance/${currency.symbol}/pairs`)
+
   return (
-    <LightCardWrap>
+    <LightCardWrap onClick={onClick}>
       <AutoRow align="flex-end" justify="center">
         {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" currency={currency} />}
         <Text
