@@ -111,12 +111,12 @@ export default function Menu() {
             Discord
           </MenuItem>
           <MenuItem id="link" href="https://explorer.fuse.io/">
-            <PieChart size={14} />
-            Analytics
+            <BarChart2 size={14} />
+            Explorer
           </MenuItem>
           <MenuItem id="link" href="https://info.fuseswap.com">
-            <BarChart2 size={14} />
-            Charts
+            <PieChart size={14} />
+            Analytics
           </MenuItem>
         </MenuFlyout>
       )}
