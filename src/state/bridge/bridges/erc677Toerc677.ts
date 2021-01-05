@@ -13,7 +13,7 @@ import {
   getHomeCustomBridgeAddress,
   pollEvent
 } from '../../../utils'
-import { FOREIGN_BRIDGE_CHAIN } from '../../../constants'
+import { FOREIGN_BRIDGE_CHAIN, GAS_PRICE } from '../../../constants'
 import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 import BridgeABI from '../../../constants/abis/ambErc677ToErc677.json'
@@ -52,7 +52,10 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
     const args = [this.homeBridgeAddress, this.amount.raw.toString(), []]
 
     const estimatedGas = await contract.estimateGas.transferAndCall(...args, {})
-    const response = await contract.transferAndCall(...args, { gasLimit: calculateGasMargin(estimatedGas) })
+    const response = await contract.transferAndCall(...args, {
+      ...(GAS_PRICE && { gasPrice: GAS_PRICE }),
+      gasLimit: calculateGasMargin(estimatedGas)
+    })
 
     this.dispatch(tokenTransferSuccess())
 

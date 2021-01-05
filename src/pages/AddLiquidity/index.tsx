@@ -17,9 +17,9 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESS } from '../../constants'
+import { ROUTER_ADDRESS, GAS_PRICE } from '../../constants'
 import { PairState } from '../../data/Reserves'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -45,6 +45,7 @@ export default function AddLiquidity({
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
+  const { isHome } = useChain()
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
@@ -176,6 +177,7 @@ export default function AddLiquidity({
       .then(estimatedGas =>
         method(...args, {
           ...(value ? { value } : {}),
+          ...(isHome && GAS_PRICE && { gasPrice: GAS_PRICE }),
           gasLimit: calculateGasMargin(estimatedGas)
         }).then(response => {
           setAttemptingTxn(false)

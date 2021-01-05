@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Info, BookOpen, Code, PieChart, MessageCircle } from 'react-feather'
+import { Info, BookOpen, Code, PieChart, MessageCircle, BarChart2 } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -113,6 +113,10 @@ export default function Menu() {
           <MenuItem id="link" href="https://explorer.fuse.io/">
             <PieChart size={14} />
             Analytics
+          </MenuItem>
+          <MenuItem id="link" href="https://info.fuseswap.com">
+            <BarChart2 size={14} />
+            Charts
           </MenuItem>
         </MenuFlyout>
       )}

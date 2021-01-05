@@ -217,3 +217,5 @@ export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
 export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.BigInt(10000))
 
 export const UNSUPPORTED_BRIDGE_TOKENS = ['WFUSE']
+
+export const GAS_PRICE = process.env.REACT_APP_GAS_PRICE ?? '1000000000'

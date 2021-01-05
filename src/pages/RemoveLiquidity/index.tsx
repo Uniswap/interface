@@ -20,8 +20,8 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { ROUTER_ADDRESS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
+import { ROUTER_ADDRESS, GAS_PRICE } from '../../constants'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
 
@@ -57,6 +57,8 @@ export default function RemoveLiquidity({
   ])
 
   const theme = useContext(ThemeContext)
+
+  const { isHome } = useChain()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -299,6 +301,7 @@ export default function RemoveLiquidity({
 
       setAttemptingTxn(true)
       await router[methodName](...args, {
+        ...(isHome && GAS_PRICE && { gasPrice: GAS_PRICE }),
         gasLimit: safeGasEstimate
       })
         .then((response: TransactionResponse) => {
