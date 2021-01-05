@@ -16,9 +16,9 @@ import { CurrencyModalView } from './CurrencySearchModal'
 
 const Wrapper = styled.div`
   width: 100%;
-  height: calc(100% - 80px);
+  height: calc(100% - 60px);
   position: relative;
-  padding-bottom: 80px;
+  padding-bottom: 60px;
 `
 
 const Footer = styled.div`
@@ -130,7 +130,7 @@ export default function ManageTokens({
         </PaddedColumn>
       </Column>
       <Footer>
-        <TYPE.main>Tip: Custom tokens are stored locally in your browser</TYPE.main>
+        <TYPE.darkGray>Tip: Custom tokens are stored locally in your browser</TYPE.darkGray>
       </Footer>
     </Wrapper>
   )

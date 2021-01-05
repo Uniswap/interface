@@ -13,11 +13,12 @@ import { IconWrapper, ExternalLink } from '../../theme/components'
 import ListLogo from 'components/ListLogo'
 import { PaddedColumn, Checkbox, TextDot } from './styleds'
 import { TokenList } from '@uniswap/token-lists'
-import { useSelector, useDispatch } from 'react-redux'
-import { AppState, AppDispatch } from 'state'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
 import { useFetchListCallback } from 'hooks/useFetchListCallback'
 import { removeList, enableList } from 'state/lists/actions'
 import { CurrencyModalView } from './CurrencySearchModal'
+import { useAllLists } from 'state/lists/hooks'
 
 const Wrapper = styled.div`
   position: relative;
@@ -38,7 +39,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
   // user must accept
   const [confirmed, setConfirmed] = useState(false)
 
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const lists = useAllLists()
   const fetchList = useFetchListCallback()
 
   // monitor is list is loading
@@ -84,11 +85,21 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
       <SectionBreak />
       <PaddedColumn gap="md">
         <Card bg={theme.bg3}>
-          <AutoColumn gap="md" justify="center">
-            <IconWrapper stroke={theme.red1} size="32px">
-              <AlertTriangle />
-            </IconWrapper>
-            <TYPE.largeHeader color={theme.red1}>Custom List</TYPE.largeHeader>
+          <AutoColumn gap="md">
+            <Row justify="center">
+              <IconWrapper stroke={theme.red1} size="32px">
+                <AlertTriangle />
+              </IconWrapper>
+            </Row>
+            <TYPE.largeHeader color={theme.red1} textAlign="center">
+              Custom List
+            </TYPE.largeHeader>
+            <TYPE.body>
+              You are importing a list from{' '}
+              <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
+                <TYPE.main color={theme.blue1}>{listURL}</TYPE.main>
+              </ExternalLink>
+            </TYPE.body>
             <TYPE.body>Please take extra caution and do your research when interacting with imported lists.</TYPE.body>
             <TYPE.body fontWeight={600} color={theme.red1}>
               By adding this list you are implicity trusting that the data is corerct.
