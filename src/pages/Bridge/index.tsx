@@ -32,7 +32,7 @@ import { Text } from 'rebass'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { getHomeMultiErc20ToErc677BridgeAddress, getForeignMultiErc20ToErc677BridgeAddress } from '../../utils'
 import { UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
-import { TYPE } from '../../theme'
+import { TYPE, ExternalLink } from '../../theme'
 import UnsupportedBridgeTokenModal from '../../components/UnsupportedBridgeTokenModal'
 import { useUserActionHandlers } from '../../state/user/hooks'
 import fuseApi from '../../api/fuseApi'
@@ -265,6 +265,16 @@ export default function Bridge({
                 <TYPE.body fontSize={14} textAlign="center">
                   Once you transfer your tokens using the bridge you will be gifted FUSE tokens directly to your wallet
                   which will act as network gas. This will allow you to transact freely on FuseSwap
+                </TYPE.body>
+                <TYPE.body fontSize={14} textAlign="center">
+                  <ExternalLink
+                    target="_blank"
+                    href="https://docs.fuse.io/fuseswap/bridge-fuse-erc20-tokens"
+                    style={{ color: theme.secondary1 }}
+                  >
+                    Click here
+                  </ExternalLink>{' '}
+                  to learn how to bridge tokens
                 </TYPE.body>
               </AutoColumn>
             )}
