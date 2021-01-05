@@ -7,6 +7,7 @@ import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
+import { useUserSingleHopOnly } from 'state/user/hooks'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
@@ -87,18 +88,22 @@ const MAX_AMOUNT_DIFFERENCE_PERCENT = new Percent(JSBI.BigInt(PERCENT_DIFFERENCE
 function findTradeWithMinimumHopsExactIn(lessHops: Trade, moreHops: Trade) {
   // multi output will always be at least as big as single output
   const outputDifference = JSBI.subtract(moreHops.outputAmount.raw, lessHops.outputAmount.raw)
+
+  // will be 0 if best multihop trade is a singlehop
   const differencePercentage = new Percent(outputDifference, moreHops.outputAmount.raw)
 
-  // if difference is < threshold, return single hop
+  // if difference is < threshold, return single hop,
   if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
     return lessHops
   }
-
   return moreHops
 }
 
 function findTradeWithMinimumHopsExactOut(lessHops: Trade, moreHops: Trade) {
+  // multihop input will always be same as single or less (if multi is a single hop)
   const inputDifference = JSBI.subtract(lessHops.inputAmount.raw, moreHops.inputAmount.raw)
+
+  // will be 0 if best multihop trade is a singlehop
   const differencePercentage = new Percent(inputDifference, moreHops.inputAmount.raw)
 
   // if difference is < threshold return single hop
@@ -113,17 +118,23 @@ function findTradeWithMinimumHopsExactOut(lessHops: Trade, moreHops: Trade) {
  */
 export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
+
+  const [singleHopOnly] = useUserSingleHopOnly()
+
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-      const multiHop =
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
-      const singleHop =
+      const fixedTrade =
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ?? null
-
-      return findTradeWithMinimumHopsExactIn(singleHop, multiHop)
+      if (singleHopOnly) {
+        return fixedTrade
+      }
+      const trade =
+        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
+      return findTradeWithMinimumHopsExactIn(fixedTrade, trade)
     }
+
     return null
-  }, [allowedPairs, currencyAmountIn, currencyOut])
+  }, [allowedPairs, currencyAmountIn, currencyOut, singleHopOnly])
 }
 
 /**
@@ -132,16 +143,21 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
 export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
 
+  const [singleHopOnly] = useUserSingleHopOnly()
+
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-      const multiHop =
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
-        null
       const singleHop =
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
+        null
+      if (singleHopOnly) {
+        return singleHop
+      }
+      const multiHop =
+        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
         null
       return findTradeWithMinimumHopsExactOut(singleHop, multiHop)
     }
     return null
-  }, [allowedPairs, currencyIn, currencyAmountOut])
+  }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
 }

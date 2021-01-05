@@ -37,7 +37,7 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useExpertModeManager, useUserSlippageTolerance, useUserSingleHopOnly } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
@@ -183,6 +183,8 @@ export default function Swap() {
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
+  const [singleHopOnly] = useUserSingleHopOnly()
+
   const handleSwap = useCallback(() => {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
       return
@@ -209,6 +211,11 @@ export default function Swap() {
             getTradeVersion(trade)
           ].join('/')
         })
+
+        ReactGA.event({
+          category: 'Routing',
+          action: singleHopOnly ? 'Swap with multihop disabled' : 'Swap with multihop enabled'
+        })
       })
       .catch(error => {
         setSwapState({
@@ -219,7 +226,17 @@ export default function Swap() {
           txHash: undefined
         })
       })
-  }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
+  }, [
+    priceImpactWithoutFee,
+    swapCallback,
+    tradeToConfirm,
+    showConfirm,
+    recipient,
+    recipientAddress,
+    account,
+    trade,
+    singleHopOnly
+  ])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)

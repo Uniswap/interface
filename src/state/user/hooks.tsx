@@ -1,5 +1,6 @@
 import { ChainId, Pair, Token } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
+import ReactGA from 'react-ga'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
@@ -91,6 +92,10 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
 
   const setSingleHopOnly = useCallback(
     (newSingleHopOnly: boolean) => {
+      ReactGA.event({
+        category: 'Routing',
+        action: newSingleHopOnly ? 'enable single hop' : 'disable single hop'
+      })
       dispatch(updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly }))
     },
     [dispatch]
