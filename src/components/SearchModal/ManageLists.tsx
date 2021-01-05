@@ -140,6 +140,24 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     }
   }, [dispatch, listUrl])
 
+  const handleEnableList = useCallback(() => {
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Enable List',
+      label: listUrl
+    })
+    dispatch(enableList(listUrl))
+  }, [dispatch, listUrl])
+
+  const handleDisableList = useCallback(() => {
+    ReactGA.event({
+      category: 'Lists',
+      action: 'Disable List',
+      label: listUrl
+    })
+    dispatch(disableList(listUrl))
+  }, [dispatch, listUrl])
+
   if (!list) return null
 
   return (
@@ -181,7 +199,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
         isActive={isActive}
         bgColor={listColor}
         toggle={() => {
-          isActive ? dispatch(disableList(listUrl)) : dispatch(enableList(listUrl))
+          isActive ? handleDisableList() : handleEnableList()
         }}
       />
     </RowWrapper>

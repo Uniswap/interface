@@ -1,12 +1,13 @@
+import { useAllLists } from 'state/lists/hooks'
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
 import { useCallback, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
-import { AppDispatch, AppState } from '../index'
+import { AppDispatch } from '../index'
 import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
 import { useAllInactiveTokens } from 'hooks/Tokens'
@@ -14,16 +15,16 @@ import { useAllInactiveTokens } from 'hooks/Tokens'
 export default function Updater(): null {
   const { library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const activeListUrls = useActiveListUrls()
-
   const isWindowVisible = useIsWindowVisible()
+
+  // get all loaded lists, and the active urls
+  const lists = useAllLists()
+  const activeListUrls = useActiveListUrls()
 
   // initiate loading
   useAllInactiveTokens()
 
   const fetchList = useFetchListCallback()
-
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
     Object.keys(lists).forEach(url =>
@@ -38,7 +39,6 @@ export default function Updater(): null {
   useEffect(() => {
     Object.keys(lists).forEach(listUrl => {
       const list = lists[listUrl]
-
       if (!list.current && !list.loadingRequestId && !list.error) {
         fetchList(listUrl).catch(error => console.debug('list added fetching error', error))
       }

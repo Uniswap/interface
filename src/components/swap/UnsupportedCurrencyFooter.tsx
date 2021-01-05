@@ -66,7 +66,7 @@ export default function UnsupportedCurrencyFooter({
               <TYPE.largeHeader>Unsupported Assets</TYPE.largeHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
-            {tokens.map((token, i) => {
+            {tokens.map(token => {
               return (
                 token &&
                 unsupportedTokens &&

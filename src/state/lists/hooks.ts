@@ -85,28 +85,29 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAd
   return useMemo(() => {
     if (!urls) return EMPTY_LIST
 
-    return urls
-      .slice()
-      .sort(sortByListPriority)
-      .reduce((allTokens, currentUrl) => {
-        const current = lists[currentUrl]?.current
-        if (!current) return allTokens
-        try {
-          // need priority here for addresses
-          // @TODO
-          const newTokens = Object.assign(listToTokenMap(current))
-          return {
-            1: { ...allTokens[1], ...newTokens[1] },
-            3: { ...allTokens[3], ...newTokens[3] },
-            4: { ...allTokens[4], ...newTokens[4] },
-            5: { ...allTokens[5], ...newTokens[5] },
-            42: { ...allTokens[42], ...newTokens[42] }
+    return (
+      urls
+        .slice()
+        // sort by priority so top priority goes last
+        .sort(sortByListPriority)
+        .reduce((allTokens, currentUrl) => {
+          const current = lists[currentUrl]?.current
+          if (!current) return allTokens
+          try {
+            const newTokens = Object.assign(listToTokenMap(current))
+            return {
+              1: { ...allTokens[1], ...newTokens[1] },
+              3: { ...allTokens[3], ...newTokens[3] },
+              4: { ...allTokens[4], ...newTokens[4] },
+              5: { ...allTokens[5], ...newTokens[5] },
+              42: { ...allTokens[42], ...newTokens[42] }
+            }
+          } catch (error) {
+            console.error('Could not show token list due to error', error)
+            return allTokens
           }
-        } catch (error) {
-          console.error('Could not show token list due to error', error)
-          return allTokens
-        }
-      }, EMPTY_LIST)
+        }, EMPTY_LIST)
+    )
   }, [lists, urls])
 }
 
