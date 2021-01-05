@@ -1,10 +1,20 @@
+import { TokenList } from '@uniswap/token-lists/dist/types'
+import UNSUPPORTED_TOKEN_LIST from '../constants/uniswap-v2-unsupported.tokenlist.json'
+
 // the Uniswap Default token list lives here
 export const DEFAULT_TOKEN_LIST_URL = 'tokens.uniswap.eth'
 
-// used to mark unsupported tokens
+// used to mark unsupported tokens, these are hosted lists of unsupported tokens
+/**
+ * @TODO replace with list from blockchain association
+ *
+ */
 export const UNSUPPORTED_LIST_URLS = [
   'https://raw.githubusercontent.com/opynfinance/opyn-tokenlist/master/opyn-v1.tokenlist.json'
 ]
+
+// list that dont need loading, used for unsupported v2 tokens
+export const LOCAL_UNSUPPORTED_LISTS: TokenList[] = [UNSUPPORTED_TOKEN_LIST]
 
 /**
  * sort priority for merging tokens
@@ -19,24 +29,21 @@ export const LIST_MERGE_PRIORITY: {
 }
 
 // all lists to load initially
+/**
+ * @TODO
+ * replace with actual defaults
+ */
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   DEFAULT_TOKEN_LIST_URL,
   ...UNSUPPORTED_LIST_URLS,
-  // 't2crtokens.eth', // kleros
-  // 'tokens.1inch.eth', // 1inch
-  // 'synths.snx.eth',
   'tokenlist.dharma.eth',
-  // 'defi.cmc.eth',
   'erc20.cmc.eth',
   'stablecoin.cmc.eth',
   'tokenlist.zerion.eth',
   'tokenlist.aave.eth',
-  // 'https://tokens.coingecko.com/uniswap/all.json',
-  // 'https://app.tryroll.com/tokens.json',
   'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json',
-  // 'https://defiprime.com/defiprime.tokenlist.json',
   'https://umaproject.org/uma.tokenlist.json'
 ]
 
-// lists to be turned 'on' initially
+// default lists to be 'active' aka searched across
 export const DEFAULT_ACTIVE_LIST_URLS: string[] = [DEFAULT_TOKEN_LIST_URL]
