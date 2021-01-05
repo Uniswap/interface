@@ -13,7 +13,8 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning
+  toggleURLWarning,
+  updateUserSingleHopOnly
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -26,6 +27,8 @@ export interface UserState {
   matchesDarkMode: boolean // whether the dark mode media query matches
 
   userExpertMode: boolean
+
+  userSingleHopOnly: boolean // only allow swaps on direct pairs
 
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number
@@ -58,6 +61,7 @@ export const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
+  userSingleHopOnly: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
@@ -102,6 +106,9 @@ export default createReducer(initialState, builder =>
     .addCase(updateUserDeadline, (state, action) => {
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserSingleHopOnly, (state, action) => {
+      state.userSingleHopOnly = action.payload.userSingleHopOnly
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
       state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
