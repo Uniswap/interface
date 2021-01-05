@@ -8,7 +8,7 @@ import Question from '../../components/QuestionHelper'
 import FullPositionCard from '../../components/PositionCard'
 import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { StyledInternalLink, TYPE } from '../../theme'
+import { StyledInternalLink, TYPE, ExternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
@@ -121,6 +121,16 @@ export default function Pool() {
                 <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
                   {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
                 </StyledInternalLink>
+              </Text>
+              <Text textAlign="center" fontSize={14}>
+                <ExternalLink
+                  target="_blank"
+                  href="https://docs.fuse.io/fuseswap/adding-liquidity"
+                  style={{ color: theme.secondary1 }}
+                >
+                  Click here
+                </ExternalLink>{' '}
+                to learn how to add liquidity
               </Text>
             </div>
           </AutoColumn>
