@@ -2,6 +2,7 @@ import { ChainId } from '@fuseio/fuse-swap-sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
+import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 
 import styled from 'styled-components'
 
@@ -16,7 +17,7 @@ import Menu from '../Menu'
 import { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
 import { getNativeCurrencySymbol } from '../../utils'
-import { TYPE } from '../../theme'
+import { TYPE, ExternalLink } from '../../theme'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -138,6 +139,9 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
+            <ExternalLink style={{ width: 175 }} target="_blank" href="http://info.fuseswap.com">
+              Analytics <ExternalLinkIcon size={14} />
+            </ExternalLink>
             <TestnetWrapper>
               {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
             </TestnetWrapper>
