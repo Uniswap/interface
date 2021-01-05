@@ -78,14 +78,11 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   )
 }
 
-const OUTPUT_PERCENT_DIFFERENCE_MAX_BIPS = 50 // 0.5% difference at most in output amount
+const PERCENT_DIFFERENCE_MAX_BIPS = 50 // 0.5% difference at most in positive direction
 const ONE_IN_BIPS = 10000
 
-// no hop output amount must be > 99.5% of trade with hops output amount
-const PERCENT_THRESHOLD = new Percent(
-  JSBI.BigInt(ONE_IN_BIPS - OUTPUT_PERCENT_DIFFERENCE_MAX_BIPS),
-  JSBI.BigInt(ONE_IN_BIPS)
-)
+// 0.5% max amount difference between amounts in single or multihop trades
+const MAX_AMOUNT_DIFFERENCE_PERCENT = new Percent(JSBI.BigInt(PERCENT_DIFFERENCE_MAX_BIPS), JSBI.BigInt(ONE_IN_BIPS))
 
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
@@ -94,20 +91,25 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-      const trade =
+      const multiHop =
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
-      const tradeFixed =
+      const singleHop =
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ?? null
 
-      // if output amount difference is within threshold, return single hop trade instead - only check if valid trades
-      if (tradeFixed && trade) {
-        const percent = new Percent(tradeFixed.outputAmount.raw, trade.outputAmount.raw)
-        if (percent.greaterThan(PERCENT_THRESHOLD)) {
-          return tradeFixed
+      if (singleHop && multiHop) {
+        const outputDifference = JSBI.subtract(multiHop.outputAmount.raw, singleHop.outputAmount.raw)
+        const differencePercentage = new Percent(outputDifference, multiHop.outputAmount.raw)
+
+        // if difference is < threshold or single gives more output, return single hop
+        if (
+          differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT) ||
+          JSBI.greaterThan(singleHop.outputAmount.raw, multiHop.outputAmount.raw)
+        ) {
+          return singleHop
         }
       }
 
-      return trade
+      return multiHop
     }
     return null
   }, [allowedPairs, currencyAmountIn, currencyOut])
@@ -121,23 +123,27 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
 
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-      const trade =
+      const multiHop =
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
         null
-
-      const tradeFixed =
+      const singleHop =
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
         null
 
-      // if input amount difference is within threshold, return single hop trade instead - only check if valid trades
-      if (tradeFixed && trade) {
-        const percent = new Percent(trade.inputAmount.raw, tradeFixed.inputAmount.raw)
-        if (percent.greaterThan(PERCENT_THRESHOLD)) {
-          return tradeFixed
+      if (singleHop && multiHop) {
+        const inputDifference = JSBI.subtract(multiHop.inputAmount.raw, singleHop.inputAmount.raw)
+        const differencePercentage = new Percent(inputDifference, multiHop.inputAmount.raw)
+
+        // if difference is < threshold or single requires less input, return single hop
+        if (
+          differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT) ||
+          JSBI.lessThan(singleHop.inputAmount.raw, multiHop.inputAmount.raw)
+        ) {
+          return singleHop
         }
       }
 
-      return trade
+      return multiHop
     }
     return null
   }, [allowedPairs, currencyIn, currencyAmountOut])
