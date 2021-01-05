@@ -3,6 +3,7 @@ import { ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -93,9 +94,13 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const selectedListUrl = useSelectedListUrl()
   const dispatch = useDispatch<AppDispatch>()
-  const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
+  const location = useLocation()
+  const router = location.pathname.split('/')[1]
+  const pathName = router === 'uniswap' || router === 'sushiswap' ? router : 'uniswap'
+  const selectedListRouterUrl = router === 'sushiswap' ? selectedListUrl?.sushiswap : selectedListUrl?.uniswap
+  const { current: list, pendingUpdate: pending } = listsByUrl[pathName][listUrl]
 
-  const isSelected = listUrl === selectedListUrl
+  const isSelected = listUrl === selectedListRouterUrl
 
   const [open, toggle] = useToggle(false)
   const node = useRef<HTMLDivElement>()
@@ -118,9 +123,9 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
       label: listUrl
     })
 
-    dispatch(selectList(listUrl))
+    dispatch(selectList({ url: listUrl, pathName }))
     onBack()
-  }, [dispatch, isSelected, listUrl, onBack])
+  }, [dispatch, isSelected, listUrl, onBack, pathName])
 
   const handleAcceptListUpdate = useCallback(() => {
     if (!pending) return
@@ -129,8 +134,8 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
       action: 'Update List from List Select',
       label: listUrl
     })
-    dispatch(acceptListUpdate(listUrl))
-  }, [dispatch, listUrl, pending])
+    dispatch(acceptListUpdate({ url: listUrl, pathName }))
+  }, [dispatch, listUrl, pathName, pending])
 
   const handleRemoveList = useCallback(() => {
     ReactGA.event({
@@ -144,9 +149,9 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
         action: 'Confirm Remove List',
         label: listUrl
       })
-      dispatch(removeList(listUrl))
+      dispatch(removeList({ url: listUrl, pathName }))
     }
-  }, [dispatch, listUrl])
+  }, [dispatch, listUrl, pathName])
 
   if (!list) return null
 
@@ -251,7 +256,11 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
   const dispatch = useDispatch<AppDispatch>()
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const location = useLocation()
+  const router = location.pathname.split('/')[1]
+  const pathName = router === 'uniswap' || router === 'sushiswap' ? router : 'uniswap'
+  const allLists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const lists = allLists[pathName]
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
   const [addError, setAddError] = useState<string | null>(null)
 
@@ -259,7 +268,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
     setListUrlInput(e.target.value)
     setAddError(null)
   }, [])
-  const fetchList = useFetchListCallback()
+  const fetchList = useFetchListCallback(router)
 
   const handleAddList = useCallback(() => {
     if (adding) return
@@ -280,9 +289,9 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
           label: listUrlInput
         })
         setAddError(error.message)
-        dispatch(removeList(listUrlInput))
+        dispatch(removeList({ url: listUrlInput, pathName }))
       })
-  }, [adding, dispatch, fetchList, listUrlInput])
+  }, [adding, dispatch, fetchList, listUrlInput, pathName])
 
   const validUrl: boolean = useMemo(() => {
     return uriToHttp(listUrlInput).length > 0 || Boolean(parseENSAddress(listUrlInput))

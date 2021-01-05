@@ -22,6 +22,7 @@ import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { useLocation } from 'react-router-dom'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -135,7 +136,10 @@ export function CurrencySearch({
     [filteredSortedTokens, handleCurrencySelect, searchQuery]
   )
 
-  const selectedListInfo = useSelectedListInfo()
+  const location = useLocation()
+  const router = location.pathname.split('/')[1]
+  const pathName = router === 'uniswap' || router === 'sushiswap' ? router : 'uniswap'
+  const selectedListInfo = useSelectedListInfo(pathName)
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>

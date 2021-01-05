@@ -43,7 +43,7 @@ import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useLocation, useRouteMatch } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { PageFields } from 'data/Reserves'
 
 export default function RemoveLiquidity({
@@ -60,7 +60,8 @@ export default function RemoveLiquidity({
     chainId
   ])
 
-  const router: string = useRouteMatch().url.split('/')[1]
+  const location = useLocation()
+  const router = location.pathname.split('/')[1]
 
   const theme = useContext(ThemeContext)
 

@@ -44,13 +44,14 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
-import { useRouteMatch } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
-  const router: string = useRouteMatch().url.split('/')[1]
+  const location = useLocation()
+  const router = location.pathname.split('/')[1]
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId)
