@@ -2,7 +2,9 @@
 export const DEFAULT_TOKEN_LIST_URL = 'tokens.uniswap.eth'
 
 // used to mark unsupported tokens
-export const UNSUPPORTED_LIST_URLS = ['https://app.tryroll.com/tokens.json']
+export const UNSUPPORTED_LIST_URLS = [
+  'https://raw.githubusercontent.com/opynfinance/opyn-tokenlist/master/opyn-v1.tokenlist.json'
+]
 
 /**
  * sort priority for merging tokens
