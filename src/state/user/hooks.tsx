@@ -17,7 +17,8 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  toggleURLWarning
+  toggleURLWarning,
+  updateUserSingleHopOnly
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -79,6 +80,23 @@ export function useExpertModeManager(): [boolean, () => void] {
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
+}
+
+export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+
+  const singleHopOnly = useSelector<AppState, AppState['user']['userSingleHopOnly']>(
+    state => state.user.userSingleHopOnly
+  )
+
+  const setSingleHopOnly = useCallback(
+    (newSingleHopOnly: boolean) => {
+      dispatch(updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly }))
+    },
+    [dispatch]
+  )
+
+  return [singleHopOnly, setSingleHopOnly]
 }
 
 export function useUserSlippageTolerance(): [number, (slippage: number) => void] {
