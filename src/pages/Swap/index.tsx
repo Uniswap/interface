@@ -493,7 +493,7 @@ export default function Swap() {
       {!swapIsUnsupported ? (
         <AdvancedSwapDetailsDropdown trade={trade} />
       ) : (
-        <UnsupportedCurrencyFooter show={swapIsUnsupported} />
+        <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}
     </>
   )

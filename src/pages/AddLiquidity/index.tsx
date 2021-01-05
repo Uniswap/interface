@@ -459,7 +459,10 @@ export default function AddLiquidity({
           </AutoColumn>
         ) : null
       ) : (
-        <UnsupportedCurrencyFooter show={addIsUnsupported} />
+        <UnsupportedCurrencyFooter
+          show={addIsUnsupported}
+          currencies={[currencies.CURRENCY_A, currencies.CURRENCY_B]}
+        />
       )}
     </>
   )

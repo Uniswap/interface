@@ -61,9 +61,9 @@ export function useAllInactiveTokens(): { [address: string]: Token } {
   return useTokensFromMap(inactiveTokensMap, false)
 }
 
-export function useBlockedTokens(): { [address: string]: Token } {
-  const blockedTokensMap = useBlockedTokenList()
-  return useTokensFromMap(blockedTokensMap, false)
+export function useUnsupportedTokens(): { [address: string]: Token } {
+  const unsupportedTokensMap = useBlockedTokenList()
+  return useTokensFromMap(unsupportedTokensMap, false)
 }
 
 export function useIsTokenActive(token: Token | undefined | null): boolean {

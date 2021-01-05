@@ -7,7 +7,7 @@ import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
-import { useBlockedTokens } from './Tokens'
+import { useUnsupportedTokens } from './Tokens'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
@@ -112,7 +112,7 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
 }
 
 export function useIsTransactionUnsupported(currencyIn?: Currency, currencyOut?: Currency): boolean {
-  const blockedTokens: { [address: string]: Token } = useBlockedTokens()
+  const blockedTokens: { [address: string]: Token } = useUnsupportedTokens()
   const { chainId } = useActiveWeb3React()
 
   const tokenIn = wrappedCurrency(currencyIn, chainId)

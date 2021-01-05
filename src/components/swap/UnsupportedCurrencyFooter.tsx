@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { TYPE, CloseIcon } from 'theme'
+import { TYPE, CloseIcon, ExternalLink } from 'theme'
 import { ButtonEmpty } from 'components/Button'
 import Modal from 'components/Modal'
-import Card from 'components/Card'
-import { RowBetween } from 'components/Row'
+import Card, { OutlineCard } from 'components/Card'
+import { RowBetween, AutoRow } from 'components/Row'
 import { AutoColumn } from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { useActiveWeb3React } from 'hooks'
+import { getEtherscanLink } from 'utils'
+import { Currency, Token } from '@uniswap/sdk'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
+import { useUnsupportedTokens } from '../../hooks/Tokens'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
@@ -24,8 +30,32 @@ const DetailsFooter = styled.div<{ show: boolean }>`
   text-align: center;
 `
 
-export default function UnsupportedCurrencyFooter({ show }: { show: boolean }) {
+const AddressText = styled(TYPE.blue)`
+  font-size: 12px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 10px;
+`}
+`
+
+export default function UnsupportedCurrencyFooter({
+  show,
+  currencies
+}: {
+  show: boolean
+  currencies: (Currency | undefined)[]
+}) {
+  const { chainId } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
+
+  const tokens =
+    chainId && currencies
+      ? currencies.map(currency => {
+          return wrappedCurrency(currency, chainId)
+        })
+      : []
+
+  const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
 
   return (
     <DetailsFooter show={show}>
@@ -36,6 +66,27 @@ export default function UnsupportedCurrencyFooter({ show }: { show: boolean }) {
               <TYPE.largeHeader>Unsupported Assets</TYPE.largeHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
+            {tokens.map((token, i) => {
+              return (
+                token &&
+                unsupportedTokens &&
+                Object.keys(unsupportedTokens).includes(token.address) && (
+                  <OutlineCard key={token.address?.concat('not-supported')}>
+                    <AutoColumn gap="10px">
+                      <AutoRow gap="5px" align="center">
+                        <CurrencyLogo currency={token} size={'24px'} />
+                        <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
+                      </AutoRow>
+                      {chainId && (
+                        <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+                          <AddressText>{token.address}</AddressText>
+                        </ExternalLink>
+                      )}
+                    </AutoColumn>
+                  </OutlineCard>
+                )
+              )
+            })}
             <AutoColumn gap="lg">
               <TYPE.body fontWeight={500}>
                 Some assets are not available through this interface because they either don’t work well with our smart
