@@ -96,15 +96,13 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
       const singleHop =
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ?? null
 
+      // multi output will always be at least as big as single output
       if (singleHop && multiHop) {
         const outputDifference = JSBI.subtract(multiHop.outputAmount.raw, singleHop.outputAmount.raw)
         const differencePercentage = new Percent(outputDifference, multiHop.outputAmount.raw)
 
-        // if difference is < threshold or single gives more output, return single hop
-        if (
-          differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT) ||
-          JSBI.greaterThan(singleHop.outputAmount.raw, multiHop.outputAmount.raw)
-        ) {
+        // if difference is < threshold, return single hop
+        if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
           return singleHop
         }
       }
@@ -130,15 +128,13 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
         null
 
+      // single input will always be at least as big as multi input
       if (singleHop && multiHop) {
-        const inputDifference = JSBI.subtract(multiHop.inputAmount.raw, singleHop.inputAmount.raw)
+        const inputDifference = JSBI.subtract(singleHop.inputAmount.raw, multiHop.inputAmount.raw)
         const differencePercentage = new Percent(inputDifference, multiHop.inputAmount.raw)
 
-        // if difference is < threshold or single requires less input, return single hop
-        if (
-          differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT) ||
-          JSBI.lessThan(singleHop.inputAmount.raw, multiHop.inputAmount.raw)
-        ) {
+        // if difference is < threshold return single hop
+        if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
           return singleHop
         }
       }
