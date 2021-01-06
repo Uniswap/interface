@@ -2,7 +2,7 @@ import { JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useTotalSupply } from '../../data/TotalSupply'
@@ -162,6 +162,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
   const { account } = useActiveWeb3React()
 
+  const pathName: string = useLocation().pathname.split('/')[1]
+
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
 
@@ -191,6 +193,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
       : [undefined, undefined]
 
   const backgroundColor = useColor(pair?.token0)
+
+  const sushiswapVision = 'https://sushiswap.vision/'
+  const uniswapInfo = 'https://uniswap.info/'
 
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
@@ -306,7 +311,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <ButtonSecondary padding="8px" borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`https://uniswap.info/account/${account}`}
+                href={`${pathName} === 'sushiswap' ? ${sushiswapVision} : ${uniswapInfo}account/${account}`}
               >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
@@ -317,7 +322,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   padding="8px"
                   borderRadius="8px"
                   as={Link}
-                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  to={`/${pathName}/add/${currencyId(currency0)}/${currencyId(currency1)}`}
                   width="48%"
                 >
                   Add
@@ -327,7 +332,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   borderRadius="8px"
                   as={Link}
                   width="48%"
-                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  to={`/${pathName}/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
                   Remove
                 </ButtonPrimary>

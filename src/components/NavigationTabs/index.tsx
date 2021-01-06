@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
-import { NavLink, Link as HistoryLink } from 'react-router-dom'
+import { NavLink, Link as HistoryLink, useLocation } from 'react-router-dom'
 
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
@@ -67,10 +67,11 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
 }
 
 export function FindPoolTabs() {
+  const pathName: string = useLocation().pathname.split('/')[1]
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
+        <HistoryLink to={`/${pathName}/pool`}>
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>Import Pool</ActiveText>
@@ -81,10 +82,11 @@ export function FindPoolTabs() {
 }
 
 export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+  const pathName: string = useLocation().pathname.split('/')[1]
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
+        <HistoryLink to={`/${pathName}/pool`}>
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
