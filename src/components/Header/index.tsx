@@ -142,7 +142,7 @@ export default function Header() {
             <ExternalLink
               style={{ width: 175, fontWeight: 400, color: 'white' }}
               target="_blank"
-              href="http://info.fuseswap.com"
+              href="https://info.fuseswap.com"
             >
               Analytics <ExternalLinkIcon size={14} />
             </ExternalLink>
