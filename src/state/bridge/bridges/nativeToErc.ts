@@ -1,4 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
+import { BigNumber } from 'ethers'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import TokenBridge from './tokenBridge'
 import {
@@ -54,12 +55,16 @@ export default class NativeToErcBridge extends TokenBridge {
     return getChainNetworkLibrary(FOREIGN_BRIDGE_CHAIN)
   }
 
+  private toBigNumber(value: string): BigNumber {
+    return parseUnits(formatUnits(value))
+  }
+
   private buildHomeTransaction() {
     return {
       to: this.homeBridgeAddress,
       from: this.account,
-      value: parseUnits(formatUnits(this.amount.raw.toString())),
-      ...(GAS_PRICE && { gasPrice: GAS_PRICE })
+      value: this.toBigNumber(this.amount.raw.toString()),
+      ...(GAS_PRICE && { gasPrice: this.toBigNumber(GAS_PRICE) })
     }
   }
 
