@@ -90,7 +90,7 @@ export default function UnsupportedCurrencyFooter({
             <AutoColumn gap="lg">
               <TYPE.body fontWeight={500}>
                 Some assets are not available through this interface because they either don’t work well with our smart
-                contract or are considered securities in certain jurisdictions.
+                contract or for legal reasons.
               </TYPE.body>
               <TYPE.body fontWeight={500}>
                 This app uses a list prepared by the [Blockchain Association](link). You can read more about it and the

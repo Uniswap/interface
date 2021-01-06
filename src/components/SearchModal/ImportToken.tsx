@@ -84,10 +84,11 @@ export function ImportToken({ token, onBack, onDismiss, handleCurrencySelect }: 
               <TYPE.body>This interface can load arbitrary tokens by token addresses.</TYPE.body>
             )}
             <TYPE.body>
-              Please take extra caution and do your research when interacting with imported ERC20 tokens.
+              Anyone can create these tokens. Please take extra caution and do your research when interacting with
+              imported ERC20 tokens.
             </TYPE.body>
             <TYPE.body fontWeight={600} color={list ? theme.text1 : theme.red1}>
-              If you purchase an imported token, you may be unable to sell it back.
+              If you purchase an imported token, you may be unable to sell it back. You are trading at your own risk.
             </TYPE.body>
             <Row>
               <RowFixed style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>

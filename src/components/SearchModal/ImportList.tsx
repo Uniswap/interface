@@ -100,11 +100,15 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 <TYPE.main color={theme.blue1}>{listURL}</TYPE.main>
               </ExternalLink>
             </TYPE.body>
-            <TYPE.body>Please take extra caution and do your research when interacting with imported lists.</TYPE.body>
-            <TYPE.body fontWeight={600} color={theme.red1}>
-              By adding this list you are implicity trusting that the data is corerct.
+            <TYPE.body>
+              Please take extra caution and do your research when interacting with imported lists. Anyone can create
+              these lists.
             </TYPE.body>
-            <TYPE.body>If you purchase a token form this list, you may be unable to sell it back.</TYPE.body>
+            <TYPE.body>By adding this list you are implicitly trusting that the data is correct.</TYPE.body>
+            <TYPE.body fontWeight={600} color={theme.red1}>
+              If you purchase a token from this list, you may be unable to sell it back. You are trading at your own
+              risk.
+            </TYPE.body>
             <Row>
               <RowFixed style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
                 <Checkbox
