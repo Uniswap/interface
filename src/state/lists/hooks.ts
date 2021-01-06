@@ -70,11 +70,11 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
-export function useTokenList(url: string | undefined): TokenAddressMap {
+export function useTokenList(url: string | undefined, pathName: string): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   return useMemo(() => {
     if (!url) return EMPTY_LIST
-    const current = lists[url]?.current
+    const current = lists[pathName][url]?.current
     if (!current) return EMPTY_LIST
     try {
       return listToTokenMap(current)
@@ -82,21 +82,24 @@ export function useTokenList(url: string | undefined): TokenAddressMap {
       console.error('Could not show token list due to error', error)
       return EMPTY_LIST
     }
-  }, [lists, url])
+  }, [lists, pathName, url])
 }
 
-export function useSelectedListUrl(): string | undefined {
+export function useSelectedListUrl(): { uniswap: string; sushiswap: string } | undefined {
   return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
 }
 
-export function useSelectedTokenList(): TokenAddressMap {
-  return useTokenList(useSelectedListUrl())
+export function useSelectedTokenList(pathName: 'uniswap' | 'sushiswap'): TokenAddressMap {
+  const selectedListUrl = useSelectedListUrl()
+  return useTokenList(selectedListUrl?.[pathName], pathName)
 }
 
-export function useSelectedListInfo(): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
+export function useSelectedListInfo(
+  pathName: 'uniswap' | 'sushiswap'
+): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
   const selectedUrl = useSelectedListUrl()
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const list = selectedUrl ? listsByUrl[selectedUrl] : undefined
+  const list = selectedUrl?.[pathName] ? listsByUrl[pathName][selectedUrl[pathName]] : undefined
   return {
     current: list?.current ?? null,
     pending: list?.pendingUpdate ?? null,
@@ -105,14 +108,15 @@ export function useSelectedListInfo(): { current: TokenList | null; pending: Tok
 }
 
 // returns all downloaded current lists
-export function useAllLists(): TokenList[] {
+export function useAllLists(pathName: string): TokenList[] {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const defiList = lists[pathName]
 
   return useMemo(
     () =>
-      Object.keys(lists)
-        .map(url => lists[url].current)
+      Object.keys(defiList)
+        .map(url => defiList[url].current)
         .filter((l): l is TokenList => Boolean(l)),
-    [lists]
+    [defiList]
   )
 }

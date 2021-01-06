@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Pair, JSBI } from '@uniswap/sdk'
-import { Link, useRouteMatch } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import FullPositionCard from '../../components/PositionCard'
@@ -78,7 +78,7 @@ export default function Pool() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
-  const pathName: string = useRouteMatch().url.split('/')[1]
+  const pathName: string = useLocation().pathname.split('/')[1]
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()

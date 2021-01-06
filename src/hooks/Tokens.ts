@@ -10,11 +10,15 @@ import { isAddress } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 import { arrayify } from 'ethers/lib/utils'
+import { useLocation } from 'react-router-dom'
 
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
-  const allTokens = useSelectedTokenList()
+  const location = useLocation()
+  const router = location.pathname.split('/')[1]
+  const pathName = router === 'uniswap' || router === 'sushiswap' ? router : 'uniswap'
+  const allTokens = useSelectedTokenList(pathName)
 
   return useMemo(() => {
     if (!chainId) return {}
