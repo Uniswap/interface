@@ -92,7 +92,7 @@ function findTradeWithMinimumHopsExactIn(lessHops: Trade, moreHops: Trade) {
   // will be 0 if best multihop trade is a singlehop
   const differencePercentage = new Percent(outputDifference, moreHops.outputAmount.raw)
 
-  // if difference is < threshold, return single hop,
+  // if difference is < threshold, return single hop
   if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
     return lessHops
   }
@@ -123,14 +123,21 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
 
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-      const fixedTrade =
+      const singleHop =
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ?? null
+
       if (singleHopOnly) {
-        return fixedTrade
+        return singleHop
       }
-      const trade =
+
+      const multiHop =
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
-      return findTradeWithMinimumHopsExactIn(fixedTrade, trade)
+
+      if (singleHop && multiHop) {
+        return findTradeWithMinimumHopsExactIn(singleHop, multiHop)
+      }
+
+      return multiHop
     }
 
     return null
@@ -150,13 +157,20 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
       const singleHop =
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
         null
+
       if (singleHopOnly) {
         return singleHop
       }
+
       const multiHop =
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
         null
-      return findTradeWithMinimumHopsExactOut(singleHop, multiHop)
+
+      if (singleHop && multiHop) {
+        return findTradeWithMinimumHopsExactOut(singleHop, multiHop)
+      }
+
+      return multiHop
     }
     return null
   }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
