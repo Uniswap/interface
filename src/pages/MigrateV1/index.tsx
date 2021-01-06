@@ -28,7 +28,7 @@ export default function MigrateV1() {
 
   // automatically add the search token
   const token = useToken(tokenSearch)
-  const selectedTokenListTokens = useSelectedTokenList()
+  const selectedTokenListTokens = useSelectedTokenList('uniswap')
   const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token ?? undefined)
   const allTokens = useAllTokens()
   const addToken = useAddUserToken()

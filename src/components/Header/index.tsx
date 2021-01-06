@@ -424,15 +424,15 @@ function CompoundHeaderLinks() {
       >
         {t('lending')}
       </StyledNavLink>
-      <StyledExternalLink id={`twitter-nav-link`} href={'https://twitter.com/deerfi_com'}>
+      <StyledExternalLink id={`twitter-nav-link`} href={'https://twitter.com/compoundfinance'}>
         Twitter <span style={{ fontSize: '11px' }}>↗</span>
       </StyledExternalLink>
-      <StyledExternalLink id={`discord-nav-link`} href={'https://discord.gg/SHdfFgX'}>
+      <StyledExternalLink id={`discord-nav-link`} href={'https://compound.finance/discord'}>
         Discord <span style={{ fontSize: '11px' }}>↗</span>
       </StyledExternalLink>
-      <StyledExternalLink id={`discord-nav-link`} href={'https://defipulse.com/defi-list'}>
+      {/* <StyledExternalLink id={`discord-nav-link`} href={'https://defipulse.com/defi-list'}>
         DeFi Pulse <span style={{ fontSize: '11px' }}>↗</span>
-      </StyledExternalLink>
+      </StyledExternalLink> */}
     </>
   )
 }

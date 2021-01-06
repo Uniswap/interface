@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
-import Button from './Button'
 import Card from './Card'
 import CardIcon from '../../../components/CardIcon'
 import IconLoader from '../../../components/IconLoader'
@@ -12,6 +11,9 @@ import useHome from '../../../hooks/useHome'
 
 import { Home } from '../../../contexts/home'
 import { PageFields } from 'data/Reserves'
+import { ButtonPrimary } from 'components/Button'
+import { NavLink } from 'react-router-dom'
+import { darken } from 'polished'
 
 const StyledCardContent = styled.div`
   display: flex;
@@ -72,6 +74,25 @@ const StyledLoadingWrapper = styled.div`
   justify-content: center;
 `
 
+const StyledNavLink = styled(NavLink)`
+  ${({ theme }) => theme.flexRowNoWrap}
+  width: 100%;
+  align-items: left;
+  border-radius: 3rem;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text2};
+  font-size: 1rem;
+  margin: 0 12px;
+  font-weight: 500;
+
+  :hover,
+  :focus {
+    color: ${({ theme }) => darken(0.1, theme.text1)};
+  }
+`
+
 const StyledRow = styled.div`
   display: flex;
   margin-bottom: ${({ theme }) => theme.spacing[4]}px;
@@ -90,7 +111,7 @@ const StyledCardWrapper = styled.div`
 `
 
 const StyledTitle = styled.h4`
-  color: ${({ theme }) => theme.grey600};
+  color: ${({ theme }) => theme.text1};
   font-size: 24px;
   font-weight: 700;
   margin: ${({ theme }) => theme.spacing[2]}px 0 0;
@@ -114,7 +135,7 @@ const StyledDetails = styled.div`
 `
 
 const StyledDetail = styled.div`
-  color: ${({ theme }) => theme.grey500};
+  color: ${({ theme }) => theme.text2};
 `
 
 function CardContent({ children }: { children: ReactNode }) {
@@ -145,7 +166,9 @@ function HomeCard({ home }: { home: Home }) {
               <StyledDetail>{home.description}</StyledDetail>
             </StyledDetails>
             <Spacer />
-            <Button to={`/${home.id}${home.home}`} text={'Enter'}></Button>
+            <StyledNavLink to={`/${home.id}${home.home}`}>
+              <ButtonPrimary>{'Enter'}</ButtonPrimary>
+            </StyledNavLink>
           </StyledContent>
         </CardContent>
       </Card>

@@ -45,7 +45,8 @@ window.addEventListener('error', error => {
 function Updaters() {
   return (
     <>
-      <ListsUpdater />
+      <ListsUpdater pathName={'uniswap'} />
+      <ListsUpdater pathName={'sushiswap'} />
       <UserUpdater />
       <ApplicationUpdater />
       <TransactionUpdater />
