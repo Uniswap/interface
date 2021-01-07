@@ -1,8 +1,8 @@
-import { Currency } from 'dxswap-sdk'
 import React from 'react'
-import { AutoRowCleanGap } from '../../components/Row'
+import { Currency, ETHER } from 'dxswap-sdk'
 
-import { GovernanceCard } from './Card'
+import { PairCard } from './Card'
+import { AutoRowCleanGap } from '../../components/Row'
 
 export default function Container() {
   const USDC: Currency = {
@@ -13,13 +13,13 @@ export default function Container() {
 
   return (
     <AutoRowCleanGap gap={8}>
-      <GovernanceCard name="USDC" pairs={15} proposals={1} currency={USDC} />
-      <GovernanceCard name="DXD" pairs={4} proposals={32} />
-      <GovernanceCard name="DMG" pairs={5} proposals={3} />
-      <GovernanceCard name="SNT" pairs={1} />
-      <GovernanceCard name="RARI" pairs={5} />
-      <GovernanceCard name="DAI" pairs={5} />
-      <GovernanceCard name="USDT" pairs={22} />
+      <PairCard currency0={USDC} currency1={ETHER} />
+      <PairCard currency0={USDC} currency1={ETHER} />
+      <PairCard currency0={USDC} currency1={ETHER} />
+      <PairCard currency0={USDC} currency1={ETHER} />
+      <PairCard currency0={USDC} currency1={ETHER} />
+      <PairCard currency0={USDC} currency1={ETHER} />
+      <PairCard currency0={USDC} currency1={ETHER} />
     </AutoRowCleanGap>
   )
 }

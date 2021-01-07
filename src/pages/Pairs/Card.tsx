@@ -1,12 +1,12 @@
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import Card from '../../components/Card'
-import { AutoRow } from '../../components/Row'
+import React from 'react'
+import styled from 'styled-components'
 import { Text } from 'rebass'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { transparentize } from 'polished'
 import { Currency } from 'dxswap-sdk'
+
+import Card from '../../components/Card'
+import { AutoRow } from '../../components/Row'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
 
 const LightCardWrap = styled(Card)`
   border: 1px solid ${({ theme }) => transparentize(0.3, theme.bg2)};
@@ -24,47 +24,22 @@ const LightCardWrap = styled(Card)`
   `};
 `
 
-const StyledText = styled(Text)``
-
 interface CardProps {
-  name: string
-  pairs: number
-  proposals?: number
-  currency?: Currency
+  currency0: Currency
+  currency1: Currency
 }
 
-export const GovernanceCard = ({ name, pairs, proposals, currency }: CardProps) => {
-  const theme = useContext(ThemeContext)
-  const shittyCounter = 2
-  return (
-    <LightCardWrap>
-      <AutoRow align="flex-end" justify="center">
-        {shittyCounter !== 2 ? <DoubleCurrencyLogo size={26.25} /> : <CurrencyLogo size="20px" currency={currency} />}
-        <Text
-          width={shittyCounter !== 2 ? '100%' : 'auto'}
-          marginTop={shittyCounter !== 2 ? '8px' : '0'}
-          marginLeft={shittyCounter !== 2 ? '0' : '6px'}
-          fontWeight={600}
-          fontSize="16px"
-          lineHeight="20px"
-        >
-          {name}
-        </Text>
-      </AutoRow>
-      <AutoRow align="flex-start" justify="center">
-        <StyledText
-          marginTop={shittyCounter !== 2 ? '10px' : '7px'}
-          color={theme.text4}
-          letterSpacing="0.02em"
-          fontWeight={600}
-          fontSize="9px"
-          lineHeight="11px"
-          textAlign="center"
-        >
-          {pairs + (pairs > 1 ? ' PAIRS' : ' PAIR')}
-          {proposals && ' | ' + proposals + (proposals > 1 ? ' PROPOSALS' : ' PROPOSAL')}
-        </StyledText>
-      </AutoRow>
-    </LightCardWrap>
-  )
-}
+export const PairCard = ({ currency0, currency1 }: CardProps) => (
+  <LightCardWrap>
+    <AutoRow align="flex-end" justify="center">
+      <div style={{ margin: 'auto', paddingLeft: '13.44px' }}>
+        <DoubleCurrencyLogo size={26.88} currency0={currency0} currency1={currency1} />
+      </div>
+    </AutoRow>
+    <AutoRow align="flex-start" justify="center">
+      <Text width="auto" marginTop="6px" fontWeight={600} fontSize="16px" lineHeight="20px">
+        {currency0.symbol}/{currency1.symbol}
+      </Text>
+    </AutoRow>
+  </LightCardWrap>
+)

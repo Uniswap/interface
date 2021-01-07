@@ -1,18 +1,20 @@
 import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
+import { Flex, Text } from 'rebass'
+import { Info } from 'react-feather'
+import { ETHER } from 'dxswap-sdk'
+
 import { PageWrapper } from '../Pool/styleds'
 import { AutoColumn } from '../../components/Column'
 import { TYPE } from '../../theme'
-import { Flex, Text } from 'rebass'
 
-import styled, { ThemeContext } from 'styled-components'
+import Container from './Container'
 import { RowBetween } from '../../components/Row'
-import { ButtonPrimary, ButtonWithLink } from '../../components/Button'
+import { ButtonPrimary } from '../../components/Button'
 import { useTranslation } from 'react-i18next'
 import { LightCard } from '../../components/Card'
-
-import { Info } from 'react-feather'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import SearchInputWithIcon from '../../components/SearchModal/styleds'
-import Container from './Container'
 import { useRouter } from '../../hooks/useRouter'
 
 const TitleRow = styled(RowBetween)`
@@ -20,7 +22,6 @@ const TitleRow = styled(RowBetween)`
     flex-wrap: wrap;
     gap: 12px;
     width: 100%;
-    
   `};
 `
 const StyledSearchInput = styled(SearchInputWithIcon)`
@@ -34,7 +35,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   `};
 `
 
-export default function Pairs() {
+export default function Governance() {
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
   const router = useRouter()
@@ -44,8 +45,12 @@ export default function Pairs() {
       <AutoColumn gap="lg" justify="center">
         <AutoColumn gap="lg" style={{ width: '100%' }}>
           <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-            <TYPE.mediumHeader lineHeight="24px">{t('governance')}</TYPE.mediumHeader>
+            <TYPE.mediumHeader color={'text4'} lineHeight="24px">
+              {t('governance')}
+            </TYPE.mediumHeader>
             &nbsp; / &nbsp;
+            <CurrencyLogo size="20px" currency={ETHER} />
+            &nbsp;
             <TYPE.mediumHeader lineHeight="24px">{t(router.query?.asset)}</TYPE.mediumHeader>
             <StyledSearchInput fontSize="12px" fontWeight={700} width="104px" height="32px" />
             <ResponsiveButtonPrimary id="create-proposal-button" padding="8px 14px">
@@ -55,8 +60,7 @@ export default function Pairs() {
             </ResponsiveButtonPrimary>
           </TitleRow>
         </AutoColumn>
-        <Container />
-        <ButtonWithLink link={'https://swapr.eth.link'} text={'GOVERNANCE STATISTICS'} />
+        <Container /> {/** need to pass all pairs information to container component */}
         <LightCard>
           <AutoColumn gap="md">
             <Flex>
