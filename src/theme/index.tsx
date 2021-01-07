@@ -74,7 +74,7 @@ export function colors(darkMode: boolean): Colors {
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
     // other
-    red1: '#FF6871',
+    red1: '#FD4040',
     red2: '#F82D3A',
     red3: '#D60000',
     green1: '#27AE60',

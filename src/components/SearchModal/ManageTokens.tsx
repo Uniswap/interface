@@ -10,8 +10,10 @@ import { Token } from '@uniswap/sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getEtherscanLink, isAddress } from 'utils'
 import { useActiveWeb3React } from 'hooks'
-import { OutlineCard } from 'components/Card'
+import Card from 'components/Card'
 import ImportRow from './ImportRow'
+import useTheme from '../../hooks/useTheme'
+
 import { CurrencyModalView } from './CurrencySearchModal'
 
 const Wrapper = styled.div`
@@ -43,6 +45,7 @@ export default function ManageTokens({
   const { chainId } = useActiveWeb3React()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const theme = useTheme()
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
@@ -98,20 +101,21 @@ export default function ManageTokens({
               id="token-search-input"
               placeholder={'0x0000'}
               value={searchQuery}
+              autoComplete="off"
               ref={inputRef as RefObject<HTMLInputElement>}
               onChange={handleInput}
             />
           </Row>
           {searchQuery !== '' && !isAddressSearch && <TYPE.error error={true}>Enter valid token address</TYPE.error>}
           {searchToken && (
-            <OutlineCard padding="1rem">
+            <Card backgroundColor={theme.bg2} padding="1rem">
               <ImportRow
                 token={searchToken}
                 showImportView={() => setModalView(CurrencyModalView.importToken)}
                 setImportToken={setImportToken}
                 style={{ height: 'fit-content' }}
               />
-            </OutlineCard>
+            </Card>
           )}
         </PaddedColumn>
         <Separator />

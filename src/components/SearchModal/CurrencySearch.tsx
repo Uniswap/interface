@@ -18,12 +18,10 @@ import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } f
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Column, { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import { filterTokens } from './filtering'
-import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -47,7 +45,8 @@ const Footer = styled.div`
   padding: 20px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
+  border-top: 1px solid ${({ theme }) => theme.bg2};
 `
 
 const Wrapper = styled.div`
@@ -86,7 +85,7 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
+  const [invertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
   // const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
@@ -217,11 +216,10 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <PaddedColumn gap="14px">
+      <PaddedColumn gap="16px">
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
             Select a token
-            <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -230,6 +228,7 @@ export function CurrencySearch({
             type="text"
             id="token-search-input"
             placeholder={t('tokenSearchPlaceholder')}
+            autoComplete="off"
             value={searchQuery}
             ref={inputRef as RefObject<HTMLInputElement>}
             onChange={handleInput}
@@ -238,14 +237,6 @@ export function CurrencySearch({
         </Row>
         {showCommonBases && (
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
-        )}
-        {filteredSortedTokens.length > 0 && (
-          <RowBetween>
-            <Text fontSize={14} fontWeight={500}>
-              Token Name
-            </Text>
-            <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
-          </RowBetween>
         )}
       </PaddedColumn>
       <Separator />
@@ -271,18 +262,23 @@ export function CurrencySearch({
         </div>
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
-          <TYPE.main color={theme.text3} textAlign="center" mb="20px">
-            No results found in active lists.
-          </TYPE.main>
+          {!showExpanded && (
+            <TYPE.main color={theme.text3} textAlign="center" mb="20px">
+              No results found in active lists.
+            </TYPE.main>
+          )}
           {showExpanded ? (
             <Wrapper style={{ padding: 0 }}>
               <AutoColumn>
-                <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="6px 8px">
-                  <TYPE.main fontWeight={500}>Showing inactive results</TYPE.main>
+                <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="8px 8px">
+                  <RowBetween>
+                    <TYPE.main fontWeight={500}>Showing results from inactive lists</TYPE.main>
+                    <CloseIcon size={16} style={{ opacity: 0.6 }} onClick={() => setShowExpanded(false)} />
+                  </RowBetween>
                 </Card>
               </AutoColumn>
               {inactiveTokens && (
-                <div style={{ flex: '1', height: '100%' }}>
+                <div style={{ flex: '1', height: '100%', padding: '0px 8px' }}>
                   <AutoSizer disableWidth>
                     {({ height }) => (
                       <FixedSizeList

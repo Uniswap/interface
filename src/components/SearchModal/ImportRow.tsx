@@ -1,6 +1,6 @@
 import React, { CSSProperties } from 'react'
 import { Token } from '@uniswap/sdk'
-import { RowBetween, RowFixed } from 'components/Row'
+import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { TYPE } from 'theme'
@@ -52,34 +52,39 @@ export default function ImportRow({
   return (
     <TokenSection style={style}>
       <RowBetween>
-        <AutoColumn gap="sm">
-          <RowFixed>
-            <CurrencyLogo currency={token} size={'24px'} />
-            <TYPE.body ml="10px" fontWeight={500}>
-              {token.symbol}
-            </TYPE.body>
+        <AutoRow>
+          <CurrencyLogo currency={token} size={'24px'} />
+          <AutoColumn gap="4px">
+            <AutoRow>
+              <TYPE.body ml="8px" fontWeight={500}>
+                {token.symbol}
+              </TYPE.body>
+              <TYPE.darkGray ml="8px" fontWeight={300}>
+                {token.name}
+              </TYPE.darkGray>
+            </AutoRow>
             {list && list.logoURI && (
-              <RowFixed style={{ marginLeft: '16px' }}>
-                <ListLogo logoURI={list.logoURI} size="12px" />
-                <TYPE.small ml="4px" color={theme.text3}>
+              <RowFixed style={{ marginLeft: '8px' }}>
+                <TYPE.small mr="4px" color={theme.text3}>
                   via {list.name}
                 </TYPE.small>
+                <ListLogo logoURI={list.logoURI} size="12px" />
               </RowFixed>
             )}
-          </RowFixed>
-        </AutoColumn>
+          </AutoColumn>
+        </AutoRow>
         {!isActive && !isAdded ? (
           <ButtonPrimary
             width="fit-content"
-            padding="6px 8px"
+            padding="6px 12px"
             fontWeight={500}
-            fontSize="12px"
+            fontSize="14px"
             onClick={() => {
               setImportToken && setImportToken(token)
               showImportView()
             }}
           >
-            + Import
+            Import
           </ButtonPrimary>
         ) : (
           <RowFixed>

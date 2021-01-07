@@ -2,14 +2,16 @@ import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import ReactGA from 'react-ga'
 import { TYPE, CloseIcon } from 'theme'
-import Card, { OutlineCard } from 'components/Card'
+import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import Row, { RowBetween, RowFixed } from 'components/Row'
+import { RowBetween, RowFixed } from 'components/Row'
 import { ArrowLeft, AlertTriangle } from 'react-feather'
 import useTheme from 'hooks/useTheme'
+import { transparentize } from 'polished'
+
 import { ButtonPrimary } from 'components/Button'
 import { SectionBreak } from 'components/swap/styleds'
-import { IconWrapper, ExternalLink } from '../../theme/components'
+import { ExternalLink } from '../../theme/components'
 import ListLogo from 'components/ListLogo'
 import { PaddedColumn, Checkbox, TextDot } from './styleds'
 import { TokenList } from '@uniswap/token-lists'
@@ -78,87 +80,83 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.manage)} />
-          <TYPE.mediumHeader>Confirm List</TYPE.mediumHeader>
+          <TYPE.mediumHeader>Import List</TYPE.mediumHeader>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
       <PaddedColumn gap="md">
-        <Card bg={theme.bg3}>
-          <AutoColumn gap="md">
-            <Row justify="center">
-              <IconWrapper stroke={theme.red1} size="32px">
-                <AlertTriangle />
-              </IconWrapper>
-            </Row>
-            <TYPE.largeHeader color={theme.red1} textAlign="center">
-              Custom List
-            </TYPE.largeHeader>
-            <TYPE.body>
-              You are importing a list from{' '}
-              <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
-                <TYPE.main color={theme.blue1}>{listURL}</TYPE.main>
-              </ExternalLink>
-            </TYPE.body>
-            <TYPE.body>
-              Please take extra caution and do your research when interacting with imported lists. Anyone can create
-              these lists.
-            </TYPE.body>
-            <TYPE.body>By adding this list you are implicitly trusting that the data is correct.</TYPE.body>
-            <TYPE.body fontWeight={600} color={theme.red1}>
-              If you purchase a token from this list, you may be unable to sell it back. You are trading at your own
-              risk.
-            </TYPE.body>
-            <Row>
-              <RowFixed style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
-                <Checkbox
-                  name="confirmed"
-                  type="checkbox"
-                  checked={confirmed}
-                  onChange={() => setConfirmed(!confirmed)}
-                />
-                <TYPE.body ml="10px" fontSize="16px" fontWeight={500}>
-                  I understand
-                </TYPE.body>
-              </RowFixed>
-            </Row>
-            <ButtonPrimary
-              disabled={!confirmed}
-              altDisabledStyle={true}
-              borderRadius="20px"
-              padding="10px 1rem"
-              onClick={handleAddList}
-            >
-              Import
-            </ButtonPrimary>
-            {addError ? (
-              <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
-                {addError}
-              </TYPE.error>
-            ) : null}
-          </AutoColumn>
-        </Card>
-        <OutlineCard padding="12px 20px">
-          <RowBetween>
-            <RowFixed>
-              {list.logoURI && <ListLogo logoURI={list.logoURI} size="40px" />}
-              <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
-                <TYPE.body fontWeight={600}>{list.name}</TYPE.body>
-                <RowFixed>
-                  <TYPE.main fontSize={'12px'} mr="6px">
-                    {list.tokens.length} tokens
-                  </TYPE.main>
-                  <TextDot />
+        <AutoColumn gap="md">
+          <Card backgroundColor={theme.bg2} padding="12px 20px">
+            <RowBetween>
+              <RowFixed>
+                {list.logoURI && <ListLogo logoURI={list.logoURI} size="40px" />}
+                <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
+                  <RowFixed>
+                    <TYPE.body fontWeight={600} mr="6px">
+                      {list.name}
+                    </TYPE.body>
+                    <TextDot />
+                    <TYPE.main fontSize={'16px'} ml="6px">
+                      {list.tokens.length} tokens
+                    </TYPE.main>
+                  </RowFixed>
                   <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
-                    <TYPE.main fontSize={'12px'} ml="6px" color={theme.blue1}>
-                      View List
+                    <TYPE.main fontSize={'12px'} color={theme.blue1}>
+                      {listURL}
                     </TYPE.main>
                   </ExternalLink>
-                </RowFixed>
-              </AutoColumn>
+                </AutoColumn>
+              </RowFixed>
+            </RowBetween>
+          </Card>
+          <Card style={{ backgroundColor: transparentize(0.8, theme.red1) }}>
+            <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
+              <AlertTriangle stroke={theme.red1} size={32} />
+              <TYPE.body fontWeight={500} fontSize={20} color={theme.red1}>
+                Import at your own risk{' '}
+              </TYPE.body>
+            </AutoColumn>
+
+            <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
+              <TYPE.body fontWeight={500} color={theme.red1}>
+                By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
+                including creating fake versions of existing lists and lists that claim to represent projects that do
+                not have one.
+              </TYPE.body>
+              <TYPE.body fontWeight={600} color={theme.red1}>
+                If you purchase a token from this list, you may be unable to sell it back.
+              </TYPE.body>
+            </AutoColumn>
+            <RowFixed justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
+              <Checkbox
+                name="confirmed"
+                type="checkbox"
+                checked={confirmed}
+                onChange={() => setConfirmed(!confirmed)}
+              />
+              <TYPE.body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
+                I understand
+              </TYPE.body>
             </RowFixed>
-          </RowBetween>
-        </OutlineCard>
+          </Card>
+
+          <ButtonPrimary
+            disabled={!confirmed}
+            altDisabledStyle={true}
+            borderRadius="20px"
+            padding="10px 1rem"
+            onClick={handleAddList}
+          >
+            Import
+          </ButtonPrimary>
+          {addError ? (
+            <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
+              {addError}
+            </TYPE.error>
+          ) : null}
+        </AutoColumn>
+        {/* </Card> */}
       </PaddedColumn>
     </Wrapper>
   )

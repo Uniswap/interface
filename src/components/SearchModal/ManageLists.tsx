@@ -25,7 +25,7 @@ import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 import { useListColor } from 'hooks/useColor'
 import useTheme from '../../hooks/useTheme'
 import ListToggle from '../Toggle/ListToggle'
-import { OutlineCard } from 'components/Card'
+import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { DEFAULT_TOKEN_LIST_URL, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 
@@ -83,7 +83,7 @@ const StyledListUrlText = styled(TYPE.main)<{ active: boolean }>`
 const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
   background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.bg2)};
   transition: 200ms;
-  align=center;
+  align-items: center;
   padding: 1rem;
   border-radius: 20px;
 `
@@ -177,7 +177,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
           </StyledListUrlText>
           <StyledMenu ref={node as any}>
             <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
-              <Settings stroke={theme.text1} size={16} />
+              <Settings stroke={isActive ? theme.bg1 : theme.text1} size={12} />
             </ButtonEmpty>
             {open && (
               <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
@@ -339,11 +339,11 @@ export function ManageLists({
       </PaddedColumn>
       {tempList && (
         <PaddedColumn style={{ paddingTop: 0 }}>
-          <OutlineCard padding="12px 20px">
+          <Card backgroundColor={theme.bg2} padding="12px 20px">
             <RowBetween>
               <RowFixed>
                 {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
-                <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
+                <AutoColumn gap="4px" style={{ marginLeft: '20px' }}>
                   <TYPE.body fontWeight={600}>{tempList.name}</TYPE.body>
                   <TYPE.main fontSize={'12px'}>{tempList.tokens.length} tokens</TYPE.main>
                 </AutoColumn>
@@ -356,12 +356,17 @@ export function ManageLists({
                   <TYPE.body color={theme.text2}>Loaded</TYPE.body>
                 </RowFixed>
               ) : (
-                <ButtonPrimary padding="6px 8px" width="fit-content" onClick={handleImport}>
+                <ButtonPrimary
+                  style={{ fontSize: '14px' }}
+                  padding="6px 8px"
+                  width="fit-content"
+                  onClick={handleImport}
+                >
                   Import
                 </ButtonPrimary>
               )}
             </RowBetween>
-          </OutlineCard>
+          </Card>
         </PaddedColumn>
       )}
       <Separator />
