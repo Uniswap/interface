@@ -1,5 +1,6 @@
 import { Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
+import { useLocation } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
@@ -85,6 +86,10 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
 
   const showRoute = Boolean(trade && trade.route.path.length > 2)
 
+  const pathName = useLocation().pathname.split('/')[1]
+  const sushiswapVision = 'https://sushiswap.vision/'
+  const uniswapInfo = 'https://uniswap.info/'
+
   return (
     <AutoColumn gap="md">
       {trade && (
@@ -105,7 +110,13 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             </>
           )}
           <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
+            <InfoLink
+              href={
+                `${pathName} === 'sushiswap' ? ${sushiswapVision} : ${uniswapInfo}'pair/` +
+                trade.route.pairs[0].liquidityToken.address
+              }
+              target="_blank"
+            >
               View pair analytics ↗
             </InfoLink>
           </AutoColumn>
