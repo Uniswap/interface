@@ -4,11 +4,10 @@ import ReactGA from 'react-ga'
 import { TYPE, CloseIcon } from 'theme'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed } from 'components/Row'
+import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { ArrowLeft, AlertTriangle } from 'react-feather'
 import useTheme from 'hooks/useTheme'
 import { transparentize } from 'polished'
-
 import { ButtonPrimary } from 'components/Button'
 import { SectionBreak } from 'components/swap/styleds'
 import { ExternalLink } from '../../theme/components'
@@ -128,7 +127,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 If you purchase a token from this list, you may be unable to sell it back.
               </TYPE.body>
             </AutoColumn>
-            <RowFixed justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
+            <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
               <Checkbox
                 name="confirmed"
                 type="checkbox"
@@ -138,7 +137,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
               <TYPE.body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
                 I understand
               </TYPE.body>
-            </RowFixed>
+            </AutoRow>
           </Card>
 
           <ButtonPrimary

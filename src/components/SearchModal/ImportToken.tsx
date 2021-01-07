@@ -7,7 +7,7 @@ import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { ArrowLeft, AlertTriangle } from 'react-feather'
-import { lighten, transparentize } from 'polished'
+import { transparentize } from 'polished'
 import useTheme from 'hooks/useTheme'
 import { ButtonPrimary } from 'components/Button'
 import { SectionBreak } from 'components/swap/styleds'
@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
   background-color: ${({ theme, highWarning }) =>
-    highWarning ? lighten(0.2, theme.red1) : lighten(0.35, theme.yellow2)};
+    highWarning ? transparentize(0.8, theme.red1) : transparentize(0.8, theme.yellow2)};
   width: fit-content;
 `
 
@@ -74,12 +74,10 @@ export function ImportToken({ token, onBack, onDismiss, handleCurrencySelect }: 
           <AutoColumn gap="10px">
             <AutoRow align="center">
               <CurrencyLogo currency={token} size={'24px'} />
-              <TYPE.body ml="8px" fontWeight={500}>
+              <TYPE.body ml="8px" mr="8px" fontWeight={500}>
                 {token.symbol}
               </TYPE.body>
-              <TYPE.darkGray ml="8px" fontWeight={300}>
-                {token.name}
-              </TYPE.darkGray>
+              <TYPE.darkGray fontWeight={300}>{token.name}</TYPE.darkGray>
             </AutoRow>
             {chainId && (
               <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
@@ -96,8 +94,8 @@ export function ImportToken({ token, onBack, onDismiss, handleCurrencySelect }: 
             ) : (
               <WarningWrapper borderRadius="4px" padding="4px" highWarning={true}>
                 <RowFixed>
-                  <AlertTriangle stroke={theme.red3} size="10px" />
-                  <TYPE.body color={theme.red3} ml="4px" fontSize="10px" fontWeight={500}>
+                  <AlertTriangle stroke={theme.red1} size="10px" />
+                  <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
                     Unkown Source
                   </TYPE.body>
                 </RowFixed>
