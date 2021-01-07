@@ -9,7 +9,6 @@ const StyledMain = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - ${({ theme }) => theme.topBarSize * 2}px);
 `
 
 export default function Page({ children }: { children: ReactNode }) {

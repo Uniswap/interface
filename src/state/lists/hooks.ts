@@ -3,6 +3,7 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
+import { PathNameType } from './actions'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -89,13 +90,13 @@ export function useSelectedListUrl(): { uniswap: string; sushiswap: string } | u
   return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
 }
 
-export function useSelectedTokenList(pathName: 'uniswap' | 'sushiswap'): TokenAddressMap {
+export function useSelectedTokenList(pathName: PathNameType): TokenAddressMap {
   const selectedListUrl = useSelectedListUrl()
   return useTokenList(selectedListUrl?.[pathName], pathName)
 }
 
 export function useSelectedListInfo(
-  pathName: 'uniswap' | 'sushiswap'
+  pathName: PathNameType
 ): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
   const selectedUrl = useSelectedListUrl()
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
