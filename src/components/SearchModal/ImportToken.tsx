@@ -117,7 +117,7 @@ export function ImportToken({ token, onBack, onDismiss, handleCurrencySelect }: 
               projects.
             </TYPE.body>
             <TYPE.body fontWeight={600} color={list ? theme.yellow2 : theme.red1}>
-              If you purchase this token, you may be unable to sell it back.
+              If you purchase this token, you may not be able to sell it back.
             </TYPE.body>
           </AutoColumn>
           <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>

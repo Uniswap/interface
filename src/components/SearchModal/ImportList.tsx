@@ -124,7 +124,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 not have one.
               </TYPE.body>
               <TYPE.body fontWeight={600} color={theme.red1}>
-                If you purchase a token from this list, you may be unable to sell it back.
+                If you purchase a token from this list, you may not be able to sell it back.
               </TYPE.body>
             </AutoColumn>
             <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>

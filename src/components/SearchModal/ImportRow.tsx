@@ -14,7 +14,6 @@ import { useIsUserAddedToken, useIsTokenActive } from 'hooks/Tokens'
 import { CheckCircle } from 'react-feather'
 
 const TokenSection = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
   padding: 4px 0px;
   height: 56px;
 `
@@ -24,6 +23,15 @@ const CheckIcon = styled(CheckCircle)`
   width: 16px;
   margin-right: 6px;
   stroke: ${({ theme }) => theme.green1};
+`
+
+const NameOverflow = styled.div`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+  font-size: 12px;
 `
 
 export default function ImportRow({
@@ -60,7 +68,7 @@ export default function ImportRow({
                 {token.symbol}
               </TYPE.body>
               <TYPE.darkGray ml="8px" fontWeight={300}>
-                {token.name}
+                <NameOverflow title={token.name}>{token.name}</NameOverflow>
               </TYPE.darkGray>
             </AutoRow>
             {list && list.logoURI && (

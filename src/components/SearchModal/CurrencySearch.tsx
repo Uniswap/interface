@@ -17,7 +17,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } from '../../hooks/Tokens'
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
-import Column, { AutoColumn } from '../Column'
+import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
@@ -269,16 +269,14 @@ export function CurrencySearch({
           )}
           {showExpanded ? (
             <Wrapper style={{ padding: 0 }}>
-              <AutoColumn>
-                <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="8px 8px">
-                  <RowBetween>
-                    <TYPE.main fontWeight={500}>Showing results from inactive lists</TYPE.main>
-                    <CloseIcon size={16} style={{ opacity: 0.6 }} onClick={() => setShowExpanded(false)} />
-                  </RowBetween>
-                </Card>
-              </AutoColumn>
+              <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="8px 8px">
+                <RowBetween>
+                  <TYPE.main fontWeight={500}>Showing results from inactive lists</TYPE.main>
+                  <CloseIcon size={16} style={{ opacity: 0.6 }} onClick={() => setShowExpanded(false)} />
+                </RowBetween>
+              </Card>
               {inactiveTokens && (
-                <div style={{ flex: '1', height: '100%', padding: '0px 8px' }}>
+                <div style={{ flex: '1', height: '94%', padding: '0px 8px' }}>
                   <AutoSizer disableWidth>
                     {({ height }) => (
                       <FixedSizeList

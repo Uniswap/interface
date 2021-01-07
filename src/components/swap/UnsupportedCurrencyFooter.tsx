@@ -93,10 +93,6 @@ export default function UnsupportedCurrencyFooter({
                 Some assets are not available through this interface because they either don’t work well with our smart
                 contract or for legal reasons.
               </TYPE.body>
-              <TYPE.body fontWeight={500}>
-                This app uses a list prepared by the [Blockchain Association](link). You can read more about it and the
-                reasons it exists [here](link).
-              </TYPE.body>
             </AutoColumn>
           </AutoColumn>
         </Card>
