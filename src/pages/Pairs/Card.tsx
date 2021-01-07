@@ -24,22 +24,31 @@ const LightCardWrap = styled(Card)`
   `};
 `
 
+const LogoContainer = styled.div<{ size: number }>`
+  margin: auto;
+  padding-left: ${props => `${props.size / 2}px`};
+`
+
 interface CardProps {
   currency0: Currency
   currency1: Currency
 }
 
-export const PairCard = ({ currency0, currency1 }: CardProps) => (
-  <LightCardWrap>
-    <AutoRow align="flex-end" justify="center">
-      <div style={{ margin: 'auto', paddingLeft: '13.44px' }}>
-        <DoubleCurrencyLogo size={26.88} currency0={currency0} currency1={currency1} />
-      </div>
-    </AutoRow>
-    <AutoRow align="flex-start" justify="center">
-      <Text width="auto" marginTop="6px" fontWeight={600} fontSize="16px" lineHeight="20px">
-        {currency0.symbol}/{currency1.symbol}
-      </Text>
-    </AutoRow>
-  </LightCardWrap>
-)
+export const PairCard = ({ currency0, currency1 }: CardProps) => {
+  const currencyLogoSize = 26.88
+
+  return (
+    <LightCardWrap>
+      <AutoRow align="flex-end" justify="center">
+        <LogoContainer size={currencyLogoSize}>
+          <DoubleCurrencyLogo size={currencyLogoSize} currency0={currency0} currency1={currency1} />
+        </LogoContainer>
+      </AutoRow>
+      <AutoRow align="flex-start" justify="center">
+        <Text width="auto" marginTop="6px" fontWeight={600} fontSize="16px" lineHeight="20px">
+          {currency0.symbol}/{currency1.symbol}
+        </Text>
+      </AutoRow>
+    </LightCardWrap>
+  )
+}
