@@ -9,7 +9,6 @@ import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
 
 const InfoLink = styled(ExternalLink)`
@@ -30,7 +29,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
   return (
     <>
-      <AutoColumn style={{ padding: '0 20px' }}>
+      <AutoColumn style={{ padding: '0 16px' }}>
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -86,29 +85,33 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const showRoute = Boolean(trade && trade.route.path.length > 2)
 
   return (
-    <AutoColumn gap="md">
+    <AutoColumn gap="0px">
       {trade && (
         <>
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
           {showRoute && (
             <>
-              <SectionBreak />
-              <AutoColumn style={{ padding: '0 24px' }}>
-                <RowFixed>
+              <RowBetween style={{ padding: '0 16px' }}>
+                <span style={{ display: 'flex', alignItems: 'center' }}>
                   <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                     Route
                   </TYPE.black>
                   <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-                </RowFixed>
+                </span>
                 <SwapRoute trade={trade} />
-              </AutoColumn>
+              </RowBetween>
             </>
           )}
-          <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
-              View pair analytics ↗
-            </InfoLink>
-          </AutoColumn>
+          {!showRoute && (
+            <AutoColumn style={{ padding: '12px 16px 0 16px' }}>
+              <InfoLink
+                href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address}
+                target="_blank"
+              >
+                View pair analytics ↗
+              </InfoLink>
+            </AutoColumn>
+          )}
         </>
       )}
     </AutoColumn>

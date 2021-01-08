@@ -330,7 +330,7 @@ export default function AddLiquidity({
           />
           <AutoColumn gap="20px">
             {noLiquidity ||
-              (isCreate && (
+              (isCreate ? (
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
@@ -342,6 +342,18 @@ export default function AddLiquidity({
                       </TYPE.link>
                       <TYPE.link fontWeight={400} color={'primaryText1'}>
                         Once you are happy with the rate click supply to review.
+                      </TYPE.link>
+                    </AutoColumn>
+                  </BlueCard>
+                </ColumnCenter>
+              ) : (
+                <ColumnCenter>
+                  <BlueCard>
+                    <AutoColumn gap="10px">
+                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                        <b>Tip:</b> When you add liquidity, you will receive pool tokens representing your position.
+                        These tokens automatically earn fees proportional to your share of the pool, and can be redeemed
+                        at any time.
                       </TYPE.link>
                     </AutoColumn>
                   </BlueCard>

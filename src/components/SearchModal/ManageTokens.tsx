@@ -2,7 +2,7 @@ import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
 import Column from 'components/Column'
 import { PaddedColumn, Separator, SearchInput } from './styleds'
 import Row, { RowBetween, RowFixed } from 'components/Row'
-import { TYPE, ExternalLinkIcon, TrashIcon, ButtonText } from 'theme'
+import { TYPE, ExternalLinkIcon, TrashIcon, ButtonText, ExternalLink } from 'theme'
 import { useToken } from 'hooks/Tokens'
 import styled from 'styled-components'
 import { useUserAddedTokens, useRemoveUserAddedToken } from 'state/user/hooks'
@@ -78,9 +78,11 @@ export default function ManageTokens({
         <RowBetween key={token.address} width="100%">
           <RowFixed>
             <CurrencyLogo currency={token} size={'20px'} />
-            <TYPE.main ml={'10px'} fontWeight={600}>
-              {token.symbol}
-            </TYPE.main>
+            <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+              <TYPE.main ml={'10px'} fontWeight={600}>
+                {token.symbol}
+              </TYPE.main>
+            </ExternalLink>
           </RowFixed>
           <RowFixed>
             <TrashIcon onClick={() => removeToken(chainId, token.address)} />
