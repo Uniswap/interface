@@ -134,6 +134,7 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
       const multiHop =
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
 
+      // if both are valid routes, need to check if single hop is good enough
       if (singleHop && multiHop) {
         return findTradeWithMinimumHopsExactIn(singleHop, multiHop)
       }
@@ -167,6 +168,7 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
         null
 
+      // if both are valid routes, need to check if single hop is good enough
       if (singleHop && multiHop) {
         return findTradeWithMinimumHopsExactOut(singleHop, multiHop)
       }
