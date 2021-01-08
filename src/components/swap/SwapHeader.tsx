@@ -5,7 +5,7 @@ import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 
 const StyledSwapHeader = styled.div`
-  padding: 12px 0.75rem 0px 1.25rem;
+  padding: 12px 1rem 0px 1.5rem;
   margin-bottom: -4px;
   width: 100%;
   max-width: 420px;
