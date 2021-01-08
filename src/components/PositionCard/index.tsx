@@ -9,10 +9,10 @@ import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE, HideExtraSmall, ExtraSmallOnly } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonUNIGradient } from '../Button'
+import { ButtonPrimary, ButtonSecondary, ButtonEmpty } from '../Button'
 import { transparentize } from 'polished'
 import { CardNoise } from '../earn/styled'
 
@@ -202,7 +202,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <Text fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>
-            {!!stakedBalance && (
+            {/* Hide this UI until a new staking program is enabled */}
+            {/* {!!stakedBalance && (
               <ButtonUNIGradient as={Link} to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}>
                 <HideExtraSmall>Earning UNI</HideExtraSmall>
                 <ExtraSmallOnly>
@@ -211,7 +212,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   </span>
                 </ExtraSmallOnly>
               </ButtonUNIGradient>
-            )}
+            )} */}
           </AutoRow>
 
           <RowFixed gap="8px">

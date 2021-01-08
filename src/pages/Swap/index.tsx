@@ -365,7 +365,7 @@ export default function Swap() {
             ) : null}
 
             {showWrap ? null : (
-              <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+              <Card padding={showWrap ? '.25rem .75rem 0 .75rem' : '0px'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   {Boolean(trade) && (
                     <RowBetween align="center">
