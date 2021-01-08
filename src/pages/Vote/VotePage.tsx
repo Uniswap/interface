@@ -122,7 +122,7 @@ export default function VotePage({
 
   // toggle for showing delegation modal
   const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
-  const toggelDelegateModal = useToggleDelegateModal()
+  const toggleDelegateModal = useToggleDelegateModal()
 
   // get and format date from data
   const currentTimestamp = useCurrentBlockTimestamp()
@@ -175,7 +175,7 @@ export default function VotePage({
   return (
     <PageWrapper gap="lg" justify="center">
       <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
-      <DelegateModal isOpen={showDelegateModal} onDismiss={toggelDelegateModal} title="Unlock Votes" />
+      <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title="Unlock Votes" />
       <ProposalInfo gap="lg" justify="start">
         <RowBetween style={{ width: '100%' }}>
           <ArrowWrapper to="/vote">
