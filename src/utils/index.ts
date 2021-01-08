@@ -281,3 +281,7 @@ export async function pollEvent(
     }, 5000)
   })
 }
+
+export function isProd(): boolean {
+  return process.env.NODE_ENV === 'production'
+}

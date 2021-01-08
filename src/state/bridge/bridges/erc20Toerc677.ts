@@ -1,5 +1,6 @@
-import TokenBridge from './tokenBridge'
 import { Contract } from '@ethersproject/contracts'
+import * as Sentry from '@sentry/react'
+import TokenBridge from './tokenBridge'
 import {
   tokenTransferPending,
   tokenTransferSuccess,
@@ -164,6 +165,13 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
       this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
     } catch (error) {
       this.dispatch(transferError())
+
+      Sentry.captureException(error, {
+        tags: {
+          section: 'Bridge',
+          bridgeType: 'ERC20ToERC677'
+        }
+      })
 
       if (error?.code !== 4001) console.log(error)
     }

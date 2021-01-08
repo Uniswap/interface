@@ -7,6 +7,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import * as Sentry from '@sentry/react'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -205,6 +206,13 @@ export default function AddLiquidity({
       )
       .catch(error => {
         setAttemptingTxn(false)
+
+        Sentry.captureException(error, {
+          tags: {
+            section: 'Add Liquidity'
+          }
+        })
+
         if (error?.code !== 4001) {
           console.log(error)
         }

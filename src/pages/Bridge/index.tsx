@@ -1,4 +1,5 @@
 import React, { useCallback, useContext, useState } from 'react'
+import * as Sentry from '@sentry/react'
 import AppBody from '../AppBody'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -177,6 +178,12 @@ export default function Bridge({
       onFieldInput('')
       updateCompletedBridgeTransfer()
     } catch (error) {
+      Sentry.captureException(error, {
+        tags: {
+          section: 'Bridge'
+        }
+      })
+
       console.log(error)
     }
   }

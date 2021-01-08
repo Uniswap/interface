@@ -8,6 +8,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import * as Sentry from '@sentry/react'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -329,6 +330,13 @@ export default function RemoveLiquidity({
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)
+
+          Sentry.captureException(error, {
+            tags: {
+              section: 'Remove Liquidity'
+            }
+          })
+
           // we only care if the error is something _other_ than the user rejected the tx
           console.error(error)
         })

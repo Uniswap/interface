@@ -4,6 +4,7 @@ import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import * as Sentry from '@sentry/react'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
@@ -222,6 +223,12 @@ export default function Swap() {
         })
       })
       .catch(error => {
+        Sentry.captureException(error, {
+          tags: {
+            section: 'Swap'
+          }
+        })
+
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,
