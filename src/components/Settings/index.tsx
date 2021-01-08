@@ -26,7 +26,7 @@ const StyledMenuIcon = styled(Settings)`
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.text1};
+    stroke: ${({ theme }) => theme.text2};
   }
 `
 
@@ -51,7 +51,7 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
+  /* background-color: ${({ theme }) => theme.bg3}; */
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -60,7 +60,7 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg4};
+    /* background-color: ${({ theme }) => theme.bg4}; */
   }
 
   svg {
@@ -94,7 +94,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 4rem;
+  top: 2rem;
   right: 0rem;
   z-index: 100;
 
