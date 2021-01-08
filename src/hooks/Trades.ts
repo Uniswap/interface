@@ -1,3 +1,4 @@
+import { useUserSingleHopOnly } from 'state/user/hooks'
 import { Currency, CurrencyAmount, Pair, Token, Trade, JSBI, Percent } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
@@ -7,7 +8,6 @@ import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
-import { useUserSingleHopOnly } from 'state/user/hooks'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
@@ -96,6 +96,7 @@ function findTradeWithMinimumHopsExactIn(lessHops: Trade, moreHops: Trade) {
   if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
     return lessHops
   }
+
   return moreHops
 }
 
@@ -110,6 +111,7 @@ function findTradeWithMinimumHopsExactOut(lessHops: Trade, moreHops: Trade) {
   if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
     return lessHops
   }
+
   return moreHops
 }
 
