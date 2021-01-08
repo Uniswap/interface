@@ -76,7 +76,6 @@ export function FindPoolTabs() {
         </HistoryLink>
         <ActiveText>Import Pool</ActiveText>
         <Settings />
-        {/* <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} /> */}
       </RowBetween>
     </Tabs>
   )
@@ -91,13 +90,6 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
         </HistoryLink>
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
         <Settings />
-        {/* <QuestionHelper
-          text={
-            adding
-              ? 'When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
-              : 'Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.'
-          }
-        /> */}
       </RowBetween>
     </Tabs>
   )
