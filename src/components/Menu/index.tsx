@@ -98,7 +98,7 @@ export default function Menu() {
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="https://docs.fuse.io">
+          <MenuItem id="link" href="https://docs.fuse.io/fuseswap/overview">
             <BookOpen size={14} />
             Docs
           </MenuItem>
