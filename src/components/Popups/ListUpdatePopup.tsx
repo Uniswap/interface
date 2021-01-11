@@ -2,12 +2,11 @@ import { diffTokenLists, TokenList } from '@uniswap/token-lists'
 import React, { useCallback, useMemo } from 'react'
 import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { AppDispatch } from '../../state'
 import { useRemovePopup } from '../../state/application/hooks'
-import { acceptListUpdate } from '../../state/lists/actions'
+import { acceptListUpdate, PathNameType } from '../../state/lists/actions'
 import { TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { ButtonSecondary } from '../Button'
@@ -22,12 +21,14 @@ export const ChangesList = styled.ul`
 export default function ListUpdatePopup({
   popKey,
   listUrl,
+  pathName,
   oldList,
   newList,
   auto
 }: {
   popKey: string
   listUrl: string
+  pathName: PathNameType
   oldList: TokenList
   newList: TokenList
   auto: boolean
@@ -35,9 +36,6 @@ export default function ListUpdatePopup({
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   const dispatch = useDispatch<AppDispatch>()
-  const location = useLocation()
-  const router = location.pathname.split('/')[1]
-  const pathName = router === 'uniswap' || router === 'sushiswap' ? router : 'uniswap'
 
   const handleAcceptUpdate = useCallback(() => {
     if (auto) return
