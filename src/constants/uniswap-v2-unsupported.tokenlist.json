@@ -12,7 +12,7 @@
   "tokens": [
     {
       "name": "Gold Tether",
-      "address": "0x4922a015c4407f87432b179bb209e125432e4a2a",
+      "address": "0x4922a015c4407F87432B179bb209e125432E4a2A",
       "symbol": "XAUt",
       "decimals": 6,
       "chainId": 1,
