@@ -49,7 +49,7 @@ jobs:
         id: upload
         uses: anantaramdas/ipfs-pinata-deploy-action@39bbda1ce1fe24c69c6f57861b8038278d53688d
         with:
-          pin-name: Deerfi Lending ${{ needs.bump_version.outputs.new_tag }}
+          pin-name: OS Finance ${{ needs.bump_version.outputs.new_tag }}
           path: './build'
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
@@ -63,7 +63,7 @@ jobs:
       - name: Update DNS with new IPFS hash
         env:
           CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          RECORD_DOMAIN: 'deerfi.com'
+          RECORD_DOMAIN: 'os.finance'
           RECORD_NAME: '_dnslink.app'
           CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
         uses: textileio/cloudflare-update-dnslink@0fe7b7a1ffc865db3a4da9773f0f987447ad5848
@@ -83,12 +83,12 @@ jobs:
             - CIDv0: `${{ steps.upload.outputs.hash }}`
             - CIDv1: `${{ steps.convert_cidv0.outputs.cidv1 }}`
 
-            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [app.deerfi.com](https://app.deerfi.com).
+            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [os.finance](https://os.finance).
 
-            You can also access the Deerfi Lending Interface directly from an IPFS gateway.
-            The Deerfi lending interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
-            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Deerfi lending interface without your permission.
-            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app.deerfi.com](https://app.deerfi.com).
+            You can also access the OS Finance Interface directly from an IPFS gateway.
+            The OS Finance interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
+            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the OS Finance interface without your permission.
+            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [os.finance](https://os.finance).
             The preferred URLs below are safe to use to access this specific release.
 
             Preferred URLs:
