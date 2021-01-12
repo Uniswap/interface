@@ -5,7 +5,7 @@ import CHAINLINK_PRICE_ORACLE_PROXY_ABI from './chainlink_price_oracle_proxy.jso
 
 const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B', // compound unitroller
-  [ChainId.ROPSTEN]: '0x2eaa9d77ae4d8f9cdd9faacd44016e746485bddb',
+  [ChainId.ROPSTEN]: '0x54188bbedd7b68228fa89cbdda5e3e930459c6c6',
   [ChainId.RINKEBY]: '0x2eaa9d77ae4d8f9cdd9faacd44016e746485bddb', // compound unitroller
   [ChainId.GÖRLI]: '0x627ea49279fd0de89186a58b8758ad02b6be2867',
   [ChainId.KOVAN]: '0x5eae89dc1c671724a672ff0630122ee834098657'
@@ -13,7 +13,7 @@ const COMPTROLLER_ADDRESSES: { [chainId in ChainId]: string } = {
 
 const ORACLE_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x922018674c12a7F0D394ebEEf9B58F186CdE13c1', // compound oracle
-  [ChainId.ROPSTEN]: '0xb2b3d5b4e35881d518fa2062325f118a6ebb6c4a',
+  [ChainId.ROPSTEN]: '0xBEf4E076A995c784be6094a432b9CA99b7431A3f',
   [ChainId.RINKEBY]: '0x536426d7768b6E2E8815Fa42357FD47094071c1D', // deerfi oracle
   [ChainId.GÖRLI]: '0x9A536Ed5C97686988F93C9f7C2A390bF3B59c0ec', // not working due to lack of oracle
   [ChainId.KOVAN]: '0xbBdE93962Ca9fe39537eeA7380550ca6845F8db7'

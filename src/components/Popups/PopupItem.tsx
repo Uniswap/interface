@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useCallback, useContext, useEffect } from 'react'
 import { X } from 'react-feather'
 import { useSpring } from 'react-spring/web'
@@ -7,6 +8,7 @@ import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
 import TransactionPopup from './TransactionPopup'
+import { useLocation } from 'react-router-dom'
 
 export const StyledClose = styled(X)`
   position: absolute;
@@ -57,6 +59,9 @@ export default function PopupItem({
 }) {
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
+  const location = useLocation()
+  const router = location.pathname.split('/')[1]
+  const locationPath = router === 'uniswap' || router === 'sushiswap' ? true : false
   useEffect(() => {
     if (removeAfterMs === null) return undefined
 
@@ -79,9 +84,19 @@ export default function PopupItem({
     popupContent = <TransactionPopup hash={hash} success={success} summary={summary} />
   } else if ('listUpdate' in content) {
     const {
-      listUpdate: { listUrl, oldList, newList, auto }
+      listUpdate: { listUrl, pathName, oldList, newList, auto }
     } = content
-    popupContent = <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
+    popupContent =
+      locationPath && router === pathName ? (
+        <ListUpdatePopup
+          popKey={popKey}
+          listUrl={listUrl}
+          pathName={pathName}
+          oldList={oldList}
+          newList={newList}
+          auto={auto}
+        />
+      ) : null
   }
 
   const faderStyle = useSpring({
@@ -90,11 +105,11 @@ export default function PopupItem({
     config: { duration: removeAfterMs ?? undefined }
   })
 
-  return (
+  return popupContent ? (
     <Popup>
       <StyledClose color={theme.text2} onClick={removeThisPopup} />
       {popupContent}
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>
-  )
+  ) : null
 }

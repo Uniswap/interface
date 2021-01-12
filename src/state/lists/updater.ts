@@ -7,14 +7,14 @@ import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { addPopup } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
-import { acceptListUpdate } from './actions'
+import { acceptListUpdate, PathNameType } from './actions'
 
-export default function Updater({ pathName }: { pathName: 'uniswap' | 'sushiswap' }): null {
+export default function Updater({ pathName }: { pathName: PathNameType }): null {
   const { library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
-  const selectedListUrl = useSelector<AppState, AppState['lists']['selectedListUrl']>(
-    state => state.lists.selectedListUrl
+  const lists = useSelector<AppState, AppState['lists']['byOsUrl']>(state => state.lists.byOsUrl)
+  const selectedListUrl = useSelector<AppState, AppState['lists']['selectedOsListUrl']>(
+    state => state.lists.selectedOsListUrl
   )
   const isWindowVisible = useIsWindowVisible()
   const fetchList = useFetchListCallback(pathName)
@@ -57,6 +57,7 @@ export default function Updater({ pathName }: { pathName: 'uniswap' | 'sushiswap
                     content: {
                       listUpdate: {
                         listUrl,
+                        pathName,
                         oldList: list.current,
                         newList: list.pendingUpdate,
                         auto: true
@@ -79,6 +80,7 @@ export default function Updater({ pathName }: { pathName: 'uniswap' | 'sushiswap
                   content: {
                     listUpdate: {
                       listUrl,
+                      pathName,
                       auto: false,
                       oldList: list.current,
                       newList: list.pendingUpdate

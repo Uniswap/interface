@@ -3,10 +3,10 @@ import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
 import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
-import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
+import { acceptListUpdate, addList, fetchTokenList, PathNameType, removeList, selectList } from './actions'
 
 export interface ListsState {
-  readonly byUrl: {
+  readonly byOsUrl: {
     readonly [pathName: string]: {
       readonly [url: string]: {
         readonly current: TokenList | null
@@ -18,11 +18,11 @@ export interface ListsState {
   }
 
   // this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
-  readonly lastInitializedDefaultListOfLists?: { uniswap: string[]; sushiswap: string[] }
-  readonly selectedListUrl: { uniswap: string; sushiswap: string } | undefined
+  readonly lastInitializedDefaultOsListOfLists?: { uniswap: string[]; sushiswap: string[] }
+  readonly selectedOsListUrl: { uniswap: string; sushiswap: string } | undefined
 }
 
-type ListState = ListsState['byUrl'][string][string] // ['byUrl'][pathName][url]
+type ListState = ListsState['byOsUrl'][string][string] // ['byOsUrl'][pathName][url]
 
 const NEW_LIST_STATE: ListState = {
   error: null,
@@ -34,46 +34,46 @@ const NEW_LIST_STATE: ListState = {
 type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
 const initialState: ListsState = {
-  lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
-  byUrl: {
+  lastInitializedDefaultOsListOfLists: DEFAULT_LIST_OF_LISTS,
+  byOsUrl: {
     uniswap: {
-      ...DEFAULT_LIST_OF_LISTS.uniswap.reduce<Mutable<ListsState['byUrl']['uniswap']>>((memo, listUrl) => {
+      ...DEFAULT_LIST_OF_LISTS.uniswap.reduce<Mutable<ListsState['byOsUrl']['uniswap']>>((memo, listUrl) => {
         memo[listUrl] = NEW_LIST_STATE
         return memo
       }, {})
     },
     sushiswap: {
-      ...DEFAULT_LIST_OF_LISTS.sushiswap.reduce<Mutable<ListsState['byUrl']['sushiswap']>>((memo, listUrl) => {
+      ...DEFAULT_LIST_OF_LISTS.sushiswap.reduce<Mutable<ListsState['byOsUrl']['sushiswap']>>((memo, listUrl) => {
         memo[listUrl] = NEW_LIST_STATE
         return memo
       }, {})
     }
   },
-  selectedListUrl: DEFAULT_TOKEN_LIST_URL
+  selectedOsListUrl: DEFAULT_TOKEN_LIST_URL
 }
 
 export default createReducer(initialState, builder =>
   builder
     .addCase(fetchTokenList.pending, (state, { payload: { requestId, pathName, url } }) => {
-      state.byUrl[pathName][url] = {
+      state.byOsUrl[pathName][url] = {
         current: null,
         pendingUpdate: null,
-        ...state.byUrl[pathName][url],
+        ...state.byOsUrl[pathName][url],
         loadingRequestId: requestId,
         error: null
       }
     })
     .addCase(fetchTokenList.fulfilled, (state, { payload: { requestId, tokenList, pathName, url } }) => {
-      const current = state.byUrl[pathName][url]?.current
-      const loadingRequestId = state.byUrl[pathName][url]?.loadingRequestId
+      const current = state.byOsUrl[pathName][url]?.current
+      const loadingRequestId = state.byOsUrl[pathName][url]?.loadingRequestId
 
       // no-op if update does nothing
       if (current) {
         const upgradeType = getVersionUpgrade(current.version, tokenList.version)
         if (upgradeType === VersionUpgrade.NONE) return
         if (loadingRequestId === null || loadingRequestId === requestId) {
-          state.byUrl[pathName][url] = {
-            ...state.byUrl[pathName][url],
+          state.byOsUrl[pathName][url] = {
+            ...state.byOsUrl[pathName][url],
             loadingRequestId: null,
             error: null,
             current: current,
@@ -81,8 +81,8 @@ export default createReducer(initialState, builder =>
           }
         }
       } else {
-        state.byUrl[pathName][url] = {
-          ...state.byUrl[pathName][url],
+        state.byOsUrl[pathName][url] = {
+          ...state.byOsUrl[pathName][url],
           loadingRequestId: null,
           error: null,
           current: tokenList,
@@ -91,13 +91,13 @@ export default createReducer(initialState, builder =>
       }
     })
     .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, pathName, errorMessage } }) => {
-      if (state.byUrl[pathName][url]?.loadingRequestId !== requestId) {
+      if (state.byOsUrl[pathName][url]?.loadingRequestId !== requestId) {
         // no-op since it's not the latest request
         return
       }
 
-      state.byUrl[pathName][url] = {
-        ...state.byUrl[pathName][url],
+      state.byOsUrl[pathName][url] = {
+        ...state.byOsUrl[pathName][url],
         loadingRequestId: null,
         error: errorMessage,
         current: null,
@@ -105,16 +105,16 @@ export default createReducer(initialState, builder =>
       }
     })
     .addCase(selectList, (state, { payload: { pathName, url } }) => {
-      if (state.selectedListUrl) {
-        state.selectedListUrl[pathName] = url
+      if (state.selectedOsListUrl) {
+        state.selectedOsListUrl[pathName] = url
       } else {
         if (pathName === 'uniswap') {
-          state.selectedListUrl = {
+          state.selectedOsListUrl = {
             uniswap: url,
             sushiswap: DEFAULT_TOKEN_LIST_URL.sushiswap
           }
         } else {
-          state.selectedListUrl = {
+          state.selectedOsListUrl = {
             uniswap: DEFAULT_TOKEN_LIST_URL.uniswap,
             sushiswap: url
           }
@@ -123,55 +123,56 @@ export default createReducer(initialState, builder =>
 
       // state.selectedListUrl?.uniswap = url
       // automatically adds list
-      if (!state.byUrl[pathName][url]) {
-        state.byUrl[pathName][url] = NEW_LIST_STATE
+      if (!state.byOsUrl[pathName][url]) {
+        state.byOsUrl[pathName][url] = NEW_LIST_STATE
       }
     })
     .addCase(addList, (state, { payload: { pathName, url } }) => {
-      if (!state.byUrl[pathName][url]) {
-        state.byUrl[pathName][url] = NEW_LIST_STATE
+      if (!state.byOsUrl[pathName][url]) {
+        state.byOsUrl[pathName][url] = NEW_LIST_STATE
       }
     })
     .addCase(removeList, (state, { payload: { pathName, url } }) => {
-      if (state.byUrl[pathName][url]) {
-        delete state.byUrl[pathName][url]
+      if (state.byOsUrl[pathName][url]) {
+        delete state.byOsUrl[pathName][url]
       }
-      if (state.selectedListUrl?.[pathName] === url) {
-        state.selectedListUrl[pathName] =
+      if (state.selectedOsListUrl?.[pathName] === url) {
+        state.selectedOsListUrl[pathName] =
           url === DEFAULT_TOKEN_LIST_URL[pathName]
-            ? Object.keys(state.byUrl[pathName])[0]
+            ? Object.keys(state.byOsUrl[pathName])[0]
             : DEFAULT_TOKEN_LIST_URL[pathName]
       }
     })
     .addCase(acceptListUpdate, (state, { payload: { pathName, url } }) => {
-      if (!state.byUrl[pathName][url]?.pendingUpdate) {
+      if (!state.byOsUrl[pathName][url]?.pendingUpdate) {
         throw new Error('accept list update called without pending update')
       }
-      state.byUrl[pathName][url] = {
-        ...state.byUrl[pathName][url],
+      state.byOsUrl[pathName][url] = {
+        ...state.byOsUrl[pathName][url],
         pendingUpdate: null,
-        current: state.byUrl[pathName][url].pendingUpdate
+        current: state.byOsUrl[pathName][url].pendingUpdate
       }
     })
     .addCase(updateVersion, state => {
       // state loaded from localStorage, but new lists have never been initialized
-      if (!state.lastInitializedDefaultListOfLists) {
-        state.byUrl = initialState.byUrl
-        state.selectedListUrl = DEFAULT_TOKEN_LIST_URL
-      } else if (state.lastInitializedDefaultListOfLists) {
+      if (!state.lastInitializedDefaultOsListOfLists) {
+        state.byOsUrl = initialState.byOsUrl
+        state.selectedOsListUrl = DEFAULT_TOKEN_LIST_URL
+      } else if (state.lastInitializedDefaultOsListOfLists) {
         let lastInitializedSet: Set<string> = new Set()
-        Object.keys(state.lastInitializedDefaultListOfLists).map(listKey => {
-          const list = state.lastInitializedDefaultListOfLists?.[listKey as 'uniswap' | 'sushiswap'].reduce<
-            Set<string>
-          >((s, l) => s.add(l), new Set())
+        Object.keys(state.lastInitializedDefaultOsListOfLists).forEach(listKey => {
+          const list = state.lastInitializedDefaultOsListOfLists?.[listKey as PathNameType].reduce<Set<string>>(
+            (s, l) => s.add(l),
+            new Set()
+          )
           if (list) {
             lastInitializedSet = new Set([...lastInitializedSet, ...list])
           }
         })
 
         let newListOfListsSet: Set<string> = new Set()
-        Object.keys(DEFAULT_LIST_OF_LISTS).map(listKey => {
-          const list = DEFAULT_LIST_OF_LISTS?.[listKey as 'uniswap' | 'sushiswap'].reduce<Set<string>>(
+        Object.keys(DEFAULT_LIST_OF_LISTS).forEach(listKey => {
+          const list = DEFAULT_LIST_OF_LISTS?.[listKey as PathNameType].reduce<Set<string>>(
             (s, l) => s.add(l),
             new Set()
           )
@@ -181,31 +182,31 @@ export default createReducer(initialState, builder =>
         })
 
         Object.keys(DEFAULT_LIST_OF_LISTS).map(listKey =>
-          DEFAULT_LIST_OF_LISTS[listKey as 'uniswap' | 'sushiswap'].forEach(listUrl => {
+          DEFAULT_LIST_OF_LISTS[listKey as PathNameType].forEach(listUrl => {
             if (!lastInitializedSet.has(listUrl)) {
-              state.byUrl[listKey][listUrl] = NEW_LIST_STATE
+              state.byOsUrl[listKey][listUrl] = NEW_LIST_STATE
             }
           })
         )
 
-        Object.keys(state.lastInitializedDefaultListOfLists).map(listKey => {
-          state.lastInitializedDefaultListOfLists?.[listKey as 'uniswap' | 'sushiswap'].forEach(listUrl => {
+        Object.keys(state.lastInitializedDefaultOsListOfLists).forEach(listKey => {
+          state.lastInitializedDefaultOsListOfLists?.[listKey as PathNameType].forEach(listUrl => {
             if (!newListOfListsSet.has(listUrl)) {
-              delete state.byUrl[listKey][listUrl]
+              delete state.byOsUrl[listKey][listUrl]
             }
           })
         })
       }
 
-      state.lastInitializedDefaultListOfLists = DEFAULT_LIST_OF_LISTS
+      state.lastInitializedDefaultOsListOfLists = DEFAULT_LIST_OF_LISTS
 
-      if (!state.selectedListUrl) {
-        state.selectedListUrl = DEFAULT_TOKEN_LIST_URL
-        if (!state.byUrl['uniswap'][DEFAULT_TOKEN_LIST_URL['uniswap']]) {
-          state.byUrl['uniswap'][DEFAULT_TOKEN_LIST_URL['uniswap']] = NEW_LIST_STATE
+      if (!state.selectedOsListUrl) {
+        state.selectedOsListUrl = DEFAULT_TOKEN_LIST_URL
+        if (!state.byOsUrl['uniswap'][DEFAULT_TOKEN_LIST_URL['uniswap']]) {
+          state.byOsUrl['uniswap'][DEFAULT_TOKEN_LIST_URL['uniswap']] = NEW_LIST_STATE
         }
-        if (!state.byUrl['sushiswap'][DEFAULT_TOKEN_LIST_URL['sushiswap']]) {
-          state.byUrl['sushiswap'][DEFAULT_TOKEN_LIST_URL['sushiswap']] = NEW_LIST_STATE
+        if (!state.byOsUrl['sushiswap'][DEFAULT_TOKEN_LIST_URL['sushiswap']]) {
+          state.byOsUrl['sushiswap'][DEFAULT_TOKEN_LIST_URL['sushiswap']] = NEW_LIST_STATE
         }
       }
     })

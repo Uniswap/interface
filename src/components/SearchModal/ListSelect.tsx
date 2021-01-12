@@ -91,7 +91,7 @@ function listUrlRowHTMLId(listUrl: string) {
 }
 
 const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; onBack: () => void }) {
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const listsByUrl = useSelector<AppState, AppState['lists']['byOsUrl']>(state => state.lists.byOsUrl)
   const selectedListUrl = useSelectedListUrl()
   const dispatch = useDispatch<AppDispatch>()
   const location = useLocation()
@@ -259,7 +259,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
   const location = useLocation()
   const router = location.pathname.split('/')[1]
   const pathName = router === 'uniswap' || router === 'sushiswap' ? router : 'uniswap'
-  const allLists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const allLists = useSelector<AppState, AppState['lists']['byOsUrl']>(state => state.lists.byOsUrl)
   const lists = allLists[pathName]
   const adding = Boolean(lists[listUrlInput]?.loadingRequestId)
   const [addError, setAddError] = useState<string | null>(null)

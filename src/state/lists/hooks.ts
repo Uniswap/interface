@@ -3,6 +3,7 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
+import { PathNameType } from './actions'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -71,7 +72,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
 }
 
 export function useTokenList(url: string | undefined, pathName: string): TokenAddressMap {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const lists = useSelector<AppState, AppState['lists']['byOsUrl']>(state => state.lists.byOsUrl)
   return useMemo(() => {
     if (!url) return EMPTY_LIST
     const current = lists[pathName][url]?.current
@@ -86,19 +87,19 @@ export function useTokenList(url: string | undefined, pathName: string): TokenAd
 }
 
 export function useSelectedListUrl(): { uniswap: string; sushiswap: string } | undefined {
-  return useSelector<AppState, AppState['lists']['selectedListUrl']>(state => state.lists.selectedListUrl)
+  return useSelector<AppState, AppState['lists']['selectedOsListUrl']>(state => state.lists.selectedOsListUrl)
 }
 
-export function useSelectedTokenList(pathName: 'uniswap' | 'sushiswap'): TokenAddressMap {
+export function useSelectedTokenList(pathName: PathNameType): TokenAddressMap {
   const selectedListUrl = useSelectedListUrl()
   return useTokenList(selectedListUrl?.[pathName], pathName)
 }
 
 export function useSelectedListInfo(
-  pathName: 'uniswap' | 'sushiswap'
+  pathName: PathNameType
 ): { current: TokenList | null; pending: TokenList | null; loading: boolean } {
   const selectedUrl = useSelectedListUrl()
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const listsByUrl = useSelector<AppState, AppState['lists']['byOsUrl']>(state => state.lists.byOsUrl)
   const list = selectedUrl?.[pathName] ? listsByUrl[pathName][selectedUrl[pathName]] : undefined
   return {
     current: list?.current ?? null,
@@ -109,7 +110,7 @@ export function useSelectedListInfo(
 
 // returns all downloaded current lists
 export function useAllLists(pathName: string): TokenList[] {
-  const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const lists = useSelector<AppState, AppState['lists']['byOsUrl']>(state => state.lists.byOsUrl)
   const defiList = lists[pathName]
 
   return useMemo(
