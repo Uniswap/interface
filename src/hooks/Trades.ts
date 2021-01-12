@@ -1,13 +1,14 @@
-import { useUserSingleHopOnly } from 'state/user/hooks'
-import { Currency, CurrencyAmount, Pair, Token, Trade, JSBI, Percent } from '@uniswap/sdk'
+import { isTradeBetter } from 'utils/trades'
+import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
-import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
+import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES, BETTER_TRADE_LESS_HOPS_THRESHOLD } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
+import { useUserSingleHopOnly } from 'state/user/hooks'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
@@ -79,41 +80,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   )
 }
 
-const PERCENT_DIFFERENCE_MAX_BIPS = 50 // 0.5% difference at most in positive direction
-const ONE_IN_BIPS = 10000
-
-// 0.5% max amount difference between amounts in single or multihop trades
-const MAX_AMOUNT_DIFFERENCE_PERCENT = new Percent(JSBI.BigInt(PERCENT_DIFFERENCE_MAX_BIPS), JSBI.BigInt(ONE_IN_BIPS))
-
-function findTradeWithMinimumHopsExactIn(lessHops: Trade, moreHops: Trade) {
-  // multi output will always be at least as big as single output
-  const outputDifference = JSBI.subtract(moreHops.outputAmount.raw, lessHops.outputAmount.raw)
-
-  // will be 0 if best multihop trade is a singlehop
-  const differencePercentage = new Percent(outputDifference, moreHops.outputAmount.raw)
-
-  // if difference is < threshold, return single hop
-  if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
-    return lessHops
-  }
-
-  return moreHops
-}
-
-function findTradeWithMinimumHopsExactOut(lessHops: Trade, moreHops: Trade) {
-  // multihop input will always be same as single or less (if multi is a single hop)
-  const inputDifference = JSBI.subtract(lessHops.inputAmount.raw, moreHops.inputAmount.raw)
-
-  // will be 0 if best multihop trade is a singlehop
-  const differencePercentage = new Percent(inputDifference, moreHops.inputAmount.raw)
-
-  // if difference is < threshold return single hop
-  if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
-    return lessHops
-  }
-
-  return moreHops
-}
+const MAX_HOPS = 3
 
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
@@ -125,21 +92,24 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
 
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-      const singleHop =
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ?? null
-
       if (singleHopOnly) {
-        return singleHop
+        return (
+          Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ??
+          null
+        )
       }
-
-      const multiHop =
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
-
-      if (singleHop && multiHop) {
-        return findTradeWithMinimumHopsExactIn(singleHop, multiHop)
+      // search through trades with varying hops, find best trade out of them
+      let bestTradeSoFar: Trade | null = null
+      for (let i = 1; i <= MAX_HOPS; i++) {
+        const currentTrade: Trade | null =
+          Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: i, maxNumResults: 1 })[0] ??
+          null
+        // if current trade is best yet, save it
+        if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
+          bestTradeSoFar = currentTrade
+        }
       }
-
-      return multiHop
+      return bestTradeSoFar
     }
 
     return null
@@ -156,23 +126,23 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
 
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-      const singleHop =
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
-        null
-
       if (singleHopOnly) {
-        return singleHop
+        return (
+          Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
+          null
+        )
       }
-
-      const multiHop =
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
-        null
-
-      if (singleHop && multiHop) {
-        return findTradeWithMinimumHopsExactOut(singleHop, multiHop)
+      // search through trades with varying hops, find best trade out of them
+      let bestTradeSoFar: Trade | null = null
+      for (let i = 1; i <= MAX_HOPS; i++) {
+        const currentTrade =
+          Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: i, maxNumResults: 1 })[0] ??
+          null
+        if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
+          bestTradeSoFar = currentTrade
+        }
       }
-
-      return multiHop
+      return bestTradeSoFar
     }
     return null
   }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
