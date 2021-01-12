@@ -1,8 +1,9 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade, JSBI, Percent } from '@uniswap/sdk'
+import { isTradeBetter } from 'utils/trades'
+import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
-import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
+import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES, BETTER_TRADE_LESS_HOPS_THRESHOLD } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
@@ -80,40 +81,6 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   )
 }
 
-const PERCENT_DIFFERENCE_MAX_BIPS = 50 // 0.5% difference at most in positive direction
-const ONE_IN_BIPS = 10000
-
-// 0.5% max amount difference between amounts in single or multihop trades
-const MAX_AMOUNT_DIFFERENCE_PERCENT = new Percent(JSBI.BigInt(PERCENT_DIFFERENCE_MAX_BIPS), JSBI.BigInt(ONE_IN_BIPS))
-
-function findTradeWithMinimumHopsExactIn(lessHops: Trade, moreHops: Trade) {
-  // multi output will always be at least as big as single output
-  const outputDifference = JSBI.subtract(moreHops.outputAmount.raw, lessHops.outputAmount.raw)
-
-  // will be 0 if best multihop trade is a singlehop
-  const differencePercentage = new Percent(outputDifference, moreHops.outputAmount.raw)
-
-  // if difference is < threshold, return single hop
-  if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
-    return lessHops
-  }
-  return moreHops
-}
-
-function findTradeWithMinimumHopsExactOut(lessHops: Trade, moreHops: Trade) {
-  // multihop input will always be same as single or less (if multi is a single hop)
-  const inputDifference = JSBI.subtract(lessHops.inputAmount.raw, moreHops.inputAmount.raw)
-
-  // will be 0 if best multihop trade is a singlehop
-  const differencePercentage = new Percent(inputDifference, moreHops.inputAmount.raw)
-
-  // if difference is < threshold return single hop
-  if (differencePercentage.lessThan(MAX_AMOUNT_DIFFERENCE_PERCENT)) {
-    return lessHops
-  }
-  return moreHops
-}
-
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
@@ -136,7 +103,10 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
 
       // if both are valid routes, need to check if single hop is good enough
       if (singleHop && multiHop) {
-        return findTradeWithMinimumHopsExactIn(singleHop, multiHop)
+        if (isTradeBetter(singleHop, multiHop, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
+          return multiHop
+        }
+        return singleHop
       }
 
       return multiHop
@@ -170,7 +140,10 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
 
       // if both are valid routes, need to check if single hop is good enough
       if (singleHop && multiHop) {
-        return findTradeWithMinimumHopsExactOut(singleHop, multiHop)
+        if (isTradeBetter(singleHop, multiHop, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
+          return multiHop
+        }
+        return singleHop
       }
 
       return multiHop
@@ -180,18 +153,18 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
 }
 
 export function useIsTransactionUnsupported(currencyIn?: Currency, currencyOut?: Currency): boolean {
-  const blockedTokens: { [address: string]: Token } = useUnsupportedTokens()
+  const unsupportedToken: { [address: string]: Token } = useUnsupportedTokens()
   const { chainId } = useActiveWeb3React()
 
   const tokenIn = wrappedCurrency(currencyIn, chainId)
   const tokenOut = wrappedCurrency(currencyOut, chainId)
 
-  // if blocked list loaded & either token on blocked list, mark as unsupported
-  if (blockedTokens) {
-    if (tokenIn && Object.keys(blockedTokens).includes(tokenIn.address)) {
+  // if unsupported list loaded & either token on list, mark as unsupported
+  if (unsupportedToken) {
+    if (tokenIn && Object.keys(unsupportedToken).includes(tokenIn.address)) {
       return true
     }
-    if (tokenOut && Object.keys(blockedTokens).includes(tokenOut.address)) {
+    if (tokenOut && Object.keys(unsupportedToken).includes(tokenOut.address)) {
       return true
     }
   }

@@ -21,8 +21,8 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 import SwapHeader from '../../components/swap/SwapHeader'
 
-import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
+import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { getTradeVersion } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency, useDefaultTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -47,6 +47,7 @@ import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { isTradeBetter } from 'utils/trades'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -111,12 +112,8 @@ export default function Swap() {
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
   const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION]
 
-  const betterTradeLinkVersion: Version | undefined =
-    toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-      ? Version.v1
-      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
-      ? Version.v2
-      : undefined
+  const betterTradeLinkV2: Version | undefined =
+    toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade) ? Version.v2 : undefined
 
   const parsedAmounts = showWrap
     ? {
@@ -503,8 +500,8 @@ export default function Swap() {
               </Column>
             )}
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            {betterTradeLinkVersion && !swapIsUnsupported ? (
-              <BetterTradeLink version={betterTradeLinkVersion} />
+            {betterTradeLinkV2 && !swapIsUnsupported && toggledVersion === Version.v1 ? (
+              <BetterTradeLink version={betterTradeLinkV2} />
             ) : toggledVersion !== DEFAULT_VERSION && defaultTrade ? (
               <DefaultVersionLink />
             ) : null}

@@ -244,7 +244,7 @@ export function CurrencySearch({
         <Wrapper>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Wrapper>
-      ) : filteredSortedTokens?.length > 0 ? (
+      ) : filteredSortedTokens?.length > 0 && !showExpanded ? (
         <div style={{ flex: '1' }}>
           <AutoSizer disableWidth>
             {({ height }) => (
@@ -266,6 +266,13 @@ export function CurrencySearch({
             <TYPE.main color={theme.text3} textAlign="center" mb="20px">
               No results found in active lists.
             </TYPE.main>
+          )}
+          {filteredSortedTokens?.length === 0 && !showExpanded && inactiveTokens && inactiveTokens.length > 0 && (
+            <ButtonText onClick={() => setShowExpanded(true)}>
+              <TYPE.main color={theme.blue1} fontWeight={500}>
+                + Show {inactiveTokens.length} inactive {inactiveTokens.length === 1 ? 'token' : 'tokens'}
+              </TYPE.main>
+            </ButtonText>
           )}
           {showExpanded ? (
             <Wrapper style={{ padding: 0 }}>
@@ -294,17 +301,17 @@ export function CurrencySearch({
                 </div>
               )}
             </Wrapper>
-          ) : (
-            inactiveTokens &&
-            inactiveTokens.length > 0 && (
-              <ButtonText onClick={() => setShowExpanded(true)}>
-                <TYPE.main color={theme.blue1} fontWeight={500}>
-                  + Show {inactiveTokens.length} inactive {inactiveTokens.length === 1 ? 'token' : 'tokens'}
-                </TYPE.main>
-              </ButtonText>
-            )
-          )}
+          ) : null}
         </Column>
+      )}
+      {filteredSortedTokens?.length > 0 && !showExpanded && inactiveTokens && inactiveTokens.length > 0 && (
+        <Row padding="20px" align="center" width="100%" justify="center">
+          <ButtonText onClick={() => setShowExpanded(true)}>
+            <TYPE.main color={theme.blue1} fontWeight={500}>
+              + Show {inactiveTokens.length} inactive {inactiveTokens.length === 1 ? 'token' : 'tokens'}
+            </TYPE.main>
+          </ButtonText>
+        </Row>
       )}
       <Footer>
         <Row justify="center">

@@ -27,7 +27,7 @@ import useTheme from '../../hooks/useTheme'
 import ListToggle from '../Toggle/ListToggle'
 import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
-import { DEFAULT_TOKEN_LIST_URL, UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 
 const Wrapper = styled(Column)`
   width: 100%;
@@ -251,13 +251,8 @@ export function ManageLists({
     const listUrls = Object.keys(lists)
     return listUrls
       .filter(listUrl => {
-        // only show loaded lists
-        // dont show default list or unsupported lists, used for background logic
-        return (
-          Boolean(lists[listUrl].current) &&
-          !Boolean(listUrl === DEFAULT_TOKEN_LIST_URL) &&
-          !Boolean(UNSUPPORTED_LIST_URLS.includes(listUrl))
-        )
+        // only show loaded lists, hide unsupported lists
+        return Boolean(lists[listUrl].current) && !Boolean(UNSUPPORTED_LIST_URLS.includes(listUrl))
       })
       .sort((u1, u2) => {
         const { current: l1 } = lists[u1]

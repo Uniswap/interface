@@ -95,7 +95,7 @@ export default function ImportRow({
             Import
           </ButtonPrimary>
         ) : (
-          <RowFixed>
+          <RowFixed style={{ minWidth: 'fit-content' }}>
             <CheckIcon />
             <TYPE.main color={theme.green1}>Active</TYPE.main>
           </RowFixed>

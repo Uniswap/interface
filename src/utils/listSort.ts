@@ -1,8 +1,9 @@
-import { LIST_MERGE_PRIORITY } from './../constants/lists'
+import { DEFAULT_LIST_OF_LISTS } from './../constants/lists'
 
+// use ordering of default list of lists to assign priority
 export default function sortByListPriority(urlA: string, urlB: string) {
-  const first = urlA in LIST_MERGE_PRIORITY ? LIST_MERGE_PRIORITY[urlA] : Number.MAX_SAFE_INTEGER
-  const second = urlB in LIST_MERGE_PRIORITY ? LIST_MERGE_PRIORITY[urlB] : Number.MAX_SAFE_INTEGER
+  const first = urlA in DEFAULT_LIST_OF_LISTS ? DEFAULT_LIST_OF_LISTS.indexOf(urlA) : Number.MAX_SAFE_INTEGER
+  const second = urlB in DEFAULT_LIST_OF_LISTS ? DEFAULT_LIST_OF_LISTS.indexOf(urlB) : Number.MAX_SAFE_INTEGER
 
   // need reverse order to make sure mapping includes top priority last
   if (first < second) return 1

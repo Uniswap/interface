@@ -30,7 +30,7 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
     [chainId, library]
   )
 
-  // prevent dispatch if using for list search or unsupported list
+  // note: prevent dispatch if using for list search or unsupported list
   return useCallback(
     async (listUrl: string, sendDispatch = true) => {
       const requestId = nanoid()
