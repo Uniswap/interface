@@ -1,4 +1,4 @@
-import { Trade, TradeType, Percent } from '@uniswap/sdk'
+import { Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
@@ -21,17 +21,9 @@ const InfoLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.text1};
 `
 
-function TradeSummary({
-  trade,
-  allowedSlippage,
-  minPriceImpact
-}: {
-  trade: Trade
-  allowedSlippage: number
-  minPriceImpact: Percent | undefined
-}) {
+function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
-  const { realizedLPFee } = computeTradePriceBreakdown(trade)
+  const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
 
@@ -62,7 +54,7 @@ function TradeSummary({
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
           </RowFixed>
-          <FormattedPriceImpact priceImpact={minPriceImpact} />
+          <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>
 
         <RowBetween>
@@ -83,10 +75,9 @@ function TradeSummary({
 
 export interface AdvancedSwapDetailsProps {
   trade?: Trade
-  minPriceImpact?: Percent
 }
 
-export function AdvancedSwapDetails({ trade, minPriceImpact }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
   const [allowedSlippage] = useUserSlippageTolerance()
@@ -97,7 +88,7 @@ export function AdvancedSwapDetails({ trade, minPriceImpact }: AdvancedSwapDetai
     <AutoColumn gap="0px">
       {trade && (
         <>
-          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} minPriceImpact={minPriceImpact} />
+          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
           {showRoute && (
             <>
               <RowBetween style={{ padding: '0 16px' }}>

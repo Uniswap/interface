@@ -469,14 +469,6 @@ describe('list reducer', () => {
       it('sets selected list', () => {
         expect(store.getState().activeListUrls).toEqual(DEFAULT_ACTIVE_LIST_URLS)
       })
-      it('default list is initialized', () => {
-        expect(store.getState().byUrl[DEFAULT_TOKEN_LIST_URL]).toEqual({
-          error: null,
-          current: null,
-          loadingRequestId: null,
-          pendingUpdate: null
-        })
-      })
     })
     describe('initialized with a different set of lists', () => {
       beforeEach(() => {

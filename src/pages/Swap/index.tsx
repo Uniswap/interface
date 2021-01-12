@@ -92,7 +92,6 @@ export default function Swap() {
   const {
     v1Trade,
     v2Trade,
-    v2MinPriceImpact,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -251,7 +250,7 @@ export default function Swap() {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // warnings on slippage
-  const priceImpactSeverity = warningSeverity(v2MinPriceImpact)
+  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
@@ -510,7 +509,7 @@ export default function Swap() {
         </Wrapper>
       </AppBody>
       {!swapIsUnsupported ? (
-        <AdvancedSwapDetailsDropdown trade={trade} minPriceImpact={v2MinPriceImpact} />
+        <AdvancedSwapDetailsDropdown trade={trade} />
       ) : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}
