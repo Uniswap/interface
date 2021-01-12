@@ -9,7 +9,8 @@ import {
   useDarkModeManager,
   useExpertModeManager,
   useUserTransactionTTL,
-  useUserSlippageTolerance
+  useUserSlippageTolerance,
+  useUserSingleHopOnly
 } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
@@ -135,6 +136,8 @@ export default function SettingsTab() {
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
+  const [singleHopOnly, setSingleHopOnly] = useUserSingleHopOnly()
+
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   // show confirmation view before turning on
@@ -228,6 +231,19 @@ export default function SettingsTab() {
                         setShowConfirmation(true)
                       }
                 }
+              />
+            </RowBetween>
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  Disable Multihops
+                </TYPE.black>
+                <QuestionHelper text="Restricts swaps to direct pairs only." />
+              </RowFixed>
+              <Toggle
+                id="toggle-disable-multihop-button"
+                isActive={singleHopOnly}
+                toggle={() => (singleHopOnly ? setSingleHopOnly(false) : setSingleHopOnly(true))}
               />
             </RowBetween>
             <RowBetween>
