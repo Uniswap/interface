@@ -142,8 +142,8 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
         if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
           bestTradeSoFar = currentTrade
         }
-        return bestTradeSoFar
       }
+      return bestTradeSoFar
     }
     return null
   }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
