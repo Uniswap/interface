@@ -110,7 +110,7 @@ export default function ManageTokens({
           </Row>
           {searchQuery !== '' && !isAddressSearch && <TYPE.error error={true}>Enter valid token address</TYPE.error>}
           {searchToken && (
-            <Card backgroundColor={theme.bg2} padding="1rem">
+            <Card backgroundColor={theme.bg2} padding="10px 0">
               <ImportRow
                 token={searchToken}
                 showImportView={() => setModalView(CurrencyModalView.importToken)}

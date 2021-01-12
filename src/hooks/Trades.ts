@@ -1,5 +1,5 @@
 import { isTradeBetter } from 'utils/trades'
-import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, Pair, Token, Trade, Percent } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
@@ -10,6 +10,7 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useActiveWeb3React } from './index'
 import { useUnsupportedTokens } from './Tokens'
 import { useUserSingleHopOnly } from 'state/user/hooks'
+import { computeTradePriceBreakdown } from 'utils/prices'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
@@ -81,74 +82,127 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   )
 }
 
+const MAX_HOPS = 3
+
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
-export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
+export function useTradeExactIn(
+  currencyAmountIn?: CurrencyAmount,
+  currencyOut?: Currency
+): { trade: Trade | null; minPriceImpact: Percent | undefined } {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-      const singleHop =
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ?? null
-
       if (singleHopOnly) {
-        return singleHop
-      }
-
-      const multiHop =
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
-
-      // if both are valid routes, need to check if single hop is good enough
-      if (singleHop && multiHop) {
-        if (isTradeBetter(singleHop, multiHop, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
-          return multiHop
+        const trade =
+          Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ??
+          null
+        return {
+          trade,
+          minPriceImpact: trade?.priceImpact
         }
-        return singleHop
       }
 
-      return multiHop
+      // search through trades with varying hops, find best trade out of them
+      let bestTradeSoFar: Trade | null = null
+
+      // keep track of min price impact from all tested trades
+      // any trades with higher impact will only be used if output/input amount is favorable for user
+      // so can return min price impact as safe indication of severity
+      let minPriceImpact: Percent | undefined = undefined
+
+      for (let i = 1; i <= MAX_HOPS; i++) {
+        const currentTrade: Trade | null =
+          Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: i, maxNumResults: 1 })[0] ??
+          null
+
+        // if current trade is best yet, save it
+        if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
+          bestTradeSoFar = currentTrade
+        }
+
+        // compare calculated price impacts
+        const currentPriceBreakdown = computeTradePriceBreakdown(currentTrade)
+        const bestSoFarPriceBreakdown = computeTradePriceBreakdown(bestTradeSoFar)
+
+        if (!minPriceImpact) {
+          minPriceImpact = currentPriceBreakdown?.priceImpactWithoutFee
+        } else if (
+          bestSoFarPriceBreakdown?.priceImpactWithoutFee &&
+          currentPriceBreakdown?.priceImpactWithoutFee &&
+          currentPriceBreakdown.priceImpactWithoutFee.lessThan(bestSoFarPriceBreakdown.priceImpactWithoutFee)
+        ) {
+          minPriceImpact = currentPriceBreakdown.priceImpactWithoutFee
+        }
+      }
+
+      return { trade: bestTradeSoFar, minPriceImpact }
     }
 
-    return null
+    return { trade: null, minPriceImpact: undefined }
   }, [allowedPairs, currencyAmountIn, currencyOut, singleHopOnly])
 }
 
 /**
  * Returns the best trade for the token in to the exact amount of token out
  */
-export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
+export function useTradeExactOut(
+  currencyIn?: Currency,
+  currencyAmountOut?: CurrencyAmount
+): { trade: Trade | null; minPriceImpact: Percent | undefined } {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-      const singleHop =
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
-        null
-
       if (singleHopOnly) {
-        return singleHop
-      }
-
-      const multiHop =
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
-        null
-
-      // if both are valid routes, need to check if single hop is good enough
-      if (singleHop && multiHop) {
-        if (isTradeBetter(singleHop, multiHop, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
-          return multiHop
+        return {
+          trade:
+            Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
+            null,
+          minPriceImpact: undefined
         }
-        return singleHop
       }
 
-      return multiHop
+      // search through trades with varying hops, find best trade out of them
+      let bestTradeSoFar: Trade | null = null
+
+      // keep track of min price impact from all tested trades
+      // any trades with higher impact will only be used if output/input amount is favorable for user
+      // so can return min price impact as safe indication of severity
+      let minPriceImpact: Percent | undefined = undefined
+
+      for (let i = 1; i <= MAX_HOPS; i++) {
+        const currentTrade =
+          Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: i, maxNumResults: 1 })[0] ??
+          null
+        if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
+          bestTradeSoFar = currentTrade
+        }
+
+        // compare calculated price impacts
+        const currentPriceBreakdown = computeTradePriceBreakdown(currentTrade)
+        const bestSoFarPriceBreakdown = computeTradePriceBreakdown(bestTradeSoFar)
+
+        if (!minPriceImpact) {
+          minPriceImpact = currentPriceBreakdown?.priceImpactWithoutFee
+        } else if (
+          bestSoFarPriceBreakdown?.priceImpactWithoutFee &&
+          currentPriceBreakdown?.priceImpactWithoutFee &&
+          currentPriceBreakdown.priceImpactWithoutFee.lessThan(bestSoFarPriceBreakdown.priceImpactWithoutFee)
+        ) {
+          minPriceImpact = currentPriceBreakdown.priceImpactWithoutFee
+        }
+      }
+
+      return { trade: bestTradeSoFar, minPriceImpact }
     }
-    return null
+    return { trade: null, minPriceImpact: undefined }
   }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
 }
 

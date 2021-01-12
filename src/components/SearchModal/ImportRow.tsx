@@ -14,7 +14,7 @@ import { useIsUserAddedToken, useIsTokenActive } from 'hooks/Tokens'
 import { CheckCircle } from 'react-feather'
 
 const TokenSection = styled.div`
-  padding: 4px 0px;
+  padding: 8px 20px;
   height: 56px;
 `
 
@@ -37,11 +37,13 @@ const NameOverflow = styled.div`
 export default function ImportRow({
   token,
   style,
+  dim,
   showImportView,
   setImportToken
 }: {
   token: Token
   style?: CSSProperties
+  dim?: boolean
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
@@ -60,7 +62,7 @@ export default function ImportRow({
   return (
     <TokenSection style={style}>
       <RowBetween>
-        <AutoRow>
+        <AutoRow style={{ opacity: dim ? '0.6' : '1' }}>
           <CurrencyLogo currency={token} size={'24px'} />
           <AutoColumn gap="4px">
             <AutoRow>

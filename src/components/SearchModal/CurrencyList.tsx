@@ -7,7 +7,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
-import { useIsUserAddedToken } from '../../hooks/Tokens'
+import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
 import Column from '../Column'
 import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
@@ -15,6 +15,8 @@ import { MouseoverTooltip } from '../Tooltip'
 import { MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
+import ImportRow from './ImportRow'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -132,7 +134,9 @@ export default function CurrencyList({
   onCurrencySelect,
   otherCurrency,
   fixedListRef,
-  showETH
+  showETH,
+  showImportView,
+  setImportToken
 }: {
   height: number
   currencies: Currency[]
@@ -141,8 +145,16 @@ export default function CurrencyList({
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
+  showImportView: () => void
+  setImportToken: (token: Token) => void
 }) {
   const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
+
+  const { chainId } = useActiveWeb3React()
+
+  const inactiveTokens: {
+    [address: string]: Token
+  } = useAllInactiveTokens()
 
   const Row = useCallback(
     ({ data, index, style }) => {
@@ -150,17 +162,34 @@ export default function CurrencyList({
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
       const handleSelect = () => onCurrencySelect(currency)
-      return (
-        <CurrencyRow
-          style={style}
-          currency={currency}
-          isSelected={isSelected}
-          onSelect={handleSelect}
-          otherSelected={otherSelected}
-        />
-      )
+
+      const token = wrappedCurrency(currency, chainId)
+
+      const showImport = inactiveTokens && token && Object.keys(inactiveTokens).includes(token.address)
+
+      if (showImport && token) {
+        return (
+          <ImportRow
+            style={style}
+            token={token}
+            showImportView={showImportView}
+            setImportToken={setImportToken}
+            dim={true}
+          />
+        )
+      } else {
+        return (
+          <CurrencyRow
+            style={style}
+            currency={currency}
+            isSelected={isSelected}
+            onSelect={handleSelect}
+            otherSelected={otherSelected}
+          />
+        )
+      }
     },
-    [onCurrencySelect, otherCurrency, selectedCurrency]
+    [chainId, inactiveTokens, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
   )
 
   const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])

@@ -1,14 +1,5 @@
 import { Currency, ETHER, Token } from '@uniswap/sdk'
-import React, {
-  KeyboardEvent,
-  RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  CSSProperties
-} from 'react'
+import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
@@ -31,7 +22,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
 import { Edit } from 'react-feather'
-import Card from 'components/Card'
+import { ButtonLight } from 'components/Button'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -47,11 +38,6 @@ const Footer = styled.div`
   border-top-right-radius: 0;
   background-color: ${({ theme }) => theme.bg1};
   border-top: 1px solid ${({ theme }) => theme.bg2};
-`
-
-const Wrapper = styled.div`
-  padding: 20px;
-  height: 100%;
 `
 
 interface CurrencySearchProps {
@@ -196,7 +182,6 @@ export function CurrencySearch({
   // if no results on main list, show option to expand into inactive
   const [showExpanded, setShowExpanded] = useState(false)
   const inactiveTokens = useFoundOnInactiveList(searchQuery)
-  const fixedImportList = useRef<FixedSizeList>()
 
   // reset expanded results on query reset
   useEffect(() => {
@@ -204,15 +189,6 @@ export function CurrencySearch({
       setShowExpanded(false)
     }
   }, [setShowExpanded, searchQuery])
-
-  // row for virtualized inactive list
-  const ImportDataRow = useCallback(
-    ({ data, index, style }: { data: Token[]; index: number; style: CSSProperties }) => {
-      const token: Token = data[index]
-      return <ImportRow token={token} style={style} showImportView={showImportView} setImportToken={setImportToken} />
-    },
-    [setImportToken, showImportView]
-  )
 
   return (
     <ContentWrapper>
@@ -241,21 +217,25 @@ export function CurrencySearch({
       </PaddedColumn>
       <Separator />
       {searchToken && !searchTokenIsAdded ? (
-        <Wrapper>
+        <Column style={{ padding: '20px 0', height: '100%' }}>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
-        </Wrapper>
-      ) : filteredSortedTokens?.length > 0 && !showExpanded ? (
+        </Column>
+      ) : filteredSortedTokens?.length > 0 || showExpanded ? (
         <div style={{ flex: '1' }}>
           <AutoSizer disableWidth>
             {({ height }) => (
               <CurrencyList
                 height={height}
                 showETH={showETH}
-                currencies={filteredSortedTokens}
+                currencies={
+                  showExpanded && inactiveTokens ? filteredSortedTokens.concat(inactiveTokens) : filteredSortedTokens
+                }
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
                 selectedCurrency={selectedCurrency}
                 fixedListRef={fixedList}
+                showImportView={showImportView}
+                setImportToken={setImportToken}
               />
             )}
           </AutoSizer>
@@ -267,50 +247,20 @@ export function CurrencySearch({
               No results found in active lists.
             </TYPE.main>
           )}
-          {filteredSortedTokens?.length === 0 && !showExpanded && inactiveTokens && inactiveTokens.length > 0 && (
-            <ButtonText onClick={() => setShowExpanded(true)}>
-              <TYPE.main color={theme.blue1} fontWeight={500}>
-                + Show {inactiveTokens.length} inactive {inactiveTokens.length === 1 ? 'token' : 'tokens'}
-              </TYPE.main>
-            </ButtonText>
-          )}
-          {showExpanded ? (
-            <Wrapper style={{ padding: 0 }}>
-              <Card borderRadius="8px" mb="10px" backgroundColor={theme.bg2} padding="8px 8px">
-                <RowBetween>
-                  <TYPE.main fontWeight={500}>Showing results from inactive lists</TYPE.main>
-                  <CloseIcon size={16} style={{ opacity: 0.6 }} onClick={() => setShowExpanded(false)} />
-                </RowBetween>
-              </Card>
-              {inactiveTokens && (
-                <div style={{ flex: '1', height: '94%', padding: '0px 8px' }}>
-                  <AutoSizer disableWidth>
-                    {({ height }) => (
-                      <FixedSizeList
-                        height={height}
-                        ref={fixedImportList as any}
-                        width="100%"
-                        itemData={inactiveTokens}
-                        itemCount={inactiveTokens.length}
-                        itemSize={56}
-                      >
-                        {ImportDataRow}
-                      </FixedSizeList>
-                    )}
-                  </AutoSizer>
-                </div>
-              )}
-            </Wrapper>
-          ) : null}
         </Column>
       )}
-      {filteredSortedTokens?.length > 0 && !showExpanded && inactiveTokens && inactiveTokens.length > 0 && (
-        <Row padding="20px" align="center" width="100%" justify="center">
-          <ButtonText onClick={() => setShowExpanded(true)}>
-            <TYPE.main color={theme.blue1} fontWeight={500}>
-              + Show {inactiveTokens.length} inactive {inactiveTokens.length === 1 ? 'token' : 'tokens'}
-            </TYPE.main>
-          </ButtonText>
+      {inactiveTokens && inactiveTokens.length > 0 && !(searchToken && !searchTokenIsAdded) && (
+        <Row align="center" width="100%" justify="center" style={{ position: 'absolute', bottom: '80px' }}>
+          <ButtonLight
+            width="fit-content"
+            borderRadius="12px"
+            padding="8px 12px"
+            onClick={() => setShowExpanded(!showExpanded)}
+          >
+            {!showExpanded
+              ? `Show ${inactiveTokens.length} more inactive ${inactiveTokens.length === 1 ? 'token' : 'tokens'}`
+              : 'Hide expanded search'}
+          </ButtonLight>
         </Row>
       )}
       <Footer>
