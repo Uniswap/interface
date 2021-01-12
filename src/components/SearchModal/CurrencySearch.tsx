@@ -247,22 +247,44 @@ export function CurrencySearch({
               No results found in active lists.
             </TYPE.main>
           )}
+          {inactiveTokens &&
+            inactiveTokens.length > 0 &&
+            !(searchToken && !searchTokenIsAdded) &&
+            searchQuery.length > 1 &&
+            filteredSortedTokens?.length === 0 && (
+              <Row align="center" width="100%" justify="center">
+                <ButtonLight
+                  width="fit-content"
+                  borderRadius="12px"
+                  padding="8px 12px"
+                  onClick={() => setShowExpanded(!showExpanded)}
+                >
+                  {!showExpanded
+                    ? `Show ${inactiveTokens.length} more inactive ${inactiveTokens.length === 1 ? 'token' : 'tokens'}`
+                    : 'Hide expanded search'}
+                </ButtonLight>
+              </Row>
+            )}
         </Column>
       )}
-      {inactiveTokens && inactiveTokens.length > 0 && !(searchToken && !searchTokenIsAdded) && (
-        <Row align="center" width="100%" justify="center" style={{ position: 'absolute', bottom: '80px' }}>
-          <ButtonLight
-            width="fit-content"
-            borderRadius="12px"
-            padding="8px 12px"
-            onClick={() => setShowExpanded(!showExpanded)}
-          >
-            {!showExpanded
-              ? `Show ${inactiveTokens.length} more inactive ${inactiveTokens.length === 1 ? 'token' : 'tokens'}`
-              : 'Hide expanded search'}
-          </ButtonLight>
-        </Row>
-      )}
+      {inactiveTokens &&
+        inactiveTokens.length > 0 &&
+        !(searchToken && !searchTokenIsAdded) &&
+        (searchQuery.length > 1 || showExpanded) &&
+        (filteredSortedTokens?.length !== 0 || showExpanded) && (
+          <Row align="center" width="100%" justify="center" style={{ position: 'absolute', bottom: '80px', left: 0 }}>
+            <ButtonLight
+              width="fit-content"
+              borderRadius="12px"
+              padding="8px 12px"
+              onClick={() => setShowExpanded(!showExpanded)}
+            >
+              {!showExpanded
+                ? `Show ${inactiveTokens.length} more inactive ${inactiveTokens.length === 1 ? 'token' : 'tokens'}`
+                : 'Hide expanded search'}
+            </ButtonLight>
+          </Row>
+        )}
       <Footer>
         <Row justify="center">
           <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
