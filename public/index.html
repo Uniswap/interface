@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#14248A" />
     <meta name="fortmatic-site-verification" content="j93LgcVZk79qcgyo" />
@@ -23,6 +23,17 @@
     -->
 
     <title>Swapr</title>
+    <script>
+      ;(function() {
+        const { pathname, hostname, protocol } = window.location
+
+        // redirect to https on non-localhost
+        if (protocol === 'http:' && hostname !== 'localhost') {
+          window.location.protocol = 'https'
+          return
+        }
+      })()
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

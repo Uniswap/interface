@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Settings, X, Info, Code } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -24,20 +24,23 @@ import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import DxDao from '../../assets/svg/dxdao.svg'
 import { useTransition, animated } from 'react-spring'
 import { version } from '../../../package.json'
+import { DialogOverlay } from '@reach/dialog'
 
-const StyledDialogOverlay = animated(styled.div`
+const AnimatedDialogOverlay = animated(DialogOverlay)
+
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 2;
+  z-index: 10;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => transparentize(0.65, theme.black)};
-`)
+`
 
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
@@ -81,7 +84,7 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuContainer = styled.span<{ ref: any }>`
+const MenuContainer = styled.span`
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -98,7 +101,7 @@ const MenuContainer = styled.span<{ ref: any }>`
   `};
 `
 
-const MenuFlyout = styled.span`
+const MenuFlyout = styled.span<{ ref: any }>`
   min-width: 322px;
   max-width: 322px;
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
@@ -115,7 +118,7 @@ const MenuFlyout = styled.span`
   box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
 `
 
-const MenuFlyoutBottom = styled.span`
+const MenuFlyoutBottom = styled.span<{ ref: any }>`
   width: 215px;
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
   backdrop-filter: blur(16px);
@@ -210,7 +213,8 @@ export default function SettingsTab() {
     leave: { opacity: 0 }
   })
 
-  const node = useRef<HTMLDivElement>()
+  const topFlyoutRef = useRef<HTMLDivElement>()
+  const bottomFlyoutRef = useRef<HTMLDivElement>()
   const toggle = useToggleSettingsMenu()
 
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
@@ -221,14 +225,35 @@ export default function SettingsTab() {
 
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
+  const [clickedOutsideTopFlyout, setClickedOutsideTopFlyout] = useState<boolean>(false)
+  const [clickedOutsideBottomFlyout, setClickedOutsideBottomFlyout] = useState<boolean>(false)
+
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
 
-  useOnClickOutside(node, open ? toggle : undefined)
+  useOnClickOutside(topFlyoutRef, () => {
+    // We only want to set this to true when the modal is open,
+    // to avoid the modal closing right after the cog icon is clicked
+    setClickedOutsideTopFlyout(open)
+  })
+
+  useOnClickOutside(bottomFlyoutRef, () => {
+    // We only want to set this to true when the modal is open,
+    // to avoid the modal closing right after the cog icon is clicked
+    setClickedOutsideBottomFlyout(open)
+  })
+
+  useEffect(() => {
+    if (open && clickedOutsideTopFlyout && clickedOutsideBottomFlyout) {
+      toggle()
+      setClickedOutsideBottomFlyout(false)
+      setClickedOutsideTopFlyout(false)
+    }
+  }, [clickedOutsideBottomFlyout, clickedOutsideTopFlyout, open, toggle])
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-    <StyledMenu ref={node as any}>
+    <StyledMenu>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="25px">
@@ -276,101 +301,94 @@ export default function SettingsTab() {
       {fadeTransition.map(
         ({ item, key, props }) =>
           item && (
-            <>
-              <StyledDialogOverlay key={key} style={props}>
-                <MenuContainer ref={node}>
-                  <MenuFlyout>
-                    <AutoColumn gap="md" style={{ padding: '8px' }}>
-                      <RowBetween>
-                        <Text fontWeight={600} fontSize={14}>
-                          Transaction settings
-                        </Text>
-                        <CloseIcon onClick={toggle} />
-                      </RowBetween>
-                      <TransactionSettings
-                        rawSlippage={userSlippageTolerance}
-                        setRawSlippage={setUserslippageTolerance}
-                        deadline={ttl}
-                        setDeadline={setTtl}
-                      />
+            <StyledDialogOverlay key={key} style={props}>
+              <MenuContainer>
+                <MenuFlyout ref={topFlyoutRef}>
+                  <AutoColumn gap="md" style={{ padding: '8px' }}>
+                    <RowBetween>
                       <Text fontWeight={600} fontSize={14}>
-                        Interface settings
+                        Transaction settings
                       </Text>
+                      <CloseIcon onClick={toggle} />
+                    </RowBetween>
+                    <TransactionSettings
+                      rawSlippage={userSlippageTolerance}
+                      setRawSlippage={setUserslippageTolerance}
+                      deadline={ttl}
+                      setDeadline={setTtl}
+                    />
+                    <Text fontWeight={600} fontSize={14}>
+                      Interface settings
+                    </Text>
+                    <RowBetween>
+                      <RowFixed>
+                        <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                          Toggle expert mode
+                        </TYPE.body>
+                        <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                      </RowFixed>
+                      <Toggle
+                        id="toggle-expert-mode-button"
+                        isActive={expertMode}
+                        toggle={
+                          expertMode
+                            ? () => {
+                                toggleExpertMode()
+                                setShowConfirmation(false)
+                              }
+                            : () => {
+                                toggle()
+                                setShowConfirmation(true)
+                              }
+                        }
+                      />
+                    </RowBetween>
+                    {
                       <RowBetween>
                         <RowFixed>
                           <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
-                            Toggle expert mode
+                            Toggle Dark Mode
                           </TYPE.body>
-                          <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
                         </RowFixed>
-                        <Toggle
-                          id="toggle-expert-mode-button"
-                          isActive={expertMode}
-                          toggle={
-                            expertMode
-                              ? () => {
-                                  toggleExpertMode()
-                                  setShowConfirmation(false)
-                                }
-                              : () => {
-                                  toggle()
-                                  setShowConfirmation(true)
-                                }
-                          }
-                        />
+                        <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
                       </RowBetween>
-                      {
-                        <RowBetween>
-                          <RowFixed>
-                            <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
-                              Toggle Dark Mode
-                            </TYPE.body>
-                          </RowFixed>
-                          <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
-                        </RowBetween>
-                      }
-                    </AutoColumn>
-                  </MenuFlyout>
-                  <FlyoutBottomAligner>
-                    <MenuFlyoutBottom>
-                      <MenuFlyoutBottomItem>
-                        <MenuItem id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
-                          <Info size={14} />
-                          About
-                        </MenuItem>
-                        <MenuItem id="link" href={CODE_LINK}>
-                          <Code size={14} />
-                          Code
-                        </MenuItem>
-                      </MenuFlyoutBottomItem>
+                    }
+                  </AutoColumn>
+                </MenuFlyout>
+                <FlyoutBottomAligner>
+                  <MenuFlyoutBottom ref={bottomFlyoutRef}>
+                    <MenuFlyoutBottomItem>
+                      <MenuItem id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
+                        <Info size={14} />
+                        About
+                      </MenuItem>
+                      <MenuItem id="link" href={CODE_LINK}>
+                        <Code size={14} />
+                        Code
+                      </MenuItem>
+                    </MenuFlyoutBottomItem>
 
-                      <MenuFlyoutBottomItem>
-                        <InfoBadge>
-                          <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
-                            v{version}
-                          </TYPE.body>
-                        </InfoBadge>
-                        <InfoBadge>
-                          <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
-                            ALPHA
-                          </TYPE.body>
-                        </InfoBadge>
-                      </MenuFlyoutBottomItem>
+                    <MenuFlyoutBottomItem>
+                      <InfoBadge>
+                        <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
+                          v{version}
+                        </TYPE.body>
+                      </InfoBadge>
+                    </MenuFlyoutBottomItem>
 
-                      <MenuBanner id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
-                        <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="text1" marginBottom="4px">
-                          A DXDAO PRODUCT
-                        </TYPE.body>
-                        <TYPE.body fontWeight={500} fontSize="8px" letterSpacing="3px" color="text1">
-                          DXDAO.ETH
-                        </TYPE.body>
-                        <img src={DxDao} alt="dxdao" />
-                      </MenuBanner>
-                    </MenuFlyoutBottom>
-                  </FlyoutBottomAligner>
-                </MenuContainer>
-              </StyledDialogOverlay>
-            </>
+                    <MenuBanner id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
+                      <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="text1" marginBottom="4px">
+                        A DXDAO PRODUCT
+                      </TYPE.body>
+                      <TYPE.body fontWeight={500} fontSize="8px" letterSpacing="3px" color="text1">
+                        DXDAO.ETH
+                      </TYPE.body>
+                      <img src={DxDao} alt="dxdao" />
+                    </MenuBanner>
+                  </MenuFlyoutBottom>
+                </FlyoutBottomAligner>
+              </MenuContainer>
+            </StyledDialogOverlay>
           )
       )}
     </StyledMenu>

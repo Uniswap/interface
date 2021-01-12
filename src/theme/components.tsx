@@ -87,10 +87,10 @@ export const StyledInternalLink = styled(Link)<{ color?: keyof Colors }>`
   }
 `
 
-const StyledLink = styled.a`
+const StyledLink = styled.a<{ color?: keyof Colors }>`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.text4};
+  color: ${({ theme, color }) => (color ? theme[color] : theme.text4)};
   font-weight: 500;
 
   :hover {
@@ -130,8 +130,9 @@ export function ExternalLink({
   target = '_blank',
   href,
   rel = 'noopener noreferrer',
+  color,
   ...rest
-}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
+}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string; color?: keyof Colors }) {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
@@ -141,7 +142,7 @@ export function ExternalLink({
     },
     [target]
   )
-  return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
+  return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} color={color} {...rest} />
 }
 
 const rotate = keyframes`

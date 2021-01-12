@@ -694,7 +694,7 @@ export default function RemoveLiquidity({
                     Swap fee
                   </TYPE.body>
                   <TYPE.body fontWeight="500" fontSize="12px" lineHeight="15px">
-                    {swapFee?.toSignificant(2)}%
+                    {swapFee ? `${swapFee.toSignificant(2)}%` : '-'}
                   </TYPE.body>
                 </RowBetween>
                 <RowBetween align="center">
@@ -702,7 +702,7 @@ export default function RemoveLiquidity({
                     Protocol fee
                   </TYPE.body>
                   <TYPE.body fontWeight="500" fontSize="12px" lineHeight="15px">
-                    {protocolFee?.toSignificant(2)}%
+                    {protocolFee ? `${protocolFee.toSignificant(2)}%` : '-'}
                   </TYPE.body>
                 </RowBetween>
               </AutoColumn>
