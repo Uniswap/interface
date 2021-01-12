@@ -21,7 +21,7 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
+import { getTradeVersion } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -37,13 +37,14 @@ import {
   useSwapActionHandlers,
   useSwapState
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useExpertModeManager, useUserSlippageTolerance, useUserSingleHopOnly } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import { isTradeBetter } from 'utils/trades'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -183,6 +184,8 @@ export default function Swap() {
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
+  const [singleHopOnly] = useUserSingleHopOnly()
+
   const handleSwap = useCallback(() => {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
       return
@@ -209,6 +212,11 @@ export default function Swap() {
             getTradeVersion(trade)
           ].join('/')
         })
+
+        ReactGA.event({
+          category: 'Routing',
+          action: singleHopOnly ? 'Swap with multihop disabled' : 'Swap with multihop enabled'
+        })
       })
       .catch(error => {
         setSwapState({
@@ -219,7 +227,17 @@ export default function Swap() {
           txHash: undefined
         })
       })
-  }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
+  }, [
+    priceImpactWithoutFee,
+    swapCallback,
+    tradeToConfirm,
+    showConfirm,
+    recipient,
+    recipientAddress,
+    account,
+    trade,
+    singleHopOnly
+  ])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -384,6 +402,7 @@ export default function Swap() {
             ) : noRoute && userHasSpecifiedInputOutput ? (
               <GreyCard style={{ textAlign: 'center' }}>
                 <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
+                {singleHopOnly && <TYPE.main mb="4px">Try enabling multi-hop trades.</TYPE.main>}
               </GreyCard>
             ) : showApproveFlow ? (
               <RowBetween>
