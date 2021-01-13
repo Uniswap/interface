@@ -8,6 +8,9 @@ import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
 // import QuestionHelper from '../QuestionHelper'
 import Settings from '../Settings'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
+import { resetMintState } from 'state/mint/actions'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -82,10 +85,18 @@ export function FindPoolTabs() {
 }
 
 export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+  // reset states on back
+  const dispatch = useDispatch<AppDispatch>()
+
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
-        <HistoryLink to="/pool">
+        <HistoryLink
+          to="/pool"
+          onClick={() => {
+            adding && dispatch(resetMintState())
+          }}
+        >
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
