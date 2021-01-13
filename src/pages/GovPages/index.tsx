@@ -1,18 +1,23 @@
 import React, { useContext } from 'react'
-import { PageWrapper } from '../Pool/styleds'
-import { AutoColumn } from '../../components/Column'
-import { TYPE } from '../../theme'
-import { Flex, Text } from 'rebass'
-
 import styled, { ThemeContext } from 'styled-components'
-import { AutoRowCleanGap, RowBetween } from '../../components/Row'
-import { ButtonPrimary, ButtonWithLink } from '../../components/Button'
 import { useTranslation } from 'react-i18next'
-import { LightCard } from '../../components/Card'
-
 import { Info } from 'react-feather'
+import { Flex, Text } from 'rebass'
+import { ETHER } from 'dxswap-sdk'
+
+import { TYPE } from '../../theme'
+import { PageWrapper } from '../Pool/styleds'
+
+import { LightCard } from '../../components/Card'
+import { RowBetween } from '../../components/Row'
+import { AutoColumn } from '../../components/Column'
+import CurrencyLogo from '../../components/CurrencyLogo'
 import SearchInputWithIcon from '../../components/SearchModal/styleds'
-import { DynamicContentCard } from './styles'
+import { useRouter } from '../../hooks/useRouter'
+import { ButtonPrimary, ButtonWithLink } from '../../components/Button'
+
+import Container from './Container'
+import { MainPage, PairPage } from './constant'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -36,13 +41,26 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 export default function Governance() {
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
+  const router = useRouter()
+
   return (
     <PageWrapper>
       <AutoColumn gap="lg" justify="center">
         <AutoColumn gap="lg" style={{ width: '100%' }}>
           <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-            <TYPE.mediumHeader lineHeight="24px">{t('governance')}</TYPE.mediumHeader>
-
+            {router.query.asset === undefined ? (
+              <TYPE.mediumHeader lineHeight="24px">{t('governance')}</TYPE.mediumHeader>
+            ) : (
+              <>
+                <TYPE.mediumHeader color={'text4'} lineHeight="24px">
+                  {t('governance')}
+                </TYPE.mediumHeader>
+                &nbsp; / &nbsp;
+                <CurrencyLogo size="20px" currency={ETHER} />
+                &nbsp;
+                <TYPE.mediumHeader lineHeight="24px">{t(router.query?.asset)}</TYPE.mediumHeader>
+              </>
+            )}
             <StyledSearchInput fontSize="12px" fontWeight={700} width="104px" height="32px" />
             <ResponsiveButtonPrimary id="create-proposal-button" padding="8px 14px">
               <Text fontWeight={700} fontSize={12}>
@@ -51,15 +69,11 @@ export default function Governance() {
             </ResponsiveButtonPrimary>
           </TitleRow>
         </AutoColumn>
-        <AutoRowCleanGap gap={8}>
-          <DynamicContentCard />
-          <DynamicContentCard />
-          <DynamicContentCard />
-          <DynamicContentCard />
-          <DynamicContentCard />
-          <DynamicContentCard />
-        </AutoRowCleanGap>
-        <ButtonWithLink link={'swapr.eth'} text={'GOVERNANCE STATISTICS'} />
+        <Container currentPage={router.query.asset === undefined ? MainPage : PairPage} />{' '}
+        {/** need to pass all informations to container like pairs, currencies etc  */}
+        {router.query.asset === undefined && (
+          <ButtonWithLink link={'https://swapr.eth.link'} text={'GOVERNANCE STATISTICS'} />
+        )}
         <LightCard>
           <AutoColumn gap="md">
             <Flex>
@@ -80,7 +94,7 @@ export default function Governance() {
                 color={'text4'}
                 fontSize="17px"
                 lineHeight="17px"
-                style={{ textDecoration: 'underline' }}
+                style={{ textDecoration: 'underline', cursor: 'pointer' }}
               >
                 Read more about Swapr Governance
               </TYPE.body>
