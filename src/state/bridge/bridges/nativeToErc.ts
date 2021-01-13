@@ -1,5 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { BigNumber } from 'ethers'
+import * as Sentry from '@sentry/react'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import TokenBridge from './tokenBridge'
 import {
@@ -140,6 +141,13 @@ export default class NativeToErcBridge extends TokenBridge {
       this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
     } catch (error) {
       this.dispatch(transferError())
+
+      Sentry.captureException(error, {
+        tags: {
+          section: 'Bridge',
+          bridgeType: 'NativeToERC'
+        }
+      })
 
       if (error?.code !== 4001) console.log(error)
     }

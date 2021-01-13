@@ -5,6 +5,8 @@ import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
+import * as Sentry from '@sentry/react'
+import { Integrations } from '@sentry/tracing'
 import { NetworkContextName } from './constants'
 import './i18n'
 import App from './pages/App'
@@ -16,6 +18,7 @@ import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
+import { isProduction } from './utils'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -39,6 +42,16 @@ window.addEventListener('error', error => {
     fatal: true
   })
 })
+
+const SENTRY_DSN: string | undefined = process.env.REACT_APP_SENTRY_DSN
+if (typeof SENTRY_DSN === 'string' && isProduction()) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    autoSessionTracking: true,
+    integrations: [new Integrations.BrowserTracing()],
+    tracesSampleRate: 1
+  })
+}
 
 function Updaters() {
   return (

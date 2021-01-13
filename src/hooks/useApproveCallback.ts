@@ -1,5 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
+import * as Sentry from '@sentry/react'
 import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@fuseio/fuse-swap-sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
@@ -91,6 +92,11 @@ export function useApproveCallback(
         })
       })
       .catch((error: Error) => {
+        Sentry.captureException(error, {
+          tags: {
+            action: 'Approve Token'
+          }
+        })
         console.debug('Failed to approve token', error)
         throw error
       })
