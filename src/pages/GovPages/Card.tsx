@@ -1,17 +1,18 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { Currency } from 'dxswap-sdk'
+import { Text } from 'rebass'
+
+import { useRouter } from '../../hooks/useRouter'
 import Card from '../../components/Card'
 import { AutoRow } from '../../components/Row'
-import { Text } from 'rebass'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import { transparentize } from 'polished'
-import { Currency } from 'dxswap-sdk'
-import { useRouter } from '../../hooks/useRouter'
 
 const LightCardWrap = styled(Card)`
-  border: 1px solid ${({ theme }) => transparentize(0.3, theme.bg2)};
-  background-color: ${({ theme }) => transparentize(0.3, theme.bg1)};
+  background: linear-gradient(113.18deg, rgba(255, 255, 255, 0.35) -0.1%, rgba(0, 0, 0, 0) 98.9%),
+    ${({ theme }) => theme.dark1};
+  background-blend-mode: overlay, normal;
   padding: 0.8rem;
   width: calc(25% - 6px);
   height: 96px;
@@ -24,6 +25,19 @@ const LightCardWrap = styled(Card)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     width: calc(50% - 4px);
   `};
+  position: relative;
+
+  ::before {
+    content: '';
+    background-image: linear-gradient(180deg, ${({ theme }) => theme.bg2} 0%, ${({ theme }) => theme.bg3} 100%);
+    top: -1px;
+    left: -1px;
+    bottom: -1px;
+    right: -1px;
+    position: absolute;
+    z-index: -1;
+    border-radius: 8px;
+  }
 `
 
 const LogoContainer = styled.div<{ size: number }>`

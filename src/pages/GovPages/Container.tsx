@@ -10,6 +10,7 @@ const CardContainer = styled(AutoRowCleanGap)`
   overflow-x: hidden;
   scrollbar-width: 'none';
   -ms-overflow-style: 'none';
+  padding: 1px;
   ::-webkit-scrollbar {
     width: 0;
     height: 0;
