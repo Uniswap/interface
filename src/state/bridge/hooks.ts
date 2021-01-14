@@ -71,8 +71,13 @@ export function useDerivedBridgeInfo(
   const bridgeFee = useAsyncMemo(async () => {
     if (!tokenAddress || !parsedAmount || !library || !account || !isHome) return
 
-    const fee = await calculateBridgeFee(tokenAddress, parsedAmount, library, account)
-    return fee
+    try {
+      const fee = await calculateBridgeFee(tokenAddress, library, account)
+      return fee
+    } catch (e) {
+      console.error('Failed to calculate bridge fee ', e)
+      return
+    }
   }, [tokenAddress, parsedAmount?.raw.toString()])
 
   let inputError: string | undefined

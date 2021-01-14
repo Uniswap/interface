@@ -22,9 +22,20 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   transition: transform 300ms ease-in-out;
 `
 
-function BridgeDetails({ currency, bridgeFee }: { currency: Currency | undefined | null; bridgeFee?: string }) {
+function BridgeDetails({
+  amount,
+  currency,
+  bridgeFee
+}: {
+  amount: string
+  currency: Currency | undefined | null
+  bridgeFee?: string
+}) {
   const theme = useContext(ThemeContext)
-  const show = Number(bridgeFee) >= 0
+  const parsedAmount = Number(amount)
+  const parsedBridgeFee = Number(bridgeFee)
+  const parsedBridgeFeePercentage = parsedBridgeFee * 100
+  const show = parsedBridgeFee > 0
 
   return (
     <AdvancedDetailsFooter show={show}>
@@ -34,10 +45,12 @@ function BridgeDetails({ currency, bridgeFee }: { currency: Currency | undefined
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Bridge Fee
             </TYPE.black>
-            <QuestionHelper text="Moving funds to mainnet requires 0.05% fee in order to cover  transaction and bridge maintenance costs" />
+            <QuestionHelper
+              text={`Moving funds to mainnet requires ${parsedBridgeFeePercentage}% fee in order to cover  transaction and bridge maintenance costs`}
+            />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
-            {`${bridgeFee} ${currency?.symbol} Fee (0.05%)`}
+            {`${parsedAmount * parsedBridgeFee} ${currency?.symbol} Fee (${parsedBridgeFeePercentage}%)`}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>

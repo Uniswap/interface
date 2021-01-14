@@ -294,7 +294,7 @@ export default function Bridge({
           </BottomGrouping>
         </Wrapper>
       </AppBody>
-      <BridgeDetails currency={inputCurrency} bridgeFee={bridgeFee} />
+      <BridgeDetails amount={formattedAmounts[Field.INPUT]} currency={inputCurrency} bridgeFee={bridgeFee} />
     </>
   )
 }
