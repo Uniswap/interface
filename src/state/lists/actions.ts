@@ -10,9 +10,14 @@ export const fetchTokenList: Readonly<{
   fulfilled: createAction('lists/fetchTokenList/fulfilled'),
   rejected: createAction('lists/fetchTokenList/rejected')
 }
-
-export const acceptListUpdate = createAction<string>('lists/acceptListUpdate')
+// add and remove from list options
 export const addList = createAction<string>('lists/addList')
 export const removeList = createAction<string>('lists/removeList')
-export const selectList = createAction<string>('lists/selectList')
+
+// select which lists to search across from loaded lists
+export const enableList = createAction<string>('lists/enableList')
+export const disableList = createAction<string>('lists/disableList')
+
+// versioning
+export const acceptListUpdate = createAction<string>('lists/acceptListUpdate')
 export const rejectVersionUpdate = createAction<Version>('lists/rejectVersionUpdate')
