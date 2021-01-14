@@ -92,7 +92,11 @@ export function colors(darkMode: boolean): Colors {
     purple3: '#8780BF',
     purple4: '#685EC6',
     purple5: '#464366',
-    boxShadow: '#0A0A0F'
+    boxShadow: '#0A0A0F',
+
+    // darkest // dark 1.1
+    darkest: '#131218',
+    dark1: '#191824'
   }
 }
 
@@ -227,6 +231,7 @@ html {
 
 body {
   min-height: 100vh;
+  background-color: ${({ theme }) => theme.darkest};
   background-position: 0 -20vh;
   background-repeat: no-repeat;
   ${({ theme }) => theme.mediaWidth.upToMedium`

@@ -46,14 +46,18 @@ export interface Colors {
   blue1: Color
 
   // new UI refactor colors, taken from ZeroHeight
-  mainPurple: Color,
-  purpleBase: Color,
-  purpleOverlay: Color,
-  purple2: Color,
-  purple3: Color,
-  purple4: Color,
-  purple5: Color,
-  boxShadow: Color,
+  mainPurple: Color
+  purpleBase: Color
+  purpleOverlay: Color
+  purple2: Color
+  purple3: Color
+  purple4: Color
+  purple5: Color
+  boxShadow: Color
+
+  // darkest // dark1.1
+  darkest: Color
+  dark1: Color
 }
 
 export interface Grids {
