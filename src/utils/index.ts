@@ -20,8 +20,8 @@ import AMBErc677To677ABI from '../constants/abis/ambErc677ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
 import HomeBridgeNativeToErc from '../constants/abis/homeBridgeNativeToErc.json'
 import ForeignBriddgeNativeToErc from '../constants/abis/foreignBridgeNativeToErc.json'
-import { CUSTOM_BRIDGE_TOKENS } from '../constants/bridge'
-import { formatUnits, Interface, id } from 'ethers/lib/utils'
+import { CUSTOM_BRIDGE_TOKENS, HOME_TO_FOREIGN_FEE_TYPE_HASH } from '../constants/bridge'
+import { formatUnits, Interface, id, formatEther } from 'ethers/lib/utils'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -284,4 +284,16 @@ export async function pollEvent(
 
 export function isProduction(): boolean {
   return process.env.NODE_ENV === 'production'
+}
+
+export async function calculateBridgeFee(
+  tokenAddress: string,
+  amount: CurrencyAmount,
+  library: Web3Provider,
+  account?: string
+) {
+  const address = getHomeMultiErc20ToErc677BridgeAddress()
+  const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
+  const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount.raw.toString())
+  return formatEther(fee)
 }

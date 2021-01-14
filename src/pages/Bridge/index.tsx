@@ -45,6 +45,7 @@ import Erc20ToErc677Bridge from '../../state/bridge/bridges/erc20Toerc677'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../state'
 import { useTransactionAdder } from '../../state/transactions/hooks'
+import BridgeDetails from '../../components/bridge/BridgeDetails'
 
 export default function Bridge({
   match: {
@@ -60,9 +61,14 @@ export default function Bridge({
 
   const { independentField, typedValue } = useBridgeState()
 
-  const { currencies, currencyBalances, parsedAmounts, inputError, bridgeTransactionStatus } = useDerivedBridgeInfo(
-    inputCurrencyId
-  )
+  const {
+    currencies,
+    currencyBalances,
+    parsedAmounts,
+    inputError,
+    bridgeTransactionStatus,
+    bridgeFee
+  } = useDerivedBridgeInfo(inputCurrencyId)
 
   const { updateCompletedBridgeTransfer } = useUserActionHandlers()
 
@@ -288,6 +294,7 @@ export default function Bridge({
           </BottomGrouping>
         </Wrapper>
       </AppBody>
+      <BridgeDetails currency={inputCurrency} bridgeFee={bridgeFee} />
     </>
   )
 }
