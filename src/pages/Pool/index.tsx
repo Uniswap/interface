@@ -170,7 +170,7 @@ export default function Pool() {
           id="join-pool-button"
           as="a"
           style={{ marginTop: '32px', padding: '10px 0px', borderRadius: '8px' }}
-          href={`https://dxstats.eth.link/account/${account}`}
+          href={`https://dxstats.eth.link/#/account/${account}`}
           rel="noopener noreferrer"
           target="_blank"
         >

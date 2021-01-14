@@ -113,7 +113,10 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             </AutoColumn>
           )}
           <AutoColumn style={{ padding: '0 24px', marginTop: '8px' }}>
-            <InfoLink href={'https://dxstats.eth.link/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
+            <InfoLink
+              href={'https://dxstats.eth.link/#/pair/' + trade.route.pairs[0].liquidityToken.address}
+              target="_blank"
+            >
               View pair analytics ↗
             </InfoLink>
           </AutoColumn>
