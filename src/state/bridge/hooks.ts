@@ -11,8 +11,6 @@ import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../constants/bridge'
 import { useCurrency } from '../../hooks/Tokens'
 import { getMinMaxPerTxn } from './limits'
 import { calculateBridgeFee } from '../../utils'
-import { BridgeMode } from './bridges/tokenBridge'
-import { getBridgeMode } from './bridges/utils'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -71,15 +69,7 @@ export function useDerivedBridgeInfo(
   }, [tokenAddress, inputCurrency])
 
   const bridgeFee = useAsyncMemo(async () => {
-    if (
-      !tokenAddress ||
-      !parsedAmount ||
-      !library ||
-      !account ||
-      !isHome ||
-      getBridgeMode(tokenAddress) !== BridgeMode.ERC20_TO_ERC677
-    )
-      return
+    if (!tokenAddress || !parsedAmount || !library || !account || !isHome) return
 
     const fee = await calculateBridgeFee(tokenAddress, parsedAmount, library, account)
     return fee

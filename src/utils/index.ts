@@ -22,6 +22,8 @@ import HomeBridgeNativeToErc from '../constants/abis/homeBridgeNativeToErc.json'
 import ForeignBriddgeNativeToErc from '../constants/abis/foreignBridgeNativeToErc.json'
 import { CUSTOM_BRIDGE_TOKENS, HOME_TO_FOREIGN_FEE_TYPE_HASH } from '../constants/bridge'
 import { formatUnits, Interface, id, formatEther } from 'ethers/lib/utils'
+import { getBridgeMode } from '../state/bridge/bridges/utils'
+import { BridgeMode } from '../state/bridge/bridges/tokenBridge'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -292,6 +294,8 @@ export async function calculateBridgeFee(
   library: Web3Provider,
   account?: string
 ) {
+  if (getBridgeMode(tokenAddress) !== BridgeMode.ERC20_TO_ERC677) return
+
   const address = getHomeMultiErc20ToErc677BridgeAddress()
   const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
   const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount.raw.toString())
