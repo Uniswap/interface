@@ -113,7 +113,7 @@ export default function TokenWarningModal({
             when interacting with arbitrary ERC20 tokens.
           </TYPE.body>
           <TYPE.body color={'red2'}>
-            If you purchase an arbitrary token, <strong>you may be unable to sell it back.</strong>
+            If you purchase an arbitrary token, <strong>you may not be able to sell it back.</strong>
           </TYPE.body>
           {tokens.map(token => {
             return <TokenWarningCard key={token.address} token={token} />

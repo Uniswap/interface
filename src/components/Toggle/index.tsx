@@ -26,14 +26,12 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
 const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
   border-radius: 12px;
   border: none;
-  /* border: 1px solid ${({ theme, isActive }) => (isActive ? theme.primary5 : theme.text4)}; */
   background: ${({ theme }) => theme.bg3};
   display: flex;
   width: fit-content;
   cursor: pointer;
   outline: none;
   padding: 0;
-  /* background-color: transparent; */
 `
 
 export interface ToggleProps {
