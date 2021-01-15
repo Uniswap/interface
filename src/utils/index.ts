@@ -288,11 +288,16 @@ export function isProduction(): boolean {
   return process.env.NODE_ENV === 'production'
 }
 
-export async function calculateBridgeFee(tokenAddress: string, library: Web3Provider, account?: string) {
+export async function calculateBridgeFee(
+  tokenAddress: string,
+  tokenAmount: string,
+  library: Web3Provider,
+  account?: string
+) {
   if (getBridgeMode(tokenAddress) !== BridgeMode.ERC20_TO_ERC677) return
 
   const address = getHomeMultiErc20ToErc677BridgeAddress()
   const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
-  const fee = await contract.getFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress)
+  const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, tokenAmount)
   return formatEther(fee)
 }

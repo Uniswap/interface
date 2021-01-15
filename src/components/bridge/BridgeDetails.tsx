@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
@@ -32,9 +32,9 @@ function BridgeDetails({
   bridgeFee?: string
 }) {
   const theme = useContext(ThemeContext)
-  const parsedAmount = Number(amount)
   const parsedBridgeFee = Number(bridgeFee)
-  const parsedBridgeFeePercentage = parsedBridgeFee * 100
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const parsedBridgeFeePercentage = useMemo(() => (parsedBridgeFee / Number(amount)) * 100, [parsedBridgeFee])
   const show = parsedBridgeFee > 0
 
   return (
@@ -50,7 +50,7 @@ function BridgeDetails({
             />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
-            {`${parsedAmount * parsedBridgeFee} ${currency?.symbol} Fee (${parsedBridgeFeePercentage}%)`}
+            {`${parsedBridgeFee} ${currency?.symbol} Fee (${parsedBridgeFeePercentage}%)`}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>

@@ -72,7 +72,7 @@ export function useDerivedBridgeInfo(
     if (!tokenAddress || !parsedAmount || !library || !account || !isHome) return
 
     try {
-      const fee = await calculateBridgeFee(tokenAddress, library, account)
+      const fee = await calculateBridgeFee(tokenAddress, parsedAmount?.raw.toString(), library, account)
       return fee
     } catch (e) {
       console.error('Failed to calculate bridge fee ', e)
