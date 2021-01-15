@@ -69,7 +69,10 @@ export default function Governance() {
             </ResponsiveButtonPrimary>
           </TitleRow>
         </AutoColumn>
-        <Container currentPage={router.query.asset === undefined ? MainPage : PairPage} />{' '}
+        <Container
+          currentPage={router.query.asset === undefined ? MainPage : PairPage}
+          currency={router.location.state?.currency}
+        />
         {/** need to pass all informations to container like pairs, currencies etc  */}
         {router.query.asset === undefined && (
           <ButtonWithLink link={'https://swapr.eth.link'} text={'GOVERNANCE STATISTICS'} />

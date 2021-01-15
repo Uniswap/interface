@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ETHER } from 'dxswap-sdk'
+import { Currency, ETHER } from 'dxswap-sdk'
 import { GovCard } from './Card'
 import { MainPage, PairPage, temporaryCurrencyData } from './constant'
 import { AutoRowCleanGap } from '../../components/Row'
@@ -19,26 +19,33 @@ const CardContainer = styled(AutoRowCleanGap)`
 
 interface ContainerProps {
   currentPage: string
+  currency?: Currency
 }
 
-export default function Container({ currentPage }: ContainerProps) {
+export default function Container({ currentPage, currency }: ContainerProps) {
   const randomInteger = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min
   }
+  console.log(currentPage, currency)
 
   if (currentPage === MainPage) {
     return (
       <CardContainer gap={8}>
-        {temporaryCurrencyData.map((currency, index) => (
-          <GovCard key={index} currency={currency} apy={152} />
+        {temporaryCurrencyData.map((ele, index) => (
+          <GovCard key={index} currency={ele} apy={152} />
         ))}
       </CardContainer>
     )
-  } else if (currentPage === PairPage) {
+  } else if (currentPage === PairPage && currency !== undefined) {
     return (
       <CardContainer gap={8}>
-        {temporaryCurrencyData.map((currency, index) => (
-          <GovCard key={index} currency={currency} currency1={ETHER} proposals={randomInteger(index, 100)} />
+        {temporaryCurrencyData.map((ele, index) => (
+          <GovCard
+            key={index}
+            currency={currency}
+            currency1={ele === currency ? ETHER : ele}
+            proposals={randomInteger(index, 100)}
+          />
         ))}
       </CardContainer>
     )
