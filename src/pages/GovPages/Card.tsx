@@ -15,7 +15,7 @@ const LightCardWrap = styled(Card)`
   background-blend-mode: overlay, normal;
   padding: 0.8rem;
   width: calc(25% - 6px);
-  height: 96px;
+  padding: 24px 30px;
   display: flex;
   flex-wrap: wrap;
   cursor: pointer;
@@ -40,6 +40,17 @@ const LightCardWrap = styled(Card)`
   }
 `
 
+const TextCard = styled(Card)`
+  background: linear-gradient(113.18deg, #ffffff -0.1%, rgba(0, 0, 0, 0) 98.9%), #28263f;
+  background-blend-mode: overlay, normal;
+  border-radius: 4px;
+  height: 15px;
+  padding: 3px 5px;
+  align-items: center;
+  margin-top: 8px;
+  width: auto;
+`
+
 const LogoContainer = styled.div<{ size: number }>`
   margin: auto;
   padding-left: ${props => `${props.size / 2}px`};
@@ -48,11 +59,11 @@ const LogoContainer = styled.div<{ size: number }>`
 interface CardProps {
   currency: Currency
   currency1?: Currency
-  pairs?: number
+  apy?: number
   proposals?: number
 }
 
-export const GovCard = ({ currency, currency1, pairs, proposals }: CardProps) => {
+export const GovCard = ({ currency, currency1, apy, proposals }: CardProps) => {
   const doubleCurrencyLogoSize = 26.88
 
   const theme = useContext(ThemeContext)
@@ -63,31 +74,26 @@ export const GovCard = ({ currency, currency1, pairs, proposals }: CardProps) =>
   }
 
   if (currency1 === undefined) {
+    // main governance page
     return (
       <LightCardWrap onClick={onClick}>
         <AutoRow align="flex-end" justify="center">
           <CurrencyLogo size="20px" currency={currency} />
-          <Text width={'auto'} marginTop={'0'} marginLeft={'6px'} fontWeight={600} fontSize="16px" lineHeight="20px">
+          <Text width="auto" marginTop="0" marginLeft="6px" fontWeight={600} fontSize="16px" lineHeight="20px">
             {currency.symbol}
           </Text>
         </AutoRow>
-        <AutoRow align="flex-start" justify="center">
-          <Text
-            marginTop="7px"
-            color={theme.text4}
-            letterSpacing="0.02em"
-            fontWeight={600}
-            fontSize="9px"
-            lineHeight="11px"
-            textAlign="center"
-          >
-            {pairs && pairs + (pairs > 1 ? ' PAIRS' : ' PAIR')}
-            {proposals && ' | ' + proposals + (proposals > 1 ? ' PROPOSALS' : ' PROPOSAL')}
-          </Text>
+        <AutoRow align="center" justify="center">
+          <TextCard>
+            <Text color={theme.text2} fontWeight={600} fontSize="9px" lineHeight="9px" textAlign="center">
+              {apy + '% APY'}
+            </Text>
+          </TextCard>
         </AutoRow>
       </LightCardWrap>
     )
   } else {
+    // pair page
     return (
       <LightCardWrap>
         <AutoRow align="flex-end" justify="center">
@@ -96,9 +102,24 @@ export const GovCard = ({ currency, currency1, pairs, proposals }: CardProps) =>
           </LogoContainer>
         </AutoRow>
         <AutoRow align="flex-start" justify="center">
-          <Text width="auto" marginTop="6px" fontWeight={600} fontSize="16px" lineHeight="20px">
+          <Text width="auto" marginTop="6px" fontWeight={600} fontSize="16px" lineHeight="19.5px">
             {currency.symbol}/{currency1.symbol}
           </Text>
+        </AutoRow>
+        <AutoRow align="flex-start" justify="center">
+          <TextCard>
+            <Text
+              color={theme.text1}
+              fontWeight={600}
+              fontSize="9px"
+              lineHeight="9px"
+              textAlign="center"
+              letterSpacing="0.08em"
+              fontStyle="normal"
+            >
+              {proposals + ' PROPOSALS'}
+            </Text>
+          </TextCard>
         </AutoRow>
       </LightCardWrap>
     )

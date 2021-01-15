@@ -30,12 +30,7 @@ export default function Container({ currentPage }: ContainerProps) {
     return (
       <CardContainer gap={8}>
         {temporaryCurrencyData.map((currency, index) => (
-          <GovCard
-            key={index}
-            currency={currency}
-            pairs={randomInteger(index, 100)}
-            proposals={randomInteger(index, 100)}
-          />
+          <GovCard key={index} currency={currency} apy={152} />
         ))}
       </CardContainer>
     )
@@ -43,7 +38,7 @@ export default function Container({ currentPage }: ContainerProps) {
     return (
       <CardContainer gap={8}>
         {temporaryCurrencyData.map((currency, index) => (
-          <GovCard key={index} currency={currency} currency1={ETHER} />
+          <GovCard key={index} currency={currency} currency1={ETHER} proposals={randomInteger(index, 100)} />
         ))}
       </CardContainer>
     )
