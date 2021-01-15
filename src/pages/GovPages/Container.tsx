@@ -4,6 +4,7 @@ import { Currency, ETHER } from 'dxswap-sdk'
 import { GovCard } from './Card'
 import { MainPage, PairPage, temporaryCurrencyData } from './constant'
 import { AutoRowCleanGap } from '../../components/Row'
+import { Redirect } from 'react-router-dom'
 
 const CardContainer = styled(AutoRowCleanGap)`
   max-height: 330px;
@@ -26,7 +27,6 @@ export default function Container({ currentPage, currency }: ContainerProps) {
   const randomInteger = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min
   }
-  console.log(currentPage, currency)
 
   if (currentPage === MainPage) {
     return (
@@ -36,19 +36,23 @@ export default function Container({ currentPage, currency }: ContainerProps) {
         ))}
       </CardContainer>
     )
-  } else if (currentPage === PairPage && currency !== undefined) {
-    return (
-      <CardContainer gap={8}>
-        {temporaryCurrencyData.map((ele, index) => (
-          <GovCard
-            key={index}
-            currency={currency}
-            currency1={ele === currency ? ETHER : ele}
-            proposals={randomInteger(index, 100)}
-          />
-        ))}
-      </CardContainer>
-    )
+  } else if (currentPage === PairPage) {
+    if (currency === undefined) {
+      return <Redirect to="/" />
+    } else {
+      return (
+        <CardContainer gap={8}>
+          {temporaryCurrencyData.map((ele, index) => (
+            <GovCard
+              key={index}
+              currency={currency}
+              currency1={ele === currency ? ETHER : ele}
+              proposals={randomInteger(index, 100)}
+            />
+          ))}
+        </CardContainer>
+      )
+    }
   } else {
     return <></>
   }
