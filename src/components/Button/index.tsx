@@ -6,6 +6,7 @@ import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import { Text } from 'rebass'
 
 const Base = styled(RebassButton)<{
   padding?: string
@@ -193,6 +194,23 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   } else {
     return <ButtonPrimary {...rest} />
   }
+}
+
+export function ButtonWithLink({ link, text, marginTop }: { link: string; text: string; marginTop?: string }) {
+  return (
+    <ButtonSecondary
+      id="join-pool-button"
+      as="a"
+      style={{ marginTop: marginTop ? marginTop : '0', padding: '10px 0px', borderRadius: '8px' }}
+      href={link}
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <Text fontWeight={700} fontSize={12} lineHeight="15px">
+        {text} <span style={{ fontSize: '11px', marginLeft: '4px' }}>↗</span>
+      </Text>
+    </ButtonSecondary>
+  )
 }
 
 export function ButtonDropdown({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {

@@ -25,28 +25,22 @@ const StyledLogo = styled(Logo)<{ size: string }>`
 export default function CurrencyLogo({
   currency,
   size = '24px',
-  style
+  style,
+  className
 }: {
   currency?: Currency
   size?: string
   style?: React.CSSProperties
+  className?: string
 }) {
   const srcs: string[] = useMemo(() => {
     if (currency === ETHER) return []
 
     if (currency instanceof Token) {
-      if (currency.name === "DXdao") {
-        return ["https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa1d65E8fB6e87b60FECCBc582F7f97804B725521/logo.png"]
-      } else if ((currency.name === "Weenus 💪") || (currency.name === "Yeenus 💪") || (currency.name === "Xeenus 💪") || (currency.name === "Zeenus 💪")){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f4b8.png"]
-      } else if (currency.name === "Mate"){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f9c9.png"]
-      } else if (currency.name === "Chair"){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1fa91.png"]
-      } else if (currency.name === "Sponge"){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f9fd.png"]
-      } else if (currency.name === "Antarctica Flag"){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f1e6.png"]
+      if (currency.name === 'DXdao') {
+        return [
+          'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa1d65E8fB6e87b60FECCBc582F7f97804B725521/logo.png'
+        ]
       } else {
         return [getTokenLogoURL(currency.address)]
       }
@@ -55,8 +49,16 @@ export default function CurrencyLogo({
   }, [currency])
 
   if (currency === ETHER) {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
+    return <StyledEthereumLogo className={className} src={EthereumLogo} size={size} style={style} />
   }
 
-  return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
+  return (
+    <StyledLogo
+      className={className}
+      size={size}
+      srcs={srcs}
+      alt={`${currency?.symbol ?? 'token'} logo`}
+      style={style}
+    />
+  )
 }

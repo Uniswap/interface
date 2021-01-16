@@ -24,12 +24,15 @@ export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   flex-wrap: wrap;
   margin: ${({ gap }) => gap && `-${gap}`};
   justify-content: ${({ justify }) => justify && justify};
-
   & > * {
     margin: ${({ gap }) => gap} !important;
   }
 `
-
+export const AutoRowCleanGap = styled.div<{ gap: number }>`
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: ${({ gap }) => `${gap}px`};
+`
 export const RowFixed = styled(Row)<{ gap?: string; justify?: string }>`
   width: fit-content;
   margin: ${({ gap }) => gap && `-${gap}`};

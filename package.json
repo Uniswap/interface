@@ -116,6 +116,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "query-string": "^6.13.8",
     "react-use": "^15.3.3"
   }
 }
