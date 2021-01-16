@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
@@ -93,7 +92,11 @@ export function colors(darkMode: boolean): Colors {
     purple3: '#8780BF',
     purple4: '#685EC6',
     purple5: '#464366',
-    boxShadow: '#0A0A0F'
+    boxShadow: '#0A0A0F',
+
+    // darkest // dark 1.1
+    darkest: '#131218',
+    dark1: '#191824'
   }
 }
 
@@ -228,13 +231,11 @@ html {
 
 body {
   min-height: 100vh;
+  background-color: ${({ theme }) => theme.darkest};
   background-position: 0 -20vh;
   background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(80% 100% at 50% 0%, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%)`};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     background-position: 0 -10vh;
-    background-image: radial-gradient(100% 50% at 50% 50%, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%);
   `};
 }
 `

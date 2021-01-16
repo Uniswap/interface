@@ -52,7 +52,7 @@ export default function Governance() {
               <TYPE.mediumHeader lineHeight="24px">{t('governance')}</TYPE.mediumHeader>
             ) : (
               <>
-                <TYPE.mediumHeader color={'text4'} lineHeight="24px">
+                <TYPE.mediumHeader color={theme.text4} lineHeight="24px">
                   {t('governance')}
                 </TYPE.mediumHeader>
                 &nbsp; / &nbsp;
@@ -69,7 +69,10 @@ export default function Governance() {
             </ResponsiveButtonPrimary>
           </TitleRow>
         </AutoColumn>
-        <Container currentPage={router.query.asset === undefined ? MainPage : PairPage} />{' '}
+        <Container
+          currentPage={router.query.asset === undefined ? MainPage : PairPage}
+          currency={router.location.state?.currency}
+        />
         {/** need to pass all informations to container like pairs, currencies etc  */}
         {router.query.asset === undefined && (
           <ButtonWithLink link={'https://swapr.eth.link'} text={'GOVERNANCE STATISTICS'} />
@@ -78,7 +81,7 @@ export default function Governance() {
           <AutoColumn gap="md">
             <Flex>
               <Info color={theme.text4} size={18} />
-              <TYPE.body marginLeft="10px" color={'text4'} fontWeight={500} lineHeight="20px">
+              <TYPE.body marginLeft="10px" color={theme.text4} fontWeight={500} lineHeight="20px">
                 Swapr Governance
               </TYPE.body>
             </Flex>
@@ -91,7 +94,7 @@ export default function Governance() {
             <RowBetween>
               <TYPE.body
                 as="a"
-                color={'text4'}
+                color={theme.text4}
                 fontSize="17px"
                 lineHeight="17px"
                 style={{ textDecoration: 'underline', cursor: 'pointer' }}
