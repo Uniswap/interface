@@ -90,6 +90,10 @@ const NetworkCard = styled(YellowCard)`
 const UniIcon = styled.div`
   img {
     width: 10.5rem;
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+      width: 7.5rem;
+    `}
   }
 `
 
@@ -108,6 +112,17 @@ const BalanceText = styled(Text)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
+`
+
+const AnalyticsLink = styled(ExternalLink)`
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+  color: white;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `}
 `
 
 export const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
@@ -139,13 +154,9 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
-            <ExternalLink
-              style={{ width: 175, fontWeight: 400, color: 'white' }}
-              target="_blank"
-              href="http://info.fuseswap.com"
-            >
-              Analytics <ExternalLinkIcon size={14} />
-            </ExternalLink>
+            <AnalyticsLink target="_blank" href="http://info.fuseswap.com">
+              Analytics <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
+            </AnalyticsLink>
             <TestnetWrapper>
               {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
             </TestnetWrapper>

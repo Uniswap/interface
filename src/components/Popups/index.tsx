@@ -10,6 +10,7 @@ const MobilePopupWrapper = styled.div<{ height: string | number }>`
   height: ${({ height }) => height};
   margin: ${({ height }) => (height ? '0 auto;' : 0)};
   margin-bottom: ${({ height }) => (height ? '20px' : 0)}};
+  margin-top: 20px;
 
   display: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -27,6 +28,10 @@ const MobilePopupInner = styled.div`
   ::-webkit-scrollbar {
     display: none;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+  `}
 `
 
 const FixedPopupColumn = styled(AutoColumn)`

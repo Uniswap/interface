@@ -6,6 +6,10 @@ const LeftIconWrapper = styled.div`
   top: 125px;
   left: calc(50% - 380px);
   z-index: 10;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+  `}
 `
 
 const Icon = styled.svg`
@@ -25,6 +29,10 @@ const RightIconWrapper = styled.div`
   top: 125px;
   left: calc(50% + 230px);
   z-index: 1;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: none;
+  `}
 `
 
 export function LeftFlashIcon() {
