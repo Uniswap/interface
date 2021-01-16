@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleMobileMenu } from '../../state/application/hooks'
@@ -6,8 +6,7 @@ import { ExternalLink } from '../../theme'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { MoreHorizontal, X } from 'react-feather'
 import { RowFixed } from '../Row'
-import { darken } from 'polished'
-import { StyledNavLink } from './index'
+import { darken, transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
 
 const StyledMenu = styled.div`
@@ -48,6 +47,25 @@ const MenuFlyout = styled.span`
   padding: 0.5rem;
 `
 
+const ComingSoonBadge = styled.div`
+  self-align: center;
+  font-size: 9px;
+  text-align: center;
+  background-color: ${({ theme }) => theme.bg4};
+  border-radius: 3px;
+  width: fit-content;
+  margin: auto;
+  padding: 2px 5px;
+`
+
+const StyledNavLinkWithBadge = styled.a`
+  top: 7px;
+  position: relative;
+  margin: 0px 12px;
+  cursor: default;
+  color: ${({ theme }) => transparentize(0.6, theme.text5)};
+`
+
 const StyledExternalLink = styled(ExternalLink)<{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
@@ -74,6 +92,10 @@ export default function MobileOptions({ history }: { history: any }) {
   const { t } = useTranslation()
   useOnClickOutside(node, open ? toggle : undefined)
 
+  const handleDisabledAnchorClick = useCallback(event => {
+    event.preventDefault()
+  }, [])
+
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
@@ -82,14 +104,10 @@ export default function MobileOptions({ history }: { history: any }) {
         <MenuContainer>
           <MenuFlyout>
             <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
-              <StyledNavLink
-                id={`governance-nav-link`}
-                to={'/governance'}
-                onClick={toggle}
-                isActive={() => history.location.pathname.includes('/governance')}
-              >
+              <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
                 {t('governance')}
-              </StyledNavLink>
+                <ComingSoonBadge>COMING SOON</ComingSoonBadge>
+              </StyledNavLinkWithBadge>
             </RowFixed>
             <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
               <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link/'}>
