@@ -7,10 +7,15 @@ import { Currency, CurrencyAmount } from '@fuseio/fuse-swap-sdk'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { tryParseAmount } from '../swap/hooks'
-import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../constants/bridge'
+import { DEFAULT_CONFIRMATIONS_LIMIT, HOME_TO_FOREIGN_FEE_TYPE_HASH } from '../../constants/bridge'
 import { useCurrency } from '../../hooks/Tokens'
 import { getMinMaxPerTxn } from './limits'
-import { calculateBridgeFee } from '../../utils'
+import {
+  getHomeMultiAMBErc20ToErc677Contract,
+  getHomeMultiErc20ToErc677BridgeAddress,
+  isMultiErc20ToErc677BridgeToken
+} from '../../utils'
+import { formatEther } from 'ethers/lib/utils'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -68,18 +73,6 @@ export function useDerivedBridgeInfo(
     }
   }, [tokenAddress, inputCurrency])
 
-  const bridgeFee = useAsyncMemo(async () => {
-    if (!tokenAddress || !parsedAmount || !library || !account || !isHome) return
-
-    try {
-      const fee = await calculateBridgeFee(tokenAddress, parsedAmount?.raw.toString(), library, account)
-      return fee
-    } catch (e) {
-      console.error('Failed to calculate bridge fee ', e)
-      return
-    }
-  }, [tokenAddress, parsedAmount?.raw.toString()])
-
   let inputError: string | undefined
   if (!account) {
     inputError = 'Connect Wallet'
@@ -111,8 +104,7 @@ export function useDerivedBridgeInfo(
     parsedAmounts,
     inputError,
     bridgeTransactionStatus,
-    confirmations,
-    bridgeFee
+    confirmations
   }
 }
 
@@ -152,4 +144,32 @@ export function useBridgeActionHandlers(): {
   )
 
   return { onFieldInput }
+}
+
+export function useBridgeFee(tokenAddress: string | undefined) {
+  const { chainId, account, library } = useActiveWeb3React()
+
+  return useAsyncMemo(async () => {
+    if (!chainId || !account || !library || !tokenAddress || !isMultiErc20ToErc677BridgeToken(tokenAddress)) return
+
+    const address = getHomeMultiErc20ToErc677BridgeAddress()
+    const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
+    const fee = await contract.getFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress)
+    return formatEther(fee)
+  }, [account, chainId, library, tokenAddress])
+}
+
+export function useCalculatedBridgeFee(tokenAddress: string | undefined, currencyAmount: CurrencyAmount | undefined) {
+  const { chainId, account, library } = useActiveWeb3React()
+  const amount = currencyAmount?.raw?.toString()
+
+  return useAsyncMemo(async () => {
+    if (!chainId || !account || !library || !tokenAddress || !amount || !isMultiErc20ToErc677BridgeToken(tokenAddress))
+      return
+
+    const address = getHomeMultiErc20ToErc677BridgeAddress()
+    const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
+    const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount)
+    return formatEther(fee)
+  }, [account, chainId, amount, library, tokenAddress])
 }

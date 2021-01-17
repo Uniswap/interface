@@ -61,14 +61,9 @@ export default function Bridge({
 
   const { independentField, typedValue } = useBridgeState()
 
-  const {
-    currencies,
-    currencyBalances,
-    parsedAmounts,
-    inputError,
-    bridgeTransactionStatus,
-    bridgeFee
-  } = useDerivedBridgeInfo(inputCurrencyId)
+  const { currencies, currencyBalances, parsedAmounts, inputError, bridgeTransactionStatus } = useDerivedBridgeInfo(
+    inputCurrencyId
+  )
 
   const { updateCompletedBridgeTransfer } = useUserActionHandlers()
 
@@ -294,7 +289,7 @@ export default function Bridge({
           </BottomGrouping>
         </Wrapper>
       </AppBody>
-      <BridgeDetails amount={formattedAmounts[Field.INPUT]} currency={inputCurrency} bridgeFee={bridgeFee} />
+      <BridgeDetails inputCurrencyId={inputCurrencyId} inputAmount={parsedAmounts[Field.INPUT]} />
     </>
   )
 }

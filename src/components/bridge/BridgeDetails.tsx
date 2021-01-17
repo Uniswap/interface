@@ -1,10 +1,12 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 import QuestionHelper from '../QuestionHelper'
-import { Currency } from '@fuseio/fuse-swap-sdk'
+import { CurrencyAmount } from '@fuseio/fuse-swap-sdk'
+import { useBridgeFee, useCalculatedBridgeFee } from '../../state/bridge/hooks'
+import { useCurrency } from '../../hooks/Tokens'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
@@ -23,34 +25,33 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
 `
 
 function BridgeDetails({
-  amount,
-  currency,
-  bridgeFee
+  inputCurrencyId,
+  inputAmount
 }: {
-  amount: string
-  currency: Currency | undefined | null
-  bridgeFee?: string
+  inputCurrencyId: string | undefined
+  inputAmount: CurrencyAmount | undefined
 }) {
   const theme = useContext(ThemeContext)
-  const parsedBridgeFee = Number(bridgeFee)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const parsedBridgeFeePercentage = useMemo(() => (parsedBridgeFee / Number(amount)) * 100, [parsedBridgeFee])
-  const show = parsedBridgeFee > 0
+  const currency = useCurrency(inputCurrencyId, 'Bridge')
+  const fee = useBridgeFee(inputCurrencyId)
+  const calculatedFee = useCalculatedBridgeFee(inputCurrencyId, inputAmount)
+  const parsedCalculatedFee = Number(calculatedFee)
+  const show = parsedCalculatedFee > 0
 
   return (
     <AdvancedDetailsFooter show={show}>
       <AutoColumn gap="md" style={{ padding: '0 20px' }}>
-        <RowBetween>
+        <RowBetween style={{ flexWrap: 'wrap' }}>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Bridge Fee
             </TYPE.black>
             <QuestionHelper
-              text={`Moving funds to mainnet requires ${parsedBridgeFeePercentage}% fee in order to cover  transaction and bridge maintenance costs`}
+              text={`Moving funds to mainnet requires ${fee}% fee in order to cover  transaction and bridge maintenance costs`}
             />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
-            {`${parsedBridgeFee} ${currency?.symbol} Fee (${parsedBridgeFeePercentage}%)`}
+            {`${calculatedFee} ${currency?.symbol} Fee (${fee}%)`}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
