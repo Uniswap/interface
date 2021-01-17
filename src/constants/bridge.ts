@@ -50,3 +50,5 @@ export const CUSTOM_BRIDGE_TOKENS: { [chainId in ChainId]: BridgeToken[] | [] } 
   [ChainId.GÖRLI]: [],
   [ChainId.KOVAN]: []
 }
+
+export const HOME_TO_FOREIGN_FEE_TYPE_HASH = '0x741ede137d0537e88e0ea0ff25b1f22d837903dbbee8980b4a06e8523247ee26'

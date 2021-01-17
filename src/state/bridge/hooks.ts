@@ -10,6 +10,7 @@ import { tryParseAmount } from '../swap/hooks'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../constants/bridge'
 import { useCurrency } from '../../hooks/Tokens'
 import { getMinMaxPerTxn } from './limits'
+import { calculateBridgeFee } from '../../utils'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -24,6 +25,7 @@ export function useDerivedBridgeInfo(
   inputError?: string
   bridgeTransactionStatus: BridgeTransactionStatus
   confirmations: number
+  bridgeFee?: string
 } {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -66,6 +68,18 @@ export function useDerivedBridgeInfo(
     }
   }, [tokenAddress, inputCurrency])
 
+  const bridgeFee = useAsyncMemo(async () => {
+    if (!tokenAddress || !parsedAmount || !library || !account || !isHome) return
+
+    try {
+      const fee = await calculateBridgeFee(tokenAddress, parsedAmount?.raw.toString(), library, account)
+      return fee
+    } catch (e) {
+      console.error('Failed to calculate bridge fee ', e)
+      return
+    }
+  }, [tokenAddress, parsedAmount?.raw.toString()])
+
   let inputError: string | undefined
   if (!account) {
     inputError = 'Connect Wallet'
@@ -97,7 +111,8 @@ export function useDerivedBridgeInfo(
     parsedAmounts,
     inputError,
     bridgeTransactionStatus,
-    confirmations
+    confirmations,
+    bridgeFee
   }
 }
 
