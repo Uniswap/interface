@@ -12,7 +12,7 @@ import {
   useUserSingleHopOnly
 } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { ButtonError } from '../Button'
+import { ButtonError, ButtonGray } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
@@ -25,7 +25,7 @@ const StyledMenuIcon = styled(Settings)`
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.text3};
+    stroke: ${({ theme }) => theme.text2};
   }
 `
 
@@ -50,7 +50,6 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  /* background-color: ${({ theme }) => theme.bg3}; */
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -59,7 +58,6 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    /* background-color: ${({ theme }) => theme.bg4}; */
   }
 
   svg {
@@ -93,7 +91,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 2rem;
+  top: 3rem;
   right: 0rem;
   z-index: 100;
 
@@ -115,6 +113,11 @@ const ModalContentWrapper = styled.div`
   padding: 2rem 0;
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 20px;
+`
+
+const ButtonWrapper = styled(ButtonGray)`
+  padding: 6px;
+  border-radius: 8px;
 `
 
 export default function SettingsTab() {
@@ -177,14 +180,16 @@ export default function SettingsTab() {
         </ModalContentWrapper>
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
-        {expertMode ? (
-          <EmojiWrapper>
-            <span role="img" aria-label="wizard-icon">
-              🧙
-            </span>
-          </EmojiWrapper>
-        ) : null}
+        <ButtonWrapper width="fit-content">
+          <StyledMenuIcon />
+          {expertMode ? (
+            <EmojiWrapper>
+              <span role="img" aria-label="wizard-icon">
+                🧙
+              </span>
+            </EmojiWrapper>
+          ) : null}
+        </ButtonWrapper>
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
