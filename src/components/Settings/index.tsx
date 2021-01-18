@@ -12,7 +12,7 @@ import {
   useUserSingleHopOnly
 } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { ButtonError, ButtonGray } from '../Button'
+import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
@@ -26,6 +26,10 @@ const StyledMenuIcon = styled(Settings)`
 
   > * {
     stroke: ${({ theme }) => theme.text2};
+  }
+
+  :hover {
+    opacity: 0.7;
   }
 `
 
@@ -115,11 +119,6 @@ const ModalContentWrapper = styled.div`
   border-radius: 20px;
 `
 
-const ButtonWrapper = styled(ButtonGray)`
-  padding: 6px;
-  border-radius: 8px;
-`
-
 export default function SettingsTab() {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
@@ -180,16 +179,14 @@ export default function SettingsTab() {
         </ModalContentWrapper>
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <ButtonWrapper width="fit-content">
-          <StyledMenuIcon />
-          {expertMode ? (
-            <EmojiWrapper>
-              <span role="img" aria-label="wizard-icon">
-                🧙
-              </span>
-            </EmojiWrapper>
-          ) : null}
-        </ButtonWrapper>
+        <StyledMenuIcon />
+        {expertMode ? (
+          <EmojiWrapper>
+            <span role="img" aria-label="wizard-icon">
+              🧙
+            </span>
+          </EmojiWrapper>
+        ) : null}
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
