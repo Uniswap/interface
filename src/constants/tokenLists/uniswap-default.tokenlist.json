@@ -1,9 +1,9 @@
 {
   "name": "Uniswap Default List",
-  "timestamp": "2021-01-11T23:59:53.688Z",
+  "timestamp": "2021-01-18T18:52:43.076Z",
   "version": {
     "major": 1,
-    "minor": 6,
+    "minor": 7,
     "patch": 0
   },
   "tags": {},
@@ -265,6 +265,22 @@
       "decimals": 18,
       "chainId": 1,
       "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
+    },
+    {
+      "name": "USDCoin",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 1,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+    },
+    {
+      "name": "Tether USD",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 1,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
     },
     {
       "name": "Wrapped BTC",

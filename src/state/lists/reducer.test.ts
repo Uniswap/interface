@@ -1,6 +1,6 @@
 import { DEFAULT_ACTIVE_LIST_URLS } from './../../constants/lists'
 import { createStore, Store } from 'redux'
-import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
+import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { fetchTokenList, acceptListUpdate, addList, removeList, enableList } from './actions'
 import reducer, { ListsState } from './reducer'
@@ -446,21 +446,12 @@ describe('list reducer', () => {
       it('all lists are empty', () => {
         const s = store.getState()
         Object.keys(s.byUrl).forEach(url => {
-          if (url === DEFAULT_TOKEN_LIST_URL) {
-            expect(s.byUrl[url]).toEqual({
-              error: null,
-              current: null,
-              loadingRequestId: null,
-              pendingUpdate: null
-            })
-          } else {
-            expect(s.byUrl[url]).toEqual({
-              error: null,
-              current: null,
-              loadingRequestId: null,
-              pendingUpdate: null
-            })
-          }
+          expect(s.byUrl[url]).toEqual({
+            error: null,
+            current: null,
+            loadingRequestId: null,
+            pendingUpdate: null
+          })
         })
       })
       it('sets initialized lists', () => {
@@ -507,10 +498,6 @@ describe('list reducer', () => {
         expect(store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest']).toBeUndefined()
       })
 
-      it('adds all the lists in the default list of lists', () => {
-        expect(Object.keys(store.getState().byUrl)).toContain(DEFAULT_TOKEN_LIST_URL)
-      })
-
       it('each of those initialized lists is empty', () => {
         const byUrl = store.getState().byUrl
         // note we don't expect the uniswap default list to be prepopulated
@@ -532,14 +519,6 @@ describe('list reducer', () => {
       })
       it('sets default list to selected list', () => {
         expect(store.getState().activeListUrls).toEqual(DEFAULT_ACTIVE_LIST_URLS)
-      })
-      it('default list is initialized', () => {
-        expect(store.getState().byUrl[DEFAULT_TOKEN_LIST_URL]).toEqual({
-          error: null,
-          current: null,
-          loadingRequestId: null,
-          pendingUpdate: null
-        })
       })
     })
   })
