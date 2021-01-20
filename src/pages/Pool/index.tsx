@@ -17,8 +17,8 @@ import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { Dots } from '../../components/swap/styleds'
 import { CardSection } from '../../components/earn/styled'
+import SkeletonLoading from '../../components/SkeletonLoading'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -139,24 +139,26 @@ export default function Pool() {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </OutlineCard>
-            ) : dxSwapIsLoading ? (
-              <OutlineCard>
-                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
-                  <Dots>Loading</Dots>
-                </TYPE.body>
-              </OutlineCard>
-            ) : allDXSwapPairsWithLiquidity?.length > 0 ? (
-              <>
-                {allDXSwapPairsWithLiquidity.map(dxSwapPair => (
-                  <FullPositionCard key={dxSwapPair.liquidityToken.address} pair={dxSwapPair} />
-                ))}
-              </>
             ) : (
-              <EmptyProposals>
-                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
-                  No liquidity found
-                </TYPE.body>
-              </EmptyProposals>
+              <SkeletonLoading
+                isLoading={dxSwapIsLoading}
+                backgroundColor="#393939"
+                foregroundColor="rgba(57,57,57,.5)"
+              >
+                {allDXSwapPairsWithLiquidity?.length > 0 ? (
+                  <>
+                    {allDXSwapPairsWithLiquidity.map(dxSwapPair => (
+                      <FullPositionCard key={dxSwapPair.liquidityToken.address} pair={dxSwapPair} />
+                    ))}
+                  </>
+                ) : (
+                  <EmptyProposals>
+                    <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
+                      No liquidity found
+                    </TYPE.body>
+                  </EmptyProposals>
+                )}
+              </SkeletonLoading>
             )}
           </AutoColumn>
         </AutoColumn>

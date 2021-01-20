@@ -39,7 +39,6 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
-import DemoComponentForLoading from './temp'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
@@ -433,7 +432,6 @@ export default function Swap() {
               </Column>
             )}
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            <DemoComponentForLoading />
           </BottomGrouping>
         </Wrapper>
       </AppBody>
