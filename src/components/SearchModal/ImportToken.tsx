@@ -76,7 +76,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
         {tokens.map(token => {
           const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
           return (
-            <Card backgroundColor={theme.bg2} key={'import' + token.address}>
+            <Card backgroundColor={theme.bg2} key={'import' + token.address} className=".token-warning-container">
               <AutoColumn gap="10px">
                 <AutoRow align="center">
                   <CurrencyLogo currency={token} size={'24px'} />
@@ -132,7 +132,13 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
             </TYPE.body>
           </AutoColumn>
           <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
-            <Checkbox name="confirmed" type="checkbox" checked={confirmed} onChange={() => setConfirmed(!confirmed)} />
+            <Checkbox
+              className=".understand-checkbox"
+              name="confirmed"
+              type="checkbox"
+              checked={confirmed}
+              onChange={() => setConfirmed(!confirmed)}
+            />
             <TYPE.body ml="10px" fontSize="16px" color={fromLists ? theme.yellow2 : theme.red1} fontWeight={500}>
               I understand
             </TYPE.body>
@@ -147,6 +153,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
             tokens.map(token => addToken(token))
             handleCurrencySelect && handleCurrencySelect(tokens[0])
           }}
+          className=".token-dismiss-button"
         >
           Import
         </ButtonPrimary>
