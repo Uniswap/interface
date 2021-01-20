@@ -1,4 +1,3 @@
-import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 const animation = keyframes`
@@ -10,7 +9,7 @@ const animation = keyframes`
   }
 `
 
-const LoadingElement = styled.span<{ isLoading?: boolean; backgroundColor?: string; foregroundColor?: string }>(
+const SkeletonLoading = styled.span<{ isLoading?: boolean; backgroundColor?: string; foregroundColor?: string }>(
   ({ backgroundColor, foregroundColor, isLoading }) => css`
     ${isLoading &&
       css`
@@ -36,13 +35,10 @@ const LoadingElement = styled.span<{ isLoading?: boolean; backgroundColor?: stri
   `
 )
 
-interface SkeletonLoadingProps {
-  children: React.ReactElement
+interface SkeletonLoading {
   isLoading: boolean
   backgroundColor: string
   foregroundColor: string
 }
 
-export default function SkeletonLoading({ children, ...props }: SkeletonLoadingProps) {
-  return <LoadingElement {...props}>{children}</LoadingElement>
-}
+export default SkeletonLoading
