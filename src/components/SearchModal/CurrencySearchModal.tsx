@@ -79,7 +79,7 @@ export default function CurrencySearchModal({
         />
       ) : modalView === CurrencyModalView.importToken && importToken ? (
         <ImportToken
-          token={importToken}
+          tokens={[importToken]}
           onDismiss={onDismiss}
           onBack={() =>
             setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search)
