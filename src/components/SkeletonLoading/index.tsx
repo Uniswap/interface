@@ -35,10 +35,4 @@ const SkeletonLoading = styled.span<{ isLoading?: boolean; backgroundColor?: str
   `
 )
 
-interface SkeletonLoading {
-  isLoading: boolean
-  backgroundColor: string
-  foregroundColor: string
-}
-
 export default SkeletonLoading
