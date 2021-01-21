@@ -24,7 +24,7 @@ import SwapHeader from '../../components/swap/SwapHeader'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrency, useDefaultTokens } from '../../hooks/Tokens'
+import { useCurrency, useAllTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -66,13 +66,13 @@ export default function Swap() {
     setDismissTokenWarning(true)
   }, [])
 
-  // dismiss warning if all imported tokens are in default list
-  const defaultTokens = useDefaultTokens()
+  // dismiss warning if all imported tokens are in active lists
+  const defaultTokens = useAllTokens()
   const importTokensNotInDefault =
     urlLoadedTokens &&
     urlLoadedTokens.filter((token: Token) => {
       return !Boolean(token.address in defaultTokens)
-    }).length > 0
+    })
 
   const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -294,14 +294,13 @@ export default function Swap() {
   return (
     <>
       <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning && importTokensNotInDefault}
-        tokens={urlLoadedTokens}
+        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        tokens={importTokensNotInDefault}
         onConfirm={handleConfirmTokenWarning}
       />
       <SwapPoolTabs active={'swap'} />
       <AppBody>
         <SwapHeader />
-        {/* <Separator /> */}
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
