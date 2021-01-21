@@ -10,7 +10,7 @@
   "logoURI": "ipfs://QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir",
   "keywords": ["uniswap", "default"],
   "tokens": [
-     {
+    {
       "chainId": 1,
       "address": "0xb6ed7644c69416d67b522e20bc294a9a9b405b31",
       "name": "0xBitcoin",
