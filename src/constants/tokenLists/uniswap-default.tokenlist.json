@@ -10,6 +10,14 @@
   "logoURI": "ipfs://QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir",
   "keywords": ["uniswap", "default"],
   "tokens": [
+     {
+      "chainId": 1,
+      "address": "0xb6ed7644c69416d67b522e20bc294a9a9b405b31",
+      "name": "0xBitcoin",
+      "symbol": "0xBTC",
+      "decimals": 8,
+      "logoURI": "https://assets.coingecko.com/coins/images/4454/thumb/0xbtc.png?1561603765"
+    },
     {
       "chainId": 1,
       "address": "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
