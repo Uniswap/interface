@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Info, BookOpen, Code, PieChart, MessageCircle, BarChart2 } from 'react-feather'
+import { Info, BookOpen, Code, PieChart, MessageCircle, BarChart2, MessageSquare } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -109,6 +109,10 @@ export default function Menu() {
           <MenuItem id="link" href="https://discord.com/invite/jpPMeSZ">
             <MessageCircle size={14} />
             Discord
+          </MenuItem>
+          <MenuItem id="link" href="https://t.me/fuseswap">
+            <MessageSquare size={14} />
+            Telegram
           </MenuItem>
           <MenuItem id="link" href="https://explorer.fuse.io/">
             <BarChart2 size={14} />
