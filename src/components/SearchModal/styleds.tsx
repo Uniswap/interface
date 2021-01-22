@@ -119,6 +119,18 @@ const SearchExpandedInput = styled.input<{ fontWeight?: number; fontSize?: strin
   ::placeholder {
     color: ${({ theme }) => theme.text4};
   }
+  :focus::-webkit-input-placeholder {
+    color: transparent;
+  }
+  :focus:-moz-placeholder {
+    color: transparent;
+  } /* Firefox 18- */
+  :focus::-moz-placeholder {
+    color: transparent;
+  } /* Firefox 19+ */
+  :focus:-ms-input-placeholder {
+    color: transparent;
+  } /* oldIE ;) */
 `
 
 export default function SearchInputWithIcon({
