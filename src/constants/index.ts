@@ -46,7 +46,13 @@ export const ESD = new Token(
   'Empty Set Dollar'
 )
 export const SFI = new Token(ChainId.MAINNET, '0xb753428af26E81097e7fD17f40c88aaA3E04902c', 18, 'SFI', 'Saffron Spice')
-export const LUNA = new Token(ChainId.MAINNET, '0xd2877702675e6ceb975b4a1dff9fb7baf4c91ea9', 18, 'LUNA', 'Terra Network Token')
+export const LUNA = new Token(
+  ChainId.MAINNET,
+  '0xd2877702675e6ceb975b4a1dff9fb7baf4c91ea9',
+  18,
+  'LUNA',
+  'Terra Network Token'
+)
 export const UST = new Token(ChainId.MAINNET, '0xa47c8bf37f92aBed4A126BDA807A7b7498661acD', 18, 'UST', 'Terra USD')
 
 // TODO this is only approximate, it's actually based on blocks
@@ -103,7 +109,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
     [BADGER.address]: [WBTC, WETH[ChainId.MAINNET]],
     [ESD.address]: [USDC, SFI, WETH[ChainId.MAINNET]],
     [SFI.address]: [ESD, WETH[ChainId.MAINNET]],
-    [LUNA.address]: [UST, WETH[ChainId.MAINNET]],
+    [LUNA.address]: [UST, WETH[ChainId.MAINNET]]
   }
 }
 
