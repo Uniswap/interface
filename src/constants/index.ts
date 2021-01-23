@@ -38,7 +38,13 @@ export const BADGER = new Token(
   'BadgerDAO'
 )
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
-export const ESD = new Token(ChainId.MAINNET, '0x36F3FD68E7325a35EB768F1AedaAe9EA0689d723', 18, 'ESD', 'Empty Set Dollar')
+export const ESD = new Token(
+  ChainId.MAINNET,
+  '0x36F3FD68E7325a35EB768F1AedaAe9EA0689d723',
+  18,
+  'ESD',
+  'Empty Set Dollar'
+)
 export const SFI = new Token(ChainId.MAINNET, '0xb753428af26E81097e7fD17f40c88aaA3E04902c', 18, 'SFI', 'Saffron Spice')
 export const LUNA = new Token(ChainId.MAINNET, '0xd2877702675e6ceb975b4a1dff9fb7baf4c91ea9', 18, 'LUNA', 'Terra Network Token')
 export const UST = new Token(ChainId.MAINNET, '0xa47c8bf37f92aBed4A126BDA807A7b7498661acD', 18, 'UST', 'Terra USD')
