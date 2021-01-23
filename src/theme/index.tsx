@@ -9,6 +9,7 @@ import styled, {
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
+import BackgroundDark from '../assets/images/bg2.png'
 
 export * from './components'
 
@@ -31,8 +32,8 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
   {}
 ) as any
 
-const white = '#FFFFFF'
-const black = '#000000'
+const white = '#000000'
+const black = '#FFFFFF'
 
 export function colors(darkMode: boolean): Colors {
   return {
@@ -74,9 +75,8 @@ export function colors(darkMode: boolean): Colors {
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
     // other
-    red1: '#FD4040',
+    red1: '#FF6871',
     red2: '#F82D3A',
-    red3: '#D60000',
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
@@ -157,7 +157,7 @@ export const TYPE = {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
   },
   blue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
   },
   yellow(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'yellow1'} {...props} />
@@ -220,6 +220,9 @@ export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg2};
+  background-image: url(${({ theme }) => theme.bg2 === '#2C2F36' ? BackgroundDark : BackgroundDark});
+  background-attachment: fixed;
+  background-size: ${({ theme }) => theme.bg2 === '#2C2F36' ? '99.99% 100%' : '100%'} ;
 }
 
 body {

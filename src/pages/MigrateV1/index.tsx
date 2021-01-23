@@ -7,6 +7,7 @@ import { SearchInput } from '../../components/SearchModal/styleds'
 import { useAllTokenV1Exchanges } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
+import { useSelectedTokenList } from '../../state/lists/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { BackArrow, TYPE } from '../../theme'
 import { LightCard } from '../../components/Card'
@@ -17,7 +18,6 @@ import QuestionHelper from '../../components/QuestionHelper'
 import { Dots } from '../../components/swap/styleds'
 import { useAddUserToken } from '../../state/user/hooks'
 import { isTokenOnList } from '../../utils'
-import { useCombinedActiveList } from '../../state/lists/hooks'
 
 export default function MigrateV1() {
   const theme = useContext(ThemeContext)
@@ -28,7 +28,7 @@ export default function MigrateV1() {
 
   // automatically add the search token
   const token = useToken(tokenSearch)
-  const selectedTokenListTokens = useCombinedActiveList()
+  const selectedTokenListTokens = useSelectedTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenListTokens, token ?? undefined)
   const allTokens = useAllTokens()
   const addToken = useAddUserToken()

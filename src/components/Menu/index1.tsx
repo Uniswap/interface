@@ -1,10 +1,10 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import { DollarSign, Code, Sunrise, MessageCircle, PieChart } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleModal } from '../../state/application/hooks'
+import useToggle from '../../hooks/useToggle'
+import { useTranslation } from 'react-i18next'
 
 import { ExternalLink } from '../../theme'
 
@@ -23,17 +23,14 @@ const StyledMenuButton = styled.button`
   padding: 0;
   height: 35px;
   background-color: ${({ theme }) => theme.bg3};
-
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
-
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
     background-color: ${({ theme }) => theme.bg4};
   }
-
   svg {
     margin-top: 2px;
   }
@@ -54,19 +51,15 @@ const MenuFlyout = styled.span`
   background-color: ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  border-radius: 0.5rem;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 4rem;
+  top: 3rem;
   right: 0rem;
   z-index: 100;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -17.25rem;
-  `};
 `
 
 const MenuItem = styled(ExternalLink)`
@@ -83,12 +76,12 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
 export default function Menu() {
   const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.MENU)
-  const toggle = useToggleModal(ApplicationModal.MENU)
+  const [open, toggle] = useToggle(false)
+  const { t } = useTranslation()
+
   useOnClickOutside(node, open ? toggle : undefined)
 
   return (
@@ -97,28 +90,27 @@ export default function Menu() {
       <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
-
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
-            <Info size={14} />
-            About
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.org/docs/v2">
-            <BookOpen size={14} />
-            Docs
-          </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
-            <Code size={14} />
-            Code
-          </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/EwFs3Pp">
-            <MessageCircle size={14} />
-            Discord
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
+          <MenuItem id="link" href="https://sushiswap.vision/">
             <PieChart size={14} />
-            Analytics
+            {t('analytics')}
+          </MenuItem>
+          <MenuItem id="link" href="https://sushiswapclassic.org/staking">
+            <DollarSign size={14} />
+            {t('stake')}
+          </MenuItem>
+          <MenuItem id="link" href="https://sushiswapclassic.org/farms">
+            <Sunrise size={14} />
+            {t('farm')}
+          </MenuItem>
+          <MenuItem id="link" href="https://discord.gg/AgJsrK7">
+            <MessageCircle size={14} />
+            {t('discord')}
+          </MenuItem>
+          <MenuItem id="link" href="https://github.com/jiro-ono/sushiswap-classic-interface">
+            <Code size={14} />
+            {t('code')}
           </MenuItem>
         </MenuFlyout>
       )}
