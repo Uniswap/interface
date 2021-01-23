@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk'
+import { Currency } from '@sushiswap/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import useLast from '../../hooks/useLast'

@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
+import { ChainId, JSBI, Percent, Token, WETH } from '@sushiswap/sdk'
 import { AbstractConnector } from '@sushi-web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink, lattice } from '../connectors'
@@ -21,8 +21,6 @@ export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a
 export const YAM = new Token(ChainId.MAINNET, '0x0e2298E3B3390e3b945a5456fBf59eCc3f55DA16', 18, 'YAM', 'YAM')
 export const RUNE = new Token(ChainId.MAINNET, '0x3155ba85d5f96b2d030a4966af206230e46849cb', 18, 'RUNE', 'RUNE.ETH')
 export const YFI = new Token(ChainId.MAINNET, '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e', 18, 'YFI', 'Yearn')
-
-
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],

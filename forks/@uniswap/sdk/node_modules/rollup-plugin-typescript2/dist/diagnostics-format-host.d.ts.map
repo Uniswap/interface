@@ -1,1 +1,0 @@
-{"version":3,"file":"diagnostics-format-host.d.ts","sourceRoot":"","sources":["src/diagnostics-format-host.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,OAAO,MAAM,YAAY,CAAC;AAGtC,qBAAa,UAAW,YAAW,OAAO,CAAC,qBAAqB;IAExD,mBAAmB,IAAI,MAAM;IAK7B,oBAAoB,CAAC,QAAQ,EAAE,MAAM,GAAG,MAAM;IAK9C,UAAU,IAAI,MAAM;CAI3B;AAED,eAAO,MAAM,UAAU,YAAmB,CAAC"}
