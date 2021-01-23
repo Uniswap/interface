@@ -258,34 +258,34 @@ export default function Header() {
     <HeaderFrame>
       <RowBetween style={{ alignItems: 'flex-start' }} padding="1rem 1rem 0 1rem">
         <HeaderElement>
-      <HeaderRow>
-          <Title href=".">
-            <UniIcon>
-            <img height={'50px'} src={darkMode ? LogoDark : Logo} alt="logo" />
-            </UniIcon>
-          </Title>
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
-          </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
-            }
-          >
-            {t('pool')}
-          </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Charts <span style={{ fontSize: '14px' }}>↗</span>
-          </StyledExternalLink>
-        </HeaderLinks>
-      </HeaderRow>
+          <HeaderRow>
+            <Title href=".">
+              <UniIcon>
+                <img height={'50px'} src={darkMode ? LogoDark : Logo} alt="logo" />
+              </UniIcon>
+            </Title>
+            <HeaderLinks>
+              <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                {t('swap')}
+              </StyledNavLink>
+              <StyledNavLink
+                id={`pool-nav-link`}
+                to={'/pool'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) ||
+                  pathname.startsWith('/add') ||
+                  pathname.startsWith('/remove') ||
+                  pathname.startsWith('/create') ||
+                  pathname.startsWith('/find')
+                }
+              >
+                {t('pool')}
+              </StyledNavLink>
+              <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
+                Charts <span style={{ fontSize: '14px' }}>↗</span>
+              </StyledExternalLink>
+            </HeaderLinks>
+          </HeaderRow>
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
@@ -302,9 +302,9 @@ export default function Header() {
             </AccountElement>
           </HeaderElement>
           <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
+            <StyledMenuButton onClick={() => toggleDarkMode()}>
+              {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+            </StyledMenuButton>
             <Menu />
           </HeaderElementWrap>
         </HeaderControls>

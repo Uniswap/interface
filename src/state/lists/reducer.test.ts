@@ -320,7 +320,8 @@ describe('list reducer', () => {
       store.dispatch(removeList('fake-url'))
       expect(store.getState()).toEqual({
         byUrl: {},
-        selectedListUrl: 'https://raw.githubusercontent.com/nikiswap/classic-token-list/master/retjehclassic.tokenlist.json'
+        selectedListUrl:
+          'https://raw.githubusercontent.com/nikiswap/classic-token-list/master/retjehclassic.tokenlist.json'
       })
     })
   })

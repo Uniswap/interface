@@ -220,9 +220,9 @@ export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg2};
-  background-image: url(${({ theme }) => theme.bg2 === '#2C2F36' ? BackgroundDark : BackgroundDark});
+  background-image: url(${({ theme }) => (theme.bg2 === '#2C2F36' ? BackgroundDark : BackgroundDark)});
   background-attachment: fixed;
-  background-size: ${({ theme }) => theme.bg2 === '#2C2F36' ? '99.99% 100%' : '100%'} ;
+  background-size: ${({ theme }) => (theme.bg2 === '#2C2F36' ? '99.99% 100%' : '100%')} ;
 }
 
 body {
