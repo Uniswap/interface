@@ -21,6 +21,8 @@ export const SUSHI = new Token(ChainId.MAINNET, '0x6B3595068778DD592e39A122f4f5a
 export const YAM = new Token(ChainId.MAINNET, '0x0e2298E3B3390e3b945a5456fBf59eCc3f55DA16', 18, 'YAM', 'YAM')
 export const RUNE = new Token(ChainId.MAINNET, '0x3155ba85d5f96b2d030a4966af206230e46849cb', 18, 'RUNE', 'RUNE.ETH')
 export const YFI = new Token(ChainId.MAINNET, '0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e', 18, 'YFI', 'Yearn')
+export const CREAM = new Token(ChainId.MAINNET, '0x2ba592f78db6436527729929aaf6c908497cb200', 18, 'CREAM', 'Cream')
+export const BAC = new Token(ChainId.MAINNET, '0x3449fc1cd036255ba1eb19d65ff4ba2b8903a69a', 18, 'BAC', 'Basis Cash')
 
 
 
@@ -35,7 +37,7 @@ const WETH_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, SUSHI, YAM, WBTC, RUNE]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, SUSHI, YAM, WBTC, RUNE, CREAM, BAC]
 }
 
 /**
