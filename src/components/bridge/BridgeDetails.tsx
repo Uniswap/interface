@@ -35,6 +35,8 @@ function BridgeDetails({
   const currency = useCurrency(inputCurrencyId, 'Bridge')
   const fee = useBridgeFee(inputCurrencyId)
   const calculatedFee = useCalculatedBridgeFee(inputCurrencyId, inputAmount)
+
+  const feePercentage = Number(fee) * 100
   const parsedCalculatedFee = Number(calculatedFee)
   const show = parsedCalculatedFee > 0
 
@@ -47,11 +49,11 @@ function BridgeDetails({
               Bridge Fee
             </TYPE.black>
             <QuestionHelper
-              text={`Moving funds to mainnet requires ${fee}% fee in order to cover  transaction and bridge maintenance costs`}
+              text={`Moving funds to mainnet requires ${feePercentage}% fee in order to cover  transaction and bridge maintenance costs`}
             />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
-            {`${calculatedFee} ${currency?.symbol} Fee (${fee}%)`}
+            {`${calculatedFee} ${currency?.symbol} Fee (${feePercentage}%)`}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
