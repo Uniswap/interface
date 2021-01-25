@@ -3,6 +3,7 @@ import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { PairState, usePairs } from '../../data/Reserves'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -17,7 +18,8 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  toggleURLWarning
+  toggleURLWarning,
+  removeSerializedPair
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -38,6 +40,17 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   )
+}
+
+function serializeSimplifiedPair(pair: Pair): SerializedPair {
+  return {
+    token0: serializeToken(pair.token0),
+    token1: serializeToken(pair.token1)
+  }
+}
+
+function deserializeSimplifiedPair(serializedPair: SerializedPair): [Token, Token] {
+  return [deserializeToken(serializedPair.token0), deserializeToken(serializedPair.token1)]
 }
 
 export function useIsDarkMode(): boolean {
@@ -143,22 +156,42 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
-function serializePair(pair: Pair): SerializedPair {
-  return {
-    token0: serializeToken(pair.token0),
-    token1: serializeToken(pair.token1)
-  }
-}
-
 export function usePairAdder(): (pair: Pair) => void {
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
     (pair: Pair) => {
-      dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
+      dispatch(addSerializedPair({ serializedPair: serializeSimplifiedPair(pair) }))
     },
     [dispatch]
   )
+}
+
+export function usePairRemover(): (pair: Pair) => void {
+  const dispatch = useDispatch<AppDispatch>()
+
+  return useCallback(
+    (pair: Pair) => {
+      dispatch(removeSerializedPair({ serializedPair: serializeSimplifiedPair(pair) }))
+    },
+    [dispatch]
+  )
+}
+
+export function useUserAddedPairs(): Pair[] {
+  const { chainId } = useActiveWeb3React()
+  const serializedPairsMap = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
+  const simplifiedPairs = Object.values(serializedPairsMap[chainId as ChainId] ?? {}).map(deserializeSimplifiedPair)
+  const pairs = usePairs(simplifiedPairs)
+
+  return useMemo(() => {
+    return pairs.reduce((userAddedPairs: Pair[], pair) => {
+      if (pair[0] === PairState.EXISTS && pair[1] !== null) {
+        userAddedPairs.push(pair[1])
+      }
+      return userAddedPairs
+    }, [])
+  }, [pairs])
 }
 
 export function useURLWarningVisible(): boolean {
@@ -185,7 +218,7 @@ export function toDXSwapLiquidityToken([tokenA, tokenB]: [Token, Token]): Token 
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
-  
+
   // get user added tokens to be used as base
   const userAddedTokens = useUserAddedTokens()
 

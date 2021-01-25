@@ -7,6 +7,10 @@ import { useActiveWeb3React } from '../hooks'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { useFeesState } from '../state/fees/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
+import { usePairContract } from '../hooks/useContract'
+import { useToken } from '../hooks/Tokens'
+import { useSingleCallResult } from '../state/multicall/hooks'
+import { useTrackedTokenPairs } from '../state/user/hooks'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -72,4 +76,28 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
 
 export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {
   return usePairs([[tokenA, tokenB]])[0]
+}
+
+export function useExistingRawPairs(): Pair[] {
+  const rawPairsList = useTrackedTokenPairs()
+  const results = usePairs(rawPairsList)
+
+  return useMemo(() => {
+    return results.reduce((existingPairs: Pair[], result) => {
+      if (result && result[0] === PairState.EXISTS && result[1]) {
+        existingPairs.push(result[1])
+      }
+      return existingPairs
+    }, [])
+  }, [results])
+}
+
+export function usePairAtAddress(address?: string): Pair | null {
+  const pairContract = usePairContract(address)
+  const { result: token0Result } = useSingleCallResult(pairContract, 'token0()')
+  const { result: token1Result } = useSingleCallResult(pairContract, 'token1()')
+  const token0 = useToken(token0Result && token0Result[0])
+  const token1 = useToken(token1Result && token1Result[0])
+  const result = usePair(token0 || undefined, token1 || undefined)
+  return result[0] === PairState.EXISTS && result[1] ? result[1] : null
 }

@@ -8,6 +8,7 @@ import styled, {
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
+import 'react-datepicker/dist/react-datepicker.min.css'
 
 export * from './components'
 
@@ -237,5 +238,58 @@ body {
   ${({ theme }) => theme.mediaWidth.upToMedium`
     background-position: 0 -10vh;
   `};
+}
+
+.react-datepicker {
+  font-family: Montserrat !important;
+  border: solid 1px ${props => props.theme.bg5} !important;
+  border-radius: 8px !important;
+  color: ${props => props.theme.text4} !important;
+  background-color: ${props => props.theme.dark1} !important;
+  background: linear-gradient(113.18deg, rgba(255, 255, 255, 0.35) -0.1%, rgba(0, 0, 0, 0) 98.9%),
+  ${({ theme }) => theme.dark1} !important;
+  background-blend-mode: overlay, normal !important;
+}
+
+.react-datepicker__triangle {
+  border-bottom-color: ${props => props.theme.dark1} !important;
+}
+
+.react-datepicker__header {
+  background-color: transparent !important;
+  border-top-left-radius: 8px;
+  border-bottom: none !important;
+}
+
+.react-datepicker__day-name {
+  color: ${props => props.theme.text4} !important;
+  font-weight: 600;
+}
+
+.react-datepicker__time-container .react-datepicker__time {
+  background: transparent !important;
+}
+
+.react-datepicker__time-container  {
+  border-left: solid 1px ${props => props.theme.bg5} !important;
+}
+
+.react-datepicker-time__header  {
+  color: ${props => props.theme.bg5} !important;
+}
+
+.react-datepicker__time-list-item {
+  transition: background-color 0.3s ease;
+  :hover {
+    background-color: ${props => props.theme.bg2} !important;
+  }
+}
+
+.react-datepicker__header.react-datepicker__header--time {
+  border-bottom: solid 1px ${props => props.theme.bg5} !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: ${props => props.theme.bg2} !important;
 }
 `

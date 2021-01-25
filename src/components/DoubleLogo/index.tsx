@@ -6,7 +6,9 @@ import CurrencyLogo from '../CurrencyLogo'
 const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
   position: relative;
   display: flex;
+  justify-content: flex-end;
   flex-direction: row;
+  width: ${props => props.sizeraw * 2 - 8}px; // -8 enforces the overlapping of the icons by 8 pixels
   margin-right: ${({ sizeraw, margin }) => margin && (sizeraw / 3 + 8).toString() + 'px'};
 `
 
@@ -20,9 +22,10 @@ interface DoubleCurrencyLogoProps {
 const HigherLogo = styled(CurrencyLogo)`
   z-index: 2;
 `
+
 const CoveredLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
   position: absolute;
-  left: ${({ sizeraw }) => '-' + (sizeraw / 2).toString() + 'px'} !important;
+  left: 0 !important;
 `
 
 export default function DoubleCurrencyLogo({

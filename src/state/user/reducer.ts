@@ -126,8 +126,11 @@ export default createReducer(initialState, builder =>
       }
       state.timestamp = currentTimestamp()
     })
-    .addCase(removeSerializedPair, (state, { payload: { chainId, tokenAAddress, tokenBAddress } }) => {
+    .addCase(removeSerializedPair, (state, { payload: { serializedPair } }) => {
+      const chainId = serializedPair.token0.chainId
       if (state.pairs[chainId]) {
+        const tokenAAddress = serializedPair.token0.address
+        const tokenBAddress = serializedPair.token1.address
         // just delete both keys if either exists
         delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)]
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]

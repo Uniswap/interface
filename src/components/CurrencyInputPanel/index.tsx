@@ -8,7 +8,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
-import { Input as NumericalInput } from '../NumericalInput'
+import NumericalInput from '../Input/NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
