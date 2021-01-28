@@ -232,7 +232,6 @@ html {
 
 body {
   min-height: 100vh;
-  background-color: ${({ theme }) => theme.darkest};
   background-position: 0 -20vh;
   background-repeat: no-repeat;
   background-image: ${({ theme }) =>
