@@ -7,6 +7,7 @@ import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 import styled from 'styled-components'
 
 import Logo from '../../assets/images/logo.png'
+import TelegramIcon from '../../assets/svg/telegram-plane-brands.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
@@ -114,11 +115,12 @@ const BalanceText = styled(Text)`
   `};
 `
 
-const AnalyticsLink = styled(ExternalLink)`
+const HeaderLink = styled(ExternalLink)`
   display: flex;
   align-items: center;
   font-weight: 400;
   color: white;
+  margin-right: 10px;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
@@ -154,9 +156,15 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
-            <AnalyticsLink target="_blank" href="http://info.fuseswap.com">
+            <HeaderLink target="_blank" href="https://t.me/fuseswap" style={{ marginRight: 20 }}>
+              <img src={TelegramIcon} alt="telegram" />
+            </HeaderLink>
+            <HeaderLink target="_blank" href="https://rewards.fuse.io">
+              Farming <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
+            </HeaderLink>
+            <HeaderLink target="_blank" href="https://info.fuseswap.com" style={{ marginRight: 0 }}>
               Analytics <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
-            </AnalyticsLink>
+            </HeaderLink>
             <TestnetWrapper>
               {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
             </TestnetWrapper>
