@@ -1,13 +1,13 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ChainId, JSBI, Percent, Token, WETH, DXD } from 'dxswap-sdk'
-import { rinkeby, mainnet } from 'dxswap-periphery/.contracts.json'
+import { rinkeby, mainnet, arbitrumTestnetV3 } from 'dxswap-periphery/.contracts.json'
 import { tokens } from './tokens'
-
 import { authereum, injected, walletConnect } from '../connectors'
 
 export const ROUTER_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: rinkeby.router,
-  [ChainId.MAINNET]: mainnet.router
+  [ChainId.MAINNET]: mainnet.router,
+  [ChainId.ARBITRUM_TESTNET_V3]: arbitrumTestnetV3.router
 }
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -29,7 +29,8 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]]
+  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
+  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]]
 }
 
 // used to construct intermediary pairs for trading
