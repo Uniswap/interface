@@ -148,28 +148,36 @@ export function useBridgeActionHandlers(): {
 
 export function useBridgeFee(tokenAddress: string | undefined) {
   const { chainId, account, library } = useActiveWeb3React()
+  const { isHome } = useChain()
 
   return useAsyncMemo(async () => {
-    if (!chainId || !account || !library || !tokenAddress || !isMultiErc20ToErc677BridgeToken(tokenAddress)) return
+    if (!isHome || !account || !library || !tokenAddress || !isMultiErc20ToErc677BridgeToken(tokenAddress)) return
 
     const address = getHomeMultiErc20ToErc677BridgeAddress()
     const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
     const fee = await contract.getFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress)
     return formatEther(fee)
-  }, [account, chainId, library, tokenAddress])
+  }, [isHome, account, chainId, library, tokenAddress])
 }
 
 export function useCalculatedBridgeFee(tokenAddress: string | undefined, currencyAmount: CurrencyAmount | undefined) {
   const { chainId, account, library } = useActiveWeb3React()
+  const { isHome } = useChain()
   const amount = currencyAmount?.raw?.toString()
 
   return useAsyncMemo(async () => {
-    if (!chainId || !account || !library || !tokenAddress || !amount || !isMultiErc20ToErc677BridgeToken(tokenAddress))
+    if (!isHome || !account || !library || !tokenAddress || !amount || !isMultiErc20ToErc677BridgeToken(tokenAddress))
       return
 
-    const address = getHomeMultiErc20ToErc677BridgeAddress()
-    const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
-    const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount)
-    return formatEther(fee)
-  }, [account, chainId, amount, library, tokenAddress])
+    try {
+      const address = getHomeMultiErc20ToErc677BridgeAddress()
+      const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
+      const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount)
+      console.log(fee, formatEther(fee))
+      return formatEther(fee)
+    } catch (error) {
+      console.error(error)
+      return
+    }
+  }, [isHome, account, chainId, amount, library, tokenAddress])
 }

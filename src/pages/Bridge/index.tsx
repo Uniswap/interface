@@ -179,13 +179,15 @@ export default function Bridge({
       onFieldInput('')
       updateCompletedBridgeTransfer()
     } catch (error) {
-      Sentry.captureException(error, {
-        tags: {
-          section: 'Bridge'
-        }
-      })
+      if (error?.code !== 4001) {
+        Sentry.captureException(error, {
+          tags: {
+            section: 'Bridge'
+          }
+        })
 
-      console.log(error)
+        console.log(error)
+      }
     }
   }
 

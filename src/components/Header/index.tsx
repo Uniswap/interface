@@ -7,7 +7,6 @@ import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 import styled from 'styled-components'
 
 import Logo from '../../assets/images/logo.png'
-import TelegramIcon from '../../assets/svg/telegram-plane-brands.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 
@@ -127,6 +126,22 @@ const HeaderLink = styled(ExternalLink)`
   `}
 `
 
+const MobileBalanceElement = styled.div`
+  display: none;
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.bg3};
+  margin-top: 0.5rem;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: flex; 
+  `}
+`
+
+const MobileBalanceText = styled(Text)`
+  padding: 0.5rem;
+  font-weight: 500;
+`
+
 export const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
@@ -156,8 +171,8 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
-            <HeaderLink target="_blank" href="https://t.me/fuseswap" style={{ marginRight: 20 }}>
-              <img src={TelegramIcon} alt="telegram" />
+            <HeaderLink target="_blank" href="https://t.me/fuseswap">
+              Telegram <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
             </HeaderLink>
             <HeaderLink target="_blank" href="https://rewards.fuse.io">
               Farming <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
@@ -177,6 +192,13 @@ export default function Header() {
               <Web3Status />
             </AccountElement>
           </HeaderElement>
+          <MobileBalanceElement>
+            {account && userEthBalance ? (
+              <MobileBalanceText>
+                {userEthBalance?.toSignificant(4)} {getNativeCurrencySymbol(chainId)}
+              </MobileBalanceText>
+            ) : null}
+          </MobileBalanceElement>
           <HeaderElementWrap>
             <Settings />
             <Menu />

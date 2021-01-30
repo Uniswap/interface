@@ -91,12 +91,14 @@ export function useApproveCallback(
           approval: { tokenAddress: token.address, spender: spender }
         })
       })
-      .catch((error: Error) => {
-        Sentry.captureException(error, {
-          tags: {
-            action: 'Approve Token'
-          }
-        })
+      .catch((error: any) => {
+        if (error?.code !== 4001) {
+          Sentry.captureException(error, {
+            tags: {
+              action: 'Approve Token'
+            }
+          })
+        }
         console.debug('Failed to approve token', error)
         throw error
       })

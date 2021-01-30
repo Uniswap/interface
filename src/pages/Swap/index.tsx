@@ -223,11 +223,13 @@ export default function Swap() {
         })
       })
       .catch(error => {
-        Sentry.captureException(error, {
-          tags: {
-            section: 'Swap'
-          }
-        })
+        if (error?.code !== 4001) {
+          Sentry.captureException(error, {
+            tags: {
+              section: 'Swap'
+            }
+          })
+        }
 
         setSwapState({
           attemptingTxn: false,
