@@ -171,9 +171,6 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
-            <HeaderLink target="_blank" href="https://t.me/fuseswap">
-              Telegram <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
-            </HeaderLink>
             <HeaderLink target="_blank" href="https://rewards.fuse.io">
               Farming <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
             </HeaderLink>
