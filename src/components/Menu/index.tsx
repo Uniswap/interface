@@ -118,9 +118,9 @@ export default function Menu() {
             <BarChart2 size={14} />
             Explorer
           </MenuItem>
-          <MenuItem id="link" href="http://info.fuseswap.com">
+          <MenuItem id="link" href="https://info.fuseswap.com">
             <PieChart size={14} />
-            Analytics
+            Charts
           </MenuItem>
         </MenuFlyout>
       )}

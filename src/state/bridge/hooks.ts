@@ -1,5 +1,6 @@
 import { AppState, AppDispatch } from '../index'
 import { useSelector, useDispatch } from 'react-redux'
+import * as Sentry from '@sentry/react'
 import { useCallback, useMemo } from 'react'
 import { useAsyncMemo } from 'use-async-memo'
 import { typeInput, Field, BridgeTransactionStatus } from './actions'
@@ -147,21 +148,27 @@ export function useBridgeActionHandlers(): {
 }
 
 export function useBridgeFee(tokenAddress: string | undefined) {
-  const { chainId, account, library } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
   const { isHome } = useChain()
 
   return useAsyncMemo(async () => {
     if (!isHome || !account || !library || !tokenAddress || !isMultiErc20ToErc677BridgeToken(tokenAddress)) return
 
-    const address = getHomeMultiErc20ToErc677BridgeAddress()
-    const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
-    const fee = await contract.getFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress)
-    return formatEther(fee)
-  }, [isHome, account, chainId, library, tokenAddress])
+    try {
+      const address = getHomeMultiErc20ToErc677BridgeAddress()
+      const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
+      const fee = await contract.getFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress)
+      return formatEther(fee)
+    } catch (error) {
+      Sentry.captureException(error)
+      console.error(error)
+      return
+    }
+  }, [isHome, account, library, tokenAddress])
 }
 
 export function useCalculatedBridgeFee(tokenAddress: string | undefined, currencyAmount: CurrencyAmount | undefined) {
-  const { chainId, account, library } = useActiveWeb3React()
+  const { account, library } = useActiveWeb3React()
   const { isHome } = useChain()
   const amount = currencyAmount?.raw?.toString()
 
@@ -173,11 +180,11 @@ export function useCalculatedBridgeFee(tokenAddress: string | undefined, currenc
       const address = getHomeMultiErc20ToErc677BridgeAddress()
       const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
       const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount)
-      console.log(fee, formatEther(fee))
       return formatEther(fee)
     } catch (error) {
+      Sentry.captureException(error)
       console.error(error)
       return
     }
-  }, [isHome, account, chainId, amount, library, tokenAddress])
+  }, [isHome, account, amount, library, tokenAddress])
 }

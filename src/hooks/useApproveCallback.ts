@@ -92,6 +92,7 @@ export function useApproveCallback(
         })
       })
       .catch((error: any) => {
+        // only handle if user didn't reject transaction
         if (error?.code !== 4001) {
           Sentry.captureException(error, {
             tags: {
