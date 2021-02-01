@@ -22,6 +22,7 @@ import { PaddedColumn, Checkbox } from './styleds'
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
+  overflow: auto;
 `
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
