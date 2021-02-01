@@ -328,14 +328,16 @@ export default function RemoveLiquidity({
             label: [currencyA?.symbol, currencyB?.symbol].join('/')
           })
         })
-        .catch((error: Error) => {
+        .catch((error: any) => {
           setAttemptingTxn(false)
 
-          Sentry.captureException(error, {
-            tags: {
-              section: 'Remove Liquidity'
-            }
-          })
+          if (error.code !== 4001) {
+            Sentry.captureException(error, {
+              tags: {
+                section: 'Remove Liquidity'
+              }
+            })
+          }
 
           // we only care if the error is something _other_ than the user rejected the tx
           console.error(error)

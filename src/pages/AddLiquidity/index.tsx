@@ -207,13 +207,13 @@ export default function AddLiquidity({
       .catch(error => {
         setAttemptingTxn(false)
 
-        Sentry.captureException(error, {
-          tags: {
-            section: 'Add Liquidity'
-          }
-        })
-
         if (error?.code !== 4001) {
+          Sentry.captureException(error, {
+            tags: {
+              section: 'Add Liquidity'
+            }
+          })
+
           console.log(error)
         }
       })

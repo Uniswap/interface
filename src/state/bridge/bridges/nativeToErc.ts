@@ -142,14 +142,16 @@ export default class NativeToErcBridge extends TokenBridge {
     } catch (error) {
       this.dispatch(transferError())
 
-      Sentry.captureException(error, {
-        tags: {
-          section: 'Bridge',
-          bridgeType: 'NativeToERC'
-        }
-      })
+      if (error?.code !== 4001) {
+        Sentry.captureException(error, {
+          tags: {
+            section: 'Bridge',
+            bridgeType: 'NativeToERC'
+          }
+        })
 
-      if (error?.code !== 4001) console.log(error)
+        console.log(error)
+      }
     }
   }
 }

@@ -76,7 +76,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg9};
   padding: 0rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
@@ -185,14 +185,21 @@ const TransactionListWrapper = styled.div`
 `
 
 const WalletAction = styled(ButtonSecondary)`
+  background-color: ${({ theme }) => theme.bg9};
   width: fit-content;
   font-weight: 400;
   margin-left: 8px;
   font-size: 0.825rem;
   padding: 4px 6px;
+  border-color: white;
   :hover {
+    background-color: ${({ theme }) => theme.bg9};
     cursor: pointer;
     text-decoration: underline;
+  }
+  :focus {
+    background-color: ${({ theme }) => theme.bg9};
+    box-shadow: none;
   }
 `
 

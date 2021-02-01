@@ -120,7 +120,7 @@ export default function Menu() {
           </MenuItem>
           <MenuItem id="link" href="https://info.fuseswap.com">
             <PieChart size={14} />
-            Analytics
+            Charts
           </MenuItem>
         </MenuFlyout>
       )}

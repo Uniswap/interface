@@ -114,15 +114,32 @@ const BalanceText = styled(Text)`
   `};
 `
 
-const AnalyticsLink = styled(ExternalLink)`
+const HeaderLink = styled(ExternalLink)`
   display: flex;
   align-items: center;
   font-weight: 400;
   color: white;
+  margin-right: 10px;
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `}
+`
+
+const MobileBalanceElement = styled.div`
+  display: none;
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.bg3};
+  margin-top: 0.5rem;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: flex; 
+  `}
+`
+
+const MobileBalanceText = styled(Text)`
+  padding: 0.5rem;
+  font-weight: 500;
 `
 
 export const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
@@ -154,9 +171,12 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
-            <AnalyticsLink target="_blank" href="http://info.fuseswap.com">
+            <HeaderLink target="_blank" href="https://rewards.fuse.io">
+              Farming <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
+            </HeaderLink>
+            <HeaderLink target="_blank" href="https://info.fuseswap.com" style={{ marginRight: 0 }}>
               Analytics <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
-            </AnalyticsLink>
+            </HeaderLink>
             <TestnetWrapper>
               {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
             </TestnetWrapper>
@@ -169,6 +189,13 @@ export default function Header() {
               <Web3Status />
             </AccountElement>
           </HeaderElement>
+          <MobileBalanceElement>
+            {account && userEthBalance ? (
+              <MobileBalanceText>
+                {userEthBalance?.toSignificant(4)} {getNativeCurrencySymbol(chainId)}
+              </MobileBalanceText>
+            ) : null}
+          </MobileBalanceElement>
           <HeaderElementWrap>
             <Settings />
             <Menu />
