@@ -22,6 +22,7 @@ import { PaddedColumn, Checkbox } from './styleds'
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
+  overflow: auto;
 `
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
@@ -102,7 +103,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
                     <RowFixed>
                       <AlertTriangle stroke={theme.red1} size="10px" />
                       <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
-                        Unkown Source
+                        Unknown Source
                       </TYPE.body>
                     </RowFixed>
                   </WarningWrapper>
