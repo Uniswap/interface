@@ -1,13 +1,12 @@
+import { getBlockscoutLink } from '@ubeswap/sdk'
 import React from 'react'
-import styled from 'styled-components'
 import { CheckCircle, Triangle } from 'react-feather'
-
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { getEtherscanLink } from '../../utils'
-import { ExternalLink } from '../../theme'
 import { useAllTransactions } from '../../state/transactions/hooks'
-import { RowFixed } from '../Row'
+import { ExternalLink } from '../../theme'
 import Loader from '../Loader'
+import { RowFixed } from '../Row'
 
 const TransactionWrapper = styled.div``
 
@@ -49,7 +48,7 @@ export default function Transaction({ hash }: { hash: string }) {
 
   return (
     <TransactionWrapper>
-      <TransactionState href={getEtherscanLink(chainId, hash, 'transaction')} pending={pending} success={success}>
+      <TransactionState href={getBlockscoutLink(chainId, hash, 'transaction')} pending={pending} success={success}>
         <RowFixed>
           <TransactionStatusText>{summary ?? hash} ↗</TransactionStatusText>
         </RowFixed>

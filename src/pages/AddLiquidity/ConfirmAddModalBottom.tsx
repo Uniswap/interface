@@ -1,9 +1,9 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk'
+import { Fraction, Percent, Token, TokenAmount } from '@ubeswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../../components/Button'
-import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 
@@ -17,8 +17,8 @@ export function ConfirmAddModalBottom({
 }: {
   noLiquidity?: boolean
   price?: Fraction
-  currencies: { [field in Field]?: Currency }
-  parsedAmounts: { [field in Field]?: CurrencyAmount }
+  currencies: { [field in Field]?: Token }
+  parsedAmounts: { [field in Field]?: TokenAmount }
   poolTokenPercentage?: Percent
   onAdd: () => void
 }) {

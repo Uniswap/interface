@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import styled from 'styled-components'
+import { useValora } from 'connectors/valora/useValora'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
+import styled from 'styled-components'
 import { network } from '../../connectors'
-import { useEagerConnect, useInactiveListener } from '../../hooks'
 import { NetworkContextName } from '../../constants'
+import { useEagerConnect, useInactiveListener } from '../../hooks'
 import Loader from '../Loader'
 
 const MessageWrapper = styled.div`
@@ -22,6 +22,7 @@ const Message = styled.h2`
 export default function Web3ReactManager({ children }: { children: JSX.Element }) {
   const { t } = useTranslation()
   const { active } = useWeb3React()
+  useValora()
   const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React(NetworkContextName)
 
   // try to eagerly connect to an injected provider, if it exists and has granted access already

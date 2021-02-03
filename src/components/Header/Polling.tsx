@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import { getBlockscoutLink } from '@ubeswap/sdk'
+import React, { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { TYPE, ExternalLink } from '../../theme'
-
-import { useBlockNumber } from '../../state/application/hooks'
-import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
+import { useBlockNumber } from '../../state/application/hooks'
+import { ExternalLink, TYPE } from '../../theme'
 
 const StyledPolling = styled.div`
   position: fixed;
@@ -84,7 +83,7 @@ export default function Polling() {
   )
 
   return (
-    <ExternalLink href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}>
+    <ExternalLink href={chainId && blockNumber ? getBlockscoutLink(chainId, blockNumber.toString(), 'block') : ''}>
       <StyledPolling>
         <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{blockNumber}</TYPE.small>
         <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>

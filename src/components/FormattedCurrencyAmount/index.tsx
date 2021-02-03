@@ -1,13 +1,13 @@
+import { Fraction, JSBI, TokenAmount } from '@ubeswap/sdk'
 import React from 'react'
-import { CurrencyAmount, Fraction, JSBI } from '@uniswap/sdk'
 
 const CURRENCY_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
 
-export default function FormattedCurrencyAmount({
+export default function FormattedTokenAmount({
   currencyAmount,
   significantDigits = 4
 }: {
-  currencyAmount: CurrencyAmount
+  currencyAmount: TokenAmount
   significantDigits?: number
 }) {
   return (

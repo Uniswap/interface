@@ -1,7 +1,7 @@
 name: Release
 on:
   schedule:
-    - cron:  '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
+    - cron: '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
 
   # manual trigger
   workflow_dispatch:
@@ -83,12 +83,12 @@ jobs:
             - CIDv0: `${{ steps.upload.outputs.hash }}`
             - CIDv1: `${{ steps.convert_cidv0.outputs.cidv1 }}`
 
-            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [app.uniswap.org](https://app.uniswap.org).
+            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [app.ubeswap.org](https://app.ubeswap.org).
 
-            You can also access the Uniswap Interface directly from an IPFS gateway.
+            You can also access the Ubeswap Interface directly from an IPFS gateway.
             The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
             **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Uniswap interface without your permission.
-            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app.uniswap.org](https://app.uniswap.org).
+            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app.ubeswap.org](https://app.ubeswap.org).
             The preferred URLs below are safe to use to access this specific release.
 
             Preferred URLs:

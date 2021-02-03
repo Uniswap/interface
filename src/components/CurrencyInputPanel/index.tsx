@@ -1,19 +1,18 @@
-import { Currency, Pair } from '@uniswap/sdk'
-import React, { useState, useCallback } from 'react'
-import styled from 'styled-components'
+import { Pair, Token } from '@ubeswap/sdk'
 import { darken } from 'polished'
+import React, { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
+import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import { useActiveWeb3React } from '../../hooks'
+import useTheme from '../../hooks/useTheme'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+import { TYPE } from '../../theme'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { RowBetween } from '../Row'
-import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-
-import { useActiveWeb3React } from '../../hooks'
-import { useTranslation } from 'react-i18next'
-import useTheme from '../../hooks/useTheme'
+import { RowBetween } from '../Row'
+import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -121,13 +120,13 @@ interface CurrencyInputPanelProps {
   onMax?: () => void
   showMaxButton: boolean
   label?: string
-  onCurrencySelect?: (currency: Currency) => void
-  currency?: Currency | null
+  onCurrencySelect?: (currency: Token) => void
+  currency?: Token | null
   disableCurrencySelect?: boolean
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
-  otherCurrency?: Currency | null
+  otherCurrency?: Token | null
   id: string
   showCommonBases?: boolean
   customBalanceText?: string

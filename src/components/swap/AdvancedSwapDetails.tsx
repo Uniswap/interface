@@ -1,9 +1,9 @@
-import { Trade, TradeType } from '@uniswap/sdk'
+import { Trade, TradeType } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
@@ -105,7 +105,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           {!showRoute && (
             <AutoColumn style={{ padding: '12px 16px 0 16px' }}>
               <InfoLink
-                href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address}
+                href={'https://info.ubeswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}
                 target="_blank"
               >
                 View pair analytics ↗

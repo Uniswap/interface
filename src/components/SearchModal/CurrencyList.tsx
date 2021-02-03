@@ -1,25 +1,24 @@
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap/sdk'
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { currencyEquals, Token, TokenAmount } from '@ubeswap/sdk'
+import React, { CSSProperties, MutableRefObject, useCallback } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
+import { useAllInactiveTokens, useIsUserAddedToken } from '../../hooks/Tokens'
+import { useCombinedActiveList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
-import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
-import Column from '../Column'
-import { RowFixed } from '../Row'
-import CurrencyLogo from '../CurrencyLogo'
-import { MouseoverTooltip } from '../Tooltip'
-import { MenuItem } from './styleds'
-import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
+import Column from '../Column'
+import CurrencyLogo from '../CurrencyLogo'
+import Loader from '../Loader'
+import { RowFixed } from '../Row'
+import { MouseoverTooltip } from '../Tooltip'
 import ImportRow from './ImportRow'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
+import { MenuItem } from './styleds'
 
-function currencyKey(currency: Currency): string {
-  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+function currencyKey(currency: Token): string {
+  return currency instanceof Token ? currency.address : ''
 }
 
 const StyledBalanceText = styled(Text)`
@@ -43,7 +42,7 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
-function Balance({ balance }: { balance: CurrencyAmount }) {
+function Balance({ balance }: { balance: TokenAmount }) {
   return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
 
@@ -52,7 +51,7 @@ const TagContainer = styled.div`
   justify-content: flex-end;
 `
 
-function TokenTags({ currency }: { currency: Currency }) {
+function TokenTags({ currency }: { currency: Token }) {
   if (!(currency instanceof WrappedTokenInfo)) {
     return <span />
   }
@@ -88,7 +87,7 @@ function CurrencyRow({
   otherSelected,
   style
 }: {
-  currency: Currency
+  currency: Token
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
@@ -134,23 +133,20 @@ export default function CurrencyList({
   onCurrencySelect,
   otherCurrency,
   fixedListRef,
-  showETH,
   showImportView,
   setImportToken
 }: {
   height: number
-  currencies: Currency[]
-  selectedCurrency?: Currency | null
-  onCurrencySelect: (currency: Currency) => void
-  otherCurrency?: Currency | null
+  currencies: Token[]
+  selectedCurrency?: Token | null
+  onCurrencySelect: (currency: Token) => void
+  otherCurrency?: Token | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showETH: boolean
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
-  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
-
-  const { chainId } = useActiveWeb3React()
+  const itemData = currencies
 
   const inactiveTokens: {
     [address: string]: Token
@@ -158,12 +154,12 @@ export default function CurrencyList({
 
   const Row = useCallback(
     ({ data, index, style }) => {
-      const currency: Currency = data[index]
+      const currency: Token = data[index]
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
       const handleSelect = () => onCurrencySelect(currency)
 
-      const token = wrappedCurrency(currency, chainId)
+      const token = currency
 
       const showImport = inactiveTokens && token && Object.keys(inactiveTokens).includes(token.address)
 
@@ -189,7 +185,7 @@ export default function CurrencyList({
         )
       }
     },
-    [chainId, inactiveTokens, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
+    [inactiveTokens, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
   )
 
   const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])

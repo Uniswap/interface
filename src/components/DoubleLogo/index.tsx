@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk'
+import { Token } from '@ubeswap/sdk'
 import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
@@ -13,8 +13,8 @@ const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
 interface DoubleCurrencyLogoProps {
   margin?: boolean
   size?: number
-  currency0?: Currency
-  currency1?: Currency
+  currency0?: Token
+  currency1?: Token
 }
 
 const HigherLogo = styled(CurrencyLogo)`

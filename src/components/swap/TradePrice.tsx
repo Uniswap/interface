@@ -1,6 +1,5 @@
-import React from 'react'
-import { Price } from '@uniswap/sdk'
-import { useContext } from 'react'
+import { Price } from '@ubeswap/sdk'
+import React, { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'

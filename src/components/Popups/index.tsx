@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useActivePopups } from '../../state/application/hooks'
+import { useURLWarningVisible } from '../../state/user/hooks'
 import { AutoColumn } from '../Column'
 import PopupItem from './PopupItem'
-import ClaimPopup from './ClaimPopup'
-import { useURLWarningVisible } from '../../state/user/hooks'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
   position: relative;
@@ -53,7 +52,6 @@ export default function Popups() {
   return (
     <>
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive}>
-        <ClaimPopup />
         {activePopups.map(item => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
