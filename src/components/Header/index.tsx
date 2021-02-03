@@ -83,7 +83,11 @@ const HeaderControls = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+
+  /* addresses safari's lack of support for "gap" */
+  & > *:not(:first-child) {
+    margin-left: 8px;
+  }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
    flex-direction: row-reverse;
