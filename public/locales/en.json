@@ -90,7 +90,7 @@
   "toleranceExplanation": "Lowering this limit decreases your risk of frontrunning. However, this makes more likely that your transaction will fail due to normal price movements.",
   "tokenSearchPlaceholder": "Search name or paste address",
   "pairSearchPlaceholder": "Search name or paste address",
-  "liquidityMining.header": "Liquidity mining",
+  "liquidityMining.header": "Liq. mining",
   "liquidityMining.title": "Liquidity mining",
   "liquidityMining.action.create": "CREATE LIQ. MINING",
   "liquidityMining.create.title": "Create a liquidity mining pool",

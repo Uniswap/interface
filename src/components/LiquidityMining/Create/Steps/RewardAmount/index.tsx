@@ -6,7 +6,7 @@ import { TYPE } from '../../../../../theme'
 import CurrencyLogo from '../../../../CurrencyLogo'
 import NumericalInput from '../../../../Input/NumericalInput'
 import Radio from '../../../../Radio'
-import { Card, Divider } from '../styleds'
+import { Card, Divider } from '../../../styleds'
 import border8pxRadius from '../../../../../assets/images/border-8px-radius.png'
 import { parseUnits } from 'ethers/lib/utils'
 

@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import CurrencySearchModal from '../../../../SearchModal/CurrencySearchModal'
 import PairSearchModal from '../../../../SearchModal/PairSearchModal'
-import { Card, Divider } from '../styleds'
+import { Card, Divider } from '../../../styleds'
 import AssetSelector from './AssetSelector'
 
 interface PairAndRewardProps {

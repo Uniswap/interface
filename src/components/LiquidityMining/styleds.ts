@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { GradientCard } from '../../../Card'
+import { GradientCard } from '../Card'
 
 export const Card = styled(GradientCard)`
   width: 100%;

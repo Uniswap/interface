@@ -5,7 +5,7 @@ import { AutoRow } from '../../../../Row'
 import { ReactComponent as DiamondSvg } from '../../../../../assets/svg/diamond.svg'
 import { ReactComponent as DiamondsSvg } from '../../../../../assets/svg/diamonds.svg'
 import { AutoColumn } from '../../../../Column'
-import { Card as StyledCard } from '../styleds'
+import { Card as StyledCard } from '../../../styleds'
 
 const Card = styled(StyledCard)`
   width: 218px;

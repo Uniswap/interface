@@ -295,4 +295,24 @@ body {
 .react-datepicker__day--keyboard-selected {
   background-color: ${props => props.theme.bg2} !important;
 }
+
+.swapr-pagination {
+  list-style: none;
+}
+
+.swapr-pagination ul {
+  display: inline-flex;
+}
+
+.swapr-pagination li {
+  display: inline-block;
+  min-width: 28px;
+  height: 28px;
+  margin-right: 8px;
+  vertical-align: middle;
+  list-style: none;
+  outline: 0;
+  cursor: pointer;
+  user-select: none;
+}
 `

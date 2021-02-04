@@ -73,6 +73,7 @@ export const GradientCard = styled(Card)<{ selectable?: boolean; active?: boolea
     width: calc(50% - 4px);
     `};
   opacity: 1;
+  border: solid 1px ${props => props.theme.bg3};
   position: relative;
   ${props =>
     props.selectable &&

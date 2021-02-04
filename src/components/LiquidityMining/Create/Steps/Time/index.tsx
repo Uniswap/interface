@@ -3,7 +3,7 @@ import { Box, Flex } from 'rebass'
 import { TYPE } from '../../../../../theme'
 import TimeSelector from './TimeSelector'
 import Toggle from '../../../../Toggle'
-import { Card, Divider } from '../styleds'
+import { Card, Divider } from '../../../styleds'
 
 interface TimeProps {
   startTime: Date | null
