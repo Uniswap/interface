@@ -9,14 +9,14 @@ import { useCurrencyBalances } from '../wallet/hooks'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { tryParseAmount } from '../swap/hooks'
 import { DEFAULT_CONFIRMATIONS_LIMIT, HOME_TO_FOREIGN_FEE_TYPE_HASH } from '../../constants/bridge'
-import { useCurrency } from '../../hooks/Tokens'
+import { useCurrency, useToken } from '../../hooks/Tokens'
 import { getMinMaxPerTxn } from './limits'
 import {
   getHomeMultiAMBErc20ToErc677Contract,
   getHomeMultiErc20ToErc677BridgeAddress,
   isMultiErc20ToErc677BridgeToken
 } from '../../utils'
-import { formatEther } from 'ethers/lib/utils'
+import { formatEther, formatUnits } from 'ethers/lib/utils'
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
@@ -170,17 +170,26 @@ export function useBridgeFee(tokenAddress: string | undefined) {
 export function useCalculatedBridgeFee(tokenAddress: string | undefined, currencyAmount: CurrencyAmount | undefined) {
   const { account, library } = useActiveWeb3React()
   const { isHome } = useChain()
+  const token = useToken(tokenAddress)
   const amount = currencyAmount?.raw?.toString()
 
   return useAsyncMemo(async () => {
-    if (!isHome || !account || !library || !tokenAddress || !amount || !isMultiErc20ToErc677BridgeToken(tokenAddress))
+    if (
+      !isHome ||
+      !account ||
+      !library ||
+      !tokenAddress ||
+      !amount ||
+      !token ||
+      !isMultiErc20ToErc677BridgeToken(tokenAddress)
+    )
       return
 
     try {
       const address = getHomeMultiErc20ToErc677BridgeAddress()
       const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
       const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount)
-      return formatEther(fee)
+      return formatUnits(fee, token.decimals)
     } catch (error) {
       Sentry.captureException(error)
       console.error(error)
