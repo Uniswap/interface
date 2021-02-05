@@ -32,6 +32,7 @@ export const AutoRowCleanGap = styled.div<{ gap: number }>`
   display: inline-flex;
   flex-wrap: wrap;
   gap: ${({ gap }) => `${gap}px`};
+  margin: ${({ gap }) => -(gap / 2)}px;
 `
 export const RowFixed = styled(Row)<{ gap?: string; justify?: string }>`
   width: fit-content;

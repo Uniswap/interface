@@ -19,11 +19,11 @@ export default function DistributionsPerAssetList({ distributions }: Distributio
   return (
     <Flex flexDirection="column">
       <Box mb="8px">
-        <AutoRowCleanGap gap={6}>
+        <AutoRowCleanGap gap={8}>
           {!distributions ? (
             <LoadingList />
           ) : (
-            <AutoRowCleanGap gap={4}>
+            <AutoRowCleanGap gap={8}>
               {distributions.map(distribution => (
                 <DistributionCard
                   key={distribution.id}

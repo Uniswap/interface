@@ -4,7 +4,7 @@ import LoadingCard from './LoadingCard'
 
 export default function LoadingList() {
   return (
-    <AutoRowCleanGap gap={6}>
+    <AutoRowCleanGap gap={8}>
       <LoadingCard />
       <LoadingCard />
       <LoadingCard />

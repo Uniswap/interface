@@ -67,7 +67,7 @@ export default function AggregatedDistributionList() {
         {!aggregatedDistributionData ? (
           <LoadingList />
         ) : (
-          <AutoRowCleanGap gap={4}>
+          <AutoRowCleanGap gap={8}>
             {aggregatedDistributionData.map(data => (
               <UndecoratedLink to={`/liquidity-mining/${data.id}`} key={data.id}>
                 <AggregatedDistributions token={data.relatedToken} usdRewards={data.usdRewards} />
