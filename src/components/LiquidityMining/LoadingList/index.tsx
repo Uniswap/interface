@@ -1,22 +1,46 @@
 import React from 'react'
-import { AutoRowCleanGap } from '../../Row'
+import { Box, Flex } from 'rebass'
 import LoadingCard from './LoadingCard'
 
 export default function LoadingList() {
   return (
-    <AutoRowCleanGap gap={8}>
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-      <LoadingCard />
-    </AutoRowCleanGap>
+    <Flex flexWrap="wrap" m="-3px">
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+      <Box p="3px">
+        <LoadingCard />
+      </Box>
+    </Flex>
   )
 }

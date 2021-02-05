@@ -23,8 +23,7 @@ export default function StackedCards({ children }: StackedCardsProps) {
   return (
     <CardsContainer>
       <SizedCard index={0} />
-      <SizedCard index={1} />
-      <SizedCard index={2} selectable>
+      <SizedCard index={1} selectable>
         {children}
       </SizedCard>
     </CardsContainer>

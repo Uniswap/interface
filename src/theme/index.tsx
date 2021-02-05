@@ -307,12 +307,29 @@ body {
 .swapr-pagination li {
   display: inline-block;
   min-width: 28px;
-  height: 28px;
+  height: 22px;
   margin-right: 8px;
   vertical-align: middle;
   list-style: none;
   outline: 0;
   cursor: pointer;
   user-select: none;
+  border: solid 1px ${props => props.theme.bg4};
+  transition: border 0.3s ease, color 0.3s ease;
+  font-size: 14px;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 20px;
+  color: ${props => props.theme.text4};
+}
+
+.swapr-pagination li.rc-pagination-disabled {
+  border: solid 1px ${props => props.theme.bg3};
+  color: ${props => props.theme.text5};
+}
+
+.swapr-pagination li.rc-pagination-prev,
+.swapr-pagination li.rc-pagination-next {
+  padding-top: 2px;
 }
 `
