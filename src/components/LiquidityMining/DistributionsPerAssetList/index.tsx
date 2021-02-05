@@ -23,7 +23,7 @@ export default function DistributionsPerAssetList({ distributions }: Distributio
         ) : (
           <Flex flexWrap="wrap" m="-3px">
             {distributions.map(distribution => (
-              <Box key={distribution.id} p="3px">
+              <Box key={distribution.id} p="4px">
                 <DistributionCard
                   key={distribution.id}
                   token0={distribution.token0}
