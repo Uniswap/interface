@@ -21,7 +21,7 @@ export default function DistributionsPerAssetList({ distributions }: Distributio
         {!distributions ? (
           <LoadingList />
         ) : (
-          <Flex flexWrap="wrap" m="-3px">
+          <Flex flexWrap="wrap" m="-8px">
             {distributions.map(distribution => (
               <Box key={distribution.id} p="4px">
                 <DistributionCard

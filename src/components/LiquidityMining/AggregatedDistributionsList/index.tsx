@@ -22,7 +22,7 @@ export default function AggregatedDistributionList() {
         {!aggregatedDistributions ? (
           <LoadingList />
         ) : (
-          <Flex wrap="wrap" m="-3px">
+          <Flex wrap="wrap" m="-8px">
             {aggregatedDistributions.map(data => (
               <Box key={data.id} p="4px">
                 <UndecoratedLink to={`/liquidity-mining/${data.id}`}>
