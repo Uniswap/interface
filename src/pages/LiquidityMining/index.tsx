@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Box, Flex, Text } from 'rebass'
 import AggregatedDistributionList from '../../components/LiquidityMining/AggregatedDistributionsList'
+import { LiquidityMiningWarning } from '../../components/LiquidityMining/Warning'
 import { TYPE } from '../../theme'
 import { PageWrapper, ResponsiveButtonPrimary } from './styleds'
 
@@ -24,6 +25,7 @@ export default function LiquidityMining() {
         </Box>
       </Flex>
       <AggregatedDistributionList />
+      <LiquidityMiningWarning />
     </PageWrapper>
   )
 }

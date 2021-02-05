@@ -7,6 +7,7 @@ import { Box, Flex, Text } from 'rebass'
 import DistributionsPerAssetList from '../../../components/LiquidityMining/DistributionsPerAssetList'
 import CurrencyLogo from '../../../components/CurrencyLogo'
 import { useDistributionsFromAggregation } from '../../../hooks/useDistributionsFromAggregation'
+import { LiquidityMiningWarning } from '../../../components/LiquidityMining/Warning'
 
 export default function LiquidityMiningAggregation({
   match: {
@@ -48,6 +49,7 @@ export default function LiquidityMiningAggregation({
         </Box>
       </Flex>
       <DistributionsPerAssetList distributions={distributions} />
+      <LiquidityMiningWarning />
     </PageWrapper>
   )
 }
