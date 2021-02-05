@@ -18,7 +18,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { CardSection } from '../../components/earn/styled'
-import SkeletonLoading from '../../components/SkeletonLoading'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -82,10 +81,7 @@ export default function Pool() {
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
-  const [dxSwapPairsBalances, fetchingDXSwapPairBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    liquidityTokens
-  )
+  const [dxSwapPairsBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, liquidityTokens)
 
   // fetch the reserves for all DXSwap pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
@@ -101,12 +97,6 @@ export default function Pool() {
   const allDXSwapPairsWithLiquidity = dxSwapPairs
     .map(([, pair]) => pair)
     .filter((dxSwapPair): dxSwapPair is Pair => Boolean(dxSwapPair))
-
-  const dxSwapIsLoading =
-    fetchingDXSwapPairBalances ||
-    trackedTokenPairs.length === 0 ||
-    dxSwapPairs?.length < liquidityTokensWithBalances.length ||
-    dxSwapPairs?.some(DXSwapPair => !DXSwapPair)
 
   return (
     <>
@@ -139,26 +129,16 @@ export default function Pool() {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </OutlineCard>
+            ) : allDXSwapPairsWithLiquidity?.length > 0 ? (
+              allDXSwapPairsWithLiquidity.map(dxSwapPair => (
+                <FullPositionCard key={dxSwapPair.liquidityToken.address} pair={dxSwapPair} />
+              ))
             ) : (
-              <SkeletonLoading
-                isLoading={dxSwapIsLoading}
-                backgroundColor="#393939"
-                foregroundColor="rgba(57,57,57,.5)"
-              >
-                {allDXSwapPairsWithLiquidity?.length > 0 ? (
-                  <>
-                    {allDXSwapPairsWithLiquidity.map(dxSwapPair => (
-                      <FullPositionCard key={dxSwapPair.liquidityToken.address} pair={dxSwapPair} />
-                    ))}
-                  </>
-                ) : (
-                  <EmptyProposals>
-                    <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
-                      No liquidity found
-                    </TYPE.body>
-                  </EmptyProposals>
-                )}
-              </SkeletonLoading>
+              <EmptyProposals>
+                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
+                  No liquidity found
+                </TYPE.body>
+              </EmptyProposals>
             )}
           </AutoColumn>
         </AutoColumn>
