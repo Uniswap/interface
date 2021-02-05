@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Box, Flex } from 'rebass'
 import Pagination from '../../Pagination'
+import LoadingList from '../LoadingList'
 
 const UndecoratedLink = styled(Link)`
   text-decoration: none;
@@ -30,7 +31,7 @@ export default function AggregatedDistributionList() {
   const { loading, error, data: rawAggregatedDistributionData } = useQuery<AggregatedQueryResult>(
     GET_AGGREGATED_DISTRIBUTION_DATA
   )
-  const [aggregatedDistributionData, setAggregatedDistributionData] = useState<ParsedAggregationData[]>([])
+  const [aggregatedDistributionData, setAggregatedDistributionData] = useState<ParsedAggregationData[] | null>(null)
 
   // TODO: make this into a hook to clean up the component
   useEffect(() => {
@@ -63,22 +64,28 @@ export default function AggregatedDistributionList() {
   return (
     <Flex flexDirection="column">
       <Box mb="8px">
-        <AutoRowCleanGap gap={8}>
-          {aggregatedDistributionData.map(data => (
-            <UndecoratedLink to={`/liquidity-mining/${data.id}`} key={data.id}>
-              <AggregatedDistributions token={data.relatedToken} usdRewards={data.usdRewards} />
-            </UndecoratedLink>
-          ))}
-        </AutoRowCleanGap>
+        {!aggregatedDistributionData ? (
+          <LoadingList />
+        ) : (
+          <AutoRowCleanGap gap={4}>
+            {aggregatedDistributionData.map(data => (
+              <UndecoratedLink to={`/liquidity-mining/${data.id}`} key={data.id}>
+                <AggregatedDistributions token={data.relatedToken} usdRewards={data.usdRewards} />
+              </UndecoratedLink>
+            ))}
+          </AutoRowCleanGap>
+        )}
       </Box>
       <Flex width="100%" justifyContent="flex-end">
         <Box>
-          <Pagination
-            page={page}
-            totalItems={aggregatedDistributionData.length}
-            itemsPerPage={12}
-            onPageChange={setPage}
-          />
+          {aggregatedDistributionData && (
+            <Pagination
+              page={page}
+              totalItems={aggregatedDistributionData.length}
+              itemsPerPage={12}
+              onPageChange={setPage}
+            />
+          )}
         </Box>
       </Flex>
     </Flex>

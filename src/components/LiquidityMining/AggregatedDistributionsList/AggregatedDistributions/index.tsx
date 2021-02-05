@@ -19,7 +19,7 @@ interface AggregatedDistributionsProps {
 
 export default function AggregatedDistributions({ token, usdRewards }: AggregatedDistributionsProps) {
   return (
-    <SizedCard m="8px" selectable>
+    <SizedCard selectable>
       <Flex justifyContent="center" alignItems="center" flexDirection="column" width="100%">
         <Box mb="6px">
           <CurrencyLogo currency={token} size="28px" />

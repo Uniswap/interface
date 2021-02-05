@@ -36,7 +36,7 @@ export default function LiquidityMiningAggregation({
     }
   )
   const [relatedToken, setRelatedToken] = useState<Token | null>(null)
-  const [distributionsPerAsset, setDistributionsPerAsset] = useState<ParsedPerAssetData[]>([])
+  const [distributionsPerAsset, setDistributionsPerAsset] = useState<ParsedPerAssetData[] | null>(null)
 
   // TODO: make this into a hook to clean up component
   useEffect(() => {
@@ -71,9 +71,11 @@ export default function LiquidityMiningAggregation({
     <PageWrapper gap="32px">
       <TitleRow>
         <AutoRow gap="4px">
-          <TYPE.mediumHeader color="text4" lineHeight="24px">
-            {t('liquidityMining.title')}
-          </TYPE.mediumHeader>
+          <Link to="/liquidity-mining">
+            <TYPE.mediumHeader color="text4" lineHeight="24px">
+              {t('liquidityMining.title')}
+            </TYPE.mediumHeader>
+          </Link>
           <TYPE.mediumHeader color="text4" lineHeight="24px">
             /
           </TYPE.mediumHeader>
