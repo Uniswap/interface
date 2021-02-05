@@ -31,7 +31,6 @@ export default function Pagination({ page, totalItems, itemsPerPage, onPageChang
       total={totalItems}
       pageSize={itemsPerPage}
       onChange={onPageChange}
-      hideOnSinglePage
       itemRender={(current, type) => {
         switch (type) {
           case 'next': {

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { AutoRowCleanGap } from '../../Row'
 import AggregatedDistributions from './AggregatedDistributions'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
@@ -23,25 +22,25 @@ export default function AggregatedDistributionList() {
         {!aggregatedDistributions ? (
           <LoadingList />
         ) : (
-          <AutoRowCleanGap gap={8}>
+          <Flex wrap="wrap" height="460px">
             {aggregatedDistributions.map(data => (
-              <UndecoratedLink to={`/liquidity-mining/${data.id}`} key={data.id}>
-                <AggregatedDistributions token={data.relatedToken} usdRewards={data.usdRewards} />
-              </UndecoratedLink>
+              <Box key={data.id} p="4px">
+                <UndecoratedLink to={`/liquidity-mining/${data.id}`}>
+                  <AggregatedDistributions token={data.relatedToken} usdRewards={data.usdRewards} />
+                </UndecoratedLink>
+              </Box>
             ))}
-          </AutoRowCleanGap>
+          </Flex>
         )}
       </Box>
       <Flex width="100%" justifyContent="flex-end">
         <Box>
-          {aggregatedDistributions && (
-            <Pagination
-              page={page}
-              totalItems={aggregatedDistributions.length}
-              itemsPerPage={12}
-              onPageChange={setPage}
-            />
-          )}
+          <Pagination
+            page={page}
+            totalItems={aggregatedDistributions ? aggregatedDistributions.length : 0}
+            itemsPerPage={12}
+            onPageChange={setPage}
+          />
         </Box>
       </Flex>
     </Flex>

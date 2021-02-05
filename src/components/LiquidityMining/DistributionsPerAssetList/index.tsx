@@ -23,16 +23,18 @@ export default function DistributionsPerAssetList({ distributions }: Distributio
           {!distributions ? (
             <LoadingList />
           ) : (
-            <AutoRowCleanGap gap={8}>
+            <Flex wrap="wrap" height="460px">
               {distributions.map(distribution => (
-                <DistributionCard
-                  key={distribution.id}
-                  token0={distribution.token0}
-                  token1={distribution.token1}
-                  usdRewards={distribution.usdRewards}
-                />
+                <Box key={distribution.id} p="4px">
+                  <DistributionCard
+                    key={distribution.id}
+                    token0={distribution.token0}
+                    token1={distribution.token1}
+                    usdRewards={distribution.usdRewards}
+                  />
+                </Box>
               ))}
-            </AutoRowCleanGap>
+            </Flex>
           )}
         </AutoRowCleanGap>
       </Box>
