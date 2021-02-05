@@ -18,13 +18,13 @@ export default function AggregatedDistributionList() {
 
   return (
     <Flex flexDirection="column">
-      <Box mb="8px">
+      <Box mb="8px" height="460px">
         {!aggregatedDistributions ? (
           <LoadingList />
         ) : (
-          <Flex wrap="wrap" height="460px">
+          <Flex wrap="wrap" m="-3px">
             {aggregatedDistributions.map(data => (
-              <Box key={data.id} p="4px">
+              <Box key={data.id} p="3px">
                 <UndecoratedLink to={`/liquidity-mining/${data.id}`}>
                   <AggregatedDistributions token={data.relatedToken} usdRewards={data.usdRewards} />
                 </UndecoratedLink>

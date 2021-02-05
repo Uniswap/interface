@@ -1,6 +1,6 @@
 import React from 'react'
 import { TYPE } from '../../../theme'
-import { PageWrapper, ResponsiveButtonPrimary, TitleRow } from '../styleds'
+import { PageWrapper, ResponsiveButtonPrimary } from '../styleds'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Box, Flex, Text } from 'rebass'
@@ -18,8 +18,8 @@ export default function LiquidityMiningAggregation({
 
   return (
     <PageWrapper gap="32px">
-      <TitleRow>
-        <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between">
+        <Flex>
           <Box mr="6px">
             <Link to="/liquidity-mining">
               <TYPE.mediumHeader color="text4" lineHeight="24px">
@@ -39,12 +39,14 @@ export default function LiquidityMiningAggregation({
             <TYPE.mediumHeader lineHeight="24px">{relatedToken ? relatedToken.symbol : ''}</TYPE.mediumHeader>
           </Box>
         </Flex>
-        <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-          <Text fontWeight={700} fontSize={12}>
-            {t('liquidityMining.action.create')}
-          </Text>
-        </ResponsiveButtonPrimary>
-      </TitleRow>
+        <Box>
+          <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+            <Text fontWeight={700} fontSize={12}>
+              {t('liquidityMining.action.create')}
+            </Text>
+          </ResponsiveButtonPrimary>
+        </Box>
+      </Flex>
       <DistributionsPerAssetList distributions={distributions} />
     </PageWrapper>
   )
