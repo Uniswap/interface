@@ -1,16 +1,10 @@
 import React from 'react'
-import styled from 'styled-components'
-import { Card } from '../../styleds'
 import { Box, Flex } from 'rebass'
 import CurrencyLogo from '../../../CurrencyLogo'
 import { Token } from 'dxswap-sdk'
 import { TYPE } from '../../../../theme'
 import BigNumber from 'bignumber.js'
-
-const SizedCard = styled(Card)`
-  width: 155px;
-  height: 147px;
-`
+import StackedCards from '../../../StackedCards'
 
 interface AggregatedDistributionsProps {
   token: Token
@@ -19,7 +13,7 @@ interface AggregatedDistributionsProps {
 
 export default function AggregatedDistributions({ token, usdRewards }: AggregatedDistributionsProps) {
   return (
-    <SizedCard selectable>
+    <StackedCards>
       <Flex justifyContent="center" alignItems="center" flexDirection="column" width="100%">
         <Box mb="6px">
           <CurrencyLogo currency={token} size="28px" />
@@ -35,6 +29,6 @@ export default function AggregatedDistributions({ token, usdRewards }: Aggregate
           </TYPE.subHeader>
         </Box>
       </Flex>
-    </SizedCard>
+    </StackedCards>
   )
 }
