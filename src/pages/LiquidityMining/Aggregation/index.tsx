@@ -19,7 +19,7 @@ export default function LiquidityMiningAggregation({
 
   return (
     <PageWrapper gap="32px">
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" alignItems="center">
         <Flex>
           <Box mr="6px">
             <Link to="/liquidity-mining">

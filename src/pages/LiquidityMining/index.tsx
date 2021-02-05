@@ -12,7 +12,7 @@ export default function LiquidityMining() {
 
   return (
     <PageWrapper gap="32px">
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" alignItems="center">
         <Box>
           <TYPE.mediumHeader lineHeight="24px">{t('liquidityMining.title')}</TYPE.mediumHeader>
         </Box>

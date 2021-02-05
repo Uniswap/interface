@@ -20,6 +20,7 @@ export default function Pagination({ page, totalItems, itemsPerPage, onPageChang
       onChange={onPageChange}
       prevIcon={<ChevronLeft size={14} />}
       nextIcon={<ChevronRight size={14} />}
+      hideOnSinglePage
     />
   )
 }
