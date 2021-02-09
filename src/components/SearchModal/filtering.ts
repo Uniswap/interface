@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { isAddress } from '../../utils'
 import { Token } from '@uniswap/sdk'
 
@@ -41,4 +42,40 @@ export function filterTokens(tokens: Token[], search: string): Token[] {
   //   }
   //   return 0
   // })
+}
+
+export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery: string): Token[] {
+  return useMemo(() => {
+    if (!tokens) {
+      return []
+    }
+
+    const symbolMatch = searchQuery
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(s => s.length > 0)
+
+    if (symbolMatch.length > 1) {
+      return tokens
+    }
+
+    return [
+      // sort any exact symbol matches first
+      ...tokens.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
+
+      // sort by tokens whos symbols start with search substrng
+      ...tokens.filter(
+        token =>
+          token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
+          token.symbol?.toLowerCase() !== symbolMatch[0]
+      ),
+
+      // rest that dont match upove
+      ...tokens.filter(
+        token =>
+          !token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
+          token.symbol?.toLowerCase() !== symbolMatch[0]
+      )
+    ]
+  }, [tokens, searchQuery])
 }

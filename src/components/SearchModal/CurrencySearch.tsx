@@ -12,7 +12,7 @@ import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens } from './filtering'
+import { filterTokens, useSortedTokensByQuery } from './filtering'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -22,7 +22,6 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
 import { Edit } from 'react-feather'
-import { ButtonLight } from 'components/Button'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -102,36 +101,11 @@ export function CurrencySearch({
     return filterTokens(Object.values(allTokens), searchQuery)
   }, [allTokens, searchQuery])
 
-  const filteredSortedTokens: Token[] = useMemo(() => {
-    const sorted = filteredTokens.sort(tokenComparator)
-    const symbolMatch = searchQuery
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(s => s.length > 0)
+  const sortedTokens: Token[] = useMemo(() => {
+    return filteredTokens.sort(tokenComparator)
+  }, [filteredTokens, tokenComparator])
 
-    if (symbolMatch.length > 1) {
-      return sorted
-    }
-
-    return [
-      // sort any exact symbol matches first
-      ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
-
-      // sort by tokens whos symbols start with search substrng
-      ...sorted.filter(
-        token =>
-          token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
-          token.symbol?.toLowerCase() !== symbolMatch[0]
-      ),
-
-      // rest that dont match upove
-      ...sorted.filter(
-        token =>
-          !token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
-          token.symbol?.toLowerCase() !== symbolMatch[0]
-      )
-    ]
-  }, [filteredTokens, searchQuery, tokenComparator])
+  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, searchQuery)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -180,15 +154,8 @@ export function CurrencySearch({
   useOnClickOutside(node, open ? toggle : undefined)
 
   // if no results on main list, show option to expand into inactive
-  const [showExpanded, setShowExpanded] = useState(false)
   const inactiveTokens = useFoundOnInactiveList(searchQuery)
-
-  // reset expanded results on query reset
-  useEffect(() => {
-    if (searchQuery === '') {
-      setShowExpanded(false)
-    }
-  }, [setShowExpanded, searchQuery])
+  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, searchQuery)
 
   return (
     <ContentWrapper>
@@ -220,7 +187,7 @@ export function CurrencySearch({
         <Column style={{ padding: '20px 0', height: '100%' }}>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
-      ) : filteredSortedTokens?.length > 0 || (showExpanded && inactiveTokens && inactiveTokens.length > 0) ? (
+      ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
         <div style={{ flex: '1' }}>
           <AutoSizer disableWidth>
             {({ height }) => (
@@ -228,8 +195,9 @@ export function CurrencySearch({
                 height={height}
                 showETH={showETH}
                 currencies={
-                  showExpanded && inactiveTokens ? filteredSortedTokens.concat(inactiveTokens) : filteredSortedTokens
+                  filteredInactiveTokens ? filteredSortedTokens.concat(filteredInactiveTokens) : filteredSortedTokens
                 }
+                breakIndex={inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined}
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
                 selectedCurrency={selectedCurrency}
@@ -243,49 +211,10 @@ export function CurrencySearch({
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
           <TYPE.main color={theme.text3} textAlign="center" mb="20px">
-            No results found in active lists.
+            No results found.
           </TYPE.main>
-          {inactiveTokens &&
-            inactiveTokens.length > 0 &&
-            !(searchToken && !searchTokenIsAdded) &&
-            searchQuery.length > 1 &&
-            filteredSortedTokens?.length === 0 && (
-              // expand button in line with no results
-              <Row align="center" width="100%" justify="center">
-                <ButtonLight
-                  width="fit-content"
-                  borderRadius="12px"
-                  padding="8px 12px"
-                  onClick={() => setShowExpanded(!showExpanded)}
-                >
-                  {!showExpanded
-                    ? `Show ${inactiveTokens.length} more inactive ${inactiveTokens.length === 1 ? 'token' : 'tokens'}`
-                    : 'Hide expanded search'}
-                </ButtonLight>
-              </Row>
-            )}
         </Column>
       )}
-
-      {inactiveTokens &&
-        inactiveTokens.length > 0 &&
-        !(searchToken && !searchTokenIsAdded) &&
-        (searchQuery.length > 1 || showExpanded) &&
-        (filteredSortedTokens?.length !== 0 || showExpanded) && (
-          // button fixed to bottom
-          <Row align="center" width="100%" justify="center" style={{ position: 'absolute', bottom: '80px', left: 0 }}>
-            <ButtonLight
-              width="fit-content"
-              borderRadius="12px"
-              padding="8px 12px"
-              onClick={() => setShowExpanded(!showExpanded)}
-            >
-              {!showExpanded
-                ? `Show ${inactiveTokens.length} more inactive ${inactiveTokens.length === 1 ? 'token' : 'tokens'}`
-                : 'Hide expanded search'}
-            </ButtonLight>
-          </Row>
-        )}
       <Footer>
         <Row justify="center">
           <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
