@@ -38,6 +38,24 @@ export const PinkCard = styled(Card)`
   font-weight: 500;
 `
 
+export const DarkCard = styled(Card)<{ selectable?: boolean }>`
+  background-image: linear-gradient(180deg, rgba(41, 38, 67, 0) 0%, rgba(68, 65, 99, 0.5) 100%);
+  position: relative;
+  cursor: ${props => (props.selectable ? 'pointer' : 'auto')};
+  z-index: 0;
+  ::before {
+    background-color: ${props => props.theme.bg1};
+    content: '';
+    z-index: -1;
+    top: 1px;
+    left: 1px;
+    bottom: 1px;
+    right: 1px;
+    position: absolute;
+    border-radius: 8px;
+  }
+`
+
 const BlueCardStyled = styled(Card)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primary1};

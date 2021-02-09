@@ -268,13 +268,12 @@ function Header({ history }: { history: any }) {
           </StyledNavLink>
           <StyledNavLink
             id={`pool-nav-link`}
-            to={'/pool'}
+            to={'/pools'}
             isActive={() =>
-              history.location.pathname.includes('/pool') ||
+              history.location.pathname.includes('/pools') ||
               history.location.pathname.includes('/add') ||
               history.location.pathname.includes('/remove') ||
-              (history.location.pathname.includes('/create') &&
-                !history.location.pathname.includes('/liquidity-mining'))
+              history.location.pathname.includes('/create')
             }
           >
             {t('pool')}
@@ -287,12 +286,6 @@ function Header({ history }: { history: any }) {
               </Box>
             </AbsoluteComingSoonBadgeFlex>
           </StyledNavLinkWithBadge>
-          <StyledNavLink
-            to={'/liquidity-mining'}
-            isActive={() => history.location.pathname.includes('/liquidity-mining')}
-          >
-            {t('liquidityMining.header')}
-          </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link/'}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">

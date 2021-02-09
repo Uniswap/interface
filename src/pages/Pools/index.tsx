@@ -1,22 +1,20 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Pair } from 'dxswap-sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { PageWrapper } from './styleds'
 
-import FullPositionCard from '../../components/PositionCard'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { OutlineCard } from '../../components/Card'
 import { TYPE, HideSmall, StyledInternalLink } from '../../theme'
-import { Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary, ButtonWithLink } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
-import { usePairs } from '../../data/Reserves'
-import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import threeBlurredCircles from '../../assets/svg/three-blurred-circles.svg'
+import { ChevronDown } from 'react-feather'
+import AggregatedPairsList from '../../components/Pool/AggregatedPairsList'
 import { CardSection } from '../../components/earn/styled'
 
 const VoteCard = styled.div`
@@ -58,45 +56,8 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   `};
 `
 
-const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text5};
-  border-radius: 8px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
-
-export default function Pool() {
+export default function Pools() {
   const { account } = useActiveWeb3React()
-
-  // fetch the user's balances of all tracked DXSwap LP tokens
-  const trackedTokenPairs = useTrackedTokenPairs()
-
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toDXSwapLiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
-  )
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
-    tokenPairsWithLiquidityTokens
-  ])
-  const [dxSwapPairsBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, liquidityTokens)
-
-  // fetch the reserves for all DXSwap pools in which the user has a balance
-  const liquidityTokensWithBalances = useMemo(
-    () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        dxSwapPairsBalances[liquidityToken.address]?.greaterThan('0')
-      ),
-    [tokenPairsWithLiquidityTokens, dxSwapPairsBalances]
-  )
-
-  const dxSwapPairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-
-  const allDXSwapPairsWithLiquidity = dxSwapPairs
-    .map(([, pair]) => pair)
-    .filter((dxSwapPair): dxSwapPair is Pair => Boolean(dxSwapPair))
 
   return (
     <>
@@ -107,19 +68,41 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader lineHeight="24px">Your liquidity</TYPE.mediumHeader>
+                <Flex alignItems="center">
+                  <Box mr="8px">
+                    <Text fontSize="26px" lineHeight="32px">
+                      Pairs
+                    </Text>
+                  </Box>
+                  <Box mr="8px">
+                    <Text fontSize="26px" lineHeight="32px">
+                      /
+                    </Text>
+                  </Box>
+                  <Box mr="4px">
+                    <img src={threeBlurredCircles} alt="Circles" />
+                  </Box>
+                  <Box mr="4px">
+                    <Text fontWeight="600" fontSize="16px" lineHeight="20px">
+                      ALL
+                    </Text>
+                  </Box>
+                  <Box>
+                    <ChevronDown size={12} />
+                  </Box>
+                </Flex>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/create">
-                  <Text fontWeight={700} fontSize={12} lineHeight="15px">
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
+                  <Text fontWeight={700} fontSize={12}>
                     CREATE PAIR
                   </Text>
-                </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/add/ETH">
-                  <Text fontWeight={700} fontSize={12}>
-                    ADD LIQUIDITY
-                  </Text>
                 </ResponsiveButtonPrimary>
+                <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+                  <Text fontWeight={700} fontSize={12} lineHeight="15px">
+                    CREATE LIQ. MINING
+                  </Text>
+                </ResponsiveButtonSecondary>
               </ButtonRow>
             </TitleRow>
 
@@ -129,16 +112,8 @@ export default function Pool() {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </OutlineCard>
-            ) : allDXSwapPairsWithLiquidity?.length > 0 ? (
-              allDXSwapPairsWithLiquidity.map(dxSwapPair => (
-                <FullPositionCard key={dxSwapPair.liquidityToken.address} pair={dxSwapPair} />
-              ))
             ) : (
-              <EmptyProposals>
-                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
-                  No liquidity found
-                </TYPE.body>
-              </EmptyProposals>
+              <AggregatedPairsList />
             )}
           </AutoColumn>
         </AutoColumn>
@@ -172,12 +147,6 @@ export default function Pool() {
                   it uses 0.25% as default value that is assigned when the pair is created.
                 </TYPE.body>
               </RowBetween>
-              {/*<RowBetween>*/}
-              {/*  /!* TODO: this should be a link to a blog post or something *!/*/}
-              {/*  <TYPE.body fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>*/}
-              {/*    Read more about providing liquidity*/}
-              {/*  </TYPE.body>*/}
-              {/*</RowBetween>*/}
             </AutoColumn>
           </CardSection>
         </VoteCard>

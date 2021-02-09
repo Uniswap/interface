@@ -6,7 +6,7 @@ import { Flex, Text } from 'rebass'
 import { ETHER } from 'dxswap-sdk'
 
 import { TYPE } from '../../theme'
-import { PageWrapper } from '../Pool/styleds'
+import { PageWrapper } from '../Pools/styleds'
 
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'

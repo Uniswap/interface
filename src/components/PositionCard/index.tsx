@@ -1,5 +1,4 @@
 import { JSBI, Pair, Percent } from 'dxswap-sdk'
-import { transparentize } from 'polished'
 import React, { useContext, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -14,12 +13,11 @@ import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonSecondary } from '../Button'
 
-import Card, { LightCard, OutlineCard } from '../Card'
+import Card, { DarkCard, OutlineCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed } from '../Row'
-import { Dots } from '../swap/styleds'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -33,13 +31,17 @@ const PointableFixedHeightRow = styled(FixedHeightRow)`
   cursor: pointer;
 `
 
-const StyledPositionCard = styled(LightCard)`
+const StyledPositionCard = styled(DarkCard)`
   border: none;
-  padding: 20px;
+  padding: 24px 36px;
   color: white;
-  background: ${({ theme }) => transparentize(0.28, theme.bg1)};
   position: relative;
   overflow: hidden;
+  ::before {
+    background-blend-mode: lighten;
+    background: linear-gradient(142.02deg, rgba(42, 29, 147, 0.6) 0.23%, rgba(42, 29, 147, 0) 73.04%);
+    background-color: #171621;
+  }
 `
 
 interface PositionCardProps {
@@ -192,9 +194,8 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
       <AutoColumn gap="12px">
         <PointableFixedHeightRow onClick={() => setShowMore(!showMore)}>
           <RowFixed>
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
             <Text fontWeight={600} fontSize="16px" lineHeight="20px">
-              {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+              Your liquidity
             </Text>
           </RowFixed>
 
@@ -205,10 +206,10 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               </>
             ) : (
               <>
-                <TYPE.body fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>
+                <TYPE.body color="white" fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>
                   Expand
                 </TYPE.body>
-                <ChevronDown color={theme.text5} size="20" style={{ marginLeft: '10px' }} />
+                <ChevronDown color={theme.white} size="20" style={{ marginLeft: '10px' }} />
               </>
             )}
           </RowFixed>

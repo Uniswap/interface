@@ -58,3 +58,19 @@ export const GET_DISTRIBUTIONS_BY_AGGREGATION = gql`
     }
   }
 `
+
+export const GET_PAIR_24H_VOLUME_USD = gql`
+  query getPair24hVolume($id: ID!) {
+    pair(id: $id) {
+      volumeUSD
+    }
+  }
+`
+
+export const GET_PAIR_LIQUIDITY_USD = gql`
+  query getPair24hVolume($id: ID!) {
+    pair(id: $id) {
+      reserveUSD
+    }
+  }
+`

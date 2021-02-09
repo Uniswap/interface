@@ -37,7 +37,7 @@ import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { ClickableText } from '../Pool/styleds'
+import { ClickableText } from '../Pools/styleds'
 import Loader from '../../components/Loader'
 
 const RotatedRepeat = styled(Repeat)`

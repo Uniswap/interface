@@ -11,15 +11,15 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds, RedirectOldAddLiquidityPathStructure } from './AddLiquidity/redirects'
-import LiquidityMining from './LiquidityMining'
-import CreateLiquidityMining from './LiquidityMining/Create'
-import LiquidityMiningAggregation from './LiquidityMining/Aggregation'
-import Pool from './Pool'
+import Pools from './Pools'
+import PairsByToken0 from './Pools/PairsByToken0'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import Pair from './Pools/Pair'
+import CreateLiquidityMining from './LiquidityMining/Create'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -80,7 +80,9 @@ export default function App() {
                   <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                   <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                   <Route exact strict path="/find" component={PoolFinder} />
-                  <Route exact strict path="/pool" component={Pool} />
+                  <Route exact strict path="/pools" component={Pools} />
+                  <Route exact strict path="/pools/:currencyIdA" component={PairsByToken0} />
+                  <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pair} />
                   <Route exact strict path="/create" component={AddLiquidity} />
                   <Route exact path="/add" component={AddLiquidity} />
                   {/* <Route exact strict path="/governance" component={GovPages} /> */}
@@ -89,9 +91,7 @@ export default function App() {
                   <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
                   <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
                   <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                  <Route exact strict path="/liquidity-mining" component={LiquidityMining} />
                   <Route exact strict path="/liquidity-mining/create" component={CreateLiquidityMining} />
-                  <Route exact strict path="/liquidity-mining/:aggregationId" component={LiquidityMiningAggregation} />
                   <Route component={RedirectPathToSwapOnly} />
                 </Switch>
               </Web3ReactManager>

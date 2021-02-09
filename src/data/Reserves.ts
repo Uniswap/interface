@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency } from 'dxswap-sdk'
+import { TokenAmount, Pair, Currency, Token } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
@@ -90,6 +90,76 @@ export function useExistingRawPairs(): Pair[] {
       return existingPairs
     }, [])
   }, [results])
+}
+
+export function useAggregatedByToken0ExistingPairs(): {
+  loading: boolean
+  aggregatedData: {
+    token0: Token
+    pairsNumber: number
+  }[]
+} {
+  const rawPairsList = useTrackedTokenPairs()
+  const results = usePairs(rawPairsList)
+
+  return useMemo(() => {
+    const loading = !!results.find(result => result[0] === PairState.LOADING)
+    if (loading) {
+      return { loading, aggregatedData: [] }
+    }
+    const rawData = results.reduce(
+      (
+        rawAggregatedPairs: {
+          [token0Address: string]: {
+            token0: Token
+            pairsNumber: number
+          }
+        },
+        result
+      ) => {
+        if (result && result[0] === PairState.EXISTS && result[1]) {
+          const pairToken0 = result[1].token0
+          if (!!rawAggregatedPairs[pairToken0.address]) {
+            rawAggregatedPairs[pairToken0.address].pairsNumber++
+          } else {
+            rawAggregatedPairs[pairToken0.address] = {
+              token0: pairToken0,
+              pairsNumber: 1
+            }
+          }
+        }
+        return rawAggregatedPairs
+      },
+      {}
+    )
+    return { loading: false, aggregatedData: Object.values(rawData) }
+  }, [results])
+}
+
+export function usePairsByToken0(
+  token0?: Token | null
+): {
+  loading: boolean
+  pairs: Pair[]
+} {
+  const rawPairsList = useTrackedTokenPairs()
+  const results = usePairs(rawPairsList)
+
+  return useMemo(() => {
+    const loading = !!results.find(result => result[0] === PairState.LOADING)
+    if (loading) {
+      return { loading, pairs: [] }
+    }
+    return {
+      loading: false,
+      pairs: results.reduce((pairs: Pair[], result) => {
+        if (result && result[0] === PairState.EXISTS && result[1] && result[1].token0.address === token0?.address) {
+          pairs.push(result[1])
+        }
+        return pairs
+      }, [])
+    }
+  }, [results, token0])
 }
 
 export function usePairAtAddress(address?: string): Pair | null {

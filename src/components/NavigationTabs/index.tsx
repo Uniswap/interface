@@ -61,7 +61,7 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
       <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
         {t('swap')}
       </StyledNavLink>
-      <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
+      <StyledNavLink id={`pool-nav-link`} to={'/pools'} isActive={() => active === 'pool'}>
         {t('pool')}
       </StyledNavLink>
     </Tabs>
@@ -72,7 +72,7 @@ export function FindPoolTabs() {
   return (
     <Tabs>
       <RowBetween mb="16px">
-        <HistoryLink to="/pool">
+        <HistoryLink to="/pools">
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>Import Pool</ActiveText>
@@ -86,7 +86,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
   return (
     <Tabs>
       <RowBetween mb="16px">
-        <HistoryLink to="/pool">
+        <HistoryLink to="/pools">
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
