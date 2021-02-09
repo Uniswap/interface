@@ -33,15 +33,6 @@ export function filterTokens(tokens: Token[], search: string): Token[] {
     const { symbol, name } = token
     return (symbol && matchesSearch(symbol)) || (name && matchesSearch(name))
   })
-  // .sort((t0: Token, t1: Token) => {
-  //   if (t0.symbol && matchesSearch(t0.symbol) && t1.symbol && !matchesSearch(t1.symbol)) {
-  //     return -1
-  //   }
-  //   if (t0.symbol && !matchesSearch(t0.symbol) && t1.symbol && matchesSearch(t1.symbol)) {
-  //     return 1
-  //   }
-  //   return 0
-  // })
 }
 
 export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery: string): Token[] {
@@ -59,23 +50,21 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       return tokens
     }
 
-    return [
-      // sort any exact symbol matches first
-      ...tokens.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
+    const exactMatches: Token[] = []
+    const symbolSubtrings: Token[] = []
+    const rest: Token[] = []
 
-      // sort by tokens whos symbols start with search substrng
-      ...tokens.filter(
-        token =>
-          token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
-          token.symbol?.toLowerCase() !== symbolMatch[0]
-      ),
+    // sort tokens by exact match -> subtring on symbol match -> rest
+    tokens.map(token => {
+      if (token.symbol?.toLowerCase() === symbolMatch[0]) {
+        return exactMatches.push(token)
+      } else if (token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim())) {
+        return symbolSubtrings.push(token)
+      } else {
+        return rest.push(token)
+      }
+    })
 
-      // rest that dont match upove
-      ...tokens.filter(
-        token =>
-          !token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
-          token.symbol?.toLowerCase() !== symbolMatch[0]
-      )
-    ]
+    return [...exactMatches, ...symbolSubtrings, ...rest]
   }, [tokens, searchQuery])
 }

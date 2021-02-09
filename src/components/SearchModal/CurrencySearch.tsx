@@ -22,6 +22,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
 import { Edit } from 'react-feather'
+import useDebounce from 'hooks/useDebounce'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -70,14 +71,15 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const debouncedQuery = useDebounce(searchQuery, 150)
+
   const [invertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
-  // const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
 
   // if they input an address, use it
-  const isAddressSearch = isAddress(searchQuery)
-  const searchToken = useToken(searchQuery)
+  const isAddressSearch = isAddress(debouncedQuery)
+  const searchToken = useToken(debouncedQuery)
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   useEffect(() => {
@@ -91,21 +93,21 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const showETH: boolean = useMemo(() => {
-    const s = searchQuery.toLowerCase().trim()
+    const s = debouncedQuery.toLowerCase().trim()
     return s === '' || s === 'e' || s === 'et' || s === 'eth'
-  }, [searchQuery])
+  }, [debouncedQuery])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
-    return filterTokens(Object.values(allTokens), searchQuery)
-  }, [allTokens, searchQuery])
+    return filterTokens(Object.values(allTokens), debouncedQuery)
+  }, [allTokens, debouncedQuery])
 
   const sortedTokens: Token[] = useMemo(() => {
     return filteredTokens.sort(tokenComparator)
   }, [filteredTokens, tokenComparator])
 
-  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, searchQuery)
+  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -132,12 +134,12 @@ export function CurrencySearch({
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        const s = searchQuery.toLowerCase().trim()
+        const s = debouncedQuery.toLowerCase().trim()
         if (s === 'eth') {
           handleCurrencySelect(ETHER)
         } else if (filteredSortedTokens.length > 0) {
           if (
-            filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||
+            filteredSortedTokens[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
             filteredSortedTokens.length === 1
           ) {
             handleCurrencySelect(filteredSortedTokens[0])
@@ -145,7 +147,7 @@ export function CurrencySearch({
         }
       }
     },
-    [filteredSortedTokens, handleCurrencySelect, searchQuery]
+    [filteredSortedTokens, handleCurrencySelect, debouncedQuery]
   )
 
   // menu ui
@@ -154,8 +156,8 @@ export function CurrencySearch({
   useOnClickOutside(node, open ? toggle : undefined)
 
   // if no results on main list, show option to expand into inactive
-  const inactiveTokens = useFoundOnInactiveList(searchQuery)
-  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, searchQuery)
+  const inactiveTokens = useFoundOnInactiveList(debouncedQuery)
+  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, debouncedQuery)
 
   return (
     <ContentWrapper>

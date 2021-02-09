@@ -17,7 +17,7 @@ import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
 import ImportRow from './ImportRow'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { LighgGreyCard } from 'components/Card'
+import { LightGreyCard } from 'components/Card'
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
@@ -195,7 +195,7 @@ export default function CurrencyList({
       if (index === breakIndex || !data) {
         return (
           <FixedContentRow style={style}>
-            <LighgGreyCard padding="8px 12px" borderRadius="8px">
+            <LightGreyCard padding="8px 12px" borderRadius="8px">
               <RowBetween>
                 <RowFixed>
                   <TokenListLogoWrapper src={TokenListLogo} />
@@ -205,7 +205,7 @@ export default function CurrencyList({
                 </RowFixed>
                 <QuestionHelper text="Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists." />
               </RowBetween>
-            </LighgGreyCard>
+            </LightGreyCard>
           </FixedContentRow>
         )
       }
