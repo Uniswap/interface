@@ -99,9 +99,9 @@ export function useApproveCallback(
               action: 'Approve Token'
             }
           })
+          throw error
         }
         console.debug('Failed to approve token', error)
-        throw error
       })
   }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
 
