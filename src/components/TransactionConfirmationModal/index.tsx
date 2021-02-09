@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainId, Token, Currency } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
@@ -7,7 +7,7 @@ import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { RowBetween } from '../Row'
 import { AlertTriangle, ArrowUpCircle } from 'react-feather'
-import { ButtonPrimary } from '../Button'
+import { ButtonPrimary, ButtonLight } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
 
@@ -63,13 +63,37 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
-  hash
+  hash,
+  currencyToAdd
 }: {
   onDismiss: () => void
   hash: string | undefined
   chainId: ChainId
+  currencyToAdd?: Currency | undefined
 }) {
   const theme = useContext(ThemeContext)
+
+  const { library } = useActiveWeb3React()
+
+  const onAddToken = async () => {
+    // if (library && library.provider.isMetaMask && library.provider.sendAsync) {
+    //   library.provider.sendAsync(
+    //     {
+    //       method: 'wallet_watchAsset',
+    //       params: {
+    //         type: 'ERC20',
+    //         options: {
+    //           address: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
+    //           symbol: 'FOO',
+    //           decimals: 18,
+    //           image: 'https://foo.io/token-image.svg'
+    //         }
+    //       }
+    //     },
+    //     error => console.log(error)
+    //   )
+    // }
+  }
 
   return (
     <Wrapper>
@@ -91,6 +115,11 @@ function TransactionSubmittedContent({
                 View on Etherscan
               </Text>
             </ExternalLink>
+          )}
+          {currencyToAdd && (
+            <ButtonLight padding="6px 12px" width="fit-content" onClick={onAddToken}>
+              Add {currencyToAdd.symbol} to Metamask
+            </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
@@ -162,6 +191,7 @@ interface ConfirmationModalProps {
   content: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
+  currencyToAdd?: Currency | undefined
 }
 
 export default function TransactionConfirmationModal({
@@ -170,7 +200,8 @@ export default function TransactionConfirmationModal({
   attemptingTxn,
   hash,
   pendingText,
-  content
+  content,
+  currencyToAdd
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -182,7 +213,12 @@ export default function TransactionConfirmationModal({
       {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
-        <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} />
+        <TransactionSubmittedContent
+          chainId={chainId}
+          hash={hash}
+          onDismiss={onDismiss}
+          currencyToAdd={currencyToAdd}
+        />
       ) : (
         content()
       )}

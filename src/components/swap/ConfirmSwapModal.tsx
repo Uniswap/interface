@@ -101,9 +101,10 @@ export default function ConfirmSwapModal({
       isOpen={isOpen}
       onDismiss={onDismiss}
       attemptingTxn={attemptingTxn}
-      hash={txHash}
+      hash={'0xc427a2c4b95cd85a8f27078fc5832f335e5354725fb463bafa6354931654c531'}
       content={confirmationContent}
       pendingText={pendingText}
+      currencyToAdd={trade?.outputAmount.currency}
     />
   )
 }

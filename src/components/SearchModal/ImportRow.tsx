@@ -103,7 +103,6 @@ export default function ImportRow({
           <TYPE.main color={theme.green1}>Active</TYPE.main>
         </RowFixed>
       )}
-      {/* </RowBetween> */}
     </TokenSection>
   )
 }

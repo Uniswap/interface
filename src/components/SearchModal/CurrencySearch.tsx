@@ -74,7 +74,6 @@ export function CurrencySearch({
   const [invertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
-  // const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
 
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
