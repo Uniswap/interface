@@ -17,8 +17,10 @@ import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
 import ImportRow from './ImportRow'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { GreyCard } from 'components/Card'
-import TokenListLogo from '../../assets/images/token-list-logo.png'
+import { LighgGreyCard } from 'components/Card'
+import TokenListLogo from '../../assets/svg/tokenlist.svg'
+import QuestionHelper from 'components/QuestionHelper'
+import useTheme from 'hooks/useTheme'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -51,13 +53,6 @@ const FixedContentRow = styled.div`
   display: grid;
   grid-gap: 16px;
   align-items: center;
-`
-
-const InnerCard = styled(GreyCard)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: ${({ theme }) => theme.bg4};
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
@@ -180,6 +175,7 @@ export default function CurrencyList({
   }, [breakIndex, currencies, showETH])
 
   const { chainId } = useActiveWeb3React()
+  const theme = useTheme()
 
   const inactiveTokens: {
     [address: string]: Token
@@ -199,16 +195,17 @@ export default function CurrencyList({
       if (index === breakIndex || !data) {
         return (
           <FixedContentRow style={style}>
-            <GreyCard padding="8px 12px" borderRadius="8px">
+            <LighgGreyCard padding="8px 12px" borderRadius="8px">
               <RowBetween>
-                <InnerCard padding="4px 8px" width="fit-content" borderRadius="8px">
+                <RowFixed>
                   <TokenListLogoWrapper src={TokenListLogo} />
-                </InnerCard>
-                <TYPE.main ml="10px" fontSize="12px">
-                  Additional Results
-                </TYPE.main>
+                  <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
+                    Expanded results from inactive Token Lists
+                  </TYPE.main>
+                </RowFixed>
+                <QuestionHelper text="Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists." />
               </RowBetween>
-            </GreyCard>
+            </LighgGreyCard>
           </FixedContentRow>
         )
       }
@@ -243,7 +240,8 @@ export default function CurrencyList({
       selectedCurrency,
       setImportToken,
       showImportView,
-      breakIndex
+      breakIndex,
+      theme.text1
     ]
   )
 
