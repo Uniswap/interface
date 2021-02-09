@@ -5,8 +5,8 @@ import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
-import { RowBetween } from '../Row'
-import { AlertTriangle, ArrowUpCircle } from 'react-feather'
+import { RowBetween, RowFixed } from '../Row'
+import { AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { ButtonPrimary, ButtonLight } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
@@ -82,7 +82,7 @@ function TransactionSubmittedContent({
 
   const { library } = useActiveWeb3React()
 
-  const { addToken } = useAddTokenToMetamask(currencyToAdd)
+  const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
 
   return (
     <Wrapper>
@@ -107,7 +107,16 @@ function TransactionSubmittedContent({
           )}
           {currencyToAdd && library?.provider?.isMetaMask && (
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
-              Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+              {!success ? (
+                <RowFixed>
+                  Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+                </RowFixed>
+              ) : (
+                <RowFixed>
+                  Added {currencyToAdd.symbol}{' '}
+                  <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
+                </RowFixed>
+              )}
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>

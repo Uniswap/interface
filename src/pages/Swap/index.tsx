@@ -303,12 +303,12 @@ export default function Swap() {
         <SwapHeader />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
-            isOpen={showConfirm}
+            isOpen={true}
             trade={trade}
             originalTrade={tradeToConfirm}
             onAcceptChanges={handleAcceptChanges}
             attemptingTxn={attemptingTxn}
-            txHash={txHash}
+            txHash={'0xf5401415ebb62a5919905b85f24604d8cb63ceab0ad42e292b9f5e931d1f0206'}
             recipient={recipient}
             allowedSlippage={allowedSlippage}
             onConfirm={handleSwap}

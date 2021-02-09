@@ -6,12 +6,12 @@ import { useActiveWeb3React } from 'hooks'
 
 export default function useAddTokenToMetamask(
   currencyToAdd: Currency | undefined
-): { addToken: () => void; success: boolean } {
+): { addToken: () => void; success: boolean | undefined } {
   const { library, chainId } = useActiveWeb3React()
 
   const token: Token | undefined = wrappedCurrency(currencyToAdd, chainId)
 
-  const [success, setSuccess] = useState(true)
+  const [success, setSuccess] = useState<boolean | undefined>()
 
   const addToken = useCallback(() => {
     if (library && library.provider.isMetaMask && library.provider.request && token) {
@@ -30,7 +30,9 @@ export default function useAddTokenToMetamask(
             }
           }
         })
-        .then(success => setSuccess(success))
+        .then(success => {
+          setSuccess(success)
+        })
         .catch(() => setSuccess(false))
     } else {
       setSuccess(false)
