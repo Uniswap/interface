@@ -6,6 +6,7 @@ import { Box, Flex } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
 import { useAggregatedDistributions } from '../../../hooks/useAggregatedDistributions'
+import Empty from '../Empty'
 
 const UndecoratedLink = styled(Link)`
   text-decoration: none;
@@ -21,6 +22,8 @@ export default function AggregatedDistributionList() {
       <Box mb="8px" height="460px">
         {!aggregatedDistributions ? (
           <LoadingList />
+        ) : [].length === 0 ? (
+          <Empty />
         ) : (
           <Flex wrap="wrap" m="-8px">
             {aggregatedDistributions.map(data => (
