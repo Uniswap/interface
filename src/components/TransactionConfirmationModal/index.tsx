@@ -1,4 +1,4 @@
-import { ChainId, Token, Currency } from '@uniswap/sdk'
+import { ChainId, Currency } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
@@ -10,9 +10,10 @@ import { AlertTriangle, ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary, ButtonLight } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
-
+import MetaMaskLogo from '../../assets/images/metamask.png'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
+import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -29,6 +30,12 @@ const BottomSection = styled(Section)`
 
 const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
+`
+
+const StyledLogo = styled.img`
+  height: 16px;
+  width: 16px;
+  margin-left: 6px;
 `
 
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
@@ -75,25 +82,7 @@ function TransactionSubmittedContent({
 
   const { library } = useActiveWeb3React()
 
-  const onAddToken = async () => {
-    // if (library && library.provider.isMetaMask && library.provider.sendAsync) {
-    //   library.provider.sendAsync(
-    //     {
-    //       method: 'wallet_watchAsset',
-    //       params: {
-    //         type: 'ERC20',
-    //         options: {
-    //           address: '0xb60e8dd61c5d32be8058bb8eb970870f07233155',
-    //           symbol: 'FOO',
-    //           decimals: 18,
-    //           image: 'https://foo.io/token-image.svg'
-    //         }
-    //       }
-    //     },
-    //     error => console.log(error)
-    //   )
-    // }
-  }
+  const { addToken } = useAddTokenToMetamask(currencyToAdd)
 
   return (
     <Wrapper>
@@ -116,9 +105,9 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {currencyToAdd && (
-            <ButtonLight padding="6px 12px" width="fit-content" onClick={onAddToken}>
-              Add {currencyToAdd.symbol} to Metamask
+          {currencyToAdd && library?.provider?.isMetaMask && (
+            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
+              Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
             </ButtonLight>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
