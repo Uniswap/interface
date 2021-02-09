@@ -71,7 +71,7 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const debouncedQuery = useDebounce(searchQuery, 150)
+  const debouncedQuery = useDebounce(searchQuery, 200)
 
   const [invertSearchOrder] = useState<boolean>(false)
 
