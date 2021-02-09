@@ -9,7 +9,7 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
 import Column from '../Column'
-import { RowFixed } from '../Row'
+import { RowFixed, RowBetween } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 import { MouseoverTooltip } from '../Tooltip'
 import { MenuItem } from './styleds'
@@ -17,6 +17,10 @@ import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
 import ImportRow from './ImportRow'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
+import { LightGreyCard } from 'components/Card'
+import TokenListLogo from '../../assets/svg/tokenlist.svg'
+import QuestionHelper from 'components/QuestionHelper'
+import useTheme from 'hooks/useTheme'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -43,6 +47,14 @@ const Tag = styled.div`
   margin-right: 4px;
 `
 
+const FixedContentRow = styled.div`
+  padding: 4px 20px;
+  height: 56px;
+  display: grid;
+  grid-gap: 16px;
+  align-items: center;
+`
+
 function Balance({ balance }: { balance: CurrencyAmount }) {
   return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
@@ -50,6 +62,10 @@ function Balance({ balance }: { balance: CurrencyAmount }) {
 const TagContainer = styled.div`
   display: flex;
   justify-content: flex-end;
+`
+
+const TokenListLogoWrapper = styled.img`
+  height: 20px;
 `
 
 function TokenTags({ currency }: { currency: Currency }) {
@@ -136,7 +152,8 @@ export default function CurrencyList({
   fixedListRef,
   showETH,
   showImportView,
-  setImportToken
+  setImportToken,
+  breakIndex
 }: {
   height: number
   currencies: Currency[]
@@ -147,10 +164,18 @@ export default function CurrencyList({
   showETH: boolean
   showImportView: () => void
   setImportToken: (token: Token) => void
+  breakIndex: number | undefined
 }) {
-  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
+  const itemData: (Currency | undefined)[] = useMemo(() => {
+    let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
+    if (breakIndex !== undefined) {
+      formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
+    }
+    return formatted
+  }, [breakIndex, currencies, showETH])
 
   const { chainId } = useActiveWeb3React()
+  const theme = useTheme()
 
   const inactiveTokens: {
     [address: string]: Token
@@ -166,6 +191,24 @@ export default function CurrencyList({
       const token = wrappedCurrency(currency, chainId)
 
       const showImport = inactiveTokens && token && Object.keys(inactiveTokens).includes(token.address)
+
+      if (index === breakIndex || !data) {
+        return (
+          <FixedContentRow style={style}>
+            <LightGreyCard padding="8px 12px" borderRadius="8px">
+              <RowBetween>
+                <RowFixed>
+                  <TokenListLogoWrapper src={TokenListLogo} />
+                  <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
+                    Expanded results from inactive Token Lists
+                  </TYPE.main>
+                </RowFixed>
+                <QuestionHelper text="Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists." />
+              </RowBetween>
+            </LightGreyCard>
+          </FixedContentRow>
+        )
+      }
 
       if (showImport && token) {
         return (
@@ -189,7 +232,17 @@ export default function CurrencyList({
         )
       }
     },
-    [chainId, inactiveTokens, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
+    [
+      chainId,
+      inactiveTokens,
+      onCurrencySelect,
+      otherCurrency,
+      selectedCurrency,
+      setImportToken,
+      showImportView,
+      breakIndex,
+      theme.text1
+    ]
   )
 
   const itemKey = useCallback((index: number, data: any) => currencyKey(data[index]), [])
