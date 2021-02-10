@@ -40,7 +40,7 @@ const StyledPositionCard = styled(DarkCard)`
   ::before {
     background-blend-mode: lighten;
     background: linear-gradient(142.02deg, rgba(42, 29, 147, 0.6) 0.23%, rgba(42, 29, 147, 0) 73.04%);
-    background-color: #171621;
+    background-color: ${props => props.theme.bg1};
   }
 `
 

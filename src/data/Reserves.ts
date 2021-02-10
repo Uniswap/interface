@@ -96,7 +96,7 @@ export function useAggregatedByToken0ExistingPairs(): {
   loading: boolean
   aggregatedData: {
     token0: Token
-    pairsNumber: number
+    pairs: Pair[]
   }[]
 } {
   const rawPairsList = useTrackedTokenPairs()
@@ -112,19 +112,20 @@ export function useAggregatedByToken0ExistingPairs(): {
         rawAggregatedPairs: {
           [token0Address: string]: {
             token0: Token
-            pairsNumber: number
+            pairs: Pair[]
           }
         },
         result
       ) => {
         if (result && result[0] === PairState.EXISTS && result[1]) {
-          const pairToken0 = result[1].token0
+          const pair = result[1]
+          const pairToken0 = pair.token0
           if (!!rawAggregatedPairs[pairToken0.address]) {
-            rawAggregatedPairs[pairToken0.address].pairsNumber++
+            rawAggregatedPairs[pairToken0.address].pairs.push(pair)
           } else {
             rawAggregatedPairs[pairToken0.address] = {
               token0: pairToken0,
-              pairsNumber: 1
+              pairs: [pair]
             }
           }
         }

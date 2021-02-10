@@ -65,7 +65,7 @@ export default function Pools() {
         <SwapPoolTabs active={'pool'} />
 
         <AutoColumn gap="lg" justify="center">
-          <AutoColumn gap="lg" style={{ width: '100%' }}>
+          <AutoColumn gap="32px" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <Flex alignItems="center">

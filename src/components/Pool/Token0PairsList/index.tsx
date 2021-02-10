@@ -19,9 +19,9 @@ export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
     <Flex flexDirection="column">
       <Box mb="8px" height="460px">
         {loading ? (
-          <LoadingList />
+          <LoadingList wideCards />
         ) : (
-          <Flex wrap="wrap" m="-8px">
+          <Flex wrap="wrap" m="-4px">
             {pairs.map(pair => (
               <Box key={pair.token0.address} p="4px">
                 <UndecoratedLink to={`/pools/${pair.token0.address}/${pair.token1.address}`}>

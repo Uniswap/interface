@@ -3,30 +3,38 @@ import AggregatedPairs from './AggregatedPairs'
 import { Box, Flex } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
-import { useAggregatedByToken0ExistingPairs } from '../../../data/Reserves'
-import BigNumber from 'bignumber.js'
-import { UndecoratedLink } from '../../UndercoratedLink'
+import ListFilter, { PairsFilterType, PairsSortingType } from '../ListFilter'
+import { useAggregatedByToken0ExistingPairsWithRemainingRewards } from '../../../hooks/usePairData'
 
 export default function AggregatedPairsList() {
   const [page, setPage] = useState(0)
-  const { loading, aggregatedData } = useAggregatedByToken0ExistingPairs()
+  const [filter, setFilter] = useState(PairsFilterType.ALL)
+  const [sorting] = useState(PairsSortingType.RELEVANCE)
+  const { loading, aggregatedData } = useAggregatedByToken0ExistingPairsWithRemainingRewards()
 
   return (
     <Flex flexDirection="column">
+      <Box mb="32px">
+        <ListFilter
+          disabled={loading}
+          filter={filter}
+          sorting={sorting}
+          onFilterChange={setFilter}
+          onSortingChange={() => {}}
+        />
+      </Box>
       <Box mb="8px" height="460px">
         {loading ? (
           <LoadingList />
         ) : (
-          <Flex wrap="wrap" m="-8px">
+          <Flex wrap="wrap" m="-4px">
             {aggregatedData.map(aggregation => (
               <Box key={aggregation.token0.address} p="4px">
-                <UndecoratedLink to={`/pools/${aggregation.token0.address}`}>
-                  <AggregatedPairs
-                    token={aggregation.token0}
-                    usdRewards={new BigNumber(0)}
-                    pairsNumber={aggregation.pairsNumber}
-                  />
-                </UndecoratedLink>
+                <AggregatedPairs
+                  token={aggregation.token0}
+                  usdRewards={aggregation.remainingRewardsUSD}
+                  pairsNumber={aggregation.pairs.length}
+                />
               </Box>
             ))}
           </Flex>

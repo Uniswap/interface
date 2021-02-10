@@ -7,8 +7,8 @@ import { DarkCard } from '../../../Card'
 import styled from 'styled-components'
 
 const SizedCard = styled(DarkCard)`
-  width: 155px;
-  height: 147px;
+  width: 208px;
+  height: 155px;
 `
 
 interface PairProps {
