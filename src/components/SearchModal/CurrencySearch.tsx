@@ -12,7 +12,7 @@ import Column from '../Column'
 import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens } from './filtering'
+import { filterTokens, useSortedTokensByQuery } from './filtering'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -22,7 +22,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import ImportRow from './ImportRow'
 import { Edit } from 'react-feather'
-import { ButtonLight } from 'components/Button'
+import useDebounce from 'hooks/useDebounce'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -71,14 +71,15 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const debouncedQuery = useDebounce(searchQuery, 200)
+
   const [invertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
-  // const inactiveTokens: Token[] | undefined = useFoundOnInactiveList(searchQuery)
 
   // if they input an address, use it
-  const isAddressSearch = isAddress(searchQuery)
-  const searchToken = useToken(searchQuery)
+  const isAddressSearch = isAddress(debouncedQuery)
+  const searchToken = useToken(debouncedQuery)
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   useEffect(() => {
@@ -92,46 +93,21 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const showETH: boolean = useMemo(() => {
-    const s = searchQuery.toLowerCase().trim()
+    const s = debouncedQuery.toLowerCase().trim()
     return s === '' || s === 'e' || s === 'et' || s === 'eth'
-  }, [searchQuery])
+  }, [debouncedQuery])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
-    return filterTokens(Object.values(allTokens), searchQuery)
-  }, [allTokens, searchQuery])
+    return filterTokens(Object.values(allTokens), debouncedQuery)
+  }, [allTokens, debouncedQuery])
 
-  const filteredSortedTokens: Token[] = useMemo(() => {
-    const sorted = filteredTokens.sort(tokenComparator)
-    const symbolMatch = searchQuery
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(s => s.length > 0)
+  const sortedTokens: Token[] = useMemo(() => {
+    return filteredTokens.sort(tokenComparator)
+  }, [filteredTokens, tokenComparator])
 
-    if (symbolMatch.length > 1) {
-      return sorted
-    }
-
-    return [
-      // sort any exact symbol matches first
-      ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
-
-      // sort by tokens whos symbols start with search substrng
-      ...sorted.filter(
-        token =>
-          token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
-          token.symbol?.toLowerCase() !== symbolMatch[0]
-      ),
-
-      // rest that dont match upove
-      ...sorted.filter(
-        token =>
-          !token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
-          token.symbol?.toLowerCase() !== symbolMatch[0]
-      )
-    ]
-  }, [filteredTokens, searchQuery, tokenComparator])
+  const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -158,12 +134,12 @@ export function CurrencySearch({
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        const s = searchQuery.toLowerCase().trim()
+        const s = debouncedQuery.toLowerCase().trim()
         if (s === 'eth') {
           handleCurrencySelect(ETHER)
         } else if (filteredSortedTokens.length > 0) {
           if (
-            filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||
+            filteredSortedTokens[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
             filteredSortedTokens.length === 1
           ) {
             handleCurrencySelect(filteredSortedTokens[0])
@@ -171,7 +147,7 @@ export function CurrencySearch({
         }
       }
     },
-    [filteredSortedTokens, handleCurrencySelect, searchQuery]
+    [filteredSortedTokens, handleCurrencySelect, debouncedQuery]
   )
 
   // menu ui
@@ -180,15 +156,8 @@ export function CurrencySearch({
   useOnClickOutside(node, open ? toggle : undefined)
 
   // if no results on main list, show option to expand into inactive
-  const [showExpanded, setShowExpanded] = useState(false)
-  const inactiveTokens = useFoundOnInactiveList(searchQuery)
-
-  // reset expanded results on query reset
-  useEffect(() => {
-    if (searchQuery === '') {
-      setShowExpanded(false)
-    }
-  }, [setShowExpanded, searchQuery])
+  const inactiveTokens = useFoundOnInactiveList(debouncedQuery)
+  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, debouncedQuery)
 
   return (
     <ContentWrapper>
@@ -220,7 +189,7 @@ export function CurrencySearch({
         <Column style={{ padding: '20px 0', height: '100%' }}>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
-      ) : filteredSortedTokens?.length > 0 || (showExpanded && inactiveTokens && inactiveTokens.length > 0) ? (
+      ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
         <div style={{ flex: '1' }}>
           <AutoSizer disableWidth>
             {({ height }) => (
@@ -228,8 +197,9 @@ export function CurrencySearch({
                 height={height}
                 showETH={showETH}
                 currencies={
-                  showExpanded && inactiveTokens ? filteredSortedTokens.concat(inactiveTokens) : filteredSortedTokens
+                  filteredInactiveTokens ? filteredSortedTokens.concat(filteredInactiveTokens) : filteredSortedTokens
                 }
+                breakIndex={inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined}
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
                 selectedCurrency={selectedCurrency}
@@ -243,49 +213,10 @@ export function CurrencySearch({
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
           <TYPE.main color={theme.text3} textAlign="center" mb="20px">
-            No results found in active lists.
+            No results found.
           </TYPE.main>
-          {inactiveTokens &&
-            inactiveTokens.length > 0 &&
-            !(searchToken && !searchTokenIsAdded) &&
-            searchQuery.length > 1 &&
-            filteredSortedTokens?.length === 0 && (
-              // expand button in line with no results
-              <Row align="center" width="100%" justify="center">
-                <ButtonLight
-                  width="fit-content"
-                  borderRadius="12px"
-                  padding="8px 12px"
-                  onClick={() => setShowExpanded(!showExpanded)}
-                >
-                  {!showExpanded
-                    ? `Show ${inactiveTokens.length} more inactive ${inactiveTokens.length === 1 ? 'token' : 'tokens'}`
-                    : 'Hide expanded search'}
-                </ButtonLight>
-              </Row>
-            )}
         </Column>
       )}
-
-      {inactiveTokens &&
-        inactiveTokens.length > 0 &&
-        !(searchToken && !searchTokenIsAdded) &&
-        (searchQuery.length > 1 || showExpanded) &&
-        (filteredSortedTokens?.length !== 0 || showExpanded) && (
-          // button fixed to bottom
-          <Row align="center" width="100%" justify="center" style={{ position: 'absolute', bottom: '80px', left: 0 }}>
-            <ButtonLight
-              width="fit-content"
-              borderRadius="12px"
-              padding="8px 12px"
-              onClick={() => setShowExpanded(!showExpanded)}
-            >
-              {!showExpanded
-                ? `Show ${inactiveTokens.length} more inactive ${inactiveTokens.length === 1 ? 'token' : 'tokens'}`
-                : 'Hide expanded search'}
-            </ButtonLight>
-          </Row>
-        )}
       <Footer>
         <Row justify="center">
           <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
