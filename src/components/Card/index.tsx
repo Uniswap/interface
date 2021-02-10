@@ -54,6 +54,28 @@ export const DarkCard = styled(Card)<{ selectable?: boolean }>`
     position: absolute;
     border-radius: 8px;
   }
+  ${props =>
+    props.selectable &&
+    css`
+      :hover::after {
+        opacity: 1;
+      }
+
+      ::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        border-radius: 8px;
+        top: 1px;
+        bottom: 1px;
+        left: 1px;
+        right: 1px;
+        background: linear-gradient(110.34deg, #ffffff 0.16%, rgba(0, 0, 0, 0) 139.17%), ${({ theme }) => theme.dark1};
+        background-blend-mode: overlay, normal;
+        transition: 0.3s ease opacity;
+        opacity: 0;
+      }
+    `}
 `
 
 const BlueCardStyled = styled(Card)`

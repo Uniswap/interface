@@ -7,7 +7,7 @@ import { ReactComponent as DiamondsSvg } from '../../../../../assets/svg/diamond
 import { AutoColumn } from '../../../../Column'
 import { Card as StyledCard } from '../../../styleds'
 
-const Card = styled(StyledCard)`
+const Card = styled(StyledCard)<{ active?: boolean }>`
   width: 218px;
   height: 138px;
   position: relative;
@@ -25,6 +25,7 @@ const CardText = styled(Text)`
 const Diamond = styled(DiamondSvg)`
   position: absolute;
   right: 0;
+  bottom: 18px;
   width: 60px;
   path {
     stroke: ${props => props.theme.purple3};
@@ -34,6 +35,7 @@ const Diamond = styled(DiamondSvg)`
 const Diamonds = styled(DiamondsSvg)`
   position: absolute;
   right: 0;
+  bottom: 18px;
   width: 100px;
   path {
     stroke: ${props => props.theme.purple3};

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { GradientCard } from '../Card'
+import { DarkCard } from '../Card'
 
-export const Card = styled(GradientCard)`
+export const Card = styled(DarkCard)`
   width: 100%;
 `
 
