@@ -24,6 +24,7 @@ const PlusNContainer = styled.div`
   position: absolute;
   top: 0;
   right: 0;
+  border-radius: 14px;
 `
 
 const PlusNText = styled(TYPE.body)`
@@ -31,13 +32,16 @@ const PlusNText = styled(TYPE.body)`
 `
 
 const BlurredCircleImage = styled.img`
+  background: rgba(68, 65, 99, 0.25);
+  box-shadow: inset 0px 0.5px 3px rgba(255, 255, 255, 0.08), inset 3px 1px 5px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
   width: 28px;
   height: 28px;
   position: absolute;
   right: 0px;
   top: 0;
   z-index: 1px;
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(12px);
   border-radius: 14px;
   display: flex;
   justify-content: center;

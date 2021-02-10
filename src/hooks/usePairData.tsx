@@ -41,9 +41,14 @@ export function useLiquidityMiningCampaignsForPairs(
       }
     }
   )
+
   return useMemo(() => {
-    if (loading || error || !data) return { loading: true, liquidityMiningCampaigns: [] }
-    return { loading: false, liquidityMiningCampaigns: data.pairs.map(pair => pair.liquidityMiningCampaigns) }
+    if (loading) return { loading: true, liquidityMiningCampaigns: [] }
+    if (error) return { loading: false, liquidityMiningCampaigns: [] }
+    return {
+      loading: false,
+      liquidityMiningCampaigns: data ? data.pairs.map(pair => pair.liquidityMiningCampaigns) : []
+    }
   }, [data, loading, error])
 }
 
@@ -70,17 +75,20 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(): {
         let analyzedPairs = 0
         return {
           ...aggregatedData,
-          remainingRewardsUSD: aggregatedByToken0ExistingPairs.reduce(
-            (rewardUSD, { pairs }) =>
-              rewardUSD.plus(
-                pairs.reduce(accumulator => {
-                  return accumulator.plus(
-                    getPairRemainingRewardsUSD(liquidityMiningCampaigns[analyzedPairs++], ethUSDPrice)
-                  )
-                }, new BigNumber(0))
-              ),
-            new BigNumber(0)
-          )
+          remainingRewardsUSD:
+            liquidityMiningCampaigns.length > 0
+              ? aggregatedByToken0ExistingPairs.reduce(
+                  (rewardUSD, { pairs }) =>
+                    rewardUSD.plus(
+                      pairs.reduce(accumulator => {
+                        return accumulator.plus(
+                          getPairRemainingRewardsUSD(liquidityMiningCampaigns[analyzedPairs++], ethUSDPrice)
+                        )
+                      }, new BigNumber(0))
+                    ),
+                  new BigNumber(0)
+                )
+              : new BigNumber(0)
         }
       })
     }

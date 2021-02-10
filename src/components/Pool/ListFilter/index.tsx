@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
-import { TYPE } from '../../../theme'
 import Radio from '../../Radio'
 
 export enum PairsFilterType {
@@ -56,11 +55,6 @@ export default function ListFilter({ disabled, filter, sorting, onFilterChange, 
           />
         </Box>
       </Flex>
-      <Box>
-        <TYPE.small fontWeight="600" letterSpacing="0.08em">
-          SORT BY:
-        </TYPE.small>
-      </Box>
     </StyledRoot>
   )
 }

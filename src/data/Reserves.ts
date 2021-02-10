@@ -104,9 +104,7 @@ export function useAggregatedByToken0ExistingPairs(): {
 
   return useMemo(() => {
     const loading = !!results.find(result => result[0] === PairState.LOADING)
-    if (loading) {
-      return { loading, aggregatedData: [] }
-    }
+    if (loading) return { loading, aggregatedData: [] }
     const rawData = results.reduce(
       (
         rawAggregatedPairs: {

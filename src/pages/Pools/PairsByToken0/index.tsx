@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
 import { PageWrapper } from '../styleds'
 
@@ -66,6 +66,9 @@ export default function PairsByToken0({
   const { account } = useActiveWeb3React()
   const token0 = useToken(currencyIdA)
 
+  if (token0 === undefined) {
+    return <Redirect to="/pools" />
+  }
   return (
     <>
       <PageWrapper>
