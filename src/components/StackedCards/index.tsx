@@ -24,7 +24,9 @@ export default function StackedCards({ children }: StackedCardsProps) {
     <CardsContainer>
       <SizedCard index={0} />
       <SizedCard index={1} />
-      <SizedCard index={2}>{children}</SizedCard>
+      <SizedCard index={2} selectable>
+        {children}
+      </SizedCard>
     </CardsContainer>
   )
 }

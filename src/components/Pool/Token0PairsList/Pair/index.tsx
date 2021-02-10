@@ -18,7 +18,7 @@ interface PairProps {
 
 export default function Pair({ token0, token1 }: PairProps) {
   return (
-    <SizedCard>
+    <SizedCard selectable>
       <Flex justifyContent="center" alignItems="center" flexDirection="column" width="100%" height="100%">
         <Box mb="6px">
           <DoubleCurrencyLogo currency0={token0} currency1={token1} size={28} />

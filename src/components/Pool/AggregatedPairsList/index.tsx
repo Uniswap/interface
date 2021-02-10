@@ -3,26 +3,19 @@ import AggregatedPairs from './AggregatedPairs'
 import { Box, Flex } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
-import ListFilter, { PairsFilterType, PairsSortingType } from '../ListFilter'
+import ListFilter, { PairsFilterType } from '../ListFilter'
 import { useAggregatedByToken0ExistingPairsWithRemainingRewards } from '../../../hooks/usePairData'
 import Empty from '../Empty'
 
 export default function AggregatedPairsList() {
   const [page, setPage] = useState(0)
   const [filter, setFilter] = useState(PairsFilterType.ALL)
-  const [sorting] = useState(PairsSortingType.RELEVANCE)
   const { loading, aggregatedData } = useAggregatedByToken0ExistingPairsWithRemainingRewards(filter)
 
   return (
     <Flex flexDirection="column">
       <Box mb="32px">
-        <ListFilter
-          disabled={loading}
-          filter={filter}
-          sorting={sorting}
-          onFilterChange={setFilter}
-          onSortingChange={() => {}}
-        />
+        <ListFilter disabled={loading} filter={filter} onFilterChange={setFilter} />
       </Box>
       <Box mb="8px" height="460px">
         {loading ? (

@@ -5,8 +5,7 @@ import Radio from '../../Radio'
 
 export enum PairsFilterType {
   ALL = 'ALL',
-  REWARDS = 'REWARDS',
-  MINE = 'MINE'
+  REWARDS = 'REWARDS'
 }
 
 export enum PairsSortingType {
@@ -21,13 +20,11 @@ const StyledRoot = styled(Flex)<{ disabled?: boolean }>`
 
 interface ListFilterProps {
   filter: PairsFilterType
-  sorting: PairsSortingType
   disabled?: boolean
   onFilterChange: (newFilter: PairsFilterType) => void
-  onSortingChange: (newSorting: PairsSortingType) => void
 }
 
-export default function ListFilter({ disabled, filter, sorting, onFilterChange, onSortingChange }: ListFilterProps) {
+export default function ListFilter({ disabled, filter, onFilterChange }: ListFilterProps) {
   const handleFilterRadioChange = useCallback(
     event => {
       onFilterChange(PairsFilterType[event.target.value as keyof typeof PairsFilterType])
