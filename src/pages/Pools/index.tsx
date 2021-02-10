@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
@@ -16,6 +16,8 @@ import threeBlurredCircles from '../../assets/svg/three-blurred-circles.svg'
 import { ChevronDown } from 'react-feather'
 import AggregatedPairsList from '../../components/Pool/AggregatedPairsList'
 import { CardSection } from '../../components/earn/styled'
+import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
+import { useRouter } from '../../hooks/useRouter'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -56,8 +58,32 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   `};
 `
 
+const PointableFlex = styled(Flex)`
+  cursor: pointer;
+`
+
 export default function Pools() {
   const { account } = useActiveWeb3React()
+  const router = useRouter()
+
+  const [openTokenModal, setOpenTokenModal] = useState(false)
+
+  const handleAllClick = useCallback(() => {
+    setOpenTokenModal(true)
+  }, [])
+
+  const handleModalClose = useCallback(() => {
+    setOpenTokenModal(false)
+  }, [])
+
+  const handleCurrencySelect = useCallback(
+    token => {
+      router.push({
+        pathname: `/pools/${token.address}`
+      })
+    },
+    [router]
+  )
 
   return (
     <>
@@ -79,17 +105,19 @@ export default function Pools() {
                       /
                     </Text>
                   </Box>
-                  <Box mr="4px">
+                  <Box mr="6px">
                     <img src={threeBlurredCircles} alt="Circles" />
                   </Box>
-                  <Box mr="4px">
-                    <Text fontWeight="600" fontSize="16px" lineHeight="20px">
-                      ALL
-                    </Text>
-                  </Box>
-                  <Box>
-                    <ChevronDown size={12} />
-                  </Box>
+                  <PointableFlex onClick={handleAllClick}>
+                    <Box>
+                      <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+                        ALL
+                      </Text>
+                    </Box>
+                    <Box>
+                      <ChevronDown size={12} />
+                    </Box>
+                  </PointableFlex>
                 </Flex>
               </HideSmall>
               <ButtonRow>
@@ -151,6 +179,12 @@ export default function Pools() {
           </CardSection>
         </VoteCard>
       </PageWrapper>
+      <CurrencySearchModal
+        isOpen={openTokenModal}
+        onDismiss={handleModalClose}
+        onCurrencySelect={handleCurrencySelect}
+        showCommonBases
+      />
     </>
   )
 }

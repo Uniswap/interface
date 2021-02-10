@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
@@ -18,6 +18,8 @@ import { useToken } from '../../../hooks/Tokens'
 import CurrencyLogo from '../../../components/CurrencyLogo'
 import Token0PairsList from '../../../components/Pool/Token0PairsList'
 import { UndecoratedLink } from '../../../components/UndercoratedLink'
+import CurrencySearchModal from '../../../components/SearchModal/CurrencySearchModal'
+import { useRouter } from '../../../hooks/useRouter'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -58,13 +60,37 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   `};
 `
 
+const PointableFlex = styled(Flex)`
+  cursor: pointer;
+`
+
 export default function PairsByToken0({
   match: {
     params: { currencyIdA }
   }
 }: RouteComponentProps<{ currencyIdA: string }>) {
   const { account } = useActiveWeb3React()
+  const router = useRouter()
   const token0 = useToken(currencyIdA)
+
+  const [openTokenModal, setOpenTokenModal] = useState(false)
+
+  const handleAllClick = useCallback(() => {
+    setOpenTokenModal(true)
+  }, [])
+
+  const handleModalClose = useCallback(() => {
+    setOpenTokenModal(false)
+  }, [])
+
+  const handleCurrencySelect = useCallback(
+    token => {
+      router.push({
+        pathname: `/pools/${token.address}`
+      })
+    },
+    [router]
+  )
 
   if (token0 === undefined) {
     return <Redirect to="/pools" />
@@ -91,14 +117,16 @@ export default function PairsByToken0({
                       /
                     </TYPE.mediumHeader>
                   </Box>
-                  <Box mr="4px">
-                    <CurrencyLogo currency={token0 || undefined} size="20px" />
-                  </Box>
-                  <Box mr="4px">
-                    <Text fontWeight="600" fontSize="16px" lineHeight="20px">
-                      {token0?.symbol}
-                    </Text>
-                  </Box>
+                  <PointableFlex onClick={handleAllClick}>
+                    <Box mr="4px">
+                      <CurrencyLogo currency={token0 || undefined} size="20px" />
+                    </Box>
+                    <Box mr="4px">
+                      <Text fontWeight="600" fontSize="16px" lineHeight="20px">
+                        {token0?.symbol}
+                      </Text>
+                    </Box>
+                  </PointableFlex>
                   <Box>
                     <ChevronDown size={12} />
                   </Box>
@@ -169,6 +197,12 @@ export default function PairsByToken0({
           </CardSection>
         </VoteCard>
       </PageWrapper>
+      <CurrencySearchModal
+        isOpen={openTokenModal}
+        onDismiss={handleModalClose}
+        onCurrencySelect={handleCurrencySelect}
+        showCommonBases
+      />
     </>
   )
 }

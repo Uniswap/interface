@@ -1,8 +1,10 @@
 import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
 import { Pair, Token, TokenAmount } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { useExistingRawPairs } from '../../data/Reserves'
 import { useAllTokenBalances, useTokenBalances } from '../../state/wallet/hooks'
+import { PairsSortingType } from '../Pool/ListFilter'
 
 // compare two token amounts with highest one coming first
 function balanceComparator(balanceA?: TokenAmount, balanceB?: TokenAmount) {
@@ -75,6 +77,35 @@ export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: T
       return comparator
     }
   }, [inverted, comparator])
+}
+
+export function useAggregatedByToken0PairComparator(
+  sortingType: PairsSortingType
+): (
+  pairA: { token0: Token; pairs: Pair[]; lpTokensBalance: BigNumber; remainingRewardsUSD: BigNumber },
+  pairB: { token0: Token; pairs: Pair[]; lpTokensBalance: BigNumber; remainingRewardsUSD: BigNumber }
+) => number {
+  return useMemo(
+    () =>
+      function sortAggregatedByToken0Pairs(pairA, pairB): number {
+        // -1 = a is first
+        // 1 = b is first
+
+        if (sortingType === PairsSortingType.RELEVANCE) {
+          // sort by lp token balances (aggregated pairs in which the user has at
+          // least a position are shown first, ordered by the absolute size of the
+          // position in LP token amounts)
+          const balanceA = pairA.lpTokensBalance
+          const balanceB = pairB.lpTokensBalance
+          const balanceComp = balanceA.isGreaterThan(balanceB) ? -1 : balanceA.isEqualTo(balanceB) ? 0 : 1
+          if (balanceComp !== 0) return balanceComp
+        }
+
+        // sort by rewards
+        return pairA.remainingRewardsUSD.isLessThan(pairB.remainingRewardsUSD) ? -1 : 1
+      },
+    [sortingType]
+  )
 }
 
 export function usePairsComparator(inverted: boolean): (pairA: Pair, pairB: Pair) => number {

@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react'
-import { Box, Flex } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import Radio from '../../Radio'
 
 export enum PairsFilterType {
-  ALL,
-  REWARDS,
-  MY
+  ALL = 'ALL',
+  REWARDS = 'REWARDS',
+  MINE = 'MINE'
 }
 
 export enum PairsSortingType {
@@ -55,6 +55,11 @@ export default function ListFilter({ disabled, filter, sorting, onFilterChange, 
           />
         </Box>
       </Flex>
+      <Box>
+        <Text fontSize="11px" fontWeight="600" lineHeight="11px" letterSpacing="0.08em">
+          SORTED BY: RELEVANCE
+        </Text>
+      </Box>
     </StyledRoot>
   )
 }

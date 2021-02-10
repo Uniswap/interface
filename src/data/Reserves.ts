@@ -10,7 +10,10 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { usePairContract } from '../hooks/useContract'
 import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
-import { useTrackedTokenPairs } from '../state/user/hooks'
+import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../state/user/hooks'
+import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
+import { useWeb3React } from '@web3-react/core'
+import BigNumber from 'bignumber.js'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -96,35 +99,53 @@ export function useAggregatedByToken0ExistingPairs(): {
   loading: boolean
   aggregatedData: {
     token0: Token
+    lpTokensBalance: BigNumber
     pairs: Pair[]
   }[]
 } {
-  const rawPairsList = useTrackedTokenPairs()
-  const results = usePairs(rawPairsList)
+  const { account } = useWeb3React()
+  const allPairs = useExistingRawPairs()
+  // to avoid excessive loading times, we fetch lp token balances for tracked token pairs only
+  const trackedPairs = useTrackedTokenPairs()
+  const trackedPairsWithLiquidityTokens = useMemo(
+    () => trackedPairs.map(tokens => ({ liquidityToken: toDXSwapLiquidityToken(tokens), tokens })),
+    [trackedPairs]
+  )
+  const lpTokens = useMemo(() => trackedPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
+    trackedPairsWithLiquidityTokens
+  ])
+  const [trackedLpTokenBalances, loadingTrackedLpTokenBalances] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    lpTokens
+  )
 
   return useMemo(() => {
-    const loading = !!results.find(result => result[0] === PairState.LOADING)
-    if (loading) return { loading, aggregatedData: [] }
-    const rawData = results.reduce(
+    if (allPairs.length === 0 || loadingTrackedLpTokenBalances) return { loading: true, aggregatedData: [] }
+    const rawData = allPairs.reduce(
       (
         rawAggregatedPairs: {
           [token0Address: string]: {
             token0: Token
+            lpTokensBalance: BigNumber
             pairs: Pair[]
           }
         },
-        result
+        pair
       ) => {
-        if (result && result[0] === PairState.EXISTS && result[1]) {
-          const pair = result[1]
-          const pairToken0 = pair.token0
-          if (!!rawAggregatedPairs[pairToken0.address]) {
-            rawAggregatedPairs[pairToken0.address].pairs.push(pair)
-          } else {
-            rawAggregatedPairs[pairToken0.address] = {
-              token0: pairToken0,
-              pairs: [pair]
-            }
+        const pairToken0 = pair.token0
+        if (!!rawAggregatedPairs[pairToken0.address]) {
+          rawAggregatedPairs[pairToken0.address].pairs.push(pair)
+          const optionalLpTokenAmount = trackedLpTokenBalances[pair.liquidityToken.address]
+          if (optionalLpTokenAmount) {
+            rawAggregatedPairs[pairToken0.address].lpTokensBalance = rawAggregatedPairs[
+              pairToken0.address
+            ].lpTokensBalance.plus(optionalLpTokenAmount.toExact())
+          }
+        } else {
+          rawAggregatedPairs[pairToken0.address] = {
+            token0: pairToken0,
+            lpTokensBalance: new BigNumber(0),
+            pairs: [pair]
           }
         }
         return rawAggregatedPairs
@@ -132,7 +153,7 @@ export function useAggregatedByToken0ExistingPairs(): {
       {}
     )
     return { loading: false, aggregatedData: Object.values(rawData) }
-  }, [results])
+  }, [allPairs, loadingTrackedLpTokenBalances, trackedLpTokenBalances])
 }
 
 export function usePairsByToken0(

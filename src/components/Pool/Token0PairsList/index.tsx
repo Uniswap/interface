@@ -6,6 +6,7 @@ import { usePairsByToken0 } from '../../../data/Reserves'
 import { UndecoratedLink } from '../../UndercoratedLink'
 import Pair from './Pair'
 import { Token } from 'dxswap-sdk'
+import Empty from '../Empty'
 
 interface AggregatedPairsListProps {
   token0?: Token | null
@@ -20,16 +21,18 @@ export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
       <Box mb="8px" height="460px">
         {loading ? (
           <LoadingList wideCards />
-        ) : (
+        ) : pairs.length > 0 ? (
           <Flex wrap="wrap" m="-4px">
             {pairs.map(pair => (
-              <Box key={pair.token0.address} p="4px">
+              <Box key={pair.liquidityToken.address} p="4px">
                 <UndecoratedLink to={`/pools/${pair.token0.address}/${pair.token1.address}`}>
                   <Pair token0={pair.token0} token1={pair.token1} />
                 </UndecoratedLink>
               </Box>
             ))}
           </Flex>
+        ) : (
+          <Empty />
         )}
       </Box>
       <Flex width="100%" justifyContent="flex-end">

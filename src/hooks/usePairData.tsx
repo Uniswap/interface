@@ -9,6 +9,8 @@ import {
   PairsNonExpiredLiquidityMiningCampaignsQueryResult,
   NonExpiredLiquidityMiningCampaign
 } from '../apollo/queries'
+import { PairsFilterType, PairsSortingType } from '../components/Pool/ListFilter'
+import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
 import { useAggregatedByToken0ExistingPairs } from '../data/Reserves'
 import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useETHUSDPrice } from './useETHUSDPrice'
@@ -52,7 +54,10 @@ export function useLiquidityMiningCampaignsForPairs(
   }, [data, loading, error])
 }
 
-export function useAggregatedByToken0ExistingPairsWithRemainingRewards(): {
+export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
+  filter: PairsFilterType = PairsFilterType.ALL,
+  sorting: PairsSortingType = PairsSortingType.RELEVANCE
+): {
   loading: boolean
   aggregatedData: { token0: Token; pairs: Pair[]; remainingRewardsUSD: BigNumber }[]
 } {
@@ -64,40 +69,50 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(): {
   const { loading: loadingLiquidityMiningCampaigns, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
     aggregatedByToken0ExistingPairs?.flatMap(data => data.pairs)
   )
+  const sorter = useAggregatedByToken0PairComparator(sorting)
 
   return useMemo(() => {
     if (loadingPairs || loadingETHUSDPrice || loadingLiquidityMiningCampaigns)
       return { loading: true, aggregatedData: [] }
-
+    const unsortedUnorderedData = aggregatedByToken0ExistingPairs.map(aggregatedData => {
+      let analyzedPairs = 0
+      return {
+        ...aggregatedData,
+        remainingRewardsUSD:
+          liquidityMiningCampaigns.length > 0
+            ? aggregatedByToken0ExistingPairs.reduce(
+                (rewardUSD, { pairs }) =>
+                  rewardUSD.plus(
+                    pairs.reduce(accumulator => {
+                      return accumulator.plus(
+                        getPairRemainingRewardsUSD(liquidityMiningCampaigns[analyzedPairs++], ethUSDPrice)
+                      )
+                    }, new BigNumber(0))
+                  ),
+                new BigNumber(0)
+              )
+            : new BigNumber(0)
+      }
+    })
+    let filteredData = unsortedUnorderedData
+    if (filter !== PairsFilterType.ALL) {
+      filteredData = unsortedUnorderedData.filter(data => {
+        // TODO: fully implement filtering
+        return filter === PairsFilterType.REWARDS ? data.remainingRewardsUSD.isGreaterThan(0) : true
+      })
+    }
     return {
       loading: false,
-      aggregatedData: aggregatedByToken0ExistingPairs.map(aggregatedData => {
-        let analyzedPairs = 0
-        return {
-          ...aggregatedData,
-          remainingRewardsUSD:
-            liquidityMiningCampaigns.length > 0
-              ? aggregatedByToken0ExistingPairs.reduce(
-                  (rewardUSD, { pairs }) =>
-                    rewardUSD.plus(
-                      pairs.reduce(accumulator => {
-                        return accumulator.plus(
-                          getPairRemainingRewardsUSD(liquidityMiningCampaigns[analyzedPairs++], ethUSDPrice)
-                        )
-                      }, new BigNumber(0))
-                    ),
-                  new BigNumber(0)
-                )
-              : new BigNumber(0)
-        }
-      })
+      aggregatedData: filteredData.sort(sorter)
     }
   }, [
     aggregatedByToken0ExistingPairs,
     ethUSDPrice,
+    filter,
     liquidityMiningCampaigns,
     loadingETHUSDPrice,
     loadingLiquidityMiningCampaigns,
-    loadingPairs
+    loadingPairs,
+    sorter
   ])
 }
