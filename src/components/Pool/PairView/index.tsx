@@ -1,12 +1,19 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { JSBI, Pair, Percent } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import DoubleCurrencyLogo from '../../DoubleLogo'
 import Loading from './Loading'
-import { usePair24hVolumeUSD, usePairLiquidityUSD } from '../../../hooks/usePairData'
+import {
+  useLiquidityMiningCampaignsForPairs,
+  usePair24hVolumeUSD,
+  usePairLiquidityUSD
+} from '../../../hooks/usePairData'
 import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
+import { AutoRow } from '../../Row'
+import { LiquidityMiningCampaign } from './LiquidityMiningCampaign'
+import useDebounce from '../../../hooks/useDebounce'
 
 const PoolFeesContainer = styled.div`
   height: 27px;
@@ -22,6 +29,27 @@ const PoolFeesContainer = styled.div`
   text-align: left;
 `
 
+const DataText = styled.div`
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 500;
+  color: ${props => props.theme.purple2};
+`
+
+interface DataRowProps {
+  title: string
+  value: ReactNode
+}
+
+function DataRow({ title, value }: DataRowProps) {
+  return (
+    <AutoRow justify="space-between" width="100%" marginBottom="8px">
+      <DataText>{title}</DataText>
+      <DataText>{value}</DataText>
+    </AutoRow>
+  )
+}
+
 interface PairViewProps {
   loading: boolean
   pair?: Pair | null
@@ -30,10 +58,18 @@ interface PairViewProps {
 export default function PairView({ loading, pair }: PairViewProps) {
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
+  const { loading: liquidityMiningCampaignsLoading, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
+    pair ? [pair] : []
+  )
+
+  const debouncedLoading = useDebounce(
+    loading || volumeLoading || liquidityLoading || liquidityMiningCampaignsLoading,
+    300
+  )
 
   return (
     <DarkCard padding="40px">
-      {loading || volumeLoading || liquidityLoading || !pair ? (
+      {debouncedLoading ? (
         <Flex flexDirection="column" width="100%" height="340px">
           <Loading />
         </Flex>
@@ -49,27 +85,30 @@ export default function PairView({ loading, pair }: PairViewProps) {
               </Text>
             </Box>
           </Flex>
-          <Flex justifyContent="space-between" mb="8px">
-            <Box>Liquidity:</Box>
-            <Box>${liquidityUSD.decimalPlaces(2).toString()}</Box>
+          <DataRow title="Liquidity:" value={`$${liquidityUSD.decimalPlaces(2).toString()}`} />
+          <DataRow title="Volume:" value={`$${volume24hUSD.decimalPlaces(2).toString()}`} />
+          <DataRow
+            title="Pool fees:"
+            value={
+              <PoolFeesContainer>
+                {pair ? new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)).toSignificant(3) : '0'}%
+              </PoolFeesContainer>
+            }
+          />
+          <Flex flexDirection="column" my="24px">
+            {liquidityMiningCampaigns.length === 1
+              ? liquidityMiningCampaigns[0].map((liquidityMiningCampaign, index) => (
+                  <Box key={index}>
+                    <LiquidityMiningCampaign duration={1} />
+                  </Box>
+                ))
+              : null}
           </Flex>
-          <Flex justifyContent="space-between" mb="11px">
-            <Box>Volume:</Box>
-            <Box>${volume24hUSD.decimalPlaces(2).toString()}</Box>
-          </Flex>
-          <Flex justifyContent="space-between" mb="18px">
-            <Box>Pool fees:</Box>
-            <Flex>
-              <Box>
-                <PoolFeesContainer>
-                  {pair ? new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)).toSignificant(3) : '0'}%
-                </PoolFeesContainer>
-              </Box>
-            </Flex>
-          </Flex>
-          <Box>
-            <FullPositionCard pair={pair} showUnwrapped />
-          </Box>
+          {pair && (
+            <Box>
+              <FullPositionCard pair={pair} />
+            </Box>
+          )}
         </Flex>
       )}
     </DarkCard>
