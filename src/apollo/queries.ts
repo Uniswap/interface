@@ -1,64 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const GET_AGGREGATED_DISTRIBUTION_DATA = gql`
-  query {
-    bundles {
-      ethPrice
-    }
-    aggregatedToken0DistributionDatas(skip: $offset, first: $limit) {
-      id
-      distributions {
-        stakablePair {
-          id
-        }
-        rewards {
-          token {
-            derivedETH
-          }
-          amount
-        }
-      }
-      token0 {
-        address: id
-        symbol
-        decimals
-        name
-      }
-    }
-  }
-`
-
-export const GET_DISTRIBUTIONS_BY_AGGREGATION = gql`
-  query getByAggregation($id: ID!) {
-    bundles {
-      ethPrice
-    }
-    aggregatedToken0DistributionData(id: $id) {
-      token0 {
-        address: id
-        symbol
-        decimals
-      }
-      distributions {
-        id
-        stakablePair {
-          token1 {
-            address: id
-            symbol
-            decimals
-          }
-        }
-        rewards {
-          token {
-            derivedETH
-          }
-          amount
-        }
-      }
-    }
-  }
-`
-
 export const GET_ETH_USD_PRICE = gql`
   query {
     bundle(id: "1") {
@@ -67,16 +8,26 @@ export const GET_ETH_USD_PRICE = gql`
   }
 `
 
+// == Get pair 24h volume data ==
+
+interface PairDayData {
+  dailyVolumeUSD: string
+}
+
+export interface Pair24hVolumeQueryResult {
+  pairDayDatas: PairDayData[]
+}
+
 export const GET_PAIR_24H_VOLUME_USD = gql`
-  query getPair24hVolume($id: ID!) {
-    pair(id: $id) {
-      volumeUSD
+  query getPair24hVolume($pairAddress: ID!, $date: Int!) {
+    pairDayDatas(first: 1, where: { pairAddress: $pairAddress, date: $date }) {
+      dailyVolumeUSD
     }
   }
 `
 
 export const GET_PAIR_LIQUIDITY_USD = gql`
-  query getPair24hVolume($id: ID!) {
+  query getPairLiquidityVolume($id: ID!) {
     pair(id: $id) {
       reserveUSD
     }

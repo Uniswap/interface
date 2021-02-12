@@ -1,13 +1,15 @@
 import { useQuery } from '@apollo/client'
 import BigNumber from 'bignumber.js'
 import { Pair, Token } from 'dxswap-sdk'
+import { DateTime } from 'luxon'
 import { useMemo } from 'react'
 import {
   GET_PAIR_24H_VOLUME_USD,
   GET_PAIR_LIQUIDITY_USD,
   GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
   PairsNonExpiredLiquidityMiningCampaignsQueryResult,
-  NonExpiredLiquidityMiningCampaign
+  NonExpiredLiquidityMiningCampaign,
+  Pair24hVolumeQueryResult
 } from '../apollo/queries'
 import { PairsFilterType, PairsSortingType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
@@ -16,11 +18,16 @@ import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useETHUSDPrice } from './useETHUSDPrice'
 
 export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; volume24hUSD: BigNumber } {
-  const { loading, data } = useQuery(GET_PAIR_24H_VOLUME_USD, {
-    variables: { id: pair?.liquidityToken.address.toLowerCase() }
+  const { loading, data } = useQuery<Pair24hVolumeQueryResult>(GET_PAIR_24H_VOLUME_USD, {
+    variables: {
+      pairAddress: pair?.liquidityToken.address.toLowerCase(),
+      date: DateTime.utc()
+        .startOf('day')
+        .toSeconds()
+    }
   })
 
-  return { loading, volume24hUSD: new BigNumber(data?.pair?.volumeUSD || 0) }
+  return { loading, volume24hUSD: new BigNumber(data?.pairDayDatas[0]?.dailyVolumeUSD || 0) }
 }
 
 export function usePairLiquidityUSD(pair?: Pair | null): { loading: boolean; liquidityUSD: BigNumber } {
