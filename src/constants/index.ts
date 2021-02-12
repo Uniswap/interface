@@ -1,5 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ChainId, JSBI, Percent, Token, WETH, DXD } from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, WETH, WSPOA, DXD, Token } from 'dxswap-sdk'
 import { rinkeby, mainnet, arbitrumTestnetV3, sokol } from 'dxswap-periphery/.contracts.json'
 import { tokens } from './tokens'
 import { authereum, injected, walletConnect } from '../connectors'
@@ -26,30 +26,28 @@ export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
 
-// this part needs to be updated to take into account chains where ETH is not the main currency
-const WETH_ONLY: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
-  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
-  [ChainId.SOKOL]: [WETH[ChainId.SOKOL]]
-}
-
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
+  [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR],
+  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
+  [ChainId.ARBITRUM_TESTNET_V3]: [Token.WETH[ChainId.ARBITRUM_TESTNET_V3]],
+  [ChainId.SOKOL]: [WSPOA[ChainId.SOKOL]]
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
+  [ChainId.MAINNET]: [Token.WETH[ChainId.MAINNET], DAI, USDC, USDT],
+  [ChainId.RINKEBY]: [Token.WETH[ChainId.RINKEBY]],
+  [ChainId.ARBITRUM_TESTNET_V3]: [Token.WETH[ChainId.ARBITRUM_TESTNET_V3]],
+  [ChainId.SOKOL]: [Token.WSPOA[ChainId.SOKOL]]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
+  [ChainId.MAINNET]: [Token.WETH[ChainId.MAINNET], DAI, USDC, USDT],
+  [ChainId.RINKEBY]: [Token.WETH[ChainId.RINKEBY]],
+  [ChainId.ARBITRUM_TESTNET_V3]: [Token.WETH[ChainId.ARBITRUM_TESTNET_V3]],
+  [ChainId.SOKOL]: [Token.WSPOA[ChainId.SOKOL]]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {

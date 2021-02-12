@@ -8,7 +8,8 @@ const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
-  trade?: Trade
+  trade?: Trade,
+  chainId?: number
 ): { priceImpactWithoutFee?: Percent; realizedLPFee?: Percent; realizedLPFeeAmount?: CurrencyAmount } {
   // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
@@ -35,13 +36,14 @@ export function computeTradePriceBreakdown(
     : undefined
 
   // the amount of the input that accrues to LPs
-  const realizedLPFeeAmount = !trade
-    ? undefined
-    : realizedLPFee &&
-      trade &&
-      (trade.inputAmount instanceof TokenAmount
-        ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-        : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+  const realizedLPFeeAmount =
+    !trade || !chainId
+      ? undefined
+      : realizedLPFee &&
+        trade &&
+        (trade.inputAmount instanceof TokenAmount
+          ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+          : CurrencyAmount.nativeCurrency(realizedLPFee.multiply(trade.inputAmount.raw).quotient, chainId))
   return {
     priceImpactWithoutFee: priceImpactWithoutFeePercent,
     realizedLPFee: realizedLPFee ? new Percent(realizedLPFee.numerator, realizedLPFee.denominator) : undefined,
@@ -52,7 +54,8 @@ export function computeTradePriceBreakdown(
 // calculates teh protocol fee for a pair and amount
 export function calculateProtocolFee(
   pair: Pair | null | undefined,
-  amount?: CurrencyAmount
+  amount?: CurrencyAmount,
+  chainId?: number
 ): { protocolFee?: Fraction; protocolFeeAmount?: CurrencyAmount } {
   const protocolFee = pair
     ? new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)).divide(pair.protocolFeeDenominator)
@@ -60,10 +63,10 @@ export function calculateProtocolFee(
 
   // the amount of the input that accrues to LPs
   const protocolFeeAmount =
-    protocolFee && amount
+    protocolFee && amount && chainId
       ? amount instanceof TokenAmount
         ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).divide(JSBI.BigInt(10000)).quotient)
-        : CurrencyAmount.ether(protocolFee.multiply(amount.raw).divide(JSBI.BigInt(100)).quotient)
+        : CurrencyAmount.nativeCurrency(protocolFee.multiply(amount.raw).divide(JSBI.BigInt(100)).quotient, chainId)
       : undefined
 
   return { protocolFee, protocolFeeAmount }

@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Token, Currency, ETHER, WETH, SPOA, WSPOA } from 'dxswap-sdk'
+import { ChainId, Token, Currency, WETH, WSPOA } from 'dxswap-sdk'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { useMemo } from 'react'
 import {
@@ -39,15 +39,8 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWrappingToken(currency?: Currency): Token | undefined {
   const { chainId } = useWeb3React()
-  if (!chainId || !currency || !currency.isNative()) return undefined
-  switch (currency) {
-    case ETHER:
-      return WETH[chainId]
-    case SPOA:
-      return WSPOA[chainId]
-    default:
-      return undefined
-  }
+  if (!chainId || !currency || !Currency.isNative(currency)) return undefined
+  return Token.getNativeWrapper(chainId)
 }
 
 function useWrappingTokenAbi(token?: Token): any | undefined {

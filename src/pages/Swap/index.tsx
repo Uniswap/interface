@@ -61,7 +61,7 @@ export default function Swap() {
     setDismissTokenWarning(true)
   }, [])
 
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -159,7 +159,7 @@ export default function Swap() {
     }
   }, [approval, approvalSubmitted])
 
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
+  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT], chainId)
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap

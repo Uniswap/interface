@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, TokenAmount, WETH, Percent, JSBI, ChainId } from 'dxswap-sdk'
+import { Currency, currencyEquals, TokenAmount, Percent, JSBI, ChainId } from 'dxswap-sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
@@ -39,6 +39,7 @@ import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import TradePrice from '../../components/swap/TradePrice'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
+import { useWrappingToken } from '../../hooks/useContract'
 
 export default function AddLiquidity({
   match: {
@@ -49,14 +50,16 @@ export default function AddLiquidity({
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const nativeCurrency = useNativeCurrency()
+  const nativeCurrencyWrapper = useWrappingToken(nativeCurrency)
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
-  const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WETH[chainId])))
+  const oneCurrencyIsWrapped = Boolean(
+    chainId && 
+      nativeCurrencyWrapper &&
+      ((currencyA && currencyEquals(currencyA, nativeCurrencyWrapper)) ||
+        (currencyB && currencyEquals(currencyB, nativeCurrencyWrapper)))
   )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
@@ -106,7 +109,7 @@ export default function AddLiquidity({
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field])
+        [field]: maxAmountSpend(currencyBalances[field], chainId)
       }
     },
     {}
@@ -467,7 +470,7 @@ export default function AddLiquidity({
 
       {pair && !noLiquidity && pairState !== PairState.INVALID ? (
         <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
-          <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
+          <MinimalPositionCard showUnwrapped={oneCurrencyIsWrapped} pair={pair} />
         </AutoColumn>
       ) : null}
     </>

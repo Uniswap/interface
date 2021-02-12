@@ -6,6 +6,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
+import { useWeb3React } from '@web3-react/core'
 
 /**
  * Returns a map of the given addresses to their eventually consistent native currenciy balances.
@@ -13,6 +14,7 @@ import { useSingleContractMultipleData, useMultipleContractSingleData } from '..
 export function useNativeCurrencyBalances(
   uncheckedAddresses?: (string | undefined)[]
 ): { [address: string]: CurrencyAmount | undefined } {
+  const { chainId } = useWeb3React()
   const multicallContract = useMulticallContract()
 
   const addresses: string[] = useMemo(
@@ -38,10 +40,10 @@ export function useNativeCurrencyBalances(
     () =>
       addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
         const value = results?.[i]?.result?.[0]
-        if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()))
+        if (chainId && value) memo[address] = CurrencyAmount.nativeCurrency(JSBI.BigInt(value.toString()), chainId)
         return memo
       }, {}),
-    [addresses, results]
+    [addresses, results, chainId]
   )
 }
 
@@ -106,7 +108,7 @@ export function useCurrencyBalances(
 
   const tokenBalances = useTokenBalances(account, tokens)
   const containsNativeCurrency: boolean = useMemo(
-    () => currencies?.some(currency => !!(currency && currency.isNative())) ?? false,
+    () => currencies?.some(currency => !!(currency && Currency.isNative(currency))) ?? false,
     [currencies]
   )
   const nativeCurrencyBalance = useNativeCurrencyBalances(containsNativeCurrency ? [account] : [])
@@ -116,7 +118,7 @@ export function useCurrencyBalances(
       currencies?.map(currency => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency.isNative()) return nativeCurrencyBalance[account]
+        if (Currency.isNative(currency)) return nativeCurrencyBalance[account]
         return undefined
       }) ?? [],
     [account, currencies, nativeCurrencyBalance, tokenBalances]

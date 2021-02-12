@@ -39,7 +39,7 @@ export default function CurrencyLogo({
   const nativeCurrencyLogo = NATIVE_CURRENCY_LOGO[(chainId as ChainId) || ChainId.MAINNET]
 
   const srcs: string[] = useMemo(() => {
-    if (currency?.isNative() && !!nativeCurrencyLogo) return [nativeCurrencyLogo]
+    if (currency && Currency.isNative(currency) && !!nativeCurrencyLogo) return [nativeCurrencyLogo]
 
     if (currency instanceof Token) {
       if (currency?.name === 'DXdao') {

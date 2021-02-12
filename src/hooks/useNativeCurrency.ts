@@ -1,7 +1,9 @@
 import { useWeb3React } from '@web3-react/core'
-import { ChainId, Currency, NATIVE_CURRENCY } from 'dxswap-sdk'
+import { Currency } from 'dxswap-sdk'
 
 export function useNativeCurrency(): Currency {
   const { chainId } = useWeb3React()
-  return NATIVE_CURRENCY[chainId || ChainId.MAINNET]
+  // fallback to ether if chain id is not defined
+  if (!chainId) return Currency.ETHER
+  return Currency.getNative(chainId) || Currency.ETHER
 }
