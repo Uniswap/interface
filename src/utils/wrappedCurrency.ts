@@ -1,7 +1,17 @@
-import { ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH } from 'dxswap-sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, SPOA, Token, TokenAmount, WETH, WSPOA } from 'dxswap-sdk'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
-  return chainId && currency === ETHER ? WETH[chainId] : currency instanceof Token ? currency : undefined
+  if (!chainId) {
+    return currency instanceof Token ? currency : undefined
+  }
+  switch (currency) {
+    case ETHER:
+      return WETH[chainId]
+    case SPOA:
+      return WSPOA[chainId]
+    default:
+      return currency instanceof Token ? currency : undefined
+  }
 }
 
 export function wrappedCurrencyAmount(

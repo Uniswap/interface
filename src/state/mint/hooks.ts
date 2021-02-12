@@ -1,10 +1,11 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, JSBI, Pair, Percent, Price, TokenAmount } from 'dxswap-sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PairState, usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
@@ -34,6 +35,7 @@ export function useDerivedMintInfo(
   error?: string
 } {
   const { account, chainId } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
 
@@ -83,13 +85,26 @@ export function useDerivedMintInfo(
           dependentField === Field.CURRENCY_B
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
-        return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
+        return dependentCurrency === nativeCurrency
+          ? CurrencyAmount.ether(dependentTokenAmount.raw)
+          : dependentTokenAmount
       }
       return undefined
     } else {
       return undefined
     }
-  }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, chainId, currencyB, pair])
+  }, [
+    noLiquidity,
+    independentAmount,
+    otherTypedValue,
+    currencies,
+    dependentField,
+    chainId,
+    currencyA,
+    currencyB,
+    pair,
+    nativeCurrency
+  ])
   const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
     [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
     [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount

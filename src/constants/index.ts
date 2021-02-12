@@ -1,14 +1,16 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ChainId, JSBI, Percent, Token, WETH, DXD } from 'dxswap-sdk'
-import { rinkeby, mainnet, arbitrumTestnetV3 } from 'dxswap-periphery/.contracts.json'
+import { rinkeby, mainnet, arbitrumTestnetV3, sokol } from 'dxswap-periphery/.contracts.json'
 import { tokens } from './tokens'
 import { authereum, injected, walletConnect } from '../connectors'
 
 export const ROUTER_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: rinkeby.router,
   [ChainId.MAINNET]: mainnet.router,
-  [ChainId.ARBITRUM_TESTNET_V3]: arbitrumTestnetV3.router
+  [ChainId.ARBITRUM_TESTNET_V3]: arbitrumTestnetV3.router,
+  [ChainId.SOKOL]: sokol.router
 }
+
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 // a list of tokens by chain
@@ -24,13 +26,12 @@ export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
 
+// this part needs to be updated to take into account chains where ETH is not the main currency
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]]
+  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
+  [ChainId.SOKOL]: [WETH[ChainId.SOKOL]]
 }
 
 // used to construct intermediary pairs for trading

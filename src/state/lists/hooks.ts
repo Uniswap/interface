@@ -19,12 +19,10 @@ export type TokenAddressMap = { [chainId in ChainId]: { [tokenAddress: string]: 
  * An empty result, useful as a default.
  */
 const EMPTY_LIST: TokenAddressMap = {
-  [ChainId.KOVAN]: {},
   [ChainId.RINKEBY]: {},
-  [ChainId.ROPSTEN]: {},
-  [ChainId.GÖRLI]: {},
   [ChainId.MAINNET]: {},
-  [ChainId.ARBITRUM_TESTNET_V3]: {}
+  [ChainId.ARBITRUM_TESTNET_V3]: {},
+  [ChainId.SOKOL]: {}
 }
 
 export function tokenListToTokenMap(list: TokenInfo[]): TokenAddressMap {

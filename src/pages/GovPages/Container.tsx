@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Currency, ETHER } from 'dxswap-sdk'
+import { Currency } from 'dxswap-sdk'
 import { GovCard } from './Card'
 import { MainPage, PairPage, temporaryCurrencyData } from './constant'
 import { AutoRowCleanGap } from '../../components/Row'
 import { Redirect } from 'react-router-dom'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 const CardContainer = styled(AutoRowCleanGap)`
   max-height: 330px;
@@ -24,6 +25,8 @@ interface ContainerProps {
 }
 
 export default function Container({ currentPage, currency }: ContainerProps) {
+  const nativeCurrency = useNativeCurrency()
+
   const randomInteger = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min + 1)) + min
   }
@@ -46,7 +49,7 @@ export default function Container({ currentPage, currency }: ContainerProps) {
             <GovCard
               key={index}
               currency={currency}
-              currency1={ele === currency ? ETHER : ele}
+              currency1={ele === currency ? nativeCurrency : ele}
               proposals={randomInteger(index, 100)}
             />
           ))}

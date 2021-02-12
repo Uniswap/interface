@@ -45,6 +45,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { calculateProtocolFee } from '../../utils/prices'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 const StyledInternalLinkText = styled(TYPE.body)`
   display: flex;
@@ -60,6 +61,7 @@ export default function RemoveLiquidity({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
     currencyA,
     currencyB,
@@ -105,7 +107,7 @@ export default function RemoveLiquidity({
 
   const { protocolFee } = calculateProtocolFee(
     pair,
-    currencyA === ETHER && parsedAmounts[Field.CURRENCY_A]
+    currencyA === nativeCurrency && parsedAmounts[Field.CURRENCY_A]
       ? CurrencyAmount.ether(parsedAmounts[Field.CURRENCY_A]?.raw ?? '')
       : parsedAmounts[Field.CURRENCY_A]
   )
@@ -228,8 +230,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER
-    const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
+    const currencyBIsNative = currencyB === nativeCurrency
+    const oneCurrencyIsNative = currencyA === nativeCurrency || currencyBIsNative
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -237,13 +239,13 @@ export default function RemoveLiquidity({
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
-      if (oneCurrencyIsETH) {
+      if (oneCurrencyIsNative) {
         methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
         args = [
-          currencyBIsETH ? tokenA.address : tokenB.address,
+          currencyBIsNative ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsNative ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[currencyBIsNative ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           deadline.toHexString()
         ]
@@ -265,13 +267,13 @@ export default function RemoveLiquidity({
     // we have a signataure, use permit versions of remove liquidity
     else if (signatureData !== null) {
       // removeLiquidityETHWithPermit
-      if (oneCurrencyIsETH) {
+      if (oneCurrencyIsNative) {
         methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
         args = [
-          currencyBIsETH ? tokenA.address : tokenB.address,
+          currencyBIsNative ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsNative ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[currencyBIsNative ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           signatureData.deadline,
           false,

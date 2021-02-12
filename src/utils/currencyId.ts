@@ -1,7 +1,7 @@
-import { Currency, ETHER, Token } from 'dxswap-sdk'
+import { Currency, Token } from 'dxswap-sdk'
 
 export function currencyId(currency: Currency): string {
-  if (currency === ETHER) return 'ETH'
+  if (currency.isNative()) return currency.symbol || ''
   if (currency instanceof Token) return currency.address
   throw new Error('invalid currency')
 }

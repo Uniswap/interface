@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, WETH } from 'dxswap-sdk'
+import { ChainId, Token, Currency, ETHER, WETH, SPOA, WSPOA } from 'dxswap-sdk'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { useMemo } from 'react'
 import {
@@ -11,9 +11,12 @@ import ENS_ABI from '../constants/abis/ens-registrar.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import WETH_ABI from '../constants/abis/weth.json'
+import WSPOA_ABI from '../constants/abis/wspoa.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
+import { useNativeCurrency } from './useNativeCurrency'
+import { useWeb3React } from '@web3-react/core'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -34,9 +37,37 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
-export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? WETH[chainId].address : undefined, WETH_ABI, withSignerIfPossible)
+export function useWrappingToken(currency?: Currency): Token | undefined {
+  const { chainId } = useWeb3React()
+  if (!chainId || !currency || !currency.isNative()) return undefined
+  switch (currency) {
+    case ETHER:
+      return WETH[chainId]
+    case SPOA:
+      return WSPOA[chainId]
+    default:
+      return undefined
+  }
+}
+
+function useWrappingTokenAbi(token?: Token): any | undefined {
+  const { chainId } = useWeb3React()
+  if (!chainId) return undefined
+  switch (token) {
+    case WETH[chainId]:
+      return WETH_ABI
+    case WSPOA[chainId]:
+      return WSPOA_ABI
+    default:
+      return undefined
+  }
+}
+
+export function useNativeCurrencyWrapperContract(withSignerIfPossible?: boolean): Contract | null {
+  const nativeCurrency = useNativeCurrency()
+  const wrapperToken = useWrappingToken(nativeCurrency)
+  const wrapperAbi = useWrappingTokenAbi(wrapperToken)
+  return useContract(wrapperToken?.address, wrapperAbi, withSignerIfPossible)
 }
 
 export function useArgentWalletDetectorContract(): Contract | null {
@@ -54,8 +85,6 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
   if (chainId) {
     switch (chainId) {
       case ChainId.MAINNET:
-      case ChainId.GÖRLI:
-      case ChainId.ROPSTEN:
       case ChainId.RINKEBY:
         address = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
         break

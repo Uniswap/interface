@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH, Percent, JSBI, ChainId } from 'dxswap-sdk'
+import { Currency, currencyEquals, TokenAmount, WETH, Percent, JSBI, ChainId } from 'dxswap-sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
@@ -38,6 +38,7 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import TradePrice from '../../components/swap/TradePrice'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 export default function AddLiquidity({
   match: {
@@ -47,6 +48,7 @@ export default function AddLiquidity({
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+  const nativeCurrency = useNativeCurrency()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -145,19 +147,19 @@ export default function AddLiquidity({
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
+    if (currencyA === nativeCurrency || currencyB === nativeCurrency) {
+      const tokenBIsNative = currencyB === nativeCurrency
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-        amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+        wrappedCurrency(tokenBIsNative ? currencyA : currencyB, chainId)?.address ?? '', // token
+        (tokenBIsNative ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        amountsMin[tokenBIsNative ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+        amountsMin[tokenBIsNative ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
         deadline.toHexString()
       ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      value = BigNumber.from((tokenBIsNative ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity

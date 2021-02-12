@@ -9,7 +9,7 @@ import Logo from '../../assets/svg/swapr.svg'
 import LogoDark from '../../assets/svg/swapr_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
+import { useNativeCurrencyBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
@@ -21,6 +21,7 @@ import { transparentize } from 'polished'
 import { ExternalLink, TYPE } from '../../theme'
 import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -237,17 +238,16 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan',
-  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum'
+  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum',
+  [ChainId.SOKOL]: 'Sokol'
 }
 
 function Header({ history }: { history: any }) {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const nativeCurrency = useNativeCurrency()
+  const userNativeCurrencyBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
   const handleDisabledAnchorClick = useCallback(event => {
@@ -303,7 +303,7 @@ function Header({ history }: { history: any }) {
             <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
           )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
+            {account && userNativeCurrencyBalance ? (
               <TYPE.white
                 style={{ flexShrink: 0 }}
                 ml="18px"
@@ -313,7 +313,7 @@ function Header({ history }: { history: any }) {
                 lineHeight="15px"
                 letterSpacing="0.08em"
               >
-                {userEthBalance?.toSignificant(4)} ETH
+                {userNativeCurrencyBalance?.toSignificant(4)} {nativeCurrency.symbol}
               </TYPE.white>
             ) : null}
             <Web3Status />

@@ -3,7 +3,6 @@ import styled, { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { Info } from 'react-feather'
 import { Flex, Text } from 'rebass'
-import { ETHER } from 'dxswap-sdk'
 
 import { TYPE } from '../../theme'
 import { PageWrapper } from '../Pool/styleds'
@@ -18,6 +17,7 @@ import { ButtonPrimary, ButtonWithLink } from '../../components/Button'
 
 import Container from './Container'
 import { MainPage, PairPage } from './constant'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -42,6 +42,7 @@ export default function Governance() {
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
   const router = useRouter()
+  const nativeCurrency = useNativeCurrency()
 
   return (
     <PageWrapper>
@@ -56,7 +57,7 @@ export default function Governance() {
                   {t('governance')}
                 </TYPE.mediumHeader>
                 &nbsp; / &nbsp;
-                <CurrencyLogo size="20px" currency={ETHER} />
+                <CurrencyLogo size="20px" currency={nativeCurrency} />
                 &nbsp;
                 <TYPE.mediumHeader lineHeight="24px">{t(router.query?.asset)}</TYPE.mediumHeader>
               </>
