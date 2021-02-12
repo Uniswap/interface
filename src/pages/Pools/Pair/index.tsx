@@ -101,7 +101,7 @@ export default function Pair({
                   <Box mr="8px">
                     <UndecoratedLink to="/pools">
                       <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px" color="text4">
-                        Pair
+                        Pairs
                       </TYPE.mediumHeader>
                     </UndecoratedLink>
                   </Box>
