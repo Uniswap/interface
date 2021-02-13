@@ -130,7 +130,9 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
         Sentry.captureException(error, {
           tags: {
             section: 'Bridge',
-            bridgeType: 'ERC677ToERC677'
+            bridgeType: 'ERC677ToERC677',
+            token: this.tokenSymbol,
+            isHome: this.isHome
           }
         })
 

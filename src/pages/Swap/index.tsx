@@ -226,7 +226,8 @@ export default function Swap() {
         if (error?.code !== 4001) {
           Sentry.captureException(error, {
             tags: {
-              section: 'Swap'
+              section: 'Swap',
+              tokens: `${trade?.inputAmount?.currency?.symbol}/${trade?.outputAmount?.currency?.symbol}`
             }
           })
         }

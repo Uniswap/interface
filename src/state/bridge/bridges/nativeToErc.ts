@@ -146,7 +146,8 @@ export default class NativeToErcBridge extends TokenBridge {
         Sentry.captureException(error, {
           tags: {
             section: 'Bridge',
-            bridgeType: 'NativeToERC'
+            bridgeType: 'NativeToERC',
+            isHome: this.isHome
           }
         })
 

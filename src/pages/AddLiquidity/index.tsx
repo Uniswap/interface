@@ -210,7 +210,8 @@ export default function AddLiquidity({
         if (error?.code !== 4001) {
           Sentry.captureException(error, {
             tags: {
-              section: 'Add Liquidity'
+              section: 'Add Liquidity',
+              tokens: `${currencies[Field.CURRENCY_A]?.symbol}/${currencies[Field.CURRENCY_B]?.symbol}`
             }
           })
 

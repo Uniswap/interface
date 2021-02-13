@@ -4,6 +4,7 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import flatMap from 'lodash.flatmap'
 import {
   ROUTER_ADDRESS,
   MAINNET_FOREIGN_BRIDGE_ADDRESS,
@@ -237,9 +238,10 @@ export function isCustomBridgeToken(tokenAddress?: string) {
   if (!tokenAddress) return
 
   const formattedTokenAddress = tokenAddress.toLowerCase()
-  const addresses = [...CUSTOM_BRIDGE_TOKENS[FOREIGN_BRIDGE_CHAIN as ChainId]]
-    .flatMap((token: any) => [token.FOREIGN_TOKEN_ADDRESS, token.HOME_TOKEN_ADDRESS])
-    .map((token: string) => token.toLowerCase())
+  const addresses = flatMap([...CUSTOM_BRIDGE_TOKENS[FOREIGN_BRIDGE_CHAIN as ChainId]], (token: any) => [
+    token.FOREIGN_TOKEN_ADDRESS,
+    token.HOME_TOKEN_ADDRESS
+  ]).map((token: string) => token.toLowerCase())
 
   return addresses.includes(formattedTokenAddress)
 }

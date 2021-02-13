@@ -26,7 +26,7 @@ export function useApproveCallback(
   amountToApprove?: CurrencyAmount,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
@@ -96,14 +96,16 @@ export function useApproveCallback(
         if (error?.code !== 4001) {
           Sentry.captureException(error, {
             tags: {
-              action: 'Approve Token'
+              action: 'Approve Token',
+              token: token.symbol,
+              chainId
             }
           })
           throw error
         }
         console.debug('Failed to approve token', error)
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction, chainId])
 
   return [approvalState, approve]
 }

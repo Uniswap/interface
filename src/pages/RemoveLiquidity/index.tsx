@@ -334,7 +334,8 @@ export default function RemoveLiquidity({
           if (error.code !== 4001) {
             Sentry.captureException(error, {
               tags: {
-                section: 'Remove Liquidity'
+                section: 'Remove Liquidity',
+                tokens: `${currencyA?.symbol}/${currencyB?.symbol}`
               }
             })
           }
