@@ -69,7 +69,7 @@ export function useDerivedBridgeInfo(
     try {
       return await getMinMaxPerTxn(tokenAddress, inputCurrency?.decimals, isHome, chainId, library, account)
     } catch (e) {
-      console.error(`Failed to fetch min max amount`)
+      console.error(`Failed to fetch min max amount for ${inputCurrency?.symbol} at ${tokenAddress}`, e)
       return { minAmount: '0', maxAmount: '1000' }
     }
   }, [tokenAddress, inputCurrency])
