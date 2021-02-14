@@ -16,7 +16,7 @@ import {
   ButtonRadio,
   ButtonSecondary,
   ButtonUNIGradient,
-  ButtonWhite
+  ButtonWhite,
 } from './index'
 
 const wrapperCss = styled.main`
@@ -29,15 +29,15 @@ export default {
   title: 'Buttons',
   argTypes: {
     disabled: { control: { type: 'boolean' } },
-    onClick: { action: 'clicked' }
+    onClick: { action: 'clicked' },
   },
   decorators: [
     (Component: Story) => (
       <div css={wrapperCss}>
         <Component />
       </div>
-    )
-  ]
+    ),
+  ],
 }
 
 const Unicorn = () => (
