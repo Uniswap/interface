@@ -18,7 +18,7 @@ if (typeof NETWORK_URL === 'undefined') {
 }
 
 export const network = new NetworkConnector({
-  urls: { [NETWORK_CHAIN_ID]: NETWORK_URL },
+  urls: { [NETWORK_CHAIN_ID]: NETWORK_URL }
 })
 
 let networkLibrary: Web3Provider | undefined
@@ -27,7 +27,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42],
+  supportedChainIds: [1, 3, 4, 5, 42]
 })
 
 // mainnet only
@@ -35,19 +35,19 @@ export const walletconnect = new WalletConnectConnector({
   rpc: { 1: NETWORK_URL },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
-  pollingInterval: 15000,
+  pollingInterval: 15000
 })
 
 // mainnet only
 export const fortmatic = new FortmaticConnector({
   apiKey: FORMATIC_KEY ?? '',
-  chainId: 1,
+  chainId: 1
 })
 
 // mainnet only
 export const portis = new PortisConnector({
   dAppId: PORTIS_ID ?? '',
-  networks: [1],
+  networks: [1]
 })
 
 // mainnet only
@@ -55,5 +55,5 @@ export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
   appName: 'Uniswap',
   appLogoUrl:
-    'https://mpng.pngfly.com/20181202/bex/kisspng-emoji-domain-unicorn-pin-badges-sticker-unicorn-tumblr-emoji-unicorn-iphoneemoji-5c046729264a77.5671679315437924251569.jpg',
+    'https://mpng.pngfly.com/20181202/bex/kisspng-emoji-domain-unicorn-pin-badges-sticker-unicorn-tumblr-emoji-unicorn-iphoneemoji-5c046729264a77.5671679315437924251569.jpg'
 })

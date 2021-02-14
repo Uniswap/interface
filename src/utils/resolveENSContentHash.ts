@@ -8,20 +8,20 @@ const REGISTRAR_ABI = [
     inputs: [
       {
         name: 'node',
-        type: 'bytes32',
-      },
+        type: 'bytes32'
+      }
     ],
     name: 'resolver',
     outputs: [
       {
         name: 'resolverAddress',
-        type: 'address',
-      },
+        type: 'address'
+      }
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
-  },
+    type: 'function'
+  }
 ]
 const REGISTRAR_ADDRESS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
 
@@ -32,21 +32,21 @@ const RESOLVER_ABI = [
       {
         internalType: 'bytes32',
         name: 'node',
-        type: 'bytes32',
-      },
+        type: 'bytes32'
+      }
     ],
     name: 'contenthash',
     outputs: [
       {
         internalType: 'bytes',
         name: '',
-        type: 'bytes',
-      },
+        type: 'bytes'
+      }
     ],
     payable: false,
     stateMutability: 'view',
-    type: 'function',
-  },
+    type: 'function'
+  }
 ]
 
 // cache the resolver contracts since most of them are the public resolver
