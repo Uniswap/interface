@@ -42,8 +42,8 @@ const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 100;
-  visibility: ${props => (props.show ? 'visible' : 'hidden')};
-  opacity: ${props => (props.show ? 1 : 0)};
+  visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
   background: ${({ theme }) => theme.bg2};
   border: 1px solid ${({ theme }) => theme.bg3};
@@ -93,7 +93,7 @@ function listUrlRowHTMLId(listUrl: string) {
 }
 
 const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
@@ -109,7 +109,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: 'auto',
     strategy: 'fixed',
-    modifiers: [{ name: 'offset', options: { offset: [8, 8] } }]
+    modifiers: [{ name: 'offset', options: { offset: [8, 8] } }],
   })
 
   useOnClickOutside(node, open ? toggle : undefined)
@@ -119,7 +119,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     ReactGA.event({
       category: 'Lists',
       action: 'Update List from List Select',
-      label: listUrl
+      label: listUrl,
     })
     dispatch(acceptListUpdate(listUrl))
   }, [dispatch, listUrl, pending])
@@ -128,13 +128,13 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     ReactGA.event({
       category: 'Lists',
       action: 'Start Remove List',
-      label: listUrl
+      label: listUrl,
     })
     if (window.prompt(`Please confirm you would like to remove this list by typing REMOVE`) === `REMOVE`) {
       ReactGA.event({
         category: 'Lists',
         action: 'Confirm Remove List',
-        label: listUrl
+        label: listUrl,
       })
       dispatch(removeList(listUrl))
     }
@@ -144,7 +144,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     ReactGA.event({
       category: 'Lists',
       action: 'Enable List',
-      label: listUrl
+      label: listUrl,
     })
     dispatch(enableList(listUrl))
   }, [dispatch, listUrl])
@@ -153,7 +153,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
     ReactGA.event({
       category: 'Lists',
       action: 'Disable List',
-      label: listUrl
+      label: listUrl,
     })
     dispatch(disableList(listUrl))
   }, [dispatch, listUrl])
@@ -216,7 +216,7 @@ const ListContainer = styled.div`
 export function ManageLists({
   setModalView,
   setImportList,
-  setListUrl
+  setListUrl,
 }: {
   setModalView: (view: CurrencyModalView) => void
   setImportList: (list: TokenList) => void
@@ -237,7 +237,7 @@ export function ManageLists({
     }
   }, [activeCopy, activeListUrls])
 
-  const handleInput = useCallback(e => {
+  const handleInput = useCallback((e) => {
     setListUrlInput(e.target.value)
   }, [])
 
@@ -250,7 +250,7 @@ export function ManageLists({
   const sortedLists = useMemo(() => {
     const listUrls = Object.keys(lists)
     return listUrls
-      .filter(listUrl => {
+      .filter((listUrl) => {
         // only show loaded lists, hide unsupported lists
         return Boolean(lists[listUrl].current) && !Boolean(UNSUPPORTED_LIST_URLS.includes(listUrl))
       })
@@ -286,7 +286,7 @@ export function ManageLists({
   useEffect(() => {
     async function fetchTempList() {
       fetchList(listUrlInput, false)
-        .then(list => setTempList(list))
+        .then((list) => setTempList(list))
         .catch(() => setAddError('Error importing list'))
     }
     // if valid url, fetch details for card
@@ -367,7 +367,7 @@ export function ManageLists({
       <Separator />
       <ListContainer>
         <AutoColumn gap="md">
-          {sortedLists.map(listUrl => (
+          {sortedLists.map((listUrl) => (
             <ListRow key={listUrl} listUrl={listUrl} />
           ))}
         </AutoColumn>

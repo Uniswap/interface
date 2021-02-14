@@ -20,18 +20,18 @@ export default {
   title: 'Charts',
   argTypes: {
     disabled: { control: { type: 'boolean' } },
-    onClick: { action: 'clicked' }
+    onClick: { action: 'clicked' },
   },
   decorators: [
     (Component: Story) => (
       <div css={wrapperCss}>
         <Component />
       </div>
-    )
-  ]
+    ),
+  ],
 }
 
-const Template: Story<LineChartProps> = args => <Component {...args}>{args.children}</Component>
+const Template: Story<LineChartProps> = (args) => <Component {...args}>{args.children}</Component>
 
 const Wrapper = styled.div`
   margin: 1em 2em;
@@ -50,7 +50,7 @@ Basic.decorators = [
         <Story />
       </Wrapper>
     )
-  }
+  },
 ]
 
 // const Full = () => {

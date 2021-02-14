@@ -24,7 +24,7 @@ export default function MigrateV1() {
   const { account, chainId } = useActiveWeb3React()
 
   const [tokenSearch, setTokenSearch] = useState<string>('')
-  const handleTokenSearchChange = useCallback(e => setTokenSearch(e.target.value), [setTokenSearch])
+  const handleTokenSearchChange = useCallback((e) => setTokenSearch(e.target.value), [setTokenSearch])
 
   // automatically add the search token
   const token = useToken(tokenSearch)
@@ -42,17 +42,19 @@ export default function MigrateV1() {
   const V1Exchanges = useAllTokenV1Exchanges()
   const V1LiquidityTokens: Token[] = useMemo(() => {
     return chainId
-      ? Object.keys(V1Exchanges).map(exchangeAddress => new Token(chainId, exchangeAddress, 18, 'UNI-V1', 'Uniswap V1'))
+      ? Object.keys(V1Exchanges).map(
+          (exchangeAddress) => new Token(chainId, exchangeAddress, 18, 'UNI-V1', 'Uniswap V1')
+        )
       : []
   }, [chainId, V1Exchanges])
   const [V1LiquidityBalances, V1LiquidityBalancesLoading] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
     V1LiquidityTokens
   )
-  const allV1PairsWithLiquidity = V1LiquidityTokens.filter(V1LiquidityToken => {
+  const allV1PairsWithLiquidity = V1LiquidityTokens.filter((V1LiquidityToken) => {
     const balance = V1LiquidityBalances?.[V1LiquidityToken.address]
     return balance && JSBI.greaterThan(balance.raw, JSBI.BigInt(0))
-  }).map(V1LiquidityToken => {
+  }).map((V1LiquidityToken) => {
     const balance = V1LiquidityBalances[V1LiquidityToken.address]
     return balance ? (
       <V1PositionCard
