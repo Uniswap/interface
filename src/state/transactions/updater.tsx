@@ -5,10 +5,13 @@ import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
 
-export function shouldCheck(
-  lastBlockNumber: number,
-  tx: { addedTime: number; receipt?: {}; lastCheckedBlockNumber?: number }
-): boolean {
+interface TxInterface {
+  addedTime: number
+  receipt?: Record<string, any>
+  lastCheckedBlockNumber?: number
+}
+
+export function shouldCheck(lastBlockNumber: number, tx: TxInterface): boolean {
   if (tx.receipt) return false
   if (!tx.lastCheckedBlockNumber) return true
   const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber
