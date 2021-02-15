@@ -247,7 +247,8 @@ function Header({ history }: { history: any }) {
   const { t } = useTranslation()
 
   const nativeCurrency = useNativeCurrency()
-  const userNativeCurrencyBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
+  const userNativeCurrencyBalances = useNativeCurrencyBalances(account ? [account] : [])
+  const userNativeCurrencyBalance = userNativeCurrencyBalances?.[account || '']
   const [isDark] = useDarkModeManager()
 
   const handleDisabledAnchorClick = useCallback(event => {
