@@ -41,7 +41,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
 export function SubmittedView({
   children,
   onDismiss,
-  hash
+  hash,
 }: {
   children: any
   onDismiss: () => void

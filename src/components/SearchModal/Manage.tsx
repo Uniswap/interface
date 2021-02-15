@@ -46,7 +46,7 @@ export default function Manage({
   setModalView,
   setImportList,
   setImportToken,
-  setListUrl
+  setListUrl,
 }: {
   onDismiss: () => void
   setModalView: (view: CurrencyModalView) => void

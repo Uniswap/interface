@@ -33,7 +33,7 @@ const ZERO_FRACTION = new Fraction(ZERO, ONE)
 function V1PairRemoval({
   exchangeContract,
   liquidityTokenAmount,
-  token
+  token,
 }: {
   exchangeContract: Contract
   liquidityTokenAmount: TokenAmount
@@ -75,11 +75,11 @@ function V1PairRemoval({
         ReactGA.event({
           category: 'Remove',
           action: 'V1',
-          label: token?.symbol
+          label: token?.symbol,
         })
 
         addTransaction(response, {
-          summary: `Remove ${chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH V1 liquidity`
+          summary: `Remove ${chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH V1 liquidity`,
         })
         setPendingRemovalHash(response.hash)
       })
@@ -128,8 +128,8 @@ function V1PairRemoval({
 
 export default function RemoveV1Exchange({
   match: {
-    params: { address }
-  }
+    params: { address },
+  },
 }: RouteComponentProps<{ address: string }>) {
   const validatedAddress = isAddress(address)
   const { chainId, account } = useActiveWeb3React()
