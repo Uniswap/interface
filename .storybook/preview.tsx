@@ -8,10 +8,10 @@ export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
   dependencies: {
     withStoriesOnly: true,
-    hideEmpty: true
+    hideEmpty: true,
   },
   docs: {
-    theme: storybookThemes.light
+    theme: storybookThemes.light,
   },
   viewport: {
     viewports: {
@@ -19,32 +19,32 @@ export const parameters = {
         name: 'iPhone X',
         styles: {
           width: '375px',
-          height: '812px'
-        }
+          height: '812px',
+        },
       },
       tablet: {
         name: 'iPad',
         styles: {
           width: '768px',
-          height: '1024px'
-        }
+          height: '1024px',
+        },
       },
       laptop: {
         name: 'Laptop',
         styles: {
           width: '1024px',
-          height: '768px'
-        }
+          height: '768px',
+        },
       },
       desktop: {
         name: 'Desktop',
         styles: {
           width: '1440px',
-          height: '1024px'
-        }
-      }
-    }
-  }
+          height: '1024px',
+        },
+      },
+    },
+  },
 }
 
 export const globalTypes = {
@@ -54,9 +54,9 @@ export const globalTypes = {
     defaultValue: 'light',
     toolbar: {
       icon: 'circlehollow',
-      items: ['light', 'dark']
-    }
-  }
+      items: ['light', 'dark'],
+    },
+  },
 }
 
 const withProviders = (Component: Story, context: Record<string, any>) => {

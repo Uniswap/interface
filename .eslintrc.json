@@ -8,9 +8,7 @@
       "jsx": true
     }
   },
-  "ignorePatterns": [
-    "node_modules/**/*"
-  ],
+  "ignorePatterns": ["node_modules/**/*"],
   "settings": {
     "react": {
       "version": "detect"

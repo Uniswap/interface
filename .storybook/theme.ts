@@ -4,11 +4,11 @@ import { create } from '@storybook/theming'
 const uniswapBaseTheme = {
   brandTitle: 'Uniswap Design',
   brandUrl: 'https://uniswap.org',
-  brandImage: 'https://ipfs.io/ipfs/QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir'
+  brandImage: 'https://ipfs.io/ipfs/QmNa8mQkrNKp1WEEeGjFezDmDeodkWRevGFN8JCV7b4Xir',
 }
 export const light = create({
   base: 'light',
-  ...uniswapBaseTheme
+  ...uniswapBaseTheme,
 })
 
 // export const dark = create({
