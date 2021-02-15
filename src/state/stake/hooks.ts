@@ -21,21 +21,21 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MAINNET]: [
     {
       tokens: [WETH[ChainId.MAINNET], DAI],
-      stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
+      stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711',
     },
     {
       tokens: [WETH[ChainId.MAINNET], USDC],
-      stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b'
+      stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b',
     },
     {
       tokens: [WETH[ChainId.MAINNET], USDT],
-      stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a'
+      stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a',
     },
     {
       tokens: [WETH[ChainId.MAINNET], WBTC],
-      stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e'
-    }
-  ]
+      stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e',
+    },
+  ],
 }
 
 export interface StakingInfo {
@@ -76,7 +76,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   const info = useMemo(
     () =>
       chainId
-        ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
+        ? STAKING_REWARDS_INFO[chainId]?.filter((stakingRewardInfo) =>
             pairToFilterBy === undefined
               ? true
               : pairToFilterBy === null
@@ -193,7 +193,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           stakedAmount: stakedAmount,
           totalStakedAmount: totalStakedAmount,
           getHypotheticalRewardRate,
-          active
+          active,
         })
       }
       return memo
@@ -208,7 +208,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     rewardRates,
     rewardsAddresses,
     totalSupplies,
-    uni
+    uni,
   ])
 }
 
@@ -256,7 +256,7 @@ export function useDerivedStakeInfo(
 
   return {
     parsedAmount,
-    error
+    error,
   }
 }
 
@@ -284,6 +284,6 @@ export function useDerivedUnstakeInfo(
 
   return {
     parsedAmount,
-    error
+    error,
   }
 }

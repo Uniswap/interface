@@ -8,15 +8,15 @@ export interface BurnState {
 
 const initialState: BurnState = {
   independentField: Field.LIQUIDITY_PERCENT,
-  typedValue: '0'
+  typedValue: '0',
 }
 
-export default createReducer<BurnState>(initialState, builder =>
+export default createReducer<BurnState>(initialState, (builder) =>
   builder.addCase(typeInput, (state, { payload: { field, typedValue } }) => {
     return {
       ...state,
       independentField: field,
-      typedValue
+      typedValue,
     }
   })
 )

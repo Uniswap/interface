@@ -68,7 +68,7 @@ const Input = styled.input<{ error?: boolean }>`
 export default function AddressInputPanel({
   id,
   value,
-  onChange
+  onChange,
 }: {
   id?: string
   // the typed string value
@@ -82,7 +82,7 @@ export default function AddressInputPanel({
   const { address, loading, name } = useENS(value)
 
   const handleInput = useCallback(
-    event => {
+    (event) => {
       const input = event.target.value
       const withoutSpaces = input.replace(/\s+/g, '')
       onChange(withoutSpaces)
