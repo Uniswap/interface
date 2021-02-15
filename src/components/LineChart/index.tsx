@@ -153,7 +153,7 @@ const LineChart = ({
       chart.timeScale().fitContent()
       setChart(chart)
     }
-  }, [chartCreated, currenValue, data, height, setValue, textColor, theme.bg1])
+  }, [color, chartCreated, currenValue, data, height, setValue, textColor, theme.bg1])
 
   return (
     <Wrapper>
