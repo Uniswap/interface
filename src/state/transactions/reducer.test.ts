@@ -19,7 +19,7 @@ describe('transaction reducer', () => {
           summary: 'hello world',
           hash: '0x0',
           approval: { tokenAddress: 'abc', spender: 'def' },
-          from: 'abc'
+          from: 'abc',
         })
       )
       const txs = store.getState()
@@ -49,8 +49,8 @@ describe('transaction reducer', () => {
             from: '0x0',
             contractAddress: '0x0',
             blockHash: '0x0',
-            blockNumber: 1
-          }
+            blockNumber: 1,
+          },
         })
       )
       expect(store.getState()).toEqual({})
@@ -62,7 +62,7 @@ describe('transaction reducer', () => {
           chainId: ChainId.RINKEBY,
           approval: { spender: '0x0', tokenAddress: '0x0' },
           summary: 'hello world',
-          from: '0x0'
+          from: '0x0',
         })
       )
       const beforeTime = new Date().getTime()
@@ -78,8 +78,8 @@ describe('transaction reducer', () => {
             from: '0x0',
             contractAddress: '0x0',
             blockHash: '0x0',
-            blockNumber: 1
-          }
+            blockNumber: 1,
+          },
         })
       )
       const tx = store.getState()[ChainId.RINKEBY]?.['0x0']
@@ -93,7 +93,7 @@ describe('transaction reducer', () => {
         from: '0x0',
         contractAddress: '0x0',
         blockHash: '0x0',
-        blockNumber: 1
+        blockNumber: 1,
       })
     })
   })
@@ -104,7 +104,7 @@ describe('transaction reducer', () => {
         checkedTransaction({
           chainId: ChainId.RINKEBY,
           hash: '0x0',
-          blockNumber: 1
+          blockNumber: 1,
         })
       )
       expect(store.getState()).toEqual({})
@@ -116,14 +116,14 @@ describe('transaction reducer', () => {
           chainId: ChainId.RINKEBY,
           approval: { spender: '0x0', tokenAddress: '0x0' },
           summary: 'hello world',
-          from: '0x0'
+          from: '0x0',
         })
       )
       store.dispatch(
         checkedTransaction({
           chainId: ChainId.RINKEBY,
           hash: '0x0',
-          blockNumber: 1
+          blockNumber: 1,
         })
       )
       const tx = store.getState()[ChainId.RINKEBY]?.['0x0']
@@ -136,21 +136,21 @@ describe('transaction reducer', () => {
           chainId: ChainId.RINKEBY,
           approval: { spender: '0x0', tokenAddress: '0x0' },
           summary: 'hello world',
-          from: '0x0'
+          from: '0x0',
         })
       )
       store.dispatch(
         checkedTransaction({
           chainId: ChainId.RINKEBY,
           hash: '0x0',
-          blockNumber: 3
+          blockNumber: 3,
         })
       )
       store.dispatch(
         checkedTransaction({
           chainId: ChainId.RINKEBY,
           hash: '0x0',
-          blockNumber: 1
+          blockNumber: 1,
         })
       )
       const tx = store.getState()[ChainId.RINKEBY]?.['0x0']
@@ -166,7 +166,7 @@ describe('transaction reducer', () => {
           summary: 'hello world',
           hash: '0x0',
           approval: { tokenAddress: 'abc', spender: 'def' },
-          from: 'abc'
+          from: 'abc',
         })
       )
       store.dispatch(
@@ -175,7 +175,7 @@ describe('transaction reducer', () => {
           summary: 'hello world',
           hash: '0x1',
           approval: { tokenAddress: 'abc', spender: 'def' },
-          from: 'abc'
+          from: 'abc',
         })
       )
       expect(Object.keys(store.getState())).toHaveLength(2)

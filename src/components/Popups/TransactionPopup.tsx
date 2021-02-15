@@ -15,7 +15,7 @@ const RowNoFlex = styled(AutoRow)`
 export default function TransactionPopup({
   hash,
   success,
-  summary
+  summary,
 }: {
   hash: string
   success?: boolean
