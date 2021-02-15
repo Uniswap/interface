@@ -105,8 +105,8 @@ const ProposerAddressLink = styled(ExternalLink)`
 
 export default function VotePage({
   match: {
-    params: { id }
-  }
+    params: { id },
+  },
 }: RouteComponentProps<{ id: string }>) {
   const { chainId, account } = useActiveWeb3React()
 

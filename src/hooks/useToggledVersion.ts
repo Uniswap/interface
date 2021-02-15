@@ -2,7 +2,7 @@ import useParsedQueryString from './useParsedQueryString'
 
 export enum Version {
   v1 = 'v1',
-  v2 = 'v2'
+  v2 = 'v2',
 }
 
 export const DEFAULT_VERSION: Version = Version.v2

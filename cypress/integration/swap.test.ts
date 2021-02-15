@@ -3,33 +3,23 @@ describe('Swap', () => {
     cy.visit('/swap')
   })
   it('can enter an amount into input', () => {
-    cy.get('#swap-currency-input .token-amount-input')
-      .type('0.001', { delay: 200 })
-      .should('have.value', '0.001')
+    cy.get('#swap-currency-input .token-amount-input').type('0.001', { delay: 200 }).should('have.value', '0.001')
   })
 
   it('zero swap amount', () => {
-    cy.get('#swap-currency-input .token-amount-input')
-      .type('0.0', { delay: 200 })
-      .should('have.value', '0.0')
+    cy.get('#swap-currency-input .token-amount-input').type('0.0', { delay: 200 }).should('have.value', '0.0')
   })
 
   it('invalid swap amount', () => {
-    cy.get('#swap-currency-input .token-amount-input')
-      .type('\\', { delay: 200 })
-      .should('have.value', '')
+    cy.get('#swap-currency-input .token-amount-input').type('\\', { delay: 200 }).should('have.value', '')
   })
 
   it('can enter an amount into output', () => {
-    cy.get('#swap-currency-output .token-amount-input')
-      .type('0.001', { delay: 200 })
-      .should('have.value', '0.001')
+    cy.get('#swap-currency-output .token-amount-input').type('0.001', { delay: 200 }).should('have.value', '0.001')
   })
 
   it('zero output amount', () => {
-    cy.get('#swap-currency-output .token-amount-input')
-      .type('0.0', { delay: 200 })
-      .should('have.value', '0.0')
+    cy.get('#swap-currency-output .token-amount-input').type('0.0', { delay: 200 }).should('have.value', '0.0')
   })
 
   it('can swap ETH for DAI', () => {
@@ -49,7 +39,7 @@ describe('Swap', () => {
 
   describe('expert mode', () => {
     beforeEach(() => {
-      cy.window().then(win => {
+      cy.window().then((win) => {
         cy.stub(win, 'prompt').returns('confirm')
       })
       cy.get('#open-settings-dialog-button').click()

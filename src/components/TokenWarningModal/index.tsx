@@ -6,7 +6,7 @@ import { ImportToken } from 'components/SearchModal/ImportToken'
 export default function TokenWarningModal({
   isOpen,
   tokens,
-  onConfirm
+  onConfirm,
 }: {
   isOpen: boolean
   tokens: Token[]

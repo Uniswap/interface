@@ -33,8 +33,8 @@ export default function BetterTradeLink({ version }: { version: Version }) {
       ...location,
       search: `?${stringify({
         ...search,
-        use: version !== DEFAULT_VERSION ? version : undefined
-      })}`
+        use: version !== DEFAULT_VERSION ? version : undefined,
+      })}`,
     }
   }, [location, search, version])
 
@@ -58,8 +58,8 @@ export function DefaultVersionLink() {
       ...location,
       search: `?${stringify({
         ...search,
-        use: DEFAULT_VERSION
-      })}`
+        use: DEFAULT_VERSION,
+      })}`,
     }
   }, [location, search])
 
