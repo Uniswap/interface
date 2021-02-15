@@ -74,11 +74,9 @@ export function tryParseAmount(value?: string, currency?: Currency, chainId?: nu
   try {
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
     if (typedValueParsed !== '0') {
-      return currency instanceof Token
-        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : chainId
-        ? CurrencyAmount.nativeCurrency(JSBI.BigInt(typedValueParsed), chainId)
-        : undefined
+      if (currency instanceof Token) return new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
+      else if (chainId) return CurrencyAmount.nativeCurrency(JSBI.BigInt(typedValueParsed), chainId)
+      else return undefined
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
