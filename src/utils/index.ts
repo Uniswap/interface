@@ -21,7 +21,8 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: '',
   4: 'rinkeby.',
   [ChainId.ARBITRUM_TESTNET_V3]: '',
-  [ChainId.SOKOL]: ''
+  [ChainId.SOKOL]: '',
+  [ChainId.XDAI]: ''
 }
 
 const getExplorerPrefix = (chainId: ChainId) => {
@@ -30,6 +31,8 @@ const getExplorerPrefix = (chainId: ChainId) => {
       return 'https://explorer.arbitrum.io/#'
     case ChainId.SOKOL:
       return 'https://blockscout.com/poa/sokol'
+    case ChainId.XDAI:
+      return 'https://blockscout.com/poa/xdai'
     default:
       return `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
   }

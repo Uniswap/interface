@@ -14,7 +14,7 @@ export const network = new NetworkConnector({
 })
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ARBITRUM_TESTNET_V3, ChainId.SOKOL]
+  supportedChainIds: [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ARBITRUM_TESTNET_V3, ChainId.SOKOL, ChainId.XDAI]
 })
 
 // mainnet only

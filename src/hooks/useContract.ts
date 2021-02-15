@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Token, Currency, WETH, WSPOA } from 'dxswap-sdk'
+import { ChainId, Token, Currency, WETH, WSPOA, WXDAI } from 'dxswap-sdk'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { useMemo } from 'react'
 import {
@@ -12,6 +12,7 @@ import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import WETH_ABI from '../constants/abis/weth.json'
 import WSPOA_ABI from '../constants/abis/wspoa.json'
+import WXDAI_ABI from '../constants/abis/wxdai.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
@@ -51,6 +52,8 @@ function useWrappingTokenAbi(token?: Token): any | undefined {
       return WETH_ABI
     case WSPOA[chainId]:
       return WSPOA_ABI
+    case WXDAI[chainId]:
+      return WXDAI_ABI
     default:
       return undefined
   }

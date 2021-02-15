@@ -239,7 +239,8 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum',
-  [ChainId.SOKOL]: 'Sokol'
+  [ChainId.SOKOL]: 'Sokol',
+  [ChainId.XDAI]: 'xDAI'
 }
 
 function Header({ history }: { history: any }) {
