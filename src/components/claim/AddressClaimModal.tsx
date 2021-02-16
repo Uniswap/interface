@@ -75,11 +75,11 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
   function onClaim() {
     setAttempting(true)
     claimCallback()
-      .then((hash) => {
+      .then(hash => {
         setHash(hash)
       })
       // reset modal and log error
-      .catch((error) => {
+      .catch(error => {
         setAttempting(false)
         console.log(error)
       })

@@ -10,7 +10,7 @@ import {
   useModalOpen,
   useShowClaimPopup,
   useToggleSelfClaimModal,
-  useToggleShowClaimPopup,
+  useToggleShowClaimPopup
 } from '../../state/application/hooks'
 
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
