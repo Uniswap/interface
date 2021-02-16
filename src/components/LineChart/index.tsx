@@ -1,11 +1,12 @@
 import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from 'react'
-import { createChart, IChartApi } from 'lightweight-charts'
+import { createChart, IChartApi, ISeriesApi } from 'lightweight-charts'
 import { darken } from 'polished'
 import { RowBetween } from 'components/Row'
 import Card from '../Card'
-
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
+import { useDarkModeManager } from 'state/user/hooks'
+import usePrevious from 'hooks/usePrevious'
 
 const Wrapper = styled(Card)`
   width: 100%;
@@ -17,8 +18,6 @@ const Wrapper = styled(Card)`
     font-size: 1rem;
   }
 `
-
-const ChartContent = styled.div``
 
 const DEFAULT_HEIGHT = 300
 
@@ -46,27 +45,22 @@ const LineChart = ({
 }: LineChartProps) => {
   const theme = useTheme()
 
-  // reference for DOM element to create with chart
-  const chartRef = useRef(null)
-
-  // pointer to the chart object
+  const chartRef = useRef<HTMLDivElement>(null)
   const [chartCreated, setChart] = useState<IChartApi | undefined>()
 
-  /**
-   * @todo respond to dark mode
-   */
-  const textColor = '#565A69'
-
+  // for reseting value on hover exit
   const currenValue = data[data.length - 1].value
 
-  const isClient = typeof window === 'object'
-
   const handleResize = useCallback(() => {
-    chartCreated && chartCreated.resize(chartRef.current.parentNode.clientWidth - 32, height)
-    chartCreated && chartCreated.timeScale().fitContent()
-    chartCreated && chartCreated.timeScale().scrollToPosition(0, 0)
-  }, [chartCreated, height])
+    if (chartCreated && chartRef?.current?.parentElement) {
+      chartCreated.resize(chartRef.current.parentElement.clientWidth - 32, height)
+      chartCreated.timeScale().fitContent()
+      chartCreated.timeScale().scrollToPosition(0, false)
+    }
+  }, [chartCreated, chartRef, height])
 
+  // add event listener for resize
+  const isClient = typeof window === 'object'
   useEffect(() => {
     if (!isClient) {
       return
@@ -75,11 +69,29 @@ const LineChart = ({
     return () => window.removeEventListener('resize', handleResize)
   }, [isClient, chartRef, handleResize]) // Empty array ensures that effect is only run on mount and unmount
 
+  const [currentTheme] = useDarkModeManager()
+  const textColor = theme.text2
+  const previousTheme = usePrevious(currentTheme)
+
+  const [activeSeries, setActiveSeries] = useState<ISeriesApi<'Area'> | undefined>(undefined)
+
+  // reset the chart if theme switches
   useEffect(() => {
-    if (!chartCreated && data && chartRef && chartRef.current) {
+    if (chartCreated && activeSeries && previousTheme && previousTheme !== currentTheme) {
+      // remove the tooltip element
+      chartCreated.removeSeries(activeSeries)
+      chartCreated.resize(0, 0)
+      setActiveSeries(undefined)
+      setChart(undefined)
+    }
+  }, [activeSeries, chartCreated, currentTheme, previousTheme])
+
+  // if chart not instantiated in canvas, create it
+  useEffect(() => {
+    if (!chartCreated && data && !!chartRef?.current?.parentElement) {
       const chart = createChart(chartRef.current, {
         height: height,
-        width: chartRef.current.parentNode.clientWidth - 32,
+        width: chartRef.current.parentElement.clientWidth - 32,
         layout: {
           backgroundColor: 'transparent',
           textColor: textColor,
@@ -131,29 +143,30 @@ const LineChart = ({
         priceLineVisible: false,
       })
 
+      setActiveSeries(series)
       series.setData(data)
 
       // update the title when hovering on the chart
       chart.subscribeCrosshairMove(function (param) {
         if (
-          param === undefined ||
-          param.time === undefined ||
-          (param && param.point && param.point.x < 0) ||
-          (param && param.point && param.point.x > chartRef.current.clientWidth) ||
-          (param && param.point && param.point.y < 0) ||
-          (param && param.point && param.point.y > height)
+          chartRef?.current &&
+          (param === undefined ||
+            param.time === undefined ||
+            (param && param.point && param.point.x < 0) ||
+            (param && param.point && param.point.x > chartRef.current.clientWidth) ||
+            (param && param.point && param.point.y < 0) ||
+            (param && param.point && param.point.y > height))
         ) {
           setValue && setValue(currenValue)
         } else {
-          const price = param.seriesPrices.get(series)
+          const price = parseFloat(param.seriesPrices.get(series)?.toString() ?? currenValue)
           setValue && setValue(price)
         }
       })
-
       chart.timeScale().fitContent()
       setChart(chart)
     }
-  }, [color, chartCreated, currenValue, data, height, setValue, textColor, theme.bg1])
+  }, [color, chartCreated, currenValue, data, height, setValue, textColor, theme])
 
   return (
     <Wrapper>
@@ -161,7 +174,7 @@ const LineChart = ({
         {topLeft ?? null}
         {topRight ?? null}
       </RowBetween>
-      <ChartContent ref={chartRef} id={'test-id'} {...rest} />
+      <div ref={chartRef} id={'line-chart'} {...rest} />
       <RowBetween>
         {bottomLeft ?? null}
         {bottomRight ?? null}
