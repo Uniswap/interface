@@ -148,5 +148,5 @@ export const dummyData = [
   { time: '2019-05-22', value: 43.3 },
   { time: '2019-05-23', value: 42.73 },
   { time: '2019-05-24', value: 42.67 },
-  { time: '2019-05-28', value: 42.75 },
+  { time: '2019-05-28', value: 42.75 }
 ]
