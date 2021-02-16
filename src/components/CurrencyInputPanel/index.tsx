@@ -88,7 +88,6 @@ const Container = styled.div<{ hideInput: boolean }>`
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '20px' : '16px')};
-
 `
 
 const StyledBalanceMax = styled.button`
