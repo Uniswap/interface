@@ -37,7 +37,7 @@ const Footer = styled.div`
 
 export default function ManageTokens({
   setModalView,
-  setImportToken
+  setImportToken,
 }: {
   setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
@@ -49,7 +49,7 @@ export default function ManageTokens({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
@@ -65,7 +65,7 @@ export default function ManageTokens({
 
   const handleRemoveAll = useCallback(() => {
     if (chainId && userAddedTokens) {
-      userAddedTokens.map(token => {
+      userAddedTokens.map((token) => {
         return removeToken(chainId, token.address)
       })
     }
@@ -74,7 +74,7 @@ export default function ManageTokens({
   const tokenList = useMemo(() => {
     return (
       chainId &&
-      userAddedTokens.map(token => (
+      userAddedTokens.map((token) => (
         <RowBetween key={token.address} width="100%">
           <RowFixed>
             <CurrencyLogo currency={token} size={'20px'} />

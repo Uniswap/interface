@@ -13,7 +13,7 @@ describe('prices', () => {
     it('returns undefined for undefined', () => {
       expect(computeTradePriceBreakdown(undefined)).toEqual({
         priceImpactWithoutFee: undefined,
-        realizedLPFee: undefined
+        realizedLPFee: undefined,
       })
     })
 

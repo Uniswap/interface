@@ -78,28 +78,28 @@ const LineChart = ({
         layout: {
           backgroundColor: 'transparent',
           textColor: textColor,
-          fontFamily: 'Inter'
+          fontFamily: 'Inter',
         },
         rightPriceScale: {
           scaleMargins: {
             top: 0.1,
-            bottom: 0.1
+            bottom: 0.1,
           },
-          borderVisible: false
+          borderVisible: false,
         },
         timeScale: {
-          borderVisible: false
+          borderVisible: false,
         },
         watermark: {
-          color: 'rgba(0, 0, 0, 0)'
+          color: 'rgba(0, 0, 0, 0)',
         },
         grid: {
           horzLines: {
-            visible: false
+            visible: false,
           },
           vertLines: {
-            visible: false
-          }
+            visible: false,
+          },
         },
         crosshair: {
           horzLine: {
@@ -107,16 +107,16 @@ const LineChart = ({
             style: 3,
             width: 1,
             color: '#505050',
-            labelBackgroundColor: color
+            labelBackgroundColor: color,
           },
           vertLine: {
             visible: true,
             style: 3,
             width: 1,
             color: '#505050',
-            labelBackgroundColor: color
-          }
-        }
+            labelBackgroundColor: color,
+          },
+        },
       })
 
       const series = chart.addAreaSeries({
@@ -124,13 +124,13 @@ const LineChart = ({
         topColor: darken(0.4, color),
         bottomColor: theme.bg1,
         lineWidth: 2,
-        priceLineVisible: false
+        priceLineVisible: false,
       })
 
       series.setData(data)
 
       // update the title when hovering on the chart
-      chart.subscribeCrosshairMove(function(param) {
+      chart.subscribeCrosshairMove(function (param) {
         if (
           chartRef?.current &&
           (param === undefined ||

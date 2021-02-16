@@ -22,10 +22,10 @@ const store = configureStore({
     mint,
     burn,
     multicall,
-    lists
+    lists,
   },
   middleware: [...getDefaultMiddleware({ thunk: false }), save({ states: PERSISTED_KEYS })],
-  preloadedState: load({ states: PERSISTED_KEYS })
+  preloadedState: load({ states: PERSISTED_KEYS }),
 })
 
 store.dispatch(updateVersion())
