@@ -44,7 +44,7 @@ interface VoteModalProps {
 export default function VoteModal({ isOpen, onDismiss, proposalId, support }: VoteModalProps) {
   const { chainId } = useActiveWeb3React()
   const {
-    voteCallback,
+    voteCallback
   }: {
     voteCallback: (proposalId: string | undefined, support: boolean) => Promise<string> | undefined
   } = useVoteCallback()
@@ -71,7 +71,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
     if (!voteCallback) return
 
     // try delegation and store hash
-    const hash = await voteCallback(proposalId, support)?.catch((error) => {
+    const hash = await voteCallback(proposalId, support)?.catch(error => {
       setAttempting(false)
       console.log(error)
     })
