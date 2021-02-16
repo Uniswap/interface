@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from 'dxswap-sdk'
+import { Currency, Token } from 'dxswap-sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
@@ -16,6 +16,7 @@ import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -42,6 +43,7 @@ export function CurrencySearch({
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
 
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
@@ -52,10 +54,10 @@ export function CurrencySearch({
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
 
-  const showETH: boolean = useMemo(() => {
+  const showNativeCurrency: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
-    return s === '' || s === 'e' || s === 'et' || s === 'eth'
-  }, [searchQuery])
+    return !!nativeCurrency.symbol?.toLowerCase().startsWith(s)
+  }, [nativeCurrency, searchQuery])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
@@ -107,8 +109,8 @@ export function CurrencySearch({
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         const s = searchQuery.toLowerCase().trim()
-        if (s === 'eth') {
-          handleCurrencySelect(ETHER)
+        if (s === nativeCurrency.symbol?.toLowerCase()) {
+          handleCurrencySelect(nativeCurrency)
         } else if (filteredSortedTokens.length > 0) {
           if (
             filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||
@@ -119,7 +121,7 @@ export function CurrencySearch({
         }
       }
     },
-    [filteredSortedTokens, handleCurrencySelect, searchQuery]
+    [filteredSortedTokens, handleCurrencySelect, searchQuery, nativeCurrency]
   )
 
   return (
@@ -156,7 +158,7 @@ export function CurrencySearch({
 
         <div style={{ flex: '1' }}>
           <CurrencyList
-            showETH={showETH}
+            showNativeCurrency={showNativeCurrency}
             currencies={filteredSortedTokens}
             onCurrencySelect={handleCurrencySelect}
             otherCurrency={otherSelectedCurrency}
