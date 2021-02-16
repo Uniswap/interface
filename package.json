@@ -9,15 +9,6 @@
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
     "@reduxjs/toolkit": "^1.3.5",
-    "@storybook/addon-actions": "^6.1.17",
-    "@storybook/addon-essentials": "^6.1.17",
-    "@storybook/addon-links": "^6.1.17",
-    "@storybook/addons": "^6.1.17",
-    "@storybook/components": "^6.1.17",
-    "@storybook/preset-create-react-app": "^3.1.5",
-    "@storybook/preset-typescript": "^3.0.0",
-    "@storybook/react": "^6.1.17",
-    "@storybook/theming": "^6.1.17",
     "@types/jest": "^25.2.1",
     "@types/lodash.flatmap": "^4.5.6",
     "@types/luxon": "^1.24.4",
@@ -103,10 +94,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
-    "storybook": "start-storybook -p 6006",
-    "test": "react-scripts test --env=jsdom"
+    "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'"
   },
   "eslintConfig": {
     "extends": "react-app",
