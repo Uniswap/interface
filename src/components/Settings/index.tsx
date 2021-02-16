@@ -9,7 +9,7 @@ import {
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance,
-  useUserSingleHopOnly
+  useUserSingleHopOnly,
 } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'

@@ -34,13 +34,13 @@ export default function v1SwapArguments(
       return {
         methodName: 'ethToTokenTransferInput',
         args: [minimumAmountOut, deadline, options.recipient],
-        value: maximumAmountIn
+        value: maximumAmountIn,
       }
     } else if (outputETH) {
       return {
         methodName: 'tokenToEthTransferInput',
         args: [maximumAmountIn, minimumAmountOut, deadline, options.recipient],
-        value: '0x0'
+        value: '0x0',
       }
     } else {
       const outputToken = trade.outputAmount.currency
@@ -51,7 +51,7 @@ export default function v1SwapArguments(
       return {
         methodName: 'tokenToTokenTransferInput',
         args: [maximumAmountIn, minimumAmountOut, '0x1', deadline, options.recipient, outputToken.address],
-        value: '0x0'
+        value: '0x0',
       }
     }
   } else {
@@ -59,13 +59,13 @@ export default function v1SwapArguments(
       return {
         methodName: 'ethToTokenTransferOutput',
         args: [minimumAmountOut, deadline, options.recipient],
-        value: maximumAmountIn
+        value: maximumAmountIn,
       }
     } else if (outputETH) {
       return {
         methodName: 'tokenToEthTransferOutput',
         args: [minimumAmountOut, maximumAmountIn, deadline, options.recipient],
-        value: '0x0'
+        value: '0x0',
       }
     } else {
       const output = trade.outputAmount.currency
@@ -81,9 +81,9 @@ export default function v1SwapArguments(
           MaxUint256.toHexString(),
           deadline,
           options.recipient,
-          output.address
+          output.address,
         ],
-        value: '0x0'
+        value: '0x0',
       }
     }
   }
