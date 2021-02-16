@@ -81,11 +81,11 @@ export default function Pool() {
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
-    tokenPairsWithLiquidityTokens
+  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken), [
+    tokenPairsWithLiquidityTokens,
   ])
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
@@ -103,7 +103,7 @@ export default function Pool() {
 
   const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some((V2Pair) => !V2Pair)
 
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
@@ -111,15 +111,15 @@ export default function Pool() {
 
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
-  const stakingInfosWithBalance = stakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
-  const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens))
+  const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
+  const stakingPairs = usePairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
 
   // remove any pairs that also are included in pairs with stake in mining pool
-  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
+  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter((v2Pair) => {
     return (
       stakingPairs
-        ?.map(stakingPair => stakingPair[1])
-        .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
+        ?.map((stakingPair) => stakingPair[1])
+        .filter((stakingPair) => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
     )
   })
 
@@ -201,7 +201,7 @@ export default function Pool() {
                     <span> ↗</span>
                   </RowBetween>
                 </ButtonSecondary>
-                {v2PairsWithoutStakedAmount.map(v2Pair => (
+                {v2PairsWithoutStakedAmount.map((v2Pair) => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}
                 {stakingPairs.map(

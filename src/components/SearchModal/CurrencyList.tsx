@@ -102,7 +102,7 @@ function CurrencyRow({
   onSelect,
   isSelected,
   otherSelected,
-  style
+  style,
 }: {
   currency: Currency
   onSelect: () => void
@@ -153,7 +153,7 @@ export default function CurrencyList({
   showETH,
   showImportView,
   setImportToken,
-  breakIndex
+  breakIndex,
 }: {
   height: number
   currencies: Currency[]
@@ -241,7 +241,7 @@ export default function CurrencyList({
       setImportToken,
       showImportView,
       breakIndex,
-      theme.text1
+      theme.text1,
     ]
   )
 

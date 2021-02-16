@@ -30,7 +30,7 @@ function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | 
   return (CLAIM_PROMISES[key] =
     CLAIM_PROMISES[key] ??
     fetch(`https://gentle-frost-9e74.uniswap.workers.dev/${chainId}/${formatted}`)
-      .then(res => {
+      .then((res) => {
         if (res.status === 200) {
           return res.json()
         } else {
@@ -38,7 +38,7 @@ function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | 
           return null
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Failed to get claim data', error)
       }))
 }
@@ -53,11 +53,11 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
 
   useEffect(() => {
     if (!account || !chainId) return
-    fetchClaim(account, chainId).then(accountClaimInfo =>
-      setClaimInfo(claimInfo => {
+    fetchClaim(account, chainId).then((accountClaimInfo) =>
+      setClaimInfo((claimInfo) => {
         return {
           ...claimInfo,
-          [key]: accountClaimInfo
+          [key]: accountClaimInfo,
         }
       })
     )
@@ -102,18 +102,18 @@ export function useClaimCallback(
   const addTransaction = useTransactionAdder()
   const distributorContract = useMerkleDistributorContract()
 
-  const claimCallback = async function() {
+  const claimCallback = async function () {
     if (!claimData || !account || !library || !chainId || !distributorContract) return
 
     const args = [claimData.index, account, claimData.amount, claimData.proof]
 
-    return distributorContract.estimateGas['claim'](...args, {}).then(estimatedGasLimit => {
+    return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             summary: `Claimed ${unClaimedAmount?.toSignificant(4)} UNI`,
-            claim: { recipient: account }
+            claim: { recipient: account },
           })
           return response.hash
         })
