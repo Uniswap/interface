@@ -1,4 +1,4 @@
-import { Currency, ETHER, JSBI, TokenAmount } from 'dxswap-sdk'
+import { Currency, JSBI, TokenAmount } from 'dxswap-sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -13,6 +13,7 @@ import Row, { RowBetween } from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { PairState, usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
@@ -27,11 +28,12 @@ enum Fields {
 
 export default function PoolFinder() {
   const { account } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [currency0, setCurrency0] = useState<Currency | null>(ETHER)
+  const [currency0, setCurrency0] = useState<Currency | null>(nativeCurrency)
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
   const [pairState, pair] = usePair(currency0 ?? undefined, currency1 ?? undefined)

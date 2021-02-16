@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, ETHER, Token } from 'dxswap-sdk'
+import { ChainId, Currency, currencyEquals, Token } from 'dxswap-sdk'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
@@ -9,6 +9,7 @@ import { AutoRow, RowBetween } from '../Row'
 import { Option } from '../../components/Option'
 import CurrencyLogo from '../CurrencyLogo'
 import { TYPE } from '../../theme'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 export default function CommonBases({
   chainId,
@@ -19,6 +20,8 @@ export default function CommonBases({
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
+  const nativeCurrency = useNativeCurrency()
+
   return (
     <AutoColumn gap="md">
       <AutoRow>
@@ -31,16 +34,16 @@ export default function CommonBases({
         <Option
           transparent
           onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-              onSelect(ETHER)
+            if (!selectedCurrency || !currencyEquals(selectedCurrency, nativeCurrency)) {
+              onSelect(nativeCurrency)
             }
           }}
-          disabled={selectedCurrency === ETHER}
+          disabled={selectedCurrency === nativeCurrency}
         >
           <RowBetween>
-            <CurrencyLogo size="20px" currency={ETHER} style={{ marginRight: 8 }} />
+            <CurrencyLogo size="20px" currency={nativeCurrency} style={{ marginRight: 8 }} />
             <Text fontWeight={500} fontSize={16}>
-              ETH
+              {nativeCurrency.symbol}
             </Text>
           </RowBetween>
         </Option>
