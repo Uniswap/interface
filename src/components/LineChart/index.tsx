@@ -1,12 +1,10 @@
 import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from 'react'
-import { createChart, IChartApi, ISeriesApi } from 'lightweight-charts'
+import { createChart, IChartApi } from 'lightweight-charts'
 import { darken } from 'polished'
 import { RowBetween } from 'components/Row'
 import Card from '../Card'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
-import { useDarkModeManager } from 'state/user/hooks'
-import usePrevious from 'hooks/usePrevious'
 
 const Wrapper = styled(Card)`
   width: 100%;
@@ -69,22 +67,7 @@ const LineChart = ({
     return () => window.removeEventListener('resize', handleResize)
   }, [isClient, chartRef, handleResize]) // Empty array ensures that effect is only run on mount and unmount
 
-  const [currentTheme] = useDarkModeManager()
   const textColor = theme.text2
-  const previousTheme = usePrevious(currentTheme)
-
-  const [activeSeries, setActiveSeries] = useState<ISeriesApi<'Area'> | undefined>(undefined)
-
-  // reset the chart if theme switches
-  useEffect(() => {
-    if (chartCreated && activeSeries && previousTheme && previousTheme !== currentTheme) {
-      // remove the tooltip element
-      chartCreated.removeSeries(activeSeries)
-      chartCreated.resize(0, 0)
-      setActiveSeries(undefined)
-      setChart(undefined)
-    }
-  }, [activeSeries, chartCreated, currentTheme, previousTheme])
 
   // if chart not instantiated in canvas, create it
   useEffect(() => {
@@ -95,6 +78,7 @@ const LineChart = ({
         layout: {
           backgroundColor: 'transparent',
           textColor: textColor,
+          fontFamily: 'Inter',
         },
         rightPriceScale: {
           scaleMargins: {
@@ -143,7 +127,6 @@ const LineChart = ({
         priceLineVisible: false,
       })
 
-      setActiveSeries(series)
       series.setData(data)
 
       // update the title when hovering on the chart
