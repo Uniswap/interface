@@ -32,7 +32,7 @@ export function useETHBalances(
   const results = useSingleContractMultipleData(
     multicallContract,
     'getEthBalance',
-    addresses.map((address) => [address])
+    addresses.map(address => [address])
   )
 
   return useMemo(
@@ -58,11 +58,11 @@ export function useTokenBalancesWithLoadingIndicator(
     [tokens]
   )
 
-  const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
+  const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => vt.address), [validatedTokens])
 
   const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
 
-  const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
+  const anyLoading: boolean = useMemo(() => balances.some(callState => callState.loading), [balances])
 
   return [
     useMemo(
@@ -79,7 +79,7 @@ export function useTokenBalancesWithLoadingIndicator(
           : {},
       [address, validatedTokens, balances]
     ),
-    anyLoading,
+    anyLoading
   ]
 }
 
@@ -102,16 +102,16 @@ export function useCurrencyBalances(
   currencies?: (Currency | undefined)[]
 ): (CurrencyAmount | undefined)[] {
   const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
-    currencies,
+    currencies
   ])
 
   const tokenBalances = useTokenBalances(account, tokens)
-  const containsETH: boolean = useMemo(() => currencies?.some((currency) => currency === ETHER) ?? false, [currencies])
+  const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === ETHER) ?? false, [currencies])
   const ethBalance = useETHBalances(containsETH ? [account] : [])
 
   return useMemo(
     () =>
-      currencies?.map((currency) => {
+      currencies?.map(currency => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
         if (currency === ETHER) return ethBalance[account]

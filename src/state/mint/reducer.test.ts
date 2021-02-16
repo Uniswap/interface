@@ -10,7 +10,7 @@ describe('mint reducer', () => {
     store = createStore(reducer, {
       independentField: Field.CURRENCY_A,
       typedValue: '',
-      otherTypedValue: '',
+      otherTypedValue: ''
     })
   })
 
