@@ -61,7 +61,7 @@ export function CurrencySearch({
   isOpen,
   showManageView,
   showImportView,
-  setImportToken
+  setImportToken,
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -87,7 +87,7 @@ export function CurrencySearch({
       ReactGA.event({
         category: 'Currency Select',
         action: 'Search by address',
-        label: isAddressSearch
+        label: isAddressSearch,
       })
     }
   }, [isAddressSearch])
@@ -124,7 +124,7 @@ export function CurrencySearch({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)

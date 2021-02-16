@@ -15,7 +15,7 @@ describe('v1SwapArguments', () => {
     const result = v1SwapArguments(trade, {
       recipient: TEST_RECIPIENT_ADDRESS,
       allowedSlippage: new Percent('1', '100'),
-      deadline: 20 * 60
+      deadline: 20 * 60,
     })
     expect(result.methodName).toEqual('ethToTokenTransferInput')
     expect(result.args).toEqual(['0x62', '0x4b0', TEST_RECIPIENT_ADDRESS])
@@ -26,7 +26,7 @@ describe('v1SwapArguments', () => {
     const result = v1SwapArguments(trade, {
       recipient: TEST_RECIPIENT_ADDRESS,
       allowedSlippage: new Percent('1', '100'),
-      deadline: 40 * 60
+      deadline: 40 * 60,
     })
     expect(result.methodName).toEqual('tokenToEthTransferInput')
     expect(result.args[0]).toEqual('0x64')
@@ -40,7 +40,7 @@ describe('v1SwapArguments', () => {
     const result = v1SwapArguments(trade, {
       recipient: TEST_RECIPIENT_ADDRESS,
       allowedSlippage: new Percent('1', '100'),
-      deadline: 20 * 60
+      deadline: 20 * 60,
     })
     expect(result.methodName).toEqual('tokenToTokenTransferInput')
     expect(result.args[0]).toEqual('0x64')
@@ -56,7 +56,7 @@ describe('v1SwapArguments', () => {
     const result = v1SwapArguments(trade, {
       recipient: TEST_RECIPIENT_ADDRESS,
       allowedSlippage: new Percent('1', '100'),
-      deadline: 20 * 60
+      deadline: 20 * 60,
     })
     expect(result.methodName).toEqual('ethToTokenTransferOutput')
     expect(result.args[0]).toEqual('0x64')
@@ -69,7 +69,7 @@ describe('v1SwapArguments', () => {
     const result = v1SwapArguments(trade, {
       recipient: TEST_RECIPIENT_ADDRESS,
       allowedSlippage: new Percent('1', '100'),
-      deadline: 20 * 60
+      deadline: 20 * 60,
     })
     expect(result.methodName).toEqual('tokenToEthTransferOutput')
     expect(result.args[0]).toEqual('0x64')
@@ -83,7 +83,7 @@ describe('v1SwapArguments', () => {
     const result = v1SwapArguments(trade, {
       recipient: TEST_RECIPIENT_ADDRESS,
       allowedSlippage: new Percent('1', '100'),
-      deadline: 20 * 60
+      deadline: 20 * 60,
     })
     expect(result.methodName).toEqual('tokenToTokenTransferOutput')
     expect(result.args[0]).toEqual('0x64')

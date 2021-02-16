@@ -23,7 +23,7 @@ import { TYPE } from '../../theme'
 
 enum Fields {
   TOKEN0 = 0,
-  TOKEN1 = 1
+  TOKEN1 = 1,
 }
 
 export default function PoolFinder() {

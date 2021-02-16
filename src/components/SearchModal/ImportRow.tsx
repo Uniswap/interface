@@ -45,7 +45,7 @@ export default function ImportRow({
   style,
   dim,
   showImportView,
-  setImportToken
+  setImportToken,
 }: {
   token: Token
   style?: CSSProperties
