@@ -48,6 +48,8 @@ import Loader from '../../components/Loader'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isTradeBetter } from 'utils/trades'
+import LineChart from 'components/LineChart'
+import { dummyData } from 'components/LineChart/data'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -300,6 +302,7 @@ export default function Swap() {
       />
       <SwapPoolTabs active={'swap'} />
       <AppBody>
+        <LineChart data={dummyData} />
         <SwapHeader />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
