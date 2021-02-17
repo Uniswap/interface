@@ -58,7 +58,7 @@ export function useLiquidityMiningCampaignsForPairs(
       loading: false,
       liquidityMiningCampaigns: data ? data.pairs.map(pair => pair.liquidityMiningCampaigns) : []
     }
-  }, [data, loading, error])
+  }, [data, error, loading])
 }
 
 export function useAggregatedByToken0ExistingPairsWithRemainingRewards(

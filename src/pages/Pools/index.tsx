@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { PageWrapper } from './styleds'
 
-import { OutlineCard } from '../../components/Card'
 import { TYPE, HideSmall, StyledInternalLink } from '../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
@@ -133,16 +132,7 @@ export default function Pools() {
                 </ResponsiveButtonSecondary>
               </ButtonRow>
             </TitleRow>
-
-            {!account ? (
-              <OutlineCard>
-                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
-                  Connect to a wallet to view your liquidity.
-                </TYPE.body>
-              </OutlineCard>
-            ) : (
-              <AggregatedPairsList />
-            )}
+            <AggregatedPairsList />
           </AutoColumn>
         </AutoColumn>
         <ButtonWithLink

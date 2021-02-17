@@ -46,10 +46,12 @@ interface NonExpiredLiquidityMiningCampaignReward {
 }
 
 export interface NonExpiredLiquidityMiningCampaign {
+  contractAddress: string
   duration: string
   startsAt: string
   endsAt: string
   rewards: NonExpiredLiquidityMiningCampaignReward[]
+  locked: boolean
 }
 
 interface PairWithNonExpiredLiquidityMiningCampaigns {
@@ -64,9 +66,11 @@ export const GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
   query($ids: [ID!]!, $timestamp: BigInt!) {
     pairs(where: { id_in: $ids }) {
       liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
+        contractAddress: id
         duration
         startsAt
         endsAt
+        locked
         rewards {
           amount
           token {

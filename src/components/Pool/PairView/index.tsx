@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { JSBI, Pair, Percent } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
@@ -13,7 +13,6 @@ import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
 import { AutoRow } from '../../Row'
 import { LiquidityMiningCampaign } from './LiquidityMiningCampaign'
-import useDebounce from '../../../hooks/useDebounce'
 
 const PoolFeesContainer = styled.div`
   height: 27px;
@@ -58,18 +57,15 @@ interface PairViewProps {
 export default function PairView({ loading, pair }: PairViewProps) {
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
+  // avoids reference changes and in turn continuously fetching liquidity mining campaigns for the pair
+  const memoizedPairArray = useMemo(() => (pair ? [pair] : []), [pair])
   const { loading: liquidityMiningCampaignsLoading, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
-    pair ? [pair] : []
-  )
-
-  const debouncedLoading = useDebounce(
-    loading || volumeLoading || liquidityLoading || liquidityMiningCampaignsLoading,
-    300
+    memoizedPairArray
   )
 
   return (
     <DarkCard padding="40px">
-      {debouncedLoading ? (
+      {loading || volumeLoading || liquidityLoading || liquidityMiningCampaignsLoading ? (
         <Flex flexDirection="column" width="100%" height="340px">
           <Loading />
         </Flex>
@@ -99,7 +95,13 @@ export default function PairView({ loading, pair }: PairViewProps) {
             {liquidityMiningCampaigns.length === 1
               ? liquidityMiningCampaigns[0].map((liquidityMiningCampaign, index) => (
                   <Box key={index}>
-                    <LiquidityMiningCampaign duration={1} />
+                    <LiquidityMiningCampaign
+                      contractAddress={liquidityMiningCampaign.contractAddress}
+                      startsAt={liquidityMiningCampaign.startsAt}
+                      endsAt={liquidityMiningCampaign.endsAt}
+                      timelock={liquidityMiningCampaign.locked}
+                      stakablePair={pair}
+                    />
                   </Box>
                 ))
               : null}
