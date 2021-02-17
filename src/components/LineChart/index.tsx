@@ -10,7 +10,7 @@ const Wrapper = styled(Card)`
   width: 100%;
   padding: 1rem;
   display: flex;
-  background-color: ${({ theme }) => theme.bg1}
+  background-color: ${({ theme }) => theme.bg0}
   flex-direction: column;
   > * {
     font-size: 1rem;
@@ -122,7 +122,7 @@ const LineChart = ({
       const series = chart.addAreaSeries({
         lineColor: color,
         topColor: darken(0.4, color),
-        bottomColor: theme.bg1,
+        bottomColor: theme.bg0,
         lineWidth: 2,
         priceLineVisible: false,
       })
