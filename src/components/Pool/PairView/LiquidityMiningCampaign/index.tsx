@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { Pair, TokenAmount } from 'dxswap-sdk'
 import { DateTime } from 'luxon'
-import React, { ReactNode, useCallback, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import { useLiquidityMiningActionCallbacks } from '../../../../hooks/useLiquidityMiningActionCallbacks'
@@ -77,6 +77,16 @@ export function LiquidityMiningCampaign({
   const [errorMessage, setErrorMessage] = useState('')
   const [showStakingConfirmationModal, setShowStakingConfirmationModal] = useState(false)
   const [showWithdrawalConfirmationModal, setShowWithdrawalConfirmationModal] = useState(false)
+  const [disabledStaking, setDisabledStaking] = useState(false)
+
+  useEffect(() => {
+    setDisabledStaking(
+      !callbacks ||
+        parseInt(startsAt) > Math.floor(Date.now() / 1000) ||
+        !stakableTokenBalance ||
+        stakableTokenBalance.equalTo('0')
+    )
+  }, [callbacks, stakableTokenBalance, startsAt])
 
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
@@ -166,10 +176,7 @@ export function LiquidityMiningCampaign({
         </Flex>
         <Flex width="100%">
           <Box>
-            <ButtonSecondary
-              disabled={!callbacks || !stakableTokenBalance || stakableTokenBalance.equalTo('0')}
-              onClick={handleStakingRequest}
-            >
+            <ButtonSecondary disabled={disabledStaking} onClick={handleStakingRequest}>
               Stake
             </ButtonSecondary>
           </Box>
