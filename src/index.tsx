@@ -11,7 +11,6 @@ import { NetworkContextName } from './constants'
 import './i18n'
 import App from './pages/App'
 import store from './state'
-import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import MulticallUpdater from './state/multicall/updater'
@@ -76,5 +75,3 @@ ReactDOM.render(
   </StrictMode>,
   document.getElementById('root')
 )
-
-serviceWorkerRegistration.register()
