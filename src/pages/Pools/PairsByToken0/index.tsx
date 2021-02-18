@@ -4,7 +4,6 @@ import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
 import { PageWrapper } from '../styleds'
 
-import { OutlineCard } from '../../../components/Card'
 import { TYPE, HideSmall, StyledInternalLink } from '../../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../../components/Row'
@@ -145,16 +144,7 @@ export default function PairsByToken0({
                 </ResponsiveButtonSecondary>
               </ButtonRow>
             </TitleRow>
-
-            {!account ? (
-              <OutlineCard>
-                <TYPE.body fontSize="14px" lineHeight="17px" textAlign="center">
-                  Connect to a wallet to view your liquidity.
-                </TYPE.body>
-              </OutlineCard>
-            ) : (
-              <Token0PairsList token0={token0} />
-            )}
+            <Token0PairsList token0={token0} />
           </AutoColumn>
         </AutoColumn>
         <ButtonWithLink

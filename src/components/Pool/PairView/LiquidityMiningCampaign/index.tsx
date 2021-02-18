@@ -62,7 +62,6 @@ export function LiquidityMiningCampaign({
 }: LiquidityMiningCampaignProps) {
   const { account } = useWeb3React()
   const callbacks = useLiquidityMiningActionCallbacks(contractAddress)
-  console.log(contractAddress)
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
   const addTransaction = useTransactionAdder()
 
@@ -73,6 +72,8 @@ export function LiquidityMiningCampaign({
 
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
+    setErrorMessage('')
+    setTransactionHash('')
   }, [])
 
   const handleStakingRequest = useCallback(() => {

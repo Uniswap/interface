@@ -36,7 +36,6 @@ export default function ConfirmStakingModal({
     stakablePair ? new TokenAmount(stakablePair.liquidityToken, '100000000000000000000000') : undefined,
     distributionContractAddress
   )
-  console.log(approvalState)
 
   const handleStakedAmountChange = useCallback(amount => {
     setStakedAmount(amount)

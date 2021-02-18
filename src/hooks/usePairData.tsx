@@ -9,7 +9,9 @@ import {
   GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
   PairsNonExpiredLiquidityMiningCampaignsQueryResult,
   NonExpiredLiquidityMiningCampaign,
-  Pair24hVolumeQueryResult
+  Pair24hVolumeQueryResult,
+  PairNonExpiredLiquidityMiningCampaignsQueryResult,
+  GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS
 } from '../apollo/queries'
 import { PairsFilterType, PairsSortingType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
@@ -36,6 +38,29 @@ export function usePairLiquidityUSD(pair?: Pair | null): { loading: boolean; liq
   })
 
   return { loading, liquidityUSD: new BigNumber(data?.pair?.reserveUSD || 0) }
+}
+
+export function useLiquidityMiningCampaignsForPair(
+  pair?: Pair
+): { loading: boolean; liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[] } {
+  const { loading, error, data } = useQuery<PairNonExpiredLiquidityMiningCampaignsQueryResult>(
+    GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
+    {
+      variables: {
+        id: pair?.liquidityToken.address.toLowerCase(),
+        timestamp: Math.floor(Date.now() / 1000)
+      }
+    }
+  )
+
+  return useMemo(() => {
+    if (loading) return { loading: true, liquidityMiningCampaigns: [] }
+    if (error) return { loading: false, liquidityMiningCampaigns: [] }
+    return {
+      loading: false,
+      liquidityMiningCampaigns: data ? data.pair.liquidityMiningCampaigns : []
+    }
+  }, [data, error, loading])
 }
 
 export function useLiquidityMiningCampaignsForPairs(

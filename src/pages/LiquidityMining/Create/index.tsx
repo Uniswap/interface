@@ -75,11 +75,10 @@ export default function CreateLiquidityMining() {
   }, [addTransaction, createLiquidityMiningCallback, liquidityPair])
 
   const handleCreateDismiss = useCallback(() => {
-    if (!createLiquidityMiningCallback) return
     setErrorMessage('')
     setTransactionHash(null)
     setShowConfirmationModal(false)
-  }, [createLiquidityMiningCallback])
+  }, [])
 
   return (
     <>

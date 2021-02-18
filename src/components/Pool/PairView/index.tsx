@@ -1,11 +1,11 @@
-import React, { ReactNode, useMemo } from 'react'
+import React, { memo, ReactNode } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { JSBI, Pair, Percent } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import DoubleCurrencyLogo from '../../DoubleLogo'
 import Loading from './Loading'
 import {
-  useLiquidityMiningCampaignsForPairs,
+  useLiquidityMiningCampaignsForPair,
   usePair24hVolumeUSD,
   usePairLiquidityUSD
 } from '../../../hooks/usePairData'
@@ -54,13 +54,12 @@ interface PairViewProps {
   pair?: Pair | null
 }
 
-export default function PairView({ loading, pair }: PairViewProps) {
+function PairView({ loading, pair }: PairViewProps) {
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
   // avoids reference changes and in turn continuously fetching liquidity mining campaigns for the pair
-  const memoizedPairArray = useMemo(() => (pair ? [pair] : []), [pair])
-  const { loading: liquidityMiningCampaignsLoading, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
-    memoizedPairArray
+  const { loading: liquidityMiningCampaignsLoading, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPair(
+    pair || undefined
   )
 
   return (
@@ -92,19 +91,17 @@ export default function PairView({ loading, pair }: PairViewProps) {
             }
           />
           <Flex flexDirection="column" my="24px">
-            {liquidityMiningCampaigns.length === 1
-              ? liquidityMiningCampaigns[0].map((liquidityMiningCampaign, index) => (
-                  <Box key={index}>
-                    <LiquidityMiningCampaign
-                      contractAddress={liquidityMiningCampaign.contractAddress}
-                      startsAt={liquidityMiningCampaign.startsAt}
-                      endsAt={liquidityMiningCampaign.endsAt}
-                      timelock={liquidityMiningCampaign.locked}
-                      stakablePair={pair}
-                    />
-                  </Box>
-                ))
-              : null}
+            {liquidityMiningCampaigns.map((liquidityMiningCampaign, index) => (
+              <Box key={index}>
+                <LiquidityMiningCampaign
+                  contractAddress={liquidityMiningCampaign.contractAddress}
+                  startsAt={liquidityMiningCampaign.startsAt}
+                  endsAt={liquidityMiningCampaign.endsAt}
+                  timelock={liquidityMiningCampaign.locked}
+                  stakablePair={pair}
+                />
+              </Box>
+            ))}
           </Flex>
           {pair && (
             <Box>
@@ -116,3 +113,16 @@ export default function PairView({ loading, pair }: PairViewProps) {
     </DarkCard>
   )
 }
+
+export default memo(PairView, (previousProps, nextProps) => {
+  // avoids pair reference changes to mess things up by reloading the whole thing
+  // (which means that if the staking modal is open, it will be closed = bad)
+  const sameLoading = previousProps.loading === nextProps.loading
+  if (previousProps.pair === nextProps.pair) {
+    return sameLoading
+  } else if ((!previousProps.pair && nextProps.pair) || (previousProps.pair && !nextProps.pair)) {
+    return false
+  } else {
+    return !!(previousProps.pair && nextProps.pair && previousProps.pair.equals(nextProps.pair) && sameLoading)
+  }
+})

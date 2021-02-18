@@ -62,9 +62,33 @@ export interface PairsNonExpiredLiquidityMiningCampaignsQueryResult {
   pairs: PairWithNonExpiredLiquidityMiningCampaigns[]
 }
 
+export interface PairNonExpiredLiquidityMiningCampaignsQueryResult {
+  pair: PairWithNonExpiredLiquidityMiningCampaigns
+}
+
 export const GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
   query($ids: [ID!]!, $timestamp: BigInt!) {
     pairs(where: { id_in: $ids }) {
+      liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
+        contractAddress: id
+        duration
+        startsAt
+        endsAt
+        locked
+        rewards {
+          amount
+          token {
+            derivedETH
+          }
+        }
+      }
+    }
+  }
+`
+
+export const GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
+  query($id: ID!, $timestamp: BigInt!) {
+    pair(id: $id) {
       liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
         contractAddress: id
         duration
