@@ -10,6 +10,7 @@ import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
+import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -312,6 +313,19 @@ export default function Swap() {
             {showWrap ? null : (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="8px">
+                  {!!trade && (
+                    <RowBetween align="center">
+                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                        <div style={{ display: 'flex' }}>
+                          Best price found on Sushiswap with&nbsp;
+                          <span style={{ color: 'white', fontWeight: 900 }}>
+                            NO added fees
+                          </span>
+                          <QuestionHelper text="Swapr always routes to the best price, even if on another exchange" />
+                        </div>
+                      </TYPE.body>
+                    </RowBetween>
+                  )}
                   <RowBetween align="center">
                     <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
                       Price
