@@ -5,8 +5,8 @@ import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
 } from '../../../TransactionConfirmationModal'
-import ConfirmStakingModalFooter from './Footer'
-import ConfirmStakingModalHeader from './Header'
+import ConfirmStakingModalFooter from '../ModalBase/Footer'
+import ConfirmStakingWithdrawingModalHeader from '../ModalBase/Header'
 
 interface ConfirmStakingModalProps {
   stakablePair?: Pair | null
@@ -48,10 +48,10 @@ export default function ConfirmStakingModal({
 
   const topContent = useCallback(
     () => (
-      <ConfirmStakingModalHeader
-        stakedAmount={stakedAmount}
-        stakableTokenBalance={stakableTokenBalance}
-        onStakedAmountChange={handleStakedAmountChange}
+      <ConfirmStakingWithdrawingModalHeader
+        amount={stakedAmount}
+        maximumAmount={stakableTokenBalance}
+        onAmountChange={handleStakedAmountChange}
         stakablePair={stakablePair}
       />
     ),
@@ -76,6 +76,7 @@ export default function ConfirmStakingModal({
                 stakedAmount.greaterThan(stakableTokenBalance) ||
                 approvalState !== ApprovalState.APPROVED
               }
+              showApprove
               stakablePair={stakablePair}
               disabledApprove={approvalState === ApprovalState.APPROVED}
               onConfirm={handleConfirm}

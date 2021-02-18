@@ -1,4 +1,4 @@
-import { Pair, Percent, TokenAmount } from 'dxswap-sdk'
+import { Pair, Percent, Rounding, TokenAmount } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { AutoColumn } from '../../../../Column'
@@ -10,34 +10,34 @@ import DoubleCurrencyLogo from '../../../../DoubleLogo'
 
 interface ConfirmStakeModalHeaderProps {
   stakablePair?: Pair | null
-  stakedAmount: TokenAmount | null
-  stakableTokenBalance?: TokenAmount
-  onStakedAmountChange: (amount: TokenAmount) => void
+  amount: TokenAmount | null
+  maximumAmount?: TokenAmount
+  onAmountChange: (amount: TokenAmount) => void
 }
 
-export default function ConfirmStakingModalHeader({
+export default function ConfirmStakingWithdrawingModalHeader({
   stakablePair,
-  stakedAmount,
-  stakableTokenBalance,
-  onStakedAmountChange
+  amount,
+  maximumAmount,
+  onAmountChange
 }: ConfirmStakeModalHeaderProps) {
   const [selectedPercentage, setSelectedPercentage] = useState(0)
 
   const handlePercentageChange = useCallback(
     percentage => {
       setSelectedPercentage(percentage)
-      if (!stakableTokenBalance || !stakablePair) return
-      onStakedAmountChange(
+      if (!maximumAmount || !stakablePair) return
+      onAmountChange(
         new TokenAmount(
           stakablePair.liquidityToken,
           parseUnits(
-            stakableTokenBalance.multiply(new Percent(percentage, '100')).toSignificant(10),
-            stakableTokenBalance.token.decimals
+            maximumAmount.multiply(new Percent(percentage, '100')).toFixed(18, undefined, Rounding.ROUND_DOWN),
+            maximumAmount.token.decimals
           ).toString()
         )
       )
     },
-    [onStakedAmountChange, stakablePair, stakableTokenBalance]
+    [onAmountChange, stakablePair, maximumAmount]
   )
 
   return (
@@ -82,7 +82,7 @@ export default function ConfirmStakingModalHeader({
           </Box>
           <Box>
             <Text textAlign="center" fontSize="32px" fontWeight={500} width="100%">
-              {stakedAmount ? stakedAmount.toSignificant(4) : '0.0'}
+              {amount ? amount.toSignificant(4) : '0.0'}
             </Text>
           </Box>
         </Flex>

@@ -5,10 +5,11 @@ import { ButtonError, ButtonPrimary } from '../../../../Button'
 
 interface ConfirmStakingModalFooterProps {
   onConfirm: () => void
-  onApprove: () => void
+  onApprove?: () => void
   stakablePair?: Pair | null
   disabledConfirm: boolean
-  disabledApprove: boolean
+  disabledApprove?: boolean
+  showApprove: boolean
 }
 
 export default function ConfirmStakingModalFooter({
@@ -16,21 +17,24 @@ export default function ConfirmStakingModalFooter({
   onApprove,
   stakablePair,
   disabledConfirm,
-  disabledApprove
+  disabledApprove,
+  showApprove
 }: ConfirmStakingModalFooterProps) {
   return (
-    <Flex>
-      <Box pr="6px">
-        <ButtonPrimary onClick={onApprove} disabled={disabledApprove}>
-          <Text fontSize={13} fontWeight={600}>
-            Approve {stakablePair?.token0.symbol}/{stakablePair?.token1.symbol}
-          </Text>
-        </ButtonPrimary>
-      </Box>
-      <Box pl="6px">
+    <Flex justifyContent="stretch">
+      {showApprove && (
+        <Box width="50%" pr="6px">
+          <ButtonPrimary onClick={onApprove} disabled={disabledApprove}>
+            <Text fontSize={13} fontWeight={600}>
+              Approve {stakablePair?.token0.symbol}/{stakablePair?.token1.symbol}
+            </Text>
+          </ButtonPrimary>
+        </Box>
+      )}
+      <Box width={showApprove ? '50%' : '100%'} pl={showApprove ? '6px' : '0'}>
         <ButtonError onClick={onConfirm} disabled={disabledConfirm}>
           <Text fontSize={13} fontWeight={600}>
-            Confirm and stake
+            Confirm
           </Text>
         </ButtonError>
       </Box>
