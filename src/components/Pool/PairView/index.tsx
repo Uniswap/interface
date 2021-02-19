@@ -18,6 +18,12 @@ import { TYPE } from '../../../theme'
 import LiquidityMiningCampaignsList from './LiquidityMiningCampaignsList'
 import { ResponsiveButtonPrimary, TitleRow } from '../../../pages/LiquidityMining/styleds'
 
+const StyledDarkCard = styled(DarkCard)`
+  ::before {
+    background: ${props => props.theme.bg1};
+  }
+`
+
 const PoolFeesContainer = styled.div`
   height: 27px;
   padding-left: 14px;
@@ -68,7 +74,7 @@ function PairView({ loading, pair }: PairViewProps) {
 
   return (
     <>
-      <DarkCard padding="40px">
+      <StyledDarkCard padding="40px">
         {loading || volumeLoading || liquidityLoading || liquidityMiningCampaignsLoading ? (
           <Flex flexDirection="column" width="100%" height="340px">
             <Loading />
@@ -123,7 +129,7 @@ function PairView({ loading, pair }: PairViewProps) {
             </Flex>
           </Flex>
         )}
-      </DarkCard>
+      </StyledDarkCard>
     </>
   )
 }

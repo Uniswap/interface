@@ -44,7 +44,7 @@ export const DarkCard = styled(Card)<{ selectable?: boolean }>`
   cursor: ${props => (props.selectable ? 'pointer' : 'auto')};
   z-index: 0;
   ::before {
-    background-color: ${props => props.theme.bg1};
+    background: linear-gradient(153.77deg, rgba(55, 82, 233, 0.35) -144.38%, rgba(55, 82, 233, 0) 65.22%), #171621;
     content: '';
     z-index: -1;
     top: 1px;
