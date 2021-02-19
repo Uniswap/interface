@@ -166,10 +166,20 @@ export function LiquidityMiningCampaignModal({
           <div>
             <LiquidityMiningInformation startsAt={startsAt} endsAt={endsAt} timelock={!!timelock} />
             <RowBetween marginTop="24px">
-              <ButtonDark marginRight="4px" disabled={disabledStaking} onClick={handleStakingRequest}>
+              <ButtonDark
+                padding="8px"
+                style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+                width="100%"
+                marginRight="4px"
+                disabled={disabledStaking}
+                onClick={handleStakingRequest}
+              >
                 Deposit {stakablePair?.liquidityToken.symbol}
               </ButtonDark>
               <ButtonDark
+                padding="8px"
+                style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+                width="100%"
                 marginLeft="4px"
                 disabled={!callbacks || !withdrawableTokenBalance || withdrawableTokenBalance.equalTo('0')}
                 onClick={handleWithdrawalRequest}
@@ -182,7 +192,13 @@ export function LiquidityMiningCampaignModal({
             <LiquidityMiningYourStake />
             <RowBetween marginTop="24px">
               {/* TODO: handle disabled state */}
-              <ButtonDark marginRight="4px" onClick={handleClaimConfirmation}>
+              <ButtonDark
+                padding="8px"
+                style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+                width="100%"
+                marginRight="4px"
+                onClick={handleClaimConfirmation}
+              >
                 Claim rewards
               </ButtonDark>
             </RowBetween>
