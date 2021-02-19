@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Flex } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
 import { usePairsByToken0 } from '../../../data/Reserves'
@@ -32,7 +32,11 @@ export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
             ))}
           </Flex>
         ) : (
-          <Empty />
+          <Empty>
+            <Text fontSize="12px" fontWeight="700" lineHeight="15px" letterSpacing="0.08em">
+              NO PAIRS YET
+            </Text>
+          </Empty>
         )}
       </Box>
       <Flex width="100%" justifyContent="flex-end">

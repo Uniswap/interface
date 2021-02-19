@@ -1,11 +1,12 @@
 import { Pair } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
-import { Box, Flex } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import { NonExpiredLiquidityMiningCampaign } from '../../../../apollo/queries'
 import Pagination from '../../../Pagination'
 import { LiquidityMiningCampaignModal } from '../LiquidityMiningCampaignModal'
 import PairCard from '../../Token0PairsList/Pair'
+import Empty from '../../Empty'
 
 const ListLayout = styled.div`
   display: grid;
@@ -46,13 +47,21 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="460px">
-          <ListLayout>
-            {items.map(item => (
-              <div key={item.contractAddress} onClick={getLiquidityMiningClickHandler(item)}>
-                <SizedPairCard token0={stakablePair?.token0} token1={stakablePair?.token1} />
-              </div>
-            ))}
-          </ListLayout>
+          {items.length > 0 ? (
+            <ListLayout>
+              {items.map(item => (
+                <div key={item.contractAddress} onClick={getLiquidityMiningClickHandler(item)}>
+                  <SizedPairCard token0={stakablePair?.token0} token1={stakablePair?.token1} />
+                </div>
+              ))}
+            </ListLayout>
+          ) : (
+            <Empty>
+              <Text fontSize="12px" fontWeight="700" lineHeight="15px" letterSpacing="0.08em">
+                NO REWARD POOLS YET
+              </Text>
+            </Empty>
+          )}
         </Box>
         <Flex width="100%" justifyContent="flex-end">
           <Box>
