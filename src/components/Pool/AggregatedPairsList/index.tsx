@@ -7,6 +7,17 @@ import ListFilter, { PairsFilterType } from '../ListFilter'
 import { useAggregatedByToken0ExistingPairsWithRemainingRewards } from '../../../hooks/usePairData'
 import Empty from '../Empty'
 import MyPairs from './MyPairs'
+import styled from 'styled-components'
+
+const ListLayout = styled.div`
+  display: grid;
+  grid-gap: 9px;
+  grid-template-columns: auto auto auto auto;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: auto;
+    grid-gap: 10px;
+  `};
+`
 
 export default function AggregatedPairsList() {
   const [page, setPage] = useState(0)
@@ -30,20 +41,17 @@ export default function AggregatedPairsList() {
         {loading ? (
           <LoadingList />
         ) : aggregatedData.length > 0 ? (
-          <Flex flexWrap="wrap" width="100%">
-            <Box p="4px">
-              <MyPairs pairs={userLpPairs} />
-            </Box>
+          <ListLayout>
+            <MyPairs pairs={userLpPairs} />
             {aggregatedData.map(aggregation => (
-              <Box key={aggregation.token0.address} px="4px" py="6px">
-                <AggregatedPairs
-                  token={aggregation.token0}
-                  usdRewards={aggregation.remainingRewardsUSD}
-                  pairsNumber={aggregation.pairs.length}
-                />
-              </Box>
+              <AggregatedPairs
+                key={aggregation.token0.address}
+                token={aggregation.token0}
+                usdRewards={aggregation.remainingRewardsUSD}
+                pairsNumber={aggregation.pairs.length}
+              />
             ))}
-          </Flex>
+          </ListLayout>
         ) : (
           <Empty>
             <Text fontSize="12px" fontWeight="700" lineHeight="15px" letterSpacing="0.08em">
