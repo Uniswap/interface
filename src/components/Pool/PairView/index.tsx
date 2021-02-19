@@ -1,5 +1,6 @@
 import React, { memo, ReactNode } from 'react'
 import { Box, Flex, Text } from 'rebass'
+import { Link } from 'react-router-dom'
 import { JSBI, Pair, Percent } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import DoubleCurrencyLogo from '../../DoubleLogo'
@@ -15,6 +16,7 @@ import { AutoRow, RowBetween } from '../../Row'
 import { ButtonGrey } from '../../Button'
 import { TYPE } from '../../../theme'
 import LiquidityMiningCampaignsList from './LiquidityMiningCampaignsList'
+import { ResponsiveButtonPrimary, TitleRow } from '../../../pages/LiquidityMining/styleds'
 
 const PoolFeesContainer = styled.div`
   height: 27px;
@@ -109,11 +111,14 @@ function PairView({ loading, pair }: PairViewProps) {
               </ButtonGrey>
             </RowBetween>
             <Flex flexDirection="column">
-              <Box mb="26px">
+              <TitleRow marginBottom="26px">
                 <TYPE.mediumHeader fontSize="18px" color="white">
                   Reward pools
                 </TYPE.mediumHeader>
-              </Box>
+                <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+                  Create liq. mining
+                </ResponsiveButtonPrimary>
+              </TitleRow>
               <LiquidityMiningCampaignsList items={liquidityMiningCampaigns} stakablePair={pair || undefined} />
             </Flex>
           </Flex>
