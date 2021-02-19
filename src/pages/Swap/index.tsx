@@ -36,6 +36,7 @@ import {
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { getNameForSupportedPlatform } from '../../utils/platform'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
@@ -311,19 +312,19 @@ export default function Swap() {
             ) : null}
 
             {showWrap ? null : (
-              <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+              <Card padding={'0'} borderRadius={'20px'}>
                 <AutoColumn gap="8px">
                   {!!trade && (
                     <RowBetween align="center">
-                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                      <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
                         <div style={{ display: 'flex' }}>
                           Best price found on
                           <span style={{ color: 'white', fontWeight: 900 }}>
-                            &nbsp;Sushiswap&nbsp;
+                            &nbsp;{getNameForSupportedPlatform(trade?.platform)}.&nbsp;
                           </span>
-                          with&nbsp;
+                          Swap with&nbsp;
                           <span style={{ color: 'white', fontWeight: 900 }}>
-                            NO added fees
+                            NO additional fees
                           </span>
                           <QuestionHelper text="Swapr always routes to the best price, even if on another exchange" />
                         </div>
