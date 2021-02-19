@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
 import { PageWrapper } from '../styleds'
 
 import { TYPE, HideSmall, StyledInternalLink } from '../../../theme'
 import { Box, Flex, Text } from 'rebass'
-import { RowBetween, RowFixed } from '../../../components/Row'
-import { ButtonSecondary, ButtonWithLink } from '../../../components/Button'
+import { RowBetween } from '../../../components/Row'
+import { ButtonWithLink } from '../../../components/Button'
 import { AutoColumn } from '../../../components/Column'
 
 import { useActiveWeb3React } from '../../../hooks'
@@ -34,22 +34,6 @@ const TitleRow = styled(RowBetween)`
     gap: 12px;
     width: 100%;
     flex-direction: column-reverse;
-  `};
-`
-
-const ButtonRow = styled(RowFixed)`
-  gap: 8px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-  `};
-`
-
-const ResponsiveButtonSecondary = styled(ButtonSecondary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
   `};
 `
 
@@ -125,17 +109,6 @@ export default function Pair({
                   </Box>
                 </Flex>
               </HideSmall>
-              <ButtonRow>
-                <ResponsiveButtonSecondary
-                  as={Link}
-                  padding="8px 14px"
-                  to={`/add/${token0?.address}/${token1?.address}`}
-                >
-                  <Text fontWeight={700} fontSize={12} lineHeight="15px">
-                    ADD/REMOVE LIQUIDITY
-                  </Text>
-                </ResponsiveButtonSecondary>
-              </ButtonRow>
             </TitleRow>
             <PairView loading={wrappedPair[1] === null} pair={wrappedPair[1]} />
           </AutoColumn>
@@ -170,12 +143,6 @@ export default function Pair({
                   it uses 0.25% as default value that is assigned when the pair is created.
                 </TYPE.body>
               </RowBetween>
-              {/*<RowBetween>*/}
-              {/*  /!* TODO: this should be a link to a blog post or something *!/*/}
-              {/*  <TYPE.body fontSize="14px" lineHeight="17px" style={{ textDecoration: 'underline' }}>*/}
-              {/*    Read more about providing liquidity*/}
-              {/*  </TYPE.body>*/}
-              {/*</RowBetween>*/}
             </AutoColumn>
           </CardSection>
         </VoteCard>
