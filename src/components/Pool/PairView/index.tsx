@@ -11,8 +11,9 @@ import {
 } from '../../../hooks/usePairData'
 import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
-import { AutoRow } from '../../Row'
+import { AutoRow, RowBetween } from '../../Row'
 import { LiquidityMiningCampaign } from './LiquidityMiningCampaign'
+import { ButtonGrey } from '../../Button'
 
 const PoolFeesContainer = styled.div`
   height: 27px;
@@ -72,7 +73,7 @@ function PairView({ loading, pair }: PairViewProps) {
         <Flex flexDirection="column">
           <Flex mb="18px" alignItems="center">
             <Box mr="8px">
-              <DoubleCurrencyLogo size={26} currency0={pair?.token0} currency1={pair?.token1} />
+              <DoubleCurrencyLogo size={20} currency0={pair?.token0} currency1={pair?.token1} />
             </Box>
             <Box>
               <Text fontSize="16px" fontWeight="600" lineHeight="20px">
@@ -90,6 +91,21 @@ function PairView({ loading, pair }: PairViewProps) {
               </PoolFeesContainer>
             }
           />
+          {pair && (
+            <Box mt="18px">
+              <FullPositionCard pair={pair} />
+            </Box>
+          )}
+          <RowBetween marginY="18px">
+            <ButtonGrey
+              padding="8px"
+              disabled
+              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+              width="100%"
+            >
+              GOVERNANCE
+            </ButtonGrey>
+          </RowBetween>
           <Flex flexDirection="column" my="24px">
             {liquidityMiningCampaigns.map((liquidityMiningCampaign, index) => (
               <Box key={index}>
@@ -103,11 +119,6 @@ function PairView({ loading, pair }: PairViewProps) {
               </Box>
             ))}
           </Flex>
-          {pair && (
-            <Box>
-              <FullPositionCard pair={pair} />
-            </Box>
-          )}
         </Flex>
       )}
     </DarkCard>

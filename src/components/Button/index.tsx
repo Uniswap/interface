@@ -86,6 +86,41 @@ export const ButtonSecondary = styled(Base)`
   }
 `
 
+export const ButtonGrey = styled(Base)`
+  border: 1px solid #252237;
+  background: radial-gradient(147.37% 164.97% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%), #1f1d2c;
+  background-blend-mode: overlay, normal;
+  color: ${({ theme }) => theme.text5};
+  font-size: 16px;
+  border-radius: 8px;
+  padding: ${({ padding }) => (padding ? padding : '10px')};
+
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+`
+
+export const ButtonDark = styled(Base)`
+  border: 1px solid #252237;
+  background-color: #171621;
+  color: ${({ theme }) => theme.text5};
+  font-size: 16px;
+  border-radius: 8px;
+  padding: ${({ padding }) => (padding ? padding : '10px')};
+
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+`
+
 export const ButtonOutlined = styled(Base)`
   border: 8px solid;
   border-radius: 8px;
