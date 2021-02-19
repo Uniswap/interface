@@ -12,10 +12,9 @@ import styled from 'styled-components'
 const ListLayout = styled.div`
   display: grid;
   grid-gap: 9px;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: 155px 155px 155px 155px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto;
-    grid-gap: 10px;
   `};
 `
 

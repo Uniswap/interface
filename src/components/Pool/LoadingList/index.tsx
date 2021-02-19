@@ -2,13 +2,12 @@ import React from 'react'
 import styled from 'styled-components'
 import LoadingCard from './LoadingCard'
 
-const ListLayout = styled.div`
+const ListLayout = styled.div<{ wide: boolean }>`
   display: grid;
   grid-gap: 9px;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: ${props => (props.wide ? '208px 208px 208px' : '155px 155px 155px 155px')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto;
-    grid-gap: 10px;
   `};
 `
 
@@ -18,7 +17,7 @@ interface LoadingListProps {
 
 export default function LoadingList({ wideCards }: LoadingListProps) {
   return (
-    <ListLayout>
+    <ListLayout wide={!!wideCards}>
       {new Array(wideCards ? 9 : 12).fill(null).map((_, index) => (
         <LoadingCard key={index} wide={wideCards} />
       ))}
