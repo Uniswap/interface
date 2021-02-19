@@ -78,7 +78,7 @@ export default function ConfirmStakingModal({
               }
               showApprove
               stakablePair={stakablePair}
-              disabledApprove={approvalState === ApprovalState.APPROVED}
+              approvalState={approvalState}
               onConfirm={handleConfirm}
               onApprove={approveCallback}
             />
