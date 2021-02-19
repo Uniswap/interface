@@ -317,7 +317,11 @@ export default function Swap() {
                     <RowBetween align="center">
                       <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
                         <div style={{ display: 'flex' }}>
-                          Best price found on Sushiswap with&nbsp;
+                          Best price found on
+                          <span style={{ color: 'white', fontWeight: 900 }}>
+                            &nbsp;Sushiswap&nbsp;
+                          </span>
+                          with&nbsp;
                           <span style={{ color: 'white', fontWeight: 900 }}>
                             NO added fees
                           </span>
