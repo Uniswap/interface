@@ -8,11 +8,6 @@ export enum PairsFilterType {
   REWARDS = 'REWARDS'
 }
 
-export enum PairsSortingType {
-  RELEVANCE,
-  MOST_REWARDS
-}
-
 const StyledRoot = styled(Flex)<{ disabled?: boolean }>`
   opacity: ${props => (props.disabled ? 0.2 : 1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};

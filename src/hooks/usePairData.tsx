@@ -13,7 +13,7 @@ import {
   PairNonExpiredLiquidityMiningCampaignsQueryResult,
   GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS
 } from '../apollo/queries'
-import { PairsFilterType, PairsSortingType } from '../components/Pool/ListFilter'
+import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
 import { useAggregatedByToken0ExistingPairs } from '../data/Reserves'
 import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
@@ -87,21 +87,24 @@ export function useLiquidityMiningCampaignsForPairs(
 }
 
 export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
-  filter: PairsFilterType = PairsFilterType.ALL,
-  sorting: PairsSortingType = PairsSortingType.RELEVANCE
+  filter: PairsFilterType = PairsFilterType.ALL
 ): {
   loading: boolean
-  aggregatedData: { token0: Token; pairs: Pair[]; remainingRewardsUSD: BigNumber }[]
+  aggregatedData: { token0: Token; lpTokensBalance: BigNumber; pairs: Pair[]; remainingRewardsUSD: BigNumber }[]
 } {
   const { loading: loadingETHUSDPrice, ethUSDPrice } = useETHUSDPrice()
   const {
     loading: loadingPairs,
     aggregatedData: aggregatedByToken0ExistingPairs
   } = useAggregatedByToken0ExistingPairs()
+  // memoizing the pairs avoid them changing reference every time, triggering a rerender in the next instruction
+  const memoizedPairs = useMemo(() => aggregatedByToken0ExistingPairs?.flatMap(data => data.pairs), [
+    aggregatedByToken0ExistingPairs
+  ])
   const { loading: loadingLiquidityMiningCampaigns, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
-    aggregatedByToken0ExistingPairs?.flatMap(data => data.pairs)
+    memoizedPairs
   )
-  const sorter = useAggregatedByToken0PairComparator(sorting)
+  const sorter = useAggregatedByToken0PairComparator()
 
   return useMemo(() => {
     if (loadingPairs || loadingETHUSDPrice || loadingLiquidityMiningCampaigns)

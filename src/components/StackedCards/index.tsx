@@ -19,12 +19,12 @@ interface StackedCardsProps {
   children: ReactNode
 }
 
-export default function StackedCards({ children }: StackedCardsProps) {
+export default function StackedCards({ children, ...rest }: StackedCardsProps) {
   return (
     <CardsContainer>
       <SizedCard index={0} />
       <SizedCard index={1} />
-      <SizedCard index={2} selectable>
+      <SizedCard index={2} selectable {...rest}>
         {children}
       </SizedCard>
     </CardsContainer>
