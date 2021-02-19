@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
 import { PageWrapper } from '../styleds'
 
@@ -16,7 +16,7 @@ import { CardSection } from '../../../components/earn/styled'
 import { useToken } from '../../../hooks/Tokens'
 import { UndecoratedLink } from '../../../components/UndercoratedLink'
 import DoubleCurrencyLogo from '../../../components/DoubleLogo'
-import { usePair } from '../../../data/Reserves'
+import { PairState, usePair } from '../../../data/Reserves'
 import PairView from '../../../components/Pool/PairView'
 import { useRouter } from '../../../hooks/useRouter'
 import PairSearchModal from '../../../components/SearchModal/PairSearchModal'
@@ -87,6 +87,7 @@ export default function Pair({
     [router]
   )
 
+  if (wrappedPair[0] === PairState.INVALID || wrappedPair[0] === PairState.NOT_EXISTS) return <Redirect to="/pools" />
   return (
     <>
       <PageWrapper>
