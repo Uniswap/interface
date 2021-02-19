@@ -1,61 +1,41 @@
 import { useWeb3React } from '@web3-react/core'
 import { Pair, TokenAmount } from 'dxswap-sdk'
-import { DateTime } from 'luxon'
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
-import { Box, Flex, Text } from 'rebass'
+import { transparentize } from 'polished'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useLiquidityMiningActionCallbacks } from '../../../../hooks/useLiquidityMiningActionCallbacks'
 import { useLiquidityMiningDistributionStakedBalance } from '../../../../hooks/useLiquidityMiningDistributionStakedBalance'
 import { useTransactionAdder } from '../../../../state/transactions/hooks'
 import { useTokenBalance } from '../../../../state/wallet/hooks'
-import { ButtonSecondary } from '../../../Button'
-import { DarkCard } from '../../../Card'
+import { TYPE } from '../../../../theme'
+import { ButtonDark } from '../../../Button'
+import { AutoColumn } from '../../../Column'
+import Modal from '../../../Modal'
+import { RowBetween } from '../../../Row'
 import ConfirmStakingModal from '../ConfirmStakingModal'
 import ConfirmWithdrawalModal from '../ConfirmWithdrawalModal'
+import LiquidityMiningInformation from './Information'
+import LiquidityMiningYourStake from './YourStake'
 
-const Divider = styled.div`
-  height: 100%;
-  width: 1px;
-  background: ${props => props.theme.bg5};
+const Wrapper = styled.div`
+  width: 100%;
+  padding: 28px 42px;
+  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
 `
-const TitleText = styled.span`
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 13px;
-  letter-spacing: 0em;
-  color: ${props => props.theme.text4};
-  text-transform: uppercase;
-`
-
-interface DataRowProps {
-  title: string
-  value: ReactNode
-}
-
-function DataRow({ title, value }: DataRowProps) {
-  return (
-    <Flex width="100%" justifyContent="space-between">
-      <Box>
-        <TitleText>{title}</TitleText>
-      </Box>
-      <Box>
-        <Text fontSize="12px" fontWeight="600" lineHeight="13px" color="text4">
-          {value}
-        </Text>
-      </Box>
-    </Flex>
-  )
-}
 
 interface LiquidityMiningCampaignProps {
-  contractAddress: string
+  show: boolean
+  onDismiss: () => void
+  contractAddress?: string
   stakablePair?: Pair | null
-  startsAt: string
-  endsAt: string
-  timelock: boolean
+  startsAt?: string
+  endsAt?: string
+  timelock?: boolean
 }
 
-export function LiquidityMiningCampaign({
+export function LiquidityMiningCampaignModal({
+  show,
+  onDismiss,
   contractAddress,
   stakablePair,
   startsAt,
@@ -80,6 +60,7 @@ export function LiquidityMiningCampaign({
   const [disabledStaking, setDisabledStaking] = useState(false)
 
   useEffect(() => {
+    if (!startsAt) return
     setDisabledStaking(
       !callbacks ||
         parseInt(startsAt) > Math.floor(Date.now() / 1000) ||
@@ -156,51 +137,71 @@ export function LiquidityMiningCampaign({
     },
     [addTransaction, callbacks, stakablePair]
   )
+  const handleClaimConfirmation = useCallback(() => {
+    if (!callbacks || !account) return
+    setAttemptingTransaction(true)
+    callbacks
+      .claimAll(account)
+      .then(transaction => {
+        setErrorMessage('')
+        setTransactionHash(transaction.hash || '')
+        addTransaction(transaction, { summary: `Claim outstanding rewards` })
+      })
+      .catch(error => {
+        console.error(error)
+        setErrorMessage('Error broadcasting transaction')
+      })
+      .finally(() => {
+        setAttemptingTransaction(false)
+      })
+  }, [account, addTransaction, callbacks])
 
   return (
-    <>
-      <DarkCard>
-        <Flex justifyContent="stretch" width="100%" mb="24px">
-          <Flex flexDirection="column" flex="1">
-            <DataRow title="APY" value="TODO" />
-            <DataRow title="Time left" value="TODO" />
-          </Flex>
-          <Box mx="18px">
-            <Divider />
-          </Box>
-          <Flex flexDirection="column" flex="1">
-            <DataRow title="Starts at" value={DateTime.fromSeconds(parseInt(startsAt)).toFormat('dd-MM-yyyy hh:mm')} />
-            <DataRow title="Ends at" value={DateTime.fromSeconds(parseInt(endsAt)).toFormat('dd-MM-yyyy hh:mm')} />
-            <DataRow title="Timelock" value={timelock ? 'ON' : 'OFF'} />
-          </Flex>
-        </Flex>
-        <Flex width="100%">
-          <Box>
-            <ButtonSecondary disabled={disabledStaking} onClick={handleStakingRequest}>
-              Stake
-            </ButtonSecondary>
-          </Box>
-          <Box>
-            <ButtonSecondary
-              disabled={!callbacks || !withdrawableTokenBalance || withdrawableTokenBalance.equalTo('0')}
-              onClick={handleWithdrawalRequest}
-            >
-              Withdraw
-            </ButtonSecondary>
-          </Box>
-        </Flex>
-      </DarkCard>
-      <ConfirmStakingModal
-        isOpen={showStakingConfirmationModal}
-        stakableTokenBalance={stakableTokenBalance}
-        onDismiss={handleDismiss}
-        stakablePair={stakablePair}
-        distributionContractAddress={contractAddress}
-        attemptingTxn={attemptingTransaction}
-        errorMessage={errorMessage}
-        onConfirm={handleStakeConfirmation}
-        txHash={transactionHash}
-      />
+    <Modal maxWidth={670} isOpen={show} onDismiss={onDismiss}>
+      <Wrapper>
+        <AutoColumn gap="24px">
+          <TYPE.mediumHeader color="text4" lineHeight="24px" letterSpacing="-0.01em">
+            Rewards program
+          </TYPE.mediumHeader>
+          <div>
+            <LiquidityMiningInformation startsAt={startsAt} endsAt={endsAt} timelock={!!timelock} />
+            <RowBetween marginTop="24px">
+              <ButtonDark marginRight="4px" disabled={disabledStaking} onClick={handleStakingRequest}>
+                Deposit {stakablePair?.liquidityToken.symbol}
+              </ButtonDark>
+              <ButtonDark
+                marginLeft="4px"
+                disabled={!callbacks || !withdrawableTokenBalance || withdrawableTokenBalance.equalTo('0')}
+                onClick={handleWithdrawalRequest}
+              >
+                Withdraw {stakablePair?.liquidityToken.symbol}
+              </ButtonDark>
+            </RowBetween>
+          </div>
+          <div>
+            <LiquidityMiningYourStake />
+            <RowBetween marginTop="24px">
+              {/* TODO: handle disabled state */}
+              <ButtonDark marginRight="4px" onClick={handleClaimConfirmation}>
+                Claim rewards
+              </ButtonDark>
+            </RowBetween>
+          </div>
+        </AutoColumn>
+      </Wrapper>
+      {contractAddress && (
+        <ConfirmStakingModal
+          isOpen={showStakingConfirmationModal}
+          stakableTokenBalance={stakableTokenBalance}
+          onDismiss={handleDismiss}
+          stakablePair={stakablePair}
+          distributionContractAddress={contractAddress}
+          attemptingTxn={attemptingTransaction}
+          errorMessage={errorMessage}
+          onConfirm={handleStakeConfirmation}
+          txHash={transactionHash}
+        />
+      )}
       <ConfirmWithdrawalModal
         isOpen={showWithdrawalConfirmationModal}
         withdrawablTokenBalance={withdrawableTokenBalance || undefined}
@@ -211,6 +212,6 @@ export function LiquidityMiningCampaign({
         onConfirm={handleWithdrawalConfirmation}
         txHash={transactionHash}
       />
-    </>
+    </Modal>
   )
 }
