@@ -76,7 +76,7 @@ function PairView({ loading, pair }: PairViewProps) {
     <>
       <StyledDarkCard padding="40px">
         {loading || volumeLoading || liquidityLoading || liquidityMiningCampaignsLoading ? (
-          <Flex flexDirection="column" width="100%" height="340px">
+          <Flex flexDirection="column" width="100%" height="560px">
             <Loading />
           </Flex>
         ) : (
