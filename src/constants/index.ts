@@ -1,7 +1,7 @@
-import { ChainId, JSBI, Percent, Token } from '@ubeswap/sdk'
+import { CELO, ChainId, cUSD, JSBI, Percent, Token } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, valora } from '../connectors'
-import { CELO, CUSD, UBE } from './tokens'
+import { UBE } from './tokens'
 
 export const ROUTER_ADDRESS = '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121'
 
@@ -23,9 +23,9 @@ export const UNI = UBE
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: [CUSD[ChainId.MAINNET], CELO[ChainId.MAINNET]],
-  [ChainId.ALFAJORES]: [CUSD[ChainId.ALFAJORES], CELO[ChainId.ALFAJORES]],
-  [ChainId.BAKLAVA]: [CUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]
+  [ChainId.MAINNET]: [cUSD[ChainId.MAINNET], CELO[ChainId.MAINNET]],
+  [ChainId.ALFAJORES]: [cUSD[ChainId.ALFAJORES], CELO[ChainId.ALFAJORES]],
+  [ChainId.BAKLAVA]: [cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]
 }
 
 // used for display in the default list when adding liquidity
@@ -35,9 +35,9 @@ export const SUGGESTED_BASES: ChainTokenList = BASES_TO_CHECK_TRADES_AGAINST
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = BASES_TO_CHECK_TRADES_AGAINST
 
 export const PINNED_PAIRS: { [chainId: number]: [Token, Token][] } = {
-  [ChainId.MAINNET]: [[CUSD[ChainId.MAINNET], CELO[ChainId.MAINNET]]],
-  [ChainId.ALFAJORES]: [[CUSD[ChainId.ALFAJORES], CELO[ChainId.ALFAJORES]]],
-  [ChainId.BAKLAVA]: [[CUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]]
+  [ChainId.MAINNET]: [[cUSD[ChainId.MAINNET], CELO[ChainId.MAINNET]]],
+  [ChainId.ALFAJORES]: [[cUSD[ChainId.ALFAJORES], CELO[ChainId.ALFAJORES]]],
+  [ChainId.BAKLAVA]: [[cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]]
 }
 
 export interface WalletInfo {

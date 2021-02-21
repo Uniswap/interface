@@ -1,7 +1,7 @@
-import { ChainId } from '@ubeswap/sdk'
-import { CUSD } from 'constants/tokens'
+import { ChainId, cUSD } from '@ubeswap/sdk'
 import { darken } from 'polished'
 import React from 'react'
+import { isMobile } from 'react-device-detect'
 import { Moon, Sun } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
@@ -259,7 +259,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const userCusdBalance = useTokenBalance(account ?? undefined, CUSD[chainId])
+  const userCusdBalance = useTokenBalance(account ?? undefined, cUSD[chainId])
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   return (
@@ -271,6 +271,9 @@ export default function Header() {
           </UniIcon>
         </Title>
         <HeaderLinks>
+          {isMobile && chainId && NETWORK_LABELS[chainId] && (
+            <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+          )}
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>

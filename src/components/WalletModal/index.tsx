@@ -2,10 +2,11 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import Card from 'components/Card'
 import { ValoraConnector } from 'connectors/valora/ValoraConnector'
-import { requestValoraAuth } from 'connectors/valora/valoraUtils'
+import { removeQueryParams, requestValoraAuth } from 'connectors/valora/valoraUtils'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
+import { useValoraAccount } from 'state/user/hooks'
 import styled from 'styled-components'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -133,6 +134,7 @@ export default function WalletModal({
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
+  const { setValoraAccount } = useValoraAccount()
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
@@ -182,18 +184,26 @@ export default function WalletModal({
 
     if (connector instanceof ValoraConnector) {
       // valora should connect by deep linking
-      requestValoraAuth()
+      const resp = await requestValoraAuth()
+      setValoraAccount(resp)
+
+      await activate(connector, undefined, true).catch(() => {
+        setPendingError(true)
+      })
+
+      // clear dappkit response from href
+      window.location.href = removeQueryParams(window.location.href, [...Object.keys(resp), 'account'])
       return
     }
 
     connector &&
-      activate(connector, undefined, true).catch(error => {
+      (await activate(connector, undefined, true).catch(error => {
         if (error instanceof UnsupportedChainIdError) {
           activate(connector) // a little janky...can't use setError because the connector isn't set
         } else {
           setPendingError(true)
         }
-      })
+      }))
   }
 
   // get wallets user can switch too, depending on device/browser

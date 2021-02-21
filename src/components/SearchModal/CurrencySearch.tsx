@@ -1,6 +1,5 @@
-import { Token } from '@ubeswap/sdk'
+import { cUSD, Token } from '@ubeswap/sdk'
 import { ButtonLight } from 'components/Button'
-import { CUSD } from 'constants/tokens'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
@@ -161,7 +160,7 @@ export function CurrencySearch({
       if (e.key === 'Enter') {
         const s = searchQuery.toLowerCase().trim()
         if (s === 'cusd') {
-          handleCurrencySelect(CUSD[chainId])
+          handleCurrencySelect(cUSD[chainId])
         } else if (filteredSortedTokens.length > 0) {
           if (
             filteredSortedTokens[0].symbol?.toLowerCase() === searchQuery.trim().toLowerCase() ||

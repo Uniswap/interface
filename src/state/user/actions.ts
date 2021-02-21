@@ -28,3 +28,6 @@ export const removeSerializedPair = createAction<{ chainId: number; tokenAAddres
   'user/removeSerializedPair'
 )
 export const toggleURLWarning = createAction<void>('app/toggleURLWarning')
+
+export const setValoraAccount = createAction<{ address: string; phoneNumber: string }>('user/setValoraAccount')
+export const clearValoraAccount = createAction<void>('user/clearValoraAccount')

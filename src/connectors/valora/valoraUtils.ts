@@ -1,10 +1,12 @@
 import {
   AccountAuthRequest,
+  AccountAuthResponseSuccess,
   DappKitResponse,
   DappKitResponseStatus,
   parseDappkitResponseDeeplink,
   serializeDappKitRequestDeeplink,
   SignTxRequest,
+  SignTxResponseSuccess,
   TxToSignParam
 } from '@celo/utils'
 import { identity, mapValues } from 'lodash'
@@ -38,7 +40,7 @@ export const parseDappkitResponse = (
   return result
 }
 
-export const awaitDappkitResponse = async (): Promise<DappKitResponse> => {
+export const awaitDappkitResponse = async <T extends DappKitResponse>(): Promise<T> => {
   return await new Promise((resolve, reject) => {
     const timer = setInterval(() => {
       console.log('awaiting')
@@ -51,7 +53,7 @@ export const awaitDappkitResponse = async (): Promise<DappKitResponse> => {
         if (response.status === DappKitResponseStatus.UNAUTHORIZED) {
           reject(new Error('Unauthorized'))
         } else {
-          resolve(response)
+          resolve((response as unknown) as T)
         }
         clearInterval(timer)
       } catch (e) {}
@@ -84,7 +86,7 @@ const cleanCallbackUrl = (url: string): string => {
 /**
  * Requests auth from the Valora app.
  */
-export const requestValoraAuth = () => {
+export const requestValoraAuth = async (): Promise<AccountAuthResponseSuccess> => {
   const requestId = 'login'
   const dappName = 'Ubeswap'
   const callback = cleanCallbackUrl(window.location.href)
@@ -95,13 +97,14 @@ export const requestValoraAuth = () => {
       callback
     })
   )
+  return await awaitDappkitResponse<AccountAuthResponseSuccess>()
 }
 
 /**
  * Requests auth from the Valora app.
  */
-export const requestValoraTransaction = async (txs: TxToSignParam[]): Promise<DappKitResponse> => {
-  const requestId = 'login'
+export const requestValoraTransaction = async (txs: TxToSignParam[]): Promise<SignTxResponseSuccess> => {
+  const requestId = 'make-transaction'
   const dappName = 'Ubeswap'
   const callback = cleanCallbackUrl(window.location.href)
   window.location.href = serializeDappKitRequestDeeplink(
@@ -111,5 +114,7 @@ export const requestValoraTransaction = async (txs: TxToSignParam[]): Promise<Da
       callback
     })
   )
-  return await awaitDappkitResponse()
+  return await awaitDappkitResponse<SignTxResponseSuccess>()
 }
+
+export type IValoraAccount = Pick<AccountAuthResponseSuccess, 'address' | 'phoneNumber'>

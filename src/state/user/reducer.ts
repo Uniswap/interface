@@ -1,20 +1,22 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
+import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
   addSerializedToken,
+  clearValoraAccount,
   removeSerializedPair,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  setValoraAccount,
+  toggleURLWarning,
   updateMatchesDarkMode,
   updateUserDarkMode,
-  updateUserExpertMode,
-  updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning,
-  updateUserSingleHopOnly
+  updateUserExpertMode,
+  updateUserSingleHopOnly,
+  updateUserSlippageTolerance
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -51,6 +53,12 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+
+  // persist valora connection
+  valoraAccount: {
+    address: string
+    phoneNumber: string
+  } | null
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -67,7 +75,8 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  URLWarningVisible: true
+  URLWarningVisible: true,
+  valoraAccount: null
 }
 
 export default createReducer(initialState, builder =>
@@ -141,5 +150,11 @@ export default createReducer(initialState, builder =>
     })
     .addCase(toggleURLWarning, state => {
       state.URLWarningVisible = !state.URLWarningVisible
+    })
+    .addCase(setValoraAccount, (state, { payload }) => {
+      state.valoraAccount = payload
+    })
+    .addCase(clearValoraAccount, state => {
+      state.valoraAccount = null
     })
 )

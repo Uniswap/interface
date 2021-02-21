@@ -1,5 +1,6 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { ValoraConnector } from 'connectors/valora/ValoraConnector'
 import useAccountSummary from 'hooks/useAccountSummary'
 import { darken, lighten } from 'polished'
 import React, { useMemo } from 'react'
@@ -130,8 +131,11 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const toggleWalletModal = useWalletModalToggle()
-
   if (account) {
+    const accountName =
+      connector instanceof ValoraConnector && connector.valoraAccount
+        ? connector.valoraAccount.phoneNumber
+        : summary?.name ?? shortenAddress(account)
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
@@ -140,7 +144,7 @@ function Web3StatusInner() {
           </RowBetween>
         ) : (
           <>
-            <Text>{summary?.name ?? shortenAddress(account)}</Text>
+            <Text>{accountName}</Text>
           </>
         )}
         {!hasPendingTransactions && connector && <StatusIcon connector={connector} />}

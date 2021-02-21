@@ -1,6 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { ChainId, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
-import { CUSD } from 'constants/tokens'
+import { ChainId, cUSD, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { useTradeExactIn, useTradeExactOut } from 'hooks/Trades'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
@@ -203,10 +202,10 @@ function parseCurrencyFromURLParameter(urlParam: any, chainId: ChainId): string 
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === 'CUSD') return CUSD[chainId].address
-    if (valid === false) return CUSD[chainId].address
+    if (urlParam.toUpperCase() === 'CUSD') return cUSD[chainId].address
+    if (valid === false) return cUSD[chainId].address
   }
-  return CUSD[chainId].address ?? ''
+  return cUSD[chainId].address ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {

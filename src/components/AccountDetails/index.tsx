@@ -1,7 +1,9 @@
 import { getBlockscoutLink } from '@ubeswap/sdk'
+import { ValoraConnector } from 'connectors/valora/ValoraConnector'
 import React, { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useDispatch } from 'react-redux'
+import { useValoraAccount } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected } from '../../connectors'
@@ -219,6 +221,7 @@ export default function AccountDetails({
   const { chainId, account, connector } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
+  const { clearValoraAccount, account: valoraAccount } = useValoraAccount()
 
   function formatConnectorName() {
     const { ethereum } = window
@@ -265,6 +268,7 @@ export default function AccountDetails({
                       style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                       onClick={() => {
                         ;(connector as any).close()
+                        clearValoraAccount()
                       }}
                     >
                       Disconnect
@@ -287,6 +291,12 @@ export default function AccountDetails({
                       <div>
                         {getStatusIcon()}
                         <p> {ENSName}</p>
+                      </div>
+                    </>
+                  ) : connector instanceof ValoraConnector && connector.valoraAccount ? (
+                    <>
+                      <div>
+                        <p> {valoraAccount?.phoneNumber}</p>
                       </div>
                     </>
                   ) : (

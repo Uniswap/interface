@@ -1,46 +1,20 @@
-import { DappKitRequestTypes, DappKitResponseStatus } from '@celo/utils'
 import { useWeb3React } from '@web3-react/core'
 import { valora } from 'connectors'
-import { useCallback, useEffect } from 'react'
-import { parseDappkitResponse, removeQueryParams } from './valoraUtils'
+import { useEffect } from 'react'
+import { useValoraAccount } from 'state/user/hooks'
 
 /**
  * useValora handles incoming valora requests
  */
 export const useValora = () => {
-  const { activate, account } = useWeb3React()
-
-  const handleFocus = useCallback(() => {
-    try {
-      const data = parseDappkitResponse(window.location.href)
-      if (!data) {
-        return
-      }
-      if (
-        data.type === DappKitRequestTypes.ACCOUNT_ADDRESS &&
-        data.status === DappKitResponseStatus.SUCCESS &&
-        account !== data.address
-      ) {
-        activate(valora, undefined, true).then(() => {
-          // clear dappkit response from href
-          window.location.href = removeQueryParams(window.location.href, [...Object.keys(data), 'account'])
-        })
-      }
-    } catch (e) {
-      if (!e.message.includes('Invalid Deeplink')) {
-        alert('error: ' + e.message)
-      }
-    }
-  }, [activate, account])
+  const { activate, account: injectedAccount } = useWeb3React()
+  const { account: savedValoraAccount } = useValoraAccount()
 
   useEffect(() => {
-    window.addEventListener('focus', handleFocus, false)
-    return () => {
-      window.removeEventListener('focus', handleFocus)
+    console.log({ injectedAccount, savedValoraAccount })
+    if (!injectedAccount && savedValoraAccount) {
+      valora.setSavedValoraAccount(savedValoraAccount)
+      activate(valora, undefined, true)
     }
-  }, [handleFocus])
-
-  useEffect(() => {
-    handleFocus()
-  }, [handleFocus])
+  }, [injectedAccount, savedValoraAccount, activate])
 }

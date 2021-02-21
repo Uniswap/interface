@@ -1,5 +1,4 @@
-import { Token } from '@ubeswap/sdk'
-import { CELO, CUSD } from 'constants/tokens'
+import { CELO, cUSD, Token } from '@ubeswap/sdk'
 import { useActiveWeb3React } from 'hooks'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -31,7 +30,7 @@ export default function CurrencyLogo({
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
-    if (currency === CUSD[chainId ?? 0])
+    if (currency === cUSD[chainId ?? 0])
       return ['https://raw.githubusercontent.com/ubeswap/token-list/master/assets/asset_cUSD.png']
     if (currency === CELO[chainId ?? 0])
       return ['https://raw.githubusercontent.com/ubeswap/token-list/master/assets/asset_cGLD.png']

@@ -85,7 +85,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:alfajores": "REACT_APP_NETWORK_ID=44787 react-scripts start",
+    "start:alfajores": "REACT_APP_CHAIN_ID=44787 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",

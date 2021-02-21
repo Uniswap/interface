@@ -1,5 +1,4 @@
-import { JSBI, Token, TokenAmount } from '@ubeswap/sdk'
-import { CUSD } from 'constants/tokens'
+import { cUSD, JSBI, Token, TokenAmount } from '@ubeswap/sdk'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
@@ -31,7 +30,7 @@ export default function PoolFinder() {
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [currency0, setCurrency0] = useState<Token | null>(CUSD[chainId])
+  const [currency0, setCurrency0] = useState<Token | null>(cUSD[chainId])
   const [currency1, setCurrency1] = useState<Token | null>(null)
 
   const [pairState, pair] = usePair(currency0 ?? undefined, currency1 ?? undefined)
