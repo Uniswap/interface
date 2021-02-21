@@ -1,21 +1,21 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import Card from 'components/Card'
+import { ValoraConnector } from 'connectors/valora/ValoraConnector'
+import { requestValoraAuth } from 'connectors/valora/valoraUtils'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis } from '../../connectors'
-import { OVERLAY_READY } from '../../connectors/Fortmatic'
+import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
-
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
@@ -180,9 +180,10 @@ export default function WalletModal({
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
-    // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-    if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
-      connector.walletConnectProvider = undefined
+    if (connector instanceof ValoraConnector) {
+      // valora should connect by deep linking
+      requestValoraAuth()
+      return
     }
 
     connector &&
@@ -195,13 +196,6 @@ export default function WalletModal({
       })
   }
 
-  // close wallet modal if fortmatic modal is active
-  useEffect(() => {
-    fortmatic.on(OVERLAY_READY, () => {
-      toggleWalletModal()
-    })
-  }, [toggleWalletModal])
-
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
@@ -209,11 +203,6 @@ export default function WalletModal({
       const option = SUPPORTED_WALLETS[key]
       // check for mobile options
       if (isMobile) {
-        //disable portis on mobile for now
-        if (option.connector === portis) {
-          return null
-        }
-
         if (!window.web3 && !window.ethereum && option.mobile) {
           return (
             <Option
@@ -298,7 +287,7 @@ export default function WalletModal({
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
+              <h5>Please connect to the appropriate Celo network.</h5>
             ) : (
               'Error connecting. Try refreshing the page.'
             )}
@@ -346,13 +335,20 @@ export default function WalletModal({
               setPendingError={setPendingError}
               tryActivation={tryActivation}
             />
+          ) : !isMobile ? (
+            <Card>
+              <p>Desktop wallet support is coming soon.</p>
+              <p>
+                Follow <ExternalLink href="https://twitter.com/Ubeswap">Ubeswap</ExternalLink> for updates!
+              </p>
+            </Card>
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
-          {walletView !== WALLET_VIEWS.PENDING && (
+          {walletView !== WALLET_VIEWS.PENDING && isMobile && (
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
+              <span>New to Celo? &nbsp;</span> {/** TODO(igm): add docmentation about how to use a wallet */}
+              <ExternalLink href="https://celo.org/">Learn more</ExternalLink>
             </Blurb>
           )}
         </ContentWrapper>

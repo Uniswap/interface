@@ -1,10 +1,12 @@
-import { ConnectorUpdate } from '@web3-react/types'
+import { ContractKit, newKit } from '@celo/contractkit'
+import { ChainId, CHAIN_INFO } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import { ConnectorUpdate } from '@web3-react/types'
+import { NETWORK_CHAIN_ID } from 'connectors'
 import invariant from 'tiny-invariant'
 
-interface NetworkConnectorArguments {
-  urls: { [chainId: number]: string }
-  defaultChainId?: number
+export interface NetworkConnectorArguments {
+  defaultChainId?: ChainId
 }
 
 // taken from ethers.js, compatible interface with web3 provider
@@ -28,26 +30,28 @@ interface BatchItem {
   reject: (error: Error) => void
 }
 
-class MiniRpcProvider implements AsyncSendable {
+export class MiniRpcProvider implements AsyncSendable {
   public readonly isMetaMask: false = false
-  public readonly chainId: number
+  public readonly chainId: ChainId
   public readonly url: string
   public readonly host: string
   public readonly path: string
   public readonly batchWaitTimeMs: number
+  public readonly kit: ContractKit
 
   private nextId = 1
   private batchTimeoutId: ReturnType<typeof setTimeout> | null = null
   private batch: BatchItem[] = []
 
-  constructor(chainId: number, url: string, batchWaitTimeMs?: number) {
+  constructor(chainId: ChainId, batchWaitTimeMs?: number) {
     this.chainId = chainId
-    this.url = url
+    const url = (this.url = CHAIN_INFO[chainId].fornoURL)
     const parsed = new URL(url)
     this.host = parsed.host
     this.path = parsed.pathname
     // how long to wait to batch calls
     this.batchWaitTimeMs = batchWaitTimeMs ?? 50
+    this.kit = newKit(url)
   }
 
   public readonly clearBatch = async () => {
@@ -55,6 +59,7 @@ class MiniRpcProvider implements AsyncSendable {
     const batch = this.batch
     this.batch = []
     this.batchTimeoutId = null
+
     let response: Response
     try {
       response = await fetch(this.url, {
@@ -138,21 +143,22 @@ class MiniRpcProvider implements AsyncSendable {
 }
 
 export class NetworkConnector extends AbstractConnector {
-  private readonly providers: { [chainId: number]: MiniRpcProvider }
-  private currentChainId: number
+  private readonly providers: { [chainId in ChainId]: MiniRpcProvider }
+  currentChainId: ChainId
 
-  constructor({ urls, defaultChainId }: NetworkConnectorArguments) {
-    invariant(defaultChainId || Object.keys(urls).length === 1, 'defaultChainId is a required argument with >1 url')
-    super({ supportedChainIds: Object.keys(urls).map((k): number => Number(k)) })
+  constructor({ defaultChainId }: NetworkConnectorArguments) {
+    invariant(defaultChainId, 'defaultChainId is a required argument')
+    super({ supportedChainIds: Object.keys(CHAIN_INFO).map((k): number => Number(k)) })
 
-    this.currentChainId = defaultChainId || Number(Object.keys(urls)[0])
-    this.providers = Object.keys(urls).reduce<{ [chainId: number]: MiniRpcProvider }>((accumulator, chainId) => {
-      accumulator[Number(chainId)] = new MiniRpcProvider(Number(chainId), urls[Number(chainId)])
-      return accumulator
-    }, {})
+    this.currentChainId = defaultChainId ?? NETWORK_CHAIN_ID
+    this.providers = {
+      [ChainId.MAINNET]: new MiniRpcProvider(ChainId.MAINNET),
+      [ChainId.ALFAJORES]: new MiniRpcProvider(ChainId.ALFAJORES),
+      [ChainId.BAKLAVA]: new MiniRpcProvider(ChainId.BAKLAVA)
+    }
   }
 
-  public get provider(): MiniRpcProvider {
+  public get provider(): MiniRpcProvider | null {
     return this.providers[this.currentChainId]
   }
 
@@ -160,7 +166,7 @@ export class NetworkConnector extends AbstractConnector {
     return { provider: this.providers[this.currentChainId], chainId: this.currentChainId, account: null }
   }
 
-  public async getProvider(): Promise<MiniRpcProvider> {
+  public async getProvider(): Promise<MiniRpcProvider | null> {
     return this.providers[this.currentChainId]
   }
 
@@ -168,7 +174,7 @@ export class NetworkConnector extends AbstractConnector {
     return this.currentChainId
   }
 
-  public async getAccount(): Promise<null> {
+  public async getAccount(): Promise<string | null> {
     return null
   }
 

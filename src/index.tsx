@@ -1,4 +1,6 @@
+import { ChainId } from '@ubeswap/sdk'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
+import { NETWORK_CHAIN_ID } from 'connectors'
 import 'inter-ui'
 import React, { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
@@ -6,7 +8,6 @@ import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
-import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants'
 import './i18n'
 import App from './pages/App'
@@ -25,8 +26,28 @@ if (!!window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
 }
 
-const GOOGLE_ANALYTICS_ID: string | undefined = process.env.REACT_APP_GOOGLE_ANALYTICS_ID
-if (typeof GOOGLE_ANALYTICS_ID === 'string') {
+const GOOGLE_ANALYTICS_IDS = {
+  production: {
+    [ChainId.MAINNET]: 'UA-189817928-4',
+    [ChainId.ALFAJORES]: 'UA-189817928-5',
+    [ChainId.BAKLAVA]: 'UA-189817928-6'
+  },
+  staging: {
+    [ChainId.MAINNET]: 'UA-189817928-2',
+    [ChainId.ALFAJORES]: 'UA-189817928-3',
+    [ChainId.BAKLAVA]: 'UA-189817928-7'
+  }
+}
+
+const environment = window.location.hostname.includes('app-staging')
+  ? 'staging'
+  : window.location.hostname.includes('ubeswap.org')
+  ? 'production'
+  : null
+
+const GOOGLE_ANALYTICS_ID = environment ? GOOGLE_ANALYTICS_IDS[environment][NETWORK_CHAIN_ID] : null
+
+if (GOOGLE_ANALYTICS_ID) {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
     customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
@@ -59,17 +80,15 @@ ReactDOM.render(
     <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
-        <Blocklist>
-          <Provider store={store}>
-            <Updaters />
-            <ThemeProvider>
-              <ThemedGlobalStyle />
-              <HashRouter>
-                <App />
-              </HashRouter>
-            </ThemeProvider>
-          </Provider>
-        </Blocklist>
+        <Provider store={store}>
+          <Updaters />
+          <ThemeProvider>
+            <ThemedGlobalStyle />
+            <HashRouter>
+              <App />
+            </HashRouter>
+          </ThemeProvider>
+        </Provider>
       </Web3ProviderNetwork>
     </Web3ReactProvider>
   </StrictMode>,

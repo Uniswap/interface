@@ -1,23 +1,22 @@
-import React, { useState } from 'react'
-import { Token, Currency } from '@uniswap/sdk'
-import styled from 'styled-components'
-import { TYPE, CloseIcon } from 'theme'
+import { getBlockscoutLink, Token } from '@ubeswap/sdk'
+import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { ArrowLeft, AlertTriangle } from 'react-feather'
-import { transparentize } from 'polished'
-import useTheme from 'hooks/useTheme'
-import { ButtonPrimary } from 'components/Button'
-import { SectionBreak } from 'components/swap/styleds'
-import { useAddUserToken } from 'state/user/hooks'
-import { getEtherscanLink } from 'utils'
-import { useActiveWeb3React } from 'hooks'
-import { ExternalLink } from '../../theme/components'
-import { useCombinedInactiveList } from 'state/lists/hooks'
 import ListLogo from 'components/ListLogo'
-import { PaddedColumn, Checkbox } from './styleds'
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { SectionBreak } from 'components/swap/styleds'
+import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
+import { transparentize } from 'polished'
+import React, { useState } from 'react'
+import { AlertTriangle, ArrowLeft } from 'react-feather'
+import { useCombinedInactiveList } from 'state/lists/hooks'
+import { useAddUserToken } from 'state/user/hooks'
+import styled from 'styled-components'
+import { CloseIcon, TYPE } from 'theme'
+import { ExternalLink } from '../../theme/components'
+import { Checkbox, PaddedColumn } from './styleds'
 
 const Wrapper = styled.div`
   position: relative;
@@ -43,7 +42,7 @@ interface ImportProps {
   tokens: Token[]
   onBack?: () => void
   onDismiss?: () => void
-  handleCurrencySelect?: (currency: Currency) => void
+  handleCurrencySelect?: (currency: Token) => void
 }
 
 export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
@@ -75,7 +74,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
       <SectionBreak />
       <PaddedColumn gap="md">
         {tokens.map(token => {
-          const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
+          const list = chainId ? inactiveTokenList?.[chainId]?.[token.address]?.list : undefined
           return (
             <Card backgroundColor={theme.bg2} key={'import' + token.address} className=".token-warning-container">
               <AutoColumn gap="10px">
@@ -87,7 +86,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
                   <TYPE.darkGray fontWeight={300}>{token.name}</TYPE.darkGray>
                 </AutoRow>
                 {chainId && (
-                  <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+                  <ExternalLink href={getBlockscoutLink(chainId, token.address, 'address')}>
                     <AddressText>{token.address}</AddressText>
                   </ExternalLink>
                 )}

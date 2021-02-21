@@ -1,20 +1,20 @@
-import { Currency, Token } from '@uniswap/sdk'
+import { Token } from '@ubeswap/sdk'
+import { TokenList } from '@uniswap/token-lists'
+import usePrevious from 'hooks/usePrevious'
 import React, { useCallback, useEffect, useState } from 'react'
 import useLast from '../../hooks/useLast'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
-import { ImportToken } from './ImportToken'
-import usePrevious from 'hooks/usePrevious'
-import Manage from './Manage'
-import { TokenList } from '@uniswap/token-lists'
 import { ImportList } from './ImportList'
+import { ImportToken } from './ImportToken'
+import Manage from './Manage'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
   onDismiss: () => void
-  selectedCurrency?: Currency | null
-  onCurrencySelect: (currency: Currency) => void
-  otherSelectedCurrency?: Currency | null
+  selectedCurrency?: Token | null
+  onCurrencySelect: (currency: Token) => void
+  otherSelectedCurrency?: Token | null
   showCommonBases?: boolean
 }
 
@@ -43,7 +43,7 @@ export default function CurrencySearchModal({
   }, [isOpen, lastOpen])
 
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
+    (currency: Token) => {
       onCurrencySelect(currency)
       onDismiss()
     },

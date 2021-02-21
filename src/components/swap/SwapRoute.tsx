@@ -1,10 +1,9 @@
-import { Trade } from '@uniswap/sdk'
+import { Trade } from '@ubeswap/sdk'
 import React, { Fragment, memo, useContext } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 
 export default memo(function SwapRoute({ trade }: { trade: Trade }) {
   const theme = useContext(ThemeContext)
@@ -12,7 +11,7 @@ export default memo(function SwapRoute({ trade }: { trade: Trade }) {
     <Flex flexWrap="wrap" width="100%" justifyContent="flex-end" alignItems="center">
       {trade.route.path.map((token, i, path) => {
         const isLastItem: boolean = i === path.length - 1
-        const currency = unwrappedToken(token)
+        const currency = token
         return (
           <Fragment key={i}>
             <Flex alignItems="end">

@@ -1,11 +1,11 @@
-import React, { useContext, useCallback } from 'react'
+import { getBlockscoutLink } from '@ubeswap/sdk'
+import React, { useCallback, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks'
+import useENS from '../../hooks/useENS'
 import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import { getEtherscanLink } from '../../utils'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -102,8 +102,11 @@ export default function AddressInputPanel({
                 Recipient
               </TYPE.black>
               {address && chainId && (
-                <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
-                  (View on Etherscan)
+                <ExternalLink
+                  href={getBlockscoutLink(chainId, name ?? address, 'address')}
+                  style={{ fontSize: '14px' }}
+                >
+                  (View on Celo Explorer)
                 </ExternalLink>
               )}
             </RowBetween>

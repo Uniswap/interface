@@ -1,4 +1,4 @@
-import { Currency, Percent, Price } from '@uniswap/sdk'
+import { Percent, Price, Token } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -14,7 +14,7 @@ export function PoolPriceBar({
   poolTokenPercentage,
   price
 }: {
-  currencies: { [field in Field]?: Currency }
+  currencies: { [field in Field]?: Token }
   noLiquidity?: boolean
   poolTokenPercentage?: Percent
   price?: Price

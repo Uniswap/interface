@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { PaddedColumn, Separator } from './styleds'
+import { Token } from '@ubeswap/sdk'
+import { TokenList } from '@uniswap/token-lists'
 import { RowBetween } from 'components/Row'
+import React, { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Text } from 'rebass'
-import { CloseIcon } from 'theme'
 import styled from 'styled-components'
-import { Token } from '@uniswap/sdk'
+import { CloseIcon } from 'theme'
+import { CurrencyModalView } from './CurrencySearchModal'
 import { ManageLists } from './ManageLists'
 import ManageTokens from './ManageTokens'
-import { TokenList } from '@uniswap/token-lists'
-import { CurrencyModalView } from './CurrencySearchModal'
+import { PaddedColumn, Separator } from './styleds'
 
 const Wrapper = styled.div`
   width: 100%;

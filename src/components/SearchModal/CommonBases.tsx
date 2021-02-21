@@ -1,13 +1,12 @@
+import { ChainId, Token } from '@ubeswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, ETHER, Token } from '@uniswap/sdk'
 import styled from 'styled-components'
-
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
+import CurrencyLogo from '../CurrencyLogo'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
-import CurrencyLogo from '../CurrencyLogo'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
@@ -31,8 +30,8 @@ export default function CommonBases({
   selectedCurrency
 }: {
   chainId?: ChainId
-  selectedCurrency?: Currency | null
-  onSelect: (currency: Currency) => void
+  selectedCurrency?: Token | null
+  onSelect: (currency: Token) => void
 }) {
   return (
     <AutoColumn gap="md">
@@ -43,19 +42,6 @@ export default function CommonBases({
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
-        <BaseWrapper
-          onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-              onSelect(ETHER)
-            }
-          }}
-          disable={selectedCurrency === ETHER}
-        >
-          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
-          <Text fontWeight={500} fontSize={16}>
-            ETH
-          </Text>
-        </BaseWrapper>
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {
           const selected = selectedCurrency instanceof Token && selectedCurrency.address === token.address
           return (

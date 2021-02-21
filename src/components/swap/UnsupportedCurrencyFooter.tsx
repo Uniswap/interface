@@ -1,16 +1,14 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { TYPE, CloseIcon, ExternalLink } from 'theme'
+import { getBlockscoutLink, Token } from '@ubeswap/sdk'
 import { ButtonEmpty } from 'components/Button'
-import Modal from 'components/Modal'
 import Card, { OutlineCard } from 'components/Card'
-import { RowBetween, AutoRow } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
+import Modal from 'components/Modal'
+import { AutoRow, RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
-import { getEtherscanLink } from 'utils'
-import { Currency, Token } from '@uniswap/sdk'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { CloseIcon, ExternalLink, TYPE } from 'theme'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
@@ -43,17 +41,12 @@ export default function UnsupportedCurrencyFooter({
   currencies
 }: {
   show: boolean
-  currencies: (Currency | undefined)[]
+  currencies: (Token | undefined)[]
 }) {
   const { chainId } = useActiveWeb3React()
   const [showDetails, setShowDetails] = useState(false)
 
-  const tokens =
-    chainId && currencies
-      ? currencies.map(currency => {
-          return wrappedCurrency(currency, chainId)
-        })
-      : []
+  const tokens = currencies
 
   const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
 
@@ -79,7 +72,7 @@ export default function UnsupportedCurrencyFooter({
                         <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
                       </AutoRow>
                       {chainId && (
-                        <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+                        <ExternalLink href={getBlockscoutLink(chainId, token.address, 'address')}>
                           <AddressText>{token.address}</AddressText>
                         </ExternalLink>
                       )}
