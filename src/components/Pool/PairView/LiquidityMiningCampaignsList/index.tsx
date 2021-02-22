@@ -28,8 +28,13 @@ interface LiquidityMiningCampaignsListProps {
   items: NonExpiredLiquidityMiningCampaign[]
 }
 
+const ITEMS_PER_PAGE = 9
+
 export default function LiquidityMiningCampaignsList({ stakablePair, items }: LiquidityMiningCampaignsListProps) {
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
+  const [paginatedItems, setPaginatedItems] = useState<NonExpiredLiquidityMiningCampaign[]>(
+    items.slice(0, ITEMS_PER_PAGE)
+  )
   const [
     selectedLiquidityMiningCampaign,
     setSelectedLiquidityMiningCampaign
@@ -43,13 +48,23 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
     setSelectedLiquidityMiningCampaign(liquidityMiningCampaign)
   }
 
+  const handlePageChange = useCallback(
+    page => {
+      setPage(page)
+      const zeroIndexPage = page - 1
+      const offset = zeroIndexPage * ITEMS_PER_PAGE
+      setPaginatedItems(items.slice(offset, offset + ITEMS_PER_PAGE))
+    },
+    [items]
+  )
+
   return (
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="460px">
           {items.length > 0 ? (
             <ListLayout>
-              {items.map(item => (
+              {paginatedItems.map(item => (
                 <div key={item.contractAddress} onClick={getLiquidityMiningClickHandler(item)}>
                   <SizedPairCard token0={stakablePair?.token0} token1={stakablePair?.token1} />
                 </div>
@@ -63,11 +78,14 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
             </Empty>
           )}
         </Box>
-        <Flex width="100%" justifyContent="flex-end">
-          <Box>
-            <Pagination page={page} totalItems={items.length} itemsPerPage={12} onPageChange={setPage} />
-          </Box>
-        </Flex>
+        <Box alignSelf="flex-end" mt="16px">
+          <Pagination
+            page={page}
+            totalItems={items.length}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={handlePageChange}
+          />
+        </Box>
       </Flex>
       <LiquidityMiningCampaignModal
         show={!!selectedLiquidityMiningCampaign}
