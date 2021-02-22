@@ -1,26 +1,31 @@
 import BigNumber from 'bignumber.js'
+import { NonExpiredLiquidityMiningCampaign } from '../apollo/queries'
 
-export function getPairRemainingRewardsUSD(liquidityMiningCampaigns: any[], ethUSDPrice: BigNumber): BigNumber {
+export function getPairRemainingRewardsUSD(
+  liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[],
+  ethUSDPrice: BigNumber
+): BigNumber {
   const now = Math.floor(Date.now() / 1000)
   // no liquidity mining campaigns check
   if (liquidityMiningCampaigns.length === 0) return new BigNumber(0)
-  return liquidityMiningCampaigns.reduce((remainingRewardsUSDForPair: BigNumber, liquidityMiningCampaign: any) => {
+  return liquidityMiningCampaigns.reduce((remainingRewardsUSDForPair: BigNumber, liquidityMiningCampaign) => {
     const {
       duration: stringDuration,
       startsAt: stringStartsAt,
       endsAt: stringEndsAt,
-      rewards
+      rewardAmounts,
+      rewardTokens
     } = liquidityMiningCampaign
     const duration = parseInt(stringDuration)
     const startsAt = parseInt(stringStartsAt)
     const endsAt = parseInt(stringEndsAt)
-    const rewardsPerSecondUSD = rewards.reduce(
-      (accumulator: BigNumber, reward: any) =>
+    const rewardsPerSecondUSD = rewardTokens.reduce(
+      (accumulator: BigNumber, rewardToken, index) =>
         accumulator.plus(
-          new BigNumber(reward.amount)
-            .multipliedBy(reward.token.derivedETH)
+          new BigNumber(rewardAmounts[index])
+            .multipliedBy(rewardToken.derivedETH)
             .multipliedBy(ethUSDPrice)
-            .dividedBy(reward.duration)
+            .dividedBy(duration)
         ),
       new BigNumber(0)
     )

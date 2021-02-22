@@ -40,17 +40,13 @@ interface NonExpiredLiquidityMiningCampaignRewardToken {
   derivedETH: string
 }
 
-interface NonExpiredLiquidityMiningCampaignReward {
-  amount: string
-  token: NonExpiredLiquidityMiningCampaignRewardToken
-}
-
 export interface NonExpiredLiquidityMiningCampaign {
   contractAddress: string
   duration: string
   startsAt: string
   endsAt: string
-  rewards: NonExpiredLiquidityMiningCampaignReward[]
+  rewardAmounts: string[]
+  rewardTokens: NonExpiredLiquidityMiningCampaignRewardToken[]
   locked: boolean
 }
 
@@ -75,12 +71,10 @@ export const GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
         startsAt
         endsAt
         locked
-        rewards {
-          amount
-          token {
-            derivedETH
-          }
+        rewardTokens {
+          derivedETH
         }
+        rewardAmounts
       }
     }
   }
@@ -95,12 +89,10 @@ export const GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
         startsAt
         endsAt
         locked
-        rewards {
-          amount
-          token {
-            derivedETH
-          }
+        rewardTokens {
+          derivedETH
         }
+        rewardAmounts
       }
     }
   }
