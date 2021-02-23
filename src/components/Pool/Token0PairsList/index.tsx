@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
-import { usePairsByToken0 } from '../../../data/Reserves'
+import { usePairsByToken0WithRemainingRewardUSD } from '../../../data/Reserves'
 import { UndecoratedLink } from '../../UndercoratedLink'
 import Pair from './Pair'
 import { Token } from 'dxswap-sdk'
@@ -24,23 +24,26 @@ interface AggregatedPairsListProps {
 
 export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
   const [page, setPage] = useState(0)
-  const { loading, pairs } = usePairsByToken0(token0)
+  const { loading, wrappedPairs } = usePairsByToken0WithRemainingRewardUSD(token0)
 
   return (
     <Flex flexDirection="column">
       <Box mb="8px" height="460px">
         {loading ? (
           <LoadingList wideCards />
-        ) : pairs.length > 0 ? (
+        ) : wrappedPairs.length > 0 ? (
           <ListLayout>
-            {pairs.map(pair => (
-              <UndecoratedLink
-                key={pair.liquidityToken.address}
-                to={`/pools/${pair.token0.address}/${pair.token1.address}`}
-              >
-                <Pair token0={pair.token0} token1={pair.token1} />
-              </UndecoratedLink>
-            ))}
+            {wrappedPairs.map(wrappedPair => {
+              const { pair, remainingRewardUSD } = wrappedPair
+              return (
+                <UndecoratedLink
+                  key={pair.liquidityToken.address}
+                  to={`/pools/${pair.token0.address}/${pair.token1.address}`}
+                >
+                  <Pair token0={pair.token0} token1={pair.token1} usdRewards={remainingRewardUSD} />
+                </UndecoratedLink>
+              )
+            })}
           </ListLayout>
         ) : (
           <Empty>
@@ -52,7 +55,7 @@ export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
       </Box>
       <Flex width="100%" justifyContent="flex-end">
         <Box>
-          <Pagination page={page} totalItems={pairs.length} itemsPerPage={12} onPageChange={setPage} />
+          <Pagination page={page} totalItems={wrappedPairs.length} itemsPerPage={12} onPageChange={setPage} />
         </Box>
       </Flex>
     </Flex>

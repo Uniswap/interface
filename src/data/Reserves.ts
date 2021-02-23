@@ -11,6 +11,10 @@ import { usePairContract } from '../hooks/useContract'
 import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useTrackedTokenPairs } from '../state/user/hooks'
+import { useLiquidityMiningCampaignsForPairs } from '../hooks/usePairData'
+import BigNumber from 'bignumber.js'
+import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
+import { useETHUSDPrice } from '../hooks/useETHUSDPrice'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -92,30 +96,41 @@ export function useExistingRawPairs(): Pair[] {
   }, [results])
 }
 
-export function usePairsByToken0(
+export function usePairsByToken0WithRemainingRewardUSD(
   token0?: Token | null
 ): {
   loading: boolean
-  pairs: Pair[]
+  wrappedPairs: { pair: Pair; remainingRewardUSD: BigNumber }[]
 } {
+  const { loading: loadingEthUsdPrice, ethUSDPrice } = useETHUSDPrice()
   const rawPairsList = useTrackedTokenPairs()
   const results = usePairs(rawPairsList)
+  const pairs = useMemo(() => {
+    return results.reduce((pairs: Pair[], result) => {
+      if (result && result[0] === PairState.EXISTS && result[1] && result[1].token0.address === token0?.address) {
+        pairs.push(result[1])
+      }
+      return pairs
+    }, [])
+  }, [results, token0])
+  const { loading: loadingLiquidityMiningCampaigns, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
+    pairs
+  )
 
   return useMemo(() => {
-    const loading = !!results.find(result => result[0] === PairState.LOADING)
-    if (loading) {
-      return { loading, pairs: [] }
-    }
+    if (!pairs || loadingLiquidityMiningCampaigns || loadingEthUsdPrice) return { loading: true, wrappedPairs: [] }
     return {
       loading: false,
-      pairs: results.reduce((pairs: Pair[], result) => {
-        if (result && result[0] === PairState.EXISTS && result[1] && result[1].token0.address === token0?.address) {
-          pairs.push(result[1])
+      wrappedPairs: pairs.map(pair => {
+        const campaigns = liquidityMiningCampaigns[pair.liquidityToken.address]
+        let remainingRewardUSD = new BigNumber(0)
+        if (!!campaigns) {
+          remainingRewardUSD = getPairRemainingRewardsUSD(campaigns, ethUSDPrice)
         }
-        return pairs
-      }, [])
+        return { pair, remainingRewardUSD }
+      })
     }
-  }, [results, token0])
+  }, [ethUSDPrice, liquidityMiningCampaigns, loadingEthUsdPrice, loadingLiquidityMiningCampaigns, pairs])
 }
 
 export function usePairAtAddress(address?: string): Pair | null {

@@ -7,6 +7,9 @@ import Pagination from '../../../Pagination'
 import { LiquidityMiningCampaignModal } from '../LiquidityMiningCampaignModal'
 import PairCard from '../../Token0PairsList/Pair'
 import Empty from '../../Empty'
+import { getRemainingRewardsUSD } from '../../../../utils/liquidityMining'
+import { useETHUSDPrice } from '../../../../hooks/useETHUSDPrice'
+import LoadingList from '../../LoadingList'
 
 const ListLayout = styled.div`
   display: grid;
@@ -35,6 +38,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
   const [paginatedItems, setPaginatedItems] = useState<NonExpiredLiquidityMiningCampaign[]>(
     items.slice(0, ITEMS_PER_PAGE)
   )
+  const { loading: loadingEthUsdPrice, ethUSDPrice } = useETHUSDPrice()
   const [
     selectedLiquidityMiningCampaign,
     setSelectedLiquidityMiningCampaign
@@ -62,11 +66,17 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="460px">
-          {items.length > 0 ? (
+          {loadingEthUsdPrice ? (
+            <LoadingList wideCards />
+          ) : items.length > 0 ? (
             <ListLayout>
               {paginatedItems.map(item => (
                 <div key={item.contractAddress} onClick={getLiquidityMiningClickHandler(item)}>
-                  <SizedPairCard token0={stakablePair?.token0} token1={stakablePair?.token1} />
+                  <SizedPairCard
+                    token0={stakablePair?.token0}
+                    token1={stakablePair?.token1}
+                    usdRewards={getRemainingRewardsUSD(item, ethUSDPrice)}
+                  />
                 </div>
               ))}
             </ListLayout>
