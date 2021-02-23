@@ -1,6 +1,8 @@
 import { useQuery } from '@apollo/client'
+import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
-import { Pair, Token } from 'dxswap-sdk'
+import { Pair, Token, TokenAmount } from 'dxswap-sdk'
+import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
 import { useMemo } from 'react'
 import {
@@ -15,7 +17,9 @@ import {
 } from '../apollo/queries'
 import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
-import { useAggregatedByToken0ExistingPairs } from '../data/Reserves'
+import { useExistingRawPairs } from '../data/Reserves'
+import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../state/user/hooks'
+import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
 import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useETHUSDPrice } from './useETHUSDPrice'
 
@@ -63,11 +67,11 @@ export function useLiquidityMiningCampaignsForPair(
   }, [data, error, loading])
 }
 
-export function useLiquidityMiningCampaignsMapForPairs(
+export function useLiquidityMiningCampaignsForPairs(
   pairs?: Pair[]
 ): {
   loading: boolean
-  liquidityMiningCampaignsMap: { [pairLowerCaseAddress: string]: NonExpiredLiquidityMiningCampaign[] }
+  liquidityMiningCampaigns: { [pairAddress: string]: NonExpiredLiquidityMiningCampaign[] }
 } {
   const { loading, error, data } = useQuery<PairsNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
@@ -80,13 +84,15 @@ export function useLiquidityMiningCampaignsMapForPairs(
   )
 
   return useMemo(() => {
-    if (loading) return { loading: true, liquidityMiningCampaignsMap: {} }
-    if (error || !data) return { loading: false, liquidityMiningCampaignsMap: {} }
+    if (loading) return { loading: true, liquidityMiningCampaigns: {} }
+    if (error || !data) return { loading: false, liquidityMiningCampaigns: {} }
     return {
       loading: false,
-      liquidityMiningCampaignsMap: data.pairs.reduce(
+      liquidityMiningCampaigns: data.pairs.reduce(
         (accumulator: { [pairAddress: string]: NonExpiredLiquidityMiningCampaign[] }, pair) => {
-          accumulator[pair.address] = pair.liquidityMiningCampaigns
+          // the address returned from the subgraph needs checksumming to avoid problems
+          // when performing the lookup
+          accumulator[ethers.utils.getAddress(pair.address)] = pair.liquidityMiningCampaigns
           return accumulator
         },
         {}
@@ -101,45 +107,71 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
   loading: boolean
   aggregatedData: {
     token0: Token
-    lpTokensBalance: BigNumber
+    lpTokensBalance: TokenAmount
     pairs: Pair[]
     remainingRewardsUSD: BigNumber
     maximumApy: BigNumber
   }[]
 } {
+  const { account } = useWeb3React()
   const { loading: loadingETHUSDPrice, ethUSDPrice } = useETHUSDPrice()
-  const {
-    loading: loadingPairs,
-    aggregatedData: aggregatedByToken0ExistingPairs
-  } = useAggregatedByToken0ExistingPairs()
-  // memoizing the pairs avoid them changing reference every time, triggering a rerender in the next instruction
-  const memoizedPairs = useMemo(() => aggregatedByToken0ExistingPairs?.flatMap(data => data.pairs), [
-    aggregatedByToken0ExistingPairs
+  const allPairs = useExistingRawPairs()
+  const trackedPairs = useTrackedTokenPairs()
+  const trackedPairsWithLiquidityTokens = useMemo(
+    () => trackedPairs.map(tokens => ({ liquidityToken: toDXSwapLiquidityToken(tokens), tokens })),
+    [trackedPairs]
+  )
+  const lpTokens = useMemo(() => trackedPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
+    trackedPairsWithLiquidityTokens
   ])
-  const {
-    loading: loadingLiquidityMiningCampaignsMap,
-    liquidityMiningCampaignsMap
-  } = useLiquidityMiningCampaignsMapForPairs(memoizedPairs)
+  const [trackedLpTokenBalances, loadingTrackedLpTokenBalances] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    lpTokens
+  )
+  const { loading: loadingLiquidityMiningCampaigns, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
+    allPairs
+  )
   const sorter = useAggregatedByToken0PairComparator()
 
   return useMemo(() => {
-    if (loadingPairs || loadingETHUSDPrice || loadingLiquidityMiningCampaignsMap)
+    if (!allPairs || loadingETHUSDPrice || loadingLiquidityMiningCampaigns || loadingTrackedLpTokenBalances)
       return { loading: true, aggregatedData: [] }
-    const unsortedUnorderedData = aggregatedByToken0ExistingPairs.map(aggregatedData => {
-      const campaignsForAggregation = aggregatedData.pairs.flatMap(
-        pair => liquidityMiningCampaignsMap[pair.liquidityToken.address.toLowerCase()] || []
-      )
-      const remainingRewardsUSD = getPairRemainingRewardsUSD(campaignsForAggregation, ethUSDPrice)
-      return {
-        ...aggregatedData,
-        remainingRewardsUSD: remainingRewardsUSD,
-        // TODO: calculate apy
-        maximumApy: new BigNumber(0)
+
+    const aggregationMap: {
+      [token0Address: string]: {
+        token0: Token
+        lpTokensBalance: TokenAmount
+        pairs: Pair[]
+        remainingRewardsUSD: BigNumber
+        maximumApy: BigNumber
       }
-    })
-    let filteredData = unsortedUnorderedData
+    } = {}
+    for (let i = 0; i < allPairs.length; i++) {
+      const pair = allPairs[i]
+      const liquidityTokenAddress = pair.liquidityToken.address
+      const pairLiquidityMiningCampaigns = liquidityMiningCampaigns[liquidityTokenAddress]
+      const remainingRewardsUSD = getPairRemainingRewardsUSD(pairLiquidityMiningCampaigns, ethUSDPrice)
+      let mappedValue = aggregationMap[pair.token0.address]
+      if (!!!mappedValue) {
+        mappedValue = {
+          token0: pair.token0,
+          lpTokensBalance: new TokenAmount(pair.liquidityToken, '0'),
+          pairs: [],
+          remainingRewardsUSD: new BigNumber(0),
+          maximumApy: new BigNumber(0)
+        }
+        aggregationMap[pair.token0.address] = mappedValue
+      }
+      mappedValue.pairs.push(pair)
+      mappedValue.remainingRewardsUSD = mappedValue.remainingRewardsUSD.plus(remainingRewardsUSD)
+      const lpTokenBalance = trackedLpTokenBalances[liquidityTokenAddress]
+      if (!!lpTokenBalance) {
+        mappedValue.lpTokensBalance = mappedValue.lpTokensBalance.add(lpTokenBalance)
+      }
+    }
+    let filteredData = Object.values(aggregationMap)
     if (filter !== PairsFilterType.ALL) {
-      filteredData = unsortedUnorderedData.filter(data => {
+      filteredData = filteredData.filter(data => {
         // TODO: fully implement filtering
         return filter === PairsFilterType.REWARDS ? data.remainingRewardsUSD.isGreaterThan(0) : true
       })
@@ -149,13 +181,14 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
       aggregatedData: filteredData.sort(sorter)
     }
   }, [
-    aggregatedByToken0ExistingPairs,
+    allPairs,
     ethUSDPrice,
     filter,
-    liquidityMiningCampaignsMap,
+    liquidityMiningCampaigns,
     loadingETHUSDPrice,
-    loadingLiquidityMiningCampaignsMap,
-    loadingPairs,
-    sorter
+    loadingLiquidityMiningCampaigns,
+    loadingTrackedLpTokenBalances,
+    sorter,
+    trackedLpTokenBalances
   ])
 }

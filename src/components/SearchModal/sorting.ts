@@ -79,8 +79,8 @@ export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: T
 }
 
 export function useAggregatedByToken0PairComparator(): (
-  pairA: { token0: Token; pairs: Pair[]; lpTokensBalance: BigNumber; remainingRewardsUSD: BigNumber },
-  pairB: { token0: Token; pairs: Pair[]; lpTokensBalance: BigNumber; remainingRewardsUSD: BigNumber }
+  pairA: { remainingRewardsUSD: BigNumber },
+  pairB: { remainingRewardsUSD: BigNumber }
 ) => number {
   return useCallback((pairA, pairB): number => {
     // sort by rewards

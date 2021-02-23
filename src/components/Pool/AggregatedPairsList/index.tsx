@@ -26,7 +26,7 @@ export default function AggregatedPairsList() {
   const userLpPairs = useMemo(
     () =>
       aggregatedData
-        .filter(aggregation => !aggregation.lpTokensBalance.isZero())
+        .filter(aggregation => aggregation.lpTokensBalance.greaterThan('0'))
         .flatMap(aggregation => aggregation.pairs),
     [aggregatedData]
   )
