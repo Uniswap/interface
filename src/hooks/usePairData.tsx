@@ -63,9 +63,12 @@ export function useLiquidityMiningCampaignsForPair(
   }, [data, error, loading])
 }
 
-export function useLiquidityMiningCampaignsForPairs(
+export function useLiquidityMiningCampaignsMapForPairs(
   pairs?: Pair[]
-): { loading: boolean; liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[][] } {
+): {
+  loading: boolean
+  liquidityMiningCampaignsMap: { [pairLowerCaseAddress: string]: NonExpiredLiquidityMiningCampaign[] }
+} {
   const { loading, error, data } = useQuery<PairsNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
     {
@@ -77,11 +80,17 @@ export function useLiquidityMiningCampaignsForPairs(
   )
 
   return useMemo(() => {
-    if (loading) return { loading: true, liquidityMiningCampaigns: [] }
-    if (error) return { loading: false, liquidityMiningCampaigns: [] }
+    if (loading) return { loading: true, liquidityMiningCampaignsMap: {} }
+    if (error || !data) return { loading: false, liquidityMiningCampaignsMap: {} }
     return {
       loading: false,
-      liquidityMiningCampaigns: data ? data.pairs.map(pair => pair.liquidityMiningCampaigns) : []
+      liquidityMiningCampaignsMap: data.pairs.reduce(
+        (accumulator: { [pairAddress: string]: NonExpiredLiquidityMiningCampaign[] }, pair) => {
+          accumulator[pair.address] = pair.liquidityMiningCampaigns
+          return accumulator
+        },
+        {}
+      )
     }
   }, [data, error, loading])
 }
@@ -107,16 +116,20 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
   const memoizedPairs = useMemo(() => aggregatedByToken0ExistingPairs?.flatMap(data => data.pairs), [
     aggregatedByToken0ExistingPairs
   ])
-  const { loading: loadingLiquidityMiningCampaigns, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
-    memoizedPairs
-  )
+  const {
+    loading: loadingLiquidityMiningCampaignsMap,
+    liquidityMiningCampaignsMap
+  } = useLiquidityMiningCampaignsMapForPairs(memoizedPairs)
   const sorter = useAggregatedByToken0PairComparator()
 
   return useMemo(() => {
-    if (loadingPairs || loadingETHUSDPrice || loadingLiquidityMiningCampaigns)
+    if (loadingPairs || loadingETHUSDPrice || loadingLiquidityMiningCampaignsMap)
       return { loading: true, aggregatedData: [] }
-    const unsortedUnorderedData = aggregatedByToken0ExistingPairs.map((aggregatedData, index) => {
-      const remainingRewardsUSD = getPairRemainingRewardsUSD(liquidityMiningCampaigns[index], ethUSDPrice)
+    const unsortedUnorderedData = aggregatedByToken0ExistingPairs.map(aggregatedData => {
+      const campaignsForAggregation = aggregatedData.pairs.flatMap(
+        pair => liquidityMiningCampaignsMap[pair.liquidityToken.address.toLowerCase()] || []
+      )
+      const remainingRewardsUSD = getPairRemainingRewardsUSD(campaignsForAggregation, ethUSDPrice)
       return {
         ...aggregatedData,
         remainingRewardsUSD: remainingRewardsUSD,
@@ -139,9 +152,9 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
     aggregatedByToken0ExistingPairs,
     ethUSDPrice,
     filter,
-    liquidityMiningCampaigns,
+    liquidityMiningCampaignsMap,
     loadingETHUSDPrice,
-    loadingLiquidityMiningCampaigns,
+    loadingLiquidityMiningCampaignsMap,
     loadingPairs,
     sorter
   ])
