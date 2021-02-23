@@ -48,6 +48,7 @@ export default function AggregatedPairsList() {
                 token={aggregation.token0}
                 usdRewards={aggregation.remainingRewardsUSD}
                 pairsNumber={aggregation.pairs.length}
+                maximumApy={aggregation.maximumApy}
               />
             ))}
           </ListLayout>

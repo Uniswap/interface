@@ -8,7 +8,7 @@ export function getPairRemainingRewardsUSD(
   const now = Math.floor(Date.now() / 1000)
   // no liquidity mining campaigns check
   if (liquidityMiningCampaigns.length === 0) return new BigNumber(0)
-  return liquidityMiningCampaigns.reduce((remainingRewardsUSDForPair: BigNumber, liquidityMiningCampaign) => {
+  return liquidityMiningCampaigns.reduce((accumulator, liquidityMiningCampaign) => {
     const {
       duration: stringDuration,
       startsAt: stringStartsAt,
@@ -19,22 +19,19 @@ export function getPairRemainingRewardsUSD(
     const duration = parseInt(stringDuration)
     const startsAt = parseInt(stringStartsAt)
     const endsAt = parseInt(stringEndsAt)
-    const rewardsPerSecondUSD = rewardTokens.reduce(
-      (accumulator: BigNumber, rewardToken, index) =>
-        accumulator.plus(
-          new BigNumber(rewardAmounts[index])
-            .multipliedBy(rewardToken.derivedETH)
-            .multipliedBy(ethUSDPrice)
-            .dividedBy(duration)
-        ),
-      new BigNumber(0)
-    )
-    if (now < startsAt) {
-      remainingRewardsUSDForPair.plus(rewardsPerSecondUSD.multipliedBy(duration))
-    } else {
-      const remainingDuration = endsAt - now
-      remainingRewardsUSDForPair.plus(rewardsPerSecondUSD.multipliedBy(remainingDuration))
+    if (now >= endsAt) {
+      // the campaign is expired, no more rewards to give out
+      return accumulator
     }
-    return remainingRewardsUSDForPair
+    const remainingDistributionProgress =
+      now < startsAt ? new BigNumber('1') : new BigNumber('1').minus(new BigNumber(now - startsAt).dividedBy(duration))
+    let remainingRewardsUSD = new BigNumber(0)
+    for (let i = 0; i < rewardTokens.length; i++) {
+      const remainingReward = new BigNumber(rewardAmounts[i]).multipliedBy(remainingDistributionProgress)
+      remainingRewardsUSD = remainingRewardsUSD.plus(
+        new BigNumber(rewardTokens[i].derivedETH).multipliedBy(ethUSDPrice).multipliedBy(remainingReward)
+      )
+    }
+    return accumulator.plus(remainingRewardsUSD)
   }, new BigNumber(0))
 }

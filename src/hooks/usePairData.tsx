@@ -90,7 +90,13 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
   filter: PairsFilterType = PairsFilterType.ALL
 ): {
   loading: boolean
-  aggregatedData: { token0: Token; lpTokensBalance: BigNumber; pairs: Pair[]; remainingRewardsUSD: BigNumber }[]
+  aggregatedData: {
+    token0: Token
+    lpTokensBalance: BigNumber
+    pairs: Pair[]
+    remainingRewardsUSD: BigNumber
+    maximumApy: BigNumber
+  }[]
 } {
   const { loading: loadingETHUSDPrice, ethUSDPrice } = useETHUSDPrice()
   const {
@@ -109,24 +115,13 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
   return useMemo(() => {
     if (loadingPairs || loadingETHUSDPrice || loadingLiquidityMiningCampaigns)
       return { loading: true, aggregatedData: [] }
-    const unsortedUnorderedData = aggregatedByToken0ExistingPairs.map(aggregatedData => {
-      let analyzedPairs = 0
+    const unsortedUnorderedData = aggregatedByToken0ExistingPairs.map((aggregatedData, index) => {
+      const remainingRewardsUSD = getPairRemainingRewardsUSD(liquidityMiningCampaigns[index], ethUSDPrice)
       return {
         ...aggregatedData,
-        remainingRewardsUSD:
-          liquidityMiningCampaigns.length > 0
-            ? aggregatedByToken0ExistingPairs.reduce(
-                (rewardUSD, { pairs }) =>
-                  rewardUSD.plus(
-                    pairs.reduce(accumulator => {
-                      return accumulator.plus(
-                        getPairRemainingRewardsUSD(liquidityMiningCampaigns[analyzedPairs++], ethUSDPrice)
-                      )
-                    }, new BigNumber(0))
-                  ),
-                new BigNumber(0)
-              )
-            : new BigNumber(0)
+        remainingRewardsUSD: remainingRewardsUSD,
+        // TODO: calculate apy
+        maximumApy: new BigNumber(0)
       }
     })
     let filteredData = unsortedUnorderedData

@@ -67,7 +67,6 @@ interface PairViewProps {
 function PairView({ loading, pair }: PairViewProps) {
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
-  // avoids reference changes and in turn continuously fetching liquidity mining campaigns for the pair
   const { loading: liquidityMiningCampaignsLoading, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPair(
     pair || undefined
   )

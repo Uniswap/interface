@@ -52,9 +52,10 @@ interface PairCardProps {
   token: Token
   usdRewards: BigNumber
   pairsNumber: number
+  maximumApy: BigNumber
 }
 
-export default function AggregatedPairs({ token, usdRewards, pairsNumber }: PairCardProps) {
+export default function AggregatedPairs({ token, usdRewards, pairsNumber, maximumApy }: PairCardProps) {
   return (
     <UndecoratedLink to={`/pools/${token.address}`}>
       <StackedCards>
@@ -73,8 +74,16 @@ export default function AggregatedPairs({ token, usdRewards, pairsNumber }: Pair
               {token.symbol}
             </TYPE.body>
           </Box>
+          {/* TODO: improve this right here */}
+          {!maximumApy.isZero() && (
+            <Box>
+              <TYPE.body color="white" lineHeight="19.5px" fontWeight="600" fontSize="16px">
+                {maximumApy.toString()}
+              </TYPE.body>
+            </Box>
+          )}
           {usdRewards.isGreaterThan(0) && (
-            <Box mt="8px">
+            <Box>
               <TYPE.subHeader fontSize="9px" color="text3" lineHeight="14px" letterSpacing="2%" fontWeight="600">
                 ${usdRewards.decimalPlaces(2).toString()} REWARDS
               </TYPE.subHeader>
