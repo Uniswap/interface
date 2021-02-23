@@ -37,7 +37,7 @@ export function usePairs(
       tokens.map(([tokenA, tokenB]) => {
         return tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB, platform) : undefined
       }),
-    [tokens]
+    [tokens, platform]
   )
 
   const { swapFees, protocolFeeDenominator } = useFeesState()
@@ -71,7 +71,7 @@ export function usePairs(
         )
       ]
     })
-  }, [protocolFeeDenominator, results, swapFees, tokens])
+  }, [protocolFeeDenominator, results, swapFees, tokens, platform])
 }
 
 export function usePair(

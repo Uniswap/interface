@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI, Trade, Token } from 'dxswap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, Repeat } from 'react-feather'
+import { ArrowDown, ChevronDown, Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -11,7 +11,7 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import QuestionHelper from '../../components/QuestionHelper'
-import { AutoRow, RowBetween } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
@@ -19,13 +19,12 @@ import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
-import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -44,6 +43,11 @@ import Loader from '../../components/Loader'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
+`
+
+const StyledChevronDown = styled(ChevronDown)`
+  height: 14px;
+  cursor: pointer;
 `
 
 export default function Swap() {
@@ -69,8 +73,12 @@ export default function Swap() {
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
 
+  // toggle selecting which exchange to use
+  const togglePlatformSelection = () => {
+    alert('foo')
+  }
+
   // for expert mode
-  const toggleSettings = useToggleSettingsMenu()
   const [isExpertMode] = useExpertModeManager()
 
   // get custom setting values for user
@@ -331,32 +339,6 @@ export default function Swap() {
                       </TYPE.body>
                     </RowBetween>
                   )}
-                  <RowBetween align="center">
-                    <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-                      Price
-                    </TYPE.body>
-                    {!!trade ? (
-                      <TradePrice
-                        price={trade?.executionPrice}
-                        showInverted={showInverted}
-                        setShowInverted={setShowInverted}
-                      />
-                    ) : (
-                      <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-                        -
-                      </TYPE.body>
-                    )}
-                  </RowBetween>
-                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && Boolean(trade) && (
-                    <RowBetween align="center">
-                      <ClickableText fontSize="12px" lineHeight="15px" fontWeight="500" onClick={toggleSettings}>
-                        Slippage Tolerance
-                      </ClickableText>
-                      <ClickableText fontSize="12px" lineHeight="15px" fontWeight="500" onClick={toggleSettings}>
-                        {allowedSlippage / 100}%
-                      </ClickableText>
-                    </RowBetween>
-                  )}
                 </AutoColumn>
               </Card>
             )}
@@ -452,6 +434,29 @@ export default function Swap() {
             )}
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
           </BottomGrouping>
+          {showWrap ? null : (
+              <Card padding={'20px 0px 0px 0px'} borderRadius={'20px'}>
+                <AutoColumn gap="8px">
+                  {!!trade && (<RowBetween align="center">
+                    <RowFixed>
+                      <ClickableText onClick={togglePlatformSelection} fontSize="14px" fontWeight="600" color="white">
+                        {!!trade ? getNameForSupportedPlatform(trade?.platform) : ''}
+                      </ClickableText>
+                    </RowFixed>
+                    <RowFixed flex="1" justify="flex-start">
+                      <StyledChevronDown onClick={togglePlatformSelection} />
+                    </RowFixed>
+                    <RowFixed>
+                      <TradePrice
+                        price={trade?.executionPrice}
+                        showInverted={showInverted}
+                        setShowInverted={setShowInverted}
+                      />
+                    </RowFixed>
+                  </RowBetween>)}
+                </AutoColumn>
+              </Card>
+            )}
         </Wrapper>
       </AppBody>
       <AdvancedSwapDetailsDropdown trade={trade} />
