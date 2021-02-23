@@ -1,6 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import Card from 'components/Card'
 import { ValoraConnector } from 'connectors/valora/ValoraConnector'
 import { removeQueryParams, requestValoraAuth } from 'connectors/valora/valoraUtils'
 import React, { useEffect, useState } from 'react'
@@ -134,6 +133,7 @@ export default function WalletModal({
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
 
   const [pendingError, setPendingError] = useState<boolean>()
+  const [activateError, setActivateError] = useState<string | null>(null)
   const { setValoraAccount } = useValoraAccount()
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
@@ -198,9 +198,11 @@ export default function WalletModal({
 
     connector &&
       (await activate(connector, undefined, true).catch(error => {
+        console.log('[Activation error]', error)
         if (error instanceof UnsupportedChainIdError) {
           activate(connector) // a little janky...can't use setError because the connector isn't set
         } else {
+          setActivateError(error.message)
           setPendingError(true)
         }
       }))
@@ -294,7 +296,9 @@ export default function WalletModal({
           <CloseIcon onClick={toggleWalletModal}>
             <CloseColor />
           </CloseIcon>
-          <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
+          <HeaderRow>
+            {error instanceof UnsupportedChainIdError ? 'Wrong Network' : activateError ?? 'Error connecting'}
+          </HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
               <h5>Please connect to the appropriate Celo network.</h5>
@@ -343,15 +347,9 @@ export default function WalletModal({
               connector={pendingWallet}
               error={pendingError}
               setPendingError={setPendingError}
+              activateError={activateError}
               tryActivation={tryActivation}
             />
-          ) : !isMobile ? (
-            <Card>
-              <p>Desktop wallet support is coming soon.</p>
-              <p>
-                Follow <ExternalLink href="https://twitter.com/Ubeswap">Ubeswap</ExternalLink> for updates!
-              </p>
-            </Card>
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}

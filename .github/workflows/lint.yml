@@ -45,4 +45,3 @@ jobs:
           github_token: ${{ secrets.github_token }}
           eslint: true
           eslint_extensions: js,jsx,ts,tsx,json
-          auto_fix: true
