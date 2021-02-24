@@ -75,12 +75,11 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
     totalSupply: BigNumber
   }[]
 } {
+  const memoizedTimestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
   const { chainId } = useWeb3React()
   const { loading, error, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
-    {
-      variables: { timestamp: Math.floor(Date.now() / 1000) }
-    }
+    { variables: { timestamp: memoizedTimestamp } }
   )
 
   return useMemo(() => {

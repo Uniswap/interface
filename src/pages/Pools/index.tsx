@@ -17,6 +17,7 @@ import AggregatedPairsList from '../../components/Pool/AggregatedPairsList'
 import { CardSection } from '../../components/earn/styled'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { useRouter } from '../../hooks/useRouter'
+import { Currency } from 'dxswap-sdk'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -54,17 +55,19 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 48%;
-  `};
+    `};
 `
 
 const PointableFlex = styled(Flex)`
   cursor: pointer;
 `
 
-export default function Pools() {
-  const { account } = useActiveWeb3React()
-  const router = useRouter()
+interface TitleProps {
+  onCurrencySelection: (currency: Currency) => void
+}
 
+// decoupling the title from the rest of the component avoids full-rerender everytime the pair selection modal is opened
+function Title({ onCurrencySelection }: TitleProps) {
   const [openTokenModal, setOpenTokenModal] = useState(false)
 
   const handleAllClick = useCallback(() => {
@@ -74,6 +77,62 @@ export default function Pools() {
   const handleModalClose = useCallback(() => {
     setOpenTokenModal(false)
   }, [])
+
+  return (
+    <>
+      <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+        <HideSmall>
+          <Flex alignItems="center">
+            <Box mr="8px">
+              <Text fontSize="26px" lineHeight="32px">
+                Pairs
+              </Text>
+            </Box>
+            <Box mr="8px">
+              <Text fontSize="26px" lineHeight="32px">
+                /
+              </Text>
+            </Box>
+            <Box mr="6px">
+              <img src={threeBlurredCircles} alt="Circles" />
+            </Box>
+            <PointableFlex onClick={handleAllClick}>
+              <Box>
+                <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+                  ALL
+                </Text>
+              </Box>
+              <Box>
+                <ChevronDown size={12} />
+              </Box>
+            </PointableFlex>
+          </Flex>
+        </HideSmall>
+        <ButtonRow>
+          <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
+            <Text fontWeight={700} fontSize={12}>
+              CREATE PAIR
+            </Text>
+          </ResponsiveButtonPrimary>
+          <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+            <Text fontWeight={700} fontSize={12} lineHeight="15px">
+              CREATE LIQ. MINING
+            </Text>
+          </ResponsiveButtonSecondary>
+        </ButtonRow>
+      </TitleRow>
+      <CurrencySearchModal
+        isOpen={openTokenModal}
+        onDismiss={handleModalClose}
+        onCurrencySelect={onCurrencySelection}
+      />
+    </>
+  )
+}
+
+export default function Pools() {
+  const { account } = useActiveWeb3React()
+  const router = useRouter()
 
   const handleCurrencySelect = useCallback(
     token => {
@@ -88,50 +147,9 @@ export default function Pools() {
     <>
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
-
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="32px" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <HideSmall>
-                <Flex alignItems="center">
-                  <Box mr="8px">
-                    <Text fontSize="26px" lineHeight="32px">
-                      Pairs
-                    </Text>
-                  </Box>
-                  <Box mr="8px">
-                    <Text fontSize="26px" lineHeight="32px">
-                      /
-                    </Text>
-                  </Box>
-                  <Box mr="6px">
-                    <img src={threeBlurredCircles} alt="Circles" />
-                  </Box>
-                  <PointableFlex onClick={handleAllClick}>
-                    <Box>
-                      <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
-                        ALL
-                      </Text>
-                    </Box>
-                    <Box>
-                      <ChevronDown size={12} />
-                    </Box>
-                  </PointableFlex>
-                </Flex>
-              </HideSmall>
-              <ButtonRow>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
-                  <Text fontWeight={700} fontSize={12}>
-                    CREATE PAIR
-                  </Text>
-                </ResponsiveButtonPrimary>
-                <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-                  <Text fontWeight={700} fontSize={12} lineHeight="15px">
-                    CREATE LIQ. MINING
-                  </Text>
-                </ResponsiveButtonSecondary>
-              </ButtonRow>
-            </TitleRow>
+            <Title onCurrencySelection={handleCurrencySelect} />
             <AggregatedPairsList />
           </AutoColumn>
         </AutoColumn>
@@ -146,7 +164,6 @@ export default function Pools() {
             Import it.
           </StyledInternalLink>
         </TYPE.body>
-
         <VoteCard style={{ marginTop: '32px' }}>
           <CardSection>
             <AutoColumn gap="md">
@@ -169,12 +186,6 @@ export default function Pools() {
           </CardSection>
         </VoteCard>
       </PageWrapper>
-      <CurrencySearchModal
-        isOpen={openTokenModal}
-        onDismiss={handleModalClose}
-        onCurrencySelect={handleCurrencySelect}
-        showCommonBases
-      />
     </>
   )
 }
