@@ -2,7 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { Pair, Token, TokenAmount } from 'dxswap-sdk'
 import { useCallback, useMemo } from 'react'
-import { useExistingRawPairs } from '../../data/Reserves'
+import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useAllTokenBalances, useTokenBalances } from '../../state/wallet/hooks'
 
 // compare two token amounts with highest one coming first
@@ -90,10 +90,10 @@ export function useAggregatedByToken0PairComparator(): (
 
 export function usePairsComparator(inverted: boolean): (pairA: Pair, pairB: Pair) => number {
   const { account } = useWeb3React()
-  const trackedTokenPairs = useExistingRawPairs()
+  const trackedTokenPairs = useTrackedTokenPairs()
   const balances = useTokenBalances(
     account || undefined,
-    trackedTokenPairs.map(pair => pair.liquidityToken)
+    trackedTokenPairs.map(rawPair => toDXSwapLiquidityToken(rawPair))
   )
   const comparator = useMemo(() => getPairsComparator(balances ?? {}), [balances])
   return useMemo(() => {

@@ -12,7 +12,7 @@ import { filterPairs } from './filtering'
 import SortButton from './SortButton'
 import { usePairsComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import { useExistingRawPairs, usePairAtAddress } from '../../data/Reserves'
+import { useAllPairs, usePairAtAddress } from '../../data/Reserves'
 import PairList from './PairList'
 
 interface PairSearchProps {
@@ -35,7 +35,7 @@ export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen }: Pa
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
-  const allPairs = useExistingRawPairs()
+  const { pairs: allPairs } = useAllPairs()
 
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)

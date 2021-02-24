@@ -34,13 +34,11 @@ export const GET_PAIR_LIQUIDITY_USD = gql`
   }
 `
 
-// == Get non expired liquidity mining campaigns for given pair ids ==
-
 interface NonExpiredLiquidityMiningCampaignRewardToken {
   derivedETH: string
 }
 
-interface RawToken {
+export interface RawToken {
   address: string
   symbol: string
   name: string

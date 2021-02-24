@@ -8,7 +8,7 @@ import Badge from '../Badge'
 import { TokenListContainer, TokenPickerItem } from './styleds'
 import { Plus, X } from 'react-feather'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { useExistingRawPairs } from '../../data/Reserves'
+import { useAllPairs } from '../../data/Reserves'
 import { isPairOnList } from '../../utils'
 
 function pairKey(pair: Pair): string {
@@ -23,8 +23,8 @@ interface PairRowProps {
 
 function PairRow({ pair, onSelect, isSelected }: PairRowProps) {
   const { chainId } = useActiveWeb3React()
-  const pairsList = useExistingRawPairs()
-  const isOnSelectedList = isPairOnList(pairsList, pair)
+  const { pairs: allPairs } = useAllPairs()
+  const isOnSelectedList = isPairOnList(allPairs, pair)
   const customAdded = useIsUserAddedPair(pair)
 
   const removePair = usePairRemover()

@@ -10,14 +10,14 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { usePairContract } from '../hooks/useContract'
 import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
-import { useTrackedTokenPairs } from '../state/user/hooks'
 import BigNumber from 'bignumber.js'
 import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useETHUSDPrice } from '../hooks/useETHUSDPrice'
-import { useQuery } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import {
   GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
-  PairsWithNonExpiredLiquidityMiningCampaignsQueryResult
+  PairsWithNonExpiredLiquidityMiningCampaignsQueryResult,
+  RawToken
 } from '../apollo/queries'
 import { ethers } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
@@ -88,18 +88,60 @@ export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair 
   return usePairs([[tokenA, tokenB]])[0]
 }
 
-export function useExistingRawPairs(): Pair[] {
-  const rawPairsList = useTrackedTokenPairs()
-  const results = usePairs(rawPairsList)
+export function useAllPairs(): { loading: boolean; pairs: Pair[] } {
+  interface RawPair {
+    reserve0: string
+    reserve1: string
+    token0: RawToken
+    token1: RawToken
+  }
+
+  interface QueryResult {
+    pairs: RawPair[]
+  }
+
+  const { chainId } = useWeb3React()
+  const { loading, data, error } = useQuery<QueryResult>(gql`
+    query getAllPairs {
+      pairs {
+        reserve0
+        reserve1
+        token0 {
+          address: id
+          name
+          symbol
+          decimals
+        }
+        token1 {
+          address: id
+          name
+          symbol
+          decimals
+        }
+      }
+    }
+  `)
 
   return useMemo(() => {
-    return results.reduce((existingPairs: Pair[], result) => {
-      if (result && result[0] === PairState.EXISTS && result[1]) {
-        existingPairs.push(result[1])
-      }
-      return existingPairs
-    }, [])
-  }, [results])
+    if (loading || !chainId) return { loading: true, pairs: [] }
+    if (!data || error) return { loading: false, pairs: [] }
+    return {
+      loading: false,
+      pairs: data.pairs.reduce((pairs: Pair[], rawPair) => {
+        const { token0, token1, reserve0, reserve1 } = rawPair
+        const tokenAmountA = new TokenAmount(
+          new Token(chainId, token0.address, parseInt(token0.decimals), token0.symbol, token0.name),
+          ethers.utils.parseUnits(reserve0, token0.decimals).toString()
+        )
+        const tokenAmountB = new TokenAmount(
+          new Token(chainId, token1.address, parseInt(token1.decimals), token1.symbol, token1.name),
+          ethers.utils.parseUnits(reserve1, token1.decimals).toString()
+        )
+        pairs.push(new Pair(tokenAmountA, tokenAmountB))
+        return pairs
+      }, [])
+    }
+  }, [chainId, data, error, loading])
 }
 
 export function usePairsByToken0WithRemainingRewardUSD(
