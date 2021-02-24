@@ -130,11 +130,23 @@ export function useAllPairs(): { loading: boolean; pairs: Pair[] } {
       pairs: data.pairs.reduce((pairs: Pair[], rawPair) => {
         const { token0, token1, reserve0, reserve1 } = rawPair
         const tokenAmountA = new TokenAmount(
-          new Token(chainId, token0.address, parseInt(token0.decimals), token0.symbol, token0.name),
+          new Token(
+            chainId,
+            ethers.utils.getAddress(token0.address),
+            parseInt(token0.decimals),
+            token0.symbol,
+            token0.name
+          ),
           ethers.utils.parseUnits(reserve0, token0.decimals).toString()
         )
         const tokenAmountB = new TokenAmount(
-          new Token(chainId, token1.address, parseInt(token1.decimals), token1.symbol, token1.name),
+          new Token(
+            chainId,
+            ethers.utils.getAddress(token1.address),
+            parseInt(token1.decimals),
+            token1.symbol,
+            token1.name
+          ),
           ethers.utils.parseUnits(reserve1, token1.decimals).toString()
         )
         pairs.push(new Pair(tokenAmountA, tokenAmountB))
@@ -156,10 +168,10 @@ export function usePairsByToken0WithRemainingRewardUSD(
     GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
     { variables: { token0Id: token0?.address.toLowerCase(), timestamp: Math.floor(Date.now() / 1000) } }
   )
-  console.log(error)
 
   return useMemo(() => {
-    if (!data || !chainId || loadingPairs || loadingEthUsdPrice) return { loading: true, wrappedPairs: [] }
+    if (!chainId || loadingPairs || loadingEthUsdPrice) return { loading: true, wrappedPairs: [] }
+    if (!data || error) return { loading: false, wrappedPairs: [] }
     return {
       loading: false,
       wrappedPairs: data.pairs.map(pair => {
@@ -186,7 +198,7 @@ export function usePairsByToken0WithRemainingRewardUSD(
         }
       })
     }
-  }, [chainId, data, ethUSDPrice, loadingEthUsdPrice, loadingPairs])
+  }, [chainId, data, error, ethUSDPrice, loadingEthUsdPrice, loadingPairs])
 }
 
 export function usePairAtAddress(address?: string): Pair | null {
