@@ -9,9 +9,11 @@ import { useWeb3React } from '@web3-react/core'
 import { useTokenBalance } from '../../../../../state/wallet/hooks'
 import { ApprovalState, useApproveCallback } from '../../../../../hooks/useApproveCallback'
 import { useStakingRewardsDistributionFactoryContract } from '../../../../../hooks/useContract'
+import BigNumber from 'bignumber.js'
 
 interface PreviewProps {
   liquidityPair: Pair | null
+  apy: BigNumber
   startTime: Date | null
   endTime: Date | null
   timelocked: boolean
@@ -25,6 +27,7 @@ export default function PreviewAndCreate({
   endTime,
   timelocked,
   reward,
+  apy,
   onCreate
 }: PreviewProps) {
   const { account } = useWeb3React()
@@ -76,7 +79,7 @@ export default function PreviewAndCreate({
             <Box mx="18px">
               <Divider />
             </Box>
-            <RewardSummary reward={reward} />
+            <RewardSummary reward={reward} apy={apy} />
           </Flex>
         </Card>
       </Box>

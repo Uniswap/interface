@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { NonExpiredLiquidityMiningCampaign } from '../apollo/queries'
+import { NonExpiredLiquidityMiningCampaign, NonExpiredLiquidityMiningCampaignRewardToken } from '../apollo/queries'
 
 function getCurrentDistributionProgress(startsAt: number, duration: number) {
   const now = Math.floor(Date.now() / 1000)
@@ -56,14 +56,17 @@ const MINIMUM_STAKED_AMOUNT_USD = new BigNumber(100)
 export function getCampaignApy(
   pairReserveETH: BigNumber,
   liquidityTokenTotalSupply: BigNumber,
-  campaign: NonExpiredLiquidityMiningCampaign,
+  duration: string,
+  startsAt: string,
+  rewardTokens: NonExpiredLiquidityMiningCampaignRewardToken[],
+  rewardAmounts: string[],
+  stakedAmount: string,
   ethUSDPrice: BigNumber
 ): BigNumber {
-  const { duration: stringDuration, startsAt: stringStartsAt, rewardTokens, rewardAmounts, stakedAmount } = campaign
-  const startsAt = parseInt(stringStartsAt)
-  const duration = parseInt(stringDuration)
+  const numericStartsAt = parseInt(startsAt)
+  const numericDuration = parseInt(duration)
 
-  const remainingDistributionProgress = getCurrentDistributionProgress(startsAt, duration)
+  const remainingDistributionProgress = getCurrentDistributionProgress(numericStartsAt, numericDuration)
   const remainingRewardAmountUSD = rewardAmounts.reduce((remainingAmount: BigNumber, fullAmount, index) => {
     const remainingReward = new BigNumber(fullAmount).multipliedBy(remainingDistributionProgress)
     return remainingAmount.plus(
@@ -97,7 +100,16 @@ export function getPairMaximumApy(
   // no liquidity mining campaigns check
   if (liquidityMiningCampaigns.length === 0) return new BigNumber(0)
   return liquidityMiningCampaigns.reduce((maximumApy, liquidityMiningCampaign) => {
-    const apy = getCampaignApy(pairReserveETH, liquidityTokenTotalSupply, liquidityMiningCampaign, ethUSDPrice)
+    const apy = getCampaignApy(
+      pairReserveETH,
+      liquidityTokenTotalSupply,
+      liquidityMiningCampaign.duration,
+      liquidityMiningCampaign.startsAt,
+      liquidityMiningCampaign.rewardTokens,
+      liquidityMiningCampaign.rewardAmounts,
+      liquidityMiningCampaign.stakedAmount,
+      ethUSDPrice
+    )
     return apy.isGreaterThan(maximumApy) ? apy : maximumApy
   }, new BigNumber(0))
 }

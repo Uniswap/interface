@@ -34,7 +34,7 @@ export const GET_PAIR_LIQUIDITY_USD = gql`
   }
 `
 
-interface NonExpiredLiquidityMiningCampaignRewardToken {
+export interface NonExpiredLiquidityMiningCampaignRewardToken {
   derivedETH: string
 }
 

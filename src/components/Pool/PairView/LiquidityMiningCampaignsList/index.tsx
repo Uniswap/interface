@@ -79,7 +79,16 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
                     usdRewards={getRemainingRewardsUSD(item, ethUSDPrice)}
-                    apy={getCampaignApy(reserveETH, supply, item, ethUSDPrice)}
+                    apy={getCampaignApy(
+                      reserveETH,
+                      supply,
+                      item.duration,
+                      item.startsAt,
+                      item.rewardTokens,
+                      item.rewardAmounts,
+                      item.stakedAmount,
+                      ethUSDPrice
+                    )}
                   />
                 </div>
               ))}

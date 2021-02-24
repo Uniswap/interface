@@ -1,5 +1,5 @@
 import { Pair, TokenAmount, Token } from 'dxswap-sdk'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AutoColumn } from '../../../components/Column'
 import Step from '../../../components/LiquidityMining/Create/Steps'
@@ -13,6 +13,11 @@ import { PageWrapper } from '../styleds'
 import { useCreateLiquidityMiningCallback } from '../../../hooks/useCreateLiquidityMiningCallback'
 import ConfirmStakingRewardsDistributionCreation from '../../../components/LiquidityMining/ConfirmStakingRewardsDistributionCreation'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
+import { usePairLiquidityTokenTotalSupply, usePairReserveETH } from '../../../data/Reserves'
+import { getCampaignApy } from '../../../utils/liquidityMining'
+import { useETHUSDPrice } from '../../../hooks/useETHUSDPrice'
+import BigNumber from 'bignumber.js'
+import { useTokenDerivedNativeCurrency } from '../../../hooks/useTokenDerivedNativeCurrency'
 
 export default function CreateLiquidityMining() {
   const { t } = useTranslation()
@@ -28,6 +33,19 @@ export default function CreateLiquidityMining() {
   const [startTime, setStartTime] = useState<Date | null>(null)
   const [endTime, setEndTime] = useState<Date | null>(null)
   const [timelocked, setTimelocked] = useState(false)
+  const [apy, setApy] = useState(new BigNumber(0))
+
+  const { loading: loadingReserveETH, reserveETH: stakablePairReserveETH } = usePairReserveETH(
+    liquidityPair || undefined
+  )
+  const { loading: loadingLiquidityTokenSupply, supply: stakablePairTokenSupply } = usePairLiquidityTokenTotalSupply(
+    liquidityPair || undefined
+  )
+  const { ethUSDPrice } = useETHUSDPrice()
+  const {
+    loading: loadingRewardDerivedNativeCurrency,
+    derivedNativeCurrency: rewardDerivedNativeCurrency
+  } = useTokenDerivedNativeCurrency(reward?.token)
 
   const addTransaction = useTransactionAdder()
   const createLiquidityMiningCallback = useCreateLiquidityMiningCallback(
@@ -37,6 +55,44 @@ export default function CreateLiquidityMining() {
     endTime,
     timelocked
   )
+
+  useEffect(() => {
+    if (
+      loadingLiquidityTokenSupply ||
+      loadingReserveETH ||
+      loadingRewardDerivedNativeCurrency ||
+      !startTime ||
+      !endTime ||
+      !reward
+    ) {
+      return
+    }
+    const normalizedStartTime = Math.floor(startTime.getTime() / 1000)
+    const normalizedEndTime = Math.floor(endTime.getTime() / 1000)
+    const duration = normalizedEndTime - normalizedStartTime
+    const apy = getCampaignApy(
+      stakablePairReserveETH,
+      stakablePairTokenSupply,
+      duration.toString(),
+      normalizedStartTime.toString(),
+      [{ derivedETH: rewardDerivedNativeCurrency.toExact() }],
+      [reward?.toExact()],
+      '0',
+      ethUSDPrice
+    )
+    setApy(apy)
+  }, [
+    endTime,
+    ethUSDPrice,
+    loadingLiquidityTokenSupply,
+    loadingReserveETH,
+    loadingRewardDerivedNativeCurrency,
+    reward,
+    rewardDerivedNativeCurrency,
+    stakablePairReserveETH,
+    stakablePairTokenSupply,
+    startTime
+  ])
 
   const handleTimelockedChange = useCallback(() => {
     setTimelocked(!timelocked)
@@ -129,6 +185,7 @@ export default function CreateLiquidityMining() {
             endTime={endTime}
             timelocked={timelocked}
             reward={reward}
+            apy={apy}
             onCreate={handleCreateRequest}
           />
         </Step>
