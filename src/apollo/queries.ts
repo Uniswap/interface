@@ -51,6 +51,7 @@ export interface NonExpiredLiquidityMiningCampaign {
   startsAt: string
   endsAt: string
   rewardAmounts: string[]
+  stakedAmount: string
   rewardTokens: NonExpiredLiquidityMiningCampaignRewardToken[]
   locked: boolean
 }
@@ -59,6 +60,8 @@ export interface PairWithNonExpiredLiquidityMiningCampaigns {
   address: string
   reserve0: string
   reserve1: string
+  reserveETH: string
+  totalSupply: string
   token0: RawToken
   token1: RawToken
   liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[]
@@ -74,6 +77,8 @@ export const GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
       address: id
       reserve0
       reserve1
+      reserveETH
+      totalSupply
       token0 {
         address: id
         name
@@ -95,6 +100,7 @@ export const GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
         rewardTokens {
           derivedETH
         }
+        stakedAmount
         rewardAmounts
       }
     }
@@ -107,6 +113,8 @@ export const GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = g
       address: id
       reserve0
       reserve1
+      reserveETH
+      totalSupply
       token0 {
         address: id
         name
@@ -128,6 +136,7 @@ export const GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = g
         rewardTokens {
           derivedETH
         }
+        stakedAmount
         rewardAmounts
       }
     }
@@ -150,6 +159,7 @@ export const GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
         rewardTokens {
           derivedETH
         }
+        stakedAmount
         rewardAmounts
       }
     }

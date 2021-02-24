@@ -4,7 +4,7 @@ import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
 import ListFilter, { PairsFilterType } from '../ListFilter'
-import { useAggregatedByToken0ExistingPairsWithRemainingRewards } from '../../../hooks/usePairData'
+import { useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy } from '../../../hooks/usePairData'
 import Empty from '../Empty'
 import MyPairs from './MyPairs'
 import styled from 'styled-components'
@@ -21,7 +21,7 @@ const ListLayout = styled.div`
 export default function AggregatedPairsList() {
   const [page, setPage] = useState(0)
   const [filter, setFilter] = useState(PairsFilterType.ALL)
-  const { loading, aggregatedData } = useAggregatedByToken0ExistingPairsWithRemainingRewards(filter)
+  const { loading, aggregatedData } = useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(filter)
 
   const userLpPairs = useMemo(
     () =>

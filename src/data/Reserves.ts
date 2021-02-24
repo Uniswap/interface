@@ -11,7 +11,7 @@ import { usePairContract } from '../hooks/useContract'
 import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import BigNumber from 'bignumber.js'
-import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
+import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useETHUSDPrice } from '../hooks/useETHUSDPrice'
 import { gql, useQuery } from '@apollo/client'
 import {
@@ -156,11 +156,63 @@ export function useAllPairs(): { loading: boolean; pairs: Pair[] } {
   }, [chainId, data, error, loading])
 }
 
-export function usePairsByToken0WithRemainingRewardUSD(
+export function usePairReserveETH(pair?: Pair): { loading: boolean; reserveETH: BigNumber } {
+  interface QueryResult {
+    pair: { reserveETH: string }
+  }
+
+  const { loading, data, error } = useQuery<QueryResult>(
+    gql`
+      query getPairReserveETH($pairId: ID!) {
+        pair(id: $pairId) {
+          reserveETH
+        }
+      }
+    `,
+    { variables: { pairId: pair?.liquidityToken.address.toLowerCase() } }
+  )
+
+  return useMemo(() => {
+    if (loading) return { loading: true, reserveETH: new BigNumber(0) }
+    if (!data || error) return { loading: false, reserveETH: new BigNumber(0) }
+    return {
+      loading: false,
+      reserveETH: new BigNumber(data.pair.reserveETH)
+    }
+  }, [data, error, loading])
+}
+
+export function usePairLiquidityTokenTotalSupply(pair?: Pair): { loading: boolean; supply: BigNumber } {
+  interface QueryResult {
+    pair: { totalSupply: string }
+  }
+
+  const { loading, data, error } = useQuery<QueryResult>(
+    gql`
+      query getPairLiquidityTokenTotalSupply($pairId: ID!) {
+        pair(id: $pairId) {
+          totalSupply
+        }
+      }
+    `,
+    { variables: { pairId: pair?.liquidityToken.address.toLowerCase() } }
+  )
+
+  return useMemo(() => {
+    if (loading) return { loading: true, supply: new BigNumber(0) }
+    if (!data || error) return { loading: false, supply: new BigNumber(0) }
+    return {
+      loading: false,
+      supply: new BigNumber(data.pair.totalSupply)
+    }
+  }, [data, error, loading])
+}
+
+export function usePairsByToken0WithRemainingRewardUSDAndMaximumApy(
   token0?: Token | null
 ): {
   loading: boolean
-  wrappedPairs: { pair: Pair; remainingRewardUSD: BigNumber }[]
+  wrappedPairs: { pair: Pair; remainingRewardUSD: BigNumber; maximumApy: BigNumber }[]
 } {
   const { chainId } = useWeb3React()
   const { loading: loadingEthUsdPrice, ethUSDPrice } = useETHUSDPrice()
@@ -177,14 +229,14 @@ export function usePairsByToken0WithRemainingRewardUSD(
       wrappedPairs: data.pairs.map(pair => {
         const token0 = new Token(
           chainId,
-          pair.token0.address,
+          ethers.utils.getAddress(pair.token0.address),
           parseInt(pair.token0.decimals),
           pair.token0.symbol,
           pair.token0.name
         )
         const token1 = new Token(
           chainId,
-          pair.token1.address,
+          ethers.utils.getAddress(pair.token1.address),
           parseInt(pair.token1.decimals),
           pair.token1.symbol,
           pair.token1.name
@@ -194,7 +246,13 @@ export function usePairsByToken0WithRemainingRewardUSD(
             new TokenAmount(token0, ethers.utils.parseUnits(pair.reserve0, token0.decimals).toString()),
             new TokenAmount(token1, ethers.utils.parseUnits(pair.reserve1, token1.decimals).toString())
           ),
-          remainingRewardUSD: getPairRemainingRewardsUSD(pair.liquidityMiningCampaigns, ethUSDPrice)
+          remainingRewardUSD: getPairRemainingRewardsUSD(pair.liquidityMiningCampaigns, ethUSDPrice),
+          maximumApy: getPairMaximumApy(
+            new BigNumber(pair.reserveETH),
+            new BigNumber(pair.totalSupply),
+            pair.liquidityMiningCampaigns,
+            ethUSDPrice
+          )
         }
       })
     }

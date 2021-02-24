@@ -7,9 +7,10 @@ import Pagination from '../../../Pagination'
 import { LiquidityMiningCampaignModal } from '../LiquidityMiningCampaignModal'
 import PairCard from '../../Token0PairsList/Pair'
 import Empty from '../../Empty'
-import { getRemainingRewardsUSD } from '../../../../utils/liquidityMining'
+import { getCampaignApy, getRemainingRewardsUSD } from '../../../../utils/liquidityMining'
 import { useETHUSDPrice } from '../../../../hooks/useETHUSDPrice'
 import LoadingList from '../../LoadingList'
+import { usePairReserveETH, usePairLiquidityTokenTotalSupply } from '../../../../data/Reserves'
 
 const ListLayout = styled.div`
   display: grid;
@@ -39,6 +40,8 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
     items.slice(0, ITEMS_PER_PAGE)
   )
   const { loading: loadingEthUsdPrice, ethUSDPrice } = useETHUSDPrice()
+  const { loading: loadingPairReserveETH, reserveETH } = usePairReserveETH(stakablePair)
+  const { loading: loadingPairTotalSupply, supply } = usePairLiquidityTokenTotalSupply(stakablePair)
   const [
     selectedLiquidityMiningCampaign,
     setSelectedLiquidityMiningCampaign
@@ -66,7 +69,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="460px">
-          {loadingEthUsdPrice ? (
+          {loadingEthUsdPrice || loadingPairReserveETH || loadingPairTotalSupply ? (
             <LoadingList wideCards />
           ) : items.length > 0 ? (
             <ListLayout>
@@ -76,6 +79,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
                     usdRewards={getRemainingRewardsUSD(item, ethUSDPrice)}
+                    apy={getCampaignApy(reserveETH, supply, item, ethUSDPrice)}
                   />
                 </div>
               ))}

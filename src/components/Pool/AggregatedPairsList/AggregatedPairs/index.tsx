@@ -8,6 +8,7 @@ import StackedCards from '../../../StackedCards'
 import styled from 'styled-components'
 import blurredCircle from '../../../../assets/svg/blurred-circle.svg'
 import { UndecoratedLink } from '../../../UndercoratedLink'
+import ApyBadge from '../../ApyBadge'
 
 const CurrencyLogosContainer = styled(Box)`
   position: relative;
@@ -74,16 +75,13 @@ export default function AggregatedPairs({ token, usdRewards, pairsNumber, maximu
               {token.symbol}
             </TYPE.body>
           </Box>
-          {/* TODO: improve this right here */}
           {!maximumApy.isZero() && (
-            <Box>
-              <TYPE.body color="white" lineHeight="19.5px" fontWeight="600" fontSize="16px">
-                {maximumApy.toString()}
-              </TYPE.body>
+            <Box mt="8px">
+              <ApyBadge apy={maximumApy} upTo />
             </Box>
           )}
           {usdRewards.isGreaterThan(0) && (
-            <Box>
+            <Box mt="4px">
               <TYPE.subHeader fontSize="9px" color="text3" lineHeight="14px" letterSpacing="2%" fontWeight="600">
                 ${usdRewards.decimalPlaces(2).toString()} REWARDS
               </TYPE.subHeader>

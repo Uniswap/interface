@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
-import { usePairsByToken0WithRemainingRewardUSD } from '../../../data/Reserves'
+import { usePairsByToken0WithRemainingRewardUSDAndMaximumApy } from '../../../data/Reserves'
 import { UndecoratedLink } from '../../UndercoratedLink'
 import Pair from './Pair'
 import { Token } from 'dxswap-sdk'
@@ -24,7 +24,7 @@ interface AggregatedPairsListProps {
 
 export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
   const [page, setPage] = useState(0)
-  const { loading, wrappedPairs } = usePairsByToken0WithRemainingRewardUSD(token0)
+  const { loading, wrappedPairs } = usePairsByToken0WithRemainingRewardUSDAndMaximumApy(token0)
 
   return (
     <Flex flexDirection="column">
@@ -34,13 +34,13 @@ export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
         ) : wrappedPairs.length > 0 ? (
           <ListLayout>
             {wrappedPairs.map(wrappedPair => {
-              const { pair, remainingRewardUSD } = wrappedPair
+              const { pair, remainingRewardUSD, maximumApy } = wrappedPair
               return (
                 <UndecoratedLink
                   key={pair.liquidityToken.address}
                   to={`/pools/${pair.token0.address}/${pair.token1.address}`}
                 >
-                  <Pair token0={pair.token0} token1={pair.token1} usdRewards={remainingRewardUSD} />
+                  <Pair token0={pair.token0} token1={pair.token1} usdRewards={remainingRewardUSD} apy={maximumApy} />
                 </UndecoratedLink>
               )
             })}

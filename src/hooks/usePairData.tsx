@@ -18,7 +18,7 @@ import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
-import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
+import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useETHUSDPrice } from './useETHUSDPrice'
 import ethers from 'ethers'
 
@@ -68,7 +68,12 @@ export function useLiquidityMiningCampaignsForPair(
 
 export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
   loading: boolean
-  wrappedPairs: { pair: Pair; liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[] }[]
+  wrappedPairs: {
+    pair: Pair
+    liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[]
+    reserveETH: BigNumber
+    totalSupply: BigNumber
+  }[]
 } {
   const { chainId } = useWeb3React()
   const { loading, error, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
@@ -84,11 +89,19 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
     return {
       loading: false,
       wrappedPairs: data.pairs.reduce(
-        (accumulator: { pair: Pair; liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[] }[], pair) => {
+        (
+          accumulator: {
+            pair: Pair
+            liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[]
+            reserveETH: BigNumber
+            totalSupply: BigNumber
+          }[],
+          pair
+        ) => {
           const tokenAmountA = new TokenAmount(
             new Token(
               chainId,
-              pair.token0.address,
+              ethers.utils.getAddress(pair.token0.address),
               parseInt(pair.token0.decimals),
               pair.token0.symbol,
               pair.token0.name
@@ -98,7 +111,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
           const tokenAmountB = new TokenAmount(
             new Token(
               chainId,
-              pair.token1.address,
+              ethers.utils.getAddress(pair.token1.address),
               parseInt(pair.token1.decimals),
               pair.token1.symbol,
               pair.token1.name
@@ -107,7 +120,9 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
           )
           accumulator.push({
             pair: new Pair(tokenAmountA, tokenAmountB),
-            liquidityMiningCampaigns: pair.liquidityMiningCampaigns
+            liquidityMiningCampaigns: pair.liquidityMiningCampaigns,
+            reserveETH: new BigNumber(pair.reserveETH),
+            totalSupply: new BigNumber(pair.totalSupply)
           })
           return accumulator
         },
@@ -117,7 +132,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
   }, [chainId, data, error, loading])
 }
 
-export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
+export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(
   filter: PairsFilterType = PairsFilterType.ALL
 ): {
   loading: boolean
@@ -163,7 +178,7 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
       }
     } = {}
     for (let i = 0; i < allWrappedPairs.length; i++) {
-      const { pair, liquidityMiningCampaigns } = allWrappedPairs[i]
+      const { pair, liquidityMiningCampaigns, reserveETH, totalSupply } = allWrappedPairs[i]
       const liquidityTokenAddress = pair.liquidityToken.address
       const remainingRewardsUSD = getPairRemainingRewardsUSD(liquidityMiningCampaigns, ethUSDPrice)
       let mappedValue = aggregationMap[pair.token0.address]
@@ -179,6 +194,10 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
       }
       mappedValue.pairs.push(pair)
       mappedValue.remainingRewardsUSD = mappedValue.remainingRewardsUSD.plus(remainingRewardsUSD)
+      const apy = getPairMaximumApy(reserveETH, totalSupply, liquidityMiningCampaigns, ethUSDPrice)
+      if (apy.isGreaterThan(mappedValue.maximumApy)) {
+        mappedValue.maximumApy = apy
+      }
       const lpTokenBalance = trackedLpTokenBalances[liquidityTokenAddress]
       // TODO: remove second part of the check and investigate why sometimes the tokens are different, causing an error
       if (!!lpTokenBalance && lpTokenBalance.token.equals(mappedValue.lpTokensBalance.token)) {
