@@ -71,7 +71,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
           ) : items.length > 0 ? (
             <ListLayout>
               {paginatedItems.map(item => (
-                <div key={item.contractAddress} onClick={getLiquidityMiningClickHandler(item)}>
+                <div key={item.address} onClick={getLiquidityMiningClickHandler(item)}>
                   <SizedPairCard
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
@@ -100,7 +100,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
       <LiquidityMiningCampaignModal
         show={!!selectedLiquidityMiningCampaign}
         onDismiss={handleLiquidityMiningCampaignModalDismiss}
-        contractAddress={selectedLiquidityMiningCampaign?.contractAddress ?? ''}
+        contractAddress={selectedLiquidityMiningCampaign?.address ?? ''}
         stakablePair={stakablePair}
         startsAt={selectedLiquidityMiningCampaign?.startsAt ?? '0'}
         endsAt={selectedLiquidityMiningCampaign?.endsAt ?? '0'}

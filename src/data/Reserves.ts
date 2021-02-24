@@ -11,10 +11,16 @@ import { usePairContract } from '../hooks/useContract'
 import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useTrackedTokenPairs } from '../state/user/hooks'
-import { useLiquidityMiningCampaignsForPairs } from '../hooks/usePairData'
 import BigNumber from 'bignumber.js'
 import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useETHUSDPrice } from '../hooks/useETHUSDPrice'
+import { useQuery } from '@apollo/client'
+import {
+  GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
+  PairsWithNonExpiredLiquidityMiningCampaignsQueryResult
+} from '../apollo/queries'
+import { ethers } from 'ethers'
+import { useWeb3React } from '@web3-react/core'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -102,35 +108,43 @@ export function usePairsByToken0WithRemainingRewardUSD(
   loading: boolean
   wrappedPairs: { pair: Pair; remainingRewardUSD: BigNumber }[]
 } {
+  const { chainId } = useWeb3React()
   const { loading: loadingEthUsdPrice, ethUSDPrice } = useETHUSDPrice()
-  const rawPairsList = useTrackedTokenPairs()
-  const results = usePairs(rawPairsList)
-  const pairs = useMemo(() => {
-    return results.reduce((pairs: Pair[], result) => {
-      if (result && result[0] === PairState.EXISTS && result[1] && result[1].token0.address === token0?.address) {
-        pairs.push(result[1])
-      }
-      return pairs
-    }, [])
-  }, [results, token0])
-  const { loading: loadingLiquidityMiningCampaigns, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
-    pairs
+  const { error, loading: loadingPairs, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
+    GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
+    { variables: { token0Id: token0?.address.toLowerCase(), timestamp: Math.floor(Date.now() / 1000) } }
   )
+  console.log(error)
 
   return useMemo(() => {
-    if (!pairs || loadingLiquidityMiningCampaigns || loadingEthUsdPrice) return { loading: true, wrappedPairs: [] }
+    if (!data || !chainId || loadingPairs || loadingEthUsdPrice) return { loading: true, wrappedPairs: [] }
     return {
       loading: false,
-      wrappedPairs: pairs.map(pair => {
-        const campaigns = liquidityMiningCampaigns[pair.liquidityToken.address]
-        let remainingRewardUSD = new BigNumber(0)
-        if (!!campaigns) {
-          remainingRewardUSD = getPairRemainingRewardsUSD(campaigns, ethUSDPrice)
+      wrappedPairs: data.pairs.map(pair => {
+        const token0 = new Token(
+          chainId,
+          pair.token0.address,
+          parseInt(pair.token0.decimals),
+          pair.token0.symbol,
+          pair.token0.name
+        )
+        const token1 = new Token(
+          chainId,
+          pair.token1.address,
+          parseInt(pair.token1.decimals),
+          pair.token1.symbol,
+          pair.token1.name
+        )
+        return {
+          pair: new Pair(
+            new TokenAmount(token0, ethers.utils.parseUnits(pair.reserve0, token0.decimals).toString()),
+            new TokenAmount(token1, ethers.utils.parseUnits(pair.reserve1, token1.decimals).toString())
+          ),
+          remainingRewardUSD: getPairRemainingRewardsUSD(pair.liquidityMiningCampaigns, ethUSDPrice)
         }
-        return { pair, remainingRewardUSD }
       })
     }
-  }, [ethUSDPrice, liquidityMiningCampaigns, loadingEthUsdPrice, loadingLiquidityMiningCampaigns, pairs])
+  }, [chainId, data, ethUSDPrice, loadingEthUsdPrice, loadingPairs])
 }
 
 export function usePairAtAddress(address?: string): Pair | null {

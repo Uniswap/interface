@@ -2,26 +2,25 @@ import { useQuery } from '@apollo/client'
 import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { Pair, Token, TokenAmount } from 'dxswap-sdk'
-import { ethers } from 'ethers'
 import { DateTime } from 'luxon'
 import { useMemo } from 'react'
 import {
   GET_PAIR_24H_VOLUME_USD,
   GET_PAIR_LIQUIDITY_USD,
-  GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
-  PairsNonExpiredLiquidityMiningCampaignsQueryResult,
+  GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
   NonExpiredLiquidityMiningCampaign,
   Pair24hVolumeQueryResult,
-  PairNonExpiredLiquidityMiningCampaignsQueryResult,
-  GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS
+  GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
+  PairsWithNonExpiredLiquidityMiningCampaignsQueryResult,
+  PairWithNonExpiredLiquidityMiningCampaignsQueryResult
 } from '../apollo/queries'
 import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
-import { useExistingRawPairs } from '../data/Reserves'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
 import { getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useETHUSDPrice } from './useETHUSDPrice'
+import ethers from 'ethers'
 
 export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; volume24hUSD: BigNumber } {
   const { loading, data } = useQuery<Pair24hVolumeQueryResult>(GET_PAIR_24H_VOLUME_USD, {
@@ -47,7 +46,7 @@ export function usePairLiquidityUSD(pair?: Pair | null): { loading: boolean; liq
 export function useLiquidityMiningCampaignsForPair(
   pair?: Pair
 ): { loading: boolean; liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[] } {
-  const { loading, error, data } = useQuery<PairNonExpiredLiquidityMiningCampaignsQueryResult>(
+  const { loading, error, data } = useQuery<PairWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
     {
       variables: {
@@ -67,38 +66,55 @@ export function useLiquidityMiningCampaignsForPair(
   }, [data, error, loading])
 }
 
-export function useLiquidityMiningCampaignsForPairs(
-  pairs?: Pair[]
-): {
+export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
   loading: boolean
-  liquidityMiningCampaigns: { [pairAddress: string]: NonExpiredLiquidityMiningCampaign[] }
+  wrappedPairs: { pair: Pair; liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[] }[]
 } {
-  const { loading, error, data } = useQuery<PairsNonExpiredLiquidityMiningCampaignsQueryResult>(
-    GET_PAIRS_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
+  const { chainId } = useWeb3React()
+  const { loading, error, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
+    GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
     {
-      variables: {
-        ids: pairs?.map(pair => pair.liquidityToken.address.toLowerCase()),
-        timestamp: Math.floor(Date.now() / 1000)
-      }
+      variables: { timestamp: Math.floor(Date.now() / 1000) }
     }
   )
 
   return useMemo(() => {
-    if (loading) return { loading: true, liquidityMiningCampaigns: {} }
-    if (error || !data) return { loading: false, liquidityMiningCampaigns: {} }
+    if (loading) return { loading: true, wrappedPairs: [] }
+    if (error || !data || !chainId) return { loading: false, wrappedPairs: [] }
     return {
       loading: false,
-      liquidityMiningCampaigns: data.pairs.reduce(
-        (accumulator: { [pairAddress: string]: NonExpiredLiquidityMiningCampaign[] }, pair) => {
-          // the address returned from the subgraph needs checksumming to avoid problems
-          // when performing the lookup
-          accumulator[ethers.utils.getAddress(pair.address)] = pair.liquidityMiningCampaigns
+      wrappedPairs: data.pairs.reduce(
+        (accumulator: { pair: Pair; liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[] }[], pair) => {
+          const tokenAmountA = new TokenAmount(
+            new Token(
+              chainId,
+              pair.token0.address,
+              parseInt(pair.token0.decimals),
+              pair.token0.symbol,
+              pair.token0.name
+            ),
+            ethers.utils.parseUnits(pair.reserve0, pair.token0.decimals).toString()
+          )
+          const tokenAmountB = new TokenAmount(
+            new Token(
+              chainId,
+              pair.token1.address,
+              parseInt(pair.token1.decimals),
+              pair.token1.symbol,
+              pair.token1.name
+            ),
+            ethers.utils.parseUnits(pair.reserve1, pair.token1.decimals).toString()
+          )
+          accumulator.push({
+            pair: new Pair(tokenAmountA, tokenAmountB),
+            liquidityMiningCampaigns: pair.liquidityMiningCampaigns
+          })
           return accumulator
         },
-        {}
+        []
       )
     }
-  }, [data, error, loading])
+  }, [chainId, data, error, loading])
 }
 
 export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
@@ -115,7 +131,10 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
 } {
   const { account } = useWeb3React()
   const { loading: loadingETHUSDPrice, ethUSDPrice } = useETHUSDPrice()
-  const allPairs = useExistingRawPairs()
+  const {
+    loading: loadingAllPairs,
+    wrappedPairs: allWrappedPairs
+  } = useAllPairsWithNonExpiredLiquidityMiningCampaigns()
   const trackedPairs = useTrackedTokenPairs()
   const trackedPairsWithLiquidityTokens = useMemo(
     () => trackedPairs.map(tokens => ({ liquidityToken: toDXSwapLiquidityToken(tokens), tokens })),
@@ -128,13 +147,10 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
     account ?? undefined,
     lpTokens
   )
-  const { loading: loadingLiquidityMiningCampaigns, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPairs(
-    allPairs
-  )
   const sorter = useAggregatedByToken0PairComparator()
 
   return useMemo(() => {
-    if (!allPairs || loadingETHUSDPrice || loadingLiquidityMiningCampaigns || loadingTrackedLpTokenBalances)
+    if (loadingAllPairs || loadingETHUSDPrice || loadingTrackedLpTokenBalances)
       return { loading: true, aggregatedData: [] }
 
     const aggregationMap: {
@@ -146,11 +162,10 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
         maximumApy: BigNumber
       }
     } = {}
-    for (let i = 0; i < allPairs.length; i++) {
-      const pair = allPairs[i]
+    for (let i = 0; i < allWrappedPairs.length; i++) {
+      const { pair, liquidityMiningCampaigns } = allWrappedPairs[i]
       const liquidityTokenAddress = pair.liquidityToken.address
-      const pairLiquidityMiningCampaigns = liquidityMiningCampaigns[liquidityTokenAddress]
-      const remainingRewardsUSD = getPairRemainingRewardsUSD(pairLiquidityMiningCampaigns, ethUSDPrice)
+      const remainingRewardsUSD = getPairRemainingRewardsUSD(liquidityMiningCampaigns, ethUSDPrice)
       let mappedValue = aggregationMap[pair.token0.address]
       if (!!!mappedValue) {
         mappedValue = {
@@ -165,7 +180,8 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
       mappedValue.pairs.push(pair)
       mappedValue.remainingRewardsUSD = mappedValue.remainingRewardsUSD.plus(remainingRewardsUSD)
       const lpTokenBalance = trackedLpTokenBalances[liquidityTokenAddress]
-      if (!!lpTokenBalance) {
+      // TODO: remove second part of the check and investigate why sometimes the tokens are different, causing an error
+      if (!!lpTokenBalance && lpTokenBalance.token.equals(mappedValue.lpTokensBalance.token)) {
         mappedValue.lpTokensBalance = mappedValue.lpTokensBalance.add(lpTokenBalance)
       }
     }
@@ -181,12 +197,11 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewards(
       aggregatedData: filteredData.sort(sorter)
     }
   }, [
-    allPairs,
+    allWrappedPairs,
     ethUSDPrice,
     filter,
-    liquidityMiningCampaigns,
+    loadingAllPairs,
     loadingETHUSDPrice,
-    loadingLiquidityMiningCampaigns,
     loadingTrackedLpTokenBalances,
     sorter,
     trackedLpTokenBalances
