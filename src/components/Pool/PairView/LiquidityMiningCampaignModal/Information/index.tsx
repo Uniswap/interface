@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import React from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
+import Countdown from '../../../../Countdown'
 import DataRow from '../DataRow'
 
 const Divider = styled.div`
@@ -21,7 +22,7 @@ export default function LiquidityMiningInformation({ startsAt, endsAt, timelock 
     <Flex justifyContent="stretch" width="100%">
       <Flex flexDirection="column" flex="1">
         <DataRow title="APY" value="TODO" />
-        <DataRow title="Time left" value="TODO" />
+        <DataRow title="Time left" value={<Countdown to={endsAt ? parseInt(endsAt) : 0} />} />
       </Flex>
       <Box mx="18px">
         <Divider />
