@@ -64,7 +64,6 @@ export default function UnsupportedCurrencyFooter({
           <AutoColumn gap="lg">
             <RowBetween>
               <TYPE.mediumHeader>Unsupported Assets</TYPE.mediumHeader>
-
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
             {tokens.map(token => {
