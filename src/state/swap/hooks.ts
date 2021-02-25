@@ -1,6 +1,6 @@
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, JSBI, Token, TokenAmount, Trade } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, JSBI, SupportedPlatform, Token, TokenAmount, Trade } from 'dxswap-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -105,11 +105,12 @@ function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(): {
+export function useDerivedSwapInfo(platformOverride?: SupportedPlatform): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
   trade: Trade | undefined
+  allPlatformTrades: (Trade | undefined)[] | undefined
   inputError?: string
 } {
   const { account, chainId } = useActiveWeb3React()
@@ -139,7 +140,14 @@ export function useDerivedSwapInfo(): {
   const bestTradeExactIn = bestTradeExactInAllPlatforms[0]
   const bestTradeExactOut = bestTradeExactOutAllPlatforms[0]
 
-  const trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
+  const allPlatformTrades = isExactIn ? bestTradeExactInAllPlatforms : bestTradeExactOutAllPlatforms
+  // If overridden platform selection and a trade for that platform exists, use that.
+  // Otherwise, use the best trade
+  let platformTrade
+  if (platformOverride) {
+    platformTrade = allPlatformTrades.filter( t => t?.platform === platformOverride)[0]
+  }
+  const trade = platformTrade ? platformTrade : (isExactIn ? bestTradeExactIn : bestTradeExactOut)
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -196,6 +204,7 @@ export function useDerivedSwapInfo(): {
     currencyBalances,
     parsedAmount,
     trade,
+    allPlatformTrades,
     inputError
   }
 }

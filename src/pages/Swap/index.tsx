@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI, Trade, Token } from 'dxswap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ChevronDown, Repeat } from 'react-feather'
+import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -49,6 +49,10 @@ const StyledChevronDown = styled(ChevronDown)`
   height: 14px;
   cursor: pointer;
 `
+const StyledChevronUp = styled(ChevronUp)`
+  height: 14px;
+  cursor: pointer;
+`
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -74,8 +78,9 @@ export default function Swap() {
   const toggleWalletModal = useWalletModalToggle()
 
   // toggle selecting which exchange to use
+  const [showPlatformSelection, setShowPlatformSelection] = useState<boolean>(false)
   const togglePlatformSelection = () => {
-    alert('foo')
+    setShowPlatformSelection(!showPlatformSelection)
   }
 
   // for expert mode
@@ -88,6 +93,7 @@ export default function Swap() {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     trade: potentialTrade,
+    allPlatformTrades,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -443,9 +449,16 @@ export default function Swap() {
                         {!!trade ? getNameForSupportedPlatform(trade?.platform) : ''}
                       </ClickableText>
                     </RowFixed>
-                    <RowFixed flex="1" justify="flex-start">
-                      <StyledChevronDown onClick={togglePlatformSelection} />
-                    </RowFixed>
+                    {!showPlatformSelection && (
+                      <RowFixed flex="1" justify="flex-start">
+                        <StyledChevronDown onClick={togglePlatformSelection} />
+                      </RowFixed>
+                    )}
+                    {showPlatformSelection && (
+                      <RowFixed flex="1" justify="flex-start">
+                        <StyledChevronUp onClick={togglePlatformSelection} />
+                      </RowFixed>
+                    )}
                     <RowFixed>
                       <TradePrice
                         price={trade?.executionPrice}
@@ -459,7 +472,7 @@ export default function Swap() {
             )}
         </Wrapper>
       </AppBody>
-      <AdvancedSwapDetailsDropdown trade={trade} />
+      <AdvancedSwapDetailsDropdown trade={trade} showPlatformSelection={showPlatformSelection} allPlatformTrades={allPlatformTrades} />
     </>
   )
 }
