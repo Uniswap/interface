@@ -10,6 +10,7 @@ import { AppDispatch } from '../index'
 import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
 import { useAllInactiveTokens } from 'hooks/Tokens'
+import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 
 export default function Updater(): null {
   const { library } = useActiveWeb3React()
@@ -39,6 +40,16 @@ export default function Updater(): null {
     Object.keys(lists).forEach(listUrl => {
       const list = lists[listUrl]
       if (!list.current && !list.loadingRequestId && !list.error) {
+        fetchList(listUrl).catch(error => console.debug('list added fetching error', error))
+      }
+    })
+  }, [dispatch, fetchList, library, lists])
+
+  // if any lists from unsupported lists are loaded, check them too (in case new updates since last visit)
+  useEffect(() => {
+    Object.keys(UNSUPPORTED_LIST_URLS).forEach(listUrl => {
+      const list = lists[listUrl]
+      if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
         fetchList(listUrl).catch(error => console.debug('list added fetching error', error))
       }
     })
