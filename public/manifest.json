@@ -1,6 +1,7 @@
 {
-  "short_name": "Uniswap",
-  "name": "Uniswap",
+  "background_color": "#fff",
+  "display": "standalone",
+  "homepage_url": "https://app.uniswap.org",
   "icons": [
     {
       "src": "./images/192x192_App_Icon.png",
@@ -16,7 +17,8 @@
     }
   ],
   "orientation": "portrait",
-  "display": "standalone",
-  "theme_color": "#ff007a",
-  "background_color": "#fff"
+  "name": "Uniswap",
+  "short_name": "Uniswap",
+  "start_url": ".",
+  "theme_color": "#ff007a"
 }
