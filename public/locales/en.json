@@ -1,4 +1,8 @@
 {
+  "createNewPool": "+ Create New Pool",
+  "selectPair": "Select Pair",
+  "showMorePools": "Show more pools",
+  "thereAreNoPools": "There are no pools",
   "noWallet": "No Ethereum wallet found",
   "wrongNetwork": "You are on the wrong network",
   "switchNetwork": "Please switch to {{ correctNetwork }}",

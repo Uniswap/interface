@@ -46,6 +46,8 @@ export function colors(darkMode: boolean): Colors {
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text6: darkMode ? '#6d8591' : '#565A69',
+    text7: darkMode ? '#c9d2d7' : '#565A69',
 
     // backgrounds
     bg1: darkMode ? '#212429' : '#FFFFFF',
@@ -78,6 +80,13 @@ export function colors(darkMode: boolean): Colors {
     secondary1: darkMode ? '#08a1e7' : '#08a1e7',
     secondary2: darkMode ? '#17000b26' : '#17000b26',
     secondary3: darkMode ? '#17000b26' : '#17000b26',
+
+    // border colors
+    border: darkMode ? '#4c5f69' : '#859aa5',
+
+    // table colors
+    oddRow: darkMode ? '#283339' : '#f4f4f4',
+    evenRow: darkMode ? '#303e46' : '#ffffff',
 
     // other
     red1: '#FF6871',
