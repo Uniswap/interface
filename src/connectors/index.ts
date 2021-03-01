@@ -52,7 +52,7 @@ export const portis = new PortisConnector({
 
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
-  appName: 'XyzSwap',
+  appName: 'DmmExchange',
   appLogoUrl: 'https://i.ibb.co/yYH3kwL/favicon.png'
 })
 
@@ -65,7 +65,7 @@ export const ledger = new LedgerConnector({
 export const trezor = new TrezorConnector({
   chainId: NETWORK_CHAIN_ID,
   url: NETWORK_URL,
-  manifestEmail: 'developer@xyzswap.com',
-  manifestAppUrl: 'https://xyzswap.com',
+  manifestEmail: 'andrew@kyber.network',
+  manifestAppUrl: 'https://dmm.exchange',
   pollingInterval: 15000
 })

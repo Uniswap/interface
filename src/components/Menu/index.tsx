@@ -6,7 +6,7 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
-import { XYZ_INFO_URL } from '../../constants'
+import { DMM_INFO_URL } from '../../constants'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -97,11 +97,11 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://xyzswap.com/">
+          <MenuItem id="link" href="https://dmm.exchange/">
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href={XYZ_INFO_URL}>
+          <MenuItem id="link" href={DMM_INFO_URL}>
             <PieChart size={14} />
             Analytics
           </MenuItem>

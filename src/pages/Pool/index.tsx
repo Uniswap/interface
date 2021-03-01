@@ -17,7 +17,7 @@ import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks
 import { Dots } from '../../components/swap/styleds'
 import { DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
-import { BIG_INT_ZERO, XYZ_INFO_URL } from '../../constants'
+import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -165,7 +165,7 @@ export default function Pool() {
               <>
                 <ButtonSecondary>
                   <RowBetween>
-                    <ExternalLink href={`${XYZ_INFO_URL}/account/` + account}>
+                    <ExternalLink href={`${DMM_INFO_URL}/account/` + account}>
                       Account analytics and accrued fees
                     </ExternalLink>
                     <span> ↗</span>
