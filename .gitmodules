@@ -1,4 +1,0 @@
-[submodule "src/libs/sdksub2"]
-	path = src/libs/sdksub2
-	url = git@github.com:dynamic-amm/dmm-sdk.git
-	branch = init-xyz-vt
