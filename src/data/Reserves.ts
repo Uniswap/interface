@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency, SupportedPlatform } from 'dxswap-sdk'
+import { TokenAmount, Pair, Currency, RoutablePlatform } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
@@ -19,7 +19,7 @@ export enum PairState {
 
 export function usePairs(
   currencies: [Currency | undefined, Currency | undefined][],
-  platform: SupportedPlatform = SupportedPlatform.SWAPR
+  platform: RoutablePlatform = RoutablePlatform.SWAPR
 ): [PairState, Pair | null][] {
   const { chainId } = useActiveWeb3React()
 
@@ -35,9 +35,11 @@ export function usePairs(
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        return tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB, platform) : undefined
+        return tokenA && tokenB && !tokenA.equals(tokenB) && chainId && platform.supportsChain(chainId)
+          ? Pair.getAddress(tokenA, tokenB, platform)
+          : undefined
       }),
-    [tokens, platform]
+    [tokens, chainId, platform]
   )
 
   const { swapFees, protocolFeeDenominator } = useFeesState()
@@ -56,7 +58,9 @@ export function usePairs(
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       const swapFee =
-        swapFees && swapFees[Pair.getAddress(token0, token1, platform)] && swapFees[Pair.getAddress(token0, token1, platform)].fee
+        swapFees &&
+        swapFees[Pair.getAddress(token0, token1, platform)] &&
+        swapFees[Pair.getAddress(token0, token1, platform)].fee
           ? swapFees[Pair.getAddress(token0, token1, platform)].fee
           : // default to 0.25% in case the "real" swap fee is not ready to be queried (https://github.com/levelkdev/dxswap-dapp/issues/150)
             BigInt(25)
@@ -74,10 +78,6 @@ export function usePairs(
   }, [protocolFeeDenominator, results, swapFees, tokens, platform])
 }
 
-export function usePair(
-  tokenA?: Currency,
-  tokenB?: Currency,
-  platform?: SupportedPlatform
-): [PairState, Pair | null] {
+export function usePair(tokenA?: Currency, tokenB?: Currency, platform?: RoutablePlatform): [PairState, Pair | null] {
   return usePairs([[tokenA, tokenB]], platform)[0]
 }

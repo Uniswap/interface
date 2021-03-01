@@ -1,6 +1,6 @@
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, JSBI, SupportedPlatform, Token, TokenAmount, Trade } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, JSBI, RoutablePlatform, Token, TokenAmount, Trade } from 'dxswap-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -105,7 +105,9 @@ function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(platformOverride?: SupportedPlatform): {
+export function useDerivedSwapInfo(
+  platformOverride?: RoutablePlatform
+): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
@@ -135,8 +137,14 @@ export function useDerivedSwapInfo(platformOverride?: SupportedPlatform): {
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined, chainId)
 
-  const bestTradeExactInAllPlatforms = useTradeExactInAllPlatforms(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestTradeExactOutAllPlatforms = useTradeExactOutAllPlatforms(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const bestTradeExactInAllPlatforms = useTradeExactInAllPlatforms(
+    isExactIn ? parsedAmount : undefined,
+    outputCurrency ?? undefined
+  )
+  const bestTradeExactOutAllPlatforms = useTradeExactOutAllPlatforms(
+    inputCurrency ?? undefined,
+    !isExactIn ? parsedAmount : undefined
+  )
   const bestTradeExactIn = bestTradeExactInAllPlatforms[0]
   const bestTradeExactOut = bestTradeExactOutAllPlatforms[0]
 
@@ -145,9 +153,9 @@ export function useDerivedSwapInfo(platformOverride?: SupportedPlatform): {
   // Otherwise, use the best trade
   let platformTrade
   if (platformOverride) {
-    platformTrade = allPlatformTrades.filter( t => t?.platform === platformOverride)[0]
+    platformTrade = allPlatformTrades.filter(t => t?.platform === platformOverride)[0]
   }
-  const trade = platformTrade ? platformTrade : (isExactIn ? bestTradeExactIn : bestTradeExactOut)
+  const trade = platformTrade ? platformTrade : isExactIn ? bestTradeExactIn : bestTradeExactOut
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],

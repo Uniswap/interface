@@ -12,7 +12,6 @@ import QuestionHelper from '../QuestionHelper'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import SwapRoute from './SwapRoute'
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
@@ -40,64 +39,61 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
   const toggleSettings = useToggleSettingsMenu()
   // Formatting logic: allowedSlippage = 900 shows as 9%, 950 shows as 9.50%
-  const formattedSlippage = ((allowedSlippage / 100) % 1 !== 0) ? (allowedSlippage / 100).toFixed(2) : (allowedSlippage / 100).toFixed(0)
+  const formattedSlippage =
+    (allowedSlippage / 100) % 1 !== 0 ? (allowedSlippage / 100).toFixed(2) : (allowedSlippage / 100).toFixed(0)
   const currency = isExactIn ? trade.outputAmount.currency : trade.inputAmount.currency
 
   return (
     <>
       <AutoColumn gap="8px">
         <RowBetween>
-          <RowFixed flex="1 1 30%">
+          <RowBetween mr="13px">
             <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
               Max slippage
             </TYPE.body>
-          </RowFixed>
-          <RowFixed justify="flex-end" flex="1 1 15%">
-            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-              {formattedSlippage}%
-            </TYPE.body>
-            <StyledMenuIcon onClick={toggleSettings} id="open-settings-from-swap-dialog-button"></StyledMenuIcon>
-          </RowFixed>
-          <RowFixed flex="1 1 10%" />
-          <RowFixed flex="1 1 30%">
+            <RowFixed>
+              <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                {formattedSlippage}%
+              </TYPE.body>
+              <StyledMenuIcon onClick={toggleSettings} id="open-settings-from-swap-dialog-button"></StyledMenuIcon>
+            </RowFixed>
+          </RowBetween>
+          <RowBetween ml="13px">
             <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
               {isExactIn ? 'Min received' : 'Max sold'}
             </TYPE.body>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
-          </RowFixed>
-          <RowFixed justify="flex-end" flex="1 1 15%">
-            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500" color="white">
-              {isExactIn
-                ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)}` ??
-                  '-'
-                : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)}` ??
-                  '-'}
-            </TYPE.body>
-            <CurrencyLogo currency={currency} size="14px" style={{margin: '0 2px'}}/>
-          </RowFixed>
+            <div>
+              <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500" color="white">
+                {isExactIn
+                  ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)}` ?? '-'
+                  : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)}` ?? '-'}
+              </TYPE.body>
+            </div>
+            <CurrencyLogo currency={currency} size="14px" style={{ margin: '0 2px' }} />
+          </RowBetween>
         </RowBetween>
         <RowBetween>
-          <RowFixed flex="1 1 30%">
-            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-              Price impact
-            </TYPE.body>
-            <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
-          </RowFixed>
-          <RowFixed justify="flex-end" flex="1 1 15%">
+          <RowBetween mr="13px">
+            <RowFixed>
+              <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                Price impact
+              </TYPE.body>
+              <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
+            </RowFixed>
             <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-          </RowFixed>
-          <RowFixed flex="1 1 10%" />
-          <RowFixed flex="1 1 30%">
-            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-              Fees
-            </TYPE.body>
-            <QuestionHelper text="A portion of each trade (between 0% - 0.30%) goes to liquidity providers as a protocol incentive." />
-          </RowFixed>
-          <RowFixed justify="flex-end" flex="1 1 15%">
+          </RowBetween>
+          <RowBetween ml="13px">
+            <RowFixed>
+              <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                Fees
+              </TYPE.body>
+              <QuestionHelper text="A portion of each trade (between 0% - 0.30%) goes to liquidity providers as a protocol incentive." />
+            </RowFixed>
             <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
               {realizedLPFee ? `${realizedLPFee.toSignificant(2)} %` : '-'}
             </TYPE.body>
-          </RowFixed>
+          </RowBetween>
         </RowBetween>
       </AutoColumn>
     </>
@@ -111,25 +107,12 @@ export interface AdvancedSwapDetailsProps {
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
 
-  const showRoute = Boolean(trade && trade.route.path.length > 2)
-
   return (
     <AutoColumn gap="8px">
       {trade && (
         <>
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
-          {showRoute && (
-            <AutoColumn style={{ padding: '0 20px' }}>
-              <RowFixed>
-                <TYPE.body fontSize="14px" lineHeight="17px" fontWeight="500">
-                  Route
-                </TYPE.body>
-                <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-              </RowFixed>
-              <SwapRoute trade={trade} />
-            </AutoColumn>
-          )}
-          <AutoColumn style={{ padding: '0 24px', marginTop: '8px' }}>
+          <AutoColumn style={{ marginTop: '8px' }}>
             <InfoLink
               href={'https://dxstats.eth.link/#/pair/' + trade.route.pairs[0].liquidityToken.address}
               target="_blank"

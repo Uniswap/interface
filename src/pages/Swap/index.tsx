@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Trade, Token } from 'dxswap-sdk'
+import { CurrencyAmount, JSBI, Trade, Token, RoutablePlatform } from 'dxswap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -35,7 +35,6 @@ import {
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { getNameForSupportedPlatform } from '../../utils/platform'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
@@ -56,6 +55,7 @@ const StyledChevronUp = styled(ChevronUp)`
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const [platformOverride, setPlatformOverride] = useState<RoutablePlatform | null>(null)
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -98,7 +98,7 @@ export default function Swap() {
     parsedAmount,
     currencies,
     inputError: swapInputError
-  } = useDerivedSwapInfo()
+  } = useDerivedSwapInfo(platformOverride || undefined)
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -333,13 +333,9 @@ export default function Swap() {
                       <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
                         <div style={{ display: 'flex' }}>
                           Best price found on
-                          <span style={{ color: 'white', fontWeight: 900 }}>
-                            &nbsp;{getNameForSupportedPlatform(trade?.platform)}.&nbsp;
-                          </span>
+                          <span style={{ color: 'white', fontWeight: 900 }}>&nbsp;{trade?.platform.name}.&nbsp;</span>
                           Swap with&nbsp;
-                          <span style={{ color: 'white', fontWeight: 900 }}>
-                            NO additional fees
-                          </span>
+                          <span style={{ color: 'white', fontWeight: 900 }}>NO additional fees</span>
                           <QuestionHelper text="Swapr always routes to the best price, even if on another exchange" />
                         </div>
                       </TYPE.body>
@@ -441,12 +437,13 @@ export default function Swap() {
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
           </BottomGrouping>
           {showWrap ? null : (
-              <Card padding={'20px 0px 0px 0px'} borderRadius={'20px'}>
-                <AutoColumn gap="8px">
-                  {!!trade && (<RowBetween align="center">
+            <Card padding={'20px 0px 0px 0px'} borderRadius={'20px'}>
+              <AutoColumn gap="8px">
+                {!!trade && (
+                  <RowBetween align="center">
                     <RowFixed>
                       <ClickableText onClick={togglePlatformSelection} fontSize="14px" fontWeight="600" color="white">
-                        {!!trade ? getNameForSupportedPlatform(trade?.platform) : ''}
+                        {!!trade ? trade?.platform.name : ''}
                       </ClickableText>
                     </RowFixed>
                     {!showPlatformSelection && (
@@ -466,13 +463,19 @@ export default function Swap() {
                         setShowInverted={setShowInverted}
                       />
                     </RowFixed>
-                  </RowBetween>)}
-                </AutoColumn>
-              </Card>
-            )}
+                  </RowBetween>
+                )}
+              </AutoColumn>
+            </Card>
+          )}
         </Wrapper>
       </AppBody>
-      <AdvancedSwapDetailsDropdown trade={trade} showPlatformSelection={showPlatformSelection} allPlatformTrades={allPlatformTrades} />
+      <AdvancedSwapDetailsDropdown
+        trade={trade}
+        showPlatformSelection={showPlatformSelection}
+        allPlatformTrades={allPlatformTrades}
+        onSelectedPlatformChange={setPlatformOverride}
+      />
     </>
   )
 }
