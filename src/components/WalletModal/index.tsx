@@ -357,8 +357,10 @@ export default function WalletModal({
           )}
           {walletView !== WALLET_VIEWS.PENDING && isMobile && (
             <Blurb>
-              <span>New to Celo? &nbsp;</span> {/** TODO(igm): add docmentation about how to use a wallet */}
-              <ExternalLink href="https://celo.org/">Learn more</ExternalLink>
+              <span>New to Celo? &nbsp;</span>
+              <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
+                Learn more about wallets
+              </ExternalLink>
             </Blurb>
           )}
         </ContentWrapper>
