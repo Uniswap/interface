@@ -5791,14 +5791,15 @@ duplexify@^3.4.2, duplexify@^3.6.0:
   dependencies:
     dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.3.1"
 
-"dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#v0.5.1":
-  version "0.5.1"
-  resolved "git://github.com/levelkdev/dxswap-sdk.git#e7cce6fe401116b26450565f329230183099869e"
+"dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#v0.6.0":
+  version "0.6.0"
+  resolved "git://github.com/levelkdev/dxswap-sdk.git#2ebca08f83d9285c0da6a6dec739b1b1185aed89"
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.3.6"
+    dxswap-periphery "git://github.com/levelkdev/dxswap-periphery.git#v0.3.7"
     jsbi "^3.1.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
