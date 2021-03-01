@@ -5,8 +5,7 @@ declare module 'jazzicon' {
 }
 
 interface Window {
-  ethereum?: {
-    isMetaMask?: true
+  celo?: {
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
     autoRefreshOnNetworkChange?: boolean

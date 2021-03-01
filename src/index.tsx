@@ -22,8 +22,8 @@ import getLibrary from './utils/getLibrary'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-if (!!window.ethereum) {
-  window.ethereum.autoRefreshOnNetworkChange = false
+if (!!window.celo) {
+  window.celo.autoRefreshOnNetworkChange = false
 }
 
 const GOOGLE_ANALYTICS_IDS = {
@@ -50,7 +50,7 @@ const GOOGLE_ANALYTICS_ID = environment ? GOOGLE_ANALYTICS_IDS[environment][NETW
 if (GOOGLE_ANALYTICS_ID) {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
-    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'ethereum' in window ? 'mobileWeb3' : 'mobileRegular'
+    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'celo' in window ? 'mobileWeb3' : 'mobileRegular'
   })
 } else {
   ReactGA.initialize('test', { testMode: true, debug: true })

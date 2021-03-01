@@ -76,7 +76,7 @@ export default function PendingView({
   activateError: string | null
   tryActivation: (connector: AbstractConnector) => void
 }) {
-  const isMetamask = window?.ethereum?.isMetaMask
+  const isCEW = !!window?.celo
 
   return (
     <PendingSection>
@@ -106,10 +106,10 @@ export default function PendingView({
         const option = SUPPORTED_WALLETS[key]
         if (option.connector === connector) {
           if (option.connector === injected) {
-            if (isMetamask && option.name !== 'MetaMask') {
+            if (isCEW && option.name !== 'Celo Extension Wallet') {
               return null
             }
-            if (!isMetamask && option.name === 'MetaMask') {
+            if (!isCEW && option.name === 'Celo Extension Wallet') {
               return null
             }
           }

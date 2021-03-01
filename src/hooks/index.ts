@@ -24,7 +24,7 @@ export function useEagerConnect() {
           setTried(true)
         })
       } else {
-        if (isMobile && window.ethereum) {
+        if (isMobile && window.celo) {
           activate(injected, undefined, true).catch(() => {
             setTried(true)
           })
@@ -53,9 +53,9 @@ export function useInactiveListener(suppress = false) {
   const { active, error, activate } = useWeb3ReactCore() // specifically using useWeb3React because of what this hook does
 
   useEffect(() => {
-    const { ethereum } = window
+    const { celo } = window
 
-    if (ethereum && ethereum.on && !active && !error && !suppress) {
+    if (celo && celo.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
         // eat errors
         activate(injected, undefined, true).catch(error => {
@@ -72,13 +72,13 @@ export function useInactiveListener(suppress = false) {
         }
       }
 
-      ethereum.on('chainChanged', handleChainChanged)
-      ethereum.on('accountsChanged', handleAccountsChanged)
+      celo.on('chainChanged', handleChainChanged)
+      celo.on('accountsChanged', handleAccountsChanged)
 
       return () => {
-        if (ethereum.removeListener) {
-          ethereum.removeListener('chainChanged', handleChainChanged)
-          ethereum.removeListener('accountsChanged', handleAccountsChanged)
+        if (celo.removeListener) {
+          celo.removeListener('chainChanged', handleChainChanged)
+          celo.removeListener('accountsChanged', handleAccountsChanged)
         }
       }
     }

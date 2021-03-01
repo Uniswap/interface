@@ -3208,6 +3208,15 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
+"@ubeswap/injected-connector@^6.0.8":
+  version "6.0.8"
+  resolved "https://registry.yarnpkg.com/@ubeswap/injected-connector/-/injected-connector-6.0.8.tgz#a2a72793e5adb9f72752b348a01e9c272fd54744"
+  integrity sha512-nCOmlvrsR8C++aglzc0QafZMaCEyl4lGi+rCmvOnqdNz7JxeNenuXAyoiBJdJ4IB3ackHd4FzEzcOGsma149yg==
+  dependencies:
+    "@web3-react/abstract-connector" "^6.0.7"
+    "@web3-react/types" "^6.0.7"
+    tiny-warning "^1.0.3"
+
 "@ubeswap/sdk@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@ubeswap/sdk/-/sdk-2.0.0.tgz#116743e256a8d6f0c1ec8ac749601cd80eeefee1"
@@ -3357,15 +3366,6 @@
     "@web3-react/abstract-connector" "^6.0.7"
     "@web3-react/types" "^6.0.7"
     tiny-invariant "^1.0.6"
-    tiny-warning "^1.0.3"
-
-"@web3-react/injected-connector@^6.0.7":
-  version "6.0.7"
-  resolved "https://registry.yarnpkg.com/@web3-react/injected-connector/-/injected-connector-6.0.7.tgz#1e0be23f51fa07fe6547fe986768a46b74c3a426"
-  integrity sha512-Y7aJSz6pg+MWKtvdyuqyy6LWuH+4Tqtph1LWfiyVms9II9ar/9B/de4R8wh4wjg91wmHkU+D75yP09E/Soh2RA==
-  dependencies:
-    "@web3-react/abstract-connector" "^6.0.7"
-    "@web3-react/types" "^6.0.7"
     tiny-warning "^1.0.3"
 
 "@web3-react/types@^6.0.7":

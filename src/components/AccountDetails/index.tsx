@@ -224,12 +224,13 @@ export default function AccountDetails({
   const { clearValoraAccount, account: valoraAccount } = useValoraAccount()
 
   function formatConnectorName() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
+    const { celo } = window
+    const isCEW = !!celo
     const name = Object.keys(SUPPORTED_WALLETS)
       .filter(
         k =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+          SUPPORTED_WALLETS[k].connector === connector &&
+          (connector !== injected || isCEW === (k === 'CELO_EXTENSION_WALLET'))
       )
       .map(k => SUPPORTED_WALLETS[k].name)[0]
     return <WalletName>Connected with {name}</WalletName>

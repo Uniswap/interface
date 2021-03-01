@@ -62,14 +62,14 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#010101',
     primary: true
   },
-  // METAMASK: {
-  //   connector: injected,
-  //   name: 'MetaMask',
-  //   iconName: 'metamask.png',
-  //   description: 'Easy-to-use browser extension.',
-  //   href: null,
-  //   color: '#E8831D'
-  // },
+  CELO_EXTENSION_WALLET: {
+    connector: injected,
+    name: 'Celo Extension Wallet',
+    iconName: 'celo_logo.png',
+    description: 'Easy-to-use browser extension.',
+    href: null,
+    color: '#35D07F'
+  },
   LEDGER: {
     connector: ledger,
     name: 'Ledger',
