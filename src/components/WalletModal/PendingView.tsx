@@ -6,6 +6,7 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import { injected } from '../../connectors'
 import { darken } from 'polished'
 import Loader from '../Loader'
+import { useIsDarkMode } from "../../state/user/hooks";
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -75,6 +76,7 @@ export default function PendingView({
   tryActivation: (connector: AbstractConnector) => void
 }) {
   const isMetamask = window?.ethereum?.isMetaMask
+  const isDarkMode = useIsDarkMode()
 
   return (
     <PendingSection>
@@ -119,7 +121,7 @@ export default function PendingView({
               color={option.color}
               header={option.name}
               subheader={option.description}
-              icon={require('../../assets/images/' + option.iconName)}
+              icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`)}
             />
           )
         }

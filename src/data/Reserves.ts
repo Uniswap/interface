@@ -1,13 +1,13 @@
-import { TokenAmount, Pair, Currency } from '@uniswap/sdk'
+import { TokenAmount, Pair, Currency, JSBI } from 'libs/sdk'
 import { useMemo } from 'react'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from '../hooks'
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
+import { LP_ABI } from "../constants";
 
-const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
+const PAIR_INTERFACE = new Interface(LP_ABI)
 
 export enum PairState {
   LOADING,
@@ -36,7 +36,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     [tokens]
   )
 
-  const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
+  const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getTradeInfo')
 
   return useMemo(() => {
     return results.map((result, i) => {
@@ -47,11 +47,16 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       if (loading) return [PairState.LOADING, null]
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
       if (!reserves) return [PairState.NOT_EXISTS, null]
-      const { reserve0, reserve1 } = reserves
+      const { _reserve0, _reserve1, feeInPrecision } = reserves
+
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [
         PairState.EXISTS,
-        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
+        new Pair(
+          new TokenAmount(token0, _reserve0.toString()),
+          new TokenAmount(token1, _reserve1.toString()),
+          JSBI.BigInt(feeInPrecision)
+        )
       ]
     })
   }, [results, tokens])

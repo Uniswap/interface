@@ -3,7 +3,6 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
-import ReactGA from 'react-ga'
 import styled from 'styled-components'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -13,8 +12,8 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
+import { useIsDarkMode } from '../../state/user/hooks'
 
 import Modal from '../Modal'
 import Option from './Option'
@@ -54,7 +53,7 @@ const HeaderRow = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg6};
   padding: 2rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -82,21 +81,11 @@ const UpperSection = styled.div`
   }
 `
 
-const Blurb = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 1rem;
-    font-size: 12px;
-  `};
-`
-
 const OptionGrid = styled.div`
-  display: grid;
-  grid-gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  
+  
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     grid-gap: 10px;
@@ -138,6 +127,7 @@ export default function WalletModal({
   const toggleWalletModal = useWalletModalToggle()
 
   const previousAccount = usePrevious(account)
+  const isDarkMode = useIsDarkMode()
 
   // close on connection, when logged out before
   useEffect(() => {
@@ -164,19 +154,6 @@ export default function WalletModal({
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
-    let name = ''
-    Object.keys(SUPPORTED_WALLETS).map(key => {
-      if (connector === SUPPORTED_WALLETS[key].connector) {
-        return (name = SUPPORTED_WALLETS[key].name)
-      }
-      return true
-    })
-    // log selected wallet
-    ReactGA.event({
-      category: 'Wallet',
-      action: 'Change Wallet',
-      label: name
-    })
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
 
@@ -227,7 +204,7 @@ export default function WalletModal({
               link={option.href}
               header={option.name}
               subheader={null}
-              icon={require('../../assets/images/' + option.iconName)}
+              icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`)}
             />
           )
         }
@@ -281,7 +258,7 @@ export default function WalletModal({
             link={option.href}
             header={option.name}
             subheader={null} //use option.descriptio to bring back multi-line
-            icon={require('../../assets/images/' + option.iconName)}
+            icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`)}
           />
         )
       )
@@ -349,19 +326,19 @@ export default function WalletModal({
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
-          {walletView !== WALLET_VIEWS.PENDING && (
-            <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
-            </Blurb>
-          )}
         </ContentWrapper>
       </UpperSection>
     )
   }
 
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
+    <Modal
+      isOpen={walletModalOpen}
+      onDismiss={toggleWalletModal}
+      minHeight={false}
+      maxHeight={90}
+      maxWidth={account && walletView === WALLET_VIEWS.ACCOUNT ? 420 : 612}
+    >
       <Wrapper>{getModalContent()}</Wrapper>
     </Modal>
   )

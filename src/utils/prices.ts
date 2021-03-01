@@ -1,27 +1,33 @@
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
-import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade } from '@uniswap/sdk'
+import { CurrencyAmount, Fraction, JSBI, Pair, Percent, TokenAmount, Trade } from 'libs/sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
 
-const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
-const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
-const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(BASE_FEE)
+export function computeFee(pairs?: Array<Pair>): Fraction {
+  let realizedLPFee: Fraction = new Fraction(JSBI.BigInt(0))
+
+  // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
+  // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
+  if (pairs) {
+    for (let i = 0; i < pairs.length; i++) {
+      const fee = pairs[i].liquidityToken.fee
+      if (fee) {
+        realizedLPFee = realizedLPFee.add(new Percent(fee, JSBI.BigInt(1000000000000000000)))
+      }
+    }
+  }
+
+  return realizedLPFee
+}
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
   trade?: Trade
-): { priceImpactWithoutFee?: Percent; realizedLPFee?: CurrencyAmount } {
-  // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
-  // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
-  const realizedLPFee = !trade
-    ? undefined
-    : ONE_HUNDRED_PERCENT.subtract(
-        trade.route.pairs.reduce<Fraction>(
-          (currentFee: Fraction): Fraction => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
-          ONE_HUNDRED_PERCENT
-        )
-      )
+): { priceImpactWithoutFee?: Percent; realizedLPFee?: CurrencyAmount, accruedFeePercent: Percent } {
+  const pairs = trade ? trade.route.pairs : undefined
+  const realizedLPFee: Fraction = computeFee(pairs)
+  const accruedFeePercent: Percent = new Percent(realizedLPFee.numerator, JSBI.BigInt(1000000000000000000))
 
   // remove lp fees from price impact
   const priceImpactWithoutFeeFraction = trade && realizedLPFee ? trade.priceImpact.subtract(realizedLPFee) : undefined
@@ -39,7 +45,7 @@ export function computeTradePriceBreakdown(
       ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
       : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
 
-  return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount }
+  return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount, accruedFeePercent }
 }
 
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips

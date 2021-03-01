@@ -3,23 +3,23 @@ import styled from 'styled-components'
 import { ExternalLink } from '../../theme'
 
 const InfoCard = styled.button<{ active?: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.bg3 : theme.bg2)};
-  padding: 1rem;
+  background-color: ${({ theme, active }) => (active ? theme.bg7 : theme.bg10)};
   outline: none;
-  border: 1px solid;
-  border-radius: 12px;
-  width: 100% !important;
-  &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.primary1};
+  border: none;
+  border-radius: 8px;
+  width: 48%;
+  margin: 0 4% 20px 0;
+  text-transform: uppercase;
+  &:nth-child(2n) {
+    margin-right: 0;
   }
-  border-color: ${({ theme, active }) => (active ? 'transparent' : theme.bg3)};
+  padding: 0 !important;
 `
 
 const OptionCard = styled(InfoCard as any)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   margin-top: 2rem;
   padding: 1rem;
 `
@@ -32,38 +32,22 @@ const OptionCardLeft = styled.div`
 
 const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   margin-top: 0;
+  cursor: pointer;
+  transition: all .2s;
   &:hover {
-    cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
-    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.primary1}` : ``)};
+    background-color: ${({theme}) => theme.bg7};
+    
+    > div:first-child {
+      background-color: ${({theme}) => theme.bg8};;
+    }
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
-`
-
-const GreenCircle = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  justify-content: center;
-  align-items: center;
-
-  &:first-child {
-    height: 8px;
-    width: 8px;
-    margin-right: 8px;
-    background-color: ${({ theme }) => theme.green1};
-    border-radius: 50%;
-  }
-`
-
-const CircleWrapper = styled.div`
-  color: ${({ theme }) => theme.green1};
-  display: flex;
-  justify-content: center;
-  align-items: center;
 `
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : ({ theme }) => theme.text1)};
-  font-size: 1rem;
+  font-size: 14px;
   font-weight: 500;
 `
 
@@ -73,14 +57,21 @@ const SubHeader = styled.div`
   font-size: 12px;
 `
 
-const IconWrapper = styled.div<{ size?: number | null }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
+const IconWrapper = styled.div<{ size?: number | null, active?: boolean }>`
+  display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 15px;
+  padding: 15px 21px;
+  background-color: ${({theme, active}) => (active ? theme.bg8 : theme.bg9)};
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  transition: all .2s;
+  
   & > img,
   span {
-    height: ${({ size }) => (size ? size + 'px' : '24px')};
-    width: ${({ size }) => (size ? size + 'px' : '24px')};
+    height: ${({ size }) => (size ? size + 'px' : '30px')};
+    width: ${({ size }) => (size ? size + 'px' : '30px')};
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: flex-end;
@@ -112,24 +103,15 @@ export default function Option({
 }) {
   const content = (
     <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
+      <IconWrapper size={size} active={active}>
+        <img src={icon} alt={'Icon'}/>
+      </IconWrapper>
       <OptionCardLeft>
         <HeaderText color={color}>
-          {active ? (
-            <CircleWrapper>
-              <GreenCircle>
-                <div />
-              </GreenCircle>
-            </CircleWrapper>
-          ) : (
-            ''
-          )}
           {header}
         </HeaderText>
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </OptionCardLeft>
-      <IconWrapper size={size}>
-        <img src={icon} alt={'Icon'} />
-      </IconWrapper>
     </OptionCardClickable>
   )
   if (link) {

@@ -1,7 +1,6 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@uniswap/sdk'
+import { CurrencyAmount, JSBI, Token, Trade } from 'libs/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
-import ReactGA from 'react-ga'
+import {ArrowDown, ArrowDownCircle} from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -13,21 +12,16 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
-
-import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { getTradeVersion, isTradeBetter } from '../../data/V1'
+import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
-import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import useToggledVersion, { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -77,35 +71,14 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
-  const {
-    v1Trade,
-    v2Trade,
-    currencyBalances,
-    parsedAmount,
-    currencies,
-    inputError: swapInputError
-  } = useDerivedSwapInfo()
+  const { v2Trade, currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  const { address: recipientAddress } = useENSAddress(recipient)
-  const toggledVersion = useToggledVersion()
-  const tradesByVersion = {
-    [Version.v1]: v1Trade,
-    [Version.v2]: v2Trade
-  }
-  const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
-  const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION]
-
-  const betterTradeLinkVersion: Version | undefined =
-    toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-      ? Version.v1
-      : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
-      ? Version.v2
-      : undefined
+  const trade = showWrap ? undefined : v2Trade
 
   const parsedAmounts = showWrap
     ? {
@@ -194,21 +167,6 @@ export default function Swap() {
     swapCallback()
       .then(hash => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
-
-        ReactGA.event({
-          category: 'Swap',
-          action:
-            recipient === null
-              ? 'Swap w/o Send'
-              : (recipientAddress ?? recipient) === account
-              ? 'Swap w/o Send + recipient'
-              : 'Swap w/ Send',
-          label: [
-            trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol,
-            getTradeVersion(trade)
-          ].join('/')
-        })
       })
       .catch(error => {
         setSwapState({
@@ -219,7 +177,7 @@ export default function Swap() {
           txHash: undefined
         })
       })
-  }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
+  }, [tradeToConfirm, priceImpactWithoutFee, showConfirm, swapCallback])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -288,7 +246,7 @@ export default function Swap() {
             onDismiss={handleConfirmDismiss}
           />
 
-          <AutoColumn gap={'md'}>
+          <AutoColumn gap={'7px'}>
             <CurrencyInputPanel
               label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
               value={formattedAmounts[Field.INPUT]}
@@ -303,8 +261,8 @@ export default function Swap() {
             <AutoColumn justify="space-between">
               <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
                 <ArrowWrapper clickable>
-                  <ArrowDown
-                    size="16"
+                  <ArrowDownCircle
+                    size="22"
                     onClick={() => {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
                       onSwitchTokens()
@@ -345,29 +303,29 @@ export default function Swap() {
             ) : null}
 
             {showWrap ? null : (
-              <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+              <Card padding={'0 .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   {Boolean(trade) && (
-                    <RowBetween align="center">
+                    <div style={{alignItems: 'center', display: 'flex'}}>
                       <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                        Price
+                        Price:&nbsp;
                       </Text>
                       <TradePrice
                         price={trade?.executionPrice}
                         showInverted={showInverted}
                         setShowInverted={setShowInverted}
                       />
-                    </RowBetween>
+                    </div>
                   )}
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                    <RowBetween align="center">
+                    <div style={{alignItems: 'center', display: 'flex'}}>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                        Slippage Tolerance
+                        Slippage Tolerance:&nbsp;
                       </ClickableText>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
                         {allowedSlippage / 100}%
                       </ClickableText>
-                    </RowBetween>
+                    </div>
                   )}
                 </AutoColumn>
               </Card>
@@ -466,11 +424,6 @@ export default function Swap() {
               </Column>
             )}
             {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-            {betterTradeLinkVersion ? (
-              <BetterTradeLink version={betterTradeLinkVersion} />
-            ) : toggledVersion !== DEFAULT_VERSION && defaultTrade ? (
-              <DefaultVersionLink />
-            ) : null}
           </BottomGrouping>
         </Wrapper>
       </AppBody>

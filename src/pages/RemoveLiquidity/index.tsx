@@ -1,10 +1,9 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent, WETH } from '@uniswap/sdk'
+import { Currency, currencyEquals, ETHER, Percent, WETH } from 'libs/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -123,7 +122,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: 'XYZSwap LP',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -324,12 +323,6 @@ export default function RemoveLiquidity({
           })
 
           setTxHash(response.hash)
-
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Remove',
-            label: [currencyA?.symbol, currencyB?.symbol].join('/')
-          })
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)

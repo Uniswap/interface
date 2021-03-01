@@ -1,5 +1,4 @@
 import React, { HTMLProps, useCallback } from 'react'
-import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
@@ -104,22 +103,6 @@ const StyledLink = styled.a`
   }
 `
 
-const rotateImg = keyframes`
-  0% {
-    transform: perspective(1000px) rotateY(0deg);
-  }
-
-  100% {
-    transform: perspective(1000px) rotateY(360deg);
-  }
-`
-
-export const UniTokenAnimated = styled.img`
-  animation: ${rotateImg} 5s cubic-bezier(0.83, 0, 0.17, 1) infinite;
-  padding: 2rem 0 0 0;
-  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15));
-`
-
 /**
  * Outbound link that handles firing google analytics events
  */
@@ -133,18 +116,11 @@ export function ExternalLink({
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
       if (target === '_blank' || event.ctrlKey || event.metaKey) {
-        ReactGA.outboundLink({ label: href }, () => {
-          console.debug('Fired outbound link event', href)
-        })
       } else {
         event.preventDefault()
-        // send a ReactGA event and then trigger a location change
-        ReactGA.outboundLink({ label: href }, () => {
-          window.location.href = href
-        })
       }
     },
-    [href, target]
+    [target]
   )
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }

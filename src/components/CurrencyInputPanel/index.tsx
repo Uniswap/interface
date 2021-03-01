@@ -1,4 +1,4 @@
-import { Currency, Pair } from '@uniswap/sdk'
+import { Currency, Pair } from 'libs/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { darken } from 'polished'
@@ -6,13 +6,13 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
+import { AutoColumn } from "../Column";
+import Card from "../Card";
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -41,19 +41,6 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   }
 `
 
-const LabelRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  color: ${({ theme }) => theme.text1};
-  font-size: 0.75rem;
-  line-height: 1rem;
-  padding: 0.75rem 1rem 0 1rem;
-  span:hover {
-    cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.text2)};
-  }
-`
-
 const Aligner = styled.span`
   display: flex;
   align-items: center;
@@ -79,7 +66,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
+  border-radius: 8px;
   border: 1px solid ${({ theme }) => theme.bg2};
   background-color: ${({ theme }) => theme.bg1};
 `
@@ -161,88 +148,85 @@ export default function CurrencyInputPanel({
   }, [setModalOpen])
 
   return (
-    <InputPanel id={id}>
-      <Container hideInput={hideInput}>
-        {!hideInput && (
-          <LabelRow>
-            <RowBetween>
-              <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                {label}
-              </TYPE.body>
-              {account && (
-                <TYPE.body
-                  onClick={onMax}
-                  color={theme.text2}
-                  fontWeight={500}
-                  fontSize={14}
-                  style={{ display: 'inline', cursor: 'pointer' }}
-                >
-                  {!hideBalance && !!currency && selectedCurrencyBalance
-                    ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                    : ' -'}
-                </TYPE.body>
-              )}
-            </RowBetween>
-          </LabelRow>
-        )}
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
-          {!hideInput && (
-            <>
-              <NumericalInput
-                className="token-amount-input"
-                value={value}
-                onUserInput={val => {
-                  onUserInput(val)
-                }}
-              />
-              {account && currency && showMaxButton && label !== 'To' && (
-                <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
-              )}
-            </>
-          )}
-          <CurrencySelect
-            selected={!!currency}
-            className="open-currency-select-button"
-            onClick={() => {
-              if (!disableCurrencySelect) {
-                setModalOpen(true)
-              }
-            }}
-          >
-            <Aligner>
-              {pair ? (
-                <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-              ) : currency ? (
-                <CurrencyLogo currency={currency} size={'24px'} />
-              ) : null}
-              {pair ? (
-                <StyledTokenName className="pair-name-container">
-                  {pair?.token0.symbol}:{pair?.token1.symbol}
-                </StyledTokenName>
-              ) : (
-                <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                  {(currency && currency.symbol && currency.symbol.length > 20
-                    ? currency.symbol.slice(0, 4) +
+    <div>
+      <InputPanel id={id}>
+        <Container hideInput={hideInput}>
+          <InputRow style={hideInput ? {padding: '0', borderRadius: '8px'} : {}} selected={disableCurrencySelect}>
+            {!hideInput && (
+              <>
+                <NumericalInput
+                  className="token-amount-input"
+                  value={value}
+                  onUserInput={val => {
+                    onUserInput(val)
+                  }}
+                />
+                {account && currency && showMaxButton && label !== 'To' && (
+                  <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
+                )}
+              </>
+            )}
+            <CurrencySelect
+              selected={!!currency}
+              className="open-currency-select-button"
+              onClick={() => {
+                if (!disableCurrencySelect) {
+                  setModalOpen(true)
+                }
+              }}
+            >
+              <Aligner>
+                {pair ? (
+                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true}/>
+                ) : currency ? (
+                  <CurrencyLogo currency={currency} size={'24px'}/>
+                ) : null}
+                {pair ? (
+                  <StyledTokenName className="pair-name-container">
+                    {pair?.token0.symbol}:{pair?.token1.symbol}
+                  </StyledTokenName>
+                ) : (
+                  <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                    {(currency && currency.symbol && currency.symbol.length > 20
+                      ? currency.symbol.slice(0, 4) +
                       '...' +
                       currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                    : currency?.symbol) || t('selectToken')}
-                </StyledTokenName>
-              )}
-              {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
-            </Aligner>
-          </CurrencySelect>
-        </InputRow>
-      </Container>
-      {!disableCurrencySelect && onCurrencySelect && (
-        <CurrencySearchModal
-          isOpen={modalOpen}
-          onDismiss={handleDismissSearch}
-          onCurrencySelect={onCurrencySelect}
-          selectedCurrency={currency}
-          otherSelectedCurrency={otherCurrency}
-          showCommonBases={showCommonBases}
-        />
+                      : currency?.symbol) || t('selectToken')}
+                  </StyledTokenName>
+                )}
+                {!disableCurrencySelect && <StyledDropDown selected={!!currency}/>}
+              </Aligner>
+            </CurrencySelect>
+          </InputRow>
+        </Container>
+        {!disableCurrencySelect && onCurrencySelect && (
+          <CurrencySearchModal
+            isOpen={modalOpen}
+            onDismiss={handleDismissSearch}
+            onCurrencySelect={onCurrencySelect}
+            selectedCurrency={currency}
+            otherSelectedCurrency={otherCurrency}
+            showCommonBases={showCommonBases}
+          />
+        )}
+      </InputPanel>
+      {account && (
+        <Card padding={'.4rem .75rem 0 .75rem'} borderRadius={'20px'}>
+          <AutoColumn gap="4px">
+            <TYPE.body
+              onClick={onMax}
+              color={theme.text2}
+              fontWeight={500}
+              fontSize={14}
+              style={{display: 'inline', cursor: `${label !== 'To' ? 'pointer' : 'initial'}`}}
+            >
+              {!hideBalance && !!currency && selectedCurrencyBalance
+                ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
+                : ' -'}
+            </TYPE.body>
+          </AutoColumn>
+        </Card>
       )}
-    </InputPanel>
+    </div>
   )
 }

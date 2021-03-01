@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, Pair, Token, Trade } from 'libs/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
@@ -83,6 +83,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
  */
 export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
+
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (
