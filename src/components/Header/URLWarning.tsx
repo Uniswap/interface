@@ -30,15 +30,15 @@ export default function URLWarning() {
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>xyzswap.com</code>
+        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>dmm.exchange</code>
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
-  ) : window.location.hostname === 'xyzswap.com' ? (
+  ) : window.location.hostname === 'dmm.exchange' ? (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Always make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>xyzswap.com</code> - bookmark it
+        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>dmm.exchange</code> - bookmark it
         to be safe.
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />

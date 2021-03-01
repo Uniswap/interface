@@ -1,7 +1,7 @@
 export const MAINNET_TOKEN_LIST = {
-  "name": "XyzSwap Token List",
+  "name": "DmmExchange Token List",
   "keywords": [
-    "xyzswap"
+    "dmmexchange"
   ],
   "timestamp": "2020-12-12T00:00:00+00:00",
   "tokens": [

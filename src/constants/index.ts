@@ -12,7 +12,7 @@ export const BAD_RECIPIENT_ADDRESSES: string[] = [
 ]
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-export const XYZ_INFO_URL: string = process.env.REACT_APP_CHAIN_NAME === 'mainnet' ? 'https://xyz-tracker.knstats.com' : 'https://dev-xyz-tracker.knstats.com'
+export const DMM_INFO_URL: string = process.env.REACT_APP_CHAIN_NAME === 'mainnet' ? 'https://dmm-tracker.knstats.com' : 'https://dev-dmm-tracker.knstats.com'
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -206,9 +206,9 @@ export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
 export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.BigInt(10000))
 
 export const TOKEN_LIST = {
-  "name": "XyzSwap Token List",
+  "name": "DmmExchange Token List",
   "keywords": [
-    "xyzswap"
+    "dmmexchange"
   ],
   "timestamp": "2020-12-12T00:00:00+00:00",
   "tokens": [

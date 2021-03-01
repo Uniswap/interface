@@ -140,8 +140,8 @@ export function useSwapCallback(
                     console.debug('Call threw error', call, callError)
                     let errorMessage: string
                     switch (callError.message) {
-                      case "execution reverted: XYZSwapRouter: INSUFFICIENT_OUTPUT_AMOUNT":
-                      case "execution reverted: XYZSwapRouter: EXCESSIVE_INPUT_AMOUNT":
+                      case "execution reverted: DmmExchangeRouter: INSUFFICIENT_OUTPUT_AMOUNT":
+                      case "execution reverted: DmmExchangeRouter: EXCESSIVE_INPUT_AMOUNT":
                         errorMessage =
                           'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
