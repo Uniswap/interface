@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { Pair, JSBI } from 'libs/sdk'
+import { Pair, JSBI, Token } from 'libs/sdk/src'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
@@ -12,8 +12,8 @@ import { RowBetween, RowFixed } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
-import { usePairs } from '../../data/Reserves'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { usePairs, usePairsByAddress } from '../../data/Reserves'
+import { useTrackedTokenPairs, useToV2LiquidityTokens } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
 import { DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
@@ -77,39 +77,57 @@ export default function Pool() {
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
-  )
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
+
+  //trackedTokenPairs = [ [Token, Token],  [Token, Token] ]
+  const tokenPairsWithLiquidityTokens = useToV2LiquidityTokens(trackedTokenPairs)
+
+  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityTokens), [
     tokenPairsWithLiquidityTokens
   ])
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
-    liquidityTokens
+    liquidityTokens.flatMap(x => x)
   )
-
   // fetch the reserves for all V2 pools in which the user has a balance
+  // const liquidityTokensWithBalances = useMemo(
+  //   () =>
+  //     tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
+  //       v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+  //     ),
+  //   [tokenPairsWithLiquidityTokens, v2PairsBalances]
+  // )
+  const vv: { liquidityToken: Token; tokens: [Token, Token] }[] = []
   const liquidityTokensWithBalances = useMemo(
     () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
-      ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+      liquidityTokens.reduce((acc, lpTokens, index) => {
+        lpTokens
+          .filter((lp: Token) => v2PairsBalances[lp.address]?.greaterThan('0'))
+          .forEach((lp: Token) => {
+            acc.push({ liquidityToken: lp, tokens: tokenPairsWithLiquidityTokens[index].tokens })
+          })
+        return acc
+      }, vv),
+    [tokenPairsWithLiquidityTokens, liquidityTokens, v2PairsBalances]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const v2Pairs = usePairsByAddress(
+    liquidityTokensWithBalances.map(({ liquidityToken, tokens }) => ({
+      address: liquidityToken.address,
+      currencies: tokens
+    }))
+  )
+
   const v2IsLoading =
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
-
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+  // const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
+  console.log('====stakingInfo', stakingInfo)
   const stakingInfosWithBalance = stakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
-  const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens))
-
-  // remove any pairs that also are included in pairs with stake in mining pool
+  const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens)).flatMap(x => x)
+  // // remove any pairs that also are included in pairs with stake in mining pool
   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
     return (
       stakingPairs
@@ -117,7 +135,7 @@ export default function Pool() {
         .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
     )
   })
-
+  console.log('-============================', allV2PairsWithLiquidity)
   return (
     <>
       <PageWrapper>

@@ -1,6 +1,6 @@
-import { CurrencyAmount, JSBI, Token, Trade } from 'libs/sdk'
+import { CurrencyAmount, Fraction, JSBI, Token, Trade } from 'libs/sdk/src'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import {ArrowDown, ArrowDownCircle} from 'react-feather'
+import { ArrowDown, ArrowDownCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -19,7 +19,7 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
+import { useCurrency, useAllTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -71,6 +71,7 @@ export default function Swap() {
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
+
   const { v2Trade, currencyBalances, parsedAmount, currencies, inputError: swapInputError } = useDerivedSwapInfo()
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
@@ -221,7 +222,13 @@ export default function Swap() {
   const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
     onCurrencySelection
   ])
+  const allTokens = useAllTokens()
 
+  // (approval === ApprovalState.NOT_APPROVED ||
+  //   approval === ApprovalState.PENDING ||
+  //   (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
+  // !(priceImpactSeverity > 3 && !isExpertMode)
+  console.log('===trade: ', trade)
   return (
     <>
       <TokenWarningModal
@@ -306,7 +313,7 @@ export default function Swap() {
               <Card padding={'0 .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   {Boolean(trade) && (
-                    <div style={{alignItems: 'center', display: 'flex'}}>
+                    <div style={{ alignItems: 'center', display: 'flex' }}>
                       <Text fontWeight={500} fontSize={14} color={theme.text2}>
                         Price:&nbsp;
                       </Text>
@@ -318,7 +325,7 @@ export default function Swap() {
                     </div>
                   )}
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                    <div style={{alignItems: 'center', display: 'flex'}}>
+                    <div style={{ alignItems: 'center', display: 'flex' }}>
                       <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
                         Slippage Tolerance:&nbsp;
                       </ClickableText>

@@ -3,9 +3,11 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
+import Numeral from 'numeral'
+
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'libs/sdk'
+import { ROUTER_ADDRESS, ROUTER_ABI, FACTORY_ADDRESS, FACTORY_ABI } from '../constants'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'libs/sdk/src'
 import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -99,7 +101,11 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 
 // account is optional
 export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
+  return getContract(ROUTER_ADDRESS, ROUTER_ABI, library, account)
+}
+
+export function getFactoryContract(_: number, library: Web3Provider, account?: string): Contract {
+  return getContract(FACTORY_ADDRESS, FACTORY_ABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {
@@ -109,4 +115,56 @@ export function escapeRegExp(string: string): string {
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
+}
+
+export const toK = (num: string) => {
+  return Numeral(num).format('0.[00]a')
+}
+
+// using a currency library here in case we want to add more in future
+export const formatDollarAmount = (num: number, digits: number) => {
+  const formatter = new Intl.NumberFormat([], {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits
+  })
+  return formatter.format(num)
+}
+
+export function formattedNum(number: string, usd = false, acceptNegatives = false) {
+  if (number === '' || number === undefined) {
+    return usd ? '$0' : 0
+  }
+
+  const num = parseFloat(number)
+
+  if (num > 500000000) {
+    return (usd ? '$' : '') + toK(num.toFixed(0))
+  }
+
+  if (num === 0) {
+    if (usd) {
+      return '$0'
+    }
+    return 0
+  }
+
+  if (num < 0.0001 && num > 0) {
+    return usd ? '< $0.0001' : '< 0.0001'
+  }
+
+  if (num > 1000) {
+    return usd ? formatDollarAmount(num, 0) : Number(num.toFixed(0)).toLocaleString()
+  }
+
+  if (usd) {
+    if (num < 0.1) {
+      return formatDollarAmount(num, 4)
+    } else {
+      return formatDollarAmount(num, 2)
+    }
+  }
+
+  return Number(num.toFixed(5)).toLocaleString()
 }

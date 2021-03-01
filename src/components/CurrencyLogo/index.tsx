@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from 'libs/sdk'
+import { Currency, ETHER, Token } from 'libs/sdk/src'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from 'libs/sdk'
+import { Currency, CurrencyAmount, Pair, Token, Trade } from 'libs/sdk/src'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
@@ -59,7 +59,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     [tokenA, tokenB, bases, basePairs, chainId]
   )
 
-  const allPairs = usePairs(allPairCombinations)
+  const allPairs = usePairs(allPairCombinations).flatMap(x => x)
 
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(

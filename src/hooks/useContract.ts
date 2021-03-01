@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, WETH } from 'libs/sdk'
+import { ChainId, WETH } from 'libs/sdk/src'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useMemo } from 'react'
 import {
@@ -15,6 +15,7 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
+import { FACTORY_ADDRESS, FACTORY_ABI } from '../constants'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -90,3 +91,7 @@ export function useSocksController(): Contract | null {
     false
   )
 }
+
+export function useFactoryContract(): Contract | null {
+  return useContract(FACTORY_ADDRESS, FACTORY_ABI)
+} 

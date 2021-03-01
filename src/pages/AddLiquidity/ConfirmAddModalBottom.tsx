@@ -1,13 +1,21 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from 'libs/sdk'
+import { Currency, CurrencyAmount, Fraction, Pair, Percent } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../../components/Button'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
+import { PoolPriceRangeBar } from './PoolPriceBar'
+import { AutoColumn } from 'components/Column'
+import { Separator } from 'components/SearchModal/styleds'
+import styled from 'styled-components'
 
+const SeparatorWhite = styled(Separator)`
+  background-color: ${({ theme }) => theme.white};
+`
 export function ConfirmAddModalBottom({
+  pair,
   noLiquidity,
   price,
   currencies,
@@ -15,6 +23,7 @@ export function ConfirmAddModalBottom({
   poolTokenPercentage,
   onAdd
 }: {
+  pair: Pair | null | undefined
   noLiquidity?: boolean
   price?: Fraction
   currencies: { [field in Field]?: Currency }
@@ -53,6 +62,14 @@ export function ConfirmAddModalBottom({
           }`}
         </TYPE.body>
       </RowBetween>
+      <SeparatorWhite />
+      <TYPE.body>AMP</TYPE.body>
+      <PoolPriceRangeBar
+                pair={pair}
+                currencies={currencies}
+                price={price} />
+      
+      <SeparatorWhite />
       <RowBetween>
         <TYPE.body>Share of Pool:</TYPE.body>
         <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>

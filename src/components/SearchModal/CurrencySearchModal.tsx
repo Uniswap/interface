@@ -1,4 +1,4 @@
-import { Currency } from 'libs/sdk'
+import { Currency } from 'libs/sdk/src'
 import React, { useCallback, useEffect, useState } from 'react'
 import useLast from '../../hooks/useLast'
 import Modal from '../Modal'

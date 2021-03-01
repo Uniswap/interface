@@ -1,4 +1,4 @@
-import { Trade, TradeType } from 'libs/sdk'
+import { Trade, TradeType } from 'libs/sdk/src'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'

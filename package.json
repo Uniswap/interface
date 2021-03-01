@@ -14,6 +14,7 @@
     "@types/luxon": "^1.24.4",
     "@types/multicodec": "^1.0.0",
     "@types/node": "^13.13.5",
+    "@types/numeral": "^2.0.0",
     "@types/qs": "^6.9.2",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.7",
@@ -91,7 +92,7 @@
     "trezor-connect": "8.1.15"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-app-rewired start",
     "start-ropsten": "env-cmd -f .env.ropsten react-scripts start",
     "build": "react-scripts build",
     "build-ropsten": "env-cmd -f .env.ropsten react-scripts build",
@@ -119,9 +120,14 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@types/big.js": "^6.0.0",
+    "dayjs": "^1.10.4",
     "decimal.js-light": "^2.5.1",
     "env-cmd": "^10.1.0",
     "jsbi": "^3.1.4",
+    "numeral": "^2.0.6",
+    "react-app-rewire-styled-components": "^3.0.2",
+    "react-app-rewired": "^2.1.8",
+    "react-use": "^17.1.1",
     "toformat": "^2.0.0"
   }
 }

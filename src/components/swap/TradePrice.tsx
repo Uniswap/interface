@@ -1,5 +1,5 @@
 import React from 'react'
-import { Price } from 'libs/sdk'
+import { Price } from 'libs/sdk/src'
 import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
