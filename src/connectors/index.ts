@@ -1,16 +1,13 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { AuthereumConnector } from '@web3-react/authereum-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { NetworkConnector } from './NetworkConnector'
+import { NetworkConnector } from '@web3-react/network-connector'
 import { ChainId } from 'dxswap-sdk'
 
 export const INFURA_PROJECT_ID = '0ebf4dd05d6740f482938b8a80860d13'
 
 export const network = new NetworkConnector({
-  urls: {
-    1: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`
-  },
-  defaultChainId: 1
+  urls: { 1: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}` }
 })
 
 export const injected = new InjectedConnector({
