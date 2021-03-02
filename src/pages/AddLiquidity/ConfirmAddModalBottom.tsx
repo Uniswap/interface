@@ -23,7 +23,7 @@ export function ConfirmAddModalBottom({
   parsedAmounts,
   poolTokenPercentage,
   onAdd,
-  typedAmp
+  amp
 }: {
   pair: Pair | null | undefined
   noLiquidity?: boolean
@@ -32,18 +32,13 @@ export function ConfirmAddModalBottom({
   parsedAmounts: { [field in Field]?: CurrencyAmount }
   poolTokenPercentage?: Percent
   onAdd: () => void
-  typedAmp?: number
+  amp?: Fraction
 }) {
   // console.log(
   //   'onAdd',
   //   new Fraction(JSBI.BigInt(parseUnits('1.234567', 10)), JSBI.BigInt(parseUnits('1', 6))).toSignificant(5)
   // )
-  let amp
-  if (pair) {
-    amp = pair.virtualReserve0.divide(pair?.reserve0)
-  } else {
-    amp = new Fraction(JSBI.BigInt(parseUnits((typedAmp as number).toString(), 20)), JSBI.BigInt(parseUnits('1', 20)))
-  }
+
   return (
     <>
       <RowBetween>
@@ -76,7 +71,7 @@ export function ConfirmAddModalBottom({
         </TYPE.body>
       </RowBetween>
       <SeparatorWhite />
-      <TYPE.body>AMP {amp.toSignificant(5)}</TYPE.body>
+      <TYPE.body>AMP {amp?.divide(JSBI.BigInt(10000)).toSignificant(5)}</TYPE.body>
       <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} />
 
       <SeparatorWhite />

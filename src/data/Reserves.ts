@@ -19,6 +19,33 @@ export enum PairState {
   INVALID
 }
 
+export function useUnAmplifiedPairs(currencies: [Currency | undefined, Currency | undefined][]): string[] {
+  const { chainId } = useActiveWeb3React()
+
+  const tokens = useMemo(
+    () =>
+      currencies.map(([currencyA, currencyB]) => [
+        wrappedCurrency(currencyA, chainId),
+        wrappedCurrency(currencyB, chainId)
+      ]),
+    [chainId, currencies]
+  )
+  const contract = useFactoryContract()
+  const ress = useSingleContractMultipleData(
+    contract,
+    'getUnamplifiedPool',
+    tokens
+      .filter(([tokenA, tokenB]) => tokenA && tokenB && !tokenA.equals(tokenB))
+      .map(([tokenA, tokenB]) => [tokenA?.address, tokenB?.address])
+  )
+  return useMemo(() => {
+    return ress.map(res => {
+      const { result, loading } = res
+      return result?.[0]
+    })
+  }, [tokens, ress])
+}
+
 export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][][] {
   const { chainId } = useActiveWeb3React()
 
@@ -141,6 +168,10 @@ export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair 
 
 export function usePairByAddress(tokenA?: Token, tokenB?: Token, address?: string): [PairState, Pair | null] {
   return usePairsByAddress([{ address, currencies: [tokenA, tokenB] }])[0]
+}
+
+export function useUnAmplifiedPair(tokenA?: Currency, tokenB?: Currency): string {
+  return useUnAmplifiedPairs([[tokenA, tokenB]])[0]
 }
 
 // export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {

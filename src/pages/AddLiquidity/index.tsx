@@ -3,13 +3,16 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard, OutlineCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal, {
+  ConfirmationModalContent,
+  TransactionErrorContent
+} from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
@@ -28,7 +31,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -41,6 +44,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import NumericalInput from 'components/NumericalInput'
 import { ONE } from 'libs/sdk/src/constants'
 import { parseUnits } from 'ethers/lib/utils'
+import Modal from 'components/Modal'
 
 const ActiveText = styled.div`
   font-weight: 500;
@@ -103,13 +107,19 @@ export default function AddLiquidity({
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error
+    error,
+    unAmplifiedPairAddress
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
-  const [amp, setAmp] = useState(0)
+  const [amp, setAmp] = useState('')
   const onAmpChange = (e: any) => {
     setAmp(e)
   }
 
+  const ampConverted = !!amp.toString()
+    ? new Fraction(JSBI.BigInt(parseUnits(amp.toString() || '1', 20)), JSBI.BigInt(parseUnits('1', 16)))
+    : undefined
+
+  const linkToUnamplifiedPool = !!ampConverted && ampConverted.equalTo(JSBI.BigInt(10000)) && !!unAmplifiedPairAddress
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
   const isValid = !(error || (!pairAddress && +amp == 0 ? 'Enter amp' : ''))
@@ -117,7 +127,7 @@ export default function AddLiquidity({
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-
+  const [showUnamplifiedPool, setShowUnamplifiedPool] = useState<boolean>(false)
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
@@ -158,6 +168,7 @@ export default function AddLiquidity({
     // console.log('onAdd', new Fraction(JSBI.BigInt(amp)).multiply(JSBI.BigInt(1000)).toSignificant(0))
 
     // if (!pair) return
+    if (!ampConverted) return
     if (!chainId || !library || !account) return
     const router = getRouterContract(chainId, library, account)
 
@@ -210,7 +221,6 @@ export default function AddLiquidity({
         value = null
       }
     } else {
-      const ampConverted = new Fraction(JSBI.BigInt(parseUnits(amp.toString(), 20)), JSBI.BigInt(parseUnits('1', 16)))
       if (currencyA === ETHER || currencyB === ETHER) {
         const tokenBIsETH = currencyB === ETHER
         estimate = router.estimateGas.addLiquidityNewPoolETH
@@ -326,7 +336,7 @@ export default function AddLiquidity({
         noLiquidity={noLiquidity}
         onAdd={onAdd}
         poolTokenPercentage={poolTokenPercentage}
-        typedAmp={amp}
+        amp={ampConverted}
       />
     )
   }
@@ -382,14 +392,38 @@ export default function AddLiquidity({
             onDismiss={handleDismissConfirmation}
             attemptingTxn={attemptingTxn}
             hash={txHash}
-            content={() => (
-              <ConfirmationModalContent
-                title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
-                onDismiss={handleDismissConfirmation}
-                topContent={modalHeader}
-                bottomContent={modalBottom}
-              />
-            )}
+            content={() =>
+              !linkToUnamplifiedPool ? (
+                <ConfirmationModalContent
+                  title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
+                  onDismiss={handleDismissConfirmation}
+                  topContent={modalHeader}
+                  bottomContent={modalBottom}
+                />
+              ) : (
+                <ConfirmationModalContent
+                  title={'Unamplified Pool existed'}
+                  onDismiss={handleDismissConfirmation}
+                  topContent={() => {
+                    return null
+                  }}
+                  bottomContent={() => {
+                    return (
+                      <>
+                        Please use the link below if you want to add liquidity to Unamplified Pool
+                        <StyledInternalLink
+                          onClick={handleDismissConfirmation}
+                          id="unamplified-pool-link"
+                          to={`/add/${currencyIdA}/${currencyIdB}/${unAmplifiedPairAddress}`}
+                        >
+                          Go to unamplified pool
+                        </StyledInternalLink>
+                      </>
+                    )
+                  }}
+                />
+              )
+            }
             pendingText={pendingText}
           />
           <AutoColumn gap="20px">

@@ -124,7 +124,6 @@ export default function Pool() {
 
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
-  console.log('====stakingInfo', stakingInfo)
   const stakingInfosWithBalance = stakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
   const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens)).flatMap(x => x)
   // // remove any pairs that also are included in pairs with stake in mining pool
@@ -135,7 +134,7 @@ export default function Pool() {
         .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
     )
   })
-  console.log('-============================', allV2PairsWithLiquidity)
+
   return (
     <>
       <PageWrapper>

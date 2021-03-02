@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from 'libs/sdk/src'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { PairState, usePair, usePairByAddress } from '../../data/Reserves'
+import { PairState, usePair, usePairByAddress, useUnAmplifiedPair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -33,6 +33,7 @@ export function useDerivedMintInfo(
   liquidityMinted?: TokenAmount
   poolTokenPercentage?: Percent
   error?: string
+  unAmplifiedPairAddress?: string
 } {
   const { account, chainId } = useActiveWeb3React()
 
@@ -53,6 +54,7 @@ export function useDerivedMintInfo(
   const tokenA = wrappedCurrency(currencies[Field.CURRENCY_A], chainId)
   const tokenB = wrappedCurrency(currencies[Field.CURRENCY_B], chainId)
   const [pairState, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean =
@@ -167,7 +169,8 @@ export function useDerivedMintInfo(
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error
+    error,
+    unAmplifiedPairAddress
   }
 }
 
