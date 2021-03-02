@@ -59,18 +59,20 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             </RowFixed>
           </RowBetween>
           <RowBetween ml="13px">
-            <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-              {isExactIn ? 'Min received' : 'Max sold'}
-            </TYPE.body>
-            <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
-            <div>
+            <RowFixed>
+              <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
+                {isExactIn ? 'Min received' : 'Max sold'}
+              </TYPE.body>
+              <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
+            </RowFixed>
+            <RowFixed>
               <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500" color="white">
                 {isExactIn
                   ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)}` ?? '-'
                   : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)}` ?? '-'}
               </TYPE.body>
-            </div>
-            <CurrencyLogo currency={currency} size="14px" style={{ margin: '0 2px' }} />
+              <CurrencyLogo currency={currency} size="14px" style={{ margin: '0 2px' }} />
+            </RowFixed>
           </RowBetween>
         </RowBetween>
         <RowBetween>
@@ -91,7 +93,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
               <QuestionHelper text="A portion of each trade (between 0% - 0.30%) goes to liquidity providers as a protocol incentive." />
             </RowFixed>
             <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
-              {realizedLPFee ? `${realizedLPFee.toSignificant(2)} %` : '-'}
+              {realizedLPFee ? `${realizedLPFee.toSignificant(2)}%` : '-'}
             </TYPE.body>
           </RowBetween>
         </RowBetween>

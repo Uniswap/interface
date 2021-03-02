@@ -6,8 +6,7 @@ import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapPlatformSelector } from './SwapPlatformSelector'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
-const AdvancedDetailsFooter = styled.div<{ show: boolean; showPlatformSelection: boolean }>`
-  padding-top: ${props => (props.showPlatformSelection ? 0 : 8)}px;
+const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   padding-bottom: 16px;
   width: 100%;
   max-width: 400px;
@@ -27,21 +26,19 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean; showPlatformSelection:
 interface AdvancedSwapDetailsDropdownProps {
   trade?: Trade
   allPlatformTrades?: (Trade | undefined)[] | undefined
-  showPlatformSelection: boolean
   onSelectedPlatformChange: (newPlatform: RoutablePlatform) => void
 }
 
 export default function AdvancedSwapDetailsDropdown({
   trade,
   allPlatformTrades,
-  showPlatformSelection,
   onSelectedPlatformChange,
   ...rest
 }: AdvancedSwapDetailsDropdownProps) {
   const lastTrade = useLastTruthy(trade)
 
   return (
-    <AdvancedDetailsFooter show={Boolean(trade)} showPlatformSelection={showPlatformSelection}>
+    <AdvancedDetailsFooter show={Boolean(trade)}>
       <SwapPlatformSelector
         selectedTrade={trade}
         allPlatformTrades={allPlatformTrades}
