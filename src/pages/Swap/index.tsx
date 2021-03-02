@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI, Trade, Token, RoutablePlatform } from 'dxswap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ChevronDown, ChevronUp, Repeat } from 'react-feather'
+import { ArrowDown, Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
@@ -44,15 +44,6 @@ const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
 `
 
-const StyledChevronDown = styled(ChevronDown)`
-  height: 14px;
-  cursor: pointer;
-`
-const StyledChevronUp = styled(ChevronUp)`
-  height: 14px;
-  cursor: pointer;
-`
-
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [platformOverride, setPlatformOverride] = useState<RoutablePlatform | null>(null)
@@ -76,12 +67,6 @@ export default function Swap() {
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
-
-  // toggle selecting which exchange to use
-  const [showPlatformSelection, setShowPlatformSelection] = useState<boolean>(false)
-  const togglePlatformSelection = () => {
-    setShowPlatformSelection(!showPlatformSelection)
-  }
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
@@ -442,20 +427,10 @@ export default function Swap() {
                 {!!trade && (
                   <RowBetween align="center">
                     <RowFixed>
-                      <ClickableText onClick={togglePlatformSelection} fontSize="14px" fontWeight="600" color="white">
+                      <ClickableText fontSize="14px" fontWeight="600" color="white">
                         {!!trade ? trade?.platform.name : ''}
                       </ClickableText>
                     </RowFixed>
-                    {!showPlatformSelection && (
-                      <RowFixed flex="1" justify="flex-start">
-                        <StyledChevronDown onClick={togglePlatformSelection} />
-                      </RowFixed>
-                    )}
-                    {showPlatformSelection && (
-                      <RowFixed flex="1" justify="flex-start">
-                        <StyledChevronUp onClick={togglePlatformSelection} />
-                      </RowFixed>
-                    )}
                     <RowFixed>
                       <TradePrice
                         price={trade?.executionPrice}
@@ -472,7 +447,6 @@ export default function Swap() {
       </AppBody>
       <AdvancedSwapDetailsDropdown
         trade={trade}
-        showPlatformSelection={showPlatformSelection}
         allPlatformTrades={allPlatformTrades}
         onSelectedPlatformChange={setPlatformOverride}
       />
