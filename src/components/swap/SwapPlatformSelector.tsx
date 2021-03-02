@@ -57,7 +57,7 @@ export function SwapPlatformSelector({
               <Flex>
                 <Box>
                   <TYPE.subHeader color="white" fontSize="12px" fontWeight="600">
-                    {trade.outputAmount.toFixed(4)}
+                    {trade.outputAmount.toSignificant(4)}
                   </TYPE.subHeader>
                 </Box>
                 <Box>
