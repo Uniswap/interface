@@ -140,8 +140,8 @@ export function useSwapCallback(
                     console.debug('Call threw error', call, callError)
                     let errorMessage: string
                     switch (callError.message) {
-                      case "execution reverted: XYZSwapRouter: INSUFFICIENT_OUTPUT_AMOUNT":
-                      case "execution reverted: XYZSwapRouter: EXCESSIVE_INPUT_AMOUNT":
+                      case 'execution reverted: XYZSwapRouter: INSUFFICIENT_OUTPUT_AMOUNT':
+                      case 'execution reverted: XYZSwapRouter: EXCESSIVE_INPUT_AMOUNT':
                         errorMessage =
                           'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
@@ -153,13 +153,13 @@ export function useSwapCallback(
               })
           })
         )
-        
+
         // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
         const successfulEstimation = estimatedCalls.find(
           (el, ix, list): el is SuccessfulCall =>
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
-        console.log("=====estimatedCalls", estimatedCalls);
+        console.log('=====estimatedCalls', estimatedCalls)
         // return new Promise((resolve, reject) => resolve(""))
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)

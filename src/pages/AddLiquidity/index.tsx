@@ -1,13 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from 'libs/sdk/src'
+import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard } from '../../components/Card'
+import { BlueCard, LightCard, OutlineCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -37,18 +37,37 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar, PoolPriceRangeBar } from './PoolPriceBar'
+import QuestionHelper from 'components/QuestionHelper'
+import NumericalInput from 'components/NumericalInput'
+import { ONE } from 'libs/sdk/src/constants'
+import { parseUnits } from 'ethers/lib/utils'
 
-const TextInput = styled.input`
-  background: transparent;
-  border: none;
-  color: inherit;
-  width: 100%;
-  font-size: inherit;
-  :focus {
-    outline: 0;
-  }
+const ActiveText = styled.div`
+  font-weight: 500;
+  font-size: 20px;
 `
 
+const DashedLine = styled.div`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  border-style: dashed;
+  margin: auto 0.5rem;
+`
+const RowFlat2 = (props: { children: React.ReactNode }) => {
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      <RowFlat>
+        {props.children}
+        <DashedLine />
+      </RowFlat>
+    </div>
+  )
+}
+
+const NumericalInput2 = styled(NumericalInput)`
+  width: 100%;
+  height: 60px;
+`
 export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB, pairAddress }
@@ -86,9 +105,14 @@ export default function AddLiquidity({
     poolTokenPercentage,
     error
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
+  const [amp, setAmp] = useState(0)
+  const onAmpChange = (e: any) => {
+    setAmp(e)
+  }
+
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
-  const isValid = !error
+  const isValid = !(error || (!pairAddress && +amp == 0 ? 'Enter amp' : ''))
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -125,14 +149,14 @@ export default function AddLiquidity({
     },
     {}
   )
-
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
 
   const addTransaction = useTransactionAdder()
   async function onAdd() {
-    console.log('onAdd', pair)
+    // console.log('onAdd', new Fraction(JSBI.BigInt(amp)).multiply(JSBI.BigInt(1000)).toSignificant(0))
+
     // if (!pair) return
     if (!chainId || !library || !account) return
     const router = getRouterContract(chainId, library, account)
@@ -186,13 +210,14 @@ export default function AddLiquidity({
         value = null
       }
     } else {
+      const ampConverted = new Fraction(JSBI.BigInt(parseUnits(amp.toString(), 20)), JSBI.BigInt(parseUnits('1', 16)))
       if (currencyA === ETHER || currencyB === ETHER) {
         const tokenBIsETH = currencyB === ETHER
         estimate = router.estimateGas.addLiquidityNewPoolETH
         method = router.addLiquidityNewPoolETH
         args = [
           wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-          40000, //ampBps
+          ampConverted.toSignificant(5), //ampBps
           (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
           amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
           amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
@@ -206,7 +231,7 @@ export default function AddLiquidity({
         args = [
           wrappedCurrency(currencyA, chainId)?.address ?? '',
           wrappedCurrency(currencyB, chainId)?.address ?? '',
-          40000, //ampBps
+          ampConverted.toSignificant(5), //ampBps
           parsedAmountA.raw.toString(),
           parsedAmountB.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
@@ -217,7 +242,6 @@ export default function AddLiquidity({
         value = null
       }
     }
-
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -302,6 +326,7 @@ export default function AddLiquidity({
         noLiquidity={noLiquidity}
         onAdd={onAdd}
         poolTokenPercentage={poolTokenPercentage}
+        typedAmp={amp}
       />
     )
   }
@@ -346,13 +371,7 @@ export default function AddLiquidity({
     setTxHash('')
   }, [onFieldAInput, txHash])
 
-  const isCreate = history.location.pathname.includes('/create')
-
-  const [amp, setAmp] = useState(5)
-  const onAmpChange = (e: any) => {
-    setAmp(+e.target.value)
-  }
-
+  const isCreate = !pairAddress
   return (
     <>
       <AppBody>
@@ -420,42 +439,25 @@ export default function AddLiquidity({
               showCommonBases
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
-              <>
-                <LightCard padding="0px" borderRadius={'20px'}>
-                  <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
-                      {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
-                    </TYPE.subHeader>
-                  </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
-                    <PoolPriceBar
-                      pair={pair}
-                      currencies={currencies}
-                      poolTokenPercentage={poolTokenPercentage}
-                      noLiquidity={noLiquidity}
-                      price={price}
-                    />
-                  </LightCard>
-                </LightCard>
-              </>
+              <PoolPriceBar
+                pair={pair}
+                currencies={currencies}
+                poolTokenPercentage={poolTokenPercentage}
+                noLiquidity={noLiquidity}
+                price={price}
+              />
             )}
 
             {!pairAddress && (
-              <LightCard padding="0.5rem" borderRadius={'10px'}>
-                <TextInput
-                  type="number"
-                  min="1"
-                  max="10"
-                  step="1"
-                  onKeyPress={event => {
-                    if (!(event.charCode >= 48 && event.charCode <= 57)) {
-                      event.preventDefault()
-                    }
-                  }}
-                  onChange={onAmpChange}
-                  defaultValue={amp}
-                />
-              </LightCard>
+              <>
+                <RowFlat2>
+                  <ActiveText>AMP</ActiveText>
+                  <QuestionHelper text={'Amplification factor'} />
+                </RowFlat2>
+                <LightCard padding="0 0.75rem" borderRadius={'10px'}>
+                  <NumericalInput2 className="token-amount-input" value={amp} onUserInput={onAmpChange} />
+                </LightCard>
+              </>
             )}
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
@@ -507,10 +509,15 @@ export default function AddLiquidity({
                     expertMode ? onAdd() : setShowConfirm(true)
                   }}
                   disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
-                  error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                  error={
+                    !isValid &&
+                    !!parsedAmounts[Field.CURRENCY_A] &&
+                    !!parsedAmounts[Field.CURRENCY_B] &&
+                    !!(pairAddress && +amp == 0)
+                  }
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {error ?? 'Supply'}
+                    {error ?? (!pairAddress && +amp == 0 ? 'Enter amp' : 'Supply')}
                   </Text>
                 </ButtonError>
               </AutoColumn>

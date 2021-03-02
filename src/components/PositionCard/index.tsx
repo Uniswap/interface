@@ -304,6 +304,11 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
+                AMP {amp.toSignificant(5)}
+              </Text>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
                 Price range {pair.token0.symbol}/{pair.token1.symbol}:{' '}
                 {priceRangeCalc(pair.priceOf(pair.token0), amp)[1]?.toSignificant(6) ?? '.'} -{' '}
                 {priceRangeCalc(pair.priceOf(pair.token0), amp)[0]?.toSignificant(6) ?? '.'}
