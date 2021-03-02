@@ -16,15 +16,11 @@ export function computeTradePriceBreakdown(
   const realizedLPFee = !trade
     ? undefined
     : ONE_HUNDRED_PERCENT.subtract(
-        trade.route.pairs.reduce<Fraction>(
-          (currentFee: Fraction, currentIndex: Pair): Fraction =>
-            currentFee.multiply(
-              ONE_HUNDRED_PERCENT.subtract(
-                new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(10000))
-              )
-            ),
-          ONE_HUNDRED_PERCENT
-        )
+        trade.route.pairs.reduce<Fraction>((currentFee: Fraction, currentIndex: Pair): Fraction => {
+          return currentFee.multiply(
+            ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(10000)))
+          )
+        }, ONE_HUNDRED_PERCENT)
       )
 
   // remove lp fees from price impact
