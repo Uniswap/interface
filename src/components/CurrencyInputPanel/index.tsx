@@ -74,7 +74,7 @@ const Container = styled(DarkCard)<{ hideInput: boolean; focused: boolean }>`
   ::before {
     background: ${({ theme }) => theme.bg1And2};
   }
-  background: ${({ focused, theme }) => (focused ? theme.bg5 : 'auto')};
+  background: ${({ focused, theme }) => (focused ? theme.bg4 : 'auto')};
   transition: background 0.3s ease;
   padding: 16px;
 `
