@@ -62,8 +62,9 @@ export function usePairs(
         swapFees[Pair.getAddress(token0, token1, platform)] &&
         swapFees[Pair.getAddress(token0, token1, platform)].fee
           ? swapFees[Pair.getAddress(token0, token1, platform)].fee
-          : // default to 0.25% in case the "real" swap fee is not ready to be queried (https://github.com/levelkdev/dxswap-dapp/issues/150)
-            BigInt(25)
+          : // default to the default platform swap fee (defined in the SDK and 0.25% for Swaps)
+            // in case the "real" swap fee is not ready to be queried (https://github.com/levelkdev/dxswap-dapp/issues/150)
+            platform.defaultSwapFee
       return [
         PairState.EXISTS,
         new Pair(
