@@ -127,7 +127,6 @@ export default function AddLiquidity({
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-  const [showUnamplifiedPool, setShowUnamplifiedPool] = useState<boolean>(false)
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
@@ -165,10 +164,7 @@ export default function AddLiquidity({
 
   const addTransaction = useTransactionAdder()
   async function onAdd() {
-    // console.log('onAdd', new Fraction(JSBI.BigInt(amp)).multiply(JSBI.BigInt(1000)).toSignificant(0))
-
     // if (!pair) return
-    if (!ampConverted) return
     if (!chainId || !library || !account) return
     const router = getRouterContract(chainId, library, account)
 
@@ -221,6 +217,7 @@ export default function AddLiquidity({
         value = null
       }
     } else {
+      if (!ampConverted) return
       if (currencyA === ETHER || currencyB === ETHER) {
         const tokenBIsETH = currencyB === ETHER
         estimate = router.estimateGas.addLiquidityNewPoolETH
@@ -252,6 +249,7 @@ export default function AddLiquidity({
         value = null
       }
     }
+    console.log('=-=-=-=-', args)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -482,16 +480,17 @@ export default function AddLiquidity({
               />
             )}
 
+            <RowFlat2>
+              <ActiveText>
+                AMP{!!pairAddress && <>&nbsp;=&nbsp;{pair?.virtualReserve0.divide(pair?.reserve0).toSignificant(5)}</>}
+              </ActiveText>
+              <QuestionHelper text={'Amplification factor'} />
+            </RowFlat2>
+
             {!pairAddress && (
-              <>
-                <RowFlat2>
-                  <ActiveText>AMP</ActiveText>
-                  <QuestionHelper text={'Amplification factor'} />
-                </RowFlat2>
-                <LightCard padding="0 0.75rem" borderRadius={'10px'}>
-                  <NumericalInput2 className="token-amount-input" value={amp} onUserInput={onAmpChange} />
-                </LightCard>
-              </>
+              <LightCard padding="0 0.75rem" borderRadius={'10px'}>
+                <NumericalInput2 className="token-amount-input" value={amp} onUserInput={onAmpChange} />
+              </LightCard>
             )}
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (

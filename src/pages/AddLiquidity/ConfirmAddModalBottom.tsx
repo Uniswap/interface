@@ -12,8 +12,10 @@ import { Separator } from 'components/SearchModal/styleds'
 import styled from 'styled-components'
 import { parseUnits } from 'ethers/lib/utils'
 
-const SeparatorWhite = styled(Separator)`
-  background-color: ${({ theme }) => theme.white};
+const DashedLine = styled.div`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  border-style: dashed;
 `
 export function ConfirmAddModalBottom({
   pair,
@@ -70,11 +72,11 @@ export function ConfirmAddModalBottom({
           }`}
         </TYPE.body>
       </RowBetween>
-      <SeparatorWhite />
+      <DashedLine />
       <TYPE.body>AMP {amp?.divide(JSBI.BigInt(10000)).toSignificant(5)}</TYPE.body>
       <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} />
 
-      <SeparatorWhite />
+      <DashedLine />
       <RowBetween>
         <TYPE.body>Share of Pool:</TYPE.body>
         <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
