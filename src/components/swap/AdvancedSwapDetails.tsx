@@ -90,7 +90,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
               <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
                 Fees
               </TYPE.body>
-              <QuestionHelper text="A portion of each trade (between 0% - 0.30%) goes to liquidity providers as a protocol incentive." />
+              <QuestionHelper text="A portion of each trade goes to liquidity providers as incentive." />
             </RowFixed>
             <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500">
               {realizedLPFee ? `${realizedLPFee.toSignificant(2)}%` : '-'}
