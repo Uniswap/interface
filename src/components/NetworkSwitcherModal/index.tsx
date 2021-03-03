@@ -94,7 +94,6 @@ const BottomLink = styled.a`
 
 export default function NetworkSwitcherModal({ isOpen }: { isOpen: boolean }) {
   const handleDismiss = useCallback(() => null, [])
-  const toggleNetworkSwitcherModal = useToggleNetworkSwitcherModalToggle()
 
   // Debug
   const currentNetwork = 'Ethereum Mainnet'
@@ -103,7 +102,7 @@ export default function NetworkSwitcherModal({ isOpen }: { isOpen: boolean }) {
     <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={90}>
       <ContentWrapper>
         <UpperSection>
-          <CloseIcon onClick={toggleNetworkSwitcherModal}>
+          <CloseIcon onClick={handleDismiss}>
             <CloseColor />
           </CloseIcon>
           <HeaderRow>Choose a network</HeaderRow>

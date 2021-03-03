@@ -55,10 +55,6 @@ export function useToggleSelfClaimModal(): () => void {
   return useToggleModal(ApplicationModal.SELF_CLAIM)
 }
 
-export function useToggleNetworkSwitcherModalToggle(): () => void {
-  return useToggleModal(ApplicationModal.NETWORK);
-}
-
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string) => void {
   const dispatch = useDispatch()
