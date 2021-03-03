@@ -19,6 +19,7 @@ import Token0PairsList from '../../../components/Pool/Token0PairsList'
 import { UndecoratedLink } from '../../../components/UndercoratedLink'
 import CurrencySearchModal from '../../../components/SearchModal/CurrencySearchModal'
 import { useRouter } from '../../../hooks/useRouter'
+import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -71,6 +72,7 @@ export default function PairsByToken0({
   const { account } = useActiveWeb3React()
   const router = useRouter()
   const token0 = useToken(currencyIdA)
+  const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
   const [openTokenModal, setOpenTokenModal] = useState(false)
 
@@ -137,11 +139,13 @@ export default function PairsByToken0({
                     CREATE PAIR
                   </Text>
                 </ResponsiveButtonPrimary>
-                <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-                  <Text fontWeight={700} fontSize={12} lineHeight="15px">
-                    CREATE LIQ. MINING
-                  </Text>
-                </ResponsiveButtonSecondary>
+                {liquidityMiningEnabled && (
+                  <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+                    <Text fontWeight={700} fontSize={12} lineHeight="15px">
+                      CREATE LIQ. MINING
+                    </Text>
+                  </ResponsiveButtonSecondary>
+                )}
               </ButtonRow>
             </TitleRow>
             <Token0PairsList token0={token0} />

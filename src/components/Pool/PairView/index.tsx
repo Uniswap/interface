@@ -17,6 +17,7 @@ import { ButtonGrey } from '../../Button'
 import { TYPE } from '../../../theme'
 import LiquidityMiningCampaignsList from './LiquidityMiningCampaignsList'
 import { ResponsiveButtonPrimary, TitleRow } from '../../../pages/LiquidityMining/styleds'
+import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
@@ -70,6 +71,7 @@ function PairView({ loading, pair }: PairViewProps) {
   const { loading: liquidityMiningCampaignsLoading, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPair(
     pair || undefined
   )
+  const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
   return (
     <>
@@ -115,17 +117,19 @@ function PairView({ loading, pair }: PairViewProps) {
                 GOVERNANCE
               </ButtonGrey>
             </RowBetween>
-            <Flex flexDirection="column">
-              <TitleRow marginBottom="26px">
-                <TYPE.mediumHeader fontSize="18px" color="white">
-                  Reward pools
-                </TYPE.mediumHeader>
-                <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-                  Create liq. mining
-                </ResponsiveButtonPrimary>
-              </TitleRow>
-              <LiquidityMiningCampaignsList items={liquidityMiningCampaigns} stakablePair={pair || undefined} />
-            </Flex>
+            {liquidityMiningEnabled && (
+              <Flex flexDirection="column">
+                <TitleRow marginBottom="26px">
+                  <TYPE.mediumHeader fontSize="18px" color="white">
+                    Reward pools
+                  </TYPE.mediumHeader>
+                  <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+                    Create liq. mining
+                  </ResponsiveButtonPrimary>
+                </TitleRow>
+                <LiquidityMiningCampaignsList items={liquidityMiningCampaigns} stakablePair={pair || undefined} />
+              </Flex>
+            )}
           </Flex>
         )}
       </StyledDarkCard>

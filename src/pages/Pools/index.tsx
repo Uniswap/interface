@@ -18,6 +18,7 @@ import { CardSection } from '../../components/earn/styled'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { useRouter } from '../../hooks/useRouter'
 import { Currency } from 'dxswap-sdk'
+import { useLiquidityMiningFeatureFlag } from '../../hooks/useLiquidityMiningFeatureFlag'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -69,6 +70,7 @@ interface TitleProps {
 // decoupling the title from the rest of the component avoids full-rerender everytime the pair selection modal is opened
 function Title({ onCurrencySelection }: TitleProps) {
   const [openTokenModal, setOpenTokenModal] = useState(false)
+  const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
   const handleAllClick = useCallback(() => {
     setOpenTokenModal(true)
@@ -114,11 +116,13 @@ function Title({ onCurrencySelection }: TitleProps) {
               CREATE PAIR
             </Text>
           </ResponsiveButtonPrimary>
-          <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-            <Text fontWeight={700} fontSize={12} lineHeight="15px">
-              CREATE LIQ. MINING
-            </Text>
-          </ResponsiveButtonSecondary>
+          {liquidityMiningEnabled && (
+            <ResponsiveButtonSecondary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+              <Text fontWeight={700} fontSize={12} lineHeight="15px">
+                CREATE LIQ. MINING
+              </Text>
+            </ResponsiveButtonSecondary>
+          )}
         </ButtonRow>
       </TitleRow>
       <CurrencySearchModal
