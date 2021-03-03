@@ -60,7 +60,6 @@ export const DarkCard = styled(Card)<{ selectable?: boolean }>`
       :hover::after {
         opacity: 1;
       }
-
       ::after {
         content: '';
         position: absolute;

@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, TokenAmount, Percent, JSBI, ChainId } from 'dxswap-sdk'
+import { Currency, currencyEquals, TokenAmount, Percent, JSBI, ChainId, RoutablePlatform } from 'dxswap-sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
@@ -16,7 +16,6 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -56,7 +55,7 @@ export default function AddLiquidity({
   const currencyB = useCurrency(currencyIdB)
 
   const oneCurrencyIsWrapped = Boolean(
-    chainId && 
+    chainId &&
       nativeCurrencyWrapper &&
       ((currencyA && currencyEquals(currencyA, nativeCurrencyWrapper)) ||
         (currencyB && currencyEquals(currencyB, nativeCurrencyWrapper)))
@@ -126,7 +125,7 @@ export default function AddLiquidity({
   )
 
   // check whether the user has approved the router on the tokens
-  const routerAddress = ROUTER_ADDRESS[chainId ? chainId : ChainId.MAINNET]
+  const routerAddress = RoutablePlatform.SWAPR.routerAddress[chainId ? chainId : ChainId.MAINNET]
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], routerAddress)
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], routerAddress)
 
@@ -134,7 +133,7 @@ export default function AddLiquidity({
 
   async function onAdd() {
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+    const router = getRouterContract(chainId, library, RoutablePlatform.SWAPR, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {

@@ -1,14 +1,19 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, Pair, RoutablePlatform, Token, Trade } from 'dxswap-sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
+import { sortTradesByExecutionPrice } from '../utils/prices'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
 
-export function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
+function useAllCommonPairs(
+  currencyA?: Currency,
+  currencyB?: Currency,
+  platform: RoutablePlatform = RoutablePlatform.SWAPR
+): Pair[] {
   const { chainId } = useActiveWeb3React()
 
   const bases: Token[] = useMemo(() => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []), [chainId])
@@ -44,7 +49,7 @@ export function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): P
     [tokenA, tokenB, bases, basePairs]
   )
 
-  const allPairs = usePairs(allPairCombinations)
+  const allPairs = usePairs(allPairCombinations, platform)
 
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(
@@ -66,31 +71,76 @@ export function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): P
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
-export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | undefined {
-  const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
+export function useTradeExactIn(
+  currencyAmountIn?: CurrencyAmount,
+  currencyOut?: Currency,
+  platform: RoutablePlatform = RoutablePlatform.SWAPR
+): Trade | undefined {
+  const { chainId } = useActiveWeb3React()
+  const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut, platform)
+
   return useMemo(() => {
-    if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+    if (currencyAmountIn && currencyOut && allowedPairs.length > 0 && chainId && platform.supportsChain(chainId)) {
       return (
         Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
       )
     }
     return undefined
-  }, [allowedPairs, currencyAmountIn, currencyOut])
+  }, [currencyAmountIn, currencyOut, allowedPairs, chainId, platform])
 }
 
 /**
  * Returns the best trade for the token in to the exact amount of token out
  */
-export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | undefined {
-  const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
+export function useTradeExactOut(
+  currencyIn?: Currency,
+  currencyAmountOut?: CurrencyAmount,
+  platform: RoutablePlatform = RoutablePlatform.SWAPR
+): Trade | undefined {
+  const { chainId } = useActiveWeb3React()
+  const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency, platform)
 
   return useMemo(() => {
-    if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
+    if (currencyIn && currencyAmountOut && allowedPairs.length > 0 && chainId && platform.supportsChain(chainId)) {
       return (
         Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
         null
       )
     }
     return undefined
-  }, [allowedPairs, currencyIn, currencyAmountOut])
+  }, [currencyIn, currencyAmountOut, allowedPairs, chainId, platform])
+}
+
+/**
+ * Returns the best trade for the exact amount of tokens in to the given token out
+ * for each supported platform. Order is by lowest price ascending.
+ */
+export function useTradeExactInAllPlatforms(
+  currencyAmountIn?: CurrencyAmount,
+  currencyOut?: Currency
+): (Trade | undefined)[] {
+  const bestTrades = [
+    useTradeExactIn(currencyAmountIn, currencyOut, RoutablePlatform.SWAPR),
+    useTradeExactIn(currencyAmountIn, currencyOut, RoutablePlatform.UNISWAP),
+    useTradeExactIn(currencyAmountIn, currencyOut, RoutablePlatform.SUSHISWAP),
+    useTradeExactIn(currencyAmountIn, currencyOut, RoutablePlatform.HONEYSWAP)
+  ]
+  return sortTradesByExecutionPrice(bestTrades)
+}
+
+/**
+ * Returns the best trade for the token in to the exact amount of token out
+ * for each supported platform. Order is by lowest price ascending.
+ */
+export function useTradeExactOutAllPlatforms(
+  currencyIn?: Currency,
+  currencyAmountOut?: CurrencyAmount
+): (Trade | undefined)[] {
+  const bestTrades = [
+    useTradeExactOut(currencyIn, currencyAmountOut, RoutablePlatform.SWAPR),
+    useTradeExactOut(currencyIn, currencyAmountOut, RoutablePlatform.UNISWAP),
+    useTradeExactOut(currencyIn, currencyAmountOut, RoutablePlatform.SUSHISWAP),
+    useTradeExactOut(currencyIn, currencyAmountOut, RoutablePlatform.HONEYSWAP)
+  ]
+  return sortTradesByExecutionPrice(bestTrades)
 }
