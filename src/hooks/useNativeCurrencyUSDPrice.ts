@@ -8,6 +8,6 @@ export function useNativeCurrencyUSDPrice(): { loading: boolean; nativeCurrencyU
 
   return useMemo(() => {
     if (loading || error) return { loading: false, nativeCurrencyUSDPrice: new BigNumber(0) }
-    return { loading: false, nativeCurrencyUSDPrice: new BigNumber(data.bundle.Price) }
+    return { loading: false, nativeCurrencyUSDPrice: new BigNumber(data.bundle.nativeCurrencyPrice) }
   }, [data, error, loading])
 }
