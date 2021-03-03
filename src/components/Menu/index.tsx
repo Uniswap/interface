@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -9,6 +9,11 @@ import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
+
+export enum FlyoutAlignment {
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT',
+}
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -51,7 +56,7 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span`
+const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 8.125rem;
   background-color: ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -63,9 +68,15 @@ const MenuFlyout = styled.span`
   font-size: 1rem;
   position: absolute;
   top: 4rem;
-  right: 0rem;
   z-index: 100;
-
+  ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
+    flyoutAlignment === FlyoutAlignment.RIGHT
+      ? css`
+          right: 0rem;
+        `
+      : css`
+          left: 0rem;
+        `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     top: -17.25rem;
   `};
@@ -131,6 +142,44 @@ export default function Menu() {
             </ButtonPrimary>
           )}
         </MenuFlyout>
+      )}
+    </StyledMenu>
+  )
+}
+
+interface NewMenuProps {
+  flyoutAlignment?: FlyoutAlignment
+  ToggleUI?: React.FunctionComponent
+  menuItems: {
+    content: any
+    link: string
+  }[]
+}
+
+const NewMenuFlyout = styled(MenuFlyout)`
+  top: 3rem !important;
+`
+const NewMenuItem = styled(MenuItem)`
+  width: max-content;
+`
+
+export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: NewMenuProps) => {
+  const node = useRef<HTMLDivElement>()
+  const open = useModalOpen(ApplicationModal.POOL_OVERVIEW_OPTIONS)
+  const toggle = useToggleModal(ApplicationModal.POOL_OVERVIEW_OPTIONS)
+  useOnClickOutside(node, open ? toggle : undefined)
+  const ToggleElement = ToggleUI || StyledMenuIcon
+  return (
+    <StyledMenu ref={node as any} {...rest}>
+      <ToggleElement onClick={toggle} />
+      {open && (
+        <NewMenuFlyout flyoutAlignment={flyoutAlignment}>
+          {menuItems.map(({ content, link }, i) => (
+            <NewMenuItem id="link" href={link} key={link + i}>
+              {content}
+            </NewMenuItem>
+          ))}
+        </NewMenuFlyout>
       )}
     </StyledMenu>
   )

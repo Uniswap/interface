@@ -1,38 +1,28 @@
+import { TokenAmount } from '@uniswap/sdk'
+import Badge, { BadgeVariant } from 'components/Badge'
+import { ButtonGray, ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import { FlyoutAlignment, NewMenu } from 'components/Menu'
+import { SwapPoolTabs } from 'components/NavigationTabs'
+import PositionList from 'components/PositionList'
+import { RowBetween, RowFixed } from 'components/Row'
+import { useActiveWeb3React } from 'hooks'
 import React, { useContext, useMemo } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import { Pair, JSBI } from '@uniswap/sdk'
+import { BookOpen, ChevronDown, Download, Inbox, Info, PlusCircle } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
-
-import FullPositionCard from '../../components/PositionCard'
-import { useUserHasLiquidityInAllTokens } from '../../data/V1'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
-import { Text } from 'rebass'
-import Card from '../../components/Card'
-import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
-import { AutoColumn } from '../../components/Column'
-
-import { useActiveWeb3React } from '../../hooks'
-import { usePairs } from '../../data/Reserves'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { Dots } from '../../components/swap/styleds'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { useStakingInfo } from '../../state/stake/hooks'
-import { BIG_INT_ZERO } from '../../constants'
+import { useWalletModalToggle } from 'state/application/hooks'
+import styled, { ThemeContext } from 'styled-components'
+import { HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
+import { basisPointsToPercent } from 'utils'
+import { DAI, WBTC } from '../../constants'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
+  max-width: 870px;
   width: 100%;
 `
-
-const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
-  overflow: hidden;
-`
-
 const TitleRow = styled(RowBetween)`
+  color: ${({ theme }) => theme.text2};
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-wrap: wrap;
     gap: 12px;
@@ -40,197 +30,220 @@ const TitleRow = styled(RowBetween)`
     flex-direction: column-reverse;
   `};
 `
-
 const ButtonRow = styled(RowFixed)`
-  gap: 8px;
+  & > *:not(:last-child) {
+    margin-right: 8px;
+  }
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
-    flex-direction: row-reverse;
+    flex-direction: row;
     justify-content: space-between;
   `};
 `
-
-const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  width: fit-content;
+const InactivePositionsBadge = styled(Badge)`
+  display: none;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
+    display: flex;
+  }
+`
+const Menu = styled(NewMenu)`
+  margin-left: 0;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
+    flex: 1 1 auto;
+    width: 49%;
   `};
 `
-
-const ResponsiveButtonSecondary = styled(ButtonSecondary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-  `};
+const MenuItem = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
 `
-
-const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
-  padding: 16px 12px;
+const MoreOptionsButton = styled(ButtonGray)`
   border-radius: 12px;
+  flex: 1 1 auto;
+  padding: 6px 8px;
+`
+const NoLiquidity = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  margin: auto;
+  max-width: 300px;
+  min-height: 25vh;
 `
+const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  border-radius: 12px;
+  padding: 6px 8px;
+  width: fit-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex: 1 1 auto;
+    width: 49%;
+  `};
+`
+const MainContentWrapper = styled.main`
+  background-color: ${({ theme }) => theme.bg0};
+  padding: 24px;
+  border-radius: 1.3em;
+  display: flex;
+  flex-direction: column;
+`
+const FEE_BIPS = {
+  FIVE: basisPointsToPercent(5),
+  THIRTY: basisPointsToPercent(30),
+  ONE_HUNDRED: basisPointsToPercent(100),
+}
 
+function useV3Positions() {
+  const positions = [
+    {
+      feesEarned: {
+        DAI: 1000,
+        WBTC: 0.005,
+      },
+      feeLevel: FEE_BIPS.FIVE,
+      tokenAmount0: new TokenAmount(DAI, BigInt(0) * BigInt(10e18)),
+      tokenAmount1: new TokenAmount(WBTC, BigInt(1) * BigInt(10e7)),
+      tickLower: 40000,
+      tickUpper: 60000,
+    },
+    {
+      feesEarned: {
+        DAI: 1000,
+        WBTC: 0.005,
+      },
+      feeLevel: FEE_BIPS.THIRTY,
+      tokenAmount0: new TokenAmount(DAI, BigInt(5000) * BigInt(10e18)),
+      tokenAmount1: new TokenAmount(WBTC, BigInt(1) * BigInt(10e7)),
+      tickLower: 45000,
+      tickUpper: 55000,
+    },
+  ]
+  const error = undefined
+  const loading = false
+  return { error, loading, positions }
+}
 export default function Pool() {
+  const { error, loading, positions } = useV3Positions()
+  const toggleWalletModal = useWalletModalToggle()
+  const { t } = useTranslation()
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
-  // fetch the user's balances of all tracked V2 LP tokens
-  const trackedTokenPairs = useTrackedTokenPairs()
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
-  )
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken), [
-    tokenPairsWithLiquidityTokens,
-  ])
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    liquidityTokens
-  )
+  if (error) {
+    console.error(error)
+  }
 
-  // fetch the reserves for all V2 pools in which the user has a balance
-  const liquidityTokensWithBalances = useMemo(
+  const numInactivePositions = useMemo(
     () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
-      ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+      positions.reduce((acc: any, position: any) => {
+        const { tokenAmount0, tokenAmount1 } = position
+        const limitCrossed = tokenAmount0.equalTo(BigInt(0)) || tokenAmount1.equalTo(BigInt(0))
+        return limitCrossed ? acc + 1 : acc
+      }, 0),
+    [positions]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-  const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some((V2Pair) => !V2Pair)
+  const hasV2Liquidity = true
+  const showMigrateHeaderLink = hasV2Liquidity && positions.length > 0
 
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-
-  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
-
-  // show liquidity even if its deposited in rewards contract
-  const stakingInfo = useStakingInfo()
-  const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
-  const stakingPairs = usePairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
-
-  // remove any pairs that also are included in pairs with stake in mining pool
-  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter((v2Pair) => {
-    return (
-      stakingPairs
-        ?.map((stakingPair) => stakingPair[1])
-        .filter((stakingPair) => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
-    )
-  })
-
+  const menuItems = [
+    {
+      content: (
+        <MenuItem>
+          <PlusCircle size={16} style={{ marginRight: '8px' }} />
+          {t('Create a pool')}
+        </MenuItem>
+      ),
+      link: '/#/add',
+    },
+    {
+      content: (
+        <MenuItem>
+          <BookOpen size={16} style={{ marginRight: '8px' }} />
+          {t('Learn')}
+        </MenuItem>
+      ),
+      link: 'https://uniswap.org/docs/v2/',
+    },
+  ]
+  if (showMigrateHeaderLink) {
+    menuItems.unshift({
+      content: (
+        <MenuItem>
+          <Download size={16} style={{ marginRight: '8px' }} />
+          {t('Migrate v2 liquidity')}
+        </MenuItem>
+      ),
+      link: '/#/migrate/v2',
+    })
+  }
   return (
     <>
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
-        <VoteCard>
-          <CardBGImage />
-          <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={600}>Liquidity provider rewards</TYPE.white>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.white fontSize={14}>
-                  {`Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.`}
-                </TYPE.white>
-              </RowBetween>
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                target="_blank"
-                href="https://uniswap.org/docs/v2/core-concepts/pools/"
-              >
-                <TYPE.white fontSize={14}>Read more about providing liquidity</TYPE.white>
-              </ExternalLink>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </VoteCard>
-
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your liquidity
-                </TYPE.mediumHeader>
+                <TYPE.mediumHeader>{t('Pool Overview')}</TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
-                  Create a pair
-                </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary
-                  id="join-pool-button"
-                  as={Link}
-                  padding="6px 8px"
-                  borderRadius="12px"
-                  to="/add/ETH"
-                >
-                  <Text fontWeight={500} fontSize={16}>
-                    Add Liquidity
-                  </Text>
+                {numInactivePositions > 0 && (
+                  <InactivePositionsBadge variant={BadgeVariant.WARNING_OUTLINE}>
+                    <Info />
+                    &nbsp;&nbsp;
+                    {numInactivePositions}{' '}
+                    {numInactivePositions === 1 ? t('Inactive position') : t('Inactive positions')}
+                  </InactivePositionsBadge>
+                )}
+                <Menu
+                  flyoutAlignment={FlyoutAlignment.LEFT}
+                  ToggleUI={(props: any) => (
+                    <MoreOptionsButton {...props}>
+                      <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
+                        {t('More')}
+                        <ChevronDown size={15} />
+                      </TYPE.body>
+                    </MoreOptionsButton>
+                  )}
+                  menuItems={menuItems}
+                />
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
+                  + {t('New Position')}
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
 
-            {!account ? (
-              <Card padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
-                  Connect to a wallet to view your liquidity.
-                </TYPE.body>
-              </Card>
-            ) : v2IsLoading ? (
-              <EmptyProposals>
-                <TYPE.body color={theme.text3} textAlign="center">
-                  <Dots>Loading</Dots>
-                </TYPE.body>
-              </EmptyProposals>
-            ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
-              <>
-                <ButtonSecondary>
-                  <RowBetween>
-                    <ExternalLink href={'https://uniswap.info/account/' + account}>
-                      Account analytics and accrued fees
-                    </ExternalLink>
-                    <span> ↗</span>
-                  </RowBetween>
-                </ButtonSecondary>
-                {v2PairsWithoutStakedAmount.map((v2Pair) => (
-                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
-                ))}
-                {stakingPairs.map(
-                  (stakingPair, i) =>
-                    stakingPair[1] && ( // skip pairs that arent loaded
-                      <FullPositionCard
-                        key={stakingInfosWithBalance[i].stakingRewardAddress}
-                        pair={stakingPair[1]}
-                        stakedBalance={stakingInfosWithBalance[i].stakedAmount}
-                      />
+            <MainContentWrapper>
+              {positions?.length > 0 ? (
+                <PositionList loading={loading} positions={positions} />
+              ) : (
+                <NoLiquidity>
+                  <TYPE.largeHeader color={theme.text3} textAlign="center">
+                    <Inbox />
+                    <div>{t('Your liquidity positions will appear here.')}</div>
+                  </TYPE.largeHeader>
+                  {!account ? (
+                    <ButtonPrimary style={{ marginTop: '1em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                      {t('Connect a wallet')}
+                    </ButtonPrimary>
+                  ) : (
+                    hasV2Liquidity && (
+                      <ButtonPrimary
+                        as={Link}
+                        to="/migrate/v2"
+                        id="import-pool-link"
+                        style={{ marginTop: '1em', padding: '8px 16px' }}
+                      >
+                        {t('Migrate v2 liquidity')}&nbsp;&nbsp;
+                        <Download size={16} />
+                      </ButtonPrimary>
                     )
-                )}
-              </>
-            ) : (
-              <EmptyProposals>
-                <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
-                </TYPE.body>
-              </EmptyProposals>
-            )}
-
-            <AutoColumn justify={'center'} gap="md">
-              <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
-                <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
-                  {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
-                </StyledInternalLink>
-              </Text>
-            </AutoColumn>
+                  )}
+                </NoLiquidity>
+              )}
+            </MainContentWrapper>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
