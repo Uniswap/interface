@@ -11,14 +11,14 @@ export function useTokenDerivedNativeCurrency(
   const { chainId } = useWeb3React()
 
   interface QueryResult {
-    token: { derivedETH: string }
+    token: { derivedNativeCurrency: string }
   }
 
   const { loading, data, error } = useQuery<QueryResult>(
     gql`
       query getTokenDerivedNativeCurrency($tokenId: ID!) {
         token(id: $tokenId) {
-          derivedETH
+          derivedNativeCurrency
         }
       }
     `,
@@ -34,7 +34,7 @@ export function useTokenDerivedNativeCurrency(
       derivedNativeCurrency: CurrencyAmount.nativeCurrency(
         ethers.utils
           .parseEther(
-            new BigNumber(data.token.derivedETH).decimalPlaces(18).toString() // force 18 decimals top
+            new BigNumber(data.token.derivedNativeCurrency).decimalPlaces(18).toString() // force 18 decimals top
           )
           .toString(),
         chainId

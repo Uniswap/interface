@@ -10,7 +10,7 @@ function getCurrentDistributionProgress(startsAt: number, duration: number) {
 
 export function getRemainingRewardsUSD(
   liquidityMiningCampaign: NonExpiredLiquidityMiningCampaign,
-  ethUSDPrice: BigNumber
+  nativeCurrencyUSDPrice: BigNumber
 ): BigNumber {
   const now = Math.floor(Date.now() / 1000)
   // no liquidity mining campaigns check
@@ -31,7 +31,9 @@ export function getRemainingRewardsUSD(
   for (let i = 0; i < rewardTokens.length; i++) {
     const remainingReward = new BigNumber(rewardAmounts[i]).multipliedBy(remainingDistributionProgress)
     remainingRewardsUSD = remainingRewardsUSD.plus(
-      new BigNumber(rewardTokens[i].derivedETH).multipliedBy(ethUSDPrice).multipliedBy(remainingReward)
+      new BigNumber(rewardTokens[i].derivedNativeCurrency)
+        .multipliedBy(nativeCurrencyUSDPrice)
+        .multipliedBy(remainingReward)
     )
   }
   return remainingRewardsUSD
@@ -39,13 +41,13 @@ export function getRemainingRewardsUSD(
 
 export function getPairRemainingRewardsUSD(
   liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[],
-  ethUSDPrice: BigNumber
+  nativeCurrencyUSDPrice: BigNumber
 ): BigNumber {
   // no liquidity mining campaigns check
   if (liquidityMiningCampaigns.length === 0) return new BigNumber(0)
   return liquidityMiningCampaigns.reduce(
     (accumulator, liquidityMiningCampaign) =>
-      accumulator.plus(getRemainingRewardsUSD(liquidityMiningCampaign, ethUSDPrice)),
+      accumulator.plus(getRemainingRewardsUSD(liquidityMiningCampaign, nativeCurrencyUSDPrice)),
     new BigNumber(0)
   )
 }
@@ -54,14 +56,14 @@ export function getPairRemainingRewardsUSD(
 const MINIMUM_STAKED_AMOUNT_USD = new BigNumber(100)
 
 export function getCampaignApy(
-  pairReserveETH: BigNumber,
+  pairReserveNativeCurrency: BigNumber,
   liquidityTokenTotalSupply: BigNumber,
   duration: string,
   startsAt: string,
   rewardTokens: NonExpiredLiquidityMiningCampaignRewardToken[],
   rewardAmounts: string[],
   stakedAmount: string,
-  ethUSDPrice: BigNumber
+  nativeCurrencyUSDPrice: BigNumber
 ): BigNumber {
   const numericStartsAt = parseInt(startsAt)
   const numericDuration = parseInt(duration)
@@ -70,12 +72,14 @@ export function getCampaignApy(
   const remainingRewardAmountUSD = rewardAmounts.reduce((remainingAmount: BigNumber, fullAmount, index) => {
     const remainingReward = new BigNumber(fullAmount).multipliedBy(remainingDistributionProgress)
     return remainingAmount.plus(
-      new BigNumber(rewardTokens[index].derivedETH).multipliedBy(ethUSDPrice).multipliedBy(remainingReward)
+      new BigNumber(rewardTokens[index].derivedNativeCurrency)
+        .multipliedBy(nativeCurrencyUSDPrice)
+        .multipliedBy(remainingReward)
     )
   }, new BigNumber(0))
 
-  let stakedValueUSD = pairReserveETH
-    .multipliedBy(ethUSDPrice)
+  let stakedValueUSD = pairReserveNativeCurrency
+    .multipliedBy(nativeCurrencyUSDPrice)
     .dividedBy(liquidityTokenTotalSupply)
     .multipliedBy(stakedAmount)
   stakedValueUSD = stakedValueUSD.isLessThan(MINIMUM_STAKED_AMOUNT_USD) ? MINIMUM_STAKED_AMOUNT_USD : stakedValueUSD
@@ -92,23 +96,23 @@ export function getCampaignApy(
 }
 
 export function getPairMaximumApy(
-  pairReserveETH: BigNumber,
+  pairReserveNativeCurrency: BigNumber,
   liquidityTokenTotalSupply: BigNumber,
   liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[],
-  ethUSDPrice: BigNumber
+  nativeCurrencyUSDPrice: BigNumber
 ): BigNumber {
   // no liquidity mining campaigns check
   if (liquidityMiningCampaigns.length === 0) return new BigNumber(0)
   return liquidityMiningCampaigns.reduce((maximumApy, liquidityMiningCampaign) => {
     const apy = getCampaignApy(
-      pairReserveETH,
+      pairReserveNativeCurrency,
       liquidityTokenTotalSupply,
       liquidityMiningCampaign.duration,
       liquidityMiningCampaign.startsAt,
       liquidityMiningCampaign.rewardTokens,
       liquidityMiningCampaign.rewardAmounts,
       liquidityMiningCampaign.stakedAmount,
-      ethUSDPrice
+      nativeCurrencyUSDPrice
     )
     return apy.isGreaterThan(maximumApy) ? apy : maximumApy
   }, new BigNumber(0))

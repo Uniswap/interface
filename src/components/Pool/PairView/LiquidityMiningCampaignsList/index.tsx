@@ -8,9 +8,9 @@ import { LiquidityMiningCampaignModal } from '../LiquidityMiningCampaignModal'
 import PairCard from '../../Token0PairsList/Pair'
 import Empty from '../../Empty'
 import { getCampaignApy, getRemainingRewardsUSD } from '../../../../utils/liquidityMining'
-import { useETHUSDPrice } from '../../../../hooks/useETHUSDPrice'
+import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'
 import LoadingList from '../../LoadingList'
-import { usePairReserveETH, usePairLiquidityTokenTotalSupply } from '../../../../data/Reserves'
+import { usePairReserveNativeCurrency, usePairLiquidityTokenTotalSupply } from '../../../../data/Reserves'
 
 const ListLayout = styled.div`
   display: grid;
@@ -39,8 +39,10 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
   const [paginatedItems, setPaginatedItems] = useState<NonExpiredLiquidityMiningCampaign[]>(
     items.slice(0, ITEMS_PER_PAGE)
   )
-  const { loading: loadingEthUsdPrice, ethUSDPrice } = useETHUSDPrice()
-  const { loading: loadingPairReserveETH, reserveETH } = usePairReserveETH(stakablePair)
+  const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
+  const { loading: loadingPairReserveNativeCurrency, reserveNativeCurrency } = usePairReserveNativeCurrency(
+    stakablePair
+  )
   const { loading: loadingPairTotalSupply, supply } = usePairLiquidityTokenTotalSupply(stakablePair)
   const [
     selectedLiquidityMiningCampaign,
@@ -69,7 +71,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="460px">
-          {loadingEthUsdPrice || loadingPairReserveETH || loadingPairTotalSupply ? (
+          {loadingNativeCurrencyUsdPrice || loadingPairReserveNativeCurrency || loadingPairTotalSupply ? (
             <LoadingList wideCards />
           ) : items.length > 0 ? (
             <ListLayout>
@@ -78,16 +80,16 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
                   <SizedPairCard
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
-                    usdRewards={getRemainingRewardsUSD(item, ethUSDPrice)}
+                    usdRewards={getRemainingRewardsUSD(item, nativeCurrencyUSDPrice)}
                     apy={getCampaignApy(
-                      reserveETH,
+                      reserveNativeCurrency,
                       supply,
                       item.duration,
                       item.startsAt,
                       item.rewardTokens,
                       item.rewardAmounts,
                       item.stakedAmount,
-                      ethUSDPrice
+                      nativeCurrencyUSDPrice
                     )}
                   />
                 </div>

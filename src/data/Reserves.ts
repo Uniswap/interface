@@ -12,7 +12,7 @@ import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import BigNumber from 'bignumber.js'
 import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../utils/liquidityMining'
-import { useETHUSDPrice } from '../hooks/useETHUSDPrice'
+import { useNativeCurrencyUSDPrice } from '../hooks/useNativeCurrencyUSDPrice'
 import { gql, useQuery } from '@apollo/client'
 import {
   GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
@@ -156,16 +156,16 @@ export function useAllPairs(): { loading: boolean; pairs: Pair[] } {
   }, [chainId, data, error, loading])
 }
 
-export function usePairReserveETH(pair?: Pair): { loading: boolean; reserveETH: BigNumber } {
+export function usePairReserveNativeCurrency(pair?: Pair): { loading: boolean; reserveNativeCurrency: BigNumber } {
   interface QueryResult {
-    pair: { reserveETH: string }
+    pair: { reserveNativeCurrency: string }
   }
 
   const { loading, data, error } = useQuery<QueryResult>(
     gql`
-      query getPairReserveETH($pairId: ID!) {
+      query getPairReserveNativeCurrency($pairId: ID!) {
         pair(id: $pairId) {
-          reserveETH
+          reserveNativeCurrency
         }
       }
     `,
@@ -173,11 +173,11 @@ export function usePairReserveETH(pair?: Pair): { loading: boolean; reserveETH: 
   )
 
   return useMemo(() => {
-    if (loading) return { loading: true, reserveETH: new BigNumber(0) }
-    if (!data || error) return { loading: false, reserveETH: new BigNumber(0) }
+    if (loading) return { loading: true, reserveNativeCurrency: new BigNumber(0) }
+    if (!data || error) return { loading: false, reserveNativeCurrency: new BigNumber(0) }
     return {
       loading: false,
-      reserveETH: new BigNumber(data.pair.reserveETH)
+      reserveNativeCurrency: new BigNumber(data.pair.reserveNativeCurrency)
     }
   }, [data, error, loading])
 }
@@ -215,14 +215,14 @@ export function usePairsByToken0WithRemainingRewardUSDAndMaximumApy(
   wrappedPairs: { pair: Pair; remainingRewardUSD: BigNumber; maximumApy: BigNumber }[]
 } {
   const { chainId } = useWeb3React()
-  const { loading: loadingEthUsdPrice, ethUSDPrice } = useETHUSDPrice()
+  const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const { error, loading: loadingPairs, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
     { variables: { token0Id: token0?.address.toLowerCase(), timestamp: Math.floor(Date.now() / 1000) } }
   )
 
   return useMemo(() => {
-    if (!chainId || loadingPairs || loadingEthUsdPrice) return { loading: true, wrappedPairs: [] }
+    if (!chainId || loadingPairs || loadingNativeCurrencyUsdPrice) return { loading: true, wrappedPairs: [] }
     if (!data || error) return { loading: false, wrappedPairs: [] }
     return {
       loading: false,
@@ -246,17 +246,17 @@ export function usePairsByToken0WithRemainingRewardUSDAndMaximumApy(
             new TokenAmount(token0, ethers.utils.parseUnits(pair.reserve0, token0.decimals).toString()),
             new TokenAmount(token1, ethers.utils.parseUnits(pair.reserve1, token1.decimals).toString())
           ),
-          remainingRewardUSD: getPairRemainingRewardsUSD(pair.liquidityMiningCampaigns, ethUSDPrice),
+          remainingRewardUSD: getPairRemainingRewardsUSD(pair.liquidityMiningCampaigns, nativeCurrencyUSDPrice),
           maximumApy: getPairMaximumApy(
-            new BigNumber(pair.reserveETH),
+            new BigNumber(pair.reserveNativeCurrency),
             new BigNumber(pair.totalSupply),
             pair.liquidityMiningCampaigns,
-            ethUSDPrice
+            nativeCurrencyUSDPrice
           )
         }
       })
     }
-  }, [chainId, data, error, ethUSDPrice, loadingEthUsdPrice, loadingPairs])
+  }, [chainId, data, error, nativeCurrencyUSDPrice, loadingNativeCurrencyUsdPrice, loadingPairs])
 }
 
 export function usePairAtAddress(address?: string): Pair | null {

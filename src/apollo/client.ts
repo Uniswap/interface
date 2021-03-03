@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/clie
 import { ChainId } from 'dxswap-sdk'
 
 export const defaultSubgraphClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/nicoelzer/swapr',
+  uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-mainnet-alpha',
   cache: new InMemoryCache(),
   defaultOptions: {
     query: {

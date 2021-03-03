@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client'
 
-export const GET_ETH_USD_PRICE = gql`
+export const GET_NATIVE_CURRENCY_USD_PRICE = gql`
   query {
     bundle(id: "1") {
-      ethPrice
+      nativeCurrencyPrice
     }
   }
 `
@@ -35,7 +35,7 @@ export const GET_PAIR_LIQUIDITY_USD = gql`
 `
 
 export interface NonExpiredLiquidityMiningCampaignRewardToken {
-  derivedETH: string
+  derivedNativeCurrency: string
 }
 
 export interface RawToken {
@@ -60,7 +60,7 @@ export interface PairWithNonExpiredLiquidityMiningCampaigns {
   address: string
   reserve0: string
   reserve1: string
-  reserveETH: string
+  reserveNativeCurrency: string
   totalSupply: string
   token0: RawToken
   token1: RawToken
@@ -77,7 +77,7 @@ export const GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
       address: id
       reserve0
       reserve1
-      reserveETH
+      reserveNativeCurrency
       totalSupply
       token0 {
         address: id
@@ -98,7 +98,7 @@ export const GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
         endsAt
         locked
         rewardTokens {
-          derivedETH
+          derivedNativeCurrency
         }
         stakedAmount
         rewardAmounts
@@ -113,7 +113,7 @@ export const GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = g
       address: id
       reserve0
       reserve1
-      reserveETH
+      reserveNativeCurrency
       totalSupply
       token0 {
         address: id
@@ -134,7 +134,7 @@ export const GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = g
         endsAt
         locked
         rewardTokens {
-          derivedETH
+          derivedNativeCurrency
         }
         stakedAmount
         rewardAmounts
@@ -157,7 +157,7 @@ export const GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
         endsAt
         locked
         rewardTokens {
-          derivedETH
+          derivedNativeCurrency
         }
         stakedAmount
         rewardAmounts

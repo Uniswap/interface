@@ -13,9 +13,9 @@ import { PageWrapper } from '../styleds'
 import { useCreateLiquidityMiningCallback } from '../../../hooks/useCreateLiquidityMiningCallback'
 import ConfirmStakingRewardsDistributionCreation from '../../../components/LiquidityMining/ConfirmStakingRewardsDistributionCreation'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
-import { usePairLiquidityTokenTotalSupply, usePairReserveETH } from '../../../data/Reserves'
+import { usePairLiquidityTokenTotalSupply, usePairReserveNativeCurrency } from '../../../data/Reserves'
 import { getCampaignApy } from '../../../utils/liquidityMining'
-import { useETHUSDPrice } from '../../../hooks/useETHUSDPrice'
+import { useNativeCurrencyUSDPrice } from '../../../hooks/useNativeCurrencyUSDPrice'
 import BigNumber from 'bignumber.js'
 import { useTokenDerivedNativeCurrency } from '../../../hooks/useTokenDerivedNativeCurrency'
 
@@ -35,13 +35,14 @@ export default function CreateLiquidityMining() {
   const [timelocked, setTimelocked] = useState(false)
   const [apy, setApy] = useState(new BigNumber(0))
 
-  const { loading: loadingReserveETH, reserveETH: stakablePairReserveETH } = usePairReserveETH(
-    liquidityPair || undefined
-  )
+  const {
+    loading: loadingReserveNativeCurrency,
+    reserveNativeCurrency: stakablePairReserveNativeCurrency
+  } = usePairReserveNativeCurrency(liquidityPair || undefined)
   const { loading: loadingLiquidityTokenSupply, supply: stakablePairTokenSupply } = usePairLiquidityTokenTotalSupply(
     liquidityPair || undefined
   )
-  const { ethUSDPrice } = useETHUSDPrice()
+  const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const {
     loading: loadingRewardDerivedNativeCurrency,
     derivedNativeCurrency: rewardDerivedNativeCurrency
@@ -58,8 +59,9 @@ export default function CreateLiquidityMining() {
 
   useEffect(() => {
     if (
+      loadingNativeCurrencyUSDPrice ||
       loadingLiquidityTokenSupply ||
-      loadingReserveETH ||
+      loadingReserveNativeCurrency ||
       loadingRewardDerivedNativeCurrency ||
       !startTime ||
       !endTime ||
@@ -71,25 +73,26 @@ export default function CreateLiquidityMining() {
     const normalizedEndTime = Math.floor(endTime.getTime() / 1000)
     const duration = normalizedEndTime - normalizedStartTime
     const apy = getCampaignApy(
-      stakablePairReserveETH,
+      stakablePairReserveNativeCurrency,
       stakablePairTokenSupply,
       duration.toString(),
       normalizedStartTime.toString(),
-      [{ derivedETH: rewardDerivedNativeCurrency.toExact() }],
+      [{ derivedNativeCurrency: rewardDerivedNativeCurrency.toExact() }],
       [reward?.toExact()],
       '0',
-      ethUSDPrice
+      nativeCurrencyUSDPrice
     )
     setApy(apy)
   }, [
     endTime,
-    ethUSDPrice,
+    loadingNativeCurrencyUSDPrice,
+    nativeCurrencyUSDPrice,
     loadingLiquidityTokenSupply,
-    loadingReserveETH,
+    loadingReserveNativeCurrency,
     loadingRewardDerivedNativeCurrency,
     reward,
     rewardDerivedNativeCurrency,
-    stakablePairReserveETH,
+    stakablePairReserveNativeCurrency,
     stakablePairTokenSupply,
     startTime
   ])

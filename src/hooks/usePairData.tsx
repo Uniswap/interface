@@ -19,7 +19,7 @@ import { useAggregatedByToken0PairComparator } from '../components/SearchModal/s
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
 import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../utils/liquidityMining'
-import { useETHUSDPrice } from './useETHUSDPrice'
+import { useNativeCurrencyUSDPrice } from './useNativeCurrencyUSDPrice'
 import ethers from 'ethers'
 
 export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; volume24hUSD: BigNumber } {
@@ -71,7 +71,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
   wrappedPairs: {
     pair: Pair
     liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[]
-    reserveETH: BigNumber
+    reserveNativeCurrency: BigNumber
     totalSupply: BigNumber
   }[]
 } {
@@ -92,7 +92,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
           accumulator: {
             pair: Pair
             liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[]
-            reserveETH: BigNumber
+            reserveNativeCurrency: BigNumber
             totalSupply: BigNumber
           }[],
           pair
@@ -120,7 +120,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
           accumulator.push({
             pair: new Pair(tokenAmountA, tokenAmountB),
             liquidityMiningCampaigns: pair.liquidityMiningCampaigns,
-            reserveETH: new BigNumber(pair.reserveETH),
+            reserveNativeCurrency: new BigNumber(pair.reserveNativeCurrency),
             totalSupply: new BigNumber(pair.totalSupply)
           })
           return accumulator
@@ -144,7 +144,7 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
   }[]
 } {
   const { account } = useWeb3React()
-  const { loading: loadingETHUSDPrice, ethUSDPrice } = useETHUSDPrice()
+  const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const {
     loading: loadingAllPairs,
     wrappedPairs: allWrappedPairs
@@ -164,7 +164,7 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
   const sorter = useAggregatedByToken0PairComparator()
 
   return useMemo(() => {
-    if (loadingAllPairs || loadingETHUSDPrice || loadingTrackedLpTokenBalances)
+    if (loadingAllPairs || loadingNativeCurrencyUSDPrice || loadingTrackedLpTokenBalances)
       return { loading: true, aggregatedData: [] }
 
     const aggregationMap: {
@@ -177,9 +177,9 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
       }
     } = {}
     for (let i = 0; i < allWrappedPairs.length; i++) {
-      const { pair, liquidityMiningCampaigns, reserveETH, totalSupply } = allWrappedPairs[i]
+      const { pair, liquidityMiningCampaigns, reserveNativeCurrency, totalSupply } = allWrappedPairs[i]
       const liquidityTokenAddress = pair.liquidityToken.address
-      const remainingRewardsUSD = getPairRemainingRewardsUSD(liquidityMiningCampaigns, ethUSDPrice)
+      const remainingRewardsUSD = getPairRemainingRewardsUSD(liquidityMiningCampaigns, nativeCurrencyUSDPrice)
       let mappedValue = aggregationMap[pair.token0.address]
       if (!!!mappedValue) {
         mappedValue = {
@@ -193,7 +193,12 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
       }
       mappedValue.pairs.push(pair)
       mappedValue.remainingRewardsUSD = mappedValue.remainingRewardsUSD.plus(remainingRewardsUSD)
-      const apy = getPairMaximumApy(reserveETH, totalSupply, liquidityMiningCampaigns, ethUSDPrice)
+      const apy = getPairMaximumApy(
+        reserveNativeCurrency,
+        totalSupply,
+        liquidityMiningCampaigns,
+        nativeCurrencyUSDPrice
+      )
       if (apy.isGreaterThan(mappedValue.maximumApy)) {
         mappedValue.maximumApy = apy
       }
@@ -216,10 +221,10 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
     }
   }, [
     allWrappedPairs,
-    ethUSDPrice,
+    nativeCurrencyUSDPrice,
     filter,
     loadingAllPairs,
-    loadingETHUSDPrice,
+    loadingNativeCurrencyUSDPrice,
     loadingTrackedLpTokenBalances,
     sorter,
     trackedLpTokenBalances
