@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { ChainId, Currency, Token } from 'dxswap-sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
@@ -6,6 +5,7 @@ import styled from 'styled-components'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import PoaLogo from '../../assets/images/poa-logo.png'
 import XDAILogo from '../../assets/images/xdai-logo.png'
+import { useActiveWeb3React } from '../../hooks'
 import Logo from '../Logo'
 
 const getTokenLogoURL = (address: string) =>
@@ -37,7 +37,7 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
   className?: string
 }) {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const nativeCurrencyLogo = NATIVE_CURRENCY_LOGO[(chainId as ChainId) || ChainId.MAINNET]
 
   const srcs: string[] = useMemo(() => {

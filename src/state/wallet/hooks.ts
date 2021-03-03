@@ -6,7 +6,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
-import { useWeb3React } from '@web3-react/core'
 
 /**
  * Returns a map of the given addresses to their eventually consistent native currenciy balances.
@@ -14,7 +13,7 @@ import { useWeb3React } from '@web3-react/core'
 export function useNativeCurrencyBalances(
   uncheckedAddresses?: (string | undefined)[]
 ): { [address: string]: CurrencyAmount | undefined } {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const multicallContract = useMulticallContract()
 
   const addresses: string[] = useMemo(

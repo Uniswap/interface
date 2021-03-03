@@ -1,4 +1,3 @@
-import { useWeb3React } from '@web3-react/core'
 import { Currency, CurrencyAmount, Pair, RoutablePlatform, Token, Trade } from 'dxswap-sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
@@ -77,7 +76,7 @@ export function useTradeExactIn(
   currencyOut?: Currency,
   platform: RoutablePlatform = RoutablePlatform.SWAPR
 ): Trade | undefined {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut, platform)
 
   return useMemo(() => {
@@ -98,7 +97,7 @@ export function useTradeExactOut(
   currencyAmountOut?: CurrencyAmount,
   platform: RoutablePlatform = RoutablePlatform.SWAPR
 ): Trade | undefined {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency, platform)
 
   return useMemo(() => {
