@@ -12,6 +12,8 @@ const Card = styled(StyledCard)<{ active?: boolean }>`
   height: 138px;
   position: relative;
   opacity: ${props => (!props.selectable || props.active ? '1' : '0.4')};
+  display: flex;
+  align-items: center;
 `
 
 const CardText = styled(Text)`
