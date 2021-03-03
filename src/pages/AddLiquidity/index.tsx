@@ -249,7 +249,6 @@ export default function AddLiquidity({
         value = null
       }
     }
-    console.log('=-=-=-=-', args)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -334,7 +333,7 @@ export default function AddLiquidity({
         noLiquidity={noLiquidity}
         onAdd={onAdd}
         poolTokenPercentage={poolTokenPercentage}
-        amp={ampConverted}
+        amplification={ampConverted}
       />
     )
   }
@@ -495,7 +494,7 @@ export default function AddLiquidity({
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} />
+                <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} amplification={ampConverted} />
               </>
             )}
 

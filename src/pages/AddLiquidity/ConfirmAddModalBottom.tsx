@@ -25,7 +25,7 @@ export function ConfirmAddModalBottom({
   parsedAmounts,
   poolTokenPercentage,
   onAdd,
-  amp
+  amplification
 }: {
   pair: Pair | null | undefined
   noLiquidity?: boolean
@@ -34,7 +34,7 @@ export function ConfirmAddModalBottom({
   parsedAmounts: { [field in Field]?: CurrencyAmount }
   poolTokenPercentage?: Percent
   onAdd: () => void
-  amp?: Fraction
+  amplification?: Fraction
 }) {
   // console.log(
   //   'onAdd',
@@ -73,8 +73,8 @@ export function ConfirmAddModalBottom({
         </TYPE.body>
       </RowBetween>
       <DashedLine />
-      <TYPE.body>AMP {amp?.divide(JSBI.BigInt(10000)).toSignificant(5)}</TYPE.body>
-      <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} />
+      <TYPE.body>AMP {amplification?.divide(JSBI.BigInt(10000)).toSignificant(5)}</TYPE.body>
+      <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} amplification={amplification} />
 
       <DashedLine />
       <RowBetween>

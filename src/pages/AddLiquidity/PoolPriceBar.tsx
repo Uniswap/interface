@@ -41,21 +41,21 @@ export function PoolPriceBar({
         .multiply('100')
         .divide(pair.virtualReserve0.divide(pair.reserve0).add(pair.virtualReserve1.divide(pair.reserve1)))
         .toSignificant(2) ?? '.'
-    : '.'
+    : '50%'
   const percentToken1 = pair
     ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
-    : '.'
+    : '50%'
   return (
     <AutoColumn gap="md">
       <AutoRow justify="space-between" gap="4px">
         <AutoColumn2>
           <OutlineCard2>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol} ={' '}
+              {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol} ={' '}
               {price?.toSignificant(6) ?? '-'}
             </Text>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol} ={' '}
+              {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol} ={' '}
               {price?.invert()?.toSignificant(6) ?? '-'}
             </Text>
           </OutlineCard2>
@@ -70,12 +70,8 @@ export function PoolPriceBar({
               %
             </Text>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              Ratio:
-              {pair && (
-                <>
-                  {percentToken0}% {pair.token0.symbol} - {percentToken1}% {pair.token1.symbol}
-                </>
-              )}
+              Ratio: {percentToken0}% {currencies[Field.CURRENCY_A]?.symbol} - {percentToken1}%{' '}
+              {currencies[Field.CURRENCY_B]?.symbol}
             </Text>
           </OutlineCard2>
         </AutoColumn2>
@@ -87,13 +83,15 @@ export function PoolPriceBar({
 export function PoolPriceRangeBar({
   currencies,
   price,
-  pair
+  pair,
+  amplification
 }: {
   currencies: { [field in Field]?: Currency }
   price?: Price | Fraction
   pair: Pair | null | undefined
+  amplification?: Fraction
 }) {
-  const amp = pair?.virtualReserve0.divide(pair?.reserve0)
+  const amp = pair?.virtualReserve0.divide(pair?.reserve0) || amplification
   const theme = useContext(ThemeContext)
   const show = !!priceRangeCalc(price, amp)[0]
   return (
