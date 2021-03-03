@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback } from 'react'
 import { RoutablePlatform, Trade } from 'dxswap-sdk'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
+import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import CurrencyLogo from '../CurrencyLogo'
 import { Box, Flex } from 'rebass'
@@ -69,13 +69,21 @@ export function SwapPlatformSelector({
         })}
       </AutoColumn>
       {selectedTrade && selectedTrade.route.path.length > 2 && (
-        <RowFixed mx="2px">
-          <TYPE.body mr="2px" fontSize="12px" lineHeight="15px" fontWeight="500">
-            Route
-          </TYPE.body>
-          <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-          <SwapRoute trade={selectedTrade} />
-        </RowFixed>
+        <Flex mx="2px" width="100%">
+          <Flex>
+            <Box>
+              <TYPE.body fontSize="12px" lineHeight="15px" fontWeight="500" minWidth="auto">
+                Route
+              </TYPE.body>
+            </Box>
+            <Box>
+              <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
+            </Box>
+          </Flex>
+          <Box flex="1">
+            <SwapRoute trade={selectedTrade} />
+          </Box>
+        </Flex>
       )}
     </AutoColumn>
   )

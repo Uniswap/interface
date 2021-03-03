@@ -2,14 +2,19 @@ import { Trade } from 'dxswap-sdk'
 import React, { Fragment, memo, useContext } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
 import CurrencyLogo from '../CurrencyLogo'
+
+const StyledChevronRight = styled(ChevronRight)`
+  height: 17px;
+  color: ${props => props.theme.purple3};
+`
 
 export default memo(function SwapRoute({ trade }: { trade: Trade }) {
   const theme = useContext(ThemeContext)
   return (
-    <Flex ml="12px" width="100%" justifyContent="space-evenly" alignItems="center">
+    <Flex width="100%" justifyContent="flex-end" alignItems="center">
       {trade.route.path.map((token, i, path) => {
         const isLastItem: boolean = i === path.length - 1
         return (
@@ -20,7 +25,7 @@ export default memo(function SwapRoute({ trade }: { trade: Trade }) {
                 {token.symbol}
               </TYPE.black>
             </Flex>
-            {isLastItem ? null : <ChevronRight height="17px" color={theme.purple3} />}
+            {!isLastItem && <StyledChevronRight />}
           </Fragment>
         )
       })}
