@@ -1,18 +1,17 @@
-import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
+import { Text, TextProps } from 'rebass'
 import styled, {
-  ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
   css,
   DefaultTheme,
+  ThemeProvider as StyledComponentsThemeProvider,
 } from 'styled-components'
 import { useIsDarkMode } from '../state/user/hooks'
-import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
 export * from './components'
 
-const MEDIA_WIDTHS = {
+export const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
   upToSmall: 720,
   upToMedium: 960,
@@ -82,6 +81,10 @@ export function colors(darkMode: boolean): Colors {
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     blue1: '#2172E5',
+
+    error: '#FD4040',
+    success: '#27AE60',
+    warning: '#F3B71E',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
