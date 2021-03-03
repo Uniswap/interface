@@ -84,7 +84,8 @@ export function useAggregatedByToken0PairComparator(): (
 ) => number {
   return useCallback((pairA, pairB): number => {
     // sort by rewards
-    return pairA.remainingRewardsUSD.isLessThan(pairB.remainingRewardsUSD) ? -1 : 1
+    if (pairA.remainingRewardsUSD.isEqualTo(pairB.remainingRewardsUSD)) return 0
+    return pairA.remainingRewardsUSD.isLessThan(pairB.remainingRewardsUSD) ? 1 : -1
   }, [])
 }
 
