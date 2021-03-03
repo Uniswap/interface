@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import { Box, Flex } from 'rebass'
@@ -8,6 +8,7 @@ import { ButtonOutlined } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
+import Search from 'components/Search'
 import { useCurrency } from 'hooks/Tokens'
 import { useDerivedPairInfo, usePairActionHandlers, usePairState } from 'state/pair/hooks'
 import { Field } from 'state/pair/actions'
@@ -33,7 +34,10 @@ const ToolbarWrapper = styled.div`
 `
 
 const CurrencyWrapper = styled(Flex)`
-  width: 100%;
+  align-items: center;
+`
+
+const SearchWrapper = styled(Flex)`
   align-items: center;
 `
 
@@ -47,6 +51,7 @@ const SelectPairInstructionWrapper = styled(Box)`
 
 const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const { t } = useTranslation()
+  const [searchValue, setSearchValue] = useState('')
 
   // Pool selection
   const { onCurrencySelection } = usePairActionHandlers()
@@ -72,7 +77,19 @@ const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; curren
     [onCurrencySelection]
   )
 
-  const poolList = pairs.map(([pairState, pair]) => pair)
+  const poolList = pairs
+    .map(([pairState, pair]) => pair)
+    .filter(pair => {
+      if (searchValue) {
+        return (
+          pair?.address.includes(searchValue) ||
+          pair?.token0?.address.includes(searchValue) ||
+          pair?.token1?.address.includes(searchValue)
+        )
+      }
+
+      return true
+    })
 
   return (
     <>
@@ -92,7 +109,8 @@ const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; curren
               id="input-tokenb"
             />
           </CurrencyWrapper>
-          <div style={{ width: '100%' }}>
+          <SearchWrapper>
+            <Search searchValue={searchValue} setSearchValue={setSearchValue} />
             <ButtonOutlined
               width="148px"
               padding="12px 18px"
@@ -104,7 +122,7 @@ const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; curren
             >
               {t('createNewPool')}
             </ButtonOutlined>
-          </div>
+          </SearchWrapper>
         </ToolbarWrapper>
 
         <Panel>
