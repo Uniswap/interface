@@ -3,7 +3,7 @@ import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
-import { TOKEN_LIST } from "../../constants";
+import { TOKEN_LIST } from '../../constants/ropsten.tokenlist'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {

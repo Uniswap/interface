@@ -15,7 +15,8 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
-import { FACTORY_ADDRESS, FACTORY_ABI } from '../constants'
+import { FACTORY_ADDRESS } from '../constants'
+import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -94,4 +95,4 @@ export function useSocksController(): Contract | null {
 
 export function useFactoryContract(): Contract | null {
   return useContract(FACTORY_ADDRESS, FACTORY_ABI)
-} 
+}

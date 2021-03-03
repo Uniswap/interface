@@ -6,7 +6,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import Numeral from 'numeral'
 
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS, ROUTER_ABI, FACTORY_ADDRESS, FACTORY_ABI } from '../constants'
+import { ROUTER_ADDRESS, FACTORY_ADDRESS } from '../constants'
+import ROUTER_ABI from '../constants/abis/dmm-router.json'
+import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'libs/sdk/src'
 import { TokenAddressMap } from '../state/lists/hooks'
 
