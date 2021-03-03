@@ -1,8 +1,8 @@
-import { useWeb3React } from '@web3-react/core'
 import { Pair, TokenAmount } from 'dxswap-sdk'
 import { transparentize } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useActiveWeb3React } from '../../../../hooks'
 import { useLiquidityMiningActionCallbacks } from '../../../../hooks/useLiquidityMiningActionCallbacks'
 import { useLiquidityMiningDistributionStakedBalance } from '../../../../hooks/useLiquidityMiningDistributionStakedBalance'
 import { useTransactionAdder } from '../../../../state/transactions/hooks'
@@ -42,7 +42,7 @@ export function LiquidityMiningCampaignModal({
   endsAt,
   timelock
 }: LiquidityMiningCampaignProps) {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const callbacks = useLiquidityMiningActionCallbacks(contractAddress)
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
   const withdrawableTokenBalance = useLiquidityMiningDistributionStakedBalance(

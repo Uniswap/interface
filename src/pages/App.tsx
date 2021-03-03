@@ -1,5 +1,4 @@
 import { ApolloProvider } from '@apollo/client'
-import { useWeb3React } from '@web3-react/core'
 import { ChainId } from 'dxswap-sdk'
 import React, { Suspense } from 'react'
 import { Route, Switch, HashRouter } from 'react-router-dom'
@@ -20,6 +19,7 @@ import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Pair from './Pools/Pair'
 import CreateLiquidityMining from './LiquidityMining/Create'
+import { useActiveWeb3React } from '../hooks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -61,7 +61,7 @@ const Marginer = styled.div`
 `
 
 export default function App() {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   return (
     <Suspense fallback={null}>

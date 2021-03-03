@@ -5,11 +5,11 @@ import PoolSummary from './PoolSummary'
 import RewardSummary from './RewardSummary'
 import { Card, Divider } from '../../../styleds'
 import { ButtonPrimary } from '../../../../Button'
-import { useWeb3React } from '@web3-react/core'
 import { useTokenBalance } from '../../../../../state/wallet/hooks'
 import { ApprovalState, useApproveCallback } from '../../../../../hooks/useApproveCallback'
 import { useStakingRewardsDistributionFactoryContract } from '../../../../../hooks/useContract'
 import BigNumber from 'bignumber.js'
+import { useActiveWeb3React } from '../../../../../hooks'
 
 interface PreviewProps {
   liquidityPair: Pair | null
@@ -30,7 +30,7 @@ export default function PreviewAndCreate({
   apy,
   onCreate
 }: PreviewProps) {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const userBalance = useTokenBalance(account || undefined, reward?.token)
   const stakingRewardsDistributionFactoryContract = useStakingRewardsDistributionFactoryContract()
   const [approvalState, approveCallback] = useApproveCallback(

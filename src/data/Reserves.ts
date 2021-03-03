@@ -20,7 +20,6 @@ import {
   RawToken
 } from '../apollo/queries'
 import { ethers } from 'ethers'
-import { useWeb3React } from '@web3-react/core'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -100,7 +99,7 @@ export function useAllPairs(): { loading: boolean; pairs: Pair[] } {
     pairs: RawPair[]
   }
 
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const { loading, data, error } = useQuery<QueryResult>(gql`
     query getAllPairs {
       pairs {
@@ -214,7 +213,7 @@ export function usePairsByToken0WithRemainingRewardUSDAndMaximumApy(
   loading: boolean
   wrappedPairs: { pair: Pair; remainingRewardUSD: BigNumber; maximumApy: BigNumber }[]
 } {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const { error, loading: loadingPairs, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,

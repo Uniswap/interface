@@ -1,14 +1,14 @@
 import { gql, useQuery } from '@apollo/client'
-import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { ChainId, CurrencyAmount, Token } from 'dxswap-sdk'
 import { ethers } from 'ethers'
 import { useMemo } from 'react'
+import { useActiveWeb3React } from '.'
 
 export function useTokenDerivedNativeCurrency(
   token?: Token
 ): { loading: boolean; derivedNativeCurrency: CurrencyAmount } {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   interface QueryResult {
     token: { derivedNativeCurrency: string }

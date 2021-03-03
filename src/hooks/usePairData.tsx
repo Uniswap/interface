@@ -1,5 +1,4 @@
 import { useQuery } from '@apollo/client'
-import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { Pair, Token, TokenAmount } from 'dxswap-sdk'
 import { DateTime } from 'luxon'
@@ -21,6 +20,7 @@ import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
 import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useNativeCurrencyUSDPrice } from './useNativeCurrencyUSDPrice'
 import ethers from 'ethers'
+import { useActiveWeb3React } from '.'
 
 export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; volume24hUSD: BigNumber } {
   const { loading, data } = useQuery<Pair24hVolumeQueryResult>(GET_PAIR_24H_VOLUME_USD, {
@@ -76,7 +76,7 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
   }[]
 } {
   const memoizedTimestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   const { loading, error, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
     { variables: { timestamp: memoizedTimestamp } }
@@ -143,7 +143,7 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
     maximumApy: BigNumber
   }[]
 } {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const {
     loading: loadingAllPairs,

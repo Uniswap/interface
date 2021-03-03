@@ -1,7 +1,7 @@
-import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import { Pair, Token, TokenAmount } from 'dxswap-sdk'
 import { useCallback, useMemo } from 'react'
+import { useActiveWeb3React } from '../../hooks'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { useAllTokenBalances, useTokenBalances } from '../../state/wallet/hooks'
 
@@ -89,7 +89,7 @@ export function useAggregatedByToken0PairComparator(): (
 }
 
 export function usePairsComparator(inverted: boolean): (pairA: Pair, pairB: Pair) => number {
-  const { account } = useWeb3React()
+  const { account } = useActiveWeb3React()
   const trackedTokenPairs = useTrackedTokenPairs()
   const balances = useTokenBalances(
     account || undefined,
