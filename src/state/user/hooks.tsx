@@ -1,7 +1,9 @@
-import { ChainId, Pair, Token } from 'libs/sdk'
+import { useFactoryContract } from 'hooks/useContract'
+import { ChainId, Pair, Token } from 'libs/sdk/src'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { useSingleContractMultipleData } from 'state/multicall/hooks'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -161,6 +163,24 @@ export function usePairAdder(): (pair: Pair) => void {
   )
 }
 
+export function usePairAdderByTokens(): (token0: Token, token1: Token) => void {
+  const dispatch = useDispatch<AppDispatch>()
+
+  return useCallback(
+    (token0: Token, token1: Token) => {
+      dispatch(
+        addSerializedPair({
+          serializedPair: {
+            token0: serializeToken(token0),
+            token1: serializeToken(token1)
+          }
+        })
+      )
+    },
+    [dispatch]
+  )
+}
+
 export function useURLWarningVisible(): boolean {
   return useSelector((state: AppState) => state.user.URLWarningVisible)
 }
@@ -175,8 +195,27 @@ export function useURLWarningToggle(): () => void {
  * @param tokenA one of the two tokens
  * @param tokenB the other token
  */
-export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'DMM-LP', 'DMM LP')
+
+// export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+//   return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'DMM-LP', 'DMM LP')
+// }
+
+export function useToV2LiquidityTokens(
+  tokenCouples: [Token, Token][]
+): { liquidityTokens: []; tokens: [Token, Token] }[] {
+  const contract = useFactoryContract()
+  const result = useSingleContractMultipleData(
+    contract,
+    'getPools',
+    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address])
+  )
+  return result.map((result, index) => ({
+    tokens: tokenCouples[index],
+    liquidityTokens:
+      result.result?.[0].map(
+        (address: string) => new Token(tokenCouples[index][0].chainId, address, 18, 'DMM-LP', 'DMM LP')
+      ) || []
+  }))
 }
 
 /**

@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from 'libs/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, WETH, Pair } from 'libs/sdk/src'
 import { useMemo } from 'react'
 import { DAI, UNI, USDC, USDT, WBTC } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
@@ -110,82 +110,83 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   )
 
   return useMemo(() => {
-    if (!chainId || !uni) return []
+    return []
+    // if (!chainId || !uni) return []
 
-    return rewardsAddresses.reduce<StakingInfo[]>((memo, rewardsAddress, index) => {
-      // these two are dependent on account
-      const balanceState = balances[index]
-      const earnedAmountState = earnedAmounts[index]
+    // return rewardsAddresses.reduce<StakingInfo[]>((memo, rewardsAddress, index) => {
+    //   // these two are dependent on account
+    //   const balanceState = balances[index]
+    //   const earnedAmountState = earnedAmounts[index]
 
-      // these get fetched regardless of account
-      const totalSupplyState = totalSupplies[index]
-      const rewardRateState = rewardRates[index]
-      const periodFinishState = periodFinishes[index]
+    //   // these get fetched regardless of account
+    //   const totalSupplyState = totalSupplies[index]
+    //   const rewardRateState = rewardRates[index]
+    //   const periodFinishState = periodFinishes[index]
 
-      if (
-        // these may be undefined if not logged in
-        !balanceState?.loading &&
-        !earnedAmountState?.loading &&
-        // always need these
-        totalSupplyState &&
-        !totalSupplyState.loading &&
-        rewardRateState &&
-        !rewardRateState.loading &&
-        periodFinishState &&
-        !periodFinishState.loading
-      ) {
-        if (
-          balanceState?.error ||
-          earnedAmountState?.error ||
-          totalSupplyState.error ||
-          rewardRateState.error ||
-          periodFinishState.error
-        ) {
-          console.error('Failed to load staking rewards info')
-          return memo
-        }
+    //   if (
+    //     // these may be undefined if not logged in
+    //     !balanceState?.loading &&
+    //     !earnedAmountState?.loading &&
+    //     // always need these
+    //     totalSupplyState &&
+    //     !totalSupplyState.loading &&
+    //     rewardRateState &&
+    //     !rewardRateState.loading &&
+    //     periodFinishState &&
+    //     !periodFinishState.loading
+    //   ) {
+    //     if (
+    //       balanceState?.error ||
+    //       earnedAmountState?.error ||
+    //       totalSupplyState.error ||
+    //       rewardRateState.error ||
+    //       periodFinishState.error
+    //     ) {
+    //       console.error('Failed to load staking rewards info')
+    //       return memo
+    //     }
 
-        // get the LP token
-        const tokens = info[index].tokens
-        const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
+    //     // get the LP token
+    //     const tokens = info[index].tokens
+    //     const dummyPair = new Pair("", new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'), new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'), JSBI.BigInt(0))
 
-        // check for account, if no account set to 0
+    //     // check for account, if no account set to 0
 
-        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
-        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
-        const totalRewardRate = new TokenAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
+    //     const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
+    //     const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
+    //     const totalRewardRate = new TokenAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
 
-        const getHypotheticalRewardRate = (
-          stakedAmount: TokenAmount,
-          totalStakedAmount: TokenAmount,
-          totalRewardRate: TokenAmount
-        ): TokenAmount => {
-          return new TokenAmount(
-            uni,
-            JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
-              ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
-              : JSBI.BigInt(0)
-          )
-        }
+    //     const getHypotheticalRewardRate = (
+    //       stakedAmount: TokenAmount,
+    //       totalStakedAmount: TokenAmount,
+    //       totalRewardRate: TokenAmount
+    //     ): TokenAmount => {
+    //       return new TokenAmount(
+    //         uni,
+    //         JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
+    //           ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
+    //           : JSBI.BigInt(0)
+    //       )
+    //     }
 
-        const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
+    //     const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
 
-        const periodFinishMs = periodFinishState.result?.[0]?.mul(1000)?.toNumber()
+    //     const periodFinishMs = periodFinishState.result?.[0]?.mul(1000)?.toNumber()
 
-        memo.push({
-          stakingRewardAddress: rewardsAddress,
-          tokens: info[index].tokens,
-          periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-          earnedAmount: new TokenAmount(uni, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
-          rewardRate: individualRewardRate,
-          totalRewardRate: totalRewardRate,
-          stakedAmount: stakedAmount,
-          totalStakedAmount: totalStakedAmount,
-          getHypotheticalRewardRate
-        })
-      }
-      return memo
-    }, [])
+    //     memo.push({
+    //       stakingRewardAddress: rewardsAddress,
+    //       tokens: info[index].tokens,
+    //       periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
+    //       earnedAmount: new TokenAmount(uni, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
+    //       rewardRate: individualRewardRate,
+    //       totalRewardRate: totalRewardRate,
+    //       stakedAmount: stakedAmount,
+    //       totalStakedAmount: totalStakedAmount,
+    //       getHypotheticalRewardRate
+    //     })
+    //   }
+    //   return memo
+    // }, [])
   }, [balances, chainId, earnedAmounts, info, periodFinishes, rewardRates, rewardsAddresses, totalSupplies, uni])
 }
 

@@ -1,5 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit'
-// import { ChainId } from 'libs/sdk'
+// import { ChainId } from 'libs/sdk/src'
 import { TokenList } from '@uniswap/token-lists'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
@@ -9,7 +9,7 @@ import { fetchTokenList } from '../state/lists/actions'
 // import getTokenList from '../utils/getTokenList'
 // import resolveENSContentHash from '../utils/resolveENSContentHash'
 // import { useActiveWeb3React } from './index'
-import { TOKEN_LIST } from "../constants";
+import { TOKEN_LIST } from '../constants/ropsten.tokenlist'
 
 export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> {
   // const { chainId, library } = useActiveWeb3React()
@@ -34,11 +34,11 @@ export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> 
   return useCallback(
     async (listUrl: string) => {
       const requestId = nanoid()
-      const tokenList = TOKEN_LIST;
+      const tokenList = TOKEN_LIST
 
-      dispatch(fetchTokenList.fulfilled({url: listUrl, tokenList, requestId}))
+      dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
 
-      return tokenList;
+      return tokenList
 
       // dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
 

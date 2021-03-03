@@ -1,4 +1,4 @@
-import { CurrencyAmount, ETHER, JSBI } from 'libs/sdk'
+import { CurrencyAmount, ETHER, JSBI } from 'libs/sdk/src'
 import { MIN_ETH } from '../constants'
 
 /**

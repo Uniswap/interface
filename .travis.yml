@@ -13,8 +13,10 @@ script:
   - echo "npm test temporarily disabled"
 
 install:
+  - git submodule update --remote
   - yarn
-  - yarn build-ropsten
+  - yarn build-ropsten | true
+  - ls build
 
 deploy:
   - provider: gcs

@@ -1,7 +1,7 @@
-import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from 'libs/sdk'
+import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from 'libs/sdk/src'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { usePair } from '../../data/Reserves'
+import { usePair, usePairByAddress } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -17,7 +17,8 @@ export function useBurnState(): AppState['burn'] {
 
 export function useDerivedBurnInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
+  pairAddress: string | undefined
 ): {
   pair?: Pair | null
   parsedAmounts: {
@@ -32,14 +33,14 @@ export function useDerivedBurnInfo(
 
   const { independentField, typedValue } = useBurnState()
 
+  const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
   // pair + totalsupply
-  const [, pair] = usePair(currencyA, currencyB)
+  const [, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
 
   // balances
   const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])
   const userLiquidity: undefined | TokenAmount = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
 
-  const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
   const tokens = {
     [Field.CURRENCY_A]: tokenA,
     [Field.CURRENCY_B]: tokenB,

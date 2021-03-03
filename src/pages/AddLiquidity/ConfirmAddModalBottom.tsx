@@ -1,27 +1,46 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from 'libs/sdk'
+import { Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
 import { ButtonPrimary } from '../../components/Button'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
+import { PoolPriceRangeBar } from './PoolPriceBar'
+import { AutoColumn } from 'components/Column'
+import { Separator } from 'components/SearchModal/styleds'
+import styled from 'styled-components'
+import { parseUnits } from 'ethers/lib/utils'
 
+const DashedLine = styled.div`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  border-style: dashed;
+`
 export function ConfirmAddModalBottom({
+  pair,
   noLiquidity,
   price,
   currencies,
   parsedAmounts,
   poolTokenPercentage,
-  onAdd
+  onAdd,
+  amp
 }: {
+  pair: Pair | null | undefined
   noLiquidity?: boolean
   price?: Fraction
   currencies: { [field in Field]?: Currency }
   parsedAmounts: { [field in Field]?: CurrencyAmount }
   poolTokenPercentage?: Percent
   onAdd: () => void
+  amp?: Fraction
 }) {
+  // console.log(
+  //   'onAdd',
+  //   new Fraction(JSBI.BigInt(parseUnits('1.234567', 10)), JSBI.BigInt(parseUnits('1', 6))).toSignificant(5)
+  // )
+
   return (
     <>
       <RowBetween>
@@ -53,6 +72,11 @@ export function ConfirmAddModalBottom({
           }`}
         </TYPE.body>
       </RowBetween>
+      <DashedLine />
+      <TYPE.body>AMP {amp?.divide(JSBI.BigInt(10000)).toSignificant(5)}</TYPE.body>
+      <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} />
+
+      <DashedLine />
       <RowBetween>
         <TYPE.body>Share of Pool:</TYPE.body>
         <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>

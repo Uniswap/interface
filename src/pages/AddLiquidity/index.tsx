@@ -1,15 +1,18 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from 'libs/sdk'
+import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard } from '../../components/Card'
+import { BlueCard, LightCard, OutlineCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal, {
+  ConfirmationModalContent,
+  TransactionErrorContent
+} from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
@@ -28,7 +31,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -36,14 +39,45 @@ import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
-import { PoolPriceBar } from './PoolPriceBar'
+import { PoolPriceBar, PoolPriceRangeBar } from './PoolPriceBar'
+import QuestionHelper from 'components/QuestionHelper'
+import NumericalInput from 'components/NumericalInput'
+import { ONE } from 'libs/sdk/src/constants'
+import { parseUnits } from 'ethers/lib/utils'
+import Modal from 'components/Modal'
 
+const ActiveText = styled.div`
+  font-weight: 500;
+  font-size: 20px;
+`
+
+const DashedLine = styled.div`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  border-style: dashed;
+  margin: auto 0.5rem;
+`
+const RowFlat2 = (props: { children: React.ReactNode }) => {
+  return (
+    <div style={{ marginTop: '1rem' }}>
+      <RowFlat>
+        {props.children}
+        <DashedLine />
+      </RowFlat>
+    </div>
+  )
+}
+
+const NumericalInput2 = styled(NumericalInput)`
+  width: 100%;
+  height: 60px;
+`
 export default function AddLiquidity({
   match: {
-    params: { currencyIdA, currencyIdB }
+    params: { currencyIdA, currencyIdB, pairAddress }
   },
   history
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
+}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; pairAddress?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
@@ -73,16 +107,26 @@ export default function AddLiquidity({
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error
-  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
+    error,
+    unAmplifiedPairAddress
+  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
+  const [amp, setAmp] = useState('')
+  const onAmpChange = (e: any) => {
+    setAmp(e)
+  }
+
+  const ampConverted = !!amp.toString()
+    ? new Fraction(JSBI.BigInt(parseUnits(amp.toString() || '1', 20)), JSBI.BigInt(parseUnits('1', 16)))
+    : undefined
+
+  const linkToUnamplifiedPool = !!ampConverted && ampConverted.equalTo(JSBI.BigInt(10000)) && !!unAmplifiedPairAddress
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
-  const isValid = !error
+  const isValid = !(error || (!pairAddress && +amp == 0 ? 'Enter amp' : ''))
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
@@ -114,14 +158,13 @@ export default function AddLiquidity({
     },
     {}
   )
-
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
   const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
 
   const addTransaction = useTransactionAdder()
-
   async function onAdd() {
+    // if (!pair) return
     if (!chainId || !library || !account) return
     const router = getRouterContract(chainId, library, account)
 
@@ -134,40 +177,79 @@ export default function AddLiquidity({
       [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
-
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
-      args = [
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-        amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-        account,
-        deadline.toHexString()
-      ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
-    } else {
-      estimate = router.estimateGas.addLiquidity
-      method = router.addLiquidity
-      args = [
-        wrappedCurrency(currencyA, chainId)?.address ?? '',
-        wrappedCurrency(currencyB, chainId)?.address ?? '',
-        parsedAmountA.raw.toString(),
-        parsedAmountB.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        account,
-        deadline.toHexString()
-      ]
-      value = null
-    }
 
+    if (pairAddress) {
+      if (!pair) return
+      if (currencyA === ETHER || currencyB === ETHER) {
+        const tokenBIsETH = currencyB === ETHER
+        estimate = router.estimateGas.addLiquidityETH
+        method = router.addLiquidityETH
+        args = [
+          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+          pair.address,
+          // 40000,                                                                              //ampBps
+          (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+          amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+          account,
+          deadline.toHexString()
+        ]
+        value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      } else {
+        estimate = router.estimateGas.addLiquidity
+        method = router.addLiquidity
+        args = [
+          wrappedCurrency(currencyA, chainId)?.address ?? '',
+          wrappedCurrency(currencyB, chainId)?.address ?? '',
+          pair.address,
+          // 40000,                                                                              //ampBps
+          parsedAmountA.raw.toString(),
+          parsedAmountB.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          account,
+          deadline.toHexString()
+        ]
+        value = null
+      }
+    } else {
+      if (!ampConverted) return
+      if (currencyA === ETHER || currencyB === ETHER) {
+        const tokenBIsETH = currencyB === ETHER
+        estimate = router.estimateGas.addLiquidityNewPoolETH
+        method = router.addLiquidityNewPoolETH
+        args = [
+          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+          ampConverted.toSignificant(5), //ampBps
+          (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+          amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+          account,
+          deadline.toHexString()
+        ]
+        value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      } else {
+        estimate = router.estimateGas.addLiquidityNewPool
+        method = router.addLiquidityNewPool
+        args = [
+          wrappedCurrency(currencyA, chainId)?.address ?? '',
+          wrappedCurrency(currencyB, chainId)?.address ?? '',
+          ampConverted.toSignificant(5), //ampBps
+          parsedAmountA.raw.toString(),
+          parsedAmountB.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          account,
+          deadline.toHexString()
+        ]
+        value = null
+      }
+    }
+    console.log('=-=-=-=-', args)
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -245,12 +327,14 @@ export default function AddLiquidity({
   const modalBottom = () => {
     return (
       <ConfirmAddModalBottom
+        pair={pair}
         price={price}
         currencies={currencies}
         parsedAmounts={parsedAmounts}
         noLiquidity={noLiquidity}
         onAdd={onAdd}
         poolTokenPercentage={poolTokenPercentage}
+        amp={ampConverted}
       />
     )
   }
@@ -295,8 +379,7 @@ export default function AddLiquidity({
     setTxHash('')
   }, [onFieldAInput, txHash])
 
-  const isCreate = history.location.pathname.includes('/create')
-
+  const isCreate = !pairAddress
   return (
     <>
       <AppBody>
@@ -307,14 +390,38 @@ export default function AddLiquidity({
             onDismiss={handleDismissConfirmation}
             attemptingTxn={attemptingTxn}
             hash={txHash}
-            content={() => (
-              <ConfirmationModalContent
-                title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
-                onDismiss={handleDismissConfirmation}
-                topContent={modalHeader}
-                bottomContent={modalBottom}
-              />
-            )}
+            content={() =>
+              !linkToUnamplifiedPool ? (
+                <ConfirmationModalContent
+                  title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
+                  onDismiss={handleDismissConfirmation}
+                  topContent={modalHeader}
+                  bottomContent={modalBottom}
+                />
+              ) : (
+                <ConfirmationModalContent
+                  title={'Unamplified Pool existed'}
+                  onDismiss={handleDismissConfirmation}
+                  topContent={() => {
+                    return null
+                  }}
+                  bottomContent={() => {
+                    return (
+                      <>
+                        Please use the link below if you want to add liquidity to Unamplified Pool
+                        <StyledInternalLink
+                          onClick={handleDismissConfirmation}
+                          id="unamplified-pool-link"
+                          to={`/add/${currencyIdA}/${currencyIdB}/${unAmplifiedPairAddress}`}
+                        >
+                          Go to unamplified pool
+                        </StyledInternalLink>
+                      </>
+                    )
+                  }}
+                />
+              )
+            }
             pendingText={pendingText}
           />
           <AutoColumn gap="20px">
@@ -364,22 +471,31 @@ export default function AddLiquidity({
               showCommonBases
             />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
+              <PoolPriceBar
+                pair={pair}
+                currencies={currencies}
+                poolTokenPercentage={poolTokenPercentage}
+                noLiquidity={noLiquidity}
+                price={price}
+              />
+            )}
+
+            <RowFlat2>
+              <ActiveText>
+                AMP{!!pairAddress && <>&nbsp;=&nbsp;{pair?.virtualReserve0.divide(pair?.reserve0).toSignificant(5)}</>}
+              </ActiveText>
+              <QuestionHelper text={'Amplification factor'} />
+            </RowFlat2>
+
+            {!pairAddress && (
+              <LightCard padding="0 0.75rem" borderRadius={'10px'}>
+                <NumericalInput2 className="token-amount-input" value={amp} onUserInput={onAmpChange} />
+              </LightCard>
+            )}
+
+            {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <LightCard padding="0px" borderRadius={'20px'}>
-                  <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
-                      {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
-                    </TYPE.subHeader>
-                  </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
-                    <PoolPriceBar
-                      currencies={currencies}
-                      poolTokenPercentage={poolTokenPercentage}
-                      noLiquidity={noLiquidity}
-                      price={price}
-                    />
-                  </LightCard>
-                </LightCard>
+                <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} />
               </>
             )}
 
@@ -426,10 +542,15 @@ export default function AddLiquidity({
                     expertMode ? onAdd() : setShowConfirm(true)
                   }}
                   disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
-                  error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                  error={
+                    !isValid &&
+                    !!parsedAmounts[Field.CURRENCY_A] &&
+                    !!parsedAmounts[Field.CURRENCY_B] &&
+                    !!(pairAddress && +amp == 0)
+                  }
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {error ?? 'Supply'}
+                    {error ?? (!pairAddress && +amp == 0 ? 'Enter amp' : 'Supply')}
                   </Text>
                 </ButtonError>
               </AutoColumn>

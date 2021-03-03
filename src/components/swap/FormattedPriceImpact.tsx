@@ -1,4 +1,4 @@
-import { Percent } from 'libs/sdk'
+import { Percent } from 'libs/sdk/src'
 import React from 'react'
 import { ONE_BIPS } from '../../constants'
 import { warningSeverity } from '../../utils/prices'

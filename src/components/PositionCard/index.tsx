@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent, TokenAmount } from 'libs/sdk'
+import { Fraction, JSBI, Pair, Percent, TokenAmount } from 'libs/sdk/src'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -22,6 +22,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
+import { priceRangeCalc } from 'utils/dmm'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -177,6 +178,14 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const backgroundColor = useColor(pair?.token0)
 
+  const price = pair.priceOf(pair.token0)
+  const amp = pair.virtualReserve0.divide(pair?.reserve0)
+
+  const percentToken0 = pair.virtualReserve0
+    .divide(pair.reserve0)
+    .multiply('100')
+    .divide(pair.virtualReserve0.divide(pair.reserve0).add(pair.virtualReserve1.divide(pair.reserve1)))
+  const percentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0)
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
@@ -287,12 +296,33 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   : '-'}
               </Text>
             </FixedHeightRow>
-
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                Ratio: {percentToken0.toSignificant(2) ?? '.'}% {pair.token0.symbol} -{' '}
+                {percentToken1.toSignificant(2) ?? '.'}% {pair.token1.symbol}
+              </Text>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                AMP {amp.toSignificant(5)}
+              </Text>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                Price range {pair.token0.symbol}/{pair.token1.symbol}:{' '}
+                {priceRangeCalc(pair.priceOf(pair.token0), amp)[1]?.toSignificant(6) ?? '.'} -{' '}
+                {priceRangeCalc(pair.priceOf(pair.token0), amp)[0]?.toSignificant(6) ?? '.'}
+              </Text>
+            </FixedHeightRow>
+            <FixedHeightRow>
+              <Text fontSize={16} fontWeight={500}>
+                Price range {pair.token1.symbol}/{pair.token0.symbol}:{' '}
+                {priceRangeCalc(pair.priceOf(pair.token1), amp)[1]?.toSignificant(6) ?? '.'} -{' '}
+                {priceRangeCalc(pair.priceOf(pair.token1), amp)[0]?.toSignificant(6) ?? '.'}
+              </Text>
+            </FixedHeightRow>
             <ButtonSecondary padding="8px" borderRadius="8px">
-              <ExternalLink
-                style={{ width: '100%', textAlign: 'center' }}
-                href={`${DMM_INFO_URL}/account/${account}`}
-              >
+              <ExternalLink style={{ width: '100%', textAlign: 'center' }} href={`${DMM_INFO_URL}/account/${account}`}>
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary>
@@ -301,7 +331,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 <ButtonPrimary
                   padding="8px"
                   as={Link}
-                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
                   width="48%"
                 >
                   Add
@@ -310,7 +340,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   padding="8px"
                   as={Link}
                   width="48%"
-                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
                 >
                   Remove
                 </ButtonPrimary>

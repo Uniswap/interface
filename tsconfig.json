@@ -11,7 +11,7 @@
     "strict": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -24,6 +24,7 @@
     "allowSyntheticDefaultImports": true,
     "types": ["react-spring", "jest"],
     "baseUrl": "src"
+    
   },
   "exclude": ["node_modules", "cypress"],
   "include": ["./src/**/*.ts", "./src/**/*.tsx", "src/components/Confetti/index.js"]

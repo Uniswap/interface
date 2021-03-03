@@ -1,4 +1,4 @@
-import { ChainId } from 'libs/sdk'
+import { ChainId } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
@@ -26,7 +26,7 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  background-color: ${({theme}) => theme.bg6};
+  background-color: ${({ theme }) => theme.bg6};
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 1rem;
   z-index: 2;
@@ -212,8 +212,8 @@ export default function Header() {
             {t('swap')}
           </StyledNavLink>
           <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
+            id={`pools-nav-link`}
+            to={'/pools'}
             isActive={(match, { pathname }) =>
               Boolean(match) ||
               pathname.startsWith('/add') ||
@@ -222,7 +222,20 @@ export default function Header() {
               pathname.startsWith('/find')
             }
           >
-            {t('pool')}
+            {t('Pools')}
+          </StyledNavLink>
+          <StyledNavLink
+            id={`my-pools-nav-link`}
+            to={'/myPools'}
+            isActive={(match, { pathname }) =>
+              Boolean(match) ||
+              pathname.startsWith('/add') ||
+              pathname.startsWith('/remove') ||
+              pathname.startsWith('/create') ||
+              pathname.startsWith('/find')
+            }
+          >
+            {t('My Pools')}
           </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>

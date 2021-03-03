@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from 'libs/sdk'
+import { Currency, ETHER, Token } from 'libs/sdk/src'
 
 export function currencyId(currency: Currency): string {
   if (currency === ETHER) return 'ETH'
