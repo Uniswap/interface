@@ -48,7 +48,7 @@ export default function RemoveLiquidity({
   match: {
     params: { currencyIdA, currencyIdB, pairAddress }
   }
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string, pairAddress: string }>) {
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
@@ -104,7 +104,7 @@ export default function RemoveLiquidity({
   const isArgentWallet = useIsArgentWallet()
 
   async function onAttemptToApprove() {
-    console.log("onAttemptToApprove")
+    console.log('onAttemptToApprove')
     if (!pairContract || !pair || !library || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
@@ -123,7 +123,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'DmmExchange LP',
+      name: 'DMM LP',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -564,7 +564,7 @@ export default function RemoveLiquidity({
                           <StyledInternalLink
                             to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
                               currencyB === ETHER ? WETH[chainId].address : currencyIdB
-                            }`}
+                            }/${pairAddress}`}
                           >
                             Receive WETH
                           </StyledInternalLink>
@@ -572,7 +572,9 @@ export default function RemoveLiquidity({
                           <StyledInternalLink
                             to={`/remove/${
                               currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
-                            }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
+                            }/${
+                              currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB
+                            }/${pairAddress}`}
                           >
                             Receive ETH
                           </StyledInternalLink>
