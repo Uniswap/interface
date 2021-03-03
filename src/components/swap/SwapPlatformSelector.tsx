@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback } from 'react'
-import { RoutablePlatform, Trade } from 'dxswap-sdk'
+import { RoutablePlatform, Trade, TradeType } from 'dxswap-sdk'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
@@ -45,6 +45,7 @@ export function SwapPlatformSelector({
       <AutoColumn gap="8px">
         {allPlatformTrades?.map((trade, i) => {
           if (!trade) return null // some platforms might not be compatible with the currently selected network
+          const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
           return (
             <RowBetween key={i}>
               <Radio
@@ -57,11 +58,15 @@ export function SwapPlatformSelector({
               <Flex>
                 <Box>
                   <TYPE.subHeader color="white" fontSize="12px" fontWeight="600">
-                    {trade.outputAmount.toSignificant(4)}
+                    {isExactIn ? trade.outputAmount.toSignificant(4) : trade.inputAmount.toSignificant(4)}
                   </TYPE.subHeader>
                 </Box>
                 <Box>
-                  <CurrencyLogo currency={trade.outputAmount.currency} size="14px" style={{ margin: '0 2px' }} />
+                  <CurrencyLogo
+                    currency={isExactIn ? trade.outputAmount.currency : trade.inputAmount.currency}
+                    size="14px"
+                    style={{ margin: '0 2px' }}
+                  />
                 </Box>
               </Flex>
             </RowBetween>
