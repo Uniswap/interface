@@ -21,7 +21,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO, XYZ_INFO_URL } from '../../constants'
+import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
 import { priceRangeCalc } from 'utils/dmm'
 
 export const FixedHeightRow = styled(RowBetween)`
@@ -322,7 +322,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               </Text>
             </FixedHeightRow>
             <ButtonSecondary padding="8px" borderRadius="8px">
-              <ExternalLink style={{ width: '100%', textAlign: 'center' }} href={`${XYZ_INFO_URL}/account/${account}`}>
+              <ExternalLink style={{ width: '100%', textAlign: 'center' }} href={`${DMM_INFO_URL}/account/${account}`}>
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary>

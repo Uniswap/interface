@@ -11,7 +11,7 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
-import { XYZ_INFO_URL } from "../../constants"
+import { DMM_INFO_URL } from "../../constants"
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
@@ -106,7 +106,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             </>
           )}
           <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={`${XYZ_INFO_URL}/pair/` + trade.route.pairs[0].liquidityToken.address} target="_blank">
+            <InfoLink href={`${DMM_INFO_URL}/pair/` + trade.route.pairs[0].liquidityToken.address} target="_blank">
               View pair analytics ↗
             </InfoLink>
           </AutoColumn>

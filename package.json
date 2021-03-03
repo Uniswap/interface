@@ -1,6 +1,6 @@
 {
-  "name": "@xyzswap/interface",
-  "description": "XyzSwap Interface",
+  "name": "@dmm/interface",
+  "description": "DMM Exchange Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {

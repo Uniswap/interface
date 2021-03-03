@@ -168,11 +168,14 @@ export function usePairAdderByTokens(): (token0: Token, token1: Token) => void {
 
   return useCallback(
     (token0: Token, token1: Token) => {
-      dispatch(addSerializedPair({ serializedPair: {
-                                                      token0: serializeToken(token0),
-                                                      token1: serializeToken(token1)
-                                                    } 
-                                }))
+      dispatch(
+        addSerializedPair({
+          serializedPair: {
+            token0: serializeToken(token0),
+            token1: serializeToken(token1)
+          }
+        })
+      )
     },
     [dispatch]
   )
@@ -192,20 +195,28 @@ export function useURLWarningToggle(): () => void {
  * @param tokenA one of the two tokens
  * @param tokenB the other token
  */
+
 // export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-//   return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'XYZ-LP', 'XYZSwap LP')
+//   return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'DMM-LP', 'DMM LP')
 // }
 
-export function useToV2LiquidityTokens(tokenCouples: [Token, Token][]) : {liquidityTokens: [], tokens: [Token, Token]}[]
-{
+export function useToV2LiquidityTokens(
+  tokenCouples: [Token, Token][]
+): { liquidityTokens: []; tokens: [Token, Token] }[] {
   const contract = useFactoryContract()
   const result = useSingleContractMultipleData(
-      contract,
-      'getPools',
-      tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address])
+    contract,
+    'getPools',
+    tokenCouples.map(([tokenA, tokenB]) => [tokenA.address, tokenB.address])
   )
-  return result.map((result, index) => ({tokens: tokenCouples[index], liquidityTokens: result.result?.[0].map((address :string) => new Token(tokenCouples[index][0].chainId, address, 18, 'XYZ-LP', 'XYZSwap LP')) || [] }))
-} 
+  return result.map((result, index) => ({
+    tokens: tokenCouples[index],
+    liquidityTokens:
+      result.result?.[0].map(
+        (address: string) => new Token(tokenCouples[index][0].chainId, address, 18, 'DMM-LP', 'DMM LP')
+      ) || []
+  }))
+}
 
 /**
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
