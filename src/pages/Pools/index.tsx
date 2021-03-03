@@ -1,80 +1,54 @@
-import React, { useContext, useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import styled, { ThemeContext } from 'styled-components'
-import { darken } from 'polished'
+import styled from 'styled-components'
+import { Box, Flex } from 'rebass'
+import { useTranslation } from 'react-i18next'
 
 import { ButtonOutlined } from 'components/Button'
-import { AutoColumn } from 'components/Column'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
-import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { useDerivedPairInfo, usePairActionHandlers, usePairState } from 'state/pair/hooks'
 import { Field } from 'state/pair/actions'
 import { Currency } from 'libs/sdk/src'
-import { useTrackedTokenPairs, useToV2LiquidityTokens } from 'state/user/hooks'
-import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
 
-const PageWrapper = styled(AutoColumn)`
-  display: flex;
+const PageWrapper = styled.div`
   padding: 0 10em;
   width: 100%;
-`
-const LeftColumn = styled(AutoColumn)`
-  width: 10em;
-`
-const RightColumn = styled(AutoColumn)`
-  width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 0 4em;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0;
+  `};
 `
 
-const InputRow = styled.div<{ selected: boolean }>`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
-`
-const CurrencySelect = styled.button<{ selected: boolean }>`
-  align-items: center;
-  height: 2.2rem;
-  font-size: 20px;
-  font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 12px;
-  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  outline: none;
-  cursor: pointer;
-  user-select: none;
-  border: none;
-  padding: 0 0.5rem;
-
-  :focus,
-  :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
-  }
-`
-
-const Aligner = styled.span`
+const ToolbarWrapper = styled.div`
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  margin-bottom: 16px;
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
-  margin: 0 0.25rem 0 0.5rem;
-  height: 35%;
-
-  path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-    stroke-width: 1.5px;
-  }
+const CurrencyWrapper = styled(Flex)`
+  width: 100%;
+  align-items: center;
 `
+
+const SelectPairInstructionWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 24px;
+`
+
 const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
-  const theme = useContext(ThemeContext)
-  const { account, chainId, library } = useActiveWeb3React()
+  const { t } = useTranslation()
 
-  // Pool selection--------------------------------------------------------------------
+  // Pool selection
   const { onCurrencySelection } = usePairActionHandlers()
   const {
     [Field.CURRENCY_A]: { currencyId: currencyIdA },
@@ -98,63 +72,48 @@ const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; curren
     [onCurrencySelection]
   )
 
-  // Your Liquidity--------------------------------------------------------------------
-  // fetch the user's balances of all tracked V2 LP tokens
-  const trackedTokenPairs = useTrackedTokenPairs()
-  const tokenPairsWithLiquidityTokens = useToV2LiquidityTokens(trackedTokenPairs)
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityTokens), [
-    tokenPairsWithLiquidityTokens
-  ]).flatMap(x => x)
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    liquidityTokens
-  )
-
-  const liquidityTokensWithBalances = tokenPairsWithLiquidityTokens
-
   const poolList = pairs.map(([pairState, pair]) => pair)
 
   return (
     <>
       <PageWrapper>
-        <LeftColumn>
-          <CurrencyInputPanel
-            value={''}
-            onUserInput={() => {}}
-            onMax={() => {}}
-            onCurrencySelect={handleCurrencyASelect}
-            showMaxButton={false}
-            currency={currencies[Field.CURRENCY_A]}
-            id="input-tokena"
-            hideInput={true}
-            hideBalance={true}
-          />
-          <CurrencyInputPanel
-            value={''}
-            onUserInput={() => {}}
-            onMax={() => {}}
-            onCurrencySelect={handleCurrencyBSelect}
-            showMaxButton={false}
-            currency={currencies[Field.CURRENCY_B]}
-            id="input-tokenb"
-            hideInput={true}
-            hideBalance={true}
-          />
-        </LeftColumn>
-        <RightColumn>
-          <div style={{ marginBottom: '18px' }}>
-            <Link
+        <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
+        <ToolbarWrapper>
+          <CurrencyWrapper>
+            <PoolsCurrencyInputPanel
+              onCurrencySelect={handleCurrencyASelect}
+              currency={currencies[Field.CURRENCY_A]}
+              id="input-tokena"
+            />
+            <span style={{ margin: '0 8px' }}>/</span>
+            <PoolsCurrencyInputPanel
+              onCurrencySelect={handleCurrencyBSelect}
+              currency={currencies[Field.CURRENCY_B]}
+              id="input-tokenb"
+            />
+          </CurrencyWrapper>
+          <div style={{ width: '100%' }}>
+            <ButtonOutlined
+              width="148px"
+              padding="12px 18px"
+              as={Link}
               to={`/create/${currencyIdA == '' ? undefined : currencyIdA}/${
                 currencyIdB == '' ? undefined : currencyIdB
               }`}
+              style={{ float: 'right' }}
             >
-              <ButtonOutlined variant="outline" width="148px" padding="12px 18px" style={{ float: 'right' }}>
-                + Create New Pool
-              </ButtonOutlined>
-            </Link>
+              {t('createNewPool')}
+            </ButtonOutlined>
           </div>
-          <Panel>{poolList.length > 0 && <PoolList pairs={poolList} />}</Panel>
-        </RightColumn>
+        </ToolbarWrapper>
+
+        <Panel>
+          {poolList.length > 0 ? (
+            <PoolList pairs={poolList} maxItems={50} />
+          ) : (
+            <SelectPairInstructionWrapper>{t('thereAreNoPools')}</SelectPairInstructionWrapper>
+          )}
+        </Panel>
       </PageWrapper>
     </>
   )
