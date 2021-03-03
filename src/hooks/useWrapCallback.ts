@@ -1,4 +1,4 @@
-import { Currency, currencyEquals, ETHER, WETH } from 'dxswap-sdk'
+import { Currency, currencyEquals } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -65,7 +65,11 @@ export default function useWrapCallback(
             : undefined,
         inputError: sufficientBalance ? undefined : 'Insufficient ETH balance'
       }
-    } else if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
+    } else if (
+      nativeCurrencyWrapperToken &&
+      currencyEquals(nativeCurrencyWrapperToken, inputCurrency) &&
+      Currency.isNative(outputCurrency)
+    ) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:
