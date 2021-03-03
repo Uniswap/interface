@@ -19,7 +19,7 @@ import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../state/user/hook
 import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
 import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../utils/liquidityMining'
 import { useNativeCurrencyUSDPrice } from './useNativeCurrencyUSDPrice'
-import ethers from 'ethers'
+import { ethers } from 'ethers'
 import { useActiveWeb3React } from '.'
 
 export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; volume24hUSD: BigNumber } {
