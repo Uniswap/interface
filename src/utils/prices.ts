@@ -16,15 +16,11 @@ export function computeTradePriceBreakdown(
   const realizedLPFee = !trade
     ? undefined
     : ONE_HUNDRED_PERCENT.subtract(
-        trade.route.pairs.reduce<Fraction>(
-          (currentFee: Fraction, currentIndex: Pair): Fraction =>
-            currentFee.multiply(
-              ONE_HUNDRED_PERCENT.subtract(
-                new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(10000))
-              )
-            ),
-          ONE_HUNDRED_PERCENT
-        )
+        trade.route.pairs.reduce<Fraction>((currentFee: Fraction, currentIndex: Pair): Fraction => {
+          return currentFee.multiply(
+            ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(10000)))
+          )
+        }, ONE_HUNDRED_PERCENT)
       )
 
   // remove lp fees from price impact
@@ -103,4 +99,23 @@ export function formatExecutionPrice(trade?: Trade, inverted?: boolean): string 
     : `${trade.executionPrice.toSignificant(6)} ${trade.outputAmount.currency.symbol} / ${
         trade.inputAmount.currency.symbol
       }`
+}
+
+export function sortTradesByExecutionPrice(trades: (Trade | undefined)[]): (Trade | undefined)[] {
+  return trades.sort((a, b) => {
+    if (a === undefined || a === null) {
+      return 1
+    }
+    if (b === undefined || b === null) {
+      return -1
+    }
+
+    if (a.executionPrice.lessThan(b.executionPrice)) {
+      return 1
+    } else if (a.executionPrice.equalTo(b.executionPrice)) {
+      return 0
+    } else {
+      return -1
+    }
+  })
 }

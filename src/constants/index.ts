@@ -1,16 +1,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ChainId, JSBI, Percent, WETH, WSPOA, DXD, WXDAI, Token } from 'dxswap-sdk'
-import { rinkeby, mainnet, arbitrumTestnetV3, sokol, xdai } from 'dxswap-periphery/.contracts.json'
 import { tokens } from './tokens'
 import { authereum, injected, walletConnect } from '../connectors'
-
-export const ROUTER_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: rinkeby.router,
-  [ChainId.MAINNET]: mainnet.router,
-  [ChainId.ARBITRUM_TESTNET_V3]: arbitrumTestnetV3.router,
-  [ChainId.SOKOL]: sokol.router,
-  [ChainId.XDAI]: xdai.router
-}
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
