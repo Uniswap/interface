@@ -12,7 +12,7 @@ import { TYPE } from '../../theme'
 
 const AutoColumn2 = styled(AutoColumn)`
   width: 48%;
-  height: 100%
+  height: 100%;
   margin: 0 !important;
 `
 
@@ -70,7 +70,7 @@ export function PoolPriceBar({
               %
             </Text>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              Ratio: {percentToken0}% {currencies[Field.CURRENCY_A]?.symbol} - {percentToken1}%{' '}
+              Ratio: {percentToken0}&nbsp;{currencies[Field.CURRENCY_A]?.symbol}&nbsp;-&nbsp;{percentToken1}&nbsp;
               {currencies[Field.CURRENCY_B]?.symbol}
             </Text>
           </OutlineCard2>

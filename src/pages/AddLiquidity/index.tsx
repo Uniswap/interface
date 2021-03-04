@@ -45,6 +45,7 @@ import NumericalInput from 'components/NumericalInput'
 import { ONE } from 'libs/sdk/src/constants'
 import { parseUnits } from 'ethers/lib/utils'
 import Modal from 'components/Modal'
+import isZero from 'utils/isZero'
 
 const ActiveText = styled.div`
   font-weight: 500;
@@ -119,7 +120,12 @@ export default function AddLiquidity({
     ? new Fraction(JSBI.BigInt(parseUnits(amp.toString() || '1', 20)), JSBI.BigInt(parseUnits('1', 16)))
     : undefined
 
-  const linkToUnamplifiedPool = !!ampConverted && ampConverted.equalTo(JSBI.BigInt(10000)) && !!unAmplifiedPairAddress
+  const linkToUnamplifiedPool =
+    !!ampConverted &&
+    ampConverted.equalTo(JSBI.BigInt(10000)) &&
+    !!unAmplifiedPairAddress &&
+    !isZero(unAmplifiedPairAddress)
+
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
   const isValid = !(error || (!pairAddress && +amp == 0 ? 'Enter amp' : ''))

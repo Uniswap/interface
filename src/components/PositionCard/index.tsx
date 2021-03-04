@@ -11,7 +11,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, HideExtraSmall, ExtraSmallOnly } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonUNIGradient } from '../Button'
+import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonUNIGradient, ButtonOutlined } from '../Button'
 import { transparentize } from 'polished'
 import { CardNoise } from '../earn/styled'
 import { useColor } from '../../hooks/useColor'
@@ -40,8 +40,19 @@ const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
     `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.bg3} 100%) `};
   position: relative;
   overflow: hidden;
+  border-radius: 8px;
 `
 
+const ButtonSecondary2 = styled(ButtonSecondary)`
+  border: none;
+  :hover {
+    border: none;
+  }
+`
+
+const ButtonOutlined2 = styled(ButtonOutlined)`
+  font-size: inherit;
+`
 interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
@@ -179,7 +190,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   const backgroundColor = useColor(pair?.token0)
 
   const price = pair.priceOf(pair.token0)
-  const amp = pair.virtualReserve0.divide(pair?.reserve0)
+  const amp = new Fraction(pair.amp).divide(JSBI.BigInt(10000))
 
   const percentToken0 = pair.virtualReserve0
     .divide(pair.reserve0)
@@ -187,7 +198,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
     .divide(pair.virtualReserve0.divide(pair.reserve0).add(pair.virtualReserve1.divide(pair.reserve1)))
   const percentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0)
   return (
-    <StyledPositionCard border={border} bgColor={backgroundColor}>
+    <StyledPositionCard border={border} bgColor={'#303e46'}>
       <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
@@ -304,7 +315,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                AMP {amp.toSignificant(5)}
+                AMP: {amp.toSignificant(5)}
               </Text>
             </FixedHeightRow>
             <FixedHeightRow>
@@ -321,30 +332,33 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 {priceRangeCalc(pair.priceOf(pair.token1), amp)[0]?.toSignificant(6) ?? '.'}
               </Text>
             </FixedHeightRow>
-            <ButtonSecondary padding="8px" borderRadius="8px">
+            <ButtonSecondary2 padding="8px" borderRadius="8px">
               <ExternalLink style={{ width: '100%', textAlign: 'center' }} href={`${DMM_INFO_URL}/account/${account}`}>
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
-            </ButtonSecondary>
+            </ButtonSecondary2>
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
-              <RowBetween marginTop="10px">
-                <ButtonPrimary
-                  padding="8px"
-                  as={Link}
-                  to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
-                  width="48%"
-                >
-                  Add
-                </ButtonPrimary>
-                <ButtonPrimary
-                  padding="8px"
-                  as={Link}
-                  width="48%"
-                  to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
-                >
-                  Remove
-                </ButtonPrimary>
-              </RowBetween>
+              <AutoRow justify="space-around" marginTop="10px">
+                <span style={{ display: 'inherit' }}>
+                  <ButtonOutlined2
+                    padding="8px"
+                    as={Link}
+                    width="150px"
+                    to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
+                  >
+                    Remove
+                  </ButtonOutlined2>
+                  &nbsp;
+                  <ButtonPrimary
+                    padding="8px"
+                    as={Link}
+                    to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
+                    width="150px"
+                  >
+                    Add
+                  </ButtonPrimary>
+                </span>
+              </AutoRow>
             )}
             {stakedBalance && JSBI.greaterThan(stakedBalance.raw, BIG_INT_ZERO) && (
               <ButtonPrimary

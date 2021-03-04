@@ -36,14 +36,9 @@ export function ConfirmAddModalBottom({
   onAdd: () => void
   amplification?: Fraction
 }) {
-  // console.log(
-  //   'onAdd',
-  //   new Fraction(JSBI.BigInt(parseUnits('1.234567', 10)), JSBI.BigInt(parseUnits('1', 6))).toSignificant(5)
-  // )
-
-  const amp =
-    pair?.virtualReserve0.divide(pair?.reserve0).toSignificant(5) ||
-    amplification?.divide(JSBI.BigInt(10000)).toSignificant(5)
+  const amp = !!pair
+    ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)
+    : amplification?.divide(JSBI.BigInt(10000)).toSignificant(5)
 
   return (
     <>

@@ -9,7 +9,7 @@ import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import Card from '../../components/Card'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs, usePairsByAddress } from '../../data/Reserves'
@@ -18,6 +18,7 @@ import { Dots } from '../../components/swap/styleds'
 import { DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
+import { useTranslation } from 'react-i18next'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -116,7 +117,6 @@ export default function Pool() {
       currencies: tokens
     }))
   )
-
   const v2IsLoading =
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
@@ -135,6 +135,7 @@ export default function Pool() {
     )
   })
 
+  const { t } = useTranslation()
   return (
     <>
       <PageWrapper>
@@ -155,14 +156,20 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
-                  Create a pair
-                </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
+                <ButtonOutlined
+                  width="148px"
+                  padding="12px 18px"
+                  as={Link}
+                  to={`/create/ETH`}
+                  style={{ float: 'right' }}
+                >
+                  {t('createNewPool')}
+                </ButtonOutlined>
+                {/* <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
                   <Text fontWeight={500} fontSize={16}>
                     Add Liquidity
                   </Text>
-                </ResponsiveButtonPrimary>
+                </ResponsiveButtonPrimary> */}
               </ButtonRow>
             </TitleRow>
 
