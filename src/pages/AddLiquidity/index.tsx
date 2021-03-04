@@ -116,13 +116,13 @@ export default function AddLiquidity({
     setAmp(e)
   }
 
-  const ampConverted = !!amp.toString()
+  const ampConvertedInBps = !!amp.toString()
     ? new Fraction(JSBI.BigInt(parseUnits(amp.toString() || '1', 20)), JSBI.BigInt(parseUnits('1', 16)))
     : undefined
 
   const linkToUnamplifiedPool =
-    !!ampConverted &&
-    ampConverted.equalTo(JSBI.BigInt(10000)) &&
+    !!ampConvertedInBps &&
+    ampConvertedInBps.equalTo(JSBI.BigInt(10000)) &&
     !!unAmplifiedPairAddress &&
     !isZero(unAmplifiedPairAddress)
 
@@ -223,14 +223,14 @@ export default function AddLiquidity({
         value = null
       }
     } else {
-      if (!ampConverted) return
+      if (!ampConvertedInBps) return
       if (currencyA === ETHER || currencyB === ETHER) {
         const tokenBIsETH = currencyB === ETHER
         estimate = router.estimateGas.addLiquidityNewPoolETH
         method = router.addLiquidityNewPoolETH
         args = [
           wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-          ampConverted.toSignificant(5), //ampBps
+          ampConvertedInBps.toSignificant(5), //ampBps
           (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
           amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
           amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
@@ -244,7 +244,7 @@ export default function AddLiquidity({
         args = [
           wrappedCurrency(currencyA, chainId)?.address ?? '',
           wrappedCurrency(currencyB, chainId)?.address ?? '',
-          ampConverted.toSignificant(5), //ampBps
+          ampConvertedInBps.toSignificant(5), //ampBps
           parsedAmountA.raw.toString(),
           parsedAmountB.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
@@ -339,7 +339,7 @@ export default function AddLiquidity({
         noLiquidity={noLiquidity}
         onAdd={onAdd}
         poolTokenPercentage={poolTokenPercentage}
-        amplification={ampConverted}
+        amplification={ampConvertedInBps}
       />
     )
   }
@@ -430,24 +430,23 @@ export default function AddLiquidity({
             pendingText={pendingText}
           />
           <AutoColumn gap="20px">
-            {noLiquidity ||
-              (isCreate && (
-                <ColumnCenter>
-                  <BlueCard>
-                    <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={600} color={'primaryText1'}>
-                        You are the first liquidity provider.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
-                        The ratio of tokens you add will set the price of this pool.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
-                        Once you are happy with the rate click supply to review.
-                      </TYPE.link>
-                    </AutoColumn>
-                  </BlueCard>
-                </ColumnCenter>
-              ))}
+            {isCreate && (
+              <ColumnCenter>
+                <BlueCard>
+                  <AutoColumn gap="10px">
+                    <TYPE.link fontWeight={600} color={'primaryText1'}>
+                      You are the first liquidity provider.
+                    </TYPE.link>
+                    <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      The ratio of tokens you add will set the price of this pool.
+                    </TYPE.link>
+                    <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      Once you are happy with the rate click supply to review.
+                    </TYPE.link>
+                  </AutoColumn>
+                </BlueCard>
+              </ColumnCenter>
+            )}
             <CurrencyInputPanel
               value={formattedAmounts[Field.CURRENCY_A]}
               onUserInput={onFieldAInput}
@@ -487,7 +486,8 @@ export default function AddLiquidity({
 
             <RowFlat2>
               <ActiveText>
-                AMP{!!pair ? <>&nbsp;=&nbsp;{pair?.virtualReserve0.divide(pair?.reserve0).toSignificant(5)}</> : ''}
+                AMP
+                {!!pair ? <>&nbsp;=&nbsp;{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</> : ''}
               </ActiveText>
               <QuestionHelper text={'Amplification factor'} />
             </RowFlat2>
@@ -500,7 +500,12 @@ export default function AddLiquidity({
 
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
-                <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} amplification={ampConverted} />
+                <PoolPriceRangeBar
+                  pair={pair}
+                  currencies={currencies}
+                  price={price}
+                  amplification={ampConvertedInBps}
+                />
               </>
             )}
 
