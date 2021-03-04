@@ -98,11 +98,11 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         for (let j = 0; j < len; j++) {
           const { result: reserves, loading } = results[start]
           const { result: amp, loading: loadingAmp } = ampResults[start]
-          if (loading || loadingAmp || !amp) {
+          if (loading || loadingAmp) {
             vv[vv.length - 1].push([PairState.LOADING, null])
           } else if (!tokenA || !tokenB || tokenA.equals(tokenB)) {
             vv[vv.length - 1].push([PairState.INVALID, null])
-          } else if (!reserves) {
+          } else if (!reserves || !amp) {
             vv[vv.length - 1].push([PairState.NOT_EXISTS, null])
           } else {
             const { _reserve0, _reserve1, _vReserve0, _vReserve1, feeInPrecision } = reserves
@@ -142,6 +142,7 @@ export function usePairsByAddress(
     new Interface(XYZSwapPair.abi),
     'ampBps'
   )
+
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result
@@ -149,8 +150,8 @@ export function usePairsByAddress(
       const tokenA = wrappedCurrency(pairInfo[i].currencies[0], chainId)
       const tokenB = wrappedCurrency(pairInfo[i].currencies[1], chainId)
 
-      if (loading || loadingAmp || !amp) return [PairState.LOADING, null]
-      if (typeof pairInfo[i].address == 'undefined') return [PairState.NOT_EXISTS, null]
+      if (loading || loadingAmp) return [PairState.LOADING, null]
+      if (typeof pairInfo[i].address == 'undefined' || !amp) return [PairState.NOT_EXISTS, null]
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
       if (!reserves) return [PairState.NOT_EXISTS, null]
       const { _reserve0, _reserve1, _vReserve0, _vReserve1, feeInPrecision } = reserves
