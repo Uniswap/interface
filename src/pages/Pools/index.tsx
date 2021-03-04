@@ -81,11 +81,7 @@ const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; curren
     .map(([pairState, pair]) => pair)
     .filter(pair => {
       if (searchValue) {
-        return (
-          pair?.address.includes(searchValue) ||
-          pair?.token0?.address.includes(searchValue) ||
-          pair?.token1?.address.includes(searchValue)
-        )
+        return pair?.address.includes(searchValue)
       }
 
       return true
