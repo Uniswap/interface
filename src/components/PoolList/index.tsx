@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { useTranslation } from 'react-i18next'
 import { Fraction, JSBI, Pair } from 'libs/sdk/src'
+import { ChevronUp, ChevronDown } from 'react-feather'
 
 import { ButtonEmpty } from 'components/Button'
 import FavoriteStar from 'components/Icons/FavoriteStar'
@@ -50,6 +51,8 @@ const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 `
 
 const ClickableText = styled(Text)`
+  display: flex;
+  align-items: center;
   color: ${({ theme }) => theme.text6};
   &:hover {
     cursor: pointer;
@@ -130,6 +133,29 @@ interface PoolListProps {
   maxItems?: number
 }
 
+const SORT_FIELD = {
+  LIQ: 0,
+  VOL: 1,
+  FEES: 2,
+  APY: 3
+}
+
+// TODO: Update this function
+const FIELD_TO_VALUE = (field: number) => {
+  switch (field) {
+    case SORT_FIELD.LIQ:
+      return field
+    case SORT_FIELD.VOL:
+      return field
+    case SORT_FIELD.FEES:
+      return field
+    case SORT_FIELD.APY:
+      return field
+    default:
+      return field
+  }
+}
+
 const PoolList = ({ pairs, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
 
@@ -137,6 +163,10 @@ const PoolList = ({ pairs, maxItems = 10 }: PoolListProps) => {
   const [page, setPage] = useState(1)
   const [maxPage, setMaxPage] = useState(1)
   const ITEMS_PER_PAGE = maxItems
+
+  // sorting
+  const [sortDirection, setSortDirection] = useState(true)
+  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
 
   useEffect(() => {
     setMaxPage(1) // edit this to do modular
@@ -164,14 +194,62 @@ const PoolList = ({ pairs, maxItems = 10 }: PoolListProps) => {
           <InfoHelper text={'Based on 24hr volume annualized'} />
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Liquidity</ClickableText>
+          <ClickableText
+            onClick={() => {
+              setSortedColumn(SORT_FIELD.LIQ)
+              setSortDirection(sortedColumn !== SORT_FIELD.LIQ ? true : !sortDirection)
+            }}
+          >
+            Liquidity
+            {sortedColumn === SORT_FIELD.LIQ ? (
+              !sortDirection ? (
+                <ChevronUp size="14" style={{ marginLeft: '2px' }} />
+              ) : (
+                <ChevronDown size="14" style={{ marginLeft: '2px' }} />
+              )
+            ) : (
+              ''
+            )}
+          </ClickableText>
         </Flex>
         <Flex alignItems="center">
-          <ClickableText>Volume</ClickableText>
+          <ClickableText
+            onClick={() => {
+              setSortedColumn(SORT_FIELD.VOL)
+              setSortDirection(sortedColumn !== SORT_FIELD.VOL ? true : !sortDirection)
+            }}
+          >
+            Volume
+            {sortedColumn === SORT_FIELD.VOL ? (
+              !sortDirection ? (
+                <ChevronUp size="14" style={{ marginLeft: '2px' }} />
+              ) : (
+                <ChevronDown size="14" style={{ marginLeft: '2px' }} />
+              )
+            ) : (
+              ''
+            )}
+          </ClickableText>
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Fee (24h)</ClickableText>
+          <ClickableText
+            onClick={() => {
+              setSortedColumn(SORT_FIELD.FEES)
+              setSortDirection(sortedColumn !== SORT_FIELD.FEES ? true : !sortDirection)
+            }}
+          >
+            Fee (24h)
+            {sortedColumn === SORT_FIELD.FEES ? (
+              !sortDirection ? (
+                <ChevronUp size="14" style={{ marginLeft: '2px' }} />
+              ) : (
+                <ChevronDown size="14" style={{ marginLeft: '2px' }} />
+              )
+            ) : (
+              ''
+            )}
+          </ClickableText>
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
@@ -180,7 +258,23 @@ const PoolList = ({ pairs, maxItems = 10 }: PoolListProps) => {
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>1y F/L</ClickableText>
+          <ClickableText
+            onClick={() => {
+              setSortedColumn(SORT_FIELD.APY)
+              setSortDirection(sortedColumn !== SORT_FIELD.APY ? true : !sortDirection)
+            }}
+          >
+            1y F/L
+            {sortedColumn === SORT_FIELD.APY ? (
+              !sortDirection ? (
+                <ChevronUp size="14" style={{ marginLeft: '2px' }} />
+              ) : (
+                <ChevronDown size="14" style={{ marginLeft: '2px' }} />
+              )
+            ) : (
+              ''
+            )}
+          </ClickableText>
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
