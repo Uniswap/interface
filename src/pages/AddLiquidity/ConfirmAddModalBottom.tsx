@@ -41,6 +41,10 @@ export function ConfirmAddModalBottom({
   //   new Fraction(JSBI.BigInt(parseUnits('1.234567', 10)), JSBI.BigInt(parseUnits('1', 6))).toSignificant(5)
   // )
 
+  const amp =
+    pair?.virtualReserve0.divide(pair?.reserve0).toSignificant(5) ||
+    amplification?.divide(JSBI.BigInt(10000)).toSignificant(5)
+
   return (
     <>
       <RowBetween>
@@ -73,7 +77,7 @@ export function ConfirmAddModalBottom({
         </TYPE.body>
       </RowBetween>
       <DashedLine />
-      <TYPE.body>AMP {amplification?.divide(JSBI.BigInt(10000)).toSignificant(5)}</TYPE.body>
+      <TYPE.body>AMP{!!amp ? <>&nbsp;=&nbsp;{amp}</> : ''}</TYPE.body>
       <PoolPriceRangeBar pair={pair} currencies={currencies} price={price} amplification={amplification} />
 
       <DashedLine />

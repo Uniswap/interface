@@ -481,7 +481,7 @@ export default function AddLiquidity({
 
             <RowFlat2>
               <ActiveText>
-                AMP{!!pairAddress && <>&nbsp;=&nbsp;{pair?.virtualReserve0.divide(pair?.reserve0).toSignificant(5)}</>}
+                AMP{!!pair ? <>&nbsp;=&nbsp;{pair?.virtualReserve0.divide(pair?.reserve0).toSignificant(5)}</> : ''}
               </ActiveText>
               <QuestionHelper text={'Amplification factor'} />
             </RowFlat2>
