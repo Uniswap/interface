@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
@@ -22,7 +22,7 @@ interface AggregatedPairsListProps {
   token0?: Token | null
 }
 
-export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
+function Token0PairsList({ token0 }: AggregatedPairsListProps) {
   const [page, setPage] = useState(0)
   const { loading, wrappedPairs } = usePairsByToken0WithRemainingRewardUSDAndMaximumApy(token0)
 
@@ -61,3 +61,8 @@ export default function Token0PairsList({ token0 }: AggregatedPairsListProps) {
     </Flex>
   )
 }
+
+export default memo(Token0PairsList, (previousProps, nextProps) => {
+  // avoids token reference changes to mess things up by reloading the whole thing
+  return !!(previousProps.token0 && nextProps.token0 && previousProps.token0.equals(nextProps.token0))
+})
