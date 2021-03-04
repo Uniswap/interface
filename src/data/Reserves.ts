@@ -86,7 +86,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     return acc
   }, [])
   const results = useMultipleContractSingleData(pairAddresses, new Interface(XYZSwapPair.abi), 'getTradeInfo')
-
+  const ampResults = useMultipleContractSingleData(pairAddresses, new Interface(XYZSwapPair.abi), 'ampBps')
   return useMemo(() => {
     start = 0
     const vv: any[] = []
@@ -97,8 +97,9 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       if (len > 0) {
         for (let j = 0; j < len; j++) {
           const { result: reserves, loading } = results[start]
-          if (loading) {
-            vv[vv.length - 1].push([PairState.INVALID, null])
+          const { result: amp, loading: loadingAmp } = ampResults[start]
+          if (loading || loadingAmp || !amp) {
+            vv[vv.length - 1].push([PairState.LOADING, null])
           } else if (!tokenA || !tokenB || tokenA.equals(tokenB)) {
             vv[vv.length - 1].push([PairState.INVALID, null])
           } else if (!reserves) {
@@ -114,7 +115,8 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
                 new TokenAmount(token1, _reserve1.toString()),
                 new TokenAmount(token0, _vReserve0.toString()),
                 new TokenAmount(token1, _vReserve1.toString()),
-                JSBI.BigInt(feeInPrecision)
+                JSBI.BigInt(feeInPrecision),
+                JSBI.BigInt(amp[0])
               )
             ])
           }
@@ -135,13 +137,19 @@ export function usePairsByAddress(
     new Interface(XYZSwapPair.abi),
     'getTradeInfo'
   )
+  const ampResults = useMultipleContractSingleData(
+    pairInfo.map(info => info.address),
+    new Interface(XYZSwapPair.abi),
+    'ampBps'
+  )
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result
+      const { result: amp, loading: loadingAmp } = ampResults[i]
       const tokenA = wrappedCurrency(pairInfo[i].currencies[0], chainId)
       const tokenB = wrappedCurrency(pairInfo[i].currencies[1], chainId)
 
-      if (loading) return [PairState.LOADING, null]
+      if (loading || loadingAmp || !amp) return [PairState.LOADING, null]
       if (typeof pairInfo[i].address == 'undefined') return [PairState.NOT_EXISTS, null]
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
       if (!reserves) return [PairState.NOT_EXISTS, null]
@@ -155,7 +163,8 @@ export function usePairsByAddress(
           new TokenAmount(token1, _reserve1.toString()),
           new TokenAmount(token0, _vReserve0.toString()),
           new TokenAmount(token1, _vReserve1.toString()),
-          JSBI.BigInt(feeInPrecision)
+          JSBI.BigInt(feeInPrecision),
+          JSBI.BigInt(amp[0])
         )
       ]
     })

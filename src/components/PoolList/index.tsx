@@ -78,7 +78,7 @@ const LoadMoreButtonContainer = styled.div`
 `
 
 const ListItem = ({ pair, isFavorite, oddRow }: { pair: Pair; isFavorite?: boolean; oddRow?: boolean }) => {
-  const amp = pair.virtualReserve0.divide(pair?.reserve0)
+  const amp = new Fraction(pair.amp).divide(JSBI.BigInt(10000))
   const percentToken0 = pair.virtualReserve0
     .divide(pair.reserve0)
     .multiply('100')
