@@ -151,7 +151,7 @@ export const GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
   query($id: ID!, $timestamp: BigInt!) {
     pair(id: $id) {
       liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
-        contractAddress: id
+        address: id
         duration
         startsAt
         endsAt
