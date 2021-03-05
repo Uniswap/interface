@@ -125,7 +125,6 @@ export default function AddLiquidity({
     ampConvertedInBps.equalTo(JSBI.BigInt(10000)) &&
     !!unAmplifiedPairAddress &&
     !isZero(unAmplifiedPairAddress)
-
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
   const isValid = !(error || (!pairAddress && +amp == 0 ? 'Enter amp' : ''))
@@ -377,6 +376,7 @@ export default function AddLiquidity({
 
   const handleDismissConfirmation = useCallback(() => {
     setShowConfirm(false)
+    setAmp('')
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onFieldAInput('')
