@@ -1,5 +1,5 @@
-import { Fraction, JSBI, Price } from 'libs/sdk/src'
-import { ONE, ZERO } from 'libs/sdk/src/constants'
+import { Fraction, JSBI, Price, Pair } from 'libs/sdk/src'
+import { ZERO, ONE } from 'libs/sdk/src/constants'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
@@ -10,4 +10,11 @@ export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fract
     (price as Price)?.adjusted.multiply(temp).multiply(temp),
     (price as Price)?.adjusted.divide(temp.multiply(temp))
   ]
+}
+
+/**
+ * Get health factor (F) of a pool
+ */
+export function getHealthFactor(pool: Pair): Fraction {
+  return pool.reserve0.multiply(pool.reserve1)
 }

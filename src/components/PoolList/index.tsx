@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
@@ -14,6 +14,7 @@ import LocalLoader from 'components/LocalLoader'
 import { shortenAddress, formattedNum } from 'utils'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
+import { getHealthFactor } from 'utils/dmm'
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -77,17 +78,27 @@ const LoadMoreButtonContainer = styled.div`
   border-bottom-right-radius: 8px;
 `
 
-const ListItem = ({ pair, isFavorite, oddRow }: { pair: Pair; isFavorite?: boolean; oddRow?: boolean }) => {
-  const amp = new Fraction(pair.amp).divide(JSBI.BigInt(10000))
-  const percentToken0 = pair.virtualReserve0
-    .divide(pair.reserve0)
+interface ListItemProps {
+  pool: Pair
+  oddRow?: boolean
+}
+
+const ListItem = ({ pool, oddRow }: ListItemProps) => {
+  const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
+
+  // Recommended pools are pools that have AMP = 1 or is registered by kyber DAO in a whitelist contract
+  // TODO: Add recommended pool which is registered by kyber DAO  in a whitelist contract
+  const isRecommended = amp.equalTo(new Fraction(JSBI.BigInt(1)))
+
+  const percentToken0 = pool.virtualReserve0
+    .divide(pool.reserve0)
     .multiply('100')
-    .divide(pair.virtualReserve0.divide(pair.reserve0).add(pair.virtualReserve1.divide(pair.reserve1)))
+    .divide(pool.virtualReserve0.divide(pool.reserve0).add(pool.virtualReserve1.divide(pool.reserve1)))
   const percentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0)
   // Shorten address with 0x + 3 characters at start and end
-  const shortenPoolAddress = shortenAddress(pair?.liquidityToken.address, 3)
-  const currency0 = unwrappedToken(pair.token0)
-  const currency1 = unwrappedToken(pair.token1)
+  const shortenPoolAddress = shortenAddress(pool?.liquidityToken.address, 3)
+  const currency0 = unwrappedToken(pool.token0)
+  const currency1 = unwrappedToken(pool.token1)
 
   // TODO: Implement this function
   const getMyLiquidity = () => {
@@ -96,19 +107,19 @@ const ListItem = ({ pair, isFavorite, oddRow }: { pair: Pair; isFavorite?: boole
 
   return (
     <TableRow oddRow={oddRow}>
-      {isFavorite && (
+      {isRecommended && (
         <div style={{ position: 'absolute' }}>
           <FavoriteStar />
         </div>
       )}
       <DataText grid-area="pool">{shortenPoolAddress}</DataText>
       <DataText grid-area="ratio">
-        <div>{`• ${percentToken0.toSignificant(2) ?? '.'}% ${pair.token0.symbol}`}</div>
-        <div>{`• ${percentToken1.toSignificant(2) ?? '.'}% ${pair.token1.symbol}`}</div>
+        <div>{`• ${percentToken0.toSignificant(2) ?? '.'}% ${pool.token0.symbol}`}</div>
+        <div>{`• ${percentToken1.toSignificant(2) ?? '.'}% ${pool.token1.symbol}`}</div>
       </DataText>
       <DataText grid-area="liq">{formattedNum('0', true)}</DataText>
       <DataText grid-area="vol">{formattedNum('0', true)}</DataText>
-      <DataText>{formattedNum(JSBI.multiply(pair?.fee, JSBI.BigInt(0)).toString(), true)}</DataText>
+      <DataText>{formattedNum(JSBI.multiply(pool?.fee, JSBI.BigInt(0)).toString(), true)}</DataText>
       <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
       <DataText>{formattedNum('0')}</DataText>
       <DataText>{getMyLiquidity()}</DataText>
@@ -117,7 +128,7 @@ const ListItem = ({ pair, isFavorite, oddRow }: { pair: Pair; isFavorite?: boole
           <ButtonEmpty
             padding="0"
             as={Link}
-            to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
+            to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.address}`}
             width="fit-content"
           >
             <AddCircle />
@@ -129,11 +140,12 @@ const ListItem = ({ pair, isFavorite, oddRow }: { pair: Pair; isFavorite?: boole
 }
 
 interface PoolListProps {
-  pairs: (Pair | null)[]
+  poolsList: (Pair | null)[]
   maxItems?: number
 }
 
 const SORT_FIELD = {
+  NONE: -1,
   LIQ: 0,
   VOL: 1,
   FEES: 2,
@@ -156,7 +168,7 @@ const FIELD_TO_VALUE = (field: number) => {
   }
 }
 
-const PoolList = ({ pairs, maxItems = 10 }: PoolListProps) => {
+const PoolList = ({ poolsList, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
 
   // pagination
@@ -166,22 +178,60 @@ const PoolList = ({ pairs, maxItems = 10 }: PoolListProps) => {
 
   // sorting
   const [sortDirection, setSortDirection] = useState(true)
-  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.LIQ)
+  const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.NONE)
+
+  const sortList = (poolA: Pair | null, poolB: Pair | null): number => {
+    if (!poolA) {
+      return 1
+    }
+
+    if (!poolB) {
+      return -1
+    }
+
+    // Pool with AMP = 1 will be on top
+    // AMP from contract is 10000 (real value is 1)
+    if (JSBI.equal(poolA.amp, JSBI.BigInt(10000))) {
+      return -1
+    }
+
+    if (JSBI.equal(poolB.amp, JSBI.BigInt(10000))) {
+      return 1
+    }
+
+    const poolAHealthFactor = getHealthFactor(poolA)
+    const poolBHealthFactor = getHealthFactor(poolB)
+
+    // Pool with better health factor will be prioritized higher
+    if (poolAHealthFactor.greaterThan(poolBHealthFactor)) {
+      return -1
+    }
+
+    if (poolAHealthFactor.lessThan(poolBHealthFactor)) {
+      return 1
+    }
+
+    return 0
+  }
 
   useEffect(() => {
     setMaxPage(1) // edit this to do modular
     setPage(1)
-  }, [pairs])
+  }, [poolsList])
+
+  const pools = useMemo(() => {
+    return poolsList.sort(sortList)
+  }, [poolsList])
 
   useEffect(() => {
-    if (pairs) {
+    if (poolsList) {
       let extraPages = 1
-      if (Object.keys(pairs).length % ITEMS_PER_PAGE === 0) {
+      if (Object.keys(poolsList).length % ITEMS_PER_PAGE === 0) {
         extraPages = 0
       }
-      setMaxPage(Math.floor(Object.keys(pairs).length / ITEMS_PER_PAGE) + extraPages)
+      setMaxPage(Math.floor(Object.keys(poolsList).length / ITEMS_PER_PAGE) + extraPages)
     }
-  }, [ITEMS_PER_PAGE, pairs])
+  }, [ITEMS_PER_PAGE, poolsList])
 
   return (
     <div>
@@ -283,12 +333,12 @@ const PoolList = ({ pairs, maxItems = 10 }: PoolListProps) => {
 
         <Flex alignItems="center" justifyContent="flexEnd" />
       </TableHeader>
-      {!pairs ? (
+      {!pools ? (
         <LocalLoader />
       ) : (
-        pairs.slice(0, page * ITEMS_PER_PAGE).map((pair, index) => {
-          if (pair) {
-            return <ListItem key={pair.address} pair={pair} oddRow={(index + 1) % 2 !== 0} isFavorite={index < 2} />
+        pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
+          if (pool) {
+            return <ListItem key={pool.address} pool={pool} oddRow={(index + 1) % 2 !== 0} />
           }
 
           return null
