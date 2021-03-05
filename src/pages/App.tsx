@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
+import { DappKitResponseStatus } from '@celo/utils'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
@@ -57,7 +58,24 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
+const localStorageKey = 'valoraRedirect'
+
 export default function App() {
+  React.useEffect(() => {
+    // Close window if search params from Valora redirect are present (handles Valora connection issue)
+    if (typeof window !== 'undefined') {
+      const url = window.location.href
+      const whereQuery = url.indexOf('?')
+      if (whereQuery !== -1) {
+        const query = url.slice(whereQuery)
+        const params = new URLSearchParams(query)
+        if (params.get('status') === DappKitResponseStatus.SUCCESS) {
+          localStorage.setItem(localStorageKey, window.location.href)
+          window.close()
+        }
+      }
+    }
+  })
   return (
     <Suspense fallback={null}>
       <Route component={GoogleAnalyticsReporter} />

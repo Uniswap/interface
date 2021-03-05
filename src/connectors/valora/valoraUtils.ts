@@ -13,6 +13,19 @@ import { identity, mapValues } from 'lodash'
 import * as querystring from 'querystring'
 import { parse } from 'url'
 
+// Gets the url redirected from Valora that is used to update the page
+async function waitForValoraResponse() {
+  const localStorageKey = 'valoraRedirect'
+  while (true) {
+    const value = localStorage.getItem(localStorageKey)
+    if (value) {
+      localStorage.removeItem(localStorageKey)
+      return value
+    }
+    await new Promise(resolve => setTimeout(resolve, 100))
+  }
+}
+
 /**
  * Parses the response from Dappkit.
  * @param url
@@ -76,7 +89,12 @@ export const removeQueryParams = (url: string, keys: string[]): string => {
     delete newQs[key]
   })
   const { protocol, host, hash } = parse(url)
-  return `${protocol}//${host}/${hash?.slice(0, hash.indexOf('?'))}?${querystring.stringify(newQs)}`
+  const queryParams = `${querystring.stringify(newQs)}`
+  const resultUrl = `${protocol}//${host}/${hash?.slice(0, hash.indexOf('?'))}`
+  if (queryParams) {
+    return `${resultUrl}?${queryParams}`
+  }
+  return resultUrl
 }
 
 const cleanCallbackUrl = (url: string): string => {
@@ -97,6 +115,7 @@ export const requestValoraAuth = async (): Promise<AccountAuthResponseSuccess> =
       callback
     })
   )
+  window.location.href = await waitForValoraResponse()
   return await awaitDappkitResponse<AccountAuthResponseSuccess>()
 }
 
@@ -114,6 +133,7 @@ export const requestValoraTransaction = async (txs: TxToSignParam[]): Promise<Si
       callback
     })
   )
+  window.location.href = await waitForValoraResponse()
   return await awaitDappkitResponse<SignTxResponseSuccess>()
 }
 
