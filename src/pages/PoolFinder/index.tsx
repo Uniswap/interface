@@ -41,7 +41,7 @@ export default function PoolFinder() {
   useEffect(() => {
     if (pairs.length > 0) {
       const token0 = wrappedCurrency(currency0 || undefined, chainId)
-      const token1 = wrappedCurrency(currency0 || undefined, chainId)
+      const token1 = wrappedCurrency(currency1 || undefined, chainId)
       if (!!(token0 && token1)) {
         addPair(token0, token1)
       }
