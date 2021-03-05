@@ -2,7 +2,6 @@ import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import Modal from '../Modal'
 import Option from './Option'
-import { useToggleNetworkSwitcherModalToggle } from '../../state/application/hooks'
 import { transparentize } from 'polished'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 
