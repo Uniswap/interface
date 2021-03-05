@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import { Pair, TokenAmount } from 'dxswap-sdk'
 import { transparentize } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -31,6 +32,7 @@ interface LiquidityMiningCampaignProps {
   startsAt?: string
   endsAt?: string
   timelock?: boolean
+  apy?: BigNumber
 }
 
 export function LiquidityMiningCampaignModal({
@@ -40,7 +42,8 @@ export function LiquidityMiningCampaignModal({
   stakablePair,
   startsAt,
   endsAt,
-  timelock
+  timelock,
+  apy
 }: LiquidityMiningCampaignProps) {
   const { account } = useActiveWeb3React()
   const callbacks = useLiquidityMiningActionCallbacks(contractAddress)
@@ -164,7 +167,12 @@ export function LiquidityMiningCampaignModal({
             Rewards program
           </TYPE.mediumHeader>
           <div>
-            <LiquidityMiningInformation startsAt={startsAt} endsAt={endsAt} timelock={!!timelock} />
+            <LiquidityMiningInformation
+              startsAt={startsAt}
+              endsAt={endsAt}
+              timelock={!!timelock}
+              apy={apy || new BigNumber(0)}
+            />
             <RowBetween marginTop="24px">
               <ButtonDark
                 padding="8px"

@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import { DateTime } from 'luxon'
 import React from 'react'
 import { Box, Flex } from 'rebass'
@@ -15,13 +16,19 @@ interface LiquidityMiningInformationProps {
   startsAt?: string
   endsAt?: string
   timelock: boolean
+  apy: BigNumber
 }
 
-export default function LiquidityMiningInformation({ startsAt, endsAt, timelock }: LiquidityMiningInformationProps) {
+export default function LiquidityMiningInformation({
+  startsAt,
+  endsAt,
+  timelock,
+  apy
+}: LiquidityMiningInformationProps) {
   return (
     <Flex justifyContent="stretch" width="100%">
       <Flex flexDirection="column" flex="1">
-        <DataRow title="APY" value="TODO" />
+        <DataRow title="APY" value={`${apy.decimalPlaces(2).toString()}%`} />
         <DataRow title="Time left" value={<Countdown to={endsAt ? parseInt(endsAt) : 0} />} />
       </Flex>
       <Box mx="18px">

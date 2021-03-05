@@ -12,6 +12,7 @@ import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUS
 import LoadingList from '../../LoadingList'
 import { usePairReserveNativeCurrency, usePairLiquidityTokenTotalSupply } from '../../../../data/Reserves'
 import { usePage } from '../../../../hooks/usePage'
+import BigNumber from 'bignumber.js'
 
 const ListLayout = styled.div`
   display: grid;
@@ -104,6 +105,20 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
         startsAt={selectedLiquidityMiningCampaign?.startsAt ?? '0'}
         endsAt={selectedLiquidityMiningCampaign?.endsAt ?? '0'}
         timelock={!!selectedLiquidityMiningCampaign?.locked}
+        apy={
+          selectedLiquidityMiningCampaign
+            ? getCampaignApy(
+                reserveNativeCurrency,
+                supply,
+                selectedLiquidityMiningCampaign.duration,
+                selectedLiquidityMiningCampaign.startsAt,
+                selectedLiquidityMiningCampaign.rewardTokens,
+                selectedLiquidityMiningCampaign.rewardAmounts,
+                selectedLiquidityMiningCampaign.stakedAmount,
+                nativeCurrencyUSDPrice
+              )
+            : new BigNumber(0)
+        }
       />
     </>
   )
