@@ -1,35 +1,35 @@
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import ContentLoader from 'react-content-loader'
+import React from 'react'
+import styled from 'styled-components'
+import Skeleton from 'react-loading-skeleton'
 import { DarkCard } from '../../../Card'
+import { Box, Flex } from 'rebass'
+import DoubleCurrencyLogo from '../../../DoubleLogo'
+import CurrencyLogo from '../../../CurrencyLogo'
 
 const SizedCard = styled(DarkCard)<{ wide?: boolean }>`
-  width: ${props => (props.wide ? 208 : 155)}px;
-  height: ${props => (props.height ? 155 : 147)}px;
+  width: 100%;
+  height: 147px;
 `
 
 interface LoadingCardsProps {
-  wide?: boolean
+  doubleCircle?: boolean
 }
 
-export default function LoadingCard({ wide }: LoadingCardsProps) {
-  const theme = useContext(ThemeContext)
-
+export default function LoadingCard({ doubleCircle }: LoadingCardsProps) {
   return (
-    <SizedCard padding="20px" wide={wide}>
-      {wide ? (
-        <ContentLoader backgroundColor={theme.bg3} foregroundColor={theme.bg2} viewBox="0 0 93px 97px">
-          <circle cx="86.5" cy="28" r="14" />
-          <rect x="66.5" y="54" rx="2" ry="2" width="40" height="16" />
-          <rect x="60.5" y="80.5" rx="2" ry="2" width="50" height="9" />
-        </ContentLoader>
-      ) : (
-        <ContentLoader backgroundColor={theme.bg3} foregroundColor={theme.bg2} viewBox="0 0 93px 97px">
-          <circle cx="59.5" cy="28" r="14" />
-          <rect x="39.5" y="54" rx="2" ry="2" width="40" height="16" />
-          <rect x="34.5" y="80.5" rx="2" ry="2" width="50" height="9" />
-        </ContentLoader>
-      )}
+    <SizedCard width="100%" height="100%" padding="20px">
+      <Flex width="100%" height="100%" justifyContent="center" alignItems="center" flexDirection="column">
+        <Box>{doubleCircle ? <DoubleCurrencyLogo size={28} loading /> : <CurrencyLogo size="28px" loading />}</Box>
+        <Box mt="5px">
+          <Skeleton height="16px" width="36px" />
+        </Box>
+        <Box mt="6px">
+          <Skeleton height="12px" width="80px" />
+        </Box>
+        <Box mt="3px">
+          <Skeleton height="9px" width="74px" />
+        </Box>
+      </Flex>
     </SizedCard>
   )
 }
