@@ -11,6 +11,7 @@ import { getCampaignApy, getRemainingRewardsUSD } from '../../../../utils/liquid
 import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'
 import LoadingList from '../../LoadingList'
 import { usePairReserveNativeCurrency, usePairLiquidityTokenTotalSupply } from '../../../../data/Reserves'
+import { usePage } from '../../../../hooks/usePage'
 
 const ListLayout = styled.div`
   display: grid;
@@ -36,9 +37,7 @@ const ITEMS_PER_PAGE = 9
 
 export default function LiquidityMiningCampaignsList({ stakablePair, items }: LiquidityMiningCampaignsListProps) {
   const [page, setPage] = useState(1)
-  const [paginatedItems, setPaginatedItems] = useState<NonExpiredLiquidityMiningCampaign[]>(
-    items.slice(0, ITEMS_PER_PAGE)
-  )
+  const itemsPage = usePage(items, ITEMS_PER_PAGE, page, 0)
   const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const { loading: loadingPairReserveNativeCurrency, reserveNativeCurrency } = usePairReserveNativeCurrency(
     stakablePair
@@ -57,25 +56,15 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
     setSelectedLiquidityMiningCampaign(liquidityMiningCampaign)
   }
 
-  const handlePageChange = useCallback(
-    page => {
-      setPage(page)
-      const zeroIndexPage = page - 1
-      const offset = zeroIndexPage * ITEMS_PER_PAGE
-      setPaginatedItems(items.slice(offset, offset + ITEMS_PER_PAGE))
-    },
-    [items]
-  )
-
   return (
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="460px">
           {loadingNativeCurrencyUsdPrice || loadingPairReserveNativeCurrency || loadingPairTotalSupply ? (
             <LoadingList wideCards />
-          ) : items.length > 0 ? (
+          ) : itemsPage.length > 0 ? (
             <ListLayout>
-              {paginatedItems.map(item => (
+              {itemsPage.map(item => (
                 <div key={item.address} onClick={getLiquidityMiningClickHandler(item)}>
                   <SizedPairCard
                     token0={stakablePair?.token0}
@@ -104,12 +93,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
           )}
         </Box>
         <Box alignSelf="flex-end" mt="16px">
-          <Pagination
-            page={page}
-            totalItems={items.length}
-            itemsPerPage={ITEMS_PER_PAGE}
-            onPageChange={handlePageChange}
-          />
+          <Pagination page={page} totalItems={items.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={setPage} />
         </Box>
       </Flex>
       <LiquidityMiningCampaignModal
