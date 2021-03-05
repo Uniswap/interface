@@ -13,6 +13,7 @@ import { useCurrency } from 'hooks/Tokens'
 import { useDerivedPairInfo, usePairActionHandlers, usePairState } from 'state/pair/hooks'
 import { Field } from 'state/pair/actions'
 import { Currency } from 'libs/sdk/src'
+import { currencyId } from 'utils/currencyId'
 
 const PageWrapper = styled.div`
   padding: 0 10em;
@@ -49,16 +50,21 @@ const SelectPairInstructionWrapper = styled(Box)`
   padding: 24px;
 `
 
-const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
+const Pools = ({
+  match: {
+    params: { currencyIdA, currencyIdB }
+  },
+  history
+}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const { t } = useTranslation()
   const [searchValue, setSearchValue] = useState('')
 
   // Pool selection
   const { onCurrencySelection } = usePairActionHandlers()
-  const {
-    [Field.CURRENCY_A]: { currencyId: currencyIdA },
-    [Field.CURRENCY_B]: { currencyId: currencyIdB }
-  } = usePairState()
+  // const {
+  //   [Field.CURRENCY_A]: { currencyId: currencyIdA },
+  //   [Field.CURRENCY_B]: { currencyId: currencyIdB }
+  // } = usePairState()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -66,15 +72,29 @@ const Pools = ({ match: {} }: RouteComponentProps<{ currencyIdA?: string; curren
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
-      onCurrencySelection(Field.CURRENCY_A, currencyA)
+      const newCurrencyIdA = currencyId(currencyA)
+      if (newCurrencyIdA === currencyIdB) {
+        history.push(`/pools/${currencyIdB}/${currencyIdA}`)
+      } else {
+        history.push(`/pools/${newCurrencyIdA}/${currencyIdB}`)
+      }
     },
-    [onCurrencySelection]
+    [currencyIdB, history, currencyIdA]
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
-      onCurrencySelection(Field.CURRENCY_B, currencyB)
+      const newCurrencyIdB = currencyId(currencyB)
+      if (currencyIdA === newCurrencyIdB) {
+        if (currencyIdB) {
+          history.push(`/pools/${currencyIdB}/${newCurrencyIdB}`)
+        } else {
+          history.push(`/pools/${newCurrencyIdB}`)
+        }
+      } else {
+        history.push(`/pools/${currencyIdA ? currencyIdA : 'ETH'}/${newCurrencyIdB}`)
+      }
     },
-    [onCurrencySelection]
+    [currencyIdA, history, currencyIdB]
   )
 
   const poolList = pairs

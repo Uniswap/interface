@@ -58,7 +58,8 @@ export function useDerivedMintInfo(
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean =
-    pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
+    (pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))) &&
+    (tokenA?.symbol != 'WETH' || tokenB?.symbol != 'WETH')
 
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [

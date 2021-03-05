@@ -211,7 +211,7 @@ export default function Header() {
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>
-          <StyledNavLink id={`pools-nav-link`} to={'/pools'} isActive={match => Boolean(match)}>
+          <StyledNavLink id={`pools-nav-link`} to={'/pools/ETH'} isActive={match => Boolean(match)}>
             {t('Pools')}
           </StyledNavLink>
           <StyledNavLink
