@@ -91,7 +91,7 @@ export function PoolPriceRangeBar({
   pair: Pair | null | undefined
   amplification?: Fraction
 }) {
-  const amp = pair?.virtualReserve0.divide(pair?.reserve0) || amplification
+  const amp = !!pair ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)) : amplification?.divide(JSBI.BigInt(10000))
   const theme = useContext(ThemeContext)
   const show = !!priceRangeCalc(price, amp)[0]
   return (
