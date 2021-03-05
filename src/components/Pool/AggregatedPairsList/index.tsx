@@ -8,6 +8,7 @@ import { useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy } f
 import Empty from '../Empty'
 import MyPairs from './MyPairs'
 import styled from 'styled-components'
+import { usePage } from '../../../hooks/usePage'
 
 const ListLayout = styled.div`
   display: grid;
@@ -24,6 +25,7 @@ export default function AggregatedPairsList() {
   const [page, setPage] = useState(1)
   const [filter, setFilter] = useState(PairsFilterType.ALL)
   const { loading, aggregatedData } = useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(filter)
+  const itemsPage = usePage(aggregatedData, ITEMS_PER_PAGE, page, 1)
 
   const userLpPairs = useMemo(
     () =>
@@ -33,13 +35,6 @@ export default function AggregatedPairsList() {
     [aggregatedData]
   )
 
-  const { pageOffset, pageItemsAmount } = useMemo(() => {
-    const zeroIndexPage = page - 1
-    const normalizedItemsPerPage = zeroIndexPage < 2 ? ITEMS_PER_PAGE - 1 : ITEMS_PER_PAGE
-    const pageOffset = zeroIndexPage * normalizedItemsPerPage
-    return { pageOffset, pageItemsAmount: normalizedItemsPerPage }
-  }, [page])
-
   return (
     <Flex flexDirection="column">
       <Box mb="32px">
@@ -47,11 +42,11 @@ export default function AggregatedPairsList() {
       </Box>
       <Box mb="8px" height="460px">
         {loading ? (
-          <LoadingList />
-        ) : aggregatedData.length > 0 ? (
+          <LoadingList doubleCircle />
+        ) : itemsPage.length > 0 ? (
           <ListLayout>
             {page === 1 && <MyPairs pairs={userLpPairs} />}
-            {aggregatedData.slice(pageOffset, pageOffset + pageItemsAmount).map(aggregation => (
+            {itemsPage.map(aggregation => (
               <AggregatedPairs
                 key={aggregation.token0.address}
                 token={aggregation.token0}
