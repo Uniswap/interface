@@ -64,6 +64,29 @@ export default function PoolFinder() {
     [activeField]
   )
 
+  const myPairs = pairs
+    .filter(([pairState, pair]) => {
+      const validPairNoLiquidity: boolean =
+        pairState === PairState.NOT_EXISTS ||
+        Boolean(
+          pairState === PairState.EXISTS &&
+            pair &&
+            JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
+            JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+        )
+      let hasPosition = false
+      if (pair && pair.liquidityToken.address && positions[pair.liquidityToken.address]) {
+        hasPosition = Boolean(
+          positions[pair.liquidityToken.address] &&
+            JSBI.greaterThan((positions[pair.liquidityToken.address] as TokenAmount).raw, JSBI.BigInt(0))
+        )
+      }
+      return pairState === PairState.EXISTS && hasPosition && pair
+    })
+    .map(
+      ([pairState, pair], index) => !!pair && <MinimalPositionCard key={index} pair={pair} border="1px solid #CED0D9" />
+    )
+
   const handleSearchDismiss = useCallback(() => {
     setShowSearch(false)
   }, [setShowSearch])
@@ -123,100 +146,37 @@ export default function PoolFinder() {
             </Text>
           )}
         </ButtonDropdownLight>
-
-        {pairs.filter(([pairState, pair]) => pairState === PairState.EXISTS).length > 0 && (
-          <ColumnCenter
-            style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
-          >
-            <Text textAlign="center" fontWeight={500}>
-              Pool Found!
-            </Text>
-            <StyledInternalLink to={`/myPools`}>
-              <Text textAlign="center">Manage this pool.</Text>
-            </StyledInternalLink>
-          </ColumnCenter>
+        <StyledInternalLink to={`/pools`}>
+          <Text textAlign="center">Add liquidity to pool</Text>
+        </StyledInternalLink>
+        {pairs.filter(([pairState, pair]) => pairState === PairState.LOADING).length > 0 && (
+          <LightCard padding="45px 10px">
+            <AutoColumn gap="sm" justify="center">
+              <Text textAlign="center">
+                Loading
+                <Dots />
+              </Text>
+            </AutoColumn>
+          </LightCard>
         )}
 
-        {currency0 && currency1 ? (
-          pairs.length > 0 ? (
-            <>
-              {pairs.map(([pairState, pair]) => {
-                const validPairNoLiquidity: boolean =
-                  pairState === PairState.NOT_EXISTS ||
-                  Boolean(
-                    pairState === PairState.EXISTS &&
-                      pair &&
-                      JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
-                      JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
-                  )
-                let hasPosition = false
-                if (pair && pair.liquidityToken.address && positions[pair.liquidityToken.address]) {
-                  hasPosition = Boolean(
-                    positions[pair.liquidityToken.address] &&
-                      JSBI.greaterThan((positions[pair.liquidityToken.address] as TokenAmount).raw, JSBI.BigInt(0))
-                  )
-                }
-                console.log('===pairState: ', pairState, hasPosition)
-                return pairState === PairState.EXISTS ? (
-                  hasPosition && pair ? (
-                    <MinimalPositionCard pair={pair} border="1px solid #CED0D9" />
-                  ) : pair ? (
-                    <LightCard>
-                      <MinimalPositionCard pair={pair} border="1px solid transparent" />
-                      <AutoColumn gap="sm" justify="center">
-                        <Text textAlign="center">You don’t have liquidity in this pool yet.</Text>
-                        <StyledInternalLink
-                          to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
-                        >
-                          <Text textAlign="center">Add liquidity.</Text>
-                        </StyledInternalLink>
-                      </AutoColumn>
-                    </LightCard>
-                  ) : (
-                    <></>
-                  )
-                ) : validPairNoLiquidity ? (
-                  <LightCard padding="45px 10px">
-                    <AutoColumn gap="sm" justify="center">
-                      <Text textAlign="center">No pool found.</Text>
-                      <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                        Create pool.
-                      </StyledInternalLink>
-                    </AutoColumn>
-                  </LightCard>
-                ) : pairState === PairState.INVALID ? (
-                  <LightCard padding="45px 10px">
-                    <AutoColumn gap="sm" justify="center">
-                      <Text textAlign="center" fontWeight={500}>
-                        Invalid pair.
-                      </Text>
-                    </AutoColumn>
-                  </LightCard>
-                ) : pairState === PairState.LOADING ? (
-                  <LightCard padding="45px 10px">
-                    <AutoColumn gap="sm" justify="center">
-                      <Text textAlign="center">
-                        Loading
-                        <Dots />
-                      </Text>
-                    </AutoColumn>
-                  </LightCard>
-                ) : null
-              })}
-            </>
-          ) : (
-            <LightCard padding="45px 10px">
-              <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">No pool found.</Text>
-                <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                  Create pool.
-                </StyledInternalLink>
-              </AutoColumn>
-            </LightCard>
-          )
-        ) : (
-          prerequisiteMessage
-        )}
+        {currency0 && currency1
+          ? myPairs.length > 0 && (
+              <>
+                <ColumnCenter
+                  style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
+                >
+                  <Text textAlign="center" fontWeight={500}>
+                    Pool Found!
+                  </Text>
+                  <StyledInternalLink to={`/myPools`}>
+                    <Text textAlign="center">Manage your pools.</Text>
+                  </StyledInternalLink>
+                </ColumnCenter>
+                {myPairs}
+              </>
+            )
+          : prerequisiteMessage}
       </AutoColumn>
 
       <CurrencySearchModal

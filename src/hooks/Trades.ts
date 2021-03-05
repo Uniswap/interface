@@ -8,7 +8,7 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'
 
-function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
+function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][] {
   const { chainId } = useActiveWeb3React()
 
   const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
@@ -59,21 +59,26 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     [tokenA, tokenB, bases, basePairs, chainId]
   )
 
-  const allPairs = usePairs(allPairCombinations).flatMap(x => x)
+  const allPairs = usePairs(allPairCombinations)
+  // const allPairss = usePairs(allPairCombinations)
 
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(
     () =>
-      Object.values(
-        allPairs
-          // filter out invalid pairs
-          .filter((result): result is [PairState.EXISTS, Pair] => Boolean(result[0] === PairState.EXISTS && result[1]))
-          // filter out duplicated pairs
-          .reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
-            memo[curr.liquidityToken.address] = memo[curr.liquidityToken.address] ?? curr
-            return memo
-          }, {})
-      ),
+      allPairs.reduce<Pair[][]>((res, poolArray) => {
+        const t = Object.values(
+          poolArray
+            .filter((result): result is [PairState.EXISTS, Pair] =>
+              Boolean(result[0] === PairState.EXISTS && result[1])
+            )
+            .reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
+              memo[curr.liquidityToken.address] = memo[curr.liquidityToken.address] ?? curr
+              return memo
+            }, {})
+        )
+        res.push(t)
+        return res
+      }, []),
     [allPairs]
   )
 }
@@ -82,8 +87,8 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
 export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
-  const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
-
+  const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut).filter(item => item.length > 0)
+  console.log('====allowedPairs in', allowedPairs)
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (
@@ -98,8 +103,8 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
  * Returns the best trade for the token in to the exact amount of token out
  */
 export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
-  const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
-
+  const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency).filter(item => item.length > 0)
+  console.log('====allowedPairs out', allowedPairs)
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
       return (
