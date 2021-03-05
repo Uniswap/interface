@@ -16,7 +16,7 @@ export function ProtocolFeeBar({
 }: {
   feePercentage?: Percent
   swapFee?: Percent
-  protocolFeeDenominator?: Number
+  protocolFeeDenominator?: number
   feeAAmount?: CurrencyAmount
   feeBAmount?: CurrencyAmount
 }) {
@@ -27,7 +27,7 @@ export function ProtocolFeeBar({
         <AutoColumn justify="center">
           <TYPE.black>{swapFee?.toSignificant(4) ?? '-'} %</TYPE.black>
           <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            Swap Fee
+            Swap fee
             <QuestionHelper text="The % fee applied to each swap in the token pair." />
           </Text>
         </AutoColumn>
