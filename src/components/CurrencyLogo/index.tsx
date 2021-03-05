@@ -1,5 +1,6 @@
 import { ChainId, Currency, Token } from 'dxswap-sdk'
-import React, { useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
+import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
@@ -30,12 +31,14 @@ export default function CurrencyLogo({
   currency,
   size = '24px',
   style,
-  className
+  className,
+  loading
 }: {
   currency?: Currency
   size?: string
   style?: React.CSSProperties
   className?: string
+  loading?: boolean
 }) {
   const { chainId } = useActiveWeb3React()
   const nativeCurrencyLogo = NATIVE_CURRENCY_LOGO[(chainId as ChainId) || ChainId.MAINNET]
@@ -55,6 +58,15 @@ export default function CurrencyLogo({
     return []
   }, [currency, nativeCurrencyLogo])
 
+  if (loading)
+    return (
+      <Skeleton
+        wrapper={({ children }: { children: ReactNode }) => <div className={className}>{children}</div>}
+        circle
+        width={size}
+        height={size}
+      />
+    )
   return (
     <StyledLogo
       className={className}
