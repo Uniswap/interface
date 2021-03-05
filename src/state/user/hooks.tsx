@@ -236,9 +236,9 @@ export function useTrackedTokenPairs(): [Token, Token][] {
             const token = tokens[tokenAddress]
             // for each token on the current chain,
             return (
-              // loop though all bases on the current chain
-              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
-                // to construct pairs of the given token with each base
+              // loop though all tokens on the current chain
+              Object.values(tokens)
+                // to construct pairs
                 .map(base => {
                   if (base.address === token.address) {
                     return null
