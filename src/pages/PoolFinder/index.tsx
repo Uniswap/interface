@@ -146,7 +146,11 @@ export default function PoolFinder() {
             </Text>
           )}
         </ButtonDropdownLight>
-        <StyledInternalLink to={`/pools`}>
+        <StyledInternalLink
+          to={`/pools/${!!currency0 ? currencyId(currency0) : undefined}/${
+            !!currency1 ? currencyId(currency1) : undefined
+          }`}
+        >
           <Text textAlign="center">Add liquidity to pool</Text>
         </StyledInternalLink>
         {pairs.filter(([pairState, pair]) => pairState === PairState.LOADING).length > 0 && (
