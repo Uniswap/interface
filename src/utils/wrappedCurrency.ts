@@ -13,7 +13,8 @@ export function wrappedCurrencyAmount(
   return token && currencyAmount ? new TokenAmount(token, currencyAmount.raw) : undefined
 }
 
-export function unwrappedToken(token: Token): Currency {
+export function unwrappedToken(token?: Token): Currency | undefined {
+  if (!token) return undefined
   if (Currency.isNative(token)) return Token.getNativeWrapper(token.chainId)
   return token
 }

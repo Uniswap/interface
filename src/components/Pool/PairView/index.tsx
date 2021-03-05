@@ -1,10 +1,9 @@
-import React, { memo, ReactNode } from 'react'
+import React, { memo, ReactNode, useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { Link } from 'react-router-dom'
-import { JSBI, Pair, Percent } from 'dxswap-sdk'
+import { Pair } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import DoubleCurrencyLogo from '../../DoubleLogo'
-import Loading from './Loading'
 import {
   useLiquidityMiningCampaignsForPair,
   usePair24hVolumeUSD,
@@ -12,31 +11,18 @@ import {
 } from '../../../hooks/usePairData'
 import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
-import { AutoRow, RowBetween } from '../../Row'
+import { RowBetween } from '../../Row'
 import { ButtonGrey } from '../../Button'
 import { TYPE } from '../../../theme'
 import LiquidityMiningCampaignsList from './LiquidityMiningCampaignsList'
 import { ResponsiveButtonPrimary, TitleRow } from '../../../pages/LiquidityMining/styleds'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
+import Skeleton from 'react-loading-skeleton'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
     background: ${props => props.theme.bg1};
   }
-`
-
-const PoolFeesContainer = styled.div`
-  height: 27px;
-  padding-left: 14px;
-  padding-right: 14px;
-  display: flex;
-  align-items: center;
-  border: 1.2px solid ${props => props.theme.bg3};
-  border-radius: 8px;
-  font-size: 12px;
-  line-height: 15px;
-  letter-spacing: 0.08em;
-  text-align: left;
 `
 
 const DataText = styled.div`
@@ -47,16 +33,17 @@ const DataText = styled.div`
 `
 
 interface DataRowProps {
+  loading?: boolean
   title: string
   value: ReactNode
 }
 
-function DataRow({ title, value }: DataRowProps) {
+function DataRow({ title, value, loading }: DataRowProps) {
   return (
-    <AutoRow justify="space-between" width="100%" marginBottom="8px">
+    <RowBetween justify="space-between" width="100%" marginBottom="8px">
       <DataText>{title}</DataText>
-      <DataText>{value}</DataText>
-    </AutoRow>
+      <DataText>{loading ? <Skeleton width="36px" /> : value}</DataText>
+    </RowBetween>
   )
 }
 
@@ -72,66 +59,59 @@ function PairView({ loading, pair }: PairViewProps) {
     pair || undefined
   )
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
+  const overallLoading = useMemo(
+    () => loading || volumeLoading || liquidityLoading || liquidityMiningCampaignsLoading,
+    [liquidityLoading, liquidityMiningCampaignsLoading, loading, volumeLoading]
+  )
 
   return (
     <>
       <StyledDarkCard padding="40px">
-        {loading || volumeLoading || liquidityLoading || liquidityMiningCampaignsLoading ? (
-          <Flex flexDirection="column" width="100%" height="560px">
-            <Loading />
+        <Flex flexDirection="column">
+          <Flex mb="18px" alignItems="center">
+            <Box mr="8px">
+              <DoubleCurrencyLogo
+                loading={overallLoading}
+                size={20}
+                currency0={pair?.token0}
+                currency1={pair?.token1}
+              />
+            </Box>
+            <Box>
+              <Text fontSize="16px" fontWeight="600" lineHeight="20px">
+                {pair ? `${pair?.token0.symbol}/${pair?.token1.symbol}` : <Skeleton width="60px" />}
+              </Text>
+            </Box>
           </Flex>
-        ) : (
-          <Flex flexDirection="column">
-            <Flex mb="18px" alignItems="center">
-              <Box mr="8px">
-                <DoubleCurrencyLogo size={20} currency0={pair?.token0} currency1={pair?.token1} />
-              </Box>
-              <Box>
-                <Text fontSize="16px" fontWeight="600" lineHeight="20px">
-                  {pair?.token0.symbol}/{pair?.token1.symbol}
-                </Text>
-              </Box>
+          <DataRow loading={overallLoading} title="Liquidity:" value={`$${liquidityUSD.decimalPlaces(2).toString()}`} />
+          <DataRow loading={overallLoading} title="Volume:" value={`$${volume24hUSD.decimalPlaces(2).toString()}`} />
+          <Box mt="18px">
+            <FullPositionCard pair={pair || undefined} />
+          </Box>
+          <RowBetween marginY="18px">
+            <ButtonGrey
+              padding="8px"
+              disabled
+              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+              width="100%"
+            >
+              GOVERNANCE
+            </ButtonGrey>
+          </RowBetween>
+          {liquidityMiningEnabled && (
+            <Flex flexDirection="column">
+              <TitleRow marginBottom="26px">
+                <TYPE.mediumHeader fontSize="18px" color="white">
+                  Reward pools
+                </TYPE.mediumHeader>
+                <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+                  Create liq. mining
+                </ResponsiveButtonPrimary>
+              </TitleRow>
+              <LiquidityMiningCampaignsList items={liquidityMiningCampaigns} stakablePair={pair || undefined} />
             </Flex>
-            <DataRow title="Liquidity:" value={`$${liquidityUSD.decimalPlaces(2).toString()}`} />
-            <DataRow title="Volume:" value={`$${volume24hUSD.decimalPlaces(2).toString()}`} />
-            <DataRow
-              title="Pool fees:"
-              value={
-                <PoolFeesContainer>
-                  {pair ? new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)).toSignificant(3) : '0'}%
-                </PoolFeesContainer>
-              }
-            />
-            {pair && (
-              <Box mt="18px">
-                <FullPositionCard pair={pair} />
-              </Box>
-            )}
-            <RowBetween marginY="18px">
-              <ButtonGrey
-                padding="8px"
-                disabled
-                style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                width="100%"
-              >
-                GOVERNANCE
-              </ButtonGrey>
-            </RowBetween>
-            {liquidityMiningEnabled && (
-              <Flex flexDirection="column">
-                <TitleRow marginBottom="26px">
-                  <TYPE.mediumHeader fontSize="18px" color="white">
-                    Reward pools
-                  </TYPE.mediumHeader>
-                  <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-                    Create liq. mining
-                  </ResponsiveButtonPrimary>
-                </TitleRow>
-                <LiquidityMiningCampaignsList items={liquidityMiningCampaigns} stakablePair={pair || undefined} />
-              </Flex>
-            )}
-          </Flex>
-        )}
+          )}
+        </Flex>
       </StyledDarkCard>
     </>
   )
