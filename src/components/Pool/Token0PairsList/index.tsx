@@ -8,6 +8,7 @@ import Pair from './Pair'
 import { Token } from 'dxswap-sdk'
 import Empty from '../Empty'
 import styled from 'styled-components'
+import { usePage } from '../../../hooks/usePage'
 
 const ListLayout = styled.div`
   display: grid;
@@ -22,18 +23,21 @@ interface AggregatedPairsListProps {
   token0?: Token | null
 }
 
+const ITEMS_PER_PAGE = 9
+
 function Token0PairsList({ token0 }: AggregatedPairsListProps) {
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
   const { loading, wrappedPairs } = usePairsByToken0WithRemainingRewardUSDAndMaximumApy(token0)
+  const itemsPage = usePage(wrappedPairs, ITEMS_PER_PAGE, page, 0)
 
   return (
     <Flex flexDirection="column">
       <Box mb="8px" height="460px">
         {loading ? (
-          <LoadingList wideCards />
-        ) : wrappedPairs.length > 0 ? (
+          <LoadingList wideCards doubleCircle />
+        ) : itemsPage.length > 0 ? (
           <ListLayout>
-            {wrappedPairs.map(wrappedPair => {
+            {itemsPage.map(wrappedPair => {
               const { pair, remainingRewardUSD, maximumApy } = wrappedPair
               return (
                 <UndecoratedLink
