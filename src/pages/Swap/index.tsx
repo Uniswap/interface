@@ -9,7 +9,6 @@ import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
-import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -312,17 +311,10 @@ export default function Swap() {
             {!showWrap && (
               <Card padding="0">
                 {!!trade && (
-                  <RowBetween align="center">
-                    <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
-                      <div style={{ display: 'flex' }}>
-                        Best price found on
-                        <span style={{ color: 'white', fontWeight: 700 }}>&nbsp;{trade?.platform.name}.&nbsp;</span>
-                        Swap with&nbsp;
-                        <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
-                        <QuestionHelper text="Swapr always routes to the best price, even if on another exchange" />
-                      </div>
-                    </TYPE.body>
-                  </RowBetween>
+                  <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
+                    Best price found on <span style={{ color: 'white', fontWeight: 700 }}>{trade?.platform.name}</span>.
+                    Swap with <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
+                  </TYPE.body>
                 )}
               </Card>
             )}
