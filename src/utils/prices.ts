@@ -8,8 +8,7 @@ const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
-  trade?: Trade,
-  chainId?: number
+  trade?: Trade
 ): { priceImpactWithoutFee?: Percent; realizedLPFee?: Percent; realizedLPFeeAmount?: CurrencyAmount } {
   // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
@@ -32,14 +31,12 @@ export function computeTradePriceBreakdown(
     : undefined
 
   // the amount of the input that accrues to LPs
-  const realizedLPFeeAmount =
-    !trade || !chainId
-      ? undefined
-      : realizedLPFee &&
-        trade &&
-        (trade.inputAmount instanceof TokenAmount
-          ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-          : CurrencyAmount.nativeCurrency(realizedLPFee.multiply(trade.inputAmount.raw).quotient, chainId))
+  const realizedLPFeeAmount = !trade
+    ? undefined
+    : realizedLPFee &&
+      (trade.inputAmount instanceof TokenAmount
+        ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+        : CurrencyAmount.nativeCurrency(realizedLPFee.multiply(trade.inputAmount.raw).quotient, trade.chainId))
   return {
     priceImpactWithoutFee: priceImpactWithoutFeePercent,
     realizedLPFee: realizedLPFee ? new Percent(realizedLPFee.numerator, realizedLPFee.denominator) : undefined,
