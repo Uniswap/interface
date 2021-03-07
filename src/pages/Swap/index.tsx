@@ -95,6 +95,7 @@ export default function Swap() {
     currencies[Field.OUTPUT],
     typedValue
   )
+  const bestPricedTrade = allPlatformTrades?.[0] // the best trade is always the first
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const trade = showWrap ? undefined : potentialTrade
 
@@ -312,7 +313,8 @@ export default function Swap() {
               <Card padding="0">
                 {!!trade && (
                   <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
-                    Best price found on <span style={{ color: 'white', fontWeight: 700 }}>{trade?.platform.name}</span>.
+                    Best price found on{' '}
+                    <span style={{ color: 'white', fontWeight: 700 }}>{bestPricedTrade?.platform.name}</span>.
                     {trade.platform.name !== RoutablePlatform.SWAPR.name ? (
                       <>
                         {' '}
