@@ -313,7 +313,12 @@ export default function Swap() {
                 {!!trade && (
                   <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
                     Best price found on <span style={{ color: 'white', fontWeight: 700 }}>{trade?.platform.name}</span>.
-                    Swap with <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
+                    {trade.platform.name !== RoutablePlatform.SWAPR.name ? (
+                      <>
+                        {' '}
+                        Swap with <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
+                      </>
+                    ) : null}
                   </TYPE.body>
                 )}
               </Card>
