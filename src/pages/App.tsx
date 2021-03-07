@@ -21,6 +21,8 @@ import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import { Mobile, getMobileOperatingSystem } from '../utils/mobile'
+import { useLocation } from 'react-router-dom'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -61,6 +63,7 @@ const Marginer = styled.div`
 const localStorageKey = 'valoraRedirect'
 
 export default function App() {
+  const location = useLocation()
   React.useEffect(() => {
     // Close window if search params from Valora redirect are present (handles Valora connection issue)
     if (typeof window !== 'undefined') {
@@ -71,11 +74,14 @@ export default function App() {
         const params = new URLSearchParams(query)
         if (params.get('status') === DappKitResponseStatus.SUCCESS) {
           localStorage.setItem(localStorageKey, window.location.href)
-          window.close()
+          const mobileOS = getMobileOperatingSystem()
+          if (mobileOS === Mobile.ANDROID) {
+            window.close()
+          }
         }
       }
     }
-  })
+  }, [location])
   return (
     <Suspense fallback={null}>
       <Route component={GoogleAnalyticsReporter} />
