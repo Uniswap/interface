@@ -399,7 +399,7 @@ export default function RemoveLiquidity({
             {'DXS ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
-            <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
+            <DoubleCurrencyLogo marginRight={6} currency0={currencyA} currency1={currencyB} />
             <Text fontWeight={500} fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
             </Text>
