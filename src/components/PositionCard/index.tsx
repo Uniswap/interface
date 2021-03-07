@@ -76,6 +76,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
         ]
       : [undefined, undefined]
 
+  const pairSwapFee = new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000))
+
   return (
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0)) ? (
@@ -90,7 +92,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             </FixedHeightRow>
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
               <RowFixed>
-                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
+                <DoubleCurrencyLogo marginRight={6} currency0={currency0} currency1={currency1} size={20} />
                 <TYPE.white fontSize="16px" lineHeight="20px">
                   {currency0.symbol}/{currency1.symbol}
                 </TYPE.white>
@@ -144,8 +146,9 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
       ) : (
         <OutlineCard>
           <TYPE.body fontWeight="500" fontSize="12px" lineHeight="20px">
-            By adding liquidity you&apos;ll earn 0.25% of all trades on this pair proportional to your share of the
-            pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+            By adding liquidity you&apos;ll earn {pairSwapFee ? pairSwapFee.toSignificant(3) : '0.25'}% of all trades on
+            this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be
+            claimed by withdrawing your liquidity.
           </TYPE.body>
         </OutlineCard>
       )}
@@ -189,7 +192,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
       <AutoColumn gap="12px">
         <PointableFixedHeightRow onClick={() => setShowMore(!showMore)}>
           <RowFixed>
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={20} />
+            <DoubleCurrencyLogo marginRight={6} currency0={currency0} currency1={currency1} size={20} />
             <Text fontWeight={600} fontSize="16px" lineHeight="20px">
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>

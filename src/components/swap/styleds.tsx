@@ -23,14 +23,35 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
       : null}
 `
 
+export const SwitchTokensAmountsContainer = styled.div`
+  background-image: linear-gradient(180deg, rgba(41, 38, 67, 0) 0%, rgba(68, 65, 99, 0.5) 100%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: -16px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  ::before {
+    content: '';
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    top: 1px;
+    left: 1px;
+    border-radius: 50%;
+    background-color: ${props => props.theme.bg2};
+  }
+`
+
 export const SectionBreak = styled.div`
   height: 1px;
   width: 100%;
   background-color: ${({ theme }) => theme.bg3};
-`
-
-export const BottomGrouping = styled.div`
-  margin-top: 1rem;
 `
 
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`

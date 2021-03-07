@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
@@ -9,6 +8,7 @@ import styled, {
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
+import { transparentize } from 'polished'
 
 export * from './components'
 
@@ -48,11 +48,12 @@ export function colors(darkMode: boolean): Colors {
     text5: darkMode ? '#8780BF' : '#C0BAF6',
 
     // backgrounds / greys
-    bg1: darkMode ? '#14131D' : '#FFFFFF',
-    bg2: darkMode ? '#26243B' : '#EBE9F8',
-    bg3: darkMode ? '#444163' : '#DDDAF8',
-    bg4: darkMode ? '#5C5886' : '#C0BBE9',
-    bg5: darkMode ? '#7873A4' : '#7873A4',
+    bg1: darkMode ? '#191A24' : '#FFFFFF',
+    bg1And2: darkMode ? '#1D202F' : '#FFFFFF',
+    bg2: darkMode ? '#2A2F42' : '#EBE9F8',
+    bg3: darkMode ? '#3E4259' : '#DDDAF8',
+    bg4: darkMode ? '#686E94' : '#C0BBE9',
+    bg5: darkMode ? '#9096BE' : '#7873A4',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
@@ -93,7 +94,12 @@ export function colors(darkMode: boolean): Colors {
     purple3: '#8780BF',
     purple4: '#685EC6',
     purple5: '#464366',
-    boxShadow: '#0A0A0F'
+    boxShadow: '#0A0A0F',
+
+    // darkest // dark 1.1
+    darkest: '#131218',
+    dark1: '#191824',
+    dark2: '#2A2F42'
   }
 }
 
@@ -207,11 +213,9 @@ button {
 
 html {
   font-size: 16px;
-  font-variant: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
   
 }
 

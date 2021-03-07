@@ -6,8 +6,8 @@ import { ExternalLink } from '../../theme'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { MoreHorizontal, X } from 'react-feather'
 import { RowFixed } from '../Row'
-import { darken } from 'polished'
-import { GovernanceText } from './styleds'
+import { darken, transparentize } from 'polished'
+import { useTranslation } from 'react-i18next'
 
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
@@ -53,7 +53,6 @@ const ComingSoonBadge = styled.div`
   text-align: center;
   background-color: ${({ theme }) => theme.bg4};
   border-radius: 3px;
-
   width: fit-content;
   margin: auto;
   padding: 2px 5px;
@@ -64,6 +63,7 @@ const StyledNavLinkWithBadge = styled.a`
   position: relative;
   margin: 0px 12px;
   cursor: default;
+  color: ${({ theme }) => transparentize(0.6, theme.text5)};
 `
 
 const StyledExternalLink = styled(ExternalLink)<{ isActive?: boolean }>`
@@ -85,10 +85,11 @@ const StyledExternalLink = styled(ExternalLink)<{ isActive?: boolean }>`
   }
 `
 
-export default function MobileOptions() {
+export default function MobileOptions({ history }: { history: any }) {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MOBILE)
   const toggle = useToggleMobileMenu()
+  const { t } = useTranslation()
   useOnClickOutside(node, open ? toggle : undefined)
 
   const handleDisabledAnchorClick = useCallback(event => {
@@ -104,7 +105,7 @@ export default function MobileOptions() {
           <MenuFlyout>
             <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
               <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
-                <GovernanceText>Governance</GovernanceText>
+                {t('governance')}
                 <ComingSoonBadge>COMING SOON</ComingSoonBadge>
               </StyledNavLinkWithBadge>
             </RowFixed>

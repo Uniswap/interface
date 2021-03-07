@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, currencyEquals, Token } from 'dxswap-sdk'
 import React, { useCallback, useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -13,9 +13,11 @@ import { useTokenList } from '../../state/lists/hooks'
 import Badge from '../Badge'
 import { TokenListContainer, TokenPickerItem } from './styleds'
 import { Plus, X } from 'react-feather'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 function currencyKey(currency: Currency): string {
-  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+  if (currency instanceof Token) return currency.address
+  return currency.symbol || ''
 }
 
 const StyledBalanceText = styled(Text)`
@@ -101,15 +103,20 @@ export default function CurrencyList({
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
-  showETH
+  showNativeCurrency
 }: {
   currencies: Currency[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
   otherCurrency?: Currency | null
-  showETH: boolean
+  showNativeCurrency: boolean
 }) {
-  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
+  const nativeCurrency = useNativeCurrency()
+  const itemData = useMemo(() => (showNativeCurrency ? [nativeCurrency, ...currencies] : currencies), [
+    currencies,
+    nativeCurrency,
+    showNativeCurrency
+  ])
 
   const Row = useCallback(
     (currency: Currency) => {

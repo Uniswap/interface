@@ -200,9 +200,7 @@ const CloseTextButton = styled(LinkStyledButton)`
   text-decoration: underline;
 `
 
-const CODE_LINK = !!process.env.REACT_APP_GIT_COMMIT_HASH
-  ? `https://github.com/levelkdev/dxswap-dapp/tree/${process.env.REACT_APP_GIT_COMMIT_HASH}`
-  : 'https://github.com/levelkdev/dxswap-dapp'
+const CODE_LINK = 'https://github.com/levelkdev/dxswap-dapp'
 
 export default function SettingsTab() {
   const open = useModalOpen(ApplicationModal.SETTINGS)

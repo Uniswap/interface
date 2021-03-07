@@ -35,7 +35,7 @@ export default function SwapModalFooter({
     allowedSlippage,
     trade
   ])
-  const { priceImpactWithoutFee, realizedLPFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
+  const { priceImpactWithoutFee, realizedLPFeeAmount } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
   const severity = warningSeverity(priceImpactWithoutFee)
 
   return (
@@ -96,12 +96,14 @@ export default function SwapModalFooter({
         <RowBetween mb="6px">
           <RowFixed>
             <TYPE.body fontWeight={400} fontSize="13px" color="text5">
-              Liquidity Provider Fee
+              Liquidity provider fee
             </TYPE.body>
-            <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
+            <QuestionHelper text="A portion of each trade goes to liquidity providers as incentive." />
           </RowFixed>
           <TYPE.body fontWeight={500} fontSize="12px" color="text5">
-            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol : '-'}
+            {realizedLPFeeAmount
+              ? `${realizedLPFeeAmount?.toSignificant(6)} ${trade.inputAmount.currency.symbol}`
+              : '-'}
           </TYPE.body>
         </RowBetween>
       </AutoColumn>

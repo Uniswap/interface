@@ -1,19 +1,15 @@
-import { Currency, ETHER, Token } from 'dxswap-sdk'
+import { ChainId, Currency, Token } from 'dxswap-sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import PoaLogo from '../../assets/images/poa-logo.png'
+import XDAILogo from '../../assets/images/xdai-logo.png'
+import { useActiveWeb3React } from '../../hooks'
 import Logo from '../Logo'
 
 const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
-
-const StyledEthereumLogo = styled.img<{ size: string }>`
-  width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  border-radius: 24px;
-`
 
 const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
@@ -22,41 +18,50 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
 `
 
+const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
+  [ChainId.ARBITRUM_TESTNET_V3]: EthereumLogo,
+  [ChainId.MAINNET]: EthereumLogo,
+  [ChainId.RINKEBY]: EthereumLogo,
+  [ChainId.SOKOL]: PoaLogo,
+  [ChainId.XDAI]: XDAILogo
+}
+
 export default function CurrencyLogo({
   currency,
   size = '24px',
-  style
+  style,
+  className
 }: {
   currency?: Currency
   size?: string
   style?: React.CSSProperties
+  className?: string
 }) {
+  const { chainId } = useActiveWeb3React()
+  const nativeCurrencyLogo = NATIVE_CURRENCY_LOGO[(chainId as ChainId) || ChainId.MAINNET]
+
   const srcs: string[] = useMemo(() => {
-    if (currency === ETHER) return []
+    if (currency && Currency.isNative(currency) && !!nativeCurrencyLogo) return [nativeCurrencyLogo]
 
     if (currency instanceof Token) {
-      if (currency.name === "DXdao") {
-        return ["https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa1d65E8fB6e87b60FECCBc582F7f97804B725521/logo.png"]
-      } else if ((currency.name === "Weenus 💪") || (currency.name === "Yeenus 💪") || (currency.name === "Xeenus 💪") || (currency.name === "Zeenus 💪")){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f4b8.png"]
-      } else if (currency.name === "Mate"){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f9c9.png"]
-      } else if (currency.name === "Chair"){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1fa91.png"]
-      } else if (currency.name === "Sponge"){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f9fd.png"]
-      } else if (currency.name === "Antarctica Flag"){
-        return ["https://github.githubassets.com/images/icons/emoji/unicode/1f1e6.png"]
+      if (currency.name === 'DXdao') {
+        return [
+          'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa1d65E8fB6e87b60FECCBc582F7f97804B725521/logo.png'
+        ]
       } else {
-        return [getTokenLogoURL(currency.address)]
+        return [getTokenLogoURL(currency?.address)]
       }
     }
     return []
-  }, [currency])
+  }, [currency, nativeCurrencyLogo])
 
-  if (currency === ETHER) {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
-  }
-
-  return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
+  return (
+    <StyledLogo
+      className={className}
+      size={size}
+      srcs={srcs}
+      alt={`${currency?.symbol ?? 'token'} logo`}
+      style={style}
+    />
+  )
 }

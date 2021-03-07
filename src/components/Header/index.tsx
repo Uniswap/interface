@@ -1,7 +1,7 @@
 import { ChainId } from 'dxswap-sdk'
 import React, { useCallback } from 'react'
 import { Box, Flex, Text } from 'rebass'
-import { Link, NavLink, withRouter } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 
 import styled from 'styled-components'
 
@@ -9,7 +9,7 @@ import Logo from '../../assets/svg/swapr.svg'
 import LogoDark from '../../assets/svg/swapr_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
+import { useNativeCurrencyBalances } from '../../state/wallet/hooks'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
@@ -19,9 +19,9 @@ import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
 import { transparentize } from 'polished'
 import { ExternalLink, TYPE } from '../../theme'
-import Badge from '../Badge'
 import MobileOptions from './MobileOptions'
-import { GovernanceText } from './styleds'
+import Badge from '../Badge'
+import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -96,7 +96,7 @@ const HeaderElementWrap = styled.div`
 
 const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
+    width: 100%;
   `};
 `
 
@@ -176,7 +176,7 @@ const DXswapIcon = styled.div`
 
 const activeClassName = 'ACTIVE'
 
-const StyledNavLink = styled(NavLink).attrs({
+export const StyledNavLink = styled(NavLink).attrs({
   activeClassName
 })`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -205,7 +205,7 @@ const StyledNavLinkWithBadge = styled.a`
   font-weight: 400;
   font-size: 16px;
   line-height: 19.5px;
-  color: ${({ theme }) => transparentize(0.4, theme.text5)};
+  color: ${({ theme }) => transparentize(0.6, theme.text5)};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
   `};
@@ -237,17 +237,20 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]: 'Mainnet',
   [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
+  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum',
+  [ChainId.SOKOL]: 'Sokol',
+  [ChainId.XDAI]: 'xDAI'
 }
 
 function Header({ history }: { history: any }) {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const nativeCurrency = useNativeCurrency()
+  const userNativeCurrencyBalances = useNativeCurrencyBalances(account ? [account] : [])
+  const userNativeCurrencyBalance = userNativeCurrencyBalances?.[account || '']
   const [isDark] = useDarkModeManager()
 
   const handleDisabledAnchorClick = useCallback(event => {
@@ -258,11 +261,9 @@ function Header({ history }: { history: any }) {
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
         <Title href=".">
-          <Link id="link" to="/">
-            <DXswapIcon>
-              <img src={isDark ? LogoDark : Logo} alt="logo" />
-            </DXswapIcon>
-          </Link>
+          <DXswapIcon>
+            <img src={isDark ? LogoDark : Logo} alt="logo" />
+          </DXswapIcon>
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => history.location.pathname.includes('/swap')}>
@@ -281,7 +282,7 @@ function Header({ history }: { history: any }) {
             {t('pool')}
           </StyledNavLink>
           <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
-            <GovernanceText>Governance</GovernanceText>
+            <span>{t('governance')}</span>
             <AbsoluteComingSoonBadgeFlex justifyContent="center" width="100%">
               <Box>
                 <Badge label="COMING SOON" />
@@ -295,7 +296,7 @@ function Header({ history }: { history: any }) {
             </Text>
           </StyledExternalLink>
           <MoreLinksIcon>
-            <MobileOptions />
+            <MobileOptions history={history} />
           </MoreLinksIcon>
         </HeaderLinks>
       </HeaderRow>
@@ -305,7 +306,7 @@ function Header({ history }: { history: any }) {
             <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
           )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
+            {account && userNativeCurrencyBalance ? (
               <TYPE.white
                 style={{ flexShrink: 0 }}
                 ml="18px"
@@ -315,7 +316,7 @@ function Header({ history }: { history: any }) {
                 lineHeight="15px"
                 letterSpacing="0.08em"
               >
-                {userEthBalance?.toSignificant(4)} ETH
+                {userNativeCurrencyBalance?.toSignificant(4)} {nativeCurrency.symbol}
               </TYPE.white>
             ) : null}
             <Web3Status />

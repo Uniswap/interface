@@ -1,10 +1,11 @@
-import { Currency, currencyEquals, ETHER, WETH } from 'dxswap-sdk'
+import { Currency, currencyEquals } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useActiveWeb3React } from './index'
-import { useWETHContract } from './useContract'
+import { useNativeCurrencyWrapperContract, useWrappingToken } from './useContract'
+import { useNativeCurrency } from './useNativeCurrency'
 
 export enum WrapType {
   NOT_APPLICABLE,
@@ -25,26 +26,42 @@ export default function useWrapCallback(
   typedValue: string | undefined
 ): { wrapType: WrapType; execute?: undefined | (() => Promise<void>); inputError?: string } {
   const { chainId, account } = useActiveWeb3React()
-  const wethContract = useWETHContract()
+  const nativeCurrency = useNativeCurrency()
+  const nativeCurrencyWrapperToken = useWrappingToken(nativeCurrency)
+  const nativeCurrencyWrapperContract = useNativeCurrencyWrapperContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
-  const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
+  const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency, chainId), [
+    inputCurrency,
+    typedValue,
+    chainId
+  ])
   const addTransaction = useTransactionAdder()
 
   return useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
+    if (!nativeCurrencyWrapperContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency === ETHER && currencyEquals(WETH[chainId], outputCurrency)) {
+    if (
+      Currency.isNative(inputCurrency) &&
+      nativeCurrencyWrapperToken &&
+      currencyEquals(nativeCurrencyWrapperToken, outputCurrency)
+    ) {
       return {
         wrapType: WrapType.WRAP,
         execute:
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
-                  addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to WETH` })
+                  const txReceipt = await nativeCurrencyWrapperContract.deposit({
+                    value: `0x${inputAmount.raw.toString(16)}`
+                  })
+                  addTransaction(txReceipt, {
+                    summary: `Wrap ${inputAmount.toSignificant(6)} ${nativeCurrency.symbol} to ${
+                      nativeCurrencyWrapperToken.symbol
+                    }`
+                  })
                 } catch (error) {
                   console.error('Could not deposit', error)
                 }
@@ -52,15 +69,23 @@ export default function useWrapCallback(
             : undefined,
         inputError: sufficientBalance ? undefined : 'Insufficient ETH balance'
       }
-    } else if (currencyEquals(WETH[chainId], inputCurrency) && outputCurrency === ETHER) {
+    } else if (
+      nativeCurrencyWrapperToken &&
+      currencyEquals(nativeCurrencyWrapperToken, inputCurrency) &&
+      outputCurrency === nativeCurrency
+    ) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
-                  addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
+                  const txReceipt = await nativeCurrencyWrapperContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                  addTransaction(txReceipt, {
+                    summary: `Unwrap ${inputAmount.toSignificant(6)} ${nativeCurrencyWrapperToken.symbol} to ${
+                      nativeCurrency.symbol
+                    }`
+                  })
                 } catch (error) {
                   console.error('Could not withdraw', error)
                 }
@@ -71,5 +96,15 @@ export default function useWrapCallback(
     } else {
       return NOT_APPLICABLE
     }
-  }, [wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [
+    nativeCurrencyWrapperContract,
+    chainId,
+    inputCurrency,
+    outputCurrency,
+    inputAmount,
+    balance,
+    nativeCurrencyWrapperToken,
+    nativeCurrency,
+    addTransaction
+  ])
 }
