@@ -16,6 +16,8 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import { getHealthFactor } from 'utils/dmm'
 
+const DEFAULT_MY_LIQUIDITY = '--/--'
+
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
@@ -78,12 +80,33 @@ const LoadMoreButtonContainer = styled.div`
   border-bottom-right-radius: 8px;
 `
 
+interface SubgraphPoolData {
+  id: string
+  reserveUSD: string
+  volumeUSD: string
+  feeUSD: string
+}
+
+interface UserLiquidityPosition {
+  id: string
+  liquidityTokenBalance: string
+  pool: {
+    id: string
+  }
+}
+
 interface ListItemProps {
   pool: Pair
+  subgraphPoolData: SubgraphPoolData
+  myLiquidity?: string
   oddRow?: boolean
 }
 
-const ListItem = ({ pool, oddRow }: ListItemProps) => {
+const getOneYearFL = (liquidity: string, feeOneDay: string) => {
+  return parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
+}
+
+const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
 
   // Recommended pools are pools that have AMP = 1 or is registered by kyber DAO in a whitelist contract
@@ -100,9 +123,10 @@ const ListItem = ({ pool, oddRow }: ListItemProps) => {
   const currency0 = unwrappedToken(pool.token0)
   const currency1 = unwrappedToken(pool.token1)
 
-  // TODO: Implement this function
-  const getMyLiquidity = () => {
-    return `--/--`
+  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, subgraphPoolData.feeUSD)
+
+  const getMyLiquidity = (myLiquidity?: string): string | 0 => {
+    return !myLiquidity ? DEFAULT_MY_LIQUIDITY : formattedNum(myLiquidity, true)
   }
 
   return (
@@ -117,12 +141,12 @@ const ListItem = ({ pool, oddRow }: ListItemProps) => {
         <div>{`• ${percentToken0.toSignificant(2) ?? '.'}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1.toSignificant(2) ?? '.'}% ${pool.token1.symbol}`}</div>
       </DataText>
-      <DataText grid-area="liq">{formattedNum('0', true)}</DataText>
-      <DataText grid-area="vol">{formattedNum('0', true)}</DataText>
-      <DataText>{formattedNum(JSBI.multiply(pool?.fee, JSBI.BigInt(0)).toString(), true)}</DataText>
+      <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
+      <DataText grid-area="vol">{formattedNum(subgraphPoolData.volumeUSD, true)}</DataText>
+      <DataText>{formattedNum(subgraphPoolData.feeUSD, true)}</DataText>
       <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
-      <DataText>{formattedNum('0')}</DataText>
-      <DataText>{getMyLiquidity()}</DataText>
+      <DataText>{`${oneYearFL}%`}</DataText>
+      <DataText>{getMyLiquidity(myLiquidity)}</DataText>
       <DataText>
         {
           <ButtonEmpty
@@ -141,6 +165,8 @@ const ListItem = ({ pool, oddRow }: ListItemProps) => {
 
 interface PoolListProps {
   poolsList: (Pair | null)[]
+  subgraphPoolsData: SubgraphPoolData[]
+  userLiquidityPositions: UserLiquidityPosition[]
   maxItems?: number
 }
 
@@ -149,27 +175,41 @@ const SORT_FIELD = {
   LIQ: 0,
   VOL: 1,
   FEES: 2,
-  APY: 3
+  ONE_YEAR_FL: 3
 }
 
 // TODO: Update this function
-const FIELD_TO_VALUE = (field: number) => {
+const FIELD_TO_VALUE = (field: number): string => {
   switch (field) {
     case SORT_FIELD.LIQ:
-      return field
+      return 'reserveUSD'
     case SORT_FIELD.VOL:
-      return field
+      return 'volumeUSD'
     case SORT_FIELD.FEES:
-      return field
-    case SORT_FIELD.APY:
-      return field
+      return 'feeUSD'
     default:
-      return field
+      return ''
   }
 }
 
-const PoolList = ({ poolsList, maxItems = 10 }: PoolListProps) => {
+const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
+
+  const transformedSubgraphPoolsData: {
+    [key: string]: SubgraphPoolData
+  } = {}
+
+  const transformedUserLiquidityPositions: {
+    [key: string]: string
+  } = {}
+
+  subgraphPoolsData.forEach(data => {
+    transformedSubgraphPoolsData[data.id] = data
+  })
+
+  userLiquidityPositions.forEach(position => {
+    transformedUserLiquidityPositions[position.pool.id] = position.liquidityTokenBalance
+  })
 
   // pagination
   const [page, setPage] = useState(1)
@@ -310,12 +350,12 @@ const PoolList = ({ poolsList, maxItems = 10 }: PoolListProps) => {
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText
             onClick={() => {
-              setSortedColumn(SORT_FIELD.APY)
-              setSortDirection(sortedColumn !== SORT_FIELD.APY ? true : !sortDirection)
+              setSortedColumn(SORT_FIELD.ONE_YEAR_FL)
+              setSortDirection(sortedColumn !== SORT_FIELD.ONE_YEAR_FL ? true : !sortDirection)
             }}
           >
             1y F/L
-            {sortedColumn === SORT_FIELD.APY ? (
+            {sortedColumn === SORT_FIELD.ONE_YEAR_FL ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
               ) : (
@@ -333,12 +373,20 @@ const PoolList = ({ poolsList, maxItems = 10 }: PoolListProps) => {
 
         <Flex alignItems="center" justifyContent="flexEnd" />
       </TableHeader>
-      {!pools ? (
+      {!subgraphPoolsData ? (
         <LocalLoader />
       ) : (
         pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
           if (pool) {
-            return <ListItem key={pool.address} pool={pool} oddRow={(index + 1) % 2 !== 0} />
+            return (
+              <ListItem
+                key={pool.address}
+                pool={pool}
+                subgraphPoolData={transformedSubgraphPoolsData[pool.address.toLowerCase()]}
+                myLiquidity={transformedUserLiquidityPositions[pool.address.toLowerCase()]}
+                oddRow={(index + 1) % 2 !== 0}
+              />
+            )
           }
 
           return null
