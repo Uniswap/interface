@@ -7,8 +7,7 @@ import { SwapPlatformSelector } from './SwapPlatformSelector'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
-  padding-bottom: 16px;
-  width: 100%;
+  width: calc(100% - 20px);
   max-width: 400px;
   color: ${({ theme }) => theme.purple3};
   background-color: ${({ theme }) => theme.bg1};

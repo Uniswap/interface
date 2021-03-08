@@ -217,6 +217,7 @@ export default function AddLiquidity({
         <OutlineCard mt="20px" borderRadius="8px">
           <RowFlat style={{ alignItems: 'center' }}>
             <DoubleCurrencyLogo
+              marginRight={6}
               currency0={currencies[Field.CURRENCY_A]}
               currency1={currencies[Field.CURRENCY_B]}
               size={24}
@@ -229,11 +230,12 @@ export default function AddLiquidity({
       </AutoColumn>
     ) : (
       <AutoColumn gap="20px">
-        <RowFlat style={{ marginTop: '20px' }}>
+        <RowFlat style={{ marginTop: '20px', alignItems: 'center' }}>
           <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
           </Text>
           <DoubleCurrencyLogo
+            marginLeft={6}
             currency0={currencies[Field.CURRENCY_A]}
             currency1={currencies[Field.CURRENCY_B]}
             size={30}

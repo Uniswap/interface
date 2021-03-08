@@ -3,38 +3,45 @@ import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
 
-const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
+const Wrapper = styled.div<{ sizeraw: number; marginRight: number; marginLeft: number }>`
   position: relative;
   display: flex;
   flex-direction: row;
-  margin-right: ${({ sizeraw, margin }) => margin && (sizeraw / 3 + 8).toString() + 'px'};
+  height: ${({ sizeraw }) => sizeraw}px;
+  width: ${({ sizeraw }) => (sizeraw * 2 - sizeraw / 2).toString() + 'px'};
+  margin-right: ${({ marginRight }) => marginRight}px;
+  margin-left: ${({ marginLeft }) => marginLeft}px;
+`
+
+const HigherLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
+  z-index: 2;
+  position: absolute;
+  left: ${({ sizeraw }) => (sizeraw / 2).toString() + 'px'} !important;
+`
+const CoveredLogo = styled(CurrencyLogo)`
+  position: absolute;
+  left: 0;
 `
 
 interface DoubleCurrencyLogoProps {
-  margin?: boolean
   size?: number
+  marginRight?: number
+  marginLeft?: number
   currency0?: Currency
   currency1?: Currency
 }
-
-const HigherLogo = styled(CurrencyLogo)`
-  z-index: 2;
-`
-const CoveredLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
-  position: absolute;
-  left: ${({ sizeraw }) => '-' + (sizeraw / 2).toString() + 'px'} !important;
-`
 
 export default function DoubleCurrencyLogo({
   currency0,
   currency1,
   size = 16,
-  margin = false
+  marginRight = 0,
+  marginLeft = 0
 }: DoubleCurrencyLogoProps) {
   return (
-    <Wrapper sizeraw={size} margin={margin}>
-      {currency0 && <HigherLogo currency={currency0} size={size.toString() + 'px'} />}
-      {currency1 && <CoveredLogo currency={currency1} size={size.toString() + 'px'} sizeraw={size} />}
+    <Wrapper sizeraw={size} marginRight={marginRight} marginLeft={marginLeft}>
+      {currency0 && <HigherLogo currency={currency0} size={size.toString() + 'px'} sizeraw={size} />}
+      {currency1 && <CoveredLogo currency={currency1} size={size.toString() + 'px'} />}
     </Wrapper>
   )
 }

@@ -9,7 +9,6 @@ import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
-import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -96,6 +95,7 @@ export default function Swap() {
     currencies[Field.OUTPUT],
     typedValue
   )
+  const bestPricedTrade = allPlatformTrades?.[0] // the best trade is always the first
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const trade = showWrap ? undefined : potentialTrade
 
@@ -228,6 +228,7 @@ export default function Swap() {
 
   const handleInputSelect = useCallback(
     inputCurrency => {
+      setPlatformOverride(null) // reset platform override, since best prices might be on a different platform
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -238,9 +239,13 @@ export default function Swap() {
     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
-    onCurrencySelection
-  ])
+  const handleOutputSelect = useCallback(
+    outputCurrency => {
+      setPlatformOverride(null) // reset platform override, since best prices might be on a different platform
+      onCurrencySelection(Field.OUTPUT, outputCurrency)
+    },
+    [onCurrencySelection]
+  )
 
   return (
     <>
@@ -307,17 +312,16 @@ export default function Swap() {
             {!showWrap && (
               <Card padding="0">
                 {!!trade && (
-                  <RowBetween align="center">
-                    <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
-                      <div style={{ display: 'flex' }}>
-                        Best price found on
-                        <span style={{ color: 'white', fontWeight: 700 }}>&nbsp;{trade?.platform.name}.&nbsp;</span>
-                        Swap with&nbsp;
-                        <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
-                        <QuestionHelper text="Swapr always routes to the best price, even if on another exchange" />
-                      </div>
-                    </TYPE.body>
-                  </RowBetween>
+                  <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
+                    Best price found on{' '}
+                    <span style={{ color: 'white', fontWeight: 700 }}>{bestPricedTrade?.platform.name}</span>.
+                    {trade.platform.name !== RoutablePlatform.SWAPR.name ? (
+                      <>
+                        {' '}
+                        Swap with <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
+                      </>
+                    ) : null}
+                  </TYPE.body>
                 )}
               </Card>
             )}
