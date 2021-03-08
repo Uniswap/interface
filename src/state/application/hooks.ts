@@ -32,7 +32,6 @@ export function useCloseModals(): () => void {
 }
 
 export function useWalletModalToggle(): () => void {
-  console.log('toggle wallet')
   return useToggleModal(ApplicationModal.WALLET)
 }
 
@@ -57,7 +56,6 @@ export function useToggleSelfClaimModal(): () => void {
 }
 
 export function useNetworkSwitcherModalToggle(): () => void {
-  console.log('toggle network switcher')
   return useToggleModal(ApplicationModal.NETWORK_SWITCHER)
 }
 
