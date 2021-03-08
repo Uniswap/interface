@@ -21,7 +21,7 @@ import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
 import { useTranslation } from 'react-i18next'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
+  max-width: 510px;
   width: 100%;
 `
 

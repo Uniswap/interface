@@ -151,7 +151,7 @@ export default function PoolFinder() {
             !!currency1 ? currencyId(currency1) : undefined
           }`}
         >
-          <Text textAlign="center">Add liquidity to pool</Text>
+          <Text textAlign="center">Add liquidity</Text>
         </StyledInternalLink>
         {pairs.filter(([pairState, pair]) => pairState === PairState.LOADING).length > 0 && (
           <LightCard padding="45px 10px">

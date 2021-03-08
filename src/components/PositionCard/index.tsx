@@ -90,7 +90,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 
   return (
     <>
-      <GreyCard border={border}>
+      <StyledPositionCard border={border} bgColor={'#303e46'}>
         <AutoColumn gap="12px">
           <FixedHeightRow>
             <RowFixed>
@@ -151,7 +151,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             </FixedHeightRow>
           </AutoColumn>
         </AutoColumn>
-      </GreyCard>
+      </StyledPositionCard>
     </>
   )
 }
@@ -309,18 +309,26 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                Ratio: {percentToken0.toSignificant(2) ?? '.'}% {pair.token0.symbol} -{' '}
-                {percentToken1.toSignificant(2) ?? '.'}% {pair.token1.symbol}
+                Ratio:
+              </Text>
+              <Text fontSize={16} fontWeight={500}>
+                {percentToken0.toSignificant(2) ?? '.'}% {pair.token0.symbol} - {percentToken1.toSignificant(2) ?? '.'}%{' '}
+                {pair.token1.symbol}
               </Text>
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                AMP: {amp.toSignificant(5)}
+                AMP:
+              </Text>
+              <Text fontSize={16} fontWeight={500}>
+                {amp.toSignificant(5)}
               </Text>
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
                 Price range {pair.token0.symbol}/{pair.token1.symbol}:{' '}
+              </Text>
+              <Text fontSize={16} fontWeight={500}>
                 {priceRangeCalc(pair.priceOf(pair.token0), amp)[1]?.toSignificant(6) ?? '.'} -{' '}
                 {priceRangeCalc(pair.priceOf(pair.token0), amp)[0]?.toSignificant(6) ?? '.'}
               </Text>
@@ -328,6 +336,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
                 Price range {pair.token1.symbol}/{pair.token0.symbol}:{' '}
+              </Text>
+              <Text fontSize={16} fontWeight={500}>
                 {priceRangeCalc(pair.priceOf(pair.token1), amp)[1]?.toSignificant(6) ?? '.'} -{' '}
                 {priceRangeCalc(pair.priceOf(pair.token1), amp)[0]?.toSignificant(6) ?? '.'}
               </Text>
