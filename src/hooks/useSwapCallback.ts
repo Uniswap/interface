@@ -9,6 +9,7 @@ import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
+import { useTradeExactIn } from './Trades'
 
 export enum SwapCallbackState {
   INVALID,
@@ -49,7 +50,7 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
-
+  const tradeBestExacInAnyway = useTradeExactIn(trade?.inputAmount, trade?.outputAmount.currency || undefined)
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
@@ -70,6 +71,15 @@ function useSwapCallArguments(
     if (trade.tradeType === TradeType.EXACT_INPUT) {
       swapMethods.push(
         Router.swapCallParameters(trade, {
+          feeOnTransfer: true,
+          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          recipient,
+          deadline: deadline.toNumber()
+        })
+      )
+    } else if (!!tradeBestExacInAnyway) {
+      swapMethods.push(
+        Router.swapCallParameters(tradeBestExacInAnyway, {
           feeOnTransfer: true,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
@@ -159,7 +169,7 @@ export function useSwapCallback(
           (el, ix, list): el is SuccessfulCall =>
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
-        console.log('=====estimatedCalls', estimatedCalls)
+        console.log('=====estimatedCalls', successfulEstimation)
         // return new Promise((resolve, reject) => resolve(""))
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
