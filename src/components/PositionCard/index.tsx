@@ -204,8 +204,14 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
         <FixedHeightRow>
           <AutoRow gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={20}>
+            <Text fontWeight={500} fontSize={14}>
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+              {!!token0Deposited && (
+                <>
+                  &emsp;
+                  {token0Deposited?.toSignificant(6)} / {token1Deposited?.toSignificant(6)}{' '}
+                </>
+              )}
             </Text>
             {!!stakedBalance && (
               <ButtonUNIGradient as={Link} to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}>
@@ -227,15 +233,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               onClick={() => setShowMore(!showMore)}
             >
               {showMore ? (
-                <>
-                  Manage
-                  <ChevronUp size="20" style={{ marginLeft: '10px' }} />
-                </>
+                <ChevronUp size="20" style={{ marginLeft: '10px' }} />
               ) : (
-                <>
-                  Manage
-                  <ChevronDown size="20" style={{ marginLeft: '10px' }} />
-                </>
+                <ChevronDown size="20" style={{ marginLeft: '10px' }} />
               )}
             </ButtonEmpty>
           </RowFixed>

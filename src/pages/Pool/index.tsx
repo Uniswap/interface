@@ -152,7 +152,7 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your liquidity
+                  My Pools
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
@@ -187,14 +187,14 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                <ButtonSecondary>
+                {/* <ButtonSecondary>
                   <RowBetween>
                     <ExternalLink href={`${DMM_INFO_URL}/account/` + account}>
                       Account analytics and accrued fees
                     </ExternalLink>
                     <span> ↗</span>
                   </RowBetween>
-                </ButtonSecondary>
+                </ButtonSecondary> */}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}
