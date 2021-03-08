@@ -99,6 +99,7 @@ const Pools = ({
 
   const poolList = pairs
     .map(([pairState, pair]) => pair)
+    .filter(pair => pair !== null)
     .filter(pair => {
       if (searchValue) {
         return pair?.address.includes(searchValue)
@@ -143,7 +144,7 @@ const Pools = ({
 
         <Panel>
           {poolList.length > 0 ? (
-            <PoolList pairs={poolList} maxItems={50} />
+            <PoolList poolsList={poolList} maxItems={50} />
           ) : (
             <SelectPairInstructionWrapper>{t('thereAreNoPools')}</SelectPairInstructionWrapper>
           )}
