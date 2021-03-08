@@ -6,16 +6,53 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle, useNetworkSwitcherModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
+import { TYPE } from '../../theme'
 import { ButtonSecondary } from '../Button'
+import { ArrowDown } from 'react-feather'
 
 import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
+import NetworkSwitcherModal from '../NetworkSwitcherModal'
+
+import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import XDAILogo from '../../assets/images/xdai-stake-logo.png'
+import ArbitrumLogo from '../../assets/images/arbitrum-logo.png'
+import { ChainId } from 'dxswap-sdk'
+
+const ChainLogo: any = {
+  [ChainId.MAINNET]: EthereumLogo,
+  [ChainId.RINKEBY]: EthereumLogo,
+  [ChainId.ARBITRUM_TESTNET_V3]: ArbitrumLogo,
+  [ChainId.SOKOL]: '',
+  [ChainId.XDAI]: XDAILogo
+}
+
+const ChainLabel: any = {
+  [ChainId.MAINNET]: 'Ethereum',
+  [ChainId.RINKEBY]: 'Rinkeby',
+  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum',
+  [ChainId.SOKOL]: 'Sokol',
+  [ChainId.XDAI]: 'xDai'
+}
+
+const IconWrapper = styled.div<{ size?: number | null }>`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  align-items: center;
+  justify-content: center;
+  & > img,
+  span {
+    height: ${({ size }) => (size ? size + 'px' : '30px')};
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    align-items: center;
+  `};
+`
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -64,7 +101,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : transparentize(0.25, theme.bg1))};
+  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.dark2)};
   border: none;
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text4)};
   border-radius: 8px;
@@ -78,8 +115,22 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   :hover,
   :focus {
     border: none;
-    background-color: ${({ pending, theme }) => (pending ? theme.primary1 : transparentize(0.1, theme.bg1))};
+    background-color: ${({ pending, theme }) => (pending ? theme.primary1 : transparentize(0.1, theme.purple3))};
   }
+`
+
+const Web3StatusNetwork = styled(Web3StatusGeneric)<{ pending?: boolean }>`
+  background-color: ${({ theme }) => theme.dark1};
+  margin-left 0.5em;
+  padding: 3px;
+  padding-left: 5px;
+  border: 1px solid ${({ theme }) => theme.dark1};
+
+  :hover,
+  :focus {
+    background-color: ${({ theme }) => theme.purple3};
+  }
+
 `
 
 const Text = styled.p<{ fontSize?: number }>`
@@ -108,7 +159,7 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 
 function Web3StatusInner() {
   const { t } = useTranslation()
-  const { account, error } = useWeb3React()
+  const { account, error, chainId } = useWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -123,18 +174,30 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const toggleWalletModal = useWalletModalToggle()
+  const toggleNetworkSwitcherModal = useNetworkSwitcherModalToggle()
 
-  if (account) {
+  if (account && chainId) {
     return (
-      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
-        {hasPendingTransactions ? (
-          <RowBetween>
-            <Text fontSize={13}>{pending?.length} Pending</Text> <Loader />
-          </RowBetween>
-        ) : (
-          ENSName || shortenAddress(account)
-        )}
-      </Web3StatusConnected>
+      <>
+        <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+          {hasPendingTransactions ? (
+            <RowBetween>
+              <Text fontSize={13}>{pending?.length} Pending</Text> <Loader />
+            </RowBetween>
+          ) : (
+            ENSName || shortenAddress(account)
+          )}
+        </Web3StatusConnected>
+        <Web3StatusNetwork onClick={toggleNetworkSwitcherModal}>
+          <IconWrapper>
+            <img src={ChainLogo[chainId]} alt={''} />
+          </IconWrapper>
+          <TYPE.white ml="12px" mr="20px" fontWeight={700} fontSize="12px">
+            {ChainLabel[chainId]}
+          </TYPE.white>
+          <ArrowDown />
+        </Web3StatusNetwork>
+      </>
     )
   } else if (error) {
     return (
@@ -176,6 +239,7 @@ export default function Web3Status() {
     <>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
+      <NetworkSwitcherModal />
     </>
   )
 }

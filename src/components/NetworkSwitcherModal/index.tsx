@@ -1,13 +1,25 @@
-import React, { useCallback } from 'react'
+import React from 'react'
+import { ChainId } from 'dxswap-sdk'
 import styled from 'styled-components'
 import Modal from '../Modal'
 import Option from './Option'
 import { transparentize } from 'polished'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { ApplicationModal } from '../../state/application/actions'
+import { useModalOpen, useNetworkSwitcherModalToggle } from '../../state/application/hooks'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.png'
+import { useWeb3React } from '@web3-react/core'
+
+const ChainLabel: any = {
+  [ChainId.MAINNET]: 'Ethereum Mainnet',
+  [ChainId.RINKEBY]: 'Rinkeby Testnet',
+  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum Testnet',
+  [ChainId.SOKOL]: 'Sokol Testnet',
+  [ChainId.XDAI]: 'xDai Network'
+}
 
 const UpperSection = styled.div`
   position: relative;
@@ -91,28 +103,31 @@ const BottomLink = styled.a`
   text-decoration: underline;
 `
 
-export default function NetworkSwitcherModal({ isOpen }: { isOpen: boolean }) {
-  const handleDismiss = useCallback(() => null, [])
-
-  // Debug
-  const currentNetwork = 'Ethereum Mainnet'
+export default function NetworkSwitcherModal() {
+  const { chainId } = useWeb3React()
+  const handleDismiss = useNetworkSwitcherModalToggle()
+  const networkSwitcherModalOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
 
   return (
-    <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={90}>
+    <Modal isOpen={networkSwitcherModalOpen} onDismiss={handleDismiss} maxHeight={90}>
       <ContentWrapper>
         <UpperSection>
           <CloseIcon onClick={handleDismiss}>
             <CloseColor />
           </CloseIcon>
           <HeaderRow>Choose a network</HeaderRow>
-          <NetworkInfo>
-            Your wallet is connected to <CurrentNetwork>{currentNetwork}</CurrentNetwork>.
-          </NetworkInfo>
+          {chainId ? (
+            <NetworkInfo>
+              Your wallet is connected to <CurrentNetwork>{ChainLabel[chainId]}</CurrentNetwork>.
+            </NetworkInfo>
+          ) : (
+            ''
+          )}
           <OptionGrid>
-            <Option id={`networkselect-mainnet`} color={'#E8831D'} header={'Ethereum'} logoSrc={EthereumLogo} />
-            <Option id={`networkselect-xDai`} color={'#E8831D'} header={'xDai'} logoSrc={XDAILogo} />
+            <Option chainId={ChainId.MAINNET} color={'#E8831D'} header={'Ethereum'} logoSrc={EthereumLogo} />
+            <Option chainId={ChainId.XDAI} color={'#E8831D'} header={'xDai'} logoSrc={XDAILogo} />
             <Option
-              id={`networkselect-arbitrum`}
+              chainId={ChainId.ARBITRUM_TESTNET_V3}
               color={'#333333'}
               header={'Arbitrum'}
               logoSrc={ArbitrumLogo}

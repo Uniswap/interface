@@ -1,13 +1,12 @@
 import { createAction } from '@reduxjs/toolkit'
 
-export type PopupContent =
-  {
-    txn: {
-      hash: string
-      success: boolean
-      summary?: string
-    }
+export type PopupContent = {
+  txn: {
+    hash: string
+    success: boolean
+    summary?: string
   }
+}
 
 export enum ApplicationModal {
   WALLET,
@@ -16,7 +15,8 @@ export enum ApplicationModal {
   ADDRESS_CLAIM,
   CLAIM_POPUP,
   MENU,
-  MOBILE
+  MOBILE,
+  NETWORK_SWITCHER
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')

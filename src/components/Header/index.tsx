@@ -115,10 +115,10 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (active ? transparentize(0.45, theme.bg1) : 'transparent')};
+  background-color: ${({ theme }) => theme.dark1};
   border: solid 2px transparent;
   box-sizing: border-box;
-  color: ${({ theme }) => theme.text4};
+  color: ${({ theme }) => theme.purple2};
   border-radius: 8px;
   white-space: nowrap;
   width: 100%;
