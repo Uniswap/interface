@@ -17,7 +17,6 @@ import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import { useNativeCurrency } from './useNativeCurrency'
-import { useWeb3React } from '@web3-react/core'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -39,13 +38,13 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 }
 
 export function useWrappingToken(currency?: Currency): Token | undefined {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   if (!chainId || !currency || !Currency.isNative(currency)) return undefined
   return Token.getNativeWrapper(chainId)
 }
 
 function useWrappingTokenAbi(token?: Token): any | undefined {
-  const { chainId } = useWeb3React()
+  const { chainId } = useActiveWeb3React()
   if (!chainId) return undefined
   switch (token) {
     case WETH[chainId]:

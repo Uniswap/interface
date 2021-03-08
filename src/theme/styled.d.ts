@@ -15,6 +15,7 @@ export interface Colors {
 
   // backgrounds / greys
   bg1: Color
+  bg1And2: Color
   bg2: Color
   bg3: Color
   bg4: Color
@@ -58,6 +59,7 @@ export interface Colors {
   // darkest // dark1.1
   darkest: Color
   dark1: Color
+  dark2: Color
 }
 
 export interface Grids {

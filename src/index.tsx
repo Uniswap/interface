@@ -1,7 +1,11 @@
+// should always be imported and executed first
+import './set-xdai-addresses'
+
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
-import 'fontsource-montserrat/400.css'
-import 'fontsource-montserrat/500.css'
-import 'fontsource-montserrat/600.css'
+import '@fontsource/montserrat/400.css'
+import '@fontsource/montserrat/500.css'
+import '@fontsource/montserrat/600.css'
+import '@fontsource/montserrat/700.css'
 import React, { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'

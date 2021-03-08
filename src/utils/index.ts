@@ -4,8 +4,7 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IDXswapRouterABI } from 'dxswap-periphery/build/IDXswapRouter.json'
-import { ROUTER_ADDRESS } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency } from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, RoutablePlatform } from 'dxswap-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -110,8 +109,18 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS[chainId ? chainId : ChainId.MAINNET] as string, IDXswapRouterABI, library, account)
+export function getRouterContract(
+  chainId: ChainId,
+  library: Web3Provider,
+  platform: RoutablePlatform,
+  account?: string
+): Contract {
+  return getContract(
+    platform.routerAddress[chainId ? chainId : ChainId.MAINNET] as string,
+    IDXswapRouterABI,
+    library,
+    account
+  )
 }
 
 export function escapeRegExp(string: string): string {
