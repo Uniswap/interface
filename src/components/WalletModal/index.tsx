@@ -238,7 +238,7 @@ export default function WalletModal({
       // overwrite injected when needed
       if (option.connector === injected) {
         // don't show injected if there's no injected provider
-        if (!(window.web3 || window.celo)) {
+        if (!window.celo) {
           if (option.name === 'Celo Extension Wallet') {
             return (
               <Option
@@ -354,6 +354,18 @@ export default function WalletModal({
             />
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
+          )}
+          {walletView !== WALLET_VIEWS.PENDING && !isMobile && (
+            <Blurb>
+              <span>
+                Looking for MetaMask? We currently don&apos;t support it.
+                <br />
+                <br />
+              </span>
+              <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
+                Learn more about Celo wallets
+              </ExternalLink>
+            </Blurb>
           )}
           {walletView !== WALLET_VIEWS.PENDING && isMobile && (
             <Blurb>
