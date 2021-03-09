@@ -26,14 +26,14 @@ function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTh
     case BadgeVariant.WARNING_OUTLINE:
       return 'transparent'
     default:
-      return theme.bg3
+      return theme.bg2
   }
 }
 
 function pickBorder(variant: BadgeVariant | undefined, theme: DefaultTheme): string {
   switch (variant) {
     case BadgeVariant.WARNING_OUTLINE:
-      return `2px solid ${theme.warning}`
+      return `1px solid ${theme.warning}`
     default:
       return 'unset'
   }
@@ -50,7 +50,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
     case BadgeVariant.WARNING_OUTLINE:
       return theme.warning
     default:
-      return readableColor(theme.bg3)
+      return readableColor(theme.bg2)
   }
 }
 
@@ -58,11 +58,12 @@ const Badge = styled.div<PropsWithChildren<BadgeProps>>`
   align-items: center;
   background-color: ${({ theme, variant }) => pickBackgroundColor(variant, theme)};
   border: ${({ theme, variant }) => pickBorder(variant, theme)};
-  border-radius: 0.5em;
+  border-radius: 0.5rem;
   color: ${({ theme, variant }) => pickFontColor(variant, theme)};
   display: inline-flex;
-  padding: 2px 6px;
+  padding: 4px 6px;
   justify-content: center;
+  font-weight: 500;
 `
 
 export default Badge
