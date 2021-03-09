@@ -81,7 +81,7 @@ const StepCounter = ({ value, onUserInput, usePercent = false, prependSymbol }: 
         setTimeout(function () {
           setPulsing(false)
         }, 1800)
-      }, 400)
+      }, 0)
     }
   }, [localValue, useLocalValue, value])
 

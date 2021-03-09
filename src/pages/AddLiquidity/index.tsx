@@ -413,7 +413,7 @@ export default function AddLiquidity({
                   {t('rangeWarning')}
                 </TYPE.main>
                 {price && rateCurrencyBase && (
-                  <RowBetween style={{ backgroundColor: '#1A2028', padding: '8px' }}>
+                  <RowBetween style={{ backgroundColor: theme.bg3, padding: '8px', borderRadius: '12px' }}>
                     <TYPE.main>{t('currentRate', { label: rateCurrencyBase.symbol })}</TYPE.main>
                     <TYPE.main>
                       {rateCurrencyBase === currencyA ? price.toSignificant(3) : price.invert().toSignificant(3)}{' '}

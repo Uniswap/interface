@@ -5,6 +5,7 @@ import { darken, lighten } from 'polished'
 import { RowBetween } from '../Row'
 import { ChevronDown, Check } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import useTheme from 'hooks/useTheme'
 
 const Base = styled(RebassButton)<{
   padding?: string
@@ -379,6 +380,8 @@ const CheckboxWrapper = styled.div`
 `
 
 export function ButtonRadioChecked({ active = false, children, ...rest }: { active?: boolean } & ButtonProps) {
+  const theme = useTheme()
+
   if (!active) {
     return (
       <ButtonOutlined borderRadius="12px" padding="12px 8px" {...rest}>
@@ -393,7 +396,7 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
             {children}
             <CheckboxWrapper>
               <Circle>
-                <Check size={13} />
+                <Check size={13} stroke={theme.white} />
               </Circle>
             </CheckboxWrapper>
           </RowBetween>
