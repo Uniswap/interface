@@ -1,30 +1,26 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@uniswap/sdk'
+import { Currency, ETHER, TokenAmount } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
-import { Plus } from 'react-feather'
+import { Link2, AlertTriangle, LifeBuoy, Circle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { BlueCard, LightCard } from '../../components/Card'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonRadioChecked, ButtonText } from '../../components/Button'
+import { YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { RowBetween, RowFlat } from '../../components/Row'
-
+import { RowBetween, RowFixed, AutoRow } from '../../components/Row'
+import ConfirmContent from './ConfirmContent'
 import { ROUTER_ADDRESS } from '../../constants'
-import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { Field } from '../../state/mint/actions'
+import { Field, Bound, RangeType } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -35,11 +31,22 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
-import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
-import { PoolPriceBar } from './PoolPriceBar'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { ToggleWrapper, ToggleElement } from 'components/Toggle/MultiToggle'
+import StepCounter from 'components/InputStepCounter/InputStepCounter'
+import {
+  DynamicSection,
+  CurrencyDropdown,
+  ScrollablePage,
+  ScrollableContent,
+  FixedPreview,
+  PreviewCard,
+} from './styled'
+import { useTranslation } from 'react-i18next'
+import CurrencyLogo from 'components/CurrencyLogo'
+import QuestionHelper from 'components/QuestionHelper'
 
 export default function AddLiquidity({
   match: {
@@ -47,39 +54,41 @@ export default function AddLiquidity({
   },
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
+  const { t } = useTranslation()
+
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
-  const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WETH[chainId])))
-  )
+  // const oneCurrencyIsWETH = Boolean(
+  //   chainId &&
+  //     ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
+  //       (currencyB && currencyEquals(currencyB, WETH[chainId])))
+  // )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode()
 
   // mint state
-  const { independentField, typedValue, otherTypedValue } = useMintState()
+  const { independentField, typedValue, otherTypedValue, rangeType } = useMintState()
   const {
     dependentField,
     currencies,
     pair,
-    pairState,
+    // pairState,
     currencyBalances,
     parsedAmounts,
+    ticks,
     price,
     noLiquidity,
-    liquidityMinted,
     poolTokenPercentage,
     error,
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
 
-  const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
+  const { onFieldAInput, onFieldBInput, onLowerRangeInput, onUpperRangeInput } = useMintActionHandlers(noLiquidity)
 
   const isValid = !error
 
@@ -211,51 +220,9 @@ export default function AddLiquidity({
       })
   }
 
-  const modalHeader = () => {
-    return noLiquidity ? (
-      <AutoColumn gap="20px">
-        <LightCard mt="20px" borderRadius="20px">
-          <RowFlat>
-            <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
-              {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
-            </Text>
-            <DoubleCurrencyLogo
-              currency0={currencies[Field.CURRENCY_A]}
-              currency1={currencies[Field.CURRENCY_B]}
-              size={30}
-            />
-          </RowFlat>
-        </LightCard>
-      </AutoColumn>
-    ) : (
-      <AutoColumn gap="20px">
-        <RowFlat style={{ marginTop: '20px' }}>
-          <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
-            {liquidityMinted?.toSignificant(6)}
-          </Text>
-          <DoubleCurrencyLogo
-            currency0={currencies[Field.CURRENCY_A]}
-            currency1={currencies[Field.CURRENCY_B]}
-            size={30}
-          />
-        </RowFlat>
-        <Row>
-          <Text fontSize="24px">
-            {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
-          </Text>
-        </Row>
-        <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          {`Output is estimated. If the price changes by more than ${
-            allowedSlippage / 100
-          }% your transaction will revert.`}
-        </TYPE.italic>
-      </AutoColumn>
-    )
-  }
-
-  const modalBottom = () => {
+  const modalContent = () => {
     return (
-      <ConfirmAddModalBottom
+      <ConfirmContent
         price={price}
         currencies={currencies}
         parsedAmounts={parsedAmounts}
@@ -306,179 +273,403 @@ export default function AddLiquidity({
     setTxHash('')
   }, [onFieldAInput, txHash])
 
-  const isCreate = history.location.pathname.includes('/create')
+  // const isCreate = history.location.pathname.includes('/create')
 
   const addIsUnsupported = useIsTransactionUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
-  return (
-    <>
-      <AppBody>
-        <AddRemoveTabs creating={isCreate} adding={true} />
-        <Wrapper>
-          <TransactionConfirmationModal
-            isOpen={showConfirm}
-            onDismiss={handleDismissConfirmation}
-            attemptingTxn={attemptingTxn}
-            hash={txHash}
-            content={() => (
-              <ConfirmationModalContent
-                title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
-                onDismiss={handleDismissConfirmation}
-                topContent={modalHeader}
-                bottomContent={modalBottom}
-              />
-            )}
-            pendingText={pendingText}
-            currencyToAdd={pair?.liquidityToken}
-          />
-          <AutoColumn gap="20px">
-            {noLiquidity ||
-              (isCreate ? (
-                <ColumnCenter>
-                  <BlueCard>
-                    <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={600} color={'primaryText1'}>
-                        You are the first liquidity provider.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
-                        The ratio of tokens you add will set the price of this pool.
-                      </TYPE.link>
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
-                        Once you are happy with the rate click supply to review.
-                      </TYPE.link>
-                    </AutoColumn>
-                  </BlueCard>
-                </ColumnCenter>
-              ) : (
-                <ColumnCenter>
-                  <BlueCard>
-                    <AutoColumn gap="10px">
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
-                        <b>Tip:</b> When you add liquidity, you will receive pool tokens representing your position.
-                        These tokens automatically earn fees proportional to your share of the pool, and can be redeemed
-                        at any time.
-                      </TYPE.link>
-                    </AutoColumn>
-                  </BlueCard>
-                </ColumnCenter>
-              ))}
-            <CurrencyInputPanel
-              value={formattedAmounts[Field.CURRENCY_A]}
-              onUserInput={onFieldAInput}
-              onMax={() => {
-                onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-              }}
-              onCurrencySelect={handleCurrencyASelect}
-              showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-              currency={currencies[Field.CURRENCY_A]}
-              id="add-liquidity-input-tokena"
-              showCommonBases
-            />
-            <ColumnCenter>
-              <Plus size="16" color={theme.text2} />
-            </ColumnCenter>
-            <CurrencyInputPanel
-              value={formattedAmounts[Field.CURRENCY_B]}
-              onUserInput={onFieldBInput}
-              onCurrencySelect={handleCurrencyBSelect}
-              onMax={() => {
-                onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-              }}
-              showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-              currency={currencies[Field.CURRENCY_B]}
-              id="add-liquidity-input-tokenb"
-              showCommonBases
-            />
-            {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
-              <>
-                <LightCard padding="0px" borderRadius={'20px'}>
-                  <RowBetween padding="1rem">
-                    <TYPE.subHeader fontWeight={500} fontSize={14}>
-                      {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
-                    </TYPE.subHeader>
-                  </RowBetween>{' '}
-                  <LightCard padding="1rem" borderRadius={'20px'}>
-                    <PoolPriceBar
-                      currencies={currencies}
-                      poolTokenPercentage={poolTokenPercentage}
-                      noLiquidity={noLiquidity}
-                      price={price}
-                    />
-                  </LightCard>
-                </LightCard>
-              </>
-            )}
+  /**
+   *
+   * dummy values for v3 prototype
+   *
+   */
+  const [feeLevel, setFeeLevel] = useState<number>(4)
 
-            {addIsUnsupported ? (
-              <ButtonPrimary disabled={true}>
-                <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
-              </ButtonPrimary>
-            ) : !account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-            ) : (
-              <AutoColumn gap={'md'}>
-                {(approvalA === ApprovalState.NOT_APPROVED ||
-                  approvalA === ApprovalState.PENDING ||
-                  approvalB === ApprovalState.NOT_APPROVED ||
-                  approvalB === ApprovalState.PENDING) &&
-                  isValid && (
-                    <RowBetween>
-                      {approvalA !== ApprovalState.APPROVED && (
-                        <ButtonPrimary
-                          onClick={approveACallback}
-                          disabled={approvalA === ApprovalState.PENDING}
-                          width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
-                        >
-                          {approvalA === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
-                          ) : (
-                            'Approve ' + currencies[Field.CURRENCY_A]?.symbol
-                          )}
-                        </ButtonPrimary>
-                      )}
-                      {approvalB !== ApprovalState.APPROVED && (
-                        <ButtonPrimary
-                          onClick={approveBCallback}
-                          disabled={approvalB === ApprovalState.PENDING}
-                          width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
-                        >
-                          {approvalB === ApprovalState.PENDING ? (
-                            <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
-                          ) : (
-                            'Approve ' + currencies[Field.CURRENCY_B]?.symbol
-                          )}
-                        </ButtonPrimary>
-                      )}
-                    </RowBetween>
-                  )}
-                <ButtonError
-                  onClick={() => {
-                    expertMode ? onAdd() : setShowConfirm(true)
-                  }}
-                  disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
-                  error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-                >
-                  <Text fontSize={20} fontWeight={500}>
-                    {error ?? 'Supply'}
-                  </Text>
-                </ButtonError>
+  const clearAll = useCallback(() => {
+    onFieldAInput('')
+    onFieldBInput('')
+    onLowerRangeInput('')
+    onUpperRangeInput('')
+    history.push(`/add/`)
+  }, [history, onFieldAInput, onFieldBInput, onLowerRangeInput, onUpperRangeInput])
+
+  const currentTick = ticks[Bound.CURRENT]
+  const lowerTick = ticks[Bound.LOWER]
+  const upperTick = ticks[Bound.UPPER]
+
+  const [rateCurrencyBase, setRateCurrencyBase] = useState<Currency | null | undefined>(currencyA)
+
+  const invalidRange = lowerTick && upperTick && lowerTick.rate > upperTick.rate
+  const outOfRange =
+    currentTick &&
+    lowerTick &&
+    upperTick &&
+    !invalidRange &&
+    (lowerTick.rate > currentTick.rate || upperTick.rate < currentTick.rate)
+
+  return (
+    <ScrollablePage>
+      <TransactionConfirmationModal
+        isOpen={showConfirm}
+        onDismiss={handleDismissConfirmation}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={() => (
+          <ConfirmationModalContent
+            title={'Review Position'}
+            onDismiss={handleDismissConfirmation}
+            topContent={modalContent}
+          />
+        )}
+        pendingText={pendingText}
+        currencyToAdd={pair?.liquidityToken}
+      />
+      <ScrollableContent>
+        <AppBody>
+          <Wrapper>
+            <AutoColumn gap="40px">
+              <AutoColumn gap="md">
+                <RowBetween paddingBottom="20px">
+                  <TYPE.label>Select a pair</TYPE.label>
+                  <ButtonText onClick={clearAll}>
+                    <TYPE.blue fontSize="12px">Clear All</TYPE.blue>
+                  </ButtonText>
+                </RowBetween>
+                <TYPE.main fontWeight={400} fontSize="14px">
+                  {t('selectAPool')}
+                </TYPE.main>
+                <RowBetween>
+                  <CurrencyDropdown
+                    value={formattedAmounts[Field.CURRENCY_A]}
+                    onUserInput={onFieldAInput}
+                    hideInput={true}
+                    onMax={() => {
+                      onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                    }}
+                    onCurrencySelect={handleCurrencyASelect}
+                    showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                    currency={currencies[Field.CURRENCY_A]}
+                    id="add-liquidity-input-tokena"
+                    showCommonBases
+                  />
+
+                  <CurrencyDropdown
+                    value={formattedAmounts[Field.CURRENCY_B]}
+                    hideInput={true}
+                    onUserInput={onFieldBInput}
+                    onCurrencySelect={handleCurrencyBSelect}
+                    onMax={() => {
+                      onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                    }}
+                    showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                    currency={currencies[Field.CURRENCY_B]}
+                    id="add-liquidity-input-tokenb"
+                    showCommonBases
+                  />
+                </RowBetween>
               </AutoColumn>
-            )}
-          </AutoColumn>
-        </Wrapper>
-      </AppBody>
-      {!addIsUnsupported ? (
-        pair && !noLiquidity && pairState !== PairState.INVALID ? (
-          <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
-            <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
-          </AutoColumn>
-        ) : null
-      ) : (
+              <AutoColumn gap="16px">
+                <DynamicSection gap="md" disabled={!currencyB || !currencyA}>
+                  <TYPE.label>{t('selectPool')}</TYPE.label>
+                  <TYPE.main fontWeight={400} fontSize="14px">
+                    {t('poolType')}
+                  </TYPE.main>
+                  <RowBetween>
+                    <ButtonRadioChecked width="32%" active={feeLevel === 0} onClick={() => setFeeLevel(0)}>
+                      <TYPE.label>0.1% {t('fee')}</TYPE.label>
+                    </ButtonRadioChecked>
+                    <ButtonRadioChecked active={feeLevel === 1} width="32%" onClick={() => setFeeLevel(1)}>
+                      <TYPE.label>0.3% {t('fee')}</TYPE.label>
+                    </ButtonRadioChecked>
+                    <ButtonRadioChecked width="32%" active={feeLevel === 2} onClick={() => setFeeLevel(2)}>
+                      <TYPE.label>0.5% {t('fee')}</TYPE.label>
+                    </ButtonRadioChecked>
+                  </RowBetween>
+                </DynamicSection>
+              </AutoColumn>
+
+              <DynamicSection gap="md" disabled={feeLevel >= 4}>
+                <RowBetween>
+                  <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
+                  {currencyA && currencyB && (
+                    <ToggleWrapper width="fit-content">
+                      <ToggleElement
+                        isActive={rateCurrencyBase === currencyA}
+                        fontSize="12px"
+                        onClick={() => setRateCurrencyBase(rateCurrencyBase === currencyB ? currencyA : currencyB)}
+                      >
+                        {currencyA.symbol} {t('rate')}
+                      </ToggleElement>
+                      <ToggleElement
+                        fontSize="12px"
+                        isActive={currencyB === rateCurrencyBase}
+                        onClick={() => setRateCurrencyBase(rateCurrencyBase === currencyB ? currencyA : currencyB)}
+                      >
+                        {currencyB.symbol} Rate
+                      </ToggleElement>
+                    </ToggleWrapper>
+                  )}
+                </RowBetween>
+                <TYPE.main fontWeight={400} fontSize="14px">
+                  {t('rangeWarning')}
+                </TYPE.main>
+                {price && rateCurrencyBase && (
+                  <RowBetween style={{ backgroundColor: '#1A2028', padding: '8px' }}>
+                    <TYPE.main>{t('currentRate', { label: rateCurrencyBase.symbol })}</TYPE.main>
+                    <TYPE.main>
+                      {rateCurrencyBase === currencyA ? price.toSignificant(3) : price.invert().toSignificant(3)}{' '}
+                      {rateCurrencyBase === currencyB ? currencyA?.symbol : currencyB?.symbol}
+                    </TYPE.main>
+                  </RowBetween>
+                )}
+
+                <RowBetween>
+                  <StepCounter
+                    value={lowerTick?.rate?.toString() ?? ''}
+                    onUserInput={onLowerRangeInput}
+                    usePercent={rangeType === RangeType.PERCENT}
+                    prependSymbol={rangeType === RangeType.PERCENT ? '-' : undefined}
+                  />
+                  <Link2 style={{ margin: '0 10px' }} size={40} />
+                  <StepCounter
+                    value={upperTick?.rate?.toString() ?? ''}
+                    onUserInput={onUpperRangeInput}
+                    usePercent={rangeType === RangeType.PERCENT}
+                    prependSymbol={rangeType === RangeType.PERCENT ? '+' : undefined}
+                  />
+                </RowBetween>
+
+                {outOfRange && (
+                  <YellowCard>
+                    <RowBetween>
+                      <AlertTriangle stroke={theme.yellow3} size="24px" />
+                      <TYPE.yellow ml="12px" fontSize="12px">
+                        {t('inactiveRangeWarning')}
+                      </TYPE.yellow>
+                    </RowBetween>
+                  </YellowCard>
+                )}
+
+                {invalidRange && (
+                  <YellowCard>
+                    <RowBetween>
+                      <AlertTriangle stroke={theme.yellow3} size="24px" />
+                      <TYPE.yellow ml="12px" fontSize="12px">
+                        {t('invalidRangeWarning')}
+                      </TYPE.yellow>
+                    </RowBetween>
+                  </YellowCard>
+                )}
+              </DynamicSection>
+
+              <DynamicSection disabled={!lowerTick || !upperTick}>
+                <AutoColumn gap="md">
+                  <TYPE.label>{t('inputTokens')}</TYPE.label>
+                  <TYPE.main fontWeight={400} fontSize="14px">
+                    {t('chooseLiquidityAmount')}
+                  </TYPE.main>
+                  <CurrencyInputPanel
+                    value={formattedAmounts[Field.CURRENCY_A]}
+                    onUserInput={onFieldAInput}
+                    disableCurrencySelect={true}
+                    onMax={() => {
+                      onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                    }}
+                    onCurrencySelect={handleCurrencyASelect}
+                    showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                    currency={currencies[Field.CURRENCY_A]}
+                    id="add-liquidity-input-tokena"
+                    showCommonBases
+                  />
+                  <ColumnCenter>
+                    <Link2 stroke={theme.text2} size={'24px'} />
+                  </ColumnCenter>
+
+                  <CurrencyInputPanel
+                    value={formattedAmounts[Field.CURRENCY_B]}
+                    disableCurrencySelect={true}
+                    onUserInput={onFieldBInput}
+                    onCurrencySelect={handleCurrencyBSelect}
+                    onMax={() => {
+                      onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                    }}
+                    showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                    currency={currencies[Field.CURRENCY_B]}
+                    id="add-liquidity-input-tokenb"
+                    showCommonBases
+                  />
+                </AutoColumn>
+              </DynamicSection>
+            </AutoColumn>
+          </Wrapper>
+        </AppBody>
+      </ScrollableContent>
+      {addIsUnsupported && (
         <UnsupportedCurrencyFooter
           show={addIsUnsupported}
           currencies={[currencies.CURRENCY_A, currencies.CURRENCY_B]}
         />
       )}
-    </>
+      <FixedPreview>
+        <AutoColumn gap="md">
+          <TYPE.main fontSize="12px">Position Preview</TYPE.main>
+          <PreviewCard>
+            {!currencyA || !currencyB ? (
+              <RowBetween>
+                <TYPE.label>Select a pair to begin</TYPE.label>
+                <QuestionHelper text="Select a pair to begin" size={20} />
+              </RowBetween>
+            ) : (
+              <AutoRow gap="4px">
+                <CurrencyLogo currency={currencyA} size={'20px'} />
+                <TYPE.label ml="4px">{currencyA.symbol}</TYPE.label>
+                <TYPE.main>/</TYPE.main>
+                <CurrencyLogo currency={currencyB} size={'20px'} />
+                <TYPE.label ml="4px">{currencyB.symbol}</TYPE.label>
+              </AutoRow>
+            )}
+          </PreviewCard>
+          <PreviewCard disabled={!currencyA || !currencyB}>
+            <RowBetween>
+              <TYPE.label>
+                {feeLevel >= 4
+                  ? t('selectPool')
+                  : `${feeLevel === 0 ? '0.1' : feeLevel === 1 ? '0.3' : '0.5'}% fee pool`}
+              </TYPE.label>
+              <LifeBuoy size="20px" />
+            </RowBetween>
+          </PreviewCard>
+          <PreviewCard disabled={feeLevel >= 4}>
+            {!lowerTick || !upperTick ? (
+              <RowBetween>
+                <TYPE.label>{t('selectPriceLimits')}</TYPE.label>
+                <Circle size="20px" />
+              </RowBetween>
+            ) : (
+              currencyA &&
+              currencyB && (
+                <AutoColumn gap="sm" style={{ width: '100%' }}>
+                  <ToggleWrapper width="100%">
+                    <ToggleElement
+                      isActive={rateCurrencyBase === currencyA}
+                      fontSize="12px"
+                      onClick={() => setRateCurrencyBase(rateCurrencyBase === currencyB ? currencyA : currencyB)}
+                    >
+                      {currencyA.symbol} {t('rate')}
+                    </ToggleElement>
+                    <ToggleElement
+                      fontSize="12px"
+                      isActive={currencyB === rateCurrencyBase}
+                      onClick={() => setRateCurrencyBase(rateCurrencyBase === currencyB ? currencyA : currencyB)}
+                    >
+                      {currencyB.symbol} Rate
+                    </ToggleElement>
+                  </ToggleWrapper>
+                  <RowBetween padding="0 32px">
+                    <TYPE.label>{lowerTick.rate}</TYPE.label>
+                    <TYPE.main>⟷</TYPE.main>
+                    <TYPE.label>{upperTick.rate}</TYPE.label>
+                  </RowBetween>
+                </AutoColumn>
+              )
+            )}
+          </PreviewCard>
+          <PreviewCard disabled={!lowerTick || !upperTick}>
+            {!formattedAmounts[Field.CURRENCY_A] || !currencyA || !currencyB ? (
+              <RowBetween>
+                <TYPE.label>{t('inputTokenDynamic', { label: currencyA ? currencyA.symbol : 'Token' })}</TYPE.label>
+                <Circle size="20px" />
+              </RowBetween>
+            ) : (
+              <RowBetween>
+                <RowFixed>
+                  <CurrencyLogo currency={currencyA} />
+                  <TYPE.label ml="8px">{formattedAmounts[Field.CURRENCY_A]}</TYPE.label>
+                  <TYPE.label ml="8px">{currencyA.symbol}</TYPE.label>
+                </RowFixed>
+                <TYPE.main>50%</TYPE.main>
+              </RowBetween>
+            )}
+          </PreviewCard>
+          <PreviewCard disabled={!lowerTick || !upperTick}>
+            {!formattedAmounts[Field.CURRENCY_B] || !currencyA || !currencyB ? (
+              <RowBetween>
+                <TYPE.label>{t('inputTokenDynamic', { label: currencyB ? currencyB.symbol : 'Token' })}</TYPE.label>
+                <Circle size="20px" />
+              </RowBetween>
+            ) : (
+              <RowBetween>
+                <RowFixed>
+                  <CurrencyLogo currency={currencyB} />
+                  <TYPE.label ml="8px">{formattedAmounts[Field.CURRENCY_B]}</TYPE.label>
+                  <TYPE.label ml="8px">{currencyB.symbol}</TYPE.label>
+                </RowFixed>
+                <TYPE.main>50%</TYPE.main>
+              </RowBetween>
+            )}
+          </PreviewCard>
+          {addIsUnsupported ? (
+            <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
+              <TYPE.main mb="4px">{t('unsupportedAsset')}</TYPE.main>
+            </ButtonPrimary>
+          ) : !account ? (
+            <ButtonLight onClick={toggleWalletModal} borderRadius="12px" padding={'12px'}>
+              {t('connectWallet')}
+            </ButtonLight>
+          ) : (
+            <AutoColumn gap={'md'}>
+              {(approvalA === ApprovalState.NOT_APPROVED ||
+                approvalA === ApprovalState.PENDING ||
+                approvalB === ApprovalState.NOT_APPROVED ||
+                approvalB === ApprovalState.PENDING) &&
+                isValid && (
+                  <RowBetween>
+                    {approvalA !== ApprovalState.APPROVED && (
+                      <ButtonPrimary
+                        borderRadius="12px"
+                        padding={'12px'}
+                        onClick={approveACallback}
+                        disabled={approvalA === ApprovalState.PENDING}
+                        width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                      >
+                        {approvalA === ApprovalState.PENDING ? (
+                          <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
+                        ) : (
+                          'Approve ' + currencies[Field.CURRENCY_A]?.symbol
+                        )}
+                      </ButtonPrimary>
+                    )}
+                    {approvalB !== ApprovalState.APPROVED && (
+                      <ButtonPrimary
+                        borderRadius="12px"
+                        padding={'12px'}
+                        onClick={approveBCallback}
+                        disabled={approvalB === ApprovalState.PENDING}
+                        width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                      >
+                        {approvalB === ApprovalState.PENDING ? (
+                          <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
+                        ) : (
+                          'Approve ' + currencies[Field.CURRENCY_B]?.symbol
+                        )}
+                      </ButtonPrimary>
+                    )}
+                  </RowBetween>
+                )}
+              <ButtonError
+                onClick={() => {
+                  expertMode ? onAdd() : setShowConfirm(true)
+                }}
+                style={{ borderRadius: '12px' }}
+                padding={'12px'}
+                disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
+                error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+              >
+                <Text fontWeight={500}>{error ?? 'Next'}</Text>
+              </ButtonError>
+            </AutoColumn>
+          )}
+        </AutoColumn>
+      </FixedPreview>
+    </ScrollablePage>
   )
 }

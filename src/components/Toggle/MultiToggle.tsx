@@ -1,30 +1,35 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
-  width: 100%;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
-  background: ${({ theme, isActive }) => (isActive ? theme.bg2 : 'none')};
-  color: ${({ theme, isActive }) => (isActive ? theme.text1 : theme.text3)};
-  font-size: 1rem;
-  font-weight: 400;
-  padding: 0.35rem 0.6rem;
-  :hover {
-    user-select: initial;
-    color: ${({ theme, isActive }) => (isActive ? theme.text2 : theme.text3)};
-  }
-`
-
-const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean; width?: string }>`
+export const ToggleWrapper = styled.button<{ width?: string }>`
   display: flex;
+  align-items: center;
   width: ${({ width }) => width ?? '100%'}
-  padding: 2px;
+  padding: 1px;
   background: ${({ theme }) => theme.bg0};
   border-radius: 8px;
   border: ${({ theme }) => '2px solid ' + theme.bg2};
   cursor: pointer;
   outline: none;
+`
+
+export const ToggleElement = styled.span<{ isActive?: boolean; fontSize?: string }>`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 4px 0.5rem;
+  border-radius: 6px;
+  justify-content: center;
+  height: 100%;
+  background: ${({ theme, isActive }) => (isActive ? theme.bg2 : 'none')};
+  color: ${({ theme, isActive }) => (isActive ? theme.text1 : theme.text3)};
+  font-size: ${({ fontSize }) => fontSize ?? '1rem'};
+  font-weight: 500;
+  white-space: nowrap;
+  :hover {
+    user-select: initial;
+    color: ${({ theme, isActive }) => (isActive ? theme.text2 : theme.text3)};
+  }
 `
 
 export interface ToggleProps {
@@ -37,17 +42,12 @@ export interface ToggleProps {
 
 export default function MultiToggle({ id, options, activeIndex, toggle, width }: ToggleProps) {
   return (
-    <StyledToggle id={id} isActive={activeIndex === 0} width={width}>
+    <ToggleWrapper id={id} width={width}>
       {options.map((option, index) => (
-        <ToggleElement
-          key={id + '-' + index}
-          isActive={index === activeIndex}
-          isOnSwitch={true}
-          onClick={() => toggle(index)}
-        >
+        <ToggleElement key={id + '-' + index} isActive={index === activeIndex} onClick={() => toggle(index)}>
           {option}
         </ToggleElement>
       ))}
-    </StyledToggle>
+    </ToggleWrapper>
   )
 }
