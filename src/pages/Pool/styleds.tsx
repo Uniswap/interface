@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   position: relative;
-  padding: 1rem;
+  padding: 20px;
 `
 
 export const ClickableText = styled(Text)`

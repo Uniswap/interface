@@ -23,7 +23,7 @@ const Section = styled(AutoColumn)`
 `
 
 const BottomSection = styled(Section)`
-  background-color: ${({ theme }) => theme.bg2};
+  // background-color: ${({ theme }) => theme.bg2};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 `
@@ -139,7 +139,7 @@ export function ConfirmationModalContent({
   title: string
   onDismiss: () => void
   topContent: () => React.ReactNode
-  bottomContent: () => React.ReactNode
+  bottomContent?: () => React.ReactNode | undefined
 }) {
   return (
     <Wrapper>
@@ -152,7 +152,7 @@ export function ConfirmationModalContent({
         </RowBetween>
         {topContent()}
       </Section>
-      <BottomSection gap="12px">{bottomContent()}</BottomSection>
+      {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
     </Wrapper>
   )
 }

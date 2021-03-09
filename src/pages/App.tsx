@@ -40,22 +40,15 @@ const AppWrapper = styled.div`
   overflow-x: hidden;
 `
 
-const HeaderWrapper = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  width: 100%;
-  justify-content: space-between;
-`
-
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 100px;
+  padding-top: 160px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 10;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 16px;
@@ -63,6 +56,15 @@ const BodyWrapper = styled.div`
   `};
 
   z-index: 1;
+`
+
+const HeaderWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  width: 100%;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  z-index: 2;
 `
 
 const Marginer = styled.div`

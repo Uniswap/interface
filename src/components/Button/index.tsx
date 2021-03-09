@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { darken, lighten } from 'polished'
 
 import { RowBetween } from '../Row'
-import { ChevronDown } from 'react-feather'
+import { ChevronDown, Check } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 
 const Base = styled(RebassButton)<{
@@ -221,6 +221,26 @@ export const ButtonEmpty = styled(Base)`
   }
 `
 
+export const ButtonText = styled(Base)`
+  padding: 0;
+  width: fit-content;
+  background: none;
+  &:focus {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    text-decoration: underline;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+  &:active {
+    text-decoration: underline;
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
+`
+
 export const ButtonWhite = styled(Base)`
   border: 1px solid #edeef2;
   background-color: ${({ theme }) => theme.bg1};
@@ -335,5 +355,50 @@ export function ButtonRadio({ active, ...rest }: { active?: boolean } & ButtonPr
     return <ButtonWhite {...rest} />
   } else {
     return <ButtonPrimary {...rest} />
+  }
+}
+
+const ActiveOutlined = styled(ButtonOutlined)`
+  border: 1px solid;
+  border-color: ${({ theme }) => theme.primary1};
+`
+
+const Circle = styled.div`
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.primary1};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const CheckboxWrapper = styled.div`
+  width: 30px;
+  padding: 0 10px;
+`
+
+export function ButtonRadioChecked({ active = false, children, ...rest }: { active?: boolean } & ButtonProps) {
+  if (!active) {
+    return (
+      <ButtonOutlined borderRadius="12px" padding="12px 8px" {...rest}>
+        {<RowBetween>{children}</RowBetween>}
+      </ButtonOutlined>
+    )
+  } else {
+    return (
+      <ActiveOutlined {...rest} padding="12px 8px" borderRadius="12px">
+        {
+          <RowBetween>
+            {children}
+            <CheckboxWrapper>
+              <Circle>
+                <Check size={13} />
+              </Circle>
+            </CheckboxWrapper>
+          </RowBetween>
+        }
+      </ActiveOutlined>
+    )
   }
 }

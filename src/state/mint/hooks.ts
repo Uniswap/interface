@@ -9,7 +9,16 @@ import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurre
 import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, typeInput } from './actions'
+import {
+  Field,
+  Bound,
+  typeInput,
+  typeLowerRangeInput,
+  typeUpperRangeInput,
+  RangeType,
+  updateRangeType as updateRangeTypeAction,
+} from './actions'
+import { tryParseTick } from './utils'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -22,6 +31,9 @@ export function useMintActionHandlers(
 ): {
   onFieldAInput: (typedValue: string) => void
   onFieldBInput: (typedValue: string) => void
+  onLowerRangeInput: (typedValue: string) => void
+  onUpperRangeInput: (typedValue: string) => void
+  updateRangeType: (rangetype: RangeType) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
@@ -31,6 +43,7 @@ export function useMintActionHandlers(
     },
     [dispatch, noLiquidity]
   )
+
   const onFieldBInput = useCallback(
     (typedValue: string) => {
       dispatch(typeInput({ field: Field.CURRENCY_B, typedValue, noLiquidity: noLiquidity === true }))
@@ -38,10 +51,39 @@ export function useMintActionHandlers(
     [dispatch, noLiquidity]
   )
 
+  const onLowerRangeInput = useCallback(
+    (typedValue: string) => {
+      dispatch(typeLowerRangeInput({ typedValue }))
+    },
+    [dispatch]
+  )
+
+  const onUpperRangeInput = useCallback(
+    (typedValue: string) => {
+      dispatch(typeUpperRangeInput({ typedValue }))
+    },
+    [dispatch]
+  )
+
+  const updateRangeType = useCallback(
+    (rangeType: RangeType) => {
+      dispatch(updateRangeTypeAction({ rangeType }))
+    },
+    [dispatch]
+  )
+
   return {
     onFieldAInput,
     onFieldBInput,
+    onLowerRangeInput,
+    onUpperRangeInput,
+    updateRangeType,
   }
+}
+
+// dummy entity
+export interface Tick {
+  rate: number
 }
 
 export function useDerivedMintInfo(
@@ -54,6 +96,7 @@ export function useDerivedMintInfo(
   pairState: PairState
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmounts: { [field in Field]?: CurrencyAmount }
+  ticks: { [bound in Bound]?: Tick }
   price?: Price
   noLiquidity?: boolean
   liquidityMinted?: TokenAmount
@@ -62,7 +105,7 @@ export function useDerivedMintInfo(
 } {
   const { account, chainId } = useActiveWeb3React()
 
-  const { independentField, typedValue, otherTypedValue } = useMintState()
+  const { independentField, typedValue, otherTypedValue, lowerRangeTypedValue, upperRangeTypedValue } = useMintState()
 
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 
@@ -117,10 +160,13 @@ export function useDerivedMintInfo(
       return undefined
     }
   }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, chainId, currencyB, pair])
-  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
-    [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
-    [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount,
-  }
+
+  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = useMemo(() => {
+    return {
+      [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
+      [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount,
+    }
+  }, [dependentAmount, independentAmount, independentField])
 
   const price = useMemo(() => {
     if (noLiquidity) {
@@ -134,6 +180,17 @@ export function useDerivedMintInfo(
       return pair && wrappedCurrencyA ? pair.priceOf(wrappedCurrencyA) : undefined
     }
   }, [chainId, currencyA, noLiquidity, pair, parsedAmounts])
+
+  // parse typed range values and determine closest ticks, dummy rn
+  const ticks = {
+    [Bound.CURRENT]: {
+      rate: parseFloat(
+        independentField === Field.CURRENCY_A ? price?.toFixed(6) ?? '0' : price?.invert().toFixed(6) ?? '0'
+      ),
+    },
+    [Bound.LOWER]: tryParseTick(lowerRangeTypedValue),
+    [Bound.UPPER]: tryParseTick(upperRangeTypedValue),
+  }
 
   // liquidity minted
   const liquidityMinted = useMemo(() => {
@@ -187,6 +244,7 @@ export function useDerivedMintInfo(
     pairState,
     currencyBalances,
     parsedAmounts,
+    ticks,
     price,
     noLiquidity,
     liquidityMinted,
