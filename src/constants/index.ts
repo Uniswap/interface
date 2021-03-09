@@ -3,8 +3,8 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, walletconnect, walletlink, trezor } from '../connectors'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 
-export const ROUTER_ADDRESS = '0xF71Fe20e1a630d27b93FE3d17dFda4249F13cDcC'
-export const FACTORY_ADDRESS = '0xe25d045D9B65F5428B231f46BBA2B3F351A97F3b'
+export const ROUTER_ADDRESS = '0xbfFf5f2386080c11898A8a7d31431D7DCc317200'
+export const FACTORY_ADDRESS = '0x2f90d05693543b8D7feCD15A2150D9a63E89034A'
 
 // export const ROUTER_ADDRESS = '0x8406Caa2Cc202aFB4eCfb066D472E462bee00f3b'
 // export const FACTORY_ADDRESS = '0x945c725e3eCC3dfdC350C0334f3fF42f08F719EA'
