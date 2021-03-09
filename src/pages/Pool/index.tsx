@@ -97,17 +97,16 @@ export default function Pool() {
   //     ),
   //   [tokenPairsWithLiquidityTokens, v2PairsBalances]
   // )
-  const vv: { liquidityToken: Token; tokens: [Token, Token] }[] = []
   const liquidityTokensWithBalances = useMemo(
     () =>
-      liquidityTokens.reduce((acc, lpTokens, index) => {
+      liquidityTokens.reduce<{ liquidityToken: Token; tokens: [Token, Token] }[]>((acc, lpTokens, index) => {
         lpTokens
           .filter((lp: Token) => v2PairsBalances[lp.address]?.greaterThan('0'))
           .forEach((lp: Token) => {
             acc.push({ liquidityToken: lp, tokens: tokenPairsWithLiquidityTokens[index].tokens })
           })
         return acc
-      }, vv),
+      }, []),
     [tokenPairsWithLiquidityTokens, liquidityTokens, v2PairsBalances]
   )
 
