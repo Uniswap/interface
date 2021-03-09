@@ -14,22 +14,23 @@ const ActiveDot = styled.span`
   border-radius: 50%;
   height: 8px;
   width: 8px;
+  margin-right: 4px;
 `
 const Row = styled(Link)`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 12px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.text1};
-  margin: 14px 0;
-  padding: 12px;
+  margin: 8px 0;
+  padding: 8px;
   text-decoration: none;
+  font-weight: 500;
   &:first-of-type {
-    margin: 0 0 14px 0;
+    margin: 0 0 8px 0;
   }
   &:last-of-type {
-    margin: 14px 0 0 0;
+    margin: 8px 0 0 0;
   }
 
   & > div:not(:first-child) {
@@ -39,25 +40,35 @@ const Row = styled(Link)`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     flex-direction: row;
   }
+  :hover {
+    background-color: ${({ theme }) => theme.bg1};
+  }
 `
 const BadgeText = styled.div`
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 14px;
 `
 const BadgeWrapper = styled.div`
-  font-size: 12px;
+  font-size: 14px;
 `
 const DataLineItem = styled.div`
   text-align: right;
+  font-size: 14px;
 `
 const DoubleArrow = styled.span`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text3};
 `
 const DesktopHeader = styled.div`
   display: none;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.6;
+  padding: 8px 8px 0 8px;
+
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     align-items: center;
     display: flex;
-    margin: 0 0 14px 0;
+    margin: 0 0 8px 0;
     & > div:first-child {
       flex: 1 1 auto;
     }
@@ -153,7 +164,15 @@ const MobileHeader = styled.div`
 const PrimaryPositionIdData = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 6px 0;
+  align-items: center;
+  padding: 6px 0 12px 0;
+  > * {
+    margin-right: 8px;
+  }
+`
+
+const DataText = styled.div`
+  font-weight: 500;
 `
 
 interface Position {
@@ -215,13 +234,18 @@ export default function PositionList({ loading, positions, showUnwrapped }: Posi
               <LabelData>
                 <PrimaryPositionIdData>
                   <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin />
-                  &nbsp;{symbol0}&nbsp;/&nbsp;{symbol1}
-                  &nbsp;<Badge>{feeLevel.toSignificant(2)}%</Badge>
+                  <DataText>
+                    &nbsp;{symbol0}&nbsp;/&nbsp;{symbol1}
+                  </DataText>
+                  &nbsp;
+                  <Badge>
+                    <BadgeText>{feeLevel.toSignificant(2)}%</BadgeText>
+                  </Badge>
                 </PrimaryPositionIdData>
                 <BadgeWrapper>
                   {limitCrossed ? (
                     <Badge variant={BadgeVariant.WARNING}>
-                      <AlertTriangle width={12} height={14} />
+                      <AlertTriangle width={14} height={14} style={{ marginRight: '4px' }} />
                       &nbsp;
                       <BadgeText>{t('Out of range')}</BadgeText>
                     </Badge>

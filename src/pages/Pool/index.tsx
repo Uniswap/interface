@@ -41,6 +41,9 @@ const ButtonRow = styled(RowFixed)`
   `};
 `
 const InactivePositionsBadge = styled(Badge)`
+  border-radius: 12px;
+  height: 100%;
+  padding: 6px 8px;
   display: none;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     display: flex;
@@ -83,7 +86,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 `
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.bg0};
-  padding: 24px;
+  padding: 16px;
   border-radius: 1.3em;
   display: flex;
   flex-direction: column;
@@ -191,7 +194,7 @@ export default function Pool() {
               <ButtonRow>
                 {numInactivePositions > 0 && (
                   <InactivePositionsBadge variant={BadgeVariant.WARNING_OUTLINE}>
-                    <Info />
+                    <Info size={20} />
                     &nbsp;&nbsp;
                     {numInactivePositions}{' '}
                     {numInactivePositions === 1 ? t('Inactive position') : t('Inactive positions')}
