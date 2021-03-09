@@ -127,7 +127,7 @@ export default function AddLiquidity({
     !isZero(unAmplifiedPairAddress)
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
-  const isValid = !(error || (!pairAddress && +amp == 0 ? 'Enter amp' : ''))
+  const isValid = !(error || (!pairAddress && +amp < 1 ? 'Enter amp (>=1)' : ''))
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -498,16 +498,19 @@ export default function AddLiquidity({
               </LightCard>
             )}
 
-            {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
-              <>
-                <PoolPriceRangeBar
-                  pair={pair}
-                  currencies={currencies}
-                  price={price}
-                  amplification={ampConvertedInBps}
-                />
-              </>
-            )}
+            {currencies[Field.CURRENCY_A] &&
+              currencies[Field.CURRENCY_B] &&
+              pairState !== PairState.INVALID &&
+              (!!pairAddress || +amp >= 1) && (
+                <>
+                  <PoolPriceRangeBar
+                    pair={pair}
+                    currencies={currencies}
+                    price={price}
+                    amplification={ampConvertedInBps}
+                  />
+                </>
+              )}
 
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
@@ -556,11 +559,11 @@ export default function AddLiquidity({
                     !isValid &&
                     !!parsedAmounts[Field.CURRENCY_A] &&
                     !!parsedAmounts[Field.CURRENCY_B] &&
-                    !!(pairAddress && +amp == 0)
+                    !!(pairAddress && +amp < 1)
                   }
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {error ?? (!pairAddress && +amp == 0 ? 'Enter amp' : 'Supply')}
+                    {error ?? (!pairAddress && +amp < 1 ? 'Enter amp (>=1)' : 'Supply')}
                   </Text>
                 </ButtonError>
               </AutoColumn>

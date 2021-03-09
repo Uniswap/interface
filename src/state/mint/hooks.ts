@@ -140,8 +140,7 @@ export function useDerivedMintInfo(
   if (!account) {
     error = 'Connect Wallet'
   }
-
-  if (pairAddress && pairState === PairState.INVALID) {
+  if ((pairAddress && pairState === PairState.INVALID) || (tokenA?.symbol == 'WETH' && tokenB?.symbol == 'WETH')) {
     error = error ?? 'Invalid pair'
   }
 
