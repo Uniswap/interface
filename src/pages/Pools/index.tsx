@@ -4,16 +4,20 @@ import styled from 'styled-components'
 import { Box, Flex } from 'rebass'
 import { useTranslation } from 'react-i18next'
 
+import { Currency } from 'libs/sdk/src'
 import { ButtonOutlined } from 'components/Button'
 import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Panel from 'components/Panel'
 import PoolList from 'components/PoolList'
 import Search from 'components/Search'
+import LocalLoader from 'components/LocalLoader'
+import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
-import { useDerivedPairInfo, usePairActionHandlers, usePairState } from 'state/pair/hooks'
+import { useDerivedPairInfo, usePairActionHandlers } from 'state/pair/hooks'
+import { useSubgraphPoolsData, useUserLiquidityPositions } from 'state/pool/hooks'
 import { Field } from 'state/pair/actions'
-import { Currency } from 'libs/sdk/src'
 import { currencyId } from 'utils/currencyId'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
 
 const PageWrapper = styled.div`
   padding: 0 10em;
@@ -57,6 +61,7 @@ const Pools = ({
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const { t } = useTranslation()
+  const { account, chainId } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
   // Pool selection
@@ -69,6 +74,12 @@ const Pools = ({
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
   const { currencies, pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
+  const { loading: loadingSubgraphPoolsData, data: subgraphPoolsData } = useSubgraphPoolsData(
+    wrappedCurrency(currencyA ?? undefined, chainId),
+    wrappedCurrency(currencyB ?? undefined, chainId)
+  )
+
+  const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
@@ -97,7 +108,7 @@ const Pools = ({
     [currencyIdA, history, currencyIdB]
   )
 
-  const poolList = pairs
+  const poolsList = pairs
     .map(([pairState, pair]) => pair)
     .filter(pair => pair !== null)
     .filter(pair => {
@@ -143,8 +154,15 @@ const Pools = ({
         </ToolbarWrapper>
 
         <Panel>
-          {poolList.length > 0 ? (
-            <PoolList poolsList={poolList} maxItems={50} />
+          {loadingSubgraphPoolsData || loadingUserLiquidityPositions ? (
+            <LocalLoader />
+          ) : poolsList.length > 0 && subgraphPoolsData?.pools && userLiquidityPositions?.liquidityPositions ? (
+            <PoolList
+              poolsList={poolsList}
+              subgraphPoolsData={subgraphPoolsData.pools}
+              userLiquidityPositions={userLiquidityPositions.liquidityPositions}
+              maxItems={50}
+            />
           ) : (
             <SelectPairInstructionWrapper>{t('thereAreNoPools')}</SelectPairInstructionWrapper>
           )}

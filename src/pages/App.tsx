@@ -1,6 +1,9 @@
 import React, { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
+import { ApolloProvider } from '@apollo/client'
+
+import { client } from 'apollo/client'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
 import URLWarning from '../components/Header/URLWarning'
@@ -59,42 +62,44 @@ const Marginer = styled.div`
 
 export default function App() {
   return (
-    <Suspense fallback={null}>
-      <Route component={DarkModeQueryParamReader} />
-      <AppWrapper>
-        <URLWarning />
-        <HeaderWrapper>
-          <Header />
-        </HeaderWrapper>
-        <BodyWrapper>
-          <Popups />
-          <Polling />
-          <Web3ReactManager>
-            <Switch>
-              <Route exact strict path="/swap" component={Swap} />
-              <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-              <Route exact strict path="/find" component={PoolFinder} />
-              <Route exact strict path="/pools" component={Pools} />
-              <Route exact strict path="/pools/:currencyIdA" component={Pools} />
-              <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
-              <Route exact strict path="/myPools" component={Pool} />
-              <Route exact path="/add" component={AddLiquidity} />
-              <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={RedirectDuplicateTokenIds} />
-              <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-              <Route exact strict path="/remove/:currencyIdA/:currencyIdB/:pairAddress" component={RemoveLiquidity} />
-              <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-              <Route exact path="/create" component={AddLiquidity} />
-              <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={RedirectDuplicateTokenIds} />
-              <Route component={RedirectPathToSwapOnly} />
-            </Switch>
-          </Web3ReactManager>
-          <Marginer />
-        </BodyWrapper>
-      </AppWrapper>
-    </Suspense>
+    <ApolloProvider client={client}>
+      <Suspense fallback={null}>
+        <Route component={DarkModeQueryParamReader} />
+        <AppWrapper>
+          <URLWarning />
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
+          <BodyWrapper>
+            <Popups />
+            <Polling />
+            <Web3ReactManager>
+              <Switch>
+                <Route exact strict path="/swap" component={Swap} />
+                <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+                <Route exact strict path="/find" component={PoolFinder} />
+                <Route exact strict path="/pools" component={Pools} />
+                <Route exact strict path="/pools/:currencyIdA" component={Pools} />
+                <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
+                <Route exact strict path="/myPools" component={Pool} />
+                <Route exact path="/add" component={AddLiquidity} />
+                <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={RedirectDuplicateTokenIds} />
+                <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
+                <Route exact strict path="/remove/:currencyIdA/:currencyIdB/:pairAddress" component={RemoveLiquidity} />
+                <Route exact strict path="/create" component={RedirectToAddLiquidity} />
+                <Route exact path="/create" component={AddLiquidity} />
+                <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={RedirectDuplicateTokenIds} />
+                <Route component={RedirectPathToSwapOnly} />
+              </Switch>
+            </Web3ReactManager>
+            <Marginer />
+          </BodyWrapper>
+        </AppWrapper>
+      </Suspense>
+    </ApolloProvider>
   )
 }

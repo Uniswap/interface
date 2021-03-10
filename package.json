@@ -119,10 +119,12 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@apollo/client": "^3.3.11",
     "@types/big.js": "^6.0.0",
     "dayjs": "^1.10.4",
     "decimal.js-light": "^2.5.1",
     "env-cmd": "^10.1.0",
+    "graphql": "^15.5.0",
     "jsbi": "^3.1.4",
     "numeral": "^2.0.6",
     "react-app-rewire-styled-components": "^3.0.2",
