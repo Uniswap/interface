@@ -156,11 +156,11 @@ const Pools = ({
         <Panel>
           {loadingSubgraphPoolsData || loadingUserLiquidityPositions ? (
             <LocalLoader />
-          ) : poolsList.length > 0 && subgraphPoolsData?.pools && userLiquidityPositions?.liquidityPositions ? (
+          ) : poolsList.length > 0 && subgraphPoolsData?.pools && userLiquidityPositions?.liquidityPositionSnapshots ? (
             <PoolList
               poolsList={poolsList}
               subgraphPoolsData={subgraphPoolsData.pools}
-              userLiquidityPositions={userLiquidityPositions.liquidityPositions}
+              userLiquidityPositions={userLiquidityPositions.liquidityPositionSnapshots}
               maxItems={50}
             />
           ) : (

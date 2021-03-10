@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 
-import { POOLS_DATA_QUERY, USER_LIQUIDITY_POSITIONS } from 'apollo/queries'
+import { POOLS_DATA_QUERY, USER_LIQUIDITY_POSITION_SNAPSHOTS } from 'apollo/queries'
 import { Token } from 'libs/sdk/src'
 
 /**
@@ -27,7 +27,7 @@ export function useSubgraphPoolsData(tokenA: Token | undefined, tokenB: Token | 
  * @param account string
  */
 export function useUserLiquidityPositions(account: string | null | undefined) {
-  const { loading, error, data } = useQuery(USER_LIQUIDITY_POSITIONS, {
+  const { loading, error, data } = useQuery(USER_LIQUIDITY_POSITION_SNAPSHOTS, {
     variables: {
       account: account?.toLowerCase()
     }

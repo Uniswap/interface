@@ -25,6 +25,7 @@ const PoolFields = `
     trackedReserveETH
     reserveETH
     volumeUSD
+    feeUSD
     untrackedVolumeUSD
     token0Price
     token1Price
@@ -41,13 +42,16 @@ export const POOLS_DATA_QUERY = gql`
   ${PoolFields}
 `
 
-export const USER_LIQUIDITY_POSITIONS = gql`
-  query liquidityPositions($account: String!) {
-    liquidityPositions(where: { user: $account }) {
+export const USER_LIQUIDITY_POSITION_SNAPSHOTS = gql`
+  query liquidityPositionSnapshots($account: String!) {
+    liquidityPositionSnapshots(where: { user: $account }) {
       pool {
         id
       }
       liquidityTokenBalance
+      liquidityTokenTotalSupply
+      reserveUSD
+      timestamp
     }
   }
 `
