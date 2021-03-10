@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { DateTime } from 'luxon'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
 import Countdown from '../../../../Countdown'
@@ -25,11 +25,17 @@ export default function LiquidityMiningInformation({
   timelock,
   apy
 }: LiquidityMiningInformationProps) {
+  const [started, setStarted] = useState(false)
+
+  useEffect(() => {
+    setStarted(!!(startsAt && parseInt(startsAt) < Math.floor(Date.now() / 1000)))
+  }, [endsAt, startsAt])
+
   return (
     <Flex justifyContent="stretch" width="100%">
       <Flex flexDirection="column" flex="1">
         <DataRow title="APY" value={`${apy.decimalPlaces(2).toString()}%`} />
-        <DataRow title="Time left" value={<Countdown to={endsAt ? parseInt(endsAt) : 0} />} />
+        {started && <DataRow title="Time left" value={<Countdown to={endsAt ? parseInt(endsAt) : 0} />} />}
       </Flex>
       <Box mx="18px">
         <Divider />
