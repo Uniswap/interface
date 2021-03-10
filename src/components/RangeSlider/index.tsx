@@ -39,12 +39,12 @@ export default function RangeSlider({ price, onUpperRangeInput, onLowerRangeInpu
 
   useEffect(() => {
     console.log(minVal)
-    onLowerRangeInput(normalizePriceOutput(minVal))
+    onLowerRangeInput(normalizePriceOutput(minVal).toString())
   }, [minVal])
 
   useEffect(() => {
     console.log(maxVal)
-    onUpperRangeInput(normalizePriceOutput(maxVal))
+    onUpperRangeInput(normalizePriceOutput(maxVal).toString())
   }, [maxVal])
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function RangeSlider({ price, onUpperRangeInput, onLowerRangeInpu
   }, [price])
 
   const inputRange = [0, 420]
-  const outputRange = [0, price * 1.5]
+  const outputRange = [price - price / 3, price * 1.5]
 
   function normalizePriceOutput(val: any) {
     return transform(val, inputRange, outputRange).toPrecision(4)

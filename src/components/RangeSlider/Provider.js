@@ -43,6 +43,7 @@ const Stop = styled(motion.div)`
   cursor: pointer;
   :hover {
     opacity: 1;
+    background-color: #888d9b80;
   }
 `
 const Key = styled.div`
@@ -109,7 +110,7 @@ const DragHandleMid = styled(motion.div)`
   background-color: #2172e5;
   /* border: 1px solid #2172e5; */
   left: 0;
-  z-index: 1;
+  z-index: -1;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   /* cursor: grab;
   :active {
@@ -138,7 +139,7 @@ const Rate = styled.div`
   border-radius: 12px;
   height: fit-content;
   position: relative;
-  transform: translateX(-50%) translateY(-125%);
+  transform: translateX(-50%) translateY(-75%);
   width: fit-content;
   display: flex;
   flex-direction: column;
@@ -147,6 +148,7 @@ const Rate = styled.div`
   background: #191b1f;
   border: 1px solid #627eea;
   z-index: 99999;
+  min-width: 80px;
   small {
     font-size: 10px;
   }
@@ -188,6 +190,7 @@ const Mid = styled.div`
   gap: 4px;
   text-align: center;
   min-width: 80px;
+  font-size: 14px;
   small {
     font-size: 10px;
   }
@@ -226,7 +229,7 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
   useEffect(() => {
     let n = 10000
     let step = 1
-    let max = 53
+    let max = 68
     let min = 0
     let data = {}
 
@@ -274,7 +277,6 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
       if (a.x > b.x) return 1
       return 0
     })
-    console.log(hc_data)
 
     setDotArray(hc_data)
   }, [])
@@ -337,7 +339,7 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
   })
 
   const inputRange = [0, 420]
-  const outputRange = [0, price * 1.5]
+  const outputRange = [price - price / 3, price * 1.5]
 
   function normalizePriceOutput(val) {
     return transform(val, inputRange, outputRange).toPrecision(4)
@@ -367,11 +369,11 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
                 }
               }}
               onHoverStart={(event, info) => {
-                setHover(i)
+                !dragging && setHover(i)
                 setHovering(true)
               }}
               onHoverEnd={(event, info) => {
-                setHover('none')
+                !dragging && setHover('none')
                 setHovering(false)
               }}
               key={i}
@@ -383,7 +385,8 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
               {i % 4 === 0 && <Key>{normalizePriceOutput(i * tickWidth + tickOffset)}</Key>}
               <Dot
                 style={{
-                  backgroundColor: i * tickWidth + tickOffset > min && i * tickWidth + tickOffset < max && ' #2172e5',
+                  backgroundColor:
+                    i * tickWidth + tickOffset > min && i * tickWidth - tickOffset / 2 < max && ' #2172e5',
                   height: dotArray[i] * 1000,
                 }}
               />
@@ -461,8 +464,7 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
           <Mid>
             <small>Min Price</small>
             <b>{min && normalizePriceOutput(min)}</b>
-
-            <small>-{relDiff(mid, min)}% change</small>
+            <small>-{relDiff(mid, min).toFixed(2)}%</small>
           </Mid>
         </DragHandleLower>
 
@@ -527,7 +529,7 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
           <Mid>
             <small>Max Price</small>
             <b>{max && normalizePriceOutput(max)}</b>
-            <small>+{relDiff(mid, max)}% change</small>
+            <small>+{relDiff(mid, max).toFixed(2)}%</small>
           </Mid>
         </DragHandleUpper>
       </Track>
