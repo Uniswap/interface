@@ -90,6 +90,9 @@ interface SubgraphPoolData {
 interface UserLiquidityPosition {
   id: string
   liquidityTokenBalance: string
+  liquidityTokenTotalSupply: string
+  reserveUSD: string
+  timestamp: number
   pool: {
     id: string
   }
@@ -98,12 +101,28 @@ interface UserLiquidityPosition {
 interface ListItemProps {
   pool: Pair
   subgraphPoolData: SubgraphPoolData
-  myLiquidity?: string
+  myLiquidity?: UserLiquidityPosition
   oddRow?: boolean
 }
 
 const getOneYearFL = (liquidity: string, feeOneDay: string) => {
   return parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
+}
+
+const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 => {
+  if (!liquidityPosition || parseFloat(liquidityPosition.liquidityTokenTotalSupply) === 0) {
+    return DEFAULT_MY_LIQUIDITY
+  }
+
+  const myLiquidity =
+    (parseFloat(liquidityPosition.liquidityTokenBalance) * parseFloat(liquidityPosition.reserveUSD)) /
+    parseFloat(liquidityPosition.liquidityTokenTotalSupply)
+
+  if (myLiquidity === 0) {
+    return DEFAULT_MY_LIQUIDITY
+  }
+
+  return formattedNum(myLiquidity.toString(), true)
 }
 
 const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
@@ -123,11 +142,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
   const currency0 = unwrappedToken(pool.token0)
   const currency1 = unwrappedToken(pool.token1)
 
-  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, subgraphPoolData.feeUSD)
-
-  const getMyLiquidity = (myLiquidity?: string): string | 0 => {
-    return !myLiquidity ? DEFAULT_MY_LIQUIDITY : formattedNum(myLiquidity, true)
-  }
+  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, subgraphPoolData.feeUSD).toFixed(2)
 
   return (
     <TableRow oddRow={oddRow}>
@@ -200,7 +215,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   } = {}
 
   const transformedUserLiquidityPositions: {
-    [key: string]: string
+    [key: string]: UserLiquidityPosition
   } = {}
 
   subgraphPoolsData.forEach(data => {
@@ -208,7 +223,12 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   })
 
   userLiquidityPositions.forEach(position => {
-    transformedUserLiquidityPositions[position.pool.id] = position.liquidityTokenBalance
+    if (
+      !transformedUserLiquidityPositions[position.pool.id] ||
+      position.timestamp > transformedUserLiquidityPositions[position.pool.id].timestamp
+    ) {
+      transformedUserLiquidityPositions[position.pool.id] = position
+    }
   })
 
   // pagination
