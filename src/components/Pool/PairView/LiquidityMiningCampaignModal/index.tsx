@@ -61,16 +61,20 @@ export function LiquidityMiningCampaignModal({
   const [showStakingConfirmationModal, setShowStakingConfirmationModal] = useState(false)
   const [showWithdrawalConfirmationModal, setShowWithdrawalConfirmationModal] = useState(false)
   const [disabledStaking, setDisabledStaking] = useState(false)
+  const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
+  const [active, setActive] = useState(false)
 
   useEffect(() => {
-    if (!startsAt) return
-    setDisabledStaking(
-      !callbacks ||
-        parseInt(startsAt) > Math.floor(Date.now() / 1000) ||
-        !stakableTokenBalance ||
-        stakableTokenBalance.equalTo('0')
-    )
+    setActive(!!startsAt && parseInt(startsAt) < Math.floor(Date.now() / 1000))
   }, [callbacks, stakableTokenBalance, startsAt])
+
+  useEffect(() => {
+    setDisabledStaking(!active || !callbacks || !stakableTokenBalance || stakableTokenBalance.equalTo('0'))
+  }, [active, callbacks, stakableTokenBalance])
+
+  useEffect(() => {
+    setDisabledWithdrawing(!active || !callbacks || !withdrawableTokenBalance || withdrawableTokenBalance.equalTo('0'))
+  }, [active, callbacks, stakableTokenBalance, withdrawableTokenBalance])
 
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
@@ -189,7 +193,7 @@ export function LiquidityMiningCampaignModal({
                 style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
                 width="100%"
                 marginLeft="4px"
-                disabled={!callbacks || !withdrawableTokenBalance || withdrawableTokenBalance.equalTo('0')}
+                disabled={disabledWithdrawing}
                 onClick={handleWithdrawalRequest}
               >
                 Withdraw {stakablePair?.liquidityToken.symbol}
@@ -206,6 +210,7 @@ export function LiquidityMiningCampaignModal({
                 width="100%"
                 marginRight="4px"
                 onClick={handleClaimConfirmation}
+                disabled={!callbacks || !active}
               >
                 Claim rewards
               </ButtonDark>
