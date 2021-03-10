@@ -1,3 +1,4 @@
+import { TokenAmount } from 'dxswap-sdk'
 import React from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
@@ -12,7 +13,11 @@ const Divider = styled.div`
   background: ${props => props.theme.bg5};
 `
 
-export default function LiquidityMiningYourStake() {
+interface LiquidityMiningYourStakeProps {
+  stake?: TokenAmount
+}
+
+export default function LiquidityMiningYourStake({ stake }: LiquidityMiningYourStakeProps) {
   return (
     <AutoColumn gap="12px">
       <TYPE.body color="white" lineHeight="20px" fontWeight="600">
@@ -20,7 +25,7 @@ export default function LiquidityMiningYourStake() {
       </TYPE.body>
       <Flex alignItems="center">
         <Box flex="1">
-          <DataRow title="Stake size" value={'TODO'} />
+          <DataRow title="Stake size" value={stake ? stake.toSignificant(3) : '0'} />
         </Box>
         <Box mx="18px">
           <Divider />

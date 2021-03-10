@@ -201,7 +201,7 @@ export function LiquidityMiningCampaignModal({
             </RowBetween>
           </div>
           <div>
-            <LiquidityMiningYourStake />
+            <LiquidityMiningYourStake stake={withdrawableTokenBalance || undefined} />
             <RowBetween marginTop="24px">
               {/* TODO: handle disabled state */}
               <ButtonDark
