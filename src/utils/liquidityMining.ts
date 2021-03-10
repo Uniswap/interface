@@ -1,39 +1,28 @@
 import BigNumber from 'bignumber.js'
 import { NonExpiredLiquidityMiningCampaign, NonExpiredLiquidityMiningCampaignRewardToken } from '../apollo/queries'
 
-function getCurrentDistributionProgress(startsAt: number, duration: number) {
+function getRemainingDistributionPercentage(startsAt: number, endsAt: number) {
+  const duration = endsAt - startsAt
   const now = Math.floor(Date.now() / 1000)
-  return now < startsAt
-    ? new BigNumber('1')
-    : new BigNumber('1').minus(new BigNumber(now - startsAt).dividedBy(duration))
+  return now < startsAt ? new BigNumber('1') : new BigNumber(now - startsAt).dividedBy(duration)
 }
 
 export function getRemainingRewardsUSD(
-  liquidityMiningCampaign: NonExpiredLiquidityMiningCampaign,
+  startsAt: number,
+  endsAt: number,
+  rewardAmounts: string[],
+  rewardTokens: NonExpiredLiquidityMiningCampaignRewardToken[],
   nativeCurrencyUSDPrice: BigNumber
 ): BigNumber {
   const now = Math.floor(Date.now() / 1000)
-  // no liquidity mining campaigns check
-  const {
-    duration: stringDuration,
-    startsAt: stringStartsAt,
-    endsAt: stringEndsAt,
-    rewardAmounts,
-    rewardTokens
-  } = liquidityMiningCampaign
-  const duration = parseInt(stringDuration)
-  const startsAt = parseInt(stringStartsAt)
-  const endsAt = parseInt(stringEndsAt)
   // the campaign is expired, no more rewards to give out
   if (now >= endsAt) return new BigNumber(0)
-  const remainingDistributionProgress = getCurrentDistributionProgress(startsAt, duration)
+  const remainingDistributionPercentage = getRemainingDistributionPercentage(startsAt, endsAt)
   let remainingRewardsUSD = new BigNumber(0)
   for (let i = 0; i < rewardTokens.length; i++) {
-    const remainingReward = new BigNumber(rewardAmounts[i]).multipliedBy(remainingDistributionProgress)
+    const remainingReward = new BigNumber(rewardAmounts[i]).multipliedBy(remainingDistributionPercentage)
     remainingRewardsUSD = remainingRewardsUSD.plus(
-      new BigNumber(rewardTokens[i].derivedNativeCurrency)
-        .multipliedBy(nativeCurrencyUSDPrice)
-        .multipliedBy(remainingReward)
+      remainingReward.multipliedBy(rewardTokens[i].derivedNativeCurrency).multipliedBy(nativeCurrencyUSDPrice)
     )
   }
   return remainingRewardsUSD
@@ -45,11 +34,14 @@ export function getPairRemainingRewardsUSD(
 ): BigNumber {
   // no liquidity mining campaigns check
   if (liquidityMiningCampaigns.length === 0) return new BigNumber(0)
-  return liquidityMiningCampaigns.reduce(
-    (accumulator, liquidityMiningCampaign) =>
-      accumulator.plus(getRemainingRewardsUSD(liquidityMiningCampaign, nativeCurrencyUSDPrice)),
-    new BigNumber(0)
-  )
+  return liquidityMiningCampaigns.reduce((accumulator, liquidityMiningCampaign) => {
+    const { startsAt: stringStartsAt, endsAt: stringEndsAt, rewardAmounts, rewardTokens } = liquidityMiningCampaign
+    const startsAt = parseInt(stringStartsAt)
+    const endsAt = parseInt(stringEndsAt)
+    return accumulator.plus(
+      getRemainingRewardsUSD(startsAt, endsAt, rewardAmounts, rewardTokens, nativeCurrencyUSDPrice)
+    )
+  }, new BigNumber(0))
 }
 
 // the minimum USD amount to calculate APY (otherwise, when no stake is in there, apy would be infinite)
@@ -58,25 +50,25 @@ const MINIMUM_STAKED_AMOUNT_USD = new BigNumber(100)
 export function getCampaignApy(
   pairReserveNativeCurrency: BigNumber,
   liquidityTokenTotalSupply: BigNumber,
-  duration: string,
   startsAt: string,
+  endsAt: string,
   rewardTokens: NonExpiredLiquidityMiningCampaignRewardToken[],
   rewardAmounts: string[],
   stakedAmount: string,
   nativeCurrencyUSDPrice: BigNumber
 ): BigNumber {
   const numericStartsAt = parseInt(startsAt)
-  const numericDuration = parseInt(duration)
+  const numericEndsAt = parseInt(endsAt)
+  const duration = numericEndsAt - numericStartsAt
+  console.log(numericStartsAt, numericEndsAt)
 
-  const remainingDistributionProgress = getCurrentDistributionProgress(numericStartsAt, numericDuration)
-  const remainingRewardAmountUSD = rewardAmounts.reduce((remainingAmount: BigNumber, fullAmount, index) => {
-    const remainingReward = new BigNumber(fullAmount).multipliedBy(remainingDistributionProgress)
-    return remainingAmount.plus(
-      new BigNumber(rewardTokens[index].derivedNativeCurrency)
-        .multipliedBy(nativeCurrencyUSDPrice)
-        .multipliedBy(remainingReward)
-    )
-  }, new BigNumber(0))
+  const remainingRewardAmountUSD = getRemainingRewardsUSD(
+    numericStartsAt,
+    numericEndsAt,
+    rewardAmounts,
+    rewardTokens,
+    nativeCurrencyUSDPrice
+  )
 
   let stakedValueUSD = pairReserveNativeCurrency
     .multipliedBy(nativeCurrencyUSDPrice)
@@ -84,15 +76,10 @@ export function getCampaignApy(
     .multipliedBy(stakedAmount)
   stakedValueUSD = stakedValueUSD.isLessThan(MINIMUM_STAKED_AMOUNT_USD) ? MINIMUM_STAKED_AMOUNT_USD : stakedValueUSD
 
-  const finalValueWithAccruedRewardsUSD = stakedValueUSD.plus(remainingRewardAmountUSD)
-  const yieldInPeriod = finalValueWithAccruedRewardsUSD
-    .minus(stakedValueUSD)
-    .div(finalValueWithAccruedRewardsUSD.plus(stakedValueUSD).div(new BigNumber(2)))
-
-  return new BigNumber(duration)
-    .dividedBy(31557600) // seconds in a year
-    .multipliedBy(yieldInPeriod)
-    .multipliedBy(100)
+  const yieldInPeriod = remainingRewardAmountUSD.dividedBy(stakedValueUSD).multipliedBy(100)
+  const annualizationMultiplier = new BigNumber(31557600) // seconds in a year
+    .dividedBy(duration)
+  return yieldInPeriod.multipliedBy(annualizationMultiplier)
 }
 
 export function getPairMaximumApy(
@@ -107,8 +94,8 @@ export function getPairMaximumApy(
     const apy = getCampaignApy(
       pairReserveNativeCurrency,
       liquidityTokenTotalSupply,
-      liquidityMiningCampaign.duration,
       liquidityMiningCampaign.startsAt,
+      liquidityMiningCampaign.endsAt,
       liquidityMiningCampaign.rewardTokens,
       liquidityMiningCampaign.rewardAmounts,
       liquidityMiningCampaign.stakedAmount,

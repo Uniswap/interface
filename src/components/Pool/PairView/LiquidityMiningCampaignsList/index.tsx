@@ -70,12 +70,18 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
                   <SizedPairCard
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
-                    usdRewards={getRemainingRewardsUSD(item, nativeCurrencyUSDPrice)}
+                    usdRewards={getRemainingRewardsUSD(
+                      parseInt(item.startsAt),
+                      parseInt(item.endsAt),
+                      item.rewardAmounts,
+                      item.rewardTokens,
+                      nativeCurrencyUSDPrice
+                    )}
                     apy={getCampaignApy(
                       reserveNativeCurrency,
                       supply,
-                      item.duration,
                       item.startsAt,
+                      item.endsAt,
                       item.rewardTokens,
                       item.rewardAmounts,
                       item.stakedAmount,
@@ -110,8 +116,8 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
             ? getCampaignApy(
                 reserveNativeCurrency,
                 supply,
-                selectedLiquidityMiningCampaign.duration,
                 selectedLiquidityMiningCampaign.startsAt,
+                selectedLiquidityMiningCampaign.endsAt,
                 selectedLiquidityMiningCampaign.rewardTokens,
                 selectedLiquidityMiningCampaign.rewardAmounts,
                 selectedLiquidityMiningCampaign.stakedAmount,

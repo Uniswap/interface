@@ -71,12 +71,11 @@ export default function CreateLiquidityMining() {
     }
     const normalizedStartTime = Math.floor(startTime.getTime() / 1000)
     const normalizedEndTime = Math.floor(endTime.getTime() / 1000)
-    const duration = normalizedEndTime - normalizedStartTime
     const apy = getCampaignApy(
       stakablePairReserveNativeCurrency,
       stakablePairTokenSupply,
-      duration.toString(),
       normalizedStartTime.toString(),
+      normalizedEndTime.toString(),
       [{ derivedNativeCurrency: rewardDerivedNativeCurrency.toExact() }],
       [reward?.toExact()],
       '0',
