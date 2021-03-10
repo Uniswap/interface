@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent } from 'dxswap-sdk'
+import { JSBI, Pair, Percent, TokenAmount } from 'dxswap-sdk'
 import React, { useState } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
@@ -166,21 +166,25 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
   const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
   const poolTokenPercentage =
-    !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
-      ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
+    !!userPoolBalance && !!totalPoolTokens
+      ? totalPoolTokens.greaterThan('0') && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+        ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
+        : new Percent('0', '100')
       : undefined
 
-  const [token0Deposited, token1Deposited] =
-    !!pair &&
-    !!totalPoolTokens &&
-    !!userPoolBalance &&
-    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+  const [token0Deposited, token1Deposited] = !!pair
+    ? !!totalPoolTokens &&
+      totalPoolTokens.greaterThan('0') &&
+      !!userPoolBalance &&
+      userPoolBalance.greaterThan('0') &&
+      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+      JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
           pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
           pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
         ]
-      : [undefined, undefined]
+      : [new TokenAmount(pair.token0, '0'), new TokenAmount(pair.token1, '0')]
+    : [undefined, undefined]
 
   return (
     <StyledPositionCard border={border}>
