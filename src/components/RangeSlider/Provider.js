@@ -456,7 +456,7 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
           onHoverEnd={(event, info) => {
             setHover('none')
           }}
-          dragConstraints={{ left: 0, right: mid }}
+          dragConstraints={{ left: 0, right: max - 32 }}
           dragMomentum={false}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
@@ -521,7 +521,7 @@ export default function Provider({ min, setMin, max, setMax, mid, setMid, amount
           onHoverEnd={() => {
             setHover('none')
           }}
-          dragConstraints={{ left: mid, right: 420 }}
+          dragConstraints={{ left: min + 32, right: 420 }}
           dragMomentum={false}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}

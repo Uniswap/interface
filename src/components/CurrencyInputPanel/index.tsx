@@ -33,7 +33,7 @@ const Container = styled.div<{ hideInput: boolean }>`
 
 const CurrencySelect = styled.button<{ selected: boolean; hideInput?: boolean }>`
   align-items: center;
-  font-size: 20px;
+  font-size: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
@@ -88,9 +88,9 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   }
 `
 
-const StyledTokenName = styled.span<{ active?: boolean }>`
+const StyledTokenName = styled.span<{ active?: boolean; hideInput?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '20px' : '16px')};
+  font-size:  ${({ active, hideInput }) => (active ? (!hideInput ? '16px' : '20px') : '16px')};
 `
 
 const StyledBalanceMax = styled.button`
@@ -195,9 +195,9 @@ export default function CurrencyInputPanel({
             <Aligner>
               <RowFixed>
                 {pair ? (
-                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                  <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={20} margin={true} />
                 ) : currency ? (
-                  <CurrencyLogo currency={currency} size={'24px'} />
+                  <CurrencyLogo currency={currency} size={'20px'} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">

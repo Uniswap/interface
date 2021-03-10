@@ -31,6 +31,7 @@ export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
 
 export const CurrencyDropdown = styled(CurrencyInputPanel)`
   width: 49%;
+  font-size: 16px;
 `
 
 export const PreviewCard = styled(DarkGreyCard)<{ disabled?: boolean }>`
