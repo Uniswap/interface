@@ -133,6 +133,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@uniswap/default-token-list": "^2.0.0",
+    "framer-motion": "^3.10.2",
     "lightweight-charts": "^3.3.0"
   }
 }

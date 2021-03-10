@@ -26,5 +26,10 @@
     "baseUrl": "src"
   },
   "exclude": ["node_modules", "cypress"],
-  "include": ["./src/**/*.ts", "./src/**/*.tsx", "src/components/Confetti/index.js"]
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "src/components/Confetti/index.js",
+    "src/components/RangeSlider/Provider.js"
+  ]
 }

@@ -47,6 +47,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import CurrencyLogo from 'components/CurrencyLogo'
 import QuestionHelper from 'components/QuestionHelper'
+import RangeSlider from 'components/RangeSlider'
 
 export default function AddLiquidity({
   match: {
@@ -412,7 +413,7 @@ export default function AddLiquidity({
                 <TYPE.main fontWeight={400} fontSize="14px">
                   {t('rangeWarning')}
                 </TYPE.main>
-                {price && rateCurrencyBase && (
+                {/* {price && rateCurrencyBase && (
                   <RowBetween style={{ backgroundColor: theme.bg3, padding: '8px', borderRadius: '12px' }}>
                     <TYPE.main>{t('currentRate', { label: rateCurrencyBase.symbol })}</TYPE.main>
                     <TYPE.main>
@@ -420,7 +421,13 @@ export default function AddLiquidity({
                       {rateCurrencyBase === currencyB ? currencyA?.symbol : currencyB?.symbol}
                     </TYPE.main>
                   </RowBetween>
-                )}
+                )} */}
+
+                <RangeSlider
+                  price={rateCurrencyBase === currencyA ? price?.toSignificant(3) : price?.invert().toSignificant(3)}
+                  onUpperRangeInput={onUpperRangeInput}
+                  onLowerRangeInput={onLowerRangeInput}
+                />
 
                 <RowBetween>
                   <StepCounter
