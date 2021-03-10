@@ -103,7 +103,7 @@ export default function CreateLiquidityMining() {
 
   const handleRewardTokenChange = useCallback(
     (token: Token) => {
-      setReward(new TokenAmount(token, reward ? reward.toExact() : '0'))
+      setReward(new TokenAmount(token, reward ? reward.raw.toString() : '0'))
     },
     [reward]
   )
