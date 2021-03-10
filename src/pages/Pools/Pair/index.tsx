@@ -20,6 +20,7 @@ import { PairState, usePair } from '../../../data/Reserves'
 import PairView from '../../../components/Pool/PairView'
 import { useRouter } from '../../../hooks/useRouter'
 import PairSearchModal from '../../../components/SearchModal/PairSearchModal'
+import Skeleton from 'react-loading-skeleton'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -96,11 +97,16 @@ export default function Pair({
                   </Box>
                   <PointableFlex onClick={handleAllClick}>
                     <Box mr="4px">
-                      <DoubleCurrencyLogo currency0={token0 || undefined} currency1={token1 || undefined} size={20} />
+                      <DoubleCurrencyLogo
+                        loading={!token0 || !token1}
+                        currency0={token0 || undefined}
+                        currency1={token1 || undefined}
+                        size={20}
+                      />
                     </Box>
                     <Box mr="4px">
                       <Text fontWeight="600" fontSize="16px" lineHeight="20px">
-                        {token0?.symbol}/{token1?.symbol}
+                        {!token0 || !token1 ? <Skeleton width="60px" /> : `${token0.symbol}/${token1.symbol}`}
                       </Text>
                     </Box>
                   </PointableFlex>
