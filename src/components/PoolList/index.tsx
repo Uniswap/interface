@@ -193,20 +193,6 @@ const SORT_FIELD = {
   ONE_YEAR_FL: 3
 }
 
-// TODO: Update this function
-const FIELD_TO_VALUE = (field: number): string => {
-  switch (field) {
-    case SORT_FIELD.LIQ:
-      return 'reserveUSD'
-    case SORT_FIELD.VOL:
-      return 'volumeUSD'
-    case SORT_FIELD.FEES:
-      return 'feeUSD'
-    default:
-      return ''
-  }
-}
-
 const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
 
@@ -241,34 +227,70 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   const [sortedColumn, setSortedColumn] = useState(SORT_FIELD.NONE)
 
   const sortList = (poolA: Pair | null, poolB: Pair | null): number => {
-    if (!poolA) {
-      return 1
+    if (sortedColumn === SORT_FIELD.NONE) {
+      if (!poolA) {
+        return 1
+      }
+
+      if (!poolB) {
+        return -1
+      }
+
+      // Pool with AMP = 1 will be on top
+      // AMP from contract is 10000 (real value is 1)
+      if (JSBI.equal(poolA.amp, JSBI.BigInt(10000))) {
+        return -1
+      }
+
+      if (JSBI.equal(poolB.amp, JSBI.BigInt(10000))) {
+        return 1
+      }
+
+      const poolAHealthFactor = getHealthFactor(poolA)
+      const poolBHealthFactor = getHealthFactor(poolB)
+
+      // Pool with better health factor will be prioritized higher
+      if (poolAHealthFactor.greaterThan(poolBHealthFactor)) {
+        return -1
+      }
+
+      if (poolAHealthFactor.lessThan(poolBHealthFactor)) {
+        return 1
+      }
+
+      return 0
     }
 
-    if (!poolB) {
-      return -1
-    }
+    switch (sortedColumn) {
+      case SORT_FIELD.LIQ:
+        return parseFloat(transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.reserveUSD) >
+          parseFloat(transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.reserveUSD)
+          ? (sortDirection ? -1 : 1) * 1
+          : (sortDirection ? -1 : 1) * -1
+      case SORT_FIELD.VOL:
+        return parseFloat(transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.volumeUSD) >
+          parseFloat(transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.volumeUSD)
+          ? (sortDirection ? -1 : 1) * 1
+          : (sortDirection ? -1 : 1) * -1
+      case SORT_FIELD.FEES:
+        return parseFloat(transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.feeUSD) >
+          parseFloat(transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.feeUSD)
+          ? (sortDirection ? -1 : 1) * 1
+          : (sortDirection ? -1 : 1) * -1
+      case SORT_FIELD.ONE_YEAR_FL:
+        const oneYearFLPoolA = getOneYearFL(
+          transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.reserveUSD,
+          transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.feeUSD
+        )
 
-    // Pool with AMP = 1 will be on top
-    // AMP from contract is 10000 (real value is 1)
-    if (JSBI.equal(poolA.amp, JSBI.BigInt(10000))) {
-      return -1
-    }
+        const oneYearFLPoolB = getOneYearFL(
+          transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.reserveUSD,
+          transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.feeUSD
+        )
 
-    if (JSBI.equal(poolB.amp, JSBI.BigInt(10000))) {
-      return 1
-    }
-
-    const poolAHealthFactor = getHealthFactor(poolA)
-    const poolBHealthFactor = getHealthFactor(poolB)
-
-    // Pool with better health factor will be prioritized higher
-    if (poolAHealthFactor.greaterThan(poolBHealthFactor)) {
-      return -1
-    }
-
-    if (poolAHealthFactor.lessThan(poolBHealthFactor)) {
-      return 1
+        return oneYearFLPoolA > oneYearFLPoolB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+      default:
+        break
     }
 
     return 0
@@ -280,8 +302,10 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   }, [poolsList])
 
   const pools = useMemo(() => {
-    return poolsList.sort(sortList)
-  }, [poolsList])
+    return poolsList
+      .map(pair => pair) // Clone to a new array to prevent "in-place" sort that mutate the poolsList
+      .sort(sortList)
+  }, [poolsList, sortedColumn, sortDirection])
 
   useEffect(() => {
     if (poolsList) {
