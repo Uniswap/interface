@@ -108,6 +108,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
         onDismiss={handleLiquidityMiningCampaignModalDismiss}
         contractAddress={selectedLiquidityMiningCampaign?.address ?? ''}
         stakablePair={stakablePair}
+        rewardTokens={selectedLiquidityMiningCampaign?.rewardTokens}
         startsAt={selectedLiquidityMiningCampaign?.startsAt ?? '0'}
         endsAt={selectedLiquidityMiningCampaign?.endsAt ?? '0'}
         timelock={!!selectedLiquidityMiningCampaign?.locked}

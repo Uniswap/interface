@@ -3,9 +3,10 @@ import { Pair, TokenAmount } from 'dxswap-sdk'
 import { transparentize } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { NonExpiredLiquidityMiningCampaignRewardToken } from '../../../../apollo/queries'
 import { useActiveWeb3React } from '../../../../hooks'
 import { useLiquidityMiningActionCallbacks } from '../../../../hooks/useLiquidityMiningActionCallbacks'
-import { useLiquidityMiningDistributionStakedBalance } from '../../../../hooks/useLiquidityMiningDistributionStakedBalance'
+import { useLiquidityMiningCampaign } from '../../../../hooks/useLiquidityMiningCampaign'
 import { useTransactionAdder } from '../../../../state/transactions/hooks'
 import { useTokenBalance } from '../../../../state/wallet/hooks'
 import { TYPE } from '../../../../theme'
@@ -29,6 +30,7 @@ interface LiquidityMiningCampaignProps {
   onDismiss: () => void
   contractAddress?: string
   stakablePair?: Pair | null
+  rewardTokens?: NonExpiredLiquidityMiningCampaignRewardToken[]
   startsAt?: string
   endsAt?: string
   timelock?: boolean
@@ -40,6 +42,7 @@ export function LiquidityMiningCampaignModal({
   onDismiss,
   contractAddress,
   stakablePair,
+  rewardTokens,
   startsAt,
   endsAt,
   timelock,
@@ -48,9 +51,10 @@ export function LiquidityMiningCampaignModal({
   const { account } = useActiveWeb3React()
   const callbacks = useLiquidityMiningActionCallbacks(contractAddress)
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
-  const withdrawableTokenBalance = useLiquidityMiningDistributionStakedBalance(
+  const { stakedTokenAmount, claimableRewardAmounts } = useLiquidityMiningCampaign(
     account ?? undefined,
     stakablePair?.liquidityToken,
+    rewardTokens,
     contractAddress
   )
   const addTransaction = useTransactionAdder()
@@ -73,8 +77,8 @@ export function LiquidityMiningCampaignModal({
   }, [active, callbacks, stakableTokenBalance])
 
   useEffect(() => {
-    setDisabledWithdrawing(!active || !callbacks || !withdrawableTokenBalance || withdrawableTokenBalance.equalTo('0'))
-  }, [active, callbacks, stakableTokenBalance, withdrawableTokenBalance])
+    setDisabledWithdrawing(!active || !callbacks || !stakedTokenAmount || stakedTokenAmount.equalTo('0'))
+  }, [active, callbacks, stakableTokenBalance, stakedTokenAmount])
 
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
@@ -201,9 +205,8 @@ export function LiquidityMiningCampaignModal({
             </RowBetween>
           </div>
           <div>
-            <LiquidityMiningYourStake stake={withdrawableTokenBalance || undefined} />
+            <LiquidityMiningYourStake stake={stakedTokenAmount || undefined} claimables={claimableRewardAmounts} />
             <RowBetween marginTop="24px">
-              {/* TODO: handle disabled state */}
               <ButtonDark
                 padding="8px"
                 style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
@@ -233,7 +236,7 @@ export function LiquidityMiningCampaignModal({
       )}
       <ConfirmWithdrawalModal
         isOpen={showWithdrawalConfirmationModal}
-        withdrawablTokenBalance={withdrawableTokenBalance || undefined}
+        withdrawablTokenBalance={stakedTokenAmount || undefined}
         onDismiss={handleDismiss}
         stakablePair={stakablePair}
         attemptingTxn={attemptingTransaction}

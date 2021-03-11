@@ -76,7 +76,15 @@ export default function CreateLiquidityMining() {
       stakablePairTokenSupply,
       normalizedStartTime.toString(),
       normalizedEndTime.toString(),
-      [{ derivedNativeCurrency: rewardDerivedNativeCurrency.toExact() }],
+      [
+        {
+          derivedNativeCurrency: rewardDerivedNativeCurrency.toExact(),
+          name: reward.token.name || '',
+          symbol: reward.token.symbol || '',
+          decimals: reward.token.decimals.toString() || '18',
+          address: reward.token.address || ''
+        }
+      ],
       [reward?.toExact()],
       '0',
       nativeCurrencyUSDPrice

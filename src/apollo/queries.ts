@@ -36,6 +36,10 @@ export const GET_PAIR_LIQUIDITY_USD = gql`
 
 export interface NonExpiredLiquidityMiningCampaignRewardToken {
   derivedNativeCurrency: string
+  address: string
+  symbol: string
+  name: string
+  decimals: string
 }
 
 export interface RawToken {
@@ -98,6 +102,10 @@ export const GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
         endsAt
         locked
         rewardTokens {
+          address: id
+          name
+          symbol
+          decimals
           derivedNativeCurrency
         }
         stakedAmount
@@ -135,6 +143,10 @@ export const GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = g
         locked
         rewardTokens {
           derivedNativeCurrency
+          address: id
+          name
+          symbol
+          decimals
         }
         stakedAmount
         rewardAmounts
@@ -158,6 +170,10 @@ export const GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
         locked
         rewardTokens {
           derivedNativeCurrency
+          address: id
+          name
+          symbol
+          decimals
         }
         stakedAmount
         rewardAmounts

@@ -15,9 +15,10 @@ const Divider = styled.div`
 
 interface LiquidityMiningYourStakeProps {
   stake?: TokenAmount
+  claimables?: TokenAmount[]
 }
 
-export default function LiquidityMiningYourStake({ stake }: LiquidityMiningYourStakeProps) {
+export default function LiquidityMiningYourStake({ stake, claimables }: LiquidityMiningYourStakeProps) {
   return (
     <AutoColumn gap="12px">
       <TYPE.body color="white" lineHeight="20px" fontWeight="600">
@@ -31,7 +32,7 @@ export default function LiquidityMiningYourStake({ stake }: LiquidityMiningYourS
           <Divider />
         </Box>
         <Box flex="1">
-          <DataRow title="Rewards" value={'TODO'} />
+          <DataRow title="Rewards" value={claimables && claimables.length > 0 ? claimables[0].toSignificant(3) : '0'} />
         </Box>
       </Flex>
     </AutoColumn>

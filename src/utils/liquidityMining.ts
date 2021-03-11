@@ -60,7 +60,6 @@ export function getCampaignApy(
   const numericStartsAt = parseInt(startsAt)
   const numericEndsAt = parseInt(endsAt)
   const duration = numericEndsAt - numericStartsAt
-  console.log(numericStartsAt, numericEndsAt)
 
   const remainingRewardAmountUSD = getRemainingRewardsUSD(
     numericStartsAt,
