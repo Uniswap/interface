@@ -36,10 +36,10 @@ export function PoolPriceBar({
 }) {
   const theme = useContext(ThemeContext)
   const percentToken0 = pair
-    ? pair.virtualReserve0
-        .divide(pair.reserve0)
+    ? pair.reserve0
+        .divide(pair.virtualReserve0)
         .multiply('100')
-        .divide(pair.virtualReserve0.divide(pair.reserve0).add(pair.virtualReserve1.divide(pair.reserve1)))
+        .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
         .toSignificant(2) ?? '.'
     : '50%'
   const percentToken1 = pair

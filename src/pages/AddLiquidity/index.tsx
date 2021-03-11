@@ -113,7 +113,7 @@ export default function AddLiquidity({
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
   const [amp, setAmp] = useState('')
   const onAmpChange = (e: any) => {
-    setAmp(e)
+    if (e.toString().length < 20) setAmp(e)
   }
 
   const ampConvertedInBps = !!amp.toString()

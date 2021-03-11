@@ -192,10 +192,10 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   const price = pair.priceOf(pair.token0)
   const amp = new Fraction(pair.amp).divide(JSBI.BigInt(10000))
 
-  const percentToken0 = pair.virtualReserve0
-    .divide(pair.reserve0)
+  const percentToken0 = pair.reserve0
+    .divide(pair.virtualReserve0)
     .multiply('100')
-    .divide(pair.virtualReserve0.divide(pair.reserve0).add(pair.virtualReserve1.divide(pair.reserve1)))
+    .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
   const percentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0)
   return (
     <StyledPositionCard border={border} bgColor={'#303e46'}>
