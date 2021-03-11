@@ -4,7 +4,7 @@ import { NonExpiredLiquidityMiningCampaign, NonExpiredLiquidityMiningCampaignRew
 function getRemainingDistributionPercentage(startsAt: number, endsAt: number) {
   const duration = endsAt - startsAt
   const now = Math.floor(Date.now() / 1000)
-  return now < startsAt ? new BigNumber('1') : new BigNumber(now - startsAt).dividedBy(duration)
+  return now < startsAt ? new BigNumber('1') : new BigNumber(endsAt - now).dividedBy(duration)
 }
 
 export function getRemainingRewardsUSD(
