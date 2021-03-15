@@ -12,14 +12,13 @@ import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import { TYPE } from '../../theme'
 import { ButtonSecondary } from '../Button'
-import { ArrowDown } from 'react-feather'
-
 import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
 
+import DropdownArrow from '../../assets/images/dropdown.svg'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.png'
@@ -152,6 +151,10 @@ const NetworkIcon = styled(Activity)`
   height: 16px;
 `
 
+const Dropdown = styled.div`
+  margin-left: 1em;
+`
+
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
@@ -195,7 +198,9 @@ function Web3StatusInner() {
           <TYPE.white ml="12px" mr="20px" fontWeight={700} fontSize="12px">
             {ChainLabel[chainId]}
           </TYPE.white>
-          <ArrowDown />
+          <Dropdown>
+            <img src={DropdownArrow} alt={'dropdown.svg'} />
+          </Dropdown>
         </Web3StatusNetwork>
       </>
     )
