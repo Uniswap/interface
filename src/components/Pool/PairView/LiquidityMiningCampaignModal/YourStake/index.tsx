@@ -22,7 +22,7 @@ export default function LiquidityMiningYourStake({ stake, claimables }: Liquidit
   return (
     <AutoColumn gap="12px">
       <TYPE.body color="white" lineHeight="20px" fontWeight="600">
-        Rewards program
+        Your position
       </TYPE.body>
       <Flex alignItems="center">
         <Box flex="1">
