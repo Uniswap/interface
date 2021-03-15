@@ -12,7 +12,7 @@ import { usePage } from '../../../hooks/usePage'
 
 const ListLayout = styled.div`
   display: grid;
-  grid-gap: 9px;
+  grid-gap: 15px 9px;
   grid-template-columns: 208px 208px 208px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto;
