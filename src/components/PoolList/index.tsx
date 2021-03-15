@@ -137,11 +137,16 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
   // TODO: Add recommended pool which is registered by kyber DAO  in a whitelist contract
   const isRecommended = amp.equalTo(new Fraction(JSBI.BigInt(1)))
 
-  const percentToken0 = pool.virtualReserve0
-    .divide(pool.reserve0)
-    .multiply('100')
-    .divide(pool.virtualReserve0.divide(pool.reserve0).add(pool.virtualReserve1.divide(pool.reserve1)))
-  const percentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0)
+  const percentToken0 = pool
+    ? pool.reserve0
+        .divide(pool.virtualReserve0)
+        .multiply('100')
+        .divide(pool.reserve0.divide(pool.virtualReserve0).add(pool.reserve1.divide(pool.virtualReserve1)))
+        .toSignificant(2) ?? '.'
+    : '50%'
+  const percentToken1 = pool
+    ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
+    : '50%'
   // Shorten address with 0x + 3 characters at start and end
   const shortenPoolAddress = shortenAddress(pool?.liquidityToken.address, 3)
   const currency0 = unwrappedToken(pool.token0)
@@ -163,8 +168,8 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         </PoolAddressContainer>
       </DataText>
       <DataText grid-area="ratio">
-        <div>{`• ${percentToken0.toSignificant(2) ?? '.'}% ${pool.token0.symbol}`}</div>
-        <div>{`• ${percentToken1.toSignificant(2) ?? '.'}% ${pool.token1.symbol}`}</div>
+        <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
+        <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
       </DataText>
       <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
       <DataText grid-area="vol">{formattedNum(subgraphPoolData.volumeUSD, true)}</DataText>
