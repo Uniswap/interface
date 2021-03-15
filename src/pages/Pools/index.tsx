@@ -128,12 +128,14 @@ const Pools = ({
             <PoolsCurrencyInputPanel
               onCurrencySelect={handleCurrencyASelect}
               currency={currencies[Field.CURRENCY_A]}
+              otherCurrency={currencies[Field.CURRENCY_B]}
               id="input-tokena"
             />
             <span style={{ margin: '0 8px' }}>/</span>
             <PoolsCurrencyInputPanel
               onCurrencySelect={handleCurrencyBSelect}
               currency={currencies[Field.CURRENCY_B]}
+              otherCurrency={currencies[Field.CURRENCY_A]}
               id="input-tokenb"
             />
           </CurrencyWrapper>

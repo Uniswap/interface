@@ -5,4 +5,4 @@ export enum Field {
   CURRENCY_B = 'CURRENCY_B'
 }
 
-export const selectCurrency = createAction<{field: Field, currencyId: string}>('pair/selectCurrency')
+export const selectCurrency = createAction<{ field: Field; currencyId: string }>('pair/selectCurrency')
