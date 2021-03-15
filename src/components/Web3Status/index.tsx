@@ -124,12 +124,6 @@ const Web3StatusNetwork = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   padding: 3px;
   padding-left: 5px;
   border: 1px solid ${({ theme }) => theme.dark1};
-
-  :hover,
-  :focus {
-    background-color: ${({ theme }) => theme.purple3};
-  }
-
 `
 
 const Text = styled.p<{ fontSize?: number }>`
@@ -147,8 +141,8 @@ const Text = styled.p<{ fontSize?: number }>`
 const NetworkIcon = styled(Activity)`
   margin-left: 0.25rem;
   margin-right: 0.5rem;
-  width: 16px;
-  height: 16px;
+  width: 5px;
+  height: 5px;
 `
 
 const Dropdown = styled.div`
@@ -192,7 +186,7 @@ function Web3StatusInner() {
           )}
         </Web3StatusConnected>
         <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover}>
-          <IconWrapper>
+          <IconWrapper size={20}>
             <img src={ChainLogo[chainId]} alt={''} />
           </IconWrapper>
           <TYPE.white ml="12px" mr="20px" fontWeight={700} fontSize="12px">

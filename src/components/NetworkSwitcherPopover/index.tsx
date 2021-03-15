@@ -1,27 +1,14 @@
 import React from 'react'
 import { ChainId } from 'dxswap-sdk'
 import styled from 'styled-components'
-// import Modal from '../Modal'
 import Option from './Option'
-import { transparentize } from 'polished'
-// import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen /*, useNetworkSwitcherPopoverToggle */ } from '../../state/application/hooks'
+import { useModalOpen } from '../../state/application/hooks'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.png'
-import { useWeb3React } from '@web3-react/core'
 import Popover from '../Popover'
-import DropdownArrow from '../../assets/images/dropdown.svg'
-
-const ChainLabel: any = {
-  [ChainId.MAINNET]: 'Ethereum Mainnet',
-  [ChainId.RINKEBY]: 'Rinkeby Testnet',
-  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum Testnet',
-  [ChainId.SOKOL]: 'Sokol Testnet',
-  [ChainId.XDAI]: 'xDai Network'
-}
 
 const ContentWrapper = styled.div`
   padding: 16px 18px 32px 16px;
