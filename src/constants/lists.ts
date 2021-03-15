@@ -2,7 +2,7 @@ import { unwrapOrThrow } from '../utils'
 
 // the Uniswap Default token list lives here
 const QA_BRIDGE_DEFAULT_TOKEN_LIST_URL =
-  'https://raw.githubusercontent.com/mul53/uniswap-interface/feat/bsc-bridge/src/constants/qa/tokenlist.json'
+  'https://raw.githubusercontent.com/fuseio/uniswap-interface/master/src/constants/qa/tokenlist.json'
 const PROD_BRIDGE_DEFAULT_TOKEN_LIST_URL =
   'https://raw.githubusercontent.com/fuseio/fuseswap-default-token-list/master/build/fuseswap-default.tokenlist.json'
 

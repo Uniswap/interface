@@ -6,7 +6,7 @@ describe('Lists', () => {
 
     it('fuse token list is default list', () => {
       cy.get('#bridge-input-token .open-currency-select-button').click()
-      cy.get('#currency-search-selected-list-name').should('contain', 'Fuse Token List')
+      cy.get('#currency-search-selected-list-name').should('contain', 'FuseSwap Test List')
     })
 
     it('change list', () => {

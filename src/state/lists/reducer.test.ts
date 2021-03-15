@@ -8,7 +8,7 @@ import {
 import { updateVersion } from '../global/actions'
 import { fetchTokenList, acceptListUpdate, addList, removeList, selectList } from './actions'
 import reducer, { ListsState } from './reducer'
-import BRIDGE_DEFAULT_TOKEN_LIST from '@fuseio/fuse-swap-default-token-list'
+import BRIDGE_DEFAULT_TOKEN_LIST from '../../constants/qa/tokenlist.json'
 import SWAP_DEFAULT_TOKEN_LIST from '@fuseswap/default-token-list'
 
 const STUB_TOKEN_LIST = {
