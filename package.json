@@ -1,8 +1,9 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@trojan/finance-interface",
+  "description": "Trojan Finance Interface",
   "homepage": ".",
   "private": true,
+  "author": "Trojan Finance",
   "devDependencies": {
     "@ethersproject/experimental": "^5.0.1",
     "@popperjs/core": "^2.4.4",
@@ -90,7 +91,13 @@
     "workbox-expiration": "^6.1.0",
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
-    "workbox-strategies": "^6.1.0"
+    "workbox-strategies": "^6.1.0",
+    "@types/react-timeago": "^4.1.2",
+    "react-timeago": "^5.2.0",
+    "socket.io-client": "^2.2.0",
+    "react-styled-flexboxgrid": "^3.2.1",
+    "react-desktop-notification": "^1.0.9",
+    "express": "^4.17.1"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"
