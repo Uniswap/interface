@@ -155,46 +155,50 @@ export function LiquidityMiningCampaignModal({
           <TYPE.mediumHeader color="text4" lineHeight="24px" letterSpacing="-0.01em">
             Rewards program
           </TYPE.mediumHeader>
-          <div>
-            <LiquidityMiningInformation campaign={campaign} />
-            <RowBetween marginTop="24px">
-              <ButtonDark
-                padding="8px"
-                style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                width="100%"
-                marginRight="4px"
-                disabled={disabledStaking}
-                onClick={handleStakingRequest}
-              >
-                Deposit {campaign.staked.token.name}
-              </ButtonDark>
-              <ButtonDark
-                padding="8px"
-                style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                width="100%"
-                marginLeft="4px"
-                disabled={disabledWithdrawing}
-                onClick={handleWithdrawalRequest}
-              >
-                Withdraw {campaign.staked.token.name}
-              </ButtonDark>
-            </RowBetween>
-          </div>
-          <div>
-            <LiquidityMiningYourStake stake={stakedTokenAmount || undefined} claimables={claimableRewardAmounts} />
-            <RowBetween marginTop="24px">
-              <ButtonDark
-                padding="8px"
-                style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                width="100%"
-                marginRight="4px"
-                onClick={handleClaimConfirmation}
-                disabled={!callbacks || !campaign.currentlyActive}
-              >
-                Claim rewards
-              </ButtonDark>
-            </RowBetween>
-          </div>
+          <LiquidityMiningInformation campaign={campaign} />
+          {!!account && (
+            <>
+              <div>
+                <RowBetween marginTop="24px">
+                  <ButtonDark
+                    padding="8px"
+                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+                    width="100%"
+                    marginRight="4px"
+                    disabled={disabledStaking}
+                    onClick={handleStakingRequest}
+                  >
+                    Deposit {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP tokens
+                  </ButtonDark>
+                  <ButtonDark
+                    padding="8px"
+                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+                    width="100%"
+                    marginLeft="4px"
+                    disabled={disabledWithdrawing}
+                    onClick={handleWithdrawalRequest}
+                  >
+                    Withdraw {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP tokens
+                  </ButtonDark>
+                </RowBetween>
+              </div>
+              <div>
+                <LiquidityMiningYourStake stake={stakedTokenAmount || undefined} claimables={claimableRewardAmounts} />
+                <RowBetween marginTop="24px">
+                  <ButtonDark
+                    padding="8px"
+                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+                    width="100%"
+                    marginRight="4px"
+                    onClick={handleClaimConfirmation}
+                    disabled={!callbacks || !campaign.currentlyActive}
+                  >
+                    Claim rewards
+                  </ButtonDark>
+                </RowBetween>
+              </div>
+            </>
+          )}
         </AutoColumn>
       </Wrapper>
       {campaignAddress && (
