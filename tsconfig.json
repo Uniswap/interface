@@ -25,6 +25,6 @@
     "types": ["react-spring", "jest"],
     "baseUrl": "src"
   },
-  "exclude": ["node_modules", "cypress"],
+  "exclude": ["node_modules"],
   "include": ["./src/**/*.ts", "./src/**/*.tsx", "src/components/Confetti/index.js"]
 }
