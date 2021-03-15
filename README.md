@@ -17,7 +17,7 @@ It monitors the mempool (pending transactions) and displays the most possible fu
 
 To access the Trojan Interface visit [beta-uniswap.trojan.finance](https://beta-uniswap.trojan.finance).
 
-Trojan Finance Interface is based on Uniswap Interface, we had removed features that we dont use for now, like Pools, Votes and Staking.
+Trojan Finance Interface is based on Uniswap Interface, we had removed features that we dont use for now, like Pools, Votes, Staking, V1 Trades.
 
 We added a server connection to expose mempool transactions via web socket for live and fast updates. **This feature do not mess with any wallet integration** its a one way web socket and we dont send to our server any information about users.
 
