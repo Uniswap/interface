@@ -6,12 +6,10 @@ import { ChainId } from 'dxswap-sdk'
 
 const InfoCard = styled.button<{ active?: boolean }>`
   background-color: transparent;
-  padding: 1rem;
   outline: none;
   border: none;
   border-radius: 8px;
   width: 100% !important;
-  margin: 0.5em 0;
 `
 
 const OptionCard = styled(InfoCard as any)`
@@ -19,8 +17,6 @@ const OptionCard = styled(InfoCard as any)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2rem;
-  padding: 1rem;
 `
 
 const OptionCardLeft = styled.div`
@@ -30,18 +26,17 @@ const OptionCardLeft = styled.div`
 `
 
 const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
-  margin-top: 0;
   cursor: ${({ clickable, disabled }) => (clickable && !disabled ? 'pointer' : 'not-allowed')};
   transition: border 0.3s ease;
-  background-color: ${({ theme, clickable, disabled }) => (!clickable || disabled ? theme.purple5 : theme.primary1)};
-  color: ${({ theme, disabled }) => (disabled ? theme.darkest : 'white')};
-  opacity: ${disabled => (disabled ? '0.75' : '1')};
+  color: white;
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
 
 const HeaderText = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  font-size: 1rem;
-  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
   margin-left: 1rem;
 `
 
@@ -51,7 +46,7 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   justify-content: center;
   & > img,
   span {
-    height: ${({ size }) => (size ? size + 'px' : '30px')};
+    height: ${({ size }) => (size ? size + 'px' : '24px')};
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: center;
@@ -73,9 +68,8 @@ export default function Option({
 }: {
   clickable?: boolean
   onClick?: null | (() => void)
-  color: string
   header: React.ReactNode
-  logoSrc: string
+  logoSrc?: string
   active?: boolean
   disabled?: boolean
   chainId: ChainId
@@ -107,9 +101,13 @@ export default function Option({
     >
       <OptionCardLeft>
         <AutoRow>
-          <IconWrapper>
-            <img src={logoSrc} alt={'Icon'} />
-          </IconWrapper>
+          {logoSrc ? (
+            <IconWrapper>
+              <img src={logoSrc} alt={'Icon'} />
+            </IconWrapper>
+          ) : (
+            ''
+          )}
           <HeaderText>{header}</HeaderText>
           <BadgeWrapper>{disabled ? <Badge label="COMING SOON" /> : ''}</BadgeWrapper>
         </AutoRow>
