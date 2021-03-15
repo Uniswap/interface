@@ -1,33 +1,39 @@
-# Uniswap Interface
+# Trojan Finance
 
-[![Lint](https://github.com/Uniswap/uniswap-interface/workflows/Lint/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions?query=workflow%3ALint)
-[![Tests](https://github.com/Uniswap/uniswap-interface/workflows/Tests/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions?query=workflow%3ATests)
-[![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
+An open source interface for Trojan Finance, based in Uniswap Interface.
 
-An open source interface for Uniswap -- a protocol for decentralized exchange of Ethereum tokens.
+## What Trojan Finance can do for you?
 
-- Website: [uniswap.org](https://uniswap.org/)
-- Interface: [app.uniswap.org](https://app.uniswap.org)
-- Docs: [uniswap.org/docs/](https://uniswap.org/docs/)
-- Twitter: [@UniswapProtocol](https://twitter.com/UniswapProtocol)
-- Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
-- Email: [contact@uniswap.org](mailto:contact@uniswap.org)
-- Discord: [Uniswap](https://discord.gg/FCfyBSbCU5)
-- Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
+The Trojan Finance platform gives the user the opportunity to take trading decisions based on future transactions.
+It monitors the _mempool\*\* _(pending transactions)\* and displays the most possible future result of each trade, based on Uniswap SDK.
 
-## Accessing the Uniswap Interface
+- Website: [trojan.finance](https://trojan.finance)
+- Twitter: [@trojanfinance](https://twitter.com/trojanfinance)
+- Discord: [TrojanFinance](https://discord.gg/VZkFP78aeF)
+- Medium: [@trojanfinance](https://medium.com/@trojanfinance)
 
-To access the Uniswap Interface, use an IPFS gateway link from the
-[latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
-or visit [app.uniswap.org](https://app.uniswap.org).
+# Accessing the Trojan Interface
 
-## Listing a token
+To access the Trojan Interface visit [beta-uniswap.trojan.finance](https://beta-uniswap.trojan.finance).
 
-Please see the
-[@1devndogs/default-token-list](https://github.com/1devndogs/default-token-list)
-repository.
+Trojan Finance Interface is based on Uniswap Interface, we had removed features that we dont use for now, like Pools, Votes and Staking.
 
-## Development
+We added a server connection to expose mempool transactions via web socket for live and fast updates.
+
+**This feature do not mess with any wallet integration** its a one way web socket and we dont send to our server any information about users.
+
+We have opened this repository so **users can check this and trust that we follow the same way Uniswap works with wallets.**
+We will be updating any updates from Uniswap repository as soon as we can.
+
+Anyway use at your own risk. This is a beta version and we are still improving our mempool scanner, decoder, compute and predictions.
+
+# Development
+
+Check the code by yourself. Download or clone this repository.
+
+```bash
+git clone --branch trojan-main https://github.com/we-commit/uniswap-interface.git
+```
 
 ### Install Dependencies
 
@@ -38,29 +44,25 @@ yarn
 ### Run
 
 ```bash
-yarn start
+yarn dev
 ```
 
-### Configuring the environment (optional)
+## Configuring the environment (optional)
 
-To have the interface default to a different network when a wallet is not connected:
+Note that the interface only works on main net. The interface will not work on other networks.
 
-1. Make a copy of `.env` named `.env.local`
-2. Change `REACT_APP_NETWORK_ID` to `"{YOUR_NETWORK_ID}"`
-3. Change `REACT_APP_NETWORK_URL` to e.g. `"https://{YOUR_NETWORK_ID}.infura.io/v3/{YOUR_INFURA_KEY}"`
+We only **scan, compute and predict trades** for Ethereum mainnet.
 
-Note that the interface only works on testnets where both
-[Uniswap V2](https://uniswap.org/docs/v2/smart-contracts/factory/) and
-[multicall](https://github.com/makerdao/multicall) are deployed.
-The interface will not work on other networks.
+- Make a copy of `.env` named `.env.local`
 
-## Contributions
+For now, **in beta phase**, we listen Uniswap transactions for a couple of tokens.
 
-**Please open all pull requests against the `master` branch.**
-CI checks will run against all PRs.
+## Proposals.
 
-## Accessing Uniswap Interface V1
+We are working hard to get this working. Trojan Finance is under active development.
 
-The Uniswap Interface supports swapping against, and migrating or removing liquidity from Uniswap V1. However,
-if you would like to use Uniswap V1, the Uniswap V1 interface for mainnet and testnets is accessible via IPFS gateways
-linked from the [v1.0.0 release](https://github.com/Uniswap/uniswap-interface/releases/tag/v1.0.0).
+We are stronger together. Jump in [Discord](https://discord.gg/VZkFP78aeF) and stay tuned.
+
+- **Proposals to add tokens will be available soon.**
+
+- **Proposals to add other dexes will be opened soon**
