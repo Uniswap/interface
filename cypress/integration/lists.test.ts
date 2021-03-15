@@ -4,10 +4,12 @@ describe('Lists', () => {
       cy.visit('/bridge')
     })
 
-    it('fuse token list is default list', () => {
-      cy.get('#bridge-input-token .open-currency-select-button').click()
-      cy.get('#currency-search-selected-list-name').should('contain', 'FuseSwap Test List')
-    })
+    // TODO: uncomment when merged
+
+    // it('fuse token list is default list', () => {
+    //   cy.get('#bridge-input-token .open-currency-select-button').click()
+    //   cy.get('#currency-search-selected-list-name').should('contain', 'FuseSwap Test List')
+    // })
 
     it('change list', () => {
       const customListUrl = 'https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json'
