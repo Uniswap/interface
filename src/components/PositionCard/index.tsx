@@ -14,7 +14,7 @@ import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonPrimary, ButtonSecondary, ButtonEmpty } from '../Button'
 import { transparentize } from 'polished'
-import { CardNoise } from '../earn/styled'
+import { CardNoise } from '../Common/styled'
 
 import { useColor } from '../../hooks/useColor'
 
