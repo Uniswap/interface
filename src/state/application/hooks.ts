@@ -55,7 +55,7 @@ export function useToggleSelfClaimModal(): () => void {
   return useToggleModal(ApplicationModal.SELF_CLAIM)
 }
 
-export function useNetworkSwitcherModalToggle(): () => void {
+export function useNetworkSwitcherPopoverToggle(): () => void {
   return useToggleModal(ApplicationModal.NETWORK_SWITCHER)
 }
 

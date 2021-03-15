@@ -6,7 +6,7 @@ import Option from './Option'
 import { transparentize } from 'polished'
 // import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen /*, useNetworkSwitcherModalToggle */ } from '../../state/application/hooks'
+import { useModalOpen /*, useNetworkSwitcherPopoverToggle */ } from '../../state/application/hooks'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
@@ -43,8 +43,8 @@ const OptionGrid = styled.div`
   `};
 `
 
-export default function NetworkSwitcherModal() {
-  const networkSwitcherModalOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
+export default function NetworkSwitcherPopover() {
+  const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
 
   return (
     <Popover
@@ -62,7 +62,7 @@ export default function NetworkSwitcherModal() {
           <Option chainId={-1} header={'Change Wallet'} />
         </OptionGrid>
       }
-      show={networkSwitcherModalOpen}
+      show={networkSwitcherPopoverOpen}
     >
       <ContentWrapper></ContentWrapper>
     </Popover>

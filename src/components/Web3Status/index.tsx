@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
-import { useWalletModalToggle, useNetworkSwitcherModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle, useNetworkSwitcherPopoverToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
@@ -18,7 +18,7 @@ import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-import NetworkSwitcherModal from '../NetworkSwitcherModal'
+import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
@@ -174,7 +174,7 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const toggleWalletModal = useWalletModalToggle()
-  const toggleNetworkSwitcherModal = useNetworkSwitcherModalToggle()
+  const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
 
   if (account && chainId) {
     return (
@@ -188,7 +188,7 @@ function Web3StatusInner() {
             ENSName || shortenAddress(account)
           )}
         </Web3StatusConnected>
-        <Web3StatusNetwork onClick={toggleNetworkSwitcherModal}>
+        <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover}>
           <IconWrapper>
             <img src={ChainLogo[chainId]} alt={''} />
           </IconWrapper>
@@ -239,7 +239,7 @@ export default function Web3Status() {
     <>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-      <NetworkSwitcherModal />
+      <NetworkSwitcherPopover />
     </>
   )
 }
