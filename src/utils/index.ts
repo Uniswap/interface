@@ -6,7 +6,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import {
   ROUTER_ADDRESS,
-  BINANCE_FOREIGN_BRIDGE_ADDRESS,
+  BINANCE_ERC20_TO_ERC677_FOREIGN_BRIDGE_ADDRESS,
   FUSE_ERC20_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
   FUSE_FOREIGN_TOKEN_ADDRESS,
   GOODDOLLAR_HOME_TOKEN_ADDRESS,
@@ -24,7 +24,6 @@ import AMBErc677To677ABI from '../constants/abis/ambErc677ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
 import HomeBridgeNativeToErc from '../constants/abis/homeBridgeNativeToErc.json'
 import ForeignBriddgeNativeToErc from '../constants/abis/foreignBridgeNativeToErc.json'
-import { MULTI_BRIDGE_TOKENS } from '../constants/bridge'
 import { formatUnits, Interface, id } from 'ethers/lib/utils'
 import { BridgeDirection, BridgeType } from '../state/bridge/hooks'
 import BinanceBridge from '../state/bridge/bridges/binance'
@@ -345,17 +344,8 @@ export function getApprovalAddress(tokenAddress?: string, bridgeDirection?: Brid
     case BridgeDirection.FUSE_TO_BSC:
       return tokenAddress
     case BridgeDirection.BSC_TO_FUSE:
-      return BINANCE_FOREIGN_BRIDGE_ADDRESS
+      return BINANCE_ERC20_TO_ERC677_FOREIGN_BRIDGE_ADDRESS
   }
-}
-
-export function isTokenOnMultiBridge(token: Token) {
-  for (const multiBridgeToken of MULTI_BRIDGE_TOKENS) {
-    if (multiBridgeToken.address === token.address) {
-      return true
-    }
-  }
-  return false
 }
 
 export function unwrapOrThrow(envName: string) {

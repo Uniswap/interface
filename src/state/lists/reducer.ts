@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
-import { TokenList } from '@uniswap/token-lists/dist/types'
+import { getVersionUpgrade, VersionUpgrade } from '@fuseio/token-lists'
+import { TokenList } from '@fuseio/token-lists/dist/types'
 import {
   BRIDGE_DEFAULT_LIST_OF_LISTS,
   BRIDGE_DEFAULT_TOKEN_LIST_URL,

@@ -14,10 +14,9 @@ import {
 import {
   GAS_PRICE,
   FUSE_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS,
-  FUSE_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
-  FUSE_FOREIGN_BRIDGE_CHAIN
+  FUSE_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
 } from '../../../constants'
-import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
+import { getChainNetworkLibrary, getNetworkLibrary, ETHEREUM_CHAIN_ID } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 import HomeBridgeABI from '../../../constants/abis/homeBridgeNativeToErc.json'
 import ForeignBridgeABI from '../../../constants/abis/foreignBridgeNativeToErc.json'
@@ -43,7 +42,7 @@ export default class NativeToErcBridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getChainNetworkLibrary(FUSE_FOREIGN_BRIDGE_CHAIN)
+    return getChainNetworkLibrary(ETHEREUM_CHAIN_ID)
   }
 
   private toBigNumber(value: string): BigNumber {

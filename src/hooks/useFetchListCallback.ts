@@ -1,6 +1,6 @@
 import { nanoid } from '@reduxjs/toolkit'
 import { ChainId } from '@fuseio/fuse-swap-sdk'
-import { TokenList } from '@uniswap/token-lists'
+import { TokenList } from '@fuseio/token-lists'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { getNetworkLibrary, NETWORK_CHAIN_ID } from '../connectors'

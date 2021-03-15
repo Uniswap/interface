@@ -3,8 +3,8 @@ import { Contract } from 'ethers'
 import * as Sentry from '@sentry/react'
 import {
   GAS_PRICE,
-  BINANCE_FOREIGN_BRIDGE_ADDRESS,
-  BINANCE_HOME_BRIDGE_ADDRESS,
+  BINANCE_ERC20_TO_ERC677_FOREIGN_BRIDGE_ADDRESS,
+  BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS,
   BINANCE_CHAIN_ID
 } from '../../../constants'
 import { getNetworkLibrary, getChainNetworkLibrary } from '../../../connectors'
@@ -30,11 +30,11 @@ export default class BinanceBridge extends TokenBridge {
   homeContract: Contract | undefined
 
   private get homeBridgeAddress() {
-    return BINANCE_HOME_BRIDGE_ADDRESS
+    return BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS
   }
 
   private get foreignBridgeAddress() {
-    return BINANCE_FOREIGN_BRIDGE_ADDRESS
+    return BINANCE_ERC20_TO_ERC677_FOREIGN_BRIDGE_ADDRESS
   }
 
   private get homeNetworkLibrary() {

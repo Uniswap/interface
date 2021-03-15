@@ -4,8 +4,7 @@ import TokenBridge from './tokenBridge'
 import {
   GAS_PRICE,
   FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS,
-  FUSE_ERC20_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
-  FUSE_FOREIGN_BRIDGE_CHAIN
+  FUSE_ERC20_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
 } from '../../../constants'
 import {
   tokenTransferPending,
@@ -21,7 +20,7 @@ import {
   getForeignMultiAMBErc20ToErc677Contract,
   pollEvent
 } from '../../../utils'
-import { getNetworkLibrary, getChainNetworkLibrary } from '../../../connectors'
+import { getNetworkLibrary, getChainNetworkLibrary, ETHEREUM_CHAIN_ID } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 import HomeBridgeABI from '../../../constants/abis/homeMultiAMBErc20ToErc677.json'
 
@@ -42,7 +41,7 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getChainNetworkLibrary(FUSE_FOREIGN_BRIDGE_CHAIN)
+    return getChainNetworkLibrary(ETHEREUM_CHAIN_ID)
   }
 
   private get homeBridgeContract() {

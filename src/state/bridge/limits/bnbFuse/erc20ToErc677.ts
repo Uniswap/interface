@@ -4,7 +4,10 @@ import {
   tryFormatAmount,
   getForeignMultiAMBErc20ToErc677Contract
 } from '../../../../utils'
-import { BINANCE_HOME_BRIDGE_ADDRESS, BINANCE_FOREIGN_BRIDGE_ADDRESS } from '../../../../constants'
+import {
+  BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS,
+  BINANCE_ERC20_TO_ERC677_FOREIGN_BRIDGE_ADDRESS
+} from '../../../../constants'
 import { Contract, constants } from 'ethers'
 
 export default async function getErc20ToErc677MinMax(
@@ -17,9 +20,9 @@ export default async function getErc20ToErc677MinMax(
   let contract: Contract
 
   if (isHome) {
-    contract = getHomeMultiAMBErc20ToErc677Contract(BINANCE_HOME_BRIDGE_ADDRESS, library, account)
+    contract = getHomeMultiAMBErc20ToErc677Contract(BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS, library, account)
   } else {
-    contract = getForeignMultiAMBErc20ToErc677Contract(BINANCE_FOREIGN_BRIDGE_ADDRESS, library, account)
+    contract = getForeignMultiAMBErc20ToErc677Contract(BINANCE_ERC20_TO_ERC677_FOREIGN_BRIDGE_ADDRESS, library, account)
   }
 
   const min = await contract.minPerTx(tokenAddress)
