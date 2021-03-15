@@ -11,6 +11,7 @@ import FavoriteStar from 'components/Icons/FavoriteStar'
 import AddCircle from 'components/Icons/AddCircle'
 import InfoHelper from 'components/InfoHelper'
 import LocalLoader from 'components/LocalLoader'
+import CopyHelper from 'components/Copy'
 import { shortenAddress, formattedNum } from 'utils'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
@@ -68,6 +69,10 @@ const ClickableText = styled(Text)`
 const DataText = styled(Flex)`
   color: ${({ theme }) => theme.text7};
   flex-direction: column;
+`
+
+const PoolAddressContainer = styled(Flex)`
+  align-items: center;
 `
 
 const LoadMoreButtonContainer = styled.div`
@@ -151,7 +156,12 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
           <FavoriteStar />
         </div>
       )}
-      <DataText grid-area="pool">{shortenPoolAddress}</DataText>
+      <DataText grid-area="pool">
+        <PoolAddressContainer>
+          {shortenPoolAddress}
+          <CopyHelper toCopy={pool.address} />
+        </PoolAddressContainer>
+      </DataText>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0.toSignificant(2) ?? '.'}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1.toSignificant(2) ?? '.'}% ${pool.token1.symbol}`}</div>
