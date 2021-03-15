@@ -3,14 +3,7 @@ import { BigNumber } from 'ethers'
 import * as Sentry from '@sentry/react'
 import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import TokenBridge from './tokenBridge'
-import {
-  getHomeCustomBridgeAddress,
-  getHomeBridgeNativeToErcContract,
-  getERC677TokenContract,
-  getForeignCustomBridgeAddress,
-  calculateGasMargin,
-  pollEvent
-} from '../../../utils'
+import { getHomeBridgeNativeToErcContract, getERC677TokenContract, calculateGasMargin, pollEvent } from '../../../utils'
 import {
   tokenTransferSuccess,
   tokenTransferPending,
@@ -18,7 +11,12 @@ import {
   confirmTokenTransferSuccess,
   transferError
 } from '../actions'
-import { FOREIGN_BRIDGE_CHAIN, GAS_PRICE } from '../../../constants'
+import {
+  GAS_PRICE,
+  FUSE_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS,
+  FUSE_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
+  FUSE_FOREIGN_BRIDGE_CHAIN
+} from '../../../constants'
 import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 import HomeBridgeABI from '../../../constants/abis/homeBridgeNativeToErc.json'
@@ -29,19 +27,11 @@ export default class NativeToErcBridge extends TokenBridge {
   private readonly HOME_BRIDGE_EVENT = 'AffirmationCompleted(address,uint256,bytes32)'
 
   private get homeBridgeAddress() {
-    const address = getHomeCustomBridgeAddress(this.tokenAddress)
-    if (!address) {
-      throw Error('Home bridge address not provided')
-    }
-    return address
+    return FUSE_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS
   }
 
   private get foreignBridgeAddress() {
-    const address = getForeignCustomBridgeAddress(this.tokenAddress)
-    if (!address) {
-      throw Error('Foreign bridge address not provided')
-    }
-    return address
+    return FUSE_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
   }
 
   private get homeBridgeContract() {
@@ -53,7 +43,7 @@ export default class NativeToErcBridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getChainNetworkLibrary(FOREIGN_BRIDGE_CHAIN)
+    return getChainNetworkLibrary(FUSE_FOREIGN_BRIDGE_CHAIN)
   }
 
   private toBigNumber(value: string): BigNumber {

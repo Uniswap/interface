@@ -102,39 +102,4 @@ describe('utils', () => {
       expect(basisPointsToPercent(50).equalTo(new Percent(JSBI.BigInt(5), JSBI.BigInt(1000)))).toBeTruthy()
     })
   })
-
-  describe('#isCustomBridgeToken', () => {
-    it('returns true when home address is included', () => {
-      expect(isCustomBridgeToken('0x100b8fd10ff8DC43fda45E636B4BB1eE6088270a')).toBeTruthy()
-    })
-    it('returns true when foreign address is included', () => {
-      expect(isCustomBridgeToken('0x4738c5e91c4f809da21dd0df4b5ad5f699878c1c')).toBeTruthy()
-    })
-  })
-
-  describe('#getForeignCustomBridgeAddress', () => {
-    it('given home token address returns foreign bridge address', () => {
-      expect(getForeignCustomBridgeAddress('0x100b8fd10ff8DC43fda45E636B4BB1eE6088270a')).toEqual(
-        '0xEDA39475415f1A2944a467Aa6359CB4C1c3ed50f'
-      )
-    })
-    it('given foreign token address returns foreign bridge address', () => {
-      expect(getForeignCustomBridgeAddress('0x4738c5e91c4f809da21dd0df4b5ad5f699878c1c')).toEqual(
-        '0xEDA39475415f1A2944a467Aa6359CB4C1c3ed50f'
-      )
-    })
-  })
-
-  describe('#getHomeCustomBridgeAddress', () => {
-    it('given home token address returns home bridge address', () => {
-      expect(getHomeCustomBridgeAddress('0x100b8fd10ff8DC43fda45E636B4BB1eE6088270a')).toEqual(
-        '0x6aF8ac12f9a285fBeb30D2a7eEcf15B8D4B59253'
-      )
-    })
-    it('given foreign token address returns home bridge address', () => {
-      expect(getHomeCustomBridgeAddress('0x4738c5e91c4f809da21dd0df4b5ad5f699878c1c')).toEqual(
-        '0x6aF8ac12f9a285fBeb30D2a7eEcf15B8D4B59253'
-      )
-    })
-  })
 })

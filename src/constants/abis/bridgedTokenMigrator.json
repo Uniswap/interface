@@ -1,0 +1,98 @@
+[
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "upgradedTokenAddress",
+    "inputs": [{ "type": "address", "name": "_deprecatedToken" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "isInitialized",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "upgradeToken",
+    "inputs": [
+      { "type": "address", "name": "_deprecatedToken" },
+      { "type": "address", "name": "_upgradedToken" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "owner",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "deprecatedTokenAddress",
+    "inputs": [{ "type": "address", "name": "_upgradedToken" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "migrateTokens",
+    "inputs": [
+      { "type": "address", "name": "deprecatedToken" },
+      { "type": "uint256", "name": "_value" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "initialize",
+    "inputs": [{ "type": "address", "name": "_owner" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "transferOwnership",
+    "inputs": [{ "type": "address", "name": "newOwner" }],
+    "constant": false
+  },
+  {
+    "type": "event",
+    "name": "TokenUpgraded",
+    "inputs": [
+      { "type": "address", "name": "deprecatedToken", "indexed": true },
+      { "type": "address", "name": "upgradedToken", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      { "type": "address", "name": "previousOwner", "indexed": false },
+      { "type": "address", "name": "newOwner", "indexed": false }
+    ],
+    "anonymous": false
+  }
+]

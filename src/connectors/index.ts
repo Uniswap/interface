@@ -7,14 +7,18 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 import { ChainId } from '@fuseio/fuse-swap-sdk'
+import { unwrapOrThrow } from '../utils'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const ROPSTEN_NETWORK_URL = process.env.REACT_APP_ROPSTEN_NETWORK_URL
 const MAINNET_NETWORK_URL = process.env.REACT_APP_MAINNET_NETWORK_URL
+const BINANCE_NETWORK_URL = process.env.REACT_APP_BINANCE_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
 export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
+
+const BINANCE_CHAIN_ID = parseInt(unwrapOrThrow('BINANCE_CHAIN_ID'))
 
 if (typeof NETWORK_URL === 'undefined') {
   throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)
@@ -26,6 +30,10 @@ if (typeof ROPSTEN_NETWORK_URL === 'undefined') {
 
 if (typeof MAINNET_NETWORK_URL === 'undefined') {
   throw new Error(`REACT_APP_MAINNET_NETWORK_URL must be a defined environment variable`)
+}
+
+if (typeof BINANCE_NETWORK_URL === 'undefined') {
+  throw new Error('REACT_APP_BINANCE_NETWORK_URL must be a defined environment variable')
 }
 
 export const network = new NetworkConnector({
@@ -50,6 +58,8 @@ export const getChainNetworkLibrary = (chainId: number) => {
       return buildNetworkLibrary(MAINNET_NETWORK_URL, chainId)
     case ChainId.ROPSTEN:
       return buildNetworkLibrary(ROPSTEN_NETWORK_URL, chainId)
+    case BINANCE_CHAIN_ID:
+      return buildNetworkLibrary(BINANCE_NETWORK_URL, chainId)
     default:
       // fuse network library
       return getNetworkLibrary()
@@ -57,7 +67,7 @@ export const getChainNetworkLibrary = (chainId: number) => {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 122]
+  supportedChainIds: [1, 3, 122, BINANCE_CHAIN_ID]
 })
 
 // mainnet only

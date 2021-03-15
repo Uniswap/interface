@@ -7,7 +7,7 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllSwapTokens, useToken, useAllBridgeTokens } from '../../hooks/Tokens'
-import { useSelectedSwapListInfo, useSelectedBridgeListInfo } from '../../state/lists/hooks'
+import { useSelectedSwapListInfo, useSelectedBridgeListInfo, WrappedTokenInfo } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Card from '../Card'
@@ -22,6 +22,7 @@ import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { useBridgeState, BridgeDirection } from '../../state/bridge/hooks'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -54,6 +55,7 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
   const useAllTokens = listType === 'Swap' ? useAllSwapTokens : useAllBridgeTokens
+  const { bridgeDirection } = useBridgeState()
   const allTokens = useAllTokens()
 
   // if they input an address, use it
@@ -71,11 +73,18 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const tokenComparator = useTokenComparator(invertSearchOrder, listType)
+  const showMultiBridgeTokens = bridgeDirection === BridgeDirection.FUSE_TO_BSC
+
+  const filteredBridgeTokens: Token[] = useMemo(() => {
+    const tokens = Object.values(allTokens)
+
+    return showMultiBridgeTokens ? tokens.filter(token => (token as WrappedTokenInfo).tokenInfo?.isMultiBridge) : tokens
+  }, [allTokens, showMultiBridgeTokens])
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []
-    return filterTokens(Object.values(allTokens), searchQuery)
-  }, [isAddressSearch, searchToken, allTokens, searchQuery])
+    return filterTokens(filteredBridgeTokens, searchQuery)
+  }, [isAddressSearch, searchToken, filteredBridgeTokens, searchQuery])
 
   const filteredSortedTokens: Token[] = useMemo(() => {
     if (searchToken) return [searchToken]
@@ -175,7 +184,7 @@ export function CurrencySearch({
           {({ height }) => (
             <CurrencyList
               height={height}
-              showETH={showETHToken}
+              showETH={showETHToken && bridgeDirection !== BridgeDirection.FUSE_TO_BSC}
               currencies={filteredSortedTokens}
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}

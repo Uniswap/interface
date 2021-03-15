@@ -1,12 +1,20 @@
-import { Contract } from '@ethersproject/contracts'
-import * as Sentry from '@sentry/react'
 import TokenBridge from './tokenBridge'
+import { Contract } from 'ethers'
+import * as Sentry from '@sentry/react'
 import {
   GAS_PRICE,
-  FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS,
-  FUSE_ERC20_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
-  FUSE_FOREIGN_BRIDGE_CHAIN
+  BINANCE_FOREIGN_BRIDGE_ADDRESS,
+  BINANCE_HOME_BRIDGE_ADDRESS,
+  BINANCE_CHAIN_ID
 } from '../../../constants'
+import { getNetworkLibrary, getChainNetworkLibrary } from '../../../connectors'
+import {
+  getHomeMultiAMBErc20ToErc677Contract,
+  getERC677TokenContract,
+  calculateGasMargin,
+  getForeignMultiAMBErc20ToErc677Contract,
+  pollEvent
+} from '../../../utils'
 import {
   tokenTransferPending,
   tokenTransferSuccess,
@@ -14,27 +22,19 @@ import {
   confirmTokenTransferSuccess,
   transferError
 } from '../actions'
-import {
-  calculateGasMargin,
-  getERC677TokenContract,
-  getHomeMultiAMBErc20ToErc677Contract,
-  getForeignMultiAMBErc20ToErc677Contract,
-  pollEvent
-} from '../../../utils'
-import { getNetworkLibrary, getChainNetworkLibrary } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 import HomeBridgeABI from '../../../constants/abis/homeMultiAMBErc20ToErc677.json'
 
-export default class Erc20ToErc677Bridge extends TokenBridge {
+export default class BinanceBridge extends TokenBridge {
   private readonly BRIDGE_EVENT = 'TokensBridged(address,address,uint256,bytes32)'
   homeContract: Contract | undefined
 
   private get homeBridgeAddress() {
-    return FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS
+    return BINANCE_HOME_BRIDGE_ADDRESS
   }
 
   private get foreignBridgeAddress() {
-    return FUSE_ERC20_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
+    return BINANCE_FOREIGN_BRIDGE_ADDRESS
   }
 
   private get homeNetworkLibrary() {
@@ -42,7 +42,7 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getChainNetworkLibrary(FUSE_FOREIGN_BRIDGE_CHAIN)
+    return getChainNetworkLibrary(BINANCE_CHAIN_ID)
   }
 
   private get homeBridgeContract() {
@@ -79,12 +79,10 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
     this.dispatch(tokenTransferPending())
 
     const contract = getForeignMultiAMBErc20ToErc677Contract(this.foreignBridgeAddress, this.library, this.account)
-    const estimate = contract.estimateGas['relayTokens(address,uint256)']
     const method = contract['relayTokens(address,uint256)']
     const args = [this.tokenAddress, this.amount.raw.toString()]
 
-    const estimatedGas = await estimate(...args, {})
-    const response = await method(...args, { gasLimit: calculateGasMargin(estimatedGas) })
+    const response = await method(...args)
 
     this.dispatch(tokenTransferSuccess())
 
@@ -125,6 +123,12 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
     )
 
     this.dispatch(confirmTokenTransferSuccess())
+  }
+
+  get transactionSummary(): string {
+    return this.isHome
+      ? 'Your tokens were transferred successfully to Binance please switch to Binance to use them'
+      : 'Your tokens were transferred successfully to Fuse please switch to Fuse to use them'
   }
 
   async executeTransaction() {

@@ -1,11 +1,14 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { ChainId } from '@fuseio/fuse-swap-sdk'
+import { ChainId, Currency } from '@fuseio/fuse-swap-sdk'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { useEffect, useState, useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
+import { useAsyncMemo } from 'use-async-memo'
+import { WrappedTokenInfo } from '../state/lists/hooks'
+import { getTokenMigrationContract } from '../utils'
 
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const context = useWeb3ReactCore<Web3Provider>()
@@ -96,4 +99,18 @@ export function useChain() {
 
     return { isHome, isEtheruem, isForeign }
   }, [chainId])
+}
+
+export function useUpgradedTokenAddress(token: Currency) {
+  const { library, account } = useActiveWeb3React()
+
+  return useAsyncMemo(async () => {
+    if (!library || !account || !token) return
+
+    const wrappedToken = token as WrappedTokenInfo
+
+    const tokenMigrator = getTokenMigrationContract(library, account)
+    const result = await tokenMigrator.upgradedTokenAddress(wrappedToken.address)
+    return result
+  }, [library, account])
 }

@@ -18,6 +18,7 @@ import { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
 import { getNativeCurrencySymbol } from '../../utils'
 import { TYPE, ExternalLink } from '../../theme'
+import { BINANCE_CHAIN_ID } from '../../constants'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -142,13 +143,14 @@ const MobileBalanceText = styled(Text)`
   font-weight: 500;
 `
 
-export const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
+export const NETWORK_LABELS: any = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
   [ChainId.KOVAN]: 'Kovan',
-  [ChainId.FUSE]: 'Fuse'
+  [ChainId.FUSE]: 'Fuse',
+  [BINANCE_CHAIN_ID]: 'Binance'
 }
 
 export default function Header() {

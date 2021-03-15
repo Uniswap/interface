@@ -1,22 +1,31 @@
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext, useState, useEffect } from 'react'
 import * as Sentry from '@sentry/react'
 import AppBody from '../AppBody'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { Currency, TokenAmount } from '@fuseio/fuse-swap-sdk'
-import { RouteComponentProps } from 'react-router-dom'
 import { currencyId } from '../../utils/currencyId'
-import { useCurrency } from '../../hooks/Tokens'
 import {
   useBridgeActionHandlers,
   useBridgeState,
   useDerivedBridgeInfo,
-  useBridgeStatus
+  useBridgeStatus,
+  useDetectBridgeDirection,
+  BridgeDirection,
+  useDefaultsFromURLSearch
 } from '../../state/bridge/hooks'
 import { Field } from '../../state/bridge/actions'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import { Wrapper, Logo, ArrowWrapper, Loader } from '../../components/bridge/styleds'
+import {
+  Wrapper,
+  Logo,
+  ArrowWrapper,
+  Loader,
+  DestinationWrapper,
+  ModalLink,
+  ExtLink
+} from '../../components/bridge/styleds'
 import { ArrowDown } from 'react-feather'
 import { ThemeContext } from 'styled-components'
 import { BottomGrouping } from '../../components/bridge/styleds'
@@ -24,6 +33,7 @@ import { ButtonLight, ButtonPrimary, ButtonError } from '../../components/Button
 import { DarkBlueCard } from '../../components/Card'
 import ethLogo from '../../assets/images/ethereum-logo.png'
 import fuseLogo from '../../assets/images/fuse-logo-wordmark.svg'
+import bnbLogo from '../../assets/svg/bnb.svg'
 import loader from '../../assets/svg/loader.svg'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
@@ -31,59 +41,58 @@ import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
 import { Text } from 'rebass'
 import { useActiveWeb3React, useChain } from '../../hooks'
-import { getHomeMultiErc20ToErc677BridgeAddress, getForeignMultiErc20ToErc677BridgeAddress } from '../../utils'
 import { UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
-import { TYPE, ExternalLink } from '../../theme'
+import { TYPE } from '../../theme'
 import UnsupportedBridgeTokenModal from '../../components/UnsupportedBridgeTokenModal'
 import { useUserActionHandlers } from '../../state/user/hooks'
 import fuseApi from '../../api/fuseApi'
-import { getBridgeMode } from '../../state/bridge/bridges/utils'
-import TokenBridge, { BridgeMode } from '../../state/bridge/bridges/tokenBridge'
-import NativeToErcBridge from '../../state/bridge/bridges/nativeToErc'
-import Erc677ToErc677Bridge from '../../state/bridge/bridges/erc677Toerc677'
-import Erc20ToErc677Bridge from '../../state/bridge/bridges/erc20Toerc677'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../state'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import BridgeDetails from '../../components/bridge/BridgeDetails'
+import { getBridge, getApprovalAddress } from '../../utils'
+import DestinationButton from '../../components/bridge/DestinationButton'
+import FeeModal from '../../components/FeeModal'
+import TokenMigrationModal from '../../components/TokenMigration'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
 
-export default function Bridge({
-  match: {
-    params: { inputCurrencyId }
-  },
-  history
-}: RouteComponentProps<{ inputCurrencyId?: string }>) {
+export default function Bridge() {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
-  const inputCurrency = useCurrency(inputCurrencyId, 'Bridge')
+  const { inputCurrencyId: defaultInputCurrencyId } = useDefaultsFromURLSearch()
+
+  const [selectedBridgeDirection, setSelectedBridgeDirection] = useState<BridgeDirection | undefined>()
+  const bridgeDirection = useDetectBridgeDirection(selectedBridgeDirection)
+
+  const [migrationCurrency, setMigrationCurrency] = useState<Currency | undefined>()
 
   const { independentField, typedValue } = useBridgeState()
 
-  const { currencies, currencyBalances, parsedAmounts, inputError, bridgeTransactionStatus } = useDerivedBridgeInfo(
+  const {
+    currencies,
+    currencyBalances,
+    parsedAmounts,
+    inputError,
+    bridgeTransactionStatus,
     inputCurrencyId
-  )
+  } = useDerivedBridgeInfo(bridgeDirection)
+
+  const { [Field.INPUT]: inputCurrency } = currencies
+
+  const bridgeStatus = useBridgeStatus(bridgeTransactionStatus)
 
   const { updateCompletedBridgeTransfer } = useUserActionHandlers()
 
-  const { onFieldInput } = useBridgeActionHandlers()
+  const { onFieldInput, onSelectBridgeDirection, onSelectCurrency } = useBridgeActionHandlers()
 
-  // modal and loading
+  // unsupportedBridge modal
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
-  const handleInputCurrencySelect = useCallback(
-    (inputCurrency: Currency) => {
-      if (inputCurrency.symbol && UNSUPPORTED_BRIDGE_TOKENS.includes(inputCurrency.symbol)) {
-        setModalOpen(true)
-        return
-      }
+  const [feeModalOpen, setFeeModalOpen] = useState(false)
 
-      const newInputCurrency = currencyId(inputCurrency)
-      history.push(`/bridge/${newInputCurrency}`)
-    },
-    [history]
-  )
+  const [migrateModalOpen, setMigrateModalOpen] = useState(false)
 
   const formattedAmounts = {
     [independentField]: typedValue
@@ -107,15 +116,14 @@ export default function Bridge({
 
   const { isHome, isEtheruem } = useChain()
 
-  const bridgeAddress = isHome ? getHomeMultiErc20ToErc677BridgeAddress() : getForeignMultiErc20ToErc677BridgeAddress()
-  const approvalAddress = isHome ? inputCurrencyId : bridgeAddress
+  const approvalAddress = getApprovalAddress(inputCurrencyId, bridgeDirection)
 
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)
 
   const addTransaction = useTransactionAdder()
 
   async function onTransfer() {
-    if (!chainId || !library || !account || !inputCurrency?.symbol) return
+    if (!chainId || !library || !account || !inputCurrency?.symbol || !bridgeDirection) return
 
     try {
       const { [Field.INPUT]: parsedAmountInput } = parsedAmounts
@@ -124,53 +132,23 @@ export default function Bridge({
         return
       }
 
-      const mode = getBridgeMode(inputCurrencyId)
+      const Bridge = getBridge(inputCurrencyId, bridgeDirection)
 
-      let bridge: TokenBridge
-      switch (mode) {
-        case BridgeMode.NATIVE_TO_ERC:
-          bridge = new NativeToErcBridge(
-            inputCurrencyId,
-            inputCurrency.symbol,
-            parsedAmountInput,
-            library,
-            chainId,
-            account,
-            dispatch,
-            isHome,
-            addTransaction
-          )
-          break
-        case BridgeMode.ERC677_TO_ERC677:
-          bridge = new Erc677ToErc677Bridge(
-            inputCurrencyId,
-            inputCurrency.symbol,
-            parsedAmountInput,
-            library,
-            chainId,
-            account,
-            dispatch,
-            isHome,
-            addTransaction
-          )
-          break
-        case BridgeMode.ERC20_TO_ERC677:
-          bridge = new Erc20ToErc677Bridge(
-            inputCurrencyId,
-            inputCurrency.symbol,
-            parsedAmountInput,
-            library,
-            chainId,
-            account,
-            dispatch,
-            isHome,
-            addTransaction,
-            bridgeAddress
-          )
-          break
-      }
+      if (!Bridge) return
 
-      await bridge.executeTransaction()
+      const bridge = new Bridge(
+        inputCurrencyId,
+        inputCurrency.symbol,
+        parsedAmountInput,
+        library,
+        chainId,
+        account,
+        dispatch,
+        isHome,
+        addTransaction
+      )
+
+      await bridge?.executeTransaction()
 
       if (isEtheruem) {
         await fuseApi.fund(account)
@@ -191,7 +169,39 @@ export default function Bridge({
     }
   }
 
-  const bridgeStatus = useBridgeStatus(bridgeTransactionStatus)
+  const handleDestinationSelect = useCallback(
+    (bridgeDirection: BridgeDirection) => {
+      setSelectedBridgeDirection(bridgeDirection)
+      onSelectBridgeDirection(bridgeDirection)
+      // reset currency on bridge selection
+      onSelectCurrency('')
+    },
+    [onSelectBridgeDirection, onSelectCurrency]
+  )
+
+  const handleInputCurrencySelect = useCallback(
+    (inputCurrency: Currency) => {
+      if (inputCurrency.symbol && UNSUPPORTED_BRIDGE_TOKENS.includes(inputCurrency.symbol)) {
+        setModalOpen(true)
+        return
+      }
+
+      const token = inputCurrency instanceof WrappedTokenInfo ? inputCurrency : undefined
+
+      if (token?.isDeprecated) {
+        setMigrationCurrency(inputCurrency)
+        setMigrateModalOpen(true)
+        return
+      }
+
+      onSelectCurrency(currencyId(inputCurrency))
+    },
+    [onSelectCurrency]
+  )
+
+  useEffect(() => {
+    onSelectCurrency(defaultInputCurrencyId)
+  }, [defaultInputCurrencyId, onSelectCurrency])
 
   return (
     <>
@@ -199,7 +209,38 @@ export default function Bridge({
         <SwapPoolTabs active={'bridge'} />
         <Wrapper id="bridge-page">
           <UnsupportedBridgeTokenModal isOpen={modalOpen} setIsOpen={setModalOpen} />
+          <FeeModal isOpen={feeModalOpen} onDismiss={() => setFeeModalOpen(false)} />
+          <TokenMigrationModal
+            token={migrationCurrency}
+            isOpen={migrateModalOpen}
+            onDismiss={() => setMigrateModalOpen(false)}
+          />
+          {isHome && (
+            <AutoColumn gap="md">
+              <TYPE.mediumHeader fontSize="18">Select Destination</TYPE.mediumHeader>
+              <DestinationWrapper>
+                <DestinationButton
+                  text="Ethereum"
+                  logoSrc={ethLogo}
+                  color={theme.ethereum}
+                  selectedBridgeDirection={bridgeDirection}
+                  bridgeDirection={BridgeDirection.FUSE_TO_ETH}
+                  handleClick={handleDestinationSelect}
+                />
+                OR
+                <DestinationButton
+                  text="Binance"
+                  logoSrc={bnbLogo}
+                  color={theme.binance}
+                  selectedBridgeDirection={bridgeDirection}
+                  bridgeDirection={BridgeDirection.FUSE_TO_BSC}
+                  handleClick={handleDestinationSelect}
+                />
+              </DestinationWrapper>
+            </AutoColumn>
+          )}
           <AutoColumn gap={'md'}>
+            <TYPE.mediumHeader fontSize="18">Select Currency</TYPE.mediumHeader>
             <CurrencyInputPanel
               label="Amount"
               value={formattedAmounts[Field.INPUT]}
@@ -208,26 +249,24 @@ export default function Bridge({
               onMax={() => {
                 onFieldInput(maxAmounts[Field.INPUT]?.toExact() ?? '')
               }}
-              currency={inputCurrency}
+              currency={currencies[Field.INPUT]}
               showMaxButton={!atMaxAmounts[Field.INPUT]}
               id="bridge-input-token"
               showETH={isHome}
               listType="Bridge"
             />
           </AutoColumn>
-          <ColumnCenter>
-            <ArrowWrapper>
-              <ArrowDown size="16" color={theme.text2} />
-            </ArrowWrapper>
-          </ColumnCenter>
-          {isHome ? (
-            <DarkBlueCard padding="0.75rem 1.25rem">
-              <Logo src={ethLogo} style={{ width: 45 }} alt="eth logo" />
-            </DarkBlueCard>
-          ) : (
-            <DarkBlueCard>
-              <Logo src={fuseLogo} alt="fuse logo" />
-            </DarkBlueCard>
+          {!isHome && (
+            <>
+              <ColumnCenter>
+                <ArrowWrapper>
+                  <ArrowDown size="16" color={theme.text2} />
+                </ArrowWrapper>
+              </ColumnCenter>
+              <DarkBlueCard>
+                <Logo src={fuseLogo} alt="fuse logo" />
+              </DarkBlueCard>
+            </>
           )}
           <BottomGrouping>
             {!account ? (
@@ -276,16 +315,12 @@ export default function Bridge({
                   Once you transfer your tokens using the bridge you will be gifted FUSE tokens directly to your wallet
                   which will act as network gas. This will allow you to transact freely on FuseSwap
                 </TYPE.body>
-                <TYPE.body fontSize={14} textAlign="center">
-                  <ExternalLink
-                    target="_blank"
-                    href="https://docs.fuse.io/fuseswap/bridge-fuse-erc20-tokens"
-                    style={{ color: theme.secondary1 }}
-                  >
-                    Click here
-                  </ExternalLink>{' '}
-                  to learn how to bridge tokens
-                </TYPE.body>
+                <Wrapper style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.5rem' }}>
+                  <ExtLink target="_blank" href="https://docs.fuse.io/fuseswap/bridge-fuse-erc20-tokens">
+                    Learn how to bridge tokens
+                  </ExtLink>
+                  <ModalLink onClick={() => setFeeModalOpen(true)}>Learn about the fees</ModalLink>
+                </Wrapper>
               </AutoColumn>
             )}
           </BottomGrouping>

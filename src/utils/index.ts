@@ -4,16 +4,19 @@ import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import flatMap from 'lodash.flatmap'
 import {
   ROUTER_ADDRESS,
-  MAINNET_FOREIGN_BRIDGE_ADDRESS,
-  ROPSTEN_FOREIGN_BRIDGE_ADDRESS,
-  FUSE_MAINNET_HOME_BRIDGE_ADDRESS,
-  FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS,
-  FOREIGN_BRIDGE_CHAIN
+  BINANCE_FOREIGN_BRIDGE_ADDRESS,
+  FUSE_ERC20_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
+  FUSE_FOREIGN_TOKEN_ADDRESS,
+  GOODDOLLAR_HOME_TOKEN_ADDRESS,
+  GOODDOLLAR_FOREIGN_TOKEN_ADDRESS,
+  FUSE_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
+  FUSE_ERC677_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
+  BINANCE_CHAIN_ID,
+  TOKEN_MIGRATOR_ADDRESS
 } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@fuseio/fuse-swap-sdk'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER as FUSE } from '@fuseio/fuse-swap-sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
 import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
@@ -21,10 +24,14 @@ import AMBErc677To677ABI from '../constants/abis/ambErc677ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
 import HomeBridgeNativeToErc from '../constants/abis/homeBridgeNativeToErc.json'
 import ForeignBriddgeNativeToErc from '../constants/abis/foreignBridgeNativeToErc.json'
-import { CUSTOM_BRIDGE_TOKENS } from '../constants/bridge'
+import { MULTI_BRIDGE_TOKENS } from '../constants/bridge'
 import { formatUnits, Interface, id } from 'ethers/lib/utils'
-import { getBridgeMode } from '../state/bridge/bridges/utils'
-import { BridgeMode } from '../state/bridge/bridges/tokenBridge'
+import { BridgeDirection, BridgeType } from '../state/bridge/hooks'
+import BinanceBridge from '../state/bridge/bridges/binance'
+import NativeToErcBridge from '../state/bridge/bridges/nativeToErc'
+import Erc677ToErc677Bridge from '../state/bridge/bridges/erc677Toerc677'
+import Erc20ToErc677Bridge from '../state/bridge/bridges/erc20Toerc677'
+import BRIDGED_TOKENS_MIGRATOR_ABI from '../constants/abis/bridgedTokenMigrator.json'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -49,6 +56,8 @@ export function getExplorerLink(chainId: ChainId, data: string, type: 'transacti
 
   if (chainId === 122) {
     prefix = 'https://explorer.fuse.io'
+  } else if (chainId === BINANCE_CHAIN_ID) {
+    prefix = 'https://testnet.bscscan.com'
   } else {
     prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
   }
@@ -75,6 +84,8 @@ export function getExplorerLinkText(chainId: number): string {
       return 'View on Etherscan'
     case ChainId.ROPSTEN:
       return 'View on Etherscan'
+    case BINANCE_CHAIN_ID:
+      return 'View on BscScan'
     default:
       return 'View on Etherscan'
   }
@@ -88,6 +99,8 @@ export function getNativeCurrencySymbol(chainId?: number): string {
       return 'ETH'
     case ChainId.ROPSTEN:
       return 'ETH'
+    case BINANCE_CHAIN_ID:
+      return 'BNB'
     default:
       return 'FUSE'
   }
@@ -151,7 +164,7 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (currency === ETHER) return true
+  if (currency === FUSE) return true
   return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
 }
 
@@ -191,17 +204,9 @@ export function getForeignBridgeNativeToErcContract(
   return getContract(address, ForeignBriddgeNativeToErc, library, account)
 }
 
-export function getHomeMultiErc20ToErc677BridgeAddress(): string {
-  return FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET ? FUSE_MAINNET_HOME_BRIDGE_ADDRESS : FUSE_ROPSTEN_HOME_BRIDGE_ADDRESS
-}
-
-export function getForeignMultiErc20ToErc677BridgeAddress(): string {
-  return FOREIGN_BRIDGE_CHAIN === ChainId.MAINNET ? MAINNET_FOREIGN_BRIDGE_ADDRESS : ROPSTEN_FOREIGN_BRIDGE_ADDRESS
-}
-
 export function getCurrencySymbol(currency: Currency | null | undefined, chainId: number | undefined) {
   if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
-    if (currency === ETHER) {
+    if (currency === FUSE) {
       return 'ETH'
     } else {
       return currency?.symbol
@@ -209,41 +214,6 @@ export function getCurrencySymbol(currency: Currency | null | undefined, chainId
   } else {
     return currency?.symbol
   }
-}
-
-export function getForeignCustomBridgeAddress(tokenAddress: string) {
-  const formattedTokenAddress = tokenAddress.toLowerCase()
-  const list = CUSTOM_BRIDGE_TOKENS[FOREIGN_BRIDGE_CHAIN as ChainId]
-  const token = list.find(
-    token =>
-      token.FOREIGN_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress ||
-      token.HOME_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress
-  )
-  return token ? token.FOREIGN_BRIDGE_MEDIATOR : null
-}
-
-export function getHomeCustomBridgeAddress(tokenAddress: string) {
-  const formattedTokenAddress = tokenAddress.toLowerCase()
-  const list = CUSTOM_BRIDGE_TOKENS[FOREIGN_BRIDGE_CHAIN as ChainId]
-  const token = list.find(
-    token =>
-      token.HOME_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress ||
-      token.FOREIGN_TOKEN_ADDRESS.toLowerCase() === formattedTokenAddress
-  )
-
-  return token ? token.HOME_BRIDGE_MEDIATOR : null
-}
-
-export function isCustomBridgeToken(tokenAddress?: string) {
-  if (!tokenAddress) return
-
-  const formattedTokenAddress = tokenAddress.toLowerCase()
-  const addresses = flatMap([...CUSTOM_BRIDGE_TOKENS[FOREIGN_BRIDGE_CHAIN as ChainId]], (token: any) => [
-    token.FOREIGN_TOKEN_ADDRESS,
-    token.HOME_TOKEN_ADDRESS
-  ]).map((token: string) => token.toLowerCase())
-
-  return addresses.includes(formattedTokenAddress)
 }
 
 export const tryFormatAmount = (amount?: string, deciamls?: number) => {
@@ -290,6 +260,116 @@ export function isProduction(): boolean {
   return process.env.NODE_ENV === 'production'
 }
 
-export function isMultiErc20ToErc677BridgeToken(tokenAddress: string) {
-  return getBridgeMode(tokenAddress) === BridgeMode.ERC20_TO_ERC677
+export function isFuse(tokenAddress: string) {
+  return tokenAddress === FUSE.symbol || tokenAddress === FUSE_FOREIGN_TOKEN_ADDRESS
+}
+
+export function isGoodDollar(tokenAddress: string) {
+  return tokenAddress === GOODDOLLAR_HOME_TOKEN_ADDRESS || tokenAddress === GOODDOLLAR_FOREIGN_TOKEN_ADDRESS
+}
+
+export function getEthFuseBridge(tokenAddress: string) {
+  if (isFuse(tokenAddress)) {
+    return NativeToErcBridge
+  } else if (isGoodDollar(tokenAddress)) {
+    return Erc677ToErc677Bridge
+  } else {
+    return Erc20ToErc677Bridge
+  }
+}
+
+export function getBnbFuseBridge() {
+  return BinanceBridge
+}
+
+export function isEthFuseDirection(bridgeDirection: BridgeDirection) {
+  return bridgeDirection === BridgeDirection.ETH_TO_FUSE || bridgeDirection === BridgeDirection.FUSE_TO_ETH
+}
+
+export function isBnbFuseDirection(bridgeDirection: BridgeDirection) {
+  return bridgeDirection === BridgeDirection.BSC_TO_FUSE || bridgeDirection === BridgeDirection.FUSE_TO_BSC
+}
+
+export function getBridge(tokenAddress: string, bridgeDirection: BridgeDirection) {
+  if (isEthFuseDirection(bridgeDirection)) {
+    return getEthFuseBridge(tokenAddress)
+  } else if (isBnbFuseDirection(bridgeDirection)) {
+    return getBnbFuseBridge()
+  }
+  return undefined
+}
+
+export function getEthFuseBridgeType(tokenAddress: string) {
+  if (isFuse(tokenAddress)) {
+    return BridgeType.ETH_FUSE_NATIVE
+  } else if (isGoodDollar(tokenAddress)) {
+    return BridgeType.ETH_FUSE_ERC677_TO_ERC677
+  } else {
+    return BridgeType.ETH_FUSE_ERC20_TO_ERC677
+  }
+}
+
+export function getBnbFuseBridgeType() {
+  return BridgeType.BSC_FUSE_ERC20_TO_ERC677
+}
+
+export function getBridgeType(tokenAddress: string, bridgeDirection: BridgeDirection) {
+  if (isEthFuseDirection(bridgeDirection)) {
+    return getEthFuseBridgeType(tokenAddress)
+  } else if (isBnbFuseDirection(bridgeDirection)) {
+    return getBnbFuseBridgeType()
+  }
+  return undefined
+}
+
+export function getEthToFuseApprovalAddress(tokenAddress: string) {
+  const bridgeType = getEthFuseBridgeType(tokenAddress)
+
+  switch (bridgeType) {
+    case BridgeType.ETH_FUSE_NATIVE:
+      return FUSE_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
+    case BridgeType.ETH_FUSE_ERC20_TO_ERC677:
+      return FUSE_ERC20_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
+    case BridgeType.ETH_FUSE_ERC677_TO_ERC677:
+      return FUSE_ERC677_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
+  }
+}
+
+export function getApprovalAddress(tokenAddress?: string, bridgeDirection?: BridgeDirection) {
+  if (!tokenAddress || !bridgeDirection) return
+
+  switch (bridgeDirection) {
+    case BridgeDirection.ETH_TO_FUSE:
+      return getEthToFuseApprovalAddress(tokenAddress)
+    case BridgeDirection.FUSE_TO_ETH:
+    case BridgeDirection.FUSE_TO_BSC:
+      return tokenAddress
+    case BridgeDirection.BSC_TO_FUSE:
+      return BINANCE_FOREIGN_BRIDGE_ADDRESS
+  }
+}
+
+export function isTokenOnMultiBridge(token: Token) {
+  for (const multiBridgeToken of MULTI_BRIDGE_TOKENS) {
+    if (multiBridgeToken.address === token.address) {
+      return true
+    }
+  }
+  return false
+}
+
+export function unwrapOrThrow(envName: string) {
+  const value = process.env[`REACT_APP_${envName}`]
+  if (!value) {
+    throw new Error(`${envName} must be a defined environment variable`)
+  }
+
+  return value
+}
+
+export function safeShortenAddress(address = '') {
+  return `${address.slice(0, 3)}...${address.slice(-4)}`
+}
+export function getTokenMigrationContract(library: Web3Provider, account: string) {
+  return getContract(TOKEN_MIGRATOR_ADDRESS, BRIDGED_TOKENS_MIGRATOR_ABI, library, account)
 }

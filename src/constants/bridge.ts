@@ -1,4 +1,4 @@
-import { ChainId } from '@fuseio/fuse-swap-sdk'
+import { ChainId, Token } from '@fuseio/fuse-swap-sdk'
 
 type BridgeToken = {
   HOME_BRIDGE_MEDIATOR: string
@@ -17,7 +17,7 @@ export const CUSTOM_BRIDGE_TOKENS: { [chainId in ChainId]: BridgeToken[] | [] } 
   [ChainId.MAINNET]: [
     {
       HOME_BRIDGE_MEDIATOR: '0xD39021DB018E2CAEadb4B2e6717D31550e7918D0',
-      HOME_TOKEN_ADDRESS: '0x495d133b938596c9984d462f007b676bdc57ecec',
+      HOME_TOKEN_ADDRESS: '0x67c5870b4a41d4ebef24d2456547a03f1f3e094b',
       FOREIGN_BRIDGE_MEDIATOR: '0xD5D11eE582c8931F336fbcd135e98CEE4DB8CCB0',
       FOREIGN_TOKEN_ADDRESS: '0x67c5870b4a41d4ebef24d2456547a03f1f3e094b',
       SYMBOL: 'G$',
@@ -52,3 +52,7 @@ export const CUSTOM_BRIDGE_TOKENS: { [chainId in ChainId]: BridgeToken[] | [] } 
 }
 
 export const HOME_TO_FOREIGN_FEE_TYPE_HASH = '0x741ede137d0537e88e0ea0ff25b1f22d837903dbbee8980b4a06e8523247ee26'
+
+export const MULTI_BRIDGE_TOKENS = [
+  new Token(ChainId.FUSE, '0xb681dF9480834653eA7C3e4519d8795aD26FAcFa', 18, 'Test Two on Fuse (T2)')
+]

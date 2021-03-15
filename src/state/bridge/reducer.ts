@@ -10,9 +10,11 @@ import {
   confirmTransactionSuccess,
   confirmTokenTransferPending,
   confirmTokenTransferSuccess,
-  transferError
+  transferError,
+  selectBridgeDirection
 } from './actions'
 import { createReducer } from '@reduxjs/toolkit'
+import { BridgeDirection } from './hooks'
 
 export interface BridgeState {
   readonly independentField: Field
@@ -22,6 +24,7 @@ export interface BridgeState {
   }
   readonly bridgeTransactionStatus: BridgeTransactionStatus
   readonly confirmations: number
+  readonly bridgeDirection?: BridgeDirection
 }
 
 const initialState: BridgeState = {
@@ -97,6 +100,12 @@ export default createReducer<BridgeState>(initialState, builder =>
         ...state,
         bridgeTransactionStatus: BridgeTransactionStatus.INITIAL,
         confirmations: 0
+      }
+    })
+    .addCase(selectBridgeDirection, (state, { payload: { direction } }) => {
+      return {
+        ...state,
+        bridgeDirection: direction
       }
     })
 )
