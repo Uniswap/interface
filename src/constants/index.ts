@@ -1,5 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ChainId, JSBI, Percent, WETH, WSPOA, DXD, WXDAI, Token } from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, CurrencyAmount, WETH, WSPOA, DXD, WXDAI, Token } from 'dxswap-sdk'
 import { tokens } from './tokens'
 import { authereum, injected, walletConnect } from '../connectors'
 
@@ -167,3 +167,5 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
 export const DEFAULT_TOKEN_LIST = tokens
+
+export const ZERO_USD = CurrencyAmount.usd('0')

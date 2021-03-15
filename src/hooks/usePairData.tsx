@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { Pair, Token, TokenAmount, CurrencyAmount, USD, Percent } from 'dxswap-sdk'
+import { Pair, Token, TokenAmount, CurrencyAmount, Percent, USD } from 'dxswap-sdk'
 import { DateTime } from 'luxon'
 import { useMemo } from 'react'
 import {
@@ -20,6 +20,9 @@ import { useNativeCurrencyUSDPrice } from './useNativeCurrencyUSDPrice'
 import { ethers } from 'ethers'
 import { useActiveWeb3React } from '.'
 import { useNativeCurrency } from './useNativeCurrency'
+import { ZERO_USD } from '../constants'
+import { parseUnits } from 'ethers/lib/utils'
+import Decimal from 'decimal.js'
 
 export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; volume24hUSD: CurrencyAmount } {
   const { loading, data, error } = useQuery<Pair24hVolumeQueryResult>(GET_PAIR_24H_VOLUME_USD, {
@@ -32,10 +35,15 @@ export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; vol
   })
 
   return useMemo(() => {
-    if (loading) return { loading: true, volume24hUSD: new CurrencyAmount(USD, '0') }
+    if (loading) return { loading: true, volume24hUSD: ZERO_USD }
     if (!data || !data.pairDayDatas || data.pairDayDatas.length === 0 || data.pairDayDatas[0] || error)
-      return { loading: false, volume24hUSD: new CurrencyAmount(USD, '0') }
-    return { loading, volume24hUSD: new CurrencyAmount(USD, data.pairDayDatas[0].dailyVolumeUSD) }
+      return { loading: false, volume24hUSD: ZERO_USD }
+    return {
+      loading,
+      volume24hUSD: CurrencyAmount.usd(
+        parseUnits(new Decimal(data.pairDayDatas[0].dailyVolumeUSD).toFixed(USD.decimals), USD.decimals).toString()
+      )
+    }
   }, [data, error, loading])
 }
 
@@ -43,12 +51,17 @@ export function usePairLiquidityUSD(pair?: Pair | null): { loading: boolean; liq
   const { loading, data, error } = useQuery(GET_PAIR_LIQUIDITY_USD, {
     variables: { id: pair?.liquidityToken.address.toLowerCase() }
   })
+  console.log(error, data)
 
   return useMemo(() => {
-    if (loading) return { loading: true, liquidityUSD: new CurrencyAmount(USD, '0') }
-    if (!data || !data.pair || data.pair.reserveUSD || error)
-      return { loading, liquidityUSD: new CurrencyAmount(USD, '0') }
-    return { loading, liquidityUSD: new CurrencyAmount(USD, data.pair.reserveUSD) }
+    if (loading) return { loading: true, liquidityUSD: ZERO_USD }
+    if (!data || !data.pair || !data.pair.reserveUSD || error) return { loading, liquidityUSD: ZERO_USD }
+    return {
+      loading,
+      liquidityUSD: CurrencyAmount.usd(
+        parseUnits(new Decimal(data.pair.reserveUSD).toFixed(USD.decimals), USD.decimals).toString()
+      )
+    }
   }, [data, error, loading])
 }
 
@@ -202,8 +215,8 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
           token0: pair.token0,
           lpTokensBalance: new TokenAmount(pair.liquidityToken, '0'),
           pairs: [],
-          remainingRewardsUSD: new CurrencyAmount(USD, '0'),
-          maximumApy: new CurrencyAmount(USD, '0')
+          remainingRewardsUSD: ZERO_USD,
+          maximumApy: ZERO_USD
         }
         aggregationMap[pair.token0.address] = mappedValue
       }

@@ -14,6 +14,7 @@ import {
 } from 'dxswap-sdk'
 import { parseUnits } from 'ethers/lib/utils'
 import { NonExpiredLiquidityMiningCampaign } from '../apollo/queries'
+import { ZERO_USD } from '../constants'
 import { getLpTokenPrice } from './prices'
 
 export function getRemainingRewardsUSD(
@@ -21,11 +22,10 @@ export function getRemainingRewardsUSD(
   nativeCurrencyUSDPrice: Price
 ): CurrencyAmount {
   const remainingRewards = campaign.remainingRewards
-  let remainingRewardsUSD = new CurrencyAmount(USD, '0')
+  let remainingRewardsUSD = ZERO_USD
   for (let i = 0; i < remainingRewards.length; i++) {
     remainingRewardsUSD = remainingRewardsUSD.add(
-      new CurrencyAmount(
-        USD,
+      CurrencyAmount.usd(
         parseUnits(
           remainingRewards[i].nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toFixed(USD.decimals),
           USD.decimals
@@ -38,10 +38,10 @@ export function getRemainingRewardsUSD(
 
 export function getPairRemainingRewardsUSD(pair: Pair, nativeCurrencyUSDPrice: Price): CurrencyAmount {
   // no liquidity mining campaigns check
-  if (pair.liquidityMiningCampaigns.length === 0) return new CurrencyAmount(USD, '0')
+  if (pair.liquidityMiningCampaigns.length === 0) return ZERO_USD
   return pair.liquidityMiningCampaigns.reduce((accumulator, campaign) => {
     return accumulator.add(getRemainingRewardsUSD(campaign, nativeCurrencyUSDPrice))
-  }, new CurrencyAmount(USD, '0'))
+  }, ZERO_USD)
 }
 
 export function getPairMaximumApy(pair: Pair): Percent {
