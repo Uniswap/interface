@@ -51,7 +51,6 @@ export function usePairLiquidityUSD(pair?: Pair | null): { loading: boolean; liq
   const { loading, data, error } = useQuery(GET_PAIR_LIQUIDITY_USD, {
     variables: { id: pair?.liquidityToken.address.toLowerCase() }
   })
-  console.log(error, data)
 
   return useMemo(() => {
     if (loading) return { loading: true, liquidityUSD: ZERO_USD }
