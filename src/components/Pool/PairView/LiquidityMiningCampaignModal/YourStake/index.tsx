@@ -1,4 +1,4 @@
-import { TokenAmount } from 'dxswap-sdk'
+import { PricedTokenAmount } from 'dxswap-sdk'
 import React from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
@@ -14,8 +14,8 @@ const Divider = styled.div`
 `
 
 interface LiquidityMiningYourStakeProps {
-  stake?: TokenAmount
-  claimables?: TokenAmount[]
+  stake?: PricedTokenAmount
+  claimables?: PricedTokenAmount[]
 }
 
 export default function LiquidityMiningYourStake({ stake, claimables }: LiquidityMiningYourStakeProps) {

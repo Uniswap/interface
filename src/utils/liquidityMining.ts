@@ -1,105 +1,120 @@
-import BigNumber from 'bignumber.js'
-import { NonExpiredLiquidityMiningCampaign, NonExpiredLiquidityMiningCampaignRewardToken } from '../apollo/queries'
-
-function getRemainingDistributionPercentage(startsAt: number, endsAt: number) {
-  const duration = endsAt - startsAt
-  const now = Math.floor(Date.now() / 1000)
-  return now < startsAt ? new BigNumber('1') : new BigNumber(endsAt - now).dividedBy(duration)
-}
+import Decimal from 'decimal.js'
+import {
+  CurrencyAmount,
+  LiquidityMiningCampaign,
+  Pair,
+  Percent,
+  Price,
+  USD,
+  ChainId,
+  Currency,
+  Token,
+  PricedToken,
+  PricedTokenAmount
+} from 'dxswap-sdk'
+import { parseUnits } from 'ethers/lib/utils'
+import { NonExpiredLiquidityMiningCampaign } from '../apollo/queries'
+import { getLpTokenPrice } from './prices'
 
 export function getRemainingRewardsUSD(
-  startsAt: number,
-  endsAt: number,
-  rewardAmounts: string[],
-  rewardTokens: NonExpiredLiquidityMiningCampaignRewardToken[],
-  nativeCurrencyUSDPrice: BigNumber
-): BigNumber {
-  const now = Math.floor(Date.now() / 1000)
-  // the campaign is expired, no more rewards to give out
-  if (now >= endsAt) return new BigNumber(0)
-  const remainingDistributionPercentage = getRemainingDistributionPercentage(startsAt, endsAt)
-  let remainingRewardsUSD = new BigNumber(0)
-  for (let i = 0; i < rewardTokens.length; i++) {
-    const remainingReward = new BigNumber(rewardAmounts[i]).multipliedBy(remainingDistributionPercentage)
-    remainingRewardsUSD = remainingRewardsUSD.plus(
-      remainingReward.multipliedBy(rewardTokens[i].derivedNativeCurrency).multipliedBy(nativeCurrencyUSDPrice)
+  campaign: LiquidityMiningCampaign,
+  nativeCurrencyUSDPrice: Price
+): CurrencyAmount {
+  const remainingRewards = campaign.remainingRewards
+  let remainingRewardsUSD = new CurrencyAmount(USD, '0')
+  for (let i = 0; i < remainingRewards.length; i++) {
+    remainingRewardsUSD = remainingRewardsUSD.add(
+      new CurrencyAmount(
+        USD,
+        parseUnits(
+          remainingRewards[i].nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toFixed(USD.decimals),
+          USD.decimals
+        ).toString()
+      )
     )
   }
   return remainingRewardsUSD
 }
 
-export function getPairRemainingRewardsUSD(
-  liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[],
-  nativeCurrencyUSDPrice: BigNumber
-): BigNumber {
+export function getPairRemainingRewardsUSD(pair: Pair, nativeCurrencyUSDPrice: Price): CurrencyAmount {
   // no liquidity mining campaigns check
-  if (liquidityMiningCampaigns.length === 0) return new BigNumber(0)
-  return liquidityMiningCampaigns.reduce((accumulator, liquidityMiningCampaign) => {
-    const { startsAt: stringStartsAt, endsAt: stringEndsAt, rewardAmounts, rewardTokens } = liquidityMiningCampaign
-    const startsAt = parseInt(stringStartsAt)
-    const endsAt = parseInt(stringEndsAt)
-    return accumulator.plus(
-      getRemainingRewardsUSD(startsAt, endsAt, rewardAmounts, rewardTokens, nativeCurrencyUSDPrice)
-    )
-  }, new BigNumber(0))
+  if (pair.liquidityMiningCampaigns.length === 0) return new CurrencyAmount(USD, '0')
+  return pair.liquidityMiningCampaigns.reduce((accumulator, campaign) => {
+    return accumulator.add(getRemainingRewardsUSD(campaign, nativeCurrencyUSDPrice))
+  }, new CurrencyAmount(USD, '0'))
 }
 
-// the minimum USD amount to calculate APY (otherwise, when no stake is in there, apy would be infinite)
-const MINIMUM_STAKED_AMOUNT_USD = new BigNumber(100)
-
-export function getCampaignApy(
-  pairReserveNativeCurrency: BigNumber,
-  liquidityTokenTotalSupply: BigNumber,
-  startsAt: string,
-  endsAt: string,
-  rewardTokens: NonExpiredLiquidityMiningCampaignRewardToken[],
-  rewardAmounts: string[],
-  stakedAmount: string,
-  nativeCurrencyUSDPrice: BigNumber
-): BigNumber {
-  const numericStartsAt = parseInt(startsAt)
-  const numericEndsAt = parseInt(endsAt)
-  const duration = numericEndsAt - numericStartsAt
-
-  const remainingRewardAmountUSD = getRemainingRewardsUSD(
-    numericStartsAt,
-    numericEndsAt,
-    rewardAmounts,
-    rewardTokens,
-    nativeCurrencyUSDPrice
-  )
-
-  let stakedValueUSD = pairReserveNativeCurrency
-    .multipliedBy(nativeCurrencyUSDPrice)
-    .dividedBy(liquidityTokenTotalSupply)
-    .multipliedBy(stakedAmount)
-  stakedValueUSD = stakedValueUSD.isLessThan(MINIMUM_STAKED_AMOUNT_USD) ? MINIMUM_STAKED_AMOUNT_USD : stakedValueUSD
-
-  const yieldInPeriod = remainingRewardAmountUSD.dividedBy(stakedValueUSD).multipliedBy(100)
-  const annualizationMultiplier = new BigNumber(31557600) // seconds in a year
-    .dividedBy(duration)
-  return yieldInPeriod.multipliedBy(annualizationMultiplier)
+export function getPairMaximumApy(pair: Pair): Percent {
+  // no liquidity mining campaigns check
+  if (pair.liquidityMiningCampaigns.length === 0) return new Percent('0', '100')
+  return pair.liquidityMiningCampaigns.reduce((maximumApy, liquidityMiningCampaign) => {
+    const apy = liquidityMiningCampaign.apy
+    return liquidityMiningCampaign.apy.greaterThan(maximumApy) ? apy : maximumApy
+  }, new Percent('0', '100'))
 }
 
-export function getPairMaximumApy(
-  pairReserveNativeCurrency: BigNumber,
-  liquidityTokenTotalSupply: BigNumber,
-  liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[],
-  nativeCurrencyUSDPrice: BigNumber
-): BigNumber {
-  // no liquidity mining campaigns check
-  if (liquidityMiningCampaigns.length === 0) return new BigNumber(0)
-  return liquidityMiningCampaigns.reduce((maximumApy, liquidityMiningCampaign) => {
-    const apy = getCampaignApy(
-      pairReserveNativeCurrency,
-      liquidityTokenTotalSupply,
-      liquidityMiningCampaign.startsAt,
-      liquidityMiningCampaign.endsAt,
-      liquidityMiningCampaign.rewardTokens,
-      liquidityMiningCampaign.rewardAmounts,
-      liquidityMiningCampaign.stakedAmount,
-      nativeCurrencyUSDPrice
+export function toLiquidityMiningCampaigns(
+  chainId: ChainId,
+  targetedPair: Pair,
+  targetedPairLpTokenTotalSupply: string,
+  targetedPairReserveNativeCurrency: string,
+  rawLiquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[],
+  nativeCurrency: Currency
+): LiquidityMiningCampaign[] {
+  return rawLiquidityMiningCampaigns.map(campaign => {
+    const rewards = campaign.rewardTokens.map((rewardToken, index) => {
+      const properRewardToken = new Token(
+        chainId,
+        rewardToken.address,
+        parseInt(rewardToken.decimals),
+        rewardToken.symbol,
+        rewardToken.name
+      )
+      const rewardTokenPriceNativeCurrency = new Price(
+        properRewardToken,
+        nativeCurrency,
+        parseUnits('1', nativeCurrency.decimals).toString(),
+        parseUnits(
+          new Decimal(rewardToken.derivedNativeCurrency).toFixed(nativeCurrency.decimals),
+          nativeCurrency.decimals
+        ).toString()
+      )
+      const pricedRewardToken = new PricedToken(
+        chainId,
+        rewardToken.address,
+        parseInt(rewardToken.decimals),
+        rewardTokenPriceNativeCurrency,
+        rewardToken.symbol,
+        rewardToken.name
+      )
+      return new PricedTokenAmount(
+        pricedRewardToken,
+        parseUnits(campaign.rewardAmounts[index], rewardToken.decimals).toString()
+      )
+    })
+    const lpTokenPriceNativeCurrency = getLpTokenPrice(
+      targetedPair,
+      nativeCurrency,
+      targetedPairLpTokenTotalSupply,
+      targetedPairReserveNativeCurrency
     )
-    return apy.isGreaterThan(maximumApy) ? apy : maximumApy
-  }, new BigNumber(0))
+    const stakedPricedToken = new PricedToken(
+      chainId,
+      targetedPair.liquidityToken.address,
+      targetedPair.liquidityToken.decimals,
+      lpTokenPriceNativeCurrency,
+      targetedPair.liquidityToken.symbol,
+      targetedPair.liquidityToken.name
+    )
+    const staked = new PricedTokenAmount(stakedPricedToken, campaign.stakedAmount)
+    return new LiquidityMiningCampaign(
+      campaign.startsAt,
+      campaign.endsAt,
+      targetedPair,
+      rewards,
+      staked,
+      campaign.locked,
+      campaign.address
+    )
+  })
 }

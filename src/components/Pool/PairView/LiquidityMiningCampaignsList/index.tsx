@@ -1,18 +1,15 @@
-import { Pair } from 'dxswap-sdk'
+import { LiquidityMiningCampaign, Pair } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import { NonExpiredLiquidityMiningCampaign } from '../../../../apollo/queries'
 import Pagination from '../../../Pagination'
 import { LiquidityMiningCampaignModal } from '../LiquidityMiningCampaignModal'
 import PairCard from '../../Token0PairsList/Pair'
 import Empty from '../../Empty'
-import { getCampaignApy, getRemainingRewardsUSD } from '../../../../utils/liquidityMining'
+import { getRemainingRewardsUSD } from '../../../../utils/liquidityMining'
 import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'
 import LoadingList from '../../LoadingList'
-import { usePairReserveNativeCurrency, usePairLiquidityTokenTotalSupply } from '../../../../data/Reserves'
 import { usePage } from '../../../../hooks/usePage'
-import BigNumber from 'bignumber.js'
 
 const ListLayout = styled.div`
   display: grid;
@@ -31,7 +28,7 @@ const SizedPairCard = styled(PairCard)`
 
 interface LiquidityMiningCampaignsListProps {
   stakablePair?: Pair
-  items: NonExpiredLiquidityMiningCampaign[]
+  items: LiquidityMiningCampaign[]
 }
 
 const ITEMS_PER_PAGE = 9
@@ -40,53 +37,31 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
   const [page, setPage] = useState(1)
   const itemsPage = usePage(items, ITEMS_PER_PAGE, page, 0)
   const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
-  const { loading: loadingPairReserveNativeCurrency, reserveNativeCurrency } = usePairReserveNativeCurrency(
-    stakablePair
-  )
-  const { loading: loadingPairTotalSupply, supply } = usePairLiquidityTokenTotalSupply(stakablePair)
-  const [
-    selectedLiquidityMiningCampaign,
-    setSelectedLiquidityMiningCampaign
-  ] = useState<NonExpiredLiquidityMiningCampaign | null>(null)
+  const [selectedCampaign, setSelectedCampaign] = useState<LiquidityMiningCampaign | null>(null)
 
   const handleLiquidityMiningCampaignModalDismiss = useCallback(() => {
-    setSelectedLiquidityMiningCampaign(null)
+    setSelectedCampaign(null)
   }, [])
 
-  const getLiquidityMiningClickHandler = (liquidityMiningCampaign: NonExpiredLiquidityMiningCampaign) => () => {
-    setSelectedLiquidityMiningCampaign(liquidityMiningCampaign)
+  const getLiquidityMiningClickHandler = (liquidityMiningCampaign: LiquidityMiningCampaign) => () => {
+    setSelectedCampaign(liquidityMiningCampaign)
   }
 
   return (
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="460px">
-          {loadingNativeCurrencyUsdPrice || loadingPairReserveNativeCurrency || loadingPairTotalSupply ? (
+          {loadingNativeCurrencyUsdPrice ? (
             <LoadingList wideCards />
           ) : itemsPage.length > 0 ? (
             <ListLayout>
-              {itemsPage.map(item => (
-                <div key={item.address} onClick={getLiquidityMiningClickHandler(item)}>
+              {itemsPage.map((item, index) => (
+                <div key={index} onClick={getLiquidityMiningClickHandler(item)}>
                   <SizedPairCard
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
-                    usdRewards={getRemainingRewardsUSD(
-                      parseInt(item.startsAt),
-                      parseInt(item.endsAt),
-                      item.rewardAmounts,
-                      item.rewardTokens,
-                      nativeCurrencyUSDPrice
-                    )}
-                    apy={getCampaignApy(
-                      reserveNativeCurrency,
-                      supply,
-                      item.startsAt,
-                      item.endsAt,
-                      item.rewardTokens,
-                      item.rewardAmounts,
-                      item.stakedAmount,
-                      nativeCurrencyUSDPrice
-                    )}
+                    usdRewards={getRemainingRewardsUSD(item, nativeCurrencyUSDPrice)}
+                    apy={item.apy}
                   />
                 </div>
               ))}
@@ -103,30 +78,14 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
           <Pagination page={page} totalItems={items.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={setPage} />
         </Box>
       </Flex>
-      <LiquidityMiningCampaignModal
-        show={!!selectedLiquidityMiningCampaign}
-        onDismiss={handleLiquidityMiningCampaignModalDismiss}
-        contractAddress={selectedLiquidityMiningCampaign?.address ?? ''}
-        stakablePair={stakablePair}
-        rewardTokens={selectedLiquidityMiningCampaign?.rewardTokens}
-        startsAt={selectedLiquidityMiningCampaign?.startsAt ?? '0'}
-        endsAt={selectedLiquidityMiningCampaign?.endsAt ?? '0'}
-        timelock={!!selectedLiquidityMiningCampaign?.locked}
-        apy={
-          selectedLiquidityMiningCampaign
-            ? getCampaignApy(
-                reserveNativeCurrency,
-                supply,
-                selectedLiquidityMiningCampaign.startsAt,
-                selectedLiquidityMiningCampaign.endsAt,
-                selectedLiquidityMiningCampaign.rewardTokens,
-                selectedLiquidityMiningCampaign.rewardAmounts,
-                selectedLiquidityMiningCampaign.stakedAmount,
-                nativeCurrencyUSDPrice
-              )
-            : new BigNumber(0)
-        }
-      />
+      {selectedCampaign && (
+        <LiquidityMiningCampaignModal
+          show={!!selectedCampaign}
+          onDismiss={handleLiquidityMiningCampaignModalDismiss}
+          campaign={selectedCampaign}
+          campaignAddress={''}
+        />
+      )}
     </>
   )
 }

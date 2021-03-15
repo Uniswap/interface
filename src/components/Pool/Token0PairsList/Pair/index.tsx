@@ -1,11 +1,10 @@
 import React from 'react'
 import { Box, Flex } from 'rebass'
-import { Token } from 'dxswap-sdk'
+import { CurrencyAmount, Percent, Token } from 'dxswap-sdk'
 import { TYPE } from '../../../../theme'
 import DoubleCurrencyLogo from '../../../DoubleLogo'
 import { DarkCard } from '../../../Card'
 import styled from 'styled-components'
-import BigNumber from 'bignumber.js'
 import ApyBadge from '../../ApyBadge'
 
 const SizedCard = styled(DarkCard)`
@@ -20,8 +19,8 @@ const SizedCard = styled(DarkCard)`
 interface PairProps {
   token0?: Token
   token1?: Token
-  usdRewards: BigNumber
-  apy: BigNumber
+  usdRewards: CurrencyAmount
+  apy: Percent
 }
 
 export default function Pair({ token0, token1, usdRewards, apy, ...rest }: PairProps) {
@@ -36,15 +35,15 @@ export default function Pair({ token0, token1, usdRewards, apy, ...rest }: PairP
             {token0?.symbol}/{token1?.symbol}
           </TYPE.body>
         </Box>
-        {!apy.isZero() && (
+        {apy.greaterThan('0') && (
           <Box mt="8px">
             <ApyBadge apy={apy} />
           </Box>
         )}
-        {usdRewards.isGreaterThan(0) && (
+        {usdRewards.greaterThan('0') && (
           <Box mt="4px">
             <TYPE.subHeader fontSize="9px" color="text3" lineHeight="14px" letterSpacing="2%" fontWeight="600">
-              ${usdRewards.decimalPlaces(2).toString()} REWARDS
+              ${usdRewards.toFixed(2)} REWARDS
             </TYPE.subHeader>
           </Box>
         )}

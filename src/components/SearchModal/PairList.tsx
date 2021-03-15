@@ -11,10 +11,6 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { useAllPairs } from '../../data/Reserves'
 import { isPairOnList } from '../../utils'
 
-function pairKey(pair: Pair): string {
-  return `${pair.token0.symbol}${pair.token1.symbol}`
-}
-
 interface PairRowProps {
   pair: Pair
   onSelect: () => void
@@ -95,7 +91,7 @@ export default function PairList({
   return (
     <TokenListContainer flexDirection="column" width="100%" overflowY="auto">
       {pairs.map(pair => (
-        <Box width="100%" height="56px" key={pairKey(pair)}>
+        <Box width="100%" height="56px" key={pair.liquidityToken.address}>
           {Row(pair)}
         </Box>
       ))}

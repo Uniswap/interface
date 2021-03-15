@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Flex } from 'rebass'
-import { Pair, TokenAmount } from 'dxswap-sdk'
+import { Pair, Percent, TokenAmount } from 'dxswap-sdk'
 import PoolSummary from './PoolSummary'
 import RewardSummary from './RewardSummary'
 import { Card, Divider } from '../../../styleds'
@@ -8,12 +8,11 @@ import { ButtonPrimary } from '../../../../Button'
 import { useTokenBalance } from '../../../../../state/wallet/hooks'
 import { ApprovalState, useApproveCallback } from '../../../../../hooks/useApproveCallback'
 import { useStakingRewardsDistributionFactoryContract } from '../../../../../hooks/useContract'
-import BigNumber from 'bignumber.js'
 import { useActiveWeb3React } from '../../../../../hooks'
 
 interface PreviewProps {
   liquidityPair: Pair | null
-  apy: BigNumber
+  apy: Percent
   startTime: Date | null
   endTime: Date | null
   timelocked: boolean

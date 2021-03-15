@@ -1,5 +1,5 @@
-import { Pair, TokenAmount, Token } from 'dxswap-sdk'
-import React, { useCallback, useEffect, useState } from 'react'
+import { Pair, Percent, Token, TokenAmount } from 'dxswap-sdk'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AutoColumn } from '../../../components/Column'
 import Step from '../../../components/LiquidityMining/Create/Steps'
@@ -13,11 +13,7 @@ import { PageWrapper } from '../styleds'
 import { useCreateLiquidityMiningCallback } from '../../../hooks/useCreateLiquidityMiningCallback'
 import ConfirmStakingRewardsDistributionCreation from '../../../components/LiquidityMining/ConfirmStakingRewardsDistributionCreation'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
-import { usePairLiquidityTokenTotalSupply, usePairReserveNativeCurrency } from '../../../data/Reserves'
-import { getCampaignApy } from '../../../utils/liquidityMining'
-import { useNativeCurrencyUSDPrice } from '../../../hooks/useNativeCurrencyUSDPrice'
-import BigNumber from 'bignumber.js'
-import { useTokenDerivedNativeCurrency } from '../../../hooks/useTokenDerivedNativeCurrency'
+import { useNewLiquidityMiningCampaign } from '../../../hooks/useNewLiquidityMiningCampaign'
 
 export default function CreateLiquidityMining() {
   const { t } = useTranslation()
@@ -27,82 +23,25 @@ export default function CreateLiquidityMining() {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [singleReward, setSingleReward] = useState<boolean | null>(null)
-  const [liquidityPair, setLiquidityPair] = useState<Pair | null>(null)
+  const [targetedPair, setTargetedPair] = useState<Pair | null>(null)
   const [reward, setReward] = useState<TokenAmount | null>(null)
   const [unlimitedPool, setUnlimitedPool] = useState(true)
   const [startTime, setStartTime] = useState<Date | null>(null)
   const [endTime, setEndTime] = useState<Date | null>(null)
   const [timelocked, setTimelocked] = useState(false)
-  const [apy, setApy] = useState(new BigNumber(0))
 
-  const {
-    loading: loadingReserveNativeCurrency,
-    reserveNativeCurrency: stakablePairReserveNativeCurrency
-  } = usePairReserveNativeCurrency(liquidityPair || undefined)
-  const { loading: loadingLiquidityTokenSupply, supply: stakablePairTokenSupply } = usePairLiquidityTokenTotalSupply(
-    liquidityPair || undefined
-  )
-  const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
-  const {
-    loading: loadingRewardDerivedNativeCurrency,
-    derivedNativeCurrency: rewardDerivedNativeCurrency
-  } = useTokenDerivedNativeCurrency(reward?.token)
-
-  const addTransaction = useTransactionAdder()
-  const createLiquidityMiningCallback = useCreateLiquidityMiningCallback(
-    liquidityPair,
-    [reward],
+  const memoizedRewardArray = useMemo(() => (reward ? [reward] : []), [reward])
+  const campaign = useNewLiquidityMiningCampaign(
+    targetedPair,
+    memoizedRewardArray,
+    unlimitedPool,
     startTime,
     endTime,
     timelocked
   )
 
-  useEffect(() => {
-    if (
-      loadingNativeCurrencyUSDPrice ||
-      loadingLiquidityTokenSupply ||
-      loadingReserveNativeCurrency ||
-      loadingRewardDerivedNativeCurrency ||
-      !startTime ||
-      !endTime ||
-      !reward
-    ) {
-      return
-    }
-    const normalizedStartTime = Math.floor(startTime.getTime() / 1000)
-    const normalizedEndTime = Math.floor(endTime.getTime() / 1000)
-    const apy = getCampaignApy(
-      stakablePairReserveNativeCurrency,
-      stakablePairTokenSupply,
-      normalizedStartTime.toString(),
-      normalizedEndTime.toString(),
-      [
-        {
-          derivedNativeCurrency: rewardDerivedNativeCurrency.toExact(),
-          name: reward.token.name || '',
-          symbol: reward.token.symbol || '',
-          decimals: reward.token.decimals.toString() || '18',
-          address: reward.token.address || ''
-        }
-      ],
-      [reward?.toExact()],
-      '0',
-      nativeCurrencyUSDPrice
-    )
-    setApy(apy)
-  }, [
-    endTime,
-    loadingNativeCurrencyUSDPrice,
-    nativeCurrencyUSDPrice,
-    loadingLiquidityTokenSupply,
-    loadingReserveNativeCurrency,
-    loadingRewardDerivedNativeCurrency,
-    reward,
-    rewardDerivedNativeCurrency,
-    stakablePairReserveNativeCurrency,
-    stakablePairTokenSupply,
-    startTime
-  ])
+  const addTransaction = useTransactionAdder()
+  const createLiquidityMiningCallback = useCreateLiquidityMiningCallback(campaign)
 
   const handleTimelockedChange = useCallback(() => {
     setTimelocked(!timelocked)
@@ -128,7 +67,7 @@ export default function CreateLiquidityMining() {
         setErrorMessage('')
         setTransactionHash(transaction.hash || null)
         addTransaction(transaction, {
-          summary: `Create liquidity mining campaign on ${liquidityPair?.token0.symbol}/${liquidityPair?.token1.symbol}`
+          summary: `Create liquidity mining campaign on ${targetedPair?.token0.symbol}/${targetedPair?.token1.symbol}`
         })
       })
       .catch(error => {
@@ -138,7 +77,7 @@ export default function CreateLiquidityMining() {
       .finally(() => {
         setAttemptingTransaction(false)
       })
-  }, [addTransaction, createLiquidityMiningCallback, liquidityPair])
+  }, [addTransaction, createLiquidityMiningCallback, targetedPair])
 
   const handleCreateDismiss = useCallback(() => {
     setErrorMessage('')
@@ -160,13 +99,13 @@ export default function CreateLiquidityMining() {
         </Step>
         <Step title="Select pair and reward" index={1} disabled={singleReward === null}>
           <PairAndReward
-            liquidityPair={liquidityPair}
+            liquidityPair={targetedPair}
             reward={reward}
-            onLiquidityPairChange={setLiquidityPair}
+            onLiquidityPairChange={setTargetedPair}
             onRewardTokenChange={handleRewardTokenChange}
           />
         </Step>
-        <Step title="Select reward amount" index={2} disabled={!liquidityPair || !reward || !reward.token}>
+        <Step title="Select reward amount" index={2} disabled={!targetedPair || !reward || !reward.token}>
           <RewardAmount
             reward={reward}
             unlimitedPool={unlimitedPool}
@@ -187,15 +126,15 @@ export default function CreateLiquidityMining() {
         <Step
           title="Preview, approve and create mining pool"
           index={4}
-          disabled={!liquidityPair || !startTime || !endTime || !reward || !reward.token || reward.equalTo('0')}
+          disabled={!targetedPair || !startTime || !endTime || !reward || !reward.token || reward.equalTo('0')}
         >
           <PreviewAndCreate
-            liquidityPair={liquidityPair}
+            liquidityPair={targetedPair}
             startTime={startTime}
             endTime={endTime}
             timelocked={timelocked}
             reward={reward}
-            apy={apy}
+            apy={campaign ? campaign.apy : new Percent('0', '100')}
             onCreate={handleCreateRequest}
           />
         </Step>
@@ -207,7 +146,7 @@ export default function CreateLiquidityMining() {
         attemptingTransaction={attemptingTransaction}
         transactionHash={transactionHash}
         errorMessage={errorMessage}
-        liquidityPair={liquidityPair}
+        liquidityPair={targetedPair}
         startTime={startTime}
         endTime={endTime}
         reward={reward}

@@ -1,12 +1,10 @@
-import BigNumber from 'bignumber.js'
-import { Pair, TokenAmount } from 'dxswap-sdk'
+import { LiquidityMiningCampaign, TokenAmount } from 'dxswap-sdk'
 import { transparentize } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { NonExpiredLiquidityMiningCampaignRewardToken } from '../../../../apollo/queries'
 import { useActiveWeb3React } from '../../../../hooks'
 import { useLiquidityMiningActionCallbacks } from '../../../../hooks/useLiquidityMiningActionCallbacks'
-import { useLiquidityMiningCampaign } from '../../../../hooks/useLiquidityMiningCampaign'
+import { useLiquidityMiningCampaignPosition } from '../../../../hooks/useLiquidityMiningCampaignPosition'
 import { useTransactionAdder } from '../../../../state/transactions/hooks'
 import { useTokenBalance } from '../../../../state/wallet/hooks'
 import { TYPE } from '../../../../theme'
@@ -28,34 +26,22 @@ const Wrapper = styled.div`
 interface LiquidityMiningCampaignProps {
   show: boolean
   onDismiss: () => void
-  contractAddress?: string
-  stakablePair?: Pair | null
-  rewardTokens?: NonExpiredLiquidityMiningCampaignRewardToken[]
-  startsAt?: string
-  endsAt?: string
-  timelock?: boolean
-  apy?: BigNumber
+  campaignAddress: string
+  campaign: LiquidityMiningCampaign
 }
 
 export function LiquidityMiningCampaignModal({
   show,
+  campaignAddress,
   onDismiss,
-  contractAddress,
-  stakablePair,
-  rewardTokens,
-  startsAt,
-  endsAt,
-  timelock,
-  apy
+  campaign
 }: LiquidityMiningCampaignProps) {
   const { account } = useActiveWeb3React()
-  const callbacks = useLiquidityMiningActionCallbacks(contractAddress)
-  const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
-  const { stakedTokenAmount, claimableRewardAmounts } = useLiquidityMiningCampaign(
-    account ?? undefined,
-    stakablePair?.liquidityToken,
-    rewardTokens,
-    contractAddress
+  const callbacks = useLiquidityMiningActionCallbacks(campaignAddress)
+  const stakableTokenBalance = useTokenBalance(account ?? undefined, campaign.staked.token)
+  const { stakedTokenAmount, claimableRewardAmounts } = useLiquidityMiningCampaignPosition(
+    campaign,
+    account ?? undefined
   )
   const addTransaction = useTransactionAdder()
 
@@ -66,19 +52,18 @@ export function LiquidityMiningCampaignModal({
   const [showWithdrawalConfirmationModal, setShowWithdrawalConfirmationModal] = useState(false)
   const [disabledStaking, setDisabledStaking] = useState(false)
   const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
-  const [active, setActive] = useState(false)
 
   useEffect(() => {
-    setActive(!!startsAt && parseInt(startsAt) < Math.floor(Date.now() / 1000))
-  }, [callbacks, stakableTokenBalance, startsAt])
+    setDisabledStaking(
+      !campaign.currentlyActive || !callbacks || !stakableTokenBalance || stakableTokenBalance.equalTo('0')
+    )
+  }, [callbacks, campaign.currentlyActive, stakableTokenBalance])
 
   useEffect(() => {
-    setDisabledStaking(!active || !callbacks || !stakableTokenBalance || stakableTokenBalance.equalTo('0'))
-  }, [active, callbacks, stakableTokenBalance])
-
-  useEffect(() => {
-    setDisabledWithdrawing(!active || !callbacks || !stakedTokenAmount || stakedTokenAmount.equalTo('0'))
-  }, [active, callbacks, stakableTokenBalance, stakedTokenAmount])
+    setDisabledWithdrawing(
+      !campaign.currentlyActive || !callbacks || !stakedTokenAmount || stakedTokenAmount.equalTo('0')
+    )
+  }, [callbacks, campaign.currentlyActive, stakableTokenBalance, stakedTokenAmount])
 
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
@@ -107,9 +92,7 @@ export function LiquidityMiningCampaignModal({
           setErrorMessage('')
           setTransactionHash(transaction.hash || '')
           addTransaction(transaction, {
-            summary: `Stake ${amount.toSignificant(4)} ${stakablePair?.token0.symbol}/${
-              stakablePair?.token1.symbol
-            } LP tokens`
+            summary: `Stake ${amount.toSignificant(4)} ${campaign.staked.token.name}`
           })
         })
         .catch(error => {
@@ -120,7 +103,7 @@ export function LiquidityMiningCampaignModal({
           setAttemptingTransaction(false)
         })
     },
-    [addTransaction, callbacks, stakablePair]
+    [addTransaction, callbacks, campaign]
   )
 
   const handleWithdrawalConfirmation = useCallback(
@@ -133,9 +116,7 @@ export function LiquidityMiningCampaignModal({
           setErrorMessage('')
           setTransactionHash(transaction.hash || '')
           addTransaction(transaction, {
-            summary: `Withdraw ${amount.toSignificant(4)} ${stakablePair?.token0.symbol}/${
-              stakablePair?.token1.symbol
-            } LP tokens`
+            summary: `Withdraw ${amount.toSignificant(4)} ${campaign.staked.token.name}`
           })
         })
         .catch(error => {
@@ -146,7 +127,7 @@ export function LiquidityMiningCampaignModal({
           setAttemptingTransaction(false)
         })
     },
-    [addTransaction, callbacks, stakablePair]
+    [addTransaction, callbacks, campaign]
   )
   const handleClaimConfirmation = useCallback(() => {
     if (!callbacks || !account) return
@@ -175,12 +156,7 @@ export function LiquidityMiningCampaignModal({
             Rewards program
           </TYPE.mediumHeader>
           <div>
-            <LiquidityMiningInformation
-              startsAt={startsAt}
-              endsAt={endsAt}
-              timelock={!!timelock}
-              apy={apy || new BigNumber(0)}
-            />
+            <LiquidityMiningInformation campaign={campaign} />
             <RowBetween marginTop="24px">
               <ButtonDark
                 padding="8px"
@@ -190,7 +166,7 @@ export function LiquidityMiningCampaignModal({
                 disabled={disabledStaking}
                 onClick={handleStakingRequest}
               >
-                Deposit {stakablePair?.liquidityToken.symbol}
+                Deposit {campaign.staked.token.name}
               </ButtonDark>
               <ButtonDark
                 padding="8px"
@@ -200,7 +176,7 @@ export function LiquidityMiningCampaignModal({
                 disabled={disabledWithdrawing}
                 onClick={handleWithdrawalRequest}
               >
-                Withdraw {stakablePair?.liquidityToken.symbol}
+                Withdraw {campaign.staked.token.name}
               </ButtonDark>
             </RowBetween>
           </div>
@@ -213,7 +189,7 @@ export function LiquidityMiningCampaignModal({
                 width="100%"
                 marginRight="4px"
                 onClick={handleClaimConfirmation}
-                disabled={!callbacks || !active}
+                disabled={!callbacks || !campaign.currentlyActive}
               >
                 Claim rewards
               </ButtonDark>
@@ -221,13 +197,13 @@ export function LiquidityMiningCampaignModal({
           </div>
         </AutoColumn>
       </Wrapper>
-      {contractAddress && (
+      {campaignAddress && (
         <ConfirmStakingModal
           isOpen={showStakingConfirmationModal}
           stakableTokenBalance={stakableTokenBalance}
           onDismiss={handleDismiss}
-          stakablePair={stakablePair}
-          distributionContractAddress={contractAddress}
+          stakablePair={campaign.targetedPair}
+          distributionContractAddress={campaignAddress}
           attemptingTxn={attemptingTransaction}
           errorMessage={errorMessage}
           onConfirm={handleStakeConfirmation}
@@ -238,7 +214,7 @@ export function LiquidityMiningCampaignModal({
         isOpen={showWithdrawalConfirmationModal}
         withdrawablTokenBalance={stakedTokenAmount || undefined}
         onDismiss={handleDismiss}
-        stakablePair={stakablePair}
+        stakablePair={campaign.targetedPair}
         attemptingTxn={attemptingTransaction}
         errorMessage={errorMessage}
         onConfirm={handleWithdrawalConfirmation}

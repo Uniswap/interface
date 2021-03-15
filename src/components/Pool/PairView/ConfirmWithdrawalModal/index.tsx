@@ -1,4 +1,4 @@
-import { Pair, TokenAmount } from 'dxswap-sdk'
+import { Pair, PricedTokenAmount, TokenAmount } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -10,7 +10,7 @@ import ConfirmStakingWithdrawingModalHeader from '../ModalBase/Header'
 interface ConfirmWithdrawalModalProps {
   stakablePair?: Pair | null
   isOpen: boolean
-  withdrawablTokenBalance?: TokenAmount
+  withdrawablTokenBalance?: PricedTokenAmount
   attemptingTxn: boolean
   txHash: string
   onConfirm: (amount: TokenAmount) => void

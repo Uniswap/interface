@@ -1,9 +1,10 @@
-import BigNumber from 'bignumber.js'
+import { LiquidityMiningCampaign } from 'dxswap-sdk'
 import { DateTime } from 'luxon'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
 import Countdown from '../../../../Countdown'
+import ApyBadge from '../../../ApyBadge'
 import DataRow from '../DataRow'
 
 const Divider = styled.div`
@@ -13,29 +14,16 @@ const Divider = styled.div`
 `
 
 interface LiquidityMiningInformationProps {
-  startsAt?: string
-  endsAt?: string
-  timelock: boolean
-  apy: BigNumber
+  campaign: LiquidityMiningCampaign
 }
 
-export default function LiquidityMiningInformation({
-  startsAt,
-  endsAt,
-  timelock,
-  apy
-}: LiquidityMiningInformationProps) {
-  const [started, setStarted] = useState(false)
-
-  useEffect(() => {
-    setStarted(!!(startsAt && parseInt(startsAt) < Math.floor(Date.now() / 1000)))
-  }, [endsAt, startsAt])
-
+export default function LiquidityMiningInformation({ campaign }: LiquidityMiningInformationProps) {
+  const { currentlyActive, locked, startsAt, endsAt, apy } = campaign
   return (
     <Flex justifyContent="stretch" width="100%">
       <Flex flexDirection="column" flex="1">
-        <DataRow title="APY" value={`${apy.decimalPlaces(2).toString()}%`} />
-        {started && <DataRow title="Time left" value={<Countdown to={endsAt ? parseInt(endsAt) : 0} />} />}
+        <DataRow title="APY" value={<ApyBadge apy={apy} />} />
+        {currentlyActive && <DataRow title="Time left" value={<Countdown to={parseInt(endsAt.toString())} />} />}
       </Flex>
       <Box mx="18px">
         <Divider />
@@ -43,13 +31,13 @@ export default function LiquidityMiningInformation({
       <Flex flexDirection="column" flex="1">
         <DataRow
           title="Starts at"
-          value={DateTime.fromSeconds(startsAt ? parseInt(startsAt) : 0).toFormat('dd-MM-yyyy hh:mm')}
+          value={DateTime.fromSeconds(parseInt(startsAt.toString())).toFormat('dd-MM-yyyy hh:mm')}
         />
         <DataRow
           title="Ends at"
-          value={DateTime.fromSeconds(endsAt ? parseInt(endsAt) : 0).toFormat('dd-MM-yyyy hh:mm')}
+          value={DateTime.fromSeconds(parseInt(endsAt.toString())).toFormat('dd-MM-yyyy hh:mm')}
         />
-        <DataRow title="Timelock" value={timelock ? 'ON' : 'OFF'} />
+        <DataRow title="Timelock" value={locked ? 'ON' : 'OFF'} />
       </Flex>
     </Flex>
   )

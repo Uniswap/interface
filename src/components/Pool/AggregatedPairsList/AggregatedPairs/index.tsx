@@ -1,9 +1,8 @@
 import React from 'react'
 import { Box, Flex } from 'rebass'
 import CurrencyLogo from '../../../CurrencyLogo'
-import { Token } from 'dxswap-sdk'
+import { CurrencyAmount, Percent, Token } from 'dxswap-sdk'
 import { TYPE } from '../../../../theme'
-import BigNumber from 'bignumber.js'
 import StackedCards from '../../../StackedCards'
 import styled from 'styled-components'
 import blurredCircle from '../../../../assets/svg/blurred-circle.svg'
@@ -51,9 +50,9 @@ const BlurredCircleImage = styled.img`
 
 interface PairCardProps {
   token: Token
-  usdRewards: BigNumber
+  usdRewards: CurrencyAmount
   pairsNumber: number
-  maximumApy: BigNumber
+  maximumApy: Percent
 }
 
 export default function AggregatedPairs({ token, usdRewards, pairsNumber, maximumApy }: PairCardProps) {
@@ -75,15 +74,15 @@ export default function AggregatedPairs({ token, usdRewards, pairsNumber, maximu
               {token.symbol}
             </TYPE.body>
           </Box>
-          {!maximumApy.isZero() && (
+          {maximumApy.greaterThan('0') && (
             <Box mt="8px">
               <ApyBadge apy={maximumApy} upTo />
             </Box>
           )}
-          {usdRewards.isGreaterThan(0) && (
+          {usdRewards.greaterThan('0') && (
             <Box mt="4px">
               <TYPE.subHeader fontSize="9px" color="text3" lineHeight="14px" letterSpacing="2%" fontWeight="600">
-                ${usdRewards.decimalPlaces(2).toString()} REWARDS
+                ${usdRewards.toFixed(2)} REWARDS
               </TYPE.subHeader>
             </Box>
           )}

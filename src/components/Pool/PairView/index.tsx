@@ -5,9 +5,9 @@ import { Pair } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import DoubleCurrencyLogo from '../../DoubleLogo'
 import {
-  useLiquidityMiningCampaignsForPair,
   usePair24hVolumeUSD,
-  usePairLiquidityUSD
+  usePairLiquidityUSD,
+  usePairWithLiquidityMiningCampaigns
 } from '../../../hooks/usePairData'
 import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
@@ -55,14 +55,16 @@ interface PairViewProps {
 function PairView({ loading, pair }: PairViewProps) {
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
-  const { loading: liquidityMiningCampaignsLoading, liquidityMiningCampaigns } = useLiquidityMiningCampaignsForPair(
+  const { loading: pairWithCampaignsLoading, pair: pairWithCampaigns } = usePairWithLiquidityMiningCampaigns(
     pair || undefined
   )
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
-  const overallLoading = useMemo(
-    () => loading || volumeLoading || liquidityLoading || liquidityMiningCampaignsLoading,
-    [liquidityLoading, liquidityMiningCampaignsLoading, loading, volumeLoading]
-  )
+  const overallLoading = useMemo(() => loading || volumeLoading || liquidityLoading || pairWithCampaignsLoading, [
+    liquidityLoading,
+    pairWithCampaignsLoading,
+    loading,
+    volumeLoading
+  ])
 
   return (
     <>
@@ -83,8 +85,8 @@ function PairView({ loading, pair }: PairViewProps) {
               </Text>
             </Box>
           </Flex>
-          <DataRow loading={overallLoading} title="Liquidity:" value={`$${liquidityUSD.decimalPlaces(2).toString()}`} />
-          <DataRow loading={overallLoading} title="Volume:" value={`$${volume24hUSD.decimalPlaces(2).toString()}`} />
+          <DataRow loading={overallLoading} title="Liquidity:" value={`$${liquidityUSD.toFixed(2)}`} />
+          <DataRow loading={overallLoading} title="Volume:" value={`$${volume24hUSD.toFixed(2)}`} />
           <Box mt="18px">
             <FullPositionCard pair={pair || undefined} />
           </Box>
@@ -108,7 +110,10 @@ function PairView({ loading, pair }: PairViewProps) {
                   Create liq. mining
                 </ResponsiveButtonPrimary>
               </TitleRow>
-              <LiquidityMiningCampaignsList items={liquidityMiningCampaigns} stakablePair={pair || undefined} />
+              <LiquidityMiningCampaignsList
+                items={pairWithCampaigns?.liquidityMiningCampaigns || []}
+                stakablePair={pair || undefined}
+              />
             </Flex>
           )}
         </Flex>

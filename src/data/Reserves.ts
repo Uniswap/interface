@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency, Token, RoutablePlatform } from 'dxswap-sdk'
+import { TokenAmount, Pair, Currency, Token, RoutablePlatform, CurrencyAmount, Percent, ChainId } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
@@ -7,11 +7,10 @@ import { useActiveWeb3React } from '../hooks'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { useFeesState } from '../state/fees/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { usePairContract } from '../hooks/useContract'
+import { usePairContract, useTokenContract } from '../hooks/useContract'
 import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
-import BigNumber from 'bignumber.js'
-import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../utils/liquidityMining'
+import { getPairMaximumApy, getPairRemainingRewardsUSD, toLiquidityMiningCampaigns } from '../utils/liquidityMining'
 import { useNativeCurrencyUSDPrice } from '../hooks/useNativeCurrencyUSDPrice'
 import { gql, useQuery } from '@apollo/client'
 import {
@@ -19,7 +18,8 @@ import {
   PairsWithNonExpiredLiquidityMiningCampaignsQueryResult,
   RawToken
 } from '../apollo/queries'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
+import { useNativeCurrency } from '../hooks/useNativeCurrency'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -164,7 +164,9 @@ export function useAllPairs(): { loading: boolean; pairs: Pair[] } {
   }, [chainId, data, error, loading])
 }
 
-export function usePairReserveNativeCurrency(pair?: Pair): { loading: boolean; reserveNativeCurrency: BigNumber } {
+export function usePairReserveNativeCurrency(pair?: Pair): { loading: boolean; reserveNativeCurrency: CurrencyAmount } {
+  const { chainId } = useActiveWeb3React()
+
   interface QueryResult {
     pair: { reserveNativeCurrency: string }
   }
@@ -181,48 +183,36 @@ export function usePairReserveNativeCurrency(pair?: Pair): { loading: boolean; r
   )
 
   return useMemo(() => {
-    if (loading) return { loading: true, reserveNativeCurrency: new BigNumber(0) }
-    if (!data || error) return { loading: false, reserveNativeCurrency: new BigNumber(0) }
+    if (loading)
+      return { loading: true, reserveNativeCurrency: CurrencyAmount.nativeCurrency('0', chainId || ChainId.MAINNET) }
+    if (!data || error || !chainId)
+      return { loading: false, reserveNativeCurrency: CurrencyAmount.nativeCurrency('0', chainId || ChainId.MAINNET) }
     return {
       loading: false,
-      reserveNativeCurrency: new BigNumber(data.pair.reserveNativeCurrency)
+      reserveNativeCurrency: CurrencyAmount.nativeCurrency(data.pair.reserveNativeCurrency, chainId)
     }
-  }, [data, error, loading])
+  }, [data, error, loading, chainId])
 }
 
-export function usePairLiquidityTokenTotalSupply(pair?: Pair): { loading: boolean; supply: BigNumber } {
-  interface QueryResult {
-    pair: { totalSupply: string }
-  }
-
-  const { loading, data, error } = useQuery<QueryResult>(
-    gql`
-      query getPairLiquidityTokenTotalSupply($pairId: ID!) {
-        pair(id: $pairId) {
-          totalSupply
-        }
-      }
-    `,
-    { variables: { pairId: pair?.liquidityToken.address.toLowerCase() } }
-  )
+export function usePairLiquidityTokenTotalSupply(pair?: Pair): TokenAmount | null {
+  const lpTokenContract = useTokenContract(pair?.liquidityToken.address)
+  const totalSupplyResult = useSingleCallResult(lpTokenContract, 'totalSupply')
 
   return useMemo(() => {
-    if (loading) return { loading: true, supply: new BigNumber(0) }
-    if (!data || error) return { loading: false, supply: new BigNumber(0) }
-    return {
-      loading: false,
-      supply: new BigNumber(data.pair.totalSupply)
-    }
-  }, [data, error, loading])
+    if (!pair || !totalSupplyResult.result || totalSupplyResult.result.length === 0) return null
+    const supply = totalSupplyResult.result[0] as BigNumber
+    return new TokenAmount(pair.liquidityToken, supply.toString())
+  }, [pair, totalSupplyResult.result])
 }
 
 export function usePairsByToken0WithRemainingRewardUSDAndMaximumApy(
   token0?: Token | null
 ): {
   loading: boolean
-  wrappedPairs: { pair: Pair; remainingRewardUSD: BigNumber; maximumApy: BigNumber }[]
+  wrappedPairs: { pair: Pair; remainingRewardUSD: CurrencyAmount; maximumApy: Percent }[]
 } {
   const { chainId } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
   const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const { error, loading: loadingPairs, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
@@ -234,37 +224,51 @@ export function usePairsByToken0WithRemainingRewardUSDAndMaximumApy(
     if (!data || error) return { loading: false, wrappedPairs: [] }
     return {
       loading: false,
-      wrappedPairs: data.pairs.map(pair => {
-        const token0 = new Token(
+      wrappedPairs: data.pairs.map(rawPair => {
+        const {
+          token0,
+          token1,
+          reserve0,
+          reserve1,
+          reserveNativeCurrency,
+          totalSupply,
+          liquidityMiningCampaigns
+        } = rawPair
+        const properToken0 = new Token(
           chainId,
-          ethers.utils.getAddress(pair.token0.address),
-          parseInt(pair.token0.decimals),
-          pair.token0.symbol,
-          pair.token0.name
+          ethers.utils.getAddress(token0.address),
+          parseInt(token0.decimals),
+          token0.symbol,
+          token0.name
         )
-        const token1 = new Token(
+        const properToken1 = new Token(
           chainId,
-          ethers.utils.getAddress(pair.token1.address),
-          parseInt(pair.token1.decimals),
-          pair.token1.symbol,
-          pair.token1.name
+          ethers.utils.getAddress(token1.address),
+          parseInt(token1.decimals),
+          token1.symbol,
+          token1.name
         )
+        const pair = new Pair(
+          new TokenAmount(properToken0, ethers.utils.parseUnits(reserve0, token0.decimals).toString()),
+          new TokenAmount(properToken1, ethers.utils.parseUnits(reserve1, token1.decimals).toString())
+        )
+        const campaigns = toLiquidityMiningCampaigns(
+          chainId,
+          pair,
+          totalSupply,
+          reserveNativeCurrency,
+          liquidityMiningCampaigns,
+          nativeCurrency
+        )
+        pair.liquidityMiningCampaigns = campaigns
         return {
-          pair: new Pair(
-            new TokenAmount(token0, ethers.utils.parseUnits(pair.reserve0, token0.decimals).toString()),
-            new TokenAmount(token1, ethers.utils.parseUnits(pair.reserve1, token1.decimals).toString())
-          ),
-          remainingRewardUSD: getPairRemainingRewardsUSD(pair.liquidityMiningCampaigns, nativeCurrencyUSDPrice),
-          maximumApy: getPairMaximumApy(
-            new BigNumber(pair.reserveNativeCurrency),
-            new BigNumber(pair.totalSupply),
-            pair.liquidityMiningCampaigns,
-            nativeCurrencyUSDPrice
-          )
+          pair,
+          remainingRewardUSD: getPairRemainingRewardsUSD(pair, nativeCurrencyUSDPrice),
+          maximumApy: getPairMaximumApy(pair)
         }
       })
     }
-  }, [chainId, data, error, nativeCurrencyUSDPrice, loadingNativeCurrencyUsdPrice, loadingPairs])
+  }, [chainId, loadingPairs, loadingNativeCurrencyUsdPrice, data, error, nativeCurrency, nativeCurrencyUSDPrice])
 }
 
 export function usePairAtAddress(address?: string): Pair | null {

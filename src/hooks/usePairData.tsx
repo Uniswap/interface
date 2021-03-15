@@ -1,13 +1,11 @@
 import { useQuery } from '@apollo/client'
-import BigNumber from 'bignumber.js'
-import { Pair, Token, TokenAmount } from 'dxswap-sdk'
+import { Pair, Token, TokenAmount, CurrencyAmount, USD, Percent } from 'dxswap-sdk'
 import { DateTime } from 'luxon'
 import { useMemo } from 'react'
 import {
   GET_PAIR_24H_VOLUME_USD,
   GET_PAIR_LIQUIDITY_USD,
   GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
-  NonExpiredLiquidityMiningCampaign,
   Pair24hVolumeQueryResult,
   GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
   PairsWithNonExpiredLiquidityMiningCampaignsQueryResult,
@@ -17,13 +15,14 @@ import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../state/user/hooks'
 import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
-import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../utils/liquidityMining'
+import { getPairMaximumApy, getPairRemainingRewardsUSD, toLiquidityMiningCampaigns } from '../utils/liquidityMining'
 import { useNativeCurrencyUSDPrice } from './useNativeCurrencyUSDPrice'
 import { ethers } from 'ethers'
 import { useActiveWeb3React } from '.'
+import { useNativeCurrency } from './useNativeCurrency'
 
-export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; volume24hUSD: BigNumber } {
-  const { loading, data } = useQuery<Pair24hVolumeQueryResult>(GET_PAIR_24H_VOLUME_USD, {
+export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; volume24hUSD: CurrencyAmount } {
+  const { loading, data, error } = useQuery<Pair24hVolumeQueryResult>(GET_PAIR_24H_VOLUME_USD, {
     variables: {
       pairAddress: pair?.liquidityToken.address.toLowerCase(),
       date: DateTime.utc()
@@ -32,20 +31,30 @@ export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; vol
     }
   })
 
-  return { loading, volume24hUSD: new BigNumber(data?.pairDayDatas[0]?.dailyVolumeUSD || 0) }
+  return useMemo(() => {
+    if (loading) return { loading: true, volume24hUSD: new CurrencyAmount(USD, '0') }
+    if (!data || !data.pairDayDatas || data.pairDayDatas.length === 0 || data.pairDayDatas[0] || error)
+      return { loading: false, volume24hUSD: new CurrencyAmount(USD, '0') }
+    return { loading, volume24hUSD: new CurrencyAmount(USD, data.pairDayDatas[0].dailyVolumeUSD) }
+  }, [data, error, loading])
 }
 
-export function usePairLiquidityUSD(pair?: Pair | null): { loading: boolean; liquidityUSD: BigNumber } {
-  const { loading, data } = useQuery(GET_PAIR_LIQUIDITY_USD, {
+export function usePairLiquidityUSD(pair?: Pair | null): { loading: boolean; liquidityUSD: CurrencyAmount } {
+  const { loading, data, error } = useQuery(GET_PAIR_LIQUIDITY_USD, {
     variables: { id: pair?.liquidityToken.address.toLowerCase() }
   })
 
-  return { loading, liquidityUSD: new BigNumber(data?.pair?.reserveUSD || 0) }
+  return useMemo(() => {
+    if (loading) return { loading: true, liquidityUSD: new CurrencyAmount(USD, '0') }
+    if (!data || !data.pair || data.pair.reserveUSD || error)
+      return { loading, liquidityUSD: new CurrencyAmount(USD, '0') }
+    return { loading, liquidityUSD: new CurrencyAmount(USD, data.pair.reserveUSD) }
+  }, [data, error, loading])
 }
 
-export function useLiquidityMiningCampaignsForPair(
-  pair?: Pair
-): { loading: boolean; liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[] } {
+export function usePairWithLiquidityMiningCampaigns(pair?: Pair): { loading: boolean; pair: Pair | undefined } {
+  const { chainId } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
   const { loading, error, data } = useQuery<PairWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
     {
@@ -57,25 +66,32 @@ export function useLiquidityMiningCampaignsForPair(
   )
 
   return useMemo(() => {
-    if (loading) return { loading: true, liquidityMiningCampaigns: [] }
-    if (error) return { loading: false, liquidityMiningCampaigns: [] }
+    if (loading) return { loading: true, pair }
+    if (!data || error || !chainId || !pair) return { loading: false, pair }
+    // data used to calculate the price of the LP token
+    const campaigns = toLiquidityMiningCampaigns(
+      chainId,
+      pair,
+      data.pair.totalSupply,
+      data.pair.reserveNativeCurrency,
+      data.pair.liquidityMiningCampaigns,
+      nativeCurrency
+    )
+    // updating reference pair and attaching the found liquidity mining campaigns
+    pair.liquidityMiningCampaigns = campaigns
     return {
       loading: false,
-      liquidityMiningCampaigns: data ? data.pair.liquidityMiningCampaigns : []
+      pair: pair
     }
-  }, [data, error, loading])
+  }, [chainId, data, error, loading, nativeCurrency, pair])
 }
 
 export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
   loading: boolean
-  wrappedPairs: {
-    pair: Pair
-    liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[]
-    reserveNativeCurrency: BigNumber
-    totalSupply: BigNumber
-  }[]
+  pairs: Pair[]
 } {
   const memoizedTimestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
+  const nativeCurrency = useNativeCurrency()
   const { chainId } = useActiveWeb3React()
   const { loading, error, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
@@ -83,52 +99,55 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
   )
 
   return useMemo(() => {
-    if (loading) return { loading: true, wrappedPairs: [] }
-    if (error || !data || !chainId) return { loading: false, wrappedPairs: [] }
+    if (loading) return { loading: true, pairs: [] }
+    if (error || !data || !chainId) return { loading: false, pairs: [] }
     return {
       loading: false,
-      wrappedPairs: data.pairs.reduce(
-        (
-          accumulator: {
-            pair: Pair
-            liquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[]
-            reserveNativeCurrency: BigNumber
-            totalSupply: BigNumber
-          }[],
-          pair
-        ) => {
-          const tokenAmountA = new TokenAmount(
-            new Token(
-              chainId,
-              ethers.utils.getAddress(pair.token0.address),
-              parseInt(pair.token0.decimals),
-              pair.token0.symbol,
-              pair.token0.name
-            ),
-            ethers.utils.parseUnits(pair.reserve0, pair.token0.decimals).toString()
-          )
-          const tokenAmountB = new TokenAmount(
-            new Token(
-              chainId,
-              ethers.utils.getAddress(pair.token1.address),
-              parseInt(pair.token1.decimals),
-              pair.token1.symbol,
-              pair.token1.name
-            ),
-            ethers.utils.parseUnits(pair.reserve1, pair.token1.decimals).toString()
-          )
-          accumulator.push({
-            pair: new Pair(tokenAmountA, tokenAmountB),
-            liquidityMiningCampaigns: pair.liquidityMiningCampaigns,
-            reserveNativeCurrency: new BigNumber(pair.reserveNativeCurrency),
-            totalSupply: new BigNumber(pair.totalSupply)
-          })
-          return accumulator
-        },
-        []
-      )
+      pairs: data.pairs.map(rawPair => {
+        const {
+          reserveNativeCurrency,
+          totalSupply,
+          token0,
+          token1,
+          reserve0,
+          reserve1,
+          liquidityMiningCampaigns
+        } = rawPair
+        const tokenAmountA = new TokenAmount(
+          new Token(
+            chainId,
+            ethers.utils.getAddress(token0.address),
+            parseInt(token0.decimals),
+            token0.symbol,
+            token0.name
+          ),
+          ethers.utils.parseUnits(reserve0, token0.decimals).toString()
+        )
+        const tokenAmountB = new TokenAmount(
+          new Token(
+            chainId,
+            ethers.utils.getAddress(token1.address),
+            parseInt(token1.decimals),
+            token1.symbol,
+            token1.name
+          ),
+          ethers.utils.parseUnits(reserve1, token1.decimals).toString()
+        )
+        const pair = new Pair(tokenAmountA, tokenAmountB)
+
+        const campaigns = toLiquidityMiningCampaigns(
+          chainId,
+          pair,
+          totalSupply,
+          reserveNativeCurrency,
+          liquidityMiningCampaigns,
+          nativeCurrency
+        )
+        pair.liquidityMiningCampaigns = campaigns
+        return pair
+      }, [])
     }
-  }, [chainId, data, error, loading])
+  }, [chainId, data, error, loading, nativeCurrency])
 }
 
 export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(
@@ -139,16 +158,13 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
     token0: Token
     lpTokensBalance: TokenAmount
     pairs: Pair[]
-    remainingRewardsUSD: BigNumber
-    maximumApy: BigNumber
+    remainingRewardsUSD: CurrencyAmount
+    maximumApy: Percent
   }[]
 } {
   const { account } = useActiveWeb3React()
   const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
-  const {
-    loading: loadingAllPairs,
-    wrappedPairs: allWrappedPairs
-  } = useAllPairsWithNonExpiredLiquidityMiningCampaigns()
+  const { loading: loadingAllPairs, pairs: allPairs } = useAllPairsWithNonExpiredLiquidityMiningCampaigns()
   const trackedPairs = useTrackedTokenPairs()
   const trackedPairsWithLiquidityTokens = useMemo(
     () => trackedPairs.map(tokens => ({ liquidityToken: toDXSwapLiquidityToken(tokens), tokens })),
@@ -172,34 +188,29 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
         token0: Token
         lpTokensBalance: TokenAmount
         pairs: Pair[]
-        remainingRewardsUSD: BigNumber
-        maximumApy: BigNumber
+        remainingRewardsUSD: CurrencyAmount
+        maximumApy: Percent
       }
     } = {}
-    for (let i = 0; i < allWrappedPairs.length; i++) {
-      const { pair, liquidityMiningCampaigns, reserveNativeCurrency, totalSupply } = allWrappedPairs[i]
+    for (let i = 0; i < allPairs.length; i++) {
+      const pair = allPairs[i]
       const liquidityTokenAddress = pair.liquidityToken.address
-      const remainingRewardsUSD = getPairRemainingRewardsUSD(liquidityMiningCampaigns, nativeCurrencyUSDPrice)
+      const remainingRewardsUSD = getPairRemainingRewardsUSD(pair, nativeCurrencyUSDPrice)
       let mappedValue = aggregationMap[pair.token0.address]
       if (!!!mappedValue) {
         mappedValue = {
           token0: pair.token0,
           lpTokensBalance: new TokenAmount(pair.liquidityToken, '0'),
           pairs: [],
-          remainingRewardsUSD: new BigNumber(0),
-          maximumApy: new BigNumber(0)
+          remainingRewardsUSD: new CurrencyAmount(USD, '0'),
+          maximumApy: new CurrencyAmount(USD, '0')
         }
         aggregationMap[pair.token0.address] = mappedValue
       }
       mappedValue.pairs.push(pair)
-      mappedValue.remainingRewardsUSD = mappedValue.remainingRewardsUSD.plus(remainingRewardsUSD)
-      const apy = getPairMaximumApy(
-        reserveNativeCurrency,
-        totalSupply,
-        liquidityMiningCampaigns,
-        nativeCurrencyUSDPrice
-      )
-      if (apy.isGreaterThan(mappedValue.maximumApy)) {
+      mappedValue.remainingRewardsUSD = mappedValue.remainingRewardsUSD.add(remainingRewardsUSD)
+      const apy = getPairMaximumApy(pair)
+      if (apy.greaterThan(mappedValue.maximumApy)) {
         mappedValue.maximumApy = apy
       }
       const lpTokenBalance = trackedLpTokenBalances[liquidityTokenAddress]
@@ -212,7 +223,7 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
     if (filter !== PairsFilterType.ALL) {
       filteredData = filteredData.filter(data => {
         // TODO: fully implement filtering
-        return filter === PairsFilterType.REWARDS ? data.remainingRewardsUSD.isGreaterThan(0) : true
+        return filter === PairsFilterType.REWARDS ? data.remainingRewardsUSD.greaterThan('0') : true
       })
     }
     return {
@@ -220,7 +231,7 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
       aggregatedData: filteredData.sort(sorter)
     }
   }, [
-    allWrappedPairs,
+    allPairs,
     nativeCurrencyUSDPrice,
     filter,
     loadingAllPairs,

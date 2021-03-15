@@ -162,6 +162,8 @@ export interface PairWithNonExpiredLiquidityMiningCampaignsQueryResult {
 export const GET_PAIR_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS = gql`
   query($id: ID!, $timestamp: BigInt!) {
     pair(id: $id) {
+      reserveNativeCurrency
+      totalSupply
       liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
         address: id
         duration

@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js'
 import { Pair, Token, TokenAmount } from 'dxswap-sdk'
+import { CurrencyAmount } from 'dxswap-sdk/dist/entities/fractions/currencyAmount'
 import { useCallback, useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
@@ -79,13 +79,13 @@ export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: T
 }
 
 export function useAggregatedByToken0PairComparator(): (
-  pairA: { remainingRewardsUSD: BigNumber },
-  pairB: { remainingRewardsUSD: BigNumber }
+  pairA: { remainingRewardsUSD: CurrencyAmount },
+  pairB: { remainingRewardsUSD: CurrencyAmount }
 ) => number {
   return useCallback((pairA, pairB): number => {
     // sort by rewards
-    if (pairA.remainingRewardsUSD.isEqualTo(pairB.remainingRewardsUSD)) return 0
-    return pairA.remainingRewardsUSD.isLessThan(pairB.remainingRewardsUSD) ? 1 : -1
+    if (pairA.remainingRewardsUSD.equalTo(pairB.remainingRewardsUSD)) return 0
+    return pairA.remainingRewardsUSD.lessThan(pairB.remainingRewardsUSD) ? 1 : -1
   }, [])
 }
 

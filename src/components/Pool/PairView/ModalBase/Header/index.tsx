@@ -1,4 +1,4 @@
-import { Pair, Percent, Rounding, TokenAmount } from 'dxswap-sdk'
+import { Pair, Percent, CurrencyAmount, Rounding, TokenAmount } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { AutoColumn } from '../../../../Column'
@@ -10,8 +10,8 @@ import DoubleCurrencyLogo from '../../../../DoubleLogo'
 
 interface ConfirmStakeModalHeaderProps {
   stakablePair?: Pair | null
-  amount: TokenAmount | null
-  maximumAmount?: TokenAmount
+  amount: CurrencyAmount | null
+  maximumAmount?: CurrencyAmount
   onAmountChange: (amount: TokenAmount) => void
 }
 
@@ -32,7 +32,7 @@ export default function ConfirmStakingWithdrawingModalHeader({
           stakablePair.liquidityToken,
           parseUnits(
             maximumAmount.multiply(new Percent(percentage, '100')).toFixed(18, undefined, Rounding.ROUND_DOWN),
-            maximumAmount.token.decimals
+            maximumAmount.currency.decimals
           ).toString()
         )
       )
