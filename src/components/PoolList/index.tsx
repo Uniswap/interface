@@ -103,15 +103,21 @@ interface UserLiquidityPosition {
   }
 }
 
+interface PoolDayData {
+  poolAddress: string
+  dailyFeeUSD: string
+}
+
 interface ListItemProps {
   pool: Pair
   subgraphPoolData: SubgraphPoolData
   myLiquidity?: UserLiquidityPosition
+  poolDayData?: PoolDayData
   oddRow?: boolean
 }
 
-const getOneYearFL = (liquidity: string, feeOneDay: string) => {
-  return parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
+const getOneYearFL = (liquidity: string, feeOneDay?: string): number => {
+  return !feeOneDay || parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
 }
 
 const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 => {
@@ -130,7 +136,7 @@ const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 =
   return formattedNum(myLiquidity.toString(), true)
 }
 
-const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
+const ListItem = ({ pool, subgraphPoolData, myLiquidity, poolDayData, oddRow }: ListItemProps) => {
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
 
   // Recommended pools are pools that have AMP = 1 or is registered by kyber DAO in a whitelist contract
@@ -152,7 +158,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
   const currency0 = unwrappedToken(pool.token0)
   const currency1 = unwrappedToken(pool.token1)
 
-  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, subgraphPoolData.feeUSD).toFixed(2)
+  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, poolDayData?.dailyFeeUSD).toFixed(2)
 
   return (
     <TableRow oddRow={oddRow}>
@@ -173,7 +179,9 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
       </DataText>
       <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
       <DataText grid-area="vol">{formattedNum(subgraphPoolData.volumeUSD, true)}</DataText>
-      <DataText>{formattedNum(subgraphPoolData.feeUSD, true)}</DataText>
+      <DataText>
+        {poolDayData?.dailyFeeUSD ? formattedNum(poolDayData.dailyFeeUSD, true) : formattedNum('0', true)}
+      </DataText>
       <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
       <DataText>{`${oneYearFL}%`}</DataText>
       <DataText>{getMyLiquidity(myLiquidity)}</DataText>
@@ -197,6 +205,7 @@ interface PoolListProps {
   poolsList: (Pair | null)[]
   subgraphPoolsData: SubgraphPoolData[]
   userLiquidityPositions: UserLiquidityPosition[]
+  poolDayData: PoolDayData[]
   maxItems?: number
 }
 
@@ -208,7 +217,13 @@ const SORT_FIELD = {
   ONE_YEAR_FL: 3
 }
 
-const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
+const PoolList = ({
+  poolsList,
+  subgraphPoolsData,
+  userLiquidityPositions,
+  poolDayData,
+  maxItems = 10
+}: PoolListProps) => {
   const { t } = useTranslation()
 
   const transformedSubgraphPoolsData: {
@@ -217,6 +232,10 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
 
   const transformedUserLiquidityPositions: {
     [key: string]: UserLiquidityPosition
+  } = {}
+
+  const transformedPoolDayData: {
+    [key: string]: PoolDayData
   } = {}
 
   subgraphPoolsData.forEach(data => {
@@ -230,6 +249,10 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     ) {
       transformedUserLiquidityPositions[position.pool.id] = position
     }
+  })
+
+  poolDayData.forEach(record => {
+    transformedPoolDayData[record.poolAddress] = record
   })
 
   // pagination
@@ -443,6 +466,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
                 pool={pool}
                 subgraphPoolData={transformedSubgraphPoolsData[pool.address.toLowerCase()]}
                 myLiquidity={transformedUserLiquidityPositions[pool.address.toLowerCase()]}
+                poolDayData={transformedPoolDayData[pool.address.toLowerCase()]}
                 oddRow={(index + 1) % 2 !== 0}
               />
             )
