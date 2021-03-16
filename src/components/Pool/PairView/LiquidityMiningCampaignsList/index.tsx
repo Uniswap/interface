@@ -42,7 +42,6 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
   const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const [selectedCampaign, setSelectedCampaign] = useState<LiquidityMiningCampaign | null>(null)
-  console.log(stakableTokenBalance)
 
   const handleLiquidityMiningCampaignModalDismiss = useCallback(() => {
     setSelectedCampaign(null)
