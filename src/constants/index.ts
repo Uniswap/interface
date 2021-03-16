@@ -41,54 +41,46 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
+export const HONEY = new Token(ChainId.XDAI, '0x71850b7e9ee3f13ab46d67167341e4bdc905eef9', 18, 'HNY', 'Honey')
+export const STAKE = new Token(
+  ChainId.XDAI,
+  '0xb7D311E2Eb55F2f68a9440da38e7989210b9A05e',
+  18,
+  'STAKE',
+  'Stake Token on xDai'
+)
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: [
-    WETH[ChainId.MAINNET],
-    DXD[ChainId.MAINNET],
-    DAI[ChainId.MAINNET],
-    USDC[ChainId.MAINNET],
-    USDT[ChainId.MAINNET],
-    COMP,
-    MKR
-  ],
-  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY], DAI[ChainId.RINKEBY], USDC[ChainId.RINKEBY], USDT[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [Token.WETH[ChainId.ARBITRUM_TESTNET_V3]],
+  [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI[ChainId.MAINNET], USDC[ChainId.MAINNET], USDT[ChainId.MAINNET], COMP, MKR],
+  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
+  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
   [ChainId.SOKOL]: [WSPOA[ChainId.SOKOL]],
-  [ChainId.XDAI]: [WXDAI[ChainId.XDAI]]
+  [ChainId.XDAI]: [WXDAI[ChainId.XDAI], WETH[ChainId.XDAI], HONEY, STAKE]
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
-  [ChainId.MAINNET]: [Token.WETH[ChainId.MAINNET], DAI[ChainId.MAINNET], USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
-  [ChainId.RINKEBY]: [Token.WETH[ChainId.RINKEBY], DAI[ChainId.RINKEBY], USDC[ChainId.RINKEBY], USDT[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [Token.WETH[ChainId.ARBITRUM_TESTNET_V3]],
-  [ChainId.SOKOL]: [Token.WSPOA[ChainId.SOKOL]],
-  [ChainId.XDAI]: [Token.WXDAI[ChainId.XDAI]]
+  [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DAI[ChainId.MAINNET], USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
+  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
+  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
+  [ChainId.SOKOL]: [WSPOA[ChainId.SOKOL]],
+  [ChainId.XDAI]: [WXDAI[ChainId.XDAI], WETH[ChainId.XDAI], HONEY, STAKE]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
-  [ChainId.MAINNET]: [Token.WETH[ChainId.MAINNET], DAI[ChainId.MAINNET], USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
-  [ChainId.RINKEBY]: [Token.WETH[ChainId.RINKEBY], DAI[ChainId.RINKEBY], USDC[ChainId.RINKEBY], USDT[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [Token.WETH[ChainId.ARBITRUM_TESTNET_V3]],
-  [ChainId.SOKOL]: [Token.WSPOA[ChainId.SOKOL]],
-  [ChainId.XDAI]: [Token.WXDAI[ChainId.XDAI]]
+  [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DAI[ChainId.MAINNET], USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
+  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY], DAI[ChainId.RINKEBY], USDC[ChainId.RINKEBY], USDT[ChainId.RINKEBY]],
+  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
+  [ChainId.SOKOL]: [WSPOA[ChainId.SOKOL]],
+  [ChainId.XDAI]: [WXDAI[ChainId.XDAI], WETH[ChainId.XDAI], HONEY, STAKE]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
   [ChainId.MAINNET]: [
-    [
-      new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
-      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')
-    ],
     [USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
     [DAI[ChainId.MAINNET], USDT[ChainId.MAINNET]]
-  ],
-  [ChainId.RINKEBY]: [
-    [USDC[ChainId.RINKEBY], USDT[ChainId.RINKEBY]],
-    [DAI[ChainId.RINKEBY], USDT[ChainId.RINKEBY]]
   ]
 }
 

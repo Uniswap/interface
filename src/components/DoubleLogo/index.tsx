@@ -3,20 +3,22 @@ import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
 
-const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
+const Wrapper = styled.div<{ sizeraw: number; marginRight: number; marginLeft: number }>`
   position: relative;
   display: flex;
   justify-content: flex-end;
   flex-direction: row;
-  width: ${props => props.sizeraw * 2 - 8}px; // -8 enforces the overlapping of the icons by 8 pixels
-  height: ${props => props.sizeraw}px;
-  margin-right: ${({ sizeraw, margin }) => margin && (sizeraw / 3 + 8).toString() + 'px'};
+  height: ${({ sizeraw }) => sizeraw}px;
+  width: ${({ sizeraw }) => (sizeraw * 2 - sizeraw / 2).toString() + 'px'};
+  margin-right: ${({ marginRight }) => marginRight}px;
+  margin-left: ${({ marginLeft }) => marginLeft}px;
 `
 
 interface DoubleCurrencyLogoProps {
-  margin?: boolean
   size?: number
   loading?: boolean
+  marginRight?: number
+  marginLeft?: number
   currency0?: Currency
   currency1?: Currency
 }
@@ -25,7 +27,7 @@ const HigherLogo = styled(CurrencyLogo)`
   z-index: 2;
 `
 
-const CoveredLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
+const CoveredLogo = styled(CurrencyLogo)`
   position: absolute;
   left: 0 !important;
 `
@@ -35,12 +37,13 @@ export default function DoubleCurrencyLogo({
   currency1,
   loading,
   size = 16,
-  margin = false
+  marginRight = 0,
+  marginLeft = 0
 }: DoubleCurrencyLogoProps) {
   return (
-    <Wrapper sizeraw={size} margin={margin}>
+    <Wrapper sizeraw={size} marginRight={marginRight} marginLeft={marginLeft}>
       <HigherLogo loading={loading} currency={currency0} size={size.toString() + 'px'} />
-      <CoveredLogo loading={loading} currency={currency1} size={size.toString() + 'px'} sizeraw={size} />
+      <CoveredLogo loading={loading} currency={currency1} size={size.toString() + 'px'} />
     </Wrapper>
   )
 }

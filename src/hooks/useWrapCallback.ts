@@ -57,7 +57,11 @@ export default function useWrapCallback(
                   const txReceipt = await nativeCurrencyWrapperContract.deposit({
                     value: `0x${inputAmount.raw.toString(16)}`
                   })
-                  addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to WETH` })
+                  addTransaction(txReceipt, {
+                    summary: `Wrap ${inputAmount.toSignificant(6)} ${nativeCurrency.symbol} to ${
+                      nativeCurrencyWrapperToken.symbol
+                    }`
+                  })
                 } catch (error) {
                   console.error('Could not deposit', error)
                 }
@@ -68,7 +72,7 @@ export default function useWrapCallback(
     } else if (
       nativeCurrencyWrapperToken &&
       currencyEquals(nativeCurrencyWrapperToken, inputCurrency) &&
-      Currency.isNative(outputCurrency)
+      outputCurrency === nativeCurrency
     ) {
       return {
         wrapType: WrapType.UNWRAP,
@@ -77,7 +81,11 @@ export default function useWrapCallback(
             ? async () => {
                 try {
                   const txReceipt = await nativeCurrencyWrapperContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
-                  addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} WETH to ETH` })
+                  addTransaction(txReceipt, {
+                    summary: `Unwrap ${inputAmount.toSignificant(6)} ${nativeCurrencyWrapperToken.symbol} to ${
+                      nativeCurrency.symbol
+                    }`
+                  })
                 } catch (error) {
                   console.error('Could not withdraw', error)
                 }
@@ -96,6 +104,7 @@ export default function useWrapCallback(
     inputAmount,
     balance,
     nativeCurrencyWrapperToken,
+    nativeCurrency,
     addTransaction
   ])
 }
