@@ -10,6 +10,8 @@ import { getRemainingRewardsUSD } from '../../../../utils/liquidityMining'
 import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'
 import LoadingList from '../../LoadingList'
 import { usePage } from '../../../../hooks/usePage'
+import { useTokenBalance } from '../../../../state/wallet/hooks'
+import { useActiveWeb3React } from '../../../../hooks'
 
 const ListLayout = styled.div`
   display: grid;
@@ -34,10 +36,13 @@ interface LiquidityMiningCampaignsListProps {
 const ITEMS_PER_PAGE = 9
 
 export default function LiquidityMiningCampaignsList({ stakablePair, items }: LiquidityMiningCampaignsListProps) {
+  const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
   const itemsPage = usePage(items, ITEMS_PER_PAGE, page, 0)
+  const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
   const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const [selectedCampaign, setSelectedCampaign] = useState<LiquidityMiningCampaign | null>(null)
+  console.log(stakableTokenBalance)
 
   const handleLiquidityMiningCampaignModalDismiss = useCallback(() => {
     setSelectedCampaign(null)
@@ -78,12 +83,12 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
           <Pagination page={page} totalItems={items.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={setPage} />
         </Box>
       </Flex>
-      {selectedCampaign && (
+      {selectedCampaign && stakableTokenBalance && (
         <LiquidityMiningCampaignModal
           show={!!selectedCampaign}
           onDismiss={handleLiquidityMiningCampaignModalDismiss}
           campaign={selectedCampaign}
-          campaignAddress={''}
+          stakableTokenBalance={stakableTokenBalance}
         />
       )}
     </>

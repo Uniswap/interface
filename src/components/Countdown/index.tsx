@@ -8,7 +8,7 @@ const Root = styled.div`
   background: linear-gradient(113.18deg, #ffffff -0.1%, rgba(0, 0, 0, 0) 98.9%), #28263f;
   background-blend-mode: overlay, normal;
   border-radius: 4px;
-  padding: 0px 3px;
+  padding: 2px 3px;
 `
 
 const Text = styled.div`

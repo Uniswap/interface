@@ -6,7 +6,6 @@ import { useActiveWeb3React } from '../../../../hooks'
 import { useLiquidityMiningActionCallbacks } from '../../../../hooks/useLiquidityMiningActionCallbacks'
 import { useLiquidityMiningCampaignPosition } from '../../../../hooks/useLiquidityMiningCampaignPosition'
 import { useTransactionAdder } from '../../../../state/transactions/hooks'
-import { useTokenBalance } from '../../../../state/wallet/hooks'
 import { TYPE } from '../../../../theme'
 import { ButtonDark } from '../../../Button'
 import { AutoColumn } from '../../../Column'
@@ -26,19 +25,18 @@ const Wrapper = styled.div`
 interface LiquidityMiningCampaignProps {
   show: boolean
   onDismiss: () => void
-  campaignAddress: string
   campaign: LiquidityMiningCampaign
+  stakableTokenBalance: TokenAmount
 }
 
 export function LiquidityMiningCampaignModal({
   show,
-  campaignAddress,
   onDismiss,
-  campaign
+  campaign,
+  stakableTokenBalance
 }: LiquidityMiningCampaignProps) {
   const { account } = useActiveWeb3React()
-  const callbacks = useLiquidityMiningActionCallbacks(campaignAddress)
-  const stakableTokenBalance = useTokenBalance(account ?? undefined, campaign.staked.token)
+  const callbacks = useLiquidityMiningActionCallbacks(campaign.address)
   const { stakedTokenAmount, claimableRewardAmounts } = useLiquidityMiningCampaignPosition(
     campaign,
     account ?? undefined
@@ -201,13 +199,13 @@ export function LiquidityMiningCampaignModal({
           )}
         </AutoColumn>
       </Wrapper>
-      {campaignAddress && (
+      {campaign.address && (
         <ConfirmStakingModal
           isOpen={showStakingConfirmationModal}
           stakableTokenBalance={stakableTokenBalance}
           onDismiss={handleDismiss}
           stakablePair={campaign.targetedPair}
-          distributionContractAddress={campaignAddress}
+          distributionContractAddress={campaign.address}
           attemptingTxn={attemptingTransaction}
           errorMessage={errorMessage}
           onConfirm={handleStakeConfirmation}
