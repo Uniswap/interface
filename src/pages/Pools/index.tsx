@@ -18,6 +18,7 @@ import { useSubgraphPoolsData, useUserLiquidityPositions } from 'state/pool/hook
 import { Field } from 'state/pair/actions'
 import { currencyId } from 'utils/currencyId'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
+import { getYesterdayMidnightEpoch } from 'utils/dmm'
 
 const PageWrapper = styled.div`
   padding: 0 10em;
@@ -76,7 +77,8 @@ const Pools = ({
   const { currencies, pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
   const { loading: loadingSubgraphPoolsData, data: subgraphPoolsData } = useSubgraphPoolsData(
     wrappedCurrency(currencyA ?? undefined, chainId),
-    wrappedCurrency(currencyB ?? undefined, chainId)
+    wrappedCurrency(currencyB ?? undefined, chainId),
+    getYesterdayMidnightEpoch()
   )
 
   const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
@@ -163,6 +165,7 @@ const Pools = ({
               poolsList={poolsList}
               subgraphPoolsData={subgraphPoolsData.pools}
               userLiquidityPositions={userLiquidityPositions.liquidityPositionSnapshots}
+              poolDayData={subgraphPoolsData.poolDayDatas}
               maxItems={50}
             />
           ) : (

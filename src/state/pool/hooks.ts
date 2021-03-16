@@ -9,12 +9,13 @@ import { Token } from 'libs/sdk/src'
  * @param tokenA Token | undefined
  * @param tokenB Token | undefined
  */
-export function useSubgraphPoolsData(tokenA: Token | undefined, tokenB: Token | undefined) {
+export function useSubgraphPoolsData(tokenA: Token | undefined, tokenB: Token | undefined, date: number) {
   const poolTokenAddresses = [tokenA?.address.toLowerCase(), tokenB?.address.toLowerCase()]
 
   const { loading, error, data } = useQuery(POOLS_DATA_QUERY, {
     variables: {
-      poolTokenAddresses
+      poolTokenAddresses,
+      date
     }
   })
 

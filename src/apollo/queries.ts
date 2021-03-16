@@ -33,13 +33,24 @@ const PoolFields = `
   }
 `
 
+const PoolDayDataFields = `
+fragment PoolDayDataFields on PoolDayData {
+  poolAddress
+  dailyFeeUSD
+}
+`
+
 export const POOLS_DATA_QUERY = gql`
-  query pools($poolTokenAddresses: [String!]!) {
+  query poolsData($poolTokenAddresses: [String!]!, $date: Int!) {
     pools(where: { token0_in: $poolTokenAddresses, token1_in: $poolTokenAddresses }) {
       ...PoolFields
     }
+    poolDayDatas(where: { date: $date, token0_in: $poolTokenAddresses, token1_in: $poolTokenAddresses }) {
+      ...PoolDayDataFields
+    }
   }
   ${PoolFields}
+  ${PoolDayDataFields}
 `
 
 export const USER_LIQUIDITY_POSITION_SNAPSHOTS = gql`
