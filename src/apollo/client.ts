@@ -11,5 +11,9 @@ export const subgraphClients: { [chainId in ChainId]?: ApolloClient<NormalizedCa
   [ChainId.RINKEBY]: new ApolloClient({
     uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr_rinkeby',
     cache: new InMemoryCache()
+  }),
+  [ChainId.XDAI]: new ApolloClient({
+    uri: 'https://api.thegraph.com/subgraphs/name/luzzif/swapr-xdai',
+    cache: new InMemoryCache()
   })
 }
