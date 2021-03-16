@@ -12,6 +12,7 @@ import {
   PricedToken,
   PricedTokenAmount
 } from 'dxswap-sdk'
+import { ethers } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { NonExpiredLiquidityMiningCampaign } from '../apollo/queries'
 import { ZERO_USD } from '../constants'
@@ -117,7 +118,7 @@ export function toLiquidityMiningCampaigns(
       rewards,
       staked,
       campaign.locked,
-      campaign.address
+      ethers.utils.getAddress(campaign.address) // checksum address to avoid warnings
     )
   })
 }
