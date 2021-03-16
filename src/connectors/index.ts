@@ -6,26 +6,25 @@ import { PortisConnector } from '@web3-react/portis-connector'
 
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
-import { ChainId } from '@fuseio/fuse-swap-sdk'
+import { unwrapOrThrow } from '../utils'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
-const ROPSTEN_NETWORK_URL = process.env.REACT_APP_ROPSTEN_NETWORK_URL
-const MAINNET_NETWORK_URL = process.env.REACT_APP_MAINNET_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
 export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
 
+export const ETHEREUM_CHAIN_ID = parseInt(unwrapOrThrow('ETHEREUM_CHAIN_ID'))
+const ETHEREUM_NETWORK_URL = unwrapOrThrow('ETHEREUM_NETWORK_URL')
+const BINANCE_NETWORK_URL = unwrapOrThrow('BINANCE_NETWORK_URL')
+const BINANCE_CHAIN_ID = parseInt(unwrapOrThrow('BINANCE_CHAIN_ID'))
+
 if (typeof NETWORK_URL === 'undefined') {
   throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)
 }
 
-if (typeof ROPSTEN_NETWORK_URL === 'undefined') {
-  throw new Error(`REACT_APP_ROPSTEN_NETWORK_URL must be a defined environment variable`)
-}
-
-if (typeof MAINNET_NETWORK_URL === 'undefined') {
-  throw new Error(`REACT_APP_MAINNET_NETWORK_URL must be a defined environment variable`)
+if (typeof BINANCE_NETWORK_URL === 'undefined') {
+  throw new Error('REACT_APP_BINANCE_NETWORK_URL must be a defined environment variable')
 }
 
 export const network = new NetworkConnector({
@@ -46,10 +45,10 @@ function buildNetworkLibrary(url: string, chainId: number) {
 
 export const getChainNetworkLibrary = (chainId: number) => {
   switch (chainId) {
-    case ChainId.MAINNET:
-      return buildNetworkLibrary(MAINNET_NETWORK_URL, chainId)
-    case ChainId.ROPSTEN:
-      return buildNetworkLibrary(ROPSTEN_NETWORK_URL, chainId)
+    case ETHEREUM_CHAIN_ID:
+      return buildNetworkLibrary(ETHEREUM_NETWORK_URL, chainId)
+    case BINANCE_CHAIN_ID:
+      return buildNetworkLibrary(BINANCE_NETWORK_URL, chainId)
     default:
       // fuse network library
       return getNetworkLibrary()
@@ -57,12 +56,12 @@ export const getChainNetworkLibrary = (chainId: number) => {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 122]
+  supportedChainIds: [ETHEREUM_CHAIN_ID, 122, BINANCE_CHAIN_ID]
 })
 
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
-  rpc: { 1: MAINNET_NETWORK_URL },
+  rpc: { [ETHEREUM_CHAIN_ID]: ETHEREUM_NETWORK_URL },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   pollingInterval: 15000
@@ -82,7 +81,7 @@ export const portis = new PortisConnector({
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
-  url: MAINNET_NETWORK_URL,
+  url: ETHEREUM_NETWORK_URL,
   appName: 'Uniswap',
   appLogoUrl:
     'https://mpng.pngfly.com/20181202/bex/kisspng-emoji-domain-unicorn-pin-badges-sticker-unicorn-tumblr-emoji-unicorn-iphoneemoji-5c046729264a77.5671679315437924251569.jpg'

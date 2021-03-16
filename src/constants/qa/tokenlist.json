@@ -1,0 +1,44 @@
+{
+    "name": "FuseSwap Test List",
+    "timestamp": "2021-03-14T13:12:36.849Z",
+    "version": {
+      "major": 1,
+      "minor": 3,
+      "patch": 0
+    },
+    "tags": {},
+    "logoURI": "ipfs://QmQQGd3Kbb8fhxKQLvzPPngzBGd5aydV3QAigLHy53Hr3g",
+    "keywords": [
+      "fuseswap",
+      "fuse",
+      "default"
+    ],
+    "tokens": [
+      {
+        "name": "Test Two on Fuse",
+        "address": "0xb681dF9480834653eA7C3e4519d8795aD26FAcFa",
+        "symbol": "T2",
+        "decimals": 18,
+        "chainId": 122,
+        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdd974D5C2e2928deA5F71b9825b8b646686BD200/logo.png",
+        "isMultiBridge": true
+      },
+      {
+        "name": "Test One on Fuse",
+        "address": "0x60C6f3CCb47f2c8d8e3943eBe956A1d6CE19C43E",
+        "symbol": "T1",
+        "decimals": 18,
+        "chainId": 122,
+        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdd974D5C2e2928deA5F71b9825b8b646686BD200/logo.png"
+      },
+      {
+        "name": "Test One on Fuse Deprecated",
+        "address": "0xc3CD52374F32fd381Db83939985E6ed2ff4A0549",
+        "symbol": "T1D",
+        "decimals": 18,
+        "chainId": 122,
+        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdd974D5C2e2928deA5F71b9825b8b646686BD200/logo.png",
+        "isDeprecated": true
+      }
+    ]
+  }

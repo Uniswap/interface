@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { ThemeContext } from 'styled-components'
-import { Pair, ChainId } from '@fuseio/fuse-swap-sdk'
+import { Pair } from '@fuseio/fuse-swap-sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -15,7 +15,7 @@ import { RowBetween } from '../../components/Row'
 import { ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import AppBody from '../AppBody'
@@ -24,7 +24,9 @@ import SwitchNetwork from '../../components/swap/SwitchNetwork'
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
+
+  const { isHome } = useChain()
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
@@ -57,7 +59,7 @@ export default function Pool() {
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
-  if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
+  if (!isHome) {
     return (
       <>
         <AppBody>

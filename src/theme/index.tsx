@@ -60,9 +60,10 @@ export function colors(darkMode: boolean): Colors {
     bg9: '#212429',
     bg10: '#041E2F',
     bg11: '#001A2A',
+    bg12: '#042438',
 
     //specialty colors
-    modalBG: 'rgba(0,0,0,.425)',
+    modalBG: 'rgba(0,0,0,.7)',
     advancedBG: 'rgba(0,0,0,0.1)',
 
     //primary colors
@@ -85,11 +86,15 @@ export function colors(darkMode: boolean): Colors {
     red2: '#F82D3A',
     green1: '#27AE60',
     yellow1: '#FFE270',
-    yellow2: '#F3841E'
+    yellow2: '#F3841E',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+
+    // brand
+    ethereum: '#627EEA',
+    binance: '#F2BE12'
   }
 }
 

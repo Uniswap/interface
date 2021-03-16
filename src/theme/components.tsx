@@ -111,8 +111,9 @@ export function ExternalLink({
   target = '_blank',
   href,
   rel = 'noopener noreferrer',
+  fontSize,
   ...rest
-}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
+}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string; fontSize?: number }) {
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLAnchorElement>) => {
       // don't prevent default, don't redirect if it's a new tab
@@ -130,7 +131,7 @@ export function ExternalLink({
     },
     [href, target]
   )
-  return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
+  return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} style={{ fontSize }} {...rest} />
 }
 
 const rotate = keyframes`

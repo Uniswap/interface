@@ -1,16 +1,20 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
-import { TokenList } from '@uniswap/token-lists/dist/types'
+import { getVersionUpgrade, VersionUpgrade } from '@fuseio/token-lists'
+import { TokenList } from '@fuseio/token-lists/dist/types'
 import {
   BRIDGE_DEFAULT_LIST_OF_LISTS,
   BRIDGE_DEFAULT_TOKEN_LIST_URL,
   SWAP_DEFAULT_LIST_OF_LISTS,
-  SWAP_DEFAULT_TOKEN_LIST_URL
+  SWAP_DEFAULT_TOKEN_LIST_URL,
+  USE_PROD_BRIDGE_LIST
 } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
-import BRIDGE_DEFAULT_LIST from '@fuseio/fuse-swap-default-token-list'
+import PROD_BRIDGE_LIST from '@fuseio/fuse-swap-default-token-list'
+import QA_BRIDGE_LIST from '../../constants/qa/tokenlist.json'
 import SWAP_DEFAULT_LIST from '@fuseswap/default-token-list'
+
+const BRIDGE_DEFAULT_LIST = USE_PROD_BRIDGE_LIST ? PROD_BRIDGE_LIST : QA_BRIDGE_LIST
 
 interface ListState {
   readonly byUrl: {

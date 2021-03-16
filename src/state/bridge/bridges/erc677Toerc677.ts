@@ -7,15 +7,13 @@ import {
   confirmTokenTransferSuccess,
   transferError
 } from '../actions'
+import { getERC677TokenContract, calculateGasMargin, pollEvent } from '../../../utils'
 import {
-  getERC677TokenContract,
-  getForeignCustomBridgeAddress,
-  calculateGasMargin,
-  getHomeCustomBridgeAddress,
-  pollEvent
-} from '../../../utils'
-import { FOREIGN_BRIDGE_CHAIN, GAS_PRICE } from '../../../constants'
-import { getChainNetworkLibrary, getNetworkLibrary } from '../../../connectors'
+  GAS_PRICE,
+  FUSE_ERC677_TO_ERC677_BRIDGE_HOME_ADDRESS,
+  FUSE_ERC677_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
+} from '../../../constants'
+import { getChainNetworkLibrary, getNetworkLibrary, ETHEREUM_CHAIN_ID } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
 import BridgeABI from '../../../constants/abis/ambErc677ToErc677.json'
 
@@ -23,11 +21,7 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
   private readonly BRIDGE_EVENT = 'TokensBridged(address,uint256,bytes32)'
 
   private get homeBridgeAddress() {
-    const address = getHomeCustomBridgeAddress(this.tokenAddress)
-    if (!address) {
-      throw Error('Home bridge address not provided')
-    }
-    return address
+    return FUSE_ERC677_TO_ERC677_BRIDGE_HOME_ADDRESS
   }
 
   private get homeNetworkLibrary() {
@@ -35,15 +29,11 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getChainNetworkLibrary(FOREIGN_BRIDGE_CHAIN)
+    return getChainNetworkLibrary(ETHEREUM_CHAIN_ID)
   }
 
   private get foreignBridgeAddress() {
-    const address = getForeignCustomBridgeAddress(this.tokenAddress)
-    if (!address) {
-      throw Error('Foreign bridge address not provided')
-    }
-    return address
+    return FUSE_ERC677_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
   }
 
   async transferToForeign() {

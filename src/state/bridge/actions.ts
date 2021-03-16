@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { BridgeDirection } from './hooks'
 
 export enum Field {
   INPUT = 'INPUT'
@@ -14,7 +15,7 @@ export enum BridgeTransactionStatus {
   CONFIRM_TOKEN_TRANSFER_SUCCESS
 }
 
-export const selectCurrency = createAction<{ field: Field; currencyId: string }>('bridge/selectCurrency')
+export const selectCurrency = createAction<{ field: Field; currencyId: string | undefined }>('bridge/selectCurrency')
 export const typeInput = createAction<{ field: Field; typedValue: string }>('bridge/typeInput')
 
 export const tokenTransferPending = createAction('bridge/tokenTransferPending')
@@ -28,3 +29,5 @@ export const confirmTokenTransferPending = createAction('bridge/confirmTokenTran
 export const confirmTokenTransferSuccess = createAction('bridge/confirmTokenTransferSuccess')
 
 export const transferError = createAction('bridge/transferError')
+
+export const selectBridgeDirection = createAction<{ direction: BridgeDirection }>('bridge/selectBridgeDirection')

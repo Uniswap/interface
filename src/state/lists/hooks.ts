@@ -1,21 +1,29 @@
 import { ChainId, Token } from '@fuseio/fuse-swap-sdk'
-import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
+import { Tags, TokenInfo, TokenList } from '@fuseio/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
+import { unwrapOrThrow } from '../../utils'
+
+const BINANCE_CHAIN_ID = unwrapOrThrow('BINANCE_CHAIN_ID')
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
   id: string
 }
 
+export interface Info extends TokenInfo {
+  isMultiBridge: boolean
+  isDeprecated: boolean
+}
+
 /**
  * Token instances created from token info.
  */
 export class WrappedTokenInfo extends Token {
-  public readonly tokenInfo: TokenInfo
+  public readonly tokenInfo: any
   public readonly tags: TagInfo[]
-  constructor(tokenInfo: TokenInfo, tags: TagInfo[]) {
+  constructor(tokenInfo: any, tags: TagInfo[]) {
     super(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)
     this.tokenInfo = tokenInfo
     this.tags = tags
@@ -23,9 +31,12 @@ export class WrappedTokenInfo extends Token {
   public get logoURI(): string | undefined {
     return this.tokenInfo.logoURI
   }
+  public get isDeprecated(): boolean {
+    return Boolean(this.tokenInfo.isDeprecated)
+  }
 }
 
-export type TokenAddressMap = Readonly<{ [chainId in ChainId]: Readonly<{ [tokenAddress: string]: WrappedTokenInfo }> }>
+export type TokenAddressMap = Readonly<any>
 
 /**
  * An empty result, useful as a default.
@@ -36,7 +47,8 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.ROPSTEN]: {},
   [ChainId.GÖRLI]: {},
   [ChainId.MAINNET]: {},
-  [ChainId.FUSE]: {}
+  [ChainId.FUSE]: {},
+  [BINANCE_CHAIN_ID]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =

@@ -1,5 +1,5 @@
 import { ActionCreatorWithPayload, createAction } from '@reduxjs/toolkit'
-import { TokenList, Version } from '@uniswap/token-lists'
+import { TokenList, Version } from '@fuseio/token-lists'
 
 export const fetchTokenList: Readonly<{
   pending: ActionCreatorWithPayload<{ url: string; requestId: string; listType: CurrencyListType }>

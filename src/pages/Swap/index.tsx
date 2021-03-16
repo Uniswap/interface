@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token, Trade, ChainId } from '@fuseio/fuse-swap-sdk'
+import { CurrencyAmount, JSBI, Token, Trade } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -23,7 +23,7 @@ import ProgressSteps from '../../components/ProgressSteps'
 
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
@@ -66,8 +66,10 @@ export default function Swap() {
     setDismissTokenWarning(true)
   }, [])
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+
+  const { isHome } = useChain()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -285,7 +287,7 @@ export default function Swap() {
     onCurrencySelection
   ])
 
-  if (chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN) {
+  if (!isHome) {
     return (
       <>
         <AppBody>

@@ -1,5 +1,5 @@
-import { TokenList } from '@uniswap/token-lists'
-import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
+import { TokenList } from '@fuseio/token-lists'
+import schema from '@fuseio/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
 import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './parseENSAddress'

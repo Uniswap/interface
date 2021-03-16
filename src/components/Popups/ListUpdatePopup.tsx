@@ -1,4 +1,4 @@
-import { diffTokenLists, TokenList } from '@uniswap/token-lists'
+import { diffTokenLists, TokenList } from '@fuseio/token-lists'
 import React, { useCallback, useMemo } from 'react'
 import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'

@@ -94,6 +94,7 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
   listType: CurrencyListType
+  isBnbList?: boolean
 }) {
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)

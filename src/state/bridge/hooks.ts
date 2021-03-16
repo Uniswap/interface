@@ -3,27 +3,39 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as Sentry from '@sentry/react'
 import { useCallback, useMemo } from 'react'
 import { useAsyncMemo } from 'use-async-memo'
-import { typeInput, Field, BridgeTransactionStatus } from './actions'
-import { Currency, CurrencyAmount } from '@fuseio/fuse-swap-sdk'
+import { typeInput, Field, BridgeTransactionStatus, selectBridgeDirection, selectCurrency } from './actions'
+import { Currency, CurrencyAmount, ChainId } from '@fuseio/fuse-swap-sdk'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { tryParseAmount } from '../swap/hooks'
 import { DEFAULT_CONFIRMATIONS_LIMIT, HOME_TO_FOREIGN_FEE_TYPE_HASH } from '../../constants/bridge'
 import { useCurrency, useToken } from '../../hooks/Tokens'
 import { getMinMaxPerTxn } from './limits'
-import {
-  getHomeMultiAMBErc20ToErc677Contract,
-  getHomeMultiErc20ToErc677BridgeAddress,
-  isMultiErc20ToErc677BridgeToken
-} from '../../utils'
+import { getHomeMultiAMBErc20ToErc677Contract, getEthFuseBridgeType } from '../../utils'
 import { formatEther, formatUnits } from 'ethers/lib/utils'
+import useParsedQueryString from '../../hooks/useParsedQueryString'
+import { FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS, BINANCE_CHAIN_ID } from '../../constants'
+
+export enum BridgeType {
+  ETH_FUSE_NATIVE = 'ETH_FUSE_NATIVE',
+  ETH_FUSE_ERC677_TO_ERC677 = 'ETH_FUSE_ERC677_TO_ERC677',
+  ETH_FUSE_ERC20_TO_ERC677 = 'ETH_FUSE_ERC20_TO_ERC677',
+  BSC_FUSE_ERC20_TO_ERC677 = 'BSC_FUSE_ERC20_TO_ERC677'
+}
+
+export enum BridgeDirection {
+  ETH_TO_FUSE = 'ETH_TO_FUSE',
+  FUSE_TO_ETH = 'FUSE_TO_ETH',
+  BSC_TO_FUSE = 'BSC_TO_FUSE',
+  FUSE_TO_BSC = 'FUSE_TO_BSC'
+}
 
 export function useBridgeState(): AppState['bridge'] {
   return useSelector<AppState, AppState['bridge']>(state => state.bridge)
 }
 
 export function useDerivedBridgeInfo(
-  tokenAddress: string | undefined
+  bridgeDirection?: BridgeDirection
 ): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
@@ -32,14 +44,21 @@ export function useDerivedBridgeInfo(
   bridgeTransactionStatus: BridgeTransactionStatus
   confirmations: number
   bridgeFee?: string
+  inputCurrencyId?: string
 } {
   const { account, chainId, library } = useActiveWeb3React()
 
   const { isHome } = useChain()
 
-  const inputCurrency = useCurrency(tokenAddress)
+  const {
+    independentField,
+    typedValue,
+    bridgeTransactionStatus,
+    confirmations,
+    [Field.INPUT]: { currencyId: inputCurrencyId }
+  } = useBridgeState()
 
-  const { independentField, typedValue, bridgeTransactionStatus, confirmations } = useBridgeState()
+  const inputCurrency = useCurrency(inputCurrencyId, 'Bridge')
 
   const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
@@ -65,18 +84,22 @@ export function useDerivedBridgeInfo(
   const { [Field.INPUT]: inputAmount } = parsedAmounts
 
   const minMaxAmount = useAsyncMemo(async () => {
-    if (!tokenAddress || !chainId || !library || !account) return
+    if (!inputCurrencyId || !chainId || !library || !account || !bridgeDirection) return
     try {
-      return await getMinMaxPerTxn(tokenAddress, inputCurrency?.decimals, isHome, chainId, library, account)
+      return await getMinMaxPerTxn(inputCurrencyId, bridgeDirection, inputCurrency?.decimals, isHome, library, account)
     } catch (e) {
-      console.error(`Failed to fetch min max amount for ${inputCurrency?.symbol} at ${tokenAddress}`, e)
+      console.error(`Failed to fetch min max amount for ${inputCurrency?.symbol} at ${inputCurrencyId}`, e)
       return { minAmount: '0', maxAmount: '1000' }
     }
-  }, [tokenAddress, inputCurrency])
+  }, [inputCurrencyId, inputCurrency, bridgeDirection])
 
   let inputError: string | undefined
   if (!account) {
     inputError = 'Connect Wallet'
+  }
+
+  if (isHome && !bridgeDirection) {
+    inputError = inputError ?? 'Select destination'
   }
 
   if (!currencies[Field.INPUT]) {
@@ -105,12 +128,13 @@ export function useDerivedBridgeInfo(
     parsedAmounts,
     inputError,
     bridgeTransactionStatus,
-    confirmations
+    confirmations,
+    inputCurrencyId
   }
 }
 
 export function useBridgeStatus(bridgeStatus: BridgeTransactionStatus): string {
-  const { confirmations } = useBridgeState()
+  const { confirmations, bridgeDirection } = useBridgeState()
   const { isHome } = useChain()
 
   return useMemo(() => {
@@ -124,16 +148,18 @@ export function useBridgeStatus(bridgeStatus: BridgeTransactionStatus): string {
       case BridgeTransactionStatus.CONFIRMATION_TRANSACTION_SUCCESS:
         return `Waiting for ${confirmations}/${DEFAULT_CONFIRMATIONS_LIMIT} Confirmations`
       case BridgeTransactionStatus.CONFIRM_TOKEN_TRANSFER_PENDING:
-        const network = isHome ? 'Ethereum' : 'Fuse'
+        const network = isHome ? (bridgeDirection === BridgeDirection.FUSE_TO_BSC ? 'Binance' : 'Ethereum') : 'Fuse'
         return 'Moving funds to ' + network
       default:
         return ''
     }
-  }, [bridgeStatus, confirmations, isHome])
+  }, [bridgeDirection, bridgeStatus, confirmations, isHome])
 }
 
 export function useBridgeActionHandlers(): {
   onFieldInput: (typedValue: string) => void
+  onSelectBridgeDirection: (direction: BridgeDirection) => void
+  onSelectCurrency: (currencyId: string | undefined) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
@@ -144,7 +170,21 @@ export function useBridgeActionHandlers(): {
     [dispatch]
   )
 
-  return { onFieldInput }
+  const onSelectBridgeDirection = useCallback(
+    (direction: BridgeDirection) => {
+      dispatch(selectBridgeDirection({ direction }))
+    },
+    [dispatch]
+  )
+
+  const onSelectCurrency = useCallback(
+    (currencyId: string | undefined) => {
+      dispatch(selectCurrency({ field: Field.INPUT, currencyId }))
+    },
+    [dispatch]
+  )
+
+  return { onFieldInput, onSelectBridgeDirection, onSelectCurrency }
 }
 
 export function useBridgeFee(tokenAddress: string | undefined) {
@@ -152,10 +192,17 @@ export function useBridgeFee(tokenAddress: string | undefined) {
   const { isHome } = useChain()
 
   return useAsyncMemo(async () => {
-    if (!isHome || !account || !library || !tokenAddress || !isMultiErc20ToErc677BridgeToken(tokenAddress)) return
+    if (
+      !isHome ||
+      !account ||
+      !library ||
+      !tokenAddress ||
+      getEthFuseBridgeType(tokenAddress) !== BridgeType.ETH_FUSE_ERC20_TO_ERC677
+    )
+      return
 
     try {
-      const address = getHomeMultiErc20ToErc677BridgeAddress()
+      const address = FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS
       const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
       const fee = await contract.getFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress)
       return formatEther(fee)
@@ -181,12 +228,12 @@ export function useCalculatedBridgeFee(tokenAddress: string | undefined, currenc
       !tokenAddress ||
       !amount ||
       !token ||
-      !isMultiErc20ToErc677BridgeToken(tokenAddress)
+      getEthFuseBridgeType(tokenAddress) !== BridgeType.ETH_FUSE_ERC20_TO_ERC677
     )
       return
 
     try {
-      const address = getHomeMultiErc20ToErc677BridgeAddress()
+      const address = FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS
       const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
       const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount)
       return formatUnits(fee, token.decimals)
@@ -196,4 +243,32 @@ export function useCalculatedBridgeFee(tokenAddress: string | undefined, currenc
       return
     }
   }, [isHome, account, amount, library, tokenAddress])
+}
+
+export function useDetectBridgeDirection(selectedBridgeDirection?: BridgeDirection) {
+  const { chainId } = useActiveWeb3React()
+
+  if (selectedBridgeDirection) {
+    return selectedBridgeDirection
+  }
+
+  switch (chainId) {
+    case ChainId.MAINNET:
+    case ChainId.ROPSTEN:
+      return BridgeDirection.ETH_TO_FUSE
+    case BINANCE_CHAIN_ID:
+      return BridgeDirection.BSC_TO_FUSE
+    default:
+      return undefined
+  }
+}
+
+export function useDefaultsFromURLSearch() {
+  const parsedQs = useParsedQueryString()
+
+  const inputCurrencyId = parsedQs.inputCurrencyId?.toString()
+
+  return {
+    inputCurrencyId
+  }
 }

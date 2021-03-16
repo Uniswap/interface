@@ -27,6 +27,7 @@ export interface Colors {
   bg9: Color
   bg10: Color
   bg11: Color
+  bg12: Color
 
   modalBG: Color
   advancedBG: Color
@@ -51,6 +52,10 @@ export interface Colors {
   green1: Color
   yellow1: Color
   yellow2: Color
+
+  // brand
+  ethereum: Color
+  binance: Color
 }
 
 export interface Grids {
