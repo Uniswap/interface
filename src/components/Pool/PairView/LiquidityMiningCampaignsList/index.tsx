@@ -16,7 +16,7 @@ import { useActiveWeb3React } from '../../../../hooks'
 const ListLayout = styled.div`
   display: grid;
   grid-gap: 9px;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 180px 180px 180px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto;
     grid-gap: 10px;
