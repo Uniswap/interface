@@ -30,7 +30,7 @@ const HeaderFrame = styled.div`
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 0.7rem 1rem 0.7rem 1rem;
-  z-index: 2;
+  z-index: 1;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     padding: 0.3rem 1rem;

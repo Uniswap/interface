@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Code, Info, MessageCircle } from 'react-feather'
+import { Code, Info, MessageCircle, Twitter } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -65,7 +65,7 @@ const MenuFlyout = styled.span`
   z-index: 100;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -10.25rem;
+    top: -15.25rem;
   `};
 `
 
@@ -83,6 +83,9 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
+const DISCORD_LINK = 'https://discord.com/invite/VZkFP78aeF'
+const MEDIUM_LINK = 'https://medium.com/@trojanfinance'
+const TWITTER_LINK = 'https://twitter.com/FinanceTrojan'
 const CODE_LINK = 'https://github.com/we-commit/trojan-finance-interface'
 
 export default function Menu() {
@@ -104,13 +107,21 @@ export default function Menu() {
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
-            <Code size={14} />
-            Code
-          </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/VZkFP78aeF">
+          <MenuItem id="link" href={DISCORD_LINK}>
             <MessageCircle size={14} />
             Discord
+          </MenuItem>
+          <MenuItem id="link" href={MEDIUM_LINK}>
+            <MessageCircle size={14} />
+            Medium
+          </MenuItem>
+          <MenuItem id="link" href={TWITTER_LINK}>
+            <Twitter size={14} />
+            Twitter
+          </MenuItem>
+          <MenuItem id="link" href={CODE_LINK}>
+            <Code size={14} />
+            Github
           </MenuItem>
         </MenuFlyout>
       )}

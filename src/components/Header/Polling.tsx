@@ -9,8 +9,8 @@ import { useActiveWeb3React } from '../../hooks'
 const StyledPolling = styled.div`
   position: fixed;
   display: flex;
-  right: 0;
-  bottom: 0;
+  justify-content: center;
+  top: 0.5rem;
   padding: 1rem;
   color: white;
   transition: opacity 0.25s ease;
@@ -29,6 +29,7 @@ const StyledPollingDot = styled.div`
   min-height: 8px;
   min-width: 8px;
   margin-left: 0.5rem;
+  margin-right: 0rem;
   margin-top: 3px;
   border-radius: 50%;
   position: relative;
@@ -63,6 +64,8 @@ const Spinner = styled.div`
 `
 
 export default function Polling() {
+  const footerStyles = { marginLeft: '0.5rem', marginRight: '0.5rem' }
+
   const { chainId } = useActiveWeb3React()
 
   const blockNumber = useBlockNumber()
@@ -84,11 +87,31 @@ export default function Polling() {
   )
 
   return (
-    <ExternalLink href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}>
-      <StyledPolling>
-        <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{blockNumber}</TYPE.small>
-        <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>
-      </StyledPolling>
-    </ExternalLink>
+    <StyledPolling>
+      <TYPE.small style={{ opacity: isMounted ? '0.9' : '0.7' }}>Block# </TYPE.small>
+      <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>
+
+      <ExternalLink
+        style={footerStyles}
+        href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}
+      >
+        <TYPE.small style={{ opacity: isMounted ? '0.9' : '0.7' }}>{blockNumber}</TYPE.small>
+      </ExternalLink>
+      <ExternalLink style={footerStyles} href={'https://discord.gg/VZkFP78aeF'}>
+        <TYPE.small>Discord</TYPE.small>
+      </ExternalLink>
+      <ExternalLink style={footerStyles} href={'https://medium.com/@trojanfinance'}>
+        <TYPE.small>Medium</TYPE.small>
+      </ExternalLink>
+      <ExternalLink style={footerStyles} href={'https://twitter.com/FinanceTrojan'}>
+        <TYPE.small>Twitter</TYPE.small>
+      </ExternalLink>
+      <ExternalLink style={footerStyles} href={'https://github.com/we-commit'}>
+        <TYPE.small>Github</TYPE.small>
+      </ExternalLink>
+      <TYPE.small style={{ marginLeft: '0.5rem' }} color={'#6C7284'}>
+        Proposals (Soon)
+      </TYPE.small>
+    </StyledPolling>
   )
 }
