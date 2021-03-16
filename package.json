@@ -126,6 +126,7 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
+    "@1devndogs/default-token-list": "^1.0.0",
     "@uniswap/default-token-list": "^2.0.0",
     "express": "^4.17.1"
   }
