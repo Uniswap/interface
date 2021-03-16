@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { WrappedTokenInfo, useSelectedSwapTokenList, useSelectedBridgeTokenList } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
-import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { useCurrencyBalance, useCurrencyBalances } from '../../state/wallet/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import Column from '../Column'
@@ -15,7 +15,8 @@ import CurrencyLogo from '../CurrencyLogo'
 import { MouseoverTooltip } from '../Tooltip'
 import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
-import { isTokenOnList, getCurrencySymbol } from '../../utils'
+import { isTokenOnList, getCurrencySymbol, isArrayEmpty } from '../../utils'
+import { filterZeroBalance } from './filtering'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -177,7 +178,21 @@ export default function CurrencyList({
   showETH: boolean
   listType: CurrencyListType
 }) {
-  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...currencies] : currencies), [currencies, showETH])
+  const { account } = useActiveWeb3React()
+  const currencyBalances = useCurrencyBalances(account ?? '', currencies)
+
+  const filteredCurrencies = useMemo(
+    () =>
+      !isArrayEmpty(currencyBalances)
+        ? currencyBalances.filter(filterZeroBalance).map(currencyAmount => currencyAmount?.currency)
+        : currencies,
+    [currencies, currencyBalances]
+  )
+
+  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...filteredCurrencies] : filteredCurrencies), [
+    filteredCurrencies,
+    showETH
+  ])
 
   const Row = useCallback(
     ({ data, index, style }) => {

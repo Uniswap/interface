@@ -1,5 +1,6 @@
 import { isAddress } from '../../utils'
-import { Token } from '@fuseio/fuse-swap-sdk'
+import { Token, CurrencyAmount } from '@fuseio/fuse-swap-sdk'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
 
 export function filterTokens(tokens: Token[], search: string): Token[] {
   if (search.length === 0) return tokens
@@ -33,4 +34,15 @@ export function filterTokens(tokens: Token[], search: string): Token[] {
 
     return (symbol && matchesSearch(symbol)) || (name && matchesSearch(name))
   })
+}
+
+export const filterZeroBalance = (currencyAmount: CurrencyAmount | undefined) => {
+  if (!currencyAmount) return false
+
+  const wrappedToken = currencyAmount.currency as WrappedTokenInfo
+  if (wrappedToken.isDeprecated) {
+    return Number(currencyAmount.toSignificant()) > 0
+  } else {
+    return true
+  }
 }
