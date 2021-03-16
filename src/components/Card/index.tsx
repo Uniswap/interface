@@ -100,7 +100,6 @@ export const GradientCard = styled(Card)<{ selectable?: boolean; active?: boolea
   background-color: ${({ theme }) => theme.dark1};
   background-blend-mode: overlay, normal;
   padding: 0.8rem;
-  width: calc(25% - 6px);
   padding: 24px 30px;
   display: flex;
   flex-wrap: wrap;
