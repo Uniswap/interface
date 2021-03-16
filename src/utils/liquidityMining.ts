@@ -106,7 +106,10 @@ export function toLiquidityMiningCampaigns(
       targetedPair.liquidityToken.symbol,
       targetedPair.liquidityToken.name
     )
-    const staked = new PricedTokenAmount(stakedPricedToken, campaign.stakedAmount)
+    const staked = new PricedTokenAmount(
+      stakedPricedToken,
+      parseUnits(campaign.stakedAmount, stakedPricedToken.decimals).toString()
+    )
     return new LiquidityMiningCampaign(
       campaign.startsAt,
       campaign.endsAt,
