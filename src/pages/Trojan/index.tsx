@@ -7,14 +7,12 @@ import { Currency, WETH } from '@uniswap/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 import Notifier from 'react-desktop-notification'
 
-import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 
 import { SocketContext } from './socket'
 
 import { ExternalLink, TYPE } from 'theme'
 import { CardSection, DataCard, CardBGImage } from './styleds'
-import { useDarkModeManager } from 'state/user/hooks'
 
 import { AutoColumn } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
@@ -57,9 +55,11 @@ const handleColorType = (status?: any, theme?: any) => {
     case 'confirmed':
       return theme.text1
     case 'soon':
-      return theme.text1
+      return theme.white
     case 'slippage':
       return theme.yellow1
+    case 'default':
+      return 'white'
   }
 }
 
@@ -93,7 +93,7 @@ const rotate = keyframes`
 const UniIcon = styled.div`
   margin-top: 3rem;
   :hover {
-    animation: 2s ${rotate} linear infinite;
+    animation: 2s ${rotate} linear 500ms;
   }
 `
 const Emoji = (props?: any) => {
@@ -109,6 +109,7 @@ const Emoji = (props?: any) => {
     </span>
   )
 }
+
 export default function Trojan({ history }: RouteComponentProps) {
   const [dimensions, setDimensions] = useState({
     height: window.innerHeight,
@@ -128,7 +129,6 @@ export default function Trojan({ history }: RouteComponentProps) {
 
   const socket = useContext(SocketContext)
 
-  const [darkMode] = useDarkModeManager()
   const [showSearch, setShowSearch] = useState<boolean>(false)
 
   const [currency0] = useState<Currency | null>(WETH[1])
@@ -308,16 +308,16 @@ export default function Trojan({ history }: RouteComponentProps) {
                   ></ExternalLink>
 
                   <UniIcon style={{ marginTop: 10 }}>
-                    <img width={'35%'} src={darkMode ? LogoDark : Logo} alt="logo" />
+                    <img width={'35%'} src={LogoDark} alt="logo" />
                   </UniIcon>
-                  <ProposalStatus status={'soon'}>{'The Future is your Friend'}</ProposalStatus>
+                  <ProposalStatus status={'default'}>{'The Future is your Friend'}</ProposalStatus>
                 </AutoColumn>
               </CardSection>
               <CardBGImage />
             </DataCard>
           </Text>
           <Row justify="center" style={{ paddingBottom: '1rem' }}>
-            <ProposalStatus status={'slippage'} style={{ textAlign: 'center', textTransform: 'none' }}>
+            <ProposalStatus status={'none'} style={{ textAlign: 'center', textTransform: 'none' }}>
               Trojan Finance is under development. We are stronger together. Jump in{' '}
               <ExternalLink href={'https://discord.gg/VZkFP78aeF'}>[Discord]</ExternalLink>
             </ProposalStatus>

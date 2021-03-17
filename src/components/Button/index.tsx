@@ -94,7 +94,7 @@ export const ButtonLight = styled(Base)`
 `
 
 export const ButtonGray = styled(Base)`
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.bg4};
   color: ${({ theme }) => theme.text2};
   font-size: 16px;
   font-weight: 500;
