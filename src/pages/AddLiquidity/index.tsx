@@ -17,9 +17,9 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { RowBetween, RowFlat } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESS } from '../../constants'
+import { ONE_BIPS, ROUTER_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -39,7 +39,7 @@ import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
-import { PoolPriceBar, PoolPriceRangeBar } from './PoolPriceBar'
+import { PoolPriceBar, PoolPriceRangeBar, PoolPriceRangeBarToggle } from './PoolPriceBar'
 import QuestionHelper from 'components/QuestionHelper'
 import NumericalInput from 'components/NumericalInput'
 import { ONE } from 'libs/sdk/src/constants'
@@ -69,6 +69,12 @@ const RowFlat2 = (props: { children: React.ReactNode }) => {
   )
 }
 
+const OutlineCard2 = styled(OutlineCard)`
+  padding: 0.75rem;
+  border: 2px solid ${({ theme }) => theme.bg3};
+  border-style: dashed;
+`
+
 const NumericalInput2 = styled(NumericalInput)`
   width: 100%;
   height: 60px;
@@ -81,7 +87,7 @@ export default function AddLiquidity({
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; pairAddress?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
-
+  const isCreate = !pairAddress
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
@@ -288,36 +294,24 @@ export default function AddLiquidity({
   }
 
   const modalHeader = () => {
-    return noLiquidity ? (
-      <AutoColumn gap="20px">
-        <LightCard mt="20px" borderRadius="20px">
-          <RowFlat>
-            <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
-              {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
-            </Text>
-            <DoubleCurrencyLogo
-              currency0={currencies[Field.CURRENCY_A]}
-              currency1={currencies[Field.CURRENCY_B]}
-              size={30}
-            />
-          </RowFlat>
-        </LightCard>
+    return isCreate ? (
+      <AutoColumn gap="5px">
+        <RowFlat>
+          <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
+            {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol}
+          </Text>
+        </RowFlat>
       </AutoColumn>
     ) : (
-      <AutoColumn gap="20px">
+      <AutoColumn gap="5px">
         <RowFlat style={{ marginTop: '20px' }}>
-          <Text fontSize="48px" fontWeight={500} lineHeight="42px" marginRight={10}>
+          <Text fontSize="24px" fontWeight={500} lineHeight="42px" marginRight={10}>
             {liquidityMinted?.toSignificant(6)}
           </Text>
-          <DoubleCurrencyLogo
-            currency0={currencies[Field.CURRENCY_A]}
-            currency1={currencies[Field.CURRENCY_B]}
-            size={30}
-          />
         </RowFlat>
         <Row>
           <Text fontSize="24px">
-            {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
+            {'DMM ' + currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' LP Tokens'}
           </Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
@@ -335,7 +329,7 @@ export default function AddLiquidity({
         price={price}
         currencies={currencies}
         parsedAmounts={parsedAmounts}
-        noLiquidity={noLiquidity}
+        noLiquidity={isCreate}
         onAdd={onAdd}
         poolTokenPercentage={poolTokenPercentage}
         amplification={ampConvertedInBps}
@@ -384,7 +378,25 @@ export default function AddLiquidity({
     setTxHash('')
   }, [onFieldAInput, txHash])
 
-  const isCreate = !pairAddress
+  const percentToken0 = pair
+    ? pair.reserve0
+        .divide(pair.virtualReserve0)
+        .multiply('100')
+        .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
+        .toSignificant(2) ?? '.'
+    : '50%'
+  const percentToken1 = pair
+    ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
+    : '50%'
+
+  const feeRangeCalc = (amp: number): string => {
+    if (amp > 20) return '4 bps'
+    if (amp <= 20 && amp > 5) return '10 bps'
+    if (amp <= 5 && amp > 2) return '20 bps'
+    if (amp <= 2) return '30 bps'
+    return ''
+  }
+
   return (
     <>
       <AppBody>
@@ -398,7 +410,7 @@ export default function AddLiquidity({
             content={() =>
               !linkToUnamplifiedPool ? (
                 <ConfirmationModalContent
-                  title={noLiquidity ? 'You are creating a pool' : 'You will receive'}
+                  title={isCreate ? 'You are creating a pool' : 'You will receive'}
                   onDismiss={handleDismissConfirmation}
                   topContent={modalHeader}
                   bottomContent={modalBottom}
@@ -459,6 +471,15 @@ export default function AddLiquidity({
               id="add-liquidity-input-tokena"
               showCommonBases
             />
+            <Text fontWeight={500} fontSize={14} color={theme.text2} style={{ margin: '-1rem 0 0 .75rem' }}>
+              {price && (
+                <>
+                  {' '}
+                  1 {currencies[Field.CURRENCY_A]?.symbol} = {price?.toSignificant(6)}{' '}
+                  {currencies[Field.CURRENCY_B]?.symbol}
+                </>
+              )}
+            </Text>
             <ColumnCenter>
               <Plus size="16" color={theme.text2} />
             </ColumnCenter>
@@ -474,7 +495,16 @@ export default function AddLiquidity({
               id="add-liquidity-input-tokenb"
               showCommonBases
             />
-            {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
+            <Text fontWeight={500} fontSize={14} color={theme.text2} style={{ margin: '-1rem 0 0 .75rem' }}>
+              {price?.invert() && (
+                <>
+                  {' '}
+                  1 {currencies[Field.CURRENCY_B]?.symbol} = {price?.invert()?.toSignificant(6)}{' '}
+                  {currencies[Field.CURRENCY_A]?.symbol}
+                </>
+              )}
+            </Text>
+            {/* {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <PoolPriceBar
                 pair={pair}
                 currencies={currencies}
@@ -482,7 +512,7 @@ export default function AddLiquidity({
                 noLiquidity={noLiquidity}
                 price={price}
               />
-            )}
+            )} */}
 
             <RowFlat2>
               <ActiveText>
@@ -497,21 +527,48 @@ export default function AddLiquidity({
                 <NumericalInput2 className="token-amount-input" value={amp} onUserInput={onAmpChange} />
               </LightCard>
             )}
-
+            {(!!pairAddress || +amp >= 1) && (
+              <OutlineCard2>
+                <AutoRow>
+                  <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                    Fee range:{' '}
+                    {feeRangeCalc(
+                      !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
+                    )}
+                  </Text>
+                  <QuestionHelper text="Fee range" />
+                </AutoRow>
+              </OutlineCard2>
+            )}
             {currencies[Field.CURRENCY_A] &&
               currencies[Field.CURRENCY_B] &&
               pairState !== PairState.INVALID &&
               (!!pairAddress || +amp >= 1) && (
-                <>
-                  <PoolPriceRangeBar
-                    pair={pair}
-                    currencies={currencies}
-                    price={price}
-                    amplification={ampConvertedInBps}
-                  />
-                </>
+                <PoolPriceRangeBarToggle
+                  pair={pair}
+                  currencies={currencies}
+                  price={price}
+                  amplification={ampConvertedInBps}
+                />
               )}
 
+            <AutoRow justify="space-between" gap="4px">
+              <AutoColumn justify="end">
+                <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+                  Ratio: {percentToken0}&nbsp;{currencies[Field.CURRENCY_A]?.symbol}&nbsp;-&nbsp;{percentToken1}&nbsp;
+                  {currencies[Field.CURRENCY_B]?.symbol}
+                </Text>
+              </AutoColumn>
+              <AutoColumn>
+                <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+                  Pool Share :{' '}
+                  {noLiquidity && price
+                    ? '100'
+                    : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
+                  %
+                </Text>
+              </AutoColumn>
+            </AutoRow>
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : (

@@ -107,6 +107,11 @@ const StyledBalanceMax = styled.button`
   `};
 `
 
+const Card2 = styled(Card)`
+  padding: 0 .75rem .4rem .75rem;
+  text-align: right;
+`
+
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -155,6 +160,23 @@ export default function CurrencyInputPanel({
 
   return (
     <div>
+      {account && (
+        <Card2 padding={'.4rem .75rem 0 .75rem'} borderRadius={'20px'}>
+          <AutoColumn gap="4px">
+            <TYPE.body
+              onClick={onMax}
+              color={theme.text2}
+              fontWeight={500}
+              fontSize={14}
+              style={{ display: 'inline', cursor: `${label !== 'To' ? 'pointer' : 'initial'}` }}
+            >
+              {!hideBalance && !!currency && selectedCurrencyBalance
+                ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
+                : ' -'}
+            </TYPE.body>
+          </AutoColumn>
+        </Card2>
+      )}
       <InputPanel id={id} hideInput={hideInput}>
         <Container hideInput={hideInput}>
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
@@ -216,23 +238,6 @@ export default function CurrencyInputPanel({
           />
         )}
       </InputPanel>
-      {account && (
-        <Card padding={'.4rem .75rem 0 .75rem'} borderRadius={'20px'}>
-          <AutoColumn gap="4px">
-            <TYPE.body
-              onClick={onMax}
-              color={theme.text2}
-              fontWeight={500}
-              fontSize={14}
-              style={{ display: 'inline', cursor: `${label !== 'To' ? 'pointer' : 'initial'}` }}
-            >
-              {!hideBalance && !!currency && selectedCurrencyBalance
-                ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                : ' -'}
-            </TYPE.body>
-          </AutoColumn>
-        </Card>
-      )}
     </div>
   )
 }
