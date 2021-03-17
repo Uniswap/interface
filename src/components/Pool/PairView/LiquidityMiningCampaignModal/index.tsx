@@ -166,7 +166,7 @@ export function LiquidityMiningCampaignModal({
                     disabled={disabledStaking}
                     onClick={handleStakingRequest}
                   >
-                    Deposit {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP tokens
+                    Deposit {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP
                   </ButtonDark>
                   <ButtonDark
                     padding="8px"
@@ -176,7 +176,7 @@ export function LiquidityMiningCampaignModal({
                     disabled={disabledWithdrawing}
                     onClick={handleWithdrawalRequest}
                   >
-                    Withdraw {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP tokens
+                    Withdraw {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP
                   </ButtonDark>
                 </RowBetween>
               </div>
