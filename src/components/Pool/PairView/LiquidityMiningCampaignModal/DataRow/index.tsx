@@ -19,7 +19,7 @@ interface DataRowProps {
 
 export default function DataRow({ title, value }: DataRowProps) {
   return (
-    <RowBetween mb="4px">
+    <RowBetween height="16px" mb="4px">
       <TitleText>{title}</TitleText>
       <Text fontSize="12px" fontWeight="600" lineHeight="13px" color="text4">
         {value}

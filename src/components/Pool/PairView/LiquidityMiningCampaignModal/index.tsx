@@ -214,7 +214,7 @@ export function LiquidityMiningCampaignModal({
           {!!account && (
             <>
               <div>
-                <RowBetween marginTop="24px">
+                <RowBetween>
                   <ButtonDark
                     padding="8px"
                     style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
@@ -239,7 +239,7 @@ export function LiquidityMiningCampaignModal({
               </div>
               <div>
                 <LiquidityMiningYourStake stake={stakedTokenAmount || undefined} claimables={claimableRewardAmounts} />
-                <RowBetween marginTop="24px">
+                <RowBetween marginTop="16px">
                   <ButtonDark
                     padding="8px"
                     style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
