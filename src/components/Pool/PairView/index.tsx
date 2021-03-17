@@ -100,24 +100,24 @@ function PairView({ loading, pair }: PairViewProps) {
               GOVERNANCE
             </ButtonGrey>
           </RowBetween>
-          {liquidityMiningEnabled && (
-            <Flex flexDirection="column">
-              <TitleRow marginBottom="26px">
-                <TYPE.mediumHeader fontSize="18px" color="white">
-                  Reward pools
-                </TYPE.mediumHeader>
-                <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-                  Create liq. mining
-                </ResponsiveButtonPrimary>
-              </TitleRow>
-              <LiquidityMiningCampaignsList
-                items={pairWithCampaigns?.liquidityMiningCampaigns || []}
-                stakablePair={pair || undefined}
-              />
-            </Flex>
-          )}
         </Flex>
       </StyledDarkCard>
+      {liquidityMiningEnabled && (
+        <Flex flexDirection="column">
+          <TitleRow marginBottom="26px">
+            <TYPE.mediumHeader fontSize="18px" color="white">
+              Reward pools
+            </TYPE.mediumHeader>
+            <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
+              Create liq. mining
+            </ResponsiveButtonPrimary>
+          </TitleRow>
+          <LiquidityMiningCampaignsList
+            items={pairWithCampaigns?.liquidityMiningCampaigns}
+            stakablePair={pair || undefined}
+          />
+        </Flex>
+      )}
     </>
   )
 }

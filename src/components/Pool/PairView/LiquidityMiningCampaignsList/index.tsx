@@ -16,7 +16,7 @@ import { useActiveWeb3React } from '../../../../hooks'
 const ListLayout = styled.div`
   display: grid;
   grid-gap: 9px;
-  grid-template-columns: 180px 180px 180px;
+  grid-template-columns: 208px 208px 208px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto;
     grid-gap: 10px;
@@ -24,21 +24,21 @@ const ListLayout = styled.div`
 `
 
 const SizedPairCard = styled(PairCard)`
-  width: 180px;
+  width: 208px;
   height: 155px;
 `
 
 interface LiquidityMiningCampaignsListProps {
   stakablePair?: Pair
-  items: LiquidityMiningCampaign[]
+  items?: LiquidityMiningCampaign[]
 }
 
-const ITEMS_PER_PAGE = 9
+const ITEMS_PER_PAGE = 3
 
 export default function LiquidityMiningCampaignsList({ stakablePair, items }: LiquidityMiningCampaignsListProps) {
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const itemsPage = usePage(items, ITEMS_PER_PAGE, page, 0)
+  const itemsPage = usePage(items || [], ITEMS_PER_PAGE, page, 0)
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
   const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const [selectedCampaign, setSelectedCampaign] = useState<LiquidityMiningCampaign | null>(null)
@@ -54,9 +54,9 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
   return (
     <>
       <Flex flexDirection="column">
-        <Box mb="8px" height="460px">
-          {loadingNativeCurrencyUsdPrice ? (
-            <LoadingList wideCards />
+        <Box mb="8px" height="155px">
+          {loadingNativeCurrencyUsdPrice || !items ? (
+            <LoadingList wideCards itemsAmount={3} />
           ) : itemsPage.length > 0 ? (
             <ListLayout>
               {itemsPage.map((item, index) => (
@@ -79,7 +79,12 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
           )}
         </Box>
         <Box alignSelf="flex-end" mt="16px">
-          <Pagination page={page} totalItems={items.length} itemsPerPage={ITEMS_PER_PAGE} onPageChange={setPage} />
+          <Pagination
+            page={page}
+            totalItems={items?.length ?? 0}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={setPage}
+          />
         </Box>
       </Flex>
       {selectedCampaign && stakableTokenBalance && (

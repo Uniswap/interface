@@ -14,12 +14,13 @@ const ListLayout = styled.div<{ wide: boolean }>`
 interface LoadingListProps {
   wideCards?: boolean
   doubleCircle?: boolean
+  itemsAmount?: number
 }
 
-export default function LoadingList({ wideCards, doubleCircle }: LoadingListProps) {
+export default function LoadingList({ wideCards, doubleCircle, itemsAmount }: LoadingListProps) {
   return (
     <ListLayout wide={!!wideCards}>
-      {new Array(wideCards ? 9 : 12).fill(null).map((_, index) => (
+      {new Array(itemsAmount || (wideCards ? 9 : 12)).fill(null).map((_, index) => (
         <LoadingCard key={index} doubleCircle={doubleCircle} />
       ))}
     </ListLayout>
