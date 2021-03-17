@@ -1,0 +1,34 @@
+{
+  "name": "FuseSwap Beta List",
+  "timestamp": "2021-03-14T13:12:36.849Z",
+  "version": {
+    "major": 1,
+    "minor": 3,
+    "patch": 0
+  },
+  "tags": {},
+  "logoURI": "ipfs://QmQQGd3Kbb8fhxKQLvzPPngzBGd5aydV3QAigLHy53Hr3g",
+  "keywords": [
+    "fuseswap",
+    "fuse",
+    "default"
+  ],
+  "tokens": [
+    {
+      "name": "Uniswap",
+      "address": "0xFcF3Bd3AEa648558B4f71499762558326E8F1077",
+      "symbol": "UNI",
+      "decimals": 18,
+      "chainId": 122,
+      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
+    },
+    {
+      "name": "Uniswap Deprecated",
+      "address": "0x2c72dFb220937738ADd112e49e95e2475d0fbf28",
+      "symbol": "UNI (Deprecated)",
+      "decimals": 18,
+      "chainId": 122,
+      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
+    }
+  ]
+}

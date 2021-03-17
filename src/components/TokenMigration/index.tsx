@@ -17,6 +17,7 @@ import { Dots } from '../swap/styleds'
 import { getTokenMigrationContract, calculateGasMargin } from '../../utils'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import { useCurrency } from '../../hooks/Tokens'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -57,11 +58,13 @@ enum MigrationState {
 export default function TokenMigrationModal({
   token: deprecatedToken,
   isOpen,
-  onDismiss
+  onDismiss,
+  listType
 }: {
   token: Currency | undefined
   isOpen: boolean
   onDismiss: () => void
+  listType: CurrencyListType
 }) {
   const { account, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -69,13 +72,15 @@ export default function TokenMigrationModal({
   const wrappedDeprecatedToken = deprecatedToken as WrappedTokenInfo
   const upgradedTokenAddress = useUpgradedTokenAddress(wrappedDeprecatedToken)
 
-  const upgradedToken = useCurrency(upgradedTokenAddress, 'Bridge')
+  const upgradedToken = useCurrency(upgradedTokenAddress, listType)
   const wrappedUpgradedToken = upgradedToken as WrappedTokenInfo
 
   const balance = useTokenBalance(account ?? undefined, deprecatedToken as TokenEntity)
   const [approval, approveCallback] = useApproveCallback(balance, TOKEN_MIGRATOR_ADDRESS)
 
   const [migrationState, setMigrationState] = useState<MigrationState>(MigrationState.INITIAL)
+
+  const addTransaction = useTransactionAdder()
 
   async function onMigrate() {
     if (!balance || !library || !account) return
@@ -86,8 +91,9 @@ export default function TokenMigrationModal({
     try {
       setMigrationState(MigrationState.PENDING)
       const estimatedGas = await tokenMigrator.estimateGas.migrateTokens(...args)
-      await tokenMigrator.migrateTokens(...args, { gasLimit: calculateGasMargin(estimatedGas) })
+      const response = await tokenMigrator.migrateTokens(...args, { gasLimit: calculateGasMargin(estimatedGas) })
 
+      addTransaction(response, { summary: `Migrate ${deprecatedToken?.symbol}` })
       setMigrationState(MigrationState.MIGRATED)
     } catch (e) {
       setMigrationState(MigrationState.INITIAL)
@@ -139,8 +145,8 @@ export default function TokenMigrationModal({
             )}
             <ButtonError
               onClick={() => (migrationState === MigrationState.MIGRATED ? onDismiss() : onMigrate())}
-              disabled={approval !== ApprovalState.APPROVED || balance?.toSignificant() === '0'}
-              error={approval !== ApprovalState.APPROVED || balance?.toSignificant() === '0'}
+              disabled={approval !== ApprovalState.APPROVED}
+              error={approval !== ApprovalState.APPROVED}
             >
               <Text fontSize={20} fontWeight={500}>
                 {migrationState === MigrationState.INITIAL && 'Migrate'}
