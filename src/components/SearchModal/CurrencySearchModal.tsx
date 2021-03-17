@@ -5,7 +5,6 @@ import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
 import { ImportToken } from './ImportToken'
 import usePrevious from 'hooks/usePrevious'
-import Manage from './Manage'
 import { TokenList } from '@uniswap/token-lists'
 import { ImportList } from './ImportList'
 
@@ -57,8 +56,8 @@ export default function CurrencySearchModal({
   const [importToken, setImportToken] = useState<Token | undefined>()
 
   // used for import list
-  const [importList, setImportList] = useState<TokenList | undefined>()
-  const [listURL, setListUrl] = useState<string | undefined>()
+  const [importList] = useState<TokenList | undefined>()
+  const [listURL] = useState<string | undefined>()
 
   // change min height if not searching
   const minHeight = modalView === CurrencyModalView.importToken || modalView === CurrencyModalView.importList ? 40 : 80
@@ -89,13 +88,7 @@ export default function CurrencySearchModal({
       ) : modalView === CurrencyModalView.importList && importList && listURL ? (
         <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
       ) : modalView === CurrencyModalView.manage ? (
-        <Manage
-          onDismiss={onDismiss}
-          setModalView={setModalView}
-          setImportToken={setImportToken}
-          setImportList={setImportList}
-          setListUrl={setListUrl}
-        />
+        ''
       ) : (
         ''
       )}

@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@1devndogs/default-token-list@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@1devndogs/default-token-list/-/default-token-list-1.0.0.tgz#f6606e996855a386e709a4353d0202fc28b0fc0b"
-  integrity sha512-7jqBXR0Uvb8im3qBYxoH3k7ij1FvVGc3Cj1TwOi1fSuYoCZu5VQ1y95X7YSlndz/msGY2bn+JrEIw3tdXumNTg==
+"@1devndogs/default-token-list@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@1devndogs/default-token-list/-/default-token-list-1.1.0.tgz#25bd332a1c810456c23d55d1d84307c23675d3ef"
+  integrity sha512-ewttH39hpCeYSQ12eCZ1w5UsePExFVHGOrDwkgQqlZ8xv+/5x7juzvdy89z1D4ZAsDMEwzEYWyTXeaDDagRQug==
 
 "@babel/code-frame@7.8.3":
   version "7.8.3"
