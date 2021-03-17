@@ -1,4 +1,4 @@
-import { Currency, Pair } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, Pair } from 'dxswap-sdk'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -123,6 +123,7 @@ interface CurrencyInputPanelProps {
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
+  balance?: CurrencyAmount
 }
 
 export default function CurrencyInputPanel({
@@ -140,7 +141,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText
+  customBalanceText,
+  balance
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -181,9 +183,9 @@ export default function CurrencyInputPanel({
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
                     <UppercaseHelper>
-                      {!hideBalance && !!currency && selectedCurrencyBalance
-                        ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                        : ' -'}
+                      {!hideBalance && !!currency && (balance || selectedCurrencyBalance)
+                        ? (customBalanceText ?? 'Balance: ') + (balance || selectedCurrencyBalance)?.toSignificant(6)
+                        : '-'}
                     </UppercaseHelper>
                   </TYPE.body>
                 )}

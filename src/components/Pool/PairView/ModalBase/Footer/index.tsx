@@ -11,7 +11,7 @@ interface ConfirmStakingModalFooterProps {
   stakablePair?: Pair | null
   disabledConfirm: boolean
   approvalState?: ApprovalState
-  showApprove: boolean
+  showApprove?: boolean
 }
 
 export default function ConfirmStakingModalFooter({

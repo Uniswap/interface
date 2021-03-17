@@ -13,6 +13,7 @@ import Modal from '../../../Modal'
 import { RowBetween } from '../../../Row'
 import ConfirmStakingModal from '../ConfirmStakingModal'
 import ConfirmWithdrawalModal from '../ConfirmWithdrawalModal'
+import ConfirmClaimModal from '../ConfirmClaimModal'
 import LiquidityMiningInformation from './Information'
 import LiquidityMiningYourStake from './YourStake'
 
@@ -48,6 +49,7 @@ export function LiquidityMiningCampaignModal({
   const [errorMessage, setErrorMessage] = useState('')
   const [showStakingConfirmationModal, setShowStakingConfirmationModal] = useState(false)
   const [showWithdrawalConfirmationModal, setShowWithdrawalConfirmationModal] = useState(false)
+  const [showClaimConfirmationModal, setShowClaimConfirmationModal] = useState(false)
   const [disabledStaking, setDisabledStaking] = useState(false)
   const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
   const [disabledClaim, setDisabledClaim] = useState(false)
@@ -73,6 +75,7 @@ export function LiquidityMiningCampaignModal({
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
     setShowWithdrawalConfirmationModal(false)
+    setShowClaimConfirmationModal(false)
     setErrorMessage('')
     setTransactionHash('')
   }, [])
@@ -80,11 +83,19 @@ export function LiquidityMiningCampaignModal({
   const handleStakingRequest = useCallback(() => {
     setShowStakingConfirmationModal(true)
     setShowWithdrawalConfirmationModal(false)
+    setShowClaimConfirmationModal(false)
   }, [])
 
   const handleWithdrawalRequest = useCallback(() => {
+    setShowWithdrawalConfirmationModal(false)
+    setShowClaimConfirmationModal(false)
     setShowStakingConfirmationModal(false)
-    setShowWithdrawalConfirmationModal(true)
+  }, [])
+
+  const handleClaimRequest = useCallback(() => {
+    setShowClaimConfirmationModal(true)
+    setShowStakingConfirmationModal(false)
+    setShowWithdrawalConfirmationModal(false)
   }, [])
 
   const handleStakeConfirmation = useCallback(
@@ -134,24 +145,29 @@ export function LiquidityMiningCampaignModal({
     },
     [addTransaction, callbacks, campaign]
   )
-  const handleClaimConfirmation = useCallback(() => {
-    if (!callbacks || !account) return
-    setAttemptingTransaction(true)
-    callbacks
-      .claimAll(account)
-      .then(transaction => {
-        setErrorMessage('')
-        setTransactionHash(transaction.hash || '')
-        addTransaction(transaction, { summary: `Claim outstanding rewards` })
-      })
-      .catch(error => {
-        console.error(error)
-        setErrorMessage('Error broadcasting transaction')
-      })
-      .finally(() => {
-        setAttemptingTransaction(false)
-      })
-  }, [account, addTransaction, callbacks])
+  const handleClaimConfirmation = useCallback(
+    (amounts: TokenAmount[]) => {
+      if (!callbacks || !account) return
+      setAttemptingTransaction(true)
+      callbacks
+        .claim(amounts, account)
+        .then(transaction => {
+          setErrorMessage('')
+          setTransactionHash(transaction.hash || '')
+          addTransaction(transaction, {
+            summary: `Claim ${amounts.map(amount => `${amount.toSignificant(4)} ${amount.token.symbol}`).join(', ')}`
+          })
+        })
+        .catch(error => {
+          console.error(error)
+          setErrorMessage('Error broadcasting transaction')
+        })
+        .finally(() => {
+          setAttemptingTransaction(false)
+        })
+    },
+    [account, addTransaction, callbacks]
+  )
 
   return (
     <Modal maxWidth={670} isOpen={show} onDismiss={onDismiss}>
@@ -195,7 +211,7 @@ export function LiquidityMiningCampaignModal({
                     style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
                     width="100%"
                     marginRight="4px"
-                    onClick={handleClaimConfirmation}
+                    onClick={handleClaimRequest}
                     disabled={disabledClaim}
                   >
                     Claim rewards
@@ -229,6 +245,17 @@ export function LiquidityMiningCampaignModal({
         onConfirm={handleWithdrawalConfirmation}
         txHash={transactionHash}
       />
+      {claimableRewardAmounts && (
+        <ConfirmClaimModal
+          isOpen={showClaimConfirmationModal}
+          claimableTokenAmounts={claimableRewardAmounts}
+          onDismiss={handleDismiss}
+          attemptingTxn={attemptingTransaction}
+          errorMessage={errorMessage}
+          onConfirm={handleClaimConfirmation}
+          txHash={transactionHash}
+        />
+      )}
     </Modal>
   )
 }

@@ -13,6 +13,7 @@ export function useLiquidityMiningActionCallbacks(
   stake: (amount: TokenAmount) => Promise<TransactionResponse>
   withdraw: (amount: TokenAmount) => Promise<TransactionResponse>
   claimAll: (recipient: string) => Promise<TransactionResponse>
+  claim: (amounts: TokenAmount[], recipient: string) => Promise<TransactionResponse>
 } | null {
   const distributionContract = useStakingRewardsDistributionContract(distributionContractAddress, true)
 
@@ -23,7 +24,12 @@ export function useLiquidityMiningActionCallbacks(
         distributionContract.stake(parseUnits(amount.toExact(), amount.token.decimals).toString()),
       withdraw: async (amount: TokenAmount) =>
         distributionContract.withdraw(parseUnits(amount?.toExact(), amount.token.decimals).toString()),
-      claimAll: async recipient => distributionContract.claimAll(recipient)
+      claimAll: async recipient => distributionContract.claimAll(recipient),
+      claim: async (amounts, recipient) =>
+        distributionContract.claim(
+          amounts.map(amount => amount.raw.toString()),
+          recipient
+        )
     }
   }, [distributionContract])
 }
