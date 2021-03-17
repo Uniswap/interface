@@ -199,9 +199,12 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
             <TYPE.body color="text4" fontWeight="500" fontSize="14px" lineHeight="17px">
               Your pool tokens:
             </TYPE.body>
-            <TYPE.body color="text4" fontWeight="500" fontSize="14px" lineHeight="17px">
-              {userPoolBalance ? userPoolBalance.toSignificant(4) : <Skeleton width="50px" />}
-            </TYPE.body>
+            <RowFixed>
+              <TYPE.body color="text4" fontWeight="500" fontSize="14px" lineHeight="17px" marginRight="8px">
+                {userPoolBalance ? userPoolBalance.toSignificant(4) : <Skeleton width="50px" />}
+              </TYPE.body>
+              <DoubleCurrencyLogo loading={!!!userPoolBalance} size={16} currency0={currency0} currency1={currency1} />
+            </RowFixed>
           </FixedHeightRow>
           <FixedHeightRow>
             <RowFixed>
@@ -210,10 +213,10 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
               </TYPE.body>
             </RowFixed>
             <RowFixed>
-              <TYPE.body color="text4" fontWeight="500" fontSize="14px" lineHeight="17px" marginRight="6px">
+              <TYPE.body color="text4" fontWeight="500" fontSize="14px" lineHeight="17px" marginRight="8px">
                 {token0Deposited ? token0Deposited.toSignificant(6) : <Skeleton width="50px" />}
               </TYPE.body>
-              <CurrencyLogo loading={!!!currency0} size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
+              <CurrencyLogo loading={!!!currency0} size="16px" currency={currency0} />
             </RowFixed>
           </FixedHeightRow>
 
@@ -224,10 +227,10 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
               </TYPE.body>
             </RowFixed>
             <RowFixed>
-              <TYPE.body color="text4" fontWeight="500" fontSize="14px" lineHeight="17px" marginRight="6px">
+              <TYPE.body color="text4" fontWeight="500" fontSize="14px" lineHeight="17px" marginRight="8px">
                 {token1Deposited ? token1Deposited.toSignificant(6) : <Skeleton width="50px" />}
               </TYPE.body>
-              <CurrencyLogo loading={!!!currency1} size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
+              <CurrencyLogo loading={!!!currency1} size="16px" currency={currency1} />
             </RowFixed>
           </FixedHeightRow>
 
