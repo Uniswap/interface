@@ -1,4 +1,5 @@
 import { LiquidityMiningCampaign, TokenAmount } from 'dxswap-sdk'
+import { Link } from 'react-router-dom'
 import { transparentize } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -234,6 +235,17 @@ export function LiquidityMiningCampaignModal({
                     onClick={handleWithdrawalRequest}
                   >
                     Withdraw {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP
+                  </ButtonDark>
+                </RowBetween>
+                <RowBetween mt="8px">
+                  <ButtonDark
+                    as={Link}
+                    padding="8px"
+                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+                    width="100%"
+                    to={`/add/${campaign.targetedPair.token0.address}/${campaign.targetedPair.token1.address}`}
+                  >
+                    Get {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP tokens
                   </ButtonDark>
                 </RowBetween>
               </div>
