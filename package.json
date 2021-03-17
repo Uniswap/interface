@@ -7,7 +7,7 @@
     "@ethersproject/experimental": "^5.0.1",
     "@fuseio/fuse-swap-default-token-list": "~2.0.0",
     "@fuseio/fuse-swap-sdk": "^3.1.1",
-    "@fuseio/token-lists": "^1.0.0",
+    "@fuseio/token-lists": "^1.1.0",
     "@fuseswap/default-token-list": "^1.0.0",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
