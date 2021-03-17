@@ -14,6 +14,7 @@ import { RowBetween } from '../../../Row'
 import ConfirmStakingModal from '../ConfirmStakingModal'
 import ConfirmWithdrawalModal from '../ConfirmWithdrawalModal'
 import ConfirmClaimModal from '../ConfirmClaimModal'
+import ConfirmExitModal from '../ConfirmExitModal'
 import LiquidityMiningInformation from './Information'
 import LiquidityMiningYourStake from './YourStake'
 
@@ -50,6 +51,7 @@ export function LiquidityMiningCampaignModal({
   const [showStakingConfirmationModal, setShowStakingConfirmationModal] = useState(false)
   const [showWithdrawalConfirmationModal, setShowWithdrawalConfirmationModal] = useState(false)
   const [showClaimConfirmationModal, setShowClaimConfirmationModal] = useState(false)
+  const [showExitConfirmationModal, setShowExitConfirmationModal] = useState(false)
   const [disabledStaking, setDisabledStaking] = useState(false)
   const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
   const [disabledClaim, setDisabledClaim] = useState(false)
@@ -76,6 +78,7 @@ export function LiquidityMiningCampaignModal({
     setShowStakingConfirmationModal(false)
     setShowWithdrawalConfirmationModal(false)
     setShowClaimConfirmationModal(false)
+    setShowExitConfirmationModal(false)
     setErrorMessage('')
     setTransactionHash('')
   }, [])
@@ -84,16 +87,26 @@ export function LiquidityMiningCampaignModal({
     setShowStakingConfirmationModal(true)
     setShowWithdrawalConfirmationModal(false)
     setShowClaimConfirmationModal(false)
+    setShowExitConfirmationModal(false)
   }, [])
 
   const handleWithdrawalRequest = useCallback(() => {
-    setShowWithdrawalConfirmationModal(false)
+    setShowWithdrawalConfirmationModal(true)
     setShowClaimConfirmationModal(false)
     setShowStakingConfirmationModal(false)
+    setShowExitConfirmationModal(false)
   }, [])
 
   const handleClaimRequest = useCallback(() => {
     setShowClaimConfirmationModal(true)
+    setShowStakingConfirmationModal(false)
+    setShowWithdrawalConfirmationModal(false)
+    setShowExitConfirmationModal(false)
+  }, [])
+
+  const handleExitRequest = useCallback(() => {
+    setShowExitConfirmationModal(true)
+    setShowClaimConfirmationModal(false)
     setShowStakingConfirmationModal(false)
     setShowWithdrawalConfirmationModal(false)
   }, [])
@@ -169,6 +182,27 @@ export function LiquidityMiningCampaignModal({
     [account, addTransaction, callbacks]
   )
 
+  const handleExitConfirmation = useCallback(() => {
+    if (!callbacks || !account) return
+    setAttemptingTransaction(true)
+    callbacks
+      .exit(account)
+      .then(transaction => {
+        setErrorMessage('')
+        setTransactionHash(transaction.hash || '')
+        addTransaction(transaction, {
+          summary: 'Claim rewards and withdraw stake'
+        })
+      })
+      .catch(error => {
+        console.error(error)
+        setErrorMessage('Error broadcasting transaction')
+      })
+      .finally(() => {
+        setAttemptingTransaction(false)
+      })
+  }, [account, addTransaction, callbacks])
+
   return (
     <Modal maxWidth={670} isOpen={show} onDismiss={onDismiss}>
       <Wrapper>
@@ -216,6 +250,16 @@ export function LiquidityMiningCampaignModal({
                   >
                     Claim rewards
                   </ButtonDark>
+                  <ButtonDark
+                    padding="8px"
+                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+                    width="100%"
+                    marginRight="4px"
+                    onClick={handleExitRequest}
+                    disabled={disabledClaim}
+                  >
+                    Claim & withdraw
+                  </ButtonDark>
                 </RowBetween>
               </div>
             </>
@@ -256,6 +300,17 @@ export function LiquidityMiningCampaignModal({
           txHash={transactionHash}
         />
       )}
+      <ConfirmExitModal
+        isOpen={showExitConfirmationModal}
+        onDismiss={handleDismiss}
+        stakablePair={campaign.targetedPair}
+        claimableRewards={claimableRewardAmounts}
+        stakedTokenBalance={stakedTokenAmount || undefined}
+        attemptingTxn={attemptingTransaction}
+        errorMessage={errorMessage}
+        onConfirm={handleExitConfirmation}
+        txHash={transactionHash}
+      />
     </Modal>
   )
 }
