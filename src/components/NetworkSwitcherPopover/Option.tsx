@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { AutoRow } from '../Row'
 import Badge from '../Badge'
-import { ChainId } from 'dxswap-sdk'
 
 const InfoCard = styled.button<{ active?: boolean }>`
   background-color: transparent;
@@ -60,45 +59,21 @@ const BadgeWrapper = styled.div`
 
 export default function Option({
   clickable = true,
+  onClick,
   header,
   logoSrc,
   active = false,
-  disabled = false,
-  chainId
+  disabled = false
 }: {
   clickable?: boolean
-  onClick?: null | (() => void)
+  onClick?: any
   header: React.ReactNode
   logoSrc?: string
   active?: boolean
   disabled?: boolean
-  chainId: ChainId
 }) {
-  const selectNetwork = () => {
-    console.log('select network: ', chainId)
-
-    /**
-     * TODO:
-     * Check Metamask connected -> (true, false)
-     * true:
-     *  Check Network added -> (true, false)
-     *   false:
-     *     add network
-     *   connect to network
-     * false:
-     *  alert Metamask not available
-     *
-     */
-  }
-
   return (
-    <OptionCardClickable
-      chainId={chainId}
-      onClick={selectNetwork}
-      clickable={clickable && !active}
-      disabled={disabled}
-      active={active}
-    >
+    <OptionCardClickable onClick={onClick} clickable={clickable && !active} disabled={disabled} active={active}>
       <OptionCardLeft>
         <AutoRow>
           {logoSrc ? (
