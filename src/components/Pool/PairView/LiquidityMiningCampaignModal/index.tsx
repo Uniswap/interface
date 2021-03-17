@@ -50,6 +50,7 @@ export function LiquidityMiningCampaignModal({
   const [showWithdrawalConfirmationModal, setShowWithdrawalConfirmationModal] = useState(false)
   const [disabledStaking, setDisabledStaking] = useState(false)
   const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
+  const [disabledClaim, setDisabledClaim] = useState(false)
 
   useEffect(() => {
     setDisabledStaking(
@@ -62,6 +63,12 @@ export function LiquidityMiningCampaignModal({
       !campaign.currentlyActive || !callbacks || !stakedTokenAmount || stakedTokenAmount.equalTo('0')
     )
   }, [callbacks, campaign.currentlyActive, stakableTokenBalance, stakedTokenAmount])
+
+  useEffect(() => {
+    setDisabledClaim(
+      !callbacks || !campaign.currentlyActive || !claimableRewardAmounts.find(amount => amount.greaterThan('0'))
+    )
+  }, [callbacks, campaign.currentlyActive, claimableRewardAmounts, stakableTokenBalance, stakedTokenAmount])
 
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
@@ -189,7 +196,7 @@ export function LiquidityMiningCampaignModal({
                     width="100%"
                     marginRight="4px"
                     onClick={handleClaimConfirmation}
-                    disabled={!callbacks || !campaign.currentlyActive}
+                    disabled={disabledClaim}
                   >
                     Claim rewards
                   </ButtonDark>
