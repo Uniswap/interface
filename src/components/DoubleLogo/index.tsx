@@ -26,7 +26,7 @@ interface DoubleCurrencyLogoProps {
 
 const HigherLogo = styled(CurrencyLogo)`
   z-index: 2;
-  box-shadow: 0px 0px 8px ${({ theme }) => transparentize(0.40, theme.black)};
+  box-shadow: 0px 0px 8px ${({ theme }) => transparentize(0.4, theme.black)};
 `
 
 const CoveredLogo = styled(CurrencyLogo)`
