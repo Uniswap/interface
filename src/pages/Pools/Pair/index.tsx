@@ -4,15 +4,12 @@ import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
 import { PageWrapper } from '../styleds'
 
-import { TYPE, HideSmall, StyledInternalLink } from '../../../theme'
+import { TYPE, HideSmall } from '../../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween } from '../../../components/Row'
-import { ButtonWithLink } from '../../../components/Button'
 import { AutoColumn } from '../../../components/Column'
 
-import { useActiveWeb3React } from '../../../hooks'
 import { ChevronDown } from 'react-feather'
-import { CardSection } from '../../../components/earn/styled'
 import { useToken } from '../../../hooks/Tokens'
 import { UndecoratedLink } from '../../../components/UndercoratedLink'
 import DoubleCurrencyLogo from '../../../components/DoubleLogo'
@@ -21,13 +18,6 @@ import PairView from '../../../components/Pool/PairView'
 import { useRouter } from '../../../hooks/useRouter'
 import PairSearchModal from '../../../components/SearchModal/PairSearchModal'
 import Skeleton from 'react-loading-skeleton'
-
-const VoteCard = styled.div`
-  overflow: hidden;
-  background-color: ${({ theme }) => theme.bg1};
-  border: 1px solid ${({ theme }) => theme.bg2};
-  border-radius: 8px;
-`
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -47,7 +37,6 @@ export default function Pair({
     params: { currencyIdA, currencyIdB }
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
-  const { account } = useActiveWeb3React()
   const router = useRouter()
   const token0 = useToken(currencyIdA)
   const token1 = useToken(currencyIdB)
@@ -119,39 +108,6 @@ export default function Pair({
             <PairView loading={wrappedPair[1] === null} pair={wrappedPair[1]} />
           </AutoColumn>
         </AutoColumn>
-        <ButtonWithLink
-          link={`https://dxstats.eth.link/#/account/${account}`}
-          text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
-          marginTop="32px"
-        />
-        <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
-          Don't see a pool you joined?{' '}
-          <StyledInternalLink color="text5" id="import-pool-link" to="/find">
-            Import it.
-          </StyledInternalLink>
-        </TYPE.body>
-
-        <VoteCard style={{ marginTop: '32px' }}>
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.body fontWeight={600} lineHeight="20px">
-                  Liquidity provider rewards
-                </TYPE.body>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.body fontWeight="500" fontSize="12px" lineHeight="20px" letterSpacing="-0.4px">
-                  Liquidity providers earn a swap fee (0.25% by default) on all trades proportional to their share of
-                  the pool.
-                  <br /> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your
-                  liquidity.
-                  <br /> The swap fee value is decided by DXdao and liquidty providers, it can be between 0% and 10% and
-                  it uses 0.25% as default value that is assigned when the pair is created.
-                </TYPE.body>
-              </RowBetween>
-            </AutoColumn>
-          </CardSection>
-        </VoteCard>
       </PageWrapper>
       <PairSearchModal isOpen={openPairsModal} onDismiss={handleModalClose} onPairSelect={handlePairSelect} />
     </>
