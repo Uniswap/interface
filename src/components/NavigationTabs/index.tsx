@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
-import { NavLink, Link as HistoryLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
@@ -52,6 +52,7 @@ const ActiveText = styled.div`
 
 const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.purple3};
+  cursor: pointer;
 `
 
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
@@ -69,12 +70,11 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
 }
 
 export function FindPoolTabs() {
+  const history = useHistory()
   return (
     <Tabs>
       <RowBetween mb="16px">
-        <HistoryLink to="/pools">
-          <StyledArrowLeft />
-        </HistoryLink>
+        <StyledArrowLeft onClick={history.goBack} />
         <ActiveText>Import Pool</ActiveText>
         <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} />
       </RowBetween>
@@ -83,12 +83,11 @@ export function FindPoolTabs() {
 }
 
 export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+  const history = useHistory()
   return (
     <Tabs>
       <RowBetween mb="16px">
-        <HistoryLink to="/pools">
-          <StyledArrowLeft />
-        </HistoryLink>
+        <StyledArrowLeft onClick={history.goBack} />
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
         <QuestionHelper
           text={
