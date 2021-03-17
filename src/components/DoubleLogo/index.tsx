@@ -1,4 +1,5 @@
 import { Currency } from 'dxswap-sdk'
+import { transparentize } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
@@ -25,6 +26,7 @@ interface DoubleCurrencyLogoProps {
 
 const HigherLogo = styled(CurrencyLogo)`
   z-index: 2;
+  box-shadow: 0px 0px 8px ${({ theme }) => transparentize(0.40, theme.black)};
 `
 
 const CoveredLogo = styled(CurrencyLogo)`
