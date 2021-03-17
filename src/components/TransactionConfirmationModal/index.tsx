@@ -22,7 +22,7 @@ const Section = styled(AutoColumn)`
 `
 
 const BottomSection = styled(Section)`
-  background-color: ${({ theme }) => theme.bg2};
+  // background-color: ${({ theme }) => theme.bg2};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 `
@@ -102,7 +102,12 @@ function TransactionSubmittedContent({
     </Wrapper>
   )
 }
-
+const DashedLine = styled.div`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  border-style: dashed;
+  margin-top: 1rem;
+`
 export function ConfirmationModalContent({
   title,
   bottomContent,
@@ -124,7 +129,9 @@ export function ConfirmationModalContent({
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
         {topContent()}
+        <DashedLine />
       </Section>
+
       <BottomSection gap="12px">{bottomContent()}</BottomSection>
     </Wrapper>
   )

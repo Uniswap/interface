@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import { Info, PieChart } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -104,6 +104,26 @@ export default function Menu() {
           <MenuItem id="link" href={DMM_INFO_URL}>
             <PieChart size={14} />
             Analytics
+          </MenuItem>
+        </MenuFlyout>
+      )}
+    </StyledMenu>
+  )
+}
+
+export function FlyoutPriceRange({ header, content }: { header: ReactNode; content: ReactNode }) {
+  const node = useRef<HTMLDivElement>()
+  const open = useModalOpen(ApplicationModal.PRICE_RANGE)
+  const toggle = useToggleModal(ApplicationModal.PRICE_RANGE)
+
+  return (
+    <StyledMenu ref={node as any}>
+      <span style={{width: '100%'}} onClick={toggle}>{header}</span>
+
+      {open && (
+        <MenuFlyout>
+          <MenuItem id="link" href="https://dmm.exchange/">
+            {content}
           </MenuItem>
         </MenuFlyout>
       )}

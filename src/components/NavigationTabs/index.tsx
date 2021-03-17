@@ -100,7 +100,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
         <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
         </ButtonEmpty>
-        <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
+        <ActiveText>{creating ? 'Create a new pool' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
         <QuestionHelper
           text={
             adding
