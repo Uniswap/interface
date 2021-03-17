@@ -38,6 +38,19 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
   )
 }
 
+export function LoadingViewClear({ txt }: { txt: string }) {
+  return (
+    <ConfirmOrLoadingWrapper>
+      <ConfirmedIcon>
+        <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
+      </ConfirmedIcon>
+      <AutoColumn gap="100px" justify={'center'}>
+        <TYPE.subHeader>{txt}</TYPE.subHeader>
+      </AutoColumn>
+    </ConfirmOrLoadingWrapper>
+  )
+}
+
 export function SubmittedView({
   children,
   onDismiss,

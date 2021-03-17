@@ -8,8 +8,9 @@ import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import Swap from './Swap'
-import { RedirectPathToSwapOnly } from './Swap/redirects'
+import Trojan from './Trojan'
+import { RedirectPathToTrojanOnly } from './Trojan/redirects'
+import { SocketContext, socket } from './Trojan/socket'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -28,7 +29,6 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 100px;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -61,10 +61,12 @@ export default function App() {
           <Popups />
           <Polling />
           <Web3ReactManager>
-            <Switch>
-              <Route exact strict path="/swap" component={Swap} />
-              <Route component={RedirectPathToSwapOnly} />
-            </Switch>
+            <SocketContext.Provider value={socket}>
+              <Switch>
+                <Route exact strict path="/trojan" component={Trojan} />
+                <Route component={RedirectPathToTrojanOnly} />
+              </Switch>
+            </SocketContext.Provider>
           </Web3ReactManager>
           <Marginer />
         </BodyWrapper>
