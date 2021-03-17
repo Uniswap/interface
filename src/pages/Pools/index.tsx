@@ -13,12 +13,11 @@ import Search from 'components/Search'
 import LocalLoader from 'components/LocalLoader'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
+import { useETHPrice } from 'state/application/hooks'
 import { useDerivedPairInfo, usePairActionHandlers } from 'state/pair/hooks'
-import { useSubgraphPoolsData, useUserLiquidityPositions } from 'state/pool/hooks'
+import { useUserLiquidityPositions, useBulkPoolData, useResetPools } from 'state/pools/hooks'
 import { Field } from 'state/pair/actions'
 import { currencyId } from 'utils/currencyId'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
-import { getYesterdayMidnightEpoch } from 'utils/dmm'
 
 const PageWrapper = styled.div`
   padding: 0 10em;
@@ -62,7 +61,7 @@ const Pools = ({
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const { t } = useTranslation()
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
   // Pool selection
@@ -75,13 +74,10 @@ const Pools = ({
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
   const { currencies, pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
-  const { loading: loadingSubgraphPoolsData, data: subgraphPoolsData } = useSubgraphPoolsData(
-    wrappedCurrency(currencyA ?? undefined, chainId),
-    wrappedCurrency(currencyB ?? undefined, chainId),
-    getYesterdayMidnightEpoch()
-  )
 
   const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
+
+  const ethPrice = useETHPrice()
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
@@ -121,6 +117,14 @@ const Pools = ({
       return true
     })
 
+  // format as array of addresses
+  const formattedPools = poolsList.map(pool => pool?.address.toLowerCase())
+
+  useResetPools(currencyA ?? undefined, currencyB ?? undefined)
+
+  // get data for every pool in list
+  const poolsData = useBulkPoolData(formattedPools, ethPrice.currentPrice)
+
   return (
     <>
       <PageWrapper>
@@ -158,14 +162,13 @@ const Pools = ({
         </ToolbarWrapper>
 
         <Panel>
-          {loadingSubgraphPoolsData || loadingUserLiquidityPositions ? (
+          {loadingUserLiquidityPositions ? (
             <LocalLoader />
-          ) : poolsList.length > 0 && subgraphPoolsData?.pools && userLiquidityPositions?.liquidityPositionSnapshots ? (
+          ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositionSnapshots ? (
             <PoolList
               poolsList={poolsList}
-              subgraphPoolsData={subgraphPoolsData.pools}
+              subgraphPoolsData={poolsData}
               userLiquidityPositions={userLiquidityPositions.liquidityPositionSnapshots}
-              poolDayData={subgraphPoolsData.poolDayDatas}
               maxItems={50}
             />
           ) : (

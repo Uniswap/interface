@@ -10,11 +10,11 @@ import { ButtonEmpty } from 'components/Button'
 import FavoriteStar from 'components/Icons/FavoriteStar'
 import AddCircle from 'components/Icons/AddCircle'
 import InfoHelper from 'components/InfoHelper'
-import LocalLoader from 'components/LocalLoader'
 import CopyHelper from 'components/Copy'
 import { shortenAddress, formattedNum } from 'utils'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
+import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { getHealthFactor } from 'utils/dmm'
 
 const DEFAULT_MY_LIQUIDITY = '--/--'
@@ -85,34 +85,10 @@ const LoadMoreButtonContainer = styled.div`
   border-bottom-right-radius: 8px;
 `
 
-interface SubgraphPoolData {
-  id: string
-  reserveUSD: string
-  volumeUSD: string
-  feeUSD: string
-}
-
-interface UserLiquidityPosition {
-  id: string
-  liquidityTokenBalance: string
-  liquidityTokenTotalSupply: string
-  reserveUSD: string
-  timestamp: number
-  pool: {
-    id: string
-  }
-}
-
-interface PoolDayData {
-  poolAddress: string
-  dailyFeeUSD: string
-}
-
 interface ListItemProps {
   pool: Pair
   subgraphPoolData: SubgraphPoolData
   myLiquidity?: UserLiquidityPosition
-  poolDayData?: PoolDayData
   oddRow?: boolean
 }
 
@@ -136,7 +112,7 @@ const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 =
   return formattedNum(myLiquidity.toString(), true)
 }
 
-const ListItem = ({ pool, subgraphPoolData, myLiquidity, poolDayData, oddRow }: ListItemProps) => {
+const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
 
   // Recommended pools are pools that have AMP = 1 or is registered by kyber DAO in a whitelist contract
@@ -158,7 +134,13 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, poolDayData, oddRow }: 
   const currency0 = unwrappedToken(pool.token0)
   const currency1 = unwrappedToken(pool.token1)
 
-  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, poolDayData?.dailyFeeUSD).toFixed(2)
+  const volume = subgraphPoolData.oneDayVolumeUSD
+    ? subgraphPoolData.oneDayVolumeUSD
+    : subgraphPoolData.oneDayVolumeUntracked
+
+  const fee = subgraphPoolData.oneDayFeeUSD ? subgraphPoolData.oneDayFeeUSD : subgraphPoolData.oneDayFeeUntracked
+
+  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, fee).toFixed(2)
 
   return (
     <TableRow oddRow={oddRow}>
@@ -178,10 +160,8 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, poolDayData, oddRow }: 
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
       </DataText>
       <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
-      <DataText grid-area="vol">{formattedNum(subgraphPoolData.volumeUSD, true)}</DataText>
-      <DataText>
-        {poolDayData?.dailyFeeUSD ? formattedNum(poolDayData.dailyFeeUSD, true) : formattedNum('0', true)}
-      </DataText>
+      <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
+      <DataText>{formattedNum(fee, true)}</DataText>
       <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
       <DataText>{`${oneYearFL}%`}</DataText>
       <DataText>{getMyLiquidity(myLiquidity)}</DataText>
@@ -205,7 +185,6 @@ interface PoolListProps {
   poolsList: (Pair | null)[]
   subgraphPoolsData: SubgraphPoolData[]
   userLiquidityPositions: UserLiquidityPosition[]
-  poolDayData: PoolDayData[]
   maxItems?: number
 }
 
@@ -217,13 +196,7 @@ const SORT_FIELD = {
   ONE_YEAR_FL: 3
 }
 
-const PoolList = ({
-  poolsList,
-  subgraphPoolsData,
-  userLiquidityPositions,
-  poolDayData,
-  maxItems = 10
-}: PoolListProps) => {
+const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
 
   const transformedSubgraphPoolsData: {
@@ -232,10 +205,6 @@ const PoolList = ({
 
   const transformedUserLiquidityPositions: {
     [key: string]: UserLiquidityPosition
-  } = {}
-
-  const transformedPoolDayData: {
-    [key: string]: PoolDayData
   } = {}
 
   subgraphPoolsData.forEach(data => {
@@ -249,10 +218,6 @@ const PoolList = ({
     ) {
       transformedUserLiquidityPositions[position.pool.id] = position
     }
-  })
-
-  poolDayData.forEach(record => {
-    transformedPoolDayData[record.poolAddress] = record
   })
 
   // pagination
@@ -299,32 +264,37 @@ const PoolList = ({
       return 0
     }
 
+    const poolASubgraphData = transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]
+    const poolBSubgraphData = transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]
+
+    const feeA = poolASubgraphData?.oneDayFeeUSD
+      ? poolASubgraphData?.oneDayFeeUSD
+      : poolASubgraphData?.oneDayFeeUntracked
+
+    const feeB = poolBSubgraphData?.oneDayFeeUSD
+      ? poolBSubgraphData?.oneDayFeeUSD
+      : poolBSubgraphData?.oneDayFeeUntracked
+
     switch (sortedColumn) {
       case SORT_FIELD.LIQ:
-        return parseFloat(transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.reserveUSD) >
-          parseFloat(transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.reserveUSD)
+        return parseFloat(poolASubgraphData?.reserveUSD) > parseFloat(poolBSubgraphData?.reserveUSD)
           ? (sortDirection ? -1 : 1) * 1
           : (sortDirection ? -1 : 1) * -1
       case SORT_FIELD.VOL:
-        return parseFloat(transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.volumeUSD) >
-          parseFloat(transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.volumeUSD)
-          ? (sortDirection ? -1 : 1) * 1
-          : (sortDirection ? -1 : 1) * -1
-      case SORT_FIELD.FEES:
-        return parseFloat(transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.feeUSD) >
-          parseFloat(transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.feeUSD)
-          ? (sortDirection ? -1 : 1) * 1
-          : (sortDirection ? -1 : 1) * -1
-      case SORT_FIELD.ONE_YEAR_FL:
-        const oneYearFLPoolA = getOneYearFL(
-          transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.reserveUSD,
-          transformedSubgraphPoolsData[(poolA as Pair).address.toLowerCase()]?.feeUSD
-        )
+        const volumeA = poolASubgraphData?.oneDayVolumeUSD
+          ? poolASubgraphData?.oneDayVolumeUSD
+          : poolASubgraphData?.oneDayVolumeUntracked
 
-        const oneYearFLPoolB = getOneYearFL(
-          transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.reserveUSD,
-          transformedSubgraphPoolsData[(poolB as Pair).address.toLowerCase()]?.feeUSD
-        )
+        const volumeB = poolBSubgraphData?.oneDayVolumeUSD
+          ? poolBSubgraphData?.oneDayVolumeUSD
+          : poolBSubgraphData?.oneDayVolumeUntracked
+
+        return parseFloat(volumeA) > parseFloat(volumeB) ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+      case SORT_FIELD.FEES:
+        return parseFloat(feeA) > parseFloat(feeB) ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
+      case SORT_FIELD.ONE_YEAR_FL:
+        const oneYearFLPoolA = getOneYearFL(poolASubgraphData?.reserveUSD, feeA)
+        const oneYearFLPoolB = getOneYearFL(poolBSubgraphData?.reserveUSD, feeB)
 
         return oneYearFLPoolA > oneYearFLPoolB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       default:
@@ -391,7 +361,7 @@ const PoolList = ({
               setSortDirection(sortedColumn !== SORT_FIELD.VOL ? true : !sortDirection)
             }}
           >
-            Volume
+            Volume (24h)
             {sortedColumn === SORT_FIELD.VOL ? (
               !sortDirection ? (
                 <ChevronUp size="14" style={{ marginLeft: '2px' }} />
@@ -455,26 +425,21 @@ const PoolList = ({
 
         <Flex alignItems="center" justifyContent="flexEnd" />
       </TableHeader>
-      {!subgraphPoolsData ? (
-        <LocalLoader />
-      ) : (
-        pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
-          if (pool) {
-            return (
-              <ListItem
-                key={pool.address}
-                pool={pool}
-                subgraphPoolData={transformedSubgraphPoolsData[pool.address.toLowerCase()]}
-                myLiquidity={transformedUserLiquidityPositions[pool.address.toLowerCase()]}
-                poolDayData={transformedPoolDayData[pool.address.toLowerCase()]}
-                oddRow={(index + 1) % 2 !== 0}
-              />
-            )
-          }
+      {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
+        if (pool && transformedSubgraphPoolsData[pool.address.toLowerCase()]) {
+          return (
+            <ListItem
+              key={pool.address}
+              pool={pool}
+              subgraphPoolData={transformedSubgraphPoolsData[pool.address.toLowerCase()]}
+              myLiquidity={transformedUserLiquidityPositions[pool.address.toLowerCase()]}
+              oddRow={(index + 1) % 2 !== 0}
+            />
+          )
+        }
 
-          return null
-        })
-      )}
+        return null
+      })}
       <LoadMoreButtonContainer>
         <ButtonEmpty
           onClick={() => {

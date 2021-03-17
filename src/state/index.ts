@@ -11,6 +11,7 @@ import lists from './lists/reducer'
 import burn from './burn/reducer'
 import multicall from './multicall/reducer'
 import pair from './pair/reducer'
+import pools from './pools/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 
@@ -24,13 +25,17 @@ const store = configureStore({
     burn,
     multicall,
     lists,
-    pair
+    pair,
+    pools
   },
-  middleware: [...getDefaultMiddleware({
-    thunk: false,
-    immutableCheck: false,
-    serializableCheck: false
-  }), save({ states: PERSISTED_KEYS })],
+  middleware: [
+    ...getDefaultMiddleware({
+      thunk: false,
+      immutableCheck: false,
+      serializableCheck: false
+    }),
+    save({ states: PERSISTED_KEYS })
+  ],
   preloadedState: load({ states: PERSISTED_KEYS })
 })
 
