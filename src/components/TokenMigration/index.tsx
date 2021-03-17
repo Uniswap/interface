@@ -16,7 +16,6 @@ import { RowBetween } from '../Row'
 import { Dots } from '../swap/styleds'
 import { getTokenMigrationContract, calculateGasMargin } from '../../utils'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useCurrency } from '../../hooks/Tokens'
 
 const Wrapper = styled.div`
@@ -76,8 +75,6 @@ export default function TokenMigrationModal({
   const balance = useTokenBalance(account ?? undefined, deprecatedToken as TokenEntity)
   const [approval, approveCallback] = useApproveCallback(balance, TOKEN_MIGRATOR_ADDRESS)
 
-  const addTransaction = useTransactionAdder()
-
   const [migrationState, setMigrationState] = useState<MigrationState>(MigrationState.INITIAL)
 
   async function onMigrate() {
@@ -89,12 +86,9 @@ export default function TokenMigrationModal({
     try {
       setMigrationState(MigrationState.PENDING)
       const estimatedGas = await tokenMigrator.estimateGas.migrateTokens(...args)
-      const response = await tokenMigrator.migrateTokens(...args, { gasLimit: calculateGasMargin(estimatedGas) })
+      await tokenMigrator.migrateTokens(...args, { gasLimit: calculateGasMargin(estimatedGas) })
 
       setMigrationState(MigrationState.MIGRATED)
-      addTransaction(response, {
-        summary: 'Migrate ' + wrappedDeprecatedToken.symbol + 'Tokens'
-      })
     } catch (e) {
       setMigrationState(MigrationState.INITIAL)
       console.log(e)
@@ -146,6 +140,7 @@ export default function TokenMigrationModal({
             <ButtonError
               onClick={() => (migrationState === MigrationState.MIGRATED ? onDismiss() : onMigrate())}
               disabled={approval !== ApprovalState.APPROVED || balance?.toSignificant() === '0'}
+              error={approval !== ApprovalState.APPROVED || balance?.toSignificant() === '0'}
             >
               <Text fontSize={20} fontWeight={500}>
                 {migrationState === MigrationState.INITIAL && 'Migrate'}

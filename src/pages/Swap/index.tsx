@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@fuseio/fuse-swap-sdk'
+import { CurrencyAmount, JSBI, Token, Trade, Currency } from '@fuseio/fuse-swap-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -47,6 +47,8 @@ import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import SwitchNetwork from '../../components/swap/SwitchNetwork'
 import BridgeInfo from '../../components/swap/BridgeInfo'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
+import TokenMigrationModal from '../../components/TokenMigration'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -81,6 +83,10 @@ export default function Swap() {
   // get custom setting values for user
   const [deadline] = useUserDeadline()
   const [allowedSlippage] = useUserSlippageTolerance()
+
+  // migration modal
+  const [migrateModalOpen, setMigrateModalOpen] = useState(false)
+  const [migrationCurrency, setMigrationCurrency] = useState<Currency | undefined>()
 
   const { completedBridgeTransfer } = useUserState()
 
@@ -273,6 +279,13 @@ export default function Swap() {
 
   const handleInputSelect = useCallback(
     inputCurrency => {
+      const wrappedToken = inputCurrency as WrappedTokenInfo
+      if (wrappedToken.isDeprecated) {
+        setMigrationCurrency(inputCurrency)
+        setMigrateModalOpen(true)
+        return
+      }
+
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -283,9 +296,19 @@ export default function Swap() {
     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
-    onCurrencySelection
-  ])
+  const handleOutputSelect = useCallback(
+    outputCurrency => {
+      const wrappedToken = outputCurrency as WrappedTokenInfo
+      if (wrappedToken.isDeprecated) {
+        setMigrationCurrency(outputCurrency)
+        setMigrateModalOpen(true)
+        return
+      }
+
+      onCurrencySelection(Field.OUTPUT, outputCurrency)
+    },
+    [onCurrencySelection]
+  )
 
   if (!isHome) {
     return (
@@ -322,6 +345,11 @@ export default function Swap() {
             onConfirm={handleSwap}
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
+          />
+          <TokenMigrationModal
+            token={migrationCurrency}
+            isOpen={migrateModalOpen}
+            onDismiss={() => setMigrateModalOpen(false)}
           />
 
           <AutoColumn gap={'md'}>

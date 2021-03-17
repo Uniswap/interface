@@ -38,6 +38,8 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
+import TokenMigrationModal from '../../components/TokenMigration'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
 
 export default function AddLiquidity({
   match: {
@@ -84,6 +86,10 @@ export default function AddLiquidity({
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
+
+  // migration modal
+  const [migrateModalOpen, setMigrateModalOpen] = useState(false)
+  const [migrationCurrency, setMigrationCurrency] = useState<Currency | undefined>()
 
   // txn values
   const [deadline] = useUserDeadline() // custom from users settings
@@ -280,6 +286,13 @@ export default function AddLiquidity({
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
+      const wrappedToken = currencyA as WrappedTokenInfo
+      if (wrappedToken.isDeprecated) {
+        setMigrationCurrency(currencyA)
+        setMigrateModalOpen(true)
+        return
+      }
+
       const newCurrencyIdA = currencyId(currencyA)
       if (newCurrencyIdA === currencyIdB) {
         history.push(`/add/${currencyIdB}/${currencyIdA}`)
@@ -291,6 +304,13 @@ export default function AddLiquidity({
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
+      const wrappedToken = currencyB as WrappedTokenInfo
+      if (wrappedToken.isDeprecated) {
+        setMigrationCurrency(currencyB)
+        setMigrateModalOpen(true)
+        return
+      }
+
       const newCurrencyIdB = currencyId(currencyB)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
@@ -333,6 +353,11 @@ export default function AddLiquidity({
               />
             )}
             pendingText={pendingText}
+          />
+          <TokenMigrationModal
+            token={migrationCurrency}
+            isOpen={migrateModalOpen}
+            onDismiss={() => setMigrateModalOpen(false)}
           />
           <AutoColumn gap="20px">
             {noLiquidity && (

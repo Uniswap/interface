@@ -1689,10 +1689,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@fuseio/token-lists@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@fuseio/token-lists/-/token-lists-1.0.0.tgz#1d4ca2296276deb88b6bc009d617b3d2b4dadb8f"
-  integrity sha512-lZuzPPucwtvk1il7EoZ5mGTTJKqs1omHeNGdSvQ/4WKxwYieAhV6Mgr9MoAepWGNEOtSaMj8y0UFwmfkEqpq3w==
+"@fuseio/token-lists@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@fuseio/token-lists/-/token-lists-1.1.0.tgz#df4e196aff2cfbeb413559673039916d07c1ad49"
+  integrity sha512-yLZIHk5Drc/UVqKtkmMC/lzK0E5001zQ1+sefCIPPHj+pgFD/MIuCjvHUsjAWtDChujogc4FE7MPHiN9Gv15qg==
 
 "@fuseswap/default-token-list@^1.0.0":
   version "1.0.0"

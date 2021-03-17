@@ -73,7 +73,7 @@ export function CurrencySearch({
   }, [isAddressSearch])
 
   const tokenComparator = useTokenComparator(invertSearchOrder, listType)
-  const showMultiBridgeTokens = bridgeDirection === BridgeDirection.FUSE_TO_BSC
+  const showMultiBridgeTokens = listType !== 'Swap' && bridgeDirection === BridgeDirection.FUSE_TO_BSC
 
   const filteredBridgeTokens: Token[] = useMemo(() => {
     const tokens = Object.values(allTokens)

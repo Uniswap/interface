@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@fuseio/fuse-swap-sdk'
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllSwapTokens, useAllBridgeTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
-import { isAddress } from '../../utils'
+import { isAddress, getTokenContract } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 
 /**
@@ -40,6 +40,20 @@ export function useETHBalances(
         return memo
       }, {}),
     [addresses, results]
+  )
+}
+
+export function useTokenBalanceCallback() {
+  const { library, account } = useActiveWeb3React()
+
+  return useCallback(
+    async (token?: Token) => {
+      if (!library || !account || !token || !isAddress(token.address)) return
+      const contract = getTokenContract(token.address, library, account)
+      const balance = await contract.balanceOf(account)
+      return balance
+    },
+    [account, library]
   )
 }
 

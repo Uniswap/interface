@@ -31,6 +31,7 @@ import NativeToErcBridge from '../state/bridge/bridges/nativeToErc'
 import Erc677ToErc677Bridge from '../state/bridge/bridges/erc677Toerc677'
 import Erc20ToErc677Bridge from '../state/bridge/bridges/erc20Toerc677'
 import BRIDGED_TOKENS_MIGRATOR_ABI from '../constants/abis/bridgedTokenMigrator.json'
+import { ERC20_ABI } from '../constants/abis/erc20'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -362,4 +363,12 @@ export function safeShortenAddress(address = '') {
 }
 export function getTokenMigrationContract(library: Web3Provider, account: string) {
   return getContract(TOKEN_MIGRATOR_ADDRESS, BRIDGED_TOKENS_MIGRATOR_ABI, library, account)
+}
+
+export function getTokenContract(address: string, library: Web3Provider, account: string) {
+  return getContract(address, ERC20_ABI, library, account)
+}
+
+export function isArrayEmpty(arr: Array<any>) {
+  return arr.filter(Boolean).length ? false : true
 }
