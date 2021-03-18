@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency, Token, RoutablePlatform, CurrencyAmount, ChainId } from 'dxswap-sdk'
+import { TokenAmount, Pair, Currency, RoutablePlatform } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
@@ -10,15 +10,7 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { usePairContract, useTokenContract } from '../hooks/useContract'
 import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
-import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
-import { gql, useQuery } from '@apollo/client'
-import {
-  GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
-  PairsWithNonExpiredLiquidityMiningCampaignsQueryResult,
-  RawToken
-} from '../apollo/queries'
-import { BigNumber, ethers } from 'ethers'
-import { useNativeCurrency } from '../hooks/useNativeCurrency'
+import { BigNumber } from 'ethers'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -95,104 +87,6 @@ export function usePair(tokenA?: Currency, tokenB?: Currency, platform?: Routabl
   return usePairs([[tokenA, tokenB]], platform)[0]
 }
 
-export function useAllPairs(): { loading: boolean; pairs: Pair[] } {
-  interface RawPair {
-    reserve0: string
-    reserve1: string
-    token0: RawToken
-    token1: RawToken
-  }
-
-  interface QueryResult {
-    pairs: RawPair[]
-  }
-
-  const { chainId } = useActiveWeb3React()
-  const { loading, data, error } = useQuery<QueryResult>(gql`
-    query getAllPairs {
-      pairs {
-        reserve0
-        reserve1
-        token0 {
-          address: id
-          name
-          symbol
-          decimals
-        }
-        token1 {
-          address: id
-          name
-          symbol
-          decimals
-        }
-      }
-    }
-  `)
-
-  return useMemo(() => {
-    if (loading || !chainId) return { loading: true, pairs: [] }
-    if (!data || error) return { loading: false, pairs: [] }
-    return {
-      loading: false,
-      pairs: data.pairs.reduce((pairs: Pair[], rawPair) => {
-        const { token0, token1, reserve0, reserve1 } = rawPair
-        const tokenAmountA = new TokenAmount(
-          new Token(
-            chainId,
-            ethers.utils.getAddress(token0.address),
-            parseInt(token0.decimals),
-            token0.symbol,
-            token0.name
-          ),
-          ethers.utils.parseUnits(reserve0, token0.decimals).toString()
-        )
-        const tokenAmountB = new TokenAmount(
-          new Token(
-            chainId,
-            ethers.utils.getAddress(token1.address),
-            parseInt(token1.decimals),
-            token1.symbol,
-            token1.name
-          ),
-          ethers.utils.parseUnits(reserve1, token1.decimals).toString()
-        )
-        pairs.push(new Pair(tokenAmountA, tokenAmountB))
-        return pairs
-      }, [])
-    }
-  }, [chainId, data, error, loading])
-}
-
-export function usePairReserveNativeCurrency(pair?: Pair): { loading: boolean; reserveNativeCurrency: CurrencyAmount } {
-  const { chainId } = useActiveWeb3React()
-
-  interface QueryResult {
-    pair: { reserveNativeCurrency: string }
-  }
-
-  const { loading, data, error } = useQuery<QueryResult>(
-    gql`
-      query getPairReserveNativeCurrency($pairId: ID!) {
-        pair(id: $pairId) {
-          reserveNativeCurrency
-        }
-      }
-    `,
-    { variables: { pairId: pair?.liquidityToken.address.toLowerCase() } }
-  )
-
-  return useMemo(() => {
-    if (loading)
-      return { loading: true, reserveNativeCurrency: CurrencyAmount.nativeCurrency('0', chainId || ChainId.MAINNET) }
-    if (!data || error || !chainId)
-      return { loading: false, reserveNativeCurrency: CurrencyAmount.nativeCurrency('0', chainId || ChainId.MAINNET) }
-    return {
-      loading: false,
-      reserveNativeCurrency: CurrencyAmount.nativeCurrency(data.pair.reserveNativeCurrency, chainId)
-    }
-  }, [data, error, loading, chainId])
-}
-
 export function usePairLiquidityTokenTotalSupply(pair?: Pair): TokenAmount | null {
   const lpTokenContract = useTokenContract(pair?.liquidityToken.address)
   const totalSupplyResult = useSingleCallResult(lpTokenContract, 'totalSupply')
@@ -202,67 +96,6 @@ export function usePairLiquidityTokenTotalSupply(pair?: Pair): TokenAmount | nul
     const supply = totalSupplyResult.result[0] as BigNumber
     return new TokenAmount(pair.liquidityToken, supply.toString())
   }, [pair, totalSupplyResult.result])
-}
-
-export function usePairsByToken0(
-  token0?: Token | null
-): {
-  loading: boolean
-  pairs: Pair[]
-} {
-  const { chainId } = useActiveWeb3React()
-  const nativeCurrency = useNativeCurrency()
-  const { error, loading: loadingPairs, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
-    GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
-    { variables: { token0Id: token0?.address.toLowerCase(), timestamp: Math.floor(Date.now() / 1000) } }
-  )
-
-  return useMemo(() => {
-    if (!chainId || loadingPairs) return { loading: true, pairs: [] }
-    if (!data || error) return { loading: false, pairs: [] }
-    return {
-      loading: false,
-      pairs: data.pairs.map(rawPair => {
-        const {
-          token0,
-          token1,
-          reserve0,
-          reserve1,
-          reserveNativeCurrency,
-          totalSupply,
-          liquidityMiningCampaigns
-        } = rawPair
-        const properToken0 = new Token(
-          chainId,
-          ethers.utils.getAddress(token0.address),
-          parseInt(token0.decimals),
-          token0.symbol,
-          token0.name
-        )
-        const properToken1 = new Token(
-          chainId,
-          ethers.utils.getAddress(token1.address),
-          parseInt(token1.decimals),
-          token1.symbol,
-          token1.name
-        )
-        const pair = new Pair(
-          new TokenAmount(properToken0, ethers.utils.parseUnits(reserve0, token0.decimals).toString()),
-          new TokenAmount(properToken1, ethers.utils.parseUnits(reserve1, token1.decimals).toString())
-        )
-        const campaigns = toLiquidityMiningCampaigns(
-          chainId,
-          pair,
-          totalSupply,
-          reserveNativeCurrency,
-          liquidityMiningCampaigns,
-          nativeCurrency
-        )
-        pair.liquidityMiningCampaigns = campaigns
-        return pair
-      })
-    }
-  }, [chainId, loadingPairs, data, error, nativeCurrency])
 }
 
 export function usePairAtAddress(address?: string): Pair | null {

@@ -12,8 +12,9 @@ import { filterPairs } from './filtering'
 import SortButton from './SortButton'
 import { usePairsComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import { useAllPairs, usePairAtAddress } from '../../data/Reserves'
+import { usePairAtAddress } from '../../data/Reserves'
 import PairList from './PairList'
+import { useAllPairs } from '../../hooks/useAllPairs'
 
 interface PairSearchProps {
   isOpen: boolean

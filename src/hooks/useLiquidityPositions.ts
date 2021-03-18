@@ -3,7 +3,7 @@ import { Pair, Token, TokenAmount } from 'dxswap-sdk'
 import { ethers } from 'ethers'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
-import { PairWithNonExpiredLiquidityMiningCampaigns } from '../apollo/queries'
+import { SubgraphLiquidityMiningCampaign } from '../apollo'
 import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 
@@ -49,12 +49,32 @@ const QUERY = gql`
   }
 `
 
+interface SubgraphToken {
+  address: string
+  symbol: string
+  name: string
+  decimals: string
+}
+
+interface SubgraphPair {
+  address: string
+  reserve0: string
+  reserve1: string
+  reserveNativeCurrency: string
+  totalSupply: string
+  token0: SubgraphToken
+  token1: SubgraphToken
+  liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
+}
+
+interface QueryResult {
+  liquidityPositions: { pair: SubgraphPair }[]
+}
+
 export function useLPPairs(account?: string): { loading: boolean; pairs: Pair[] } {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
-  const { loading, data, error } = useQuery<{
-    liquidityPositions: { pair: PairWithNonExpiredLiquidityMiningCampaigns }[]
-  }>(QUERY, {
+  const { loading, data, error } = useQuery<QueryResult>(QUERY, {
     variables: {
       account: account?.toLowerCase(),
       timestamp: Math.floor(Date.now() / 1000)

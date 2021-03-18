@@ -4,11 +4,6 @@ import { Link } from 'react-router-dom'
 import { Pair } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import DoubleCurrencyLogo from '../../DoubleLogo'
-import {
-  usePair24hVolumeUSD,
-  usePairLiquidityUSD,
-  usePairWithLiquidityMiningCampaigns
-} from '../../../hooks/usePairData'
 import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
 import { RowBetween } from '../../Row'
@@ -18,6 +13,9 @@ import LiquidityMiningCampaignsList from './LiquidityMiningCampaignsList'
 import { ResponsiveButtonPrimary, TitleRow } from '../../../pages/LiquidityMining/styleds'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
 import Skeleton from 'react-loading-skeleton'
+import { usePair24hVolumeUSD } from '../../../hooks/usePairVolume24hUSD'
+import { usePairLiquidityUSD } from '../../../hooks/usePairLiquidityUSD'
+import { usePairWithLiquidityMiningCampaigns } from '../../../hooks/usePairWithLiquidityMiningCampaign'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {

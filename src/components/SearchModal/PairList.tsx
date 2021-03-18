@@ -8,8 +8,8 @@ import Badge from '../Badge'
 import { TokenListContainer, TokenPickerItem } from './styleds'
 import { Plus, X } from 'react-feather'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { useAllPairs } from '../../data/Reserves'
 import { isPairOnList } from '../../utils'
+import { useAllPairs } from '../../hooks/useAllPairs'
 
 interface PairRowProps {
   pair: Pair

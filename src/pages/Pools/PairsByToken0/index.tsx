@@ -19,7 +19,7 @@ import { UndecoratedLink } from '../../../components/UndercoratedLink'
 import CurrencySearchModal from '../../../components/SearchModal/CurrencySearchModal'
 import { useRouter } from '../../../hooks/useRouter'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
-import { usePairsByToken0 } from '../../../data/Reserves'
+import { usePairsByToken0 } from '../../../hooks/usePairsByToken0'
 import PairsList from '../../../components/Pool/PairsList'
 
 const VoteCard = styled.div`

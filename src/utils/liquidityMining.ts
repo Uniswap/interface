@@ -12,9 +12,8 @@ import {
   PricedToken,
   PricedTokenAmount
 } from 'dxswap-sdk'
-import { ethers } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
-import { NonExpiredLiquidityMiningCampaign } from '../apollo/queries'
+import { getAddress, parseUnits } from 'ethers/lib/utils'
+import { SubgraphLiquidityMiningCampaign } from '../apollo'
 import { ZERO_USD } from '../constants'
 import { getLpTokenPrice } from './prices'
 
@@ -59,14 +58,14 @@ export function toLiquidityMiningCampaigns(
   targetedPair: Pair,
   targetedPairLpTokenTotalSupply: string,
   targetedPairReserveNativeCurrency: string,
-  rawLiquidityMiningCampaigns: NonExpiredLiquidityMiningCampaign[],
+  rawLiquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[],
   nativeCurrency: Currency
 ): LiquidityMiningCampaign[] {
   return rawLiquidityMiningCampaigns.map(campaign => {
     const rewards = campaign.rewardTokens.map((rewardToken, index) => {
       const properRewardToken = new Token(
         chainId,
-        rewardToken.address,
+        getAddress(rewardToken.address),
         parseInt(rewardToken.decimals),
         rewardToken.symbol,
         rewardToken.name
@@ -82,7 +81,7 @@ export function toLiquidityMiningCampaigns(
       )
       const pricedRewardToken = new PricedToken(
         chainId,
-        rewardToken.address,
+        getAddress(rewardToken.address),
         parseInt(rewardToken.decimals),
         rewardTokenPriceNativeCurrency,
         rewardToken.symbol,
@@ -101,7 +100,7 @@ export function toLiquidityMiningCampaigns(
     )
     const stakedPricedToken = new PricedToken(
       chainId,
-      targetedPair.liquidityToken.address,
+      getAddress(targetedPair.liquidityToken.address),
       targetedPair.liquidityToken.decimals,
       lpTokenPriceNativeCurrency,
       targetedPair.liquidityToken.symbol,
@@ -118,7 +117,7 @@ export function toLiquidityMiningCampaigns(
       rewards,
       staked,
       campaign.locked,
-      ethers.utils.getAddress(campaign.address) // checksum address to avoid warnings
+      getAddress(campaign.address)
     )
   })
 }

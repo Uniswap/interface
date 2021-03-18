@@ -2,9 +2,10 @@ import { LiquidityMiningCampaign, Pair, PricedToken, PricedTokenAmount, TokenAmo
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { useNativeCurrencyPricedTokenAmounts } from './useTokensDerivedNativeCurrency'
-import { usePairLiquidityTokenTotalSupply, usePairReserveNativeCurrency } from '../data/Reserves'
+import { usePairLiquidityTokenTotalSupply } from '../data/Reserves'
 import { getLpTokenPrice } from '../utils/prices'
 import { useNativeCurrency } from './useNativeCurrency'
+import { usePairReserveNativeCurrency } from './usePairReserveNativeCurrency'
 
 export function useNewLiquidityMiningCampaign(
   targetedPair: Pair | null,

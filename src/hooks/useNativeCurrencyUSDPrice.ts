@@ -1,17 +1,25 @@
-import { useQuery } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import Decimal from 'decimal.js'
 import { Price, USD } from 'dxswap-sdk'
 import { parseUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'
-import { GET_NATIVE_CURRENCY_USD_PRICE } from '../apollo/queries'
 import { useNativeCurrency } from './useNativeCurrency'
+
+const QUERY = gql`
+  query {
+    bundle(id: "1") {
+      nativeCurrencyPrice
+    }
+  }
+`
 
 export function useNativeCurrencyUSDPrice(): { loading: boolean; nativeCurrencyUSDPrice: Price } {
   const nativeCurrency = useNativeCurrency()
-  const { loading, error, data } = useQuery(GET_NATIVE_CURRENCY_USD_PRICE)
+  const { loading, error, data } = useQuery<{ bundle: { nativeCurrencyPrice: string } }>(QUERY)
 
   return useMemo(() => {
-    if (loading || error) return { loading: false, nativeCurrencyUSDPrice: new Price(nativeCurrency, USD, '1', '0') }
+    if (loading) return { loading: true, nativeCurrencyUSDPrice: new Price(nativeCurrency, USD, '1', '0') }
+    if (!data || error) return { loading: false, nativeCurrencyUSDPrice: new Price(nativeCurrency, USD, '1', '0') }
     const [numerator, denominator] = new Decimal(data.bundle.nativeCurrencyPrice).toFraction(
       parseUnits('1', USD.decimals).toString()
     )
