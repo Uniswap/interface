@@ -71,7 +71,7 @@ export default function MyPairs() {
                   </TYPE.mediumHeader>
                 </Box>
                 <Box>
-                  <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px" color="text4">
+                  <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
                     MINE
                   </TYPE.mediumHeader>
                 </Box>
