@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency, Token, RoutablePlatform, CurrencyAmount, Percent, ChainId } from 'dxswap-sdk'
+import { TokenAmount, Pair, Currency, Token, RoutablePlatform, CurrencyAmount, ChainId } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { Interface } from '@ethersproject/abi'
@@ -10,8 +10,7 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { usePairContract, useTokenContract } from '../hooks/useContract'
 import { useToken } from '../hooks/Tokens'
 import { useSingleCallResult } from '../state/multicall/hooks'
-import { getPairMaximumApy, getPairRemainingRewardsUSD, toLiquidityMiningCampaigns } from '../utils/liquidityMining'
-import { useNativeCurrencyUSDPrice } from '../hooks/useNativeCurrencyUSDPrice'
+import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
 import { gql, useQuery } from '@apollo/client'
 import {
   GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
@@ -205,26 +204,25 @@ export function usePairLiquidityTokenTotalSupply(pair?: Pair): TokenAmount | nul
   }, [pair, totalSupplyResult.result])
 }
 
-export function usePairsByToken0WithRemainingRewardUSDAndMaximumApy(
+export function usePairsByToken0(
   token0?: Token | null
 ): {
   loading: boolean
-  wrappedPairs: { pair: Pair; remainingRewardUSD: CurrencyAmount; maximumApy: Percent }[]
+  pairs: Pair[]
 } {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
-  const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const { error, loading: loadingPairs, data } = useQuery<PairsWithNonExpiredLiquidityMiningCampaignsQueryResult>(
     GET_PAIRS_BY_TOKEN0_WITH_NON_EXPIRED_LIQUIDITY_MINING_CAMPAIGNS,
     { variables: { token0Id: token0?.address.toLowerCase(), timestamp: Math.floor(Date.now() / 1000) } }
   )
 
   return useMemo(() => {
-    if (!chainId || loadingPairs || loadingNativeCurrencyUsdPrice) return { loading: true, wrappedPairs: [] }
-    if (!data || error) return { loading: false, wrappedPairs: [] }
+    if (!chainId || loadingPairs) return { loading: true, pairs: [] }
+    if (!data || error) return { loading: false, pairs: [] }
     return {
       loading: false,
-      wrappedPairs: data.pairs.map(rawPair => {
+      pairs: data.pairs.map(rawPair => {
         const {
           token0,
           token1,
@@ -261,14 +259,10 @@ export function usePairsByToken0WithRemainingRewardUSDAndMaximumApy(
           nativeCurrency
         )
         pair.liquidityMiningCampaigns = campaigns
-        return {
-          pair,
-          remainingRewardUSD: getPairRemainingRewardsUSD(pair, nativeCurrencyUSDPrice),
-          maximumApy: getPairMaximumApy(pair)
-        }
+        return pair
       })
     }
-  }, [chainId, loadingPairs, loadingNativeCurrencyUsdPrice, data, error, nativeCurrency, nativeCurrencyUSDPrice])
+  }, [chainId, loadingPairs, data, error, nativeCurrency])
 }
 
 export function usePairAtAddress(address?: string): Pair | null {

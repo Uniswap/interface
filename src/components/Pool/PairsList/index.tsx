@@ -1,14 +1,15 @@
-import React, { memo, useState } from 'react'
+import React, { useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
-import { usePairsByToken0WithRemainingRewardUSDAndMaximumApy } from '../../../data/Reserves'
 import { UndecoratedLink } from '../../UndercoratedLink'
-import Pair from './Pair'
-import { Token } from 'dxswap-sdk'
+import PairCard from './Pair'
+import { Pair } from 'dxswap-sdk'
 import Empty from '../Empty'
 import styled from 'styled-components'
 import { usePage } from '../../../hooks/usePage'
+import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../../../utils/liquidityMining'
+import { useNativeCurrencyUSDPrice } from '../../../hooks/useNativeCurrencyUSDPrice'
 
 const ListLayout = styled.div`
   display: grid;
@@ -19,32 +20,41 @@ const ListLayout = styled.div`
   `};
 `
 
-interface AggregatedPairsListProps {
-  token0?: Token | null
+interface PairsListProps {
+  pairs: Pair[]
+  loading?: boolean
 }
 
 const ITEMS_PER_PAGE = 9
 
-function Token0PairsList({ token0 }: AggregatedPairsListProps) {
+export default function PairsList({ pairs, loading }: PairsListProps) {
   const [page, setPage] = useState(1)
-  const { loading, wrappedPairs } = usePairsByToken0WithRemainingRewardUSDAndMaximumApy(token0)
-  const itemsPage = usePage(wrappedPairs, ITEMS_PER_PAGE, page, 0)
+  const itemsPage = usePage(pairs, ITEMS_PER_PAGE, page, 0)
+  const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
+
+  const overallLoading = loading || loadingNativeCurrencyUSDPrice
 
   return (
     <Flex flexDirection="column">
       <Box mb="8px" height="460px">
-        {loading ? (
+        {overallLoading ? (
           <LoadingList wideCards doubleCircle />
         ) : itemsPage.length > 0 ? (
           <ListLayout>
-            {itemsPage.map(wrappedPair => {
-              const { pair, remainingRewardUSD, maximumApy } = wrappedPair
+            {itemsPage.map(pair => {
+              const remainingRewardUSD = getPairRemainingRewardsUSD(pair, nativeCurrencyUSDPrice)
+              const maximumApy = getPairMaximumApy(pair)
               return (
                 <UndecoratedLink
                   key={pair.liquidityToken.address}
                   to={`/pools/${pair.token0.address}/${pair.token1.address}`}
                 >
-                  <Pair token0={pair.token0} token1={pair.token1} usdRewards={remainingRewardUSD} apy={maximumApy} />
+                  <PairCard
+                    token0={pair.token0}
+                    token1={pair.token1}
+                    usdRewards={remainingRewardUSD}
+                    apy={maximumApy}
+                  />
                 </UndecoratedLink>
               )
             })}
@@ -59,14 +69,9 @@ function Token0PairsList({ token0 }: AggregatedPairsListProps) {
       </Box>
       <Flex width="100%" justifyContent="flex-end">
         <Box>
-          <Pagination page={page} totalItems={wrappedPairs.length} itemsPerPage={12} onPageChange={setPage} />
+          <Pagination page={page} totalItems={pairs.length} itemsPerPage={12} onPageChange={setPage} />
         </Box>
       </Flex>
     </Flex>
   )
 }
-
-export default memo(Token0PairsList, (previousProps, nextProps) => {
-  // avoids token reference changes to mess things up by reloading the whole thing
-  return !!(previousProps.token0 && nextProps.token0 && previousProps.token0.equals(nextProps.token0))
-})

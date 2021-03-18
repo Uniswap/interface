@@ -15,11 +15,12 @@ import { ChevronDown } from 'react-feather'
 import { CardSection } from '../../../components/earn/styled'
 import { useToken } from '../../../hooks/Tokens'
 import CurrencyLogo from '../../../components/CurrencyLogo'
-import Token0PairsList from '../../../components/Pool/Token0PairsList'
 import { UndecoratedLink } from '../../../components/UndercoratedLink'
 import CurrencySearchModal from '../../../components/SearchModal/CurrencySearchModal'
 import { useRouter } from '../../../hooks/useRouter'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
+import { usePairsByToken0 } from '../../../data/Reserves'
+import PairsList from '../../../components/Pool/PairsList'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -72,6 +73,7 @@ export default function PairsByToken0({
   const { account } = useActiveWeb3React()
   const router = useRouter()
   const token0 = useToken(currencyIdA)
+  const { loading: loadingPairs, pairs } = usePairsByToken0(token0)
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
   const [openTokenModal, setOpenTokenModal] = useState(false)
@@ -148,7 +150,7 @@ export default function PairsByToken0({
                 )}
               </ButtonRow>
             </TitleRow>
-            <Token0PairsList token0={token0} />
+            <PairsList loading={loadingPairs} pairs={pairs} />
           </AutoColumn>
         </AutoColumn>
         <ButtonWithLink

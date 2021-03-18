@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import AggregatedPairs from './AggregatedPairs'
 import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
@@ -9,31 +9,32 @@ import Empty from '../Empty'
 import MyPairs from './MyPairs'
 import styled from 'styled-components'
 import { usePage } from '../../../hooks/usePage'
+import { useLPPairs } from '../../../hooks/useLiquidityPositions'
+import { useActiveWeb3React } from '../../../hooks'
 
 const ListLayout = styled.div`
   display: grid;
   grid-gap: 15px 9px;
   grid-template-columns: 155px 155px 155px 155px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: auto;
+    grid-template-columns: auto-fill;
   `};
 `
 
 const ITEMS_PER_PAGE = 12
 
 export default function AggregatedPairsList() {
+  const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
   const [filter, setFilter] = useState(PairsFilterType.ALL)
-  const { loading, aggregatedData } = useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(filter)
+  const {
+    loading: loadingAggregatedData,
+    aggregatedData
+  } = useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(filter)
   const itemsPage = usePage(aggregatedData, ITEMS_PER_PAGE, page, 1)
+  const { loading: loadingUserLpPositions, pairs: userLpPairs } = useLPPairs(account || undefined)
 
-  const userLpPairs = useMemo(
-    () =>
-      aggregatedData
-        .filter(aggregation => aggregation.lpTokensBalance.greaterThan('0'))
-        .flatMap(aggregation => aggregation.pairs),
-    [aggregatedData]
-  )
+  const loading = loadingUserLpPositions || loadingAggregatedData
 
   return (
     <Flex flexDirection="column">

@@ -42,7 +42,7 @@ interface MyPairsProps {
 
 export default function MyPairs({ pairs }: MyPairsProps) {
   return (
-    <UndecoratedLink to={`/pools/mine`}>
+    <UndecoratedLink to="/pools/mine">
       <StyledStackedCards>
         <Flex justifyContent="center" alignItems="center" flexDirection="column" width="100%" height="100%">
           <Box mb="4px">

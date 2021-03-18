@@ -13,8 +13,6 @@ import {
 } from '../apollo/queries'
 import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
-import { toDXSwapLiquidityToken, useTrackedTokenPairs } from '../state/user/hooks'
-import { useTokenBalancesWithLoadingIndicator } from '../state/wallet/hooks'
 import { getPairMaximumApy, getPairRemainingRewardsUSD, toLiquidityMiningCampaigns } from '../utils/liquidityMining'
 import { useNativeCurrencyUSDPrice } from './useNativeCurrencyUSDPrice'
 import { ethers } from 'ethers'
@@ -168,37 +166,20 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
   loading: boolean
   aggregatedData: {
     token0: Token
-    lpTokensBalance: TokenAmount
     pairs: Pair[]
     remainingRewardsUSD: CurrencyAmount
     maximumApy: Percent
   }[]
 } {
-  const { account } = useActiveWeb3React()
   const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const { loading: loadingAllPairs, pairs: allPairs } = useAllPairsWithNonExpiredLiquidityMiningCampaigns()
-  const trackedPairs = useTrackedTokenPairs()
-  const trackedPairsWithLiquidityTokens = useMemo(
-    () => trackedPairs.map(tokens => ({ liquidityToken: toDXSwapLiquidityToken(tokens), tokens })),
-    [trackedPairs]
-  )
-  const lpTokens = useMemo(() => trackedPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
-    trackedPairsWithLiquidityTokens
-  ])
-  const [trackedLpTokenBalances, loadingTrackedLpTokenBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    lpTokens
-  )
   const sorter = useAggregatedByToken0PairComparator()
 
   return useMemo(() => {
-    if (loadingAllPairs || loadingNativeCurrencyUSDPrice || loadingTrackedLpTokenBalances)
-      return { loading: true, aggregatedData: [] }
-
+    if (loadingAllPairs || loadingNativeCurrencyUSDPrice) return { loading: true, aggregatedData: [] }
     const aggregationMap: {
       [token0Address: string]: {
         token0: Token
-        lpTokensBalance: TokenAmount
         pairs: Pair[]
         remainingRewardsUSD: CurrencyAmount
         maximumApy: Percent
@@ -206,13 +187,11 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
     } = {}
     for (let i = 0; i < allPairs.length; i++) {
       const pair = allPairs[i]
-      const liquidityTokenAddress = pair.liquidityToken.address
       const remainingRewardsUSD = getPairRemainingRewardsUSD(pair, nativeCurrencyUSDPrice)
       let mappedValue = aggregationMap[pair.token0.address]
       if (!!!mappedValue) {
         mappedValue = {
           token0: pair.token0,
-          lpTokensBalance: new TokenAmount(pair.liquidityToken, '0'),
           pairs: [],
           remainingRewardsUSD: ZERO_USD,
           maximumApy: ZERO_USD
@@ -224,11 +203,6 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
       const apy = getPairMaximumApy(pair)
       if (apy.greaterThan(mappedValue.maximumApy)) {
         mappedValue.maximumApy = apy
-      }
-      const lpTokenBalance = trackedLpTokenBalances[liquidityTokenAddress]
-      // TODO: remove second part of the check and investigate why sometimes the tokens are different, causing an error
-      if (!!lpTokenBalance && lpTokenBalance.token.equals(mappedValue.lpTokensBalance.token)) {
-        mappedValue.lpTokensBalance = mappedValue.lpTokensBalance.add(lpTokenBalance)
       }
     }
     let filteredData = Object.values(aggregationMap)
@@ -242,14 +216,5 @@ export function useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximum
       loading: false,
       aggregatedData: filteredData.sort(sorter)
     }
-  }, [
-    allPairs,
-    nativeCurrencyUSDPrice,
-    filter,
-    loadingAllPairs,
-    loadingNativeCurrencyUSDPrice,
-    loadingTrackedLpTokenBalances,
-    sorter,
-    trackedLpTokenBalances
-  ])
+  }, [allPairs, nativeCurrencyUSDPrice, filter, loadingAllPairs, loadingNativeCurrencyUSDPrice, sorter])
 }
