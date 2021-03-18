@@ -80,10 +80,20 @@ export default function CreateLiquidityMining() {
   }, [addTransaction, createLiquidityMiningCallback, targetedPair])
 
   const handleCreateDismiss = useCallback(() => {
+    if (transactionHash) {
+      // the creation tx has been submitted, let's empty the creation form
+      setSingleReward(null)
+      setTargetedPair(null)
+      setReward(null)
+      setUnlimitedPool(true)
+      setStartTime(null)
+      setEndTime(null)
+      setTimelocked(false)
+    }
     setErrorMessage('')
     setTransactionHash(null)
     setShowConfirmationModal(false)
-  }, [])
+  }, [transactionHash])
 
   return (
     <>
