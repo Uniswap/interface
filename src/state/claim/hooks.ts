@@ -29,18 +29,16 @@ function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | 
 
   return (CLAIM_PROMISES[key] =
     CLAIM_PROMISES[key] ??
-    fetch(`https://gentle-frost-9e74.uniswap.workers.dev/${chainId}/${formatted}`)
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json()
-        } else {
-          console.debug(`No claim for account ${formatted} on chain ID ${chainId}`)
-          return null
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to get claim data', error)
-      }))
+    fetch('https://merkle-drop-1.uniswap.workers.dev/', {
+      body: JSON.stringify({ chainId, address: formatted }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Referrer-Policy': 'no-referrer',
+      },
+      method: 'POST',
+    })
+      .then(({ ok, json }) => (ok ? json() : console.debug(`No claim for account ${formatted} on chain ID ${chainId}`)))
+      .catch((error) => console.error('Failed to get claim data', error)))
 }
 
 // parse distributorContract blob and detect if user has claim data
