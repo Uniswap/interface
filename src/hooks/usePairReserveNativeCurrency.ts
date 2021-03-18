@@ -1,7 +1,10 @@
 import { gql, useQuery } from '@apollo/client'
+import Decimal from 'decimal.js'
 import { ChainId, CurrencyAmount, Pair } from 'dxswap-sdk'
+import { parseUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
+import { useNativeCurrency } from './useNativeCurrency'
 
 const QUERY = gql`
   query($pairId: ID!) {
@@ -14,6 +17,7 @@ const QUERY = gql`
 
 export function usePairReserveNativeCurrency(pair?: Pair): { loading: boolean; reserveNativeCurrency: CurrencyAmount } {
   const { chainId } = useActiveWeb3React()
+  const nativeCurrency = useNativeCurrency()
 
   interface QueryResult {
     pair: { reserveNativeCurrency: string }
@@ -30,7 +34,13 @@ export function usePairReserveNativeCurrency(pair?: Pair): { loading: boolean; r
       return { loading: false, reserveNativeCurrency: CurrencyAmount.nativeCurrency('0', chainId || ChainId.MAINNET) }
     return {
       loading: false,
-      reserveNativeCurrency: CurrencyAmount.nativeCurrency(data.pair.reserveNativeCurrency, chainId)
+      reserveNativeCurrency: CurrencyAmount.nativeCurrency(
+        parseUnits(
+          new Decimal(data.pair.reserveNativeCurrency).toFixed(nativeCurrency.decimals),
+          nativeCurrency.decimals
+        ).toString(),
+        chainId
+      )
     }
-  }, [data, error, loading, chainId])
+  }, [loading, chainId, data, error, nativeCurrency])
 }

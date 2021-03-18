@@ -2,16 +2,16 @@ import { LiquidityMiningCampaign, Pair } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import Pagination from '../../../Pagination'
-import { LiquidityMiningCampaignModal } from '../LiquidityMiningCampaignModal'
-import PairCard from '../../PairsList/Pair'
-import Empty from '../../Empty'
-import { getRemainingRewardsUSD } from '../../../../utils/liquidityMining'
-import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'
-import LoadingList from '../../LoadingList'
-import { usePage } from '../../../../hooks/usePage'
-import { useTokenBalance } from '../../../../state/wallet/hooks'
-import { useActiveWeb3React } from '../../../../hooks'
+import Pagination from '../../../../Pagination'
+import { LiquidityMiningCampaignModal } from '../../LiquidityMiningCampaignModal'
+import PairCard from '../../../PairsList/Pair'
+import Empty from '../../../Empty'
+import { getRemainingRewardsUSD } from '../../../../../utils/liquidityMining'
+import { useNativeCurrencyUSDPrice } from '../../../../../hooks/useNativeCurrencyUSDPrice'
+import LoadingList from '../../../LoadingList'
+import { usePage } from '../../../../../hooks/usePage'
+import { useTokenBalance } from '../../../../../state/wallet/hooks'
+import { useActiveWeb3React } from '../../../../../hooks'
 
 const ListLayout = styled.div`
   display: grid;
@@ -31,11 +31,12 @@ const SizedPairCard = styled(PairCard)`
 interface LiquidityMiningCampaignsListProps {
   stakablePair?: Pair
   items?: LiquidityMiningCampaign[]
+  loading?: boolean
 }
 
 const ITEMS_PER_PAGE = 3
 
-export default function LiquidityMiningCampaignsList({ stakablePair, items }: LiquidityMiningCampaignsListProps) {
+export default function List({ stakablePair, loading, items }: LiquidityMiningCampaignsListProps) {
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
   const itemsPage = usePage(items || [], ITEMS_PER_PAGE, page, 0)
@@ -51,11 +52,13 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
     setSelectedCampaign(liquidityMiningCampaign)
   }
 
+  const overallLoading = loading || loadingNativeCurrencyUsdPrice || !items
+
   return (
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="155px">
-          {loadingNativeCurrencyUsdPrice || !items ? (
+          {overallLoading ? (
             <LoadingList wideCards itemsAmount={3} />
           ) : itemsPage.length > 0 ? (
             <ListLayout>
@@ -73,7 +76,7 @@ export default function LiquidityMiningCampaignsList({ stakablePair, items }: Li
           ) : (
             <Empty>
               <Text fontSize="12px" fontWeight="700" lineHeight="15px" letterSpacing="0.08em">
-                NO REWARD POOLS YET
+                NO REWARD POOLS HERE YET
               </Text>
             </Empty>
           )}

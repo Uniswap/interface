@@ -80,7 +80,6 @@ export function usePairsByToken0(
   const { error, loading: loadingPairs, data } = useQuery<QueryResult>(QUERY, {
     variables: { token0Id: token0?.address.toLowerCase(), timestamp: Math.floor(Date.now() / 1000) }
   })
-  console.log(data, error)
 
   return useMemo(() => {
     if (!chainId || loadingPairs) return { loading: true, pairs: [] }

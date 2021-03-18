@@ -1,6 +1,5 @@
-import React, { memo, ReactNode, useMemo } from 'react'
+import React, { memo, ReactNode } from 'react'
 import { Box, Flex, Text } from 'rebass'
-import { Link } from 'react-router-dom'
 import { Pair } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import DoubleCurrencyLogo from '../../DoubleLogo'
@@ -8,14 +7,11 @@ import styled from 'styled-components'
 import FullPositionCard from '../../PositionCard'
 import { RowBetween } from '../../Row'
 import { ButtonGrey } from '../../Button'
-import { TYPE } from '../../../theme'
-import LiquidityMiningCampaignsList from './LiquidityMiningCampaignsList'
-import { ResponsiveButtonPrimary, TitleRow } from '../../../pages/LiquidityMining/styleds'
 import { useLiquidityMiningFeatureFlag } from '../../../hooks/useLiquidityMiningFeatureFlag'
 import Skeleton from 'react-loading-skeleton'
 import { usePair24hVolumeUSD } from '../../../hooks/usePairVolume24hUSD'
 import { usePairLiquidityUSD } from '../../../hooks/usePairLiquidityUSD'
-import { usePairWithLiquidityMiningCampaigns } from '../../../hooks/usePairWithLiquidityMiningCampaign'
+import LiquidityMiningCampaigns from './LiquidityMiningCampaigns'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
@@ -53,20 +49,13 @@ interface PairViewProps {
 function PairView({ loading, pair }: PairViewProps) {
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
-  const { loading: pairWithCampaignsLoading, pair: pairWithCampaigns } = usePairWithLiquidityMiningCampaigns(
-    pair || undefined
-  )
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
-  const overallLoading = useMemo(() => loading || volumeLoading || liquidityLoading || pairWithCampaignsLoading, [
-    liquidityLoading,
-    pairWithCampaignsLoading,
-    loading,
-    volumeLoading
-  ])
+
+  const overallLoading = loading || volumeLoading || liquidityLoading
 
   return (
     <>
-      <StyledDarkCard padding="40px">
+      <StyledDarkCard padding="32px">
         <Flex flexDirection="column">
           <Flex mb="18px" alignItems="center">
             <Box mr="8px">
@@ -88,7 +77,7 @@ function PairView({ loading, pair }: PairViewProps) {
           <Box mt="18px">
             <FullPositionCard pair={pair || undefined} />
           </Box>
-          <RowBetween marginY="18px">
+          <RowBetween mt="18px">
             <ButtonGrey
               padding="8px"
               disabled
@@ -100,22 +89,7 @@ function PairView({ loading, pair }: PairViewProps) {
           </RowBetween>
         </Flex>
       </StyledDarkCard>
-      {liquidityMiningEnabled && (
-        <Flex flexDirection="column">
-          <TitleRow marginBottom="26px">
-            <TYPE.mediumHeader fontSize="18px" color="white">
-              Reward pools
-            </TYPE.mediumHeader>
-            <ResponsiveButtonPrimary as={Link} padding="8px 14px" to="/liquidity-mining/create">
-              Create liq. mining
-            </ResponsiveButtonPrimary>
-          </TitleRow>
-          <LiquidityMiningCampaignsList
-            items={pairWithCampaigns?.liquidityMiningCampaigns}
-            stakablePair={pair || undefined}
-          />
-        </Flex>
-      )}
+      {liquidityMiningEnabled && <LiquidityMiningCampaigns pair={pair || undefined} />}
     </>
   )
 }
