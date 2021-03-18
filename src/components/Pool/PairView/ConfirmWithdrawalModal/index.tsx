@@ -42,13 +42,12 @@ export default function ConfirmWithdrawalModal({
   const topContent = useCallback(
     () => (
       <ConfirmStakingWithdrawingModalHeader
-        amount={withdrawableAmount}
         maximumAmount={withdrawablTokenBalance}
         onAmountChange={handleWithdrawableAmountChange}
         stakablePair={stakablePair}
       />
     ),
-    [handleWithdrawableAmountChange, stakablePair, withdrawablTokenBalance, withdrawableAmount]
+    [handleWithdrawableAmountChange, stakablePair, withdrawablTokenBalance]
   )
 
   const content = useCallback(

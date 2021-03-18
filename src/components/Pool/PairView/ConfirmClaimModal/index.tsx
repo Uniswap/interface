@@ -1,5 +1,5 @@
 import { PricedTokenAmount, TokenAmount } from 'dxswap-sdk'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
@@ -27,6 +27,25 @@ export default function ConfirmClaimModal({
   onConfirm
 }: ConfirmClaimModalProps) {
   const [claimedAmounts, setClaimedAmounts] = useState<{ [claimedTokenAddress: string]: TokenAmount }>({})
+  const [disabledConfirm, setDisabledConfirm] = useState(true)
+
+  useEffect(() => {
+    let allZero = true
+    let excessiveClaim = false
+    for (const claimedAmount of Object.values(claimedAmounts)) {
+      if (allZero && claimedAmount.greaterThan('0')) {
+        allZero = false
+      }
+      const relatedClaimableReward = claimableTokenAmounts.find(claimable =>
+        claimable.token.equals(claimedAmount.token)
+      )
+      if (relatedClaimableReward && relatedClaimableReward.lessThan(claimedAmount)) {
+        excessiveClaim = true
+        break
+      }
+    }
+    setDisabledConfirm(allZero || excessiveClaim)
+  }, [claimableTokenAmounts, claimedAmounts])
 
   const handleClaimedAmountChange = useCallback(
     (newAmount: TokenAmount) => {
@@ -51,13 +70,9 @@ export default function ConfirmClaimModal({
 
   const topContent = useCallback(
     () => (
-      <ConfirmClaimModalHeader
-        claimableRewards={claimableTokenAmounts}
-        claimedRewards={claimedAmounts}
-        onAmountChange={handleClaimedAmountChange}
-      />
+      <ConfirmClaimModalHeader claimableRewards={claimableTokenAmounts} onAmountChange={handleClaimedAmountChange} />
     ),
-    [claimableTokenAmounts, claimedAmounts, handleClaimedAmountChange]
+    [claimableTokenAmounts, handleClaimedAmountChange]
   )
 
   const content = useCallback(
@@ -70,11 +85,11 @@ export default function ConfirmClaimModal({
           onDismiss={handleDismiss}
           topContent={topContent}
           bottomContent={() => (
-            <ConfirmStakingModalFooter disabledConfirm={!claimedAmounts} onConfirm={handleConfirm} />
+            <ConfirmStakingModalFooter disabledConfirm={disabledConfirm} onConfirm={handleConfirm} />
           )}
         />
       ),
-    [claimedAmounts, errorMessage, handleConfirm, handleDismiss, topContent]
+    [disabledConfirm, errorMessage, handleConfirm, handleDismiss, topContent]
   )
 
   return (

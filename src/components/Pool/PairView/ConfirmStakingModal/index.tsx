@@ -49,13 +49,12 @@ export default function ConfirmStakingModal({
   const topContent = useCallback(
     () => (
       <ConfirmStakingWithdrawingModalHeader
-        amount={stakedAmount}
         maximumAmount={stakableTokenBalance}
         onAmountChange={handleStakedAmountChange}
         stakablePair={stakablePair}
       />
     ),
-    [handleStakedAmountChange, stakablePair, stakableTokenBalance, stakedAmount]
+    [handleStakedAmountChange, stakablePair, stakableTokenBalance]
   )
 
   const content = useCallback(
