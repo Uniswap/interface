@@ -179,7 +179,7 @@ export default function CurrencyList({
   listType: CurrencyListType
 }) {
   const { account } = useActiveWeb3React()
-  const currencyBalances = useCurrencyBalances(account ?? '', currencies)
+  const currencyBalances = useCurrencyBalances(account ?? undefined, currencies)
 
   const filteredCurrencies = useMemo(
     () =>
