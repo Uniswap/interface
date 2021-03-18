@@ -18,15 +18,3 @@ export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fract
 export function getHealthFactor(pool: Pair): Fraction {
   return pool.reserve0.multiply(pool.reserve1)
 }
-
-/**
- * Get yesterday midnight epoch
- *
- * @returns number
- */
-export function getYesterdayMidnightEpoch(): number {
-  const d = new Date()
-  d.setUTCHours(-24, 0, 0, 0) // yesterday midnight in UTC
-
-  return Math.round(d.getTime() / 1000)
-}

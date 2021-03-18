@@ -1,18 +1,34 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
-import { addPopup, PopupContent, removePopup, updateBlockNumber, ApplicationModal, setOpenModal } from './actions'
+import {
+  addPopup,
+  PopupContent,
+  removePopup,
+  updateBlockNumber,
+  ApplicationModal,
+  setOpenModal,
+  updateETHPrice
+} from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
+
+type ETHPrice = {
+  currentPrice?: string
+  oneDayBackPrice?: string
+  pricePercentChange?: number
+}
 
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupList
   readonly openModal: ApplicationModal | null
+  readonly ethPrice: ETHPrice
 }
 
 const initialState: ApplicationState = {
   blockNumber: {},
   popupList: [],
-  openModal: null
+  openModal: null,
+  ethPrice: {}
 }
 
 export default createReducer(initialState, builder =>
@@ -44,5 +60,10 @@ export default createReducer(initialState, builder =>
           p.show = false
         }
       })
+    })
+    .addCase(updateETHPrice, (state, { payload: { currentPrice, oneDayBackPrice, pricePercentChange } }) => {
+      state.ethPrice.currentPrice = currentPrice
+      state.ethPrice.oneDayBackPrice = oneDayBackPrice
+      state.ethPrice.pricePercentChange = pricePercentChange
     })
 )
