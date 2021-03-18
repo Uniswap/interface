@@ -63,7 +63,6 @@ export function useLPPairs(account?: string): { loading: boolean; pairs: Pair[] 
 
   return useMemo(() => {
     if (loading) return { loading: true, pairs: [] }
-    console.log(data, error)
     if (!data || !data.liquidityPositions || data.liquidityPositions.length === 0 || error || !chainId)
       return { loading: false, pairs: [] }
     return {
