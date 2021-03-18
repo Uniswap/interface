@@ -96,7 +96,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
-    "build:qa": "env-cmd -f .env react-scripts build"
+    "build:qa": "env-cmd -f .env react-scripts build",
+    "build:beta": "env-cmd -f .env.beta react-scripts build"
   },
   "eslintConfig": {
     "extends": "react-app"

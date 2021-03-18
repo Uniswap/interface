@@ -214,6 +214,7 @@ export default function Bridge() {
             token={migrationCurrency}
             isOpen={migrateModalOpen}
             onDismiss={() => setMigrateModalOpen(false)}
+            listType="Bridge"
           />
           {isHome && (
             <AutoColumn gap="md">

@@ -32,6 +32,10 @@ import Erc677ToErc677Bridge from '../state/bridge/bridges/erc677Toerc677'
 import Erc20ToErc677Bridge from '../state/bridge/bridges/erc20Toerc677'
 import BRIDGED_TOKENS_MIGRATOR_ABI from '../constants/abis/bridgedTokenMigrator.json'
 import { ERC20_ABI } from '../constants/abis/erc20'
+import PROD_BRIDGE_LIST from '@fuseio/fuse-swap-default-token-list'
+import QA_BRIDGE_LIST from '../constants/qa/tokenlist.json'
+import BETA_BRIDGE_LIST from '../constants/qa/beta-tokenlist.json'
+import { TokenList } from '@fuseio/token-lists'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -371,4 +375,17 @@ export function getTokenContract(address: string, library: Web3Provider, account
 
 export function isArrayEmpty(arr: Array<any>) {
   return arr.filter(Boolean).length ? false : true
+}
+
+export function getBridgeList(env: string): TokenList {
+  switch (env) {
+    case 'development':
+      return QA_BRIDGE_LIST
+    case 'production':
+      return PROD_BRIDGE_LIST
+    case 'beta':
+      return BETA_BRIDGE_LIST
+    default:
+      return QA_BRIDGE_LIST
+  }
 }

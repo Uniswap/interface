@@ -6,15 +6,14 @@ import {
   BRIDGE_DEFAULT_TOKEN_LIST_URL,
   SWAP_DEFAULT_LIST_OF_LISTS,
   SWAP_DEFAULT_TOKEN_LIST_URL,
-  USE_PROD_BRIDGE_LIST
+  BRIDGE_LIST_ENV
 } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
-import PROD_BRIDGE_LIST from '@fuseio/fuse-swap-default-token-list'
-import QA_BRIDGE_LIST from '../../constants/qa/tokenlist.json'
 import SWAP_DEFAULT_LIST from '@fuseswap/default-token-list'
+import { getBridgeList } from '../../utils'
 
-const BRIDGE_DEFAULT_LIST = USE_PROD_BRIDGE_LIST ? PROD_BRIDGE_LIST : QA_BRIDGE_LIST
+const BRIDGE_DEFAULT_LIST = getBridgeList(BRIDGE_LIST_ENV)
 
 interface ListState {
   readonly byUrl: {

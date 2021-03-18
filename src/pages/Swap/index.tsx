@@ -350,6 +350,7 @@ export default function Swap() {
             token={migrationCurrency}
             isOpen={migrateModalOpen}
             onDismiss={() => setMigrateModalOpen(false)}
+            listType="Swap"
           />
 
           <AutoColumn gap={'md'}>

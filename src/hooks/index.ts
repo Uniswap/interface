@@ -101,16 +101,20 @@ export function useChain() {
   }, [chainId])
 }
 
-export function useUpgradedTokenAddress(token: Currency) {
+export function useUpgradedTokenAddress(token: Currency | undefined) {
   const { library, account } = useActiveWeb3React()
 
   return useAsyncMemo(async () => {
     if (!library || !account || !token) return
 
-    const wrappedToken = token as WrappedTokenInfo
+    try {
+      const wrappedToken = token as WrappedTokenInfo
 
-    const tokenMigrator = getTokenMigrationContract(library, account)
-    const result = await tokenMigrator.upgradedTokenAddress(wrappedToken.address)
-    return result
-  }, [library, account])
+      const tokenMigrator = getTokenMigrationContract(library, account)
+      const result = await tokenMigrator.upgradedTokenAddress(wrappedToken.address)
+      return result
+    } catch (e) {
+      console.log(e)
+    }
+  }, [library, account, token])
 }

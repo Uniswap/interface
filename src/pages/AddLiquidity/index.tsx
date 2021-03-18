@@ -358,6 +358,7 @@ export default function AddLiquidity({
             token={migrationCurrency}
             isOpen={migrateModalOpen}
             onDismiss={() => setMigrateModalOpen(false)}
+            listType="Swap"
           />
           <AutoColumn gap="20px">
             {noLiquidity && (
