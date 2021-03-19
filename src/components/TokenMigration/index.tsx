@@ -14,7 +14,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React, useUpgradedTokenAddress } from '../../hooks'
 import { RowBetween } from '../Row'
 import { Dots } from '../swap/styleds'
-import { getTokenMigrationContract, calculateGasMargin } from '../../utils'
+import { getTokenMigrationContract, calculateGasMargin, addTokenToWallet } from '../../utils'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -95,6 +95,10 @@ export default function TokenMigrationModal({
 
       addTransaction(response, { summary: `Migrate ${deprecatedToken?.symbol}` })
       setMigrationState(MigrationState.MIGRATED)
+
+      if (wrappedUpgradedToken) {
+        await addTokenToWallet(wrappedUpgradedToken, library)
+      }
     } catch (e) {
       setMigrationState(MigrationState.INITIAL)
       console.log(e)
