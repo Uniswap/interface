@@ -40,7 +40,7 @@ function SwitchNetwork() {
         </RowCenter>
         <RowCenter>
           <TYPE.body fontSize={18} fontWeight={500}>
-            <Link id="fuse-connect-open-step1" onClick={() => addChain(FUSE_CHAIN)}>
+            <Link id="fuse-connect-open" onClick={() => addChain(FUSE_CHAIN)}>
               Switch to Fuse Network
             </Link>
           </TYPE.body>

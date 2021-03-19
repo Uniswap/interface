@@ -6,17 +6,9 @@ describe('Add Liquidity', () => {
       options = { networkName: 'ropsten' }
     })
 
-    it('when pool is clicked should show fuse message', () => {
+    it('when pool is clicked should show connect fuse button', () => {
       cy.visit('/pool', options)
-      cy.contains('Please switch to Fuse')
-    })
-
-    it('shows how to connect pop up', () => {
-      cy.visit('/pool', options)
-      cy.get('#fuse-connect-open-step1').click()
-      cy.get('#fuse-connect-modal').should('contain', 'CONNECT TO FUSE NETWORK')
-      cy.get('#fuse-connect-open-step2').click()
-      cy.get('#fuse-connect-modal').should('contain', 'ADD FUSE NETWORK TO METAMASK')
+      cy.get('#fuse-connect-open').should('be.visible')
     })
   })
 
