@@ -11,16 +11,15 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
-import { DMM_INFO_URL } from "../../constants"
+import { DMM_INFO_URL } from '../../constants'
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  padding: 6px 6px;
-  border-radius: 8px;
+  border-top: 1px solid ${({ theme }) => theme.advancedBorder};
+  padding: 12px 6px;
   text-align: center;
-  font-size: 14px;
-  color: ${({ theme }) => theme.text1};
+  font-size: 12px;
+  color: ${({ theme }) => theme.text10};
 `
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
@@ -64,7 +63,11 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Liquidity Provider Fee
             </TYPE.black>
-            <QuestionHelper text={`A portion of each trade (${accruedFeePercent.toSignificant(6)}%) goes to liquidity providers as a protocol incentive.`} />
+            <QuestionHelper
+              text={`A portion of each trade (${accruedFeePercent.toSignificant(
+                6
+              )}%) goes to liquidity providers as a protocol incentive.`}
+            />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>
             {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
@@ -106,8 +109,8 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             </>
           )}
           <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={`${DMM_INFO_URL}/pair/` + trade.route.pairs[0].liquidityToken.address} target="_blank">
-              View pair analytics ↗
+            <InfoLink href={`${DMM_INFO_URL}/pool/${trade?.route.pairs[0].liquidityToken.address}`} target="_blank">
+              Token pool analytics →
             </InfoLink>
           </AutoColumn>
         </>
