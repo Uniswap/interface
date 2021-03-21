@@ -123,14 +123,14 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
       variables: {
         allPools: poolList
       },
-      fetchPolicy: 'cache-first'
+      fetchPolicy: 'network-only'
     })
 
     const [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
       [b1, b2, bWeek].map(async block => {
         const result = client.query({
           query: POOLS_HISTORICAL_BULK(block, poolList),
-          fetchPolicy: 'cache-first'
+          fetchPolicy: 'network-only'
         })
         return result
       })
@@ -156,7 +156,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
           if (!oneDayHistory) {
             const newData = await client.query({
               query: POOL_DATA(pool.id, b1),
-              fetchPolicy: 'cache-first'
+              fetchPolicy: 'network-only'
             })
             oneDayHistory = newData.data.pools[0]
           }
@@ -164,7 +164,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
           if (!twoDayHistory) {
             const newData = await client.query({
               query: POOL_DATA(pool.id, b2),
-              fetchPolicy: 'cache-first'
+              fetchPolicy: 'network-only'
             })
             twoDayHistory = newData.data.pools[0]
           }
@@ -172,7 +172,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
           if (!oneWeekHistory) {
             const newData = await client.query({
               query: POOL_DATA(pool.id, bWeek),
-              fetchPolicy: 'cache-first'
+              fetchPolicy: 'network-only'
             })
             oneWeekHistory = newData.data.pools[0]
           }
@@ -203,7 +203,7 @@ export function useBulkPoolData(poolList: (string | undefined)[], ethPrice?: str
     }
 
     checkForPools()
-  }, [poolList])
+  }, [dispatch, ethPrice, poolList, poolsData.length])
 
   return poolsData
 }
@@ -213,5 +213,5 @@ export function useResetPools(currencyA: Currency | undefined, currencyB: Curren
 
   useEffect(() => {
     dispatch(updatePools({ pools: [] }))
-  }, [currencyA, currencyB])
+  }, [currencyA, currencyB, dispatch])
 }
