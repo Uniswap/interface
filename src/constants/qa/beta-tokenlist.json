@@ -4,7 +4,7 @@
   "version": {
     "major": 1,
     "minor": 3,
-    "patch": 0
+    "patch": 1
   },
   "tags": {},
   "logoURI": "ipfs://QmQQGd3Kbb8fhxKQLvzPPngzBGd5aydV3QAigLHy53Hr3g",
@@ -61,7 +61,8 @@
       "symbol": "UNI (Deprecated)",
       "decimals": 18,
       "chainId": 122,
-      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
+      "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg",
+      "isDeprecated": true
     },
     {
       "name": "USD Coin on Fuse",
