@@ -39,7 +39,7 @@
     "cypress": "^4.11.0",
     "dxswap-core": "git://github.com/levelkdev/dxswap-core.git#v0.3.6",
     "dxswap-periphery": "git://github.com/levelkdev/dxswap-periphery.git#v0.3.7",
-    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.7.3",
+    "dxswap-sdk": "git://github.com/levelkdev/dxswap-sdk.git#v0.7.4",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
