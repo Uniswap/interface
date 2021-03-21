@@ -6,6 +6,8 @@ import icon from '../../assets/svg/fuse.svg'
 import styled from 'styled-components'
 import ConnectFuseModal from '../ConnectFuseModal'
 import { Link as RebassLink } from 'rebass'
+import useAddChain from '../../hooks/useAddChain'
+import { FUSE_CHAIN } from '../../constants/chains'
 
 const Link = styled(RebassLink)`
   font-weight: 600;
@@ -26,6 +28,7 @@ const Icon = styled.img.attrs({
 
 function SwitchNetwork() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const { error, addChain } = useAddChain()
 
   return (
     <>
@@ -37,17 +40,18 @@ function SwitchNetwork() {
         </RowCenter>
         <RowCenter>
           <TYPE.body fontSize={18} fontWeight={500}>
-            Please switch to Fuse
+            <Link id="fuse-connect-open" onClick={() => addChain(FUSE_CHAIN)}>
+              Switch to Fuse Network
+            </Link>
           </TYPE.body>
         </RowCenter>
-        <RowCenter>
-          <TYPE.body fontSize={18} fontWeight={500}>
-            <Link id="fuse-connect-open-step1" onClick={() => setModalOpen(true)}>
-              Click here
-            </Link>{' '}
-            to learn how
-          </TYPE.body>
-        </RowCenter>
+        {error && (
+          <RowCenter>
+            <TYPE.error error={true} marginTop={16}>
+              {error}
+            </TYPE.error>
+          </RowCenter>
+        )}
       </AutoColumn>
     </>
   )

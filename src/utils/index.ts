@@ -17,7 +17,7 @@ import {
   TOKEN_MIGRATOR_ADDRESS
 } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER as FUSE } from '@fuseio/fuse-swap-sdk'
-import { TokenAddressMap } from '../state/lists/hooks'
+import { TokenAddressMap, WrappedTokenInfo } from '../state/lists/hooks'
 import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
 import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
 import AMBErc677To677ABI from '../constants/abis/ambErc677ToErc677.json'
@@ -387,5 +387,28 @@ export function getBridgeList(env: string): TokenList {
       return BETA_BRIDGE_LIST
     default:
       return QA_BRIDGE_LIST
+  }
+}
+
+export async function addTokenToWallet(token: Token, library: Web3Provider) {
+  if (library.provider && library.provider.request) {
+    try {
+      await library.provider.request({
+        method: 'wallet_watchAsset',
+        params: {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          //@ts-ignore // need this for incorrect ethers provider type
+          type: 'ERC20',
+          options: {
+            address: token.address,
+            symbol: token.symbol,
+            decimals: token.decimals,
+            ...(token instanceof WrappedTokenInfo ? { image: token.logoURI } : {})
+          }
+        }
+      })
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
