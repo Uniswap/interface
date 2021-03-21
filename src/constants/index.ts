@@ -32,6 +32,9 @@ export const FUSE_FOREIGN_TOKEN_ADDRESS = unwrapOrThrow('FUSE_FOREIGN_TOKEN_ADDR
 
 export const TOKEN_MIGRATOR_ADDRESS = unwrapOrThrow('TOKEN_MIGRATOR_ADDRESS')
 
+export const BINANCE_TESTNET_CHAINID = 97
+export const BINANCE_MAINNET_CHAINID = 56
+
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]

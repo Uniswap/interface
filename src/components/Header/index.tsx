@@ -18,7 +18,7 @@ import { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
 import { getNativeCurrencySymbol } from '../../utils'
 import { TYPE, ExternalLink } from '../../theme'
-import { BINANCE_CHAIN_ID } from '../../constants'
+import { BINANCE_MAINNET_CHAINID, BINANCE_TESTNET_CHAINID } from '../../constants'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -150,7 +150,8 @@ export const NETWORK_LABELS: any = {
   [ChainId.GÖRLI]: 'Görli',
   [ChainId.KOVAN]: 'Kovan',
   [ChainId.FUSE]: 'Fuse',
-  [BINANCE_CHAIN_ID]: 'Binance'
+  [BINANCE_TESTNET_CHAINID]: 'Binance Testnet',
+  [BINANCE_MAINNET_CHAINID]: 'Binance'
 }
 
 export default function Header() {
