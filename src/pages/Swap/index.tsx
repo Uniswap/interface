@@ -24,7 +24,7 @@ import ProgressSteps from '../../components/ProgressSteps'
 import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React, useChain } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
+import { useCurrency, useAllSwapTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
@@ -49,9 +49,11 @@ import SwitchNetwork from '../../components/swap/SwitchNetwork'
 import BridgeInfo from '../../components/swap/BridgeInfo'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import TokenMigrationModal from '../../components/TokenMigration'
+import { isTokenOnTokenList } from '../../utils'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const tokens = useAllSwapTokens()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -61,8 +63,11 @@ export default function Swap() {
 
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
-    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
+    () =>
+      [loadedInputCurrency, loadedOutputCurrency]?.filter(
+        (c): c is Token => c instanceof Token && !isTokenOnTokenList(tokens, c)
+      ) ?? [],
+    [loadedInputCurrency, loadedOutputCurrency, tokens]
   )
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)

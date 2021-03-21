@@ -412,3 +412,10 @@ export async function addTokenToWallet(token: Token, library: Web3Provider) {
     }
   }
 }
+
+export function isTokenOnTokenList(tokenList: any, currency: Currency | undefined) {
+  if (currency === FUSE) return true
+
+  const token = currency as Token
+  return Boolean(tokenList[token?.address])
+}
