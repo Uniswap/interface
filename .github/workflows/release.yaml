@@ -54,6 +54,14 @@ jobs:
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
 
+      - name: Pin to Crust
+        uses: crustio/ipfs-crust-action@v1.0.8
+        continue-on-error: true
+        timeout-minutes: 2
+        with:
+          cid: ${{ steps.upload.outputs.hash }}
+          seeds: ${{ secrets.CRUST_SEEDS }}
+
       - name: Convert CIDv0 to CIDv1
         id: convert_cidv0
         uses: uniswap/convert-cidv0-cidv1@v1.0.0
