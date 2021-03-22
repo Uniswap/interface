@@ -300,3 +300,6 @@ export const get2DayPercentChange = (valueNow: any, value24HoursAgo: any, value4
   }
   return [currentChange, adjustedPercentChange]
 }
+
+export const getTokenLogoURL = (address: string) =>
+  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
