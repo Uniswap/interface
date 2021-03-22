@@ -227,6 +227,9 @@ export default function Header() {
           >
             {t('My Pools')}
           </StyledNavLink>
+          <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
+            {t('About')}
+          </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>

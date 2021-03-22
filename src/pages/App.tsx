@@ -23,6 +23,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import About from './Static/About'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -93,6 +94,7 @@ export default function App() {
                 <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
                 <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
                 <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={RedirectDuplicateTokenIds} />
+                <Route exact path="/about" component={About} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>
             </Web3ReactManager>
