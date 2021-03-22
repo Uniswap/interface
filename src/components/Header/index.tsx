@@ -15,6 +15,7 @@ import Settings from '../Settings'
 import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
+import { ExternalLink } from 'theme/components'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -186,6 +187,34 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
+const StyledNavExternalLink = styled(ExternalLink).attrs({
+  activeClassName
+})`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: left;
+  border-radius: 3rem;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text2};
+  font-size: 1rem;
+  width: fit-content;
+  margin: 0 12px;
+  font-weight: 500;
+
+  &.${activeClassName} {
+    border-radius: 12px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.text1};
+  }
+
+  :hover,
+  :focus {
+    color: ${({ theme }) => darken(0.1, theme.text1)};
+    text-decoration: none;
+  }
+`
+
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
@@ -212,8 +241,11 @@ export default function Header() {
             {t('swap')}
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={'/pools/ETH'} isActive={match => Boolean(match)}>
-            {t('Pools')}
+            {t('pool')}
           </StyledNavLink>
+          <StyledNavExternalLink href={String(process.env.REACT_APP_DMM_ANALYTICS_URL)}>
+            {t('analytics')}
+          </StyledNavExternalLink>
           <StyledNavLink
             id={`my-pools-nav-link`}
             to={'/myPools'}
@@ -225,7 +257,7 @@ export default function Header() {
               pathname.startsWith('/find')
             }
           >
-            {t('My Pools')}
+            {t('dashboard')}
           </StyledNavLink>
           <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
             {t('About')}

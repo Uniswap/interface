@@ -1,10 +1,12 @@
 {
+  "analytics": "Analytics",
   "createNewPool": "+ Create New Pool",
   "searchByPoolAddress": "Search by pool address",
   "selectPair": "Select Pair",
   "showMorePools": "Show more pools",
   "thereAreNoPools": "There are no pools",
   "noWallet": "No Ethereum wallet found",
+  "dashboard": "Dashboard",
   "wrongNetwork": "You are on the wrong network",
   "switchNetwork": "Please switch to {{ correctNetwork }}",
   "installWeb3MobileBrowser": "Please visit us from a web3-enabled mobile browser such as Trust Wallet or Coinbase Wallet.",
