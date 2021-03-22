@@ -16,6 +16,7 @@ export const Button = styled.button<{ isActive?: boolean }>`
   color: ${({ color }) => color};
   border-color: ${({ theme }) => theme.bg12};
   font-weight: 500;
+  outline: 0;
 
   &:hover {
     border-color: ${({ color }) => color};

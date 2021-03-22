@@ -5,17 +5,18 @@ import useCopyClipboard from '../../hooks/useCopyClipboard'
 import { LinkStyledButton } from '../../theme'
 import { CheckCircle, Copy } from 'react-feather'
 
-const CopyIcon = styled(LinkStyledButton)`
-  color: ${({ theme }) => theme.text3};
+const CopyIcon = styled(LinkStyledButton)<{ color?: string; fontSize?: string; paddingLeft?: string }>`
+  color: ${({ theme, color }) => color || theme.text3};
   flex-shrink: 0;
   display: flex;
   text-decoration: none;
-  font-size: 0.825rem;
+  font-size: ${({ fontSize }) => (fontSize ? fontSize : '0.825rem')};
+  ${({ paddingLeft }) => `padding-left: ${paddingLeft}`};
   :hover,
   :active,
   :focus {
     text-decoration: none;
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme, color }) => color || theme.text2};
   }
 `
 const TransactionStatusText = styled.span`
@@ -25,11 +26,22 @@ const TransactionStatusText = styled.span`
   align-items: center;
 `
 
-export default function CopyHelper(props: { toCopy: string; children?: React.ReactNode }) {
+export default function CopyHelper(props: {
+  toCopy: string
+  children?: React.ReactNode
+  color?: string
+  fontSize?: string
+  paddingLeft?: string
+}) {
   const [isCopied, setCopied] = useCopyClipboard()
 
   return (
-    <CopyIcon onClick={() => setCopied(props.toCopy)}>
+    <CopyIcon
+      onClick={() => setCopied(props.toCopy)}
+      color={props.color}
+      fontSize={props.fontSize}
+      paddingLeft={props.paddingLeft}
+    >
       {isCopied ? (
         <TransactionStatusText>
           <CheckCircle size={'16'} />

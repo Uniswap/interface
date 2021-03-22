@@ -13,8 +13,9 @@ import {
   GOODDOLLAR_FOREIGN_TOKEN_ADDRESS,
   FUSE_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
   FUSE_ERC677_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
-  BINANCE_CHAIN_ID,
-  TOKEN_MIGRATOR_ADDRESS
+  TOKEN_MIGRATOR_ADDRESS,
+  BINANCE_TESTNET_CHAINID,
+  BINANCE_MAINNET_CHAINID
 } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER as FUSE } from '@fuseio/fuse-swap-sdk'
 import { TokenAddressMap, WrappedTokenInfo } from '../state/lists/hooks'
@@ -60,8 +61,10 @@ export function getExplorerLink(chainId: ChainId, data: string, type: 'transacti
 
   if (chainId === 122) {
     prefix = 'https://explorer.fuse.io'
-  } else if (chainId === BINANCE_CHAIN_ID) {
+  } else if (chainId === BINANCE_TESTNET_CHAINID) {
     prefix = 'https://testnet.bscscan.com'
+  } else if (chainId === BINANCE_MAINNET_CHAINID) {
+    prefix = 'https://bscscan.com'
   } else {
     prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
   }
@@ -88,7 +91,9 @@ export function getExplorerLinkText(chainId: number): string {
       return 'View on Etherscan'
     case ChainId.ROPSTEN:
       return 'View on Etherscan'
-    case BINANCE_CHAIN_ID:
+    case BINANCE_TESTNET_CHAINID:
+      return 'View on BscScan Testnet'
+    case BINANCE_MAINNET_CHAINID:
       return 'View on BscScan'
     default:
       return 'View on Etherscan'
@@ -103,7 +108,8 @@ export function getNativeCurrencySymbol(chainId?: number): string {
       return 'ETH'
     case ChainId.ROPSTEN:
       return 'ETH'
-    case BINANCE_CHAIN_ID:
+    case BINANCE_MAINNET_CHAINID:
+    case BINANCE_TESTNET_CHAINID:
       return 'BNB'
     default:
       return 'FUSE'
@@ -411,4 +417,11 @@ export async function addTokenToWallet(token: Token, library: Web3Provider) {
       console.log(e)
     }
   }
+}
+
+export function isTokenOnTokenList(tokenList: any, currency: Currency | undefined) {
+  if (currency === FUSE) return true
+
+  const token = currency as Token
+  return Boolean(tokenList[token?.address])
 }
