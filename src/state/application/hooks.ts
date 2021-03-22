@@ -149,7 +149,7 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
       }
     }
     checkForEthPrice()
-  }, [ethPrice])
+  }, [ethPrice, dispatch])
 
   return ethPrice
 }

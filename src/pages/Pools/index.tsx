@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import { Box, Flex } from 'rebass'
@@ -106,19 +106,23 @@ const Pools = ({
     [currencyIdA, history, currencyIdB]
   )
 
-  const poolsList = pairs
-    .map(([pairState, pair]) => pair)
-    .filter(pair => pair !== null)
-    .filter(pair => {
-      if (searchValue) {
-        return pair?.address.includes(searchValue)
-      }
+  const poolsList = useMemo(
+    () =>
+      pairs
+        .map(([pairState, pair]) => pair)
+        .filter(pair => pair !== null)
+        .filter(pair => {
+          if (searchValue) {
+            return pair?.address.includes(searchValue)
+          }
 
-      return true
-    })
+          return true
+        }),
+    [pairs, searchValue]
+  )
 
   // format as array of addresses
-  const formattedPools = poolsList.map(pool => pool?.address.toLowerCase())
+  const formattedPools = useMemo(() => poolsList.map(pool => pool?.address.toLowerCase()), [poolsList])
 
   useResetPools(currencyA ?? undefined, currencyB ?? undefined)
 
@@ -162,7 +166,7 @@ const Pools = ({
         </ToolbarWrapper>
 
         <Panel>
-          {loadingUserLiquidityPositions ? (
+          {loadingUserLiquidityPositions || !poolsData ? (
             <LocalLoader />
           ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositionSnapshots ? (
             <PoolList
