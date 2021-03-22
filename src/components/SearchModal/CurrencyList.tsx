@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, currencyEquals, Token } from 'dxswap-sdk'
-import React, { useCallback, useMemo } from 'react'
+import React, { CSSProperties, useCallback, useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -8,14 +8,17 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import CurrencyLogo from '../CurrencyLogo'
 import Loader from '../Loader'
-import { isTokenOnList } from '../../utils'
-import { useTokenList } from '../../state/lists/hooks'
 import Badge from '../Badge'
 import { TokenListContainer, TokenPickerItem } from './styleds'
 import { Plus, X } from 'react-feather'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
+import { FixedSizeList } from 'react-window'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { TokenAddressMap, useTokenList } from '../../state/lists/hooks'
+import { isTokenOnList } from '../../utils'
 
-function currencyKey(currency: Currency): string {
+function currencyKey(index: number, data: any): string {
+  const currency = data[index]
   if (currency instanceof Token) return currency.address
   return currency.symbol || ''
 }
@@ -33,18 +36,20 @@ function Balance({ balance }: { balance: CurrencyAmount }) {
 
 function CurrencyRow({
   currency,
+  selectedTokenList,
   onSelect,
   isSelected,
-  otherSelected
+  otherSelected,
+  style
 }: {
   currency: Currency
+  selectedTokenList: TokenAddressMap
   onSelect: () => void
   isSelected: boolean
   otherSelected: boolean
+  style: CSSProperties
 }) {
   const { account, chainId } = useActiveWeb3React()
-  const key = currencyKey(currency)
-  const selectedTokenList = useTokenList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
@@ -55,12 +60,11 @@ function CurrencyRow({
   // only show add or remove buttons if not on selected list
   return (
     <TokenPickerItem
-      className={`token-item-${key}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
       selected={otherSelected}
       alignItems="center"
-      px="20px"
+      style={style}
     >
       <Box mr="8px">
         <CurrencyLogo currency={currency} size={'20px'} />
@@ -112,6 +116,7 @@ export default function CurrencyList({
   showNativeCurrency: boolean
 }) {
   const nativeCurrency = useNativeCurrency()
+  const selectedTokenList = useTokenList()
   const itemData = useMemo(() => (showNativeCurrency ? [nativeCurrency, ...currencies] : currencies), [
     currencies,
     nativeCurrency,
@@ -119,29 +124,41 @@ export default function CurrencyList({
   ])
 
   const Row = useCallback(
-    (currency: Currency) => {
+    ({ data, index, style }) => {
+      const currency: Currency = data[index]
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
       const handleSelect = () => onCurrencySelect(currency)
       return (
         <CurrencyRow
+          selectedTokenList={selectedTokenList}
           currency={currency}
           isSelected={isSelected}
           onSelect={handleSelect}
           otherSelected={otherSelected}
+          style={style}
         />
       )
     },
-    [onCurrencySelect, otherCurrency, selectedCurrency]
+    [onCurrencySelect, otherCurrency, selectedCurrency, selectedTokenList]
   )
 
   return (
     <TokenListContainer flexDirection="column" width="100%" overflowY="auto">
-      {itemData.map(currency => (
-        <Box width="100%" height="56px" key={currencyKey(currency)}>
-          {Row(currency)}
-        </Box>
-      ))}
+      <AutoSizer>
+        {({ width, height }) => (
+          <FixedSizeList
+            width={width}
+            height={height}
+            itemData={itemData}
+            itemCount={itemData.length}
+            itemSize={56}
+            itemKey={currencyKey}
+          >
+            {Row}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
     </TokenListContainer>
   )
 }
