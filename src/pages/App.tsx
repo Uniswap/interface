@@ -5,10 +5,11 @@ import { ApolloProvider } from '@apollo/client'
 
 import { client } from 'apollo/client'
 import Header from '../components/Header'
-import Polling from '../components/Header/Polling'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
+import Utilities from 'components/Footer/Utilities'
+import PoweredBy from 'components/Footer/PoweredBy'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import {
@@ -73,7 +74,8 @@ export default function App() {
           </HeaderWrapper>
           <BodyWrapper>
             <Popups />
-            <Polling />
+            <Utilities />
+            <PoweredBy />
             <Web3ReactManager>
               <Switch>
                 <Route exact strict path="/swap" component={Swap} />
