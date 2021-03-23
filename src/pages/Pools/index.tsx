@@ -19,6 +19,9 @@ import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModa
 import { useRouter } from '../../hooks/useRouter'
 import { Currency } from 'dxswap-sdk'
 import { useLiquidityMiningFeatureFlag } from '../../hooks/useLiquidityMiningFeatureFlag'
+import { useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy } from '../../hooks/useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy'
+import { PairsFilterType } from '../../components/Pool/ListFilter'
+import { useLPPairs } from '../../hooks/useLiquidityPositions'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -137,6 +140,12 @@ function Title({ onCurrencySelection }: TitleProps) {
 export default function Pools() {
   const { account } = useActiveWeb3React()
   const router = useRouter()
+  const [aggregatedDataFilter, setAggregatedDataFilter] = useState(PairsFilterType.ALL)
+  const {
+    loading: loadingAggregatedData,
+    aggregatedData
+  } = useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(aggregatedDataFilter)
+  const { loading: loadingUserLpPositions, pairs: userLpPairs } = useLPPairs(account || undefined)
 
   const handleCurrencySelect = useCallback(
     token => {
@@ -154,7 +163,13 @@ export default function Pools() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="32px" style={{ width: '100%' }}>
             <Title onCurrencySelection={handleCurrencySelect} />
-            <AggregatedPairsList />
+            <AggregatedPairsList
+              loading={loadingUserLpPositions || loadingAggregatedData}
+              aggregatedData={aggregatedData}
+              userLpPairs={userLpPairs}
+              filter={aggregatedDataFilter}
+              onFilterChange={setAggregatedDataFilter}
+            />
           </AutoColumn>
         </AutoColumn>
         <ButtonWithLink

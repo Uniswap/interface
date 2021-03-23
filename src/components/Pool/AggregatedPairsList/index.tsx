@@ -4,13 +4,11 @@ import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
 import ListFilter, { PairsFilterType } from '../ListFilter'
-import { useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy } from '../../../hooks/useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy'
 import Empty from '../Empty'
 import MyPairs from './MyPairs'
 import styled from 'styled-components'
 import { usePage } from '../../../hooks/usePage'
-import { useLPPairs } from '../../../hooks/useLiquidityPositions'
-import { useActiveWeb3React } from '../../../hooks'
+import { CurrencyAmount, Pair, Percent, Token } from 'dxswap-sdk'
 
 const ListLayout = styled.div`
   display: grid;
@@ -23,23 +21,33 @@ const ListLayout = styled.div`
 
 const ITEMS_PER_PAGE = 12
 
-export default function AggregatedPairsList() {
-  const { account } = useActiveWeb3React()
-  const [page, setPage] = useState(1)
-  const [filter, setFilter] = useState(PairsFilterType.ALL)
-  const {
-    loading: loadingAggregatedData,
-    aggregatedData
-  } = useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(filter)
-  const itemsPage = usePage(aggregatedData, ITEMS_PER_PAGE, page, 1)
-  const { loading: loadingUserLpPositions, pairs: userLpPairs } = useLPPairs(account || undefined)
+interface AggregatedPairsListProps {
+  loading: boolean
+  aggregatedData: {
+    token0: Token
+    pairs: Pair[]
+    remainingRewardsUSD: CurrencyAmount
+    maximumApy: Percent
+  }[]
+  userLpPairs: Pair[]
+  filter: PairsFilterType
+  onFilterChange: (newFilter: PairsFilterType) => void
+}
 
-  const loading = loadingUserLpPositions || loadingAggregatedData
+export default function AggregatedPairsList({
+  loading,
+  aggregatedData,
+  userLpPairs,
+  filter,
+  onFilterChange
+}: AggregatedPairsListProps) {
+  const [page, setPage] = useState(1)
+  const itemsPage = usePage(aggregatedData, ITEMS_PER_PAGE, page, 1)
 
   return (
     <Flex flexDirection="column">
       <Box mb="32px">
-        <ListFilter disabled={loading} filter={filter} onFilterChange={setFilter} />
+        <ListFilter disabled={loading} filter={filter} onFilterChange={onFilterChange} />
       </Box>
       <Box mb="8px" height="460px">
         {loading ? (
