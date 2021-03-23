@@ -35,8 +35,6 @@ interface LiquidityMiningCampaignsListProps {
   loading?: boolean
 }
 
-const ITEMS_PER_PAGE = 3
-
 export default function List({ stakablePair, loading, items }: LiquidityMiningCampaignsListProps) {
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
@@ -87,7 +85,7 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
           <Pagination
             page={page}
             totalItems={items?.length ?? 0}
-            itemsPerPage={ITEMS_PER_PAGE}
+            itemsPerPage={responsiveItemsPerPage}
             onPageChange={setPage}
           />
         </Box>

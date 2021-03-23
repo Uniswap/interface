@@ -46,7 +46,6 @@ export default function AggregatedPairsList({
   const responsiveItemsAmount = useResponsiveItemsPerPage(false)
   const [page, setPage] = useState(1)
   const itemsPage = usePage(aggregatedData, responsiveItemsAmount, page, 1)
-  console.log(itemsPage)
 
   return (
     <Flex flexDirection="column">

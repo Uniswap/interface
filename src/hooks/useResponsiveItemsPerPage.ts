@@ -1,10 +1,16 @@
 import { useMemo } from 'react'
-import { isMobile, isTablet } from 'react-device-detect'
+import { useWindowSize } from './useWindowSize'
+import { MEDIA_WIDTHS } from '../theme'
+
+const { upToSmall, upToMedium } = MEDIA_WIDTHS
 
 export function useResponsiveItemsPerPage(wideCards: boolean): number {
+  const { width } = useWindowSize()
+
   return useMemo(() => {
-    if (isMobile) return wideCards ? 3 : 6
-    if (isTablet) return wideCards ? 4 : 8
+    if (!width) return 0
+    if (width < upToSmall) return wideCards ? 3 : 6
+    if (width < upToMedium) return wideCards ? 3 : 6
     return wideCards ? 9 : 12
-  }, [wideCards])
+  }, [wideCards, width])
 }
