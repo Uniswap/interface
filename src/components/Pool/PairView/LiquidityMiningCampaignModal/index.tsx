@@ -21,7 +21,7 @@ import LiquidityMiningYourStake from './YourStake'
 
 const Wrapper = styled.div`
   width: 100%;
-  padding: 28px 42px;
+  padding: 20px 32px;
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
 `
 
