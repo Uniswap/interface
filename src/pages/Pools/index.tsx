@@ -54,6 +54,14 @@ const SelectPairInstructionWrapper = styled(Box)`
   padding: 24px;
 `
 
+const ErrorMessage = styled.div`
+  color: ${({ theme }) => theme.red1};
+  font-style: italic;
+  font-weight: 400;
+  text-align: center;
+  margin-top: 1rem;
+`
+
 const Pools = ({
   match: {
     params: { currencyIdA, currencyIdB }
@@ -74,8 +82,6 @@ const Pools = ({
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
   const { currencies, pairs } = useDerivedPairInfo(currencyA ?? undefined, currencyB ?? undefined)
-
-  const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
 
   const ethPrice = useETHPrice()
 
@@ -127,7 +133,12 @@ const Pools = ({
   useResetPools(currencyA ?? undefined, currencyB ?? undefined)
 
   // get data for every pool in list
-  const poolsData = useBulkPoolData(formattedPools, ethPrice.currentPrice)
+  const { loading: loadingPoolsData, error: errorPoolsData, data: poolsData } = useBulkPoolData(
+    formattedPools,
+    ethPrice.currentPrice
+  )
+
+  const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
 
   return (
     <>
@@ -166,7 +177,7 @@ const Pools = ({
         </ToolbarWrapper>
 
         <Panel>
-          {loadingUserLiquidityPositions || !poolsData ? (
+          {loadingUserLiquidityPositions || loadingPoolsData ? (
             <LocalLoader />
           ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositionSnapshots ? (
             <PoolList
@@ -179,6 +190,8 @@ const Pools = ({
             <SelectPairInstructionWrapper>{t('thereAreNoPools')}</SelectPairInstructionWrapper>
           )}
         </Panel>
+
+        {errorPoolsData ? <ErrorMessage>{errorPoolsData.message}</ErrorMessage> : null}
       </PageWrapper>
     </>
   )

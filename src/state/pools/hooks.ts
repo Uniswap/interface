@@ -6,7 +6,7 @@ import { client } from 'apollo/client'
 import { USER_LIQUIDITY_POSITION_SNAPSHOTS, POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK } from 'apollo/queries'
 import { Currency } from 'libs/sdk/src'
 import { AppState } from '../index'
-import { updatePools } from './actions'
+import { updatePools, setLoading, setError } from './actions'
 import { getPercentChange, getTimestampsForChanges, getBlocksFromTimestamps, get2DayPercentChange } from 'utils'
 
 export interface SubgraphPoolData {
@@ -185,27 +185,45 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
     return poolData
   } catch (e) {
     console.error(e)
-    return []
+    throw e
   }
 }
 
-export function useBulkPoolData(poolList: (string | undefined)[], ethPrice?: string): AppState['pools']['pools'] {
+export function useBulkPoolData(
+  poolList: (string | undefined)[],
+  ethPrice?: string
+): {
+  loading: AppState['pools']['loading']
+  error: AppState['pools']['error']
+  data: AppState['pools']['pools']
+} {
   const dispatch = useDispatch()
 
   const poolsData = useSelector((state: AppState) => state.pools.pools)
+  const loading = useSelector((state: AppState) => state.pools.loading)
+  const error = useSelector((state: AppState) => state.pools.error)
 
   useEffect(() => {
     async function checkForPools() {
-      if (poolList.length > 0 && poolsData.length === 0) {
-        const pools = await getBulkPoolData(poolList as string[], ethPrice)
-        dispatch(updatePools({ pools }))
+      dispatch(setError(undefined))
+
+      try {
+        if (poolList.length > 0 && poolsData.length === 0) {
+          dispatch(setLoading(true))
+          const pools = await getBulkPoolData(poolList as string[], ethPrice)
+          dispatch(updatePools({ pools }))
+        }
+      } catch (error) {
+        dispatch(setError(error))
       }
+
+      dispatch(setLoading(false))
     }
 
     checkForPools()
   }, [dispatch, ethPrice, poolList, poolsData.length])
 
-  return poolsData
+  return { loading, error, data: poolsData }
 }
 
 export function useResetPools(currencyA: Currency | undefined, currencyB: Currency | undefined) {
