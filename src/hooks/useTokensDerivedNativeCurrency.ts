@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
-import Decimal from 'decimal.js'
+import Decimal from 'decimal.js-light'
 import { Price, PricedToken, PricedTokenAmount, Token, TokenAmount } from 'dxswap-sdk'
 import { parseUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'

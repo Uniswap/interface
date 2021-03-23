@@ -3,7 +3,7 @@ import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade, Pair, Pric
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
-import Decimal from 'decimal.js'
+import Decimal from 'decimal.js-light'
 import { parseUnits } from 'ethers/lib/utils'
 
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
