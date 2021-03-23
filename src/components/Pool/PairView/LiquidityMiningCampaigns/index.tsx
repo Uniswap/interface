@@ -14,6 +14,8 @@ interface LiquidityMiningCampaignsListProps {
   pair?: Pair
 }
 
+const TAB_TITLES = ['Active', 'Upcoming', 'Expired (30 days)']
+
 export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampaignsListProps) {
   const [activeTab, setActiveTab] = useState(0)
 
@@ -31,7 +33,7 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
           Create liq. mining
         </ResponsiveButtonPrimary>
       </TitleRow>
-      <TabBar titles={['Active', 'Upcoming', 'Expired (30 days)']} active={activeTab} onChange={handleTabChange} />
+      <TabBar titles={TAB_TITLES} active={activeTab} onChange={handleTabChange} />
       {pair ? (
         <>
           {activeTab === 0 && <ActiveTab pair={pair} />}

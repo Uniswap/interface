@@ -15,13 +15,13 @@ const QUERY = gql`
   }
 `
 
+interface QueryResult {
+  pair: { reserveNativeCurrency: string }
+}
+
 export function usePairReserveNativeCurrency(pair?: Pair): { loading: boolean; reserveNativeCurrency: CurrencyAmount } {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
-
-  interface QueryResult {
-    pair: { reserveNativeCurrency: string }
-  }
 
   const { loading, data, error } = useQuery<QueryResult>(QUERY, {
     variables: { pairId: pair?.liquidityToken.address.toLowerCase() }

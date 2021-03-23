@@ -36,13 +36,11 @@ export function useActiveLiquidityMiningCampaignsForPair(
   const nativeCurrency = useNativeCurrency()
   const lpTokenTotalSupply = usePairLiquidityTokenTotalSupply(pair)
   const { loading: loadingReserveNativeCurrency, reserveNativeCurrency } = usePairReserveNativeCurrency(pair)
+  const timestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
   const { data, loading: loadingActiveCampaigns, error } = useQuery<{
     liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
   }>(QUERY, {
-    variables: {
-      pairId: pair.liquidityToken.address.toLowerCase(),
-      timestamp: Math.floor(Date.now() / 1000)
-    }
+    variables: { pairId: pair.liquidityToken.address.toLowerCase(), timestamp }
   })
 
   return useMemo(() => {
