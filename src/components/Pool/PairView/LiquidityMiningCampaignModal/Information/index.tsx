@@ -28,7 +28,7 @@ export default function LiquidityMiningInformation({ campaign }: LiquidityMining
   const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
 
   return (
-    <Flex justifyContent="stretch" width="100%">
+    <Flex flexDirection={['column', 'row']} justifyContent="stretch" width="100%">
       <Flex flexDirection="column" flex="1">
         <DataRow title="APY" value={<ApyBadge apy={apy} />} />
         <DataRow
@@ -59,7 +59,7 @@ export default function LiquidityMiningInformation({ campaign }: LiquidityMining
           }
         />
       </Flex>
-      <Box mx="18px">
+      <Box display={['none', 'flex']} mx="18px">
         <Divider />
       </Box>
       <Flex flexDirection="column" flex="1">

@@ -17,6 +17,9 @@ const ListLayout = styled.div`
   grid-gap: 15px 9px;
   grid-template-columns: 208px 208px 208px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: auto auto;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     grid-template-columns: auto;
   `};
 `

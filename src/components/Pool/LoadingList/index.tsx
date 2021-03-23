@@ -8,7 +8,7 @@ const ListLayout = styled.div<{ wide: boolean }>`
   grid-gap: 9px;
   grid-template-columns: ${props => (props.wide ? 'auto auto auto' : 'auto auto auto auto')};
   ${({ theme }) => theme.mediaWidth.upToMedium<{ wide: boolean }>`
-    grid-template-columns: ${props => (props.wide ? 'auto' : ' auto auto')};
+    grid-template-columns: ${props => (props.wide ? 'auto auto' : ' auto auto auto')};
   `};
   ${({ theme }) => theme.mediaWidth.upToExtraSmall<{ wide: boolean }>`
     grid-template-columns: ${props => (props.wide ? 'auto' : ' auto auto')};
