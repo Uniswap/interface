@@ -44,8 +44,8 @@ export default function DoubleCurrencyLogo({
 }: DoubleCurrencyLogoProps) {
   return (
     <Wrapper sizeraw={size} marginRight={marginRight} marginLeft={marginLeft}>
-      <HigherLogo loading={loading} currency={currency0} size={size.toString() + 'px'} />
-      <CoveredLogo loading={loading} currency={currency1} size={size.toString() + 'px'} />
+      <CoveredLogo loading={loading} currency={currency0} size={size.toString() + 'px'} />
+      <HigherLogo loading={loading} currency={currency1} size={size.toString() + 'px'} />
     </Wrapper>
   )
 }
