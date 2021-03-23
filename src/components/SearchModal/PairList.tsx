@@ -1,5 +1,5 @@
 import { Pair } from 'dxswap-sdk'
-import React, { useCallback } from 'react'
+import React, { CSSProperties, useCallback } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
 import { usePairAdder, usePairRemover } from '../../state/user/hooks'
@@ -10,14 +10,21 @@ import { Plus, X } from 'react-feather'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { isPairOnList } from '../../utils'
 import { useAllPairs } from '../../hooks/useAllPairs'
+import AutoSizer from 'react-virtualized-auto-sizer'
+import { FixedSizeList } from 'react-window'
 
 interface PairRowProps {
   pair: Pair
   onSelect: () => void
   isSelected: boolean
+  style: CSSProperties
 }
 
-function PairRow({ pair, onSelect, isSelected }: PairRowProps) {
+function pairKey(index: number, data: Pair[]) {
+  return data[index].liquidityToken.address
+}
+
+function PairRow({ pair, onSelect, isSelected, style }: PairRowProps) {
   const { chainId } = useActiveWeb3React()
   const { pairs: allPairs } = useAllPairs()
   const isOnSelectedList = isPairOnList(allPairs, pair)
@@ -31,6 +38,7 @@ function PairRow({ pair, onSelect, isSelected }: PairRowProps) {
   // only show add or remove buttons if not on selected list
   return (
     <TokenPickerItem
+      style={style}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
       alignItems="center"
@@ -80,21 +88,31 @@ export default function PairList({
   otherPair?: Pair | null
 }) {
   const Row = useCallback(
-    (pair: Pair) => {
+    ({ data, index, style }) => {
+      const pair = data[index]
       const isSelected = Boolean(selectedPair && selectedPair.equals(pair))
       const handleSelect = () => onPairSelect(pair)
-      return <PairRow pair={pair} isSelected={isSelected} onSelect={handleSelect} />
+      return <PairRow style={style} pair={pair} isSelected={isSelected} onSelect={handleSelect} />
     },
     [onPairSelect, selectedPair]
   )
 
   return (
-    <TokenListContainer flexDirection="column" width="100%" overflowY="auto">
-      {pairs.map(pair => (
-        <Box width="100%" height="56px" key={pair.liquidityToken.address}>
-          {Row(pair)}
-        </Box>
-      ))}
+    <TokenListContainer>
+      <AutoSizer>
+        {({ width, height }) => (
+          <FixedSizeList
+            width={width}
+            height={height}
+            itemData={pairs}
+            itemCount={pairs.length}
+            itemSize={56}
+            itemKey={pairKey}
+          >
+            {Row}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
     </TokenListContainer>
   )
 }
