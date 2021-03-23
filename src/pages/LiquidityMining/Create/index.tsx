@@ -22,7 +22,7 @@ export default function CreateLiquidityMining() {
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [singleReward, setSingleReward] = useState<boolean | null>(null)
+  const [singleReward, setSingleReward] = useState<boolean | null>(true)
   const [targetedPair, setTargetedPair] = useState<Pair | null>(null)
   const [reward, setReward] = useState<TokenAmount | null>(null)
   const [unlimitedPool, setUnlimitedPool] = useState(true)

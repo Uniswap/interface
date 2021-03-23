@@ -54,10 +54,6 @@ export default function SingleOrMultiStep({ singleReward, onChange }: SingleOrMu
     onChange(true)
   }, [onChange])
 
-  const handleMultiRewardClick = useCallback(() => {
-    onChange(false)
-  }, [onChange])
-
   return (
     <AutoRow gap="16px">
       <Card selectable active={singleReward === null || !!singleReward} onClick={handleSingleRewardClick}>
@@ -68,7 +64,7 @@ export default function SingleOrMultiStep({ singleReward, onChange }: SingleOrMu
         </AutoColumn>
         <Diamond />
       </Card>
-      <Card selectable active={singleReward === null || !singleReward} onClick={handleMultiRewardClick}>
+      <Card disabled selectable active={false}>
         <AutoColumn>
           <CardText>Multi</CardText>
           <CardText>Reward</CardText>
