@@ -7,6 +7,8 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import PoaLogo from '../../assets/images/poa-logo.png'
 import XDAILogo from '../../assets/images/xdai-logo.png'
 import { useActiveWeb3React } from '../../hooks'
+import useHttpLocations from '../../hooks/useHttpLocations'
+import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
 
 const getTokenLogoURL = (address: string) =>
@@ -41,21 +43,16 @@ export default function CurrencyLogo({
 }) {
   const { chainId } = useActiveWeb3React()
   const nativeCurrencyLogo = NATIVE_CURRENCY_LOGO[(chainId as ChainId) || ChainId.MAINNET]
+  const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
     if (currency && Currency.isNative(currency) && !!nativeCurrencyLogo) return [nativeCurrencyLogo]
-
     if (currency instanceof Token) {
-      if (currency.name === 'DXdao') {
-        return [
-          'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xa1d65E8fB6e87b60FECCBc582F7f97804B725521/logo.png'
-        ]
-      } else {
-        return [getTokenLogoURL(currency?.address)]
-      }
+      if (Token.isNativeWrapper(currency)) return [nativeCurrencyLogo]
+      return [getTokenLogoURL(currency.address), ...uriLocations]
     }
     return []
-  }, [currency, nativeCurrencyLogo])
+  }, [currency, nativeCurrencyLogo, uriLocations])
 
   if (loading)
     return (
