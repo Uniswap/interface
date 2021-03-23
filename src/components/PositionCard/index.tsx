@@ -22,7 +22,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
-import { priceRangeCalc } from 'utils/dmm'
+import { priceRangeCalcByPair } from 'utils/dmm'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -329,8 +329,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 Price range {pair.token0.symbol}/{pair.token1.symbol}:{' '}
               </Text>
               <Text fontSize={16} fontWeight={500}>
-                {priceRangeCalc(pair.priceOf(pair.token0), amp)[1]?.toSignificant(6) ?? '.'} -{' '}
-                {priceRangeCalc(pair.priceOf(pair.token0), amp)[0]?.toSignificant(6) ?? '.'}
+                {/* token 0  */}
+                {priceRangeCalcByPair(pair)[0][0]?.toSignificant(6) ?? '.'} -{' '}
+                {priceRangeCalcByPair(pair)[0][1]?.toSignificant(6) ?? '.'}
               </Text>
             </FixedHeightRow>
             <FixedHeightRow>
@@ -338,8 +339,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 Price range {pair.token1.symbol}/{pair.token0.symbol}:{' '}
               </Text>
               <Text fontSize={16} fontWeight={500}>
-                {priceRangeCalc(pair.priceOf(pair.token1), amp)[1]?.toSignificant(6) ?? '.'} -{' '}
-                {priceRangeCalc(pair.priceOf(pair.token1), amp)[0]?.toSignificant(6) ?? '.'}
+                {/* token 1  */}
+                {priceRangeCalcByPair(pair)[1][0]?.toSignificant(6) ?? '.'} -{' '}
+                {priceRangeCalcByPair(pair)[1][1]?.toSignificant(6) ?? '.'}
               </Text>
             </FixedHeightRow>
             <ButtonSecondary2 padding="8px" borderRadius="8px">

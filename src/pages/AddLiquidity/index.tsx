@@ -390,11 +390,13 @@ export default function AddLiquidity({
     : '50%'
 
   const feeRangeCalc = (amp: number): string => {
-    if (amp > 20) return '4 bps'
-    if (amp <= 20 && amp > 5) return '10 bps'
-    if (amp <= 5 && amp > 2) return '20 bps'
-    if (amp <= 2) return '30 bps'
-    return ''
+    let baseFee = 0
+    if (amp > 20) baseFee = 4
+    if (amp <= 20 && amp > 5) baseFee = 10
+    if (amp <= 5 && amp > 2) baseFee = 20
+    if (amp <= 2) baseFee = 30
+
+    return `${(baseFee / 2).toPrecision()} - ${(baseFee * 2).toPrecision()}`
   }
 
   return (
