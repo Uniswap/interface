@@ -4,7 +4,7 @@ import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
 import { PageWrapper } from '../styleds'
 
-import { TYPE, HideSmall, StyledInternalLink } from '../../../theme'
+import { TYPE, HideSmall } from '../../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../../components/Row'
 import { ButtonPrimary, ButtonSecondary, ButtonWithLink } from '../../../components/Button'
@@ -158,12 +158,13 @@ export default function PairsByToken0({
           text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
           marginTop="32px"
         />
-        <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
+        {/* Should not be needed since when we fetch liquidity positions from the subgraph */}
+        {/* <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
           Don't see a pool you joined?{' '}
           <StyledInternalLink color="text5" id="import-pool-link" to="/find">
             Import it.
           </StyledInternalLink>
-        </TYPE.body>
+        </TYPE.body> */}
 
         <VoteCard style={{ marginTop: '32px' }}>
           <CardSection>
