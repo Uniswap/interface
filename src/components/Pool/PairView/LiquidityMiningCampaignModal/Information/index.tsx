@@ -6,9 +6,10 @@ import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
 import { useNativeCurrencyUSDPrice } from '../../../../../hooks/useNativeCurrencyUSDPrice'
 import { getRemainingRewardsUSD } from '../../../../../utils/liquidityMining'
+import { AutoColumn } from '../../../../Column'
 import Countdown from '../../../../Countdown'
 import CurrencyLogo from '../../../../CurrencyLogo'
-import { RowBetween } from '../../../../Row'
+import Row from '../../../../Row'
 import ApyBadge from '../../../ApyBadge'
 import DataRow from '../DataRow'
 
@@ -36,12 +37,16 @@ export default function LiquidityMiningInformation({ campaign }: LiquidityMining
         />
         <DataRow
           title="Rewards left"
-          value={campaign.remainingRewards.map(remainingReward => (
-            <RowBetween key={remainingReward.token.address}>
-              {remainingReward.toSignificant(3)}
-              <CurrencyLogo size="14px" currency={remainingReward.token} />
-            </RowBetween>
-          ))}
+          value={
+            <AutoColumn gap="4px" justify="flex-end">
+              {campaign.remainingRewards.map(remainingReward => (
+                <Row alignItems="center" justifyContent="flex-end" key={remainingReward.token.address}>
+                  {remainingReward.toSignificant(3)}
+                  <CurrencyLogo marginLeft={4} size="14px" currency={remainingReward.token} />
+                </Row>
+              ))}
+            </AutoColumn>
+          }
         />
         <DataRow
           title="Rewards left (USD)"

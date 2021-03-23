@@ -1,8 +1,13 @@
 import { PricedTokenAmount, TokenAmount } from 'dxswap-sdk'
 import React, { useState } from 'react'
-import { Flex, Box } from 'rebass'
+import styled from 'styled-components'
 import { tryParseAmount } from '../../../../../state/swap/hooks'
+import { AutoColumn } from '../../../../Column'
 import CurrencyInputPanel from '../../../../CurrencyInputPanel'
+
+const Root = styled.div`
+  margin-top: 20px;
+`
 
 interface ConfirmStakeModalHeaderProps {
   claimableRewards: PricedTokenAmount[]
@@ -13,13 +18,14 @@ export default function ConfirmClaimModalHeader({ claimableRewards, onAmountChan
   const [typedAmount, setTypedAmount] = useState<{ [rewardTokenAddress: string]: string }>({})
 
   return (
-    <Flex flexDirection="column" alignItems="center" mt="20px">
-      {claimableRewards.map(claimableReward => {
-        const rewardToken = claimableReward.token
-        const rewardTokenAddress = rewardToken.address
-        return (
-          <Box width="100%" key={rewardTokenAddress}>
+    <Root>
+      <AutoColumn gap="8px">
+        {claimableRewards.map(claimableReward => {
+          const rewardToken = claimableReward.token
+          const rewardTokenAddress = rewardToken.address
+          return (
             <CurrencyInputPanel
+              key={rewardTokenAddress}
               value={typedAmount[rewardTokenAddress] || ''}
               onUserInput={input => {
                 setTypedAmount({ ...typedAmount, [rewardTokenAddress]: input })
@@ -39,9 +45,9 @@ export default function ConfirmClaimModalHeader({ claimableRewards, onAmountChan
               customBalanceText="Claimable: "
               balance={claimableReward}
             />
-          </Box>
-        )
-      })}
-    </Flex>
+          )
+        })}
+      </AutoColumn>
+    </Root>
   )
 }

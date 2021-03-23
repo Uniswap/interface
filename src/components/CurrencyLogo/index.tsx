@@ -20,6 +20,12 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   border-radius: ${({ size }) => size};
 `
 
+const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number }>`
+  margin-right: ${({ marginRight }) => marginRight}px;
+  margin-left: ${({ marginLeft }) => marginLeft}px;
+  border-radius: ${({ size }) => size};
+`
+
 const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
   [ChainId.ARBITRUM_TESTNET_V3]: EthereumLogo,
   [ChainId.MAINNET]: EthereumLogo,
@@ -33,13 +39,17 @@ export default function CurrencyLogo({
   size = '24px',
   style,
   className,
-  loading
+  loading,
+  marginRight = 0,
+  marginLeft = 0
 }: {
   currency?: Currency
   size?: string
   style?: React.CSSProperties
   className?: string
   loading?: boolean
+  marginRight?: number
+  marginLeft?: number
 }) {
   const { chainId } = useActiveWeb3React()
   const nativeCurrencyLogo = NATIVE_CURRENCY_LOGO[(chainId as ChainId) || ChainId.MAINNET]
@@ -57,20 +67,25 @@ export default function CurrencyLogo({
   if (loading)
     return (
       <Skeleton
-        wrapper={({ children }: { children: ReactNode }) => <div className={className}>{children}</div>}
+        wrapper={({ children }: { children: ReactNode }) => (
+          <Wrapper size={size} marginRight={marginRight} marginLeft={marginLeft} className={className}>
+            {children}
+          </Wrapper>
+        )}
         circle
         width={size}
         height={size}
       />
     )
   return (
-    <StyledLogo
-      className={className}
-      size={size}
-      defaultText={currency?.symbol || '?'}
-      srcs={srcs}
-      alt={`${currency?.symbol ?? 'token'} logo`}
-      style={style}
-    />
+    <Wrapper size={size} marginRight={marginRight} marginLeft={marginLeft} className={className}>
+      <StyledLogo
+        size={size}
+        defaultText={currency?.symbol || '?'}
+        srcs={srcs}
+        alt={`${currency?.symbol ?? 'token'} logo`}
+        style={style}
+      />
+    </Wrapper>
   )
 }

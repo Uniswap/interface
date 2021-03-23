@@ -1,9 +1,8 @@
 import React, { ReactNode } from 'react'
-import { Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import { RowBetween } from '../../../../Row'
 
-const TitleText = styled.span`
+const TitleText = styled(Box)`
   font-size: 11px;
   font-weight: 600;
   line-height: 13px;
@@ -19,11 +18,11 @@ interface DataRowProps {
 
 export default function DataRow({ title, value }: DataRowProps) {
   return (
-    <RowBetween height="16px" mb="4px">
+    <Flex justifyContent="space-between" minHeight="16px" mb="4px">
       <TitleText>{title}</TitleText>
       <Text fontSize="12px" fontWeight="600" lineHeight="13px" color="text4">
         {value}
       </Text>
-    </RowBetween>
+    </Flex>
   )
 }
