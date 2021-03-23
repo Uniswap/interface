@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
-import { priceRangeCalc } from 'utils/dmm'
+import { priceRangeCalc, priceRangeCalcByPair } from 'utils/dmm'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow, RowFixed } from '../../components/Row'
 import { ONE_BIPS } from '../../constants'
@@ -148,42 +148,10 @@ export function PoolPriceRangeBarToggle({
   pair: Pair | null | undefined
   amplification?: Fraction
 }) {
-  const theme = useContext(ThemeContext)
-  const amp = !!pair ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)) : amplification?.divide(JSBI.BigInt(10000))
-  const show = !!priceRangeCalc(price, amp)[0]
   return (
     <OutlineCard3>
       <ToggleComponent title="Active Price Range" question="Active Price Range">
-        <AutoColumn gap="md">
-          <AutoRow justify="space-between" gap="4px">
-            <AutoColumn>
-              <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-                {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol}
-              </Text>
-              {show ? (
-                <>
-                  <TYPE.black>Max: {priceRangeCalc(price, amp)[0]?.toSignificant(6) ?? '-'}</TYPE.black>
-                  <TYPE.black>Min: {priceRangeCalc(price, amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
-                </>
-              ) : (
-                '--/--'
-              )}
-            </AutoColumn>
-            <AutoColumn justify="end">
-              <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-                {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol}
-              </Text>
-              {show ? (
-                <>
-                  <TYPE.black>Max: {priceRangeCalc(price?.invert(), amp)[0]?.toSignificant(6) ?? '-'}</TYPE.black>
-                  <TYPE.black>Min: {priceRangeCalc(price?.invert(), amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
-                </>
-              ) : (
-                '--/--'
-              )}
-            </AutoColumn>
-          </AutoRow>
-        </AutoColumn>
+        <PoolPriceRangeBar currencies={currencies} price={price} pair={pair} amplification={amplification} />
       </ToggleComponent>
     </OutlineCard3>
   )
@@ -200,41 +168,100 @@ export function PoolPriceRangeBar({
   pair: Pair | null | undefined
   amplification?: Fraction
 }) {
-  const amp = !!pair ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)) : amplification?.divide(JSBI.BigInt(10000))
-
-  const show = !!priceRangeCalc(price, amp)[0]
-
   const theme = useContext(ThemeContext)
-  return (
-    <AutoColumn gap="md">
-      <AutoRow justify="space-between" gap="4px">
-        <AutoColumn>
-          <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol}
-          </Text>
-          {show ? (
-            <>
-              <TYPE.black>Max: {priceRangeCalc(price, amp)[0]?.toSignificant(6) ?? '-'}</TYPE.black>
-              <TYPE.black>Min: {priceRangeCalc(price, amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
-            </>
-          ) : (
-            '--/--'
-          )}
-        </AutoColumn>
-        <AutoColumn justify="end">
-          <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-            {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol}
-          </Text>
-          {show ? (
-            <>
-              <TYPE.black>Max: {priceRangeCalc(price?.invert(), amp)[0]?.toSignificant(6) ?? '-'}</TYPE.black>
-              <TYPE.black>Min: {priceRangeCalc(price?.invert(), amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
-            </>
-          ) : (
-            '--/--'
-          )}
-        </AutoColumn>
-      </AutoRow>
-    </AutoColumn>
-  )
+  // const amp = !!pair ? new Fraction(pair.amp).divide(JSBI.BigInt(10000)) : amplification?.divide(JSBI.BigInt(10000))
+  // const show = !!priceRangeCalc(price, amp)[0]
+  const existedPriceRange = () => {
+    const show = !!pair && !!priceRangeCalcByPair(pair)[0][0]
+    return (
+      <AutoColumn gap="md">
+        <AutoRow justify="space-between" gap="4px">
+          <AutoColumn>
+            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+              {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol}
+            </Text>
+            {show && !!pair ? (
+              <>
+                <TYPE.black>
+                  Max:{' '}
+                  {priceRangeCalcByPair(pair)[
+                    currencies[Field.CURRENCY_A]?.symbol == pair.token0.symbol ? 0 : 1
+                  ][1]?.toSignificant(6) ?? '-'}
+                </TYPE.black>
+                <TYPE.black>
+                  Min:{' '}
+                  {priceRangeCalcByPair(pair)[
+                    currencies[Field.CURRENCY_A]?.symbol == pair.token0.symbol ? 0 : 1
+                  ][0]?.toSignificant(6) ?? '-'}
+                </TYPE.black>
+              </>
+            ) : (
+              '--/--'
+            )}
+          </AutoColumn>
+          <AutoColumn justify="end">
+            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+              {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol}
+            </Text>
+            {show && !!pair ? (
+              <>
+                <TYPE.black>
+                  Max:{' '}
+                  {priceRangeCalcByPair(pair)[
+                    currencies[Field.CURRENCY_A]?.symbol == pair.token0.symbol ? 1 : 0
+                  ][1]?.toSignificant(6) ?? '-'}
+                </TYPE.black>
+                <TYPE.black>
+                  Min:{' '}
+                  {priceRangeCalcByPair(pair)[
+                    currencies[Field.CURRENCY_A]?.symbol == pair.token0.symbol ? 1 : 0
+                  ][0]?.toSignificant(6) ?? '-'}
+                </TYPE.black>
+              </>
+            ) : (
+              '--/--'
+            )}
+          </AutoColumn>
+        </AutoRow>
+      </AutoColumn>
+    )
+  }
+  const newPriceRange = () => {
+    const amp = amplification?.divide(JSBI.BigInt(10000))
+    const show = !!priceRangeCalc(price, amp)[0]
+    return (
+      <AutoColumn gap="md">
+        <AutoRow justify="space-between" gap="4px">
+          <AutoColumn>
+            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+              {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol}
+            </Text>
+            {show ? (
+              <>
+                <TYPE.black>Max: {priceRangeCalc(price, amp)[0]?.toSignificant(6) ?? '-'}</TYPE.black>
+                <TYPE.black>Min: {priceRangeCalc(price, amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
+              </>
+            ) : (
+              '--/--'
+            )}
+          </AutoColumn>
+          <AutoColumn justify="end">
+            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+              {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol}
+            </Text>
+            {show ? (
+              <>
+                <TYPE.black>Max: {priceRangeCalc(price?.invert(), amp)[0]?.toSignificant(6) ?? '-'}</TYPE.black>
+                <TYPE.black>Min: {priceRangeCalc(price?.invert(), amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
+              </>
+            ) : (
+              '--/--'
+            )}
+          </AutoColumn>
+        </AutoRow>
+      </AutoColumn>
+    )
+  }
+
+  return <>{!!pair ? existedPriceRange() : newPriceRange()}</>
 }
