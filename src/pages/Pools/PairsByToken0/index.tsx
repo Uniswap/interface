@@ -4,13 +4,12 @@ import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
 import { PageWrapper } from '../styleds'
 
-import { TYPE, HideSmall } from '../../../theme'
+import { TYPE } from '../../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../../components/Row'
-import { ButtonPrimary, ButtonSecondary, ButtonWithLink } from '../../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../../components/Button'
 import { AutoColumn } from '../../../components/Column'
 
-import { useActiveWeb3React } from '../../../hooks'
 import { ChevronDown } from 'react-feather'
 import { CardSection } from '../../../components/earn/styled'
 import { useToken } from '../../../hooks/Tokens'
@@ -39,10 +38,10 @@ const TitleRow = styled(RowBetween)`
 `
 
 const ButtonRow = styled(RowFixed)`
-  gap: 8px;
+  gap: 12px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
-    flex-direction: row-reverse;
+    flex-direction: column;
     justify-content: space-between;
   `};
 `
@@ -50,14 +49,14 @@ const ButtonRow = styled(RowFixed)`
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
+    width: 100%;
   `};
 `
 
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
+    width: 100%;
   `};
 `
 
@@ -70,7 +69,6 @@ export default function PairsByToken0({
     params: { currencyIdA }
   }
 }: RouteComponentProps<{ currencyIdA: string }>) {
-  const { account } = useActiveWeb3React()
   const router = useRouter()
   const token0 = useToken(currencyIdA)
   const { loading: loadingPairs, pairs } = usePairsByToken0(token0)
@@ -103,38 +101,36 @@ export default function PairsByToken0({
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
 
-        <AutoColumn gap="lg" justify="center">
+        <AutoColumn gap="lg">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <HideSmall>
-                <Flex alignItems="center">
-                  <Box mr="8px">
-                    <UndecoratedLink to="/pools">
-                      <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px" color="text4">
-                        Pairs
-                      </TYPE.mediumHeader>
-                    </UndecoratedLink>
-                  </Box>
-                  <Box mr="8px">
+              <Flex alignItems="center">
+                <Box mr="8px">
+                  <UndecoratedLink to="/pools">
                     <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px" color="text4">
-                      /
+                      Pairs
                     </TYPE.mediumHeader>
+                  </UndecoratedLink>
+                </Box>
+                <Box mr="8px">
+                  <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px" color="text4">
+                    /
+                  </TYPE.mediumHeader>
+                </Box>
+                <PointableFlex onClick={handleAllClick}>
+                  <Box mr="4px">
+                    <CurrencyLogo currency={token0 || undefined} size="20px" />
                   </Box>
-                  <PointableFlex onClick={handleAllClick}>
-                    <Box mr="4px">
-                      <CurrencyLogo currency={token0 || undefined} size="20px" />
-                    </Box>
-                    <Box mr="4px">
-                      <Text fontWeight="600" fontSize="16px" lineHeight="20px">
-                        {token0?.symbol}
-                      </Text>
-                    </Box>
-                  </PointableFlex>
-                  <Box>
-                    <ChevronDown size={12} />
+                  <Box mr="4px">
+                    <Text fontWeight="600" fontSize="16px" lineHeight="20px">
+                      {token0?.symbol}
+                    </Text>
                   </Box>
-                </Flex>
-              </HideSmall>
+                </PointableFlex>
+                <Box>
+                  <ChevronDown size={12} />
+                </Box>
+              </Flex>
               <ButtonRow>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
                   <Text fontWeight={700} fontSize={12}>
@@ -153,11 +149,12 @@ export default function PairsByToken0({
             <PairsList loading={loadingPairs} pairs={pairs} />
           </AutoColumn>
         </AutoColumn>
-        <ButtonWithLink
+        {/* TODO: uncomment once multi-chain analytics are a thing */}
+        {/* <ButtonWithLink
           link={`https://dxstats.eth.link/#/account/${account}`}
           text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
           marginTop="32px"
-        />
+        /> */}
         {/* Should not be needed since when we fetch liquidity positions from the subgraph */}
         {/* <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
           Don't see a pool you joined?{' '}

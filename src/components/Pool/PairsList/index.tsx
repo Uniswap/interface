@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import { usePage } from '../../../hooks/usePage'
 import { getPairMaximumApy, getPairRemainingRewardsUSD } from '../../../utils/liquidityMining'
 import { useNativeCurrencyUSDPrice } from '../../../hooks/useNativeCurrencyUSDPrice'
+import { useResponsiveItemsPerPage } from '../../../hooks/useResponsiveItemsPerPage'
 
 const ListLayout = styled.div`
   display: grid;
@@ -25,11 +26,10 @@ interface PairsListProps {
   loading?: boolean
 }
 
-const ITEMS_PER_PAGE = 9
-
 export default function PairsList({ pairs, loading }: PairsListProps) {
   const [page, setPage] = useState(1)
-  const itemsPage = usePage(pairs, ITEMS_PER_PAGE, page, 0)
+  const responsiveItemsPerPgae = useResponsiveItemsPerPage(true)
+  const itemsPage = usePage(pairs, responsiveItemsPerPgae, page, 0)
   const { loading: loadingNativeCurrencyUSDPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
 
   const overallLoading = loading || loadingNativeCurrencyUSDPrice

@@ -12,6 +12,7 @@ import LoadingList from '../../../LoadingList'
 import { usePage } from '../../../../../hooks/usePage'
 import { useTokenBalance } from '../../../../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../../../../hooks'
+import { useResponsiveItemsPerPage } from '../../../../../hooks/useResponsiveItemsPerPage'
 
 const ListLayout = styled.div`
   display: grid;
@@ -39,7 +40,8 @@ const ITEMS_PER_PAGE = 3
 export default function List({ stakablePair, loading, items }: LiquidityMiningCampaignsListProps) {
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const itemsPage = usePage(items || [], ITEMS_PER_PAGE, page, 0)
+  const responsiveItemsPerPage = useResponsiveItemsPerPage(true)
+  const itemsPage = usePage(items || [], responsiveItemsPerPage, page, 0)
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
   const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const [selectedCampaign, setSelectedCampaign] = useState<LiquidityMiningCampaign | null>(null)

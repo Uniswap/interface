@@ -14,6 +14,9 @@ const SizedCard = styled(DarkCard)`
     background: linear-gradient(153.77deg, rgba(55, 82, 233, 0.35) -144.38%, rgba(55, 82, 233, 0) 65.22%),
       linear-gradient(0deg, #171621, #171621);
   }
+  ${props => props.theme.mediaWidth.upToMedium`
+    width: 100%;
+  `}
 `
 
 interface PairProps {

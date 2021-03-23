@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { PageWrapper } from './styleds'
 
-import { TYPE, HideSmall } from '../../theme'
+import { TYPE } from '../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary, ButtonWithLink } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -40,26 +40,27 @@ const TitleRow = styled(RowBetween)`
 `
 
 const ButtonRow = styled(RowFixed)`
-  gap: 8px;
+  gap: 12px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
-    flex-direction: row-reverse;
+    flex-direction: column;
     justify-content: space-between;
+    margin-bottom: 8px;
   `};
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
+    width: 100%;
   `};
 `
 
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-    `};
+    width: 100%;
+  `};
 `
 
 const PointableFlex = styled(Flex)`
@@ -86,33 +87,31 @@ function Title({ onCurrencySelection }: TitleProps) {
   return (
     <>
       <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-        <HideSmall>
-          <Flex alignItems="center">
-            <Box mr="8px">
-              <Text fontSize="26px" lineHeight="32px">
-                Pairs
+        <Flex alignItems="center">
+          <Box mr="8px">
+            <Text fontSize="26px" lineHeight="32px">
+              Pairs
+            </Text>
+          </Box>
+          <Box mr="8px">
+            <Text fontSize="26px" lineHeight="32px">
+              /
+            </Text>
+          </Box>
+          <Box mr="6px">
+            <img src={threeBlurredCircles} alt="Circles" />
+          </Box>
+          <PointableFlex onClick={handleAllClick}>
+            <Box>
+              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+                ALL
               </Text>
             </Box>
-            <Box mr="8px">
-              <Text fontSize="26px" lineHeight="32px">
-                /
-              </Text>
+            <Box>
+              <ChevronDown size={12} />
             </Box>
-            <Box mr="6px">
-              <img src={threeBlurredCircles} alt="Circles" />
-            </Box>
-            <PointableFlex onClick={handleAllClick}>
-              <Box>
-                <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
-                  ALL
-                </Text>
-              </Box>
-              <Box>
-                <ChevronDown size={12} />
-              </Box>
-            </PointableFlex>
-          </Flex>
-        </HideSmall>
+          </PointableFlex>
+        </Flex>
         <ButtonRow>
           <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
             <Text fontWeight={700} fontSize={12}>
@@ -172,11 +171,12 @@ export default function Pools() {
             />
           </AutoColumn>
         </AutoColumn>
-        <ButtonWithLink
+        {/* TODO: uncomment once multi-chain analytics are a thing */}
+        {/* <ButtonWithLink
           link={`https://dxstats.eth.link/#/account/${account}`}
           text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
           marginTop="32px"
-        />
+        /> */}
         {/* Should not be needed since when we fetch liquidity positions from the subgraph */}
         {/* <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
           Don't see a pool you joined?{' '}

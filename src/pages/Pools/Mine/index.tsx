@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { PageWrapper } from '../styleds'
 
-import { TYPE, HideSmall } from '../../../theme'
+import { TYPE } from '../../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../../components/Button'
@@ -24,18 +24,19 @@ const TitleRow = styled(RowBetween)`
 `
 
 const ButtonRow = styled(RowFixed)`
-  gap: 8px;
+  gap: 12px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 100%;
-    flex-direction: row-reverse;
+    flex-direction: column;
     justify-content: space-between;
+    margin-bottom: 8px;
   `};
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
+    width: 100%;
   `};
 `
 
@@ -56,27 +57,25 @@ export default function MyPairs() {
       <AutoColumn gap="lg" justify="center">
         <AutoColumn gap="lg" style={{ width: '100%' }}>
           <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-            <HideSmall>
-              <Flex alignItems="center">
-                <Box mr="8px">
-                  <UndecoratedLink to="/pools">
-                    <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px" color="text4">
-                      Pairs
-                    </TYPE.mediumHeader>
-                  </UndecoratedLink>
-                </Box>
-                <Box mr="8px">
+            <Flex alignItems="center">
+              <Box mr="8px">
+                <UndecoratedLink to="/pools">
                   <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px" color="text4">
-                    /
+                    Pairs
                   </TYPE.mediumHeader>
-                </Box>
-                <Box>
-                  <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
-                    MINE
-                  </TYPE.mediumHeader>
-                </Box>
-              </Flex>
-            </HideSmall>
+                </UndecoratedLink>
+              </Box>
+              <Box mr="8px">
+                <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px" color="text4">
+                  /
+                </TYPE.mediumHeader>
+              </Box>
+              <Box>
+                <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
+                  MINE
+                </TYPE.mediumHeader>
+              </Box>
+            </Flex>
             <ButtonRow>
               <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/create">
                 <Text fontWeight={700} fontSize={12}>

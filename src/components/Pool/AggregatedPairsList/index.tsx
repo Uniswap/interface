@@ -9,17 +9,19 @@ import MyPairs from './MyPairs'
 import styled from 'styled-components'
 import { usePage } from '../../../hooks/usePage'
 import { CurrencyAmount, Pair, Percent, Token } from 'dxswap-sdk'
+import { useResponsiveItemsPerPage } from '../../../hooks/useResponsiveItemsPerPage'
 
 const ListLayout = styled.div`
   display: grid;
   grid-gap: 15px 9px;
   grid-template-columns: 155px 155px 155px 155px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: auto-fill;
+    grid-template-columns: auto auto auto;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    grid-template-columns: auto auto;
   `};
 `
-
-const ITEMS_PER_PAGE = 12
 
 interface AggregatedPairsListProps {
   loading: boolean
@@ -41,15 +43,17 @@ export default function AggregatedPairsList({
   filter,
   onFilterChange
 }: AggregatedPairsListProps) {
+  const responsiveItemsAmount = useResponsiveItemsPerPage(false)
   const [page, setPage] = useState(1)
-  const itemsPage = usePage(aggregatedData, ITEMS_PER_PAGE, page, 1)
+  const itemsPage = usePage(aggregatedData, responsiveItemsAmount, page, 1)
+  console.log(itemsPage)
 
   return (
     <Flex flexDirection="column">
       <Box mb="32px">
         <ListFilter disabled={loading} filter={filter} onFilterChange={onFilterChange} />
       </Box>
-      <Box mb="8px" height="460px">
+      <Box mb="8px" minHeight={['230px', '460px']}>
         {loading ? (
           <LoadingList doubleCircle />
         ) : itemsPage.length > 0 ? (
@@ -79,7 +83,7 @@ export default function AggregatedPairsList({
             page={page}
             /* +1 because we account for the my pools card */
             totalItems={aggregatedData.length + 1}
-            itemsPerPage={ITEMS_PER_PAGE}
+            itemsPerPage={responsiveItemsAmount}
             onPageChange={setPage}
           />
         </Box>

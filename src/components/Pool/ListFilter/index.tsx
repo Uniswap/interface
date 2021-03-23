@@ -29,8 +29,8 @@ export default function ListFilter({ disabled, filter, onFilterChange }: ListFil
 
   return (
     <StyledRoot justifyContent="space-between" disabled={disabled}>
-      <Flex>
-        <Box mr="26px">
+      <Flex flex="1" flexWrap="wrap">
+        <Box mb={['8px', '0px']} mr="20px">
           <Radio
             onChange={handleFilterRadioChange}
             checked={filter === PairsFilterType.ALL}
@@ -38,7 +38,7 @@ export default function ListFilter({ disabled, filter, onFilterChange }: ListFil
             value={PairsFilterType.ALL.toString()}
           />
         </Box>
-        <Box mr="26px">
+        <Box mr="20px">
           <Radio
             onChange={handleFilterRadioChange}
             checked={filter === PairsFilterType.REWARDS}
@@ -49,7 +49,7 @@ export default function ListFilter({ disabled, filter, onFilterChange }: ListFil
       </Flex>
       <Box>
         <Text fontSize="11px" fontWeight="600" lineHeight="11px" letterSpacing="0.08em">
-          SORTED BY: RELEVANCE
+          SORTING: RELEVANCE
         </Text>
       </Box>
     </StyledRoot>
