@@ -15,6 +15,7 @@ script:
 install:
   - git submodule update --remote
   - yarn
+  - npm rebuild node-sass
   - yarn build-ropsten | true
   - ls build
 
