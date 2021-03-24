@@ -245,6 +245,10 @@ body {
   `};
 }
 
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
 .react-datepicker {
   font-family: Montserrat !important;
   border: solid 1px ${props => props.theme.bg5} !important;

@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { AutoRow } from '../../../../Row'
 import { ReactComponent as DiamondSvg } from '../../../../../assets/svg/diamond.svg'
 import { ReactComponent as DiamondsSvg } from '../../../../../assets/svg/diamonds.svg'
 import { AutoColumn } from '../../../../Column'
+import { AutoRow } from '../../../../Row'
 import { Card as StyledCard } from '../../../styleds'
 
 const Card = styled(StyledCard)<{ active?: boolean }>`
@@ -14,6 +14,9 @@ const Card = styled(StyledCard)<{ active?: boolean }>`
   opacity: ${props => (!props.selectable || props.active ? '1' : '0.4')};
   display: flex;
   align-items: center;
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    width: 100%;
+  `}
 `
 
 const CardText = styled(Text)`
@@ -55,7 +58,7 @@ export default function SingleOrMultiStep({ singleReward, onChange }: SingleOrMu
   }, [onChange])
 
   return (
-    <AutoRow gap="16px">
+    <AutoRow gap="8px">
       <Card selectable active={singleReward === null || !!singleReward} onClick={handleSingleRewardClick}>
         <AutoColumn>
           <CardText>Single</CardText>

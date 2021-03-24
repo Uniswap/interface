@@ -64,7 +64,7 @@ interface PickerProps {
   maximum?: Date
 }
 
-function DateTimeInput({ value, placeholder, minimum, maximum, onChange }: PickerProps) {
+function DateTimeInput({ value, placeholder, minimum, maximum, onChange, ...rest }: PickerProps) {
   return (
     <Datepicker
       customInput={<Input />}
@@ -80,6 +80,7 @@ function DateTimeInput({ value, placeholder, minimum, maximum, onChange }: Picke
       timeFormat="HH:mm"
       minTime={minimum}
       maxTime={maximum}
+      {...rest}
     />
   )
 }

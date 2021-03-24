@@ -1,10 +1,23 @@
 import { Pair, Token, TokenAmount } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex } from 'rebass'
+import styled from 'styled-components'
 import CurrencySearchModal from '../../../../SearchModal/CurrencySearchModal'
 import PairSearchModal from '../../../../SearchModal/PairSearchModal'
 import { Card, Divider } from '../../../styleds'
 import AssetSelector from './AssetSelector'
+
+const FlexContainer = styled(Flex)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    flex-direction: column;
+  `}
+`
+
+const RewardTokenContainer = styled(Box)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    margin-top: 16px !important;
+  `}
+`
 
 interface PairAndRewardProps {
   liquidityPair: Pair | null
@@ -55,7 +68,7 @@ export default function PairAndReward({
   return (
     <>
       <Card>
-        <Flex justifyContent="stretch" width="100%">
+        <FlexContainer justifyContent="stretch" width="100%">
           <Box flex="1">
             <AssetSelector
               title="LIQUIDITY PAIR"
@@ -67,10 +80,10 @@ export default function PairAndReward({
           <Box mx="18px">
             <Divider />
           </Box>
-          <Box flex="1">
+          <RewardTokenContainer flex="1">
             <AssetSelector title="REWARD TOKEN" currency0={reward?.token} onClick={handleOpenCurrencySearch} />
-          </Box>
-        </Flex>
+          </RewardTokenContainer>
+        </FlexContainer>
       </Card>
       <PairSearchModal
         isOpen={pairSearchOpen}

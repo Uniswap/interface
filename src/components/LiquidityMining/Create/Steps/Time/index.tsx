@@ -4,6 +4,25 @@ import { TYPE } from '../../../../../theme'
 import TimeSelector from './TimeSelector'
 import Toggle from '../../../../Toggle'
 import { Card, Divider } from '../../../styleds'
+import styled from 'styled-components'
+
+const FlexContainer = styled(Flex)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    flex-direction: column;
+  `}
+`
+
+const ResponsiveBoxContainer = styled(Box)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    margin-top: 16px !important;
+  `}
+`
+
+const ResponsiveFlexContainer = styled(Box)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    margin-top: 16px !important;
+  `}
+`
 
 interface TimeProps {
   startTime: Date | null
@@ -24,7 +43,7 @@ export default function Time({
 }: TimeProps) {
   return (
     <Card>
-      <Flex justifyContent="stretch" width="100%">
+      <FlexContainer justifyContent="stretch" width="100%">
         <Box flex="1">
           <TimeSelector
             title="START DATE AND TIME"
@@ -37,7 +56,7 @@ export default function Time({
         <Box mx="18px">
           <Divider />
         </Box>
-        <Box flex="1">
+        <ResponsiveBoxContainer flex="1">
           <TimeSelector
             title="END DATE AND TIME"
             placeholder="End date & time"
@@ -45,11 +64,11 @@ export default function Time({
             minimum={startTime || new Date()}
             onChange={onEndTimeChange}
           />
-        </Box>
+        </ResponsiveBoxContainer>
         <Box mx="18px">
           <Divider />
         </Box>
-        <Flex flexDirection="column">
+        <ResponsiveFlexContainer flexDirection="column">
           <Box mb="16px">
             <TYPE.small fontWeight="600" color="text4" letterSpacing="0.08em">
               TIMELOCK
@@ -58,8 +77,8 @@ export default function Time({
           <Box>
             <Toggle isActive={timelocked} toggle={onTimelockedChange} />
           </Box>
-        </Flex>
-      </Flex>
+        </ResponsiveFlexContainer>
+      </FlexContainer>
     </Card>
   )
 }

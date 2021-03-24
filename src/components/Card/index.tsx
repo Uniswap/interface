@@ -104,12 +104,6 @@ export const GradientCard = styled(Card)<{ selectable?: boolean; active?: boolea
   display: flex;
   flex-wrap: wrap;
   cursor: ${props => (props.selectable ? 'pointer' : 'auto')};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: calc(33% - 4px);
-  `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    width: calc(50% - 4px);
-    `};
   opacity: 1;
   border: solid 1px ${props => props.theme.bg3};
   position: relative;

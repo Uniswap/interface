@@ -9,6 +9,19 @@ import { useTokenBalance } from '../../../../../state/wallet/hooks'
 import { ApprovalState, useApproveCallback } from '../../../../../hooks/useApproveCallback'
 import { useStakingRewardsDistributionFactoryContract } from '../../../../../hooks/useContract'
 import { useActiveWeb3React } from '../../../../../hooks'
+import styled from 'styled-components'
+
+const FlexContainer = styled(Flex)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    flex-direction: column;
+  `}
+`
+
+const ResponsiveContainer = styled(Box)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    margin-top: 16px !important;
+  `}
+`
 
 interface PreviewProps {
   liquidityPair: Pair | null
@@ -68,7 +81,7 @@ export default function PreviewAndCreate({
     <Flex flexDirection="column">
       <Box mb="40px">
         <Card>
-          <Flex justifyContent="stretch" width="100%">
+          <FlexContainer justifyContent="stretch" width="100%">
             <PoolSummary
               liquidityPair={liquidityPair}
               startTime={startTime}
@@ -78,13 +91,15 @@ export default function PreviewAndCreate({
             <Box mx="18px">
               <Divider />
             </Box>
-            <RewardSummary reward={reward} apy={apy} />
-          </Flex>
+            <ResponsiveContainer>
+              <RewardSummary reward={reward} apy={apy} />
+            </ResponsiveContainer>
+          </FlexContainer>
         </Card>
       </Box>
       <Box>
         <Card>
-          <Flex justifyContent="stretch" width="100%">
+          <FlexContainer justifyContent="stretch" width="100%">
             <Box width="100%">
               <ButtonPrimary
                 disabled={
@@ -100,15 +115,15 @@ export default function PreviewAndCreate({
             <Box mx="18px">
               <Divider />
             </Box>
-            <Box width="100%">
+            <ResponsiveContainer width="100%">
               <ButtonPrimary
                 disabled={areButtonsDisabled || approvalState !== ApprovalState.APPROVED}
                 onClick={onCreate}
               >
                 {getConfirmButtonMessage()}
               </ButtonPrimary>
-            </Box>
-          </Flex>
+            </ResponsiveContainer>
+          </FlexContainer>
         </Card>
       </Box>
     </Flex>

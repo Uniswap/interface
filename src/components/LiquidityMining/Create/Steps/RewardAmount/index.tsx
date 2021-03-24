@@ -35,6 +35,18 @@ const RewardInputLogo = styled(CurrencyLogo)`
   right: 16px;
 `
 
+const FlexContainer = styled(Flex)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    flex-direction: column;
+  `}
+`
+
+const PoolSizeContainer = styled(Box)`
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    margin-top: 16px !important;
+  `}
+`
+
 interface RewardAmountProps {
   reward: TokenAmount | null
   unlimitedPool: boolean
@@ -69,7 +81,7 @@ export default function RewardAmount({
 
   return (
     <Card>
-      <Flex width="100%">
+      <FlexContainer width="100%">
         <Flex flex="1" flexDirection="column">
           <Box mb="16px">
             <TYPE.small fontWeight="600" color="text4" letterSpacing="0.08em">
@@ -86,7 +98,7 @@ export default function RewardAmount({
         <Box mx="18px">
           <Divider />
         </Box>
-        <Flex flex="1" flexDirection="column">
+        <PoolSizeContainer flex="1" flexDirection="column">
           <Box mb="24px">
             <TYPE.small fontWeight="600" color="text4" letterSpacing="0.08em">
               POOL SIZE
@@ -100,8 +112,8 @@ export default function RewardAmount({
               <Radio disabled label="Limited" value="limited" onChange={handleLocalRadioChange} />
             </Box>
           </Flex>
-        </Flex>
-      </Flex>
+        </PoolSizeContainer>
+      </FlexContainer>
     </Card>
   )
 }
