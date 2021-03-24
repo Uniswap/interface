@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { ChainId, Currency } from 'dxswap-sdk'
 import styled from 'styled-components'
 import Option from './Option'
+import { ButtonPrimary, ButtonSecondary } from '../Button'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useCloseModals, useWalletModalToggle } from '../../state/application/hooks'
+import { network } from '../../connectors'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
@@ -49,16 +51,6 @@ interface AddEthereumChainParameter {
   iconUrls?: string[] // Currently ignored.
 }
 
-const ContentWrapper = styled.div`
-  padding: 16px 18px 32px 16px;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  margin: auto;
-  width: 100%;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
-`
-
 const OptionGrid = styled.div`
   padding: 0.5em 1em 2em 0.75rem;
   display: grid;
@@ -69,61 +61,135 @@ const OptionGrid = styled.div`
   `};
 `
 
+const ApprovalHint = styled.p`
+  font-size: 14px;
+  width: 500px;
+`
+
+const ApprovalWrapper = styled.div`
+  margin-top: 10%;
+`
+
+const ButtonWrapper = styled.div`
+  margin: 1em auto;
+  width: 100%;
+`
+
+const ApproveButton = styled(ButtonPrimary)`
+  width: 45%;
+  padding: 1em;
+  margin: 1em;
+  font-size: 10px;
+  display: inline-block;
+`
+
+const IgnoreButton = styled(ButtonSecondary)`
+  width: 45%;
+  padding: 1em;
+  margin: 1em;
+  font-size: 10px;
+  display: inline-block;
+`
+
 export default function NetworkSwitcherPopover() {
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
-  const closeModals = useCloseModals()
-
   const toggleWalletModal = useWalletModalToggle()
-
   const { chainId } = useWeb3React()
+  const closeModals = useCloseModals()
+  const [approve, setApprove] = useState(false)
 
-  const selectNetwork = (optionChainId: ChainId) => {
-    if (optionChainId === chainId) return
+  const customRPCs = [ChainId.XDAI, ChainId.ARBITRUM_TESTNET_V3]
 
-    if (!window.ethereum?.isMetaMask || !window.ethereum?.request || !chainId) return
+  function AddNetworkApproval() {
+    const handleIgnore = () => {
+      closeModals()
+      setApprove(false)
+    }
 
-    window.ethereum
-      .request({ method: 'wallet_addEthereumChain', params: [NETWORK_DETAILS[optionChainId]] })
-      .catch(error => {
-        console.error(`error adding network to metamask`, error)
-      })
+    const newNetworkId = network.currentChainId
 
-    closeModals()
+    const handleAddNetwork = () => {
+      if (!window.ethereum?.isMetaMask || !window.ethereum?.request || !customRPCs.includes(newNetworkId)) {
+        closeModals()
+        setApprove(false)
+        return
+      }
+
+      window.ethereum
+        .request({ method: 'wallet_addEthereumChain', params: [NETWORK_DETAILS[newNetworkId]] })
+        .catch(error => {
+          console.error(`error adding network to metamask`, error)
+        })
+        .finally(() => {
+          closeModals()
+          setApprove(false)
+        })
+    }
+
+    return (
+      <ApprovalWrapper>
+        <ApprovalHint>
+          We have detected that you are using Metamask. Would you like to add {NETWORK_DETAILS[newNetworkId].chainName}{' '}
+          to your list of custom RPCs?
+        </ApprovalHint>
+        <ButtonWrapper>
+          <IgnoreButton onClick={handleIgnore}>Ignore</IgnoreButton>
+          <ApproveButton onClick={handleAddNetwork}>Add/Switch Network</ApproveButton>
+        </ButtonWrapper>
+      </ApprovalWrapper>
+    )
+  }
+
+  function NetworkSelector() {
+    const selectNetwork = (optionChainId: ChainId) => {
+      network.changeChainId(optionChainId)
+
+      if (chainId && optionChainId === chainId) {
+        closeModals()
+        return
+      }
+
+      if (!window.ethereum?.isMetaMask || !window.ethereum?.request || !customRPCs.includes(optionChainId)) {
+        closeModals()
+        return
+      }
+
+      setApprove(true)
+    }
+
+    return (
+      <OptionGrid>
+        <Option
+          onClick={() => {
+            selectNetwork(ChainId.MAINNET)
+          }}
+          header={'Ethereum'}
+          logoSrc={EthereumLogo}
+        />
+        <Option
+          onClick={() => {
+            selectNetwork(ChainId.XDAI)
+          }}
+          header={'xDai'}
+          logoSrc={XDAILogo}
+        />
+        <Option
+          onClick={() => {
+            selectNetwork(ChainId.ARBITRUM_TESTNET_V3)
+          }}
+          header={'Arbitrum'}
+          logoSrc={ArbitrumLogo}
+          disabled={true}
+          clickable={false}
+        />
+        <Option onClick={toggleWalletModal} header={'Connect Wallet'} />
+      </OptionGrid>
+    )
   }
 
   return (
-    <Popover
-      content={
-        <OptionGrid>
-          <Option
-            onClick={() => {
-              selectNetwork(ChainId.MAINNET)
-            }}
-            header={'Ethereum'}
-            logoSrc={EthereumLogo}
-          />
-          <Option
-            onClick={() => {
-              selectNetwork(ChainId.XDAI)
-            }}
-            header={'xDai'}
-            logoSrc={XDAILogo}
-          />
-          <Option
-            onClick={() => {
-              selectNetwork(ChainId.ARBITRUM_TESTNET_V3)
-            }}
-            header={'Arbitrum'}
-            logoSrc={ArbitrumLogo}
-            disabled={true}
-            clickable={false}
-          />
-          <Option onClick={toggleWalletModal} header={'Change Wallet'} />
-        </OptionGrid>
-      }
-      show={networkSwitcherPopoverOpen}
-    >
-      <ContentWrapper></ContentWrapper>
+    <Popover content={approve ? <AddNetworkApproval /> : <NetworkSelector />} show={networkSwitcherPopoverOpen}>
+      <></>
     </Popover>
   )
 }

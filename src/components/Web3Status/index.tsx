@@ -13,6 +13,7 @@ import { shortenAddress } from '../../utils'
 import { TYPE } from '../../theme'
 import { ButtonSecondary } from '../Button'
 import Loader from '../Loader'
+import { network } from '../../connectors'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
@@ -173,6 +174,8 @@ function Web3StatusInner() {
   const toggleWalletModal = useWalletModalToggle()
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
 
+  const networkConnectorChainId = network.currentChainId
+
   if (account && chainId) {
     return (
       <>
@@ -185,17 +188,6 @@ function Web3StatusInner() {
             ENSName || shortenAddress(account)
           )}
         </Web3StatusConnected>
-        <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover}>
-          <IconWrapper size={20}>
-            <img src={ChainLogo[chainId]} alt={''} />
-          </IconWrapper>
-          <TYPE.white ml="12px" mr="20px" fontWeight={700} fontSize="12px">
-            {ChainLabel[chainId]}
-          </TYPE.white>
-          <Dropdown>
-            <img src={DropdownArrow} alt={'dropdown.svg'} />
-          </Dropdown>
-        </Web3StatusNetwork>
       </>
     )
   } else if (error) {
@@ -207,9 +199,22 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        {t('No wallet connected')}
-      </Web3StatusConnect>
+      <>
+        <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+          {t('No wallet connected')}
+        </Web3StatusConnect>
+        <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover}>
+          <IconWrapper size={20}>
+            <img src={ChainLogo[networkConnectorChainId]} alt={''} />
+          </IconWrapper>
+          <TYPE.white ml="12px" mr="20px" fontWeight={700} fontSize="12px">
+            {ChainLabel[networkConnectorChainId]}
+          </TYPE.white>
+          <Dropdown>
+            <img src={DropdownArrow} alt={'dropdown.svg'} />
+          </Dropdown>
+        </Web3StatusNetwork>
+      </>
     )
   }
 }
