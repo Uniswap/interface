@@ -37,14 +37,14 @@ export const MAINNET_TOKEN_LIST = {
       address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
       symbol: 'WBTC',
       name: 'WBTC',
-      decimals: 18
+      decimals: 6
     },
     {
       chainId: 1,
       address: '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D',
       symbol: 'renBTC',
       name: 'renBTC',
-      decimals: 18
+      decimals: 6
     },
     {
       chainId: 1,

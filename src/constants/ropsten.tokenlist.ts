@@ -42,7 +42,7 @@ export const TOKEN_LIST = {
       address: '0x3dff0dce5fc4b367ec91d31de3837cf3840c8284',
       symbol: 'WBTC',
       name: 'WBTC',
-      decimals: 18,
+      decimals: 6,
       logoURI: getTokenLogoURL('0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599')
     },
     {
@@ -50,7 +50,7 @@ export const TOKEN_LIST = {
       address: '0xa748593dD74E5d0BB38a3f2F5090a0f31370c574',
       symbol: 'renBTC',
       name: 'renBTC',
-      decimals: 18,
+      decimals: 6,
       logoURI: getTokenLogoURL('0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D')
     },
     {
