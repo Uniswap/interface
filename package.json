@@ -1,6 +1,6 @@
 {
   "name": "dxswap-dapp",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "DXswap Decentralized Application",
   "devDependencies": {
     "@apollo/client": "^3.3.7",
