@@ -101,6 +101,7 @@ export function colors(darkMode: boolean): Colors {
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     blue1: '#08a1e7',
+    warning: '#eeab2e',
     custom_bg1: darkMode ? '#303e46' : '#FFFFFF'
   }
 }
@@ -241,12 +242,6 @@ html {
 
 body {
   min-height: 100vh;
-  background-position: 0 -30vh;
-  background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+  background: ${({ theme }) => theme.bg12};
 }
 `

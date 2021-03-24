@@ -20,8 +20,12 @@ import { Field } from 'state/pair/actions'
 import { currencyId } from 'utils/currencyId'
 
 const PageWrapper = styled.div`
-  padding: 0 10em;
+  padding: 0 17em;
   width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    padding: 0 12rem;
+  `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0 4em;

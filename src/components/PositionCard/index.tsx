@@ -20,6 +20,7 @@ import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
+import WarningRightIcon from 'components/Icons/WarningRightIcon'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
 import { priceRangeCalcByPair } from 'utils/dmm'
@@ -34,10 +35,9 @@ export const HoverCard = styled(Card)`
     border: 1px solid ${({ theme }) => darken(0.06, theme.bg2)};
   }
 `
-const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
+const StyledPositionCard = styled(LightCard)`
   border: none;
-  background: ${({ theme, bgColor }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${transparentize(0.8, bgColor)} 0%, ${theme.bg3} 100%) `};
+  background: ${({ theme }) => theme.bg6};
   position: relative;
   overflow: hidden;
   border-radius: 8px;
@@ -48,6 +48,21 @@ const ButtonSecondary2 = styled(ButtonSecondary)`
   :hover {
     border: none;
   }
+`
+
+const IconWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+`
+
+const TokenRatioText = styled(Text)<{ isWarning: boolean }>`
+  color: ${({ theme, isWarning }) => (isWarning ? theme.warning : theme.text1)};
+`
+
+const WarningMessage = styled(Text)`
+  color: ${({ theme }) => theme.warning};
+  text-align: center;
 `
 
 const ButtonOutlined2 = styled(ButtonOutlined)`
@@ -90,7 +105,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 
   return (
     <>
-      <StyledPositionCard border={border} bgColor={'#303e46'}>
+      <StyledPositionCard border={border}>
         <AutoColumn gap="12px">
           <FixedHeightRow>
             <RowFixed>
@@ -197,9 +212,16 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
     .multiply('100')
     .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
   const percentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0)
+
+  const isWarning = percentToken0.lessThan(JSBI.BigInt(10)) || percentToken1.lessThan(JSBI.BigInt(10))
+
   return (
-    <StyledPositionCard border={border} bgColor={'#303e46'}>
-      <CardNoise />
+    <StyledPositionCard border={border}>
+      {isWarning && (
+        <IconWrapper>
+          <WarningRightIcon />
+        </IconWrapper>
+      )}
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <AutoRow gap="8px">
@@ -311,10 +333,10 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               <Text fontSize={16} fontWeight={500}>
                 Ratio:
               </Text>
-              <Text fontSize={16} fontWeight={500}>
+              <TokenRatioText fontSize={16} fontWeight={500} isWarning={isWarning}>
                 {percentToken0.toSignificant(2) ?? '.'}% {pair.token0.symbol} - {percentToken1.toSignificant(2) ?? '.'}%{' '}
                 {pair.token1.symbol}
-              </Text>
+              </TokenRatioText>
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
@@ -349,6 +371,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary2>
+
+            {isWarning && <WarningMessage>Lorem ipassum bago aliet amet waring</WarningMessage>}
+
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
               <AutoRow justify="space-around" marginTop="10px">
                 <span style={{ display: 'inherit' }}>

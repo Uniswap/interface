@@ -6,11 +6,11 @@ import LanguageSelector from './LanguageSelector'
 import SocialLinks from './SocialLinks'
 
 const StyledUtilities = styled.div`
-  position: fixed;
+  position: absolute;
   display: flex;
-  left: 0;
-  bottom: 0;
-  padding: 1rem;
+  top: 0;
+  right: 0;
+  padding: 20px 18px;
   opacity: 0.8;
   transition: opacity 0.25s ease;
   :hover {
