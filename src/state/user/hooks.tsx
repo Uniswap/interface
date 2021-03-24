@@ -1,4 +1,5 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainId, Token } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
 import flatMap from 'lodash.flatmap'
 import ReactGA from 'react-ga'
 import { useCallback, useMemo } from 'react'

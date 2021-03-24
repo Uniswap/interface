@@ -1,6 +1,6 @@
-import { Token, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useContext } from 'react'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
+import { Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -27,7 +27,7 @@ function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
           <RowFixed>
             <DoubleCurrencyLogo currency0={token} margin={true} size={20} />
             <Text fontWeight={500} fontSize={20} style={{ marginLeft: '' }}>
-              {`${chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH`}
+              {`${chainId && token.equals(WETH9[chainId]) ? 'WETH' : token.symbol}/ETH`}
             </Text>
             <Text
               fontSize={12}

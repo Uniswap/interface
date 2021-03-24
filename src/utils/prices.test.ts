@@ -1,4 +1,5 @@
-import { ChainId, JSBI, Pair, Route, Token, TokenAmount, Trade, TradeType } from '@uniswap/sdk'
+import { ChainId, Token, TokenAmount, TradeType } from '@uniswap/sdk-core'
+import { JSBI, Trade, Pair, Route } from '@uniswap/v2-sdk'
 import { computeTradePriceBreakdown } from './prices'
 
 describe('prices', () => {

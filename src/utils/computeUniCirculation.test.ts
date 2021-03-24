@@ -1,4 +1,5 @@
-import { ChainId, JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import { ChainId, Token, TokenAmount } from '@uniswap/sdk-core'
+import { JSBI } from '@uniswap/v2-sdk'
 import { BigNumber } from 'ethers'
 import { ZERO_ADDRESS } from '../constants'
 import { computeUniCirculation } from './computeUniCirculation'

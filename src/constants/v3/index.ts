@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainId } from '@uniswap/sdk-core'
 
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: { [chainId in ChainId | 1337]: string } = {
   [ChainId.MAINNET]: '',
