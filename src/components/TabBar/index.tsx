@@ -1,11 +1,12 @@
 import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
-const TabContainer = styled.section`
+const TabContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 50px;
+  overflow-x: auto;
 `
 
 const TabButton = styled.button<{ active: boolean }>`
@@ -24,7 +25,7 @@ const TabButton = styled.button<{ active: boolean }>`
   }
 `
 
-const Title = styled.p<{ active: boolean }>`
+const Title = styled.span<{ active: boolean }>`
   position: relative;
   display: flex;
   align-items: center;
@@ -37,6 +38,7 @@ const Title = styled.p<{ active: boolean }>`
   border-bottom-width: 2px;
   border-bottom-style: solid;
   border-bottom-color: ${props => (props.active ? props.theme.text4 : 'transparent')};
+  white-space: nowrap;
 `
 
 interface TabBarProps {
