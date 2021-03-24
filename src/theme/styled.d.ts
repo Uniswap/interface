@@ -31,6 +31,7 @@ export interface Colors {
   bg10: Color
   bg11: Color
   bg12: Color
+  bg13: Color
 
   modalBG: Color
   advancedBG: Color
