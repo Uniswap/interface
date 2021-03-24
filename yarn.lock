@@ -2257,6 +2257,11 @@
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
 
+"@openzeppelin/contracts@3.4.1-solc-0.7-2":
+  version "3.4.1-solc-0.7-2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.4.1-solc-0.7-2.tgz#371c67ebffe50f551c3146a9eec5fe6ffe862e92"
+  integrity sha512-tAG9LWg8+M2CMu7hIsqHPaTyG4uDzjr6mhvH96LvOpLZZj6tgzTluBt+LsCf1/QaYrlis6pITvpIaIhE+iZB+Q==
+
 "@pedrouid/iso-crypto@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@pedrouid/iso-crypto/-/iso-crypto-1.0.0.tgz#cf06b40ef3da3d7ca7363bd7a521ed59fa2fd13d"
@@ -3983,6 +3988,19 @@
   dependencies:
     "@uniswap/lib" "1.1.1"
     "@uniswap/v2-core" "1.0.0"
+
+"@uniswap/v3-core@^1.0.0-beta.10":
+  version "1.0.0-beta.10"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-core/-/v3-core-1.0.0-beta.10.tgz#c0fa1169e4a7fd0e5b33efb827c95c9bd05be071"
+  integrity sha512-Z23ikJr3sWIYQrvsRMrzDCeDXfQtRQMIyGsgHtfx4UAXc4jjUzNfDxNdAcBcgFH0u0ekt1RJ0gXUVcH0NjPfKQ==
+
+"@uniswap/v3-periphery@^1.0.0-beta.7":
+  version "1.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0-beta.7.tgz#d110308f8f8d0d645ad541ebe0f62721ade0dbd8"
+  integrity sha512-tvOYdjVgrYzIuxIjUHCyYv8C0UYwa0PFkn0xM0FALU2TNYy7BP4ITrozu6KmUBqEVZf9hAs2HlmomhMoSa/WtA==
+  dependencies:
+    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
+    "@uniswap/v3-core" "^1.0.0-beta.10"
 
 "@walletconnect/client@^1.1.1-alpha.0":
   version "1.3.6"
