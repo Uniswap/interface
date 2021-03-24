@@ -41,6 +41,7 @@ const HeaderWrapper = styled.div`
 
 const BodyWrapper = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   width: 100%;
   padding-top: 32px;

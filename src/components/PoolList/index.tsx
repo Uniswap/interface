@@ -8,6 +8,7 @@ import { ChevronUp, ChevronDown } from 'react-feather'
 
 import { ButtonEmpty } from 'components/Button'
 import FavoriteStar from 'components/Icons/FavoriteStar'
+import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
 import InfoHelper from 'components/InfoHelper'
 import CopyHelper from 'components/Copy'
@@ -125,10 +126,13 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         .multiply('100')
         .divide(pool.reserve0.divide(pool.virtualReserve0).add(pool.reserve1.divide(pool.virtualReserve1)))
         .toSignificant(2) ?? '.'
-    : '50%'
+    : '50'
   const percentToken1 = pool
     ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
-    : '50%'
+    : '50'
+
+  const isWarning = parseFloat(percentToken0) < 10 || parseFloat(percentToken1) < 10
+
   // Shorten address with 0x + 3 characters at start and end
   const shortenPoolAddress = shortenAddress(pool?.liquidityToken.address, 3)
   const currency0 = unwrappedToken(pool.token0)
@@ -144,9 +148,14 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
   return (
     <TableRow oddRow={oddRow}>
-      {isRecommended && (
+      {isRecommended && !isWarning && (
         <div style={{ position: 'absolute' }}>
           <FavoriteStar />
+        </div>
+      )}
+      {isWarning && (
+        <div style={{ position: 'absolute' }}>
+          <WarningLeftIcon />
         </div>
       )}
       <DataText grid-area="pool">
