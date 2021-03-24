@@ -396,7 +396,7 @@ export default function AddLiquidity({
     if (amp <= 5 && amp > 2) baseFee = 20
     if (amp <= 2) baseFee = 30
 
-    return `${(baseFee / 2).toPrecision()} - ${(baseFee * 2).toPrecision()}`
+    return `${(baseFee / 2 / 100).toPrecision()}% - ${((baseFee * 2) / 100).toPrecision()}%`
   }
 
   return (
@@ -533,7 +533,7 @@ export default function AddLiquidity({
               <OutlineCard2>
                 <AutoRow>
                   <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                    Fee range:{' '}
+                    Dynamic Fee:{' '}
                     {feeRangeCalc(
                       !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
                     )}
