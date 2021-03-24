@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token } from 'dxswap-sdk'
+import { ChainId, Currency, Token, Fetcher } from 'dxswap-sdk'
 import React, { ReactNode, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'
@@ -20,10 +20,13 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   border-radius: ${({ size }) => size};
 `
 
-const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number }>`
+const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number; loading?: boolean }>`
   margin-right: ${({ marginRight }) => marginRight}px;
   margin-left: ${({ marginLeft }) => marginLeft}px;
+  width: ${({ size }) => size};
+  height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
+  background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
 `
 
 const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
@@ -59,7 +62,7 @@ export default function CurrencyLogo({
     if (currency && Currency.isNative(currency) && !!nativeCurrencyLogo) return [nativeCurrencyLogo]
     if (currency instanceof Token) {
       if (Token.isNativeWrapper(currency)) return [nativeCurrencyLogo]
-      return [getTokenLogoURL(currency.address), ...uriLocations]
+      return [getTokenLogoURL(currency.address), Fetcher.getCachedTokenLogo(currency), ...uriLocations]
     }
     return []
   }, [currency, nativeCurrencyLogo, uriLocations])
@@ -68,7 +71,13 @@ export default function CurrencyLogo({
     return (
       <Skeleton
         wrapper={({ children }: { children: ReactNode }) => (
-          <Wrapper size={size} marginRight={marginRight} marginLeft={marginLeft} className={className}>
+          <Wrapper
+            loading={loading}
+            size={size}
+            marginRight={marginRight}
+            marginLeft={marginLeft}
+            className={className}
+          >
             {children}
           </Wrapper>
         )}
