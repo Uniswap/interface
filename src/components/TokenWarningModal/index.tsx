@@ -1,5 +1,5 @@
-import { Token } from '@uniswap/sdk'
-import React, { useCallback } from 'react'
+import { Token } from '@uniswap/sdk-core'
+import React from 'react'
 import Modal from '../Modal'
 import { ImportToken } from 'components/SearchModal/ImportToken'
 
@@ -7,15 +7,15 @@ export default function TokenWarningModal({
   isOpen,
   tokens,
   onConfirm,
+  onDismiss,
 }: {
   isOpen: boolean
   tokens: Token[]
   onConfirm: () => void
+  onDismiss: () => void
 }) {
-  const handleDismiss = useCallback(() => null, [])
-
   return (
-    <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={100}>
       <ImportToken tokens={tokens} handleCurrencySelect={onConfirm} />
     </Modal>
   )

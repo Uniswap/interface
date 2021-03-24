@@ -1,4 +1,3 @@
-import { Percent, TokenAmount } from '@uniswap/sdk'
 import Badge, { BadgeVariant } from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import React from 'react'
@@ -215,7 +214,7 @@ export default function PositionList({ loading, positions, showUnwrapped }: Posi
           const symbol1 = tokenAmount1.token.symbol || ''
           const currency0 = showUnwrapped ? tokenAmount0.token : unwrappedToken(tokenAmount0.token)
           const currency1 = showUnwrapped ? tokenAmount1.token : unwrappedToken(tokenAmount1.token)
-          const limitCrossed = tokenAmount0.equalTo(BigInt(0)) || tokenAmount1.equalTo(BigInt(0))
+          const limitCrossed = tokenAmount0.equalTo(0) || tokenAmount1.equalTo(0)
 
           const key = `${feeLevel.toFixed()}-${symbol0}-${tokenAmount0.toFixed(2)}-${symbol1}-${tokenAmount1.toFixed(
             2

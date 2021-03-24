@@ -9,7 +9,7 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useActiveWeb3React } from 'hooks'
 import { getEtherscanLink } from 'utils'
-import { Currency, Token } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 
@@ -64,7 +64,6 @@ export default function UnsupportedCurrencyFooter({
           <AutoColumn gap="lg">
             <RowBetween>
               <TYPE.mediumHeader>Unsupported Assets</TYPE.mediumHeader>
-
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
             {tokens.map((token) => {

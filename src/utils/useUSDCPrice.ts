@@ -1,4 +1,5 @@
-import { ChainId, Currency, currencyEquals, JSBI, Price, WETH } from '@uniswap/sdk'
+import { ChainId, Currency, currencyEquals, Price, WETH9 } from '@uniswap/sdk-core'
+import { JSBI } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { USDC } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
@@ -15,11 +16,11 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
   const tokenPairs: [Currency | undefined, Currency | undefined][] = useMemo(
     () => [
       [
-        chainId && wrapped && currencyEquals(WETH[chainId], wrapped) ? undefined : currency,
-        chainId ? WETH[chainId] : undefined,
+        chainId && wrapped && currencyEquals(WETH9[chainId], wrapped) ? undefined : currency,
+        chainId ? WETH9[chainId] : undefined,
       ],
       [wrapped?.equals(USDC) ? undefined : wrapped, chainId === ChainId.MAINNET ? USDC : undefined],
-      [chainId ? WETH[chainId] : undefined, chainId === ChainId.MAINNET ? USDC : undefined],
+      [chainId ? WETH9[chainId] : undefined, chainId === ChainId.MAINNET ? USDC : undefined],
     ],
     [chainId, currency, wrapped]
   )
@@ -30,9 +31,9 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
       return undefined
     }
     // handle weth/eth
-    if (wrapped.equals(WETH[chainId])) {
+    if (wrapped.equals(WETH9[chainId])) {
       if (usdcPair) {
-        const price = usdcPair.priceOf(WETH[chainId])
+        const price = usdcPair.priceOf(WETH9[chainId])
         return new Price(currency, USDC, price.denominator, price.numerator)
       } else {
         return undefined
@@ -43,9 +44,9 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
       return new Price(USDC, USDC, '1', '1')
     }
 
-    const ethPairETHAmount = ethPair?.reserveOf(WETH[chainId])
+    const ethPairETHAmount = ethPair?.reserveOf(WETH9[chainId])
     const ethPairETHUSDCValue: JSBI =
-      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(WETH[chainId]).quote(ethPairETHAmount).raw : JSBI.BigInt(0)
+      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(WETH9[chainId]).quote(ethPairETHAmount).raw : JSBI.BigInt(0)
 
     // all other tokens
     // first try the usdc pair
@@ -54,9 +55,9 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
       return new Price(currency, USDC, price.denominator, price.numerator)
     }
     if (ethPairState === PairState.EXISTS && ethPair && usdcEthPairState === PairState.EXISTS && usdcEthPair) {
-      if (usdcEthPair.reserveOf(USDC).greaterThan('0') && ethPair.reserveOf(WETH[chainId]).greaterThan('0')) {
+      if (usdcEthPair.reserveOf(USDC).greaterThan('0') && ethPair.reserveOf(WETH9[chainId]).greaterThan('0')) {
         const ethUsdcPrice = usdcEthPair.priceOf(USDC)
-        const currencyEthPrice = ethPair.priceOf(WETH[chainId])
+        const currencyEthPrice = ethPair.priceOf(WETH9[chainId])
         const usdcPrice = ethUsdcPrice.multiply(currencyEthPrice).invert()
         return new Price(currency, USDC, usdcPrice.denominator, usdcPrice.numerator)
       }

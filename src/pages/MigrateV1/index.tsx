@@ -1,4 +1,5 @@
-import { JSBI, Token } from '@uniswap/sdk'
+import { Token } from '@uniswap/sdk-core'
+import { JSBI } from '@uniswap/v2-sdk'
 import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'

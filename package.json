@@ -41,7 +41,6 @@
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
-    "@uniswap/sdk": "3.0.3",
     "@uniswap/token-lists": "^1.0.0-beta.19",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
@@ -94,19 +93,25 @@
     "react-window": "^1.8.5",
     "rebass": "^4.0.7",
     "redux-localstorage-simple": "^2.3.1",
-    "serve": "^11.3.0",
+    "serve": "^11.3.2",
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "styled-system": "^5.1.5",
     "typescript": "^3.8.3",
     "use-count-up": "^2.2.5",
-    "wcag-contrast": "^3.0.0"
+    "wcag-contrast": "^3.0.0",
+    "workbox-core": "^6.1.0",
+    "workbox-expiration": "^6.1.0",
+    "workbox-precaching": "^6.1.0",
+    "workbox-routing": "^6.1.0",
+    "workbox-strategies": "^6.1.0"
   },
   "resolutions": {
     "@walletconnect/web3-provider": "1.1.1-alpha.0"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:service-worker": "yarn build && yarn serve -s build",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
@@ -134,6 +139,8 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@uniswap/default-token-list": "^2.0.0",
+    "@uniswap/sdk-core": "^1.0.8",
+    "@uniswap/v2-sdk": "^1.0.6",
     "lightweight-charts": "^3.3.0"
   }
 }

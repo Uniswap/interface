@@ -1,17 +1,18 @@
 import { Story } from '@storybook/react/types-6-0'
-import { TokenAmount } from '@uniswap/sdk'
 import React from 'react'
 import { basisPointsToPercent } from 'utils'
 import { DAI, WBTC } from '../../constants'
 import Component, { PositionListProps } from './index'
+import { TokenAmount } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 
 const FEE_BIPS = {
   FIVE: basisPointsToPercent(5),
   THIRTY: basisPointsToPercent(30),
   ONE_HUNDRED: basisPointsToPercent(100),
 }
-const daiAmount = new TokenAmount(DAI, BigInt(500) * BigInt(10e18))
-const wbtcAmount = new TokenAmount(WBTC, BigInt(1) * BigInt(10e7))
+const daiAmount = new TokenAmount(DAI, JSBI.BigInt(500 * 10 ** 18))
+const wbtcAmount = new TokenAmount(WBTC, JSBI.BigInt(10 ** 7))
 const positions = [
   {
     feesEarned: {

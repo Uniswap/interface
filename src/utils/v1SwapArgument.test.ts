@@ -1,4 +1,5 @@
-import { CurrencyAmount, ETHER, Percent, Route, TokenAmount, Trade } from '@uniswap/sdk'
+import { CurrencyAmount, ETHER, Percent, TokenAmount } from '@uniswap/sdk-core'
+import { Route, Trade } from '@uniswap/v2-sdk'
 import { DAI, USDC } from '../constants'
 import { MockV1Pair } from '../data/V1'
 import v1SwapArguments from './v1SwapArguments'

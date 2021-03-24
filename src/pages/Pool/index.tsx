@@ -10,9 +10,9 @@ import { useV3Positions } from 'hooks/useV3PositionManager'
 import React, { useContext, useMemo } from 'react'
 import { BookOpen, ChevronDown, Download, Inbox, Info, PlusCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import styled, { ThemeContext } from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
-import styled, { ThemeContext } from 'styled-components'
 import { HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
 
 const PageWrapper = styled(AutoColumn)`

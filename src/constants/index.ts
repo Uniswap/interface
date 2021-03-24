@@ -1,5 +1,6 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@uniswap/sdk'
+import { ChainId, Percent, Token, WETH9 } from '@uniswap/sdk-core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import JSBI from 'jsbi'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
@@ -52,11 +53,11 @@ export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
 }
 
 const WETH_ONLY: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
+  [ChainId.MAINNET]: [WETH9[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [WETH9[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [WETH9[ChainId.RINKEBY]],
+  [ChainId.GÖRLI]: [WETH9[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [WETH9[ChainId.KOVAN]],
 }
 
 // used to construct intermediary pairs for trading
@@ -71,7 +72,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]],
+    [AMPL.address]: [DAI, WETH9[ChainId.MAINNET]],
   },
 }
 
@@ -186,8 +187,8 @@ export const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)
 
 export const BIG_INT_ZERO = JSBI.BigInt(0)
 
-// one basis point
-export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10000))
+// one basis JSBI.BigInt
+export const ONE_BIPS = new Percent(JSBI.BigInt(1), JSBI.BigInt(10))
 export const BIPS_BASE = JSBI.BigInt(10000)
 // used for warning states
 export const ALLOWED_PRICE_IMPACT_LOW: Percent = new Percent(JSBI.BigInt(100), BIPS_BASE) // 1%
@@ -211,4 +212,5 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0xd882cFc20F52f2599D84b8e8D58C7FB62cfE344b',
   '0x901bb9583b24D97e995513C6778dc6888AB6870e',
   '0xA7e5d5A720f06526557c513402f2e6B5fA20b008',
+  '0x8576aCC5C05D6Ce88f4e49bf65BdF0C62F91353C',
 ]
