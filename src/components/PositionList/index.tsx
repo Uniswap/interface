@@ -8,6 +8,7 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 import styled, { keyframes } from 'styled-components'
 import { Link } from 'react-router-dom'
 import { MEDIA_WIDTHS } from 'theme'
+import { Position } from 'types/v3'
 
 const ActiveDot = styled.span`
   background-color: ${({ theme }) => theme.success};
@@ -174,15 +175,6 @@ const PrimaryPositionIdData = styled.div`
 const DataText = styled.div`
   font-weight: 500;
 `
-
-interface Position {
-  feeLevel: Percent
-  feesEarned: Record<string, number>
-  tokenAmount0: TokenAmount
-  tokenAmount1: TokenAmount
-  tickLower: number
-  tickUpper: number
-}
 
 export type PositionListProps = React.PropsWithChildren<{
   loading: boolean

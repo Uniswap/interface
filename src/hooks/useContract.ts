@@ -5,7 +5,10 @@ import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/Stak
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { ChainId, WETH } from '@uniswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
+import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
 import { useMemo } from 'react'
+import { NonfungiblePositionManager } from 'types/v3/contracts/NonfungiblePositionManager'
 import { GOVERNANCE_ADDRESS, MERKLE_DISTRIBUTOR_ADDRESS, UNI } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
@@ -127,4 +130,10 @@ export function useSocksController(): Contract | null {
     UNISOCKS_ABI,
     false
   )
+}
+
+export function useV3NFTPositionManagerContract(): NonfungiblePositionManager | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
+  return useContract(address, NFTPositionManagerABI) as NonfungiblePositionManager | null
 }

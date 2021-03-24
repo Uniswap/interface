@@ -1,4 +1,3 @@
-import { TokenAmount } from '@uniswap/sdk'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonGray, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -7,6 +6,7 @@ import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
+import { useV3Positions } from 'hooks/useV3PositionManager'
 import React, { useContext, useMemo } from 'react'
 import { BookOpen, ChevronDown, Download, Inbox, Info, PlusCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -14,8 +14,6 @@ import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import styled, { ThemeContext } from 'styled-components'
 import { HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
-import { basisPointsToPercent } from 'utils'
-import { DAI, WBTC } from '../../constants'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
@@ -91,64 +89,29 @@ const MainContentWrapper = styled.main`
   display: flex;
   flex-direction: column;
 `
-const FEE_BIPS = {
-  FIVE: basisPointsToPercent(5),
-  THIRTY: basisPointsToPercent(30),
-  ONE_HUNDRED: basisPointsToPercent(100),
-}
-
-function useV3Positions() {
-  const positions = [
-    {
-      feesEarned: {
-        DAI: 1000,
-        WBTC: 0.005,
-      },
-      feeLevel: FEE_BIPS.FIVE,
-      tokenAmount0: new TokenAmount(DAI, BigInt(0) * BigInt(10e18)),
-      tokenAmount1: new TokenAmount(WBTC, BigInt(1) * BigInt(10e7)),
-      tickLower: 40000,
-      tickUpper: 60000,
-    },
-    {
-      feesEarned: {
-        DAI: 1000,
-        WBTC: 0.005,
-      },
-      feeLevel: FEE_BIPS.THIRTY,
-      tokenAmount0: new TokenAmount(DAI, BigInt(5000) * BigInt(10e18)),
-      tokenAmount1: new TokenAmount(WBTC, BigInt(1) * BigInt(10e7)),
-      tickLower: 45000,
-      tickUpper: 55000,
-    },
-  ]
-  const error = undefined
-  const loading = false
-  return { error, loading, positions }
-}
 export default function Pool() {
-  const { error, loading, positions } = useV3Positions()
+  const { account } = useActiveWeb3React()
+  const { error, loading, positions } = useV3Positions(account)
   const toggleWalletModal = useWalletModalToggle()
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
 
   if (error) {
-    console.error(error)
+    console.error('error fetching v3 positions', error)
   }
 
-  const numInactivePositions = useMemo(
-    () =>
-      positions.reduce((acc: any, position: any) => {
-        const { tokenAmount0, tokenAmount1 } = position
-        const limitCrossed = tokenAmount0.equalTo(BigInt(0)) || tokenAmount1.equalTo(BigInt(0))
-        return limitCrossed ? acc + 1 : acc
-      }, 0),
-    [positions]
-  )
+  const hasPositions = Boolean(positions?.length > 0)
+
+  const numInactivePositions = useMemo(() => {
+    return positions.reduce((acc: any, position: any) => {
+      const { tokenAmount0, tokenAmount1 } = position
+      const limitCrossed = tokenAmount0.equalTo(BigInt(0)) || tokenAmount1.equalTo(BigInt(0))
+      return limitCrossed ? acc + 1 : acc
+    }, 0)
+  }, [positions])
 
   const hasV2Liquidity = true
-  const showMigrateHeaderLink = hasV2Liquidity && positions.length > 0
+  const showMigrateHeaderLink = Boolean(hasV2Liquidity && hasPositions)
 
   const menuItems = [
     {
@@ -219,7 +182,7 @@ export default function Pool() {
             </TitleRow>
 
             <MainContentWrapper>
-              {positions?.length > 0 ? (
+              {hasPositions ? (
                 <PositionList loading={loading} positions={positions} />
               ) : (
                 <NoLiquidity>
