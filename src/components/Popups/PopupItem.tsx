@@ -7,8 +7,11 @@ import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
 import TransactionPopup from './TransactionPopup'
 import NewNetworkPopup from './NewNetworkPopup'
+import { DarkCard } from '../Card'
 
 export const StyledClose = styled(X)`
+  width: 16px;
+  height: 16px;
   position: absolute;
   right: 10px;
   top: 10px;
@@ -17,11 +20,10 @@ export const StyledClose = styled(X)`
     cursor: pointer;
   }
 `
-export const Popup = styled.div`
+export const Popup = styled(DarkCard)`
   display: inline-block;
   width: 100%;
   padding: 1em;
-  background-color: ${({ theme }) => theme.bg1};
   position: relative;
   border-radius: 10px;
   padding: 20px;
@@ -29,7 +31,7 @@ export const Popup = styled.div`
   overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    min-width: 290px;
+    min-width: 100%;
   `}
 `
 const Fader = styled.div`

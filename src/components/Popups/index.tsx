@@ -7,7 +7,10 @@ import PopupItem from './PopupItem'
 import { useURLWarningVisible } from '../../state/user/hooks'
 
 const MobilePopupWrapper = styled.div<{ height: string | number }>`
-  position: relative;
+  position: fixed;
+  bottom: 56px;
+  right: 16px;
+  left: 16px;
   max-width: 100%;
   height: ${({ height }) => height};
   margin: ${({ height }) => (height ? '0 auto;' : 0)};

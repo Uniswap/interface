@@ -7,9 +7,6 @@ import styled from 'styled-components'
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-  `};
 `
 
 export default function NewNetworkPopup({ chainId }: { chainId: ChainId }) {
@@ -28,7 +25,7 @@ export default function NewNetworkPopup({ chainId }: { chainId: ChainId }) {
   return (
     <Flex flexDirection="column">
       <Box mb="16px">Do you want to add {NETWORK_DETAIL[chainId].chainName} to your Metamask?</Box>
-      <Box>
+      <Box display="flex" width="100%" justifyContent="flex-end">
         <ResponsiveButtonPrimary padding="8px 14px" onClick={handleAddClick}>
           <Text fontWeight={700} fontSize={12}>
             ADD NETWORK
