@@ -9,7 +9,7 @@ export const INFURA_PROJECT_ID = '0ebf4dd05d6740f482938b8a80860d13'
 export const network = new NetworkConnector({
   urls: {
     [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-    [ChainId.XDAI]: 'https://rpc.xdaichain.com/'
+    [ChainId.XDAI]: 'https://dai.poa.network'
   },
   defaultChainId: ChainId.MAINNET
 })
