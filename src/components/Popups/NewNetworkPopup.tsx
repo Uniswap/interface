@@ -1,8 +1,16 @@
 import React, { useCallback } from 'react'
 import { ChainId } from 'dxswap-sdk'
 import { NETWORK_DETAIL } from '../../constants'
-import { Box, Flex } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import { ButtonPrimary } from '../Button'
+import styled from 'styled-components'
+
+const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  width: fit-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 48%;
+  `};
+`
 
 export default function NewNetworkPopup({ chainId }: { chainId: ChainId }) {
   const handleAddClick = useCallback(() => {
@@ -19,12 +27,15 @@ export default function NewNetworkPopup({ chainId }: { chainId: ChainId }) {
 
   return (
     <Flex flexDirection="column">
-      <Box>
-        We detected you have Metamask installed. Do you want to add/switch to the network{' '}
-        {NETWORK_DETAIL[chainId].chainName}?
+      <Box mb="16px">
+        We detected you have Metamask installed. Do you want to add {NETWORK_DETAIL[chainId].chainName} to it?
       </Box>
       <Box>
-        <ButtonPrimary onClick={handleAddClick}>Add/Switch</ButtonPrimary>
+        <ResponsiveButtonPrimary padding="8px 14px" onClick={handleAddClick}>
+          <Text fontWeight={700} fontSize={12}>
+            ADD NETWORK
+          </Text>
+        </ResponsiveButtonPrimary>
       </Box>
     </Flex>
   )
