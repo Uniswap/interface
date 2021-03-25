@@ -30,7 +30,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   const addPopup = useAddPopup()
   const closeModals = useCloseModals()
   useOnClickOutside(popoverRef, () => {
-    closeModals()
+    if (networkSwitcherPopoverOpen) closeModals()
   })
 
   const { chainId, account } = useActiveWeb3React()
