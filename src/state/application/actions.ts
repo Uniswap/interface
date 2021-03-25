@@ -1,11 +1,13 @@
 import { createAction } from '@reduxjs/toolkit'
+import { ChainId } from 'dxswap-sdk'
 
 export type PopupContent = {
-  txn: {
+  txn?: {
     hash: string
     success: boolean
     summary?: string
   }
+  newNetworkChainId?: ChainId
 }
 
 export enum ApplicationModal {

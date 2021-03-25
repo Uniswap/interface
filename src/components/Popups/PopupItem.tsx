@@ -6,6 +6,7 @@ import { animated } from 'react-spring'
 import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
 import TransactionPopup from './TransactionPopup'
+import NewNetworkPopup from './NewNetworkPopup'
 
 export const StyledClose = styled(X)`
   position: absolute;
@@ -68,8 +69,9 @@ export default function PopupItem({
   const theme = useContext(ThemeContext)
 
   let popupContent
-  const { txn } = content
-    popupContent = <TransactionPopup hash={txn.hash} success={txn.success} summary={txn.summary} />
+  const { txn, newNetworkChainId } = content
+  if (txn) popupContent = <TransactionPopup hash={txn.hash} success={txn.success} summary={txn.summary} />
+  else if (newNetworkChainId) popupContent = <NewNetworkPopup chainId={newNetworkChainId} />
 
   const faderStyle = useSpring({
     from: { width: '100%' },

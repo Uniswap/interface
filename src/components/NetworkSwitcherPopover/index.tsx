@@ -3,7 +3,7 @@ import { ChainId } from 'dxswap-sdk'
 import styled from 'styled-components'
 import Option from './Option'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useCloseModals } from '../../state/application/hooks'
+import { useModalOpen, useCloseModals, useAddPopup } from '../../state/application/hooks'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
@@ -12,44 +12,7 @@ import Popover from '../Popover'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { NetworkConnector } from '@web3-react/network-connector'
-
-/* const NETWORK_DETAILS: { [chainId: number]: AddEthereumChainParameter } = {
-  [ChainId.MAINNET]: {
-    chainId: `0x${ChainId.MAINNET.toString(16)}`,
-    chainName: 'Ethereum Main Net',
-    nativeCurrency: {
-      name: Currency.ETHER.name || 'Ether',
-      symbol: Currency.ETHER.symbol || 'ETH',
-      decimals: Currency.ETHER.decimals || 18
-    },
-    rpcUrls: ['https://mainnet.infura.io/v3'],
-    blockExplorerUrls: ['https://etherscan.io']
-  },
-  [ChainId.XDAI]: {
-    chainId: `0x${ChainId.XDAI.toString(16)}`,
-    chainName: 'xDAI',
-    nativeCurrency: {
-      name: Currency.XDAI.name || 'xDAI',
-      symbol: Currency.XDAI.symbol || 'xDAI',
-      decimals: Currency.XDAI.decimals || 18
-    },
-    rpcUrls: ['https://rpc.xdaichain.com/'],
-    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet']
-  }
-} */
-
-/* interface AddEthereumChainParameter {
-  chainId: string
-  chainName: string
-  nativeCurrency: {
-    name: string
-    symbol: string
-    decimals: number
-  }
-  rpcUrls: string[]
-  blockExplorerUrls?: string[]
-  iconUrls?: string[] // Currently ignored.
-} */
+import { NETWORK_DETAIL } from '../../constants'
 
 const OptionGrid = styled.div`
   display: grid;
@@ -64,25 +27,29 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   const { connector } = useActiveWeb3React()
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
   const popoverRef = useRef(null)
+  const addPopup = useAddPopup()
   const closeModals = useCloseModals()
   useOnClickOutside(popoverRef, () => {
     closeModals()
   })
 
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
   const selectNetwork = (optionChainId: ChainId) => {
     if (optionChainId === chainId) return
     if (!window.ethereum?.isMetaMask || !window.ethereum?.request || !chainId) return
-    if (!(connector instanceof NetworkConnector)) return
-    connector.changeChainId(optionChainId)
-    /* window.ethereum
-      .request({ method: 'wallet_addEthereumChain', params: [NETWORK_DETAILS[optionChainId]] })
-      .catch(error => {
-        console.error(`error adding network to metamask`, error)
-      })
-
-    closeModals() */
+    if (!!!account && connector instanceof NetworkConnector) {
+      connector.changeChainId(optionChainId)
+    }
+    if (
+      window.ethereum &&
+      window.ethereum.isMetaMask &&
+      NETWORK_DETAIL[optionChainId] &&
+      NETWORK_DETAIL[optionChainId].metamaskAddable
+    ) {
+      addPopup({ newNetworkChainId: optionChainId })
+    }
+    closeModals()
   }
 
   return (
