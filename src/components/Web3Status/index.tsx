@@ -1,7 +1,7 @@
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, transparentize } from 'polished'
 import React, { useMemo } from 'react'
-import { Activity } from 'react-feather'
+import { Activity, ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { NetworkContextName } from '../../constants'
@@ -18,11 +18,11 @@ import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
 
-import DropdownArrow from '../../assets/images/dropdown.svg'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
-import ArbitrumLogo from '../../assets/images/arbitrum-logo.png'
+import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
 import { ChainId } from 'dxswap-sdk'
+import { useActiveWeb3React } from '../../hooks'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -87,7 +87,7 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition: background-color 0.3s ease;
-  padding: 9px 14px;
+  padding: 9px 0px 9px 14px;
   outline: none;
 
   :hover,
@@ -120,9 +120,7 @@ const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
 
 const Web3StatusNetwork = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   background-color: ${({ theme }) => theme.dark1};
-  margin-left 0.5em;
-  padding: 3px;
-  padding-left: 5px;
+  padding: 0px 18px 0px 14px;
   border: 1px solid ${({ theme }) => theme.dark1};
 `
 
@@ -139,14 +137,8 @@ const Text = styled.p<{ fontSize?: number }>`
 `
 
 const NetworkIcon = styled(Activity)`
-  margin-left: 0.25rem;
-  margin-right: 0.5rem;
   width: 5px;
   height: 5px;
-`
-
-const Dropdown = styled.div`
-  margin-left: 1em;
 `
 
 // we want the latest one to come first, so return negative if a is after b
@@ -156,7 +148,7 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 
 function Web3StatusInner() {
   const { t } = useTranslation()
-  const { account, error, chainId } = useWeb3React()
+  const { account, error, chainId } = useActiveWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -173,29 +165,35 @@ function Web3StatusInner() {
   const toggleWalletModal = useWalletModalToggle()
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
 
-  if (account && chainId) {
+  if (chainId) {
     return (
       <>
-        <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
-          {hasPendingTransactions ? (
-            <RowBetween>
-              <Text fontSize={13}>{pending?.length} Pending</Text> <Loader />
-            </RowBetween>
-          ) : (
-            ENSName || shortenAddress(account)
-          )}
-        </Web3StatusConnected>
-        <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover}>
-          <IconWrapper size={20}>
-            <img src={ChainLogo[chainId]} alt={''} />
-          </IconWrapper>
-          <TYPE.white ml="12px" mr="20px" fontWeight={700} fontSize="12px">
-            {ChainLabel[chainId]}
-          </TYPE.white>
-          <Dropdown>
-            <img src={DropdownArrow} alt={'dropdown.svg'} />
-          </Dropdown>
-        </Web3StatusNetwork>
+        {!!account ? (
+          <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+            {hasPendingTransactions ? (
+              <RowBetween>
+                <Text fontSize={13}>{pending?.length} Pending</Text> <Loader />
+              </RowBetween>
+            ) : (
+              ENSName || shortenAddress(account)
+            )}
+          </Web3StatusConnected>
+        ) : (
+          <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
+            {t('No wallet connected')}
+          </Web3StatusConnect>
+        )}
+        <NetworkSwitcherPopover>
+          <Web3StatusNetwork onClick={!!!account ? toggleNetworkSwitcherPopover : () => {}}>
+            <IconWrapper size={20}>
+              <img src={ChainLogo[chainId]} alt={''} />
+            </IconWrapper>
+            <TYPE.white ml="8px" mr={!!!account ? '4px' : '0px'} fontWeight={700} fontSize="12px">
+              {ChainLabel[chainId]}
+            </TYPE.white>
+            {!!!account && <ChevronDown size={16} />}
+          </Web3StatusNetwork>
+        </NetworkSwitcherPopover>
       </>
     )
   } else if (error) {
@@ -206,11 +204,7 @@ function Web3StatusInner() {
       </Web3StatusError>
     )
   } else {
-    return (
-      <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        {t('No wallet connected')}
-      </Web3StatusConnect>
-    )
+    return null
   }
 }
 
@@ -238,7 +232,6 @@ export default function Web3Status() {
     <>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-      <NetworkSwitcherPopover />
     </>
   )
 }

@@ -36,25 +36,18 @@ const HeaderText = styled.div`
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 700;
-  margin-left: 1rem;
+  margin-left: 16px;
 `
 
-const IconWrapper = styled.div<{ size?: number | null }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  align-items: center;
-  justify-content: center;
-  & > img,
-  span {
-    height: ${({ size }) => (size ? size + 'px' : '24px')};
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    align-items: center;
-  `};
+const Icon = styled.img`
+  width: 24px;
+  border-radius: 50%;
 `
 
 const BadgeWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 10%;
+  margin-left: 8px;
 `
 
 export default function Option({
@@ -76,13 +69,7 @@ export default function Option({
     <OptionCardClickable onClick={onClick} clickable={clickable && !active} disabled={disabled} active={active}>
       <OptionCardLeft>
         <AutoRow>
-          {logoSrc ? (
-            <IconWrapper>
-              <img src={logoSrc} alt={'Icon'} />
-            </IconWrapper>
-          ) : (
-            ''
-          )}
+          {logoSrc && <Icon src={logoSrc} alt={'Icon'} />}
           <HeaderText>{header}</HeaderText>
           <BadgeWrapper>{disabled ? <Badge label="COMING SOON" /> : ''}</BadgeWrapper>
         </AutoRow>
