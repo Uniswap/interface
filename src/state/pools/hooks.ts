@@ -205,10 +205,8 @@ export function useBulkPoolData(
 
   useEffect(() => {
     async function checkForPools() {
-      dispatch(setError(undefined))
-
       try {
-        if (poolList.length > 0 && poolsData.length === 0) {
+        if (poolList.length > 0 && !error && poolsData.length === 0) {
           dispatch(setLoading(true))
           const pools = await getBulkPoolData(poolList as string[], ethPrice)
           dispatch(updatePools({ pools }))
@@ -221,7 +219,7 @@ export function useBulkPoolData(
     }
 
     checkForPools()
-  }, [dispatch, ethPrice, poolList, poolsData.length])
+  }, [dispatch, ethPrice, error, poolList, poolsData.length])
 
   return { loading, error, data: poolsData }
 }
@@ -231,5 +229,6 @@ export function useResetPools(currencyA: Currency | undefined, currencyB: Curren
 
   useEffect(() => {
     dispatch(updatePools({ pools: [] }))
+    dispatch(setError(undefined))
   }, [currencyA, currencyB, dispatch])
 }
