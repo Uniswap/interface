@@ -241,8 +241,8 @@ export default function SettingsTab() {
                   ReactGA.event({
                     category: 'Routing',
                     action: singleHopOnly ? 'disable single hop' : 'enable single hop'
-                  });
-                  singleHopOnly ? setSingleHopOnly(false) : setSingleHopOnly(true);
+                  })
+                  singleHopOnly ? setSingleHopOnly(false) : setSingleHopOnly(true)
                 }}
               />
             </RowBetween>
