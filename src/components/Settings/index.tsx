@@ -242,7 +242,7 @@ export default function SettingsTab() {
                     category: 'Routing',
                     action: singleHopOnly ? 'disable single hop' : 'enable single hop'
                   })
-                  singleHopOnly ? setSingleHopOnly(false) : setSingleHopOnly(true)
+                  setSingleHopOnly(!singleHopOnly)
                 }}
               />
             </RowBetween>
