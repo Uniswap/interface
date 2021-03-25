@@ -12,15 +12,14 @@ import { ExternalLink, HideExtraSmall, ExtraSmallOnly } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonUNIGradient, ButtonOutlined } from '../Button'
-import { transparentize } from 'polished'
-import { CardNoise } from '../earn/styled'
 import { useColor } from '../../hooks/useColor'
-import Card, { GreyCard, LightCard } from '../Card'
+import Card, { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import WarningRightIcon from 'components/Icons/WarningRightIcon'
+import QuestionHelper from 'components/QuestionHelper'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
 import { priceRangeCalcByPair } from 'utils/dmm'
@@ -215,6 +214,12 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const isWarning = percentToken0.lessThan(JSBI.BigInt(10)) || percentToken1.lessThan(JSBI.BigInt(10))
 
+  const warningToken = isWarning
+    ? percentToken0.lessThan(JSBI.BigInt(10))
+      ? pair.token0.symbol
+      : pair.token1.symbol
+    : undefined
+
   return (
     <StyledPositionCard border={border}>
       {isWarning && (
@@ -340,7 +345,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                AMP:
+                AMP <QuestionHelper text="Amplification factor" />:
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {amp.toSignificant(5)}
@@ -348,7 +353,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                Price range {pair.token0.symbol}/{pair.token1.symbol}:{' '}
+                Price range {pair.token0.symbol}/{pair.token1.symbol} <QuestionHelper text="Active price range" />:
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {/* token 0  */}
@@ -358,7 +363,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                Price range {pair.token1.symbol}/{pair.token0.symbol}:{' '}
+                Price range {pair.token1.symbol}/{pair.token0.symbol} <QuestionHelper text="Active price range" />:
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {/* token 1  */}
@@ -372,7 +377,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               </ExternalLink>
             </ButtonSecondary2>
 
-            {isWarning && <WarningMessage>Lorem ipassum bago aliet amet waring</WarningMessage>}
+            {isWarning && warningToken && (
+              <WarningMessage>{`Note: ${warningToken} is now <10% of the pool. Pool might become inactive if ${warningToken} reaches 0%`}</WarningMessage>
+            )}
 
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
               <AutoRow justify="space-around" marginTop="10px">
