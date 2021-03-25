@@ -18,6 +18,11 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 `
 
 const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: number; loading?: boolean }>`
@@ -27,6 +32,7 @@ const Wrapper = styled.div<{ size: string; marginRight: number; marginLeft: numb
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
   background-color: ${props => (props.loading ? 'transparent' : props.theme.white)};
+  position: relative;
 `
 
 const NATIVE_CURRENCY_LOGO: { [chainId in ChainId]: string } = {
