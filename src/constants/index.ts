@@ -1,5 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ChainId, JSBI, Percent, CurrencyAmount, WETH, WSPOA, DXD, WXDAI, Token } from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, CurrencyAmount, WETH, WSPOA, DXD, WXDAI, Token, Currency } from 'dxswap-sdk'
 import { tokens } from './tokens'
 import { authereum, injected, walletConnect } from '../connectors'
 
@@ -52,7 +52,15 @@ export const STAKE = new Token(
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI[ChainId.MAINNET], USDC[ChainId.MAINNET], USDT[ChainId.MAINNET], COMP, MKR],
+  [ChainId.MAINNET]: [
+    WETH[ChainId.MAINNET],
+    DXD[ChainId.MAINNET],
+    DAI[ChainId.MAINNET],
+    USDC[ChainId.MAINNET],
+    USDT[ChainId.MAINNET],
+    COMP,
+    MKR
+  ],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
   [ChainId.SOKOL]: [WSPOA[ChainId.SOKOL]],
@@ -161,3 +169,43 @@ export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
 export const DEFAULT_TOKEN_LIST = tokens
 
 export const ZERO_USD = CurrencyAmount.usd('0')
+
+interface NetworkDetails {
+  chainId: string
+  chainName: string
+  nativeCurrency: {
+    name: string
+    symbol: string
+    decimals: number
+  }
+  rpcUrls: string[]
+  blockExplorerUrls?: string[]
+  iconUrls?: string[] // Currently ignored.
+  metamaskAddable?: boolean
+}
+
+export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
+  [ChainId.MAINNET]: {
+    chainId: `0x${ChainId.MAINNET.toString(16)}`,
+    chainName: 'Ethereum Main Net',
+    nativeCurrency: {
+      name: Currency.ETHER.name || 'Ether',
+      symbol: Currency.ETHER.symbol || 'ETH',
+      decimals: Currency.ETHER.decimals || 18
+    },
+    rpcUrls: ['https://mainnet.infura.io/v3'],
+    blockExplorerUrls: ['https://etherscan.io']
+  },
+  [ChainId.XDAI]: {
+    chainId: `0x${ChainId.XDAI.toString(16)}`,
+    chainName: 'xDAI',
+    nativeCurrency: {
+      name: Currency.XDAI.name || 'xDAI',
+      symbol: Currency.XDAI.symbol || 'xDAI',
+      decimals: Currency.XDAI.decimals || 18
+    },
+    rpcUrls: ['https://rpc.xdaichain.com/'],
+    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
+    metamaskAddable: true
+  }
+}

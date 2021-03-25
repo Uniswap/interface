@@ -61,7 +61,6 @@ const BodyWrapper = styled.div`
 const Marginer = styled.div`
   margin-top: 5rem;
 `
-
 export default function App() {
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
