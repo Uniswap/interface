@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from 'react'
+import React, { ReactNode, useCallback, useRef } from 'react'
 import { ChainId } from 'dxswap-sdk'
 import styled from 'styled-components'
 import Option from './Option'
@@ -35,22 +35,25 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
 
   const { chainId, account } = useActiveWeb3React()
 
-  const selectNetwork = (optionChainId: ChainId) => {
-    if (optionChainId === chainId) return
-    if (!window.ethereum?.isMetaMask || !window.ethereum?.request || !chainId) return
-    if (!!!account && connector instanceof CustomNetworkConnector) {
-      connector.changeChainId(optionChainId)
-    }
-    if (
-      window.ethereum &&
-      window.ethereum.isMetaMask &&
-      NETWORK_DETAIL[optionChainId] &&
-      NETWORK_DETAIL[optionChainId].metamaskAddable
-    ) {
-      addPopup({ newNetworkChainId: optionChainId })
-    }
-    closeModals()
-  }
+  const selectNetwork = useCallback(
+    (optionChainId: ChainId) => {
+      if (optionChainId === chainId) return
+      if (!window.ethereum?.isMetaMask || !window.ethereum?.request || !chainId) return
+      if (!!!account && connector instanceof CustomNetworkConnector) {
+        connector.changeChainId(optionChainId)
+      }
+      if (
+        window.ethereum &&
+        window.ethereum.isMetaMask &&
+        NETWORK_DETAIL[optionChainId] &&
+        NETWORK_DETAIL[optionChainId].metamaskAddable
+      ) {
+        addPopup({ newNetworkChainId: optionChainId })
+      }
+      closeModals()
+    },
+    [account, addPopup, chainId, closeModals, connector]
+  )
 
   return (
     <div ref={popoverRef} style={{ height: 22 }}>

@@ -38,7 +38,6 @@ class CustomMiniRpcProvider implements AsyncSendable {
     request: { jsonrpc: '2.0'; id: number | string | null; method: string; params?: unknown[] | object },
     callback: (error: any, response: any) => void
   ): void => {
-    console.log('sendAsync', request.method, request.params)
     this.request(request.method, request.params)
       .then(result => callback(null, { jsonrpc: '2.0', id: request.id, result }))
       .catch(error => callback(error, null))
@@ -118,7 +117,6 @@ export class CustomNetworkConnector extends AbstractConnector {
   }
 
   public changeChainId(chainId: number) {
-    console.log('Bruh')
     invariant(Object.keys(this.providers).includes(chainId.toString()), `No url found for chainId ${chainId}`)
     this.currentChainId = chainId
     this.emitUpdate({ provider: this.providers[this.currentChainId], chainId })

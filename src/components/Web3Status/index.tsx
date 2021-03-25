@@ -148,7 +148,8 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 
 function Web3StatusInner() {
   const { t } = useTranslation()
-  const { account, error, chainId } = useActiveWeb3React()
+  const { account, error } = useWeb3React()
+  const { chainId: networkConnectorChainId } = useActiveWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -165,7 +166,15 @@ function Web3StatusInner() {
   const toggleWalletModal = useWalletModalToggle()
   const toggleNetworkSwitcherPopover = useNetworkSwitcherPopoverToggle()
 
-  if (chainId) {
+  if (error) {
+    return (
+      <Web3StatusError onClick={toggleWalletModal}>
+        <NetworkIcon />
+        <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
+      </Web3StatusError>
+    )
+  }
+  if (networkConnectorChainId) {
     return (
       <>
         {!!account ? (
@@ -186,26 +195,18 @@ function Web3StatusInner() {
         <NetworkSwitcherPopover>
           <Web3StatusNetwork onClick={!!!account ? toggleNetworkSwitcherPopover : () => {}}>
             <IconWrapper size={20}>
-              <img src={ChainLogo[chainId]} alt={''} />
+              <img src={ChainLogo[networkConnectorChainId]} alt={''} />
             </IconWrapper>
             <TYPE.white ml="8px" mr={!!!account ? '4px' : '0px'} fontWeight={700} fontSize="12px">
-              {ChainLabel[chainId]}
+              {ChainLabel[networkConnectorChainId]}
             </TYPE.white>
             {!!!account && <ChevronDown size={16} />}
           </Web3StatusNetwork>
         </NetworkSwitcherPopover>
       </>
     )
-  } else if (error) {
-    return (
-      <Web3StatusError onClick={toggleWalletModal}>
-        <NetworkIcon />
-        <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
-      </Web3StatusError>
-    )
-  } else {
-    return null
   }
+  return null
 }
 
 export default function Web3Status() {
