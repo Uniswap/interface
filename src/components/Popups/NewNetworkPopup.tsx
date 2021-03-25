@@ -27,9 +27,7 @@ export default function NewNetworkPopup({ chainId }: { chainId: ChainId }) {
 
   return (
     <Flex flexDirection="column">
-      <Box mb="16px">
-        We detected you have Metamask installed. Do you want to add {NETWORK_DETAIL[chainId].chainName} to it?
-      </Box>
+      <Box mb="16px">Do you want to add {NETWORK_DETAIL[chainId].chainName} to your Metamask?</Box>
       <Box>
         <ResponsiveButtonPrimary padding="8px 14px" onClick={handleAddClick}>
           <Text fontWeight={700} fontSize={12}>
