@@ -72,7 +72,6 @@ const HeaderControls = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
    flex-direction: row-reverse;
@@ -264,6 +263,9 @@ function Header({ history }: { history: any }) {
               ↗
             </Text>
           </StyledExternalLink>
+          <HeaderElementWrap>
+            <Settings />
+          </HeaderElementWrap>
           <MoreLinksIcon>
             <MobileOptions history={history} />
           </MoreLinksIcon>
@@ -288,9 +290,6 @@ function Header({ history }: { history: any }) {
             <Web3Status />
           </AccountElement>
         </HeaderElement>
-        <HeaderElementWrap>
-          <Settings />
-        </HeaderElementWrap>
       </HeaderControls>
     </HeaderFrame>
   )
