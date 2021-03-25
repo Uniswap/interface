@@ -1,15 +1,15 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { AuthereumConnector } from '@web3-react/authereum-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { NetworkConnector } from '@web3-react/network-connector'
+import { CustomNetworkConnector } from './CustomNetworkConnector'
 import { ChainId } from 'dxswap-sdk'
 
 export const INFURA_PROJECT_ID = '0ebf4dd05d6740f482938b8a80860d13'
 
-export const network = new NetworkConnector({
+export const network = new CustomNetworkConnector({
   urls: {
     [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_PROJECT_ID}`,
-    [ChainId.XDAI]: 'https://dai.poa.network'
+    [ChainId.XDAI]: 'https://rpc.xdaichain.com/'
   },
   defaultChainId: ChainId.MAINNET
 })

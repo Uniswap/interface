@@ -11,8 +11,8 @@ import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
 import Popover from '../Popover'
 import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { NetworkConnector } from '@web3-react/network-connector'
 import { NETWORK_DETAIL } from '../../constants'
+import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 
 const OptionGrid = styled.div`
   display: grid;
@@ -38,7 +38,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   const selectNetwork = (optionChainId: ChainId) => {
     if (optionChainId === chainId) return
     if (!window.ethereum?.isMetaMask || !window.ethereum?.request || !chainId) return
-    if (!!!account && connector instanceof NetworkConnector) {
+    if (!!!account && connector instanceof CustomNetworkConnector) {
       connector.changeChainId(optionChainId)
     }
     if (
