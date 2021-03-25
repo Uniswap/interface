@@ -270,6 +270,10 @@ body {
   border-bottom: none !important;
 }
 
+.react-datepicker__current-month {
+  color: ${props => props.theme.text4} !important;
+}
+
 .react-datepicker__day-name {
   color: ${props => props.theme.text4} !important;
   font-weight: 600;

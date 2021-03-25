@@ -13,7 +13,8 @@ export function useNewLiquidityMiningCampaign(
   unlimitedPool: boolean,
   startTime: Date | null,
   endTime: Date | null,
-  locked: boolean
+  locked: boolean,
+  stakingCap: TokenAmount | null
 ): LiquidityMiningCampaign | null {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
@@ -22,7 +23,15 @@ export function useNewLiquidityMiningCampaign(
   const { reserveNativeCurrency: targetedPairReserveNativeCurrency } = usePairReserveNativeCurrency()
 
   return useMemo(() => {
-    if (!chainId || !targetedPair || !lpTokenTotalSupply || pricedRewardAmounts.length === 0 || !startTime || !endTime)
+    if (
+      !chainId ||
+      !targetedPair ||
+      !lpTokenTotalSupply ||
+      pricedRewardAmounts.length === 0 ||
+      !startTime ||
+      !endTime ||
+      !stakingCap
+    )
       return null
     const { address, symbol, name, decimals } = targetedPair.liquidityToken
     const lpTokenNativeCurrencyPrice = getLpTokenPrice(
@@ -39,17 +48,19 @@ export function useNewLiquidityMiningCampaign(
       targetedPair,
       pricedRewardAmounts,
       staked,
-      locked
+      locked,
+      stakingCap
     )
   }, [
     chainId,
-    endTime,
-    locked,
+    targetedPair,
     lpTokenTotalSupply,
-    nativeCurrency,
     pricedRewardAmounts,
     startTime,
-    targetedPair,
-    targetedPairReserveNativeCurrency.raw
+    endTime,
+    stakingCap,
+    nativeCurrency,
+    targetedPairReserveNativeCurrency.raw,
+    locked
   ])
 }

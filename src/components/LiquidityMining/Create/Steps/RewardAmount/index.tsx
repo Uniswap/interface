@@ -1,4 +1,4 @@
-import { TokenAmount } from 'dxswap-sdk'
+import { Pair, TokenAmount } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
@@ -8,10 +8,13 @@ import NumericalInput from '../../../../Input/NumericalInput'
 import Radio from '../../../../Radio'
 import { Card, Divider } from '../../../styleds'
 import border8pxRadius from '../../../../../assets/images/border-8px-radius.png'
-import { parseUnits } from 'ethers/lib/utils'
+import DoubleCurrencyLogo from '../../../../DoubleLogo'
+import { tryParseAmount } from '../../../../../state/swap/hooks'
 
-const RelativeContainer = styled.div`
+const RelativeContainer = styled.div<{ disabled?: boolean }>`
   position: relative;
+  transition: opacity 0.3s ease;
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
 `
 
 const StyledNumericalInput = styled(NumericalInput)`
@@ -35,6 +38,12 @@ const RewardInputLogo = styled(CurrencyLogo)`
   right: 16px;
 `
 
+const StakablePairInputLogoContainer = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 16px;
+`
+
 const FlexContainer = styled(Flex)`
   ${props => props.theme.mediaWidth.upToExtraSmall`
     flex-direction: column;
@@ -50,26 +59,45 @@ const PoolSizeContainer = styled(Box)`
 interface RewardAmountProps {
   reward: TokenAmount | null
   unlimitedPool: boolean
+  stakablePair: Pair | null
   onRewardAmountChange: (newAmount: TokenAmount) => void
   onUnlimitedPoolChange: (newValue: boolean) => void
+  onStakingCapChange: (newValue: TokenAmount) => void
 }
 
 export default function RewardAmount({
   reward,
   unlimitedPool,
+  stakablePair,
   onRewardAmountChange,
-  onUnlimitedPoolChange
+  onUnlimitedPoolChange,
+  onStakingCapChange
 }: RewardAmountProps) {
   const [amount, setAmount] = useState('')
+  const [stakingCapString, setStakingCapString] = useState('')
 
   const handleLocalUserInput = useCallback(
     rawValue => {
       if (!reward || !reward.token) return
       setAmount(rawValue)
-      const parsedAmount = rawValue ? parseUnits(rawValue, reward.token.decimals).toString() : '0'
-      onRewardAmountChange(new TokenAmount(reward.token, parsedAmount))
+      const parsedAmount = tryParseAmount(rawValue, reward.token) as TokenAmount | undefined
+      if (parsedAmount) {
+        onRewardAmountChange(parsedAmount)
+      }
     },
     [onRewardAmountChange, reward]
+  )
+
+  const handleLocalStakingCapChange = useCallback(
+    rawValue => {
+      if (!stakablePair || !stakablePair.liquidityToken) return
+      setStakingCapString(rawValue)
+      const parsedAmount = tryParseAmount(rawValue, stakablePair.liquidityToken) as TokenAmount | undefined
+      if (parsedAmount) {
+        onStakingCapChange(parsedAmount)
+      }
+    },
+    [onStakingCapChange, stakablePair]
   )
 
   const handleLocalRadioChange = useCallback(
@@ -104,12 +132,24 @@ export default function RewardAmount({
               POOL SIZE
             </TYPE.small>
           </Box>
-          <Flex>
-            <Box mr="26px">
+          <Flex flexDirection="column">
+            <Box mb="16px">
               <Radio checked={unlimitedPool} label="Unlimited" value="unlimited" onChange={handleLocalRadioChange} />
             </Box>
+            <Box mb="16px">
+              <Radio checked={!unlimitedPool} label="Limited" value="limited" onChange={handleLocalRadioChange} />
+            </Box>
             <Box>
-              <Radio disabled label="Limited" value="limited" onChange={handleLocalRadioChange} />
+              <RelativeContainer disabled={unlimitedPool}>
+                <StyledNumericalInput
+                  disabled={unlimitedPool}
+                  value={stakingCapString}
+                  onUserInput={handleLocalStakingCapChange}
+                />
+                <StakablePairInputLogoContainer>
+                  <DoubleCurrencyLogo size={16} currency0={stakablePair?.token0} currency1={stakablePair?.token1} />
+                </StakablePairInputLogoContainer>
+              </RelativeContainer>
             </Box>
           </Flex>
         </PoolSizeContainer>

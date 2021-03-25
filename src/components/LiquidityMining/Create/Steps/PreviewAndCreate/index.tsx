@@ -17,7 +17,8 @@ const FlexContainer = styled(Flex)`
   `}
 `
 
-const ResponsiveContainer = styled(Box)`
+const ResponsiveContainer = styled(Box)<{ flex1?: boolean }>`
+  flex: ${props => (props.flex1 ? 1 : 'auto')};
   ${props => props.theme.mediaWidth.upToExtraSmall`
     margin-top: 16px !important;
   `}
@@ -29,6 +30,7 @@ interface PreviewProps {
   startTime: Date | null
   endTime: Date | null
   timelocked: boolean
+  stakingCap: TokenAmount | null
   reward: TokenAmount | null
   onCreate: () => void
 }
@@ -38,6 +40,7 @@ export default function PreviewAndCreate({
   startTime,
   endTime,
   timelocked,
+  stakingCap,
   reward,
   apy,
   onCreate
@@ -78,7 +81,7 @@ export default function PreviewAndCreate({
   }, [account, reward, userBalance])
 
   return (
-    <Flex flexDirection="column">
+    <Flex flexDirection="column" style={{ zIndex: -1 }}>
       <Box mb="40px">
         <Card>
           <FlexContainer justifyContent="stretch" width="100%">
@@ -87,11 +90,12 @@ export default function PreviewAndCreate({
               startTime={startTime}
               endTime={endTime}
               timelocked={timelocked}
+              stakingCap={stakingCap}
             />
             <Box mx="18px">
               <Divider />
             </Box>
-            <ResponsiveContainer>
+            <ResponsiveContainer flex1>
               <RewardSummary reward={reward} apy={apy} />
             </ResponsiveContainer>
           </FlexContainer>

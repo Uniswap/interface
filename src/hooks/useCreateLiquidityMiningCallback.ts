@@ -21,7 +21,8 @@ export function useCreateLiquidityMiningCallback(
         campaign.rewards.map(reward => parseUnits(reward?.toExact(), reward.token.decimals).toString()),
         campaign.startsAt,
         campaign.endsAt,
-        campaign.locked
+        campaign.locked,
+        campaign.stakingCap.raw.toString()
       )
     }
   }, [factoryContract, campaign])

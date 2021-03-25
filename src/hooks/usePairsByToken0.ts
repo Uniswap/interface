@@ -33,6 +33,7 @@ const QUERY = gql`
         startsAt
         endsAt
         locked
+        stakingCap
         rewardTokens {
           derivedNativeCurrency
           address: id

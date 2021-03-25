@@ -34,6 +34,7 @@ const QUERY = gql`
           startsAt
           endsAt
           locked
+          stakingCap
           rewardTokens {
             address: id
             name

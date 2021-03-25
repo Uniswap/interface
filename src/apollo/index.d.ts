@@ -15,4 +15,5 @@ export interface SubgraphLiquidityMiningCampaign {
   stakedAmount: string
   rewardTokens: SubgraphLiquidityMiningCampaignRewardToken[]
   locked: boolean
+  stakingCap: string
 }

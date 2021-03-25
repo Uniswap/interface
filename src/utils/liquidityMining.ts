@@ -10,7 +10,8 @@ import {
   Currency,
   Token,
   PricedToken,
-  PricedTokenAmount
+  PricedTokenAmount,
+  TokenAmount
 } from 'dxswap-sdk'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
@@ -117,6 +118,10 @@ export function toLiquidityMiningCampaigns(
       rewards,
       staked,
       campaign.locked,
+      new TokenAmount(
+        targetedPair.liquidityToken,
+        parseUnits(campaign.stakingCap, targetedPair.liquidityToken.decimals).toString()
+      ),
       getAddress(campaign.address)
     )
   })

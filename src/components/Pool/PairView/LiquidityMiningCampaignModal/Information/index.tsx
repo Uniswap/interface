@@ -72,7 +72,16 @@ export default function LiquidityMiningInformation({ campaign }: LiquidityMining
           value={DateTime.fromSeconds(parseInt(endsAt.toString())).toFormat('dd-MM-yyyy hh:mm')}
         />
         <DataRow title="Timelock" value={locked ? 'ON' : 'OFF'} />
-        <DataRow title="Max pool size" value="UNLIMITED" />
+        <DataRow
+          title="Max pool size"
+          value={
+            campaign.stakingCap.equalTo('0')
+              ? 'UNLIMITED'
+              : `${campaign.stakingCap.toSignificant(4)} ${campaign.targetedPair.token0.symbol}/${
+                  campaign.targetedPair.token1.symbol
+                } LP`
+          }
+        />
       </Flex>
     </Flex>
   )

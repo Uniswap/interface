@@ -14,6 +14,11 @@ import { useCreateLiquidityMiningCallback } from '../../../hooks/useCreateLiquid
 import ConfirmStakingRewardsDistributionCreation from '../../../components/LiquidityMining/ConfirmStakingRewardsDistributionCreation'
 import { useTransactionAdder } from '../../../state/transactions/hooks'
 import { useNewLiquidityMiningCampaign } from '../../../hooks/useNewLiquidityMiningCampaign'
+import styled from 'styled-components'
+
+const LastStep = styled(Step)`
+  z-index: 0;
+`
 
 export default function CreateLiquidityMining() {
   const { t } = useTranslation()
@@ -29,6 +34,7 @@ export default function CreateLiquidityMining() {
   const [startTime, setStartTime] = useState<Date | null>(null)
   const [endTime, setEndTime] = useState<Date | null>(null)
   const [timelocked, setTimelocked] = useState(false)
+  const [stakingCap, setStakingCap] = useState<TokenAmount | null>(null)
 
   const memoizedRewardArray = useMemo(() => (reward ? [reward] : []), [reward])
   const campaign = useNewLiquidityMiningCampaign(
@@ -37,7 +43,8 @@ export default function CreateLiquidityMining() {
     unlimitedPool,
     startTime,
     endTime,
-    timelocked
+    timelocked,
+    stakingCap
   )
 
   const addTransaction = useTransactionAdder()
@@ -118,9 +125,11 @@ export default function CreateLiquidityMining() {
         <Step title="Select reward amount" index={2} disabled={!targetedPair || !reward || !reward.token}>
           <RewardAmount
             reward={reward}
+            stakablePair={targetedPair}
             unlimitedPool={unlimitedPool}
             onRewardAmountChange={setReward}
             onUnlimitedPoolChange={setUnlimitedPool}
+            onStakingCapChange={setStakingCap}
           />
         </Step>
         <Step title="Duration and start/end time" index={3} disabled={!reward || reward.equalTo('0')}>
@@ -133,7 +142,7 @@ export default function CreateLiquidityMining() {
             onTimelockedChange={handleTimelockedChange}
           />
         </Step>
-        <Step
+        <LastStep
           title="Preview, approve and create mining pool"
           index={4}
           disabled={!targetedPair || !startTime || !endTime || !reward || !reward.token || reward.equalTo('0')}
@@ -144,10 +153,11 @@ export default function CreateLiquidityMining() {
             endTime={endTime}
             timelocked={timelocked}
             reward={reward}
+            stakingCap={stakingCap}
             apy={campaign ? campaign.apy : new Percent('0', '100')}
             onCreate={handleCreateRequest}
           />
-        </Step>
+        </LastStep>
       </PageWrapper>
       <ConfirmStakingRewardsDistributionCreation
         onConfirm={handleCreateConfirmation}
@@ -161,6 +171,7 @@ export default function CreateLiquidityMining() {
         endTime={endTime}
         reward={reward}
         timelocked={timelocked}
+        stakingCap={stakingCap}
         unlimitedPool={unlimitedPool}
       />
     </>

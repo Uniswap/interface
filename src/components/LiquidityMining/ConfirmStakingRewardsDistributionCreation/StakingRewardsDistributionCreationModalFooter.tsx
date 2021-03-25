@@ -14,6 +14,7 @@ interface StakingRewardsDistributionCreationModalFooterProps {
   endTime: Date | null
   reward: TokenAmount | null
   timelocked: boolean
+  stakingCap: TokenAmount | null
   unlimitedPool: boolean
   onConfirm: () => void
 }
@@ -24,6 +25,7 @@ export default function StakingRewardsDistributionCreationModalFooter({
   endTime,
   reward,
   timelocked,
+  stakingCap,
   unlimitedPool,
   onConfirm
 }: StakingRewardsDistributionCreationModalFooterProps) {
@@ -85,7 +87,9 @@ export default function StakingRewardsDistributionCreationModalFooter({
             paddingLeft: '10px'
           }}
         >
-          {unlimitedPool ? 'Unlimited' : 'Limited'}
+          {unlimitedPool
+            ? 'Unlimited'
+            : `${stakingCap?.toSignificant(4)} ${liquidityPair?.token0.symbol}/${liquidityPair?.token1.symbol} LP`}
         </TYPE.body>
       </RowBetween>
 

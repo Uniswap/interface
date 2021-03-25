@@ -18,6 +18,7 @@ interface ConfirmStakingRewardsDistributionCreationProps {
   endTime: Date | null
   reward: TokenAmount | null
   timelocked: boolean
+  stakingCap: TokenAmount | null
   unlimitedPool: boolean
 }
 
@@ -33,6 +34,7 @@ export default function ConfirmStakingRewardsDistributionCreation({
   endTime,
   reward,
   timelocked,
+  stakingCap,
   unlimitedPool
 }: ConfirmStakingRewardsDistributionCreationProps) {
   const confirmationContent = useCallback(
@@ -52,12 +54,24 @@ export default function ConfirmStakingRewardsDistributionCreation({
               endTime={endTime}
               reward={reward}
               timelocked={timelocked}
+              stakingCap={stakingCap}
               unlimitedPool={unlimitedPool}
             />
           )}
         />
       ),
-    [errorMessage, onDismiss, onConfirm, liquidityPair, startTime, endTime, reward, timelocked, unlimitedPool]
+    [
+      errorMessage,
+      onDismiss,
+      onConfirm,
+      liquidityPair,
+      startTime,
+      endTime,
+      reward,
+      timelocked,
+      stakingCap,
+      unlimitedPool
+    ]
   )
 
   return (
