@@ -6,11 +6,17 @@ declare module 'jazzicon' {
 
 declare module 'fortmatic'
 
+interface EthereumProviderRequestArguments {
+  method: string
+  params?: unknown[] | object
+}
+
 interface Window {
   ethereum?: {
     isMetaMask?: true
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
+    request?: (args: EthereumProviderRequestArguments) => Promise<unknown>
   }
   web3?: {}
 }

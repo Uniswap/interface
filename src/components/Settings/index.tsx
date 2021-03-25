@@ -45,7 +45,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
   width: 18px;
-  margin: 0 16px;
+  margin: 0 8px;
   cursor: pointer;
 
   > * {

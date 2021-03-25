@@ -1,4 +1,3 @@
-import { ChainId } from 'dxswap-sdk'
 import React, { useCallback } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { NavLink, withRouter } from 'react-router-dom'
@@ -11,7 +10,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useNativeCurrencyBalances } from '../../state/wallet/hooks'
 
-import { YellowCard } from '../Card'
 import Settings from '../Settings'
 
 import Row, { RowFixed } from '../Row'
@@ -74,7 +72,6 @@ const HeaderControls = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
    flex-direction: row-reverse;
@@ -89,9 +86,20 @@ const MoreLinksIcon = styled(HeaderElement)`
   `};
 `
 
-const HeaderElementWrap = styled.div`
+const MobileSettingsWrap = styled.div`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: block;
+    align-items: center;
+  `}
+`
+
+const DesktopSettingsWrap = styled.div`
   display: flex;
   align-items: center;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `}
 `
 
 const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
@@ -115,10 +123,10 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (active ? transparentize(0.45, theme.bg1) : 'transparent')};
+  background-color: ${({ theme }) => theme.dark1};
   border: solid 2px transparent;
   box-sizing: border-box;
-  color: ${({ theme }) => theme.text4};
+  color: ${({ theme }) => theme.purple2};
   border-radius: 8px;
   white-space: nowrap;
   width: 100%;
@@ -127,27 +135,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   :focus {
     border: solid 2px transparent;
   }
-`
-
-const NetworkCard = styled(YellowCard)`
-  border-radius: 8px;
-  padding: 9px 14px;
-  font-weight: 700;
-  font-size: 12px;
-  line-height: 15px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin: 0;
-    margin-right: 0.5rem;
-    width: initial;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex-shrink: 1;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
 `
 
 const Title = styled.a`
@@ -236,16 +223,8 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   `};
 `
 
-const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: 'Mainnet',
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum',
-  [ChainId.SOKOL]: 'Sokol',
-  [ChainId.XDAI]: 'xDAI'
-}
-
 function Header({ history }: { history: any }) {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const { t } = useTranslation()
 
   const nativeCurrency = useNativeCurrency()
@@ -295,6 +274,9 @@ function Header({ history }: { history: any }) {
               ↗
             </Text>
           </StyledExternalLink>
+          <MobileSettingsWrap>
+            <Settings />
+          </MobileSettingsWrap>
           <MoreLinksIcon>
             <MobileOptions history={history} />
           </MoreLinksIcon>
@@ -302,9 +284,6 @@ function Header({ history }: { history: any }) {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          {chainId && NETWORK_LABELS[chainId] && (
-            <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-          )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userNativeCurrencyBalance ? (
               <TYPE.white
@@ -322,9 +301,9 @@ function Header({ history }: { history: any }) {
             <Web3Status />
           </AccountElement>
         </HeaderElement>
-        <HeaderElementWrap>
+        <DesktopSettingsWrap>
           <Settings />
-        </HeaderElementWrap>
+        </DesktopSettingsWrap>
       </HeaderControls>
     </HeaderFrame>
   )
