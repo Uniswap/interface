@@ -86,9 +86,20 @@ const MoreLinksIcon = styled(HeaderElement)`
   `};
 `
 
-const HeaderElementWrap = styled.div`
+const MobileSettingsWrap = styled.div`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: block;
+    align-items: center;
+  `}
+`
+
+const DesktopSettingsWrap = styled.div`
   display: flex;
   align-items: center;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `}
 `
 
 const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
@@ -263,9 +274,9 @@ function Header({ history }: { history: any }) {
               ↗
             </Text>
           </StyledExternalLink>
-          <HeaderElementWrap>
+          <MobileSettingsWrap>
             <Settings />
-          </HeaderElementWrap>
+          </MobileSettingsWrap>
           <MoreLinksIcon>
             <MobileOptions history={history} />
           </MoreLinksIcon>
@@ -290,6 +301,9 @@ function Header({ history }: { history: any }) {
             <Web3Status />
           </AccountElement>
         </HeaderElement>
+        <DesktopSettingsWrap>
+          <Settings />
+        </DesktopSettingsWrap>
       </HeaderControls>
     </HeaderFrame>
   )
