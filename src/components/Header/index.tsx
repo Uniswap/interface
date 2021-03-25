@@ -233,7 +233,7 @@ export default function Header() {
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <img width={'55px'} src={isDark ? Logo : LogoDark} alt="logo" />
+            <img width={'100px'} src={isDark ? Logo : LogoDark} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
