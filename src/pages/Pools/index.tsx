@@ -195,7 +195,7 @@ const Pools = ({
           )}
         </Panel>
 
-        {errorPoolsData ? <ErrorMessage>{errorPoolsData.message}</ErrorMessage> : null}
+        {errorPoolsData ? <ErrorMessage>{t('somethingWentWrong')}</ErrorMessage> : null}
       </PageWrapper>
     </>
   )
