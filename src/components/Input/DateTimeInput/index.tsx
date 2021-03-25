@@ -36,11 +36,11 @@ interface PickerProps {
   maximum?: Date
 }
 
-function DateTimeInput({ value, placeholder, minimum, maximum, onChange, ...rest }: PickerProps) {
+export default function DateTimeInput({ value, placeholder, minimum, maximum, onChange }: PickerProps) {
   return (
     <Datepicker
       customInput={<Input />}
-      dateFormat="dd-MM-yyyy hh:mm"
+      dateFormat="dd-MM-yyyy HH:mm"
       renderDayContents={(day: number) => {
         return <StyledDay>{day}</StyledDay>
       }}
@@ -49,11 +49,14 @@ function DateTimeInput({ value, placeholder, minimum, maximum, onChange, ...rest
       onChange={onChange}
       showTimeSelect
       timeFormat="HH:mm"
-      minTime={minimum}
-      maxTime={maximum}
-      {...rest}
+      filterTime={time => {
+        if (!minimum) return true
+        const dateTime = new Date(time)
+        if (dateTime.getMonth() !== minimum.getMonth() || dateTime.getDate() !== minimum.getDate()) return true
+        return dateTime.getTime() >= minimum.getTime()
+      }}
+      minDate={minimum}
+      maxDate={maximum}
     />
   )
 }
-
-export default DateTimeInput

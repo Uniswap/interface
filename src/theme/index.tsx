@@ -279,6 +279,11 @@ body {
   font-weight: 600;
 }
 
+.react-datepicker__day.react-datepicker__day--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .react-datepicker__time-container .react-datepicker__time {
   background: transparent !important;
 }
@@ -293,9 +298,14 @@ body {
 
 .react-datepicker__time-list-item {
   transition: background-color 0.3s ease;
-  :hover {
+  :hover:not(.react-datepicker__time-list-item--disabled) {
     background-color: ${props => props.theme.bg2} !important;
   }
+}
+
+.react-datepicker__time-list-item.react-datepicker__time-list-item--disabled {
+  opacity: 0.5;
+  color: ${props => props.theme.text4} !important;
 }
 
 .react-datepicker__header.react-datepicker__header--time {
