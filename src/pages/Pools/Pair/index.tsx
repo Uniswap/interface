@@ -89,7 +89,7 @@ export default function Pair({
     [router]
   )
 
-  if (wrappedPair[0] === PairState.NOT_EXISTS || wrappedPair[0] === PairState.INVALID) return <Redirect to="/pools" />
+  if (wrappedPair[0] === PairState.NOT_EXISTS) return <Redirect to="/pools" />
   return (
     <>
       <PageWrapper>
