@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleMobileMenu } from '../../state/application/hooks'
+import { useCloseModals, useModalOpen, useToggleMobileMenu } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
 import { darken, transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
@@ -75,6 +75,7 @@ export default function MobileOptions({ history }: { history: any }) {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MOBILE)
   const toggle = useToggleMobileMenu()
+  const closeModals = useCloseModals()
   const { t } = useTranslation()
 
   const handleDisabledAnchorClick = useCallback(event => {
@@ -91,6 +92,7 @@ export default function MobileOptions({ history }: { history: any }) {
             <StyledNavLink
               id={`swap-nav-link`}
               to={'/swap'}
+              onClick={closeModals}
               isActive={() => history.location.pathname.includes('/swap')}
             >
               {t('swap')}
@@ -100,6 +102,7 @@ export default function MobileOptions({ history }: { history: any }) {
             <StyledNavLink
               id={`pool-nav-link`}
               to={'/pools'}
+              onClick={closeModals}
               isActive={() =>
                 history.location.pathname.includes('/pools') ||
                 history.location.pathname.includes('/add') ||
