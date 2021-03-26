@@ -12,6 +12,7 @@ import Skeleton from 'react-loading-skeleton'
 import { usePair24hVolumeUSD } from '../../../hooks/usePairVolume24hUSD'
 import { usePairLiquidityUSD } from '../../../hooks/usePairLiquidityUSD'
 import LiquidityMiningCampaigns from './LiquidityMiningCampaigns'
+import { useActiveWeb3React } from '../../../hooks'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
@@ -47,6 +48,7 @@ interface PairViewProps {
 }
 
 function PairView({ loading, pair }: PairViewProps) {
+  const { account } = useActiveWeb3React()
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
@@ -74,9 +76,11 @@ function PairView({ loading, pair }: PairViewProps) {
           </Flex>
           <DataRow loading={overallLoading} title="Liquidity:" value={`$${liquidityUSD.toFixed(2)}`} />
           <DataRow loading={overallLoading} title="Volume:" value={`$${volume24hUSD.toFixed(2)}`} />
-          <Box mt="18px">
-            <FullPositionCard pair={pair || undefined} />
-          </Box>
+          {!!account && (
+            <Box mt="18px">
+              <FullPositionCard pair={pair || undefined} />
+            </Box>
+          )}
           <RowBetween mt="18px">
             <ButtonGrey
               padding="8px"
