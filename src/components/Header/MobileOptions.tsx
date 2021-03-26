@@ -43,21 +43,22 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
-const DisabledNavLink = styled(StyledNavLink)`
-  color: ${({ theme }) => transparentize(0.6, theme.text5)};
+const DisabledNavLink = styled(StyledNavLink)<{ isActive?: boolean }>`
+  color: ${({ theme }) => transparentize(0.6, theme.text5)} !important;
+  font-weight: 400 !important;
 `
 
-const StyledExternalLink = styled(ExternalLink)<{ isActive?: boolean }>`
+const StyledExternalLink = styled(ExternalLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
-  width: fit-content;
-  font-weight: 500;
+  color: ${({ theme }) => theme.text5};
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19.5px;
 
   :hover,
   :focus {
