@@ -6,7 +6,7 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
-import { getTokenLogoURL } from 'utils'
+import { getTokenLogoURL, getRopstenTokenLogoURL } from 'utils'
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -41,7 +41,7 @@ export default function CurrencyLogo({
         return [...uriLocations, getTokenLogoURL(currency.address)]
       }
 
-      return [getTokenLogoURL(currency.address)]
+      return [getTokenLogoURL(currency.address), getRopstenTokenLogoURL(currency.address)]
     }
     return []
   }, [currency, uriLocations])
