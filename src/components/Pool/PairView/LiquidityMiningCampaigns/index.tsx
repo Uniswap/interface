@@ -30,7 +30,7 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
   )
 
   useEffect(() => {
-    if (account) setTabTitles(['My positions', ...INITIAL_TAB_TITLES])
+    if (account) setTabTitles(['Your positions', ...INITIAL_TAB_TITLES])
     else setTabTitles(INITIAL_TAB_TITLES)
   }, [account])
 
