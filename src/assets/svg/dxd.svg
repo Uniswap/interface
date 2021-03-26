@@ -1,0 +1,27 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g opacity="0.9">
+<circle cx="256" cy="256" r="256" fill="url(#paint0_radial)"/>
+<g filter="url(#filter0_d)">
+<path d="M125.666 125.666C180.777 70.5549 262.105 57.6385 329.505 86.9169L294.333 122.089C247.291 108.669 194.57 120.481 157.526 157.525C108.563 206.488 103.68 282.838 142.878 337.263L195.178 284.963L227.037 316.823L142.56 401.3C136.702 396.715 131.059 391.727 125.666 386.334C53.6846 314.352 53.6846 197.647 125.666 125.666Z" fill="white"/>
+<path d="M182.495 425.083C249.895 454.361 331.223 441.445 386.334 386.334C458.315 314.352 458.315 197.647 386.334 125.666C380.941 120.273 375.298 115.285 369.44 110.7L284.963 195.177L316.823 227.037L369.122 174.737C408.32 229.162 403.437 305.512 354.475 354.474C317.431 391.519 264.709 403.331 217.667 389.911L182.495 425.083Z" fill="white"/>
+<path d="M287.86 256L256 224.141L224.141 256L256 287.859L287.86 256Z" fill="white"/>
+<path d="M195.178 163.318L227.037 195.177L195.178 227.037L163.318 195.177L195.178 163.318Z" fill="white"/>
+<path d="M348.682 316.822L316.823 284.963L284.963 316.822L316.823 348.682L348.682 316.822Z" fill="white"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_d" x="69.68" y="69.68" width="372.64" height="372.64" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="1"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+</filter>
+<radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(256 256) rotate(90) scale(256)">
+<stop stop-color="#304FFE"/>
+<stop offset="1" stop-color="#3D5AFE"/>
+</radialGradient>
+</defs>
+</svg>

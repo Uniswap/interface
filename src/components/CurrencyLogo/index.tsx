@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token, Fetcher } from 'dxswap-sdk'
+import { ChainId, Currency, Token, Fetcher, DXD } from 'dxswap-sdk'
 import React, { ReactNode, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'
@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import PoaLogo from '../../assets/images/poa-logo.png'
 import XDAILogo from '../../assets/images/xdai-logo.png'
+import DXDLogo from '../../assets/svg/dxd.svg'
 import { useActiveWeb3React } from '../../hooks'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
@@ -68,10 +69,11 @@ export default function CurrencyLogo({
     if (currency && Currency.isNative(currency) && !!nativeCurrencyLogo) return [nativeCurrencyLogo]
     if (currency instanceof Token) {
       if (Token.isNativeWrapper(currency)) return [nativeCurrencyLogo]
+      if (chainId && DXD[chainId] && DXD[chainId].address === currency.address) return [DXDLogo]
       return [getTokenLogoURL(currency.address), Fetcher.getCachedTokenLogo(currency), ...uriLocations]
     }
     return []
-  }, [currency, nativeCurrencyLogo, uriLocations])
+  }, [chainId, currency, nativeCurrencyLogo, uriLocations])
 
   if (loading)
     return (
