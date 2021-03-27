@@ -1,4 +1,4 @@
-import { UNI } from './../../constants/index'
+import { UNI, PRELOADED_PROPOSALS } from './../../constants/index'
 import { TokenAmount } from '@uniswap/sdk'
 import { isAddress } from 'ethers/lib/utils'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
@@ -121,10 +121,11 @@ export function useAllProposalData() {
         return Boolean(p.result) && Boolean(allProposalStates[i]?.result) && Boolean(formattedEvents[i])
       })
       .map((p, i) => {
+        const description = PRELOADED_PROPOSALS.get(allProposals.length - i - 1) || formattedEvents[i].description
         const formattedProposal: ProposalData = {
           id: allProposals[i]?.result?.id.toString(),
-          title: formattedEvents[i].description?.split(/# |\n/g)[1] || 'Untitled',
-          description: formattedEvents[i].description?.split(/# /)[1] || 'No description.',
+          title: description?.split(/# |\n/g)[1] || 'Untitled',
+          description: description || 'No description.',
           proposer: allProposals[i]?.result?.proposer,
           status: enumerateProposalState(allProposalStates[i]?.result?.[0]) ?? 'Undetermined',
           forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString(), 18)),
@@ -153,6 +154,7 @@ export function useUserDelegatee(): string {
   return result?.[0] ?? undefined
 }
 
+// gets the users current votes
 export function useUserVotes(): TokenAmount | undefined {
   const { account, chainId } = useActiveWeb3React()
   const uniContract = useUniContract()
@@ -160,6 +162,18 @@ export function useUserVotes(): TokenAmount | undefined {
   // check for available votes
   const uni = chainId ? UNI[chainId] : undefined
   const votes = useSingleCallResult(uniContract, 'getCurrentVotes', [account ?? undefined])?.result?.[0]
+  return votes && uni ? new TokenAmount(uni, votes) : undefined
+}
+
+// fetch available votes as of block (usually proposal start block)
+export function useUserVotesAsOfBlock(block: number | undefined): TokenAmount | undefined {
+  const { account, chainId } = useActiveWeb3React()
+  const uniContract = useUniContract()
+
+  // check for available votes
+  const uni = chainId ? UNI[chainId] : undefined
+  const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account ?? undefined, block ?? undefined])
+    ?.result?.[0]
   return votes && uni ? new TokenAmount(uni, votes) : undefined
 }
 

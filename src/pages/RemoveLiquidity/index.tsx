@@ -9,7 +9,7 @@ import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
-import { LightCard } from '../../components/Card'
+import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -492,6 +492,14 @@ export default function RemoveLiquidity({
             pendingText={pendingText}
           />
           <AutoColumn gap="md">
+            <BlueCard>
+              <AutoColumn gap="10px">
+                <TYPE.link fontWeight={400} color={'primaryText1'}>
+                  <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
+                  rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
+                </TYPE.link>
+              </AutoColumn>
+            </BlueCard>
             <LightCard>
               <AutoColumn gap="20px">
                 <RowBetween>

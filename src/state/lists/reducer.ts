@@ -1,9 +1,10 @@
+import { DEFAULT_ACTIVE_LIST_URLS } from './../../constants/lists'
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
-import { DEFAULT_LIST_OF_LISTS, DEFAULT_TOKEN_LIST_URL } from '../../constants/lists'
+import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
-import { acceptListUpdate, addList, fetchTokenList, removeList, selectList } from './actions'
+import { acceptListUpdate, addList, fetchTokenList, removeList, enableList, disableList } from './actions'
 
 export interface ListsState {
   readonly byUrl: {
@@ -16,7 +17,9 @@ export interface ListsState {
   }
   // this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
   readonly lastInitializedDefaultListOfLists?: string[]
-  readonly selectedListUrl: string | undefined
+
+  // currently active lists
+  readonly activeListUrls: string[] | undefined
 }
 
 type ListState = ListsState['byUrl'][string]
@@ -38,7 +41,7 @@ const initialState: ListsState = {
       return memo
     }, {})
   },
-  selectedListUrl: DEFAULT_TOKEN_LIST_URL
+  activeListUrls: DEFAULT_ACTIVE_LIST_URLS
 }
 
 export default createReducer(initialState, builder =>
@@ -59,6 +62,7 @@ export default createReducer(initialState, builder =>
       // no-op if update does nothing
       if (current) {
         const upgradeType = getVersionUpgrade(current.version, tokenList.version)
+
         if (upgradeType === VersionUpgrade.NONE) return
         if (loadingRequestId === null || loadingRequestId === requestId) {
           state.byUrl[url] = {
@@ -70,6 +74,11 @@ export default createReducer(initialState, builder =>
           }
         }
       } else {
+        // activate if on default active
+        if (DEFAULT_ACTIVE_LIST_URLS.includes(url)) {
+          state.activeListUrls?.push(url)
+        }
+
         state.byUrl[url] = {
           ...state.byUrl[url],
           loadingRequestId: null,
@@ -93,13 +102,6 @@ export default createReducer(initialState, builder =>
         pendingUpdate: null
       }
     })
-    .addCase(selectList, (state, { payload: url }) => {
-      state.selectedListUrl = url
-      // automatically adds list
-      if (!state.byUrl[url]) {
-        state.byUrl[url] = NEW_LIST_STATE
-      }
-    })
     .addCase(addList, (state, { payload: url }) => {
       if (!state.byUrl[url]) {
         state.byUrl[url] = NEW_LIST_STATE
@@ -109,8 +111,27 @@ export default createReducer(initialState, builder =>
       if (state.byUrl[url]) {
         delete state.byUrl[url]
       }
-      if (state.selectedListUrl === url) {
-        state.selectedListUrl = url === DEFAULT_TOKEN_LIST_URL ? Object.keys(state.byUrl)[0] : DEFAULT_TOKEN_LIST_URL
+      // remove list from active urls if needed
+      if (state.activeListUrls && state.activeListUrls.includes(url)) {
+        state.activeListUrls = state.activeListUrls.filter(u => u !== url)
+      }
+    })
+    .addCase(enableList, (state, { payload: url }) => {
+      if (!state.byUrl[url]) {
+        state.byUrl[url] = NEW_LIST_STATE
+      }
+
+      if (state.activeListUrls && !state.activeListUrls.includes(url)) {
+        state.activeListUrls.push(url)
+      }
+
+      if (!state.activeListUrls) {
+        state.activeListUrls = [url]
+      }
+    })
+    .addCase(disableList, (state, { payload: url }) => {
+      if (state.activeListUrls && state.activeListUrls.includes(url)) {
+        state.activeListUrls = state.activeListUrls.filter(u => u !== url)
       }
     })
     .addCase(acceptListUpdate, (state, { payload: url }) => {
@@ -127,7 +148,7 @@ export default createReducer(initialState, builder =>
       // state loaded from localStorage, but new lists have never been initialized
       if (!state.lastInitializedDefaultListOfLists) {
         state.byUrl = initialState.byUrl
-        state.selectedListUrl = DEFAULT_TOKEN_LIST_URL
+        state.activeListUrls = initialState.activeListUrls
       } else if (state.lastInitializedDefaultListOfLists) {
         const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
           (s, l) => s.add(l),
@@ -150,11 +171,17 @@ export default createReducer(initialState, builder =>
 
       state.lastInitializedDefaultListOfLists = DEFAULT_LIST_OF_LISTS
 
-      if (!state.selectedListUrl) {
-        state.selectedListUrl = DEFAULT_TOKEN_LIST_URL
-        if (!state.byUrl[DEFAULT_TOKEN_LIST_URL]) {
-          state.byUrl[DEFAULT_TOKEN_LIST_URL] = NEW_LIST_STATE
-        }
+      // if no active lists, activate defaults
+      if (!state.activeListUrls) {
+        state.activeListUrls = DEFAULT_ACTIVE_LIST_URLS
+
+        // for each list on default list, initialize if needed
+        DEFAULT_ACTIVE_LIST_URLS.map((listUrl: string) => {
+          if (!state.byUrl[listUrl]) {
+            state.byUrl[listUrl] = NEW_LIST_STATE
+          }
+          return true
+        })
       }
     })
 )

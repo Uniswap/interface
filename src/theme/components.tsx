@@ -3,7 +3,25 @@ import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
-import { ArrowLeft, X } from 'react-feather'
+import { ArrowLeft, X, ExternalLink as LinkIconFeather, Trash } from 'react-feather'
+
+export const ButtonText = styled.button`
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+
+  :hover {
+    opacity: 0.7;
+  }
+
+  :focus {
+    text-decoration: underline;
+  }
+`
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1
@@ -37,6 +55,20 @@ export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColo
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
+`
+
+// for wrapper react feather icons
+export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRight?: string; marginLeft?: string }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${({ size }) => size ?? '20px'};
+  height: ${({ size }) => size ?? '20px'};
+  margin-right: ${({ marginRight }) => marginRight ?? 0};
+  margin-left: ${({ marginLeft }) => marginLeft ?? 0};
+  & > * {
+    stroke: ${({ theme, stroke }) => stroke ?? theme.blue1};
+  }
 `
 
 // A button that triggers some onClick result, but looks like a link.
@@ -104,6 +136,51 @@ const StyledLink = styled.a`
   }
 `
 
+const LinkIconWrapper = styled.a`
+  text-decoration: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+
+  :hover {
+    text-decoration: none;
+    opacity: 0.7;
+  }
+
+  :focus {
+    outline: none;
+    text-decoration: none;
+  }
+
+  :active {
+    text-decoration: none;
+  }
+`
+
+export const LinkIcon = styled(LinkIconFeather)`
+  height: 16px;
+  width: 18px;
+  margin-left: 10px;
+  stroke: ${({ theme }) => theme.blue1};
+`
+
+export const TrashIcon = styled(Trash)`
+  height: 16px;
+  width: 18px;
+  margin-left: 10px;
+  stroke: ${({ theme }) => theme.text3};
+
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+
+  :hover {
+    opacity: 0.7;
+  }
+`
+
 const rotateImg = keyframes`
   0% {
     transform: perspective(1000px) rotateY(0deg);
@@ -149,6 +226,36 @@ export function ExternalLink({
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }
 
+export function ExternalLinkIcon({
+  target = '_blank',
+  href,
+  rel = 'noopener noreferrer',
+  ...rest
+}: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      // don't prevent default, don't redirect if it's a new tab
+      if (target === '_blank' || event.ctrlKey || event.metaKey) {
+        ReactGA.outboundLink({ label: href }, () => {
+          console.debug('Fired outbound link event', href)
+        })
+      } else {
+        event.preventDefault()
+        // send a ReactGA event and then trigger a location change
+        ReactGA.outboundLink({ label: href }, () => {
+          window.location.href = href
+        })
+      }
+    },
+    [href, target]
+  )
+  return (
+    <LinkIconWrapper target={target} rel={rel} href={href} onClick={handleClick} {...rest}>
+      <LinkIcon />
+    </LinkIconWrapper>
+  )
+}
+
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
@@ -183,5 +290,18 @@ export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
 export const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
+  `};
+`
+
+export const HideExtraSmall = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: none;
+  `};
+`
+
+export const ExtraSmallOnly = styled.span`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    display: block;
   `};
 `

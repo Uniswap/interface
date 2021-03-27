@@ -1,7 +1,7 @@
-import { ChainId, TokenAmount, JSBI } from '@uniswap/sdk'
+import { ChainId, TokenAmount } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
-import { NavLink, withRouter } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 
@@ -17,7 +17,7 @@ import { CountUp } from 'use-count-up'
 import { TYPE, ExternalLink } from '../../theme'
 
 import { YellowCard } from '../Card'
-import Settings from '../Settings'
+import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
@@ -83,7 +83,11 @@ const HeaderControls = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+
+  /* addresses safari's lack of support for "gap" */
+  & > *:not(:first-child) {
+    margin-left: 8px;
+  }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
    flex-direction: row-reverse;
@@ -123,9 +127,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   :focus {
     border: 1px solid blue;
   }
-  /* :hover {
-    background-color: ${({ theme, active }) => (!active ? theme.bg2 : theme.bg4)};
-  } */
 `
 
 const UNIAmount = styled(AccountElement)`
@@ -257,6 +258,35 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `}
 `
 
+export const StyledMenuButton = styled.button`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  height: 35px;
+  background-color: ${({ theme }) => theme.bg3};
+  margin-left: 8px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.5rem;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => theme.bg4};
+  }
+
+  svg {
+    margin-top: 2px;
+  }
+  > * {
+    stroke: ${({ theme }) => theme.text1};
+  }
+`
+
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
@@ -264,12 +294,13 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.KOVAN]: 'Kovan'
 }
 
-function Header({ history }: { history: any }) {
+export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
-  const [isDark] = useDarkModeManager()
+  // const [isDark] = useDarkModeManager()
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -292,34 +323,32 @@ function Header({ history }: { history: any }) {
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
       <HeaderRow>
-        <Title href="." style={{}}>
+        <Title href=".">
           <UniIcon>
-            <img width={'24px'} src={isDark ? LogoDark : Logo} alt="logo" />
+            <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => history.location.pathname.includes('/swap')}>
+          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>
           <StyledNavLink
             id={`pool-nav-link`}
             to={'/pool'}
-            isActive={() =>
-              history.location.pathname.includes('/pool') ||
-              history.location.pathname.includes('/add') ||
-              history.location.pathname.includes('/remove')
+            isActive={(match, { pathname }) =>
+              Boolean(match) ||
+              pathname.startsWith('/add') ||
+              pathname.startsWith('/remove') ||
+              pathname.startsWith('/create') ||
+              pathname.startsWith('/find')
             }
           >
             {t('pool')}
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/uni'} isActive={() => history.location.pathname.includes('/uni')}>
+          <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
             UNI
           </StyledNavLink>
-          <StyledNavLink
-            id={`stake-nav-link`}
-            to={'/vote'}
-            isActive={() => history.location.pathname.includes('/vote')}
-          >
+          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
             Vote
           </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
@@ -344,26 +373,28 @@ function Header({ history }: { history: any }) {
               <CardNoise />
             </UNIWrapper>
           )}
-          {!availableClaim && aggregateBalance && JSBI.greaterThan(aggregateBalance.raw, JSBI.BigInt(0)) && (
+          {!availableClaim && aggregateBalance && (
             <UNIWrapper onClick={() => setShowUniBalanceModal(true)}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <HideSmall>
-                  <TYPE.white
-                    style={{
-                      paddingRight: '.4rem'
-                    }}
-                  >
-                    <CountUp
-                      key={countUpValue}
-                      isCounting
-                      start={parseFloat(countUpValuePrevious)}
-                      end={parseFloat(countUpValue)}
-                      thousandsSeparator={','}
-                      duration={1}
-                    />
-                  </TYPE.white>
-                </HideSmall>
-                {'UNI'}
+                {account && (
+                  <HideSmall>
+                    <TYPE.white
+                      style={{
+                        paddingRight: '.4rem'
+                      }}
+                    >
+                      <CountUp
+                        key={countUpValue}
+                        isCounting
+                        start={parseFloat(countUpValuePrevious)}
+                        end={parseFloat(countUpValue)}
+                        thousandsSeparator={','}
+                        duration={1}
+                      />
+                    </TYPE.white>
+                  </HideSmall>
+                )}
+                UNI
               </UNIAmount>
               <CardNoise />
             </UNIWrapper>
@@ -378,12 +409,12 @@ function Header({ history }: { history: any }) {
           </AccountElement>
         </HeaderElement>
         <HeaderElementWrap>
-          <Settings />
+          <StyledMenuButton onClick={() => toggleDarkMode()}>
+            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+          </StyledMenuButton>
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>
     </HeaderFrame>
   )
 }
-
-export default withRouter(Header)
