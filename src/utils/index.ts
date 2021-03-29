@@ -31,7 +31,7 @@ const getExplorerPrefix = (chainId: ChainId) => {
     case ChainId.SOKOL:
       return 'https://blockscout.com/poa/sokol'
     case ChainId.XDAI:
-      return 'https://blockscout.com/poa/xdai'
+      return 'https://blockscout.com/xdai/mainnet'
     default:
       return `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
   }
@@ -43,6 +43,12 @@ export function getExplorerLink(
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
   const prefix = getExplorerPrefix(chainId)
+
+  // exception. blockscout doesn't have a token-specific address
+  if (chainId && type === 'token') {
+    return `${prefix}/address/${data}`
+  }
+
   switch (type) {
     case 'transaction': {
       return `${prefix}/tx/${data}`
