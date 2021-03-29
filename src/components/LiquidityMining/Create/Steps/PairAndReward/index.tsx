@@ -96,6 +96,7 @@ export default function PairAndReward({
         onDismiss={handleDismissCurrencySearch}
         onCurrencySelect={handleCurrencySelection}
         selectedCurrency={reward?.token}
+        showNativeCurrency={false}
       />
     </>
   )
