@@ -97,8 +97,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
-          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
+          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance),
+          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance)
         ]
       : [undefined, undefined]
 
@@ -196,8 +196,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
-          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
+          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance),
+          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance)
         ]
       : [undefined, undefined]
 

@@ -10,7 +10,7 @@ import {
 } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useFactoryContract, usePairContract } from 'hooks/useContract'
-import XYZSwapPair from 'libs/sdk/src/abis/XYZSwapPair.json'
+import DMMPool from 'libs/sdk/src/abis/DMMPool.json'
 
 export enum PairState {
   LOADING,
@@ -85,8 +85,8 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
     }
     return acc
   }, [])
-  const results = useMultipleContractSingleData(pairAddresses, new Interface(XYZSwapPair.abi), 'getTradeInfo')
-  const ampResults = useMultipleContractSingleData(pairAddresses, new Interface(XYZSwapPair.abi), 'ampBps')
+  const results = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'getTradeInfo')
+  const ampResults = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'ampBps')
   return useMemo(() => {
     start = 0
     const vv: any[] = []
@@ -134,12 +134,12 @@ export function usePairsByAddress(
   const { chainId } = useActiveWeb3React()
   const results = useMultipleContractSingleData(
     pairInfo.map(info => info.address),
-    new Interface(XYZSwapPair.abi),
+    new Interface(DMMPool.abi),
     'getTradeInfo'
   )
   const ampResults = useMultipleContractSingleData(
     pairInfo.map(info => info.address),
-    new Interface(XYZSwapPair.abi),
+    new Interface(DMMPool.abi),
     'ampBps'
   )
 
@@ -208,7 +208,7 @@ export function useUnAmplifiedPair(tokenA?: Currency, tokenB?: Currency): string
 //     [tokens]
 //   )
 
-//   const results = useMultipleContractSingleData(pairAddresses, new Interface(XYZSwapPair.abi), 'getTradeInfo')
+//   const results = useMultipleContractSingleData(pairAddresses, new Interface(DMMPool.abi), 'getTradeInfo')
 
 //   return useMemo(() => {
 //     return results.map((result, i) => {
