@@ -216,15 +216,16 @@ export function useDerivedSwapInfo(): {
     v1Trade
   }
 }
-
+    
+const DEFAULT_TOKEN = 'ETH'
 function parseCurrencyFromURLParameter(urlParam: any): string {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === 'ETH') return 'ETH'
-    if (valid === false) return 'ETH'
+    if (urlParam.toUpperCase() === DEFAULT_TOKEN) return DEFAULT_TOKEN
+    if (valid === false) return DEFAULT_TOKEN
   }
-  return 'ETH' ?? ''
+  return DEFAULT_TOKEN ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
