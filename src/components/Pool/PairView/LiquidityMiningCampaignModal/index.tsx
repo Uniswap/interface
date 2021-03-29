@@ -282,7 +282,11 @@ export function LiquidityMiningCampaignModal({
         <ConfirmStakingModal
           isOpen={showStakingConfirmationModal}
           stakableTokenBalance={
-            campaign.stakingCap.lessThan(stakableTokenBalance) ? campaign.stakingCap : stakableTokenBalance
+            campaign.stakingCap.equalTo('0')
+              ? stakableTokenBalance
+              : campaign.stakingCap.subtract(campaign.staked).lessThan(stakableTokenBalance)
+              ? campaign.stakingCap.subtract(campaign.staked)
+              : stakableTokenBalance
           }
           onDismiss={handleDismiss}
           stakablePair={campaign.targetedPair}

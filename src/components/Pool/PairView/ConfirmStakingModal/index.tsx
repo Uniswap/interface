@@ -104,7 +104,9 @@ export default function ConfirmStakingModal({
       attemptingTxn={attemptingTxn}
       hash={txHash}
       content={content}
-      pendingText={`Staking ${stakedAmount?.toSignificant(6)} tokens`}
+      pendingText={`Staking ${stakedAmount?.toSignificant(6)} ${stakablePair?.token0.symbol}/${
+        stakablePair?.token1.symbol
+      } LP tokens`}
     />
   )
 }
