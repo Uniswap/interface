@@ -45,7 +45,7 @@ export function getExplorerLink(
   const prefix = getExplorerPrefix(chainId)
 
   // exception. blockscout doesn't have a token-specific address
-  if (chainId && type === 'token') {
+  if (chainId === ChainId.XDAI && type === 'token') {
     return `${prefix}/address/${data}`
   }
 
