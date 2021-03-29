@@ -20,7 +20,7 @@ export default function CurrencySearchModal({
   selectedCurrency,
   otherSelectedCurrency,
   showCommonBases = false,
-  showNativeCurrency
+  showNativeCurrency = true
 }: CurrencySearchModalProps) {
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {

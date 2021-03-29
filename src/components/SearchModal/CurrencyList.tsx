@@ -16,6 +16,8 @@ import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { TokenAddressMap, useTokenList } from '../../state/lists/hooks'
 import { isTokenOnList } from '../../utils'
+import { AutoColumn } from '../Column'
+import { TYPE } from '../../theme'
 
 function currencyKey(index: number, data: any): string {
   const currency = data[index]
@@ -66,13 +68,16 @@ function CurrencyRow({
       alignItems="center"
       style={style}
     >
-      <Box mr="8px">
+      <Box mr="12px">
         <CurrencyLogo currency={currency} size={'20px'} />
       </Box>
       <Box>
-        <Text title={currency.name} fontWeight={500}>
-          {currency.symbol}
-        </Text>
+        <AutoColumn gap="2px">
+          <Text fontWeight={500}>{currency.symbol}</Text>
+          <TYPE.body fontSize="11px" color="text4" fontWeight={400}>
+            {currency.name}
+          </TYPE.body>
+        </AutoColumn>
       </Box>
       <Flex flex="1" px="20px">
         {!isOnSelectedList && (
