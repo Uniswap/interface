@@ -40,7 +40,6 @@ export default function CreateLiquidityMining() {
   const campaign = useNewLiquidityMiningCampaign(
     targetedPair,
     memoizedRewardArray,
-    unlimitedPool,
     startTime,
     endTime,
     timelocked,

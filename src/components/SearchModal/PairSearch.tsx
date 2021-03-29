@@ -8,7 +8,7 @@ import { CloseIcon, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import { RowBetween } from '../Row'
-import { filterPairs } from './filtering'
+import { filterPairs as filterPairsBySearchQuery } from './filtering'
 import SortButton from './SortButton'
 import { usePairsComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
@@ -22,6 +22,7 @@ interface PairSearchProps {
   selectedPair?: Pair | null
   onPairSelect: (pair: Pair) => void
   showCommonBases?: boolean
+  filterPairs?: (pair: Pair) => boolean
 }
 
 const Wrapper = styled.div`
@@ -30,7 +31,7 @@ const Wrapper = styled.div`
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
 `
 
-export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen }: PairSearchProps) {
+export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen, filterPairs }: PairSearchProps) {
   const { t } = useTranslation()
 
   const fixedList = useRef<FixedSizeList>()
@@ -45,9 +46,11 @@ export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen }: Pa
   const pairsComparator = usePairsComparator(invertSearchOrder)
 
   const filteredPairs: Pair[] = useMemo(() => {
+    let pairs = allPairs
+    if (filterPairs) pairs = allPairs.filter(filterPairs)
     if (isAddressSearch) return searchPair ? [searchPair] : []
-    return filterPairs(allPairs, searchQuery)
-  }, [isAddressSearch, searchPair, allPairs, searchQuery])
+    return filterPairsBySearchQuery(pairs, searchQuery)
+  }, [allPairs, filterPairs, isAddressSearch, searchPair, searchQuery])
 
   const filteredSortedPairs: Pair[] = useMemo(() => {
     if (searchPair) return [searchPair]

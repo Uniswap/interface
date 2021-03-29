@@ -8,9 +8,16 @@ interface PairSearchModalProps {
   onDismiss: () => void
   selectedPair?: Pair | null
   onPairSelect: (pair: Pair) => void
+  filterPairs?: (pair: Pair) => boolean
 }
 
-export default function PairSearchModal({ isOpen, onDismiss, onPairSelect, selectedPair }: PairSearchModalProps) {
+export default function PairSearchModal({
+  isOpen,
+  onDismiss,
+  onPairSelect,
+  selectedPair,
+  filterPairs
+}: PairSearchModalProps) {
   const handlePairSelect = useCallback(
     (pair: Pair) => {
       onPairSelect(pair)
@@ -21,7 +28,13 @@ export default function PairSearchModal({ isOpen, onDismiss, onPairSelect, selec
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>
-      <PairSearch isOpen={isOpen} onDismiss={onDismiss} onPairSelect={handlePairSelect} selectedPair={selectedPair} />
+      <PairSearch
+        isOpen={isOpen}
+        onDismiss={onDismiss}
+        onPairSelect={handlePairSelect}
+        selectedPair={selectedPair}
+        filterPairs={filterPairs}
+      />
     </Modal>
   )
 }

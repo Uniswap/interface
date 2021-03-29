@@ -10,7 +10,6 @@ import { usePairReserveNativeCurrency } from './usePairReserveNativeCurrency'
 export function useNewLiquidityMiningCampaign(
   targetedPair: Pair | null,
   rewards: TokenAmount[],
-  unlimitedPool: boolean,
   startTime: Date | null,
   endTime: Date | null,
   locked: boolean,
@@ -23,15 +22,7 @@ export function useNewLiquidityMiningCampaign(
   const { reserveNativeCurrency: targetedPairReserveNativeCurrency } = usePairReserveNativeCurrency()
 
   return useMemo(() => {
-    if (
-      !chainId ||
-      !targetedPair ||
-      !lpTokenTotalSupply ||
-      pricedRewardAmounts.length === 0 ||
-      !startTime ||
-      !endTime ||
-      !stakingCap
-    )
+    if (!chainId || !targetedPair || !lpTokenTotalSupply || pricedRewardAmounts.length === 0 || !startTime || !endTime)
       return null
     const { address, symbol, name, decimals } = targetedPair.liquidityToken
     const lpTokenNativeCurrencyPrice = getLpTokenPrice(
@@ -49,7 +40,7 @@ export function useNewLiquidityMiningCampaign(
       pricedRewardAmounts,
       staked,
       locked,
-      stakingCap
+      stakingCap || new TokenAmount(targetedPair.liquidityToken, '0')
     )
   }, [
     chainId,
