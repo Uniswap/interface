@@ -37,6 +37,8 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
+import NetworkWarningModal from '../../components/NetworkWarningModal'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
@@ -64,6 +66,7 @@ export default function Swap() {
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
     [loadedInputCurrency, loadedOutputCurrency]
   )
+  const urlLoadedChainId = useTargetedChainIdFromUrl()
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
@@ -249,8 +252,14 @@ export default function Swap() {
 
   return (
     <>
+      <NetworkWarningModal
+        isOpen={!!urlLoadedChainId && chainId !== urlLoadedChainId}
+        targetedNetwork={urlLoadedChainId}
+      />
       <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
+        isOpen={
+          (!urlLoadedChainId || chainId === urlLoadedChainId) && urlLoadedTokens.length > 0 && !dismissTokenWarning
+        }
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
