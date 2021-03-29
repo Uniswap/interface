@@ -216,7 +216,7 @@ export function useDerivedSwapInfo(): {
     v1Trade
   }
 }
-    
+
 const DEFAULT_TOKEN = 'ETH'
 function parseCurrencyFromURLParameter(urlParam: any): string {
   if (typeof urlParam === 'string') {
