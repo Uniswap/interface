@@ -207,9 +207,9 @@ export default function SettingsTab() {
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={12} color={theme.text11}>
-                  Toggle Expert Mode
+                  Advanced Mode
                 </TYPE.black>
-                <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                <QuestionHelper text="Enables high slippage trades. Use at your own risk." />
               </RowFixed>
               <Toggle
                 id="toggle-expert-mode-button"
