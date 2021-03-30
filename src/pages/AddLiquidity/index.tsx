@@ -521,7 +521,11 @@ export default function AddLiquidity({
                 AMP
                 {!!pair ? <>&nbsp;=&nbsp;{new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5)}</> : ''}
               </ActiveText>
-              <QuestionHelper text={'Amplification factor'} />
+              <QuestionHelper
+                text={
+                  'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
+                }
+              />
             </RowFlat2>
 
             {!pairAddress && (
@@ -538,7 +542,7 @@ export default function AddLiquidity({
                       !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
                     )}
                   </Text>
-                  <QuestionHelper text="Fee range" />
+                  <QuestionHelper text="Fees are adjusted dynamically according to market conditions. In a volatile market, fees increase to an optimal level. With low volatility, fees decrease to encourage more trading." />
                 </AutoRow>
               </OutlineCard2>
             )}

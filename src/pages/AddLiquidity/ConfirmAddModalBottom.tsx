@@ -77,7 +77,7 @@ export function ConfirmAddModalBottom({
 
       <DashedLine />
       <RowBetween>
-        <TYPE.body>Pool Share: {noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}</TYPE.body>
+        <TYPE.body>Pool Share: {noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
         <Text fontWeight={500} fontSize={20}>
