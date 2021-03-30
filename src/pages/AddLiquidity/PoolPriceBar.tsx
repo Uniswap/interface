@@ -16,6 +16,8 @@ import { ONE_BIPS } from '../../constants'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
 
+const DEFAULT_PRICE_RANGE = '0.00 - ♾️'
+
 const AutoColumn2 = styled(AutoColumn)`
   width: 48%;
   height: 100%;
@@ -150,7 +152,10 @@ export function PoolPriceRangeBarToggle({
 }) {
   return (
     <OutlineCard3>
-      <ToggleComponent title="Active Price Range" question="Active Price Range">
+      <ToggleComponent
+        title="Active Price Range"
+        question="Tradable token pair price range for this pool based on AMP. If the price goes below or above this range, the pool may become inactive."
+      >
         <PoolPriceRangeBar currencies={currencies} price={price} pair={pair} amplification={amplification} />
       </ToggleComponent>
     </OutlineCard3>
@@ -196,7 +201,7 @@ export function PoolPriceRangeBar({
                 </TYPE.black>
               </>
             ) : (
-              '--/--'
+              DEFAULT_PRICE_RANGE
             )}
           </AutoColumn>
           <AutoColumn justify="end">
@@ -219,7 +224,7 @@ export function PoolPriceRangeBar({
                 </TYPE.black>
               </>
             ) : (
-              '--/--'
+              DEFAULT_PRICE_RANGE
             )}
           </AutoColumn>
         </AutoRow>
@@ -242,7 +247,7 @@ export function PoolPriceRangeBar({
                 <TYPE.black>Min: {priceRangeCalc(price, amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
               </>
             ) : (
-              '--/--'
+              DEFAULT_PRICE_RANGE
             )}
           </AutoColumn>
           <AutoColumn justify="end">
@@ -255,7 +260,7 @@ export function PoolPriceRangeBar({
                 <TYPE.black>Min: {priceRangeCalc(price?.invert(), amp)[1]?.toSignificant(6) ?? '-'}</TYPE.black>
               </>
             ) : (
-              '--/--'
+              DEFAULT_PRICE_RANGE
             )}
           </AutoColumn>
         </AutoRow>

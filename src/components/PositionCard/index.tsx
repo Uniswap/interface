@@ -345,7 +345,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                AMP <QuestionHelper text="Amplification factor" />:
+                AMP{' '}
+                <QuestionHelper text="Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs." />
+                :
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {amp.toSignificant(5)}
@@ -353,7 +355,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                Price range {pair.token0.symbol}/{pair.token1.symbol} <QuestionHelper text="Active price range" />:
+                Price range {pair.token0.symbol}/{pair.token1.symbol}{' '}
+                <QuestionHelper text="Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive." />
+                :
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {/* token 0  */}
@@ -363,7 +367,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             </FixedHeightRow>
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                Price range {pair.token1.symbol}/{pair.token0.symbol} <QuestionHelper text="Active price range" />:
+                Price range {pair.token1.symbol}/{pair.token0.symbol}{' '}
+                <QuestionHelper text="Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive." />
+                :
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {/* token 1  */}

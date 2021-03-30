@@ -50,10 +50,8 @@ const SearchWrapper = styled(Flex)`
   align-items: center;
 `
 
-const SelectPairInstructionWrapper = styled(Box)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const SelectPairInstructionWrapper = styled.div`
+  text-align: center;
   height: 100%;
   padding: 24px;
 `
@@ -188,10 +186,13 @@ const Pools = ({
               poolsList={poolsList}
               subgraphPoolsData={poolsData}
               userLiquidityPositions={userLiquidityPositions.liquidityPositionSnapshots}
-              maxItems={50}
+              maxItems={3}
             />
           ) : (
-            <SelectPairInstructionWrapper>{t('thereAreNoPools')}</SelectPairInstructionWrapper>
+            <SelectPairInstructionWrapper>
+              <div style={{ marginBottom: '1rem' }}>{t('thereAreNoPools')}</div>
+              <div>{t('thereAreNoPoolsInstruction')}</div>
+            </SelectPairInstructionWrapper>
           )}
         </Panel>
 

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
+import { KNC } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
@@ -228,6 +229,8 @@ export default function Header() {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
+  const poolsMenuLink = chainId ? `/pools/ETH/${KNC[chainId as ChainId].address}` : '/pools/ETH'
+
   return (
     <HeaderFrame>
       <HeaderRow>
@@ -240,12 +243,9 @@ export default function Header() {
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
             {t('swap')}
           </StyledNavLink>
-          <StyledNavLink id={`pools-nav-link`} to={'/pools/ETH'} isActive={match => Boolean(match)}>
-            {t('pool')}
+          <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
+            {t('pools')}
           </StyledNavLink>
-          <StyledNavExternalLink href={String(process.env.REACT_APP_DMM_ANALYTICS_URL)}>
-            {t('analytics')}
-          </StyledNavExternalLink>
           <StyledNavLink
             id={`my-pools-nav-link`}
             to={'/myPools'}
@@ -259,6 +259,9 @@ export default function Header() {
           >
             {t('dashboard')}
           </StyledNavLink>
+          <StyledNavExternalLink href={String(process.env.REACT_APP_DMM_ANALYTICS_URL)}>
+            {t('analytics')}
+          </StyledNavExternalLink>
           <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
             {t('About')}
           </StyledNavLink>

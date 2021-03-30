@@ -1,7 +1,6 @@
 import React, { ReactNode, useRef } from 'react'
-import { Info, PieChart } from 'react-feather'
+import { Info, PieChart, Menu as MenuIcon } from 'react-feather'
 import styled from 'styled-components'
-import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
@@ -22,6 +21,7 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
+  color: ${({ theme }) => theme.text11};
   background-color: ${({ theme }) => theme.bg3};
 
   padding: 0.15rem 0.5rem;
@@ -118,7 +118,9 @@ export function FlyoutPriceRange({ header, content }: { header: ReactNode; conte
 
   return (
     <StyledMenu ref={node as any}>
-      <span style={{width: '100%'}} onClick={toggle}>{header}</span>
+      <span style={{ width: '100%' }} onClick={toggle}>
+        {header}
+      </span>
 
       {open && (
         <MenuFlyout>

@@ -12,18 +12,19 @@ import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
 import InfoHelper from 'components/InfoHelper'
 import CopyHelper from 'components/Copy'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { shortenAddress, formattedNum } from 'utils'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { getHealthFactor } from 'utils/dmm'
 
-const DEFAULT_MY_LIQUIDITY = '--/--'
+const DEFAULT_MY_LIQUIDITY = '-'
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(8, 1fr) 0.25fr;
+  grid-template-columns: repeat(8, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -39,7 +40,7 @@ const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(8, 1fr) 0.25fr;
+  grid-template-columns: repeat(8, 1fr) 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -150,12 +151,16 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
     <TableRow oddRow={oddRow}>
       {isRecommended && !isWarning && (
         <div style={{ position: 'absolute' }}>
-          <FavoriteStar />
+          <MouseoverTooltip text="Recommended pool">
+            <FavoriteStar />
+          </MouseoverTooltip>
         </div>
       )}
       {isWarning && (
         <div style={{ position: 'absolute' }}>
-          <WarningLeftIcon />
+          <MouseoverTooltip text="One token is close to 0% in the pool ratio. Pool might go inactive.">
+            <WarningLeftIcon />
+          </MouseoverTooltip>
         </div>
       )}
       <DataText grid-area="pool">
@@ -342,7 +347,11 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText>Ratio</ClickableText>
-          <InfoHelper text={'Based on 24hr volume annualized'} />
+          <InfoHelper
+            text={
+              'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
+            }
+          />
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText
@@ -405,7 +414,11 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
 
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText>AMP</ClickableText>
-          <InfoHelper text={'Based on 24hr volume annualized'} />
+          <InfoHelper
+            text={
+              'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
+            }
+          />
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
@@ -426,13 +439,16 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
               ''
             )}
           </ClickableText>
+          <InfoHelper text={'1Yr Fees Collected/Liquidity based on 24H volume annualized'} />
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText>My liquidity</ClickableText>
         </Flex>
 
-        <Flex alignItems="center" justifyContent="flexEnd" />
+        <Flex alignItems="center" justifyContent="flexEnd">
+          <ClickableText>Add liquidity</ClickableText>
+        </Flex>
       </TableHeader>
       {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
         if (pool && transformedSubgraphPoolsData[pool.address.toLowerCase()]) {
