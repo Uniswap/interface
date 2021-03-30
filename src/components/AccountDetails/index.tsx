@@ -1,4 +1,5 @@
 import { getBlockscoutLink } from '@ubeswap/sdk'
+import { LedgerConnector } from 'connectors/ledger/LedgerConnector'
 import { ValoraConnector } from 'connectors/valora/ValoraConnector'
 import React, { useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
@@ -226,13 +227,16 @@ export default function AccountDetails({
   function formatConnectorName() {
     const { celo } = window
     const isCEW = !!celo
-    const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        k =>
-          SUPPORTED_WALLETS[k].connector === connector &&
-          (connector !== injected || isCEW === (k === 'CELO_EXTENSION_WALLET'))
-      )
-      .map(k => SUPPORTED_WALLETS[k].name)[0]
+    const name =
+      connector instanceof LedgerConnector
+        ? 'Ledger'
+        : Object.keys(SUPPORTED_WALLETS)
+            .filter(
+              k =>
+                SUPPORTED_WALLETS[k].connector === connector &&
+                (connector !== injected || isCEW === (k === 'CELO_EXTENSION_WALLET'))
+            )
+            .map(k => SUPPORTED_WALLETS[k].name)[0]
     return <WalletName>Connected with {name}</WalletName>
   }
 

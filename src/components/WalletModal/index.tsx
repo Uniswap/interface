@@ -17,6 +17,7 @@ import { useModalOpen, useWalletModalToggle } from '../../state/application/hook
 import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
 import Modal from '../Modal'
+import { LedgerWalletSelector } from './LedgerWalletSelector'
 import Option from './Option'
 import PendingView from './PendingView'
 
@@ -113,7 +114,8 @@ const WALLET_VIEWS = {
   OPTIONS: 'options',
   OPTIONS_SECONDARY: 'options_secondary',
   ACCOUNT: 'account',
-  PENDING: 'pending'
+  PENDING: 'pending',
+  LEDGER: 'ledger'
 }
 
 export default function WalletModal({
@@ -274,6 +276,11 @@ export default function WalletModal({
           <Option
             id={`connect-${key}`}
             onClick={() => {
+              if (option.name === 'Ledger') {
+                setWalletView(WALLET_VIEWS.LEDGER)
+                return
+              }
+
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
                 : !option.href && tryActivation(option.connector)
@@ -352,28 +359,34 @@ export default function WalletModal({
               activateError={activateError}
               tryActivation={tryActivation}
             />
+          ) : walletView === WALLET_VIEWS.LEDGER ? (
+            <LedgerWalletSelector tryActivation={tryActivation} />
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
-          {walletView !== WALLET_VIEWS.PENDING && !isMobile && (
-            <Blurb>
-              <span>
-                Looking for MetaMask? We currently don&apos;t support it.
-                <br />
-                <br />
-              </span>
-              <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
-                Learn more about Celo wallets
-              </ExternalLink>
-            </Blurb>
-          )}
-          {walletView !== WALLET_VIEWS.PENDING && isMobile && (
-            <Blurb>
-              <span>New to Celo? &nbsp;</span>
-              <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
-                Learn more about wallets
-              </ExternalLink>
-            </Blurb>
+          {walletView !== WALLET_VIEWS.PENDING && walletView !== WALLET_VIEWS.LEDGER && (
+            <>
+              {!isMobile && (
+                <Blurb>
+                  <span>
+                    Looking for MetaMask? Celo currently don&apos;t support it.
+                    <br />
+                    <br />
+                  </span>
+                  <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
+                    Learn more about Celo wallets
+                  </ExternalLink>
+                </Blurb>
+              )}
+              {isMobile && (
+                <Blurb>
+                  <span>New to Celo? &nbsp;</span>
+                  <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
+                    Learn more about wallets
+                  </ExternalLink>
+                </Blurb>
+              )}
+            </>
           )}
         </ContentWrapper>
       </UpperSection>

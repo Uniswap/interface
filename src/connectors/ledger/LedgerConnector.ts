@@ -9,7 +9,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ConnectorUpdate } from '@web3-react/types'
 import { NETWORK_CHAIN_ID } from 'connectors'
 
-class LedgerKit {
+export class LedgerKit {
   private closed = false
   private constructor(public chainId: ChainId, public kit: ContractKit, public wallet: LedgerWallet) {}
 
@@ -37,12 +37,24 @@ class LedgerKit {
 
 export class LedgerConnector extends AbstractConnector {
   private kit: LedgerKit | null = null
+  private index: number | null = null
 
-  constructor() {
+  constructor(connectedKit?: { kit: LedgerKit; index: number }) {
     super({ supportedChainIds: [NETWORK_CHAIN_ID] })
+    if (connectedKit) {
+      this.kit = connectedKit.kit
+      this.index = connectedKit.index
+    }
   }
 
   public async activate(): Promise<ConnectorUpdate> {
+    if (this.kit && this.index !== null) {
+      return {
+        provider: this.kit.kit.web3.currentProvider,
+        chainId: NETWORK_CHAIN_ID,
+        account: this.kit.wallet.getAccounts()[this.index]
+      }
+    }
     const idxs = [0, 1, 2, 3, 4]
     const ledgerKit = await LedgerKit.init(NETWORK_CHAIN_ID, idxs)
     this.kit = ledgerKit
@@ -67,5 +79,11 @@ export class LedgerConnector extends AbstractConnector {
 
   public deactivate() {
     this.kit?.close()
+  }
+
+  async close() {
+    this.kit?.close()
+    this.kit = null
+    this.emitDeactivate()
   }
 }
