@@ -23,6 +23,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
 import { priceRangeCalcByPair } from 'utils/dmm'
+import useUSDCPrice from 'utils/useUSDCPrice'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -102,6 +103,11 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
         ]
       : [undefined, undefined]
 
+  const priceToken0InUSD = useUSDCPrice(currency0)
+  const priceToken1InUSD = useUSDCPrice(currency1)
+  const valueToken0 = token0Deposited && priceToken0InUSD && token0Deposited.multiply(priceToken0InUSD.adjusted)
+  const valueToken1 = token0Deposited && priceToken0InUSD && token0Deposited.multiply(priceToken0InUSD.adjusted)
+  const valueSum = valueToken0 && valueToken1 && valueToken0.add(valueToken1)
   return (
     <>
       <StyledPositionCard border={border}>
@@ -122,7 +128,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             </RowFixed>
             <RowFixed>
               <Text fontWeight={500} fontSize={20}>
-                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
+                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}{' '}
+                {!!valueSum ? `($${valueSum?.toSignificant(4)})` : ''}
               </Text>
             </RowFixed>
           </FixedHeightRow>
@@ -220,6 +227,11 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
       : pair.token1.symbol
     : undefined
 
+  const priceToken0InUSD = useUSDCPrice(currency0)
+  const priceToken1InUSD = useUSDCPrice(currency1)
+  const valueToken0 = token0Deposited && priceToken0InUSD && token0Deposited.multiply(priceToken0InUSD.adjusted)
+  const valueToken1 = token0Deposited && priceToken0InUSD && token0Deposited.multiply(priceToken0InUSD.adjusted)
+  const valueSum = valueToken0 && valueToken1 && valueToken0.add(valueToken1)
   return (
     <StyledPositionCard border={border}>
       {isWarning && (
@@ -253,12 +265,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           </AutoRow>
 
           <RowFixed gap="8px">
-            <ButtonEmpty
-              padding="6px 8px"
-              borderRadius="12px"
-              width="fit-content"
-              onClick={() => setShowMore(!showMore)}
-            >
+            {!!valueSum ? `US$${valueSum?.toSignificant(4)}` : ''}
+            <ButtonEmpty padding="6px 8px" borderRadius="12px" width="100px" onClick={() => setShowMore(!showMore)}>
               {showMore ? (
                 <ChevronUp size="20" style={{ marginLeft: '10px' }} />
               ) : (

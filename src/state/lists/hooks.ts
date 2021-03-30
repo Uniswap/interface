@@ -4,6 +4,8 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
 import { TOKEN_LIST } from '../../constants/ropsten.tokenlist'
+import { MAINNET_TOKEN_LIST } from '../../constants/mainnet.tokenlist'
+import { useActiveWeb3React } from 'hooks'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -72,7 +74,8 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
 }
 
 export function useTokenList(url: string | undefined): TokenAddressMap {
-  return listToTokenMap(TOKEN_LIST)
+  const { chainId, library } = useActiveWeb3React()
+  return listToTokenMap(chainId == 1 ? MAINNET_TOKEN_LIST : TOKEN_LIST)
 }
 
 export function useSelectedListUrl(): string | undefined {

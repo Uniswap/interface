@@ -8,11 +8,12 @@ import { AppDispatch } from '../state'
 import { fetchTokenList } from '../state/lists/actions'
 // import getTokenList from '../utils/getTokenList'
 // import resolveENSContentHash from '../utils/resolveENSContentHash'
-// import { useActiveWeb3React } from './index'
+import { useActiveWeb3React } from './index'
 import { TOKEN_LIST } from '../constants/ropsten.tokenlist'
+import { MAINNET_TOKEN_LIST } from '../constants/mainnet.tokenlist'
 
 export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> {
-  // const { chainId, library } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
 
   /*const ensResolver = useCallback(
@@ -34,8 +35,7 @@ export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> 
   return useCallback(
     async (listUrl: string) => {
       const requestId = nanoid()
-      const tokenList = TOKEN_LIST
-
+      const tokenList = chainId == 1 ? MAINNET_TOKEN_LIST : TOKEN_LIST
       dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
 
       return tokenList
@@ -54,6 +54,6 @@ export function useFetchListCallback(): (listUrl: string) => Promise<TokenList> 
         })*/
     },
     // [dispatch, ensResolver]
-    [dispatch]
+    [dispatch, chainId]
   )
 }
