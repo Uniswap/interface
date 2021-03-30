@@ -1,5 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ChainId, JSBI, Percent, WETH, WSPOA, DXD, WXDAI, Token } from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, WETH, WSPOA, DXD, WXDAI, Token, Currency } from 'dxswap-sdk'
 import { tokens } from './tokens'
 import { authereum, injected, walletConnect } from '../connectors'
 
@@ -135,3 +135,43 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
 export const DEFAULT_TOKEN_LIST = tokens
+
+interface NetworkDetails {
+  chainId: string
+  chainName: string
+  nativeCurrency: {
+    name: string
+    symbol: string
+    decimals: number
+  }
+  rpcUrls: string[]
+  blockExplorerUrls?: string[]
+  iconUrls?: string[] // Currently ignored.
+  metamaskAddable?: boolean
+}
+
+export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
+  [ChainId.MAINNET]: {
+    chainId: `0x${ChainId.MAINNET.toString(16)}`,
+    chainName: 'Ethereum Main Net',
+    nativeCurrency: {
+      name: Currency.ETHER.name || 'Ether',
+      symbol: Currency.ETHER.symbol || 'ETH',
+      decimals: Currency.ETHER.decimals || 18
+    },
+    rpcUrls: ['https://mainnet.infura.io/v3'],
+    blockExplorerUrls: ['https://etherscan.io']
+  },
+  [ChainId.XDAI]: {
+    chainId: `0x${ChainId.XDAI.toString(16)}`,
+    chainName: 'xDAI',
+    nativeCurrency: {
+      name: Currency.XDAI.name || 'xDAI',
+      symbol: Currency.XDAI.symbol || 'xDAI',
+      decimals: Currency.XDAI.decimals || 18
+    },
+    rpcUrls: ['https://rpc.xdaichain.com/'],
+    blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
+    metamaskAddable: true
+  }
+}

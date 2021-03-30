@@ -1,13 +1,14 @@
 import { createAction } from '@reduxjs/toolkit'
+import { ChainId } from 'dxswap-sdk'
 
-export type PopupContent =
-  {
-    txn: {
-      hash: string
-      success: boolean
-      summary?: string
-    }
+export type PopupContent = {
+  txn?: {
+    hash: string
+    success: boolean
+    summary?: string
   }
+  newNetworkChainId?: ChainId
+}
 
 export enum ApplicationModal {
   WALLET,
@@ -16,7 +17,8 @@ export enum ApplicationModal {
   ADDRESS_CLAIM,
   CLAIM_POPUP,
   MENU,
-  MOBILE
+  MOBILE,
+  NETWORK_SWITCHER
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')

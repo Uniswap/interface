@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Settings, X, Info, Code } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
@@ -24,11 +23,8 @@ import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import DxDao from '../../assets/svg/dxdao.svg'
 import { useTransition, animated } from 'react-spring'
 import { version } from '../../../package.json'
-import { DialogOverlay } from '@reach/dialog'
 
-const AnimatedDialogOverlay = animated(DialogOverlay)
-
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
+const StyledDialogOverlay = animated(styled.div`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -40,12 +36,12 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => transparentize(0.65, theme.black)};
-`
+`)
 
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
   width: 18px;
-  margin: 0 16px;
+  margin: 0 8px;
   cursor: pointer;
 
   > * {
@@ -84,7 +80,7 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuContainer = styled.span`
+const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -101,7 +97,7 @@ const MenuContainer = styled.span`
   `};
 `
 
-const MenuFlyout = styled.span<{ ref: any }>`
+const MenuFlyout = styled.div`
   min-width: 322px;
   max-width: 322px;
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
@@ -118,7 +114,7 @@ const MenuFlyout = styled.span<{ ref: any }>`
   box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
 `
 
-const MenuFlyoutBottom = styled.span<{ ref: any }>`
+const MenuFlyoutBottom = styled.div`
   width: 215px;
   background: ${({ theme }) => transparentize(0.45, theme.bg2)};
   backdrop-filter: blur(16px);
@@ -131,13 +127,13 @@ const MenuFlyoutBottom = styled.span<{ ref: any }>`
   padding: 21px 13px;
 `
 
-const MenuFlyoutBottomItem = styled.span`
+const MenuFlyoutBottomItem = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 16px;
 `
 
-const InfoBadge = styled.span`
+const InfoBadge = styled.div`
   background: ${({ theme }) => theme.bg3};
   padding: 3px 4px;
   color: ${({ theme }) => theme.text1};
@@ -166,7 +162,7 @@ const MenuBanner = styled(ExternalLink)`
   }
 `
 
-const FlyoutBottomAligner = styled.span`
+const FlyoutBottomAligner = styled.div`
   display: flex;
   justify-content: flex-end;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -211,43 +207,14 @@ export default function SettingsTab() {
     leave: { opacity: 0 }
   })
 
-  const topFlyoutRef = useRef<HTMLDivElement>()
-  const bottomFlyoutRef = useRef<HTMLDivElement>()
   const toggle = useToggleSettingsMenu()
-
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
-
   const [ttl, setTtl] = useUserTransactionTTL()
-
   const [expertMode, toggleExpertMode] = useExpertModeManager()
-
   const [darkMode, toggleDarkMode] = useDarkModeManager()
-
-  const [clickedOutsideTopFlyout, setClickedOutsideTopFlyout] = useState<boolean>(false)
-  const [clickedOutsideBottomFlyout, setClickedOutsideBottomFlyout] = useState<boolean>(false)
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
-
-  useOnClickOutside(topFlyoutRef, () => {
-    // We only want to set this to true when the modal is open,
-    // to avoid the modal closing right after the cog icon is clicked
-    setClickedOutsideTopFlyout(open)
-  })
-
-  useOnClickOutside(bottomFlyoutRef, () => {
-    // We only want to set this to true when the modal is open,
-    // to avoid the modal closing right after the cog icon is clicked
-    setClickedOutsideBottomFlyout(open)
-  })
-
-  useEffect(() => {
-    if (open && clickedOutsideTopFlyout && clickedOutsideBottomFlyout) {
-      toggle()
-      setClickedOutsideBottomFlyout(false)
-      setClickedOutsideTopFlyout(false)
-    }
-  }, [clickedOutsideBottomFlyout, clickedOutsideTopFlyout, open, toggle])
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
@@ -301,7 +268,7 @@ export default function SettingsTab() {
           item && (
             <StyledDialogOverlay key={key} style={props}>
               <MenuContainer>
-                <MenuFlyout ref={topFlyoutRef}>
+                <MenuFlyout>
                   <AutoColumn gap="md" style={{ padding: '8px' }}>
                     <RowBetween>
                       <Text fontWeight={600} fontSize={14}>
@@ -354,7 +321,7 @@ export default function SettingsTab() {
                   </AutoColumn>
                 </MenuFlyout>
                 <FlyoutBottomAligner>
-                  <MenuFlyoutBottom ref={bottomFlyoutRef}>
+                  <MenuFlyoutBottom>
                     <MenuFlyoutBottomItem>
                       <MenuItem id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
                         <Info size={14} />

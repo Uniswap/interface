@@ -53,7 +53,6 @@ const BodyWrapper = styled.div`
 const Marginer = styled.div`
   margin-top: 5rem;
 `
-
 export default function App() {
   return (
     <Suspense fallback={null}>
