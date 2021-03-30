@@ -244,7 +244,7 @@ export default function Header() {
             {t('swap')}
           </StyledNavLink>
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
-            {t('pool')}
+            {t('pools')}
           </StyledNavLink>
           <StyledNavLink
             id={`my-pools-nav-link`}
