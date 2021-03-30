@@ -259,7 +259,7 @@ export default function Swap() {
   return (
     <>
       <NetworkWarningModal
-        isOpen={!!urlLoadedChainId && chainId !== urlLoadedChainId}
+        isOpen={!!account && !!urlLoadedChainId && chainId !== urlLoadedChainId}
         targetedNetwork={urlLoadedChainId}
       />
       <TokenWarningModal

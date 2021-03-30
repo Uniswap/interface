@@ -8,6 +8,7 @@ import { AutoRow } from '../Row'
 import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
 import { NETWORK_DETAIL } from '../../constants'
+import { ButtonPrimary } from '../Button'
 
 const WarningContainer = styled.div`
   width: 100%;
@@ -34,6 +35,18 @@ export default function NetworkWarningModal({
   targetedNetwork?: ChainId
 }) {
   const handleDismiss = useCallback(() => null, [])
+  const handleAddClick = useCallback(() => {
+    if (!window.ethereum || !window.ethereum.request || !targetedNetwork) return
+    window.ethereum
+      .request({
+        method: 'wallet_addEthereumChain',
+        params: [{ ...NETWORK_DETAIL[targetedNetwork], metamaskAddable: undefined }]
+      })
+      .catch(error => {
+        console.error(`error adding network to metamask`, error)
+      })
+  }, [targetedNetwork])
+
   return (
     <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={90}>
       <OuterContainer>
@@ -57,6 +70,25 @@ export default function NetworkWarningModal({
                 You're currently on the wrong network to correctly visualize this page. Please switch to{' '}
                 {targetedNetwork ? NETWORK_DETAIL[targetedNetwork].chainName : ''} in your connected wallet to continue.
               </TYPE.body>
+              {targetedNetwork &&
+                window.ethereum &&
+                window.ethereum.isMetaMask &&
+                NETWORK_DETAIL[targetedNetwork] &&
+                NETWORK_DETAIL[targetedNetwork].metamaskAddable && (
+                  <>
+                    <TYPE.body
+                      marginY="20px"
+                      fontSize="14px"
+                      fontWeight="400"
+                      lineHeight="22px"
+                      letterSpacing="-0.02em"
+                      color="text4"
+                    >
+                      To add/switch to the requested network, click the button below.
+                    </TYPE.body>
+                    <ButtonPrimary onClick={handleAddClick}>Add</ButtonPrimary>
+                  </>
+                )}
             </UpperSectionContainer>
           </AutoColumn>
         </WarningContainer>

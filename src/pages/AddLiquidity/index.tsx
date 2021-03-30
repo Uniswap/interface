@@ -316,7 +316,7 @@ export default function AddLiquidity({
   return (
     <>
       <NetworkWarningModal
-        isOpen={!!urlLoadedChainId && chainId !== urlLoadedChainId}
+        isOpen={!!account && !!urlLoadedChainId && chainId !== urlLoadedChainId}
         targetedNetwork={urlLoadedChainId}
       />
       <AppBody>

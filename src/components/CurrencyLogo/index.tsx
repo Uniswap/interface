@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token, DXD } from 'dxswap-sdk'
+import { ChainId, Currency, Token, DXD, Fetcher } from 'dxswap-sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -49,7 +49,7 @@ export default function CurrencyLogo({
     if (currency instanceof Token) {
       if (Token.isNativeWrapper(currency)) return [nativeCurrencyLogo]
       if (chainId && DXD[chainId] && DXD[chainId].address === currency.address) return [DXDLogo]
-      return [getTokenLogoURL(currency.address), ...uriLocations]
+      return [getTokenLogoURL(currency.address), Fetcher.getCachedTokenLogo(currency), ...uriLocations]
     }
     return []
   }, [chainId, currency, nativeCurrencyLogo, uriLocations])
