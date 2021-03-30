@@ -53,6 +53,39 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
 }
 
+const KNC_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
+export const KNC: { [chainId in ChainId]: Token } = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
+  [ChainId.RINKEBY]: new Token(
+    ChainId.RINKEBY,
+    '0x7B2810576aa1cce68F2B118CeF1F36467c648F92',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.ROPSTEN]: new Token(
+    ChainId.ROPSTEN,
+    '0x7B2810576aa1cce68F2B118CeF1F36467c648F92',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.GÖRLI]: new Token(
+    ChainId.GÖRLI,
+    '0x7B2810576aa1cce68F2B118CeF1F36467c648F92',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.KOVAN]: new Token(
+    ChainId.KOVAN,
+    '0x7B2810576aa1cce68F2B118CeF1F36467c648F92',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  )
+}
+
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
