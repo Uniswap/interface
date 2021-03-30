@@ -18,7 +18,7 @@ export interface MintState {
   readonly rangeType: RangeType
 }
 
-const initialState: MintState = {
+export const initialState: MintState = {
   independentField: Field.CURRENCY_A,
   typedValue: '',
   otherTypedValue: '',

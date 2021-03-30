@@ -7,7 +7,7 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 import styled, { keyframes } from 'styled-components'
 import { Link } from 'react-router-dom'
 import { MEDIA_WIDTHS } from 'theme'
-import { Position } from 'types/v3'
+import { Position } from 'types/position'
 
 const ActiveDot = styled.span`
   background-color: ${({ theme }) => theme.success};

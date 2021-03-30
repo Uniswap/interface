@@ -8,7 +8,7 @@ import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
 import { useMemo } from 'react'
-import { NonfungiblePositionManager } from 'types/v3/contracts/NonfungiblePositionManager'
+import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
 import { GOVERNANCE_ADDRESS, MERKLE_DISTRIBUTOR_ADDRESS, UNI } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,

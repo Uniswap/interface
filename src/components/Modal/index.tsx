@@ -128,7 +128,7 @@ export default function Modal({
                 {...(isMobile
                   ? {
                       ...bind(),
-                      style: { transform: y.interpolate((y) => `translateY(${y > 0 ? y : 0}px)`) },
+                      style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
                     }
                   : {})}
                 aria-label="dialog content"
