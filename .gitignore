@@ -1,5 +1,8 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+# generated contract types
+/src/types/v3
+
 # dependencies
 /node_modules
 

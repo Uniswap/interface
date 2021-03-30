@@ -1,5 +1,5 @@
 import { OptionalMethodInputs, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
-import { Position } from 'types/v3'
+import { Position } from 'types/position'
 import { useV3NFTPositionManagerContract } from './useContract'
 
 interface UseV3PositionsResults {
