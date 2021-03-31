@@ -3,7 +3,7 @@ import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@fuseio/fuse-swap-sdk'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
@@ -114,6 +114,7 @@ export function useDerivedSwapInfo(): {
   v2Trade: Trade | undefined
   inputError?: string
   v1Trade: Trade | undefined
+  parsedPegAmounts: { [field in Field]?: CurrencyAmount }
 } {
   const { account } = useActiveWeb3React()
 
@@ -157,6 +158,14 @@ export function useDerivedSwapInfo(): {
 
   // get link to trade on v1, if a better rate exists
   const v1Trade = useV1Trade(isExactIn, currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
+
+  const parsedPegAmounts = useMemo(
+    () => ({
+      [Field.INPUT]: tryParseAmount(typedValue, currencies[Field.INPUT]),
+      [Field.OUTPUT]: tryParseAmount(typedValue, currencies[Field.OUTPUT])
+    }),
+    [currencies, typedValue]
+  )
 
   let inputError: string | undefined
   if (!account) {
@@ -213,7 +222,8 @@ export function useDerivedSwapInfo(): {
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     inputError,
-    v1Trade
+    v1Trade,
+    parsedPegAmounts
   }
 }
 

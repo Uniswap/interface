@@ -1,0 +1,130 @@
+[
+  {
+    "type": "event",
+    "name": "LiquidityUpdated",
+    "inputs": [
+      { "type": "uint256", "name": "amount", "internalType": "uint256", "indexed": false },
+      { "type": "address", "name": "source", "internalType": "address", "indexed": true },
+      { "type": "address", "name": "target", "internalType": "address", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferRequested",
+    "inputs": [
+      { "type": "address", "name": "from", "internalType": "address", "indexed": true },
+      { "type": "address", "name": "to", "internalType": "address", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      { "type": "address", "name": "from", "internalType": "address", "indexed": true },
+      { "type": "address", "name": "to", "internalType": "address", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "StuckTokensRecovered",
+    "inputs": [
+      { "type": "uint256", "name": "amount", "internalType": "uint256", "indexed": false },
+      { "type": "address", "name": "target", "internalType": "address", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "TokensSwapped",
+    "inputs": [
+      { "type": "uint256", "name": "amount", "internalType": "uint256", "indexed": false },
+      { "type": "address", "name": "source", "internalType": "address", "indexed": true },
+      { "type": "address", "name": "target", "internalType": "address", "indexed": true },
+      { "type": "address", "name": "caller", "internalType": "address", "indexed": true }
+    ],
+    "anonymous": false
+  },
+  { "type": "fallback", "stateMutability": "nonpayable" },
+  { "type": "function", "stateMutability": "nonpayable", "outputs": [], "name": "acceptOwnership", "inputs": [] },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "addLiquidity",
+    "inputs": [
+      { "type": "uint256", "name": "amount", "internalType": "uint256" },
+      { "type": "address", "name": "source", "internalType": "address" },
+      { "type": "address", "name": "target", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "uint256", "name": "amount", "internalType": "uint256" }],
+    "name": "getSwappableAmount",
+    "inputs": [
+      { "type": "address", "name": "source", "internalType": "address" },
+      { "type": "address", "name": "target", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "onTokenTransfer",
+    "inputs": [
+      { "type": "address", "name": "sender", "internalType": "address" },
+      { "type": "uint256", "name": "amount", "internalType": "uint256" },
+      { "type": "bytes", "name": "targetData", "internalType": "bytes" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "outputs": [{ "type": "address", "name": "", "internalType": "address" }],
+    "name": "owner",
+    "inputs": []
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "recoverStuckTokens",
+    "inputs": [
+      { "type": "uint256", "name": "amount", "internalType": "uint256" },
+      { "type": "address", "name": "target", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "removeLiquidity",
+    "inputs": [
+      { "type": "uint256", "name": "amount", "internalType": "uint256" },
+      { "type": "address", "name": "source", "internalType": "address" },
+      { "type": "address", "name": "target", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "swap",
+    "inputs": [
+      { "type": "uint256", "name": "amount", "internalType": "uint256" },
+      { "type": "address", "name": "source", "internalType": "address" },
+      { "type": "address", "name": "target", "internalType": "address" }
+    ]
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "outputs": [],
+    "name": "transferOwnership",
+    "inputs": [{ "type": "address", "name": "_to", "internalType": "address" }]
+  }
+]
