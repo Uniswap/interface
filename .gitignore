@@ -2,6 +2,7 @@
 
 # generated contract types
 /src/types/v3
+/src/abis/types
 
 # dependencies
 /node_modules

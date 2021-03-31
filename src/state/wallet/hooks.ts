@@ -1,16 +1,17 @@
-import { UNI } from './../../constants/index'
 import { Currency, CurrencyAmount, ETHER, Token, TokenAmount } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
-import ERC20_INTERFACE from '../../constants/abis/erc20'
-import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
+import { useAllTokens } from '../../hooks/Tokens'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
-import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 import { useUserUnclaimedAmount } from '../claim/hooks'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 import { useTotalUniEarned } from '../stake/hooks'
-
+import { UNI } from './../../constants/index'
+import { Interface } from '@ethersproject/abi'
+import ERC20ABI from 'abis/erc20.json'
+import { Erc20Interface } from 'abis/types/Erc20'
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
@@ -60,8 +61,8 @@ export function useTokenBalancesWithLoadingIndicator(
   )
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
-
-  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
+  const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
+  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20Interface, 'balanceOf', [address])
 
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
 
