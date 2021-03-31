@@ -89,7 +89,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 22405
+    "gas": "22405"
   },
   {
     "name": "tokenByIndex",
@@ -108,7 +108,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 631
+    "gas": "631"
   },
   {
     "name": "tokenOfOwnerByIndex",
@@ -131,7 +131,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 1248
+    "gas": "1248"
   },
   {
     "name": "transferFrom",
@@ -153,7 +153,7 @@
     "constant": false,
     "payable": false,
     "type": "function",
-    "gas": 259486
+    "gas": "259486"
   },
   {
     "name": "safeTransferFrom",
@@ -217,7 +217,7 @@
     "constant": false,
     "payable": false,
     "type": "function",
-    "gas": 38422
+    "gas": "38422"
   },
   {
     "name": "setApprovalForAll",
@@ -235,7 +235,7 @@
     "constant": false,
     "payable": false,
     "type": "function",
-    "gas": 38016
+    "gas": "38016"
   },
   {
     "name": "mint",
@@ -254,7 +254,7 @@
     "constant": false,
     "payable": false,
     "type": "function",
-    "gas": 182636
+    "gas": "182636"
   },
   {
     "name": "changeMinter",
@@ -268,7 +268,7 @@
     "constant": false,
     "payable": false,
     "type": "function",
-    "gas": 35897
+    "gas": "35897"
   },
   {
     "name": "changeURI",
@@ -282,7 +282,7 @@
     "constant": false,
     "payable": false,
     "type": "function",
-    "gas": 35927
+    "gas": "35927"
   },
   {
     "name": "name",
@@ -296,7 +296,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 6612
+    "gas": "6612"
   },
   {
     "name": "symbol",
@@ -310,7 +310,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 6642
+    "gas": "6642"
   },
   {
     "name": "totalSupply",
@@ -324,7 +324,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 873
+    "gas": "873"
   },
   {
     "name": "minter",
@@ -338,7 +338,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 903
+    "gas": "903"
   },
   {
     "name": "socks",
@@ -353,7 +353,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 933
+    "gas": "933"
   },
   {
     "name": "newURI",
@@ -367,7 +367,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 963
+    "gas": "963"
   },
   {
     "name": "ownerOf",
@@ -386,7 +386,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 1126
+    "gas": "1126"
   },
   {
     "name": "balanceOf",
@@ -405,7 +405,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 1195
+    "gas": "1195"
   },
   {
     "name": "getApproved",
@@ -424,7 +424,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 1186
+    "gas": "1186"
   },
   {
     "name": "isApprovedForAll",
@@ -447,7 +447,7 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 1415
+    "gas": "1415"
   },
   {
     "name": "supportsInterface",
@@ -466,6 +466,6 @@
     "constant": true,
     "payable": false,
     "type": "function",
-    "gas": 1246
+    "gas": "1246"
   }
 ]

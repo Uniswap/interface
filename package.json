@@ -117,7 +117,9 @@
     "@walletconnect/web3-provider": "1.1.1-alpha.0"
   },
   "scripts": {
-    "compile-contract-types": "npx typechain --target ethers-v5 --outDir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
+    "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
+    "compile-external-abi-types": "npx typechain --target ethers-v5 --outDir src/abis/types './src/abis/**/*.json'",
+    "compile-v3-contract-types": "npx typechain --target ethers-v5 --outDir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
     "build": "yarn compile-contract-types && react-scripts build",
     "eject": "react-scripts eject",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",

@@ -6,24 +6,28 @@ import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
+import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
+import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
+import ENS_ABI from 'abis/ens-registrar.json'
+import ERC20_ABI from 'abis/erc20.json'
+import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
+import MIGRATOR_ABI from 'abis/migrator.json'
+import { Unisocks } from 'abis/types/Unisocks'
+import UNISOCKS_ABI from 'abis/unisocks.json'
+import WETH_ABI from 'abis/weth.json'
+import {
+  ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
+  GOVERNANCE_ADDRESS,
+  MERKLE_DISTRIBUTOR_ADDRESS,
+  MIGRATOR_ADDRESS,
+  UNI,
+} from 'constants/index'
+import { MULTICALL_ABI, MULTICALL_NETWORKS } from 'constants/multicall'
+import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from 'constants/v1'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
-import { GOVERNANCE_ADDRESS, MERKLE_DISTRIBUTOR_ADDRESS, UNI } from '../constants'
-import {
-  ARGENT_WALLET_DETECTOR_ABI,
-  ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
-} from '../constants/abis/argent-wallet-detector'
-import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
-import ENS_ABI from '../constants/abis/ens-registrar.json'
-import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
-import ERC20_ABI from '../constants/abis/erc20.json'
-import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
-import UNISOCKS_ABI from '../constants/abis/unisocks.json'
-import WETH_ABI from '../constants/abis/weth.json'
-import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
-import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
-import { getContract } from '../utils'
+import { getContract } from 'utils'
 import { useActiveWeb3React } from './index'
 
 // returns null on errors
@@ -123,13 +127,13 @@ export function useStakingContract(stakingAddress?: string, withSignerIfPossible
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
 }
 
-export function useSocksController(): Contract | null {
+export function useSocksController(): Unisocks | null {
   const { chainId } = useActiveWeb3React()
   return useContract(
     chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
     UNISOCKS_ABI,
     false
-  )
+  ) as Unisocks | null
 }
 
 export function useV3NFTPositionManagerContract(): NonfungiblePositionManager | null {
