@@ -8,6 +8,7 @@ import { MoreHorizontal, X } from 'react-feather'
 import { RowFixed } from '../Row'
 import { darken, transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
+import { useActiveWeb3React } from '../../hooks'
 
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
@@ -85,12 +86,13 @@ const StyledExternalLink = styled(ExternalLink)<{ isActive?: boolean }>`
   }
 `
 
-export default function MobileOptions({ history }: { history: any }) {
+export default function MobileOptions() {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MOBILE)
   const toggle = useToggleMobileMenu()
   const { t } = useTranslation()
   useOnClickOutside(node, open ? toggle : undefined)
+  const { chainId } = useActiveWeb3React()
 
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
@@ -110,7 +112,7 @@ export default function MobileOptions({ history }: { history: any }) {
               </StyledNavLinkWithBadge>
             </RowFixed>
             <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
-              <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link/'}>
+              <StyledExternalLink id={`stake-nav-link`} href={`https://dxstats.eth.link/?chainId=${chainId}`}>
                 Charts <span style={{ fontSize: '11px' }}>↗</span>
               </StyledExternalLink>
             </RowFixed>

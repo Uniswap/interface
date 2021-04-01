@@ -69,7 +69,7 @@ const EmptyProposals = styled.div`
 `
 
 export default function Pool() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked DXSwap LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
@@ -142,17 +142,28 @@ export default function Pool() {
             )}
           </AutoColumn>
         </AutoColumn>
-        <ButtonWithLink
-          link={`https://dxstats.eth.link/#/account/${account}`}
-          text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
-          marginTop="32px"
-        />
-        <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
-          Don't see a pool you joined?{' '}
-          <StyledInternalLink color="text5" id="import-pool-link" to="/find">
-            Import it.
-          </StyledInternalLink>
-        </TYPE.body>
+        {account && chainId && (
+          <>
+            <ButtonWithLink
+              link={`https://dxstats.eth.link/#/account/${account}?chainId=${chainId}`}
+              text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
+              marginTop="32px"
+            />
+            <TYPE.body
+              color="text4"
+              textAlign="center"
+              fontWeight="500"
+              fontSize="14px"
+              lineHeight="17px"
+              marginTop="32px"
+            >
+              Don't see a pool you joined?{' '}
+              <StyledInternalLink color="text5" id="import-pool-link" to="/find">
+                Import it.
+              </StyledInternalLink>
+            </TYPE.body>
+          </>
+        )}
 
         <VoteCard style={{ marginTop: '32px' }}>
           <CardSection>
@@ -168,8 +179,8 @@ export default function Pool() {
                   the pool.
                   <br /> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your
                   liquidity.
-                  <br /> The swap fee value is decided by DXdao and liquidity providers, it can be between 0% and 10% and
-                  it uses 0.25% as default value that is assigned when the pair is created.
+                  <br /> The swap fee value is decided by DXdao and liquidity providers, it can be between 0% and 10%
+                  and it uses 0.25% as default value that is assigned when the pair is created.
                 </TYPE.body>
               </RowBetween>
               {/*<RowBetween>*/}
