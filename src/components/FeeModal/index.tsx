@@ -84,7 +84,7 @@ export default function FeeModal({ isOpen, onDismiss }: FeeModalProps) {
             </Network>
             <Row>
               <FeeCard title="Free" subtitle="Deposit fee" />
-              <FeeCard title="0.01%" subtitle="Withdrawal fee" />
+              <FeeCard title="0.05%" subtitle="Withdrawal fee" />
               <FeeCard title="20 USD" subtitle="Withdrawal minimum" style={{ marginRight: 0 }} />
             </Row>
           </NetworkFee>
