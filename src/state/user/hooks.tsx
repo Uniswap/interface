@@ -185,7 +185,7 @@ export function toDXSwapLiquidityToken([tokenA, tokenB]: [Token, Token]): Token 
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
-  
+
   // get user added tokens to be used as base
   const userAddedTokens = useUserAddedTokens()
 
