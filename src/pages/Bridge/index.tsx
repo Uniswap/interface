@@ -322,6 +322,21 @@ export default function Bridge() {
                   </ExtLink>
                   <ModalLink onClick={() => setFeeModalOpen(true)}>Learn about the fees</ModalLink>
                 </Wrapper>
+                <Wrapper style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.5rem' }}>
+                  <TYPE.body fontSize={14} textAlign="center">
+                    <ExtLink target="_blank" href="https://docs.fuse.io/fuseswap/migration-tutorial">
+                      Learn about token migration
+                    </ExtLink>
+                  </TYPE.body>
+                  <TYPE.body fontSize={14}>
+                    <ExtLink
+                      target="_blank"
+                      href="https://docs.fuse.io/fuseswap/bridge-fuse-network-less-than-greater-than-bsc"
+                    >
+                      Learn about Bsc bridge
+                    </ExtLink>
+                  </TYPE.body>
+                </Wrapper>
               </AutoColumn>
             )}
           </BottomGrouping>
