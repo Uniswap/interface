@@ -11,10 +11,14 @@ import { tryParseAmount } from '../swap/hooks'
 import { DEFAULT_CONFIRMATIONS_LIMIT, HOME_TO_FOREIGN_FEE_TYPE_HASH } from '../../constants/bridge'
 import { useCurrency, useToken } from '../../hooks/Tokens'
 import { getMinMaxPerTxn } from './limits'
-import { getHomeMultiAMBErc20ToErc677Contract, getEthFuseBridgeType } from '../../utils'
+import { getHomeMultiAMBErc20ToErc677Contract } from '../../utils'
 import { formatEther, formatUnits } from 'ethers/lib/utils'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
-import { FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS, BINANCE_CHAIN_ID } from '../../constants'
+import {
+  FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS,
+  BINANCE_CHAIN_ID,
+  BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS
+} from '../../constants'
 
 export enum BridgeType {
   ETH_FUSE_NATIVE = 'ETH_FUSE_NATIVE',
@@ -187,22 +191,23 @@ export function useBridgeActionHandlers(): {
   return { onFieldInput, onSelectBridgeDirection, onSelectCurrency }
 }
 
-export function useBridgeFee(tokenAddress: string | undefined) {
+export function useBridgeFee(tokenAddress: string | undefined, bridgeDirection: BridgeDirection | undefined) {
   const { account, library } = useActiveWeb3React()
   const { isHome } = useChain()
 
   return useAsyncMemo(async () => {
-    if (
-      !isHome ||
-      !account ||
-      !library ||
-      !tokenAddress ||
-      getEthFuseBridgeType(tokenAddress) !== BridgeType.ETH_FUSE_ERC20_TO_ERC677
-    )
-      return
+    if (!isHome || !account || !library || !tokenAddress || !bridgeDirection) return
 
     try {
-      const address = FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS
+      let address
+      if (bridgeDirection === BridgeDirection.FUSE_TO_BSC) {
+        address = BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS
+      } else if (bridgeDirection === BridgeDirection.FUSE_TO_ETH) {
+        address = FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS
+      } else {
+        return
+      }
+
       const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
       const fee = await contract.getFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress)
       return formatEther(fee)
@@ -214,26 +219,29 @@ export function useBridgeFee(tokenAddress: string | undefined) {
   }, [isHome, account, library, tokenAddress])
 }
 
-export function useCalculatedBridgeFee(tokenAddress: string | undefined, currencyAmount: CurrencyAmount | undefined) {
+export function useCalculatedBridgeFee(
+  tokenAddress: string | undefined,
+  currencyAmount: CurrencyAmount | undefined,
+  bridgeDirection: BridgeDirection | undefined
+) {
   const { account, library } = useActiveWeb3React()
   const { isHome } = useChain()
   const token = useToken(tokenAddress)
   const amount = currencyAmount?.raw?.toString()
 
   return useAsyncMemo(async () => {
-    if (
-      !isHome ||
-      !account ||
-      !library ||
-      !tokenAddress ||
-      !amount ||
-      !token ||
-      getEthFuseBridgeType(tokenAddress) !== BridgeType.ETH_FUSE_ERC20_TO_ERC677
-    )
-      return
+    if (!isHome || !account || !library || !tokenAddress || !amount || !token || !bridgeDirection) return
 
     try {
-      const address = FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS
+      let address
+      if (bridgeDirection === BridgeDirection.FUSE_TO_BSC) {
+        address = BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS
+      } else if (bridgeDirection === BridgeDirection.FUSE_TO_ETH) {
+        address = FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS
+      } else {
+        return
+      }
+
       const contract = getHomeMultiAMBErc20ToErc677Contract(address, library, account)
       const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress, amount)
       return formatUnits(fee, token.decimals)

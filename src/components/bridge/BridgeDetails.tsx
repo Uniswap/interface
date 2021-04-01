@@ -5,7 +5,7 @@ import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 import QuestionHelper from '../QuestionHelper'
 import { CurrencyAmount } from '@fuseio/fuse-swap-sdk'
-import { useBridgeFee, useCalculatedBridgeFee } from '../../state/bridge/hooks'
+import { useBridgeFee, useCalculatedBridgeFee, BridgeDirection } from '../../state/bridge/hooks'
 import { useCurrency } from '../../hooks/Tokens'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
@@ -26,15 +26,17 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
 
 function BridgeDetails({
   inputCurrencyId,
-  inputAmount
+  inputAmount,
+  bridgeDirection
 }: {
   inputCurrencyId: string | undefined
   inputAmount: CurrencyAmount | undefined
+  bridgeDirection: BridgeDirection | undefined
 }) {
   const theme = useContext(ThemeContext)
   const currency = useCurrency(inputCurrencyId, 'Bridge')
-  const fee = useBridgeFee(inputCurrencyId)
-  const calculatedFee = useCalculatedBridgeFee(inputCurrencyId, inputAmount)
+  const fee = useBridgeFee(inputCurrencyId, bridgeDirection)
+  const calculatedFee = useCalculatedBridgeFee(inputCurrencyId, inputAmount, bridgeDirection)
 
   const feePercentage = Number(fee) * 100
   const parsedCalculatedFee = Number(calculatedFee)
