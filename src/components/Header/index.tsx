@@ -268,7 +268,7 @@ function Header({ history }: { history: any }) {
               </Box>
             </AbsoluteComingSoonBadgeFlex>
           </StyledNavLinkWithBadge>
-          <StyledExternalLink id={`stake-nav-link`} href={`http://dxstats.eth.link/#/?chainId=${chainId}`}>
+          <StyledExternalLink id={`stake-nav-link`} href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">
               ↗
