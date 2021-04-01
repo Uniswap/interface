@@ -316,6 +316,10 @@ export default function Bridge() {
                   Once you transfer your tokens using the bridge you will be gifted FUSE tokens directly to your wallet
                   which will act as network gas. This will allow you to transact freely on FuseSwap
                 </TYPE.body>
+                <TYPE.body fontSize={14} textAlign="center" color={theme.red1}>
+                  Note: Please note that there are minimum limits to bridge the tokens back from fuse network to
+                  ethereum network. This is due to the high gas fees on ethereum network.
+                </TYPE.body>
                 <Wrapper style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '0.5rem' }}>
                   <ExtLink target="_blank" href="https://docs.fuse.io/fuseswap/bridge-fuse-erc20-tokens">
                     Learn how to bridge tokens
@@ -342,7 +346,9 @@ export default function Bridge() {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
-      <BridgeDetails inputCurrencyId={inputCurrencyId} inputAmount={parsedAmounts[Field.INPUT]} />
+      {bridgeDirection === BridgeDirection.FUSE_TO_ETH && (
+        <BridgeDetails inputCurrencyId={inputCurrencyId} inputAmount={parsedAmounts[Field.INPUT]} />
+      )}
     </>
   )
 }

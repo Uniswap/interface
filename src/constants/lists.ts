@@ -6,7 +6,7 @@ export const QA_BRIDGE_DEFAULT_TOKEN_LIST_URL =
 export const BETA_BRIDGE_DEFAULT_TOKEN_LIST_URL =
   'https://raw.githubusercontent.com/fuseio/fuseswap-interface/master/src/constants/qa/beta-tokenlist.json'
 export const PROD_BRIDGE_DEFAULT_TOKEN_LIST_URL =
-  'https://raw.githubusercontent.com/fuseio/fuseswap-default-token-list/master/build/fuseswap-default.tokenlist.json'
+  'https://raw.githubusercontent.com/fuseio/default-token-list/master/build/fuseswap-default.tokenlist.json'
 
 export const BRIDGE_LIST_ENV = unwrapOrThrow('BRIDGE_LIST_ENV')
 

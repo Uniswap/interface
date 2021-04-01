@@ -3,7 +3,7 @@
   "timestamp": "2021-03-14T13:12:36.849Z",
   "version": {
     "major": 1,
-    "minor": 3,
+    "minor": 4,
     "patch": 1
   },
   "tags": {},
@@ -47,6 +47,14 @@
       "logoURI": "ipfs://QmXttGpZrECX5qCyXbBQiqgQNytVGeZW5Anewvh2jc4psg"
     },
     {
+      "name": "Wrapped Ether",
+      "address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+      "symbol": "WETH",
+      "decimals": 18,
+      "chainId": 56,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+    },
+    {
       "name": "Uniswap",
       "address": "0xFcF3Bd3AEa648558B4f71499762558326E8F1077",
       "symbol": "UNI",
@@ -75,10 +83,20 @@
     {
       "name": "Wrapped Ether on Fuse",
       "address": "0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670",
+      "symbol": "WETH (Deprecated)",
+      "decimals": 18,
+      "chainId": 122,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+      "isDeprecated": true
+    },
+    {
+      "name": "Wrapped Ether on Fuse",
+      "address": "0xa722c13135930332Eb3d749B2F0906559D2C5b99",
       "symbol": "WETH",
       "decimals": 18,
       "chainId": 122,
-      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+      "isMultiBridge": true
     }
   ]
 }
