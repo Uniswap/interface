@@ -36,8 +36,7 @@
       "symbol": "CELO",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/ubeswap/token-list/master/assets/asset_cGLD.png"
-    },
-
+    },    
     {
       "chainId": 42220,
       "address": "0x765DE816845861e75A25fCA122bb6898B8B1282a",
@@ -53,6 +52,14 @@
       "symbol": "CELO",
       "decimals": 18,
       "logoURI": "https://raw.githubusercontent.com/ubeswap/token-list/master/assets/asset_cGLD.png"
+    },
+    {
+      "chainId": 42220,
+      "address": "0x32A9FE697a32135BFd313a6Ac28792DaE4D9979d",
+      "name": "Celo Moss Carbon Credit",
+      "symbol": "cMCO2",
+      "decimals": 18,
+      "logoURI": "https://raw.githubusercontent.com/ubeswap/token-list/master/assets/asset_cMCO2.png"
     }
   ],
   "version": {
