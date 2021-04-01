@@ -333,7 +333,7 @@ export default function Bridge() {
                       target="_blank"
                       href="https://docs.fuse.io/fuseswap/bridge-fuse-network-less-than-greater-than-bsc"
                     >
-                      Learn about Bsc bridge
+                      Learn about BSC bridge
                     </ExtLink>
                   </TYPE.body>
                 </Wrapper>
