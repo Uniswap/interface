@@ -5,7 +5,8 @@ import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUnisw
 
 export const ROUTER_ADDRESS = '0xbfFf5f2386080c11898A8a7d31431D7DCc317200'
 export const FACTORY_ADDRESS = '0x2f90d05693543b8D7feCD15A2150D9a63E89034A'
-
+export const MIGRATE_ADDRESS = '0xf026ea3512ec19027340f815f3fde4856ad59e98'
+export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 // export const ROUTER_ADDRESS = '0x8406Caa2Cc202aFB4eCfb066D472E462bee00f3b'
 // export const FACTORY_ADDRESS = '0x945c725e3eCC3dfdC350C0334f3fF42f08F719EA'
 // export const ROUTER_ABI = IUniswapV2Router02ABI

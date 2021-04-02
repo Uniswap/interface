@@ -121,6 +121,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.11",
     "@types/big.js": "^6.0.0",
+    "@uniswap/sdk": "^3.0.3",
     "dayjs": "^1.10.4",
     "decimal.js-light": "^2.5.1",
     "env-cmd": "^10.1.0",

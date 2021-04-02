@@ -3,6 +3,7 @@ import { createReducer } from '@reduxjs/toolkit'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
+  addSerializedPairUNI,
   addSerializedToken,
   removeSerializedPair,
   removeSerializedToken,
@@ -46,6 +47,12 @@ export interface UserState {
     }
   }
 
+  pairsUNI: {
+    [chainId: number]: {
+      // keyed by token0Address:token1Address
+      [key: string]: SerializedPair
+    }
+  }
   timestamp: number
   URLWarningVisible: boolean
 }
@@ -62,6 +69,7 @@ export const initialState: UserState = {
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
+  pairsUNI: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true
 }
@@ -119,8 +127,22 @@ export default createReducer(initialState, builder =>
         serializedPair.token0.address !== serializedPair.token1.address
       ) {
         const chainId = serializedPair.token0.chainId
+        console.log('=-=-=pairsUNI', state.pairs, state.pairs[3])
         state.pairs[chainId] = state.pairs[chainId] || {}
         state.pairs[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
+      }
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(addSerializedPairUNI, (state, { payload: { serializedPair } }) => {
+      if (
+        serializedPair.token0.chainId === serializedPair.token1.chainId &&
+        serializedPair.token0.address !== serializedPair.token1.address
+      ) {
+        const chainId = serializedPair.token0.chainId
+        console.log('=-=-=pairsUNI', state, state.pairsUNI)
+        console.log('=-=-=pairsUNI', state.pairsUNI[3])
+        state.pairsUNI[chainId] = state.pairs[chainId] || {}
+        state.pairsUNI[chainId][pairKey(serializedPair.token0.address, serializedPair.token1.address)] = serializedPair
       }
       state.timestamp = currentTimestamp()
     })
