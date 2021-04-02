@@ -164,7 +164,8 @@ export function useSingleContractMultipleData(
   contract: Contract | null | undefined,
   methodName: string,
   callInputs: OptionalMethodInputs[],
-  options?: ListenerOptions
+  options?: ListenerOptions,
+  gasRequired?: number
 ): CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
@@ -175,10 +176,11 @@ export function useSingleContractMultipleData(
             return {
               address: contract.address,
               callData: contract.interface.encodeFunctionData(fragment, inputs),
+              ...(gasRequired ? { gasRequired } : {}),
             }
           })
         : [],
-    [callInputs, contract, fragment]
+    [callInputs, contract, fragment, gasRequired]
   )
 
   const results = useCallsData(calls, options)
@@ -195,7 +197,8 @@ export function useMultipleContractSingleData(
   contractInterface: Interface,
   methodName: string,
   callInputs?: OptionalMethodInputs,
-  options?: ListenerOptions
+  options?: ListenerOptions,
+  gasRequired?: number
 ): CallState[] {
   const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
   const callData: string | undefined = useMemo(
@@ -214,11 +217,12 @@ export function useMultipleContractSingleData(
               ? {
                   address,
                   callData,
+                  ...(gasRequired ? { gasRequired } : {}),
                 }
               : undefined
           })
         : [],
-    [addresses, callData, fragment]
+    [addresses, callData, fragment, gasRequired]
   )
 
   const results = useCallsData(calls, options)
@@ -234,7 +238,8 @@ export function useSingleCallResult(
   contract: Contract | null | undefined,
   methodName: string,
   inputs?: OptionalMethodInputs,
-  options?: ListenerOptions
+  options?: ListenerOptions,
+  gasRequired?: number
 ): CallState {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
@@ -244,10 +249,11 @@ export function useSingleCallResult(
           {
             address: contract.address,
             callData: contract.interface.encodeFunctionData(fragment, inputs),
+            ...(gasRequired ? { gasRequired } : {}),
           },
         ]
       : []
-  }, [contract, fragment, inputs])
+  }, [contract, fragment, inputs, gasRequired])
 
   const result = useCallsData(calls, options)[0]
   const latestBlockNumber = useBlockNumber()
