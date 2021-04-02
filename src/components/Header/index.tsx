@@ -95,7 +95,23 @@ const HeaderLinks = styled(Row)`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
-`};
+  `};
+`
+
+const IconImage = styled.img`
+  width: 100px;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    width: 40px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 60px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 70px;
+  `};
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -214,6 +230,10 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
     color: ${({ theme }) => darken(0.1, theme.text1)};
     text-decoration: none;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+      display: none;
+  `}
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
@@ -236,7 +256,7 @@ export default function Header() {
       <HeaderRow>
         <Title href=".">
           <UniIcon>
-            <img width={'100px'} src={isDark ? Logo : LogoDark} alt="logo" />
+            <IconImage src={isDark ? Logo : LogoDark} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
@@ -262,9 +282,11 @@ export default function Header() {
           <StyledNavExternalLink href={String(process.env.REACT_APP_DMM_ANALYTICS_URL)}>
             {t('analytics')}
           </StyledNavExternalLink>
-          <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
-            {t('About')}
-          </StyledNavLink>
+          <HideSmall>
+            <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
+              {t('About')}
+            </StyledNavLink>
+          </HideSmall>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>

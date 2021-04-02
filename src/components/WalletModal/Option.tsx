@@ -32,13 +32,13 @@ const OptionCardLeft = styled.div`
 
 const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   margin-top: 0;
-  cursor: pointer;
-  transition: all .2s;
+  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'not-allowed')};
+  transition: all 0.2s;
   &:hover {
-    background-color: ${({theme}) => theme.bg7};
-    
+    background-color: ${({ theme }) => theme.bg7};
+
     > div:first-child {
-      background-color: ${({theme}) => theme.bg8};;
+      background-color: ${({ theme }) => theme.bg8};
     }
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
@@ -57,17 +57,17 @@ const SubHeader = styled.div`
   font-size: 12px;
 `
 
-const IconWrapper = styled.div<{ size?: number | null, active?: boolean }>`
+const IconWrapper = styled.div<{ size?: number | null; active?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 15px;
   padding: 15px 21px;
-  background-color: ${({theme, active}) => (active ? theme.bg8 : theme.bg9)};
+  background-color: ${({ theme, active }) => (active ? theme.bg8 : theme.bg9)};
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
-  transition: all .2s;
-  
+  transition: all 0.2s;
+
   & > img,
   span {
     height: ${({ size }) => (size ? size + 'px' : '30px')};
@@ -102,14 +102,18 @@ export default function Option({
   id: string
 }) {
   const content = (
-    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
+    <OptionCardClickable
+      id={id}
+      onClick={onClick}
+      clickable={clickable && !active}
+      active={active}
+      disabled={clickable === false}
+    >
       <IconWrapper size={size} active={active}>
-        <img src={icon} alt={'Icon'}/>
+        <img src={icon} alt={'Icon'} />
       </IconWrapper>
       <OptionCardLeft>
-        <HeaderText color={color}>
-          {header}
-        </HeaderText>
+        <HeaderText color={color}>{header}</HeaderText>
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </OptionCardLeft>
     </OptionCardClickable>

@@ -270,9 +270,10 @@ $desktop-width: 1024px;
 
     img {
       display: inline;
-      margin: 10px 10px 0 10px;
+      margin: 32px 10px 0 10px;
       border-radius: 10px;
       height: 80px;
+      max-width: 160px;
     }
   }
 }
