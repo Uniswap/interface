@@ -19,7 +19,7 @@ export default function About() {
       <div className={style.image2}></div>
       <div className={style.image3} style={{ bottom: `0` }}></div>
       <Text fontSize={58} mt={150}>
-        DeFi's First
+        World's First
       </Text>
       <div>
         <Text fontSize={58} color={'#1183b7'} display={'inline-block'}>
@@ -274,9 +274,8 @@ export default function About() {
       </Text>
       <div className={style.security}>
         <div>
-          <Text fontSize={18}>Audited by</Text>
-          <img src={require('../../assets/svg/about_icon_audit_2.jpg')} />
-          <img src={require('../../assets/svg/about_icon_audit_1.jpg')} />
+          <Text fontSize={18}>Code Audited</Text>
+          <img src={require('../../assets/svg/about_icon_insurance.svg')} />
         </div>
         <div>
           <Text fontSize={18}>On-chain and Open Source</Text>
@@ -284,7 +283,11 @@ export default function About() {
         </div>
         <div>
           <Text fontSize={18}>Bug Bounty</Text>
-          <img src={require('../../assets/svg/about_icon_insurance.svg')} />
+          <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} />
+        </div>
+        <div>
+          <Text fontSize={18}>Insured by</Text>
+          <img style={{ maxWidth: '160px' }} src={require('../../assets/svg/about_icon_unslashed.svg')} />
         </div>
       </div>
       <div className={style.powered}>
