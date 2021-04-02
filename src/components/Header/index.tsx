@@ -287,6 +287,18 @@ export default function Header() {
               {t('About')}
             </StyledNavLink>
           </HideSmall>
+
+          <StyledNavLink
+            id={`migrations-nav-link`}
+            to={'/migration'}
+            isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/migrate')}
+          >
+            Migration
+          </StyledNavLink>
+
+          <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
+            {t('About')}
+          </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>
       <HeaderControls>

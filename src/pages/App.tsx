@@ -18,9 +18,12 @@ import {
   RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
 import Pool from './Pool'
+import Migration from './Pool/lp'
 import Pools from './Pools'
 import PoolFinder from './PoolFinder'
+import PoolFinderUNI from './PoolFinder/PoolFinderUNI'
 import RemoveLiquidity from './RemoveLiquidity'
+import MigrateLiquidityUNI from './RemoveLiquidity/migrate_uni'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
@@ -82,10 +85,12 @@ export default function App() {
                 <Route exact strict path="/swap" component={Swap} />
                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                 <Route exact strict path="/find" component={PoolFinder} />
+                <Route exact strict path="/findUNI" component={PoolFinderUNI} />
                 <Route exact strict path="/pools" component={Pools} />
                 <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                 <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
                 <Route exact strict path="/myPools" component={Pool} />
+                <Route exact strict path="/migration" component={Migration} />
                 <Route exact path="/add" component={AddLiquidity} />
                 <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
                 <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
@@ -97,6 +102,7 @@ export default function App() {
                 <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
                 <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
                 <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={RedirectDuplicateTokenIds} />
+                <Route exact strict path="/migrate/:currencyIdA/:currencyIdB" component={MigrateLiquidityUNI} />
                 <Route exact path="/about" component={About} />
                 <Route component={RedirectPathToSwapOnly} />
               </Switch>

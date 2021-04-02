@@ -9,8 +9,9 @@ import dayjs from 'dayjs'
 import { blockClient } from 'apollo/client'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS, FACTORY_ADDRESS, ROPSTEN_TOKEN_LOGOS_MAPPING } from '../constants'
+import { ROUTER_ADDRESS, FACTORY_ADDRESS, ROPSTEN_TOKEN_LOGOS_MAPPING, MIGRATE_ADDRESS } from '../constants'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
+import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'libs/sdk/src'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -107,6 +108,10 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 // account is optional
 export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
   return getContract(ROUTER_ADDRESS, ROUTER_ABI, library, account)
+}
+
+export function getMigratorContract(_: number, library: Web3Provider, account?: string): Contract {
+  return getContract(MIGRATE_ADDRESS, MIGRATOR_ABI, library, account)
 }
 
 export function getFactoryContract(_: number, library: Web3Provider, account?: string): Contract {
