@@ -8,8 +8,7 @@ export const MAINNET_TOKEN_LIST = {
       address: '0xdd974D5C2e2928deA5F71b9825b8b646686BD200',
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
-      decimals: 18,
-      logoURI: 'ipfs://QmXfzKRvjZz3u5JRgC4v5mGVbm9ahrUiB4DgzHBsnWbTMM'
+      decimals: 18
     },
     {
       chainId: 1,
