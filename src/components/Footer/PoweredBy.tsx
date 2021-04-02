@@ -18,7 +18,8 @@ const StyledPoweredBy = styled.div`
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
+    top: auto;
+    bottom: 4.5rem;
   `}
 `
 
