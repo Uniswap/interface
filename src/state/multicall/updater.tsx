@@ -16,9 +16,6 @@ import {
   updateMulticallResults,
 } from './actions'
 
-// chunk calls so we do not exceed the gas limit
-const CALL_CHUNK_SIZE = 500
-
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
  * @param multicallContract multicall contract to fetch against
@@ -141,7 +138,7 @@ export default function Updater(): null {
     if (outdatedCallKeys.length === 0) return
     const calls = outdatedCallKeys.map((key) => parseCallKey(key))
 
-    const chunkedCalls = chunkArray(calls, CALL_CHUNK_SIZE)
+    const chunkedCalls = chunkArray(calls)
 
     if (cancellations.current?.blockNumber !== latestBlockNumber) {
       cancellations.current?.cancellations?.forEach((c) => c())
