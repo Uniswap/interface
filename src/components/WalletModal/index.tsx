@@ -44,7 +44,7 @@ const Wrapper = styled.div`
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1rem 1rem;
+  padding: 3rem 2rem 0 2rem;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -54,11 +54,21 @@ const HeaderRow = styled.div`
 
 const ContentWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg6};
-  padding: 2rem;
+  padding: 2rem 2rem 8px 2rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
+`
+
+const FooterRow = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  padding: 0 2rem 40px 2rem;
+  font-weight: 500;
+  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
 `
 
 const UpperSection = styled.div`
@@ -84,8 +94,7 @@ const UpperSection = styled.div`
 const OptionGrid = styled.div`
   display: flex;
   flex-wrap: wrap;
-  
-  
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     grid-gap: 10px;
@@ -96,6 +105,11 @@ const HoverText = styled.div`
   :hover {
     cursor: pointer;
   }
+`
+
+const ToSText = styled.span`
+  color: ${({ theme }) => theme.text9};
+  font-weight: 500;
 `
 
 const WALLET_VIEWS = {
@@ -128,6 +142,8 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
   const isDarkMode = useIsDarkMode()
+
+  const [isAccepted, setIsAccepted] = useState(true)
 
   // close on connection, when logged out before
   useEffect(() => {
@@ -178,6 +194,10 @@ export default function WalletModal({
       toggleWalletModal()
     })
   }, [toggleWalletModal])
+
+  const handleAccept = () => {
+    setIsAccepted(!isAccepted)
+  }
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
@@ -246,6 +266,7 @@ export default function WalletModal({
         !isMobile &&
         !option.mobileOnly && (
           <Option
+            clickable={isAccepted}
             id={`connect-${key}`}
             onClick={() => {
               option.connector === connector
@@ -312,7 +333,7 @@ export default function WalletModal({
           </HeaderRow>
         ) : (
           <HeaderRow>
-            <HoverText>Connect to a wallet</HoverText>
+            <HoverText>Import your Wallet</HoverText>
           </HeaderRow>
         )}
         <ContentWrapper>
@@ -327,6 +348,10 @@ export default function WalletModal({
             <OptionGrid>{getOptions()}</OptionGrid>
           )}
         </ContentWrapper>
+        <FooterRow>
+          <input type="checkbox" checked={isAccepted} onChange={handleAccept} style={{ marginRight: '12px' }} />
+          <ToSText>Accept Terms of Service, Legal Disclosure and Privacy Policy</ToSText>
+        </FooterRow>
       </UpperSection>
     )
   }
