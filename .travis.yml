@@ -16,8 +16,8 @@ install:
   - git submodule update --remote
   - yarn
   - npm rebuild node-sass
-  - bash .travis/build.sh
-  - ls build
+  - bash .travis/build.sh || true
+  - ls build || true
 
 deploy:
   - provider: gcs
