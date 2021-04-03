@@ -17,9 +17,7 @@ import { shortenAddress, formattedNum } from 'utils'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { currencyId } from 'utils/currencyId'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
-import { getHealthFactor } from 'utils/dmm'
-
-const DEFAULT_MY_LIQUIDITY = '-'
+import { getHealthFactor, getMyLiquidity } from 'utils/dmm'
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -96,22 +94,6 @@ interface ListItemProps {
 
 const getOneYearFL = (liquidity: string, feeOneDay?: string): number => {
   return !feeOneDay || parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
-}
-
-const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 => {
-  if (!liquidityPosition || parseFloat(liquidityPosition.liquidityTokenTotalSupply) === 0) {
-    return DEFAULT_MY_LIQUIDITY
-  }
-
-  const myLiquidity =
-    (parseFloat(liquidityPosition.liquidityTokenBalance) * parseFloat(liquidityPosition.reserveUSD)) /
-    parseFloat(liquidityPosition.liquidityTokenTotalSupply)
-
-  if (myLiquidity === 0) {
-    return DEFAULT_MY_LIQUIDITY
-  }
-
-  return formattedNum(myLiquidity.toString(), true)
 }
 
 const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {

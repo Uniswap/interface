@@ -1,24 +1,26 @@
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { Pair, JSBI, Token } from 'libs/sdk/src'
 import { Link } from 'react-router-dom'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
-import FullPositionCard from '../../components/PositionCard'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
-import { Text } from 'rebass'
-import Card from '../../components/Card'
-import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
-import { AutoColumn } from '../../components/Column'
-import { useActiveWeb3React } from '../../hooks'
-import { usePairs, usePairsByAddress } from '../../data/Reserves'
-import { useTrackedTokenPairs, useToV2LiquidityTokens } from '../../state/user/hooks'
-import { Dots } from '../../components/swap/styleds'
-import { DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { useStakingInfo } from '../../state/stake/hooks'
-import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
 import { useTranslation } from 'react-i18next'
+import { Text } from 'rebass'
+
+import { Pair, JSBI, Token } from 'libs/sdk/src'
+import { BIG_INT_ZERO } from '../../constants'
+import { SwapPoolTabs } from 'components/NavigationTabs'
+import FullPositionCard from 'components/PositionCard'
+import { DataCard, CardNoise, CardBGImage } from 'components/earn/styled'
+import Card from 'components/Card'
+import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import { RowBetween, RowFixed } from 'components/Row'
+import { Dots } from 'components/swap/styleds'
+import { StyledInternalLink, TYPE, HideSmall } from '../../theme'
+import { useActiveWeb3React } from 'hooks'
+import { usePairs, usePairsByAddress } from 'data/Reserves'
+import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
+import { useTrackedTokenPairs, useToV2LiquidityTokens } from 'state/user/hooks'
+import { useStakingInfo } from 'state/stake/hooks'
+import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 510px;
@@ -135,6 +137,22 @@ export default function Pool() {
   })
 
   const { t } = useTranslation()
+
+  const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
+
+  const transformedUserLiquidityPositions: {
+    [key: string]: UserLiquidityPosition
+  } = {}
+
+  userLiquidityPositions?.liquidityPositionSnapshots.forEach((position: UserLiquidityPosition) => {
+    if (
+      !transformedUserLiquidityPositions[position.pool.id] ||
+      position.timestamp > transformedUserLiquidityPositions[position.pool.id].timestamp
+    ) {
+      transformedUserLiquidityPositions[position.pool.id] = position
+    }
+  })
+
   return (
     <>
       <PageWrapper>
@@ -178,7 +196,7 @@ export default function Pool() {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </Card>
-            ) : v2IsLoading ? (
+            ) : v2IsLoading || loadingUserLiquidityPositions ? (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
                   <Dots>Loading</Dots>
@@ -195,7 +213,11 @@ export default function Pool() {
                   </RowBetween>
                 </ButtonSecondary> */}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
-                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                  <FullPositionCard
+                    key={v2Pair.liquidityToken.address}
+                    pair={v2Pair}
+                    myLiquidity={transformedUserLiquidityPositions[v2Pair.address.toLowerCase()]}
+                  />
                 ))}
                 {stakingPairs.map(
                   (stakingPair, i) =>
@@ -204,6 +226,7 @@ export default function Pool() {
                         key={stakingInfosWithBalance[i].stakingRewardAddress}
                         pair={stakingPair[1]}
                         stakedBalance={stakingInfosWithBalance[i].stakedAmount}
+                        myLiquidity={transformedUserLiquidityPositions[stakingPair[1].address.toLowerCase()]}
                       />
                     )
                 )}

@@ -1,5 +1,7 @@
 import { Fraction, JSBI, Price, Pair } from 'libs/sdk/src'
 import { ZERO, ONE } from 'libs/sdk/src/constants'
+import { UserLiquidityPosition } from 'state/pools/hooks'
+import { formattedNum } from 'utils'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
@@ -62,4 +64,22 @@ export const priceRangeCalcByPair = (pair?: Pair): [Fraction | undefined, Fracti
     [getToken0MinPrice(pair), getToken0MaxPrice(pair)],
     [getToken1MinPrice(pair), getToken1MaxPrice(pair)]
   ]
+}
+
+const DEFAULT_MY_LIQUIDITY = '-'
+
+export const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 => {
+  if (!liquidityPosition || parseFloat(liquidityPosition.liquidityTokenTotalSupply) === 0) {
+    return DEFAULT_MY_LIQUIDITY
+  }
+
+  const myLiquidity =
+    (parseFloat(liquidityPosition.liquidityTokenBalance) * parseFloat(liquidityPosition.reserveUSD)) /
+    parseFloat(liquidityPosition.liquidityTokenTotalSupply)
+
+  if (myLiquidity === 0) {
+    return DEFAULT_MY_LIQUIDITY
+  }
+
+  return formattedNum(myLiquidity.toString(), true)
 }
