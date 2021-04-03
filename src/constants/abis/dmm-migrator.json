@@ -9,10 +9,9 @@
     "inputs": [
       { "indexed": true, "internalType": "address", "name": "tokenA", "type": "address" },
       { "indexed": true, "internalType": "address", "name": "tokenB", "type": "address" },
-      { "indexed": true, "internalType": "address", "name": "uniPair", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "liquidity", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "amountA", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "amountB", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "dmmAmountA", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "dmmAmountB", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "dmmLiquidity", "type": "uint256" },
       {
         "components": [
           { "internalType": "address", "name": "poolAddress", "type": "address" },
@@ -34,6 +33,19 @@
       { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
     ],
     "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "tokenA", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "tokenB", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "uniPair", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "liquidity", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amountA", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amountB", "type": "uint256" }
+    ],
+    "name": "RemoveLiquidity",
     "type": "event"
   },
   {
@@ -62,6 +74,8 @@
       { "internalType": "uint256", "name": "liquidity", "type": "uint256" },
       { "internalType": "uint256", "name": "amountAMin", "type": "uint256" },
       { "internalType": "uint256", "name": "amountBMin", "type": "uint256" },
+      { "internalType": "uint256", "name": "dmmAmountAMin", "type": "uint256" },
+      { "internalType": "uint256", "name": "dmmAmountBMin", "type": "uint256" },
       {
         "components": [
           { "internalType": "address", "name": "poolAddress", "type": "address" },
@@ -75,9 +89,9 @@
     ],
     "name": "migrateLpToDmmPool",
     "outputs": [
-      { "internalType": "uint256", "name": "amountA", "type": "uint256" },
-      { "internalType": "uint256", "name": "amountB", "type": "uint256" },
-      { "internalType": "uint256", "name": "addedLiquidity", "type": "uint256" }
+      { "internalType": "uint256", "name": "dmmAmountA", "type": "uint256" },
+      { "internalType": "uint256", "name": "dmmAmountB", "type": "uint256" },
+      { "internalType": "uint256", "name": "dmmLiquidity", "type": "uint256" }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -90,6 +104,8 @@
       { "internalType": "uint256", "name": "liquidity", "type": "uint256" },
       { "internalType": "uint256", "name": "amountAMin", "type": "uint256" },
       { "internalType": "uint256", "name": "amountBMin", "type": "uint256" },
+      { "internalType": "uint256", "name": "dmmAmountAMin", "type": "uint256" },
+      { "internalType": "uint256", "name": "dmmAmountBMin", "type": "uint256" },
       {
         "components": [
           { "internalType": "address", "name": "poolAddress", "type": "address" },
@@ -145,6 +161,5 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  { "stateMutability": "payable", "type": "receive" }
+  }
 ]

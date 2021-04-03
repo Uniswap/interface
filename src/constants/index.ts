@@ -5,7 +5,7 @@ import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUnisw
 
 export const ROUTER_ADDRESS = process.env.REACT_APP_ROUTER_ADDRESS || '0xf9a856b7d8750c5d7f0aec4f586677bdfd9aaf40'
 export const FACTORY_ADDRESS = process.env.REACT_APP_FACTORY_ADDRESS || '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9'
-export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xf026ea3512ec19027340f815f3fde4856ad59e98'
+export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0x8aDd712c8fde1c6f98f8e45C7E29bAA66F074056'
 export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 // export const ROUTER_ADDRESS = '0x8406Caa2Cc202aFB4eCfb066D472E462bee00f3b'
 // export const FACTORY_ADDRESS = '0x945c725e3eCC3dfdC350C0334f3fF42f08F719EA'
