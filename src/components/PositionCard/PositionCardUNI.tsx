@@ -54,6 +54,11 @@ const ButtonOutlined2 = styled(ButtonOutlined)`
   font-size: inherit;
 `
 
+// export enum LPType {
+//   DMM = 'DMM',
+//   UNI = 'UNI'
+// }
+
 interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
@@ -220,6 +225,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               width="fit-content"
               onClick={() => setShowMore(!showMore)}
             >
+              <img src={require('../../assets/svg/uniswap-icon.svg')} alt="uniswap-icon" />
               {showMore ? (
                 <ChevronUp size="20" style={{ marginLeft: '10px' }} />
               ) : (
