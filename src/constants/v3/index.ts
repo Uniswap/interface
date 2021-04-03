@@ -15,7 +15,7 @@ export const TICK_LENS_ADDRESSES: { [chainId in ChainId | 1337]: string } = {
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
-  [1337]: '0xe0507a63E40Ce227CbF2ed7273a01066bAFE667B',
+  [1337]: '0x99Cb00560BFca3E5B7Cda8e820dDFF1ED403966E',
 }
 
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: { [chainId in ChainId | 1337]: string } = {

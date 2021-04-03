@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useTickLens } from './useContract'
 
@@ -11,38 +12,80 @@ function MAX_TICK(tickSpacing: number) {
 }
 
 function bitmapIndex(tick: number, tickSpacing: number) {
-  return (tick / tickSpacing) >> 8
+  const compressed = tick / tickSpacing
+  return compressed >> 8
 }
 
-// todo this hook needs some tlc around return values
-export function useAllV3Ticks(poolAddress: string, tickSpacing: number): Result[] | null {
+const REFRESH_FREQUENCY = { blocksPerFetch: 10 }
+
+interface TickData {
+  tick: number
+  liquidityNet: number
+  liquidityGross: number
+}
+
+export function useAllV3Ticks(
+  poolAddress: string,
+  tickSpacing: number
+): {
+  loading: boolean
+  syncing: boolean
+  error: boolean
+  valid: boolean
+  tickData: TickData[]
+} {
   const tickLens = useTickLens()
 
-  const min = MIN_TICK(tickSpacing)
-  const max = MAX_TICK(tickSpacing)
-  const minIndex = bitmapIndex(min, tickSpacing)
-  const maxIndex = bitmapIndex(max, tickSpacing)
+  const minIndex = useMemo(() => bitmapIndex(MIN_TICK(tickSpacing), tickSpacing), [tickSpacing])
+  const maxIndex = useMemo(() => bitmapIndex(MAX_TICK(tickSpacing), tickSpacing), [tickSpacing])
 
-  const tickLensArgs = new Array(maxIndex - minIndex + 1)
-    .fill(0)
-    .map((_, i) => i + minIndex)
-    .map((wordIndex) => [poolAddress, wordIndex])
+  const tickLensArgs = useMemo(
+    () =>
+      new Array(maxIndex - minIndex + 1)
+        .fill(0)
+        .map((_, i) => i + minIndex)
+        .map((wordIndex) => [poolAddress, wordIndex]),
+    [minIndex, maxIndex, poolAddress]
+  )
 
   const callStates = useSingleContractMultipleData(
     tickLens,
     'getPopulatedTicksInWord',
     tickLensArgs,
-    undefined,
+    REFRESH_FREQUENCY,
     2_000_000
   )
 
-  const canReturn = callStates.every(
-    (callState) => !callState.error && !callState.loading && !callState.syncing && callState.valid && callState.result
+  const error = useMemo(() => callStates.some(({ error }) => error), [callStates])
+  const loading = useMemo(() => callStates.some(({ loading }) => loading), [callStates])
+  const syncing = useMemo(() => callStates.some(({ syncing }) => syncing), [callStates])
+  const valid = useMemo(() => callStates.some(({ valid }) => valid), [callStates])
+
+  const tickData = useMemo(
+    () =>
+      callStates
+        .map(({ result }) => (result as Result)?.populatedTicks)
+        .reduce(
+          (accumulator, current) => [
+            ...accumulator,
+            ...(current?.map((tickData: TickData) => {
+              return {
+                tick: tickData.tick,
+                liquidityNet: tickData.liquidityNet,
+                liquidityGross: tickData.liquidityGross,
+              }
+            }) ?? []),
+          ],
+          []
+        ),
+    [callStates]
   )
 
-  return canReturn
-    ? callStates
-        .map(({ result }) => (result as Result).populatedTicks)
-        .reduce((accumulator, current) => [...accumulator, ...current], [])
-    : null
+  return {
+    loading,
+    syncing,
+    error,
+    valid,
+    tickData,
+  }
 }
