@@ -141,8 +141,8 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
         const [newPrice, oneDayBackPrice, pricePercentChange] = await getEthPrice()
         dispatch(
           updateETHPrice({
-            currentPrice: newPrice.toString(),
-            oneDayBackPrice: oneDayBackPrice.toString(),
+            currentPrice: (newPrice ? newPrice : 0).toString(),
+            oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
             pricePercentChange
           })
         )
