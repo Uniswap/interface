@@ -12,7 +12,6 @@ import { useAllTokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
-  addSerializedPairUNI,
   addSerializedToken,
   removeSerializedToken,
   SerializedPair,
@@ -168,7 +167,7 @@ export function usePairAdderUNI(): (pair: PairUNI) => void {
 
   return useCallback(
     (pair: PairUNI) => {
-      dispatch(addSerializedPairUNI({ serializedPair: serializePair(pair) }))
+      dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
     },
     [dispatch]
   )

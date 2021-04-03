@@ -1,4 +1,5 @@
-import { Currency, ETHER, JSBI, TokenAmount } from '@uniswap/sdk'
+import { Currency, JSBI, TokenAmount } from '@uniswap/sdk'
+import { ETHER } from 'libs/sdk/src'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
@@ -140,7 +141,7 @@ export default function PoolFinder() {
             <Text textAlign="center" fontWeight={500}>
               Pool Found!
             </Text>
-            <StyledInternalLink to={`/pool`}>
+            <StyledInternalLink to={`/migration`}>
               <Text textAlign="center">Manage this pool.</Text>
             </StyledInternalLink>
           </ColumnCenter>
