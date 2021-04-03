@@ -4,7 +4,7 @@
  */
 export const UNSUPPORTED_LIST_URLS: string[] = []
 
-const UBESWAP_LIST = 'https://raw.githubusercontent.com/ubeswap/token-list/master/ubeswap.token-list.json'
+const UBESWAP_LIST = 'https://raw.githubusercontent.com/Ubeswap/default-token-list/master/ubeswap.token-list.json'
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [

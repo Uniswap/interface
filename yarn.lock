@@ -3208,6 +3208,11 @@
     semver "^7.3.2"
     tsutils "^3.17.1"
 
+"@ubeswap/default-token-list@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-0.3.0.tgz#7da146091a37e1d76dd52697056f2940945a49c0"
+  integrity sha512-VWB5wxqfEqiDpAOz3Ks4u+EAkBL8/nt5O70TOAxh/Lxd1+/Ino7gFx+veNdFUQwuYF/hLHIqjcEP3PJrfAFaXQ==
+
 "@ubeswap/injected-connector@^6.0.8":
   version "6.0.8"
   resolved "https://registry.yarnpkg.com/@ubeswap/injected-connector/-/injected-connector-6.0.8.tgz#a2a72793e5adb9f72752b348a01e9c272fd54744"
