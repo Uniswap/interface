@@ -117,7 +117,7 @@
     "@celo/utils": "^1.0.1",
     "@celo/wallet-ledger": "^1.0.2",
     "@ledgerhq/hw-transport-webusb": "^5.43.0",
-    "@ubeswap/default-token-list": "^0.3.0",
+    "@ubeswap/default-token-list": "^0.3.1",
     "@ubeswap/sdk": "^2.0.0",
     "lodash": "^4.17.20",
     "web3": "^1.3.4"
