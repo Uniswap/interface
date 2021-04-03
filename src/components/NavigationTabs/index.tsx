@@ -1,16 +1,15 @@
-import React from 'react'
-import styled from 'styled-components'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
-import { NavLink, Link as HistoryLink } from 'react-router-dom'
-
+import React from 'react'
 import { ArrowLeft } from 'react-feather'
+import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { Link as HistoryLink, NavLink } from 'react-router-dom'
+import { AppDispatch } from 'state'
+import { resetMintState } from 'state/mint/actions'
+import styled from 'styled-components'
 import { RowBetween } from '../Row'
 // import QuestionHelper from '../QuestionHelper'
 import Settings from '../Settings'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from 'state'
-import { resetMintState } from 'state/mint/actions'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -56,7 +55,7 @@ const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `
 
-export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
+export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' | 'send' }) {
   const { t } = useTranslation()
   return (
     <Tabs style={{ marginBottom: '20px', display: 'none' }}>
