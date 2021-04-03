@@ -22,8 +22,8 @@ import WarningRightIcon from 'components/Icons/WarningRightIcon'
 import QuestionHelper from 'components/QuestionHelper'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
-import { priceRangeCalcByPair } from 'utils/dmm'
-import useUSDCPrice from 'utils/useUSDCPrice'
+import { priceRangeCalcByPair, getMyLiquidity } from 'utils/dmm'
+import { UserLiquidityPosition } from 'state/pools/hooks'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -73,6 +73,7 @@ interface PositionCardProps {
   showUnwrapped?: boolean
   border?: string
   stakedBalance?: TokenAmount // optional balance to indicate that liquidity is deposited in mining pool
+  myLiquidity?: UserLiquidityPosition
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
@@ -103,11 +104,6 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
         ]
       : [undefined, undefined]
 
-  const priceToken0InUSD = useUSDCPrice(currency0)
-  const priceToken1InUSD = useUSDCPrice(currency1)
-  const valueToken0 = token0Deposited && priceToken0InUSD && token0Deposited.multiply(priceToken0InUSD.adjusted)
-  const valueToken1 = token0Deposited && priceToken0InUSD && token0Deposited.multiply(priceToken0InUSD.adjusted)
-  const valueSum = valueToken0 && valueToken1 && valueToken0.add(valueToken1)
   return (
     <>
       <StyledPositionCard border={border}>
@@ -129,7 +125,6 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             <RowFixed>
               <Text fontWeight={500} fontSize={20}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}{' '}
-                {!!valueSum ? `($${valueSum?.toSignificant(4)})` : ''}
               </Text>
             </RowFixed>
           </FixedHeightRow>
@@ -177,7 +172,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
+export default function FullPositionCard({ pair, border, stakedBalance, myLiquidity }: PositionCardProps) {
   const { account } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
@@ -219,6 +214,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
     .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
   const percentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0)
 
+  const usdValue = getMyLiquidity(myLiquidity)
+
   const isWarning = percentToken0.lessThan(JSBI.BigInt(10)) || percentToken1.lessThan(JSBI.BigInt(10))
 
   const warningToken = isWarning
@@ -227,11 +224,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
       : pair.token1.symbol
     : undefined
 
-  const priceToken0InUSD = useUSDCPrice(currency0)
-  const priceToken1InUSD = useUSDCPrice(currency1)
-  const valueToken0 = token0Deposited && priceToken0InUSD && token0Deposited.multiply(priceToken0InUSD.adjusted)
-  const valueToken1 = token0Deposited && priceToken0InUSD && token0Deposited.multiply(priceToken0InUSD.adjusted)
-  const valueSum = valueToken0 && valueToken1 && valueToken0.add(valueToken1)
   return (
     <StyledPositionCard border={border}>
       {isWarning && (
@@ -265,7 +257,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           </AutoRow>
 
           <RowFixed gap="8px">
-            {!!valueSum ? `US$${valueSum?.toSignificant(4)}` : ''}
+            {!!usdValue ? `${usdValue}` : ''}
             <ButtonEmpty padding="6px 8px" borderRadius="12px" width="100px" onClick={() => setShowMore(!showMore)}>
               {showMore ? (
                 <ChevronUp size="20" style={{ marginLeft: '10px' }} />

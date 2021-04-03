@@ -18,7 +18,12 @@ const StyledUtilities = styled.div`
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
+    position: fixed;
+    top: auto;
+    bottom: 4.5rem;
+    left: 0;
+    right: auto;
+    height: fit-content;
   `}
 `
 

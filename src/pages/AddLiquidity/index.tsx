@@ -542,7 +542,7 @@ export default function AddLiquidity({
                       !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
                     )}
                   </Text>
-                  <QuestionHelper text="Fees are adjusted dynamically according to market conditions. In a volatile market, fees increase to an optimal level. With low volatility, fees decrease to encourage more trading." />
+                  <QuestionHelper text="Fees are adjusted dynamically according to market conditions to maximise returns for liquidity providers." />
                 </AutoRow>
               </OutlineCard2>
             )}

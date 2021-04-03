@@ -17,10 +17,12 @@ export function useMintState(): AppState['mint'] {
   return useSelector<AppState, AppState['mint']>(state => state.mint)
 }
 
-export function useDerivedMintInfo(
+export function useDerivedMintInfoUNI(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  pairAddress: string | undefined
+  pairAddress: string | undefined,
+  independentField: Field,
+  typedValue: string
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
@@ -36,9 +38,7 @@ export function useDerivedMintInfo(
   unAmplifiedPairAddress?: string
 } {
   const { account, chainId } = useActiveWeb3React()
-
-  const { independentField, typedValue, otherTypedValue } = useMintState()
-  console.log('==useMintState', independentField, typedValue, otherTypedValue)
+  const otherTypedValue = ''
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 
   // tokens
@@ -56,7 +56,6 @@ export function useDerivedMintInfo(
   const [pairState, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
   const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
-
   const noLiquidity: boolean =
     (pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))) &&
     (tokenA?.symbol != 'WETH' || tokenB?.symbol != 'WETH')

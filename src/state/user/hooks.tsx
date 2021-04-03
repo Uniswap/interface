@@ -1,5 +1,6 @@
 import { useFactoryContract } from 'hooks/useContract'
 import { ChainId, Pair, Token } from 'libs/sdk/src'
+import { Pair as PairUNI, Token as TokenUNI } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -22,7 +23,7 @@ import {
   toggleURLWarning
 } from './actions'
 
-function serializeToken(token: Token): SerializedToken {
+function serializeToken(token: Token | TokenUNI): SerializedToken {
   return {
     chainId: token.chainId,
     address: token.address,
@@ -34,6 +35,15 @@ function serializeToken(token: Token): SerializedToken {
 
 function deserializeToken(serializedToken: SerializedToken): Token {
   return new Token(
+    serializedToken.chainId,
+    serializedToken.address,
+    serializedToken.decimals,
+    serializedToken.symbol,
+    serializedToken.name
+  )
+}
+function deserializeTokenUNI(serializedToken: SerializedToken): TokenUNI {
+  return new TokenUNI(
     serializedToken.chainId,
     serializedToken.address,
     serializedToken.decimals,
@@ -145,18 +155,18 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
-function serializePair(pair: Pair): SerializedPair {
+function serializePair(pair: Pair | PairUNI): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
     token1: serializeToken(pair.token1)
   }
 }
 
-export function usePairAdder(): (pair: Pair) => void {
+export function usePairAdderUNI(): (pair: PairUNI) => void {
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
-    (pair: Pair) => {
+    (pair: PairUNI) => {
       dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
     },
     [dispatch]
@@ -196,9 +206,9 @@ export function useURLWarningToggle(): () => void {
  * @param tokenB the other token
  */
 
-// export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-//   return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'DMM-LP', 'DMM LP')
-// }
+export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+  return new TokenUNI(tokenA.chainId, PairUNI.getAddress(tokenA, tokenB), 18, 'DMM-LP', 'DMM LP')
+}
 
 export function useToV2LiquidityTokens(
   tokenCouples: [Token, Token][]

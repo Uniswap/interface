@@ -94,8 +94,12 @@
   "scripts": {
     "start": "react-app-rewired start",
     "start-ropsten": "env-cmd -f .env.ropsten react-scripts start",
+    "start-staging": "env-cmd -f .env.staging react-scripts start",
+    "start-production": "env-cmd -f .env.production react-scripts start",
     "build": "react-scripts build",
     "build-ropsten": "env-cmd -f .env.ropsten react-scripts build",
+    "build-staging": "env-cmd -f .env.staging react-scripts build",
+    "build-production": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
@@ -121,6 +125,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.11",
     "@types/big.js": "^6.0.0",
+    "@uniswap/sdk": "^3.0.3",
     "dayjs": "^1.10.4",
     "decimal.js-light": "^2.5.1",
     "env-cmd": "^10.1.0",
@@ -130,7 +135,7 @@
     "numeral": "^2.0.6",
     "react-app-rewire-styled-components": "^3.0.2",
     "react-app-rewired": "^2.1.8",
-    "react-use": "^17.1.1",
+    "react-use": "^15.3.4",
     "toformat": "^2.0.0"
   }
 }

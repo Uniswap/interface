@@ -112,3 +112,23 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
     </Tabs>
   )
 }
+
+export function MigrateTab() {
+  const history = useHistory()
+
+  const goBack = () => {
+    history.goBack()
+  }
+
+  return (
+    <Tabs>
+      <RowBetween style={{ padding: '1rem' }}>
+        <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
+          <StyledArrowLeft />
+        </ButtonEmpty>
+        <ActiveText>{'Migrate Liquidity'}</ActiveText>
+        <QuestionHelper text="Converts your position back into underlying tokens at the current rate, proportional to your share of the pool, Accrued fees are included in the amounts you receive. After that add them to the unamplified pool. You are given DMM pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time." />
+      </RowBetween>
+    </Tabs>
+  )
+}
