@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { useDispatch, useSelector } from 'react-redux'
+import { useDeepCompareEffect } from 'react-use'
 
 import { client } from 'apollo/client'
 import { USER_LIQUIDITY_POSITION_SNAPSHOTS, POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK } from 'apollo/queries'
@@ -203,7 +204,7 @@ export function useBulkPoolData(
   const loading = useSelector((state: AppState) => state.pools.loading)
   const error = useSelector((state: AppState) => state.pools.error)
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     async function checkForPools() {
       try {
         if (poolList.length > 0 && !error && poolsData.length === 0) {
