@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ETHER, WETH } from 'libs/sdk/src'
+import { ETHER, Fraction, WETH, CurrencyAmount } from 'libs/sdk/src'
 import { Currency, currencyEquals, Pair, Percent } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -20,7 +20,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { MIGRATE_ADDRESS, ROUTER_ADDRESS, ROUTER_ADDRESS_UNI } from '../../constants'
+import { MIGRATE_ADDRESS, ROUTER_ADDRESS, ROUTER_ADDRESS_UNI, ZERO_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
@@ -46,12 +46,14 @@ import { Dots } from '../../components/swap/styleds'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
 import { useDerivedBurnInfo as useDerivedBurnInfoUNI, useBurnState } from '../../state/burn/hooks_uni'
 import { Field } from '../../state/burn/actions'
+import { Field as FieldMint } from '../../state/mint/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Redirect } from 'react-router-dom'
 import { useDerivedMintInfoUNI, useMintActionHandlers } from 'state/mint/hooks_uni'
 import { useMintState } from 'state/mint/hooks'
+import isZero from 'utils/isZero'
 
 export default function MigrateLiquidity({
   history,
@@ -200,6 +202,29 @@ export default function MigrateLiquidity({
   )
 
   // tx sending
+
+  const { parsedAmounts: parsedAmountsMaxA, liquidityMinted: liquidityMintedMaxA } = useDerivedMintInfoUNI(
+    currencyA ?? undefined,
+    currencyB ?? undefined,
+    unAmplifiedPairAddress,
+    FieldMint.CURRENCY_A,
+    formattedAmounts[Field.CURRENCY_A]
+  )
+
+  const { parsedAmounts: parsedAmountsMaxB, liquidityMinted: liquidityMintedMaxB } = useDerivedMintInfoUNI(
+    currencyA ?? undefined,
+    currencyB ?? undefined,
+    unAmplifiedPairAddress,
+    FieldMint.CURRENCY_B,
+    formattedAmounts[Field.CURRENCY_B]
+  )
+  const liquidityMinted =
+    !liquidityMintedMaxA || !liquidityMintedMaxB
+      ? undefined
+      : liquidityMintedMaxA.lessThan(liquidityMintedMaxB)
+      ? liquidityMintedMaxA
+      : liquidityMintedMaxB
+
   const addTransaction = useTransactionAdder()
   async function onRemove() {
     if (!chainId || !library || !account || !deadline) throw new Error('missing dependencies')
@@ -207,6 +232,7 @@ export default function MigrateLiquidity({
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
     }
+
     // const router = getRouterContract(chainId, library, account)
     const migrator = getMigratorContract(chainId, library, account)
 
@@ -214,7 +240,6 @@ export default function MigrateLiquidity({
       [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
     }
-
     if (!currencyA || !currencyB) throw new Error('missing tokens')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
@@ -225,40 +250,134 @@ export default function MigrateLiquidity({
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
     let methodNames: string[], args: Array<any>
-    // we have approval, use normal remove liquidity
-    if (approval === ApprovalState.APPROVED) {
-      // removeLiquidity
-      methodNames = ['migrateLpToDmmPool']
-      args = [
-        !!pair ? Pair.getAddress(pair?.token0, pair?.token1) : '',
-        tokenA.address,
-        tokenB.address,
-        liquidityAmount.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        !!unAmplifiedPairAddress ? [unAmplifiedPairAddress, 123] : ['', 1],
-        deadline.toHexString()
-      ]
-    }
-    // we have a signataure, use permit versions of remove liquidity
-    else if (signatureData !== null) {
-      // removeLiquidityETHWithPermit
-      methodNames = ['migrateLpToDmmPoolWithPermit']
-      // [uniPair, tokenA, tokenB, liquidity, amountAMin, amountBMin, [pooladdress, amp], deadline, [v,r,s]]
-      // use unAmplifiedPairAddress = 0x5708D9442207D0ca4975bB746A158D98df842dCd for testing
-      args = [
-        !!pair ? Pair.getAddress(pair?.token0, pair?.token1) : '',
-        tokenA.address,
-        tokenB.address,
-        liquidityAmount.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        !!unAmplifiedPairAddress ? [unAmplifiedPairAddress, 123] : ['', 1],
-        signatureData.deadline,
-        [false, signatureData.v, signatureData.r, signatureData.s]
-      ]
+    if (!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)) {
+      //co pool amp = 1
+
+      if (
+        !parsedAmountsMaxA[FieldMint.CURRENCY_A] ||
+        !parsedAmountsMaxA[FieldMint.CURRENCY_B] ||
+        !parsedAmountsMaxB[FieldMint.CURRENCY_A] ||
+        !parsedAmountsMaxB[FieldMint.CURRENCY_B] ||
+        !parsedAmounts[Field.CURRENCY_A] ||
+        !parsedAmounts[Field.CURRENCY_B]
+      ) {
+        throw new Error('missing dependencies')
+      }
+      const {
+        [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
+        [FieldMint.CURRENCY_B]: currencyAmountBOfMaxA
+      } = parsedAmountsMaxA
+      if (!currencyAmountAOfMaxA || !currencyAmountBOfMaxA) {
+        throw new Error('missing currency amounts')
+      }
+
+      const {
+        [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB,
+        [FieldMint.CURRENCY_B]: currencyAmountBOfMaxB
+      } = parsedAmountsMaxB
+      if (!currencyAmountAOfMaxB || !currencyAmountBOfMaxB) {
+        throw new Error('missing currency amounts')
+      }
+      const { [FieldMint.CURRENCY_A]: currencyAmountAToAddPool, [FieldMint.CURRENCY_B]: currencyAmountBToAddPool } =
+        +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
+          ? parsedAmountsMaxA
+          : parsedAmountsMaxB
+
+      if (!currencyAmountAToAddPool || !currencyAmountBToAddPool) {
+        throw new Error('missing currency amounts')
+      }
+      const amountsMinToAddPool = {
+        [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountAToAddPool, allowedSlippage)[0],
+        [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountBToAddPool, allowedSlippage)[0]
+      }
+
+      // we have approval, use normal remove liquidity
+      if (approval === ApprovalState.APPROVED) {
+        // removeLiquidity
+        methodNames = ['migrateLpToDmmPool']
+        args = [
+          !!pair ? Pair.getAddress(pair?.token0, pair?.token1) : '',
+          tokenA.address,
+          tokenB.address,
+          liquidityAmount.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          amountsMinToAddPool[Field.CURRENCY_A].toString(),
+          amountsMinToAddPool[Field.CURRENCY_B].toString(),
+          !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
+            ? [unAmplifiedPairAddress, 123]
+            : [ZERO_ADDRESS, 1],
+          deadline.toHexString()
+        ]
+      }
+      // we have a signataure, use permit versions of remove liquidity
+      else if (signatureData !== null) {
+        // removeLiquidityETHWithPermit
+        methodNames = ['migrateLpToDmmPoolWithPermit']
+        // [uniPair, tokenA, tokenB, liquidity, amountAMin, amountBMin, [pooladdress, amp], deadline, [v,r,s]]
+        // use unAmplifiedPairAddress = 0x5708D9442207D0ca4975bB746A158D98df842dCd for testing
+        args = [
+          !!pair ? Pair.getAddress(pair?.token0, pair?.token1) : '',
+          tokenA.address,
+          tokenB.address,
+          liquidityAmount.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          amountsMinToAddPool[Field.CURRENCY_A].toString(),
+          amountsMinToAddPool[Field.CURRENCY_B].toString(),
+          !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
+            ? [unAmplifiedPairAddress, 123]
+            : [ZERO_ADDRESS, 1],
+          signatureData.deadline,
+          [false, signatureData.v, signatureData.r, signatureData.s]
+        ]
+      } else {
+        throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
+      }
     } else {
-      throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
+      // we have approval, use normal remove liquidity
+      if (approval === ApprovalState.APPROVED) {
+        // removeLiquidity
+        methodNames = ['migrateLpToDmmPool']
+        args = [
+          !!pair ? Pair.getAddress(pair?.token0, pair?.token1) : '',
+          tokenA.address,
+          tokenB.address,
+          liquidityAmount.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
+            ? [unAmplifiedPairAddress, 123]
+            : [ZERO_ADDRESS, 10000],
+          deadline.toHexString()
+        ]
+      }
+      // we have a signataure, use permit versions of remove liquidity
+      else if (signatureData !== null) {
+        // removeLiquidityETHWithPermit
+        methodNames = ['migrateLpToDmmPoolWithPermit']
+        // [uniPair, tokenA, tokenB, liquidity, amountAMin, amountBMin, [pooladdress, amp], deadline, [v,r,s]]
+        // use unAmplifiedPairAddress = 0x5708D9442207D0ca4975bB746A158D98df842dCd for testing
+        args = [
+          !!pair ? Pair.getAddress(pair?.token0, pair?.token1) : '',
+          tokenA.address,
+          tokenB.address,
+          liquidityAmount.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
+            ? [unAmplifiedPairAddress, 123]
+            : [ZERO_ADDRESS, 10000],
+          signatureData.deadline,
+          [false, signatureData.v, signatureData.r, signatureData.s]
+        ]
+      } else {
+        throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
+      }
     }
 
     console.log('===pair', args, migrator)
@@ -553,7 +672,7 @@ export default function MigrateLiquidity({
                         </Text>
                       </RowBetween>
                     </AutoColumn>
-                    {!!unAmplifiedPairAddress && (
+                    {!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress) && (
                       <AutoColumn gap="10px">
                         <RowBetween>
                           <Text fontSize={14} fontWeight={500}>
@@ -567,6 +686,16 @@ export default function MigrateLiquidity({
                         </RowBetween>
                       </AutoColumn>
                     )}
+                    <AutoColumn gap="10px">
+                      <RowBetween>
+                        <Text fontSize={14} fontWeight={500}>
+                          DMM LP tokens
+                        </Text>
+                        <Text fontSize={14} fontWeight={500}>
+                          {liquidityMinted?.toSignificant(4)}
+                        </Text>
+                      </RowBetween>
+                    </AutoColumn>
                   </LightCard>
                 </>
 
@@ -637,51 +766,3 @@ export default function MigrateLiquidity({
     </>
   )
 }
-
-// export default function MigrateLiquidity({
-//   history,
-//   match: {
-//     params: { currencyIdA, currencyIdB, pairAddress }
-//   }
-// }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
-//   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
-//   const { pair, parsedAmounts, unAmplifiedPairAddress, error } = useDerivedBurnInfoUNI(
-//     currencyA ?? undefined,
-//     currencyB ?? undefined
-//   )
-//   const { independentField, typedValue } = useBurnState()
-//   const formattedAmounts = {
-//     [Field.LIQUIDITY_PERCENT]: parsedAmounts[Field.LIQUIDITY_PERCENT].equalTo('0')
-//       ? '0'
-//       : parsedAmounts[Field.LIQUIDITY_PERCENT].lessThan(new Percent('1', '100'))
-//       ? '<1'
-//       : parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0),
-//     [Field.LIQUIDITY]:
-//       independentField === Field.LIQUIDITY ? typedValue : parsedAmounts[Field.LIQUIDITY]?.toSignificant(6) ?? '',
-//     [Field.CURRENCY_A]:
-//       independentField === Field.CURRENCY_A ? typedValue : parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) ?? '',
-//     [Field.CURRENCY_B]:
-//       independentField === Field.CURRENCY_B ? typedValue : parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) ?? ''
-//   }
-//   // wrapped onUserInput to clear signatures
-//   const { onUserInput: _onUserInput } = useBurnActionHandlers()
-//   const onUserInput = useCallback(
-//     (field: Field, typedValue: string) => {
-//       return _onUserInput(field, typedValue)
-//     },
-//     [_onUserInput]
-//   )
-//   useEffect(() => {
-//     onUserInput(Field.LIQUIDITY_PERCENT, '25')
-//   }, [])
-//   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(false)
-//   useEffect(() => {
-//     if (!!formattedAmounts[Field.CURRENCY_A]) onFieldAInput('2')
-//   }, [onFieldAInput, formattedAmounts])
-//   // useDerivedMintInfoUNI(currencyA ?? undefined, currencyB ?? undefined, '0xfd9DBebcC376b79C874C75e77951d0255882d712')
-//   // const mintState = useMintState()
-//   const mintState = null
-
-//   console.log('===parsedAmounts', formattedAmounts[Field.CURRENCY_A], formattedAmounts[Field.CURRENCY_B], mintState)
-//   return <></>
-// }
