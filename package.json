@@ -131,7 +131,7 @@
     "numeral": "^2.0.6",
     "react-app-rewire-styled-components": "^3.0.2",
     "react-app-rewired": "^2.1.8",
-    "react-use": "^17.1.1",
+    "react-use": "^15.3.4",
     "toformat": "^2.0.0"
   }
 }
