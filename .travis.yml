@@ -16,8 +16,8 @@ install:
   - git submodule update --remote
   - yarn
   - npm rebuild node-sass
-  - yarn build-ropsten | true
-  - ls build
+  - bash .travis/build.sh || true
+  - ls build || true
 
 deploy:
   - provider: gcs
@@ -30,6 +30,17 @@ deploy:
     on:
       all_branches: true
       condition: $TRAVIS_BRANCH =~ ^develop$
+
+  - provider: gcs
+    access_key_id: $GCS_ACCESS_KEY_ID
+    secret_access_key: $GCS_SECRET_KEY_ID
+    bucket: staging-dmm.knstats.com
+    skip_cleanup: true
+    local-dir: build
+    cache_control: "no-cache"
+    on:
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^staging$
 
   - provider: gcs
     access_key_id: $GCS_ACCESS_KEY_ID
