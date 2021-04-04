@@ -346,9 +346,11 @@ export default function Bridge() {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
-      {bridgeDirection === BridgeDirection.FUSE_TO_ETH && (
-        <BridgeDetails inputCurrencyId={inputCurrencyId} inputAmount={parsedAmounts[Field.INPUT]} />
-      )}
+      <BridgeDetails
+        inputCurrencyId={inputCurrencyId}
+        inputAmount={parsedAmounts[Field.INPUT]}
+        bridgeDirection={bridgeDirection}
+      />
     </>
   )
 }
