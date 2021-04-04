@@ -611,7 +611,8 @@ export default function RemoveLiquidity({
                   showMaxButton={!atMaxAmount}
                   currency={currencyA}
                   label={'Output'}
-                  onCurrencySelect={handleSelectCurrencyA}
+                  onCurrencySelect={() => null}
+                  disableCurrencySelect={true}
                   id="remove-liquidity-tokena"
                 />
                 <ColumnCenter>
@@ -625,7 +626,8 @@ export default function RemoveLiquidity({
                   showMaxButton={!atMaxAmount}
                   currency={currencyB}
                   label={'Output'}
-                  onCurrencySelect={handleSelectCurrencyB}
+                  onCurrencySelect={() => null}
+                  disableCurrencySelect={true}
                   id="remove-liquidity-tokenb"
                 />
               </>
