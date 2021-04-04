@@ -21,7 +21,7 @@ import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
-import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE, UNDER_MAINTENANCE } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency, useAllSwapTokens } from '../../hooks/Tokens'
@@ -50,6 +50,7 @@ import BridgeInfo from '../../components/swap/BridgeInfo'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import TokenMigrationModal from '../../components/TokenMigration'
 import { isTokenOnTokenList } from '../../utils'
+import Maintenance from '../../components/swap/Maintenance'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -314,6 +315,10 @@ export default function Swap() {
     },
     [onCurrencySelection]
   )
+
+  if (UNDER_MAINTENANCE) {
+    return <Maintenance />
+  }
 
   if (!isHome) {
     return (
