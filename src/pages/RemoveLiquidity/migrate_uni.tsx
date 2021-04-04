@@ -288,7 +288,7 @@ export default function MigrateLiquidity({
       estimatedRefund =
         +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
           ? `${currencyAmountB.subtract(currencyAmountBOfMaxA).toSignificant(6)} ${tokenB?.symbol}`
-          : `${currencyAmountA.subtract(currencyAmountAOfMaxB).toSignificant(6)} ${tokenB?.symbol}`
+          : `${currencyAmountA.subtract(currencyAmountAOfMaxB).toSignificant(6)} ${tokenA?.symbol}`
       poolShare =
         +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
           ? `${poolTokenPercentageMaxA?.toSignificant(2)}%`
@@ -591,11 +591,16 @@ export default function MigrateLiquidity({
     return (
       <LightCard>
         <AutoColumn gap="10px">
-          <RowBetween>
+          <RowFixed>
+            <img
+              src={require('../../assets/svg/logo.svg')}
+              alt="uniswap-icon"
+              style={{ width: '30px', marginBottom: '3px' }}
+            />
             <Text fontSize={14} fontWeight={500}>
-              DMM Pool
+              &nbsp; Pool
             </Text>
-          </RowBetween>
+          </RowFixed>
         </AutoColumn>
 
         <AutoColumn gap="10px" style={{ marginTop: '10px', marginBottom: '10px' }}>
