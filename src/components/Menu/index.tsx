@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react'
-import { Info, PieChart, Menu as MenuIcon } from 'react-feather'
+import { Info, PieChart, Menu as MenuIcon, Zap } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
@@ -116,6 +116,10 @@ export default function Menu() {
           <NavMenuItem to="/about">
             <Info size={14} />
             About
+          </NavMenuItem>
+          <NavMenuItem to="/migration">
+            <Zap size={14} />
+            Migration
           </NavMenuItem>
           <MenuItem id="link" href={DMM_INFO_URL}>
             <PieChart size={14} />
