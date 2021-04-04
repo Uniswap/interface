@@ -1,23 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { useTranslation } from 'react-i18next'
-import { Fraction, JSBI, Pair } from 'libs/sdk/src'
+import { JSBI, Pair } from 'libs/sdk/src'
 import { ChevronUp, ChevronDown } from 'react-feather'
+import { useMedia } from 'react-use'
 
 import { ButtonEmpty } from 'components/Button'
-import FavoriteStar from 'components/Icons/FavoriteStar'
-import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
-import AddCircle from 'components/Icons/AddCircle'
 import InfoHelper from 'components/InfoHelper'
-import CopyHelper from 'components/Copy'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { shortenAddress, formattedNum } from 'utils'
-import { unwrappedToken } from 'utils/wrappedCurrency'
-import { currencyId } from 'utils/currencyId'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
-import { getHealthFactor, getMyLiquidity } from 'utils/dmm'
+import { getHealthFactor } from 'utils/dmm'
+import ListItem, { ItemCard } from './ListItem'
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -35,25 +28,6 @@ const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   border-top-right-radius: 8px;
 `
 
-const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
-  display: grid;
-  grid-gap: 1em;
-  grid-template-columns: repeat(8, 1fr) 1fr;
-  grid-template-areas: 'pool ratio liq vol';
-  padding: 15px 36px 13px 26px;
-  font-size: 12px;
-  align-items: flex-start;
-  height: fit-content;
-  position: relative;
-  opacity: ${({ fade }) => (fade ? '0.6' : '1')};
-  background-color: ${({ theme, oddRow }) => (oddRow ? theme.oddRow : theme.evenRow)};
-  border: 1px solid transparent;
-
-  &:hover {
-    border: 1px solid #4a636f;
-  }
-`
-
 const ClickableText = styled(Text)`
   display: flex;
   align-items: center;
@@ -66,15 +40,6 @@ const ClickableText = styled(Text)`
   text-transform: uppercase;
 `
 
-const DataText = styled(Flex)`
-  color: ${({ theme }) => theme.text7};
-  flex-direction: column;
-`
-
-const PoolAddressContainer = styled(Flex)`
-  align-items: center;
-`
-
 const LoadMoreButtonContainer = styled.div`
   width: 100%;
   display: flex;
@@ -83,98 +48,14 @@ const LoadMoreButtonContainer = styled.div`
   font-size: 12px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-`
 
-interface ListItemProps {
-  pool: Pair
-  subgraphPoolData: SubgraphPoolData
-  myLiquidity?: UserLiquidityPosition
-  oddRow?: boolean
-}
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    background-color: transparent;
+  `};
+`
 
 const getOneYearFL = (liquidity: string, feeOneDay?: string): number => {
   return !feeOneDay || parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
-}
-
-const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
-  const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
-
-  // Recommended pools are pools that have AMP = 1 or is registered by kyber DAO in a whitelist contract
-  // TODO: Add recommended pool which is registered by kyber DAO  in a whitelist contract
-  const isRecommended = amp.equalTo(new Fraction(JSBI.BigInt(1)))
-
-  const percentToken0 = pool
-    ? pool.reserve0
-        .divide(pool.virtualReserve0)
-        .multiply('100')
-        .divide(pool.reserve0.divide(pool.virtualReserve0).add(pool.reserve1.divide(pool.virtualReserve1)))
-        .toSignificant(2) ?? '.'
-    : '50'
-  const percentToken1 = pool
-    ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
-    : '50'
-
-  const isWarning = parseFloat(percentToken0) < 10 || parseFloat(percentToken1) < 10
-
-  // Shorten address with 0x + 3 characters at start and end
-  const shortenPoolAddress = shortenAddress(pool?.liquidityToken.address, 3)
-  const currency0 = unwrappedToken(pool.token0)
-  const currency1 = unwrappedToken(pool.token1)
-
-  const volume = subgraphPoolData.oneDayVolumeUSD
-    ? subgraphPoolData.oneDayVolumeUSD
-    : subgraphPoolData.oneDayVolumeUntracked
-
-  const fee = subgraphPoolData.oneDayFeeUSD ? subgraphPoolData.oneDayFeeUSD : subgraphPoolData.oneDayFeeUntracked
-
-  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, fee).toFixed(2)
-
-  return (
-    <TableRow oddRow={oddRow}>
-      {isRecommended && !isWarning && (
-        <div style={{ position: 'absolute' }}>
-          <MouseoverTooltip text="Recommended pool">
-            <FavoriteStar />
-          </MouseoverTooltip>
-        </div>
-      )}
-      {isWarning && (
-        <div style={{ position: 'absolute' }}>
-          <MouseoverTooltip text="One token is close to 0% in the pool ratio. Pool might go inactive.">
-            <WarningLeftIcon />
-          </MouseoverTooltip>
-        </div>
-      )}
-      <DataText grid-area="pool">
-        <PoolAddressContainer>
-          {shortenPoolAddress}
-          <CopyHelper toCopy={pool.address} />
-        </PoolAddressContainer>
-      </DataText>
-      <DataText grid-area="ratio">
-        <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
-        <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
-      </DataText>
-      <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
-      <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
-      <DataText>{formattedNum(fee, true)}</DataText>
-      <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
-      <DataText>{`${oneYearFL}%`}</DataText>
-      <DataText>{getMyLiquidity(myLiquidity)}</DataText>
-      <DataText>
-        {
-          <ButtonEmpty
-            padding="0"
-            as={Link}
-            to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.address}`}
-            width="fit-content"
-          >
-            <AddCircle />
-          </ButtonEmpty>
-        }
-      </DataText>
-    </TableRow>
-  )
 }
 
 interface PoolListProps {
@@ -194,6 +75,7 @@ const SORT_FIELD = {
 
 const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
+  const mdBreakpoint = useMedia('(min-width: 768px)')
 
   const transformedSubgraphPoolsData: {
     [key: string]: SubgraphPoolData
@@ -300,29 +182,8 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     return 0
   }
 
-  useEffect(() => {
-    setMaxPage(1) // edit this to do modular
-    setPage(1)
-  }, [poolsList])
-
-  const pools = useMemo(() => {
-    return poolsList
-      .map(pair => pair) // Clone to a new array to prevent "in-place" sort that mutate the poolsList
-      .sort(sortList)
-  }, [poolsList, sortedColumn, sortDirection])
-
-  useEffect(() => {
-    if (poolsList) {
-      let extraPages = 1
-      if (Object.keys(poolsList).length % ITEMS_PER_PAGE === 0) {
-        extraPages = 0
-      }
-      setMaxPage(Math.floor(Object.keys(poolsList).length / ITEMS_PER_PAGE) + extraPages)
-    }
-  }, [ITEMS_PER_PAGE, poolsList])
-
-  return (
-    <div>
+  const renderHeader = () => {
+    return mdBreakpoint ? (
       <TableHeader>
         <Flex alignItems="center" justifyContent="flexStart">
           <ClickableText>Pool</ClickableText>
@@ -432,10 +293,45 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
           <ClickableText>Add liquidity</ClickableText>
         </Flex>
       </TableHeader>
+    ) : null
+  }
+
+  useEffect(() => {
+    setMaxPage(1) // edit this to do modular
+    setPage(1)
+  }, [poolsList])
+
+  const pools = useMemo(() => {
+    return poolsList
+      .map(pair => pair) // Clone to a new array to prevent "in-place" sort that mutate the poolsList
+      .sort(sortList)
+  }, [poolsList, sortedColumn, sortDirection])
+
+  useEffect(() => {
+    if (poolsList) {
+      let extraPages = 1
+      if (Object.keys(poolsList).length % ITEMS_PER_PAGE === 0) {
+        extraPages = 0
+      }
+      setMaxPage(Math.floor(Object.keys(poolsList).length / ITEMS_PER_PAGE) + extraPages)
+    }
+  }, [ITEMS_PER_PAGE, poolsList])
+
+  return (
+    <div>
+      {renderHeader()}
       {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
         if (pool && transformedSubgraphPoolsData[pool.address.toLowerCase()]) {
-          return (
+          return mdBreakpoint ? (
             <ListItem
+              key={pool.address}
+              pool={pool}
+              subgraphPoolData={transformedSubgraphPoolsData[pool.address.toLowerCase()]}
+              myLiquidity={transformedUserLiquidityPositions[pool.address.toLowerCase()]}
+              oddRow={(index + 1) % 2 !== 0}
+            />
+          ) : (
+            <ItemCard
               key={pool.address}
               pool={pool}
               subgraphPoolData={transformedSubgraphPoolsData[pool.address.toLowerCase()]}
