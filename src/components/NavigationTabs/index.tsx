@@ -127,7 +127,7 @@ export function MigrateTab() {
           <StyledArrowLeft />
         </ButtonEmpty>
         <ActiveText>{'Migrate Liquidity'}</ActiveText>
-        <QuestionHelper text="Converts your position back into underlying tokens at the current rate, proportional to your share of the pool, Accrued fees are included in the amounts you receive. After that add them to the unamplified pool. You are given DMM pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time." />
+        <QuestionHelper text="Converts your UNI position back into underlying tokens at the current rate, proportional to your share of the pool, Accrued fees are included in the amounts you receive. After that add them to the DMM unamplified pool. You are given DMM pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time." />
       </RowBetween>
     </Tabs>
   )
