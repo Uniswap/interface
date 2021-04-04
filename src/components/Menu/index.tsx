@@ -1,6 +1,8 @@
 import React, { ReactNode, useRef } from 'react'
 import { Info, PieChart, Menu as MenuIcon } from 'react-feather'
 import styled from 'styled-components'
+import { NavLink } from 'react-router-dom'
+
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
@@ -69,6 +71,20 @@ const MenuFlyout = styled.span`
   `};
 `
 
+const NavMenuItem = styled(NavLink)`
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+  }
+  > svg {
+    margin-right: 8px;
+  }
+`
+
 const MenuItem = styled(ExternalLink)`
   flex: 1;
   padding: 0.5rem 0.5rem;
@@ -97,10 +113,10 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://dmm.exchange/">
+          <NavMenuItem to="/about">
             <Info size={14} />
             About
-          </MenuItem>
+          </NavMenuItem>
           <MenuItem id="link" href={DMM_INFO_URL}>
             <PieChart size={14} />
             Analytics
