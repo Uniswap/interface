@@ -124,11 +124,11 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  My Pools
+                  My Pools on External Platforms
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ButtonOutlined
+                {/* <ButtonOutlined
                   width="148px"
                   padding="12px 18px"
                   as={Link}
@@ -136,7 +136,7 @@ export default function Pool() {
                   style={{ float: 'right' }}
                 >
                   {t('createNewPool')}
-                </ButtonOutlined>
+                </ButtonOutlined> */}
                 {/* <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
                   <Text fontWeight={500} fontSize={16}>
                     Add Liquidity

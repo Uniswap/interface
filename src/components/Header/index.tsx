@@ -290,7 +290,7 @@ export default function Header() {
                 Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
               }
             >
-              Migration
+              Migrate Liquidity
             </StyledNavLink>
           </HideSmall>
           <HideSmall>
