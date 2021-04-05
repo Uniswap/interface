@@ -11,9 +11,9 @@ elif [[ "$TRAVIS_BRANCH" == "staging" ]]; then
   echo "Start running build-staging"
   yarn build-staging
   echo "Finished running build-staging"
-elif [[ "$TRAVIS_BRANCH" == "master" ]]; then
+elif [[ "$TRAVIS_BRANCH" == "main" ]]; then
   echo "Start running build"
-  yarn build
+  yarn build-production
   echo "Finished running build"
 else
     echo "Branch is not set for auto-build."
