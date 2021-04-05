@@ -127,7 +127,7 @@ export function MigrateTab() {
           <StyledArrowLeft />
         </ButtonEmpty>
         <ActiveText>{'Migrate Liquidity'}</ActiveText>
-        <QuestionHelper text="Converts your UNI position back into underlying tokens at the current rate, proportional to your share of the pool, Accrued fees are included in the amounts you receive. After that add them to the DMM unamplified pool. You are given DMM pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time." />
+        <QuestionHelper text="Converts your liquidity position on Uniswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address." />
       </RowBetween>
     </Tabs>
   )

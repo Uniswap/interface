@@ -119,7 +119,7 @@ export default function Menu() {
           </NavMenuItem>
           <NavMenuItem to="/migration">
             <Zap size={14} />
-            Migration
+            Migrate &nbsp;&nbsp;&nbsp;&nbsp;Liquidity
           </NavMenuItem>
           <MenuItem id="link" href={DMM_INFO_URL}>
             <PieChart size={14} />
