@@ -305,7 +305,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <ButtonSecondary2 padding="8px" borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`https://uniswap.info/account/${account}`}
+                href={`${process.env.REACT_APP_DMM_ANALYTICS_URL}/account/${account}`}
               >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
