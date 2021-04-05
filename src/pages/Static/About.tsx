@@ -1,17 +1,25 @@
-import AppBody from 'pages/AppBody'
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React from 'react'
 import style from './about.module.scss'
 
 import { Text } from 'rebass'
-import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { Link } from 'react-router-dom'
+
+import { ButtonOutlined, ButtonPrimary } from 'components/Button'
+import LocalLoader from 'components/LocalLoader'
 import { ExternalLink } from 'theme'
-import { useActiveWeb3React } from 'hooks'
+import { useGlobalData } from 'state/about/hooks'
+import { formattedNum } from 'utils'
 
 export default function About() {
-  const theme = useContext(ThemeContext)
-  const { chainId } = useActiveWeb3React()
+  const { loading, data } = useGlobalData()
+
+  if (loading || !data) {
+    return <LocalLoader />
+  }
+
+  const globalData = data.dmmFactories[0]
+  console.log('globalData', globalData)
+
   return (
     <div className={style.wrapper}>
       <style>@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@900&display=swap');</style>
@@ -37,20 +45,20 @@ export default function About() {
       </div>
 
       <Text mt={10} fontSize={21} color={'#c9d2d7'}>
-        Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
+        Automated Market Making with greater flexibility and extremely high capital efficiency
       </Text>
 
       <div className={style.section_number}>
         <div>
           <Text fontSize={42} fontWeight={900}>
-            $265,987
+            {formattedNum(globalData.totalVolumeUSD, true)}
           </Text>
           <Text fontSize={14}>Trading Volume</Text>
         </div>
         <div style={{ width: '0px', border: '1px solid #303e46' }}></div>
         <div>
           <Text fontSize={42} fontWeight={900}>
-            $654,986
+            {formattedNum(globalData.totalLiquidityUSD, true)}
           </Text>
           <Text fontSize={14}>Total Value Locked</Text>
         </div>
@@ -71,11 +79,7 @@ export default function About() {
         </ButtonOutlined>
       </div>
       <Text mt={100} color={'#f4f4f4'} fontSize={40} style={{ position: 'relative' }}>
-        <div
-          className={[style.icon, style.icon_1].join(' ')}
-          style={{ display: 'inline-block', width: '50px', height: '50px', position: 'absolute' }}
-        ></div>
-        <span style={{ marginLeft: '55px' }}>Programmable Pricing Curve</span>
+        <span>Programmable Pricing Curve</span>
       </Text>
       <div className={style.section_curve_details}>
         <i>
@@ -117,11 +121,7 @@ export default function About() {
       </i>
 
       <Text fontSize={36} fontWeight={500} mt={100} mb={56} color={'#f4f4f4'} style={{ position: 'relative' }}>
-        <div
-          className={[style.icon, style.icon_2].join(' ')}
-          style={{ display: 'inline-block', width: '50px', height: '50px', position: 'absolute' }}
-        ></div>
-        <span style={{ marginLeft: '55px' }}>Dynamic Fees</span>
+        <span>Dynamic Fees</span>
       </Text>
 
       <div className={style.section_fee}>
@@ -160,11 +160,7 @@ export default function About() {
       </div>
 
       <Text fontSize={36} color={'#f4f4f4'} mt={135} style={{ position: 'relative' }}>
-        <div
-          className={[style.icon, style.icon_3].join(' ')}
-          style={{ display: 'inline-block', width: '50px', height: '50px', position: 'absolute' }}
-        ></div>
-        <span style={{ marginLeft: '55px' }}>Permissionless and Frictionless Liquidity for DeFi</span>
+        <span>Permissionless and Frictionless Liquidity for DeFi</span>
       </Text>
       <div style={{ marginTop: '70px', position: 'relative' }}>
         <div className={style.wrapper5}>
