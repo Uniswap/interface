@@ -150,8 +150,10 @@ const Pools = ({
     ethPrice.currentPrice
   )
 
-  const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
-
+  // const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
+  const temp = useUserLiquidityPositions(account)
+  const loadingUserLiquidityPositions = !account ? false : temp.loading
+  const userLiquidityPositions = !account ? { liquidityPositionSnapshots: [] } : temp.data
   return (
     <>
       <PageWrapper>
