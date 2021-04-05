@@ -144,16 +144,11 @@ $desktop-width: 1024px;
 }
 
 .wrapper5 {
-  width: 100%;
-  max-width: 800px;
-  min-height: 160px;
-  padding: 27px 40px 26px 36px;
-  border-radius: 20px;
-  border: solid 1px #303e46;
-  background-color: #1d272b;
-  margin: 0 auto;
   display: flex;
-  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: auto auto;
 }
 
 .icon {

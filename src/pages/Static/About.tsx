@@ -9,8 +9,14 @@ import LocalLoader from 'components/LocalLoader'
 import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
 import { formattedNum } from 'utils'
+import { useActiveWeb3React } from 'hooks'
+import { ChainId } from 'libs/sdk/src'
+import { KNC } from '../../constants'
 
 export default function About() {
+  const { chainId } = useActiveWeb3React()
+
+  const poolsMenuLink = chainId ? `/pools/ETH/${KNC[chainId as ChainId].address}` : '/pools/ETH'
   const { loading, data } = useGlobalData()
 
   if (loading || !data) {
@@ -53,7 +59,7 @@ export default function About() {
           <Text fontSize={42} fontWeight={900}>
             {formattedNum(globalData.totalVolumeUSD, true)}
           </Text>
-          <Text fontSize={14}>Trading Volume</Text>
+          <Text fontSize={14}>Total Trading Volume</Text>
         </div>
         <div style={{ width: '0px', border: '1px solid #303e46' }}></div>
         <div>
@@ -65,7 +71,7 @@ export default function About() {
       </div>
 
       <div className={style.panel0}>
-        <ButtonPrimary padding="12px 28px" as={Link} to={`/pools/ETH`}>
+        <ButtonPrimary padding="12px 28px" as={Link} to={poolsMenuLink}>
           Add Liquidity
         </ButtonPrimary>
         <ButtonOutlined
@@ -164,34 +170,14 @@ export default function About() {
       </Text>
       <div style={{ marginTop: '70px', position: 'relative' }}>
         <div className={style.wrapper5}>
-          <div className={[style.icon, style.icon_1].join(' ')}></div>
-          <Text fontSize={24} width={200} margin={'auto'}>
-            Programmable Curves
-          </Text>
-          <Text fontSize={18} margin={'auto'} marginLeft={'20px'} width={'60%'}>
-            Liquidity pool creators can easily customize their pricing curves depending on the nature of their token
-            pairs to improve capital efficiency.
-          </Text>
+          <img src={require('../../assets/svg/permissionless_frictionless.svg')} />
         </div>
-        <div className={style.wrapper5}>
-          <div className={[style.icon, style.icon_2].join(' ')}></div>
-          <Text fontSize={24} width={200} margin={'auto'}>
-            Dynamic Fees
-          </Text>
-          <Text fontSize={18} margin={'auto'} marginLeft={'20px'} width={'60%'}>
-            LP fees will adjust based on market conditions (Trading Volume and Price Volatility) to reduce the impact of
-            impermanent loss for LPs and maximise returns for takers.
-          </Text>
-        </div>
-        <div className={style.wrapper5}>
-          <div className={[style.icon, style.icon_3].join(' ')}></div>
-          <Text fontSize={24} width={200} margin={'auto'}>
-            Permissionless Liquidity Contribution
-          </Text>
-          <Text fontSize={18} margin={'auto'} marginLeft={'20px'} width={'60%'}>
-            Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
-            aggregators, end users) can source liquidity from the DMM.
-          </Text>
+        <div
+          className={style.wrapper5}
+          style={{ maxWidth: '780px', fontSize: '20px', color: '#c9d2d7', marginTop: '36px' }}
+        >
+          Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
+          aggregators, end users) can source liquidity from the DMM.
         </div>
       </div>
 
@@ -199,7 +185,7 @@ export default function About() {
         width="248px"
         padding="12px 18px"
         as={Link}
-        to={`/pools/ETH`}
+        to={poolsMenuLink}
         style={{ margin: '60px auto', fontSize: '16px' }}
       >
         Explore pools
