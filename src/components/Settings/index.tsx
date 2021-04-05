@@ -151,18 +151,18 @@ export default function SettingsTab() {
             <RowBetween style={{ padding: '0 2rem' }}>
               <div />
               <Text fontWeight={500} fontSize={20}>
-                Are you sure?
+                Please Confirm
               </Text>
               <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
               <Text fontWeight={500} fontSize={20}>
-                Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
-                in bad rates and lost funds.
+                In Advanced Mode, the ‘confirm transaction’ prompt is deactivated. This allows high slippage trades that
+                often result in bad rates.
               </Text>
               <Text fontWeight={600} fontSize={20}>
-                ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
+                ONLY USE THIS MODE IF YOU ARE AWARE OF THE RISKS
               </Text>
               <ButtonError
                 error={true}
@@ -175,7 +175,7 @@ export default function SettingsTab() {
                 }}
               >
                 <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
-                  Turn On Expert Mode
+                  Turn On Advanced Mode
                 </Text>
               </ButtonError>
             </AutoColumn>
