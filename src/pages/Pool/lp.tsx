@@ -124,7 +124,7 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  My Pools
+                  My Pools on External Platforms
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
