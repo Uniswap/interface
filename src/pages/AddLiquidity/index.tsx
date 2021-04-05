@@ -449,13 +449,13 @@ export default function AddLiquidity({
                 <BlueCard>
                   <AutoColumn gap="10px">
                     <TYPE.link fontWeight={600} color={'primaryText1'}>
-                      You are the first liquidity provider.
+                      You are the first Liquidity Provider.
                     </TYPE.link>
                     <TYPE.link fontWeight={400} color={'primaryText1'}>
                       The ratio of tokens you add will set the price of this pool.
                     </TYPE.link>
                     <TYPE.link fontWeight={400} color={'primaryText1'}>
-                      Once you are happy with the rate click supply to review.
+                      Once you are happy with the rate, click supply to review.
                     </TYPE.link>
                   </AutoColumn>
                 </BlueCard>
@@ -537,7 +537,7 @@ export default function AddLiquidity({
               <OutlineCard2>
                 <AutoRow>
                   <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                    Dynamic Fee:{' '}
+                    Dynamic Fee Range:{' '}
                     {feeRangeCalc(
                       !!pair?.amp ? +new Fraction(pair.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp
                     )}
