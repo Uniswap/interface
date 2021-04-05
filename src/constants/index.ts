@@ -218,6 +218,11 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   // }
 }
 
+export const BLACKLIST_WALLETS: string[] = [
+  '0xd882cfc20f52f2599d84b8e8d58c7fb62cfe344b',
+  '0x7f367cc41522ce07553e823bf3be79a889debe1b'
+]
+
 export const NetworkContextName = 'NETWORK'
 
 // default allowed slippage, in bips

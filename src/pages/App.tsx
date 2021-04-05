@@ -28,6 +28,8 @@ import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redir
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import About from './Static/About'
+import { BLACKLIST_WALLETS } from '../constants'
+import { useActiveWeb3React } from 'hooks'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -67,50 +69,69 @@ const Marginer = styled.div`
 `
 
 export default function App() {
+  const { account } = useActiveWeb3React()
+
   return (
-    <ApolloProvider client={client}>
-      <Suspense fallback={null}>
-        <Route component={DarkModeQueryParamReader} />
-        <AppWrapper>
-          <URLWarning />
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Utilities />
-            <PoweredBy />
-            <Web3ReactManager>
-              <Switch>
-                <Route exact strict path="/swap" component={Swap} />
-                <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                <Route exact strict path="/find" component={PoolFinder} />
-                <Route exact strict path="/findUNI" component={PoolFinderUNI} />
-                <Route exact strict path="/pools" component={Pools} />
-                <Route exact strict path="/pools/:currencyIdA" component={Pools} />
-                <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
-                <Route exact strict path="/myPools" component={Pool} />
-                <Route exact strict path="/migration" component={Migration} />
-                <Route exact path="/add" component={AddLiquidity} />
-                <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-                <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-                <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={RedirectDuplicateTokenIds} />
-                <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
-                <Route exact strict path="/remove/:currencyIdA/:currencyIdB/:pairAddress" component={RemoveLiquidity} />
-                <Route exact strict path="/create" component={RedirectToAddLiquidity} />
-                <Route exact path="/create" component={AddLiquidity} />
-                <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-                <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-                <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={RedirectDuplicateTokenIds} />
-                <Route exact strict path="/migrate/:currencyIdA/:currencyIdB" component={MigrateLiquidityUNI} />
-                <Route exact path="/about" component={About} />
-                <Route component={RedirectPathToSwapOnly} />
-              </Switch>
-            </Web3ReactManager>
-            <Marginer />
-          </BodyWrapper>
-        </AppWrapper>
-      </Suspense>
-    </ApolloProvider>
+    <>
+      {(!account || !BLACKLIST_WALLETS.includes(account)) && (
+        <ApolloProvider client={client}>
+          <Suspense fallback={null}>
+            <Route component={DarkModeQueryParamReader} />
+            <AppWrapper>
+              <URLWarning />
+              <HeaderWrapper>
+                <Header />
+              </HeaderWrapper>
+              <BodyWrapper>
+                <Popups />
+                <Utilities />
+                <PoweredBy />
+                <Web3ReactManager>
+                  <Switch>
+                    <Route exact strict path="/swap" component={Swap} />
+                    <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+                    <Route exact strict path="/find" component={PoolFinder} />
+                    <Route exact strict path="/findUNI" component={PoolFinderUNI} />
+                    <Route exact strict path="/pools" component={Pools} />
+                    <Route exact strict path="/pools/:currencyIdA" component={Pools} />
+                    <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
+                    <Route exact strict path="/myPools" component={Pool} />
+                    <Route exact strict path="/migration" component={Migration} />
+                    <Route exact path="/add" component={AddLiquidity} />
+                    <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                    <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                    <Route
+                      exact
+                      path="/add/:currencyIdA/:currencyIdB/:pairAddress"
+                      component={RedirectDuplicateTokenIds}
+                    />
+                    <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
+                    <Route
+                      exact
+                      strict
+                      path="/remove/:currencyIdA/:currencyIdB/:pairAddress"
+                      component={RemoveLiquidity}
+                    />
+                    <Route exact strict path="/create" component={RedirectToAddLiquidity} />
+                    <Route exact path="/create" component={AddLiquidity} />
+                    <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
+                    <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+                    <Route
+                      exact
+                      path="/add/:currencyIdA/:currencyIdB/:pairAddress"
+                      component={RedirectDuplicateTokenIds}
+                    />
+                    <Route exact strict path="/migrate/:currencyIdA/:currencyIdB" component={MigrateLiquidityUNI} />
+                    <Route exact path="/about" component={About} />
+                    <Route component={RedirectPathToSwapOnly} />
+                  </Switch>
+                </Web3ReactManager>
+                <Marginer />
+              </BodyWrapper>
+            </AppWrapper>
+          </Suspense>
+        </ApolloProvider>
+      )}
+    </>
   )
 }
