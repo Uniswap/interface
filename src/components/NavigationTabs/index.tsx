@@ -127,7 +127,7 @@ export function MigrateTab() {
           <StyledArrowLeft />
         </ButtonEmpty>
         <ActiveText>{'Migrate Liquidity'}</ActiveText>
-        <QuestionHelper text="Converts your liquidity position on Uniswap/Sushiswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address." />
+        <QuestionHelper text="Converts your liquidity position on Uniswap into underlying tokens at the current rate. Tokens are deposited into the basic AMP=1 pool on the DMM and you will be given DMM-LP tokens representing your new pool share. If rates are different between the two platforms, some tokens may be refunded to your address." />
       </RowBetween>
     </Tabs>
   )

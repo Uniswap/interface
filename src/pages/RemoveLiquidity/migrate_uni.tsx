@@ -829,7 +829,7 @@ export default function MigrateLiquidity({
                           />
                           <Text fontSize={14} fontWeight={500}>
                             There is no existing pool for this token pair. You will be creating a new pool with AMP=1
-                            and migrating tokens from Uniswap/Sushiswap to DMM.{' '}
+                            and migrating tokens from Uniswap to DMM.{' '}
                           </Text>
                         </RowFixed>
                       </YellowCard>
