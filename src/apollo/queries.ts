@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-import { BUNDLE_ID } from '../constants'
+import { BUNDLE_ID, FACTORY_ADDRESS } from '../constants'
 
 export const ETH_PRICE = (block?: number) => {
   const queryString = block
@@ -19,6 +19,26 @@ export const ETH_PRICE = (block?: number) => {
       }
     }
   `
+  return gql(queryString)
+}
+
+export const GLOBAL_DATA = (block?: number) => {
+  const queryString = `query dmmFactories {
+    dmmFactories(
+       ${block ? `block: { number: ${block}}` : ``} 
+       where: { id: "${FACTORY_ADDRESS.toLowerCase()}" }) {
+        id
+        totalVolumeUSD
+        totalFeeUSD
+        totalVolumeETH
+        untrackedVolumeUSD
+        totalLiquidityUSD
+        totalLiquidityETH
+        txCount
+        pairCount
+      }
+    }`
+
   return gql(queryString)
 }
 
