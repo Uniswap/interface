@@ -14,6 +14,7 @@ import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import AccountDetails from '../AccountDetails'
 import { useIsDarkMode } from '../../state/user/hooks'
+import { ExternalLink } from '../../theme'
 
 import Modal from '../Modal'
 import Option from './Option'
@@ -350,7 +351,15 @@ export default function WalletModal({
         </ContentWrapper>
         <FooterRow>
           <input type="checkbox" checked={isAccepted} onChange={handleAccept} style={{ marginRight: '12px' }} />
-          <ToSText>Accept Terms of Use and Privacy Policy</ToSText>
+          <ToSText>
+            Accept <ExternalLink href="http://files.dmm.exchange/tac.pdf">Terms of Use</ExternalLink> and{' '}
+            <ExternalLink
+              href="http://files.dmm.exchange/privacy.pdf
+"
+            >
+              Privacy Policy
+            </ExternalLink>
+          </ToSText>
         </FooterRow>
       </UpperSection>
     )
