@@ -311,8 +311,14 @@ export default function About() {
             <Text>
               <ExternalLink href={`https://files.kyber.network/DMM-Feb21.pdf`}>DMM Litepaper</ExternalLink>
             </Text>
-            <Text>
+            {/* <Text>
               <a>FAQ</a>
+            </Text> */}
+            <Text>
+              <ExternalLink href={`http://files.dmm.exchange/privacy.pdf`}>Privacy</ExternalLink>
+            </Text>
+            <Text>
+              <ExternalLink href={`http://files.dmm.exchange/tac.pdf`}>Terms</ExternalLink>
             </Text>
             <Text>
               <ExternalLink href={`https://kyber.network/`}>Kyber Network</ExternalLink>

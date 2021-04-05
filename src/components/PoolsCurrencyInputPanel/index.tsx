@@ -13,6 +13,10 @@ const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `};
 `
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
@@ -34,12 +38,20 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `};
 `
 
 const Aligner = styled.span`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `};
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
@@ -58,12 +70,26 @@ const InputPanel = styled.div`
   border-radius: 8px;
   background-color: transparent;
   z-index: 1;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+    margin-bottom: 12px;
+  `};
 `
 
 const Container = styled.div`
   border-radius: 8px;
   border: 1px solid transparent;
   background-color: transparent;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `};
+`
+
+const LogoNameWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -99,20 +125,20 @@ export default function CurrencyInputPanel({
   }, [setModalOpen])
 
   return (
-    <div>
-      <InputPanel id={id}>
-        <Container>
-          <InputRow style={{ padding: '0', borderRadius: '8px' }} selected={disableCurrencySelect}>
-            <CurrencySelect
-              selected={!!currency}
-              className="open-currency-select-button"
-              onClick={() => {
-                if (!disableCurrencySelect) {
-                  setModalOpen(true)
-                }
-              }}
-            >
-              <Aligner>
+    <InputPanel id={id}>
+      <Container>
+        <InputRow style={{ padding: '0', borderRadius: '8px' }} selected={disableCurrencySelect}>
+          <CurrencySelect
+            selected={!!currency}
+            className="open-currency-select-button"
+            onClick={() => {
+              if (!disableCurrencySelect) {
+                setModalOpen(true)
+              }
+            }}
+          >
+            <Aligner>
+              <LogoNameWrapper>
                 {pair ? (
                   <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                 ) : currency ? (
@@ -131,22 +157,22 @@ export default function CurrencyInputPanel({
                       : currency?.symbol) || t('selectToken')}
                   </StyledTokenName>
                 )}
-                {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
-              </Aligner>
-            </CurrencySelect>
-          </InputRow>
-        </Container>
-        {!disableCurrencySelect && onCurrencySelect && (
-          <CurrencySearchModal
-            isOpen={modalOpen}
-            onDismiss={handleDismissSearch}
-            onCurrencySelect={onCurrencySelect}
-            selectedCurrency={currency}
-            otherSelectedCurrency={otherCurrency}
-            showCommonBases={showCommonBases}
-          />
-        )}
-      </InputPanel>
-    </div>
+              </LogoNameWrapper>
+              {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+            </Aligner>
+          </CurrencySelect>
+        </InputRow>
+      </Container>
+      {!disableCurrencySelect && onCurrencySelect && (
+        <CurrencySearchModal
+          isOpen={modalOpen}
+          onDismiss={handleDismissSearch}
+          onCurrencySelect={onCurrencySelect}
+          selectedCurrency={currency}
+          otherSelectedCurrency={otherCurrency}
+          showCommonBases={showCommonBases}
+        />
+      )}
+    </InputPanel>
   )
 }
