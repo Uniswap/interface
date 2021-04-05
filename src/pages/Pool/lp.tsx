@@ -128,7 +128,7 @@ export default function Pool() {
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ButtonOutlined
+                {/* <ButtonOutlined
                   width="148px"
                   padding="12px 18px"
                   as={Link}
@@ -136,7 +136,7 @@ export default function Pool() {
                   style={{ float: 'right' }}
                 >
                   {t('createNewPool')}
-                </ButtonOutlined>
+                </ButtonOutlined> */}
                 {/* <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
                   <Text fontWeight={500} fontSize={16}>
                     Add Liquidity
