@@ -2,9 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
-import { NavLink, Link as HistoryLink } from 'react-router-dom'
-
+import { NavLink, useHistory } from 'react-router-dom'
 import { ArrowLeft } from 'react-feather'
+
+import { ButtonEmpty } from 'components/Button'
 import { RowBetween } from '../Row'
 import QuestionHelper from '../QuestionHelper'
 
@@ -67,12 +68,18 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
 }
 
 export function FindPoolTabs() {
+  const history = useHistory()
+
+  const goBack = () => {
+    history.goBack()
+  }
+
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
+        <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
-        </HistoryLink>
+        </ButtonEmpty>
         <ActiveText>Import Pool</ActiveText>
         <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} />
       </RowBetween>
@@ -81,20 +88,46 @@ export function FindPoolTabs() {
 }
 
 export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+  const history = useHistory()
+
+  const goBack = () => {
+    history.goBack()
+  }
+
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
+        <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
           <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
+        </ButtonEmpty>
+        <ActiveText>{creating ? 'Create a new pool' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
         <QuestionHelper
           text={
             adding
-              ? 'When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
+              ? 'Add liquidity and receive pool tokens representing your pool share. You will earn dynamic fees on trades for this token pair, proportional to your pool share. Fees earned are automatically claimed when you withdraw your liquidity.'
               : 'Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.'
           }
         />
+      </RowBetween>
+    </Tabs>
+  )
+}
+
+export function MigrateTab() {
+  const history = useHistory()
+
+  const goBack = () => {
+    history.goBack()
+  }
+
+  return (
+    <Tabs>
+      <RowBetween style={{ padding: '1rem' }}>
+        <ButtonEmpty width="fit-content" padding="0" onClick={goBack}>
+          <StyledArrowLeft />
+        </ButtonEmpty>
+        <ActiveText>{'Migrate Liquidity'}</ActiveText>
+        <QuestionHelper text="Converts your UNI position back into underlying tokens at the current rate, proportional to your share of the pool, Accrued fees are included in the amounts you receive. After that add them to the DMM unamplified pool. You are given DMM pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time." />
       </RowBetween>
     </Tabs>
   )

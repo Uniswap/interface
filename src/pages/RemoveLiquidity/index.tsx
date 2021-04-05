@@ -1,10 +1,9 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Percent, WETH } from '@uniswap/sdk'
+import { Currency, currencyEquals, ETHER, Percent, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
@@ -47,9 +46,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 export default function RemoveLiquidity({
   history,
   match: {
-    params: { currencyIdA, currencyIdB }
+    params: { currencyIdA, currencyIdB, pairAddress }
   }
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; pairAddress: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
   const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
@@ -65,7 +64,7 @@ export default function RemoveLiquidity({
 
   // burn state
   const { independentField, typedValue } = useBurnState()
-  const { pair, parsedAmounts, error } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined)
+  const { pair, parsedAmounts, error } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
 
@@ -105,6 +104,7 @@ export default function RemoveLiquidity({
   const isArgentWallet = useIsArgentWallet()
 
   async function onAttemptToApprove() {
+    console.log('onAttemptToApprove')
     if (!pairContract || !pair || !library || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
@@ -123,7 +123,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: 'KyberDMM LP',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -222,6 +222,7 @@ export default function RemoveLiquidity({
         methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
         args = [
           currencyBIsETH ? tokenA.address : tokenB.address,
+          pairAddress,
           liquidityAmount.raw.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
@@ -235,6 +236,7 @@ export default function RemoveLiquidity({
         args = [
           tokenA.address,
           tokenB.address,
+          pairAddress,
           liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
@@ -250,6 +252,7 @@ export default function RemoveLiquidity({
         methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
         args = [
           currencyBIsETH ? tokenA.address : tokenB.address,
+          pairAddress,
           liquidityAmount.raw.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
@@ -267,6 +270,7 @@ export default function RemoveLiquidity({
         args = [
           tokenA.address,
           tokenB.address,
+          pairAddress,
           liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
@@ -324,12 +328,6 @@ export default function RemoveLiquidity({
           })
 
           setTxHash(response.hash)
-
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Remove',
-            label: [currencyA?.symbol, currencyB?.symbol].join('/')
-          })
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)
@@ -381,7 +379,7 @@ export default function RemoveLiquidity({
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {'UNI ' + currencyA?.symbol + '/' + currencyB?.symbol} Burned
+            {currencyA?.symbol + '/' + currencyB?.symbol} Burned
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
@@ -566,7 +564,7 @@ export default function RemoveLiquidity({
                           <StyledInternalLink
                             to={`/remove/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
                               currencyB === ETHER ? WETH[chainId].address : currencyIdB
-                            }`}
+                            }/${pairAddress}`}
                           >
                             Receive WETH
                           </StyledInternalLink>
@@ -574,7 +572,9 @@ export default function RemoveLiquidity({
                           <StyledInternalLink
                             to={`/remove/${
                               currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
-                            }/${currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB}`}
+                            }/${
+                              currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB
+                            }/${pairAddress}`}
                           >
                             Receive ETH
                           </StyledInternalLink>
@@ -611,7 +611,8 @@ export default function RemoveLiquidity({
                   showMaxButton={!atMaxAmount}
                   currency={currencyA}
                   label={'Output'}
-                  onCurrencySelect={handleSelectCurrencyA}
+                  onCurrencySelect={() => null}
+                  disableCurrencySelect={true}
                   id="remove-liquidity-tokena"
                 />
                 <ColumnCenter>
@@ -625,7 +626,8 @@ export default function RemoveLiquidity({
                   showMaxButton={!atMaxAmount}
                   currency={currencyB}
                   label={'Output'}
-                  onCurrencySelect={handleSelectCurrencyB}
+                  onCurrencySelect={() => null}
+                  disableCurrencySelect={true}
                   id="remove-liquidity-tokenb"
                 />
               </>

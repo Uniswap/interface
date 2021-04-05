@@ -1,7 +1,7 @@
-import { ChainId, Currency, currencyEquals, JSBI, Price, WETH } from '@uniswap/sdk'
+import { ChainId, Currency, currencyEquals, JSBI, Price, Token, WETH } from 'libs/sdk/src'
 import { useMemo } from 'react'
-import { USDC } from '../constants'
-import { PairState, usePairs } from '../data/Reserves'
+import { USDC as USDC_MAINNET } from '../constants'
+import { PairState, usePairs, useUnAmplifiedPairsFull } from '../data/Reserves'
 import { useActiveWeb3React } from '../hooks'
 import { wrappedCurrency } from './wrappedCurrency'
 
@@ -12,18 +12,27 @@ import { wrappedCurrency } from './wrappedCurrency'
 export default function useUSDCPrice(currency?: Currency): Price | undefined {
   const { chainId } = useActiveWeb3React()
   const wrapped = wrappedCurrency(currency, chainId)
+  const USDC =
+    chainId == 1
+      ? USDC_MAINNET
+      : new Token(ChainId.ROPSTEN, '0x068B43f7F2f2c6a662C36E201144aE45f7a1C040', 6, 'USDC', 'USD//C')
   const tokenPairs: [Currency | undefined, Currency | undefined][] = useMemo(
     () => [
       [
         chainId && wrapped && currencyEquals(WETH[chainId], wrapped) ? undefined : currency,
         chainId ? WETH[chainId] : undefined
       ],
-      [wrapped?.equals(USDC) ? undefined : wrapped, chainId === ChainId.MAINNET ? USDC : undefined],
-      [chainId ? WETH[chainId] : undefined, chainId === ChainId.MAINNET ? USDC : undefined]
+      [wrapped?.equals(USDC) ? undefined : wrapped, USDC],
+      [chainId ? WETH[chainId] : undefined, USDC]
     ],
     [chainId, currency, wrapped]
   )
-  const [[ethPairState, ethPair], [usdcPairState, usdcPair], [usdcEthPairState, usdcEthPair]] = usePairs(tokenPairs)
+  const p0 = useUnAmplifiedPairsFull([tokenPairs[0]])
+  const [ethPairState, ethPair] = p0.length > 0 ? p0[0] : [PairState.INVALID, null]
+  const p1 = useUnAmplifiedPairsFull([tokenPairs[1]])
+  const [usdcPairState, usdcPair] = p1.length > 0 ? p1[0] : [PairState.INVALID, null]
+  const p2 = useUnAmplifiedPairsFull([tokenPairs[2]])
+  const [usdcEthPairState, usdcEthPair] = p2.length > 0 ? p2[0] : [PairState.INVALID, null]
 
   return useMemo(() => {
     if (!currency || !wrapped || !chainId) {

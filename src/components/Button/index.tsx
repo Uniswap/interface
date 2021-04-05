@@ -9,14 +9,16 @@ import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 const Base = styled(RebassButton)<{
   padding?: string
   width?: string
+  height?: string
   borderRadius?: string
   altDisabledStyle?: boolean
 }>`
   padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
+  height: ${({ height }) => (height ? height : 'auto')};
   font-weight: 500;
   text-align: center;
-  border-radius: 12px;
+  border-radius: 5.5px;
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid transparent;
@@ -180,9 +182,11 @@ export const ButtonUNIGradient = styled(ButtonPrimary)`
 `
 
 export const ButtonOutlined = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.primary1};
   background-color: transparent;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.primary1};
+  border-radius: 5.5px;
+  font-size: 12px;
 
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
@@ -217,7 +221,7 @@ export const ButtonEmpty = styled(Base)`
   }
   &:disabled {
     opacity: 50%;
-    cursor: auto;
+    cursor: not-allowed;
   }
 `
 

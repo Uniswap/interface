@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk'
+import { Currency, ETHER, Token } from 'libs/sdk/src'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
@@ -6,9 +6,7 @@ import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
-
-const getTokenLogoURL = (address: string) =>
-  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+import { getTokenLogoURL, getRopstenTokenLogoURL } from 'utils'
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
@@ -43,7 +41,7 @@ export default function CurrencyLogo({
         return [...uriLocations, getTokenLogoURL(currency.address)]
       }
 
-      return [getTokenLogoURL(currency.address)]
+      return [getTokenLogoURL(currency.address), getRopstenTokenLogoURL(currency.address)]
     }
     return []
   }, [currency, uriLocations])

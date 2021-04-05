@@ -1,5 +1,5 @@
-import { UNI } from './../../constants/index'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from 'libs/sdk/src'
+import { Token as TokenUNI, TokenAmount as TokenAmountUNI } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -7,8 +7,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
-import { useUserUnclaimedAmount } from '../claim/hooks'
-import { useTotalUniEarned } from '../stake/hooks'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -83,6 +81,40 @@ export function useTokenBalancesWithLoadingIndicator(
   ]
 }
 
+export function useTokenBalancesWithLoadingIndicatorUNI(
+  address?: string,
+  tokens?: (TokenUNI | undefined)[]
+): [{ [tokenAddress: string]: TokenAmountUNI | undefined }, boolean] {
+  const validatedTokens: Token[] = useMemo(
+    () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
+    [tokens]
+  )
+
+  const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => vt.address), [validatedTokens])
+
+  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
+
+  const anyLoading: boolean = useMemo(() => balances.some(callState => callState.loading), [balances])
+
+  return [
+    useMemo(
+      () =>
+        address && validatedTokens.length > 0
+          ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmountUNI | undefined }>((memo, token, i) => {
+              const value = balances?.[i]?.result?.[0]
+              const amount = value ? JSBI.BigInt(value.toString()) : undefined
+              if (amount) {
+                memo[token.address] = new TokenAmountUNI(token, amount)
+              }
+              return memo
+            }, {})
+          : {},
+      [address, validatedTokens, balances]
+    ),
+    anyLoading
+  ]
+}
+
 export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[]
@@ -132,25 +164,4 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
   return balances ?? {}
-}
-
-// get the total owned, unclaimed, and unharvested UNI for account
-export function useAggregateUniBalance(): TokenAmount | undefined {
-  const { account, chainId } = useActiveWeb3React()
-
-  const uni = chainId ? UNI[chainId] : undefined
-
-  const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, uni)
-  const uniUnclaimed: TokenAmount | undefined = useUserUnclaimedAmount(account)
-  const uniUnHarvested: TokenAmount | undefined = useTotalUniEarned()
-
-  if (!uni) return undefined
-
-  return new TokenAmount(
-    uni,
-    JSBI.add(
-      JSBI.add(uniBalance?.raw ?? JSBI.BigInt(0), uniUnclaimed?.raw ?? JSBI.BigInt(0)),
-      uniUnHarvested?.raw ?? JSBI.BigInt(0)
-    )
-  )
 }

@@ -26,7 +26,8 @@ export enum ApplicationModal {
   CLAIM_POPUP,
   MENU,
   DELEGATE,
-  VOTE
+  VOTE,
+  PRICE_RANGE
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
@@ -35,3 +36,8 @@ export const addPopup = createAction<{ key?: string; removeAfterMs?: number | nu
   'application/addPopup'
 )
 export const removePopup = createAction<{ key: string }>('application/removePopup')
+export const updateETHPrice = createAction<{
+  currentPrice: string
+  oneDayBackPrice: string
+  pricePercentChange: number
+}>('application/updateETHPrice')

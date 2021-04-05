@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="577" height="519" viewBox="0 0 577 519">
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g>
+                    <g>
+                        <path fill="#1D272B" fill-opacity=".6" stroke="#303E46" stroke-dasharray="4 3" stroke-linecap="round" stroke-linejoin="round" d="M20 0h535c11.046 0 20 8.954 20 20v477c0 11.046-8.954 20-20 20H20c-11.046 0-20-8.954-20-20V20C0 8.954 8.954 0 20 0z" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1)"/>
+                        <g>
+                            <path fill="#105D81" fill-rule="nonzero" d="M267.633 17.5l12 24h-10.001v299h-4v-299h-10l12-24z" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)"/>
+                            <path fill="#105D81" fill-rule="nonzero" d="M459.017 326.5l24 12-24 12-.001-10H75.748v10l-24-12 24-12v10h383.268v-10z" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)"/>
+                            <path stroke="#105D81" stroke-dasharray="4 10" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M51.749 178L483.017 178" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)"/>
+                            <path stroke="#08A1E7" stroke-linecap="round" stroke-width="6" d="M51.383 298.594c116.217 0 285.113-224.008 432-224.008" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)"/>
+                            <text fill="#C9D2D7" font-family="WorkSans-Regular, Work Sans" font-size="14" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)">
+                                <tspan x="281.139" y="13">LP fees</tspan>
+                            </text>
+                            <text fill="#C9D2D7" font-family="WorkSans-SemiBold, Work Sans" font-size="14" font-weight="500" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)">
+                                <tspan x="375" y="21">Increase fee</tspan> <tspan x="459.686" y="21" font-family="WorkSans-Regular, Work Sans" font-weight="normal"> to </tspan> <tspan x="375" y="45" font-family="WorkSans-Regular, Work Sans" font-weight="normal">increase LP profits</tspan>
+                            </text>
+                            <text fill="#C9D2D7" font-family="WorkSans-SemiBold, Work Sans" font-size="14" font-weight="500" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)">
+                                <tspan x="24" y="217">Lower fee</tspan> <tspan x="93.272" y="217" font-family="WorkSans-Regular, Work Sans" font-weight="normal"> to </tspan> <tspan x="24" y="241" font-family="WorkSans-Regular, Work Sans" font-weight="normal">encourage trading</tspan>
+                            </text>
+                            <text fill="#C9D2D7" font-family="WorkSans-Regular, Work Sans" font-size="14" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)">
+                                <tspan x="394" y="200">Typical AMMs </tspan> <tspan x="394" y="224">have fixed fees</tspan>
+                            </text>
+                            <text fill="#C9D2D7" font-family="WorkSans-Regular, Work Sans" font-size="14" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)">
+                                <tspan x="380" y="375">High Volume Trend </tspan> <tspan x="380" y="399">(Volatile Market)</tspan>
+                            </text>
+                            <text fill="#C9D2D7" font-family="WorkSans-Regular, Work Sans" font-size="14" transform="translate(-319 -1836) translate(320 1525) translate(0 311) translate(0 1) translate(21 46)">
+                                <tspan x="24" y="379">Low Volume Trend </tspan> <tspan x="24" y="403">(Stable Market)</tspan>
+                            </text>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

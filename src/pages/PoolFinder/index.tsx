@@ -1,7 +1,8 @@
-import { Currency, ETHER, JSBI, TokenAmount } from '@uniswap/sdk'
+import { Currency, ETHER, JSBI, Pair, TokenAmount } from 'libs/sdk/src'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -12,8 +13,8 @@ import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { PairState, usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
-import { usePairAdder } from '../../state/user/hooks'
-import { useTokenBalance } from '../../state/wallet/hooks'
+import { usePairAdderByTokens } from '../../state/user/hooks'
+import { useTokenBalance, useTokenBalances } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
@@ -26,6 +27,7 @@ enum Fields {
 
 export default function PoolFinder() {
   const { account } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
@@ -33,25 +35,23 @@ export default function PoolFinder() {
   const [currency0, setCurrency0] = useState<Currency | null>(ETHER)
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
-  const [pairState, pair] = usePair(currency0 ?? undefined, currency1 ?? undefined)
-  const addPair = usePairAdder()
+  const pairs: [PairState, Pair | null][] = usePair(currency0 ?? undefined, currency1 ?? undefined)
+  console.log('Pool finder', pairs)
+  const addPair = usePairAdderByTokens()
   useEffect(() => {
-    if (pair) {
-      addPair(pair)
+    if (pairs.length > 0) {
+      const token0 = wrappedCurrency(currency0 || undefined, chainId)
+      const token1 = wrappedCurrency(currency1 || undefined, chainId)
+      if (!!(token0 && token1)) {
+        addPair(token0, token1)
+      }
     }
-  }, [pair, addPair])
+  }, [pairs, addPair])
 
-  const validPairNoLiquidity: boolean =
-    pairState === PairState.NOT_EXISTS ||
-    Boolean(
-      pairState === PairState.EXISTS &&
-        pair &&
-        JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
-        JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
-    )
-
-  const position: TokenAmount | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
-  const hasPosition = Boolean(position && JSBI.greaterThan(position.raw, JSBI.BigInt(0)))
+  const positions: { [tokenAddress: string]: TokenAmount | undefined } = useTokenBalances(
+    account ?? undefined,
+    pairs.map(([, pair]) => pair?.liquidityToken)
+  )
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -63,6 +63,29 @@ export default function PoolFinder() {
     },
     [activeField]
   )
+
+  const myPairs = pairs
+    .filter(([pairState, pair]) => {
+      const validPairNoLiquidity: boolean =
+        pairState === PairState.NOT_EXISTS ||
+        Boolean(
+          pairState === PairState.EXISTS &&
+            pair &&
+            JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
+            JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+        )
+      let hasPosition = false
+      if (pair && pair.liquidityToken.address && positions[pair.liquidityToken.address]) {
+        hasPosition = Boolean(
+          positions[pair.liquidityToken.address] &&
+            JSBI.greaterThan((positions[pair.liquidityToken.address] as TokenAmount).raw, JSBI.BigInt(0))
+        )
+      }
+      return pairState === PairState.EXISTS && hasPosition && pair
+    })
+    .map(
+      ([pairState, pair], index) => !!pair && <MinimalPositionCard key={index} pair={pair} border="1px solid #CED0D9" />
+    )
 
   const handleSearchDismiss = useCallback(() => {
     setShowSearch(false)
@@ -123,64 +146,41 @@ export default function PoolFinder() {
             </Text>
           )}
         </ButtonDropdownLight>
-
-        {hasPosition && (
-          <ColumnCenter
-            style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
-          >
-            <Text textAlign="center" fontWeight={500}>
-              Pool Found!
-            </Text>
-            <StyledInternalLink to={`/pool`}>
-              <Text textAlign="center">Manage this pool.</Text>
-            </StyledInternalLink>
-          </ColumnCenter>
+        <StyledInternalLink
+          to={`/pools/${!!currency0 ? currencyId(currency0) : undefined}/${
+            !!currency1 ? currencyId(currency1) : undefined
+          }`}
+        >
+          <Text textAlign="center">Add liquidity</Text>
+        </StyledInternalLink>
+        {pairs.filter(([pairState, pair]) => pairState === PairState.LOADING).length > 0 && (
+          <LightCard padding="45px 10px">
+            <AutoColumn gap="sm" justify="center">
+              <Text textAlign="center">
+                Loading
+                <Dots />
+              </Text>
+            </AutoColumn>
+          </LightCard>
         )}
 
-        {currency0 && currency1 ? (
-          pairState === PairState.EXISTS ? (
-            hasPosition && pair ? (
-              <MinimalPositionCard pair={pair} border="1px solid #CED0D9" />
-            ) : (
-              <LightCard padding="45px 10px">
-                <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center">You don’t have liquidity in this pool yet.</Text>
-                  <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                    <Text textAlign="center">Add liquidity.</Text>
+        {currency0 && currency1
+          ? myPairs.length > 0 && (
+              <>
+                <ColumnCenter
+                  style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
+                >
+                  <Text textAlign="center" fontWeight={500}>
+                    Pool Found!
+                  </Text>
+                  <StyledInternalLink to={`/myPools`}>
+                    <Text textAlign="center">Manage your pools.</Text>
                   </StyledInternalLink>
-                </AutoColumn>
-              </LightCard>
+                </ColumnCenter>
+                {myPairs}
+              </>
             )
-          ) : validPairNoLiquidity ? (
-            <LightCard padding="45px 10px">
-              <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">No pool found.</Text>
-                <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                  Create pool.
-                </StyledInternalLink>
-              </AutoColumn>
-            </LightCard>
-          ) : pairState === PairState.INVALID ? (
-            <LightCard padding="45px 10px">
-              <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center" fontWeight={500}>
-                  Invalid pair.
-                </Text>
-              </AutoColumn>
-            </LightCard>
-          ) : pairState === PairState.LOADING ? (
-            <LightCard padding="45px 10px">
-              <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">
-                  Loading
-                  <Dots />
-                </Text>
-              </AutoColumn>
-            </LightCard>
-          ) : null
-        ) : (
-          prerequisiteMessage
-        )}
+          : prerequisiteMessage}
       </AutoColumn>
 
       <CurrencySearchModal

@@ -1,14 +1,13 @@
-import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import React, { ReactNode, useRef } from 'react'
+import { Info, PieChart, Menu as MenuIcon, Zap } from 'react-feather'
 import styled from 'styled-components'
-import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
-import { useActiveWeb3React } from '../../hooks'
+import { NavLink } from 'react-router-dom'
+
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
-
 import { ExternalLink } from '../../theme'
-import { ButtonPrimary } from '../Button'
+import { DMM_INFO_URL } from '../../constants'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -24,6 +23,7 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
+  color: ${({ theme }) => theme.text11};
   background-color: ${({ theme }) => theme.bg3};
 
   padding: 0.15rem 0.5rem;
@@ -71,6 +71,20 @@ const MenuFlyout = styled.span`
   `};
 `
 
+const NavMenuItem = styled(NavLink)`
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+  }
+  > svg {
+    margin-right: 8px;
+  }
+`
+
 const MenuItem = styled(ExternalLink)`
   flex: 1;
   padding: 0.5rem 0.5rem;
@@ -85,19 +99,13 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
-
 export default function Menu() {
-  const { account } = useActiveWeb3React()
-
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
-  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
@@ -105,31 +113,40 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
+          <NavMenuItem to="/about">
             <Info size={14} />
             About
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.org/docs/v2">
-            <BookOpen size={14} />
-            Docs
-          </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
-            <Code size={14} />
-            Code
-          </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/EwFs3Pp">
-            <MessageCircle size={14} />
-            Discord
-          </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
+          </NavMenuItem>
+          <NavMenuItem to="/migration">
+            <Zap size={14} />
+            Migration
+          </NavMenuItem>
+          <MenuItem id="link" href={DMM_INFO_URL}>
             <PieChart size={14} />
             Analytics
           </MenuItem>
-          {account && (
-            <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              Claim UNI
-            </ButtonPrimary>
-          )}
+        </MenuFlyout>
+      )}
+    </StyledMenu>
+  )
+}
+
+export function FlyoutPriceRange({ header, content }: { header: ReactNode; content: ReactNode }) {
+  const node = useRef<HTMLDivElement>()
+  const open = useModalOpen(ApplicationModal.PRICE_RANGE)
+  const toggle = useToggleModal(ApplicationModal.PRICE_RANGE)
+
+  return (
+    <StyledMenu ref={node as any}>
+      <span style={{ width: '100%' }} onClick={toggle}>
+        {header}
+      </span>
+
+      {open && (
+        <MenuFlyout>
+          <MenuItem id="link" href="https://dmm.exchange/">
+            {content}
+          </MenuItem>
         </MenuFlyout>
       )}
     </StyledMenu>

@@ -46,32 +46,55 @@ export function colors(darkMode: boolean): Colors {
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text6: darkMode ? '#6d8591' : '#565A69',
+    text7: darkMode ? '#c9d2d7' : '#565A69',
+    text8: darkMode ? '#5c6468' : '#5c6468',
+    text9: darkMode ? '#859aa5' : '#859aa5',
+    text10: darkMode ? '#00a2f7' : '#00a2f7',
+    text11: darkMode ? '#f4f4f4' : '#565A69',
 
-    // backgrounds / greys
+    // backgrounds
     bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
-    bg3: darkMode ? '#40444F' : '#EDEEF2',
+    bg2: darkMode ? '#222c31' : '#F7F8FA',
+    bg3: darkMode ? '#40444F' : '#dcdbdc',
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
+    bg6: darkMode ? '#303e46' : '#FFFFFF',
+    bg7: darkMode ? '#0aa1e7' : '#e1f5fe',
+    bg8: darkMode ? '#0078b0' : '#b3e5fc',
+    bg9: darkMode ? '#1d2a32' : '#ecebeb',
+    bg10: darkMode ? '#263239' : '#f5f5f5',
+    bg11: darkMode ? '#1b2226' : '#ebeaea',
+    bg12: darkMode ? '#222c31' : '#f5f5f5',
+    bg13: darkMode ? '#13191b' : '#e8e9ed',
+    bg14: darkMode ? '#40505a' : '#ffffff',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+    advancedBG: darkMode ? '#1d272b' : '#ecebeb',
+    advancedBorder: darkMode ? '#303e46' : '#dcdbdc',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: darkMode ? '#08a1e7' : '#08a1e7',
+    primary2: darkMode ? '#3680E7' : '#3680E7',
+    primary3: darkMode ? '#4D8FEA' : '#4D8FEA',
+    primary4: darkMode ? '#376bad70' : '#376bad70',
+    primary5: darkMode ? '#153d6f70' : '#08a1e7',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#6da8ff' : 'white',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
-    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary1: darkMode ? '#08a1e7' : '#08a1e7',
+    secondary2: darkMode ? '#17000b26' : '#17000b26',
+    secondary3: darkMode ? '#17000b26' : '#17000b26',
+
+    // border colors
+    border: darkMode ? '#4c5f69' : '#859aa5',
+
+    // table colors
+    oddRow: darkMode ? '#283339' : '#f4f4f4',
+    evenRow: darkMode ? '#303e46' : '#ffffff',
 
     // other
     red1: '#FF6871',
@@ -79,11 +102,9 @@ export function colors(darkMode: boolean): Colors {
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
-    blue1: '#2172E5'
-
-    // dont wanna forget these blue yet
-    // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+    blue1: '#08a1e7',
+    warning: '#eeab2e',
+    custom_bg1: darkMode ? '#303e46' : '#FFFFFF'
   }
 }
 
@@ -177,12 +198,12 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Work Sans', 'Inter', sans-serif;
   font-display: fallback;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
+    font-family: 'Work Sans', 'Inter var', sans-serif;
   }
 }
 
@@ -223,12 +244,6 @@ html {
 
 body {
   min-height: 100vh;
-  background-position: 0 -30vh;
-  background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+  background: ${({ theme }) => theme.bg12};
 }
 `

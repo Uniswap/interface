@@ -1,7 +1,7 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from 'libs/sdk/src'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { PairState, usePair } from '../../data/Reserves'
+import { PairState, usePair, usePairByAddress, useUnAmplifiedPair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -19,7 +19,8 @@ export function useMintState(): AppState['mint'] {
 
 export function useDerivedMintInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
+  pairAddress: string | undefined
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
@@ -32,11 +33,12 @@ export function useDerivedMintInfo(
   liquidityMinted?: TokenAmount
   poolTokenPercentage?: Percent
   error?: string
+  unAmplifiedPairAddress?: string
 } {
   const { account, chainId } = useActiveWeb3React()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
-
+  console.log('==useMintState', independentField, typedValue, otherTypedValue)
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 
   // tokens
@@ -49,11 +51,15 @@ export function useDerivedMintInfo(
   )
 
   // pair
-  const [pairState, pair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
+  const tokenA = wrappedCurrency(currencies[Field.CURRENCY_A], chainId)
+  const tokenB = wrappedCurrency(currencies[Field.CURRENCY_B], chainId)
+  const [pairState, pair] = usePairByAddress(tokenA, tokenB, pairAddress)
+  const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean =
-    pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
+    (pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))) &&
+    (tokenA?.symbol != 'WETH' || tokenB?.symbol != 'WETH')
 
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
@@ -67,6 +73,7 @@ export function useDerivedMintInfo(
 
   // amounts
   const independentAmount: CurrencyAmount | undefined = tryParseAmount(typedValue, currencies[independentField])
+
   const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
     if (noLiquidity) {
       if (otherTypedValue && currencies[dependentField]) {
@@ -77,12 +84,13 @@ export function useDerivedMintInfo(
       // we wrap the currencies just to get the price in terms of the other token
       const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
       const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
+
       if (tokenA && tokenB && wrappedIndependentAmount && pair) {
         const dependentCurrency = dependentField === Field.CURRENCY_B ? currencyB : currencyA
         const dependentTokenAmount =
           dependentField === Field.CURRENCY_B
-            ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
-            : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
+            ? pair.priceOfReal(tokenA).quote(wrappedIndependentAmount)
+            : pair.priceOfReal(tokenB).quote(wrappedIndependentAmount)
         return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
       }
       return undefined
@@ -104,7 +112,7 @@ export function useDerivedMintInfo(
       return undefined
     } else {
       const wrappedCurrencyA = wrappedCurrency(currencyA, chainId)
-      return pair && wrappedCurrencyA ? pair.priceOf(wrappedCurrencyA) : undefined
+      return pair && wrappedCurrencyA ? pair.priceOfReal(wrappedCurrencyA) : undefined
     }
   }, [chainId, currencyA, noLiquidity, pair, parsedAmounts])
 
@@ -134,8 +142,7 @@ export function useDerivedMintInfo(
   if (!account) {
     error = 'Connect Wallet'
   }
-
-  if (pairState === PairState.INVALID) {
+  if ((pairAddress && pairState === PairState.INVALID) || (tokenA?.symbol == 'WETH' && tokenB?.symbol == 'WETH')) {
     error = error ?? 'Invalid pair'
   }
 
@@ -164,7 +171,8 @@ export function useDerivedMintInfo(
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error
+    error,
+    unAmplifiedPairAddress
   }
 }
 

@@ -12,6 +12,12 @@ export interface Colors {
   text3: Color
   text4: Color
   text5: Color
+  text6: Color
+  text7: Color
+  text8: Color
+  text9: Color
+  text10: Color
+  text11: Color
 
   // backgrounds / greys
   bg1: Color
@@ -19,9 +25,19 @@ export interface Colors {
   bg3: Color
   bg4: Color
   bg5: Color
+  bg6: Color
+  bg7: Color
+  bg8: Color
+  bg9: Color
+  bg10: Color
+  bg11: Color
+  bg12: Color
+  bg13: Color
+  bg14: Color
 
   modalBG: Color
   advancedBG: Color
+  advancedBorder: Color
 
   //blues
   primary1: Color
@@ -37,6 +53,13 @@ export interface Colors {
   secondary2: Color
   secondary3: Color
 
+  // border colors
+  border: Color
+
+  // table colors
+  oddRow: Color
+  evenRow: Color
+
   // other
   red1: Color
   red2: Color
@@ -44,6 +67,9 @@ export interface Colors {
   yellow1: Color
   yellow2: Color
   blue1: Color
+  warning: Color
+
+  custom_bg1: Color
 }
 
 export interface Grids {
