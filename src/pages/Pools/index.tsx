@@ -49,7 +49,7 @@ const CurrencyWrapper = styled.div`
   align-items: center;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin-bottom: 20px;
+    margin-bottom: 8px;
     flex-direction: column;
   `};
 `

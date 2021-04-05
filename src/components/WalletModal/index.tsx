@@ -350,7 +350,7 @@ export default function WalletModal({
         </ContentWrapper>
         <FooterRow>
           <input type="checkbox" checked={isAccepted} onChange={handleAccept} style={{ marginRight: '12px' }} />
-          <ToSText>Accept Terms of Service, Legal Disclosure and Privacy Policy</ToSText>
+          <ToSText>Accept Terms of Use and Privacy Policy</ToSText>
         </FooterRow>
       </UpperSection>
     )

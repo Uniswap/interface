@@ -207,15 +207,15 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Ledger Device',
     href: null,
     color: '#315CF5'
-  },
-  TREZOR: {
-    connector: trezor,
-    name: 'Trezor',
-    iconName: 'trezor.svg',
-    description: 'Trezor Device',
-    href: null,
-    color: '#315CF5'
   }
+  // TREZOR: {
+  //   connector: trezor,
+  //   name: 'Trezor',
+  //   iconName: 'trezor.svg',
+  //   description: 'Trezor Device',
+  //   href: null,
+  //   color: '#315CF5'
+  // }
 }
 
 export const NetworkContextName = 'NETWORK'
