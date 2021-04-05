@@ -53,7 +53,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Price Impact
             </TYPE.black>
-            <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
+            <QuestionHelper text="The difference between the market price and your price due to trade size. Adjust the price impact tolerance in the top right configuration." />
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>

@@ -334,7 +334,7 @@ export default function About() {
             <a>
               <img src={require('../../assets/svg/about_icon_medium.svg')} />
             </a>
-            <Text fontSize={12}>(c) kyber.dmm</Text>
+            <Text fontSize={12}>(c) dmm.exchange</Text>
           </div>
         </div>
       </div>
