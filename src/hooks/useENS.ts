@@ -16,6 +16,6 @@ export default function useENS(
   return {
     loading: reverseLookup.loading || lookup.loading,
     address: validated ? validated : lookup.address,
-    name: reverseLookup.ENSName ? reverseLookup.ENSName : !validated && lookup.address ? nameOrAddress || null : null
+    name: reverseLookup.ENSName ? reverseLookup.ENSName : !validated && lookup.address ? nameOrAddress || null : null,
   }
 }

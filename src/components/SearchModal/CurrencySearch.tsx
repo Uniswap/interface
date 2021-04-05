@@ -61,7 +61,7 @@ export function CurrencySearch({
   isOpen,
   showManageView,
   showImportView,
-  setImportToken
+  setImportToken,
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -86,7 +86,7 @@ export function CurrencySearch({
       ReactGA.event({
         category: 'Currency Select',
         action: 'Search by address',
-        label: isAddressSearch
+        label: isAddressSearch,
       })
     }
   }, [isAddressSearch])
@@ -107,7 +107,7 @@ export function CurrencySearch({
     const symbolMatch = searchQuery
       .toLowerCase()
       .split(/\s+/)
-      .filter(s => s.length > 0)
+      .filter((s) => s.length > 0)
 
     if (symbolMatch.length > 1) {
       return sorted
@@ -115,21 +115,21 @@ export function CurrencySearch({
 
     return [
       // sort any exact symbol matches first
-      ...sorted.filter(token => token.symbol?.toLowerCase() === symbolMatch[0]),
+      ...sorted.filter((token) => token.symbol?.toLowerCase() === symbolMatch[0]),
 
       // sort by tokens whos symbols start with search substrng
       ...sorted.filter(
-        token =>
+        (token) =>
           token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
           token.symbol?.toLowerCase() !== symbolMatch[0]
       ),
 
       // rest that dont match upove
       ...sorted.filter(
-        token =>
+        (token) =>
           !token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim()) &&
           token.symbol?.toLowerCase() !== symbolMatch[0]
-      )
+      ),
     ]
   }, [filteredTokens, searchQuery, tokenComparator])
 
@@ -148,7 +148,7 @@ export function CurrencySearch({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)

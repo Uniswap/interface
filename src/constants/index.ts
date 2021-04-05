@@ -25,7 +25,7 @@ export const UNI = UBE
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   [ChainId.MAINNET]: [cUSD[ChainId.MAINNET], CELO[ChainId.MAINNET]],
   [ChainId.ALFAJORES]: [cUSD[ChainId.ALFAJORES], CELO[ChainId.ALFAJORES]],
-  [ChainId.BAKLAVA]: [cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]
+  [ChainId.BAKLAVA]: [cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]],
 }
 
 // used for display in the default list when adding liquidity
@@ -37,7 +37,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = BASES_TO_CHECK_TRADE
 export const PINNED_PAIRS: { [chainId: number]: [Token, Token][] } = {
   [ChainId.MAINNET]: [[cUSD[ChainId.MAINNET], CELO[ChainId.MAINNET]]],
   [ChainId.ALFAJORES]: [[cUSD[ChainId.ALFAJORES], CELO[ChainId.ALFAJORES]]],
-  [ChainId.BAKLAVA]: [[cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]]
+  [ChainId.BAKLAVA]: [[cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]],
 }
 
 export interface WalletInfo {
@@ -68,7 +68,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     iconName: 'celo_logo.png',
     description: 'Easy-to-use browser extension.',
     href: null,
-    color: '#35D07F'
+    color: '#35D07F',
   },
   LEDGER: {
     connector: ledger,
@@ -76,7 +76,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     iconName: 'ledger.svg',
     description: 'Connect to Ledger device',
     href: null,
-    color: '#fff'
+    color: '#fff',
   },
   VALORA_LINK: {
     connector: valora,
@@ -86,8 +86,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#315CF5',
     mobile: true,
-    mobileOnly: true
-  }
+    mobileOnly: true,
+  },
 }
 
 export const NetworkContextName = 'NETWORK'

@@ -26,7 +26,7 @@ export const StyledClose = styled(X)`
 const appURL: { [id in ChainId]: string } = {
   [ChainId.MAINNET]: 'app.ubeswap.org',
   [ChainId.ALFAJORES]: 'app-alfajores.ubeswap.org',
-  [ChainId.BAKLAVA]: 'app-baklava.ubeswap.org'
+  [ChainId.BAKLAVA]: 'app-baklava.ubeswap.org',
 }
 
 export default function URLWarning() {

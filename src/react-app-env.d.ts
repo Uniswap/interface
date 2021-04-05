@@ -1,7 +1,7 @@
 /// <reference types="react-scripts" />
 
 declare module 'jazzicon' {
-  export default function(diameter: number, seed: number): HTMLElement
+  export default function (diameter: number, seed: number): HTMLElement
 }
 
 interface Window {
@@ -10,7 +10,7 @@ interface Window {
     removeListener?: (...args: any[]) => void
     autoRefreshOnNetworkChange?: boolean
   }
-  web3?: {}
+  web3?: unknown
 }
 
 declare module 'content-hash' {

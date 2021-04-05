@@ -52,7 +52,7 @@ export class LedgerConnector extends AbstractConnector {
       return {
         provider: this.kit.kit.web3.currentProvider,
         chainId: NETWORK_CHAIN_ID,
-        account: this.kit.wallet.getAccounts()[this.index]
+        account: this.kit.wallet.getAccounts()[this.index],
       }
     }
     const idxs = [0, 1, 2, 3, 4]
@@ -61,7 +61,7 @@ export class LedgerConnector extends AbstractConnector {
     return {
       provider: ledgerKit.kit.web3.currentProvider,
       chainId: NETWORK_CHAIN_ID,
-      account: ledgerKit.wallet.getAccounts()[0]
+      account: ledgerKit.wallet.getAccounts()[0],
     }
   }
 

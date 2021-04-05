@@ -1,4 +1,6 @@
 import { Pair, Token, TokenAmount, Trade } from '@ubeswap/sdk'
+import { MoolaTrade } from 'components/swap/routing/moola/MoolaTrade'
+import { useMoolaRoute } from 'components/swap/routing/moola/useMoolaRoute'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 import { useUserSingleHopOnly } from 'state/user/hooks'
@@ -11,12 +13,12 @@ import { useUnsupportedTokens } from './Tokens'
 function useAllCommonPairs(currencyA?: Token, currencyB?: Token): Pair[] {
   const { chainId } = useActiveWeb3React()
 
-  const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
+  const bases: Token[] = useMemo(() => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []), [chainId])
   const [tokenA, tokenB] = [currencyA, currencyB]
 
   const basePairs: [Token, Token][] = useMemo(
     () =>
-      flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])).filter(
+      flatMap(bases, (base): [Token, Token][] => bases.map((otherBase) => [base, otherBase])).filter(
         ([t0, t1]) => t0.address !== t1.address
       ),
     [bases]
@@ -33,7 +35,7 @@ function useAllCommonPairs(currencyA?: Token, currencyB?: Token): Pair[] {
             // token B against all bases
             ...bases.map((base): [Token, Token] => [tokenB, base]),
             // each base against all bases
-            ...basePairs
+            ...basePairs,
           ]
             .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
             .filter(([t0, t1]) => t0.address !== t1.address)
@@ -69,8 +71,13 @@ export function useTradeExactIn(currencyAmountIn?: TokenAmount, currencyOut?: To
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
 
   const [singleHopOnly] = useUserSingleHopOnly()
+  const moolaRoute = useMoolaRoute(currencyAmountIn?.currency, currencyOut)
 
   return useMemo(() => {
+    if (moolaRoute && currencyAmountIn) {
+      return MoolaTrade.fromIn(moolaRoute, currencyAmountIn)
+    }
+
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       if (singleHopOnly) {
         return (
@@ -93,7 +100,7 @@ export function useTradeExactIn(currencyAmountIn?: TokenAmount, currencyOut?: To
     }
 
     return null
-  }, [allowedPairs, currencyAmountIn, currencyOut, singleHopOnly])
+  }, [allowedPairs, currencyAmountIn, currencyOut, singleHopOnly, moolaRoute])
 }
 
 /**
@@ -103,8 +110,13 @@ export function useTradeExactOut(currencyIn?: Token, currencyAmountOut?: TokenAm
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
 
   const [singleHopOnly] = useUserSingleHopOnly()
+  const moolaRoute = useMoolaRoute(currencyIn, currencyAmountOut?.currency)
 
   return useMemo(() => {
+    if (moolaRoute && currencyAmountOut) {
+      return MoolaTrade.fromOut(moolaRoute, currencyAmountOut)
+    }
+
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
       if (singleHopOnly) {
         return (
@@ -125,7 +137,7 @@ export function useTradeExactOut(currencyIn?: Token, currencyAmountOut?: TokenAm
       return bestTradeSoFar
     }
     return null
-  }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
+  }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly, moolaRoute])
 }
 
 export function useIsTransactionUnsupported(currencyIn?: Token, currencyOut?: Token): boolean {

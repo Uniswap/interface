@@ -7,7 +7,7 @@ import {
   serializeDappKitRequestDeeplink,
   SignTxRequest,
   SignTxResponseSuccess,
-  TxToSignParam
+  TxToSignParam,
 } from '@celo/utils'
 import { identity, mapValues } from 'lodash'
 import * as querystring from 'querystring'
@@ -22,7 +22,7 @@ async function waitForValoraResponse() {
       localStorage.removeItem(localStorageKey)
       return value
     }
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise((resolve) => setTimeout(resolve, 100))
   }
 }
 
@@ -82,10 +82,10 @@ export const removeQueryParams = (url: string, keys: string[]): string => {
   const searchNonDeduped = url.slice(whereQuery + 1)
   const allSearch = searchNonDeduped.split('?')
   const newQs: Record<string, string> = allSearch.reduce(
-    (acc, qs) => ({ ...acc, ...mapValues(querystring.parse(qs), v => v?.toString() ?? null) }),
+    (acc, qs) => ({ ...acc, ...mapValues(querystring.parse(qs), (v) => v?.toString() ?? null) }),
     {}
   )
-  keys.forEach(key => {
+  keys.forEach((key) => {
     delete newQs[key]
   })
   const { protocol, host, hash } = parse(url)
@@ -112,7 +112,7 @@ export const requestValoraAuth = async (): Promise<AccountAuthResponseSuccess> =
     AccountAuthRequest({
       requestId,
       dappName,
-      callback
+      callback,
     })
   )
   window.location.href = await waitForValoraResponse()
@@ -130,7 +130,7 @@ export const requestValoraTransaction = async (txs: TxToSignParam[]): Promise<Si
     SignTxRequest(txs, {
       requestId,
       dappName,
-      callback
+      callback,
     })
   )
   window.location.href = await waitForValoraResponse()

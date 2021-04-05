@@ -38,7 +38,7 @@ const AddressText = styled(TYPE.blue)`
 
 export default function UnsupportedCurrencyFooter({
   show,
-  currencies
+  currencies,
 }: {
   show: boolean
   currencies: (Token | undefined)[]
@@ -60,7 +60,7 @@ export default function UnsupportedCurrencyFooter({
 
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
-            {tokens.map(token => {
+            {tokens.map((token) => {
               return (
                 token &&
                 unsupportedTokens &&

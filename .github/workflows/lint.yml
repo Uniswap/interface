@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  pull_request_target:
+  pull_request:
     branches:
       - main
 
@@ -16,32 +16,15 @@ jobs:
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
-
-      - name: Set up node
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
-          node-version: 12
-          always-auth: true
-          registry-url: https://registry.npmjs.org
-
-      - name: Set output of cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Node dependency cache
-        uses: actions/cache@v1
-        with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            yarn-
+          node-version: 14.x
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Run linters
-        uses: wearerequired/lint-action@77d70b9a07ecb93bc98dc46dc27d96c4f004d035
+        uses: wearerequired/lint-action@v1
         with:
-          github_token: ${{ secrets.github_token }}
           eslint: true
           eslint_extensions: js,jsx,ts,tsx,json

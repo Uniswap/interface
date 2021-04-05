@@ -5,7 +5,7 @@ const CURRENCY_AMOUNT_MIN = new Fraction(JSBI.BigInt(1), JSBI.BigInt(1000000))
 
 export default function FormattedTokenAmount({
   currencyAmount,
-  significantDigits = 4
+  significantDigits = 4,
 }: {
   currencyAmount: TokenAmount
   significantDigits?: number

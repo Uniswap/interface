@@ -27,6 +27,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contract | null {
   // TODO(igm): find CELO equivalent of ENS
   return null

@@ -30,13 +30,13 @@ const GOOGLE_ANALYTICS_IDS = {
   production: {
     [ChainId.MAINNET]: 'UA-189817928-4',
     [ChainId.ALFAJORES]: 'UA-189817928-5',
-    [ChainId.BAKLAVA]: 'UA-189817928-6'
+    [ChainId.BAKLAVA]: 'UA-189817928-6',
   },
   staging: {
     [ChainId.MAINNET]: 'UA-189817928-2',
     [ChainId.ALFAJORES]: 'UA-189817928-3',
-    [ChainId.BAKLAVA]: 'UA-189817928-7'
-  }
+    [ChainId.BAKLAVA]: 'UA-189817928-7',
+  },
 }
 
 const environment = window.location.hostname.includes('app-staging')
@@ -50,16 +50,16 @@ const GOOGLE_ANALYTICS_ID = environment ? GOOGLE_ANALYTICS_IDS[environment][NETW
 if (GOOGLE_ANALYTICS_ID) {
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
-    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'celo' in window ? 'mobileWeb3' : 'mobileRegular'
+    customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'celo' in window ? 'mobileWeb3' : 'mobileRegular',
   })
 } else {
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
-window.addEventListener('error', error => {
+window.addEventListener('error', (error) => {
   ReactGA.exception({
     description: `${error.message} @ ${error.filename}:${error.lineno}:${error.colno}`,
-    fatal: true
+    fatal: true,
   })
 })
 

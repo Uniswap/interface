@@ -41,7 +41,7 @@ export type TokenAddressMap = Readonly<{
 const EMPTY_LIST: TokenAddressMap = {
   [ChainId.MAINNET]: {},
   [ChainId.ALFAJORES]: {},
-  [ChainId.BAKLAVA]: {}
+  [ChainId.BAKLAVA]: {},
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -55,7 +55,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
     (tokenMap, tokenInfo) => {
       const tags: TagInfo[] =
         tokenInfo.tags
-          ?.map(tagId => {
+          ?.map((tagId) => {
             if (!list.tags?.[tagId]) return undefined
             return { ...list.tags[tagId], id: tagId }
           })
@@ -68,9 +68,9 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           ...tokenMap[token.chainId],
           [token.address]: {
             token,
-            list: list
-          }
-        }
+            list: list,
+          },
+        },
       }
     },
     { ...EMPTY_LIST }
@@ -87,14 +87,14 @@ export function useAllLists(): {
     readonly error: string | null
   }
 } {
-  return useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+  return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
 }
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
     [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
     [ChainId.ALFAJORES]: { ...map1[ChainId.ALFAJORES], ...map2[ChainId.ALFAJORES] },
-    [ChainId.BAKLAVA]: { ...map1[ChainId.BAKLAVA], ...map2[ChainId.BAKLAVA] }
+    [ChainId.BAKLAVA]: { ...map1[ChainId.BAKLAVA], ...map2[ChainId.BAKLAVA] },
   }
 }
 
@@ -127,15 +127,15 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
 
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
-  return useSelector<AppState, AppState['lists']['activeListUrls']>(state => state.lists.activeListUrls)?.filter(
-    url => !UNSUPPORTED_LIST_URLS.includes(url)
+  return useSelector<AppState, AppState['lists']['activeListUrls']>((state) => state.lists.activeListUrls)?.filter(
+    (url) => !UNSUPPORTED_LIST_URLS.includes(url)
   )
 }
 
 export function useInactiveListUrls(): string[] {
   const lists = useAllLists()
   const allActiveListUrls = useActiveListUrls()
-  return Object.keys(lists).filter(url => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url))
+  return Object.keys(lists).filter((url) => !allActiveListUrls?.includes(url) && !UNSUPPORTED_LIST_URLS.includes(url))
 }
 
 // get all the tokens from active lists, combine with local default tokens

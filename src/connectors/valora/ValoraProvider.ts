@@ -13,7 +13,7 @@ export class ValoraProvider extends MiniRpcProvider {
 
   _networkRequest = this.request
 
-  _request = async (method: string, params?: unknown[] | object): Promise<unknown> => {
+  _request = async (method: string, params?: unknown[] | Record<string, unknown>): Promise<unknown> => {
     console.log('[Valora request]', { method, params })
     if (method === 'eth_estimateGas' && params) {
       try {
@@ -24,7 +24,7 @@ export class ValoraProvider extends MiniRpcProvider {
         const gasEstimate = await this.kit.connection.estimateGas({
           feeCurrency: stableAddress,
           nonce: baseNonce,
-          ...txData
+          ...txData,
         })
         return '0x' + gasEstimate.toString(16)
       } catch (e) {
@@ -48,7 +48,7 @@ export class ValoraProvider extends MiniRpcProvider {
               feeCurrency: stableAddress,
               from,
               to,
-              data
+              data,
             })
             return {
               txData: data,
@@ -57,7 +57,7 @@ export class ValoraProvider extends MiniRpcProvider {
               to,
               nonce: baseNonce + i,
               feeCurrencyAddress: stableAddress,
-              value: '0'
+              value: '0',
             }
           })
         )
@@ -84,7 +84,7 @@ export class ValoraProvider extends MiniRpcProvider {
 
   request = async (
     method: string | { method: string; params: unknown[] },
-    params?: unknown[] | object
+    params?: unknown[] | Record<string, unknown>
   ): Promise<unknown> => {
     if (typeof method !== 'string') {
       return this._request(method.method, method.params)

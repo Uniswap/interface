@@ -12,7 +12,7 @@ import { Field, typeInput } from './actions'
 const ZERO = JSBI.BigInt(0)
 
 export function useMintState(): AppState['mint'] {
-  return useSelector<AppState, AppState['mint']>(state => state.mint)
+  return useSelector<AppState, AppState['mint']>((state) => state.mint)
 }
 
 export function useMintActionHandlers(
@@ -38,7 +38,7 @@ export function useMintActionHandlers(
 
   return {
     onFieldAInput,
-    onFieldBInput
+    onFieldBInput,
   }
 }
 
@@ -68,7 +68,7 @@ export function useDerivedMintInfo(
   const currencies: { [field in Field]?: Token } = useMemo(
     () => ({
       [Field.CURRENCY_A]: currencyA ?? undefined,
-      [Field.CURRENCY_B]: currencyB ?? undefined
+      [Field.CURRENCY_B]: currencyB ?? undefined,
     }),
     [currencyA, currencyB]
   )
@@ -83,11 +83,11 @@ export function useDerivedMintInfo(
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
     currencies[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_B]
+    currencies[Field.CURRENCY_B],
   ])
   const currencyBalances: { [field in Field]?: TokenAmount } = {
     [Field.CURRENCY_A]: balances[0],
-    [Field.CURRENCY_B]: balances[1]
+    [Field.CURRENCY_B]: balances[1],
   }
 
   // amounts
@@ -114,10 +114,13 @@ export function useDerivedMintInfo(
       return undefined
     }
   }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, currencyB, pair])
-  const parsedAmounts: { [field in Field]: TokenAmount | undefined } = {
-    [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
-    [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
-  }
+  const parsedAmounts: { [field in Field]: TokenAmount | undefined } = useMemo(
+    () => ({
+      [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
+      [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount,
+    }),
+    [independentField, independentAmount, dependentAmount]
+  )
 
   const price = useMemo(() => {
     if (noLiquidity) {
@@ -185,6 +188,6 @@ export function useDerivedMintInfo(
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error
+    error,
   }
 }

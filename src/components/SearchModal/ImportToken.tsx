@@ -73,7 +73,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
       </PaddedColumn>
       <SectionBreak />
       <PaddedColumn gap="md">
-        {tokens.map(token => {
+        {tokens.map((token) => {
           const list = chainId ? inactiveTokenList?.[chainId]?.[token.address]?.list : undefined
           return (
             <Card backgroundColor={theme.bg2} key={'import' + token.address} className=".token-warning-container">
@@ -150,7 +150,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
           borderRadius="20px"
           padding="10px 1rem"
           onClick={() => {
-            tokens.map(token => addToken(token))
+            tokens.map((token) => addToken(token))
             handleCurrencySelect && handleCurrencySelect(tokens[0])
           }}
           className=".token-dismiss-button"

@@ -18,7 +18,7 @@ export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
 console.log('Loading Ubeswap interface at', window.location.hostname, networkChainIDFromHostname, NETWORK_CHAIN_ID)
 
 export const network = new NetworkConnector({
-  defaultChainId: NETWORK_CHAIN_ID
+  defaultChainId: NETWORK_CHAIN_ID,
 })
 
 let networkLibrary: Web3Provider | undefined
@@ -27,11 +27,11 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [ChainId.ALFAJORES, ChainId.BAKLAVA, ChainId.MAINNET]
+  supportedChainIds: [ChainId.ALFAJORES, ChainId.BAKLAVA, ChainId.MAINNET],
 })
 
 export const ledger = new LedgerConnector()
 
 export const valora = new ValoraConnector({
-  defaultChainId: NETWORK_CHAIN_ID
+  defaultChainId: NETWORK_CHAIN_ID,
 })

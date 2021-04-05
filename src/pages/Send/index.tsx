@@ -44,7 +44,7 @@ export default function Send() {
     const response = await token.transfer(recipientAddress, parsedAmount.raw.toString())
 
     addTransaction(response, {
-      summary: `Send ${parsedAmount.toSignificant(3)} ${parsedAmount.currency.symbol} to ${recipient}`
+      summary: `Send ${parsedAmount.toSignificant(3)} ${parsedAmount.currency.symbol} to ${recipient}`,
     })
   }, [isValid, library, parsedAmount, recipientAddress, account, addTransaction, recipient])
 
@@ -60,7 +60,7 @@ export default function Send() {
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmount?.equalTo(maxAmountInput))
 
   const handleInputSelect = useCallback(
-    inputCurrency => {
+    (inputCurrency) => {
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
     [onCurrencySelection]

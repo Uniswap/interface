@@ -56,7 +56,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
         ReactGA.event({
           category: 'Lists',
           action: 'Add List',
-          label: listURL
+          label: listURL,
         })
 
         // turn list on
@@ -64,11 +64,11 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
         // go back to lists
         setModalView(CurrencyModalView.manage)
       })
-      .catch(error => {
+      .catch((error) => {
         ReactGA.event({
           category: 'Lists',
           action: 'Add List Failed',
-          label: listURL
+          label: listURL,
         })
         setAddError(error.message)
         dispatch(removeList(listURL))

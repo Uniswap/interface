@@ -163,7 +163,7 @@ const UniIcon = styled.div`
 const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
+  activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
@@ -251,7 +251,7 @@ export const StyledMenuButton = styled.button`
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.ALFAJORES]: 'Alfajores',
-  [ChainId.BAKLAVA]: 'Baklava'
+  [ChainId.BAKLAVA]: 'Baklava',
 }
 
 export default function Header() {
@@ -307,7 +307,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userCusdBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userCusdBalance?.toFixed(2)} cUSD
+                {userCusdBalance?.toFixed(2) ?? '0.00'} cUSD
               </BalanceText>
             ) : null}
             <Web3Status />

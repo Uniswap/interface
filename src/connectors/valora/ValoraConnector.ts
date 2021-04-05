@@ -21,7 +21,7 @@ export class ValoraConnector extends NetworkConnector {
       return {
         provider: this.mainProvider,
         chainId: this.currentChainId,
-        account: this.valoraAccount.address
+        account: this.valoraAccount.address,
       }
     }
 
@@ -36,7 +36,7 @@ export class ValoraConnector extends NetworkConnector {
         return {
           provider: this.mainProvider,
           chainId: this.currentChainId,
-          account: this.account
+          account: this.account,
         }
       }
     }

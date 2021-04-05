@@ -3,7 +3,7 @@ import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
   ALLOWED_PRICE_IMPACT_MEDIUM,
-  BLOCKED_PRICE_IMPACT_NON_EXPERT
+  BLOCKED_PRICE_IMPACT_NON_EXPERT,
 } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
@@ -52,7 +52,7 @@ export function computeSlippageAdjustedAmounts(
   const pct = basisPointsToPercent(allowedSlippage)
   return {
     [Field.INPUT]: trade?.maximumAmountIn(pct),
-    [Field.OUTPUT]: trade?.minimumAmountOut(pct)
+    [Field.OUTPUT]: trade?.minimumAmountOut(pct),
   }
 }
 

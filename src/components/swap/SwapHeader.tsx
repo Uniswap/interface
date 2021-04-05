@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import Settings from '../Settings'
-import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
+import { RowBetween } from '../Row'
+import Settings from '../Settings'
 
 const StyledSwapHeader = styled.div`
   padding: 12px 1rem 0px 1.5rem;
@@ -12,11 +12,11 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-export default function SwapHeader() {
+export default function SwapHeader({ title = 'Swap' }: { title?: string }) {
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <TYPE.black fontWeight={500}>Swap</TYPE.black>
+        <TYPE.black fontWeight={500}>{title}</TYPE.black>
         <Settings />
       </RowBetween>
     </StyledSwapHeader>

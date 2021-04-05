@@ -14,7 +14,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
 
   return Vibrant.from(path)
     .getPalette()
-    .then(palette => {
+    .then((palette) => {
       if (palette?.Vibrant) {
         let detectedHex = palette.Vibrant.hex
         let AAscore = hex(detectedHex, '#FFF')
@@ -34,7 +34,7 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
 
   return Vibrant.from(formattedPath)
     .getPalette()
-    .then(palette => {
+    .then((palette) => {
       if (palette?.Vibrant) {
         return palette.Vibrant.hex
       }
@@ -50,7 +50,7 @@ export function useColor(token?: Token) {
     let stale = false
 
     if (token) {
-      getColorFromToken(token).then(tokenColor => {
+      getColorFromToken(token).then((tokenColor) => {
         if (!stale && tokenColor !== null) {
           setColor(tokenColor)
         }
@@ -73,7 +73,7 @@ export function useListColor(listImageUri?: string) {
     let stale = false
 
     if (listImageUri) {
-      getColorFromUriPath(listImageUri).then(color => {
+      getColorFromUriPath(listImageUri).then((color) => {
         if (!stale && color !== null) {
           setColor(color)
         }

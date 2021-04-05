@@ -1,7 +1,7 @@
 export enum Mobile {
   ANDROID = 'Android',
   IOS = 'iOS',
-  OTHER = 'Other'
+  OTHER = 'Other',
 }
 
 // Taken from https://stackoverflow.com/questions/21741841/detecting-ios-android-operating-system
