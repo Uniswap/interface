@@ -228,7 +228,6 @@ export default function Swap() {
   //   approval === ApprovalState.PENDING ||
   //   (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
   // !(priceImpactSeverity > 3 && !isExpertMode)
-  console.log('===trade: ', trade)
   return (
     <>
       <TokenWarningModal

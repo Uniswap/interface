@@ -79,7 +79,6 @@ export default function Pool() {
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
-  console.log('====trackedTokenPairs', trackedTokenPairs)
   //trackedTokenPairs = [ [Token, Token],  [Token, Token] ]
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
@@ -108,7 +107,6 @@ export default function Pool() {
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is PairUNI => Boolean(v2Pair))
   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity
-  console.log('===v2PairsWithoutStakedAmount', v2PairsWithoutStakedAmount)
   const { t } = useTranslation()
   return (
     <>

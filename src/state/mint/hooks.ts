@@ -38,7 +38,6 @@ export function useDerivedMintInfo(
   const { account, chainId } = useActiveWeb3React()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
-  console.log('==useMintState', independentField, typedValue, otherTypedValue)
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 
   // tokens
