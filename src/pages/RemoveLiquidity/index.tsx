@@ -104,7 +104,6 @@ export default function RemoveLiquidity({
   const isArgentWallet = useIsArgentWallet()
 
   async function onAttemptToApprove() {
-    console.log('onAttemptToApprove')
     if (!pairContract || !pair || !library || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
