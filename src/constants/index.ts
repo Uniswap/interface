@@ -17,7 +17,7 @@ export const BAD_RECIPIENT_ADDRESSES: string[] = [FACTORY_ADDRESS, ROUTER_ADDRES
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const DMM_INFO_URL: string =
-  process.env.REACT_APP_CHAIN_NAME === 'mainnet' ? 'https://dmm-info.knstats.com' : 'https://dev-dmm-info.knstats.com'
+  String(process.env.REACT_APP_DMM_ANALYTICS_URL) || 'https://dev-dmm-info.knstats.com'
 
 // a list of tokens by chain
 type ChainTokenList = {

@@ -66,6 +66,10 @@ const Panel = styled(RebassBox)<{
     `};
 
   ${props => !props.last && panelPseudo}
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    background-color: transparent;
+  `};
 `
 
 export default Panel

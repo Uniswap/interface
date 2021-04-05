@@ -274,7 +274,7 @@ export default function Header() {
               pathname.startsWith('/add') ||
               pathname.startsWith('/remove') ||
               pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
+              (pathname.startsWith('/find') && pathname.endsWith('find'))
             }
           >
             {t('dashboard')}
@@ -286,7 +286,9 @@ export default function Header() {
             <StyledNavLink
               id={`migrations-nav-link`}
               to={'/migration'}
-              isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/migrate')}
+              isActive={(match, { pathname }) =>
+                Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
+              }
             >
               Migration
             </StyledNavLink>

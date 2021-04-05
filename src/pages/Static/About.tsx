@@ -285,10 +285,6 @@ export default function About() {
           <Text fontSize={18}>Bug Bounty</Text>
           <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} />
         </div>
-        <div>
-          <Text fontSize={18}>Insured by</Text>
-          <img style={{ maxWidth: '160px' }} src={require('../../assets/svg/about_icon_unslashed.svg')} />
-        </div>
       </div>
       <div className={style.powered}>
         <Text fontSize={18} display={'inline'}>

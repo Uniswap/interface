@@ -1,6 +1,7 @@
 {
   "analytics": "Analytics",
   "createNewPool": "+ Create New Pool",
+  "newPool": "+ New Pool",
   "searchByPoolAddress": "Search by pool address",
   "selectPair": "Select Pair",
   "showMorePools": "Show more pools",

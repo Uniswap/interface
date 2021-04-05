@@ -3,6 +3,7 @@ import { Link, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import { Box, Flex } from 'rebass'
 import { useTranslation } from 'react-i18next'
+import { useMedia } from 'react-use'
 
 import { Currency } from 'libs/sdk/src'
 import { ButtonOutlined } from 'components/Button'
@@ -38,12 +39,19 @@ const PageWrapper = styled.div`
 
 const ToolbarWrapper = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 16px;
 `
 
-const CurrencyWrapper = styled(Flex)`
+const CurrencyWrapper = styled.div`
+  display: flex;
   align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-bottom: 20px;
+    flex-direction: column;
+  `};
 `
 
 const SearchWrapper = styled(Flex)`
@@ -73,6 +81,8 @@ const Pools = ({
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
+
+  const mdBreakpoint = useMedia('(min-width: 768px)')
 
   // Pool selection
   const { onCurrencySelection } = usePairActionHandlers()
@@ -145,38 +155,75 @@ const Pools = ({
   return (
     <>
       <PageWrapper>
-        <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
-        <ToolbarWrapper>
-          <CurrencyWrapper>
-            <PoolsCurrencyInputPanel
-              onCurrencySelect={handleCurrencyASelect}
-              currency={currencies[Field.CURRENCY_A]}
-              otherCurrency={currencies[Field.CURRENCY_B]}
-              id="input-tokena"
-            />
-            <span style={{ margin: '0 8px' }}>/</span>
-            <PoolsCurrencyInputPanel
-              onCurrencySelect={handleCurrencyBSelect}
-              currency={currencies[Field.CURRENCY_B]}
-              otherCurrency={currencies[Field.CURRENCY_A]}
-              id="input-tokenb"
-            />
-          </CurrencyWrapper>
-          <SearchWrapper>
-            <Search searchValue={searchValue} setSearchValue={setSearchValue} />
-            <ButtonOutlined
-              width="148px"
-              padding="12px 18px"
-              as={Link}
-              to={`/create/${currencyIdA == '' ? undefined : currencyIdA}/${
-                currencyIdB == '' ? undefined : currencyIdB
-              }`}
-              style={{ float: 'right' }}
-            >
-              {t('createNewPool')}
-            </ButtonOutlined>
-          </SearchWrapper>
-        </ToolbarWrapper>
+        {mdBreakpoint ? (
+          <>
+            <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
+            <ToolbarWrapper>
+              <CurrencyWrapper>
+                <PoolsCurrencyInputPanel
+                  onCurrencySelect={handleCurrencyASelect}
+                  currency={currencies[Field.CURRENCY_A]}
+                  otherCurrency={currencies[Field.CURRENCY_B]}
+                  id="input-tokena"
+                />
+                <span style={{ margin: '0 8px' }}>/</span>
+                <PoolsCurrencyInputPanel
+                  onCurrencySelect={handleCurrencyBSelect}
+                  currency={currencies[Field.CURRENCY_B]}
+                  otherCurrency={currencies[Field.CURRENCY_A]}
+                  id="input-tokenb"
+                />
+              </CurrencyWrapper>
+              <SearchWrapper>
+                <Search searchValue={searchValue} setSearchValue={setSearchValue} />
+                <ButtonOutlined
+                  width="148px"
+                  padding="12px 18px"
+                  as={Link}
+                  to={`/create/${currencyIdA == '' ? undefined : currencyIdA}/${
+                    currencyIdB == '' ? undefined : currencyIdB
+                  }`}
+                  style={{ float: 'right' }}
+                >
+                  {t('createNewPool')}
+                </ButtonOutlined>
+              </SearchWrapper>
+            </ToolbarWrapper>
+          </>
+        ) : (
+          <>
+            <ToolbarWrapper>
+              <div>{t('selectPair')}</div>
+              <SearchWrapper>
+                <ButtonOutlined
+                  width="98px"
+                  padding="10px 12px"
+                  as={Link}
+                  to={`/create/${currencyIdA == '' ? undefined : currencyIdA}/${
+                    currencyIdB == '' ? undefined : currencyIdB
+                  }`}
+                  style={{ float: 'right' }}
+                >
+                  {t('newPool')}
+                </ButtonOutlined>
+              </SearchWrapper>
+            </ToolbarWrapper>
+            <CurrencyWrapper>
+              <PoolsCurrencyInputPanel
+                onCurrencySelect={handleCurrencyASelect}
+                currency={currencies[Field.CURRENCY_A]}
+                otherCurrency={currencies[Field.CURRENCY_B]}
+                id="input-tokena"
+              />
+              <PoolsCurrencyInputPanel
+                onCurrencySelect={handleCurrencyBSelect}
+                currency={currencies[Field.CURRENCY_B]}
+                otherCurrency={currencies[Field.CURRENCY_A]}
+                id="input-tokenb"
+              />
+            </CurrencyWrapper>
+          </>
+        )}
 
         <Panel>
           {loadingUserLiquidityPositions || loadingPoolsData ? (

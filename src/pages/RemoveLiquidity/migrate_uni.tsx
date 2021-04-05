@@ -1,15 +1,15 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ETHER, Fraction, WETH, CurrencyAmount } from 'libs/sdk/src'
+import { ETHER, Fraction, WETH, CurrencyAmount, TokenAmount } from 'libs/sdk/src'
 import { Currency, currencyEquals, Pair, Percent } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
-import { LightCard } from '../../components/Card'
+import { LightCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -54,6 +54,13 @@ import { Redirect } from 'react-router-dom'
 import { useDerivedMintInfoUNI, useMintActionHandlers } from 'state/mint/hooks_uni'
 import { useMintState } from 'state/mint/hooks'
 import isZero from 'utils/isZero'
+
+const DashedLine = styled.div`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  border-style: dashed;
+  margin-top: 1rem;
+`
 
 export default function MigrateLiquidity({
   history,
@@ -203,7 +210,11 @@ export default function MigrateLiquidity({
 
   // tx sending
 
-  const { parsedAmounts: parsedAmountsMaxA, liquidityMinted: liquidityMintedMaxA } = useDerivedMintInfoUNI(
+  const {
+    parsedAmounts: parsedAmountsMaxA,
+    liquidityMinted: liquidityMintedMaxA,
+    poolTokenPercentage: poolTokenPercentageMaxA
+  } = useDerivedMintInfoUNI(
     currencyA ?? undefined,
     currencyB ?? undefined,
     unAmplifiedPairAddress,
@@ -211,7 +222,11 @@ export default function MigrateLiquidity({
     formattedAmounts[Field.CURRENCY_A]
   )
 
-  const { parsedAmounts: parsedAmountsMaxB, liquidityMinted: liquidityMintedMaxB } = useDerivedMintInfoUNI(
+  const {
+    parsedAmounts: parsedAmountsMaxB,
+    liquidityMinted: liquidityMintedMaxB,
+    poolTokenPercentage: poolTokenPercentageMaxB
+  } = useDerivedMintInfoUNI(
     currencyA ?? undefined,
     currencyB ?? undefined,
     unAmplifiedPairAddress,
@@ -224,6 +239,84 @@ export default function MigrateLiquidity({
       : liquidityMintedMaxA.lessThan(liquidityMintedMaxB)
       ? liquidityMintedMaxA
       : liquidityMintedMaxB
+
+  let amountsMin
+  let currencyAmountAToAddPool: CurrencyAmount | undefined
+  let currencyAmountBToAddPool: CurrencyAmount | undefined
+  let estimatedRefund = ''
+  let poolShare = ''
+  const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
+  if (!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)) {
+    amountsMin =
+      !currencyAmountA || !currencyAmountB
+        ? {
+            [Field.CURRENCY_A]: undefined,
+            [Field.CURRENCY_B]: undefined
+          }
+        : {
+            [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
+            [Field.CURRENCY_B]: calculateSlippageAmount(currencyAmountB, allowedSlippage)[0]
+          }
+    const {
+      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
+      [FieldMint.CURRENCY_B]: currencyAmountBOfMaxA
+    } = parsedAmountsMaxA
+    const {
+      [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB,
+      [FieldMint.CURRENCY_B]: currencyAmountBOfMaxB
+    } = parsedAmountsMaxB
+
+    if (
+      !currencyAmountBOfMaxA ||
+      !currencyAmountB ||
+      !currencyAmountAOfMaxB ||
+      !currencyAmountA ||
+      !poolTokenPercentageMaxA ||
+      !poolTokenPercentageMaxB
+    ) {
+      currencyAmountAToAddPool = undefined
+      currencyAmountBToAddPool = undefined
+      estimatedRefund = ''
+      poolShare = ''
+    } else {
+      const temp =
+        +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
+          ? parsedAmountsMaxA
+          : parsedAmountsMaxB
+      currencyAmountAToAddPool = temp[FieldMint.CURRENCY_A]
+      currencyAmountBToAddPool = temp[FieldMint.CURRENCY_B]
+      estimatedRefund =
+        +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
+          ? `${currencyAmountB.subtract(currencyAmountBOfMaxA).toSignificant(6)} ${tokenB?.symbol}`
+          : `${currencyAmountA.subtract(currencyAmountAOfMaxB).toSignificant(6)} ${tokenA?.symbol}`
+      poolShare =
+        +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
+          ? `${poolTokenPercentageMaxA?.toSignificant(2)}%`
+          : `${poolTokenPercentageMaxB?.toSignificant(2)}%`
+    }
+
+    // const temp =
+    //   !currencyAmountBOfMaxA || !currencyAmountB
+    //     ? { [FieldMint.CURRENCY_A]: undefined, [FieldMint.CURRENCY_B]: undefined }
+    //     : +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
+    //     ? parsedAmountsMaxA
+    //     : parsedAmountsMaxB
+    // currencyAmountAToAddPool = temp[FieldMint.CURRENCY_A]
+    // currencyAmountBToAddPool = temp[FieldMint.CURRENCY_B]
+    // //vt
+
+    // estimatedRefund =
+    //   !currencyAmountBOfMaxA || !currencyAmountB || !currencyAmountAOfMaxB || !currencyAmountA
+    //     ? ''
+    //     : +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
+    //     ? `${currencyAmountB.subtract(currencyAmountBOfMaxA).toSignificant(6)} ${tokenB?.symbol}`
+    //     : `${currencyAmountA.subtract(currencyAmountAOfMaxB).toSignificant(6)} ${tokenB?.symbol}`
+  } else {
+    currencyAmountAToAddPool = currencyAmountA
+    currencyAmountBToAddPool = currencyAmountB
+    poolShare = '100%'
+  }
+  console.log('migrator', MIGRATE_ADDRESS)
 
   const addTransaction = useTransactionAdder()
   async function onRemove() {
@@ -252,37 +345,6 @@ export default function MigrateLiquidity({
     let methodNames: string[], args: Array<any>
     if (!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)) {
       //co pool amp = 1
-
-      if (
-        !parsedAmountsMaxA[FieldMint.CURRENCY_A] ||
-        !parsedAmountsMaxA[FieldMint.CURRENCY_B] ||
-        !parsedAmountsMaxB[FieldMint.CURRENCY_A] ||
-        !parsedAmountsMaxB[FieldMint.CURRENCY_B] ||
-        !parsedAmounts[Field.CURRENCY_A] ||
-        !parsedAmounts[Field.CURRENCY_B]
-      ) {
-        throw new Error('missing dependencies')
-      }
-      const {
-        [FieldMint.CURRENCY_A]: currencyAmountAOfMaxA,
-        [FieldMint.CURRENCY_B]: currencyAmountBOfMaxA
-      } = parsedAmountsMaxA
-      if (!currencyAmountAOfMaxA || !currencyAmountBOfMaxA) {
-        throw new Error('missing currency amounts')
-      }
-
-      const {
-        [FieldMint.CURRENCY_A]: currencyAmountAOfMaxB,
-        [FieldMint.CURRENCY_B]: currencyAmountBOfMaxB
-      } = parsedAmountsMaxB
-      if (!currencyAmountAOfMaxB || !currencyAmountBOfMaxB) {
-        throw new Error('missing currency amounts')
-      }
-      const { [FieldMint.CURRENCY_A]: currencyAmountAToAddPool, [FieldMint.CURRENCY_B]: currencyAmountBToAddPool } =
-        +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
-          ? parsedAmountsMaxA
-          : parsedAmountsMaxB
-
       if (!currencyAmountAToAddPool || !currencyAmountBToAddPool) {
         throw new Error('missing currency amounts')
       }
@@ -306,7 +368,7 @@ export default function MigrateLiquidity({
           amountsMinToAddPool[Field.CURRENCY_B].toString(),
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
             ? [unAmplifiedPairAddress, 123]
-            : [ZERO_ADDRESS, 1],
+            : [ZERO_ADDRESS, 10000],
           deadline.toHexString()
         ]
       }
@@ -327,7 +389,7 @@ export default function MigrateLiquidity({
           amountsMinToAddPool[Field.CURRENCY_B].toString(),
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
             ? [unAmplifiedPairAddress, 123]
-            : [ZERO_ADDRESS, 1],
+            : [ZERO_ADDRESS, 10000],
           signatureData.deadline,
           [false, signatureData.v, signatureData.r, signatureData.s]
         ]
@@ -432,84 +494,6 @@ export default function MigrateLiquidity({
     }
   }
 
-  function modalHeader() {
-    return (
-      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
-        <RowBetween align="flex-end">
-          <Text fontSize={24} fontWeight={500}>
-            {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
-          </Text>
-          <RowFixed gap="4px">
-            <CurrencyLogo currency={currencyA} size={'24px'} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-              {currencyA?.symbol}
-            </Text>
-          </RowFixed>
-        </RowBetween>
-        <RowFixed>
-          <Plus size="16" color={theme.text2} />
-        </RowFixed>
-        <RowBetween align="flex-end">
-          <Text fontSize={24} fontWeight={500}>
-            {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
-          </Text>
-          <RowFixed gap="4px">
-            <CurrencyLogo currency={currencyB} size={'24px'} />
-            <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-              {currencyB?.symbol}
-            </Text>
-          </RowFixed>
-        </RowBetween>
-
-        <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
-          {`Output is estimated. If the price changes by more than ${allowedSlippage /
-            100}% your transaction will revert.`}
-        </TYPE.italic>
-      </AutoColumn>
-    )
-  }
-
-  function modalBottom() {
-    return (
-      <>
-        <RowBetween>
-          <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            {currencyA?.symbol + '/' + currencyB?.symbol} Burned
-          </Text>
-          <RowFixed>
-            <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
-            <Text fontWeight={500} fontSize={16}>
-              {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
-            </Text>
-          </RowFixed>
-        </RowBetween>
-        {pair && (
-          <>
-            <RowBetween>
-              <Text color={theme.text2} fontWeight={500} fontSize={16}>
-                Price
-              </Text>
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
-                1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
-              </Text>
-            </RowBetween>
-            <RowBetween>
-              <div />
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
-                1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
-              </Text>
-            </RowBetween>
-          </>
-        )}
-        <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
-          <Text fontWeight={500} fontSize={20}>
-            Confirm
-          </Text>
-        </ButtonPrimary>
-      </>
-    )
-  }
-
   const pendingText = `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
     currencyA?.symbol
   } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
@@ -542,6 +526,244 @@ export default function MigrateLiquidity({
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
     liquidityPercentChangeCallback
   )
+
+  function uniInfo() {
+    return (
+      <LightCard>
+        <AutoColumn gap="10px">
+          <RowFixed>
+            <img src={require('../../assets/svg/uniswap-icon.svg')} alt="uniswap-icon" />
+            <Text fontSize={14} fontWeight={500}>
+              &nbsp; Uni Pool
+            </Text>
+          </RowFixed>
+        </AutoColumn>
+        <AutoColumn gap="10px">
+          <RowBetween>
+            <Text fontSize={14} fontWeight={500}>
+              {formattedAmounts[Field.CURRENCY_A] || '-'}
+            </Text>
+            <RowFixed>
+              <CurrencyLogo currency={currencyA} style={{ marginRight: '12px' }} />
+              <Text fontSize={14} fontWeight={500} id="remove-liquidity-tokena-symbol">
+                {currencyA?.symbol}
+              </Text>
+            </RowFixed>
+          </RowBetween>
+          <RowBetween>
+            <Text fontSize={14} fontWeight={500}>
+              {formattedAmounts[Field.CURRENCY_B] || '-'}
+            </Text>
+            <RowFixed>
+              <CurrencyLogo currency={currencyB} style={{ marginRight: '12px' }} />
+              <Text fontSize={14} fontWeight={500} id="remove-liquidity-tokenb-symbol">
+                {currencyB?.symbol}
+              </Text>
+            </RowFixed>
+          </RowBetween>
+          {chainId && (oneCurrencyIsWETH || oneCurrencyIsETH) ? (
+            <RowBetween style={{ justifyContent: 'flex-end' }}>
+              {oneCurrencyIsETH ? (
+                <StyledInternalLink
+                  to={`/migrate/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
+                    currencyB === ETHER ? WETH[chainId].address : currencyIdB
+                  }`}
+                >
+                  Receive WETH
+                </StyledInternalLink>
+              ) : oneCurrencyIsWETH ? (
+                <StyledInternalLink
+                  to={`/remove/${currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA}/${
+                    currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB
+                  }/${pairAddress}`}
+                >
+                  Receive ETH
+                </StyledInternalLink>
+              ) : null}
+            </RowBetween>
+          ) : null}
+        </AutoColumn>
+      </LightCard>
+    )
+  }
+
+  function dmmInfo() {
+    return (
+      <LightCard>
+        <AutoColumn gap="10px">
+          <RowFixed>
+            <img
+              src={require('../../assets/svg/logo.svg')}
+              alt="uniswap-icon"
+              style={{ width: '30px', marginBottom: '3px' }}
+            />
+            <Text fontSize={14} fontWeight={500}>
+              &nbsp; Pool
+            </Text>
+          </RowFixed>
+        </AutoColumn>
+
+        <AutoColumn gap="10px" style={{ marginTop: '10px', marginBottom: '10px' }}>
+          <RowBetween>
+            <RowFixed>
+              <CurrencyLogo currency={currencyA} />
+              <CurrencyLogo currency={currencyB} style={{ marginRight: '12px' }} />
+              <Text fontSize={14} fontWeight={500}>
+                DMM LP {currencyA?.symbol}-{currencyB?.symbol}
+              </Text>
+            </RowFixed>
+            <Text fontSize={14} fontWeight={500}>
+              {liquidityMinted?.toSignificant(4)}
+            </Text>
+          </RowBetween>
+        </AutoColumn>
+        <AutoColumn gap="10px">
+          <RowBetween>
+            <Text fontSize={14} fontWeight={500}>
+              Poole share
+            </Text>
+            <Text fontSize={14} fontWeight={500}>
+              {poolShare}
+            </Text>
+          </RowBetween>
+        </AutoColumn>
+        <AutoColumn gap="10px">
+          <RowBetween>
+            <Text fontSize={14} fontWeight={500}>
+              Pooled {currencyA?.symbol}
+            </Text>
+            <Text fontSize={14} fontWeight={500}>
+              {currencyAmountAToAddPool?.toSignificant(6)}
+            </Text>
+          </RowBetween>
+        </AutoColumn>
+        <AutoColumn gap="10px">
+          <RowBetween>
+            <Text fontSize={14} fontWeight={500}>
+              Pooled {currencyB?.symbol}
+            </Text>
+            <Text fontSize={14} fontWeight={500}>
+              {currencyAmountBToAddPool?.toSignificant(6)}
+            </Text>
+          </RowBetween>
+        </AutoColumn>
+        <AutoColumn gap="10px">
+          <RowBetween>
+            <Text fontSize={14} fontWeight={500}>
+              AMP
+            </Text>
+            <Text fontSize={14} fontWeight={500}>
+              1
+            </Text>
+          </RowBetween>
+        </AutoColumn>
+        {!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress) && (
+          <>
+            <AutoColumn gap="10px">
+              <RowBetween>
+                <Text fontSize={14} fontWeight={500}>
+                  Pool Address
+                </Text>
+                <RowFixed>
+                  <Text fontSize={14} fontWeight={500}>
+                    {shortenAddress(unAmplifiedPairAddress, 5)}
+                  </Text>
+                </RowFixed>
+              </RowBetween>
+            </AutoColumn>
+            <DashedLine style={{ marginTop: '20px' }} />
+            <AutoColumn gap="10px" style={{ marginTop: '20px' }}>
+              <RowBetween>
+                <Text fontSize={14} fontWeight={500}>
+                  Estimated Refund
+                </Text>
+                <Text fontSize={14} fontWeight={500}>
+                  {estimatedRefund}
+                </Text>
+              </RowBetween>
+            </AutoColumn>
+          </>
+        )}
+      </LightCard>
+    )
+  }
+
+  function modalHeader() {
+    return <div style={{ marginTop: '20px' }}>{dmmInfo()}</div>
+    // <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
+    //   <RowBetween align="flex-end">
+    //     <Text fontSize={24} fontWeight={500}>
+    //       {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
+    //     </Text>
+    //     <RowFixed gap="4px">
+    //       <CurrencyLogo currency={currencyA} size={'24px'} />
+    //       <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+    //         {currencyA?.symbol}
+    //       </Text>
+    //     </RowFixed>
+    //   </RowBetween>
+    //   <RowFixed>
+    //     <Plus size="16" color={theme.text2} />
+    //   </RowFixed>
+    //   <RowBetween align="flex-end">
+    //     <Text fontSize={24} fontWeight={500}>
+    //       {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
+    //     </Text>
+    //     <RowFixed gap="4px">
+    //       <CurrencyLogo currency={currencyB} size={'24px'} />
+    //       <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+    //         {currencyB?.symbol}
+    //       </Text>
+    //     </RowFixed>
+    //   </RowBetween>
+
+    //   <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
+    //     {`Output is estimated. If the price changes by more than ${allowedSlippage /
+    //       100}% your transaction will revert.`}
+    //   </TYPE.italic>
+    // </AutoColumn>
+  }
+
+  function modalBottom() {
+    return (
+      <>
+        {/* <RowBetween>
+          <Text color={theme.text2} fontWeight={500} fontSize={16}>
+            {currencyA?.symbol + '/' + currencyB?.symbol} Burned
+          </Text>
+          <RowFixed>
+            <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
+            <Text fontWeight={500} fontSize={16}>
+              {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
+            </Text>
+          </RowFixed>
+        </RowBetween>
+        {pair && (
+          <>
+            <RowBetween>
+              <Text color={theme.text2} fontWeight={500} fontSize={16}>
+                Price
+              </Text>
+              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+                1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
+              </Text>
+            </RowBetween>
+            <RowBetween>
+              <div />
+              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+                1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
+              </Text>
+            </RowBetween>
+          </>
+        )} */}
+        <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
+          <Text fontWeight={500} fontSize={20}>
+            Confirm
+          </Text>
+        </ButtonPrimary>
+      </>
+    )
+  }
 
   return (
     <>
@@ -602,104 +824,30 @@ export default function MigrateLiquidity({
                   <ColumnCenter>
                     <ArrowDown size="16" color={theme.text2} />
                   </ColumnCenter>
-                  <LightCard>
-                    <AutoColumn gap="10px">
-                      <RowBetween>
-                        <Text fontSize={14} fontWeight={500}>
-                          {formattedAmounts[Field.CURRENCY_A] || '-'}
-                        </Text>
-                        <RowFixed>
-                          <CurrencyLogo currency={currencyA} style={{ marginRight: '12px' }} />
-                          <Text fontSize={14} fontWeight={500} id="remove-liquidity-tokena-symbol">
-                            {currencyA?.symbol}
-                          </Text>
-                        </RowFixed>
-                      </RowBetween>
-                      <RowBetween>
-                        <Text fontSize={14} fontWeight={500}>
-                          {formattedAmounts[Field.CURRENCY_B] || '-'}
-                        </Text>
-                        <RowFixed>
-                          <CurrencyLogo currency={currencyB} style={{ marginRight: '12px' }} />
-                          <Text fontSize={14} fontWeight={500} id="remove-liquidity-tokenb-symbol">
-                            {currencyB?.symbol}
-                          </Text>
-                        </RowFixed>
-                      </RowBetween>
-                      {chainId && (oneCurrencyIsWETH || oneCurrencyIsETH) ? (
-                        <RowBetween style={{ justifyContent: 'flex-end' }}>
-                          {oneCurrencyIsETH ? (
-                            <StyledInternalLink
-                              to={`/migrate/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
-                                currencyB === ETHER ? WETH[chainId].address : currencyIdB
-                              }`}
-                            >
-                              Receive WETH
-                            </StyledInternalLink>
-                          ) : oneCurrencyIsWETH ? (
-                            <StyledInternalLink
-                              to={`/remove/${
-                                currencyA && currencyEquals(currencyA, WETH[chainId]) ? 'ETH' : currencyIdA
-                              }/${
-                                currencyB && currencyEquals(currencyB, WETH[chainId]) ? 'ETH' : currencyIdB
-                              }/${pairAddress}`}
-                            >
-                              Receive ETH
-                            </StyledInternalLink>
-                          ) : null}
-                        </RowBetween>
-                      ) : null}
-                    </AutoColumn>
-                  </LightCard>
+                  {uniInfo()}
                   <ColumnCenter>
                     <ArrowDown size="16" color={theme.text2} />
                   </ColumnCenter>
-                  <LightCard>
-                    <AutoColumn gap="10px">
-                      <RowBetween>
-                        <Text fontSize={14} fontWeight={500}>
-                          DMM Pool
-                        </Text>
-                      </RowBetween>
-                    </AutoColumn>
-                    <AutoColumn gap="10px">
-                      <RowBetween>
-                        <Text fontSize={14} fontWeight={500}>
-                          AMP
-                        </Text>
-                        <Text fontSize={14} fontWeight={500}>
-                          1
-                        </Text>
-                      </RowBetween>
-                    </AutoColumn>
-                    {!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress) && (
-                      <AutoColumn gap="10px">
-                        <RowBetween>
+                  {dmmInfo()}
+                  {!unAmplifiedPairAddress ||
+                    (isZero(unAmplifiedPairAddress) && (
+                      <YellowCard>
+                        <RowFixed>
+                          <img
+                            src={require('../../assets/svg/warning-icon.svg')}
+                            alt="warning-icon"
+                            style={{ marginRight: '20px' }}
+                          />
                           <Text fontSize={14} fontWeight={500}>
-                            Pool Address
+                            There is no existing pool for this token pair. You will be creating a new pool with AMP=1
+                            and migrating tokens from Uniswap/Sushiswap to DMM.{' '}
                           </Text>
-                          <RowFixed>
-                            <Text fontSize={14} fontWeight={500}>
-                              {shortenAddress(unAmplifiedPairAddress, 5)}
-                            </Text>
-                          </RowFixed>
-                        </RowBetween>
-                      </AutoColumn>
-                    )}
-                    <AutoColumn gap="10px">
-                      <RowBetween>
-                        <Text fontSize={14} fontWeight={500}>
-                          DMM LP tokens
-                        </Text>
-                        <Text fontSize={14} fontWeight={500}>
-                          {liquidityMinted?.toSignificant(4)}
-                        </Text>
-                      </RowBetween>
-                    </AutoColumn>
-                  </LightCard>
+                        </RowFixed>
+                      </YellowCard>
+                    ))}
                 </>
 
-                {pair && (
+                {/* {pair && (
                   <div style={{ padding: '10px 20px' }}>
                     <RowBetween>
                       Price:
@@ -716,7 +864,7 @@ export default function MigrateLiquidity({
                       </div>
                     </RowBetween>
                   </div>
-                )}
+                )} */}
                 <div style={{ position: 'relative' }}>
                   {!account ? (
                     <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
