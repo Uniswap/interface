@@ -124,7 +124,6 @@ export default function MigrateLiquidity({
   const isArgentWallet = useIsArgentWallet()
 
   async function onAttemptToApprove() {
-    console.log('onAttemptToApprove')
     if (!pairContract || !pair || !library || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
@@ -171,15 +170,7 @@ export default function MigrateLiquidity({
       primaryType: 'Permit',
       message
     })
-    console.log('==signnature', {
-      types: {
-        EIP712Domain,
-        Permit
-      },
-      domain,
-      primaryType: 'Permit',
-      message
-    })
+
     library
       .send('eth_signTypedData_v4', [account, data])
       .then(splitSignature)
@@ -316,7 +307,6 @@ export default function MigrateLiquidity({
     currencyAmountBToAddPool = currencyAmountB
     poolShare = '100%'
   }
-  console.log('migrator', MIGRATE_ADDRESS)
 
   const addTransaction = useTransactionAdder()
   async function onRemove() {
@@ -442,7 +432,6 @@ export default function MigrateLiquidity({
       }
     }
 
-    console.log('===pair', args, migrator)
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
         migrator.estimateGas[methodName](...args)
