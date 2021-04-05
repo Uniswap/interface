@@ -220,7 +220,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
 
 export const BLACKLIST_WALLETS: string[] = [
   '0xd882cfc20f52f2599d84b8e8d58c7fb62cfe344b',
-  '0x7f367cc41522ce07553e823bf3be79a889debe1b'
+  '0x7f367cc41522ce07553e823bf3be79a889debe1b',
+  '0x076567024aa84D766803EF0128dc7C58C13a6359'
 ]
 
 export const NetworkContextName = 'NETWORK'
