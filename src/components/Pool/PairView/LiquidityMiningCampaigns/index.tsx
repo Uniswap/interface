@@ -20,7 +20,7 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
   const { account } = useActiveWeb3React()
 
   const [tabTitles, setTabTitles] = useState(INITIAL_TAB_TITLES)
-  const [activeTab, setActiveTab] = useState(0)
+  const [activeTab, setActiveTab] = useState(account ? 0 : 1)
 
   const handleTabChange = useCallback(
     newActiveTab => {
@@ -39,7 +39,7 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
       <TYPE.mediumHeader fontSize="18px" color="white">
         Reward pools
       </TYPE.mediumHeader>
-      <TabBar titles={tabTitles} active={activeTab} onChange={handleTabChange} />
+      <TabBar titles={tabTitles} active={account ? activeTab : activeTab - 1} onChange={handleTabChange} />
       {pair ? (
         <>
           {activeTab === 0 && <ConnectedAccountTab pair={pair} />}

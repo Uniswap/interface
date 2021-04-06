@@ -29,7 +29,7 @@ interface LiquidityMiningCampaignProps {
   show: boolean
   onDismiss: () => void
   campaign: LiquidityMiningCampaign
-  stakableTokenBalance: TokenAmount
+  stakableTokenBalance?: TokenAmount
 }
 
 export function LiquidityMiningCampaignModal({
@@ -56,6 +56,17 @@ export function LiquidityMiningCampaignModal({
   const [disabledStaking, setDisabledStaking] = useState(false)
   const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
   const [disabledClaim, setDisabledClaim] = useState(false)
+  const [normalizedStakableTokenBalance, setNormalizedStakableTokenBalance] = useState<TokenAmount>()
+
+  useEffect(() => {
+    if (!stakableTokenBalance) {
+      setNormalizedStakableTokenBalance(new TokenAmount(campaign.targetedPair.liquidityToken, '0'))
+    } else if (campaign.stakingCap.equalTo('0')) {
+      setNormalizedStakableTokenBalance(stakableTokenBalance)
+    } else if (campaign.stakingCap.subtract(campaign.staked).lessThan(stakableTokenBalance)) {
+      setNormalizedStakableTokenBalance(campaign.stakingCap.subtract(campaign.staked))
+    }
+  }, [campaign.staked, campaign.stakingCap, campaign.targetedPair.liquidityToken, stakableTokenBalance])
 
   useEffect(() => {
     setDisabledStaking(
@@ -281,13 +292,7 @@ export function LiquidityMiningCampaignModal({
       {campaign.address && (
         <ConfirmStakingModal
           isOpen={showStakingConfirmationModal}
-          stakableTokenBalance={
-            campaign.stakingCap.equalTo('0')
-              ? stakableTokenBalance
-              : campaign.stakingCap.subtract(campaign.staked).lessThan(stakableTokenBalance)
-              ? campaign.stakingCap.subtract(campaign.staked)
-              : stakableTokenBalance
-          }
+          stakableTokenBalance={normalizedStakableTokenBalance}
           onDismiss={handleDismiss}
           stakablePair={campaign.targetedPair}
           distributionContractAddress={campaign.address}

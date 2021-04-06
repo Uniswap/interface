@@ -107,7 +107,7 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
           />
         </Box>
       </Flex>
-      {selectedCampaign && stakableTokenBalance && (
+      {selectedCampaign && (
         <LiquidityMiningCampaignModal
           show={!!selectedCampaign}
           onDismiss={handleLiquidityMiningCampaignModalDismiss}
