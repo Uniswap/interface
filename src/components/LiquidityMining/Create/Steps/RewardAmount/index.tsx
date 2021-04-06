@@ -1,5 +1,5 @@
 import { Pair, TokenAmount } from 'dxswap-sdk'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
 import { TYPE } from '../../../../../theme'
@@ -62,7 +62,7 @@ interface RewardAmountProps {
   stakablePair: Pair | null
   onRewardAmountChange: (newAmount: TokenAmount) => void
   onUnlimitedPoolChange: (newValue: boolean) => void
-  onStakingCapChange: (newValue: TokenAmount) => void
+  onStakingCapChange: (newValue: TokenAmount | null) => void
 }
 
 export default function RewardAmount({
@@ -75,6 +75,13 @@ export default function RewardAmount({
 }: RewardAmountProps) {
   const [amount, setAmount] = useState('')
   const [stakingCapString, setStakingCapString] = useState('')
+
+  useEffect(() => {
+    if (unlimitedPool) {
+      setStakingCapString('')
+      onStakingCapChange(null)
+    }
+  }, [onStakingCapChange, stakablePair, unlimitedPool])
 
   const handleLocalUserInput = useCallback(
     rawValue => {
