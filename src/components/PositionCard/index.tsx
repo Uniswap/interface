@@ -56,6 +56,26 @@ const IconWrapper = styled.div`
   right: 0;
 `
 
+const RightColumn = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr 0 1fr;
+  grid-column-gap: 24px;
+  align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-template-columns: 1fr 1.5fr;
+    grid-column-gap: 4px;
+  `}
+`
+
+const USDValue = styled.div`
+  text-align: right;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    text-align: left;
+  `}
+`
+
 const TokenRatioText = styled(Text)<{ isWarning: boolean }>`
   color: ${({ theme, isWarning }) => (isWarning ? theme.warning : theme.text1)};
 `
@@ -233,70 +253,66 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
       )}
       <AutoColumn gap="12px">
         <FixedHeightRow>
-          <AutoRow gap="8px">
+          <AutoRow gap="8px" align="flex-start">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={14}>
-              {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
-              {!!token0Deposited && (
-                <>
-                  &emsp;
-                  {token0Deposited?.toSignificant(6)} / {token1Deposited?.toSignificant(6)}{' '}
-                </>
+            <Text fontWeight={500} fontSize={14} style={{ flexGrow: 1 }}>
+              {!currency0 || !currency1 ? (
+                <Dots>Loading</Dots>
+              ) : (
+                <RightColumn>
+                  <div>{`${currency0.symbol}/${currency1.symbol}`}</div>
+                  <div>
+                    {!!token0Deposited && (
+                      <div>
+                        {token0Deposited?.toSignificant(6)} / {token1Deposited?.toSignificant(6)}{' '}
+                      </div>
+                    )}
+                  </div>
+                  <div />
+                  {!!usdValue && <USDValue>{usdValue}</USDValue>}
+                </RightColumn>
               )}
             </Text>
-            {!!stakedBalance && (
-              <ButtonUNIGradient as={Link} to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                <HideExtraSmall>Earning UNI</HideExtraSmall>
-                <ExtraSmallOnly>
-                  <span role="img" aria-label="bolt">
-                    ⚡
-                  </span>
-                </ExtraSmallOnly>
-              </ButtonUNIGradient>
-            )}
           </AutoRow>
 
-          <RowFixed gap="8px">
-            {!!usdValue ? `${usdValue}` : ''}
-            <ButtonEmpty padding="6px 8px" borderRadius="12px" width="100px" onClick={() => setShowMore(!showMore)}>
-              {showMore ? (
-                <ChevronUp size="20" style={{ marginLeft: '10px' }} />
-              ) : (
-                <ChevronDown size="20" style={{ marginLeft: '10px' }} />
-              )}
-            </ButtonEmpty>
-          </RowFixed>
+          <ButtonEmpty padding="0" width="32px" onClick={() => setShowMore(!showMore)}>
+            {showMore ? (
+              <ChevronUp size="20" style={{ marginLeft: '10px' }} />
+            ) : (
+              <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+            )}
+          </ButtonEmpty>
         </FixedHeightRow>
 
         {showMore && (
-          <AutoColumn gap="8px">
+          <AutoColumn gap="8px" style={{ marginTop: '8px' }}>
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500}>
                 Your total pool tokens:
               </Text>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
               </Text>
             </FixedHeightRow>
             {stakedBalance && (
               <FixedHeightRow>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={14} fontWeight={500}>
                   Pool tokens in rewards pool:
                 </Text>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={14} fontWeight={500}>
                   {stakedBalance.toSignificant(4)}
                 </Text>
               </FixedHeightRow>
             )}
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={14} fontWeight={500}>
                   Pooled {currency0.symbol}:
                 </Text>
               </RowFixed>
               {token0Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
                     {token0Deposited?.toSignificant(6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
@@ -308,13 +324,13 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
 
             <FixedHeightRow>
               <RowFixed>
-                <Text fontSize={16} fontWeight={500}>
+                <Text fontSize={14} fontWeight={500}>
                   Pooled {currency1.symbol}:
                 </Text>
               </RowFixed>
               {token1Deposited ? (
                 <RowFixed>
-                  <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
                     {token1Deposited?.toSignificant(6)}
                   </Text>
                   <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
@@ -325,17 +341,17 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
             </FixedHeightRow>
 
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500}>
                 Your pool share:
               </Text>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500}>
                 {poolTokenPercentage
                   ? (poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2)) + '%'
                   : '-'}
               </Text>
             </FixedHeightRow>
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500}>
                 Ratio:
               </Text>
               <TokenRatioText fontSize={16} fontWeight={500} isWarning={isWarning}>
@@ -344,39 +360,39 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               </TokenRatioText>
             </FixedHeightRow>
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500}>
                 AMP{' '}
                 <QuestionHelper text="Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs." />
                 :
               </Text>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500}>
                 {amp.toSignificant(5)}
               </Text>
             </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+            <RowBetween>
+              <Text fontSize={14} fontWeight={500}>
                 Price range {pair.token0.symbol}/{pair.token1.symbol}{' '}
                 <QuestionHelper text="Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive." />
                 :
               </Text>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500} marginLeft="12px">
                 {/* token 0  */}
                 {priceRangeCalcByPair(pair)[0][0]?.toSignificant(6) ?? '.'} -{' '}
                 {priceRangeCalcByPair(pair)[0][1]?.toSignificant(6) ?? '.'}
               </Text>
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={16} fontWeight={500}>
+            </RowBetween>
+            <RowBetween>
+              <Text fontSize={14} fontWeight={500}>
                 Price range {pair.token1.symbol}/{pair.token0.symbol}{' '}
                 <QuestionHelper text="Tradable price range for this pair based on AMP. If the price goes below or above this range, the pool may become inactive." />
                 :
               </Text>
-              <Text fontSize={16} fontWeight={500}>
+              <Text fontSize={14} fontWeight={500} marginLeft="12px">
                 {/* token 1  */}
                 {priceRangeCalcByPair(pair)[1][0]?.toSignificant(6) ?? '.'} -{' '}
                 {priceRangeCalcByPair(pair)[1][1]?.toSignificant(6) ?? '.'}
               </Text>
-            </FixedHeightRow>
+            </RowBetween>
             <ButtonSecondary2 padding="8px" borderRadius="8px">
               <ExternalLink style={{ width: '100%', textAlign: 'center' }} href={`${DMM_INFO_URL}/account/${account}`}>
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
