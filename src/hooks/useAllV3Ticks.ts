@@ -16,7 +16,7 @@ function bitmapIndex(tick: number, tickSpacing: number) {
   return compressed >> 8
 }
 
-const REFRESH_FREQUENCY = { blocksPerFetch: 10 }
+const REFRESH_FREQUENCY = { blocksPerFetch: 2 }
 
 interface TickData {
   tick: number
@@ -53,7 +53,7 @@ export function useAllV3Ticks(
     'getPopulatedTicksInWord',
     tickLensArgs,
     REFRESH_FREQUENCY,
-    2_000_000
+    1_500_000
   )
 
   const error = useMemo(() => callStates.some(({ error }) => error), [callStates])
@@ -81,11 +81,14 @@ export function useAllV3Ticks(
     [callStates]
   )
 
-  return {
-    loading,
-    syncing,
-    error,
-    valid,
-    tickData,
-  }
+  return useMemo(
+    () => ({
+      loading,
+      syncing,
+      error,
+      valid,
+      tickData,
+    }),
+    [loading, syncing, error, valid, tickData]
+  )
 }
