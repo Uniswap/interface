@@ -56,7 +56,9 @@ export function LiquidityMiningCampaignModal({
   const [disabledStaking, setDisabledStaking] = useState(false)
   const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
   const [disabledClaim, setDisabledClaim] = useState(false)
-  const [normalizedStakableTokenBalance, setNormalizedStakableTokenBalance] = useState<TokenAmount>()
+  const [normalizedStakableTokenBalance, setNormalizedStakableTokenBalance] = useState<TokenAmount>(
+    new TokenAmount(campaign.targetedPair.liquidityToken, '0')
+  )
 
   useEffect(() => {
     if (!stakableTokenBalance) {
@@ -65,8 +67,10 @@ export function LiquidityMiningCampaignModal({
       setNormalizedStakableTokenBalance(stakableTokenBalance)
     } else if (campaign.stakingCap.subtract(campaign.staked).lessThan(stakableTokenBalance)) {
       setNormalizedStakableTokenBalance(campaign.stakingCap.subtract(campaign.staked))
+    } else {
+      setNormalizedStakableTokenBalance(stakableTokenBalance)
     }
-  }, [campaign.staked, campaign.stakingCap, campaign.targetedPair.liquidityToken, stakableTokenBalance])
+  }, [campaign, stakableTokenBalance])
 
   useEffect(() => {
     setDisabledStaking(
