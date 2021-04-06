@@ -228,7 +228,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `
 
 function Header({ history }: { history: any }) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
   const nativeCurrency = useNativeCurrency()
@@ -272,7 +272,7 @@ function Header({ history }: { history: any }) {
               </Box>
             </AbsoluteComingSoonBadgeFlex>
           </StyledNavLinkWithBadge>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link/'}>
+          <StyledExternalLink id={`stake-nav-link`} href={`https://dxstats.eth.link/#/?chainId=${chainId}`}>
             Charts{' '}
             <Text ml="4px" fontSize="11px">
               ↗

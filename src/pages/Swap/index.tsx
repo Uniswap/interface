@@ -18,7 +18,7 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
+import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -37,6 +37,8 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pools/styleds'
 import Loader from '../../components/Loader'
+import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
+import NetworkWarningModal from '../../components/NetworkWarningModal'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
@@ -53,6 +55,7 @@ const SwitchIconContainer = styled.div`
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [platformOverride, setPlatformOverride] = useState<RoutablePlatform | null>(null)
+  const allTokens = useAllTokens()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -60,10 +63,16 @@ export default function Swap() {
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
-  const urlLoadedTokens: Token[] = useMemo(
-    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
-    [loadedInputCurrency, loadedOutputCurrency]
-  )
+  const urlLoadedScammyTokens: Token[] = useMemo(() => {
+    const normalizedAllTokens = Object.values(allTokens)
+    if (normalizedAllTokens.length === 0) return []
+    return [loadedInputCurrency, loadedOutputCurrency].filter((urlLoadedToken): urlLoadedToken is Token => {
+      return (
+        urlLoadedToken instanceof Token && !normalizedAllTokens.some(legitToken => legitToken.equals(urlLoadedToken))
+      )
+    })
+  }, [loadedInputCurrency, loadedOutputCurrency, allTokens])
+  const urlLoadedChainId = useTargetedChainIdFromUrl()
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
@@ -249,9 +258,17 @@ export default function Swap() {
 
   return (
     <>
+      <NetworkWarningModal
+        isOpen={!!account && !!urlLoadedChainId && chainId !== urlLoadedChainId}
+        targetedNetwork={urlLoadedChainId}
+      />
       <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
-        tokens={urlLoadedTokens}
+        isOpen={
+          (!urlLoadedChainId || chainId === urlLoadedChainId) &&
+          urlLoadedScammyTokens.length > 0 &&
+          !dismissTokenWarning
+        }
+        tokens={urlLoadedScammyTokens}
         onConfirm={handleConfirmTokenWarning}
       />
       <AppBody tradeDetailsOpen={!!trade}>

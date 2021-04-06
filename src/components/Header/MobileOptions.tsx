@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom'
 import { Menu } from 'react-feather'
 import Modal from '../Modal'
 import { Box, Flex } from 'rebass'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
@@ -77,6 +78,7 @@ export default function MobileOptions({ history }: { history: any }) {
   const toggle = useToggleMobileMenu()
   const closeModals = useCloseModals()
   const { t } = useTranslation()
+  useOnClickOutside(node, open ? toggle : undefined)
 
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
