@@ -1,11 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { Flex, Text } from 'rebass'
+import { Flex } from 'rebass'
 
 import { Fraction, JSBI, Pair } from 'libs/sdk/src'
 import { ButtonEmpty } from 'components/Button'
-import FavoriteStar from 'components/Icons/FavoriteStar'
 import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -14,7 +13,7 @@ import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { shortenAddress, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { getMyLiquidity } from 'utils/dmm'
+import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc } from 'utils/dmm'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -36,21 +35,24 @@ const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 `
 
 const StyledItemCard = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 4px;
   border-radius: 10px;
   margin-bottom: 20px;
-  padding: 16px 20px 4px 20px;
+  padding: 8px 20px 4px 20px;
   background-color: ${({ theme }) => theme.bg6};
   font-size: 12px;
 `
 
-const CardRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+const GridItem = styled.div<{ noBorder?: boolean }>`
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px dashed ${theme.border}`)};
+  padding-bottom: 12px;
 `
 
-const DataTitle = styled(Text)`
+const DataTitle = styled.div`
   display: flex;
   align-items: center;
   color: ${({ theme }) => theme.text6};
@@ -59,6 +61,7 @@ const DataTitle = styled(Text)`
   }
   user-select: none;
   text-transform: uppercase;
+  margin-bottom: 4px;
 `
 
 const DataText = styled(Flex)`
@@ -83,10 +86,6 @@ interface ListItemProps {
 
 export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps) => {
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
-
-  // Recommended pools are pools that have AMP = 1 or is registered by kyber DAO in a whitelist contract
-  // TODO: Add recommended pool which is registered by kyber DAO  in a whitelist contract
-  const isRecommended = amp.equalTo(new Fraction(JSBI.BigInt(1)))
 
   const percentToken0 = pool
     ? pool.reserve0
@@ -116,13 +115,6 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
   return (
     <div>
-      {isRecommended && !isWarning && (
-        <div style={{ position: 'absolute' }}>
-          <MouseoverTooltip text="Recommended pool">
-            <FavoriteStar />
-          </MouseoverTooltip>
-        </div>
-      )}
       {isWarning && (
         <div style={{ position: 'absolute' }}>
           <MouseoverTooltip text="One token is close to 0% in the pool ratio. Pool might go inactive.">
@@ -132,23 +124,23 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
       )}
 
       <StyledItemCard>
-        <CardRow>
-          <div>
-            <DataTitle>Pool</DataTitle>
-            <DataText grid-area="pool">
-              <PoolAddressContainer>
-                {shortenPoolAddress}
-                <CopyHelper toCopy={pool.address} />
-              </PoolAddressContainer>
-            </DataText>
-          </div>
+        <GridItem>
+          <DataTitle>Pool</DataTitle>
+          <DataText grid-area="pool">
+            <PoolAddressContainer>
+              {shortenPoolAddress}
+              <CopyHelper toCopy={pool.address} />
+            </PoolAddressContainer>
+          </DataText>
+        </GridItem>
 
-          <div>
-            <DataTitle>My liquidity</DataTitle>
-            <DataText>{getMyLiquidity(myLiquidity)}</DataText>
-          </div>
+        <GridItem>
+          <DataTitle>My liquidity</DataTitle>
+          <DataText>{getMyLiquidity(myLiquidity)}</DataText>
+        </GridItem>
 
-          <DataText>
+        <GridItem>
+          <DataText style={{ alignItems: 'flex-end' }}>
             {
               <ButtonEmpty
                 padding="0"
@@ -160,38 +152,54 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
               </ButtonEmpty>
             }
           </DataText>
-        </CardRow>
-        <CardRow>
-          <div>
-            <DataTitle>Liquidity</DataTitle>
-            <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
-          </div>
-          <div>
-            <DataTitle>Volume (24h)</DataTitle>
-            <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
-          </div>
-          <div>
-            <DataTitle>Ratio</DataTitle>
-            <DataText grid-area="ratio">
-              <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
-              <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
-            </DataText>
-          </div>
-        </CardRow>
-        <CardRow>
-          <div>
-            <DataTitle>Fee (24h)</DataTitle>
-            <DataText>{formattedNum(fee, true)}</DataText>
-          </div>
-          <div>
-            <DataTitle>AMP</DataTitle>
-            <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
-          </div>
-          <div>
-            <DataTitle>1y F/L</DataTitle>
-            <DataText>{`${oneYearFL}%`}</DataText>
-          </div>
-        </CardRow>
+        </GridItem>
+
+        <GridItem>
+          <DataTitle>Liquidity</DataTitle>
+          <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
+        </GridItem>
+        <GridItem>
+          <DataTitle>Volume (24h)</DataTitle>
+          <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
+        </GridItem>
+        <GridItem>
+          <DataTitle>Ratio</DataTitle>
+          <DataText grid-area="ratio">
+            <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
+            <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
+          </DataText>
+        </GridItem>
+
+        <GridItem>
+          <DataTitle>Fee (24h)</DataTitle>
+          <DataText>{formattedNum(fee, true)}</DataText>
+        </GridItem>
+        <GridItem>
+          <DataTitle>AMP</DataTitle>
+          <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
+        </GridItem>
+        <GridItem>
+          <DataTitle>1y F/L</DataTitle>
+          <DataText>{`${oneYearFL}%`}</DataText>
+        </GridItem>
+
+        <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
+          <DataTitle>Price Range</DataTitle>
+          <DataText>
+            {pool.token0.symbol}/{pool.token1.symbol}: {priceRangeCalcByPair(pool)[0][0]?.toSignificant(6) ?? '0'} -{' '}
+            {priceRangeCalcByPair(pool)[0][1]?.toSignificant(6) ?? '♾️'}
+          </DataText>
+          <DataText>
+            {pool.token1.symbol}/{pool.token0.symbol}: {priceRangeCalcByPair(pool)[1][0]?.toSignificant(6) ?? '0'} -{' '}
+            {priceRangeCalcByPair(pool)[1][1]?.toSignificant(6) ?? '♾️'}
+          </DataText>
+        </GridItem>
+        <GridItem noBorder>
+          <DataTitle>Fee Range</DataTitle>
+          <DataText>
+            {feeRangeCalc(!!pool?.amp ? +new Fraction(pool.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp)}
+          </DataText>
+        </GridItem>
       </StyledItemCard>
     </div>
   )
@@ -199,10 +207,6 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
 const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
-
-  // Recommended pools are pools that have AMP = 1 or is registered by kyber DAO in a whitelist contract
-  // TODO: Add recommended pool which is registered by kyber DAO  in a whitelist contract
-  const isRecommended = amp.equalTo(new Fraction(JSBI.BigInt(1)))
 
   const percentToken0 = pool
     ? pool.reserve0
@@ -232,13 +236,6 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
   return (
     <TableRow oddRow={oddRow}>
-      {isRecommended && !isWarning && (
-        <div style={{ position: 'absolute' }}>
-          <MouseoverTooltip text="Recommended pool">
-            <FavoriteStar />
-          </MouseoverTooltip>
-        </div>
-      )}
       {isWarning && (
         <div style={{ position: 'absolute' }}>
           <MouseoverTooltip text="One token is close to 0% in the pool ratio. Pool might go inactive.">

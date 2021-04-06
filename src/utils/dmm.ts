@@ -66,6 +66,16 @@ export const priceRangeCalcByPair = (pair?: Pair): [Fraction | undefined, Fracti
   ]
 }
 
+export const feeRangeCalc = (amp: number): string => {
+  let baseFee = 0
+  if (amp > 20) baseFee = 4
+  if (amp <= 20 && amp > 5) baseFee = 10
+  if (amp <= 5 && amp > 2) baseFee = 20
+  if (amp <= 2) baseFee = 30
+
+  return `${(baseFee / 2 / 100).toPrecision()}% - ${((baseFee * 2) / 100).toPrecision()}%`
+}
+
 const DEFAULT_MY_LIQUIDITY = '-'
 
 export const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 => {
