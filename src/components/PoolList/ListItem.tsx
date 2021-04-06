@@ -13,7 +13,7 @@ import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { shortenAddress, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { getMyLiquidity } from 'utils/dmm'
+import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc } from 'utils/dmm'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -37,7 +37,7 @@ const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 const StyledItemCard = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-column-gap: 8px;
+  grid-column-gap: 4px;
   border-radius: 10px;
   margin-bottom: 20px;
   padding: 8px 20px 4px 20px;
@@ -45,9 +45,11 @@ const StyledItemCard = styled.div`
   font-size: 12px;
 `
 
-const GridItem = styled.div`
+const GridItem = styled.div<{ noBorder?: boolean }>`
   margin-top: 8px;
   margin-bottom: 8px;
+  border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px dashed ${theme.border}`)};
+  padding-bottom: 12px;
 `
 
 const DataTitle = styled.div`
@@ -179,6 +181,24 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         <GridItem>
           <DataTitle>1y F/L</DataTitle>
           <DataText>{`${oneYearFL}%`}</DataText>
+        </GridItem>
+
+        <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
+          <DataTitle>Price Range</DataTitle>
+          <DataText>
+            {pool.token0.symbol}/{pool.token1.symbol}: {priceRangeCalcByPair(pool)[0][0]?.toSignificant(6) ?? '0'} -{' '}
+            {priceRangeCalcByPair(pool)[0][1]?.toSignificant(6) ?? '♾️'}
+          </DataText>
+          <DataText>
+            {pool.token1.symbol}/{pool.token0.symbol}: {priceRangeCalcByPair(pool)[1][0]?.toSignificant(6) ?? '0'} -{' '}
+            {priceRangeCalcByPair(pool)[1][1]?.toSignificant(6) ?? '♾️'}
+          </DataText>
+        </GridItem>
+        <GridItem noBorder>
+          <DataTitle>Fee Range</DataTitle>
+          <DataText>
+            {feeRangeCalc(!!pool?.amp ? +new Fraction(pool.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp)}
+          </DataText>
         </GridItem>
       </StyledItemCard>
     </div>

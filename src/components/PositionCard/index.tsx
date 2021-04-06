@@ -377,8 +377,8 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               </Text>
               <Text fontSize={14} fontWeight={500} marginLeft="12px">
                 {/* token 0  */}
-                {priceRangeCalcByPair(pair)[0][0]?.toSignificant(6) ?? '.'} -{' '}
-                {priceRangeCalcByPair(pair)[0][1]?.toSignificant(6) ?? '.'}
+                {priceRangeCalcByPair(pair)[0][0]?.toSignificant(6) ?? '0'} -{' '}
+                {priceRangeCalcByPair(pair)[0][1]?.toSignificant(6) ?? '♾️'}
               </Text>
             </RowBetween>
             <RowBetween>
@@ -389,8 +389,8 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               </Text>
               <Text fontSize={14} fontWeight={500} marginLeft="12px">
                 {/* token 1  */}
-                {priceRangeCalcByPair(pair)[1][0]?.toSignificant(6) ?? '.'} -{' '}
-                {priceRangeCalcByPair(pair)[1][1]?.toSignificant(6) ?? '.'}
+                {priceRangeCalcByPair(pair)[1][0]?.toSignificant(6) ?? '0'} -{' '}
+                {priceRangeCalcByPair(pair)[1][1]?.toSignificant(6) ?? '♾️'}
               </Text>
             </RowBetween>
             <ButtonSecondary2 padding="8px" borderRadius="8px">
