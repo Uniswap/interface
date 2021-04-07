@@ -1,5 +1,4 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
-import { BigNumber } from 'ethers'
 import {
   addPopup,
   PopupContent,
@@ -14,7 +13,7 @@ type PopupList = Array<{ key: string; show: boolean; content: PopupContent; remo
 
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
-  readonly blockGasLimit: { readonly [chainId: number]: BigNumber }
+  readonly blockGasLimit: { readonly [chainId: number]: string } // hex representation of block gas limit
   readonly popupList: PopupList
   readonly openModal: ApplicationModal | null
 }

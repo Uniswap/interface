@@ -60,7 +60,12 @@ export default function Updater(): null {
     if (!debouncedState.chainId || !debouncedState.blockNumber || !debouncedState.blockGasLimit || !windowVisible)
       return
     dispatch(updateBlockNumber({ chainId: debouncedState.chainId, blockNumber: debouncedState.blockNumber }))
-    dispatch(updateBlockGasLimit({ chainId: debouncedState.chainId, blockGasLimit: debouncedState.blockGasLimit }))
+    dispatch(
+      updateBlockGasLimit({
+        chainId: debouncedState.chainId,
+        blockGasLimit: debouncedState.blockGasLimit.toHexString()
+      })
+    )
   }, [windowVisible, dispatch, debouncedState.blockNumber, debouncedState.chainId, debouncedState.blockGasLimit])
 
   return null

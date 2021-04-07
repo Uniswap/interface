@@ -13,7 +13,8 @@ export function useBlockNumber(): number | undefined {
 
 export function useBlockGasLimit(): BigNumber | undefined {
   const { chainId } = useActiveWeb3React()
-  return useSelector((state: AppState) => state.application.blockGasLimit[chainId ?? -1])
+  const rawBlockGasLimit = useSelector((state: AppState) => state.application.blockGasLimit[chainId ?? -1])
+  return BigNumber.from(rawBlockGasLimit ?? '0')
 }
 
 export function useModalOpen(modal: ApplicationModal): boolean {
