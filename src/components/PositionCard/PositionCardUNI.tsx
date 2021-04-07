@@ -101,7 +101,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <Text fontWeight={500} fontSize={16}>
+                <img src={require('../../assets/svg/uniswap-icon.svg')} alt="uniswap-icon" />
+                <Text fontWeight={500} fontSize={16} style={{ marginLeft: '10px' }}>
                   Your position
                 </Text>
               </RowFixed>
