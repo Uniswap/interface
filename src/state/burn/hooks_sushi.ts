@@ -1,10 +1,11 @@
-import { CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
-import { Currency } from 'libs/sdk/src'
+import { CurrencyAmount, JSBI, Pair, Percent, TokenAmount, Token } from '@sushiswap/sdk'
+import { Currency, TokenAmount as TokenAmountDMM } from 'libs/sdk/src'
 import { useUnAmplifiedPair } from 'data/Reserves'
 import { useEffect } from 'react'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { usePair } from '../../data/ReservesUNI'
+import { tokenAmountDmmToSushi, tokenDmmToSushi, tokenSushiToDmm } from 'utils/dmm'
+import { usePair } from '../../data/ReservesSUSHI'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -30,7 +31,6 @@ export function useDerivedBurnInfo(
     [Field.CURRENCY_A]?: CurrencyAmount
     [Field.CURRENCY_B]?: CurrencyAmount
   }
-  unAmplifiedPairAddress?: string
   error?: string
 } {
   const { account, chainId } = useActiveWeb3React()
@@ -39,9 +39,14 @@ export function useDerivedBurnInfo(
 
   // pair + totalsupply
   const [, pair] = usePair(currencyA, currencyB)
+
   // balances
-  const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])
-  const userLiquidity: undefined | TokenAmount = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
+  const relevantTokenBalances = useTokenBalances(account ?? undefined, [
+    !!pair?.liquidityToken ? tokenSushiToDmm(pair?.liquidityToken) : undefined
+  ])
+  const userLiquidity: undefined | TokenAmount = !!relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
+    ? tokenAmountDmmToSushi(relevantTokenBalances?.[pair?.liquidityToken?.address ?? ''] as TokenAmountDMM)
+    : undefined
 
   const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
   const tokens = {
@@ -51,7 +56,8 @@ export function useDerivedBurnInfo(
   }
 
   // liquidity values
-  const totalSupply = useTotalSupply(pair?.liquidityToken)
+  const totalSupply = useTotalSupply(!!pair?.liquidityToken ? tokenSushiToDmm(pair?.liquidityToken) : undefined)
+
   const liquidityValueA =
     pair &&
     totalSupply &&
@@ -59,7 +65,10 @@ export function useDerivedBurnInfo(
     tokenA &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
-      ? new TokenAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity, false).raw)
+      ? new TokenAmount(
+          tokenDmmToSushi(tokenA),
+          pair.getLiquidityValue(tokenDmmToSushi(tokenA), tokenAmountDmmToSushi(totalSupply), userLiquidity, false).raw
+        )
       : undefined
   const liquidityValueB =
     pair &&
@@ -68,7 +77,10 @@ export function useDerivedBurnInfo(
     tokenB &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
-      ? new TokenAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity, false).raw)
+      ? new TokenAmount(
+          tokenDmmToSushi(tokenB),
+          pair.getLiquidityValue(tokenDmmToSushi(tokenB), tokenAmountDmmToSushi(totalSupply), userLiquidity, false).raw
+        )
       : undefined
   const liquidityValues: { [Field.CURRENCY_A]?: TokenAmount; [Field.CURRENCY_B]?: TokenAmount } = {
     [Field.CURRENCY_A]: liquidityValueA,
@@ -113,11 +125,11 @@ export function useDerivedBurnInfo(
         : undefined,
     [Field.CURRENCY_A]:
       tokenA && percentToRemove && percentToRemove.greaterThan('0') && liquidityValueA
-        ? new TokenAmount(tokenA, percentToRemove.multiply(liquidityValueA.raw).quotient)
+        ? new TokenAmount(tokenDmmToSushi(tokenA), percentToRemove.multiply(liquidityValueA.raw).quotient)
         : undefined,
     [Field.CURRENCY_B]:
       tokenB && percentToRemove && percentToRemove.greaterThan('0') && liquidityValueB
-        ? new TokenAmount(tokenB, percentToRemove.multiply(liquidityValueB.raw).quotient)
+        ? new TokenAmount(tokenDmmToSushi(tokenB), percentToRemove.multiply(liquidityValueB.raw).quotient)
         : undefined
   }
 
@@ -130,9 +142,7 @@ export function useDerivedBurnInfo(
     error = error ?? 'Enter an amount'
   }
 
-  const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
-
-  return { pair, parsedAmounts, error, unAmplifiedPairAddress }
+  return { pair, parsedAmounts, error }
 }
 
 export function useBurnActionHandlers(): {

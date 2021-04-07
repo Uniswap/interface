@@ -124,6 +124,8 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@apollo/client": "^3.3.11",
+    "@sushiswap/core": "^1.4.2",
+    "@sushiswap/sdk": "^5.0.0-canary.6",
     "@types/big.js": "^6.0.0",
     "@uniswap/sdk": "^3.0.3",
     "dayjs": "^1.10.4",
