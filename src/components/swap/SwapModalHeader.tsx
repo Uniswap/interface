@@ -39,7 +39,7 @@ export default function SwapModalHeader({
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
-          <CurrencyLogo currency={trade.inputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
+          <CurrencyLogo currency={trade.inputAmount.currency} size={'24px'} marginRight={12} />
           <TruncatedText
             fontSize={24}
             fontWeight={500}
@@ -59,7 +59,7 @@ export default function SwapModalHeader({
       </RowFixed>
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
-          <CurrencyLogo currency={trade.outputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
+          <CurrencyLogo currency={trade.outputAmount.currency} size={'24px'} marginRight={12} />
           <TruncatedText
             fontSize={24}
             fontWeight={500}

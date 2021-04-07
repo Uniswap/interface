@@ -67,7 +67,7 @@ export function SwapPlatformSelector({
                   <CurrencyLogo
                     currency={isExactIn ? trade.outputAmount.currency : trade.inputAmount.currency}
                     size="14px"
-                    style={{ margin: '0 2px' }}
+                    marginLeft={4}
                   />
                 </Box>
               </Flex>

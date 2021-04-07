@@ -63,7 +63,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
                   ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)}` ?? '-'
                   : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)}` ?? '-'}
               </TYPE.body>
-              <CurrencyLogo currency={currency} size="14px" style={{ margin: '0 2px' }} />
+              <CurrencyLogo currency={currency} size="14px" marginLeft={4} />
             </div>
           </RowBetween>
         </RowBetween>
