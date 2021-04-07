@@ -24,7 +24,6 @@ export default function About() {
   }
 
   const globalData = data.dmmFactories[0]
-  console.log('globalData', globalData)
 
   return (
     <div className={style.wrapper}>

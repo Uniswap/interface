@@ -35,7 +35,7 @@ export default function SocialLinks() {
           <TwitterIcon />
         </StyledTwitterIcon>
       </ExternalLink>
-      <ExternalLink href="https://discord.gg/NfFMVz6">
+      <ExternalLink href="https://discord.gg/HdXWUb2pQM">
         <StyledDiscordIcon>
           <DiscordIcon />
         </StyledDiscordIcon>

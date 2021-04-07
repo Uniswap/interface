@@ -17,7 +17,7 @@ export function useMintState(): AppState['mint'] {
   return useSelector<AppState, AppState['mint']>(state => state.mint)
 }
 
-export function useDerivedMintInfoUNI(
+export function useDerivedMintInfoMigration(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   pairAddress: string | undefined,
@@ -172,32 +172,5 @@ export function useDerivedMintInfoUNI(
     poolTokenPercentage,
     error,
     unAmplifiedPairAddress
-  }
-}
-
-export function useMintActionHandlers(
-  noLiquidity: boolean | undefined
-): {
-  onFieldAInput: (typedValue: string) => void
-  onFieldBInput: (typedValue: string) => void
-} {
-  const dispatch = useDispatch<AppDispatch>()
-
-  const onFieldAInput = useCallback(
-    (typedValue: string) => {
-      dispatch(typeInput({ field: Field.CURRENCY_A, typedValue, noLiquidity: noLiquidity === true }))
-    },
-    [dispatch, noLiquidity]
-  )
-  const onFieldBInput = useCallback(
-    (typedValue: string) => {
-      dispatch(typeInput({ field: Field.CURRENCY_B, typedValue, noLiquidity: noLiquidity === true }))
-    },
-    [dispatch, noLiquidity]
-  )
-
-  return {
-    onFieldAInput,
-    onFieldBInput
   }
 }

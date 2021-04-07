@@ -3,6 +3,19 @@ import { ZERO, ONE } from 'libs/sdk/src/constants'
 import { UserLiquidityPosition } from 'state/pools/hooks'
 import { formattedNum } from 'utils'
 
+import {
+  Currency as CurrencySUSHI,
+  TokenAmount as TokenAmountSUSHI,
+  Token as TokenSUSHI,
+  ChainId as ChainIdSUSHI
+} from '@sushiswap/sdk'
+import {
+  Currency as CurrencyDMM,
+  Token as TokenDMM,
+  TokenAmount as TokenAmountDMM,
+  ChainId as ChainIdDMM
+} from 'libs/sdk/src'
+
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
   if (amp && (amp.equalTo(ONE) || amp?.equalTo(ZERO))) return [undefined, undefined]
@@ -66,6 +79,16 @@ export const priceRangeCalcByPair = (pair?: Pair): [Fraction | undefined, Fracti
   ]
 }
 
+export const feeRangeCalc = (amp: number): string => {
+  let baseFee = 0
+  if (amp > 20) baseFee = 4
+  if (amp <= 20 && amp > 5) baseFee = 10
+  if (amp <= 5 && amp > 2) baseFee = 20
+  if (amp <= 2) baseFee = 30
+
+  return `${(baseFee / 2 / 100).toPrecision()}% - ${((baseFee * 2) / 100).toPrecision()}%`
+}
+
 const DEFAULT_MY_LIQUIDITY = '-'
 
 export const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 => {
@@ -82,4 +105,36 @@ export const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): strin
   }
 
   return formattedNum(myLiquidity.toString(), true)
+}
+
+export function tokenSushiToDmm(tokenSushi: TokenSUSHI): TokenDMM {
+  return new TokenDMM(
+    tokenSushi.chainId as ChainIdDMM,
+    tokenSushi.address,
+    tokenSushi.decimals,
+    tokenSushi.symbol,
+    tokenSushi.name
+  )
+}
+export function tokenDmmToSushi(tokenDmm: TokenDMM): TokenSUSHI {
+  return new TokenSUSHI(
+    tokenDmm.chainId as ChainIdSUSHI,
+    tokenDmm.address,
+    tokenDmm.decimals,
+    tokenDmm.symbol,
+    tokenDmm.name
+  )
+}
+
+export function tokenAmountDmmToSushi(amount: TokenAmountDMM): TokenAmountSUSHI {
+  return new TokenAmountSUSHI(
+    new TokenSUSHI(
+      amount.token.chainId as ChainIdSUSHI,
+      amount.token.address,
+      amount.token.decimals,
+      amount.token.symbol,
+      amount.token.name
+    ),
+    amount.raw
+  )
 }

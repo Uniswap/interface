@@ -64,6 +64,10 @@ export function useToggleVoteModal(): () => void {
   return useToggleModal(ApplicationModal.VOTE)
 }
 
+export function usePoolDetailModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.POOL_DETAIL)
+}
+
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string) => void {
   const dispatch = useDispatch()

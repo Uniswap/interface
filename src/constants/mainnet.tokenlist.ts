@@ -72,6 +72,27 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'AAVE',
       name: 'AAVE',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0x1F3F677Ecc58F6A1F9e2CF410dF4776a8546b5DE',
+      symbol: 'VNDC',
+      name: 'VNDC',
+      decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0x27702a26126e0B3702af63Ee09aC4d1A084EF628',
+      symbol: 'ALEPH',
+      name: 'Aleph.im',
+      decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0x196f4727526eA7FB1e17b2071B3d8eAA38486988',
+      symbol: 'RSV',
+      name: 'Reserve',
+      decimals: 18
     }
   ],
   version: {

@@ -46,6 +46,7 @@ import { ONE } from 'libs/sdk/src/constants'
 import { parseUnits } from 'ethers/lib/utils'
 import Modal from 'components/Modal'
 import isZero from 'utils/isZero'
+import { feeRangeCalc } from 'utils/dmm'
 
 const ActiveText = styled.div`
   font-weight: 500;
@@ -388,16 +389,6 @@ export default function AddLiquidity({
   const percentToken1 = pair
     ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
     : '50%'
-
-  const feeRangeCalc = (amp: number): string => {
-    let baseFee = 0
-    if (amp > 20) baseFee = 4
-    if (amp <= 20 && amp > 5) baseFee = 10
-    if (amp <= 5 && amp > 2) baseFee = 20
-    if (amp <= 2) baseFee = 30
-
-    return `${(baseFee / 2 / 100).toPrecision()}% - ${((baseFee * 2) / 100).toPrecision()}%`
-  }
 
   return (
     <>

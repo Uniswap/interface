@@ -24,6 +24,7 @@ import PoolFinder from './PoolFinder'
 import PoolFinderUNI from './PoolFinder/PoolFinderUNI'
 import RemoveLiquidity from './RemoveLiquidity'
 import MigrateLiquidityUNI from './RemoveLiquidity/migrate_uni'
+import MigrateLiquiditySUSHI from './RemoveLiquidity/migrate_sushi'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
@@ -120,6 +121,12 @@ export default function App() {
                       exact
                       path="/add/:currencyIdA/:currencyIdB/:pairAddress"
                       component={RedirectDuplicateTokenIds}
+                    />
+                    <Route
+                      exact
+                      strict
+                      path="/migrateSushi/:currencyIdA/:currencyIdB"
+                      component={MigrateLiquiditySUSHI}
                     />
                     <Route exact strict path="/migrate/:currencyIdA/:currencyIdB" component={MigrateLiquidityUNI} />
                     <Route exact path="/about" component={About} />

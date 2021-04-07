@@ -14,6 +14,11 @@ const InfoCard = styled.button<{ active?: boolean }>`
     margin-right: 0;
   }
   padding: 0 !important;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+    margin: 0 0 8px 0;
+  `};
 `
 
 const OptionCard = styled(InfoCard as any)`
