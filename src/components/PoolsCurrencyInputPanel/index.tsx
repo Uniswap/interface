@@ -14,7 +14,7 @@ const InputRow = styled.div<{ selected: boolean }>`
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
   `};
 `
@@ -39,7 +39,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
     background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
   }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
   `};
 `
@@ -49,7 +49,7 @@ const Aligner = styled.span`
   align-items: center;
   justify-content: space-between;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
   `};
 `
@@ -71,7 +71,7 @@ const InputPanel = styled.div`
   background-color: transparent;
   z-index: 1;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
     margin-bottom: 12px;
   `};
@@ -82,7 +82,7 @@ const Container = styled.div`
   border: 1px solid transparent;
   background-color: transparent;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
   `};
 `

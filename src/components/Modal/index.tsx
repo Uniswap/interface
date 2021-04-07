@@ -42,11 +42,11 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
     overflow-x: hidden;
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
-    max-width: ${({ maxWidth }) => `${maxWidth}px`};
+    max-width: ${({ maxWidth }) => (maxWidth && !isNaN(maxWidth) ? `${maxWidth}px` : maxWidth)};
     ${({ maxHeight }) =>
       maxHeight &&
       css`
-        max-height: ${maxHeight}vh;
+        max-height: ${maxHeight && !isNaN(maxHeight) ? `${maxHeight}vh` : maxHeight};
       `}
     ${({ minHeight }) =>
       minHeight &&
@@ -76,8 +76,8 @@ interface ModalProps {
   isOpen: boolean
   onDismiss: () => void
   minHeight?: number | false
-  maxHeight?: number
-  maxWidth?: number
+  maxHeight?: number | string
+  maxWidth?: number | string
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
 }

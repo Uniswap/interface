@@ -1,18 +1,27 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { SubgraphPoolData } from './hooks'
-import { setError, setLoading, updatePools } from './actions'
+import { Pair } from 'libs/sdk/src'
+import { SubgraphPoolData, UserLiquidityPosition } from './hooks'
+import { setError, setLoading, setSelectedPool, updatePools } from './actions'
+
+interface SelectedPool {
+  pool: Pair
+  subgraphPoolData: SubgraphPoolData
+  myLiquidity?: UserLiquidityPosition
+}
 
 export interface PoolsState {
   readonly pools: SubgraphPoolData[]
   readonly loading: boolean
   readonly error?: Error
+  readonly selectedPool?: SelectedPool
 }
 
 const initialState: PoolsState = {
   pools: [],
   loading: false,
-  error: undefined
+  error: undefined,
+  selectedPool: undefined
 }
 
 export default createReducer<PoolsState>(initialState, builder =>
@@ -20,19 +29,32 @@ export default createReducer<PoolsState>(initialState, builder =>
     .addCase(updatePools, (state, { payload: { pools } }) => {
       return {
         ...state,
-        pools
+        pools,
+        selectedPool: undefined
       }
     })
     .addCase(setLoading, (state, { payload: loading }) => {
       return {
         ...state,
-        loading
+        loading,
+        selectedPool: undefined
       }
     })
     .addCase(setError, (state, { payload: error }) => {
       return {
         ...state,
-        error
+        error,
+        selectedPool: undefined
+      }
+    })
+    .addCase(setSelectedPool, (state, { payload: { pool, subgraphPoolData, myLiquidity } }) => {
+      return {
+        ...state,
+        selectedPool: {
+          pool,
+          subgraphPoolData,
+          myLiquidity
+        }
       }
     })
 )

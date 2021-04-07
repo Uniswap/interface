@@ -11,6 +11,7 @@ import InfoHelper from 'components/InfoHelper'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { getHealthFactor } from 'utils/dmm'
 import ListItem, { ItemCard } from './ListItem'
+import PoolDetailModal from './PoolDetailModal'
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -75,7 +76,7 @@ const SORT_FIELD = {
 
 const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
-  const above800 = useMedia('(min-width: 800px)')
+  const above1200 = useMedia('(min-width: 1200px)') // Extra large screen
 
   const transformedSubgraphPoolsData: {
     [key: string]: SubgraphPoolData
@@ -183,7 +184,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   }
 
   const renderHeader = () => {
-    return above800 ? (
+    return above1200 ? (
       <TableHeader>
         <Flex alignItems="center" justifyContent="flexStart">
           <ClickableText>Pool</ClickableText>
@@ -322,7 +323,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
       {renderHeader()}
       {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
         if (pool && transformedSubgraphPoolsData[pool.address.toLowerCase()]) {
-          return above800 ? (
+          return above1200 ? (
             <ListItem
               key={pool.address}
               pool={pool}
@@ -353,6 +354,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
           {t('showMorePools')}
         </ButtonEmpty>
       </LoadMoreButtonContainer>
+      <PoolDetailModal />
     </div>
   )
 }
