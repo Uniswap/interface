@@ -1,5 +1,6 @@
 import { createAction } from '@reduxjs/toolkit'
 import { ChainId } from 'dxswap-sdk'
+import { BigNumber } from 'ethers'
 
 export type PopupContent = {
   txn?: {
@@ -22,6 +23,9 @@ export enum ApplicationModal {
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
+export const updateBlockGasLimit = createAction<{ chainId: number; blockGasLimit: BigNumber }>(
+  'application/updateBlockGasLimit'
+)
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
 export const addPopup = createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>(
   'application/addPopup'
