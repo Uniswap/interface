@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Flex } from 'rebass'
+import { MoreHorizontal } from 'react-feather'
+import { useDispatch } from 'react-redux'
 
 import { Fraction, JSBI, Pair } from 'libs/sdk/src'
 import { ButtonEmpty } from 'components/Button'
@@ -9,11 +11,13 @@ import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
 import { MouseoverTooltip } from 'components/Tooltip'
 import CopyHelper from 'components/Copy'
+import { usePoolDetailModalToggle } from 'state/application/hooks'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { shortenAddress, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc } from 'utils/dmm'
+import { setSelectedPool } from 'state/pools/actions'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -39,10 +43,14 @@ const StyledItemCard = styled.div`
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 4px;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   padding: 8px 20px 4px 20px;
   background-color: ${({ theme }) => theme.bg6};
   font-size: 12px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-bottom: 20px;
+  `}
 `
 
 const GridItem = styled.div<{ noBorder?: boolean }>`
@@ -67,6 +75,14 @@ const DataTitle = styled.div`
 const DataText = styled(Flex)`
   color: ${({ theme }) => theme.text7};
   flex-direction: column;
+`
+
+const ButtonWrapper = styled(Flex)`
+  justify-content: space-between;
+`
+
+const StyledMoreHorizontal = styled(MoreHorizontal)`
+  color: ${({ theme }) => theme.text9};
 `
 
 const PoolAddressContainer = styled(Flex)`
@@ -206,6 +222,9 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 }
 
 const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
+  const dispatch = useDispatch()
+  const togglePoolDetailModal = usePoolDetailModalToggle()
+
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
 
   const percentToken0 = pool
@@ -234,6 +253,17 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
   const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, fee).toFixed(2)
 
+  const handleShowMore = () => {
+    dispatch(
+      setSelectedPool({
+        pool,
+        subgraphPoolData,
+        myLiquidity
+      })
+    )
+    togglePoolDetailModal()
+  }
+
   return (
     <TableRow oddRow={oddRow}>
       {isWarning && (
@@ -259,18 +289,19 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
       <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
       <DataText>{`${oneYearFL}%`}</DataText>
       <DataText>{getMyLiquidity(myLiquidity)}</DataText>
-      <DataText>
-        {
-          <ButtonEmpty
-            padding="0"
-            as={Link}
-            to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.address}`}
-            width="fit-content"
-          >
-            <AddCircle />
-          </ButtonEmpty>
-        }
-      </DataText>
+      <ButtonWrapper>
+        <ButtonEmpty
+          padding="0"
+          as={Link}
+          to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.address}`}
+          width="fit-content"
+        >
+          <AddCircle />
+        </ButtonEmpty>
+        <ButtonEmpty padding="0" width="fit-content" onClick={handleShowMore}>
+          <StyledMoreHorizontal />
+        </ButtonEmpty>
+      </ButtonWrapper>
     </TableRow>
   )
 }
