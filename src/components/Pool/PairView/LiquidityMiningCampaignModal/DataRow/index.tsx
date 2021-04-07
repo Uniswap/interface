@@ -18,7 +18,7 @@ interface DataRowProps {
 
 export default function DataRow({ title, value }: DataRowProps) {
   return (
-    <Flex justifyContent="space-between" minHeight="16px" mb="4px">
+    <Flex justifyContent="space-between" minHeight="16px" mb="4px" width="100%">
       <TitleText>{title}</TitleText>
       <Text fontSize="12px" fontWeight="600" lineHeight="13px" color="text4">
         {value}

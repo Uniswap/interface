@@ -1,4 +1,4 @@
-import { LiquidityMiningCampaign, TokenAmount } from 'dxswap-sdk'
+import { JSBI, LiquidityMiningCampaign, parseBigintIsh, TokenAmount } from 'dxswap-sdk'
 import { Link } from 'react-router-dom'
 import { transparentize } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -80,9 +80,12 @@ export function LiquidityMiningCampaignModal({
 
   useEffect(() => {
     setDisabledWithdrawing(
-      !campaign.currentlyActive || !callbacks || !stakedTokenAmount || stakedTokenAmount.equalTo('0')
+      !JSBI.greaterThanOrEqual(parseBigintIsh(campaign.startsAt), JSBI.BigInt(Math.floor(Date.now() / 1000))) ||
+        !callbacks ||
+        !stakedTokenAmount ||
+        stakedTokenAmount.equalTo('0')
     )
-  }, [callbacks, campaign.currentlyActive, stakableTokenBalance, stakedTokenAmount])
+  }, [callbacks, campaign.currentlyActive, campaign.startsAt, stakableTokenBalance, stakedTokenAmount])
 
   useEffect(() => {
     setDisabledClaim(
@@ -265,7 +268,11 @@ export function LiquidityMiningCampaignModal({
                 </RowBetween>
               </div>
               <div>
-                <LiquidityMiningYourStake stake={stakedTokenAmount || undefined} claimables={claimableRewardAmounts} />
+                <LiquidityMiningYourStake
+                  stake={stakedTokenAmount || undefined}
+                  claimables={claimableRewardAmounts}
+                  targetedPair={campaign.targetedPair}
+                />
                 <RowBetween marginTop="16px">
                   <ButtonDark
                     padding="8px"

@@ -31,10 +31,12 @@ export default function LiquidityMiningInformation({ campaign }: LiquidityMining
     <Flex flexDirection={['column', 'row']} justifyContent="stretch" width="100%">
       <Flex flexDirection="column" flex="1">
         <DataRow title="APY" value={<ApyBadge apy={apy} />} />
-        <DataRow
-          title={currentlyActive ? 'Time left' : 'Starts in'}
-          value={<Countdown to={parseInt(currentlyActive ? endsAt.toString() : startsAt.toString())} />}
-        />
+        {!campaign.ended && (
+          <DataRow
+            title={currentlyActive ? 'Time left' : 'Starts in'}
+            value={<Countdown to={parseInt(currentlyActive ? endsAt.toString() : startsAt.toString())} />}
+          />
+        )}
         <DataRow
           title="Rewards left"
           value={
