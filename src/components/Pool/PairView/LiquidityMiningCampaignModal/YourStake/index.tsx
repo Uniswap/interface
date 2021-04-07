@@ -27,7 +27,7 @@ export default function LiquidityMiningYourStake({ stake, claimables, targetedPa
       <TYPE.body color="white" lineHeight="20px" fontWeight="600">
         Your position
       </TYPE.body>
-      <Flex alignItems="center">
+      <Flex flexDirection={['column', 'row']}>
         <Box flex="1">
           <DataRow
             title="Stake size"
