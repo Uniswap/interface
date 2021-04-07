@@ -1,11 +1,13 @@
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { Pair, JSBI, Token } from 'libs/sdk/src'
+import { Pair, JSBI, Token, Currency } from 'libs/sdk/src'
 import { Pair as PairUNI } from '@uniswap/sdk'
+import { Pair as PairSUSHI } from '@sushiswap/sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
-import FullPositionCard from '../../components/PositionCard/PositionCardUNI'
-import { useTokenBalancesWithLoadingIndicator, useTokenBalancesWithLoadingIndicatorUNI } from '../../state/wallet/hooks'
+import FullPositionCardUNI from '../../components/PositionCard/PositionCardUNI'
+import FullPositionCardSUSHI from '../../components/PositionCard/PositionCardSUSHI'
+import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import Card from '../../components/Card'
@@ -13,13 +15,19 @@ import { RowBetween, RowFixed } from '../../components/Row'
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
-import { useTrackedTokenPairs, toV2LiquidityToken, useToV2LiquidityTokens } from '../../state/user/hooks'
+import {
+  useTrackedTokenPairs,
+  toV2LiquidityToken,
+  useToV2LiquidityTokens,
+  toV2LiquidityTokenSushi
+} from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
 import { DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
 import { useTranslation } from 'react-i18next'
 import { usePairs } from 'data/ReservesUNI'
+import { usePairs as usePairsSUSHI } from 'data/ReservesSUSHI'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 510px;
@@ -80,33 +88,69 @@ export default function Pool() {
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   //trackedTokenPairs = [ [Token, Token],  [Token, Token] ]
-  const tokenPairsWithLiquidityTokens = useMemo(
+  const tokenPairsWithLiquidityTokensUNI = useMemo(
     () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
 
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
-    tokenPairsWithLiquidityTokens
+  const tokenPairsWithLiquidityTokensSUSHI = useMemo(
+    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityTokenSushi(tokens), tokens })),
+    [trackedTokenPairs]
+  )
+  //All are Token DMM
+  // const tokenPairsWithLiquidityTokens = [...tokenPairsWithLiquidityTokensUNI, ...tokenPairsWithLiquidityTokensSUSHI]
+  // const tokenPairsWithLiquidityTokens = [...tokenPairsWithLiquidityTokensUNI, ...tokenPairsWithLiquidityTokensSUSHI]
+
+  const liquidityTokensUNI = useMemo(() => tokenPairsWithLiquidityTokensUNI.map(tpwlt => tpwlt.liquidityToken), [
+    tokenPairsWithLiquidityTokensUNI
+  ])
+  const liquidityTokensSUSHI = useMemo(() => tokenPairsWithLiquidityTokensSUSHI.map(tpwlt => tpwlt.liquidityToken), [
+    tokenPairsWithLiquidityTokensSUSHI
   ])
 
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicatorUNI(
+  const [v2PairsBalancesUNI, fetchingV2PairBalancesUNI] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
-    liquidityTokens
+    liquidityTokensUNI
+  )
+  const [v2PairsBalancesSUSHI, fetchingV2PairBalancesSUSHI] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    liquidityTokensSUSHI
   )
   // fetch the reserves for all V2 pools in which the user has a balance
-  const liquidityTokensWithBalances = useMemo(
+  const liquidityTokensWithBalancesUNI = useMemo(
     () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+      tokenPairsWithLiquidityTokensUNI.filter(({ liquidityToken }) =>
+        v2PairsBalancesUNI[liquidityToken.address]?.greaterThan('0')
       ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+    [tokenPairsWithLiquidityTokensUNI, v2PairsBalancesUNI]
   )
+  const liquidityTokensWithBalancesSUSHI = useMemo(
+    () =>
+      tokenPairsWithLiquidityTokensSUSHI.filter(({ liquidityToken }) =>
+        v2PairsBalancesSUSHI[liquidityToken.address]?.greaterThan('0')
+      ),
+    [tokenPairsWithLiquidityTokensSUSHI, v2PairsBalancesSUSHI]
+  )
+  const v2PairsUNI = usePairs(liquidityTokensWithBalancesUNI.map(({ tokens }) => tokens))
+  const v2PairsSUSHI = usePairsSUSHI(liquidityTokensWithBalancesSUSHI.map(({ tokens }) => tokens))
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is PairUNI => Boolean(v2Pair))
-  const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity
+    fetchingV2PairBalancesUNI ||
+    fetchingV2PairBalancesSUSHI ||
+    v2PairsUNI?.length < liquidityTokensWithBalancesUNI.length ||
+    v2PairsSUSHI?.length < liquidityTokensWithBalancesSUSHI.length ||
+    v2PairsUNI?.some(V2Pair => !V2Pair) ||
+    v2PairsSUSHI?.some(v2PairsSUSHI => !v2PairsSUSHI)
+
+  const allV2PairsWithLiquidityUNI = v2PairsUNI
+    .map(([, pair]) => pair)
+    .filter((v2Pair): v2Pair is PairUNI => Boolean(v2Pair))
+  const v2PairsWithoutStakedAmountUNI = allV2PairsWithLiquidityUNI
+
+  const allV2PairsWithLiquiditySUSHI = v2PairsSUSHI
+    .map(([, pair]) => pair)
+    .filter((v2Pair): v2Pair is PairSUSHI => Boolean(v2Pair))
+  const v2PairsWithoutStakedAmountSUSHI = allV2PairsWithLiquiditySUSHI
   const { t } = useTranslation()
   return (
     <>
@@ -157,10 +201,13 @@ export default function Pool() {
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : allV2PairsWithLiquidity?.length > 0 ? (
+            ) : allV2PairsWithLiquidityUNI?.length > 0 || allV2PairsWithLiquiditySUSHI?.length > 0 ? (
               <>
-                {v2PairsWithoutStakedAmount.map(v2Pair => (
-                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                {v2PairsWithoutStakedAmountUNI.map(v2Pair => (
+                  <FullPositionCardUNI key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                ))}
+                {v2PairsWithoutStakedAmountSUSHI.map(v2Pair => (
+                  <FullPositionCardSUSHI key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}
               </>
             ) : (

@@ -1,5 +1,6 @@
 import { Token, TokenAmount } from 'libs/sdk/src'
 import { Token as TokenUNI, TokenAmount as TokenAmountUNI } from '@uniswap/sdk'
+import { Token as TokenSUSHI, TokenAmount as TokenAmountSUSHI } from '@sushiswap/sdk'
 import { useMemo } from 'react'
 
 import { useTokenContract } from '../hooks/useContract'
@@ -24,6 +25,22 @@ export function useTokenAllowanceUNI(token?: TokenUNI, owner?: string, spender?:
   const allowance = useSingleCallResult(contract, 'allowance', inputs).result
 
   return useMemo(() => (token && allowance ? new TokenAmountUNI(token, allowance.toString()) : undefined), [
+    token,
+    allowance
+  ])
+}
+
+export function useTokenAllowanceSUSHI(
+  token?: TokenSUSHI,
+  owner?: string,
+  spender?: string
+): TokenAmountSUSHI | undefined {
+  const contract = useTokenContract(token?.address, false)
+
+  const inputs = useMemo(() => [owner, spender], [owner, spender])
+  const allowance = useSingleCallResult(contract, 'allowance', inputs).result
+
+  return useMemo(() => (token && allowance ? new TokenAmountSUSHI(token, allowance.toString()) : undefined), [
     token,
     allowance
   ])

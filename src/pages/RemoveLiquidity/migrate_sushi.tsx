@@ -1,8 +1,8 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ETHER, Fraction, WETH, CurrencyAmount, TokenAmount } from 'libs/sdk/src'
-import { Currency, currencyEquals, Pair, Percent } from '@uniswap/sdk'
+import { ETHER, Fraction, WETH, CurrencyAmount, TokenAmount, currencyEquals } from 'libs/sdk/src'
+import { Currency, Pair, Percent } from '@sushiswap/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
@@ -41,10 +41,10 @@ import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
-import { useApproveCallback as useApproveCallbackUNI, ApprovalState } from '../../hooks/useApproveCallbackUNI'
+import { useApproveCallback as useApproveCallbackSUSHI, ApprovalState } from '../../hooks/useApproveCallbackSUSHI'
 import { Dots } from '../../components/swap/styleds'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
-import { useDerivedBurnInfo as useDerivedBurnInfoUNI, useBurnState } from '../../state/burn/hooks_uni'
+import { useDerivedBurnInfo as useDerivedBurnInfoSUSHI, useBurnState } from '../../state/burn/hooks_sushi'
 import { Field } from '../../state/burn/actions'
 import { Field as FieldMint } from '../../state/mint/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -54,6 +54,8 @@ import { Redirect } from 'react-router-dom'
 import { useDerivedMintInfoMigration } from 'state/mint/hooks_for_migration'
 import { useMintState } from 'state/mint/hooks'
 import isZero from 'utils/isZero'
+import { tokenAmountDmmToSushi, tokenDmmToSushi } from 'utils/dmm'
+import { useUnAmplifiedPair } from 'data/Reserves'
 
 const DashedLine = styled.div`
   width: 100%;
@@ -62,7 +64,7 @@ const DashedLine = styled.div`
   margin-top: 1rem;
 `
 
-export default function MigrateLiquidity({
+export default function MigrateLiquiditySUSHI({
   history,
   match: {
     params: { currencyIdA, currencyIdB, pairAddress }
@@ -82,10 +84,8 @@ export default function MigrateLiquidity({
 
   // burn state
   const { independentField, typedValue } = useBurnState()
-  const { pair, parsedAmounts, unAmplifiedPairAddress, error } = useDerivedBurnInfoUNI(
-    currencyA ?? undefined,
-    currencyB ?? undefined
-  )
+  const unAmplifiedPairAddress = useUnAmplifiedPair(tokenA, tokenB)
+  const { pair, parsedAmounts, error } = useDerivedBurnInfoSUSHI(currencyA ?? undefined, currencyB ?? undefined)
 
   const { onUserInput: _onUserInput } = useBurnActionHandlers()
   const isValid = !error
@@ -119,7 +119,7 @@ export default function MigrateLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallbackUNI(parsedAmounts[Field.LIQUIDITY], MIGRATE_ADDRESS)
+  const [approval, approveCallback] = useApproveCallbackSUSHI(parsedAmounts[Field.LIQUIDITY], MIGRATE_ADDRESS)
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -142,7 +142,7 @@ export default function MigrateLiquidity({
       { name: 'verifyingContract', type: 'address' }
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: 'SushiSwap LP Token',
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address
@@ -200,7 +200,6 @@ export default function MigrateLiquidity({
   )
 
   // tx sending
-
   const {
     parsedAmounts: parsedAmountsMaxA,
     liquidityMinted: liquidityMintedMaxA,
@@ -278,8 +277,12 @@ export default function MigrateLiquidity({
       currencyAmountBToAddPool = temp[FieldMint.CURRENCY_B]
       estimatedRefund =
         +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
-          ? `${currencyAmountB.subtract(currencyAmountBOfMaxA).toSignificant(6)} ${tokenB?.symbol}`
-          : `${currencyAmountA.subtract(currencyAmountAOfMaxB).toSignificant(6)} ${tokenA?.symbol}`
+          ? `${currencyAmountB
+              .subtract(tokenAmountDmmToSushi(currencyAmountBOfMaxA as TokenAmount))
+              .toSignificant(6)} ${tokenB?.symbol}`
+          : `${currencyAmountA
+              .subtract(tokenAmountDmmToSushi(currencyAmountAOfMaxB as TokenAmount))
+              .toSignificant(6)} ${tokenA?.symbol}`
       poolShare =
         +currencyAmountBOfMaxA.toSignificant(6) <= +currencyAmountB.toSignificant(6)
           ? `${poolTokenPercentageMaxA?.toSignificant(2)}%`
@@ -521,9 +524,9 @@ export default function MigrateLiquidity({
       <LightCard>
         <AutoColumn gap="10px">
           <RowFixed>
-            <img src={require('../../assets/svg/uniswap-icon.svg')} alt="uniswap-icon" />
+            <img src={require('../../assets/svg/sushiswap-icon.svg')} alt="sushiswap-icon" />
             <Text fontSize={14} fontWeight={500}>
-              &nbsp; Uni Pool
+              &nbsp; Sushi Pool
             </Text>
           </RowFixed>
         </AutoColumn>
@@ -737,7 +740,7 @@ export default function MigrateLiquidity({
     <>
       {chainId && oneCurrencyIsETH ? (
         <Redirect
-          to={`/migrate/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
+          to={`/migrateSushi/${currencyA === ETHER ? WETH[chainId].address : currencyIdA}/${
             currencyB === ETHER ? WETH[chainId].address : currencyIdB
           }`}
         />
@@ -882,3 +885,8 @@ export default function MigrateLiquidity({
     </>
   )
 }
+
+// import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+// export default function AAA() {
+//   return <></>
+// }
