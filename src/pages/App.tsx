@@ -21,7 +21,7 @@ import Pool from './Pool'
 import Migration from './Pool/lp'
 import Pools from './Pools'
 import PoolFinder from './PoolFinder'
-import PoolFinderUNI from './PoolFinder/PoolFinderUNI'
+import PoolFinderExternal from './PoolFinder/PoolFinderExternal'
 import RemoveLiquidity from './RemoveLiquidity'
 import MigrateLiquidityUNI from './RemoveLiquidity/migrate_uni'
 import MigrateLiquiditySUSHI from './RemoveLiquidity/migrate_sushi'
@@ -92,7 +92,7 @@ export default function App() {
                     <Route exact strict path="/swap" component={Swap} />
                     <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                     <Route exact strict path="/find" component={PoolFinder} />
-                    <Route exact strict path="/findUNI" component={PoolFinderUNI} />
+                    <Route exact strict path="/findExternal" component={PoolFinderExternal} />
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />

@@ -221,7 +221,7 @@ export default function Pool() {
             <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
                 {"Don't see a pool you joined?"}{' '}
-                <StyledInternalLink id="import-pool-link" to={'/findUNI'}>
+                <StyledInternalLink id="import-pool-link" to={'/findExternal'}>
                   Import it.
                 </StyledInternalLink>
               </Text>
