@@ -24,7 +24,7 @@ import {
   toggleURLWarning
 } from './actions'
 
-function serializeToken(token: Token | TokenUNI): SerializedToken {
+function serializeToken(token: Token | TokenUNI | TokenSUSHI): SerializedToken {
   return {
     chainId: token.chainId,
     address: token.address,
@@ -156,18 +156,18 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
-function serializePair(pair: Pair | PairUNI): SerializedPair {
+function serializePair(pair: Pair | PairUNI | PairSUSHI): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
     token1: serializeToken(pair.token1)
   }
 }
 
-export function usePairAdderUNI(): (pair: PairUNI) => void {
+export function usePairAdder(): (pair: PairUNI | PairSUSHI) => void {
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
-    (pair: PairUNI) => {
+    (pair: PairUNI | PairSUSHI) => {
       dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
     },
     [dispatch]
