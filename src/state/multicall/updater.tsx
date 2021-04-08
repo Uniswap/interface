@@ -30,7 +30,7 @@ async function fetchChunk(
   console.debug('Fetching chunk', multicallContract, chunk, minBlockNumber)
   let resultsBlockNumber, returnData
   try {
-    ;[resultsBlockNumber, returnData] = await multicallContract.aggregate(
+    ;[resultsBlockNumber, returnData] = await multicallContract.callStatic.aggregate(
       chunk.map((obj) => [obj.address, obj.callData])
     )
   } catch (error) {
