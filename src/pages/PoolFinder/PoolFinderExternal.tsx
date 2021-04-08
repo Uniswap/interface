@@ -87,8 +87,10 @@ export default function PoolFinderExternal() {
   useEffect(() => {
     if (pair) {
       addPair(pair)
+    } else if (pairSushi) {
+      addPair(pairSushi)
     }
-  }, [pair, addPair])
+  }, [pair, pairSushi, addPair])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
