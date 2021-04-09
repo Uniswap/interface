@@ -25,6 +25,7 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
+  showNativeCurrency?: boolean
 }
 
 const Wrapper = styled.div`
@@ -38,6 +39,7 @@ export function CurrencySearch({
   onCurrencySelect,
   otherSelectedCurrency,
   showCommonBases,
+  showNativeCurrency,
   onDismiss,
   isOpen
 }: CurrencySearchProps) {
@@ -54,10 +56,11 @@ export function CurrencySearch({
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
 
-  const showNativeCurrency: boolean = useMemo(() => {
+  const nativeCurrencyShown: boolean = useMemo(() => {
+    if (!showNativeCurrency) return false
     const s = searchQuery.toLowerCase().trim()
     return !!nativeCurrency.symbol?.toLowerCase().startsWith(s)
-  }, [nativeCurrency, searchQuery])
+  }, [nativeCurrency, searchQuery, showNativeCurrency])
 
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
@@ -158,7 +161,7 @@ export function CurrencySearch({
 
         <div style={{ flex: '1' }}>
           <CurrencyList
-            showNativeCurrency={showNativeCurrency}
+            showNativeCurrency={nativeCurrencyShown}
             currencies={filteredSortedTokens}
             onCurrencySelect={handleCurrencySelect}
             otherCurrency={otherSelectedCurrency}

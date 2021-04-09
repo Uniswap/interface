@@ -9,7 +9,7 @@
   "swapAnyway": "Swap Anyway",
   "send": "Send",
   "sendAnyway": "Send Anyway",
-  "pool": "Pool",
+  "pool": "Pool & rewards",
   "governance": "Governance",
   "betaWarning": "This project is in beta. Use at your own risk.",
   "input": "Input",
@@ -88,5 +88,11 @@
   "forAtLeast": "for at least ",
   "brokenToken": "The selected token is not compatible with Swapr. Adding liquidity will result in locked funds.",
   "toleranceExplanation": "Lowering this limit decreases your risk of frontrunning. However, this makes more likely that your transaction will fail due to normal price movements.",
-  "tokenSearchPlaceholder": "Search name or paste address"
+  "tokenSearchPlaceholder": "Search name or paste address",
+  "pairSearchPlaceholder": "Search name or paste address",
+  "liquidityMining.header": "Liq. mining",
+  "liquidityMining.title": "Liquidity mining",
+  "liquidityMining.action.create": "CREATE LIQ. MINING",
+  "liquidityMining.create.title": "Create a liquidity mining pool",
+  "liquidityMining.create.subtitle": "Follow these simple steps to preview and create a liquidity mining pool on swapr"
 }

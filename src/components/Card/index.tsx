@@ -87,3 +87,44 @@ export const BlueCard = ({ children, ...rest }: CardProps) => {
     </BlueCardStyled>
   )
 }
+
+export const GradientCard = styled(Card)<{ selectable?: boolean; active?: boolean }>`
+  background: linear-gradient(113.18deg, rgba(255, 255, 255, 0.35) -0.1%, rgba(0, 0, 0, 0) 98.9%),
+    ${({ theme }) => theme.dark1};
+  background-color: ${({ theme }) => theme.dark1};
+  background-blend-mode: overlay, normal;
+  padding: 0.8rem;
+  padding: 24px 30px;
+  display: flex;
+  flex-wrap: wrap;
+  cursor: ${props => (props.selectable ? 'pointer' : 'auto')};
+  opacity: 1;
+  border: solid 1px ${props => props.theme.bg3};
+  position: relative;
+  ${props =>
+    props.selectable &&
+    css`
+      > * {
+        z-index: 1;
+      }
+
+      :hover::before {
+        opacity: 1;
+      }
+
+      ::before {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        border-radius: 8px;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(110.34deg, #ffffff 0.16%, rgba(0, 0, 0, 0) 139.17%), ${({ theme }) => theme.dark1};
+        background-blend-mode: overlay, normal;
+        transition: 0.3s ease opacity;
+        opacity: 0;
+      }
+    `}
+`

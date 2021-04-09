@@ -8,11 +8,12 @@ import styled, {
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
+import 'react-datepicker/dist/react-datepicker.min.css'
 import { transparentize } from 'polished'
 
 export * from './components'
 
-const MEDIA_WIDTHS = {
+export const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
   upToSmall: 720,
   upToMedium: 960,
@@ -235,10 +236,126 @@ body {
   background-position: 0 -20vh;
   background-repeat: no-repeat;
   background-image: ${({ theme }) =>
-    `radial-gradient(80% 100% at 50% 0%, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%)`};
+    `radial-gradient(80vw 100vh at 50vw 0vh, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%)`};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     background-position: 0 -10vh;
-    background-image: radial-gradient(100% 50% at 50% 50%, ${transparentize(0.7, theme.text5)} 0%, ${theme.bg1} 100%);
+    background-image: radial-gradient(100vw 50vh at 50vw 50vh, ${transparentize(0.7, theme.text5)} 0%, ${
+    theme.bg1
+  } 100%);
   `};
 }
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker {
+  font-family: Montserrat !important;
+  border: solid 1px ${props => props.theme.bg5} !important;
+  border-radius: 8px !important;
+  color: ${props => props.theme.text4} !important;
+  background-color: ${props => props.theme.dark1} !important;
+  background: linear-gradient(113.18deg, rgba(255, 255, 255, 0.35) -0.1%, rgba(0, 0, 0, 0) 98.9%),
+  ${({ theme }) => theme.dark1} !important;
+  background-blend-mode: overlay, normal !important;
+}
+
+.react-datepicker__triangle {
+  border-bottom-color: ${props => props.theme.dark1} !important;
+}
+
+.react-datepicker__header {
+  background-color: transparent !important;
+  border-top-left-radius: 8px;
+  border-bottom: none !important;
+}
+
+.react-datepicker__current-month {
+  color: ${props => props.theme.text4} !important;
+}
+
+.react-datepicker__day-name {
+  color: ${props => props.theme.text4} !important;
+  font-weight: 600;
+}
+
+.react-datepicker__day.react-datepicker__day--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.react-datepicker__time-container .react-datepicker__time {
+  background: transparent !important;
+}
+
+.react-datepicker__time-container  {
+  border-left: solid 1px ${props => props.theme.bg5} !important;
+}
+
+.react-datepicker-time__header  {
+  color: ${props => props.theme.bg5} !important;
+}
+
+.react-datepicker__time-list-item {
+  transition: background-color 0.3s ease;
+  :hover:not(.react-datepicker__time-list-item--disabled) {
+    background-color: ${props => props.theme.bg2} !important;
+  }
+}
+
+.react-datepicker__time-list-item.react-datepicker__time-list-item--disabled {
+  opacity: 0.5;
+  color: ${props => props.theme.text4} !important;
+}
+
+.react-datepicker__header.react-datepicker__header--time {
+  border-bottom: solid 1px ${props => props.theme.bg5} !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: ${props => props.theme.bg2} !important;
+}
+
+.swapr-pagination {
+  list-style: none;
+}
+
+.swapr-pagination ul {
+  display: inline-flex;
+}
+
+.swapr-pagination li {
+  display: inline-block;
+  min-width: 28px;
+  height: 22px;
+  margin-right: 8px;
+  vertical-align: middle;
+  list-style: none;
+  outline: 0;
+  cursor: pointer;
+  user-select: none;
+  border: solid 1px ${props => props.theme.bg3};
+  transition: border 0.3s ease, color 0.3s ease;
+  font-size: 14px;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 20px;
+  color: ${props => props.theme.text5};
+}
+
+.swapr-pagination li.rc-pagination-item-active {
+  border: solid 1px ${props => props.theme.bg4};
+}
+
+.swapr-pagination li.rc-pagination-prev,
+.swapr-pagination li.rc-pagination-next {
+  color: ${props => props.theme.white};
+  padding-top: 2px;
+}
+
+.swapr-pagination li.rc-pagination-disabled {
+  border: solid 1px ${props => props.theme.bg3};
+  color: ${props => props.theme.bg3};
+}
+
 `

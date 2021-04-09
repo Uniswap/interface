@@ -255,14 +255,12 @@ export default function AccountDetails({
                   ) : (
                     <>
                       <div>
-                        <p>
-                          {' '}
-                          {account && (
-                            <TYPE.body fontSize="22px" fontWeight="500" color={'text1'}>
-                              {shortenAddress(account)}
-                            </TYPE.body>
-                          )}
-                        </p>
+                        {' '}
+                        {account && (
+                          <TYPE.body fontSize="22px" fontWeight="500" color={'text1'}>
+                            {shortenAddress(account)}
+                          </TYPE.body>
+                        )}
                       </div>
                     </>
                   )}

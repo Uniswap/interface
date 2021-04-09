@@ -1,14 +1,15 @@
 import React, { useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleMobileMenu } from '../../state/application/hooks'
+import { useCloseModals, useModalOpen, useToggleMobileMenu } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { MoreHorizontal, X } from 'react-feather'
-import { RowFixed } from '../Row'
 import { darken, transparentize } from 'polished'
 import { useTranslation } from 'react-i18next'
-import { useActiveWeb3React } from '../../hooks'
+import { NavLink } from 'react-router-dom'
+import { Menu } from 'react-feather'
+import Modal from '../Modal'
+import { Box, Flex } from 'rebass'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 
 const StyledMenu = styled.div`
   margin-left: 0.5rem;
@@ -20,65 +21,45 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuContainer = styled.span`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: 4rem;
-  right: 0rem;
-  width: 169px;
-  z-index: 100;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    position: fixed;
-    top: calc(4rem + 50px);
-    right: calc(50vw - 90px);
-    align-items: center;
-  `};
-`
+const activeClassName = 'ACTIVE'
 
-const MenuFlyout = styled.span`
-  background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-  height: auto;
-  padding: 0.5rem;
-`
-
-const ComingSoonBadge = styled.div`
-  self-align: center;
-  font-size: 9px;
-  text-align: center;
-  background-color: ${({ theme }) => theme.bg4};
-  border-radius: 3px;
+const StyledNavLink = styled(NavLink).attrs({
+  activeClassName
+})`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: left;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text5};
   width: fit-content;
-  margin: auto;
-  padding: 2px 5px;
+  height: 36px;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19.5px;
+
+  &.${activeClassName} {
+    font-weight: 600;
+    color: ${({ theme }) => theme.white};
+  }
 `
 
-const StyledNavLinkWithBadge = styled.a`
-  top: 7px;
-  position: relative;
-  margin: 0px 12px;
-  cursor: default;
-  color: ${({ theme }) => transparentize(0.6, theme.text5)};
+const DisabledNavLink = styled(StyledNavLink)<{ isActive?: boolean }>`
+  color: ${({ theme }) => transparentize(0.6, theme.text5)} !important;
+  font-weight: 400 !important;
 `
 
-const StyledExternalLink = styled(ExternalLink)<{ isActive?: boolean }>`
+const StyledExternalLink = styled(ExternalLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
+  color: ${({ theme }) => theme.text5};
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19.5px;
 
   :hover,
   :focus {
@@ -86,13 +67,18 @@ const StyledExternalLink = styled(ExternalLink)<{ isActive?: boolean }>`
   }
 `
 
-export default function MobileOptions() {
+const Wrapper = styled(Flex)`
+  width: 100%;
+  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+`
+
+export default function MobileOptions({ history }: { history: any }) {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MOBILE)
   const toggle = useToggleMobileMenu()
+  const closeModals = useCloseModals()
   const { t } = useTranslation()
   useOnClickOutside(node, open ? toggle : undefined)
-  const { chainId } = useActiveWeb3React()
 
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
@@ -101,27 +87,46 @@ export default function MobileOptions() {
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <MoreHorizontal size={24} onClick={toggle} />
-      {open && (
-        <MenuContainer>
-          <MenuFlyout>
-            <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
-              <StyledNavLinkWithBadge href="/#" onClick={handleDisabledAnchorClick}>
-                {t('governance')}
-                <ComingSoonBadge>COMING SOON</ComingSoonBadge>
-              </StyledNavLinkWithBadge>
-            </RowFixed>
-            <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
-              <StyledExternalLink id={`stake-nav-link`} href={`https://dxstats.eth.link/?chainId=${chainId}`}>
-                Charts <span style={{ fontSize: '11px' }}>↗</span>
-              </StyledExternalLink>
-            </RowFixed>
-            <RowFixed style={{ alignSelf: 'center', margin: '1rem' }}>
-              <X size={24} onClick={toggle} />
-            </RowFixed>
-          </MenuFlyout>
-        </MenuContainer>
-      )}
+      <Menu size={24} onClick={toggle} />
+      <Modal isOpen={open} onDismiss={toggle}>
+        <Wrapper flexDirection="column" p="16px 24px">
+          <Box>
+            <StyledNavLink
+              id={`swap-nav-link`}
+              to={'/swap'}
+              onClick={closeModals}
+              isActive={() => history.location.pathname.includes('/swap')}
+            >
+              {t('swap')}
+            </StyledNavLink>
+          </Box>
+          <Box>
+            <StyledNavLink
+              id={`pool-nav-link`}
+              to={'/pools'}
+              onClick={closeModals}
+              isActive={() =>
+                history.location.pathname.includes('/pools') ||
+                history.location.pathname.includes('/add') ||
+                history.location.pathname.includes('/remove') ||
+                history.location.pathname.includes('/create')
+              }
+            >
+              {t('pool')}
+            </StyledNavLink>
+          </Box>
+          <Box>
+            <DisabledNavLink to="/#" onClick={handleDisabledAnchorClick}>
+              {t('governance')} (coming soon)
+            </DisabledNavLink>
+          </Box>
+          <Box>
+            <StyledExternalLink id={`stake-nav-link`} href={'https://dxstats.eth.link/'}>
+              Charts <span style={{ fontSize: '11px' }}>↗</span>
+            </StyledExternalLink>
+          </Box>
+        </Wrapper>
+      </Modal>
     </StyledMenu>
   )
 }

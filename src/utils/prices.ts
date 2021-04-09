@@ -1,8 +1,10 @@
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
-import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade, Pair } from 'dxswap-sdk'
+import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade, Pair, Price, Currency } from 'dxswap-sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
+import Decimal from 'decimal.js-light'
+import { parseUnits } from 'ethers/lib/utils'
 
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
 
@@ -115,4 +117,18 @@ export function sortTradesByExecutionPrice(trades: (Trade | undefined)[]): (Trad
       return -1
     }
   })
+}
+
+export function getLpTokenPrice(
+  pair: Pair,
+  nativeCurrency: Currency,
+  totalSupply: string,
+  reserveNativeCurrency: string
+): Price {
+  return new Price(
+    pair.liquidityToken,
+    nativeCurrency,
+    parseUnits(new Decimal(totalSupply).toFixed(pair.liquidityToken.decimals), pair.liquidityToken.decimals).toString(),
+    parseUnits(new Decimal(reserveNativeCurrency).toFixed(nativeCurrency.decimals), nativeCurrency.decimals).toString()
+  )
 }

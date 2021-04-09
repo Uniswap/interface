@@ -10,6 +10,7 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
+  showNativeCurrency?: boolean
 }
 
 export default function CurrencySearchModal({
@@ -18,7 +19,8 @@ export default function CurrencySearchModal({
   onCurrencySelect,
   selectedCurrency,
   otherSelectedCurrency,
-  showCommonBases = false
+  showCommonBases = false,
+  showNativeCurrency = true
 }: CurrencySearchModalProps) {
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -37,6 +39,7 @@ export default function CurrencySearchModal({
         selectedCurrency={selectedCurrency}
         otherSelectedCurrency={otherSelectedCurrency}
         showCommonBases={showCommonBases}
+        showNativeCurrency={showNativeCurrency}
       />
     </Modal>
   )

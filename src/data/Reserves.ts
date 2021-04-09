@@ -7,6 +7,10 @@ import { useActiveWeb3React } from '../hooks'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { useFeesState } from '../state/fees/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
+import { usePairContract, useTokenContract } from '../hooks/useContract'
+import { useToken } from '../hooks/Tokens'
+import { useSingleCallResult } from '../state/multicall/hooks'
+import { BigNumber } from 'ethers'
 
 const PAIR_INTERFACE = new Interface(IDXswapPairABI)
 
@@ -81,4 +85,25 @@ export function usePairs(
 
 export function usePair(tokenA?: Currency, tokenB?: Currency, platform?: RoutablePlatform): [PairState, Pair | null] {
   return usePairs([[tokenA, tokenB]], platform)[0]
+}
+
+export function usePairLiquidityTokenTotalSupply(pair?: Pair): TokenAmount | null {
+  const lpTokenContract = useTokenContract(pair?.liquidityToken.address)
+  const totalSupplyResult = useSingleCallResult(lpTokenContract, 'totalSupply')
+
+  return useMemo(() => {
+    if (!pair || !totalSupplyResult.result || totalSupplyResult.result.length === 0) return null
+    const supply = totalSupplyResult.result[0] as BigNumber
+    return new TokenAmount(pair.liquidityToken, supply.toString())
+  }, [pair, totalSupplyResult.result])
+}
+
+export function usePairAtAddress(address?: string): Pair | null {
+  const pairContract = usePairContract(address)
+  const { result: token0Result } = useSingleCallResult(pairContract, 'token0()')
+  const { result: token1Result } = useSingleCallResult(pairContract, 'token1()')
+  const token0 = useToken(token0Result && token0Result[0])
+  const token1 = useToken(token1Result && token1Result[0])
+  const result = usePair(token0 || undefined, token1 || undefined)
+  return result[0] === PairState.EXISTS && result[1] ? result[1] : null
 }

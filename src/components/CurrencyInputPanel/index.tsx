@@ -1,4 +1,4 @@
-import { Currency, Pair } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, Pair } from 'dxswap-sdk'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -7,7 +7,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
-import { Input as NumericalInput } from '../NumericalInput'
+import NumericalInput from '../Input/NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -123,6 +123,7 @@ interface CurrencyInputPanelProps {
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
+  balance?: CurrencyAmount
 }
 
 export default function CurrencyInputPanel({
@@ -140,7 +141,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText
+  customBalanceText,
+  balance
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -181,9 +183,9 @@ export default function CurrencyInputPanel({
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
                     <UppercaseHelper>
-                      {!hideBalance && !!currency && selectedCurrencyBalance
-                        ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                        : ' -'}
+                      {!hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance)
+                        ? (customBalanceText ?? 'Balance: ') + (balance || selectedCurrencyBalance)?.toSignificant(6)
+                        : '-'}
                     </UppercaseHelper>
                   </TYPE.body>
                 )}
@@ -202,13 +204,13 @@ export default function CurrencyInputPanel({
                     onUserInput(val)
                   }}
                 />
-                {account && currency && showMaxButton && label !== 'To' && (
+                {account && (currency || pair) && showMaxButton && label !== 'To' && (
                   <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
                 )}
               </>
             )}
             <CurrencySelect
-              selected={!!currency}
+              selected={!!(currency || pair)}
               className="open-currency-select-button"
               onClick={() => {
                 if (!disableCurrencySelect) {
@@ -224,7 +226,7 @@ export default function CurrencyInputPanel({
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
+                    {pair?.token0.symbol}/{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
                   <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>

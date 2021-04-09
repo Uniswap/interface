@@ -1,9 +1,9 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, Token, currencyEquals } from 'dxswap-sdk'
+import { Currency, Token, currencyEquals, Pair } from 'dxswap-sdk'
 import { useMemo } from 'react'
 import { useTokenList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-import { useUserAddedTokens } from '../state/user/hooks'
+import { useUserAddedPairs, useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 
 import { useActiveWeb3React } from './index'
@@ -35,6 +35,11 @@ export function useAllTokens(): { [address: string]: Token } {
 export function useIsUserAddedToken(currency: Currency): boolean {
   const userAddedTokens = useUserAddedTokens()
   return !!userAddedTokens.find(token => currencyEquals(currency, token))
+}
+
+export function useIsUserAddedPair(pair: Pair): boolean {
+  const userAddedPairs = useUserAddedPairs()
+  return !!userAddedPairs.find(loopedPair => loopedPair.equals(pair))
 }
 
 // parse a name or symbol from a token response
