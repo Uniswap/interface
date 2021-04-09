@@ -204,10 +204,10 @@ export default function Pool() {
             ) : allV2PairsWithLiquidityUNI?.length > 0 || allV2PairsWithLiquiditySUSHI?.length > 0 ? (
               <>
                 {v2PairsWithoutStakedAmountUNI.map(v2Pair => (
-                  <FullPositionCardUNI key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                  <FullPositionCardUNI key={`UNI-${v2Pair.liquidityToken.address}`} pair={v2Pair} />
                 ))}
                 {v2PairsWithoutStakedAmountSUSHI.map(v2Pair => (
-                  <FullPositionCardSUSHI key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                  <FullPositionCardSUSHI key={`SUSHI-${v2Pair.liquidityToken.address}`} pair={v2Pair} />
                 ))}
               </>
             ) : (
