@@ -811,7 +811,7 @@ export default function MigrateLiquiditySUSHI({
                           />
                           <Text fontSize={14} fontWeight={500}>
                             There is no existing pool for this token pair. You will be creating a new pool with AMP=1
-                            and migrating tokens from Uniswap to DMM.{' '}
+                            and migrating tokens from Sushiswap to DMM.{' '}
                           </Text>
                         </RowFixed>
                       </YellowCard>
