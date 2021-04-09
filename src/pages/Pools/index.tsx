@@ -195,8 +195,8 @@ export default function Pools() {
               </RowBetween>
               <RowBetween>
                 <TYPE.body fontWeight="500" fontSize="12px" lineHeight="20px" letterSpacing="-0.4px">
-                  Liquidity providers earn a swap fee (0.25% by default) on all trades proportional to their share of
-                  the pool.
+                  Liquidity providers earn a swap fee (0.25% by default, of which ~10% taken by the protocol as a fee)
+                  on all trades proportional to their share of the pool.
                   <br /> Fees are added to the pool, accrue in real time and can be claimed by withdrawing your
                   liquidity.
                   <br /> The swap fee value is decided by DXdao and liquidty providers, it can be between 0% and 10% and
