@@ -22,7 +22,7 @@ import {
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
   GOVERNANCE_ADDRESS,
   MERKLE_DISTRIBUTOR_ADDRESS,
-  MIGRATOR_ADDRESS,
+  V1_MIGRATOR_ADDRESS,
   UNI,
 } from 'constants/index'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from 'constants/multicall'
@@ -54,8 +54,8 @@ export function useV1FactoryContract(): Contract | null {
   return useContract(chainId && V1_FACTORY_ADDRESSES[chainId], V1_FACTORY_ABI, false)
 }
 
-export function useV2MigratorContract(): Contract | null {
-  return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
+export function useV1MigratorContract(): Contract | null {
+  return useContract(V1_MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
 }
 
 export function useV1ExchangeContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
