@@ -552,7 +552,7 @@ export default function AddLiquidity({
             <AutoRow justify="space-between" gap="4px">
               <AutoColumn justify="end">
                 <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-                  Ratio: {percentToken0}&nbsp;{currencies[Field.CURRENCY_A]?.symbol}&nbsp;-&nbsp;{percentToken1}&nbsp;
+                  Ratio: {percentToken0}%&nbsp;{currencies[Field.CURRENCY_A]?.symbol}&nbsp;-&nbsp;{percentToken1}%&nbsp;
                   {currencies[Field.CURRENCY_B]?.symbol}
                 </Text>
               </AutoColumn>
