@@ -212,7 +212,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(tokenSushiToDmm(pair?.token0))
+  // const backgroundColor = useColor(tokenSushiToDmm(pair?.token0))
+  const backgroundColor = useColor(undefined)
 
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
