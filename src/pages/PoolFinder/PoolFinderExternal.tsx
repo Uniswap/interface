@@ -9,11 +9,13 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { FindPoolTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard/PositionCardUNI'
+import { MinimalPositionCard as MinimalPositionCardSUSHI } from '../../components/PositionCard/PositionCardSUSHI'
 import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { PairState, usePair } from '../../data/ReservesUNI'
+import { PairState as PairStateSUSHI, usePair as usePairSUSHI } from '../../data/ReservesSUSHI'
 import { useActiveWeb3React } from '../../hooks'
-import { usePairAdderUNI } from '../../state/user/hooks'
+import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -21,29 +23,16 @@ import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 import { BlueCard } from '../../components/Card'
 import { TYPE } from '../../theme'
+import { tokenSushiToDmm } from 'utils/dmm'
 
 enum Fields {
   TOKEN0 = 0,
   TOKEN1 = 1
 }
 
-export default function PoolFinder() {
+function usePoolUNI(currency0: Currency | null, currency1: Currency | null) {
   const { account } = useActiveWeb3React()
-
-  const [showSearch, setShowSearch] = useState<boolean>(false)
-  const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
-
-  const [currency0, setCurrency0] = useState<Currency | null>(ETHER)
-  const [currency1, setCurrency1] = useState<Currency | null>(null)
-
   const [pairState, pair] = usePair(currency0 ?? undefined, currency1 ?? undefined)
-  const addPair = usePairAdderUNI()
-  useEffect(() => {
-    if (pair) {
-      addPair(pair)
-    }
-  }, [pair, addPair])
-
   const validPairNoLiquidity: boolean =
     pairState === PairState.NOT_EXISTS ||
     Boolean(
@@ -55,6 +44,53 @@ export default function PoolFinder() {
 
   const position: TokenAmount | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
   const hasPosition = Boolean(position && JSBI.greaterThan(position.raw, JSBI.BigInt(0)))
+  return { pairState, pair, validPairNoLiquidity, position, hasPosition }
+}
+
+function usePoolSUSHI(currency0: Currency | null, currency1: Currency | null) {
+  const { account } = useActiveWeb3React()
+  const [pairState, pair] = usePairSUSHI(currency0 ?? undefined, currency1 ?? undefined)
+  const validPairNoLiquidity: boolean =
+    pairState === PairState.NOT_EXISTS ||
+    Boolean(
+      pairState === PairState.EXISTS &&
+        pair &&
+        JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
+        JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
+    )
+
+  const position: TokenAmount | undefined = useTokenBalance(
+    account ?? undefined,
+    !pair?.liquidityToken ? undefined : tokenSushiToDmm(pair?.liquidityToken)
+  )
+  const hasPosition = Boolean(position && JSBI.greaterThan(position.raw, JSBI.BigInt(0)))
+  return { pairState, pair, validPairNoLiquidity, position, hasPosition }
+}
+
+export default function PoolFinderExternal() {
+  const { account } = useActiveWeb3React()
+
+  const [showSearch, setShowSearch] = useState<boolean>(false)
+  const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
+
+  const [currency0, setCurrency0] = useState<Currency | null>(ETHER)
+  const [currency1, setCurrency1] = useState<Currency | null>(null)
+  const { pairState, pair, validPairNoLiquidity, position, hasPosition } = usePoolUNI(currency0, currency1)
+  const {
+    pairState: pairStateSushi,
+    pair: pairSushi,
+    validPairNoLiquidity: validPairNoLiquiditySushi,
+    position: positionSushi,
+    hasPosition: hasPositionSushi
+  } = usePoolSUSHI(currency0, currency1)
+  const addPair = usePairAdder()
+  useEffect(() => {
+    if (pair) {
+      addPair(pair)
+    } else if (pairSushi) {
+      addPair(pairSushi)
+    }
+  }, [pair, pairSushi, addPair])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -79,6 +115,56 @@ export default function PoolFinder() {
     </LightCard>
   )
 
+  function showPostion(
+    pairState: any,
+    pair: any,
+    validPairNoLiquidity: any,
+    position: any,
+    hasPosition: any,
+    type: string,
+    Comp: any
+  ) {
+    return (
+      <>
+        {currency0 &&
+          currency1 &&
+          (pairState === PairState.EXISTS ? (
+            hasPosition && pair ? (
+              <Comp pair={pair} border="1px solid #CED0D9" />
+            ) : (
+              <LightCard padding="45px 10px">
+                <AutoColumn gap="sm" justify="center">
+                  <Text textAlign="center">You don’t have liquidity in this {type} pool yet.</Text>
+                </AutoColumn>
+              </LightCard>
+            )
+          ) : validPairNoLiquidity ? (
+            <LightCard padding="45px 10px">
+              <AutoColumn gap="sm" justify="center">
+                <Text textAlign="center">No {type} pool found.</Text>
+              </AutoColumn>
+            </LightCard>
+          ) : pairState === PairState.INVALID ? (
+            <LightCard padding="45px 10px">
+              <AutoColumn gap="sm" justify="center">
+                <Text textAlign="center" fontWeight={500}>
+                  Invalid pair.
+                </Text>
+              </AutoColumn>
+            </LightCard>
+          ) : pairState === PairState.LOADING ? (
+            <LightCard padding="45px 10px">
+              <AutoColumn gap="sm" justify="center">
+                <Text textAlign="center">
+                  Loading
+                  <Dots />
+                </Text>
+              </AutoColumn>
+            </LightCard>
+          ) : null)}
+      </>
+    )
+  }
   return (
     <AppBody>
       <FindPoolTabs />
@@ -133,8 +219,7 @@ export default function PoolFinder() {
             </Text>
           )}
         </ButtonDropdownLight>
-
-        {hasPosition && (
+        {(hasPosition || hasPositionSushi) && (
           <ColumnCenter
             style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
           >
@@ -146,48 +231,19 @@ export default function PoolFinder() {
             </StyledInternalLink>
           </ColumnCenter>
         )}
-
         {currency0 && currency1 ? (
-          pairState === PairState.EXISTS ? (
-            hasPosition && pair ? (
-              <MinimalPositionCard pair={pair} border="1px solid #CED0D9" />
-            ) : (
-              <LightCard padding="45px 10px">
-                <AutoColumn gap="sm" justify="center">
-                  <Text textAlign="center">You don’t have liquidity in this pool yet.</Text>
-                  <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                    <Text textAlign="center">Add liquidity.</Text>
-                  </StyledInternalLink>
-                </AutoColumn>
-              </LightCard>
-            )
-          ) : validPairNoLiquidity ? (
-            <LightCard padding="45px 10px">
-              <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">No pool found.</Text>
-                <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                  Create pool.
-                </StyledInternalLink>
-              </AutoColumn>
-            </LightCard>
-          ) : pairState === PairState.INVALID ? (
-            <LightCard padding="45px 10px">
-              <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center" fontWeight={500}>
-                  Invalid pair.
-                </Text>
-              </AutoColumn>
-            </LightCard>
-          ) : pairState === PairState.LOADING ? (
-            <LightCard padding="45px 10px">
-              <AutoColumn gap="sm" justify="center">
-                <Text textAlign="center">
-                  Loading
-                  <Dots />
-                </Text>
-              </AutoColumn>
-            </LightCard>
-          ) : null
+          <>
+            {showPostion(pairState, pair, validPairNoLiquidity, position, hasPosition, 'UNI', MinimalPositionCard)}
+            {showPostion(
+              pairStateSushi,
+              pairSushi,
+              validPairNoLiquiditySushi,
+              positionSushi,
+              hasPositionSushi,
+              'SUSHI',
+              MinimalPositionCardSUSHI
+            )}
+          </>
         ) : (
           prerequisiteMessage
         )}

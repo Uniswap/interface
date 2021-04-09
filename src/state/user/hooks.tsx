@@ -1,6 +1,7 @@
 import { useFactoryContract } from 'hooks/useContract'
 import { ChainId, Pair, Token } from 'libs/sdk/src'
 import { Pair as PairUNI, Token as TokenUNI } from '@uniswap/sdk'
+import { Pair as PairSUSHI, Token as TokenSUSHI } from '@sushiswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -23,7 +24,7 @@ import {
   toggleURLWarning
 } from './actions'
 
-function serializeToken(token: Token | TokenUNI): SerializedToken {
+function serializeToken(token: Token | TokenUNI | TokenSUSHI): SerializedToken {
   return {
     chainId: token.chainId,
     address: token.address,
@@ -155,18 +156,18 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
-function serializePair(pair: Pair | PairUNI): SerializedPair {
+function serializePair(pair: Pair | PairUNI | PairSUSHI): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
     token1: serializeToken(pair.token1)
   }
 }
 
-export function usePairAdderUNI(): (pair: PairUNI) => void {
+export function usePairAdder(): (pair: PairUNI | PairSUSHI) => void {
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
-    (pair: PairUNI) => {
+    (pair: PairUNI | PairSUSHI) => {
       dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
     },
     [dispatch]
@@ -207,7 +208,20 @@ export function useURLWarningToggle(): () => void {
  */
 
 export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new TokenUNI(tokenA.chainId, PairUNI.getAddress(tokenA, tokenB), 18, 'DMM-LP', 'DMM LP')
+  return new Token(tokenA.chainId, PairUNI.getAddress(tokenA, tokenB), 18, 'UNI-LP', 'UNI LP')
+}
+
+export function toV2LiquidityTokenSushi([tokenA, tokenB]: [Token, Token]): Token {
+  return new Token(
+    tokenA.chainId,
+    PairSUSHI.getAddress(
+      new TokenSUSHI(tokenA.chainId, tokenA.address, tokenA.decimals, tokenA.symbol, tokenA.name),
+      new TokenSUSHI(tokenB.chainId, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name)
+    ),
+    18,
+    'SUSHI-LP',
+    'SUSHI LP'
+  )
 }
 
 export function useToV2LiquidityTokens(

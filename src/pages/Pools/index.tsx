@@ -82,7 +82,7 @@ const Pools = ({
   const { account } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
-  const mdBreakpoint = useMedia('(min-width: 768px)')
+  const above1200 = useMedia('(min-width: 1200px)')
 
   // Pool selection
   const { onCurrencySelection } = usePairActionHandlers()
@@ -157,7 +157,7 @@ const Pools = ({
   return (
     <>
       <PageWrapper>
-        {mdBreakpoint ? (
+        {above1200 ? (
           <>
             <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
             <ToolbarWrapper>

@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
+import { JSBI, Pair, Percent, TokenAmount } from '@sushiswap/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -12,7 +12,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonOutlined } from '../Button'
+import { ButtonPrimary, ButtonSecondary, ButtonEmpty } from '../Button'
 import { transparentize } from 'polished'
 import { CardNoise } from '../earn/styled'
 
@@ -25,6 +25,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO } from '../../constants'
+import { tokenAmountDmmToSushi, tokenSushiToDmm } from 'utils/dmm'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -44,21 +45,6 @@ const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border-radius: 8px;
 `
 
-const ButtonSecondary2 = styled(ButtonSecondary)`
-  border: none;
-  :hover {
-    border: none;
-  }
-`
-const ButtonOutlined2 = styled(ButtonOutlined)`
-  font-size: inherit;
-`
-
-// export enum LPType {
-//   DMM = 'DMM',
-//   UNI = 'UNI'
-// }
-
 interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
@@ -69,13 +55,13 @@ interface PositionCardProps {
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
   const { account } = useActiveWeb3React()
 
-  const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
-  const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1)
+  const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(tokenSushiToDmm(pair.token0))
+  const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(tokenSushiToDmm(pair.token1))
 
   const [showMore, setShowMore] = useState(false)
 
-  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
-  const totalPoolTokens = useTotalSupply(pair.liquidityToken)
+  const userPoolBalance = useTokenBalance(account ?? undefined, tokenSushiToDmm(pair.liquidityToken))
+  const totalPoolTokens = useTotalSupply(tokenSushiToDmm(pair.liquidityToken))
 
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
@@ -89,8 +75,18 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
-          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
+          pair.getLiquidityValue(
+            pair.token0,
+            tokenAmountDmmToSushi(totalPoolTokens),
+            tokenAmountDmmToSushi(userPoolBalance),
+            false
+          ),
+          pair.getLiquidityValue(
+            pair.token1,
+            tokenAmountDmmToSushi(totalPoolTokens),
+            tokenAmountDmmToSushi(userPoolBalance),
+            false
+          )
         ]
       : [undefined, undefined]
 
@@ -101,7 +97,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
           <AutoColumn gap="12px">
             <FixedHeightRow>
               <RowFixed>
-                <img src={require('../../assets/svg/uniswap-icon.svg')} alt="uniswap-icon" />
+                <img src={require('../../assets/svg/sushiswap-icon.svg')} alt="sushiswap-icon" />
                 <Text fontWeight={500} fontSize={16} style={{ marginLeft: '10px' }}>
                   Your position
                 </Text>
@@ -176,19 +172,19 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
-  const currency0 = unwrappedToken(pair.token0)
-  const currency1 = unwrappedToken(pair.token1)
+  const currency0 = unwrappedToken(tokenSushiToDmm(pair.token0))
+  const currency1 = unwrappedToken(tokenSushiToDmm(pair.token1))
 
   const [showMore, setShowMore] = useState(false)
 
-  const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
-  const totalPoolTokens = useTotalSupply(pair.liquidityToken)
+  const userDefaultPoolBalance = useTokenBalance(account ?? undefined, tokenSushiToDmm(pair.liquidityToken))
+  const totalPoolTokens = useTotalSupply(tokenSushiToDmm(pair.liquidityToken))
 
   // if staked balance balance provided, add to standard liquidity amount
-  const userPoolBalance = stakedBalance ? userDefaultPoolBalance?.add(stakedBalance) : userDefaultPoolBalance
-
+  //   const userPoolBalance = stakedBalance ? userDefaultPoolBalance?.add(stakedBalance) : userDefaultPoolBalance
+  const userPoolBalance = userDefaultPoolBalance
   const poolTokenPercentage =
     !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
@@ -201,16 +197,26 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
-          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
+          pair.getLiquidityValue(
+            pair.token0,
+            tokenAmountDmmToSushi(totalPoolTokens),
+            tokenAmountDmmToSushi(userPoolBalance),
+            false
+          ),
+          pair.getLiquidityValue(
+            pair.token1,
+            tokenAmountDmmToSushi(totalPoolTokens),
+            tokenAmountDmmToSushi(userPoolBalance),
+            false
+          )
         ]
       : [undefined, undefined]
 
-  const backgroundColor = useColor(pair?.token0)
+  // const backgroundColor = useColor(tokenSushiToDmm(pair?.token0))
+  const backgroundColor = useColor(undefined)
 
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
-      <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <AutoRow gap="8px">
@@ -222,15 +228,19 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           <RowFixed gap="8px">
             <ButtonEmpty
               padding="6px 8px"
-              borderRadius="12px"
+              borderRadius="20px"
               width="fit-content"
               onClick={() => setShowMore(!showMore)}
             >
-              <img src={require('../../assets/svg/uniswap-icon.svg')} alt="uniswap-icon" />
+              <img src={require('../../assets/svg/sushiswap-icon.svg')} alt="uniswap-icon" />
               {showMore ? (
-                <ChevronUp size="20" style={{ marginLeft: '10px' }} />
+                <>
+                  <ChevronUp size="20" style={{ marginLeft: '10px' }} />
+                </>
               ) : (
-                <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+                <>
+                  <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+                </>
               )}
             </ButtonEmpty>
           </RowFixed>
@@ -259,7 +269,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  Pooled {currency0.symbol}:
+                  Pooled {currency0?.symbol}:
                 </Text>
               </RowFixed>
               {token0Deposited ? (
@@ -277,7 +287,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  Pooled {currency1.symbol}:
+                  Pooled {currency1?.symbol}:
                 </Text>
               </RowFixed>
               {token1Deposited ? (
@@ -303,25 +313,27 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               </Text>
             </FixedHeightRow>
 
-            <ButtonSecondary2 padding="8px" borderRadius="8px">
+            {/* <ButtonSecondary padding="8px" borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`${process.env.REACT_APP_DMM_ANALYTICS_URL}/account/${account}`}
+                href={`https://uniswap.info/account/${account}`}
               >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
-            </ButtonSecondary2>
+            </ButtonSecondary> */}
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                as={Link}
-                width="48%"
-                to={`/migrate/${currencyId(currency0)}/${currencyId(currency1)}`}
-                style={{ width: '100%', textAlign: 'center' }}
-              >
-                Migrate
-              </ButtonPrimary>
+              <RowBetween marginTop="10px">
+                <ButtonPrimary
+                  padding="8px"
+                  borderRadius="8px"
+                  as={Link}
+                  width="48%"
+                  to={`/migrateSushi/${currencyId(currency0)}/${currencyId(currency1)}`}
+                  style={{ width: '100%', textAlign: 'center' }}
+                >
+                  Migrate
+                </ButtonPrimary>
+              </RowBetween>
             )}
             {stakedBalance && JSBI.greaterThan(stakedBalance.raw, BIG_INT_ZERO) && (
               <ButtonPrimary

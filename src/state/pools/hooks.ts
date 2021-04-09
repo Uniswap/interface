@@ -235,3 +235,7 @@ export function useResetPools(currencyA: Currency | undefined, currencyB: Curren
     dispatch(setError(undefined))
   }, [currencyA, currencyB, dispatch])
 }
+
+export function useSelectedPool() {
+  return useSelector((state: AppState) => state.pools.selectedPool)
+}
