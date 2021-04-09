@@ -69,7 +69,10 @@ export function filterPairs(pairs: Pair[], search: string): Pair[] {
       (token0.symbol && matchesSearch(token0.symbol)) ||
       (token1.symbol && matchesSearch(token1.symbol)) ||
       (token0.name && matchesSearch(token0.name)) ||
-      (token1.name && matchesSearch(token1.name))
+      (token1.name && matchesSearch(token1.name)) ||
+      (token0.symbol &&
+        token1.symbol &&
+        (matchesSearch(token0.symbol + token1.symbol) || matchesSearch(`${token0.symbol}/${token1.symbol}`)))
     )
   })
 }

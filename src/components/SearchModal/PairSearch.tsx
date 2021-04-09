@@ -54,17 +54,8 @@ export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen, filt
 
   const filteredSortedPairs: Pair[] = useMemo(() => {
     if (searchPair) return [searchPair]
-    const sorted = filteredPairs.sort(pairsComparator)
-    const symbolMatch = searchQuery
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(s => s.length > 0)
-    if (symbolMatch.length > 1) return sorted
-
-    // sort any exact symbol matches first
-    // return sorted.filter(pair => ((pair[0].symbol || '') + (pair[1].symbol || '')).toLowerCase() === symbolMatch[0])
-    return sorted
-  }, [filteredPairs, searchQuery, searchPair, pairsComparator])
+    return filteredPairs.sort(pairsComparator)
+  }, [filteredPairs, searchPair, pairsComparator])
 
   const handlePairSelect = useCallback(
     (pair: Pair) => {
