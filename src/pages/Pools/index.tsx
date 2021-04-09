@@ -7,7 +7,7 @@ import { PageWrapper } from './styleds'
 import { TYPE } from '../../theme'
 import { Box, Flex, Text } from 'rebass'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary, ButtonWithLink } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -137,7 +137,7 @@ function Title({ onCurrencySelection }: TitleProps) {
 }
 
 export default function Pools() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const router = useRouter()
   const [aggregatedDataFilter, setAggregatedDataFilter] = useState(PairsFilterType.ALL)
   const {
@@ -171,12 +171,13 @@ export default function Pools() {
             />
           </AutoColumn>
         </AutoColumn>
-        {/* TODO: uncomment once multi-chain analytics are a thing */}
-        {/* <ButtonWithLink
-          link={`https://dxstats.eth.link/#/account/${account}`}
-          text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
-          marginTop="32px"
-        /> */}
+        {account && (
+          <ButtonWithLink
+            link={`https://dxstats.eth.link/#/account/${account}?chainId=${chainId}`}
+            text={'ACCOUNT ANALYTICS AND ACCRUED FEES'}
+            marginTop="32px"
+          />
+        )}
         {/* Should not be needed since when we fetch liquidity positions from the subgraph */}
         {/* <TYPE.body color="text4" textAlign="center" fontWeight="500" fontSize="14px" lineHeight="17px" marginTop="32px">
           Don't see a pool you joined?{' '}
