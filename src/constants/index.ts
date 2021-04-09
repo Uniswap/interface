@@ -47,7 +47,6 @@ export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
   [TIMELOCK_ADDRESS]: 'Timelock',
 }
 
-// TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e',
 }
@@ -217,4 +216,4 @@ export const BLOCKED_ADDRESSES: string[] = [
 
 export const ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS = '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8'
 
-export const MIGRATOR_ADDRESS = '0x16D4F26C15f3658ec65B1126ff27DD3dF2a2996b'
+export const V1_MIGRATOR_ADDRESS = '0x16D4F26C15f3658ec65B1126ff27DD3dF2a2996b'

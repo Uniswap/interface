@@ -21,13 +21,20 @@ import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 import { BlueCard } from '../../components/Card'
 import { TYPE } from '../../theme'
+import { useLocation } from 'react-router'
 
 enum Fields {
   TOKEN0 = 0,
   TOKEN1 = 1,
 }
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search)
+}
+
 export default function PoolFinder() {
+  const query = useQuery()
+
   const { account } = useActiveWeb3React()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
@@ -81,7 +88,7 @@ export default function PoolFinder() {
 
   return (
     <AppBody>
-      <FindPoolTabs />
+      <FindPoolTabs origin={query.get('origin') ?? '/pool'} />
       <AutoColumn style={{ padding: '1rem' }} gap="md">
         <BlueCard>
           <AutoColumn gap="10px">

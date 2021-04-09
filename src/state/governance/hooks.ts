@@ -8,7 +8,7 @@ import { ethers, utils } from 'ethers'
 import { calculateGasMargin } from '../../utils'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../transactions/hooks'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 
 interface ProposalDetail {
@@ -49,14 +49,16 @@ export function useProposalCount(): number | undefined {
  * Need proposal events to get description data emitted from
  * new proposal event.
  */
+const eventParser = new ethers.utils.Interface(GOV_ABI)
 export function useDataFromEventLogs() {
   const { library } = useActiveWeb3React()
   const [formattedEvents, setFormattedEvents] = useState<any>()
   const govContract = useGovernanceContract()
 
   // create filter for these specific events
-  const filter = { ...govContract?.filters?.['ProposalCreated'](), fromBlock: 0, toBlock: 'latest' }
-  const eventParser = new ethers.utils.Interface(GOV_ABI)
+  const filter = useMemo(() => ({ ...govContract?.filters?.['ProposalCreated'](), fromBlock: 0, toBlock: 'latest' }), [
+    govContract,
+  ])
 
   useEffect(() => {
     async function fetchData() {
@@ -88,7 +90,7 @@ export function useDataFromEventLogs() {
     if (!formattedEvents) {
       fetchData()
     }
-  }, [eventParser, filter, library, formattedEvents])
+  }, [filter, library, formattedEvents])
 
   return formattedEvents
 }
