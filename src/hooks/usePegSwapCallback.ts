@@ -32,11 +32,7 @@ export default function usePegSwapCallback(
   const { account } = useActiveWeb3React()
   const pegSwapContract = usePegSwapContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
-  // A 18 decimals -> 0.6
-  // B 6 decimals -> 0.6
-
-  // L 6 decimals -> 10,000,000
-  const inputAmount = useMemo(() => tryParseAmount(typedValue, outputCurrency), [outputCurrency, typedValue])
+  const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
   const liquidity = usePegLiquidity(inputCurrency, outputCurrency)
   const addTransaction = useTransactionAdder()
 
@@ -51,12 +47,9 @@ export default function usePegSwapCallback(
       const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
       const sufficientLiquidity = inputAmount?.lessThan(JSBI.BigInt(liquidity ?? 0))
 
-      console.log(liquidity && JSBI.BigInt(liquidity).toString(), inputAmount?.raw.toString())
-
       return {
         pegSwapType: PegSwapType.SWAP,
         execute: async () => {
-          console.log(inputAmount?.raw.toString())
           try {
             const txReceipt = await pegSwapContract.swap(
               inputAmount?.raw.toString(),

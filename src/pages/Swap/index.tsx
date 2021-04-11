@@ -218,8 +218,6 @@ export default function Swap() {
 
   const [approval, approveCallback] = useApproveCallback(...useApproveCallbackArgs)
 
-  console.log(approval, useApproveCallbackArgs)
-
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
