@@ -34,6 +34,7 @@ yarn
 ### Run
 
 ```bash
+yarn typechain
 yarn start
 ```
 

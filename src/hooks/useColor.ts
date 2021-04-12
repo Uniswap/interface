@@ -2,6 +2,7 @@ import { ChainId, Token } from '@ubeswap/sdk'
 import Vibrant from 'node-vibrant'
 import { shade } from 'polished'
 import { useLayoutEffect, useState } from 'react'
+import { useTheme } from 'styled-components'
 import uriToHttp from 'utils/uriToHttp'
 import { hex } from 'wcag-contrast'
 
@@ -44,7 +45,8 @@ async function getColorFromUriPath(uri: string): Promise<string | null> {
 }
 
 export function useColor(token?: Token) {
-  const [color, setColor] = useState('#2172E5')
+  const theme = useTheme()
+  const [color, setColor] = useState(theme.primary1)
 
   useLayoutEffect(() => {
     let stale = false

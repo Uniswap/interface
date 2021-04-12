@@ -20,6 +20,6 @@ export const UBE = makeTokens(
     [ChainId.BAKLAVA]: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
   },
   18,
-  'cUSD',
-  'Celo Dollar'
+  'UBE',
+  'Ubeswap'
 )

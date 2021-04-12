@@ -17,7 +17,11 @@ export const TextBox = styled.div`
 `
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);
+  background: radial-gradient(
+    96.02% 99.41% at 1.84% 0%,
+    ${(props) => props.theme.primary1} 30%,
+    ${(props) => props.theme.bg5} 100%
+  );
   border-radius: 12px;
   width: 100%;
   position: relative;

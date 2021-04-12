@@ -4,7 +4,10 @@ import { useMemo } from 'react'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
+import POOL_MANAGER_ABI from '../constants/abis/pool-manager.json'
+import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
+import { PoolManager, StakingRewards } from '../generated'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 
@@ -48,4 +51,15 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 export function useMulticallContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId ? MULTICALL_NETWORKS[chainId] : undefined, MULTICALL_ABI, false)
+}
+
+export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): StakingRewards | null {
+  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible) as StakingRewards
+}
+
+export function usePoolManagerContract(
+  poolManagerAddress?: string,
+  withSignerIfPossible?: boolean
+): PoolManager | null {
+  return useContract(poolManagerAddress, POOL_MANAGER_ABI, withSignerIfPossible) as PoolManager
 }
