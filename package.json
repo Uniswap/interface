@@ -136,6 +136,6 @@
     "web3": "^1.3.4"
   },
   "lint-staged": {
-    "*.js,ts,tsx,json": "eslint --cache --fix"
+    "*.{js,ts,tsx,json}": "eslint --cache --fix"
   }
 }
