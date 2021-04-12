@@ -1,5 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { BigNumber } from '@ethersproject/bignumber'
 
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
@@ -88,8 +89,8 @@ const SlippageEmojiContainer = styled.span`
 export interface SlippageTabsProps {
   rawSlippage: number
   setRawSlippage: (rawSlippage: number) => void
-  deadline: number
-  setDeadline: (deadline: number) => void
+  deadline: BigNumber
+  setDeadline: (deadline: BigNumber) => void
 }
 
 export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
@@ -102,7 +103,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
 
   const slippageInputIsValid =
     slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
-  const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
+  const deadlineInputIsValid = deadlineInput === '' || deadline.div(60).toString() === deadlineInput
 
   let slippageError: SlippageError | undefined
   if (slippageInput !== '' && !slippageInputIsValid) {
@@ -137,9 +138,9 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     setDeadlineInput(value)
 
     try {
-      const valueAsInt: number = Number.parseInt(value) * 60
-      if (!Number.isNaN(valueAsInt) && valueAsInt > 0) {
-        setDeadline(valueAsInt)
+      const valueAsBN = BigNumber.from(value).mul(60)
+      if (valueAsBN.gt(0)) {
+        setDeadline(valueAsBN)
       }
     } catch {}
   }
@@ -235,9 +236,9 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
             <Input
               color={!!deadlineError ? 'red' : undefined}
               onBlur={() => {
-                parseCustomDeadline((deadline / 60).toString())
+                parseCustomDeadline(deadline.div(60).toString())
               }}
-              placeholder={(deadline / 60).toString()}
+              placeholder={deadline.div(60).toString()}
               value={deadlineInput}
               onChange={e => parseCustomDeadline(e.target.value)}
             />

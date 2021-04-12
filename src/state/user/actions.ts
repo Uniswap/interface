@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { createAction } from '@reduxjs/toolkit'
 
 export interface SerializedToken {
@@ -20,7 +21,7 @@ export const updateUserSingleHopOnly = createAction<{ userSingleHopOnly: boolean
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number }>(
   'user/updateUserSlippageTolerance'
 )
-export const updateUserDeadline = createAction<{ userDeadline: number }>('user/updateUserDeadline')
+export const updateUserDeadline = createAction<{ userDeadline: BigNumber }>('user/updateUserDeadline')
 export const addSerializedToken = createAction<{ serializedToken: SerializedToken }>('user/addSerializedToken')
 export const removeSerializedToken = createAction<{ chainId: number; address: string }>('user/removeSerializedToken')
 export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('user/addSerializedPair')
