@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle } from 'react-feather'
+import { BookOpen, Code, Send, Info, MessageCircle } from 'react-feather'
+import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -82,6 +83,21 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
+const MenuItemInternal = styled(NavLink)`
+  text-decoration: none;
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  > svg {
+    margin-right: 8px;
+  }
+`
+
 const CODE_LINK = 'https://github.com/Ubeswap/ubeswap-interface'
 
 export default function Menu() {
@@ -99,6 +115,10 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
+          <MenuItemInternal id="link" to="/send">
+            <Send size={14} />
+            Send
+          </MenuItemInternal>
           <MenuItem id="link" href="https://ubeswap.org/">
             <Info size={14} />
             About

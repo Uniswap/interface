@@ -289,9 +289,6 @@ export default function Header() {
           >
             {t('pool')}
           </StyledNavLink>
-          <StyledNavLink id={`send-nav-link`} to={'/send'}>
-            Send
-          </StyledNavLink>
           <StyledNavLink id="farm-nav-link" to="/farm">
             Farm
           </StyledNavLink>
