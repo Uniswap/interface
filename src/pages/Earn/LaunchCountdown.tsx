@@ -65,7 +65,7 @@ const StyledCountdownWrapper = styled.div`
 `
 
 const StyledCountdownTitle = styled.p`
-  font-size: 20px;
+  font-size: 16px;
   color: ${(props) => props.theme.text2};
   margin: 0;
 `
