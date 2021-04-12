@@ -34,3 +34,4 @@ cypress/screenshots
 cypress/fixtures/example.json
 
 /src/generated
+.eslintcache
