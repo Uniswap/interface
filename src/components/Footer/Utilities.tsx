@@ -4,8 +4,9 @@ import styled from 'styled-components'
 import ToggleDarkMode from './ToggleDarkMode'
 import LanguageSelector from './LanguageSelector'
 import SocialLinks from './SocialLinks'
+import { useRouteMatch } from 'react-router'
 
-const StyledUtilities = styled.div`
+const StyledUtilities = styled.div<{ isAboutpage?: boolean }>`
   position: absolute;
   display: flex;
   top: 0;
@@ -17,7 +18,8 @@ const StyledUtilities = styled.div`
     opacity: 1;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme, isAboutpage }) => theme.mediaWidth.upToMedium`
+    ${isAboutpage ? `display: none;` : ``}
     position: fixed;
     top: auto;
     bottom: 4.5rem;
@@ -28,8 +30,10 @@ const StyledUtilities = styled.div`
 `
 
 export default function Utilities() {
+  let aboutPage = useRouteMatch("/about");
+
   return (
-    <StyledUtilities>
+    <StyledUtilities isAboutpage={aboutPage?.isExact}>
       <ToggleDarkMode />
       <LanguageSelector />
       <SocialLinks />
