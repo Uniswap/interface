@@ -108,6 +108,8 @@ function CurrencyRow({
   const removeToken = useRemoveUserAddedToken()
   const addToken = useAddUserToken()
 
+  const isDeprecated = currency instanceof WrappedTokenInfo ? currency.isDeprecated : false
+
   // only show add or remove buttons if not on selected list
   return (
     <MenuItem
@@ -120,7 +122,7 @@ function CurrencyRow({
       <CurrencyLogo currency={currency} size={'24px'} />
       <Column>
         <Text title={currency.name} fontWeight={500}>
-          {getCurrencySymbol(currency, chainId)}
+          {getCurrencySymbol(currency, chainId)?.replace(/\(Deprecated\)/, '')}
         </Text>
         <FadedSpan>
           {!isOnSelectedList && customAdded ? (
@@ -149,6 +151,7 @@ function CurrencyRow({
               </LinkStyledButton>
             </TYPE.main>
           ) : null}
+          {isDeprecated ? <TYPE.main fontWeight={500}>Deprecated (Click to Migrate)</TYPE.main> : null}
         </FadedSpan>
       </Column>
       <TokenTags currency={currency} />

@@ -21,6 +21,8 @@ import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../../components/swap/styleds'
 import SwitchNetwork from '../../components/swap/SwitchNetwork'
+import { UNDER_MAINTENANCE } from '../../constants'
+import Maintenance from '../../components/swap/Maintenance'
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
@@ -58,6 +60,10 @@ export default function Pool() {
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+
+  if (UNDER_MAINTENANCE) {
+    return <Maintenance />
+  }
 
   if (!isHome) {
     return (
