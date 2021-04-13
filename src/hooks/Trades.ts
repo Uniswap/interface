@@ -21,10 +21,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     : [undefined, undefined]
 
   const basePairs: [Token, Token][] = useMemo(
-    () =>
-      flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])).filter(
-        ([t0, t1]) => t0.address !== t1.address
-      ),
+    () => flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])),
     [bases]
   )
 
@@ -46,10 +43,9 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
             .filter(([tokenA, tokenB]) => {
               if (!chainId) return true
               const customBases = CUSTOM_BASES[chainId]
-              if (!customBases) return true
 
-              const customBasesA: Token[] | undefined = customBases[tokenA.address]
-              const customBasesB: Token[] | undefined = customBases[tokenB.address]
+              const customBasesA: Token[] | undefined = customBases?.[tokenA.address]
+              const customBasesB: Token[] | undefined = customBases?.[tokenB.address]
 
               if (!customBasesA && !customBasesB) return true
 
