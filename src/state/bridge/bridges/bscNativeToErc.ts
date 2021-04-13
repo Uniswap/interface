@@ -1,9 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { BigNumber } from 'ethers'
 import * as Sentry from '@sentry/react'
-import { parseUnits, formatUnits } from 'ethers/lib/utils'
 import TokenBridge from './tokenBridge'
-import { getHomeBridgeNativeToErcContract, getERC677TokenContract, calculateGasMargin, pollEvent } from '../../../utils'
+import { getERC677TokenContract, calculateGasMargin, pollEvent, getContract } from '../../../utils'
 import {
   tokenTransferSuccess,
   tokenTransferPending,
@@ -12,13 +10,12 @@ import {
   transferError
 } from '../actions'
 import {
-  GAS_PRICE,
   BSC_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS,
   BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
 } from '../../../constants'
 import { getChainNetworkLibrary, getNetworkLibrary, ETHEREUM_CHAIN_ID } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
-import HomeBridgeABI from '../../../constants/abis/homeBridgeNativeToErc.json'
+import HomeBridgeABI from '../../../constants/abis/bscFuseHomeNativeToErc20.json'
 import ForeignBridgeABI from '../../../constants/abis/foreignBridgeNativeToErc.json'
 
 export default class BscNativeToErcBridge extends TokenBridge {
@@ -34,7 +31,7 @@ export default class BscNativeToErcBridge extends TokenBridge {
   }
 
   private get homeBridgeContract() {
-    return getHomeBridgeNativeToErcContract(this.homeBridgeAddress, this.library, this.account)
+    return getContract(this.homeBridgeAddress, HomeBridgeABI, this.library, this.account)
   }
 
   private get homeNetworkLibrary() {
@@ -45,23 +42,15 @@ export default class BscNativeToErcBridge extends TokenBridge {
     return getChainNetworkLibrary(ETHEREUM_CHAIN_ID)
   }
 
-  private toBigNumber(value: string): BigNumber {
-    return parseUnits(formatUnits(value))
-  }
-
-  private buildHomeTransaction() {
-    return {
-      to: this.homeBridgeAddress,
-      from: this.account,
-      value: this.toBigNumber(this.amount.raw.toString()),
-      ...(GAS_PRICE && { gasPrice: this.toBigNumber(GAS_PRICE) })
-    }
-  }
-
   async transferToForeign(): Promise<TransactionResponse | null> {
     this.dispatch(tokenTransferPending())
 
-    const response = await this.homeBridgeContract.signer.sendTransaction(this.buildHomeTransaction())
+    const contract = this.homeBridgeContract
+    const args = [this.account]
+    const value = this.amount.raw.toString()
+
+    const estimatedGas = await contract.estimateGas.relayTokens(...args, { value })
+    const response = await contract.relayTokens(...args, { gasLimit: calculateGasMargin(estimatedGas), value })
 
     this.dispatch(tokenTransferSuccess())
 
