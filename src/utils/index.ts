@@ -15,7 +15,8 @@ import {
   FUSE_ERC677_TO_ERC677_BRIDGE_FOREIGN_ADDRESS,
   TOKEN_MIGRATOR_ADDRESS,
   BINANCE_TESTNET_CHAINID,
-  BINANCE_MAINNET_CHAINID
+  BINANCE_MAINNET_CHAINID,
+  BSC_FUSE_TOKEN_ADDRESS
 } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER as FUSE } from '@fuseio/fuse-swap-sdk'
 import { TokenAddressMap, WrappedTokenInfo } from '../state/lists/hooks'
@@ -37,6 +38,7 @@ import PROD_BRIDGE_LIST from '@fuseio/fuse-swap-default-token-list'
 import QA_BRIDGE_LIST from '../constants/qa/tokenlist.json'
 import BETA_BRIDGE_LIST from '../constants/qa/beta-tokenlist.json'
 import { TokenList } from '@fuseio/token-lists'
+import BscNativeToErcBridge from '../state/bridge/bridges/bscNativeToErc'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -271,7 +273,11 @@ export function isProduction(): boolean {
 }
 
 export function isFuse(tokenAddress: string) {
-  return tokenAddress === FUSE.symbol || tokenAddress === FUSE_FOREIGN_TOKEN_ADDRESS
+  return (
+    tokenAddress === FUSE.symbol ||
+    tokenAddress === FUSE_FOREIGN_TOKEN_ADDRESS ||
+    tokenAddress === BSC_FUSE_TOKEN_ADDRESS
+  )
 }
 
 export function isGoodDollar(tokenAddress: string) {
@@ -288,8 +294,12 @@ export function getEthFuseBridge(tokenAddress: string) {
   }
 }
 
-export function getBnbFuseBridge() {
-  return BinanceBridge
+export function getBnbFuseBridge(tokenAddress: string) {
+  if (isFuse(tokenAddress)) {
+    return BscNativeToErcBridge
+  } else {
+    return BinanceBridge
+  }
 }
 
 export function isEthFuseDirection(bridgeDirection: BridgeDirection) {
@@ -304,7 +314,7 @@ export function getBridge(tokenAddress: string, bridgeDirection: BridgeDirection
   if (isEthFuseDirection(bridgeDirection)) {
     return getEthFuseBridge(tokenAddress)
   } else if (isBnbFuseDirection(bridgeDirection)) {
-    return getBnbFuseBridge()
+    return getBnbFuseBridge(tokenAddress)
   }
   return undefined
 }
@@ -319,15 +329,19 @@ export function getEthFuseBridgeType(tokenAddress: string) {
   }
 }
 
-export function getBnbFuseBridgeType() {
-  return BridgeType.BSC_FUSE_ERC20_TO_ERC677
+export function getBnbFuseBridgeType(tokenAddress: string) {
+  if (isFuse(tokenAddress)) {
+    return BridgeType.BSC_FUSE_NATIVE
+  } else {
+    return BridgeType.BSC_FUSE_ERC20_TO_ERC677
+  }
 }
 
 export function getBridgeType(tokenAddress: string, bridgeDirection: BridgeDirection) {
   if (isEthFuseDirection(bridgeDirection)) {
     return getEthFuseBridgeType(tokenAddress)
   } else if (isBnbFuseDirection(bridgeDirection)) {
-    return getBnbFuseBridgeType()
+    return getBnbFuseBridgeType(tokenAddress)
   }
   return undefined
 }
