@@ -1,6 +1,5 @@
 import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
-import { BigNumber } from '@ethersproject/bignumber'
 import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
@@ -35,7 +34,7 @@ export interface UserState {
   userSlippageTolerance: number
 
   // deadline set by user in minutes, used in all txns
-  userDeadline: BigNumber
+  userDeadline: string
 
   tokens: {
     [chainId: number]: {
@@ -64,7 +63,7 @@ export const initialState: UserState = {
   userExpertMode: false,
   userSingleHopOnly: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
-  userDeadline: BigNumber.from(DEFAULT_DEADLINE_FROM_NOW),
+  userDeadline: DEFAULT_DEADLINE_FROM_NOW.toString(),
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
@@ -83,7 +82,7 @@ export default createReducer(initialState, builder =>
       // deadline isnt being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
       if (typeof state.userDeadline !== 'number') {
-        state.userDeadline = BigNumber.from(DEFAULT_DEADLINE_FROM_NOW)
+        state.userDeadline = DEFAULT_DEADLINE_FROM_NOW.toString()
       }
 
       state.lastUpdateVersionTimestamp = currentTimestamp()

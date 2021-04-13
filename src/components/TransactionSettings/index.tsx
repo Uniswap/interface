@@ -89,8 +89,8 @@ const SlippageEmojiContainer = styled.span`
 export interface SlippageTabsProps {
   rawSlippage: number
   setRawSlippage: (rawSlippage: number) => void
-  deadline: BigNumber
-  setDeadline: (deadline: BigNumber) => void
+  deadline: string
+  setDeadline: (deadline: string) => void
 }
 
 export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
@@ -103,7 +103,11 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
 
   const slippageInputIsValid =
     slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
-  const deadlineInputIsValid = deadlineInput === '' || deadline.div(60).toString() === deadlineInput
+  const deadlineInputIsValid =
+    deadlineInput === '' ||
+    BigNumber.from(deadline)
+      .div(60)
+      .toString() === deadlineInput
 
   let slippageError: SlippageError | undefined
   if (slippageInput !== '' && !slippageInputIsValid) {
@@ -140,7 +144,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     try {
       const valueAsBN = BigNumber.from(value).mul(60)
       if (valueAsBN.gt(0)) {
-        setDeadline(valueAsBN)
+        setDeadline(valueAsBN.toString())
       }
     } catch {}
   }
@@ -236,9 +240,15 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
             <Input
               color={!!deadlineError ? 'red' : undefined}
               onBlur={() => {
-                parseCustomDeadline(deadline.div(60).toString())
+                parseCustomDeadline(
+                  BigNumber.from(deadline)
+                    .div(60)
+                    .toString()
+                )
               }}
-              placeholder={deadline.div(60).toString()}
+              placeholder={BigNumber.from(deadline)
+                .div(60)
+                .toString()}
               value={deadlineInput}
               onChange={e => parseCustomDeadline(e.target.value)}
             />

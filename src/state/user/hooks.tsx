@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Pair, Token } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
@@ -116,14 +115,14 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
   return [userSlippageTolerance, setUserSlippageTolerance]
 }
 
-export function useUserTransactionTTL(): [BigNumber, (slippage: BigNumber) => void] {
+export function useUserTransactionTTL(): [string, (slippage: string) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userDeadline = useSelector<AppState, AppState['user']['userDeadline']>(state => {
     return state.user.userDeadline
   })
 
   const setUserDeadline = useCallback(
-    (userDeadline: BigNumber) => {
+    (userDeadline: string) => {
       dispatch(updateUserDeadline({ userDeadline }))
     },
     [dispatch]
