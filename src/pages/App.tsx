@@ -20,6 +20,7 @@ import {
 import Pool from './Pool'
 import Migration from './Pool/lp'
 import Pools from './Pools'
+import Farms from './Farms'
 import PoolFinder from './PoolFinder'
 import PoolFinderExternal from './PoolFinder/PoolFinderExternal'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -95,6 +96,7 @@ export default function App() {
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
+                    <Route exact strict path="/farms" component={Farms} />
                     <Route exact strict path="/myPools" component={Pool} />
                     <Route exact strict path="/migration" component={Migration} />
                     <Route exact path="/add" component={AddLiquidity} />

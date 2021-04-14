@@ -98,5 +98,13 @@
   "toleranceExplanation": "Lowering this limit decreases your risk of frontrunning. However, this makes more likely that your transaction will fail due to normal price movements.",
   "tokenSearchPlaceholder": "Search name or paste address",
   "somethingWentWrong": "Something went wrong! Please try again later.",
-  "importWallet": "Import Wallet"
+  "importWallet": "Import Wallet",
+  "farms": "Farms",
+  "allPools": "All Pools",
+  "yourPools": "Your Pools",
+  "cancel": "Cancel",
+  "claim": "Claim",
+  "stake": "Stake",
+  "unstake": "Unstake",
+  "stakeUnstake": "Stake/Unstake"
 }

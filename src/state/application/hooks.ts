@@ -68,6 +68,14 @@ export function usePoolDetailModalToggle(): () => void {
   return useToggleModal(ApplicationModal.POOL_DETAIL)
 }
 
+export function useFarmClaimModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.FARM_CLAIM)
+}
+
+export function useFarmStakeModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.FARM_STAKE)
+}
+
 // returns a function that allows adding a popup
 export function useAddPopup(): (content: PopupContent, key?: string) => void {
   const dispatch = useDispatch()
