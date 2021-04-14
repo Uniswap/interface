@@ -79,7 +79,9 @@ export function CurrencySearch({
 
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
+
   const searchToken = useToken(debouncedQuery)
+
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   useEffect(() => {

@@ -91,14 +91,14 @@
   "selectFee": "Select Fee",
   "selectLiquidityRange": "Select Liquidity Range",
   "selectPool": "Select Fee Tier",
-  "inputTokens": "Input Tokens",
+  "depositAmounts": "Deposit Amounts",
   "fee": "fee",
   "setLimits": "Set Limits",
   "percent": "Percent",
   "rate": "Rate",
-  "currentRate": "Current {{label}} Rate:",
+  "currentRate": "Current {{label}} Price:",
   "inactiveRangeWarning": "Your position will not be active or earn fees until the selected rates come into range.",
-  "invalidRangeWarning": "Invalid Range",
+  "invalidRangeWarning": "Invalid Range entered. Lower range must be lower than upper range.",
   "connectWallet": "Connect Wallet",
   "unsupportedAsset": "Unsupported Asset",
   "feePool": "Fee Pool",
@@ -109,6 +109,8 @@
   "poolType": "Select a fee tier based on your preferred liquidity provider fee.",
   "rangeWarning": "Your liquidity will only be active and earning fees when the rate of the pool is within this price range.",
   "chooseLiquidityAmount": "Choose an amount of tokens to open this liquidity position. If you don’t have enough tokens you can trade for them with a Swap.",
-  "selectPriceLimits": "Select Price Limits",
-  "inputTokenDynamic": "Input {{label}}"
+  "selectRange": "Select Liquidity Range",
+  "inputTokenDynamic": "Input {{label}}",
+  "selectStartingPrice": "Select Starting Price",
+  "newPoolPrice": "Select the market rate for the tokens being added."
 }

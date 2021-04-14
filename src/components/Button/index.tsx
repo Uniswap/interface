@@ -231,7 +231,8 @@ export const ButtonText = styled(Base)`
     text-decoration: underline;
   }
   &:hover {
-    text-decoration: underline;
+    // text-decoration: underline;
+    opacity: 0.9;
   }
   &:active {
     text-decoration: underline;
@@ -377,6 +378,9 @@ const Circle = styled.div`
 const CheckboxWrapper = styled.div`
   width: 30px;
   padding: 0 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 `
 
 export function ButtonRadioChecked({ active = false, children, ...rest }: { active?: boolean } & ButtonProps) {

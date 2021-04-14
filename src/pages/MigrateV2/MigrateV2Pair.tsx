@@ -1,43 +1,32 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider'
-import { AddressZero } from '@ethersproject/constants'
-import { Currency, CurrencyAmount, Fraction, Percent, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
+import React, { useMemo } from 'react'
+import { Currency, CurrencyAmount, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
-import React, { useCallback, useMemo, useState } from 'react'
-import ReactGA from 'react-ga'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
-import { ButtonConfirmed } from '../../components/Button'
-import { LightCard, PinkCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { Dots } from '../../components/swap/styleds'
-import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE, V1_MIGRATOR_ADDRESS } from 'constants/index'
-import { PairState, usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { usePairContract, useV1MigratorContract } from '../../hooks/useContract'
+import { usePairContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
-import { useIsTransactionPending, useTransactionAdder } from '../../state/transactions/hooks'
-import { useETHBalances, useTokenBalance } from '../../state/wallet/hooks'
+import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from '../MigrateV1/EmptyState'
-import { toV2LiquidityToken } from 'state/user/hooks'
 import { V2_MIGRATOR_ADDRESSES } from 'constants/v3'
 
 // TODO the whole file
 
-const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
-const ZERO = JSBI.BigInt(0)
-const ONE = JSBI.BigInt(1)
-const ZERO_FRACTION = new Fraction(ZERO, ONE)
-const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(10000 - INITIAL_ALLOWED_SLIPPAGE), JSBI.BigInt(10000))
+// const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
+// const ZERO = JSBI.BigInt(0)
+// const ONE = JSBI.BigInt(1)
+// const ZERO_FRACTION = new Fraction(ZERO, ONE)
+// const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(10000 - INITIAL_ALLOWED_SLIPPAGE), JSBI.BigInt(10000))
 
 export function V2LiquidityInfo({
   token,
@@ -105,7 +94,7 @@ function V2PairMigration({
   token0: Token
   token1: Token
 }) {
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   // this is just getLiquidityValue with the fee off, but for the passed pair
   const token0Value = useMemo(
@@ -118,6 +107,8 @@ function V2PairMigration({
   )
 
   const v2SpotPrice = new Price(token0, token1, reserve0.raw, reserve1.raw)
+
+  console.log(token0Value, token1Value, v2SpotPrice)
 
   // const isFirstLiquidityProvider: boolean = false // check for v3 pair existence
 

@@ -8,5 +8,6 @@ export default function RemoveLiquidityV3({
     params: { currencyIdA, currencyIdB, fee },
   },
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; fee: string }>) {
+  console.log(currencyIdA, currencyIdB, fee)
   return <AppBody>TODO</AppBody>
 }

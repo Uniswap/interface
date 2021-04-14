@@ -12,7 +12,7 @@ import useTheme from 'hooks/useTheme'
 import { AlertOctagon } from 'react-feather'
 import { ToggleWrapper, ToggleElement } from 'components/Toggle/MultiToggle'
 import { useTranslation } from 'react-i18next'
-import { Price, Percent, Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Price, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 
 const Wrapper = styled(AutoColumn)`
   padding: 1rem 0;
@@ -27,7 +27,6 @@ export function ConfirmContent({
   price?: Price
   currencies: { [field in Field]?: Currency }
   parsedAmounts: { [field in Field]?: CurrencyAmount }
-  poolTokenPercentage?: Percent
   onAdd: () => void
 }) {
   const currencyA: Currency | undefined = currencies[Field.CURRENCY_A]
