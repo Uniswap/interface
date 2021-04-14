@@ -184,7 +184,7 @@ export function CurrencySearch({
           {({ height }) => (
             <CurrencyList
               height={height}
-              showETH={showETHToken && bridgeDirection !== BridgeDirection.FUSE_TO_BSC}
+              showETH={showETHToken}
               currencies={filteredSortedTokens}
               onCurrencySelect={handleCurrencySelect}
               otherCurrency={otherSelectedCurrency}

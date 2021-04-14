@@ -37,6 +37,11 @@ export const UNDER_MAINTENANCE = unwrapOrThrow('UNDER_MAINTENANCE') === 'true'
 export const BINANCE_TESTNET_CHAINID = 97
 export const BINANCE_MAINNET_CHAINID = 56
 
+export const BSC_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS = unwrapOrThrow('BSC_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS')
+export const BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS = unwrapOrThrow('BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS')
+
+export const BSC_FUSE_TOKEN_ADDRESS = unwrapOrThrow('BSC_FUSE_TOKEN_ADDRESS')
+
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
