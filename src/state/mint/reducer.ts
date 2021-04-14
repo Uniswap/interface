@@ -5,37 +5,30 @@ import {
   typeInput,
   typeLowerRangeInput,
   typeUpperRangeInput,
-  RangeType,
-  updateRangeType,
+  typeStartPriceInput,
 } from './actions'
 
 export interface MintState {
   readonly independentField: Field
   readonly typedValue: string
   readonly otherTypedValue: string // for the case when there's no liquidity
+  readonly startPriceTypedValue: string // for the case when there's no liquidity
   readonly lowerRangeTypedValue: string
   readonly upperRangeTypedValue: string
-  readonly rangeType: RangeType
 }
 
 export const initialState: MintState = {
   independentField: Field.CURRENCY_A,
   typedValue: '',
   otherTypedValue: '',
+  startPriceTypedValue: '',
   lowerRangeTypedValue: '',
   upperRangeTypedValue: '',
-  rangeType: RangeType.RATE,
 }
 
 export default createReducer<MintState>(initialState, (builder) =>
   builder
     .addCase(resetMintState, () => initialState)
-    .addCase(updateRangeType, (state, { payload: { rangeType } }) => {
-      return {
-        ...state,
-        rangeType,
-      }
-    })
     .addCase(typeLowerRangeInput, (state, { payload: { typedValue } }) => {
       return {
         ...state,
@@ -46,6 +39,12 @@ export default createReducer<MintState>(initialState, (builder) =>
       return {
         ...state,
         upperRangeTypedValue: typedValue,
+      }
+    })
+    .addCase(typeStartPriceInput, (state, { payload: { typedValue } }) => {
+      return {
+        ...state,
+        startPriceTypedValue: typedValue,
       }
     })
     .addCase(typeInput, (state, { payload: { field, typedValue, noLiquidity } }) => {

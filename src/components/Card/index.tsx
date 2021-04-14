@@ -48,5 +48,4 @@ export const BlueCard = styled(Card)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.blue2};
   border-radius: 12px;
-  width: fit-content;
 `

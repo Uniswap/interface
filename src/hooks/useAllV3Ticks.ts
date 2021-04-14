@@ -1,6 +1,9 @@
+import { Token } from '@uniswap/sdk-core'
+import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { ZERO_ADDRESS } from '../constants'
 import { useMemo } from 'react'
-import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
-import { useTickLens } from './useContract'
+import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+import { useTickLens, useV3Factory } from './useContract'
 
 // the following should probably all be from the sdk, just mocking it for now
 function MIN_TICK(tickSpacing: number) {
@@ -25,8 +28,9 @@ interface TickData {
 }
 
 export function useAllV3Ticks(
-  poolAddress: string,
-  tickSpacing: number
+  token0: Token | undefined,
+  token1: Token | undefined,
+  feeAmount: FeeAmount | undefined
 ): {
   loading: boolean
   syncing: boolean
@@ -34,22 +38,35 @@ export function useAllV3Ticks(
   valid: boolean
   tickData: TickData[]
 } {
-  const tickLens = useTickLens()
+  const tickSpacing = useMemo(() => (feeAmount ? TICK_SPACINGS[feeAmount] : undefined), [feeAmount])
 
-  const minIndex = useMemo(() => bitmapIndex(MIN_TICK(tickSpacing), tickSpacing), [tickSpacing])
-  const maxIndex = useMemo(() => bitmapIndex(MAX_TICK(tickSpacing), tickSpacing), [tickSpacing])
+  const minIndex = useMemo(() => (tickSpacing ? bitmapIndex(MIN_TICK(tickSpacing), tickSpacing) : undefined), [
+    tickSpacing,
+  ])
+  const maxIndex = useMemo(() => (tickSpacing ? bitmapIndex(MAX_TICK(tickSpacing), tickSpacing) : undefined), [
+    tickSpacing,
+  ])
 
-  const tickLensArgs = useMemo(
+  // fetch the pool address
+  const factoryContract = useV3Factory()
+  const addressParams = token0 && token1 && feeAmount ? [token0.address, token1.address, feeAmount] : undefined
+  const poolAddress = useSingleCallResult(addressParams ? factoryContract : undefined, 'getPool', addressParams)
+    .result?.[0]
+
+  const tickLensArgs: [string, number][] = useMemo(
     () =>
-      new Array(maxIndex - minIndex + 1)
-        .fill(0)
-        .map((_, i) => i + minIndex)
-        .map((wordIndex) => [poolAddress, wordIndex]),
+      maxIndex && minIndex && poolAddress && poolAddress !== ZERO_ADDRESS
+        ? new Array(maxIndex - minIndex + 1)
+            .fill(0)
+            .map((_, i) => i + minIndex)
+            .map((wordIndex) => [poolAddress, wordIndex])
+        : [],
     [minIndex, maxIndex, poolAddress]
   )
 
+  const tickLens = useTickLens()
   const callStates = useSingleContractMultipleData(
-    tickLens,
+    tickLensArgs.length > 0 ? tickLens : undefined,
     'getPopulatedTicksInWord',
     tickLensArgs,
     REFRESH_FREQUENCY,

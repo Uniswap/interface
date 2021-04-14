@@ -5,7 +5,7 @@ import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES, BETTER_TRADE_LESS_HOPS_THRESHOLD } from '../constants'
-import { PairState, usePairs } from '../data/Reserves'
+import { PairState, usePairs } from '../data/V2'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 import { useActiveWeb3React } from './index'

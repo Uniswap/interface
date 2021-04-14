@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { OutlineCard } from 'components/Card'
 import { RowBetween } from 'components/Row'
-import { ButtonGray } from 'components/Button'
-import { TYPE } from 'theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import styled, { keyframes, css } from 'styled-components'
+import { TYPE } from 'theme'
+import { AutoColumn } from 'components/Column'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -22,7 +22,7 @@ const pulse = (color: string) => keyframes`
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
   border-color: ${({ active, theme }) => active && theme.blue1};
-  padding: 8px 12px;
+  padding: 12px;
 
   ${({ pulsing, theme }) =>
     pulsing &&
@@ -33,25 +33,22 @@ const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boo
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: ${({ theme }) => theme.bg0};
-  text-align: ${({ usePercent }) => (usePercent ? 'right' : 'center')};
+  text-align: left;
   margin-right: 2px;
 `
 
 const ContentWrapper = styled(RowBetween)`
-  padding: 0 8px;
-  width: 70%;
+  width: 92%;
 `
 
 interface StepCounterProps {
   value: string
   onUserInput: (value: string) => void
-  onIncrement?: () => void
-  onDecrement?: () => void
-  usePercent?: boolean
-  prependSymbol?: string | undefined
+  label?: string
+  width?: string
 }
 
-const StepCounter = ({ value, onUserInput, usePercent = false, prependSymbol }: StepCounterProps) => {
+const StepCounter = ({ value, onUserInput, label, width }: StepCounterProps) => {
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
 
@@ -85,20 +82,9 @@ const StepCounter = ({ value, onUserInput, usePercent = false, prependSymbol }: 
     }
   }, [localValue, useLocalValue, value])
 
-  const handleDeccrement = useCallback(() => {
-    localValue && setLocalValue((parseFloat(localValue) * 0.997).toString())
-  }, [localValue])
-
-  const handleIncrement = useCallback(() => {
-    localValue && setLocalValue((parseFloat(localValue) * 1.003).toString())
-  }, [localValue])
-
   return (
-    <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur}>
-      <RowBetween>
-        <ButtonGray padding="2px 0px" borderRadius="8px" onClick={handleDeccrement} width="50px">
-          <TYPE.label>-</TYPE.label>
-        </ButtonGray>
+    <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
+      <AutoColumn gap="md">
         <ContentWrapper>
           <StyledInput
             className="rate-input-0"
@@ -107,15 +93,10 @@ const StepCounter = ({ value, onUserInput, usePercent = false, prependSymbol }: 
             onUserInput={(val) => {
               setLocalValue(val)
             }}
-            prependSymbol={prependSymbol}
-            usePercent={usePercent}
           />
-          {usePercent && <TYPE.main>%</TYPE.main>}
         </ContentWrapper>
-        <ButtonGray padding="2px 0px" borderRadius="8px" onClick={handleIncrement} width="50px">
-          <TYPE.label>+</TYPE.label>
-        </ButtonGray>
-      </RowBetween>
+        {label && <TYPE.label fontSize="12px">{label}</TYPE.label>}
+      </AutoColumn>
     </FocusedOutlineCard>
   )
 }

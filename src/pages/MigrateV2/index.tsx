@@ -13,8 +13,8 @@ import { EmptyState } from '../MigrateV1/EmptyState'
 import QuestionHelper from '../../components/QuestionHelper'
 import { Dots } from '../../components/swap/styleds'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { usePairs } from 'data/Reserves'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
+import { usePairs } from 'data/V2'
 
 // TODO there's a bug in loading where "No V2 Liquidity found" flashes
 // TODO add support for more pairs

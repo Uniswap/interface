@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export const BodyWrapper = styled.div`
+export const BodyWrapper = styled.div<{ margin?: string }>`
   position: relative;
+  margin-top: ${({ margin }) => margin ?? '0px'};
   max-width: 460px;
   width: 100%;
   background: ${({ theme }) => theme.bg0};
@@ -14,6 +15,6 @@ export const BodyWrapper = styled.div`
 /**
  * The styled container element that wraps the content of most pages and the tabs.
  */
-export default function AppBody({ children }: { children: React.ReactNode }) {
-  return <BodyWrapper>{children}</BodyWrapper>
+export default function AppBody({ children, ...rest }: { children: React.ReactNode }) {
+  return <BodyWrapper {...rest}>{children}</BodyWrapper>
 }

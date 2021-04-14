@@ -15,6 +15,8 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 import useTheme from '../../hooks/useTheme'
+import { Lock } from 'react-feather'
+import { AutoColumn } from 'components/Column'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -23,6 +25,19 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   background-color: ${({ theme }) => theme.bg2};
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+`
+
+const FixedContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 20px;
+  background-color: ${({ theme }) => theme.bg1};
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
@@ -134,6 +149,7 @@ interface CurrencyInputPanelProps {
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
+  locked?: boolean
 }
 
 export default function CurrencyInputPanel({
@@ -144,14 +160,15 @@ export default function CurrencyInputPanel({
   label = 'Input',
   onCurrencySelect,
   currency,
-  disableCurrencySelect = false,
-  hideBalance = false,
-  pair = null, // used for double token logo
-  hideInput = false,
   otherCurrency,
   id,
   showCommonBases,
   customBalanceText,
+  disableCurrencySelect = false,
+  hideBalance = false,
+  pair = null, // used for double token logo
+  hideInput = false,
+  locked = false,
   ...rest
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
@@ -167,6 +184,14 @@ export default function CurrencyInputPanel({
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
+      {locked && (
+        <FixedContainer>
+          <AutoColumn gap="sm" justify="center">
+            <Lock />
+            <TYPE.label fontSize="12px">Single-asset deposit only, price out of range.</TYPE.label>
+          </AutoColumn>
+        </FixedContainer>
+      )}
       <Container hideInput={hideInput}>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
           {!hideInput && (

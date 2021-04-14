@@ -11,12 +11,7 @@ import Web3ReactManager from '../components/Web3ReactManager'
 import { ApplicationModal } from '../state/application/actions'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import AddLiquidity from './AddLiquidity'
-import {
-  RedirectDuplicateTokenIds,
-  RedirectOldAddLiquidityPathStructure,
-  RedirectToAddLiquidity,
-} from './AddLiquidity/redirects'
+import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
 import MigrateV1 from './MigrateV1'
@@ -34,12 +29,15 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
+import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
+import AddLiquidity from './AddLiquidity'
+import AddLiquidityV2 from './AddLiquidityV2'
 
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 `
 
 const BodyWrapper = styled.div`
@@ -49,8 +47,8 @@ const BodyWrapper = styled.div`
   padding-top: 160px;
   align-items: center;
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-y: auto; */
+  /* overflow-x: hidden; */
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 16px;
@@ -108,13 +106,20 @@ export default function App() {
               <Route exact strict path="/find" component={PoolFinder} />
               <Route exact strict path="/pool/v2" component={PoolV2} />
               <Route exact strict path="/pool" component={Pool} />
-              <Route exact strict path="/create" component={RedirectToAddLiquidity} />
+
               <Route exact path="/add" component={AddLiquidity} />
-              <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/add/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact path="/create" component={AddLiquidity} />
-              <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
-              <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
+              <Route exact path="/add/v2/" component={AddLiquidityV2} />
+              <Route exact path="/add/v2/:currencyIdA" component={AddLiquidityV2} />
+
+              <Route exact path="/add/:currencyIdA" component={AddLiquidity} />
+              <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
+              <Route
+                exact
+                strict
+                path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                component={RedirectDuplicateTokenIds}
+              />
+
               <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
               <Route exact strict path="/remove/v2/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
               <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />

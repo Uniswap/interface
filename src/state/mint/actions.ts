@@ -6,11 +6,11 @@ export enum Field {
 }
 
 export enum Bound {
-  CURRENT = 'CURRENT',
   LOWER = 'LOWER',
   UPPER = 'UPPER',
 }
 
+// save for % inputs
 export enum RangeType {
   PERCENT = 'PERCENT',
   RATE = 'RATE',
@@ -19,5 +19,5 @@ export enum RangeType {
 export const typeInput = createAction<{ field: Field; typedValue: string; noLiquidity: boolean }>('mint/typeInputMint')
 export const typeLowerRangeInput = createAction<{ typedValue: string }>('mint/typeLowerRangeInput')
 export const typeUpperRangeInput = createAction<{ typedValue: string }>('mint/typeUpperRangeInput')
-export const updateRangeType = createAction<{ rangeType: RangeType }>('mint/updateRangeType')
+export const typeStartPriceInput = createAction<{ typedValue: string }>('mint/typeStartPriceInput')
 export const resetMintState = createAction<void>('mint/resetMintState')

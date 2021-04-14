@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Percent, TokenAmount } from '@uniswap/sdk-cor
 import { JSBI, Pair } from '@uniswap/v2-sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { usePair } from '../../data/Reserves'
+import { usePair } from '../../data/V2'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'

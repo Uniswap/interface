@@ -1,9 +1,11 @@
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
@@ -122,4 +124,8 @@ export function supportedChainId(chainId: number): ChainId | undefined {
     return chainId
   }
   return undefined
+}
+
+export const formattedFeeAmount = (feeAmount: FeeAmount): number => {
+  return feeAmount / 10000
 }

@@ -102,6 +102,23 @@
         "internalType": "bytes32",
         "name": "blockHash",
         "type": "bytes32"
+      },
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "success",
+            "type": "bool"
+          },
+          {
+            "internalType": "bytes",
+            "name": "returnData",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct Multicall2.Result[]",
+        "name": "returnData",
+        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
