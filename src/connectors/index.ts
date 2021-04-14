@@ -17,7 +17,7 @@ export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID 
 export const ETHEREUM_CHAIN_ID = parseInt(unwrapOrThrow('ETHEREUM_CHAIN_ID'))
 const ETHEREUM_NETWORK_URL = unwrapOrThrow('ETHEREUM_NETWORK_URL')
 const BINANCE_NETWORK_URL = unwrapOrThrow('BINANCE_NETWORK_URL')
-const BINANCE_CHAIN_ID = parseInt(unwrapOrThrow('BINANCE_CHAIN_ID'))
+export const BINANCE_CHAIN_ID = parseInt(unwrapOrThrow('BINANCE_CHAIN_ID'))
 
 if (typeof NETWORK_URL === 'undefined') {
   throw new Error(`REACT_APP_NETWORK_URL must be a defined environment variable`)

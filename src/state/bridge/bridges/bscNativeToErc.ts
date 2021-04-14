@@ -13,14 +13,13 @@ import {
   BSC_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS,
   BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS
 } from '../../../constants'
-import { getChainNetworkLibrary, getNetworkLibrary, ETHEREUM_CHAIN_ID } from '../../../connectors'
+import { getChainNetworkLibrary, getNetworkLibrary, BINANCE_CHAIN_ID } from '../../../connectors'
 import { DEFAULT_CONFIRMATIONS_LIMIT } from '../../../constants/bridge'
-import HomeBridgeABI from '../../../constants/abis/bscFuseHomeNativeToErc20.json'
-import ForeignBridgeABI from '../../../constants/abis/foreignBridgeNativeToErc.json'
+import HomeBridgeABI from '../../../constants/abis/homeAMBNativeToErc20.json'
+import ForeignBridgeABI from '../../../constants/abis/foreignAMBNativeToErc20.json'
 
 export default class BscNativeToErcBridge extends TokenBridge {
-  private readonly FOREIGN_BRIDGE_EVENT = 'RelayedMessage(address,uint256,bytes32)'
-  private readonly HOME_BRIDGE_EVENT = 'AffirmationCompleted(address,uint256,bytes32)'
+  private readonly BRIDGE_EVENT = 'TokensBridged(address,uint256,bytes32)'
 
   private get homeBridgeAddress() {
     return BSC_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS
@@ -39,7 +38,7 @@ export default class BscNativeToErcBridge extends TokenBridge {
   }
 
   private get foreignNetworkLibrary() {
-    return getChainNetworkLibrary(ETHEREUM_CHAIN_ID)
+    return getChainNetworkLibrary(BINANCE_CHAIN_ID)
   }
 
   async transferToForeign(): Promise<TransactionResponse | null> {
@@ -75,7 +74,7 @@ export default class BscNativeToErcBridge extends TokenBridge {
     this.dispatch(confirmTokenTransferPending())
 
     await pollEvent(
-      this.FOREIGN_BRIDGE_EVENT,
+      this.BRIDGE_EVENT,
       this.foreignBridgeAddress,
       ForeignBridgeABI,
       this.foreignNetworkLibrary,
@@ -92,7 +91,7 @@ export default class BscNativeToErcBridge extends TokenBridge {
     this.dispatch(confirmTokenTransferPending())
 
     await pollEvent(
-      this.HOME_BRIDGE_EVENT,
+      this.BRIDGE_EVENT,
       this.homeBridgeAddress,
       HomeBridgeABI,
       this.homeNetworkLibrary,
@@ -103,6 +102,12 @@ export default class BscNativeToErcBridge extends TokenBridge {
     )
 
     this.dispatch(confirmTokenTransferSuccess())
+  }
+
+  get transactionSummary(): string {
+    return this.isHome
+      ? 'Your tokens were transferred successfully to Binance please switch to Binance to use them'
+      : 'Your tokens were transferred successfully to Fuse please switch to Fuse to use them'
   }
 
   async executeTransaction() {
