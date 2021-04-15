@@ -1,5 +1,5 @@
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
-import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade, Pair, Price, Currency } from 'dxswap-sdk'
+import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade, Pair, Price, Currency, _10000 } from 'dxswap-sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
@@ -52,16 +52,14 @@ export function calculateProtocolFee(
   amount?: CurrencyAmount,
   chainId?: number
 ): { protocolFee?: Fraction; protocolFeeAmount?: CurrencyAmount } {
-  const protocolFee = pair
-    ? new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)).divide(pair.protocolFeeDenominator)
-    : undefined
+  const protocolFee = pair ? new Percent(pair.swapFee, _10000).divide(pair.protocolFeeDenominator) : undefined
 
   // the amount of the input that accrues to LPs
   const protocolFeeAmount =
     protocolFee && amount && chainId
       ? amount instanceof TokenAmount
-        ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).divide(JSBI.BigInt(10000)).quotient)
-        : CurrencyAmount.nativeCurrency(protocolFee.multiply(amount.raw).divide(JSBI.BigInt(100)).quotient, chainId)
+        ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).divide(_10000).quotient)
+        : CurrencyAmount.nativeCurrency(protocolFee.multiply(amount.raw).divide(_10000).quotient, chainId)
       : undefined
 
   return { protocolFee, protocolFeeAmount }

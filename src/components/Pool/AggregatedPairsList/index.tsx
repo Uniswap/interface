@@ -52,7 +52,7 @@ export default function AggregatedPairsList({
       <Box mb="32px">
         <ListFilter disabled={loading} filter={filter} onFilterChange={onFilterChange} />
       </Box>
-      <Box mb="8px" minHeight={['230px', '460px']}>
+      <Box mb="8px" height={['230px', '460px']}>
         {loading ? (
           <LoadingList doubleCircle />
         ) : itemsPage.length > 0 ? (
