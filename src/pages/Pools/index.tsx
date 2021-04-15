@@ -131,6 +131,7 @@ function Title({ onCurrencySelection }: TitleProps) {
         isOpen={openTokenModal}
         onDismiss={handleModalClose}
         onCurrencySelect={onCurrencySelection}
+        showNativeCurrency={false}
       />
     </>
   )

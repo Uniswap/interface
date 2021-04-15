@@ -198,6 +198,7 @@ export default function PairsByToken0({
         isOpen={openTokenModal}
         onDismiss={handleModalClose}
         onCurrencySelect={handleCurrencySelect}
+        showNativeCurrency={false}
       />
     </>
   )
