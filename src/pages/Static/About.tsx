@@ -1,12 +1,12 @@
 import React from 'react'
 import style from './about.module.scss'
 
-import { Text } from 'rebass'
+import { Box, Image, Text } from 'rebass'
 import { Link } from 'react-router-dom'
 
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import LocalLoader from 'components/LocalLoader'
-import { ExternalLink } from 'theme'
+import { colors, ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
 import { formattedNum } from 'utils'
 import { useActiveWeb3React } from 'hooks'
@@ -27,54 +27,58 @@ export default function About() {
 
   return (
     <div className={style.wrapper}>
-      <style>@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@900&display=swap');</style>
       <div className={style.image1}></div>
       <div className={style.image2}></div>
       <div className={style.image3} style={{ bottom: `0` }}></div>
-      <Text fontSize={58} mt={150}>
-        World's First
-      </Text>
-      <div>
-        <Text fontSize={58} color={'#1183b7'} display={'inline-block'}>
-          Dynamic&nbsp;
-        </Text>
-        <Text fontSize={58} color={'#08a1e7'} display={'inline-block'}>
-          Market&nbsp;
-        </Text>
-        <Text fontSize={58} color={'#78d5ff'} display={'inline-block'}>
-          Maker&nbsp;
-        </Text>
-        <Text fontSize={58} color={'#c9d2d7'} display={'inline-block'}>
-          Protocol&nbsp;
-        </Text>
-      </div>
-
-      <Text mt={10} fontSize={21} color={'#c9d2d7'}>
-        Automated Market Making with greater flexibility and extremely high capital efficiency
-      </Text>
-
-      <div className={style.section_number}>
+      <Text fontSize={[24, 58]} mt={[35, 150]}>
+        <Text fontWeight={300}>World's First</Text>
         <div>
-          <Text fontSize={42} fontWeight={900}>
-            {formattedNum(globalData.totalVolumeUSD, true)}
+          <Text color={'#1183b7'} display={'inline-block'}>
+            Dynamic&nbsp;
           </Text>
-          <Text fontSize={14}>Total Trading Volume</Text>
+          <Text color={'#08a1e7'} display={'inline-block'}>
+            Market&nbsp;
+          </Text>
+          <Text color={'#78d5ff'} display={'inline-block'}>
+            Maker&nbsp;
+          </Text>
+          <Text color={'#c9d2d7'} display={'inline-block'} fontWeight={300}>
+            Protocol&nbsp;
+          </Text>
         </div>
-        <div style={{ width: '0px', border: '1px solid #303e46' }}></div>
-        <div>
-          <Text fontSize={42} fontWeight={900}>
-            {formattedNum(globalData.totalLiquidityUSD, true)}
-          </Text>
-          <Text fontSize={14}>Total Value Locked</Text>
+      </Text>
+      <Text px={4} mt={10} fontSize={[16, 21]} color={'#c9d2d7'}>
+        Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
+      </Text>
+
+      <div style={{ padding: '24px' }}>
+        <div className={style.section_number}>
+          <div>
+            <Text fontSize={[24, 42]} fontWeight={[600, 700]} color="#FFFFFF">
+              {formattedNum(globalData.totalVolumeUSD, true)}
+            </Text>
+            <Text fontSize={14} mt={2}>
+              Total Trading Volume
+            </Text>
+          </div>
+          <div style={{ width: '0px', border: '1px solid #303e46' }}></div>
+          <div>
+            <Text fontSize={[24, 42]} fontWeight={[600, 700]} color="#FFFFFF" mt={[4, 0]}>
+              {formattedNum(globalData.totalLiquidityUSD, true)}
+            </Text>
+            <Text fontSize={14} mt={2}>
+              Total Value Locked
+            </Text>
+          </div>
         </div>
       </div>
 
       <div className={style.panel0}>
-        <ButtonPrimary padding="12px 28px" as={Link} to={poolsMenuLink}>
+        <ButtonPrimary padding="12px 10px" as={Link} to={poolsMenuLink}>
           Add Liquidity
         </ButtonPrimary>
         <ButtonOutlined
-          padding="12px 28px"
+          padding="12px 10px"
           as={ExternalLink}
           href={`https://docs.dmm.exchange`}
           target="_blank"
@@ -83,7 +87,7 @@ export default function About() {
           Documentation
         </ButtonOutlined>
       </div>
-      <Text mt={100} color={'#f4f4f4'} fontSize={40} style={{ position: 'relative' }}>
+      <Text mt={[70, 100]} color={'#f4f4f4'} fontSize={[24, 40]}>
         <span>Programmable Pricing Curve</span>
       </Text>
       <div className={style.section_curve_details}>
@@ -96,7 +100,7 @@ export default function About() {
           <b>much higher capital efficiency</b> for providers and <b>better slippage</b> for users compared to AMMs.
         </div>
       </div>
-      <Text fontSize={24} fontWeight={600}>
+      <Text fontSize={[16, 24]} fontWeight={600} px={2}>
         DMM can be up to 100x more capital efficient than typical AMMs
       </Text>
       <div className={style.section_amp}>
@@ -120,12 +124,12 @@ export default function About() {
         </div>
       </div>
       <i>
-        <Text fontSize={14}>
-          <b>*Slippage Incurred</b>: Assuming liquidity of $1M for each token and a $100K trade
+        <Text fontSize={[12, 14]} px={2} color="#859aa5">
+          *Slippage Incurred: Assuming liquidity of $1M for each token and a $100K trade
         </Text>
       </i>
 
-      <Text fontSize={36} fontWeight={500} mt={100} mb={56} color={'#f4f4f4'} style={{ position: 'relative' }}>
+      <Text fontSize={[24, 36]} fontWeight={500} mt={100} mb={56} color={'#f4f4f4'} style={{ position: 'relative' }}>
         <span>Dynamic Fees</span>
       </Text>
 
@@ -145,39 +149,36 @@ export default function About() {
         <div className={style.right}>
           <div className={style.item}>
             <div className={[style.box, style.box_1].join(' ')}></div>
-            <Text fontSize={14} mt={25}>
+            <Text fontSize={[12, 14]} mt={[10, 25]}>
               Reduce the impact of IL
             </Text>
           </div>
           <div className={style.item}>
             <div className={[style.box, style.box_2].join(' ')}></div>
-            <Text fontSize={14} mt={25}>
+            <Text fontSize={[12, 14]} mt={[10, 25]}>
               Increase LP Profit
             </Text>
           </div>
           <div className={style.item}>
             <div className={[style.box, style.box_3].join(' ')}></div>
-            <Text fontSize={14} mt={25}>
+            <Text fontSize={[12, 14]} mt={[10, 25]}>
               Encourage trading
             </Text>
           </div>
         </div>
       </div>
 
-      <Text fontSize={36} color={'#f4f4f4'} mt={135} style={{ position: 'relative' }}>
+      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[50, 135]} px={2}>
         <span>Permissionless and Frictionless Liquidity for DeFi</span>
       </Text>
-      <div style={{ marginTop: '70px', position: 'relative' }}>
-        <div className={style.wrapper5}>
+      <div style={{ padding: '0 24px' }}>
+        <Box width={['100%', 780]} mx="auto">
           <img src={require('../../assets/svg/permissionless_frictionless.svg')} />
-        </div>
-        <div
-          className={style.wrapper5}
-          style={{ maxWidth: '780px', fontSize: '20px', color: '#c9d2d7', marginTop: '36px' }}
-        >
-          Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
-          aggregators, end users) can source liquidity from the DMM.
-        </div>
+          <Text mt={[16, 20]} color="#c9d2d7" lineHeight="26px">
+            Anyone can provide liquidity by depositing token inventory into various pools and any taker (e.g. Dapps,
+            aggregators, end users) can source liquidity from the DMM.
+          </Text>
+        </Box>
       </div>
 
       <ButtonOutlined
@@ -190,19 +191,10 @@ export default function About() {
         Explore pools
       </ButtonOutlined>
 
-      <Text
-        fontSize={36}
-        color={'#f4f4f4'}
-        mt={200}
-        mb={45}
-        width={'100%'}
-        maxWidth={'700px'}
-        marginLeft={'auto'}
-        marginRight={'auto'}
-      >
+      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} maxWidth={'700px'} mx="auto">
         Access DMM Liquidity for your Blockchain Platform
       </Text>
-      <Text fontSize={20} style={{ width: '100%', maxWidth: '700px', margin: 'auto' }}>
+      <Text fontSize={[16, 20]} maxWidth="700px" mx="auto">
         All the documentation and tools necessary for developers to connect their Dapps to frictionless liquidity to
         perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing.
       </Text>
@@ -211,7 +203,7 @@ export default function About() {
           padding="12px 28px"
           as={ExternalLink}
           href={process.env.REACT_APP_DMM_ANALYTICS_URL || `https://dev-dmm-info.knstats.com/`}
-          style={{ width: 'auto', marginTop: '5px', fontSize: '16px' }}
+          style={{ width: 'auto', fontSize: '16px' }}
         >
           Analytics
         </ButtonOutlined>
@@ -219,7 +211,7 @@ export default function About() {
           padding="12px 28px"
           as={ExternalLink}
           href={`https://github.com/dynamic-amm`}
-          style={{ width: 'auto', marginTop: '5px', fontSize: '16px' }}
+          style={{ width: 'auto', fontSize: '16px' }}
         >
           Github
         </ButtonOutlined>
@@ -227,51 +219,50 @@ export default function About() {
           padding="12px 28px"
           as={ExternalLink}
           href={`https://files.kyber.network/DMM-Feb21.pdf`}
-          style={{ width: 'auto', marginTop: '5px', fontSize: '16px' }}
+          style={{ width: 'auto', fontSize: '16px' }}
         >
-          Lightpaper
+          Litepaper
         </ButtonOutlined>
         <ButtonOutlined
           padding="12px 28px"
           as={ExternalLink}
           href={`https://docs.dmm.exchange`}
-          style={{ width: 'auto', marginTop: '5px', fontSize: '16px' }}
+          style={{ width: 'auto', fontSize: '16px' }}
         >
           Developer Support
         </ButtonOutlined>
       </div>
 
-      <Text
-        fontSize={36}
-        color={'#f4f4f4'}
-        mt={200}
-        mb={45}
-        width={'100%'}
-        maxWidth={'700px'}
-        marginLeft={'auto'}
-        marginRight={'auto'}
-      >
+      <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} px={2}>
         Committed to Security
       </Text>
       <div className={style.security}>
         <div>
-          <Text fontSize={18}>Code Audited</Text>
+          <Text fontSize={[12, 18]} fontWeight={500}>
+            Code Audited
+          </Text>
           <img src={require('../../assets/svg/about_icon_insurance.svg')} />
         </div>
         <div>
-          <Text fontSize={18}>On-chain and Open Source</Text>
+          <Text fontSize={[12, 18]} fontWeight={500}>
+            On-chain and Open Source
+          </Text>
           <img src={require('../../assets/svg/about_icon_github.jpg')} />
         </div>
         <div>
-          <Text fontSize={18}>Bug Bounty</Text>
+          <Text fontSize={[12, 18]} fontWeight={500}>
+            Bug Bounty
+          </Text>
           <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} />
         </div>
       </div>
       <div className={style.powered}>
-        <Text fontSize={18} display={'inline'}>
-          Powered by{' '}
-        </Text>
-        <img src={require('../../assets/svg/about_icon_kyber.svg')} />
+        <div>
+          <Text fontSize={[12, 18]} fontWeight={500} mb={4}>
+            Powered by
+          </Text>
+          <img src={require('../../assets/svg/about_icon_kyber.svg')} />
+        </div>
         <img src={require('../../assets/svg/about_icon_ethereum.png')} />
       </div>
       <div className={style.footer}>
@@ -307,15 +298,17 @@ export default function About() {
           </div>
           <div className={style.right}>
             <a>
-              <img src={require('../../assets/svg/about_icon_twitter.svg')} />
+              <Image src={require('../../assets/svg/about_icon_twitter.svg')} />
             </a>
             <a>
-              <img src={require('../../assets/svg/about_icon_discord.svg')} />
+              <Image src={require('../../assets/svg/about_icon_discord.svg')} />
             </a>
             <a>
-              <img src={require('../../assets/svg/about_icon_medium.svg')} />
+              <Image src={require('../../assets/svg/about_icon_medium.svg')} />
             </a>
-            <Text fontSize={12}>(c) dmm.exchange</Text>
+            <Text fontSize={12} ml={['auto', 0]}>
+              (c) dmm.exchange
+            </Text>
           </div>
         </div>
       </div>
