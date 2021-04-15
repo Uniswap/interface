@@ -10,6 +10,7 @@ import { Card, Divider } from '../../../styleds'
 import border8pxRadius from '../../../../../assets/images/border-8px-radius.png'
 import DoubleCurrencyLogo from '../../../../DoubleLogo'
 import { tryParseAmount } from '../../../../../state/swap/hooks'
+import { usePrevious } from 'react-use'
 
 const RelativeContainer = styled.div<{ disabled?: boolean }>`
   position: relative;
@@ -73,6 +74,7 @@ export default function RewardAmount({
   onUnlimitedPoolChange,
   onStakingCapChange
 }: RewardAmountProps) {
+  const previousReward = usePrevious(reward)
   const [amount, setAmount] = useState('')
   const [stakingCapString, setStakingCapString] = useState('')
 
@@ -82,6 +84,13 @@ export default function RewardAmount({
       onStakingCapChange(null)
     }
   }, [onStakingCapChange, stakablePair, unlimitedPool])
+
+  useEffect(() => {
+    if (reward && reward.token && (!previousReward || !previousReward.token.equals(reward.token))) {
+      const parsedAmount = tryParseAmount(amount, reward.token) as TokenAmount | undefined
+      onRewardAmountChange(parsedAmount || new TokenAmount(reward.token, '0'))
+    }
+  }, [onRewardAmountChange, reward, amount, previousReward])
 
   const handleLocalUserInput = useCallback(
     rawValue => {
