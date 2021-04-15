@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;500;600;700&display=swap');
+
 $mobile-width: 480px;
 $tablet-width: 768px;
 $desktop-width: 1024px;
@@ -19,8 +21,10 @@ $desktop-width: 1024px;
     @content;
   }
 }
+img {
+  max-width: 100%;
+}
 .wrapper {
-  padding: 0px;
   width: 100%;
   height: 100%;
   margin-top: -32px;
@@ -29,6 +33,16 @@ $desktop-width: 1024px;
   position: relative;
   background-color: #222c31;
   z-index: -2;
+}
+
+.title {
+  font-size: 24px;
+  margin-top: 35px;
+  padding: 0 16px;
+  @include desktop {
+    font-size: 58px;
+    margin-top: 150px;
+  }
 }
 
 .section_number {
@@ -41,15 +55,21 @@ $desktop-width: 1024px;
   padding: 34px 56px;
   display: flex;
   justify-content: space-around;
+  @include mobile {
+    flex-direction: column;
+  }
 }
 
 .section_curve_details {
-  width: 100%;
   max-width: 680px;
-  margin: 45px auto 75px auto;
+  margin: 45px auto 75px;
   padding: 0 20px;
   color: #c9d2d7;
   font-size: 20px;
+  @include mobile {
+    font-size: 16px;
+    margin-top: 20px;
+  }
 }
 
 .section_amp {
@@ -62,22 +82,40 @@ $desktop-width: 1024px;
       font-size: 18px;
     }
     &:nth-child(2) {
+      margin-bottom: 10px;
       font-size: 12px;
     }
     &:nth-child(3) {
       font-size: 42px;
       font-weight: 600;
+      margin-top: auto;
     }
     &:nth-child(4) {
       font-size: 14px;
     }
+    @include mobile {
+      &:nth-child(1) {
+        font-size: 12px;
+      }
+      &:nth-child(2) {
+        margin-bottom: 5px;
+        font-size: 10px;
+      }
+      &:nth-child(3) {
+        font-size: 18px;
+      }
+      &:nth-child(4) {
+        font-size: 10px;
+      }
+    }
   }
   .box_1 {
     text-align: center;
-
     width: 220px;
     border-radius: 20px;
     padding: 25px;
+    display: flex;
+    flex-direction: column;
     &:nth-child(1) {
       background-color: #105d81;
     }
@@ -87,16 +125,22 @@ $desktop-width: 1024px;
     &:nth-child(3) {
       background-color: #08a1e7;
     }
+    @include mobile {
+      width: 100px;
+      padding: 10px;
+    }
   }
 }
 
 .section_fee {
-  width: 100%;
   max-width: 780px;
   margin: 0 auto;
   padding: 0 10px;
   color: #c9d2d7;
   font-size: 20px;
+  @include mobile {
+    font-size: 16px;
+  }
 }
 
 .break {
@@ -104,20 +148,30 @@ $desktop-width: 1024px;
   height: 0;
 }
 .section_graph {
-  width: 100%;
   max-width: 780px;
   margin: 0 auto;
   display: flex;
   margin-top: 50px;
+  @include mobile {
+    flex-direction: column;
+    padding: 0 24px;
+  }
   .left {
     border-radius: 20px;
     flex: 1;
     background-image: url('../../assets/svg/about_graph.svg');
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: 100%;
+    @include mobile {
+      height: 300px;
+      flex: auto;
+      margin-bottom: 20px;
+    }
   }
   .right {
-    flex: 0 200px;
+    @include mobile {
+      display: flex;
+    }
     .item {
       padding: 25px;
       background-color: rgba(29, 39, 43, 0.6);
@@ -129,6 +183,10 @@ $desktop-width: 1024px;
         margin: 0 auto;
         background-repeat: no-repeat;
         background-size: contain;
+        @include mobile {
+          width: 40px;
+          height: 37px;
+        }
         &_1 {
           background-image: url('../../assets/svg/about_icon_4.svg');
         }
@@ -141,14 +199,6 @@ $desktop-width: 1024px;
       }
     }
   }
-}
-
-.wrapper5 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: auto auto;
 }
 
 .icon {
@@ -234,7 +284,8 @@ $desktop-width: 1024px;
   margin: 50px auto auto auto;
   a {
     width: 200px;
-    margin-left: 20px;
+    max-width: 100%;
+    margin: 0 10px;
   }
 }
 
@@ -246,9 +297,13 @@ $desktop-width: 1024px;
   margin-top: 50px;
   margin: 50px auto auto auto;
   flex-wrap: wrap;
-  > {
-    max-width: 200px;
-    margin-left: 20px;
+  padding: 0 15px;
+  @include mobile {
+    flex-direction: column;
+    > a {
+      margin-top: 10px;
+      display: block;
+    }
   }
 }
 
@@ -262,13 +317,22 @@ $desktop-width: 1024px;
   flex-wrap: wrap;
   div {
     text-align: center;
-
+    @include mobile {
+      flex-basis: 50%;
+    }
     img {
       display: inline;
       margin: 32px 10px 0 10px;
       border-radius: 10px;
       height: 80px;
       max-width: 160px;
+      @include mobile {
+        flex-basis: 50%;
+        max-height: 55px;
+        max-width: 97px;
+        margin-top: 20px;
+        margin-bottom: 40px;
+      }
     }
   }
 }
@@ -278,22 +342,27 @@ $desktop-width: 1024px;
   width: 100%;
   max-width: 500px;
   margin: 90px auto;
-  flex-wrap: wrap;
-  div {
-    margin: auto;
+  align-items: flex-end;
+  @include mobile() {
+    margin: 40px auto;
   }
-  img {
+  > div {
+    flex-basis: 50%;
+  }
+  > img {
+    flex-basis: 50%;
     height: 60px;
-    margin-right: 20px;
+    margin: 0 20px;
+    vertical-align: middle;
   }
 }
 .footer {
   background: #0c1012;
-  height: 85px;
   display: flex;
-  padding: 20px;
+  padding: 10px 20px;
   @include desktop {
     margin-bottom: -5rem;
+    height: 85px;
   }
   .content {
     width: 100%;
@@ -301,20 +370,30 @@ $desktop-width: 1024px;
     display: flex;
     justify-content: space-between;
     margin: auto;
-
     flex-wrap: wrap;
     .left {
       padding-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      @include mobile {
+        font-size: 12px;
+      }
       div {
         cursor: pointer;
         display: inline;
         margin-right: 20px;
+        margin-top: 10px;
         a {
           color: #859aa5;
         }
       }
     }
     .right {
+      @include mobile {
+        display: flex;
+        margin-top: 20px;
+        justify-content: space-between;
+      }
       a {
         cursor: pointer;
         img {

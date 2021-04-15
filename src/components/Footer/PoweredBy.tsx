@@ -4,8 +4,9 @@ import PoweredByIconLight from 'components/Icons/PoweredByIconLight'
 import PoweredByIconDark from 'components/Icons/PoweredByIconDark'
 import { ExternalLink } from '../../theme'
 import { useDarkModeManager } from 'state/user/hooks'
+import { useRouteMatch } from 'react-router'
 
-const StyledPoweredBy = styled.div`
+const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
   position: fixed;
   display: flex;
   right: 0;
@@ -21,14 +22,21 @@ const StyledPoweredBy = styled.div`
     top: auto;
     bottom: 4.5rem;
   `}
+
+  ${({ isAboutpage }) => `
+    ${isAboutpage ? `display: none;` : ``}
+  `}
 `
 
 export default function PoweredBy() {
   const [darkMode] = useDarkModeManager()
+  let aboutPage = useRouteMatch('/about')
 
   return (
     <ExternalLink href="https://kyber.network/">
-      <StyledPoweredBy>{darkMode ? <PoweredByIconDark /> : <PoweredByIconLight />}</StyledPoweredBy>
+      <StyledPoweredBy isAboutpage={aboutPage?.isExact}>
+        {darkMode ? <PoweredByIconDark /> : <PoweredByIconLight />}
+      </StyledPoweredBy>
     </ExternalLink>
   )
 }

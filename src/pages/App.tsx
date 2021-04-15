@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloProvider } from '@apollo/client'
 
@@ -45,7 +45,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{ isAboutpage?: boolean }>`
   display: flex;
   position: relative;
   flex-direction: column;
@@ -57,20 +57,19 @@ const BodyWrapper = styled.div`
   overflow-x: hidden;
   z-index: 10;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 16px;
+  ${({ theme, isAboutpage }) => theme.mediaWidth.upToSmall`
+    ${isAboutpage ? `` : `padding: 16px;`}
     padding-top: 2rem;
   `};
-
   z-index: 1;
 `
-
 const Marginer = styled.div`
   margin-top: 5rem;
 `
 
 export default function App() {
   const { account } = useActiveWeb3React()
+  let aboutPage = useRouteMatch("/about");
 
   return (
     <>
@@ -83,7 +82,7 @@ export default function App() {
               <HeaderWrapper>
                 <Header />
               </HeaderWrapper>
-              <BodyWrapper>
+              <BodyWrapper isAboutpage={aboutPage?.isExact}>
                 <Popups />
                 <Utilities />
                 <PoweredBy />
