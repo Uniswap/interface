@@ -32,7 +32,10 @@ export default function PoolSummary({ liquidityPair, startTime, endTime, timeloc
           />
           <DataRow name="ENDS" value={endTime ? DateTime.fromJSDate(endTime).toFormat('dd-MM-yyyy hh:mm') : '-'} />
           <DataRow name="TIMELOCK" value={timelocked ? 'YES' : 'NO'} />
-          <DataRow name="STAKING CAP" value={stakingCap ? stakingCap.toSignificant(4) : '-'} />
+          <DataRow
+            name="STAKING CAP"
+            value={stakingCap && stakingCap.greaterThan('0') ? stakingCap.toSignificant(4) : '-'}
+          />
         </AutoColumn>
       </AutoColumn>
     </Flex>

@@ -88,9 +88,7 @@ export default function RewardAmount({
       if (!reward || !reward.token) return
       setAmount(rawValue)
       const parsedAmount = tryParseAmount(rawValue, reward.token) as TokenAmount | undefined
-      if (parsedAmount) {
-        onRewardAmountChange(parsedAmount)
-      }
+      onRewardAmountChange(parsedAmount || new TokenAmount(reward.token, '0'))
     },
     [onRewardAmountChange, reward]
   )
@@ -100,9 +98,7 @@ export default function RewardAmount({
       if (!stakablePair || !stakablePair.liquidityToken) return
       setStakingCapString(rawValue)
       const parsedAmount = tryParseAmount(rawValue, stakablePair.liquidityToken) as TokenAmount | undefined
-      if (parsedAmount) {
-        onStakingCapChange(parsedAmount)
-      }
+      onStakingCapChange(parsedAmount || new TokenAmount(stakablePair.liquidityToken, '0'))
     },
     [onStakingCapChange, stakablePair]
   )
