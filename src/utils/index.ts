@@ -18,7 +18,16 @@ import {
   BINANCE_MAINNET_CHAINID,
   BSC_FUSE_TOKEN_ADDRESS
 } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER as FUSE } from '@fuseio/fuse-swap-sdk'
+import {
+  ChainId,
+  JSBI,
+  Percent,
+  Token,
+  CurrencyAmount,
+  Currency,
+  ETHER as FUSE,
+  TokenAmount
+} from '@fuseio/fuse-swap-sdk'
 import { TokenAddressMap, WrappedTokenInfo } from '../state/lists/hooks'
 import ForeignMultiAMBErc20ToErc677ABI from '../constants/abis/foreignMultiAMBErc20ToErc677.json'
 import HomeMultiAMBErc20ToErc677ABI from '../constants/abis/homeMultiAMBErc20ToErc677.json'
@@ -26,7 +35,7 @@ import AMBErc677To677ABI from '../constants/abis/ambErc677ToErc677.json'
 import Erc677TokenABI from '../constants/abis/erc677.json'
 import HomeBridgeNativeToErc from '../constants/abis/homeBridgeNativeToErc.json'
 import ForeignBriddgeNativeToErc from '../constants/abis/foreignBridgeNativeToErc.json'
-import { formatUnits, Interface, id } from 'ethers/lib/utils'
+import { formatUnits, Interface, id, formatEther } from 'ethers/lib/utils'
 import { BridgeDirection, BridgeType } from '../state/bridge/hooks'
 import BinanceBridge from '../state/bridge/bridges/binance'
 import NativeToErcBridge from '../state/bridge/bridges/nativeToErc'
@@ -39,6 +48,8 @@ import QA_BRIDGE_LIST from '../constants/qa/tokenlist.json'
 import BETA_BRIDGE_LIST from '../constants/qa/beta-tokenlist.json'
 import { TokenList } from '@fuseio/token-lists'
 import BscNativeToErcBridge from '../state/bridge/bridges/bscNativeToErc'
+import FeeManagerAMBNativetoErc20 from '../constants/abis/feeManagerAMBNativeToErc20.json'
+import { HOME_TO_FOREIGN_FEE_TYPE_HASH } from '../constants/bridge'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -206,6 +217,14 @@ export function getForeignMultiAMBErc20ToErc677Contract(
 
 export function getHomeBridgeNativeToErcContract(address: string, library: Web3Provider, account?: string): Contract {
   return getContract(address, HomeBridgeNativeToErc, library, account)
+}
+
+export function getFeeManagerAMBNativeToErc20Contract(
+  address: string,
+  library: Web3Provider,
+  account?: string
+): Contract {
+  return getContract(address, FeeManagerAMBNativetoErc20, library, account)
 }
 
 export function getForeignBridgeNativeToErcContract(
@@ -438,4 +457,45 @@ export function isTokenOnTokenList(tokenList: any, currency: Currency | undefine
 
   const token = currency as Token
   return Boolean(tokenList[token?.address])
+}
+
+export async function getNativeBridgeFee(bridgeAddress: string, library: Web3Provider, account: string) {
+  const contract = getFeeManagerAMBNativeToErc20Contract(bridgeAddress, library, account)
+  const fee = await contract.fee()
+  return formatEther(fee)
+}
+
+export async function getMultiBridgeFee(
+  tokenAddress: string,
+  bridgeAddress: string,
+  library: Web3Provider,
+  account: string
+) {
+  const contract = getHomeMultiAMBErc20ToErc677Contract(bridgeAddress, library, account)
+  const fee = await contract.getFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, tokenAddress)
+  return formatEther(fee)
+}
+
+export async function calculateMultiBridgeFee(
+  amount: CurrencyAmount,
+  bridgeAddress: string,
+  library: Web3Provider,
+  account: string
+) {
+  if (!(amount instanceof TokenAmount)) return
+
+  const contract = getHomeMultiAMBErc20ToErc677Contract(bridgeAddress, library, account)
+  const fee = await contract.calculateFee(HOME_TO_FOREIGN_FEE_TYPE_HASH, amount.token.address, amount.raw.toString())
+  return formatUnits(fee, amount.token.decimals)
+}
+
+export async function calculateNativeBridgeFee(
+  amount: CurrencyAmount,
+  bridgeAddress: string,
+  library: Web3Provider,
+  account: string
+) {
+  const contract = getFeeManagerAMBNativeToErc20Contract(bridgeAddress, library, account)
+  const fee = await contract.calculateFee(amount.raw.toString())
+  return formatEther(fee)
 }
