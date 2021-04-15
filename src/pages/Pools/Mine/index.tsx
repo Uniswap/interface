@@ -72,7 +72,7 @@ export default function MyPairs() {
               </Box>
               <Box>
                 <TYPE.mediumHeader fontWeight="400" fontSize="26px" lineHeight="32px">
-                  MINE
+                  MY PAIRS
                 </TYPE.mediumHeader>
               </Box>
             </Flex>
