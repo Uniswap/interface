@@ -186,6 +186,8 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
       : [new TokenAmount(pair.token0, '0'), new TokenAmount(pair.token1, '0')]
     : [undefined, undefined]
 
+  const showRemoveButton = !!userPoolBalance?.greaterThan('0')
+
   return (
     <StyledPositionCard border={border}>
       <AutoColumn gap="12px">
@@ -261,19 +263,21 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
               as={Link}
               to={currency0 && currency1 ? `/add/${currencyId(currency0)}/${currencyId(currency1)}` : ''}
               style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-              width="48%"
+              width={showRemoveButton ? '48%' : '100%'}
             >
               ADD
             </ButtonDark>
-            <ButtonDark
-              padding="8px"
-              as={Link}
-              width="48%"
-              to={currency0 && currency1 ? `/remove/${currencyId(currency0)}/${currencyId(currency1)}` : ''}
-              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-            >
-              REMOVE
-            </ButtonDark>
+            {showRemoveButton && (
+              <ButtonDark
+                padding="8px"
+                as={Link}
+                width="48%"
+                to={currency0 && currency1 ? `/remove/${currencyId(currency0)}/${currencyId(currency1)}` : ''}
+                style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+              >
+                REMOVE
+              </ButtonDark>
+            )}
           </RowBetween>
         </AutoColumn>
       </AutoColumn>
