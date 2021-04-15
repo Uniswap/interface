@@ -56,6 +56,7 @@ export function LiquidityMiningCampaignModal({
   const [disabledStaking, setDisabledStaking] = useState(false)
   const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
   const [disabledClaim, setDisabledClaim] = useState(false)
+  const [disabledExit, setDisabledExit] = useState(false)
   const [normalizedStakableTokenBalance, setNormalizedStakableTokenBalance] = useState<TokenAmount>(
     new TokenAmount(campaign.targetedPair.liquidityToken, '0')
   )
@@ -80,7 +81,7 @@ export function LiquidityMiningCampaignModal({
 
   useEffect(() => {
     setDisabledWithdrawing(
-      !JSBI.greaterThanOrEqual(parseBigintIsh(campaign.startsAt), JSBI.BigInt(Math.floor(Date.now() / 1000))) ||
+      !JSBI.greaterThanOrEqual(JSBI.BigInt(Math.floor(Date.now() / 1000)), parseBigintIsh(campaign.startsAt)) ||
         !callbacks ||
         !stakedTokenAmount ||
         stakedTokenAmount.equalTo('0')
@@ -89,9 +90,15 @@ export function LiquidityMiningCampaignModal({
 
   useEffect(() => {
     setDisabledClaim(
-      !callbacks || !campaign.currentlyActive || !claimableRewardAmounts.find(amount => amount.greaterThan('0'))
+      !callbacks ||
+        !JSBI.greaterThanOrEqual(JSBI.BigInt(Math.floor(Date.now() / 1000)), parseBigintIsh(campaign.startsAt)) ||
+        !claimableRewardAmounts.find(amount => amount.greaterThan('0'))
     )
-  }, [callbacks, campaign.currentlyActive, claimableRewardAmounts, stakableTokenBalance, stakedTokenAmount])
+  }, [callbacks, campaign.startsAt, claimableRewardAmounts, stakableTokenBalance, stakedTokenAmount])
+
+  useEffect(() => {
+    setDisabledExit(disabledClaim || !stakedTokenAmount || stakedTokenAmount.equalTo('0'))
+  }, [disabledClaim, stakedTokenAmount])
 
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
@@ -290,7 +297,7 @@ export function LiquidityMiningCampaignModal({
                     width="100%"
                     marginRight="4px"
                     onClick={handleExitRequest}
-                    disabled={disabledClaim}
+                    disabled={disabledExit}
                   >
                     Claim & withdraw
                   </ButtonDark>
