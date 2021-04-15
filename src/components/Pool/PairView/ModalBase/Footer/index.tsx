@@ -27,13 +27,16 @@ export default function ConfirmStakingModalFooter({
       {showApprove && (
         <Box width="50%" pr="6px">
           <ButtonPrimary onClick={onApprove} disabled={approvalState === ApprovalState.APPROVED}>
-            {approvalState === ApprovalState.PENDING ? (
+            {approvalState === ApprovalState.PENDING && (
               <Dots>
                 Approving {stakablePair?.token0.symbol}/{stakablePair?.token1.symbol}
               </Dots>
-            ) : (
-              `Approve ${stakablePair?.token0.symbol}/${stakablePair?.token1.symbol}`
             )}
+            {approvalState === ApprovalState.APPROVED &&
+              `${stakablePair?.token0.symbol}/${stakablePair?.token1.symbol} APPROVED`}
+            {approvalState !== ApprovalState.PENDING &&
+              approvalState !== ApprovalState.APPROVED &&
+              `Approve ${stakablePair?.token0.symbol}/${stakablePair?.token1.symbol}`}
           </ButtonPrimary>
         </Box>
       )}
