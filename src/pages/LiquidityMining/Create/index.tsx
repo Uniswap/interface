@@ -65,6 +65,19 @@ export default function CreateLiquidityMining() {
     setShowConfirmationModal(true)
   }, [createLiquidityMiningCallback])
 
+  const handleStartTimeChange = useCallback((newStartTime: Date) => {
+    if (Date.now() > newStartTime.getTime()) return // date in the past, invalid
+    setStartTime(newStartTime)
+  }, [])
+
+  const handleEndTimeChange = useCallback(
+    (newEndTime: Date) => {
+      if (startTime ? startTime.getTime() > newEndTime.getTime() : Date.now() > newEndTime.getTime()) return // date in the past, invalid
+      setEndTime(newEndTime)
+    },
+    [startTime]
+  )
+
   const handleCreateConfirmation = useCallback(() => {
     if (!createLiquidityMiningCallback) return
     setAttemptingTransaction(true)
@@ -136,8 +149,8 @@ export default function CreateLiquidityMining() {
             startTime={startTime}
             endTime={endTime}
             timelocked={timelocked}
-            onStartTimeChange={setStartTime}
-            onEndTimeChange={setEndTime}
+            onStartTimeChange={handleStartTimeChange}
+            onEndTimeChange={handleEndTimeChange}
             onTimelockedChange={handleTimelockedChange}
           />
         </Step>
