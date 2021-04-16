@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Send, Info, MessageCircle } from 'react-feather'
+import { BookOpen, Code, Send, Info, MessageCircle, PieChart } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -135,10 +135,10 @@ export default function Menu() {
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          {/* <MenuItem id="link" href="https://info.ubeswap.org/">
+          <MenuItem id="link" href="https://info.ubeswap.org/">
             <PieChart size={14} />
             Analytics
-          </MenuItem> */}
+          </MenuItem>
         </MenuFlyout>
       )}
     </StyledMenu>

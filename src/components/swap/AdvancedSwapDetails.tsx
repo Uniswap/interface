@@ -1,8 +1,8 @@
 import { Trade } from '@ubeswap/sdk'
 import React, { useContext } from 'react'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween } from '../Row'
@@ -22,6 +22,16 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 export interface AdvancedSwapDetailsProps {
   trade?: Trade
 }
+
+const InfoLink = styled(ExternalLink)`
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.bg3};
+  padding: 6px 6px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.text1};
+`
 
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
@@ -48,7 +58,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
               </RowBetween>
             </>
           )}
-          {/* {!showRoute && (
+          {!showRoute && (
             <AutoColumn style={{ padding: '12px 16px 0 16px' }}>
               <InfoLink
                 href={'https://info.ubeswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}
@@ -57,7 +67,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
                 View pair analytics ↗
               </InfoLink>
             </AutoColumn>
-          )} */}
+          )}
         </>
       )}
     </AutoColumn>

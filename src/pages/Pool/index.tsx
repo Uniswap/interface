@@ -170,14 +170,14 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 ? (
               <>
-                {/* <ButtonSecondary>
+                <ButtonSecondary>
                   <RowBetween>
                     <ExternalLink href={'https://info.ubeswap.org/account/' + account}>
                       Account analytics and accrued fees
                     </ExternalLink>
                     <span> ↗</span>
                   </RowBetween>
-                </ButtonSecondary> */}
+                </ButtonSecondary>
                 {allV2PairsWithLiquidity.map((v2Pair) => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}
