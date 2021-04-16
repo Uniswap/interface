@@ -32,6 +32,7 @@ import VotePage from './Vote/VotePage'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import AddLiquidity from './AddLiquidity'
 import AddLiquidityV2 from './AddLiquidityV2'
+import { PositionPage } from './Pool/PositionPage'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -106,11 +107,11 @@ export default function App() {
               <Route exact strict path="/find" component={PoolFinder} />
               <Route exact strict path="/pool/v2" component={PoolV2} />
               <Route exact strict path="/pool" component={Pool} />
+              <Route exact strict path="/pool/:positionIndex" component={PositionPage} />
 
               <Route exact path="/add" component={AddLiquidity} />
               <Route exact path="/add/v2/" component={AddLiquidityV2} />
               <Route exact path="/add/v2/:currencyIdA" component={AddLiquidityV2} />
-
               <Route exact path="/add/:currencyIdA" component={AddLiquidity} />
               <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
               <Route

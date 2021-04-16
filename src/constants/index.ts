@@ -1,7 +1,6 @@
 import { ChainId, Percent, Token, WETH9 } from '@uniswap/sdk-core'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import JSBI from 'jsbi'
-
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 export const MULTICALL_ADDRESSES: { [chainId in ChainId]: string } = {
