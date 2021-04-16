@@ -93,6 +93,13 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'RSV',
       name: 'Reserve',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0x0ccD5DD52Dee42B171a623478e5261C1eaaE092A',
+      symbol: 'DFM',
+      name: 'DFM',
+      decimals: 18
     }
   ],
   version: {
