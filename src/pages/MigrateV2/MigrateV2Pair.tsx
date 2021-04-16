@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react'
-import { Currency, CurrencyAmount, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
+import React, { useCallback, useMemo, useState } from 'react'
+import { Currency, CurrencyAmount, Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
@@ -11,7 +11,7 @@ import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
-import { usePairContract } from '../../hooks/useContract'
+import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
@@ -19,14 +19,20 @@ import { getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { EmptyState } from '../MigrateV1/EmptyState'
 import { V2_MIGRATOR_ADDRESSES } from 'constants/v3'
+import { PoolState, usePool } from 'data/Pools'
+import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
+import { FeeSelector, RateToggle } from 'pages/AddLiquidity'
+import { LightCard, PinkCard, YellowCard } from 'components/Card'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import { Dots } from 'components/swap/styleds'
+import { ButtonConfirmed } from 'components/Button'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useUserSlippageTolerance } from 'state/user/hooks'
+import ReactGA from 'react-ga'
+import { TransactionResponse } from '@ethersproject/providers'
+import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 
-// TODO the whole file
-
-// const WEI_DENOM = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
-// const ZERO = JSBI.BigInt(0)
-// const ONE = JSBI.BigInt(1)
-// const ZERO_FRACTION = new Fraction(ZERO, ONE)
-// const ALLOWED_OUTPUT_MIN_PERCENT = new Percent(JSBI.BigInt(10000 - INITIAL_ALLOWED_SLIPPAGE), JSBI.BigInt(10000))
+const ZERO = JSBI.BigInt(0)
 
 export function V2LiquidityInfo({
   token,
@@ -94,7 +100,7 @@ function V2PairMigration({
   token0: Token
   token1: Token
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
   // this is just getLiquidityValue with the fee off, but for the passed pair
   const token0Value = useMemo(
@@ -106,90 +112,144 @@ function V2PairMigration({
     [token1, pairBalance, reserve1, totalSupply]
   )
 
-  const v2SpotPrice = new Price(token0, token1, reserve0.raw, reserve1.raw)
+  // set up v3 pool
+  const [feeAmount, setFeeAmount] = useState(FeeAmount.MEDIUM)
+  const [poolState, pool] = usePool(token0, token1, feeAmount)
+  const noLiquidity = poolState === PoolState.NOT_EXISTS
 
-  console.log(token0Value, token1Value, v2SpotPrice)
+  // get spot prices + price difference
+  const v2SpotPrice = useMemo(() => new Price(token0, token1, reserve0.raw, reserve1.raw), [
+    token0,
+    token1,
+    reserve0,
+    reserve1,
+  ])
+  const v3SpotPrice = poolState === PoolState.EXISTS ? pool?.token0Price : undefined
 
-  // const isFirstLiquidityProvider: boolean = false // check for v3 pair existence
+  let priceDifferenceFraction: Fraction | undefined =
+    v2SpotPrice && v3SpotPrice ? v3SpotPrice.divide(v2SpotPrice).subtract(1).multiply(100) : undefined
+  if (priceDifferenceFraction?.lessThan(ZERO)) {
+    priceDifferenceFraction = priceDifferenceFraction.multiply(-1)
+  }
 
-  // const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
-  // const [pendingMigrationHash, setPendingMigrationHash] = useState<string | null>(null)
+  const largePriceDifference = priceDifferenceFraction && !priceDifferenceFraction?.lessThan(JSBI.BigInt(4))
 
-  // const shareFraction: Fraction = totalSupply ? new Percent(liquidityTokenAmount.raw, totalSupply.raw) : ZERO_FRACTION
+  const [invertPrice, setInvertPrice] = useState(false)
 
-  // const ethWorth: CurrencyAmount = exchangeETHBalance
-  //   ? CurrencyAmount.ether(exchangeETHBalance.multiply(shareFraction).multiply(WEI_DENOM).quotient)
-  //   : CurrencyAmount.ether(ZERO)
+  // TODO these obviously have to not be hardcoded eventually
+  const lowerTick = -60000
+  const upperTick = 60000
+  const percentageToMigrate = 100
 
-  // const tokenWorth: TokenAmount = exchangeTokenBalance
-  //   ? new TokenAmount(token, shareFraction.multiply(exchangeTokenBalance.raw).quotient)
-  //   : new TokenAmount(token, ZERO)
+  const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
+  const [pendingMigrationHash, setPendingMigrationHash] = useState<string | null>(null)
 
-  // const [approval, approve] = useApproveCallback(liquidityTokenAmount, V1_MIGRATOR_ADDRESS)
+  // TODO add permit approval
+  const [approval, approve] = useApproveCallback(pairBalance, chainId ? V2_MIGRATOR_ADDRESSES[chainId] : undefined)
 
-  // const v1SpotPrice =
-  //   exchangeTokenBalance && exchangeETHBalance
-  //     ? exchangeTokenBalance.divide(new Fraction(exchangeETHBalance.raw, WEI_DENOM))
-  //     : null
+  const addTransaction = useTransactionAdder()
+  const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
 
-  // const priceDifferenceFraction: Fraction | undefined =
-  //   v1SpotPrice && v2SpotPrice ? v1SpotPrice.divide(v2SpotPrice).multiply('100').subtract('100') : undefined
+  const deadline = useTransactionDeadline() // custom from users settings
+  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
 
-  // const priceDifferenceAbs: Fraction | undefined = priceDifferenceFraction?.lessThan(ZERO)
-  //   ? priceDifferenceFraction?.multiply('-1')
-  //   : priceDifferenceFraction
+  const migrator = useV2MigratorContract()
+  const migrate = useCallback(() => {
+    if (!migrator || !account || !deadline) return
 
-  // const minAmountETH: JSBI | undefined =
-  //   v2SpotPrice && tokenWorth
-  //     ? tokenWorth.divide(v2SpotPrice).multiply(WEI_DENOM).multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
-  //     : ethWorth?.numerator
+    // the v3 tick is either the tickCurrent, or the tick closest to the v2 spot price
+    const tick = pool?.tickCurrent ?? priceToClosestTick(v2SpotPrice)
+    // the price is either the current v3 price, or the price at the tick
+    const sqrtPrice = pool?.sqrtRatioX96 ?? TickMath.getSqrtRatioAtTick(tick)
 
-  // const minAmountToken: JSBI | undefined =
-  //   v2SpotPrice && ethWorth
-  //     ? ethWorth
-  //         .multiply(v2SpotPrice)
-  //         .multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(token.decimals)))
-  //         .multiply(ALLOWED_OUTPUT_MIN_PERCENT).quotient
-  //     : tokenWorth?.numerator
+    const data = []
 
-  // const addTransaction = useTransactionAdder()
-  // const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
+    // create/initialize pool if necessary
+    if (noLiquidity) {
+      data.push(
+        migrator.interface.encodeFunctionData('createAndInitializePoolIfNecessary', [
+          token0.address,
+          token1.address,
+          feeAmount,
+          `0x${sqrtPrice.toString(16)}`,
+        ])
+      )
+    }
 
-  // const migrator = useV1MigratorContract()
-  // const migrate = useCallback(() => {
-  //   if (!minAmountToken || !minAmountETH || !migrator) return
+    const position = Position.fromAmounts({
+      pool: pool ?? new Pool(token0, token1, feeAmount, sqrtPrice, 0, tick, []),
+      tickLower: lowerTick,
+      tickUpper: upperTick,
+      amount0: token0Value.raw,
+      amount1: token1Value.raw,
+    })
 
-  //   setConfirmingMigration(true)
-  //   migrator
-  //     .migrate(
-  //       token.address,
-  //       minAmountToken.toString(),
-  //       minAmountETH.toString(),
-  //       account,
-  //       Math.floor(new Date().getTime() / 1000) + DEFAULT_DEADLINE_FROM_NOW
-  //     )
-  //     .then((response: TransactionResponse) => {
-  //       ReactGA.event({
-  //         category: 'Migrate',
-  //         action: 'V1->V2',
-  //         label: token?.symbol,
-  //       })
+    // TODO could save gas by not doing this in multicall
+    data.push(
+      migrator.interface.encodeFunctionData('migrate', [
+        {
+          pair: pairBalance.token.address,
+          liquidityToMigrate: `0x${pairBalance.raw.toString(16)}`,
+          percentageToMigrate,
+          token0: token0.address,
+          token1: token1.address,
+          fee: feeAmount,
+          tickLower: lowerTick,
+          tickUpper: upperTick,
+          amount0Min: `0x${JSBI.divide(
+            JSBI.multiply(position.amount0.raw, JSBI.BigInt(allowedSlippage)),
+            JSBI.BigInt(10000)
+          ).toString(16)}`,
+          amount1Min: `0x${JSBI.divide(
+            JSBI.multiply(position.amount1.raw, JSBI.BigInt(allowedSlippage)),
+            JSBI.BigInt(10000)
+          ).toString(16)}`,
+          recipient: account,
+          deadline,
+          refundAsETH: true, // TODO might want to change this?
+        },
+      ])
+    )
 
-  //       addTransaction(response, {
-  //         summary: `Migrate ${token.symbol} liquidity to V2`,
-  //       })
-  //       setPendingMigrationHash(response.hash)
-  //     })
-  //     .catch(() => {
-  //       setConfirmingMigration(false)
-  //     })
-  // }, [minAmountToken, minAmountETH, migrator, token, account, addTransaction])
+    setConfirmingMigration(true)
+    migrator
+      .multicall(data)
+      .then((response: TransactionResponse) => {
+        ReactGA.event({
+          category: 'Migrate',
+          action: 'V2->V3',
+          label: `${token0.symbol}/${token1.symbol}`,
+        })
 
-  // const noLiquidityTokens = !!liquidityTokenAmount && liquidityTokenAmount.equalTo(ZERO)
+        addTransaction(response, {
+          summary: `Migrate ${token0.symbol}/${token1.symbol} liquidity to V3`,
+        })
+        setPendingMigrationHash(response.hash)
+      })
+      .catch(() => {
+        setConfirmingMigration(false)
+      })
+  }, [
+    migrator,
+    noLiquidity,
+    token0,
+    token1,
+    feeAmount,
+    v2SpotPrice,
+    pairBalance,
+    token0Value,
+    token1Value,
+    percentageToMigrate,
+    lowerTick,
+    allowedSlippage,
+    pool,
+    upperTick,
+    account,
+    deadline,
+    addTransaction,
+  ])
 
-  // const largePriceDifference = !!priceDifferenceAbs && !priceDifferenceAbs.lessThan(JSBI.BigInt(5))
-
-  // const isSuccessfullyMigrated = !!pendingMigrationHash && noLiquidityTokens
+  const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.raw, ZERO)
 
   return (
     <AutoColumn gap="20px">
@@ -204,78 +264,76 @@ function V2PairMigration({
         .
       </TYPE.body>
 
-      {/* {!isFirstLiquidityProvider && largePriceDifference ? (
-        <YellowCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            It{"'"}s best to deposit liquidity into Uniswap V2 at a price you believe is correct. If the V2 price seems
-            incorrect, you can either make a swap to move the price or wait for someone else to do so.
-          </TYPE.body>
-          <AutoColumn gap="8px">
-            <RowBetween>
-              <TYPE.body>V1 Price:</TYPE.body>
-              <TYPE.black>
-                {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-              </TYPE.black>
-            </RowBetween>
-            <RowBetween>
-              <div />
-              <TYPE.black>
-                {v1SpotPrice?.invert()?.toSignificant(6)} ETH/{token.symbol}
-              </TYPE.black>
-            </RowBetween>
+      <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
 
+      <div style={{ justifySelf: 'end' }}>
+        <RateToggle
+          currencyA={invertPrice ? token1 : token0}
+          currencyB={invertPrice ? token0 : token1}
+          handleRateToggle={() => setInvertPrice((invertPrice) => !invertPrice)}
+        />
+      </div>
+
+      {noLiquidity && (
+        <PinkCard>
+          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
+            You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will be migrated at the
+            current V2 price. Your transaction cost will include the gas to create the pool.
+          </TYPE.body>
+
+          <AutoColumn gap="8px">
             <RowBetween>
               <TYPE.body>V2 Price:</TYPE.body>
               <TYPE.black>
-                {v2SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-              </TYPE.black>
-            </RowBetween>
-            <RowBetween>
-              <div />
-              <TYPE.black>
-                {v2SpotPrice?.invert()?.toSignificant(6)} ETH/{token.symbol}
-              </TYPE.black>
-            </RowBetween>
-
-            <RowBetween>
-              <TYPE.body color="inherit">Price Difference:</TYPE.body>
-              <TYPE.black color="inherit">{priceDifferenceAbs?.toSignificant(4)}%</TYPE.black>
-            </RowBetween>
-          </AutoColumn>
-        </YellowCard>
-      ) : null}
-
-      {isFirstLiquidityProvider && (
-        <PinkCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            You are the first liquidity provider for this pair on Uniswap V2. Your liquidity will be migrated at the
-            current V1 price. Your transaction cost also includes the gas to create the pool.
-          </TYPE.body>
-
-          <AutoColumn gap="8px">
-            <RowBetween>
-              <TYPE.body>V1 Price:</TYPE.body>
-              <TYPE.black>
-                {v1SpotPrice?.toSignificant(6)} {token.symbol}/ETH
-              </TYPE.black>
-            </RowBetween>
-            <RowBetween>
-              <div />
-              <TYPE.black>
-                {v1SpotPrice?.invert()?.toSignificant(6)} ETH/{token.symbol}
+                {invertPrice
+                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
+                  : `${v2SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
               </TYPE.black>
             </RowBetween>
           </AutoColumn>
         </PinkCard>
       )}
 
+      {largePriceDifference && (
+        <YellowCard>
+          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
+            You should only deposit liquidity into Uniswap V3 at a price you believe is correct. If the price seems
+            incorrect, you can either make a swap to move the price or wait for someone else to do so.
+          </TYPE.body>
+          <AutoColumn gap="8px">
+            <RowBetween>
+              <TYPE.body>V2 Price:</TYPE.body>
+              <TYPE.black>
+                {invertPrice
+                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
+                  : `${v2SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
+              </TYPE.black>
+            </RowBetween>
+
+            <RowBetween>
+              <TYPE.body>V3 Price:</TYPE.body>
+              <TYPE.black>
+                {invertPrice
+                  ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
+                  : `${v3SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
+              </TYPE.black>
+            </RowBetween>
+
+            <RowBetween>
+              <TYPE.body color="inherit">Price Difference:</TYPE.body>
+              <TYPE.black color="inherit">{priceDifferenceFraction?.toSignificant(4)}%</TYPE.black>
+            </RowBetween>
+          </AutoColumn>
+        </YellowCard>
+      )}
+
       <LightCard>
-        <V2LiquidityInfo
+        {/* <V2LiquidityInfo
           token={token}
           liquidityTokenAmount={liquidityTokenAmount}
           tokenWorth={tokenWorth}
           ethWorth={ethWorth}
-        />
+        /> */}
 
         <div style={{ display: 'flex', marginTop: '1rem' }}>
           <AutoColumn gap="12px" style={{ flex: '1', marginRight: 12 }}>
@@ -297,22 +355,25 @@ function V2PairMigration({
             <ButtonConfirmed
               confirmed={isSuccessfullyMigrated}
               disabled={
-                isSuccessfullyMigrated ||
-                noLiquidityTokens ||
-                isMigrationPending ||
                 approval !== ApprovalState.APPROVED ||
-                confirmingMigration
+                confirmingMigration ||
+                isMigrationPending ||
+                isSuccessfullyMigrated
               }
               onClick={migrate}
             >
-              {isSuccessfullyMigrated ? 'Success' : isMigrationPending ? <Dots>Migrating</Dots> : 'Migrate'}
+              {isSuccessfullyMigrated ? 'Success!' : isMigrationPending ? <Dots>Migrating</Dots> : 'Migrate'}
             </ButtonConfirmed>
           </AutoColumn>
         </div>
       </LightCard>
       <TYPE.darkGray style={{ textAlign: 'center' }}>
-        {`Your Uniswap V1 ${token.symbol}/ETH liquidity will become Uniswap V2 ${token.symbol}/ETH liquidity.`}
-      </TYPE.darkGray> */}
+        {`Your Uniswap V2 ${invertPrice ? token0?.symbol : token1?.symbol} / ${
+          invertPrice ? token1?.symbol : token0?.symbol
+        } liquidity tokens will become a Uniswap V3 ${invertPrice ? token0?.symbol : token1?.symbol} / ${
+          invertPrice ? token1?.symbol : token0?.symbol
+        } NFT.`}
+      </TYPE.darkGray>
     </AutoColumn>
   )
 }
