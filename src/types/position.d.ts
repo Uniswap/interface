@@ -1,10 +1,14 @@
-import { BigNumberish } from '@ethersproject/bignumber'
-
-export interface Position {
-  feesEarned: Record<string, BigNumberish>
-  feeLevel: FEE_BIPS
-  tokenAmount0: TokenAmount
-  tokenAmount1: TokenAmount
-  tickLower: BigNumberish
-  tickUpper: BigNumberish
+export interface PositionDetails {
+  nonce: BigNumber
+  operator: string
+  token0: string
+  token1: string
+  fee: number
+  tickLower: number
+  tickUpper: number
+  liquidity: BigNumber
+  feeGrowthInside0LastX128: BigNumber
+  feeGrowthInside1LastX128: BigNumber
+  tokensOwed0: BigNumber
+  tokensOwed1: BigNumber
 }

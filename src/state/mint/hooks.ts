@@ -145,7 +145,7 @@ export function useDerivedMintInfo(
   const price = useMemo(() => {
     // if no liquidity use typed value
     if (noLiquidity) {
-      const parsedAmount = tryParseAmount(startPriceTypedValue, tokenA)
+      const parsedAmount = tryParseAmount(startPriceTypedValue, tokenB)
       if (parsedAmount && tokenA && tokenB) {
         const amountOne = tryParseAmount('1', tokenA)
         return amountOne ? new Price(tokenA, tokenB, amountOne.raw, parsedAmount.raw) : undefined

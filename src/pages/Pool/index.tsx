@@ -1,3 +1,4 @@
+import React, { useContext, useMemo } from 'react'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonGray, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -6,14 +7,15 @@ import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
-import { useV3Positions } from 'hooks/useV3PositionManager'
-import React, { useContext, useMemo } from 'react'
+import { useV3Positions } from 'hooks/useV3Positions'
 import { BookOpen, ChevronDown, Download, Inbox, Info, PlusCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import styled, { ThemeContext } from 'styled-components'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
+import styled, { ThemeContext } from 'styled-components'
 import { HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
+import { PositionDetails } from 'types/position'
+import { LoadingRows } from './styleds'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
@@ -91,24 +93,27 @@ const MainContentWrapper = styled.main`
 `
 export default function Pool() {
   const { account } = useActiveWeb3React()
-  const { error, loading, positions } = useV3Positions(account)
   const toggleWalletModal = useWalletModalToggle()
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
+
+  const { error, positions } = useV3Positions(account)
 
   if (error) {
     console.error('error fetching v3 positions', error)
   }
 
-  const hasPositions = Boolean(positions?.length > 0)
+  const hasPositions = useMemo(() => Boolean(positions && positions.length > 0), [positions])
 
   const numInactivePositions = useMemo(() => {
-    return positions.reduce((acc: any, position: any) => {
-      const { tokenAmount0, tokenAmount1 } = position
-      const limitCrossed = tokenAmount0.equalTo(BigInt(0)) || tokenAmount1.equalTo(BigInt(0))
-      return limitCrossed ? acc + 1 : acc
-    }, 0)
-  }, [positions])
+    return hasPositions && positions
+      ? positions.reduce((acc: any, position: PositionDetails) => {
+          const { tokensOwed0, tokensOwed1 } = position
+          const limitCrossed = tokensOwed0.eq(0) || tokensOwed1.eq(0)
+          return limitCrossed ? acc + 1 : acc
+        }, 0)
+      : 0
+  }, [positions, hasPositions])
 
   const hasV2Liquidity = true
   const showMigrateHeaderLink = Boolean(hasV2Liquidity && hasPositions)
@@ -182,9 +187,9 @@ export default function Pool() {
             </TitleRow>
 
             <MainContentWrapper>
-              {hasPositions ? (
-                <PositionList loading={loading} positions={positions} />
-              ) : (
+              {hasPositions && positions ? (
+                <PositionList positions={positions} />
+              ) : positions && !hasPositions ? (
                 <NoLiquidity>
                   <TYPE.largeHeader color={theme.text3} textAlign="center">
                     <Inbox />
@@ -208,6 +213,21 @@ export default function Pool() {
                     )
                   )}
                 </NoLiquidity>
+              ) : (
+                <LoadingRows>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRows>
               )}
             </MainContentWrapper>
           </AutoColumn>
