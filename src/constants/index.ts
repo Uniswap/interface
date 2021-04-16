@@ -71,6 +71,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
     '0xA948E86885e12Fb09AfEF8C52142EBDbDf73cD18': [new Token(ChainId.MAINNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap')],
+    '0x561a4717537ff4AF5c687328c0f7E90a319705C0': [new Token(ChainId.MAINNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap')],
     [FEI.address]: [TRIBE],
     [TRIBE.address]: [FEI],
     [FRAX.address]: [FXS],
