@@ -27,7 +27,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [ChainId.ALFAJORES, ChainId.BAKLAVA, ChainId.MAINNET],
+  supportedChainIds: [NETWORK_CHAIN_ID],
 })
 
 export const ledger = new LedgerConnector()
