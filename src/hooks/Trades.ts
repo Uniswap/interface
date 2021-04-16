@@ -3,7 +3,12 @@ import { Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 
-import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES, BETTER_TRADE_LESS_HOPS_THRESHOLD } from '../constants'
+import {
+  BASES_TO_CHECK_TRADES_AGAINST,
+  CUSTOM_BASES,
+  BETTER_TRADE_LESS_HOPS_THRESHOLD,
+  ADDITIONAL_BASES
+} from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
@@ -14,17 +19,22 @@ import { useUserSingleHopOnly } from 'state/user/hooks'
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
 
-  const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
-
   const [tokenA, tokenB] = chainId
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined]
 
+  const bases: Token[] = useMemo(() => {
+    if (!chainId) return []
+
+    const common = BASES_TO_CHECK_TRADES_AGAINST[chainId] ?? []
+    const additionalA = tokenA ? ADDITIONAL_BASES[chainId]?.[tokenA.address] ?? [] : []
+    const additionalB = tokenB ? ADDITIONAL_BASES[chainId]?.[tokenB.address] ?? [] : []
+
+    return [...common, ...additionalA, ...additionalB]
+  }, [chainId, tokenA, tokenB])
+
   const basePairs: [Token, Token][] = useMemo(
-    () =>
-      flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])).filter(
-        ([t0, t1]) => t0.address !== t1.address
-      ),
+    () => flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])),
     [bases]
   )
 
@@ -46,10 +56,9 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
             .filter(([tokenA, tokenB]) => {
               if (!chainId) return true
               const customBases = CUSTOM_BASES[chainId]
-              if (!customBases) return true
 
-              const customBasesA: Token[] | undefined = customBases[tokenA.address]
-              const customBasesB: Token[] | undefined = customBases[tokenB.address]
+              const customBasesA: Token[] | undefined = customBases?.[tokenA.address]
+              const customBasesB: Token[] | undefined = customBases?.[tokenB.address]
 
               if (!customBasesA && !customBasesB) return true
 
