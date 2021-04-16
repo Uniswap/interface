@@ -7,6 +7,7 @@ import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as V3FactoryABI } from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json'
 import { abi as V3PoolABI } from '@uniswap/v3-core/artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json'
+import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import { abi as TickLensABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
 
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
@@ -29,10 +30,16 @@ import {
 } from 'constants/index'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from 'constants/v1'
-import { FACTORY_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TICK_LENS_ADDRESSES } from 'constants/v3'
+import {
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  FACTORY_ADDRESSES,
+  TICK_LENS_ADDRESSES,
+  V2_MIGRATOR_ADDRESSES,
+} from 'constants/v3'
 import { useMemo } from 'react'
 import { TickLens, UniswapV3Factory, UniswapV3Pool } from 'types/v3'
 import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
+import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 import { useActiveWeb3React } from './index'
 
@@ -58,6 +65,11 @@ export function useV1FactoryContract(): Contract | null {
 
 export function useV1MigratorContract(): Contract | null {
   return useContract(V1_MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
+}
+
+export function useV2MigratorContract(): V3Migrator | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && V2_MIGRATOR_ADDRESSES[chainId], V2MigratorABI, true) as V3Migrator | null
 }
 
 export function useV1ExchangeContract(address?: string, withSignerIfPossible?: boolean): Contract | null {

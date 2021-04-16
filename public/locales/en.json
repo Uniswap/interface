@@ -109,7 +109,6 @@
   "poolType": "Select a fee tier based on your preferred liquidity provider fee.",
   "rangeWarning": "Your liquidity will only be active and earning fees when the rate of the pool is within this price range.",
   "chooseLiquidityAmount": "Choose an amount of tokens to open this liquidity position. If you don’t have enough tokens you can trade for them with a Swap.",
-  "selectRange": "Select Liquidity Range",
   "inputTokenDynamic": "Input {{label}}",
   "selectStartingPrice": "Select Starting Price",
   "newPoolPrice": "Select the market rate for the tokens being added."

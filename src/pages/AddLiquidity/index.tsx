@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, TokenAmount, Token, Percent, ETHER } from '@uniswap/sdk-core'
-import React, { useCallback, useContext, useState, useMemo } from 'react'
+import { Currency, TokenAmount, Percent, ETHER } from '@uniswap/sdk-core'
+import React, { useCallback, useContext, useState } from 'react'
 import { Link2, AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
@@ -46,6 +46,95 @@ import { useMintState, useMintActionHandlers, useDerivedMintInfo } from 'state/m
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
 import JSBI from 'jsbi'
+
+export function FeeSelector({
+  disabled = false,
+  feeAmount,
+  handleFeePoolSelect,
+}: {
+  disabled?: boolean
+  feeAmount?: FeeAmount
+  handleFeePoolSelect: (feeAmount: FeeAmount) => void
+}) {
+  const { t } = useTranslation()
+
+  return (
+    <AutoColumn gap="16px">
+      <DynamicSection gap="md" disabled={disabled}>
+        <TYPE.label>{t('selectPool')}</TYPE.label>
+        <RowBetween>
+          <ButtonRadioChecked
+            width="32%"
+            active={feeAmount === FeeAmount.LOW}
+            onClick={() => handleFeePoolSelect(FeeAmount.LOW)}
+          >
+            <AutoColumn gap="sm" justify="flex-start">
+              <TYPE.label>0.05% {t('fee')}</TYPE.label>
+              <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                Optimized for stable assets.
+              </TYPE.main>
+            </AutoColumn>
+          </ButtonRadioChecked>
+          <ButtonRadioChecked
+            width="32%"
+            active={feeAmount === FeeAmount.MEDIUM}
+            onClick={() => handleFeePoolSelect(FeeAmount.MEDIUM)}
+          >
+            <AutoColumn gap="sm" justify="flex-start">
+              <TYPE.label>0.3% {t('fee')}</TYPE.label>
+              <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                The classic Uniswap pool fee.
+              </TYPE.main>
+            </AutoColumn>
+          </ButtonRadioChecked>
+          <ButtonRadioChecked
+            width="32%"
+            active={feeAmount === FeeAmount.HIGH}
+            onClick={() => handleFeePoolSelect(FeeAmount.HIGH)}
+          >
+            <AutoColumn gap="sm" justify="flex-start">
+              <TYPE.label>1% {t('fee')}</TYPE.label>
+              <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
+                Best for volatile assets.
+              </TYPE.main>
+            </AutoColumn>
+          </ButtonRadioChecked>
+        </RowBetween>
+      </DynamicSection>
+    </AutoColumn>
+  )
+}
+
+// the order of displayed base currencies from left to right is always in sort order
+// currencyA is treated as the preferred base currency
+export function RateToggle({
+  currencyA,
+  currencyB,
+  handleRateToggle,
+}: {
+  currencyA: Currency
+  currencyB: Currency
+  handleRateToggle: () => void
+}) {
+  const { t } = useTranslation()
+  const { chainId } = useActiveWeb3React()
+
+  const tokenA = wrappedCurrency(currencyA, chainId)
+  const tokenB = wrappedCurrency(currencyB, chainId)
+
+  const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
+
+  return tokenA && tokenB ? (
+    <ToggleWrapper width="fit-content">
+      <ToggleElement isActive={isSorted} fontSize="12px" onClick={handleRateToggle}>
+        {isSorted ? currencyA.symbol : currencyB.symbol} {t('rate')}
+      </ToggleElement>
+      <ToggleElement isActive={!isSorted} fontSize="12px" onClick={handleRateToggle}>
+        {isSorted ? currencyB.symbol : currencyA.symbol} {t('rate')}
+      </ToggleElement>
+    </ToggleWrapper>
+  ) : null
+}
 
 export default function AddLiquidity({
   match: {
@@ -285,19 +374,6 @@ export default function AddLiquidity({
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  // used sort sorted toggle
-  const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
-  const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
-  const sortedTokens: Token[] | undefined = useMemo(
-    () =>
-      tokenA && tokenB && !tokenA.equals(tokenB)
-        ? tokenA.sortsBefore(tokenB)
-          ? [tokenA, tokenB]
-          : [tokenB, tokenA]
-        : undefined,
-    [tokenA, tokenB]
-  )
-
   const handleRateToggle = useCallback(() => {
     if (currencyA && currencyB) {
       const currencyIdA = currencyId(currencyA)
@@ -321,19 +397,6 @@ export default function AddLiquidity({
     onStartPriceInput,
     onUpperRangeInput,
   ])
-
-  const RateToggle = () => {
-    return sortedTokens && currencyB && currencyA ? (
-      <ToggleWrapper width="fit-content">
-        <ToggleElement isActive={tokenA === sortedTokens[0]} fontSize="12px" onClick={handleRateToggle}>
-          {tokenA === sortedTokens[0] ? currencyB.symbol : currencyA?.symbol} {t('rate')}
-        </ToggleElement>
-        <ToggleElement isActive={tokenB === sortedTokens[0]} fontSize="12px" onClick={handleRateToggle}>
-          {tokenB === sortedTokens[0] ? currencyB.symbol : currencyA?.symbol} {t('rate')}
-        </ToggleElement>
-      </ToggleWrapper>
-    ) : null
-  }
 
   return (
     <ScrollablePage>
@@ -415,52 +478,11 @@ export default function AddLiquidity({
                   </RowBetween>
                 </AutoColumn>
 
-                <AutoColumn gap="16px">
-                  <DynamicSection gap="md" disabled={!currencyB || !currencyA}>
-                    <TYPE.label>{t('selectPool')}</TYPE.label>
-                    {/* <TYPE.main fontWeight={400} fontSize="14px">
-                    {t('poolType')}
-                  </TYPE.main> */}
-                    <RowBetween>
-                      <ButtonRadioChecked
-                        width="32%"
-                        active={feeAmount === FeeAmount.LOW}
-                        onClick={() => handleFeePoolSelect(FeeAmount.LOW)}
-                      >
-                        <AutoColumn gap="sm" justify="flex-start">
-                          <TYPE.label>0.05% {t('fee')}</TYPE.label>
-                          <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                            Optimized for stable assets.
-                          </TYPE.main>
-                        </AutoColumn>
-                      </ButtonRadioChecked>
-                      <ButtonRadioChecked
-                        width="32%"
-                        active={feeAmount === FeeAmount.MEDIUM}
-                        onClick={() => handleFeePoolSelect(FeeAmount.MEDIUM)}
-                      >
-                        <AutoColumn gap="sm" justify="flex-start">
-                          <TYPE.label>0.3% {t('fee')}</TYPE.label>
-                          <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                            The classic Uniswap pool fee.
-                          </TYPE.main>
-                        </AutoColumn>
-                      </ButtonRadioChecked>
-                      <ButtonRadioChecked
-                        width="32%"
-                        active={feeAmount === FeeAmount.HIGH}
-                        onClick={() => handleFeePoolSelect(FeeAmount.HIGH)}
-                      >
-                        <AutoColumn gap="sm" justify="flex-start">
-                          <TYPE.label>1% {t('fee')}</TYPE.label>
-                          <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                            Best for volatile assets.
-                          </TYPE.main>
-                        </AutoColumn>
-                      </ButtonRadioChecked>
-                    </RowBetween>
-                  </DynamicSection>
-                </AutoColumn>
+                <FeeSelector
+                  disabled={!currencyB || !currencyA}
+                  feeAmount={feeAmount}
+                  handleFeePoolSelect={handleFeePoolSelect}
+                />
 
                 {noLiquidity && (
                   <DynamicSection disabled={!currencyA || !currencyB}>
@@ -470,7 +492,9 @@ export default function AddLiquidity({
                       </BlueCard>
                       <RowBetween>
                         <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
-                        {tokenA && tokenB && <RateToggle />}
+                        {currencyA && currencyB ? (
+                          <RateToggle currencyA={currencyA} currencyB={currencyB} handleRateToggle={handleRateToggle} />
+                        ) : null}
                       </RowBetween>
                       {/* <TYPE.main fontWeight={400} fontSize="14px">
                       {t('newPoolPrice')}
@@ -499,7 +523,9 @@ export default function AddLiquidity({
                 <DynamicSection gap="md" disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}>
                   <RowBetween>
                     <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
-                    {tokenA && tokenB && !noLiquidity && <RateToggle />}
+                    {currencyA && currencyB && !noLiquidity && (
+                      <RateToggle currencyA={currencyA} currencyB={currencyB} handleRateToggle={handleRateToggle} />
+                    )}
                   </RowBetween>
                   {/* <TYPE.main fontWeight={400} fontSize="14px">
                   {t('rangeWarning')}
