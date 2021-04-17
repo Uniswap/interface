@@ -202,21 +202,18 @@ export default function Swap() {
   const noRoute = !route
 
   const amountToApprove = useMemo(
-    () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
-    [trade, allowedSlippage]
+    () =>
+      showPegSwap
+        ? parsedPegAmounts[Field.INPUT]
+        : trade
+        ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT]
+        : undefined,
+    [showPegSwap, parsedPegAmounts, trade, allowedSlippage]
   )
 
   // check whether the user has approved the router on the input token
-  // boolean to check whether to use useApproveCallbackFromTrade or useApproveCallback
-  let useApproveCallbackArgs: Array<any>
-
-  if (showPegSwap) {
-    useApproveCallbackArgs = [parsedPegAmounts[Field.INPUT], PEG_SWAP_ADDRESS]
-  } else {
-    useApproveCallbackArgs = [amountToApprove, ROUTER_ADDRESS]
-  }
-
-  const [approval, approveCallback] = useApproveCallback(...useApproveCallbackArgs)
+  const spenderAddress = showPegSwap ? PEG_SWAP_ADDRESS : ROUTER_ADDRESS
+  const [approval, approveCallback] = useApproveCallback(amountToApprove, spenderAddress)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)

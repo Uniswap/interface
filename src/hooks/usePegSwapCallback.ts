@@ -43,7 +43,6 @@ export default function usePegSwapCallback(
       (currencyEquals(inputCurrency, FUSE_FUSD) && currencyEquals(outputCurrency, FUSE_USDC)) ||
       (currencyEquals(inputCurrency, FUSE_USDC) && currencyEquals(outputCurrency, FUSE_FUSD))
     ) {
-      console.log(liquidity && JSBI.BigInt(liquidity).toString())
       const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
       const sufficientLiquidity = inputAmount?.lessThan(JSBI.BigInt(liquidity ?? 0))
 
