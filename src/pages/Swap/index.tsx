@@ -124,7 +124,7 @@ export default function Swap() {
     currencies[Field.OUTPUT] as Token,
     typedValue
   )
-  // declare showPegSwap
+
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const showPegSwap: boolean = pegSwapType !== PegSwapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
@@ -145,7 +145,7 @@ export default function Swap() {
       : undefined
 
   const parsedAmounts =
-    showWrap || showPegSwap // add showPegSwap boolean here
+    showWrap || showPegSwap
       ? {
           [Field.INPUT]: parsedAmount,
           [Field.OUTPUT]: parsedAmount
