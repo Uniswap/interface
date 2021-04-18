@@ -162,7 +162,8 @@ export function useDerivedSwapInfo(): {
   const parsedPegAmounts = useMemo(
     () => ({
       [Field.INPUT]: tryParseAmount(typedValue, currencies[Field.INPUT]),
-      [Field.OUTPUT]: tryParseAmount(typedValue, currencies[Field.OUTPUT])
+      // prevent fractional component exceeds decimals error, we use the input decimals
+      [Field.OUTPUT]: tryParseAmount(typedValue, currencies[Field.INPUT])
     }),
     [currencies, typedValue]
   )

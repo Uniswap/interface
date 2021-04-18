@@ -7,6 +7,8 @@ import { useActiveWeb3React } from '.'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useSingleCallResult } from '../state/multicall/hooks'
+import { tryFormatAmount } from '../utils'
+import { formatUnits } from 'ethers/lib/utils'
 
 export enum PegSwapType {
   NOT_APPLICABLE = 'NOT_APPLICABLE',
@@ -21,7 +23,22 @@ function usePegLiquidity(inputCurrency?: Token, outputCurrency?: Token) {
   const inputs = useMemo(() => [inputCurrency?.address, outputCurrency?.address], [inputCurrency, outputCurrency])
   const liquidity = useSingleCallResult(contract, 'getSwappableAmount', inputs)?.result?.[0]
 
-  return liquidity
+  return tryFormatAmount(liquidity?.toString(), outputCurrency?.decimals)
+}
+
+function usePegMinimum(inputCurrency?: Token, outputCurrency?: Token) {
+  if (!inputCurrency || !outputCurrency) return
+
+  const inputDecimals = inputCurrency.decimals
+  const outputDecimals = outputCurrency.decimals
+  const rate = JSBI.BigInt(Math.abs(inputDecimals - outputDecimals))
+  const min = String(JSBI.exponentiate(JSBI.BigInt(10), rate))
+
+  if (inputDecimals > outputDecimals) {
+    return formatUnits(min, inputDecimals)
+  }
+
+  return
 }
 
 export default function usePegSwapCallback(
@@ -34,6 +51,7 @@ export default function usePegSwapCallback(
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
   const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
   const liquidity = usePegLiquidity(inputCurrency, outputCurrency)
+  const minimum = usePegMinimum(inputCurrency, outputCurrency)
   const addTransaction = useTransactionAdder()
 
   return useMemo(() => {
@@ -43,8 +61,16 @@ export default function usePegSwapCallback(
       (currencyEquals(inputCurrency, FUSE_FUSD) && currencyEquals(outputCurrency, FUSE_USDC)) ||
       (currencyEquals(inputCurrency, FUSE_USDC) && currencyEquals(outputCurrency, FUSE_FUSD))
     ) {
-      const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
-      const sufficientLiquidity = inputAmount?.lessThan(JSBI.BigInt(liquidity ?? 0))
+      let error
+      if (!inputAmount) {
+        error = 'Enter an amount'
+      } else if (inputAmount && balance && balance.lessThan(inputAmount)) {
+        error = `Insufficient ${inputCurrency.symbol} balance`
+      } else if (Number(typedValue) > Number(liquidity)) {
+        error = `Above maximum limit ${liquidity}`
+      } else if (minimum && Number(typedValue) < Number(minimum)) {
+        error = `Below minimum limit ${minimum}`
+      }
 
       return {
         pegSwapType: PegSwapType.SWAP,
@@ -63,14 +89,20 @@ export default function usePegSwapCallback(
             console.error('Could not peg swap', error)
           }
         },
-        inputError: sufficientBalance
-          ? sufficientLiquidity
-            ? undefined
-            : 'Insufficient Liquidity'
-          : `Insufficient ${inputCurrency.symbol} balance`
+        inputError: error
       }
     } else {
       return NOT_APPLICABLE
     }
-  }, [addTransaction, balance, inputAmount, inputCurrency, liquidity, outputCurrency, pegSwapContract])
+  }, [
+    addTransaction,
+    balance,
+    inputAmount,
+    inputCurrency,
+    liquidity,
+    minimum,
+    outputCurrency,
+    pegSwapContract,
+    typedValue
+  ])
 }
