@@ -45,7 +45,7 @@ export default function usePegSwapCallback(
   inputCurrency: Token | undefined,
   outputCurrency: Token | undefined,
   typedValue: string | undefined
-): { pegSwapType: PegSwapType; execute?: undefined | (() => Promise<void>); inputError?: string } {
+): { pegSwapType: PegSwapType; execute?: undefined | (() => Promise<any>); inputError?: string } {
   const { account } = useActiveWeb3React()
   const pegSwapContract = usePegSwapContract()
   const balance = useCurrencyBalance(account ?? undefined, inputCurrency)
@@ -85,8 +85,10 @@ export default function usePegSwapCallback(
             addTransaction(txReceipt, {
               summary: `Swap ${inputAmount?.toSignificant(6)} ${inputCurrency.symbol} to ${outputCurrency.symbol}`
             })
+
+            return txReceipt
           } catch (error) {
-            console.error('Could not peg swap', error)
+            throw new Error('Could not peg swap ' + error)
           }
         },
         inputError: error

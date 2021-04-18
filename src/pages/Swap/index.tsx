@@ -285,6 +285,20 @@ export default function Swap() {
       })
   }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
 
+  const handlePegSwap = async () => {
+    if (!onPegSwap) return
+
+    try {
+      const txReceipt = await onPegSwap()
+      if (txReceipt) {
+        onUserInput(Field.INPUT, '')
+      }
+    } catch (e) {
+      console.error(e)
+      onUserInput(Field.INPUT, '')
+    }
+  }
+
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
@@ -497,7 +511,7 @@ export default function Swap() {
                 )}
                 <ButtonError
                   disabled={Boolean(pegSwapInputError) || approval !== ApprovalState.APPROVED}
-                  onClick={onPegSwap}
+                  onClick={handlePegSwap}
                   error={Boolean(pegSwapInputError) || approval !== ApprovalState.APPROVED}
                 >
                   {pegSwapInputError ?? 'Swap'}
