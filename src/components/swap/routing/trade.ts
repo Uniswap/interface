@@ -10,7 +10,7 @@ export const defaultRouter: TradeRouter = {
 }
 
 export class UbeswapTrade extends Trade {
-  hidePairAnalytics = true
+  hidePairAnalytics = false
   router: TradeRouter
   readonly path: readonly Token[]
 
