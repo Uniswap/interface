@@ -1,9 +1,12 @@
+import moolaRouterAddresses from '@ubeswap/moola/deployments/router.mainnet.addresses.json'
 import { CELO, ChainId, cUSD, JSBI, Percent, Token } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, valora } from '../connectors'
 export { UBE } from './tokens'
 
 export const ROUTER_ADDRESS = '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121'
+
+export const UBESWAP_MOOLA_ROUTER_ADDRESS = moolaRouterAddresses.UbeswapMoolaRouter
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -18,22 +21,66 @@ export const AVERAGE_BLOCK_TIME_IN_SECS = 13
 export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
 export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
 
+export const MCUSD = {
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x64dEFa3544c695db8c535D289d843a189aa26b98',
+    18,
+    'mCUSD',
+    'Moola cUSD'
+  ),
+  [ChainId.ALFAJORES]: new Token(
+    ChainId.ALFAJORES,
+    '0x71DB38719f9113A36e14F409bAD4F07B58b4730b',
+    18,
+    'mCUSD',
+    'Moola cUSD'
+  ),
+}
+
+export const MCELO = {
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x7037F7296B2fc7908de7b57a89efaa8319f0C500',
+    18,
+    'mCELO',
+    'Moola CELO'
+  ),
+  [ChainId.ALFAJORES]: new Token(
+    ChainId.ALFAJORES,
+    '0x86f61EB83e10e914fc6F321F5dD3c2dD4860a003',
+    18,
+    'mCELO',
+    'Moola CELO'
+  ),
+}
+
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: [cUSD[ChainId.MAINNET], CELO[ChainId.MAINNET]],
-  [ChainId.ALFAJORES]: [cUSD[ChainId.ALFAJORES], CELO[ChainId.ALFAJORES]],
-  [ChainId.BAKLAVA]: [cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]],
+  [ChainId.MAINNET]: [MCUSD, MCELO, cUSD, CELO].map((el) => el[ChainId.MAINNET]),
+  [ChainId.ALFAJORES]: [MCUSD, MCELO, cUSD, CELO].map((el) => el[ChainId.ALFAJORES]),
+  [ChainId.BAKLAVA]: [cUSD, CELO].map((el) => el[ChainId.BAKLAVA]),
 }
 
 // used for display in the default list when adding liquidity
-export const SUGGESTED_BASES: ChainTokenList = BASES_TO_CHECK_TRADES_AGAINST
+export const SUGGESTED_BASES: ChainTokenList = {
+  ...BASES_TO_CHECK_TRADES_AGAINST,
+  [ChainId.MAINNET]: [MCUSD, CELO].map((el) => el[ChainId.MAINNET]),
+  [ChainId.ALFAJORES]: [MCUSD, CELO].map((el) => el[ChainId.ALFAJORES]),
+}
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = BASES_TO_CHECK_TRADES_AGAINST
 
 export const PINNED_PAIRS: { [chainId: number]: [Token, Token][] } = {
-  [ChainId.MAINNET]: [[cUSD[ChainId.MAINNET], CELO[ChainId.MAINNET]]],
-  [ChainId.ALFAJORES]: [[cUSD[ChainId.ALFAJORES], CELO[ChainId.ALFAJORES]]],
+  [ChainId.MAINNET]: [
+    [cUSD, CELO],
+    [MCUSD, CELO],
+  ].map((el) => el.map((t) => t[ChainId.MAINNET]) as [Token, Token]),
+  [ChainId.ALFAJORES]: [
+    [cUSD, CELO],
+    [MCUSD, CELO],
+  ].map((el) => el.map((t) => t[ChainId.ALFAJORES]) as [Token, Token]),
   [ChainId.BAKLAVA]: [[cUSD[ChainId.BAKLAVA], CELO[ChainId.BAKLAVA]]],
 }
 

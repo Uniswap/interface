@@ -4,8 +4,8 @@ import { SwapCallbackState, useSwapCallback } from 'hooks/useSwapCallback'
 import { useCallback } from 'react'
 import { useDoTransaction } from '.'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../../constants'
-import { executeMoolaTrade } from './moola/executeMoolaTrade'
-import { MoolaTrade } from './moola/MoolaTrade'
+import { executeMoolaDirectTrade } from './moola/executeMoolaDirectTrade'
+import { MoolaDirectTrade } from './moola/MoolaDirectTrade'
 
 /**
  * Use callback to allow trading
@@ -39,8 +39,8 @@ export const useTradeCallback = (
 
     const signer = library.getSigner(account)
     const env = { signer, chainId, doTransaction }
-    if (trade instanceof MoolaTrade) {
-      return (await executeMoolaTrade({ ...env, trade })).hash
+    if (trade instanceof MoolaDirectTrade) {
+      return (await executeMoolaDirectTrade({ ...env, trade })).hash
     } else if (swapCallback) {
       return await swapCallback()
     } else {

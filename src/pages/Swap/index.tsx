@@ -1,6 +1,6 @@
 import { JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { describeTrade } from 'components/swap/routing/describeTrade'
-import { MoolaTrade } from 'components/swap/routing/moola/MoolaTrade'
+import { MoolaDirectTrade } from 'components/swap/routing/moola/MoolaDirectTrade'
 import { useTradeCallback } from 'components/swap/routing/useTradeCallback'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
@@ -129,7 +129,7 @@ export default function Swap() {
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]:
-      (trade instanceof MoolaTrade
+      (trade instanceof MoolaDirectTrade
         ? parsedAmounts[dependentField]?.toExact()
         : parsedAmounts[dependentField]?.toSignificant(6)) ?? '',
   }

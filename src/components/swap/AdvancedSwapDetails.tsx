@@ -6,7 +6,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween } from '../Row'
-import { MoolaTrade } from './routing/moola/MoolaTrade'
+import { UbeswapTrade } from './routing/trade'
 import { TradeDetails } from './routing/TradeDetails'
 import SwapRoute from './SwapRoute'
 
@@ -21,7 +21,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 }
 
 export interface AdvancedSwapDetailsProps {
-  trade?: Trade
+  trade?: UbeswapTrade
 }
 
 const InfoLink = styled(ExternalLink)`
@@ -39,7 +39,8 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
-  const showRoute = Boolean(trade && trade.route.path.length > 2)
+  const path = trade && trade.path
+  const showRoute = Boolean(path && path.length > 2)
 
   return (
     <AutoColumn gap="0px">
@@ -59,7 +60,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
               </RowBetween>
             </>
           )}
-          {!(trade instanceof MoolaTrade) && !showRoute && (
+          {!trade.hidePairAnalytics && !showRoute && (
             <AutoColumn style={{ padding: '12px 16px 0 16px' }}>
               <InfoLink
                 href={'https://info.ubeswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}

@@ -3877,10 +3877,10 @@
     "@typescript-eslint/types" "4.20.0"
     eslint-visitor-keys "^2.0.0"
 
-"@ubeswap/default-token-list@^0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-0.4.3.tgz#d6cfd8d531f021a277f8009434ba2d9071c8559e"
-  integrity sha512-HVMfKUBznDzmdlEuFwL8XIS0LtMDTvIPaha/hpVWVPjkIwHNLn7bOc8AJsHqxirdF+QLgpcxpf7uVqyjLbouAw==
+"@ubeswap/default-token-list@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-2.0.1.tgz#3f57366f13a46bf072a4e03c721b5489d575a29b"
+  integrity sha512-rSNBAn3iRC/srJwqdnBStitpqI3J/6MEXGyf1/MUkNDQJYV2otPScmFwBZRT75dGConTI/n8FwJ/6Fl9Wc1jlw==
 
 "@ubeswap/injected-connector@^6.0.8":
   version "6.0.8"
@@ -3890,6 +3890,13 @@
     "@web3-react/abstract-connector" "^6.0.7"
     "@web3-react/types" "^6.0.7"
     tiny-warning "^1.0.3"
+
+"@ubeswap/moola@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@ubeswap/moola/-/moola-0.2.0.tgz#9716c686f257e6c55f49e2b1122aba427b3c9505"
+  integrity sha512-1vLcloZJa3jTjIDdNAC9Shm1GgTx4qiHshQhmNW2MB4qhX3btjEEBIkd4zNH1/+wmj6Hgwoco8HF1DzYgeNcXQ==
+  dependencies:
+    openzeppelin-solidity "^4.0.0"
 
 "@ubeswap/sdk@^2.0.0":
   version "2.0.0"
@@ -12055,6 +12062,11 @@ open@^7.0.2:
   dependencies:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
+
+openzeppelin-solidity@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/openzeppelin-solidity/-/openzeppelin-solidity-4.0.0.tgz#6452bc183eed149df924d03404c13ee38434da48"
+  integrity sha512-m05OqHUXR6oc3pbJcYpFtyAYMwH5Ot0p/RlbKVEDnAuFrNsyjQd5bYyqvf62Jz7JQX/w21LGguyFsDrU38gdYQ==
 
 opn@^5.5.0:
   version "5.5.0"

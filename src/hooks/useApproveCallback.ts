@@ -1,12 +1,13 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { TokenAmount, Trade } from '@ubeswap/sdk'
-import { MoolaTrade } from 'components/swap/routing/moola/MoolaTrade'
+import { MoolaRouterTrade } from 'components/swap/routing/hooks/useTrade'
+import { MoolaDirectTrade } from 'components/swap/routing/moola/MoolaDirectTrade'
 import { useMoolaConfig } from 'components/swap/routing/moola/useMoola'
 import { BigNumber } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import { useUserMinApprove } from 'state/user/hooks'
-import { ROUTER_ADDRESS } from '../constants'
+import { ROUTER_ADDRESS, UBESWAP_MOOLA_ROUTER_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
 import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
@@ -116,5 +117,12 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
     [trade, allowedSlippage]
   )
   const moola = useMoolaConfig()
-  return useApproveCallback(amountToApprove, trade instanceof MoolaTrade ? moola?.lendingPoolCore : ROUTER_ADDRESS)
+  return useApproveCallback(
+    amountToApprove,
+    trade instanceof MoolaDirectTrade
+      ? moola?.lendingPoolCore
+      : trade instanceof MoolaRouterTrade
+      ? UBESWAP_MOOLA_ROUTER_ADDRESS
+      : ROUTER_ADDRESS
+  )
 }

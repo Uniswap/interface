@@ -1,6 +1,7 @@
 import { parseUnits } from '@ethersproject/units'
 import { ChainId, cUSD, JSBI, Token, TokenAmount, Trade } from '@ubeswap/sdk'
-import { useTradeExactIn, useTradeExactOut } from 'hooks/Trades'
+import { useUbeswapTradeExactIn, useUbeswapTradeExactOut } from 'components/swap/routing/hooks/useTrade'
+import { UbeswapTrade } from 'components/swap/routing/trade'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -108,7 +109,7 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Token }
   currencyBalances: { [field in Field]?: TokenAmount }
   parsedAmount: TokenAmount | undefined
-  v2Trade: Trade | undefined
+  v2Trade: UbeswapTrade | undefined
   inputError?: string
 } {
   const { account } = useActiveWeb3React()
@@ -134,8 +135,8 @@ export function useDerivedSwapInfo(): {
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const bestTradeExactIn = useUbeswapTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  const bestTradeExactOut = useUbeswapTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 

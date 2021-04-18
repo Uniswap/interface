@@ -8,14 +8,14 @@ import { ThemeContext } from 'styled-components'
 import { TYPE } from '../../../../theme'
 import QuestionHelper from '../../../QuestionHelper'
 import { RowBetween, RowFixed } from '../../../Row'
-import { MoolaTrade } from '../moola/MoolaTrade'
+import { MoolaDirectTrade } from '../moola/MoolaDirectTrade'
 import { useLendingPool } from '../moola/useMoola'
 
 interface Props {
-  trade: MoolaTrade
+  trade: MoolaDirectTrade
 }
 
-export const MoolaTradeDetails: React.FC<Props> = ({ trade }: Props) => {
+export const MoolaDirectTradeDetails: React.FC<Props> = ({ trade }: Props) => {
   const { account, chainId } = useActiveWeb3React()
   const lendingPool = useLendingPool()
   const theme = useContext(ThemeContext)

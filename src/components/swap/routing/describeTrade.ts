@@ -1,9 +1,11 @@
 import { Trade } from '@ubeswap/sdk'
-import { MoolaTrade } from './moola/MoolaTrade'
+import { MoolaRouterTrade } from './hooks/useTrade'
+import { MoolaDirectTrade } from './moola/MoolaDirectTrade'
 
 export enum RoutingMethod {
   UBESWAP = 0,
   MOOLA = 1,
+  MOOLA_ROUTER = 2,
 }
 
 export const describeTrade = (
@@ -14,7 +16,7 @@ export const describeTrade = (
   routingMethod: RoutingMethod
   isEstimate: boolean
 } => {
-  if (trade instanceof MoolaTrade) {
+  if (trade instanceof MoolaDirectTrade) {
     return {
       label: trade.isWithdrawal() ? 'Withdraw' : 'Deposit',
       makeLabel: (isInverted) => {
@@ -26,6 +28,11 @@ export const describeTrade = (
       isEstimate: false,
     }
   } else {
-    return { label: 'Swap', routingMethod: RoutingMethod.UBESWAP, isEstimate: true, makeLabel: () => 'Swap' }
+    return {
+      label: 'Swap',
+      routingMethod: trade instanceof MoolaRouterTrade ? RoutingMethod.MOOLA_ROUTER : RoutingMethod.UBESWAP,
+      isEstimate: true,
+      makeLabel: () => 'Swap',
+    }
   }
 }

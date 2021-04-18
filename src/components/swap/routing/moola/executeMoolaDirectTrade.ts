@@ -1,9 +1,9 @@
 import { CeloContract } from '@celo/contractkit'
-import { currencyEquals, Token } from '@ubeswap/sdk'
+import { currencyEquals } from '@ubeswap/sdk'
 import { AToken__factory } from 'generated/factories/AToken__factory'
 import { TradeExecutor } from '..'
 import { LendingPool__factory } from '../../../../generated'
-import { MoolaTrade } from './MoolaTrade'
+import { MoolaDirectTrade } from './MoolaDirectTrade'
 import { moolaLendingPools } from './useMoola'
 
 /**
@@ -11,11 +11,15 @@ import { moolaLendingPools } from './useMoola'
  * @param trade
  * @returns
  */
-export const executeMoolaTrade: TradeExecutor<MoolaTrade> = async ({ trade, signer, chainId, doTransaction }) => {
+export const executeMoolaDirectTrade: TradeExecutor<MoolaDirectTrade> = async ({
+  trade,
+  signer,
+  chainId,
+  doTransaction,
+}) => {
   const chainCfg = moolaLendingPools[chainId]
-
-  const mcUSD = new Token(chainId, chainCfg.mcUSD, 18, 'mcUSD', 'Moola cUSD')
-  const mCELO = new Token(chainId, chainCfg.mCELO, 18, 'mCELO', 'Moola CELO')
+  const { mcUSD, mCELO } = chainCfg
+  const CELO = chainCfg[CeloContract.GoldToken]
 
   const pool = LendingPool__factory.connect(chainCfg.lendingPool, signer)
 
@@ -23,7 +27,6 @@ export const executeMoolaTrade: TradeExecutor<MoolaTrade> = async ({ trade, sign
   const token = inputAmount.token
 
   const convert = async (): Promise<string> => {
-    const CELO = chainCfg[CeloContract.GoldToken]
     const symbol = currencyEquals(token, chainCfg[CeloContract.StableToken])
       ? 'cUSD'
       : currencyEquals(token, chainCfg[CeloContract.GoldToken])
@@ -32,7 +35,7 @@ export const executeMoolaTrade: TradeExecutor<MoolaTrade> = async ({ trade, sign
       ? 'mcUSD'
       : currencyEquals(token, mCELO)
       ? 'mCELO'
-      : null
+      : token.symbol ?? null
 
     if (symbol?.startsWith('m')) {
       const aToken = AToken__factory.connect(inputAmount.token.address, signer)
