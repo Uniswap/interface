@@ -41,7 +41,7 @@ export const BSC_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS = unwrapOrThrow('BSC_NATIV
 export const BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS = unwrapOrThrow('BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS')
 
 export const BSC_FUSE_TOKEN_ADDRESS = unwrapOrThrow('BSC_FUSE_TOKEN_ADDRESS')
-export const PEG_SWAP_ADDRESS = '0xF95dD2A962450e8868FE866b8c6Ddfce7B194141'
+export const PEG_SWAP_ADDRESS = unwrapOrThrow('PEG_SWAP_ADDRESS')
 
 // a list of tokens by chain
 type ChainTokenList = {
