@@ -17,11 +17,14 @@ import {
   SerializedToken,
   setValoraAccount,
   toggleURLWarning,
+  updateUserAllowMoolaWithdrawal,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
+  updateUserMinApprove,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
+  updateUserDisableSmartRouting,
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -106,6 +109,46 @@ export function useExpertModeManager(): [boolean, () => void] {
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
+}
+
+export function useUserMinApprove(): [boolean, (minApprove: boolean) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const minApprove = useSelector<AppState, AppState['user']['userMinApprove']>((state) => state.user.userMinApprove)
+  const setMinApprove = useCallback(
+    (newMinApprove: boolean) => {
+      dispatch(updateUserMinApprove({ userMinApprove: newMinApprove }))
+    },
+    [dispatch]
+  )
+  return [minApprove, setMinApprove]
+}
+
+export function useUserAllowMoolaWithdrawal(): [boolean, (allowMoolaWithdrawal: boolean) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const allowMoolaWithdrawal = useSelector<AppState, AppState['user']['userAllowMoolaWithdrawal']>(
+    (state) => state.user.userAllowMoolaWithdrawal
+  )
+  const setAllowMoolaWithdrawal = useCallback(
+    (newallowMoolaWithdrawal: boolean) => {
+      dispatch(updateUserAllowMoolaWithdrawal({ userAllowMoolaWithdrawal: newallowMoolaWithdrawal }))
+    },
+    [dispatch]
+  )
+  return [allowMoolaWithdrawal, setAllowMoolaWithdrawal]
+}
+
+export function useUserDisableSmartRouting(): [boolean, (disableSmartRouting: boolean) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const disableSmartRouting = useSelector<AppState, AppState['user']['userDisableSmartRouting']>(
+    (state) => state.user.userDisableSmartRouting
+  )
+  const setDisableSmartRouting = useCallback(
+    (newSmartRouting: boolean) => {
+      dispatch(updateUserDisableSmartRouting({ userDisableSmartRouting: newSmartRouting }))
+    },
+    [dispatch]
+  )
+  return [disableSmartRouting, setDisableSmartRouting]
 }
 
 export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) => void] {

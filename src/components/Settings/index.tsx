@@ -1,15 +1,16 @@
 import React, { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import { Text } from 'rebass'
+import { useUserAllowMoolaWithdrawal, useUserDisableSmartRouting, useUserMinApprove } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
   useExpertModeManager,
-  useUserTransactionTTL,
-  useUserSlippageTolerance,
   useUserSingleHopOnly,
+  useUserSlippageTolerance,
+  useUserTransactionTTL,
 } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
@@ -126,6 +127,9 @@ export default function SettingsTab() {
 
   const theme = useContext(ThemeContext)
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
+  const [minApprove, setMinApprove] = useUserMinApprove()
+  const [allowMoolaWithdrawal, setAllowMoolaWithdrawal] = useUserAllowMoolaWithdrawal()
+  const [disableSmartRouting, setDisableSmartRouting] = useUserDisableSmartRouting()
 
   const [ttl, setTtl] = useUserTransactionTTL()
 
@@ -238,6 +242,36 @@ export default function SettingsTab() {
                 isActive={singleHopOnly}
                 toggle={() => (singleHopOnly ? setSingleHopOnly(false) : setSingleHopOnly(true))}
               />
+            </RowBetween>
+            <Text fontWeight={600} fontSize={14}>
+              Routing Settings
+            </Text>
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  Use minimum approval
+                </TYPE.black>
+                <QuestionHelper text="Ensures that each individual trade requires approving the router for the transfer." />
+              </RowFixed>
+              <Toggle isActive={minApprove} toggle={() => (minApprove ? setMinApprove(false) : setMinApprove(true))} />
+            </RowBetween>
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  Disable smart routing
+                </TYPE.black>
+                <QuestionHelper text="Disable using advanced routing techniques to optimize your trade execution price." />
+              </RowFixed>
+              <Toggle isActive={disableSmartRouting} toggle={() => setDisableSmartRouting(!disableSmartRouting)} />
+            </RowBetween>
+            <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  Allow Moola withdrawal
+                </TYPE.black>
+                <QuestionHelper text="Enables withdrawing collateral from Moola. This can cause you to get liquidated-- be careful!" />
+              </RowFixed>
+              <Toggle isActive={allowMoolaWithdrawal} toggle={() => setAllowMoolaWithdrawal(!allowMoolaWithdrawal)} />
             </RowBetween>
           </AutoColumn>
         </MenuFlyout>

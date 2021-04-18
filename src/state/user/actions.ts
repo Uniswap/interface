@@ -17,6 +17,13 @@ export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>(
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserSingleHopOnly = createAction<{ userSingleHopOnly: boolean }>('user/updateUserSingleHopOnly')
+export const updateUserMinApprove = createAction<{ userMinApprove: boolean }>('user/updateUserMinApprove')
+export const updateUserAllowMoolaWithdrawal = createAction<{ userAllowMoolaWithdrawal: boolean }>(
+  'user/updateUserAllowMoolaWithdrawal'
+)
+export const updateUserDisableSmartRouting = createAction<{ userDisableSmartRouting: boolean }>(
+  'user/updateUserDisableSmartRouting'
+)
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number }>(
   'user/updateUserSlippageTolerance'
 )

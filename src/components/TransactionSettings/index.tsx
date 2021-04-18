@@ -1,12 +1,10 @@
-import React, { useState, useRef, useContext } from 'react'
+import { darken } from 'polished'
+import React, { useContext, useRef, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-
-import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
+import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
-
-import { darken } from 'polished'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',

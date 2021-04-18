@@ -6,6 +6,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween } from '../Row'
+import { MoolaTrade } from './routing/moola/MoolaTrade'
 import { TradeDetails } from './routing/TradeDetails'
 import SwapRoute from './SwapRoute'
 
@@ -58,7 +59,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
               </RowBetween>
             </>
           )}
-          {!showRoute && (
+          {!(trade instanceof MoolaTrade) && !showRoute && (
             <AutoColumn style={{ padding: '12px 16px 0 16px' }}>
               <InfoLink
                 href={'https://info.ubeswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}
