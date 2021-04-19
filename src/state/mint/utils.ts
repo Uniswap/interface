@@ -1,14 +1,14 @@
-import { Pool, priceToClosestTick, nearestUsableTick } from '@uniswap/v3-sdk/dist/'
+import { priceToClosestTick, nearestUsableTick, FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk/dist/'
 import { Price, Token } from '@uniswap/sdk-core'
 import { tryParseAmount } from 'state/swap/hooks'
 
 export function tryParseTick(
-  baseToken: Token | undefined,
-  quoteToken: Token | undefined,
-  pool: Pool | undefined,
+  baseToken?: Token,
+  quoteToken?: Token,
+  feeAmount?: FeeAmount,
   value?: string
 ): number | undefined {
-  if (!value || !baseToken || !quoteToken || !pool) {
+  if (!baseToken || !quoteToken || !feeAmount || !value) {
     return undefined
   }
 
@@ -23,5 +23,5 @@ export function tryParseTick(
 
   const tick = priceToClosestTick(price)
 
-  return nearestUsableTick(tick, pool.tickSpacing)
+  return nearestUsableTick(tick, TICK_SPACINGS[feeAmount])
 }

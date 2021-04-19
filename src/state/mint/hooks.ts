@@ -176,10 +176,10 @@ export function useDerivedMintInfo(
     [key: string]: number | undefined
   } = useMemo(() => {
     return {
-      [Bound.LOWER]: poolForPosition ? tryParseTick(tokenA, tokenB, poolForPosition, lowerRangeTypedValue) : undefined,
-      [Bound.UPPER]: poolForPosition ? tryParseTick(tokenA, tokenB, poolForPosition, upperRangeTypedValue) : undefined,
+      [Bound.LOWER]: tryParseTick(tokenA, tokenB, feeAmount, lowerRangeTypedValue),
+      [Bound.UPPER]: tryParseTick(tokenA, tokenB, feeAmount, upperRangeTypedValue),
     }
-  }, [lowerRangeTypedValue, poolForPosition, tokenA, tokenB, upperRangeTypedValue])
+  }, [feeAmount, lowerRangeTypedValue, tokenA, tokenB, upperRangeTypedValue])
 
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {}
   const sortedTicks = useMemo(
@@ -194,10 +194,10 @@ export function useDerivedMintInfo(
 
   const pricesAtTicks = useMemo(() => {
     return {
-      [Bound.LOWER]: poolForPosition ? getTickToPrice(tokenA, tokenB, ticks[Bound.LOWER]) : undefined,
-      [Bound.UPPER]: poolForPosition ? getTickToPrice(tokenA, tokenB, ticks[Bound.UPPER]) : undefined,
+      [Bound.LOWER]: getTickToPrice(tokenA, tokenB, ticks[Bound.LOWER]),
+      [Bound.UPPER]: getTickToPrice(tokenA, tokenB, ticks[Bound.UPPER]),
     }
-  }, [poolForPosition, ticks, tokenA, tokenB])
+  }, [tokenA, tokenB, ticks])
   const { [Bound.LOWER]: lowerPrice, [Bound.UPPER]: upperPrice } = pricesAtTicks
 
   // mark invalid range
