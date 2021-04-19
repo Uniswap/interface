@@ -94,9 +94,6 @@
     "workbox-routing": "^6.1.0",
     "workbox-strategies": "^6.1.0"
   },
-  "resolutions": {
-    "@walletconnect/web3-provider": "1.1.1-alpha.0"
-  },
   "scripts": {
     "start": "react-scripts start",
     "start:service-worker": "yarn build && yarn serve -s build",
