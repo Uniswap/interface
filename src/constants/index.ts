@@ -41,6 +41,7 @@ export const BSC_NATIVE_TO_ERC677_BRIDGE_HOME_ADDRESS = unwrapOrThrow('BSC_NATIV
 export const BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS = unwrapOrThrow('BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS')
 
 export const BSC_FUSE_TOKEN_ADDRESS = unwrapOrThrow('BSC_FUSE_TOKEN_ADDRESS')
+export const PEG_SWAP_ADDRESS = unwrapOrThrow('PEG_SWAP_ADDRESS')
 
 // a list of tokens by chain
 type ChainTokenList = {
@@ -88,6 +89,13 @@ export const FUSE_WETH = new Token(
   18,
   'WETH',
   'Wrapped Ether on Fuse'
+)
+export const FUSE_FUSD = new Token(
+  ChainId.FUSE,
+  '0x249BE57637D8B013Ad64785404b24aeBaE9B098B',
+  18,
+  'fUSD',
+  'Fuse Dollar'
 )
 
 const WETH_ONLY: ChainTokenList = {

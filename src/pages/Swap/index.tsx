@@ -16,16 +16,22 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper, Dots } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
-import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE, UNDER_MAINTENANCE } from '../../constants'
+import {
+  BETTER_TRADE_LINK_THRESHOLD,
+  INITIAL_ALLOWED_SLIPPAGE,
+  UNDER_MAINTENANCE,
+  PEG_SWAP_ADDRESS,
+  ROUTER_ADDRESS
+} from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency, useAllSwapTokens } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
@@ -41,7 +47,7 @@ import {
 import { useExpertModeManager, useUserDeadline, useUserSlippageTolerance, useUserState } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import { computeTradePriceBreakdown, warningSeverity, computeSlippageAdjustedAmounts } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
@@ -51,6 +57,7 @@ import { WrappedTokenInfo } from '../../state/lists/hooks'
 import TokenMigrationModal from '../../components/TokenMigration'
 import { isTokenOnTokenList } from '../../utils'
 import Maintenance from '../../components/swap/Maintenance'
+import usePegSwapCallback, { PegSwapType } from '../../hooks/usePegSwapCallback'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -104,22 +111,31 @@ export default function Swap() {
     currencyBalances,
     parsedAmount,
     currencies,
-    inputError: swapInputError
+    inputError: swapInputError,
+    parsedPegAmounts
   } = useDerivedSwapInfo()
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
     typedValue
   )
+  const { pegSwapType, execute: onPegSwap, inputError: pegSwapInputError } = usePegSwapCallback(
+    currencies[Field.INPUT] as Token,
+    currencies[Field.OUTPUT] as Token,
+    typedValue
+  )
+
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
+  const showPegSwap: boolean = pegSwapType !== PegSwapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
-  const trade = showWrap
-    ? undefined
-    : {
-        [Version.v1]: v1Trade,
-        [Version.v2]: v2Trade
-      }[toggledVersion]
+  const trade =
+    showWrap || showPegSwap
+      ? undefined
+      : {
+          [Version.v1]: v1Trade,
+          [Version.v2]: v2Trade
+        }[toggledVersion]
 
   const betterTradeLinkVersion: Version | undefined =
     toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
@@ -128,15 +144,16 @@ export default function Swap() {
       ? Version.v2
       : undefined
 
-  const parsedAmounts = showWrap
-    ? {
-        [Field.INPUT]: parsedAmount,
-        [Field.OUTPUT]: parsedAmount
-      }
-    : {
-        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-      }
+  const parsedAmounts =
+    showWrap || showPegSwap
+      ? {
+          [Field.INPUT]: parsedAmount,
+          [Field.OUTPUT]: parsedAmount
+        }
+      : {
+          [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+          [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+        }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
@@ -172,9 +189,10 @@ export default function Swap() {
 
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: showWrap
-      ? parsedAmounts[independentField]?.toExact() ?? ''
-      : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+    [dependentField]:
+      showWrap || showPegSwap
+        ? parsedAmounts[independentField]?.toExact() ?? ''
+        : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
 
   const route = trade?.route
@@ -183,8 +201,19 @@ export default function Swap() {
   )
   const noRoute = !route
 
+  const amountToApprove = useMemo(
+    () =>
+      showPegSwap
+        ? parsedPegAmounts[Field.INPUT]
+        : trade
+        ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT]
+        : undefined,
+    [showPegSwap, parsedPegAmounts, trade, allowedSlippage]
+  )
+
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const spenderAddress = showPegSwap ? PEG_SWAP_ADDRESS : ROUTER_ADDRESS
+  const [approval, approveCallback] = useApproveCallback(amountToApprove, spenderAddress)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -255,6 +284,20 @@ export default function Swap() {
         })
       })
   }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
+
+  const handlePegSwap = async () => {
+    if (!onPegSwap) return
+
+    try {
+      const txReceipt = await onPegSwap()
+      if (txReceipt) {
+        onUserInput(Field.INPUT, '')
+      }
+    } catch (e) {
+      console.error(e)
+      onUserInput(Field.INPUT, '')
+    }
+  }
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -365,7 +408,9 @@ export default function Swap() {
 
           <AutoColumn gap={'md'}>
             <CurrencyInputPanel
-              label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
+              label={
+                independentField === Field.OUTPUT && !showWrap && !showPegSwap && trade ? 'From (estimated)' : 'From'
+              }
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={!atMaxAmountInput}
               currency={currencies[Field.INPUT]}
@@ -387,7 +432,7 @@ export default function Swap() {
                     color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
                   />
                 </ArrowWrapper>
-                {recipient === null && !showWrap && isExpertMode ? (
+                {recipient === null && !showWrap && !showPegSwap && isExpertMode ? (
                   <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
                     + Add a send (optional)
                   </LinkStyledButton>
@@ -397,7 +442,7 @@ export default function Swap() {
             <CurrencyInputPanel
               value={formattedAmounts[Field.OUTPUT]}
               onUserInput={handleTypeOutput}
-              label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
+              label={independentField === Field.INPUT && !showWrap && !showPegSwap && trade ? 'To (estimated)' : 'To'}
               showMaxButton={false}
               currency={currencies[Field.OUTPUT]}
               onCurrencySelect={handleOutputSelect}
@@ -405,7 +450,7 @@ export default function Swap() {
               id="swap-currency-output"
             />
 
-            {recipient !== null && !showWrap ? (
+            {recipient !== null && !showWrap && !showPegSwap ? (
               <>
                 <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                   <ArrowWrapper clickable={false}>
@@ -419,7 +464,7 @@ export default function Swap() {
               </>
             ) : null}
 
-            {showWrap ? null : (
+            {showWrap || showPegSwap ? null : (
               <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                 <AutoColumn gap="4px">
                   {Boolean(trade) && (
@@ -451,6 +496,27 @@ export default function Swap() {
           <BottomGrouping>
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+            ) : showPegSwap ? (
+              <>
+                {(approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING) && (
+                  <RowBetween marginBottom={20}>
+                    <ButtonPrimary onClick={approveCallback} disabled={approval === ApprovalState.PENDING}>
+                      {approval === ApprovalState.PENDING ? (
+                        <Dots>Approving {currencies[Field.INPUT]?.symbol}</Dots>
+                      ) : (
+                        'Approve ' + currencies[Field.INPUT]?.symbol
+                      )}
+                    </ButtonPrimary>
+                  </RowBetween>
+                )}
+                <ButtonError
+                  disabled={Boolean(pegSwapInputError) || approval !== ApprovalState.APPROVED}
+                  onClick={handlePegSwap}
+                  error={Boolean(pegSwapInputError) || approval !== ApprovalState.APPROVED}
+                >
+                  {pegSwapInputError ?? 'Swap'}
+                </ButtonError>
+              </>
             ) : showWrap ? (
               <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??
