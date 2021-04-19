@@ -54,8 +54,8 @@ deploy:
       condition: $TRAVIS_BRANCH =~ ^develop$
 
   - provider: gcs
-    access_key_id: $GCS_ACCESS_KEY_ID_PROD
-    secret_access_key: $GCS_SECRET_KEY_ID_PROD
+    access_key_id: $GCS_ACCESS_KEY_ID
+    secret_access_key: $GCS_SECRET_KEY_ID
     bucket: dmm.exchange
     skip_cleanup: true
     local-dir: build
