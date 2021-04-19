@@ -38,7 +38,7 @@ function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | 
       },
       method: 'POST',
     })
-      .then((res) => (res.ok ? res.json() : console.debug(`No claim for account ${formatted} on chain ID ${chainId}`)))
+      .then((res) => (res.ok ? res.json() : console.log(`No claim for account ${formatted} on chain ID ${chainId}`)))
       .catch((error) => console.error('Failed to get claim data', error)))
 }
 

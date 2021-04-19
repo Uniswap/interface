@@ -55,6 +55,16 @@ export default function Updater(): null {
     })
   }, [dispatch, fetchList, library, lists])
 
+  // if any lists from unsupported lists are loaded, check them too (in case new updates since last visit)
+  useEffect(() => {
+    Object.keys(UNSUPPORTED_LIST_URLS).forEach((listUrl) => {
+      const list = lists[listUrl]
+      if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
+        fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
+      }
+    })
+  }, [dispatch, fetchList, library, lists])
+
   // automatically update lists if versions are minor/patch
   useEffect(() => {
     Object.keys(lists).forEach((listUrl) => {

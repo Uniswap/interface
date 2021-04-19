@@ -56,7 +56,7 @@ The interface will not work on other networks.
 
 ## Contributions
 
-**Please open all pull requests against the `master` branch.**
+**Please open all pull requests against the `main` branch.**
 CI checks will run against all PRs.
 
 ## Accessing Uniswap Interface V1
