@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, TokenAmount, Percent, ETHER } from '@uniswap/sdk-core'
+import { Currency, TokenAmount, Percent, ETHER, Price } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useState } from 'react'
 import { Link2, AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -102,6 +102,48 @@ export function FeeSelector({
         </RowBetween>
       </DynamicSection>
     </AutoColumn>
+  )
+}
+
+// currencyA is the base token
+export function RangeSelector({
+  priceLower,
+  priceUpper,
+  onLowerRangeInput,
+  onUpperRangeInput,
+  currencyA,
+  currencyB,
+}: {
+  priceLower?: Price
+  priceUpper?: Price
+  onLowerRangeInput: (typedValue: string) => void
+  onUpperRangeInput: (typedValue: string) => void
+  currencyA?: Currency | null
+  currencyB?: Currency | null
+}) {
+  return (
+    <RowBetween>
+      <StepCounter
+        value={priceLower?.toSignificant(5) ?? ''}
+        onUserInput={onLowerRangeInput}
+        width="48%"
+        label={
+          priceLower && currencyA && currencyB
+            ? `${priceLower.toSignificant(4)} ${currencyB.symbol} / 1 ${currencyA.symbol}`
+            : '-'
+        }
+      />
+      <StepCounter
+        value={priceUpper?.toSignificant(5) ?? ''}
+        onUserInput={onUpperRangeInput}
+        width="48%"
+        label={
+          priceUpper && currencyA && currencyB
+            ? `${priceUpper.toSignificant(4)} ${currencyB?.symbol} / 1 ${currencyA?.symbol}`
+            : '-'
+        }
+      />
+    </RowBetween>
   )
 }
 
@@ -538,28 +580,15 @@ export default function AddLiquidity({
                       </TYPE.main>
                     </RowBetween>
                   )}
-                  <RowBetween>
-                    <StepCounter
-                      value={priceLower?.toSignificant(5) ?? ''}
-                      onUserInput={onLowerRangeInput}
-                      width="48%"
-                      label={
-                        priceLower && currencyA && currencyB
-                          ? '1 ' + currencyA?.symbol + ' / ' + priceLower?.toSignificant(4) + ' ' + currencyB?.symbol
-                          : '-'
-                      }
-                    />
-                    <StepCounter
-                      value={priceUpper?.toSignificant(5) ?? ''}
-                      onUserInput={onUpperRangeInput}
-                      width="48%"
-                      label={
-                        priceUpper && currencyA && currencyB
-                          ? '1 ' + currencyA?.symbol + ' / ' + priceUpper?.toSignificant(4) + ' ' + currencyB?.symbol
-                          : '-'
-                      }
-                    />
-                  </RowBetween>
+
+                  <RangeSelector
+                    priceLower={priceLower}
+                    priceUpper={priceUpper}
+                    onLowerRangeInput={onLowerRangeInput}
+                    onUpperRangeInput={onUpperRangeInput}
+                    currencyA={currencyA}
+                    currencyB={currencyB}
+                  />
 
                   {outOfRange ? (
                     <YellowCard padding="8px 12px" borderRadius="12px">
