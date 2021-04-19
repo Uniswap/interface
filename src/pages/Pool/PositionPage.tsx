@@ -15,7 +15,7 @@ import { TYPE } from 'theme'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { basisPointsToPercent } from 'utils'
 import { ButtonPrimary } from 'components/Button'
-import { DarkCard } from 'components/Card'
+import { DarkCard, DarkGreyCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AlertTriangle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -73,6 +73,13 @@ const ActiveDot = styled.span`
   margin-right: 4px;
 `
 
+const DarkBadge = styled.div`
+  widthL fit-content;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.bg0};
+  padding: 4px 6px;
+`
+
 export function PositionPage({
   match: {
     params: { positionIndex },
@@ -111,10 +118,10 @@ export function PositionPage({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  // const price0Lower = position ? position.token0PriceLower : undefined
-  // const price0Upper = position ? position.token0PriceUpper : undefined
-  // const price1Lower = price0Upper ? price0Upper.invert() : undefined
-  // const price1Upper = price0Lower ? price0Lower.invert() : undefined
+  const price0Lower = position ? position.token0PriceLower : undefined
+  const price0Upper = position ? position.token0PriceUpper : undefined
+  const price1Lower = price0Upper ? price0Upper.invert() : undefined
+  const price1Upper = price0Lower ? price0Lower.invert() : undefined
 
   // check if price is within range
   const outOfRange: boolean =
@@ -204,6 +211,56 @@ export function PositionPage({
         <DarkCard>
           <AutoColumn gap="lg">
             <TYPE.label>Position Limits</TYPE.label>
+            <RowBetween>
+              <DarkGreyCard width="49%">
+                <AutoColumn gap="sm" justify="flex-start">
+                  <TYPE.main>Lower Limit</TYPE.main>
+                  <RowFixed>
+                    <TYPE.label>{price0Lower?.toSignificant(4)}</TYPE.label>
+                    <TYPE.label ml="10px">
+                      {currency0?.symbol} / {currency1?.symbol}
+                    </TYPE.label>
+                  </RowFixed>
+                  <RowFixed>
+                    <TYPE.label>{price1Lower?.toSignificant(4)}</TYPE.label>
+                    <TYPE.label ml="10px">
+                      {currency1?.symbol} / {currency0?.symbol}
+                    </TYPE.label>
+                  </RowFixed>
+                  <DarkBadge>
+                    <RowFixed>
+                      <TYPE.label mr="6px">100%</TYPE.label>
+                      <CurrencyLogo currency={currency0} size="16px" />
+                      <TYPE.label ml="4px">{currency0?.symbol}</TYPE.label>
+                    </RowFixed>
+                  </DarkBadge>
+                </AutoColumn>
+              </DarkGreyCard>
+              <DarkGreyCard width="49%">
+                <AutoColumn gap="sm" justify="flex-start">
+                  <TYPE.main>Lower Limit</TYPE.main>
+                  <RowFixed>
+                    <TYPE.label>{price0Upper?.toSignificant(4)}</TYPE.label>
+                    <TYPE.label ml="10px">
+                      {currency0?.symbol} / {currency1?.symbol}
+                    </TYPE.label>
+                  </RowFixed>
+                  <RowFixed>
+                    <TYPE.label>{price1Upper?.toSignificant(4)}</TYPE.label>
+                    <TYPE.label ml="10px">
+                      {currency1?.symbol} / {currency0?.symbol}
+                    </TYPE.label>
+                  </RowFixed>
+                  <DarkBadge>
+                    <RowFixed>
+                      <TYPE.label mr="6px">100%</TYPE.label>
+                      <CurrencyLogo currency={currency1} size="16px" />
+                      <TYPE.label ml="4px">{currency1?.symbol}</TYPE.label>
+                    </RowFixed>
+                  </DarkBadge>
+                </AutoColumn>
+              </DarkGreyCard>
+            </RowBetween>
           </AutoColumn>
         </DarkCard>
       </AutoColumn>
