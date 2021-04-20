@@ -48,11 +48,13 @@ const environment = window.location.hostname.includes('app-staging')
 const GOOGLE_ANALYTICS_ID = environment ? GOOGLE_ANALYTICS_IDS[environment][NETWORK_CHAIN_ID] : null
 
 if (GOOGLE_ANALYTICS_ID) {
+  console.log(`Initializing GA at ${GOOGLE_ANALYTICS_ID} (${environment} ${NETWORK_CHAIN_ID})`)
   ReactGA.initialize(GOOGLE_ANALYTICS_ID)
   ReactGA.set({
     customBrowserType: !isMobile ? 'desktop' : 'web3' in window || 'celo' in window ? 'mobileWeb3' : 'mobileRegular',
   })
 } else {
+  console.log(`Could not initialize GA (${environment} ${NETWORK_CHAIN_ID})`)
   ReactGA.initialize('test', { testMode: true, debug: true })
 }
 
