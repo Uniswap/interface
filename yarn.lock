@@ -4134,12 +4134,17 @@
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
 
-"@uniswap/v3-core@1.0.0-rc.1", "@uniswap/v3-core@^1.0.0-rc.1":
+"@uniswap/v3-core@1.0.0-rc.1":
   version "1.0.0-rc.1"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-core/-/v3-core-1.0.0-rc.1.tgz#f2bbc483451364a951fba06eb2d978c6e8bdd58f"
   integrity sha512-4ET2H0a8p7nVBGFWfio9SHc+RA6UIXEvlTRIJNsDwjQvfs8Jq9lfJ+eSOUTGmiB8Vp8V5dWarLDBU/rDE159pQ==
 
-"@uniswap/v3-periphery@^1.0.0-beta.17", "@uniswap/v3-periphery@^1.0.0-beta.19":
+"@uniswap/v3-core@1.0.0-rc.2", "@uniswap/v3-core@^1.0.0-rc.2":
+  version "1.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-core/-/v3-core-1.0.0-rc.2.tgz#a1afb3253a7295bec6165ad1d960121e6851a576"
+  integrity sha512-vsqkqAHPCKsVi0nWwWeX+mHnSTJ8ZUdu1zAVXB9Mj9A+aeBQGV9foRKs9ufDGJq7S1nqmz+7FdjSOcVoeiUqgQ==
+
+"@uniswap/v3-periphery@^1.0.0-beta.17":
   version "1.0.0-beta.19"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0-beta.19.tgz#d9af90b12657049674cd2f26ae1c61b6cc393261"
   integrity sha512-ZQX5KN/89OB7UjrmGOSB7QZIEbgW+R0uaVM5NdlK63Ji0rZjmddeoYS8oNk7i5BU3WR+xJY5DgfiDSmn1W6Sww==
@@ -4148,6 +4153,16 @@
     "@uniswap/lib" "^4.0.1-alpha"
     "@uniswap/v2-core" "1.0.1"
     "@uniswap/v3-core" "1.0.0-rc.1"
+
+"@uniswap/v3-periphery@^1.0.0-beta.20":
+  version "1.0.0-beta.20"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0-beta.20.tgz#67a8086315e4820e3669b1f645916f9e246a6e56"
+  integrity sha512-sWh2W+CBjRVAwbPbKwgu8DWKYY7J3ucZf5mjRPBnmvsNLi6ILM5/NDAtefCvMnKEX7IQzO3gk7gDWZHPrkWXyw==
+  dependencies:
+    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
+    "@uniswap/lib" "^4.0.1-alpha"
+    "@uniswap/v2-core" "1.0.1"
+    "@uniswap/v3-core" "1.0.0-rc.2"
 
 "@uniswap/v3-sdk@^1.0.0-alpha.11":
   version "1.0.0-alpha.11"

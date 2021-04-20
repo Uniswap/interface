@@ -1,12 +1,4 @@
 describe('Remove Liquidity', () => {
-  it('redirects', () => {
-    cy.visit('/remove/v2/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.url().should(
-      'contain',
-      '/remove/v2/0xc778417E063141139Fce010982780140Aa0cD5Ab/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'
-    )
-  })
-
   it('eth remove', () => {
     cy.visit('/remove/v2/ETH/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
     cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'ETH')
