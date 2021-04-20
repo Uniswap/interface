@@ -1,7 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
-import { TransactionResponse } from '@ethersproject/providers'
 import { Percent, Token } from '@ubeswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -97,63 +95,7 @@ export default function RemoveLiquidity({
     if (!pairContract || !pair || !library || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
-
-    // try to gather a signature for permission
-    const nonce = await pairContract.nonces(account)
-
-    const EIP712Domain = [
-      { name: 'name', type: 'string' },
-      { name: 'version', type: 'string' },
-      { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' },
-    ]
-    const domain = {
-      name: 'Uniswap V2',
-      version: '1',
-      chainId: chainId,
-      verifyingContract: pair.liquidityToken.address,
-    }
-    const Permit = [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' },
-    ]
-    const message = {
-      owner: account,
-      spender: ROUTER_ADDRESS,
-      value: liquidityAmount.raw.toString(),
-      nonce: nonce.toHexString(),
-      deadline: deadline.toNumber(),
-    }
-    const data = JSON.stringify({
-      types: {
-        EIP712Domain,
-        Permit,
-      },
-      domain,
-      primaryType: 'Permit',
-      message,
-    })
-
-    library
-      .send('eth_signTypedData_v4', [account, data])
-      .then(splitSignature)
-      .then((signature) => {
-        setSignatureData({
-          v: signature.v,
-          r: signature.r,
-          s: signature.s,
-          deadline: deadline.toNumber(),
-        })
-      })
-      .catch((error) => {
-        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
-        if (error?.code !== 4001) {
-          approveCallback()
-        }
-      })
+    approveCallback()
   }
 
   // wrapped onUserInput to clear signatures
@@ -196,95 +138,66 @@ export default function RemoveLiquidity({
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
-    let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
-    if (approval === ApprovalState.APPROVED) {
-      // removeLiquidity
-      methodNames = ['removeLiquidity']
-      args = [
-        tokenA.address,
-        tokenB.address,
-        liquidityAmount.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        account,
-        deadline.toHexString(),
-      ]
-    }
-    // we have a signataure, use permit versions of remove liquidity
-    else if (signatureData !== null) {
-      methodNames = ['removeLiquidityWithPermit']
-      args = [
-        tokenA.address,
-        tokenB.address,
-        liquidityAmount.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        account,
-        signatureData.deadline,
-        false,
-        signatureData.v,
-        signatureData.r,
-        signatureData.s,
-      ]
-    } else {
+    if (approval !== ApprovalState.APPROVED) {
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
 
-    const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
-      methodNames.map((methodName) =>
-        router.estimateGas[methodName](...args)
-          .then(calculateGasMargin)
-          .catch((error) => {
-            console.error(`estimateGas failed`, methodName, args, error)
-            return undefined
-          })
-      )
-    )
+    // removeLiquidity
+    const args = [
+      tokenA.address,
+      tokenB.address,
+      liquidityAmount.raw.toString(),
+      amountsMin[Field.CURRENCY_A].toString(),
+      amountsMin[Field.CURRENCY_B].toString(),
+      account,
+      deadline.toHexString(),
+    ] as const
 
-    const indexOfSuccessfulEstimation = safeGasEstimates.findIndex((safeGasEstimate) =>
-      BigNumber.isBigNumber(safeGasEstimate)
-    )
+    const safeGasEstimate: BigNumber | undefined = await router.estimateGas
+      .removeLiquidity(...args)
+      .then(calculateGasMargin)
+      .catch((error) => {
+        console.error(`estimateGas failed`, args, error)
+        return undefined
+      })
 
     // all estimations failed...
-    if (indexOfSuccessfulEstimation === -1) {
+    if (safeGasEstimate === undefined) {
       console.error('This transaction would fail. Please contact support.')
     } else {
-      const methodName = methodNames[indexOfSuccessfulEstimation]
-      const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
-
       setAttemptingTxn(true)
-      await router[methodName](...args, {
-        gasLimit: safeGasEstimate,
-      })
-        .then((response: TransactionResponse) => {
-          setAttemptingTxn(false)
-
-          addTransaction(response, {
-            summary:
-              'Remove ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencyA?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencyB?.symbol,
-          })
-
-          setTxHash(response.hash)
-
-          ReactGA.event({
-            category: 'Liquidity',
-            action: 'Remove',
-            label: [currencyA?.symbol, currencyB?.symbol].join('/'),
-          })
+      try {
+        const response = await router.removeLiquidity(...args, {
+          gasLimit: safeGasEstimate,
         })
-        .catch((error: Error) => {
-          setAttemptingTxn(false)
-          // we only care if the error is something _other_ than the user rejected the tx
-          console.error(error)
+
+        setAttemptingTxn(false)
+
+        addTransaction(response, {
+          summary:
+            'Remove ' +
+            parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+            ' ' +
+            currencyA?.symbol +
+            ' and ' +
+            parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+            ' ' +
+            currencyB?.symbol,
         })
+
+        setTxHash(response.hash)
+
+        ReactGA.event({
+          category: 'Liquidity',
+          action: 'Remove',
+          label: [currencyA?.symbol, currencyB?.symbol].join('/'),
+        })
+      } catch (error) {
+        setAttemptingTxn(false)
+        // we only care if the error is something _other_ than the user rejected the tx
+        console.error(error)
+      }
     }
   }
 

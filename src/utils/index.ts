@@ -8,7 +8,7 @@ import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUnisw
 import { ROUTER_ADDRESS, UBESWAP_MOOLA_ROUTER_ADDRESS } from '../constants'
 import { TokenAddressMap } from '../state/lists/hooks'
 import UbeswapMoolaRouterABI from '../constants/abis/UbeswapMoolaRouter.json'
-import { UbeswapMoolaRouter } from 'generated'
+import { IUniswapV2Router02, UbeswapMoolaRouter } from 'generated/index'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -68,8 +68,8 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
+export function getRouterContract(_: number, library: Web3Provider, account?: string): IUniswapV2Router02 {
+  return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account) as IUniswapV2Router02
 }
 
 export function getMoolaRouterContract(_: number, library: Web3Provider, account?: string): UbeswapMoolaRouter {
