@@ -65,6 +65,7 @@ const StyledCloseIcon = styled(X)`
 `
 const EmojiWrapper = styled.div`
   position: absolute;
+  cursor: pointer;
   bottom: -6px;
   right: 3px;
   font-size: 12px;
@@ -257,7 +258,7 @@ export default function SettingsTab() {
       </Modal>
       <StyledMenuIcon onClick={toggle} id="open-settings-dialog-button"></StyledMenuIcon>
       {expertMode && (
-        <EmojiWrapper>
+        <EmojiWrapper onClick={toggle}>
           <span role="img" aria-label="wizard-icon">
             😎
           </span>
