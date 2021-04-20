@@ -61,20 +61,14 @@ export function usePairs(
       if (!reserves) return [PairState.NOT_EXISTS, null]
       const { reserve0, reserve1 } = reserves
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
-      const swapFee =
-        swapFees &&
-        swapFees[Pair.getAddress(token0, token1, platform)] &&
-        swapFees[Pair.getAddress(token0, token1, platform)].fee
-          ? swapFees[Pair.getAddress(token0, token1, platform)].fee
-          : // default to the default platform swap fee (defined in the SDK and 0.25% for Swaps)
-            // in case the "real" swap fee is not ready to be queried (https://github.com/levelkdev/dxswap-dapp/issues/150)
-            platform.defaultSwapFee
+      const swapFee = swapFees?.[Pair.getAddress(token0, token1, platform)]?.fee
+      if (!swapFee && platform === RoutablePlatform.SWAPR) return [PairState.LOADING, null]
       return [
         PairState.EXISTS,
         new Pair(
           new TokenAmount(token0, reserve0.toString()),
           new TokenAmount(token1, reserve1.toString()),
-          swapFee,
+          swapFee || platform.defaultSwapFee,
           protocolFeeDenominator ? BigInt(protocolFeeDenominator) : BigInt(0),
           platform
         )
