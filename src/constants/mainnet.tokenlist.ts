@@ -100,6 +100,13 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'DFM',
       name: 'DFM',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0x6e36556B3ee5Aa28Def2a8EC3DAe30eC2B208739',
+      symbol: 'BUILD',
+      name: 'BUILD Finance',
+      decimals: 18
     }
   ],
   version: {
