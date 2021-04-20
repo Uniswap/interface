@@ -1,14 +1,68 @@
-import { useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+import { useSingleCallResult, useSingleContractMultipleData, Result } from 'state/multicall/hooks'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import { useV3NFTPositionManagerContract } from './useContract'
-import JSBI from 'jsbi'
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 
 interface UseV3PositionsResults {
-  error?: (string | boolean) | (string | boolean)[]
   loading: boolean
+  error: boolean
   positions: PositionDetails[] | undefined
 }
+
+function useV3PositionsFromTokenIds(tokenIds: BigNumberish[]): UseV3PositionsResults {
+  const positionManager = useV3NFTPositionManagerContract()
+  const inputs = useMemo(() => tokenIds.map((tokenId) => [BigNumber.from(tokenId)]), [tokenIds])
+  const results = useSingleContractMultipleData(positionManager ?? undefined, 'positions', inputs)
+
+  const loading = useMemo(() => results.some(({ loading }) => loading), [results])
+  const error = useMemo(() => results.some(({ error }) => error), [results])
+
+  const positions = useMemo(() => {
+    if (!loading && !error) {
+      return results.map((call) => {
+        const result = call.result as Result
+        return {
+          fee: result.fee,
+          feeGrowthInside0LastX128: result.feeGrowthInside0LastX128,
+          feeGrowthInside1LastX128: result.feeGrowthInside1LastX128,
+          liquidity: result.liquidity,
+          nonce: result.nonce,
+          operator: result.operator,
+          tickLower: result.tickLower,
+          tickUpper: result.tickUpper,
+          token0: result.token0,
+          token1: result.token1,
+          tokensOwed0: result.tokensOwed0,
+          tokensOwed1: result.tokensOwed1,
+        }
+      })
+    }
+    return undefined
+  }, [loading, error, results])
+
+  return {
+    loading,
+    error,
+    positions,
+  }
+}
+
+interface UseV3PositionResults {
+  loading: boolean
+  error: boolean
+  position: PositionDetails | undefined
+}
+
+export function useV3PositionFromTokenId(tokenId: BigNumberish): UseV3PositionResults {
+  const position = useV3PositionsFromTokenIds([tokenId])
+  return {
+    loading: position.loading,
+    error: position.error,
+    position: position.positions?.[0],
+  }
+}
+
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
 
@@ -18,9 +72,8 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     [account ?? undefined]
   )
 
-  const accountBalance: number | undefined = balanceResult
-    ? parseFloat(JSBI.BigInt(balanceResult[0]).toString())
-    : undefined
+  // we don't expect any account balance to ever exceed the bounds of max safe int
+  const accountBalance: number | undefined = balanceResult?.[0] ? Number.parseInt(balanceResult[0]) : undefined
 
   const positionIndicesArgs = useMemo(() => {
     if (accountBalance && account) {
@@ -45,51 +98,25 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     positionIndicesResults,
   ])
 
-  const formattedIndicesArgs = useMemo(() => {
-    if (positionIndicesResults && account) {
-      return positionIndicesResults.map((call) => {
-        return [call.result?.[0] ? parseFloat(JSBI.BigInt(call.result?.[0]).toString()) : undefined]
-      })
+  const tokenIds = useMemo(() => {
+    if (account) {
+      return positionIndicesResults
+        .map(({ result }) => result)
+        .filter((result): result is Result => !!result)
+        .map((result) => BigNumber.from(result[0]))
     }
     return []
   }, [account, positionIndicesResults])
 
-  const positionsResults = useSingleContractMultipleData(
-    positionManager ?? undefined,
-    'positions',
-    formattedIndicesArgs
-  )
-  const positionResultsLoading = useMemo(() => positionsResults.some(({ loading }) => loading), [positionsResults])
-  const positionResultsError = useMemo(() => positionsResults.some(({ error }) => error), [positionsResults])
+  const positionsResults = useV3PositionsFromTokenIds(tokenIds)
 
-  const loading = balanceLoading || positionResultsLoading || positionIndicesLoading
-
-  const positions = useMemo(() => {
-    if (positionsResults && !loading) {
-      return positionsResults.map((entry) => {
-        const rp = entry.result
-        return {
-          fee: rp?.fee,
-          feeGrowthInside0LastX128: rp?.feeGrowthInside0LastX128,
-          feeGrowthInside1LastX128: rp?.feeGrowthInside1LastX128,
-          liquidity: rp?.liquidity,
-          nonce: rp?.nonce,
-          operator: rp?.operator,
-          tickLower: rp?.tickLower,
-          tickUpper: rp?.tickUpper,
-          token0: rp?.token0,
-          token1: rp?.token1,
-          tokensOwed0: rp?.tokensOwed0,
-          tokensOwed1: rp?.tokensOwed1,
-        }
-      })
-    }
-    return undefined
-  }, [positionsResults, loading])
+  // wrap the return value
+  const loading = balanceLoading || positionIndicesLoading
+  const error = balanceError || positionIndicesError
 
   return {
-    error: balanceError || positionIndicesError || positionResultsError,
-    loading,
-    positions,
+    loading: loading || positionsResults.loading,
+    error: error || positionsResults.error,
+    positions: loading || error ? undefined : positionsResults.positions,
   }
 }

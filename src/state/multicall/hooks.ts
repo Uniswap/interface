@@ -25,7 +25,7 @@ type MethodArgs = Array<MethodArg | MethodArg[]>
 export type OptionalMethodInputs = Array<MethodArg | MethodArg[] | undefined> | undefined
 
 function isMethodArg(x: unknown): x is MethodArg {
-  return ['string', 'number'].indexOf(typeof x) !== -1
+  return BigNumber.isBigNumber(x) || ['string', 'number'].indexOf(typeof x) !== -1
 }
 
 function isValidMethodArgs(x: unknown): x is MethodArgs | undefined {
