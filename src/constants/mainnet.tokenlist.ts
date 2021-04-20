@@ -99,7 +99,16 @@ export const MAINNET_TOKEN_LIST = {
       address: '0x0ccD5DD52Dee42B171a623478e5261C1eaaE092A',
       symbol: 'DFM',
       name: 'DFM',
-      decimals: 18
+      decimals: 18,
+      logoURI: 'https://mycoldwalletnow.wpcomstaging.com/htdocs/wp-content/mcwhp/img/logo.svg'
+    },
+    {
+      chainId: 1,
+      address: '0x6e36556B3ee5Aa28Def2a8EC3DAe30eC2B208739',
+      symbol: 'BUILD',
+      name: 'BUILD Finance',
+      decimals: 18,
+      logoURI: 'https://build.finance/images/logo.png'
     }
   ],
   version: {
