@@ -19,6 +19,7 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: ${({ size }) => size};
+  border: solid 1px ${props => props.theme.white};
   position: absolute;
   top: 0;
   bottom: 0;

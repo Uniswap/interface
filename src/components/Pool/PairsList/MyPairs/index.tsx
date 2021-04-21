@@ -21,16 +21,14 @@ const PlusNText = styled(TYPE.body)`
 `
 
 const BlurredCircleImage = styled.div`
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   background: rgba(68, 65, 99, 0.25);
   box-shadow: inset 0px 0.5px 3px rgba(255, 255, 255, 0.08), inset 3px 1px 5px rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
-  width: 28px;
-  height: 28px;
   z-index: 1px;
   backdrop-filter: blur(12px);
-  border-radius: 14px;
+  border-radius: 18px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,10 +43,10 @@ export default function MyPairs({ pairsAmount }: MyPairsProps) {
   return (
     <UndecoratedLink to="/pools/mine">
       <SizedCard>
-        <Flex justifyContent="center" alignItems="center" flexDirection="column" width="100%" height="100%">
-          <Box mb="4px">
+        <Flex justifyContent="space-between" flexDirection="column" width="100%" height="100%">
+          <Box>
             <BlurredCircleImage>
-              <PlusNText color="white" fontWeight="600" fontSize="12px" lineHeight="15px">
+              <PlusNText color="white" fontWeight="600" fontSize="16px" lineHeight="15px">
                 {pairsAmount}
               </PlusNText>
             </BlurredCircleImage>

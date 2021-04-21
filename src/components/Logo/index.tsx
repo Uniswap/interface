@@ -37,7 +37,7 @@ export default function Logo({ srcs, alt, size, defaultText, ...rest }: LogoProp
   const fontSize = Math.ceil(numberSize / 4.5)
   return (
     <svg height={numberSize} width={numberSize} {...rest} fill="none">
-      <circle cx={numberSize / 2} cy={numberSize / 2} r={numberSize / 2} fill={theme.white} />
+      <circle cx={numberSize / 2} cy={numberSize / 2} r="50%" fill={theme.white} />
       <text
         fill={theme.black}
         stroke="none"
