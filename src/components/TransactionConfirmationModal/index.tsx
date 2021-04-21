@@ -68,7 +68,7 @@ export function ConfirmationPendingContent({
               {pendingText}
             </Text>
           </AutoColumn>
-          <Text fontSize={12} color="#565A69" textAlign="center">
+          <Text fontSize={12} color="#565A69" textAlign="center" marginBottom={12}>
             Confirm this transaction in your wallet
           </Text>
         </AutoColumn>
