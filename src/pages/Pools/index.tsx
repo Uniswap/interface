@@ -21,6 +21,7 @@ import { useAllPairsWithLiquidityAndMaximumApy } from '../../hooks/useAllPairsWi
 import ListFilter, { PairsFilterType } from '../../components/Pool/ListFilter'
 import { useLPPairs } from '../../hooks/useLiquidityPositions'
 import PairsList from '../../components/Pool/PairsList'
+import CurrencyLogo from '../../components/CurrencyLogo'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -67,11 +68,12 @@ const PointableFlex = styled(Flex)`
 `
 
 interface TitleProps {
+  filteredToken?: Token
   onCurrencySelection: (currency: Currency) => void
 }
 
 // decoupling the title from the rest of the component avoids full-rerender everytime the pair selection modal is opened
-function Title({ onCurrencySelection }: TitleProps) {
+function Title({ onCurrencySelection, filteredToken }: TitleProps) {
   const [openTokenModal, setOpenTokenModal] = useState(false)
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
@@ -97,15 +99,22 @@ function Title({ onCurrencySelection }: TitleProps) {
               /
             </Text>
           </Box>
-          <Box mr="6px">
-            <img src={threeBlurredCircles} alt="Circles" />
-          </Box>
-          <PointableFlex onClick={handleAllClick}>
-            <Box>
-              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
-                ALL
-              </Text>
+          {!filteredToken && (
+            <Box mr="6px">
+              <img src={threeBlurredCircles} alt="Circles" />
             </Box>
+          )}
+          <PointableFlex onClick={handleAllClick}>
+            <Flex alignItems="center">
+              {filteredToken && (
+                <Box mr="8px">
+                  <CurrencyLogo currency={filteredToken} />
+                </Box>
+              )}
+              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+                {filteredToken ? filteredToken.symbol : 'ALL'}
+              </Text>
+            </Flex>
             <Box>
               <ChevronDown size={12} />
             </Box>
@@ -156,7 +165,7 @@ export default function Pools() {
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="32px" style={{ width: '100%' }}>
-            <Title onCurrencySelection={handleCurrencySelect} />
+            <Title onCurrencySelection={handleCurrencySelect} filteredToken={filterToken} />
             <ListFilter filter={aggregatedDataFilter} onFilterChange={setAggregatedDataFilter} />
             <PairsList
               showMyPairs
