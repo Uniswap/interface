@@ -14,17 +14,16 @@ import { getMinMaxPerTxn } from './limits'
 import {
   getBridgeType,
   getMultiBridgeFee,
-  getNativeBridgeFee,
+  getNativeAMBBridgeFee,
   calculateMultiBridgeFee,
-  calculateNativeBridgeFee
+  calculateNativeAMBBridgeFee,
+  getBscFuseInverseLibrary
 } from '../../utils'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import {
   FUSE_ERC20_TO_ERC677_BRIDGE_HOME_ADDRESS,
   BINANCE_CHAIN_ID,
-  BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS,
-  HOME_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS,
-  FOREIGN_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS
+  BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS
 } from '../../constants'
 
 export enum BridgeType {
@@ -222,10 +221,8 @@ export function useBridgeFee(tokenAddress: string | undefined, bridgeDirection: 
           args = [tokenAddress, BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS, library, account, isHome]
           break
         case BridgeType.BSC_FUSE_NATIVE:
-          // eslint-disable-next-line
-          const address = isHome ? HOME_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS : FOREIGN_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS
-          method = getNativeBridgeFee
-          args = [address, library, account, isHome]
+          method = getNativeAMBBridgeFee
+          args = [isHome, getBscFuseInverseLibrary(isHome), account]
           break
         default:
           throw new Error(`Unsupported bridgeType for token: ${tokenAddress}`)
@@ -268,10 +265,8 @@ export function useCalculatedBridgeFee(
           args = [currencyAmount, BINANCE_ERC20_TO_ERC677_HOME_BRIDGE_ADDRESS, library, account]
           break
         case BridgeType.BSC_FUSE_NATIVE:
-          // eslint-disable-next-line
-          const address = isHome ? HOME_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS : FOREIGN_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS
-          method = calculateNativeBridgeFee
-          args = [currencyAmount, address, library, account]
+          method = calculateNativeAMBBridgeFee
+          args = [currencyAmount, isHome, getBscFuseInverseLibrary(isHome), account]
           break
         default:
           throw new Error(`Unsupported bridgeType for token: ${tokenAddress}`)
