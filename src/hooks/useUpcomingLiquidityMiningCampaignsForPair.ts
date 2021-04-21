@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
 import { usePairLiquidityTokenTotalSupply } from '../data/Reserves'
-import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
+import { toLiquidityMiningCampaign } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 import { usePairReserveNativeCurrency } from './usePairReserveNativeCurrency'
 
@@ -32,7 +32,7 @@ const QUERY = gql`
 
 export function useUpcomingLiquidityMiningCampaignsForPair(
   pair: Pair
-): { loading: boolean; liquidityMiningCampaigns: LiquidityMiningCampaign[] } {
+): { loading: boolean; wrappedCampaigns: { campaign: LiquidityMiningCampaign; staked: boolean }[] } {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
   const lpTokenTotalSupply = usePairLiquidityTokenTotalSupply(pair)
@@ -48,18 +48,25 @@ export function useUpcomingLiquidityMiningCampaignsForPair(
   })
 
   return useMemo(() => {
-    if (loadingUpcomingCampaigns || loadingReserveNativeCurrency) return { loading: true, liquidityMiningCampaigns: [] }
-    if (error || !data || !chainId || !lpTokenTotalSupply) return { loading: false, liquidityMiningCampaigns: [] }
+    if (loadingUpcomingCampaigns || loadingReserveNativeCurrency) return { loading: true, wrappedCampaigns: [] }
+    if (error || !data || !chainId || !lpTokenTotalSupply) return { loading: false, wrappedCampaigns: [] }
+    const wrappedCampaigns = []
+    for (let i = 0; i < data.liquidityMiningCampaigns.length; i++) {
+      wrappedCampaigns.push({
+        campaign: toLiquidityMiningCampaign(
+          chainId,
+          pair,
+          lpTokenTotalSupply?.raw.toString(),
+          reserveNativeCurrency.raw.toString(),
+          data.liquidityMiningCampaigns[i],
+          nativeCurrency
+        ),
+        staked: false
+      })
+    }
     return {
       loading: false,
-      liquidityMiningCampaigns: toLiquidityMiningCampaigns(
-        chainId,
-        pair,
-        lpTokenTotalSupply?.raw.toString(),
-        reserveNativeCurrency.raw.toString(),
-        data.liquidityMiningCampaigns,
-        nativeCurrency
-      )
+      wrappedCampaigns
     }
   }, [
     chainId,

@@ -8,7 +8,7 @@ interface ActiveTabProps {
 }
 
 export default function ActiveTab({ pair }: ActiveTabProps) {
-  const { loading, liquidityMiningCampaigns } = useActiveLiquidityMiningCampaignsForPair(pair)
+  const { loading, wrappedCampaigns } = useActiveLiquidityMiningCampaignsForPair(pair)
 
-  return <List loading={loading} stakablePair={pair} items={liquidityMiningCampaigns} />
+  return <List loading={loading} stakablePair={pair} items={wrappedCampaigns} />
 }

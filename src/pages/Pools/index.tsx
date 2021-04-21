@@ -13,15 +13,14 @@ import { AutoColumn } from '../../components/Column'
 import { useActiveWeb3React } from '../../hooks'
 import threeBlurredCircles from '../../assets/svg/three-blurred-circles.svg'
 import { ChevronDown } from 'react-feather'
-import AggregatedPairsList from '../../components/Pool/AggregatedPairsList'
 import { CardSection } from '../../components/earn/styled'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
-import { useRouter } from '../../hooks/useRouter'
-import { Currency } from 'dxswap-sdk'
+import { Currency, Token } from 'dxswap-sdk'
 import { useLiquidityMiningFeatureFlag } from '../../hooks/useLiquidityMiningFeatureFlag'
-import { useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy } from '../../hooks/useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy'
-import { PairsFilterType } from '../../components/Pool/ListFilter'
+import { useAllPairsWithLiquidityAndMaximumApy } from '../../hooks/useAllPairsWithLiquidityAndMaximumApy'
+import ListFilter, { PairsFilterType } from '../../components/Pool/ListFilter'
 import { useLPPairs } from '../../hooks/useLiquidityPositions'
+import PairsList from '../../components/Pool/PairsList'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -139,22 +138,17 @@ function Title({ onCurrencySelection }: TitleProps) {
 
 export default function Pools() {
   const { account, chainId } = useActiveWeb3React()
-  const router = useRouter()
+  const [filterToken, setFilterToken] = useState<Token | undefined>()
   const [aggregatedDataFilter, setAggregatedDataFilter] = useState(PairsFilterType.ALL)
-  const {
-    loading: loadingAggregatedData,
-    aggregatedData
-  } = useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(aggregatedDataFilter)
-  const { loading: loadingUserLpPositions, pairs: userLpPairs } = useLPPairs(account || undefined)
-
-  const handleCurrencySelect = useCallback(
-    token => {
-      router.push({
-        pathname: `/pools/${token.address}`
-      })
-    },
-    [router]
+  const { loading: loadingAggregatedData, aggregatedData } = useAllPairsWithLiquidityAndMaximumApy(
+    aggregatedDataFilter,
+    filterToken
   )
+  const { loading: loadingUserLpPositions, data: userLpPairs } = useLPPairs(account || undefined)
+
+  const handleCurrencySelect = useCallback(token => {
+    setFilterToken(token as Token)
+  }, [])
 
   return (
     <>
@@ -163,12 +157,12 @@ export default function Pools() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="32px" style={{ width: '100%' }}>
             <Title onCurrencySelection={handleCurrencySelect} />
-            <AggregatedPairsList
+            <ListFilter filter={aggregatedDataFilter} onFilterChange={setAggregatedDataFilter} />
+            <PairsList
+              showMyPairs
               loading={loadingUserLpPositions || loadingAggregatedData}
-              aggregatedData={aggregatedData}
+              aggregatedPairs={aggregatedData}
               userLpPairs={userLpPairs}
-              filter={aggregatedDataFilter}
-              onFilterChange={setAggregatedDataFilter}
             />
           </AutoColumn>
         </AutoColumn>

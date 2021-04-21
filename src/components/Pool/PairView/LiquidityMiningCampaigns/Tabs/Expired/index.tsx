@@ -9,12 +9,12 @@ interface ExpiredTabProps {
 }
 
 export default function ExpiredTab({ pair }: ExpiredTabProps) {
-  const { loading, liquidityMiningCampaigns } = useExpiredLiquidityMiningCampaignsForPair(
+  const { loading, wrappedCampaigns } = useExpiredLiquidityMiningCampaignsForPair(
     pair,
     DateTime.utc()
       .minus(Duration.fromObject({ days: 30 }))
       .toJSDate()
   )
 
-  return <List loading={loading} stakablePair={pair} items={liquidityMiningCampaigns} />
+  return <List loading={loading} stakablePair={pair} items={wrappedCampaigns} />
 }

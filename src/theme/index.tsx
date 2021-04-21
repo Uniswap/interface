@@ -98,7 +98,7 @@ export function colors(darkMode: boolean): Colors {
     boxShadow: '#0A0A0F',
 
     // darkest // dark 1.1
-    darkest: '#131218',
+    darkest: '#161721',
     dark1: '#191824',
     dark2: '#2A2F42'
   }

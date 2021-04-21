@@ -3,31 +3,29 @@ import styled from 'styled-components'
 import { useResponsiveItemsPerPage } from '../../../hooks/useResponsiveItemsPerPage'
 import LoadingCard from './LoadingCard'
 
-const ListLayout = styled.div<{ wide: boolean }>`
+const ListLayout = styled.div`
   display: grid;
-  grid-gap: 9px;
-  grid-template-columns: ${props => (props.wide ? 'auto auto auto' : 'auto auto auto auto')};
-  ${({ theme }) => theme.mediaWidth.upToMedium<{ wide: boolean }>`
-    grid-template-columns: ${props => (props.wide ? 'auto auto' : ' auto auto auto')};
+  grid-gap: 12px 16px;
+  grid-template-columns: auto auto auto;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: auto auto;
   `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall<{ wide: boolean }>`
-    grid-template-columns: ${props => (props.wide ? 'auto' : ' auto auto')};
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    grid-template-columns: auto;
   `};
 `
 
 interface LoadingListProps {
-  wideCards?: boolean
-  doubleCircle?: boolean
   itemsAmount?: number
 }
 
-export default function LoadingList({ wideCards, doubleCircle, itemsAmount }: LoadingListProps) {
-  const responsiveItemsAmount = useResponsiveItemsPerPage(!!wideCards)
+export default function LoadingList({ itemsAmount }: LoadingListProps) {
+  const responsiveItemsAmount = useResponsiveItemsPerPage()
 
   return (
-    <ListLayout wide={!!wideCards}>
+    <ListLayout>
       {new Array(itemsAmount || responsiveItemsAmount).fill(null).map((_, index) => (
-        <LoadingCard key={index} doubleCircle={doubleCircle} />
+        <LoadingCard key={index} />
       ))}
     </ListLayout>
   )

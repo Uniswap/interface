@@ -4,41 +4,29 @@ import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import Pagination from '../../../../Pagination'
 import { LiquidityMiningCampaignModal } from '../../LiquidityMiningCampaignModal'
-import PairCard from '../../../PairsList/Pair'
 import Empty from '../../../Empty'
-import { getRemainingRewardsUSD } from '../../../../../utils/liquidityMining'
-import { useNativeCurrencyUSDPrice } from '../../../../../hooks/useNativeCurrencyUSDPrice'
 import LoadingList from '../../../LoadingList'
 import { usePage } from '../../../../../hooks/usePage'
 import { useTokenBalance } from '../../../../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../../../../hooks'
 import { useWindowSize } from '../../../../../hooks/useWindowSize'
 import { MEDIA_WIDTHS } from '../../../../../theme'
+import { usePairLiquidityUSD } from '../../../../../hooks/usePairLiquidityUSD'
+import Item from './Item'
 
 const ListLayout = styled.div`
   display: grid;
-  grid-gap: 9px;
-  grid-template-columns: 208px 208px 208px;
+  grid-gap: 10px;
+  grid-template-columns: 200px 200px 200px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: auto;
     grid-gap: 10px;
   `};
 `
 
-const SizedPairCard = styled(PairCard)`
-  width: 208px;
-  height: 155px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: auto auto;
-  `};
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    grid-template-columns: 100%;
-  `};
-`
-
 interface LiquidityMiningCampaignsListProps {
   stakablePair?: Pair
-  items?: LiquidityMiningCampaign[]
+  items?: { campaign: LiquidityMiningCampaign; staked: boolean }[]
   loading?: boolean
 }
 
@@ -50,9 +38,9 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
   const [responsiveItemsPerPage, setResponsiveItemsPerPage] = useState(0)
   const itemsPage = usePage(items || [], responsiveItemsPerPage, page, 0)
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
-  const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
   const [selectedCampaign, setSelectedCampaign] = useState<LiquidityMiningCampaign | null>(null)
   const { width } = useWindowSize()
+  const { loading: loadingStakablePairLiquidityUSD, liquidityUSD } = usePairLiquidityUSD(stakablePair)
 
   const handleLiquidityMiningCampaignModalDismiss = useCallback(() => {
     setSelectedCampaign(null)
@@ -69,23 +57,24 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
     else setResponsiveItemsPerPage(3)
   }, [width])
 
-  const overallLoading = loading || loadingNativeCurrencyUsdPrice || !items
+  const overallLoading = loading || loadingStakablePairLiquidityUSD || !items
 
   return (
     <>
       <Flex flexDirection="column">
         <Box mb="8px" height="155px">
           {overallLoading ? (
-            <LoadingList wideCards itemsAmount={responsiveItemsPerPage} />
+            <LoadingList itemsAmount={responsiveItemsPerPage} />
           ) : itemsPage.length > 0 ? (
             <ListLayout>
               {itemsPage.map((item, index) => (
-                <div key={index} onClick={getLiquidityMiningClickHandler(item)}>
-                  <SizedPairCard
+                <div key={index} onClick={getLiquidityMiningClickHandler(item.campaign)}>
+                  <Item
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
-                    usdRewards={getRemainingRewardsUSD(item, nativeCurrencyUSDPrice)}
-                    apy={item.apy}
+                    usdLiquidity={liquidityUSD}
+                    apy={item.campaign.apy}
+                    staked={item.staked}
                   />
                 </div>
               ))}

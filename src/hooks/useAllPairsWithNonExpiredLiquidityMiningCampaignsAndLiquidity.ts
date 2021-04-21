@@ -1,5 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
-import { Pair, Token, TokenAmount } from 'dxswap-sdk'
+import Decimal from 'decimal.js-light'
+import { CurrencyAmount, Pair, Token, TokenAmount, USD } from 'dxswap-sdk'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
@@ -13,6 +14,7 @@ const QUERY = gql`
       address: id
       reserve0
       reserve1
+      reserveUSD
       reserveNativeCurrency
       totalSupply
       token0 {
@@ -60,6 +62,7 @@ interface SubgraphPair {
   reserve0: string
   reserve1: string
   reserveNativeCurrency: string
+  reserveUSD: string
   totalSupply: string
   token0: SubgraphToken
   token1: SubgraphToken
@@ -70,23 +73,37 @@ interface QueryResult {
   pairs: SubgraphPair[]
 }
 
-export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
+export function useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidity(
+  tokenFilter?: Token
+): {
   loading: boolean
-  pairs: Pair[]
+  wrappedPairs: {
+    pair: Pair
+    reserveUSD: CurrencyAmount
+  }[]
 } {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
   const memoizedTimestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
   const { loading, error, data } = useQuery<QueryResult>(QUERY, { variables: { timestamp: memoizedTimestamp } })
+  const filterTokenAddress = useMemo(() => tokenFilter?.address.toLowerCase(), [tokenFilter])
 
   return useMemo(() => {
-    if (loading) return { loading: true, pairs: [] }
-    if (error || !data || !chainId) return { loading: false, pairs: [] }
+    if (loading) return { loading: true, wrappedPairs: [] }
+    if (error || !data || !chainId) return { loading: false, wrappedPairs: [] }
+    const rawPairs = filterTokenAddress
+      ? data.pairs.filter(
+          pair =>
+            pair.token0.address.toLowerCase() === filterTokenAddress ||
+            pair.token1.address.toLowerCase() === filterTokenAddress
+        )
+      : data.pairs
     return {
       loading: false,
-      pairs: data.pairs.map(rawPair => {
+      wrappedPairs: rawPairs.map(rawPair => {
         const {
           reserveNativeCurrency,
+          reserveUSD,
           totalSupply,
           token0,
           token1,
@@ -113,8 +130,13 @@ export function useAllPairsWithNonExpiredLiquidityMiningCampaigns(): {
           nativeCurrency
         )
         pair.liquidityMiningCampaigns = campaigns
-        return pair
+        return {
+          pair,
+          reserveUSD: CurrencyAmount.usd(
+            parseUnits(new Decimal(reserveUSD).toFixed(USD.decimals), USD.decimals).toString()
+          )
+        }
       }, [])
     }
-  }, [chainId, data, error, loading, nativeCurrency])
+  }, [chainId, data, error, filterTokenAddress, loading, nativeCurrency])
 }

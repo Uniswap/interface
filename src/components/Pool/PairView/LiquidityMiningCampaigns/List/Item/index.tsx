@@ -1,12 +1,13 @@
 import React from 'react'
 import { Box, Flex } from 'rebass'
 import { CurrencyAmount, Percent, Token } from 'dxswap-sdk'
-import { TYPE } from '../../../../theme'
-import DoubleCurrencyLogo from '../../../DoubleLogo'
-import { DarkCard } from '../../../Card'
-import styled from 'styled-components'
-import ApyBadge from '../../ApyBadge'
 import { ethers } from 'ethers'
+import DoubleCurrencyLogo from '../../../../../DoubleLogo'
+import ApyBadge from '../../../../ApyBadge'
+import StakedBadge from './StakedBadge'
+import styled from 'styled-components'
+import { DarkCard } from '../../../../../Card'
+import { TYPE } from '../../../../../../theme'
 
 const SizedCard = styled(DarkCard)`
   width: 210px;
@@ -17,14 +18,15 @@ const SizedCard = styled(DarkCard)`
   `}
 `
 
-interface PairProps {
+interface ItemProps {
   token0?: Token
   token1?: Token
   apy: Percent
   usdLiquidity: CurrencyAmount
+  staked: boolean
 }
 
-export default function Pair({ token0, token1, usdLiquidity, apy, ...rest }: PairProps) {
+export default function Item({ token0, token1, usdLiquidity, apy, staked, ...rest }: ItemProps) {
   return (
     <SizedCard selectable {...rest}>
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
@@ -32,11 +34,18 @@ export default function Pair({ token0, token1, usdLiquidity, apy, ...rest }: Pai
           <Box>
             <DoubleCurrencyLogo currency0={token0} currency1={token1} size={36} />
           </Box>
-          {apy.greaterThan('0') && (
-            <Box>
-              <ApyBadge apy={apy} />
-            </Box>
-          )}
+          <Flex flexDirection="column" alignItems="flex-end">
+            {apy.greaterThan('0') && (
+              <Box>
+                <ApyBadge apy={apy} />
+              </Box>
+            )}
+            {staked && (
+              <Box mt="4px">
+                <StakedBadge />
+              </Box>
+            )}
+          </Flex>
         </Flex>
         <Flex flexDirection="column">
           <Box>

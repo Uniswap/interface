@@ -11,7 +11,6 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds, RedirectOldAddLiquidityPathStructure } from './AddLiquidity/redirects'
 import Pools from './Pools'
-import PairsByToken0 from './Pools/PairsByToken0'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
@@ -85,7 +84,6 @@ export default function App() {
                     <Route exact strict path="/find" component={PoolFinder} />
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/mine" component={MyPairs} />
-                    <Route exact strict path="/pools/:currencyIdA" component={PairsByToken0} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pair} />
                     <Route exact strict path="/create" component={AddLiquidity} />
                     <Route exact path="/add" component={AddLiquidity} />

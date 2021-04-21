@@ -8,7 +8,7 @@ interface UpcomingTabProps {
 }
 
 export default function UpcomingTab({ pair }: UpcomingTabProps) {
-  const { loading, liquidityMiningCampaigns } = useUpcomingLiquidityMiningCampaignsForPair(pair)
+  const { loading, wrappedCampaigns } = useUpcomingLiquidityMiningCampaignsForPair(pair)
 
-  return <List loading={loading} stakablePair={pair} items={liquidityMiningCampaigns} />
+  return <List loading={loading} stakablePair={pair} items={wrappedCampaigns} />
 }

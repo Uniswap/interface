@@ -54,6 +54,77 @@ export function getPairMaximumApy(pair: Pair): Percent {
   }, new Percent('0', '100'))
 }
 
+export function toLiquidityMiningCampaign(
+  chainId: ChainId,
+  targetedPair: Pair,
+  targetedPairLpTokenTotalSupply: string,
+  targetedPairReserveNativeCurrency: string,
+  campaign: SubgraphLiquidityMiningCampaign,
+  nativeCurrency: Currency
+): LiquidityMiningCampaign {
+  const rewards = campaign.rewardTokens.map((rewardToken, index) => {
+    const properRewardToken = new Token(
+      chainId,
+      getAddress(rewardToken.address),
+      parseInt(rewardToken.decimals),
+      rewardToken.symbol,
+      rewardToken.name
+    )
+    const rewardTokenPriceNativeCurrency = new Price(
+      properRewardToken,
+      nativeCurrency,
+      parseUnits('1', nativeCurrency.decimals).toString(),
+      parseUnits(
+        new Decimal(rewardToken.derivedNativeCurrency).toFixed(nativeCurrency.decimals),
+        nativeCurrency.decimals
+      ).toString()
+    )
+    const pricedRewardToken = new PricedToken(
+      chainId,
+      getAddress(rewardToken.address),
+      parseInt(rewardToken.decimals),
+      rewardTokenPriceNativeCurrency,
+      rewardToken.symbol,
+      rewardToken.name
+    )
+    return new PricedTokenAmount(
+      pricedRewardToken,
+      parseUnits(campaign.rewardAmounts[index], rewardToken.decimals).toString()
+    )
+  })
+  const lpTokenPriceNativeCurrency = getLpTokenPrice(
+    targetedPair,
+    nativeCurrency,
+    targetedPairLpTokenTotalSupply,
+    targetedPairReserveNativeCurrency
+  )
+  const stakedPricedToken = new PricedToken(
+    chainId,
+    getAddress(targetedPair.liquidityToken.address),
+    targetedPair.liquidityToken.decimals,
+    lpTokenPriceNativeCurrency,
+    targetedPair.liquidityToken.symbol,
+    targetedPair.liquidityToken.name
+  )
+  const staked = new PricedTokenAmount(
+    stakedPricedToken,
+    parseUnits(campaign.stakedAmount, stakedPricedToken.decimals).toString()
+  )
+  return new LiquidityMiningCampaign(
+    campaign.startsAt,
+    campaign.endsAt,
+    targetedPair,
+    rewards,
+    staked,
+    campaign.locked,
+    new TokenAmount(
+      targetedPair.liquidityToken,
+      parseUnits(campaign.stakingCap, targetedPair.liquidityToken.decimals).toString()
+    ),
+    getAddress(campaign.address)
+  )
+}
+
 export function toLiquidityMiningCampaigns(
   chainId: ChainId,
   targetedPair: Pair,
@@ -62,67 +133,14 @@ export function toLiquidityMiningCampaigns(
   rawLiquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[],
   nativeCurrency: Currency
 ): LiquidityMiningCampaign[] {
-  return rawLiquidityMiningCampaigns.map(campaign => {
-    const rewards = campaign.rewardTokens.map((rewardToken, index) => {
-      const properRewardToken = new Token(
-        chainId,
-        getAddress(rewardToken.address),
-        parseInt(rewardToken.decimals),
-        rewardToken.symbol,
-        rewardToken.name
-      )
-      const rewardTokenPriceNativeCurrency = new Price(
-        properRewardToken,
-        nativeCurrency,
-        parseUnits('1', nativeCurrency.decimals).toString(),
-        parseUnits(
-          new Decimal(rewardToken.derivedNativeCurrency).toFixed(nativeCurrency.decimals),
-          nativeCurrency.decimals
-        ).toString()
-      )
-      const pricedRewardToken = new PricedToken(
-        chainId,
-        getAddress(rewardToken.address),
-        parseInt(rewardToken.decimals),
-        rewardTokenPriceNativeCurrency,
-        rewardToken.symbol,
-        rewardToken.name
-      )
-      return new PricedTokenAmount(
-        pricedRewardToken,
-        parseUnits(campaign.rewardAmounts[index], rewardToken.decimals).toString()
-      )
-    })
-    const lpTokenPriceNativeCurrency = getLpTokenPrice(
-      targetedPair,
-      nativeCurrency,
-      targetedPairLpTokenTotalSupply,
-      targetedPairReserveNativeCurrency
-    )
-    const stakedPricedToken = new PricedToken(
+  return rawLiquidityMiningCampaigns.map(campaign =>
+    toLiquidityMiningCampaign(
       chainId,
-      getAddress(targetedPair.liquidityToken.address),
-      targetedPair.liquidityToken.decimals,
-      lpTokenPriceNativeCurrency,
-      targetedPair.liquidityToken.symbol,
-      targetedPair.liquidityToken.name
-    )
-    const staked = new PricedTokenAmount(
-      stakedPricedToken,
-      parseUnits(campaign.stakedAmount, stakedPricedToken.decimals).toString()
-    )
-    return new LiquidityMiningCampaign(
-      campaign.startsAt,
-      campaign.endsAt,
       targetedPair,
-      rewards,
-      staked,
-      campaign.locked,
-      new TokenAmount(
-        targetedPair.liquidityToken,
-        parseUnits(campaign.stakingCap, targetedPair.liquidityToken.decimals).toString()
-      ),
-      getAddress(campaign.address)
+      targetedPairLpTokenTotalSupply,
+      targetedPairReserveNativeCurrency,
+      campaign,
+      nativeCurrency
     )
-  })
+  )
 }
