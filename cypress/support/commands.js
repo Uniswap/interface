@@ -6,7 +6,7 @@
 
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
-import { _Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
+import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
 // never send real ether to this, obviously
 const PRIVATE_KEY_TEST_NEVER_USE = '0xad20c82497421e9784f18460ad2fe84f73569068e98e270b3e63743268af5763'
@@ -16,7 +16,9 @@ export const TEST_ADDRESS_NEVER_USE = '0x0fF2D1eFd7A57B7562b2bf27F3f37899dB27F4a
 
 export const TEST_ADDRESS_NEVER_USE_SHORTENED = '0x0fF2...F4a5'
 
-class CustomizedBridge extends _Eip1193Bridge {
+class CustomizedBridge extends Eip1193Bridge {
+  chainId = 4
+
   async sendAsync(...args) {
     console.debug('sendAsync called', ...args)
     return this.send(...args)
