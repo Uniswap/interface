@@ -1,18 +1,16 @@
-name: Lint
-
+name: Unit Tests
 on:
   push:
     branches:
       - main
-  pull_request_target:
+  pull_request:
     branches:
       - main
 
 jobs:
-  run-linters:
-    name: Run linters
+  unit-tests:
+    name: Unit tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,10 +24,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run linters
-        uses: wearerequired/lint-action@b98b0918aa71490373d2eca9e8e39a9bc1cc2517
-        with:
-          github_token: ${{ secrets.github_token }}
-          eslint: true
-          eslint_extensions: js,jsx,ts,tsx,json
-          auto_fix: true
+      - name: Run unit tests
+        run: yarn test
