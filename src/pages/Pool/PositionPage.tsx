@@ -4,7 +4,7 @@ import { PoolState, usePool } from 'data/Pools'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, Link } from 'react-router-dom'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { LoadingRows } from './styleds'
 import styled from 'styled-components'
@@ -99,6 +99,7 @@ export function PositionPage({
     liquidity,
     tickLower,
     tickUpper,
+    tokenId,
     // feeGrowthInside0LastX128,
     // feeGrowthInside1LastX128,
   } = positionDetails || {}
@@ -112,8 +113,8 @@ export function PositionPage({
   // construct Position from details returned
   const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
   const position = useMemo(() => {
-    if (pool && tickLower && tickUpper) {
-      return new Position({ pool, liquidity, tickLower, tickUpper })
+    if (pool && liquidity && tickLower && tickUpper) {
+      return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
     }
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
@@ -156,9 +157,11 @@ export function PositionPage({
                 <BadgeText>{basisPointsToPercent(feeAmount / 100).toSignificant()}%</BadgeText>
               </Badge>
             </RowFixed>
-            <ButtonPrimary width="200px" padding="8px" borderRadius="12px">
-              Remove liquidity
-            </ButtonPrimary>
+            {tokenId && (
+              <ButtonPrimary width="200px" padding="8px" borderRadius="12px" as={Link} to={`/remove/${tokenId}`}>
+                Remove liquidity
+              </ButtonPrimary>
+            )}
           </RowBetween>
           <RowBetween>
             <BadgeWrapper>
