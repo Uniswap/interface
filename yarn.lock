@@ -4139,16 +4139,6 @@
   resolved "https://registry.yarnpkg.com/@uniswap/v3-core/-/v3-core-1.0.0-rc.2.tgz#a1afb3253a7295bec6165ad1d960121e6851a576"
   integrity sha512-vsqkqAHPCKsVi0nWwWeX+mHnSTJ8ZUdu1zAVXB9Mj9A+aeBQGV9foRKs9ufDGJq7S1nqmz+7FdjSOcVoeiUqgQ==
 
-"@uniswap/v3-periphery@^1.0.0-beta.19":
-  version "1.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0-beta.21.tgz#0b8510bebca4b74aabdca72c5545bd5bec5128cd"
-  integrity sha512-o4U+lyH6qtlG2RTy3H/mtUGJuflkmVJ0pnXyrThZKC1KV/avlVgf4hmlG2PvOCV0yfwGMjQARKQ4jv6OpLFVqA==
-  dependencies:
-    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
-    "@uniswap/lib" "^4.0.1-alpha"
-    "@uniswap/v2-core" "1.0.1"
-    "@uniswap/v3-core" "1.0.0-rc.2"
-
 "@uniswap/v3-periphery@^1.0.0-beta.20":
   version "1.0.0-beta.20"
   resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0-beta.20.tgz#67a8086315e4820e3669b1f645916f9e246a6e56"
@@ -4159,15 +4149,25 @@
     "@uniswap/v2-core" "1.0.1"
     "@uniswap/v3-core" "1.0.0-rc.2"
 
-"@uniswap/v3-sdk@^1.0.0-alpha.12":
-  version "1.0.0-alpha.12"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-1.0.0-alpha.12.tgz#097b525479a42d7546ca292c0a5488209f14fd6f"
-  integrity sha512-sMQr7G7/nU1W1ivSoC8Ku+RpzokYc6/cjQM7kj5o9DUwi2qvHnVV+sCQpU74piubTX3THBgbRVFLoOEBxPtYng==
+"@uniswap/v3-periphery@^1.0.0-beta.21":
+  version "1.0.0-beta.21"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0-beta.21.tgz#0b8510bebca4b74aabdca72c5545bd5bec5128cd"
+  integrity sha512-o4U+lyH6qtlG2RTy3H/mtUGJuflkmVJ0pnXyrThZKC1KV/avlVgf4hmlG2PvOCV0yfwGMjQARKQ4jv6OpLFVqA==
+  dependencies:
+    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
+    "@uniswap/lib" "^4.0.1-alpha"
+    "@uniswap/v2-core" "1.0.1"
+    "@uniswap/v3-core" "1.0.0-rc.2"
+
+"@uniswap/v3-sdk@^1.0.0-alpha.13":
+  version "1.0.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-1.0.0-alpha.13.tgz#5634bb361e6bcb8e1a05d79a2aa61ffe13412f0c"
+  integrity sha512-OEEMhMoJlRQyqcd6u4r37cyifVy5jKJf/afW1jD8iqRqg/qAiYG0aR9Y/s7HiDA9WVHyaL/0YsWG8f0hv2UK/w==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
     "@uniswap/sdk-core" "^1.0.9"
-    "@uniswap/v3-periphery" "^1.0.0-beta.19"
+    "@uniswap/v3-periphery" "^1.0.0-beta.21"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
 
