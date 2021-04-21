@@ -70,7 +70,7 @@ export function useAllV3Ticks(
     'getPopulatedTicksInWord',
     tickLensArgs,
     REFRESH_FREQUENCY,
-    1_500_000
+    3_000_000
   )
 
   const error = useMemo(() => callStates.some(({ error }) => error), [callStates])

@@ -47,7 +47,7 @@ function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: TokenAmou
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            {token0Amount.toSignificant(4)}
+            <FormattedCurrencyAmount currencyAmount={token0Amount} />
           </Text>
           <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={token0Amount.token} />
         </RowFixed>

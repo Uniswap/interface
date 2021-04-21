@@ -11,10 +11,10 @@ import { FACTORY_ADDRESSES } from 'constants/v3'
 import { useAllV3Ticks } from 'hooks/useAllV3Ticks'
 
 export enum PoolState {
-  LOADING,
-  NOT_EXISTS,
-  EXISTS,
-  INVALID,
+  LOADING = 'LOADING',
+  NOT_EXISTS = 'NOT_EXISTS',
+  EXISTS = 'EXISTS',
+  INVALID = 'INVALID',
 }
 
 export function usePool(currencyA?: Currency, currencyB?: Currency, feeAmount?: FeeAmount): [PoolState, Pool | null] {

@@ -2,17 +2,17 @@ import { useSingleCallResult, useSingleContractMultipleData, Result } from 'stat
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import { useV3NFTPositionManagerContract } from './useContract'
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
+import { BigNumber } from '@ethersproject/bignumber'
 
 interface UseV3PositionsResults {
   loading: boolean
   error: boolean
-  positions: PositionDetails[] | undefined
+  positions: (PositionDetails & { tokenId: BigNumber })[] | undefined
 }
 
-function useV3PositionsFromTokenIds(tokenIds: BigNumberish[]): UseV3PositionsResults {
+function useV3PositionsFromTokenIds(tokenIds: BigNumber[]): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
-  const inputs = useMemo(() => tokenIds.map((tokenId) => [BigNumber.from(tokenId)]), [tokenIds])
+  const inputs = useMemo(() => tokenIds.map((tokenId) => [tokenId]), [tokenIds])
   const results = useSingleContractMultipleData(positionManager ?? undefined, 'positions', inputs)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
@@ -44,17 +44,17 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumberish[]): UseV3PositionsRes
   return {
     loading,
     error,
-    positions,
+    positions: positions?.map((position, i) => ({ ...position, tokenId: inputs[i][0] })),
   }
 }
 
 interface UseV3PositionResults {
   loading: boolean
   error: boolean
-  position: PositionDetails | undefined
+  position: (PositionDetails & { tokenId: BigNumber }) | undefined
 }
 
-export function useV3PositionFromTokenId(tokenId: BigNumberish): UseV3PositionResults {
+export function useV3PositionFromTokenId(tokenId: BigNumber): UseV3PositionResults {
   const position = useV3PositionsFromTokenIds([tokenId])
   return {
     loading: position.loading,
