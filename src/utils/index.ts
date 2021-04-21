@@ -246,6 +246,7 @@ export function getHomeAMBNativeToErc20Contract(address: string, library: Web3Pr
 }
 
 export function getForeignAMBNativeToErc20Contract(address: string, library: Web3Provider, account?: string): Contract {
+  console.log(library)
   return getContract(address, ForeignAMBNativeToErc20ABI, library, account)
 }
 
@@ -486,10 +487,10 @@ export async function getAMBNativeToErc20FeeManagerAddress(isHome: boolean, libr
 }
 
 export async function getNativeAMBBridgeFee(isHome: boolean, library: Web3Provider, account: string) {
-  const feeManagerAddress = await getAMBNativeToErc20FeeManagerAddress(isHome, library, account)
-  if (feeManagerAddress === AddressZero) return '0'
+  const address = await getAMBNativeToErc20FeeManagerAddress(isHome, library, account)
+  if (address === AddressZero) return '0'
 
-  const contract = getFeeManagerAMBNativeToErc20Contract(feeManagerAddress, library, account)
+  const contract = getFeeManagerAMBNativeToErc20Contract(address, library, account)
   const fee = await contract.fee()
   return formatEther(fee)
 }
@@ -524,14 +525,14 @@ export async function calculateNativeAMBBridgeFee(
   library: Web3Provider,
   account: string
 ) {
-  const feeManagerAddress = await getAMBNativeToErc20FeeManagerAddress(isHome, library, account)
-  if (feeManagerAddress === AddressZero) return '0'
+  const address = await getAMBNativeToErc20FeeManagerAddress(isHome, library, account)
+  if (address === AddressZero) return '0'
 
-  const contract = getFeeManagerAMBNativeToErc20Contract(feeManagerAddress, library, account)
+  const contract = getFeeManagerAMBNativeToErc20Contract(address, library, account)
   const fee = await contract.calculateFee(amount.raw.toString())
   return formatEther(fee)
 }
 
-export async function getBscFuseInverseLibrary(isHome: boolean) {
+export function getBscFuseInverseLibrary(isHome: boolean) {
   return isHome ? getChainNetworkLibrary(BINANCE_CHAIN_ID) : getNetworkLibrary()
 }
