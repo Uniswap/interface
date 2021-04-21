@@ -134,7 +134,7 @@ export default function Earn() {
         {!isGenesisOver && <LaunchCountdown />}
 
         <PoolSection>
-          {stakingRewardsExist && sortedStakingInfos?.length === 0 && isGenesisOver ? (
+          {stakingRewardsExist && sortedStakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
           ) : !stakingRewardsExist ? (
             renderInactiveStakingInfo(stakingInfosWithBalance)

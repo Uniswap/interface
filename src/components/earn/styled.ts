@@ -68,7 +68,7 @@ export const CardNoise = styled.span`
   position: absolute;
   top: 0;
   left: 0;
-  user-select: none;
+  pointer-events: none;
 `
 
 export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`

@@ -5,13 +5,24 @@ import { useLayoutEffect, useState } from 'react'
 import { useTheme } from 'styled-components'
 import uriToHttp from 'utils/uriToHttp'
 import { hex } from 'wcag-contrast'
+import * as UbeswapDefaultList from '@ubeswap/default-token-list'
+import * as UbeswapExperimentalList from '@ubeswap/default-token-list/ubeswap-experimental.token-list.json'
+
+const images: Record<string, string> = {}
+
+UbeswapDefaultList.tokens.concat(UbeswapExperimentalList.tokens).forEach((token) => {
+  images[token.address] = token.logoURI
+})
 
 async function getColorFromToken(token: Token): Promise<string | null> {
   if (token.chainId === ChainId.ALFAJORES && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
     return Promise.resolve('#FAAB14')
   }
 
-  const path = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
+  const path = images[token.address]
+  if (!path) {
+    return '#FAAB14'
+  }
 
   return Vibrant.from(path)
     .getPalette()

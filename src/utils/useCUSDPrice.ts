@@ -1,4 +1,4 @@
-import { currencyEquals, cUSD, Price, Token } from '@ubeswap/sdk'
+import { CELO, currencyEquals, cUSD, Price, Token } from '@ubeswap/sdk'
 import { useMemo } from 'react'
 import { usePairs } from '../data/Reserves'
 import { useActiveWeb3React } from '../hooks'
@@ -10,11 +10,16 @@ import { useActiveWeb3React } from '../hooks'
 export default function useCUSDPrice(token?: Token): Price | undefined {
   const { chainId } = useActiveWeb3React()
   const CUSD = cUSD[chainId]
+  const celo = CELO[chainId]
   const tokenPairs: [Token | undefined, Token | undefined][] = useMemo(
-    () => [[token && currencyEquals(token, CUSD) ? undefined : token, CUSD]],
-    [CUSD, token]
+    () => [
+      [token && currencyEquals(token, CUSD) ? undefined : token, CUSD],
+      [token && currencyEquals(token, celo) ? undefined : token, celo],
+      [celo, CUSD],
+    ],
+    [CUSD, celo, token]
   )
-  const [[, cUSDPair]] = usePairs(tokenPairs)
+  const [[, cUSDPair], [, celoPair], [, celoCUSDPair]] = usePairs(tokenPairs)
 
   return useMemo(() => {
     if (!token || !chainId) {
@@ -30,6 +35,10 @@ export default function useCUSDPrice(token?: Token): Price | undefined {
       return cUSDPair.priceOf(token)
     }
 
+    if (celoPair && celoCUSDPair) {
+      return celoPair.priceOf(token).multiply(celoCUSDPair.priceOf(celo))
+    }
+
     return undefined
-  }, [chainId, token, CUSD, cUSDPair])
+  }, [chainId, token, CUSD, cUSDPair, celo, celoCUSDPair, celoPair])
 }

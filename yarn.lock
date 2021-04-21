@@ -3877,10 +3877,10 @@
     "@typescript-eslint/types" "4.20.0"
     eslint-visitor-keys "^2.0.0"
 
-"@ubeswap/default-token-list@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-2.0.1.tgz#3f57366f13a46bf072a4e03c721b5489d575a29b"
-  integrity sha512-rSNBAn3iRC/srJwqdnBStitpqI3J/6MEXGyf1/MUkNDQJYV2otPScmFwBZRT75dGConTI/n8FwJ/6Fl9Wc1jlw==
+"@ubeswap/default-token-list@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-2.1.0.tgz#6393c62e7dc0f9338a0d7e3b0f420449ce8e493c"
+  integrity sha512-b82XfUf9u8daWkpm7JOk17eozIETQNqoFaYR+nBjQ+BzreM/OwgW2v8+GSjXauTC3NZvhuot5gMJ8X05ZJc0/Q==
 
 "@ubeswap/injected-connector@^6.0.8":
   version "6.0.8"

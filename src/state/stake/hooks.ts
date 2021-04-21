@@ -1,4 +1,4 @@
-import { JSBI, Pair, Token, TokenAmount } from '@ubeswap/sdk'
+import { ChainId, JSBI, Pair, Token, TokenAmount } from '@ubeswap/sdk'
 import { POOL_MANAGER } from 'constants/poolManager'
 import { UBE } from 'constants/tokens'
 import { BigNumber } from 'ethers'
@@ -26,30 +26,32 @@ export const STAKING_GENESIS = 1619100000
 
 export interface StakingInfo {
   // the address of the reward contract
-  stakingRewardAddress: string
+  readonly stakingRewardAddress: string
   // the tokens involved in this pair
-  tokens: [Token, Token]
+  readonly tokens: readonly [Token, Token]
   // the amount of token currently staked, or undefined if no account
-  stakedAmount: TokenAmount
+  readonly stakedAmount: TokenAmount
   // the amount of reward token earned by the active account, or undefined if no account
-  earnedAmount: TokenAmount
+  readonly earnedAmount: TokenAmount
   // the total amount of token staked in the contract
-  totalStakedAmount: TokenAmount
+  readonly totalStakedAmount: TokenAmount
   // the amount of token distributed per second to all LPs, constant
-  totalRewardRate: TokenAmount
+  readonly totalRewardRate: TokenAmount
   // the current amount of token distributed to the active account per second.
   // equivalent to percent of total supply * reward rate
-  rewardRate: TokenAmount
+  readonly rewardRate: TokenAmount
   // when the period ends
-  periodFinish: Date | undefined
+  readonly periodFinish: Date | undefined
   // if pool is active
-  active: boolean
+  readonly active: boolean
   // calculates a hypothetical amount of token distributed to the active account per second.
-  getHypotheticalRewardRate: (
+  readonly getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
     totalStakedAmount: TokenAmount,
     totalRewardRate: TokenAmount
   ) => TokenAmount
+  readonly nextPeriodRewards: TokenAmount
+  readonly poolInfo: IRawPool
 }
 
 // gets the staking info from the network for the active chain id
@@ -64,7 +66,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
   const ube = chainId ? UBE[chainId] : undefined
 
   // These are the staking pools
-  const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }: any) => stakingRewardAddress), [info])
+  const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 
   const accountArg = useMemo(() => [account ?? undefined], [account])
 
@@ -93,104 +95,108 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
   return useMemo(() => {
     if (!chainId || !ube) return []
 
-    return rewardsAddresses.reduce((memo: any[], rewardsAddress: string, index: number) => {
-      // these two are dependent on account
-      const balanceState = balances[index]
-      const earnedAmountState = earnedAmounts[index]
+    return info.reduce(
+      (memo: StakingInfo[], { stakingRewardAddress: rewardsAddress, poolInfo, tokens }, index: number) => {
+        // these two are dependent on account
+        const balanceState = balances[index]
+        const earnedAmountState = earnedAmounts[index]
 
-      // these get fetched regardless of account
-      const totalSupplyState = totalSupplies[index]
-      const rewardRateState = rewardRates[index]
-      const periodFinishState = periodFinishes[index]
+        // these get fetched regardless of account
+        const totalSupplyState = totalSupplies[index]
+        const rewardRateState = rewardRates[index]
+        const periodFinishState = periodFinishes[index]
 
-      if (
-        // these may be undefined if not logged in
-        !balanceState?.loading &&
-        !earnedAmountState?.loading &&
-        // always need these
-        totalSupplyState &&
-        !totalSupplyState.loading &&
-        rewardRateState &&
-        !rewardRateState.loading &&
-        periodFinishState &&
-        !periodFinishState.loading
-      ) {
         if (
-          balanceState?.error ||
-          earnedAmountState?.error ||
-          totalSupplyState.error ||
-          rewardRateState.error ||
-          periodFinishState.error
+          // these may be undefined if not logged in
+          !balanceState?.loading &&
+          !earnedAmountState?.loading &&
+          // always need these
+          totalSupplyState &&
+          !totalSupplyState.loading &&
+          rewardRateState &&
+          !rewardRateState.loading &&
+          periodFinishState &&
+          !periodFinishState.loading
         ) {
-          console.error('Failed to load staking rewards info')
-          return memo
+          if (
+            balanceState?.error ||
+            earnedAmountState?.error ||
+            totalSupplyState.error ||
+            rewardRateState.error ||
+            periodFinishState.error
+          ) {
+            console.error('Failed to load staking rewards info')
+            return memo
+          }
+
+          // get the LP token
+          const liquidityToken = new Token(chainId, poolInfo.stakingToken, 18, 'ULP', 'Ubeswap LP Token')
+
+          // check for account, if no account set to 0
+          const stakedAmount = new TokenAmount(liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
+          const totalStakedAmount = new TokenAmount(liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
+          const totalRewardRate = new TokenAmount(ube, JSBI.BigInt(rewardRateState.result?.[0]))
+          const nextPeriodRewards = new TokenAmount(ube, poolInfo.nextPeriodRewards?.toString() ?? '0')
+
+          const getHypotheticalRewardRate = (
+            stakedAmount: TokenAmount,
+            totalStakedAmount: TokenAmount,
+            totalRewardRate: TokenAmount
+          ): TokenAmount => {
+            return new TokenAmount(
+              ube,
+              JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
+                ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
+                : JSBI.BigInt(0)
+            )
+          }
+
+          const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
+
+          const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
+          const periodFinishMs = periodFinishSeconds * 1000
+
+          // compare period end timestamp vs current block timestamp (in seconds)
+          const active =
+            periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
+
+          if (!tokens) {
+            return memo
+          }
+
+          memo.push({
+            stakingRewardAddress: rewardsAddress,
+            tokens,
+            periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
+            earnedAmount: new TokenAmount(ube, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
+            rewardRate: individualRewardRate,
+            totalRewardRate: totalRewardRate,
+            nextPeriodRewards,
+            stakedAmount: stakedAmount,
+            totalStakedAmount: totalStakedAmount,
+            getHypotheticalRewardRate,
+            active,
+            poolInfo,
+          })
         }
-
-        // get the LP token
-        const tokens = info[index].tokens
-        const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
-
-        // check for account, if no account set to 0
-        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
-        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
-        const totalRewardRate = new TokenAmount(ube, JSBI.BigInt(rewardRateState.result?.[0]))
-
-        const getHypotheticalRewardRate = (
-          stakedAmount: TokenAmount,
-          totalStakedAmount: TokenAmount,
-          totalRewardRate: TokenAmount
-        ): TokenAmount => {
-          return new TokenAmount(
-            ube,
-            JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
-              ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
-              : JSBI.BigInt(0)
-          )
-        }
-
-        const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
-
-        const periodFinishSeconds = periodFinishState.result?.[0]?.toNumber()
-        const periodFinishMs = periodFinishSeconds * 1000
-
-        // compare period end timestamp vs current block timestamp (in seconds)
-        const active =
-          periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
-
-        memo.push({
-          stakingRewardAddress: rewardsAddress,
-          tokens: info[index].tokens,
-          periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-          earnedAmount: new TokenAmount(ube, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
-          rewardRate: individualRewardRate,
-          totalRewardRate: totalRewardRate,
-          stakedAmount: stakedAmount,
-          totalStakedAmount: totalStakedAmount,
-          getHypotheticalRewardRate,
-          active,
-        })
-      }
-      return memo
-    }, [])
-  }, [
-    balances,
-    chainId,
-    currentBlockTimestamp,
-    earnedAmounts,
-    info,
-    periodFinishes,
-    rewardRates,
-    rewardsAddresses,
-    totalSupplies,
-    ube,
-  ])
+        return memo
+      },
+      []
+    )
+  }, [balances, chainId, currentBlockTimestamp, earnedAmounts, info, periodFinishes, rewardRates, totalSupplies, ube])
 }
 
-export function useStakingPools(pairToFilterBy?: Pair | null) {
+interface IStakingPool {
+  stakingRewardAddress: string
+  tokens?: readonly [Token, Token]
+  poolInfo: IRawPool
+}
+
+export function useStakingPools(pairToFilterBy?: Pair | null): readonly IStakingPool[] {
   const { chainId } = useActiveWeb3React()
   const ube = chainId ? UBE[chainId] : undefined
 
-  const poolManagerContract = usePoolManagerContract(POOL_MANAGER[chainId])
+  const poolManagerContract = usePoolManagerContract(chainId !== ChainId.BAKLAVA ? POOL_MANAGER[chainId] : undefined)
   const poolsCountBigNumber = useSingleCallResult(poolManagerContract, 'poolsCount').result?.[0] as
     | BigNumber
     | undefined
@@ -207,20 +213,23 @@ export function useStakingPools(pairToFilterBy?: Pair | null) {
 
     return (
       pools
-        .reduce((memo: any, poolInfo: any, index: any) => {
-          const pool = {
-            stakingRewardAddress: poolInfo.poolAddress,
-            tokens: poolPairs[index],
-          }
-          memo.push(pool)
-          return memo
+        .reduce((memo: IStakingPool[], poolInfo, index) => {
+          return [
+            ...memo,
+            {
+              stakingRewardAddress: poolInfo.poolAddress,
+              tokens: poolPairs[index],
+              poolInfo,
+            },
+          ]
         }, [])
-        .filter((stakingRewardInfo: any) =>
+        .filter((stakingRewardInfo) =>
           pairToFilterBy === undefined
             ? true
             : pairToFilterBy === null
             ? false
-            : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+            : stakingRewardInfo.tokens &&
+              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
               pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
         ) ?? []
     )
@@ -240,15 +249,40 @@ export function useStakingPoolAddresses(poolManagerContract: PoolManager | null,
   }, [poolAddresses])
 }
 
-export function useStakingPoolsInfo(poolManagerContract: PoolManager | null, poolAddresses: string[][]) {
-  const pools = useSingleContractMultipleData(poolManagerContract, 'pools', poolAddresses)
-
-  return useMemo(() => {
-    return !pools || !pools[0] || pools[0].loading ? [] : pools.map((p) => p?.result)
-  }, [pools])
+interface IRawPool {
+  index: number
+  stakingToken: string
+  poolAddress: string
+  weight: number
+  nextPeriod: number
+  nextPeriodRewards: BigNumber | null
 }
 
-export function usePairDataFromAddresses(pairAddresses: string[]) {
+export function useStakingPoolsInfo(
+  poolManagerContract: PoolManager | null,
+  poolAddresses: string[][]
+): readonly IRawPool[] {
+  const pools = useSingleContractMultipleData(poolManagerContract, 'pools', poolAddresses)
+
+  const rawPools = useMemo(() => {
+    return !pools || !pools[0] || pools[0].loading ? [] : pools.map((p) => (p?.result as unknown) as IRawPool)
+  }, [pools])
+
+  const nextPeriod = useSingleCallResult(poolManagerContract, 'nextPeriod')
+  const poolRewards = useSingleContractMultipleData(
+    poolManagerContract,
+    'computeAmountForPool',
+    rawPools.map((p) => [p.stakingToken, nextPeriod?.result?.[0]])
+  )
+  return rawPools.map((pool, i) => ({
+    ...pool,
+    nextPeriodRewards: poolRewards?.[i]?.result?.[0] ?? null,
+  }))
+}
+
+export function usePairDataFromAddresses(
+  pairAddresses: readonly string[]
+): readonly (readonly [Token, Token] | undefined)[] {
   const { chainId } = useActiveWeb3React()
 
   const token0Data = useMultipleContractSingleData(
@@ -267,13 +301,14 @@ export function usePairDataFromAddresses(pairAddresses: string[]) {
     NEVER_RELOAD
   )
 
-  const tokens0 = token0Data.map((t) => t?.result?.[0] as string)
-  const tokens1 = token1Data.map((t) => t?.result?.[0] as string)
+  const tokens0 = token0Data.map((t) => t?.result?.[0] as string | undefined)
+  const tokens1 = token1Data.map((t) => t?.result?.[0] as string | undefined)
   const tokensDb = useAllTokens()
 
   // Construct a set of all the unique token addresses that are not in the tokenlists.
   const tokenAddressesNeededToFetch = useMemo(
-    () => [...new Set([...tokens0, ...tokens1])].filter((addr) => !tokensDb[addr]),
+    () =>
+      [...new Set([...tokens0, ...tokens1])].filter((addr): addr is string => addr !== undefined && !tokensDb[addr]),
     [tokensDb, tokens0, tokens1]
   )
 
@@ -302,7 +337,7 @@ export function usePairDataFromAddresses(pairAddresses: string[]) {
   )
 
   // Construct the full token data
-  const tokensNeededToFetch = useMemo(() => {
+  const tokensNeededToFetch: readonly Token[] | null = useMemo(() => {
     if (!tokenAddressesNeededToFetch.length || !names.length || !symbols.length || !tokenDecimals.length) return null
     if (names[0].loading || tokenDecimals[0].loading || symbols[0].loading) return null
     if (!names[0].result || !tokenDecimals[0].result || !symbols[0].result) return null
@@ -313,22 +348,26 @@ export function usePairDataFromAddresses(pairAddresses: string[]) {
       const symbol = symbols[index].result?.[0] === 'cGLD' ? 'CELO' : symbols[index].result?.[0] // todo - remove hardcoded symbol swap for CELO
 
       const token = new Token(chainId, address, decimals, symbol, name)
-      memo.push(token)
-      return memo
+      return [...memo, token]
     }, [])
   }, [chainId, tokenAddressesNeededToFetch, names, symbols, tokenDecimals])
 
-  const pairsData = useMemo(() => {
+  const pairsData: readonly (readonly [Token, Token] | undefined)[] = useMemo(() => {
     const tokens = tokensNeededToFetch ?? []
-    return tokens0.reduce((pairs: [Token, Token][], token0Address, index) => {
-      const token1Address = tokens1[index]
-      const token0 = tokensDb[token0Address] ?? tokens.find((t: any) => t.address === token0Address)
-      const token1 = tokensDb[token1Address] ?? tokens.find((t: any) => t.address === token1Address)
-      if (!token0 || !token1) {
-        return pairs
+    return tokens0.reduce((pairs: readonly (readonly [Token, Token] | undefined)[], token0Address, index) => {
+      if (!token0Address) {
+        return [...pairs, undefined]
       }
-      pairs.push([token0, token1])
-      return pairs
+      const token1Address = tokens1[index]
+      if (!token1Address) {
+        return [...pairs, undefined]
+      }
+      const token0 = tokensDb[token0Address] ?? tokens.find((t) => t.address === token0Address)
+      const token1 = tokensDb[token1Address] ?? tokens.find((t) => t.address === token1Address)
+      if (!token0 || !token1) {
+        return [...pairs, undefined]
+      }
+      return [...pairs, [token0, token1]]
     }, [])
   }, [tokensNeededToFetch, tokens0, tokens1, tokensDb])
 

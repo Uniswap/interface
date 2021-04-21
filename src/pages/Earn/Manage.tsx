@@ -45,9 +45,12 @@ const BottomSection = styled(AutoColumn)`
 const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #3d51a5 100%);
   z-index: 2;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   background: ${({ theme, bgColor, showBackground }) =>
     `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${showBackground ? theme.black : theme.bg5} 100%) `};
+  ${({ showBackground }) =>
+    showBackground &&
+    `  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);`}
 `
 
 const StyledBottomCard = styled(DataCard)<{ dim: any }>`
@@ -110,7 +113,7 @@ export default function Manage({
   const backgroundColor = useColor(token ?? undefined)
 
   // get CUSD value of staked LP tokens
-  const valueOfTotalStakedAmountInCUSD = useStakingPoolValue(stakingInfo)
+  const { valueCUSD: valueOfTotalStakedAmountInCUSD } = useStakingPoolValue(stakingInfo)
 
   const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
@@ -140,9 +143,15 @@ export default function Manage({
             <TYPE.body style={{ margin: 0 }}>Total deposits</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {valueOfTotalStakedAmountInCUSD
-                ? `$${valueOfTotalStakedAmountInCUSD.toFixed(0, {
-                    groupSeparator: ',',
-                  })}`
+                ? `$${
+                    valueOfTotalStakedAmountInCUSD.lessThan('1')
+                      ? valueOfTotalStakedAmountInCUSD.toFixed(2, {
+                          groupSeparator: ',',
+                        })
+                      : valueOfTotalStakedAmountInCUSD.toFixed(0, {
+                          groupSeparator: ',',
+                        })
+                  }`
                 : '-'}
             </TYPE.body>
           </AutoColumn>
@@ -217,7 +226,6 @@ export default function Manage({
         <BottomSection gap="lg" justify="center">
           <StyledDataCard disabled={disableTop} bgColor={backgroundColor} showBackground={!showAddLiquidityButton}>
             <CardSection>
-              <CardBGImage desaturate />
               <CardNoise />
               <AutoColumn gap="md">
                 <RowBetween>
@@ -235,7 +243,6 @@ export default function Manage({
             </CardSection>
           </StyledDataCard>
           <StyledBottomCard dim={stakingInfo?.stakedAmount?.equalTo(JSBI.BigInt(0))}>
-            <CardBGImage desaturate />
             <CardNoise />
             <AutoColumn gap="sm">
               <RowBetween>

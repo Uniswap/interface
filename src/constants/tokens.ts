@@ -12,12 +12,11 @@ const makeTokens = (
   })
 }
 
-// TODO(igm): update with real addresses
 export const UBE = makeTokens(
   {
-    [ChainId.MAINNET]: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
-    [ChainId.ALFAJORES]: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
-    [ChainId.BAKLAVA]: '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+    [ChainId.MAINNET]: '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC',
+    [ChainId.ALFAJORES]: '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC',
+    [ChainId.BAKLAVA]: '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC',
   },
   18,
   'UBE',

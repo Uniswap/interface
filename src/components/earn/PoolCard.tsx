@@ -1,5 +1,4 @@
-import { cUSD } from '@ubeswap/sdk'
-import { useActiveWeb3React } from 'hooks'
+import { LightQuestionHelper } from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
 import styled from 'styled-components'
@@ -11,7 +10,7 @@ import { currencyId } from '../../utils/currencyId'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { RowBetween } from '../Row'
+import { RowBetween, RowFixed } from '../Row'
 import { Break, CardNoise } from './styled'
 
 const StatContainer = styled.div`
@@ -32,9 +31,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   width: 100%;
   overflow: hidden;
   position: relative;
-  opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};
+  background: ${({ bgColor }) => `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, #212429 100%) `};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
   ${({ showBackground }) =>
     showBackground &&
@@ -66,17 +63,16 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 `
 
 export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
-  const { chainId } = useActiveWeb3React()
   const [token0, token1] = stakingInfo.tokens
 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
   // get the color of the token
-  const token = token0 === cUSD[chainId] ? token1 : token0
+  const token = token0.symbol?.startsWith('m') ? token1 : token0
   const backgroundColor = useColor(token)
 
   // get the USD value of staked WETH
-  const valueOfTotalStakedAmountInCUSD = useStakingPoolValue(stakingInfo)
+  const { valueCUSD: valueOfTotalStakedAmountInCUSD } = useStakingPoolValue(stakingInfo)
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
@@ -116,6 +112,17 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
                     ?.toFixed(0, { groupSeparator: ',' })} UBE / week`
                 : '0 UBE / week'
               : '-'}
+          </TYPE.white>
+        </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <TYPE.white>Next pool rate</TYPE.white>
+            <LightQuestionHelper text="The rate of emissions this pool will receive on the next rewards refresh." />
+          </RowFixed>
+          <TYPE.white>
+            {`${stakingInfo.nextPeriodRewards.toFixed(0, {
+              groupSeparator: ',',
+            })} UBE / week`}
           </TYPE.white>
         </RowBetween>
       </StatContainer>

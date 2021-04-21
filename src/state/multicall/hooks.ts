@@ -160,9 +160,9 @@ function toCallState(
   }
 }
 
-export function useSingleContractMultipleData(
-  contract: Contract | null | undefined,
-  methodName: string,
+export function useSingleContractMultipleData<T extends Contract = Contract>(
+  contract: T | null | undefined,
+  methodName: keyof T['estimateGas'] & string,
   callInputs: OptionalMethodInputs[],
   options?: ListenerOptions
 ): CallState[] {
@@ -191,7 +191,7 @@ export function useSingleContractMultipleData(
 }
 
 export function useMultipleContractSingleData(
-  addresses: (string | undefined)[],
+  addresses: readonly (string | undefined)[],
   contractInterface: Interface,
   methodName: string,
   callInputs?: OptionalMethodInputs,
