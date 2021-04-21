@@ -4123,7 +4123,7 @@
     "@uniswap/lib" "1.1.1"
     "@uniswap/v2-core" "1.0.0"
 
-"@uniswap/v2-sdk@^1.0.6":
+"@uniswap/v2-sdk@^1.0.7":
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/@uniswap/v2-sdk/-/v2-sdk-1.0.7.tgz#442eadcf1283356dea7c96c21e24b70ede74ae4d"
   integrity sha512-HutwgAVEd2vxn+yNOHlO3Tu3oExudmgo/f6AzWjq99P0JcF3d8oi7+zJ/5/PSItk3hENZ1RVUaIvivV1uMNBGg==
