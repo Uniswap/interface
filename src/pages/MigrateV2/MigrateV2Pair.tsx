@@ -35,6 +35,11 @@ import { useDerivedMintInfo, useMintActionHandlers } from 'state/mint/hooks'
 import { Bound } from 'state/mint/actions'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown } from 'react-feather'
+import useIsArgentWallet from 'hooks/useIsArgentWallet'
+import { Contract } from '@ethersproject/contracts'
+import { splitSignature } from '@ethersproject/bytes'
+import { BigNumber } from '@ethersproject/bignumber'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -71,6 +76,7 @@ function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: TokenAmou
 const percentageToMigrate = 100
 
 function V2PairMigration({
+  pair,
   pairBalance,
   totalSupply,
   reserve0,
@@ -78,6 +84,7 @@ function V2PairMigration({
   token0,
   token1,
 }: {
+  pair: Contract
   pairBalance: TokenAmount
   totalSupply: TokenAmount
   reserve0: TokenAmount
@@ -86,9 +93,10 @@ function V2PairMigration({
   token1: Token
 }) {
   const { t } = useTranslation()
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account, library } = useActiveWeb3React()
 
   const deadline = useTransactionDeadline() // custom from users settings
+  const blockTimestamp = useCurrentBlockTimestamp()
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
 
   // this is just getLiquidityValue with the fee off, but for the passed pair
@@ -184,18 +192,93 @@ function V2PairMigration({
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
   const [pendingMigrationHash, setPendingMigrationHash] = useState<string | null>(null)
 
-  // TODO add permit approval
-  const [approval, approve] = useApproveCallback(pairBalance, chainId ? V2_MIGRATOR_ADDRESSES[chainId] : undefined)
+  const migrator = useV2MigratorContract()
+
+  // approvals
+  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: BigNumber } | null>(
+    null
+  )
+  const [approval, approveManually] = useApproveCallback(
+    pairBalance,
+    chainId ? V2_MIGRATOR_ADDRESSES[chainId] : undefined
+  )
+  const isArgentWallet = useIsArgentWallet()
+
+  const approve = useCallback(async () => {
+    if (!account || !migrator || !deadline || !chainId || !library) return
+
+    if (isArgentWallet) {
+      return approveManually()
+    }
+
+    // try to gather a signature for permission
+    const nonce = await pair.nonces(account)
+
+    const EIP712Domain = [
+      { name: 'name', type: 'string' },
+      { name: 'version', type: 'string' },
+      { name: 'chainId', type: 'uint256' },
+      { name: 'verifyingContract', type: 'address' },
+    ]
+    const domain = {
+      name: 'Uniswap V2',
+      version: '1',
+      chainId: chainId,
+      verifyingContract: pair.address,
+    }
+    const Permit = [
+      { name: 'owner', type: 'address' },
+      { name: 'spender', type: 'address' },
+      { name: 'value', type: 'uint256' },
+      { name: 'nonce', type: 'uint256' },
+      { name: 'deadline', type: 'uint256' },
+    ]
+    const message = {
+      owner: account,
+      spender: migrator.address,
+      value: `0x${pairBalance.raw.toString(16)}`,
+      nonce: nonce.toHexString(),
+      deadline: deadline.toHexString(),
+    }
+    const data = JSON.stringify({
+      types: {
+        EIP712Domain,
+        Permit,
+      },
+      domain,
+      primaryType: 'Permit',
+      message,
+    })
+
+    library
+      .send('eth_signTypedData_v4', [account, data])
+      .then(splitSignature)
+      .then((signature) => {
+        setSignatureData({
+          v: signature.v,
+          r: signature.r,
+          s: signature.s,
+          deadline,
+        })
+      })
+      .catch((error) => {
+        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
+        if (error?.code !== 4001) {
+          console.log('here?')
+          approveManually()
+        }
+      })
+  }, [account, isArgentWallet, approveManually, pair, pairBalance, migrator, deadline, chainId, library])
 
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
 
-  const migrator = useV2MigratorContract()
   const migrate = useCallback(() => {
     if (
       !migrator ||
       !account ||
       !deadline ||
+      !blockTimestamp ||
       typeof tickLower !== 'number' ||
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
@@ -203,7 +286,28 @@ function V2PairMigration({
     )
       return
 
+    const deadlineToUse = signatureData?.deadline ?? deadline
+
+    // janky way to ensure that stale-ish sigs are cleared
+    if (deadline.sub(deadlineToUse).lt(deadline.sub(blockTimestamp).div(2))) {
+      setSignatureData(null)
+    }
+
     const data = []
+
+    // permit if necessary
+    if (signatureData) {
+      data.push(
+        migrator.interface.encodeFunctionData('selfPermit', [
+          pair.address,
+          `0x${pairBalance.raw.toString(16)}`,
+          deadlineToUse,
+          signatureData.v,
+          signatureData.r,
+          signatureData.s,
+        ])
+      )
+    }
 
     // create/initialize pool if necessary
     if (noLiquidity) {
@@ -221,7 +325,7 @@ function V2PairMigration({
     data.push(
       migrator.interface.encodeFunctionData('migrate', [
         {
-          pair: pairBalance.token.address,
+          pair: pair.address,
           liquidityToMigrate: `0x${pairBalance.raw.toString(16)}`,
           percentageToMigrate,
           token0: token0.address,
@@ -232,7 +336,7 @@ function V2PairMigration({
           amount0Min: `0x${v3Amount0Min.raw.toString(16)}`,
           amount1Min: `0x${v3Amount1Min.raw.toString(16)}`,
           recipient: account,
-          deadline,
+          deadline: deadlineToUse,
           refundAsETH: true, // hard-code this for now
         },
       ])
@@ -242,6 +346,8 @@ function V2PairMigration({
     migrator
       .multicall(data)
       .then((response: TransactionResponse) => {
+        setSignatureData(null) // clear sig data
+
         ReactGA.event({
           category: 'Migrate',
           action: 'V2->V3',
@@ -259,6 +365,7 @@ function V2PairMigration({
   }, [
     migrator,
     noLiquidity,
+    blockTimestamp,
     token0,
     token1,
     feeAmount,
@@ -271,7 +378,9 @@ function V2PairMigration({
     v3Amount1Min,
     account,
     deadline,
+    signatureData,
     addTransaction,
+    pair,
   ])
 
   const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.raw, ZERO)
@@ -379,28 +488,36 @@ function V2PairMigration({
         ) : null}
 
         <div style={{ display: 'flex', marginTop: '1rem' }}>
-          <AutoColumn gap="12px" style={{ flex: '1', marginRight: 12 }}>
-            <ButtonConfirmed
-              confirmed={approval === ApprovalState.APPROVED}
-              disabled={approval !== ApprovalState.NOT_APPROVED}
-              onClick={approve}
-            >
-              {approval === ApprovalState.PENDING ? (
-                <Dots>Approving</Dots>
-              ) : approval === ApprovalState.APPROVED ? (
-                'Approved'
-              ) : (
-                'Approve'
-              )}
-            </ButtonConfirmed>
-          </AutoColumn>
+          {!isSuccessfullyMigrated && !isMigrationPending ? (
+            <AutoColumn gap="12px" style={{ flex: '1', marginRight: 12 }}>
+              <ButtonConfirmed
+                confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                disabled={
+                  approval !== ApprovalState.NOT_APPROVED ||
+                  signatureData !== null ||
+                  !v3Amount0Min ||
+                  !v3Amount1Min ||
+                  confirmingMigration
+                }
+                onClick={approve}
+              >
+                {approval === ApprovalState.PENDING ? (
+                  <Dots>Approving</Dots>
+                ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
+                  'Approved'
+                ) : (
+                  'Approve'
+                )}
+              </ButtonConfirmed>
+            </AutoColumn>
+          ) : null}
           <AutoColumn gap="12px" style={{ flex: '1' }}>
             <ButtonConfirmed
               confirmed={isSuccessfullyMigrated}
               disabled={
                 !v3Amount0Min ||
                 !v3Amount1Min ||
-                approval !== ApprovalState.APPROVED ||
+                (approval !== ApprovalState.APPROVED && signatureData === null) ||
                 confirmingMigration ||
                 isMigrationPending ||
                 isSuccessfullyMigrated
@@ -475,6 +592,7 @@ export default function MigrateV2Pair({
   // redirect for invalid url params
   if (
     !validatedAddress ||
+    !pair ||
     (pair &&
       token0AddressCallState?.valid &&
       !token0AddressCallState?.loading &&
@@ -500,6 +618,7 @@ export default function MigrateV2Pair({
           <TYPE.largeHeader>You must connect an account.</TYPE.largeHeader>
         ) : pairBalance && totalSupply && reserve0 && reserve1 && token0 && token1 ? (
           <V2PairMigration
+            pair={pair}
             pairBalance={pairBalance}
             totalSupply={totalSupply}
             reserve0={reserve0}
