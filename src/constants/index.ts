@@ -2,6 +2,7 @@ import moolaRouterAddresses from '@ubeswap/moola/deployments/router.mainnet.addr
 import { CELO, ChainId, cUSD, JSBI, Percent, Token } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, valora } from '../connectors'
+import { UBE } from './tokens'
 export { UBE } from './tokens'
 
 export const ROUTER_ADDRESS = '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121'
@@ -55,18 +56,46 @@ export const MCELO = {
   ),
 }
 
+export const MCEUR = {
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0xa8d0E6799FF3Fd19c6459bf02689aE09c4d78Ba7',
+    18,
+    'mCELO',
+    'Moola CELO'
+  ),
+  [ChainId.ALFAJORES]: new Token(
+    ChainId.ALFAJORES,
+    '0x32974C7335e649932b5766c5aE15595aFC269160',
+    18,
+    'mCELO',
+    'Moola CELO'
+  ),
+}
+
+export const CEUR = {
+  [ChainId.ALFAJORES]: new Token(
+    ChainId.ALFAJORES,
+    '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
+    18,
+    'cEUR',
+    'Celo Euro'
+  ),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73', 18, 'cEUR', 'Celo Euro'),
+}
+
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: [MCUSD, MCELO, cUSD, CELO].map((el) => el[ChainId.MAINNET]),
-  [ChainId.ALFAJORES]: [MCUSD, MCELO, cUSD, CELO].map((el) => el[ChainId.ALFAJORES]),
+  [ChainId.MAINNET]: [cUSD, CELO, CEUR, UBE].map((el) => el[ChainId.MAINNET]),
+  [ChainId.ALFAJORES]: [cUSD, CELO, CEUR].map((el) => el[ChainId.ALFAJORES]),
   [ChainId.BAKLAVA]: [cUSD, CELO].map((el) => el[ChainId.BAKLAVA]),
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...BASES_TO_CHECK_TRADES_AGAINST,
-  [ChainId.MAINNET]: [MCUSD, CELO].map((el) => el[ChainId.MAINNET]),
-  [ChainId.ALFAJORES]: [MCUSD, CELO].map((el) => el[ChainId.ALFAJORES]),
+  [ChainId.MAINNET]: [MCUSD, MCEUR, CELO].map((el) => el[ChainId.MAINNET]),
+  [ChainId.ALFAJORES]: [MCUSD, MCEUR, CELO].map((el) => el[ChainId.ALFAJORES]),
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -76,6 +105,9 @@ export const PINNED_PAIRS: { [chainId: number]: [Token, Token][] } = {
   [ChainId.MAINNET]: [
     [cUSD, CELO],
     [MCUSD, CELO],
+    [MCEUR, CELO],
+    [MCUSD, UBE],
+    [MCEUR, UBE],
   ].map((el) => el.map((t) => t[ChainId.MAINNET]) as [Token, Token]),
   [ChainId.ALFAJORES]: [
     [cUSD, CELO],
@@ -97,15 +129,6 @@ export interface WalletInfo {
 }
 
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
-  // INJECTED: {
-  //   connector: injected,
-  //   name: 'Injected',
-  //   iconName: 'arrow-right.svg',
-  //   description: 'Injected web3 provider.',
-  //   href: null,
-  //   color: '#010101',
-  //   primary: true
-  // },
   CELO_EXTENSION_WALLET: {
     connector: injected,
     name: 'Celo Extension Wallet',

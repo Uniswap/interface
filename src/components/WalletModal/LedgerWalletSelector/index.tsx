@@ -100,7 +100,7 @@ export const InfoCard = styled.button`
   border: 1px solid;
   border-radius: 12px;
   width: 100% !important;
-  color: #fff;
+  color: ${({ theme }) => theme.text1};
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.primary1};
   }

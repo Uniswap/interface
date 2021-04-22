@@ -18,12 +18,10 @@ export class ValoraProvider extends MiniRpcProvider {
     if (method === 'eth_estimateGas' && params) {
       try {
         const txData = (params as unknown[])[0] as { from: string; to: string; data: string }
-        const baseNonce = await this.kit.connection.nonce(txData.from)
         const stableAddress = await this.kit.registry.addressFor(CeloContract.StableToken)
         // estimate gas for the transaction
         const gasEstimate = await this.kit.connection.estimateGas({
           feeCurrency: stableAddress,
-          nonce: baseNonce,
           ...txData,
         })
         return '0x' + gasEstimate.toString(16)
@@ -38,7 +36,10 @@ export class ValoraProvider extends MiniRpcProvider {
         throw new Error('No tx found')
       }
       const stableAddress = await this.kit.registry.addressFor(CeloContract.StableToken)
-      // const goldAddress = await this.kit.registry.addressFor(CeloContract.GoldToken)
+      const goldToken = await this.kit.contracts.getGoldToken()
+      const goldBalance = await goldToken.balanceOf(firstTx.from)
+      const feeCurrencyAddress = goldBalance.isZero() ? stableAddress : goldToken.address
+
       const baseNonce = await this.kit.connection.nonce(firstTx.from)
 
       try {
@@ -56,7 +57,7 @@ export class ValoraProvider extends MiniRpcProvider {
               from,
               to,
               nonce: baseNonce + i,
-              feeCurrencyAddress: stableAddress,
+              feeCurrencyAddress,
               value: '0',
             }
           })

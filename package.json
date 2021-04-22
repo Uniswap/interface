@@ -121,7 +121,7 @@
   },
   "dependencies": {
     "@celo/connect": "^1.0.1",
-    "@celo/contractkit": "^1.0.1",
+    "@celo/contractkit": "^1.1.0",
     "@celo/utils": "^1.0.1",
     "@celo/wallet-ledger": "^1.0.2",
     "@ledgerhq/hw-transport-webusb": "^5.43.0",

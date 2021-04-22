@@ -1,6 +1,6 @@
 import { CeloContract } from '@celo/contractkit'
 import { CELO, ChainId, currencyEquals, cUSD, Token } from '@ubeswap/sdk'
-import { MCELO, MCUSD } from 'constants/index'
+import { CEUR, MCELO, MCEUR, MCUSD } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
 import { LendingPool, LendingPool__factory } from '../../../../generated'
@@ -28,6 +28,7 @@ export const moolaLendingPools = {
 export const moolaDuals = ([
   [MCUSD, cUSD],
   [MCELO, CELO],
+  [MCEUR, CEUR],
 ] as const).flatMap((dual) => [dual, [dual[1], dual[0]] as const])
 
 /**
@@ -49,18 +50,12 @@ export type MoolaConfig = typeof moolaLendingPools[IMoolaChain]
 
 export const useMoolaConfig = () => {
   const { chainId } = useActiveWeb3React()
-
   // TODO(igm): this breaks on baklava
   const chainCfg = moolaLendingPools[chainId as IMoolaChain]
   const { lendingPool, lendingPoolCore } = chainCfg
-
-  const { mcUSD, mCELO } = chainCfg
-
   return {
     lendingPoolCore,
     lendingPool,
-    mcUSD,
-    mCELO,
   }
 }
 
