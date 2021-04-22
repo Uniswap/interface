@@ -4,7 +4,7 @@ import { PositionDetails } from 'types/position'
 import { useV3Pool } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import { computePoolAddress, Pool } from '@uniswap/v3-sdk'
-import { FACTORY_ADDRESSES } from 'constants/v3'
+import { V3_CORE_FACTORY_ADDRESSES } from 'constants/v3'
 import { useActiveWeb3React } from 'hooks'
 import { TokenAmount } from '@uniswap/sdk-core'
 
@@ -53,9 +53,9 @@ export function useV3PositionFees(
 
   const poolAddress = useMemo(() => {
     try {
-      return chainId && pool && positionDetails
+      return chainId && V3_CORE_FACTORY_ADDRESSES[chainId] && pool && positionDetails
         ? computePoolAddress({
-            factoryAddress: FACTORY_ADDRESSES[chainId],
+            factoryAddress: V3_CORE_FACTORY_ADDRESSES[chainId] as string,
             tokenA: pool.token0,
             tokenB: pool.token1,
             fee: positionDetails.fee,
