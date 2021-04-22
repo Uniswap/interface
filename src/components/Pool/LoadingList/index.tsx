@@ -5,7 +5,7 @@ import LoadingCard from './LoadingCard'
 
 const ListLayout = styled.div`
   display: grid;
-  grid-gap: 12px 16px;
+  grid-gap: 10px;
   grid-template-columns: auto auto auto;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto auto;

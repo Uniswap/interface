@@ -8,7 +8,7 @@ import DoubleCurrencyLogo from '../../../DoubleLogo'
 const SizedCard = styled(DarkCard)`
   width: 210px;
   height: 108px;
-  padding: 12px 16px;
+  padding: 16px;
   ${props => props.theme.mediaWidth.upToMedium`
     width: 100%;
   `}
@@ -16,22 +16,24 @@ const SizedCard = styled(DarkCard)`
 
 export default function LoadingCard() {
   return (
-    <SizedCard width="100%" height="100%" padding="20px">
-      <Flex width="100%" height="100%" justifyContent="space-between" flexDirection="column">
-        <Flex justifyContent="space-between">
+    <SizedCard selectable>
+      <Flex flexDirection="column" justifyContent="space-between" height="100%">
+        <Flex justifyContent="space-between" width="100%">
           <Box>
-            <DoubleCurrencyLogo size={36} loading />
+            <DoubleCurrencyLogo loading size={34} />
           </Box>
-          <Box>
-            <Skeleton height="16px" width="36px" />
-          </Box>
+          <Flex flexDirection="column">
+            <Box mb="8px">
+              <Skeleton height="16px" width="36px" />
+            </Box>
+          </Flex>
         </Flex>
         <Flex flexDirection="column" justifyContent="flex-end">
-          <Box>
-            <Skeleton height="8px" width="40px" />
+          <Box mb="2px">
+            <Skeleton height="9px" width="40px" style={{ display: 'flex' }} />
           </Box>
           <Box>
-            <Skeleton height="16px" width="80px" />
+            <Skeleton height="20px" width="80px" />
           </Box>
         </Flex>
       </Flex>

@@ -11,7 +11,7 @@ import { ethers } from 'ethers'
 const SizedCard = styled(DarkCard)`
   width: 210px;
   height: 108px;
-  padding: 12px 16px;
+  padding: 16px;
   ${props => props.theme.mediaWidth.upToMedium`
     width: 100%;
   `}
@@ -49,7 +49,7 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, ...res
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
         <Flex justifyContent="space-between" width="100%">
           <Box>
-            <DoubleCurrencyLogo currency0={token0} currency1={token1} size={36} />
+            <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
           </Box>
           <Flex flexDirection="column">
             {apy.greaterThan('0') && (
