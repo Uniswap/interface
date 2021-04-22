@@ -1,22 +1,13 @@
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk/dist/'
 import { ZERO_ADDRESS } from '../constants'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useTickLens, useV3Factory } from './useContract'
 
-// the following should probably all be from the sdk, just mocking it for now
-function MIN_TICK(tickSpacing: number) {
-  return Math.ceil(-887272 / tickSpacing) * tickSpacing
-}
-
-function MAX_TICK(tickSpacing: number) {
-  return Math.floor(887272 / tickSpacing) * tickSpacing
-}
-
 function bitmapIndex(tick: number, tickSpacing: number) {
-  const compressed = tick / tickSpacing
-  return compressed >> 8
+  return Math.floor(tick / tickSpacing / 256)
 }
 
 const REFRESH_FREQUENCY = { blocksPerFetch: 2 }
@@ -38,19 +29,22 @@ export function useAllV3Ticks(
   valid: boolean
   tickData: TickData[]
 } {
-  const tickSpacing = useMemo(() => (feeAmount ? TICK_SPACINGS[feeAmount] : undefined), [feeAmount])
+  const tickSpacing = feeAmount && TICK_SPACINGS[feeAmount]
 
-  const minIndex = useMemo(() => (tickSpacing ? bitmapIndex(MIN_TICK(tickSpacing), tickSpacing) : undefined), [
-    tickSpacing,
-  ])
-  const maxIndex = useMemo(() => (tickSpacing ? bitmapIndex(MAX_TICK(tickSpacing), tickSpacing) : undefined), [
-    tickSpacing,
-  ])
+  const minIndex = useMemo(
+    () => (tickSpacing ? bitmapIndex(nearestUsableTick(TickMath.MIN_TICK, tickSpacing), tickSpacing) : undefined),
+    [tickSpacing]
+  )
+  const maxIndex = useMemo(
+    () => (tickSpacing ? bitmapIndex(nearestUsableTick(TickMath.MAX_TICK, tickSpacing), tickSpacing) : undefined),
+    [tickSpacing]
+  )
+
+  const [tickDataLatestSynced, setTickDataLatestSynced] = useState<TickData[]>([])
 
   // fetch the pool address
   const factoryContract = useV3Factory()
-  const addressParams = token0 && token1 && feeAmount ? [token0.address, token1.address, feeAmount] : undefined
-  const poolAddress = useSingleCallResult(addressParams ? factoryContract : undefined, 'getPool', addressParams)
+  const poolAddress = useSingleCallResult(factoryContract, 'getPool', [token0?.address, token1?.address, feeAmount])
     .result?.[0]
 
   const tickLensArgs: [string, number][] = useMemo(
@@ -98,14 +92,21 @@ export function useAllV3Ticks(
     [callStates]
   )
 
+  // return the latest synced tickdata even if we are still loading the newest data
+  useEffect(() => {
+    if (!syncing && !loading && !error && valid) {
+      setTickDataLatestSynced(tickData)
+    }
+  }, [error, loading, syncing, tickData, valid])
+
   return useMemo(
     () => ({
       loading,
       syncing,
       error,
       valid,
-      tickData,
+      tickData: tickDataLatestSynced,
     }),
-    [loading, syncing, error, valid, tickData]
+    [loading, syncing, error, valid, tickDataLatestSynced]
   )
 }

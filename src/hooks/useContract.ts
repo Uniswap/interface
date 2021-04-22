@@ -29,10 +29,9 @@ import {
   MULTICALL_ADDRESSES,
 } from 'constants/index'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
-import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from 'constants/v1'
 import {
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  FACTORY_ADDRESSES,
+  V3_CORE_FACTORY_ADDRESSES,
   TICK_LENS_ADDRESSES,
   V2_MIGRATOR_ADDRESSES,
 } from 'constants/v3'
@@ -58,11 +57,6 @@ export function useContract(address: string | undefined, ABI: any, withSignerIfP
   }, [address, ABI, library, withSignerIfPossible, account])
 }
 
-export function useV1FactoryContract(): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContract(chainId && V1_FACTORY_ADDRESSES[chainId], V1_FACTORY_ABI, false)
-}
-
 export function useV1MigratorContract(): Contract | null {
   return useContract(V1_MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
 }
@@ -72,13 +66,10 @@ export function useV2MigratorContract(): V3Migrator | null {
   return useContract(chainId && V2_MIGRATOR_ADDRESSES[chainId], V2MigratorABI, true) as V3Migrator | null
 }
 
-export function useV1ExchangeContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(address, V1_EXCHANGE_ABI, withSignerIfPossible)
-}
-
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
+
 export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   const address = chainId && chainId in WETH9 ? WETH9[chainId].address : undefined
@@ -162,7 +153,7 @@ export function useV3NFTPositionManagerContract(): NonfungiblePositionManager | 
 
 export function useV3Factory(): UniswapV3Factory | null {
   const { chainId } = useActiveWeb3React()
-  const address = chainId ? FACTORY_ADDRESSES[chainId] : undefined
+  const address = chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
   return useContract(address, V3FactoryABI) as UniswapV3Factory | null
 }
 
