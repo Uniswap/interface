@@ -36,10 +36,6 @@ export class ValoraProvider extends MiniRpcProvider {
         throw new Error('No tx found')
       }
       const stableAddress = await this.kit.registry.addressFor(CeloContract.StableToken)
-      const goldToken = await this.kit.contracts.getGoldToken()
-      const goldBalance = await goldToken.balanceOf(firstTx.from)
-      const feeCurrencyAddress = goldBalance.isZero() ? stableAddress : goldToken.address
-
       const baseNonce = await this.kit.connection.nonce(firstTx.from)
 
       try {
@@ -57,7 +53,7 @@ export class ValoraProvider extends MiniRpcProvider {
               from,
               to,
               nonce: baseNonce + i,
-              feeCurrencyAddress,
+              feeCurrencyAddress: stableAddress,
               value: '0',
             }
           })
