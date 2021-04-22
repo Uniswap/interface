@@ -1,7 +1,7 @@
 import { transparentize } from 'polished'
 import React from 'react'
 import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
 
@@ -11,40 +11,40 @@ export const Wrapper = styled.div`
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   padding: 2px;
-
-  ${({ clickable }) =>
-    clickable
-      ? css`
-          :hover {
-            cursor: pointer;
-            opacity: 0.8;
-          }
-        `
-      : null}
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export const SwitchTokensAmountsContainer = styled.div`
   background-image: linear-gradient(180deg, rgba(41, 38, 67, 0) 0%, rgba(68, 65, 99, 0.5) 100%);
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  width: 37px;
+  height: 37px;
+  box-sizing: border-box;
   position: absolute;
   left: 50%;
   top: -16px;
   transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   z-index: 2;
+  border-radius: 50%;
+  border: solid 4px ${props => props.theme.dark1};
+  cursor: pointer;
+  transition: opacity 0.2s ease;
   ::before {
+    border-radius: 50%;
+    background-color: ${({ theme }) => theme.bg1And2};
     content: '';
-    position: absolute;
-    width: 35px;
-    height: 35px;
+    z-index: -1;
     top: 1px;
     left: 1px;
-    border-radius: 50%;
-    background-color: ${props => props.theme.bg2};
+    bottom: 1px;
+    right: 1px;
+    position: absolute;
   }
 `
 
