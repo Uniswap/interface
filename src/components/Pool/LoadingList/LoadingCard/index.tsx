@@ -20,18 +20,18 @@ export default function LoadingCard() {
       <Flex width="100%" height="100%" justifyContent="space-between" flexDirection="column">
         <Flex justifyContent="space-between">
           <Box>
-            <DoubleCurrencyLogo size={28} loading />
+            <DoubleCurrencyLogo size={36} loading />
           </Box>
-          <Box mt="5px">
+          <Box>
             <Skeleton height="16px" width="36px" />
           </Box>
         </Flex>
-        <Flex flexDirection="column">
+        <Flex flexDirection="column" justifyContent="flex-end">
           <Box>
-            <Skeleton height="9px" width="40px" />
+            <Skeleton height="8px" width="40px" />
           </Box>
           <Box>
-            <Skeleton height="20px" width="80px" />
+            <Skeleton height="16px" width="80px" />
           </Box>
         </Flex>
       </Flex>
