@@ -7,6 +7,7 @@ import { useAllTokens } from 'hooks/Tokens'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 // Hooks
 import { useMemo } from 'react'
+import useCUSDPrice from 'utils/useCUSDPrice'
 import ERC_20_INTERFACE from '../../constants/abis/erc20'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 // Interfaces
@@ -52,11 +53,13 @@ export interface StakingInfo {
   ) => TokenAmount
   readonly nextPeriodRewards: TokenAmount
   readonly poolInfo: IRawPool
+  readonly dollarRewardPerYear: TokenAmount | undefined
 }
 
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingInfo[] {
   const { chainId, account } = useActiveWeb3React()
+  const ubePrice = useCUSDPrice(UBE[chainId as ChainId])
 
   // detect if staking is ended
   const currentBlockTimestamp = useCurrentBlockTimestamp()
@@ -138,6 +141,10 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
           const totalRewardRate = new TokenAmount(ube, JSBI.BigInt(rewardRateState.result?.[0]))
           const nextPeriodRewards = new TokenAmount(ube, poolInfo.nextPeriodRewards?.toString() ?? '0')
 
+          // tokens per month
+          const ubePerYear = new TokenAmount(ube, JSBI.multiply(totalRewardRate.raw, JSBI.BigInt(365 * 24 * 60 * 60)))
+          const dollarRewardPerYear = ubePrice?.quote(ubePerYear)
+
           const getHypotheticalRewardRate = (
             stakedAmount: TokenAmount,
             totalStakedAmount: TokenAmount,
@@ -177,13 +184,25 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
             getHypotheticalRewardRate,
             active,
             poolInfo,
+            dollarRewardPerYear,
           })
         }
         return memo
       },
       []
     )
-  }, [balances, chainId, currentBlockTimestamp, earnedAmounts, info, periodFinishes, rewardRates, totalSupplies, ube])
+  }, [
+    balances,
+    chainId,
+    currentBlockTimestamp,
+    earnedAmounts,
+    info,
+    periodFinishes,
+    rewardRates,
+    totalSupplies,
+    ube,
+    ubePrice,
+  ])
 }
 
 interface IStakingPool {

@@ -1,3 +1,4 @@
+import { Percent } from '@ubeswap/sdk'
 import { LightQuestionHelper } from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
@@ -73,6 +74,10 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
 
   // get the USD value of staked WETH
   const { valueCUSD: valueOfTotalStakedAmountInCUSD } = useStakingPoolValue(stakingInfo)
+  const apyFraction = valueOfTotalStakedAmountInCUSD
+    ? stakingInfo.dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
+    : undefined
+  const apy = apyFraction ? new Percent(apyFraction.numerator, apyFraction.denominator) : undefined
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
@@ -114,17 +119,29 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
               : '-'}
           </TYPE.white>
         </RowBetween>
-        <RowBetween>
-          <RowFixed>
-            <TYPE.white>Next pool rate</TYPE.white>
-            <LightQuestionHelper text="The rate of emissions this pool will receive on the next rewards refresh." />
-          </RowFixed>
-          <TYPE.white>
-            {`${stakingInfo.nextPeriodRewards.toFixed(0, {
-              groupSeparator: ',',
-            })} UBE / week`}
-          </TYPE.white>
-        </RowBetween>
+        {apy && apy.greaterThan('0') && (
+          <RowBetween>
+            <RowFixed>
+              <TYPE.white>APR</TYPE.white>
+              <LightQuestionHelper text="The annualized, non-compounding rate of rewards based on the current value of UBE relative to the tokens in this pool." />
+            </RowFixed>
+            <TYPE.white>{apy ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}</TYPE.white>
+          </RowBetween>
+        )}
+
+        {!stakingInfo.active && (
+          <RowBetween>
+            <RowFixed>
+              <TYPE.white>Next pool rate</TYPE.white>
+              <LightQuestionHelper text="The rate of emissions this pool will receive on the next rewards refresh." />
+            </RowFixed>
+            <TYPE.white>
+              {`${stakingInfo.nextPeriodRewards.toFixed(0, {
+                groupSeparator: ',',
+              })} UBE / week`}
+            </TYPE.white>
+          </RowBetween>
+        )}
       </StatContainer>
 
       {isStaking && (
