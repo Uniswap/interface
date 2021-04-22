@@ -116,23 +116,23 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
+          <MenuItem href="https://uniswap.org/">
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="https://uniswap.org/docs/v2">
+          <MenuItem href="https://uniswap.org/docs/v2">
             <BookOpen size={14} />
             Docs
           </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
+          <MenuItem href={CODE_LINK}>
             <Code size={14} />
             Code
           </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/FCfyBSbCU5">
+          <MenuItem href="https://discord.gg/FCfyBSbCU5">
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="link" href="https://uniswap.info/">
+          <MenuItem href="https://uniswap.info/">
             <PieChart size={14} />
             Analytics
           </MenuItem>
@@ -175,7 +175,7 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
       {open && (
         <NewMenuFlyout flyoutAlignment={flyoutAlignment}>
           {menuItems.map(({ content, link }, i) => (
-            <NewMenuItem id="link" href={link} key={link + i}>
+            <NewMenuItem href={link} key={i}>
               {content}
             </NewMenuItem>
           ))}
