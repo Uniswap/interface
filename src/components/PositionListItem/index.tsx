@@ -15,6 +15,8 @@ import { TokenAmount } from '@uniswap/sdk-core'
 import { formatPrice, formatTokenAmount } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/wrappedCurrency'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import { BigNumber } from '@ethersproject/bignumber'
 
 const ActiveDot = styled.span`
   background-color: ${({ theme }) => theme.success};
@@ -119,7 +121,7 @@ const DataText = styled.div`
 `
 
 export interface PositionListItemProps {
-  positionDetails: PositionDetails
+  positionDetails: PositionDetails & { tokenId: BigNumber }
   positionIndex: number
 }
 
@@ -133,8 +135,6 @@ export default function PositionListItem({ positionDetails, positionIndex }: Pos
     liquidity,
     tickLower,
     tickUpper,
-    feeGrowthInside0LastX128,
-    feeGrowthInside1LastX128,
   } = positionDetails
 
   const token0 = useToken(token0Address)
@@ -165,6 +165,9 @@ export default function PositionListItem({ positionDetails, positionIndex }: Pos
   const price0Upper = position ? position.token0PriceUpper : undefined
   const price1Lower = price0Upper ? price0Upper.invert() : undefined
   const price1Upper = price0Lower ? price0Lower.invert() : undefined
+
+  // fees
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
 
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper : false
@@ -232,12 +235,18 @@ export default function PositionListItem({ positionDetails, positionIndex }: Pos
         )}
       </AmountData>
       <FeeData>
-        <DataLineItem>
-          {feeGrowthInside0LastX128.toString()}&nbsp;{currency0?.symbol}
-        </DataLineItem>
-        <DataLineItem>
-          {feeGrowthInside1LastX128.toString()}&nbsp;{currency1?.symbol}
-        </DataLineItem>
+        {feeValue0 && feeValue1 ? (
+          <>
+            <DataLineItem>
+              {formatTokenAmount(feeValue0, 4)}&nbsp;{currency0?.symbol}
+            </DataLineItem>
+            <DataLineItem>
+              {formatTokenAmount(feeValue1, 4)}&nbsp;{currency1?.symbol}
+            </DataLineItem>
+          </>
+        ) : (
+          <Loader />
+        )}
       </FeeData>
     </Row>
   )

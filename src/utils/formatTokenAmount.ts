@@ -1,8 +1,13 @@
 import { Price, TokenAmount } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
 
 export function formatTokenAmount(amount: TokenAmount | undefined, sigFigs: number) {
   if (!amount) {
     return '-'
+  }
+
+  if (JSBI.equal(amount.raw, JSBI.BigInt(0))) {
+    return '0'
   }
 
   if (parseFloat(amount.toFixed(sigFigs)) < 0.0001) {

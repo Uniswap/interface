@@ -96,6 +96,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       )
     }
 
+    // TODO allow collection in ETH
     data.push(
       positionManager.interface.encodeFunctionData('collect', [
         {
