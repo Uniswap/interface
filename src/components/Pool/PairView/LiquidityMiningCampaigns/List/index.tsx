@@ -17,7 +17,7 @@ import PairCard from '../../../PairsList/Pair'
 const ListLayout = styled.div`
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: 200px 200px 200px;
+  grid-template-columns: 210px 210px 210px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: auto;
     grid-gap: 10px;
@@ -35,7 +35,7 @@ const { upToSmall, upToMedium } = MEDIA_WIDTHS
 export default function List({ stakablePair, loading, items }: LiquidityMiningCampaignsListProps) {
   const { account } = useActiveWeb3React()
   const [page, setPage] = useState(1)
-  const [responsiveItemsPerPage, setResponsiveItemsPerPage] = useState(0)
+  const [responsiveItemsPerPage, setResponsiveItemsPerPage] = useState(3)
   const itemsPage = usePage(items || [], responsiveItemsPerPage, page, 0)
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
   const [selectedCampaign, setSelectedCampaign] = useState<LiquidityMiningCampaign | null>(null)
@@ -51,7 +51,7 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
   }
 
   useEffect(() => {
-    if (!width) setResponsiveItemsPerPage(0)
+    if (!width) return
     else if (width <= upToSmall) setResponsiveItemsPerPage(1)
     else if (width <= upToMedium) setResponsiveItemsPerPage(2)
     else setResponsiveItemsPerPage(3)
@@ -62,7 +62,7 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
   return (
     <>
       <Flex flexDirection="column">
-        <Box mb="8px" height="155px">
+        <Box mb="8px" height="100px">
           {overallLoading ? (
             <LoadingList itemsAmount={responsiveItemsPerPage} />
           ) : itemsPage.length > 0 ? (

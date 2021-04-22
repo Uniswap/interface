@@ -24,7 +24,7 @@ export default function LoadingList({ itemsAmount }: LoadingListProps) {
 
   return (
     <ListLayout>
-      {new Array(itemsAmount || responsiveItemsAmount).fill(null).map((_, index) => (
+      {new Array(itemsAmount && itemsAmount !== 0 ? itemsAmount : responsiveItemsAmount).fill(null).map((_, index) => (
         <LoadingCard key={index} />
       ))}
     </ListLayout>

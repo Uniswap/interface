@@ -14,7 +14,7 @@ import MyPairs from './MyPairs'
 const ListLayout = styled.div`
   display: grid;
   grid-gap: 12px 10px;
-  grid-template-columns: 208px 208px 208px;
+  grid-template-columns: 210px 210px 210px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: auto auto;
   `};
