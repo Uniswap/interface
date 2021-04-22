@@ -17,7 +17,7 @@ import { CardSection } from '../../components/earn/styled'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { Currency, Token } from 'dxswap-sdk'
 import { useLiquidityMiningFeatureFlag } from '../../hooks/useLiquidityMiningFeatureFlag'
-import { useAllPairsWithLiquidityAndMaximumApy } from '../../hooks/useAllPairsWithLiquidityAndMaximumApy'
+import { useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator } from '../../hooks/useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator'
 import ListFilter, { PairsFilterType } from '../../components/Pool/ListFilter'
 import { useLPPairs } from '../../hooks/useLiquidityPositions'
 import PairsList from '../../components/Pool/PairsList'
@@ -149,7 +149,7 @@ export default function Pools() {
   const { account, chainId } = useActiveWeb3React()
   const [filterToken, setFilterToken] = useState<Token | undefined>()
   const [aggregatedDataFilter, setAggregatedDataFilter] = useState(PairsFilterType.ALL)
-  const { loading: loadingAggregatedData, aggregatedData } = useAllPairsWithLiquidityAndMaximumApy(
+  const { loading: loadingAggregatedData, aggregatedData } = useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator(
     aggregatedDataFilter,
     filterToken
   )

@@ -12,7 +12,7 @@ import { useActiveWeb3React } from '../../../../../hooks'
 import { useWindowSize } from '../../../../../hooks/useWindowSize'
 import { MEDIA_WIDTHS } from '../../../../../theme'
 import { usePairLiquidityUSD } from '../../../../../hooks/usePairLiquidityUSD'
-import Item from './Item'
+import PairCard from '../../../PairsList/Pair'
 
 const ListLayout = styled.div`
   display: grid;
@@ -69,7 +69,7 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
             <ListLayout>
               {itemsPage.map((item, index) => (
                 <div key={index} onClick={getLiquidityMiningClickHandler(item.campaign)}>
-                  <Item
+                  <PairCard
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
                     usdLiquidity={liquidityUSD}

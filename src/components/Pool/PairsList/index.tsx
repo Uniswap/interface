@@ -28,6 +28,7 @@ interface PairsListProps {
     pair: Pair
     liquidityUSD: CurrencyAmount
     maximumApy: Percent
+    staked?: boolean
   }[]
   userLpPairs?: {
     pair: Pair
@@ -62,6 +63,7 @@ export default function PairsList({ aggregatedPairs, loading, userLpPairs, showM
                     token1={aggregatedPair.pair.token1}
                     usdLiquidity={aggregatedPair.liquidityUSD}
                     apy={aggregatedPair.maximumApy}
+                    staked={aggregatedPair.staked}
                   />
                 </UndecoratedLink>
               )

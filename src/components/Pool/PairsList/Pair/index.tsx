@@ -17,14 +17,33 @@ const SizedCard = styled(DarkCard)`
   `}
 `
 
+const PositiveBadgeRoot = styled.div`
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(14, 159, 110, 0.1);
+  border-radius: 4px;
+  padding: 0 4px;
+`
+
+const BadgeText = styled.div`
+  font-weight: 600;
+  font-size: 9px;
+  line-height: 11px;
+  letter-spacing: 0.02em;
+  color: #0e9f6e;
+`
+
 interface PairProps {
   token0?: Token
   token1?: Token
   apy: Percent
   usdLiquidity: CurrencyAmount
+  staked?: boolean
 }
 
-export default function Pair({ token0, token1, usdLiquidity, apy, ...rest }: PairProps) {
+export default function Pair({ token0, token1, usdLiquidity, apy, staked, ...rest }: PairProps) {
   return (
     <SizedCard selectable {...rest}>
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
@@ -32,11 +51,20 @@ export default function Pair({ token0, token1, usdLiquidity, apy, ...rest }: Pai
           <Box>
             <DoubleCurrencyLogo currency0={token0} currency1={token1} size={36} />
           </Box>
-          {apy.greaterThan('0') && (
-            <Box>
-              <ApyBadge apy={apy} />
-            </Box>
-          )}
+          <Flex flexDirection="column">
+            {apy.greaterThan('0') && (
+              <Box mb="8px">
+                <ApyBadge apy={apy} />
+              </Box>
+            )}
+            {staked && (
+              <Box>
+                <PositiveBadgeRoot>
+                  <BadgeText>STAKING</BadgeText>
+                </PositiveBadgeRoot>
+              </Box>
+            )}
+          </Flex>
         </Flex>
         <Flex flexDirection="column">
           <Box>

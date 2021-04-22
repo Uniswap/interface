@@ -3,9 +3,9 @@ import { useMemo } from 'react'
 import { PairsFilterType } from '../components/Pool/ListFilter'
 import { useAggregatedByToken0PairComparator } from '../components/SearchModal/sorting'
 import { getPairMaximumApy } from '../utils/liquidityMining'
-import { useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidity } from './useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidity'
+import { useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAndStakingIndicator } from './useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAndStakingIndicator'
 
-export function useAllPairsWithLiquidityAndMaximumApy(
+export function useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator(
   filter: PairsFilterType = PairsFilterType.ALL,
   filterToken?: Token
 ): {
@@ -14,12 +14,13 @@ export function useAllPairsWithLiquidityAndMaximumApy(
     pair: Pair
     liquidityUSD: CurrencyAmount
     maximumApy: Percent
+    staked: boolean
   }[]
 } {
   const {
     loading: loadingAllWrappedPairs,
     wrappedPairs: allWrappedPairs
-  } = useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidity(filterToken)
+  } = useAllPairsWithNonExpiredLiquidityMiningCampaignsAndLiquidityAndStakingIndicator(filterToken)
   const sorter = useAggregatedByToken0PairComparator()
 
   return useMemo(() => {
@@ -30,6 +31,7 @@ export function useAllPairsWithLiquidityAndMaximumApy(
       const wrappedPair = allWrappedPairs[i]
       aggregation.push({
         pair: wrappedPair.pair,
+        staked: wrappedPair.staked,
         liquidityUSD: wrappedPair.reserveUSD,
         maximumApy: getPairMaximumApy(wrappedPair.pair)
       })
