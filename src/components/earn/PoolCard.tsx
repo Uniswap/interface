@@ -125,7 +125,9 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
               <TYPE.white>APR</TYPE.white>
               <LightQuestionHelper text="The annualized, non-compounding rate of rewards based on the current value of UBE relative to the tokens in this pool." />
             </RowFixed>
-            <TYPE.white>{apy ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}</TYPE.white>
+            <TYPE.white>
+              {apy && apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
+            </TYPE.white>
           </RowBetween>
         )}
 
