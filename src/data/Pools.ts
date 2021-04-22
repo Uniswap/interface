@@ -7,7 +7,7 @@ import { useSingleCallResult } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { Pool, FeeAmount, computePoolAddress } from '@uniswap/v3-sdk'
 import { useV3Factory, useV3Pool } from 'hooks/useContract'
-import { FACTORY_ADDRESSES } from 'constants/v3'
+import { V3_CORE_FACTORY_ADDRESSES } from 'constants/v3'
 import { useAllV3Ticks } from 'hooks/useAllV3Ticks'
 
 export enum PoolState {
@@ -38,9 +38,10 @@ export function usePool(currencyA?: Currency, currencyB?: Currency, feeAmount?: 
   // fetch all generated addresses for pools
   const poolAddress = useMemo(() => {
     try {
-      return chainId && tokenA && tokenB && feeAmount && !tokenA.equals(tokenB)
+      const addr = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
+      return addr && tokenA && tokenB && feeAmount && !tokenA.equals(tokenB)
         ? computePoolAddress({
-            factoryAddress: FACTORY_ADDRESSES[chainId],
+            factoryAddress: addr,
             tokenA,
             tokenB,
             fee: feeAmount,
@@ -71,28 +72,44 @@ export function usePool(currencyA?: Currency, currencyB?: Currency, feeAmount?: 
   const poolAddressFromFactory = addressesResult?.[0]
 
   // fetch tick data for pool
-  const { tickData, loading: tickLoading } = useAllV3Ticks(token0, token1, feeAmount)
+  const { tickData, loading: tickLoading, syncing: tickSyncing } = useAllV3Ticks(token0, token1, feeAmount)
 
-  // still loading data
-  if (slot0Loading || addressesLoading || liquidityLoading || tickLoading) return [PoolState.LOADING, null]
+  return useMemo(() => {
+    // still loading data
+    if (slot0Loading || addressesLoading || liquidityLoading || tickLoading || tickSyncing)
+      return [PoolState.LOADING, null]
 
-  // invalid pool setup
-  if (!tokenA || !tokenB || !feeAmount || tokenA.equals(tokenB)) return [PoolState.INVALID, null]
+    // invalid pool setup
+    if (!tokenA || !tokenB || !feeAmount || tokenA.equals(tokenB)) return [PoolState.INVALID, null]
 
-  // pool has not been created or not initialized yet
-  if (poolAddressFromFactory === ZERO_ADDRESS || !slot0 || !liquidity || slot0.sqrtPriceX96 === 0) {
-    return [PoolState.NOT_EXISTS, null]
-  }
+    // pool has not been created or not initialized yet
+    if (poolAddressFromFactory === ZERO_ADDRESS || !slot0 || !liquidity || slot0.sqrtPriceX96 === 0) {
+      return [PoolState.NOT_EXISTS, null]
+    }
 
-  const tickList: Tick[] = tickData
-    .map((tick) => {
-      return new Tick({
-        index: tick.tick,
-        liquidityGross: tick.liquidityGross,
-        liquidityNet: tick.liquidityNet,
+    const tickList: Tick[] = tickData
+      .map((tick) => {
+        return new Tick({
+          index: tick.tick,
+          liquidityGross: tick.liquidityGross,
+          liquidityNet: tick.liquidityNet,
+        })
       })
-    })
-    .sort((tickA, tickB) => (tickA.index > tickB.index ? 1 : -1))
+      .sort((tickA, tickB) => (tickA.index > tickB.index ? 1 : -1))
 
-  return [PoolState.EXISTS, new Pool(tokenA, tokenB, feeAmount, slot0.sqrtPriceX96, liquidity, slot0.tick, tickList)]
+    return [PoolState.EXISTS, new Pool(tokenA, tokenB, feeAmount, slot0.sqrtPriceX96, liquidity, slot0.tick, tickList)]
+  }, [
+    addressesLoading,
+    feeAmount,
+    liquidity,
+    liquidityLoading,
+    poolAddressFromFactory,
+    slot0,
+    slot0Loading,
+    tickData,
+    tickLoading,
+    tickSyncing,
+    tokenA,
+    tokenB,
+  ])
 }

@@ -14,9 +14,6 @@ import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
-import MigrateV1 from './MigrateV1'
-import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -114,12 +111,9 @@ export default function App() {
                 component={RedirectDuplicateTokenIds}
               />
 
-              <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
               <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
 
-              <Route exact strict path="/migrate/v1" component={MigrateV1} />
-              <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
               <Route exact strict path="/migrate/v2" component={MigrateV2} />
               <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
 
