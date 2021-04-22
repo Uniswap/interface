@@ -17,7 +17,6 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
-import { EmptyState } from '../MigrateV1/EmptyState'
 import { V2_MIGRATOR_ADDRESSES } from 'constants/v3'
 import { PoolState, usePool } from 'data/Pools'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
@@ -42,6 +41,14 @@ import { BigNumber } from '@ethersproject/bignumber'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 
 const ZERO = JSBI.BigInt(0)
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
+      <TYPE.body>{message}</TYPE.body>
+    </AutoColumn>
+  )
+}
 
 function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: TokenAmount; token1Amount: TokenAmount }) {
   return (
@@ -198,10 +205,9 @@ function V2PairMigration({
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: BigNumber } | null>(
     null
   )
-  const [approval, approveManually] = useApproveCallback(
-    pairBalance,
-    chainId ? V2_MIGRATOR_ADDRESSES[chainId] : undefined
-  )
+
+  const migratorAddress = chainId && V2_MIGRATOR_ADDRESSES[chainId]
+  const [approval, approveManually] = useApproveCallback(pairBalance, migratorAddress)
   const isArgentWallet = useIsArgentWallet()
 
   const approve = useCallback(async () => {
@@ -389,8 +395,8 @@ function V2PairMigration({
     <AutoColumn gap="20px">
       <TYPE.body my={9} style={{ fontWeight: 400 }}>
         This tool will safely migrate your V2 liquidity to V3. The process is completely trustless thanks to the{' '}
-        {chainId && (
-          <ExternalLink href={getEtherscanLink(chainId, V2_MIGRATOR_ADDRESSES[chainId], 'address')}>
+        {chainId && migratorAddress && (
+          <ExternalLink href={getEtherscanLink(chainId, migratorAddress, 'address')}>
             <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
           </ExternalLink>
         )}

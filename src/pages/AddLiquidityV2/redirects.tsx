@@ -9,8 +9,9 @@ export function RedirectDuplicateTokenIdsV2(props: RouteComponentProps<{ currenc
     },
   } = props
 
-  if (currencyIdA.toLowerCase() === currencyIdB.toLowerCase()) {
+  if (currencyIdA && currencyIdB && currencyIdA.toLowerCase() === currencyIdB.toLowerCase()) {
     return <Redirect to={`/add/v2/${currencyIdA}`} />
   }
+
   return <AddLiquidityV2 {...props} />
 }
