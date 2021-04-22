@@ -39,6 +39,7 @@ import { Contract } from '@ethersproject/contracts'
 import { splitSignature } from '@ethersproject/bytes'
 import { BigNumber } from '@ethersproject/bignumber'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { formatTokenAmount } from 'utils/formatTokenAmount'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -538,9 +539,9 @@ function V2PairMigration({
         {chainId && refund0 && refund1 ? (
           <div style={{ marginTop: '1rem' }}>
             <TYPE.darkGray style={{ textAlign: 'center' }}>
-              {refund0.toSignificant(4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
-              {refund1.toSignificant(4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be refunded to
-              your wallet.
+              {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
+              {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be refunded
+              to your wallet.
             </TYPE.darkGray>
           </div>
         ) : null}
