@@ -4,6 +4,7 @@ import { Position } from '@uniswap/v3-sdk'
 import { usePool } from 'data/Pools'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PositionDetails } from 'types/position'
@@ -33,29 +34,23 @@ export function useDerivedV3BurnInfo(
 
   const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.fee)
 
-  const liquidity = position?.liquidity ? position.liquidity.mul(percent).div(100) : undefined
-
-  const positionSDK = useMemo(
+  const partialPosition = useMemo(
     () =>
-      pool && liquidity && position?.tickLower && position?.tickLower
+      pool && position?.liquidity && position?.tickLower && position?.tickLower
         ? new Position({
             pool,
-            liquidity: liquidity.toString(),
-            tickLower: position?.tickLower,
-            tickUpper: position?.tickUpper,
+            liquidity: position.liquidity.mul(percent).div(100).toString(),
+            tickLower: position.tickLower,
+            tickUpper: position.tickUpper,
           })
         : undefined,
-    [pool, liquidity, position]
+    [pool, percent, position]
   )
 
-  const liquidityValue0 = positionSDK?.amount0
-  const liquidityValue1 = positionSDK?.amount1
+  const liquidityValue0 = partialPosition?.amount0
+  const liquidityValue1 = partialPosition?.amount1
 
-  // TODO include counterfactual fees calculate from fee growth snapshots here
-  const feeValue0 =
-    token0 && position?.tokensOwed0 ? new TokenAmount(token0, position.tokensOwed0.toString()) : undefined
-  const feeValue1 =
-    token1 && position?.tokensOwed1 ? new TokenAmount(token1, position.tokensOwed1.toString()) : undefined
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position)
 
   let error: string | undefined
   if (!account) {
@@ -64,7 +59,14 @@ export function useDerivedV3BurnInfo(
   if (percent === 0) {
     error = error ?? 'Enter an percent'
   }
-  return { liquidity, liquidityValue0, liquidityValue1, feeValue0, feeValue1, error }
+  return {
+    liquidity: partialPosition?.liquidity ? BigNumber.from(partialPosition?.liquidity.toString()) : undefined,
+    liquidityValue0,
+    liquidityValue1,
+    feeValue0,
+    feeValue1,
+    error,
+  }
 }
 
 export function useBurnV3ActionHandlers(): {

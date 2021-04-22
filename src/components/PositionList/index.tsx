@@ -1,3 +1,4 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import PositionListItem from 'components/PositionListItem'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -36,7 +37,7 @@ const MobileHeader = styled.div`
 `
 
 export type PositionListProps = React.PropsWithChildren<{
-  positions: PositionDetails[]
+  positions: (PositionDetails & { tokenId: BigNumber })[]
 }>
 
 export default function PositionList({ positions }: PositionListProps) {

@@ -19,6 +19,8 @@ import { DarkCard, DarkGreyCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AlertTriangle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import { formatTokenAmount } from 'utils/formatTokenAmount'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -37,10 +39,10 @@ const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
 
-  grid-template-columns: 1.5fr repeat(4, 1fr);
+  grid-template-columns: 1.5fr repeat(3, 1fr);
 
   @media screen and (max-width: 900px) {
-    grid-template-columns: 1.5fr repeat(4, 1fr);
+    grid-template-columns: 1.5fr repeat(3, 1fr);
     & :nth-child(4) {
       display: none;
     }
@@ -92,17 +94,8 @@ export function PositionPage({
 
   const positionDetails = positionIndex && positions ? positions[parseInt(positionIndex)] : undefined
 
-  const {
-    token0: token0Address,
-    token1: token1Address,
-    fee: feeAmount,
-    liquidity,
-    tickLower,
-    tickUpper,
-    tokenId,
-    // feeGrowthInside0LastX128,
-    // feeGrowthInside1LastX128,
-  } = positionDetails || {}
+  const { token0: token0Address, token1: token1Address, fee: feeAmount, liquidity, tickLower, tickUpper, tokenId } =
+    positionDetails || {}
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
@@ -127,6 +120,9 @@ export function PositionPage({
   // check if price is within range
   const outOfRange: boolean =
     pool && tickLower && tickUpper ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper : false
+
+  // fees
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
@@ -184,7 +180,6 @@ export function PositionPage({
           <AutoColumn gap="lg">
             <ResponsiveGrid>
               <Label>Tokens</Label>
-              <Label end={true}>Entry</Label>
               <Label end={true}>Current</Label>
               <Label end={true}>Fees</Label>
               <Label end={true}>USD Value</Label>
@@ -195,9 +190,8 @@ export function PositionPage({
                 <TYPE.label ml="10px">{currency0?.symbol}</TYPE.label>
               </RowFixed>
               <Label end={true}>{position?.amount0.toSignificant(4)}</Label>
-              <Label end={true}>{position?.amount0.toSignificant(4)}</Label>
-              <Label end={true}>1</Label>
-              <Label end={true}>$100</Label>
+              <Label end={true}>{feeValue0 ? formatTokenAmount(feeValue0, 4) : '-'}</Label>
+              <Label end={true}>-</Label>
             </ResponsiveGrid>
             <ResponsiveGrid>
               <RowFixed>
@@ -205,9 +199,8 @@ export function PositionPage({
                 <TYPE.label ml="10px">{currency1?.symbol}</TYPE.label>
               </RowFixed>
               <Label end={true}>{position?.amount1.toSignificant(4)}</Label>
-              <Label end={true}>{position?.amount1.toSignificant(4)}</Label>
-              <Label end={true}>1</Label>
-              <Label end={true}>$100</Label>
+              <Label end={true}>{feeValue1 ? formatTokenAmount(feeValue1, 4) : '-'}</Label>
+              <Label end={true}>-</Label>
             </ResponsiveGrid>
           </AutoColumn>
         </DarkCard>

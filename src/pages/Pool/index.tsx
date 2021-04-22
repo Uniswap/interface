@@ -1,5 +1,4 @@
 import React, { useContext, useMemo } from 'react'
-import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonGray, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -8,13 +7,12 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { BookOpen, ChevronDown, Download, Inbox, Info, PlusCircle } from 'react-feather'
+import { BookOpen, ChevronDown, Download, Inbox, PlusCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import styled, { ThemeContext } from 'styled-components'
-import { HideSmall, MEDIA_WIDTHS, TYPE } from 'theme'
-import { PositionDetails } from 'types/position'
+import { HideSmall, TYPE } from 'theme'
 import { LoadingRows } from './styleds'
 
 const PageWrapper = styled(AutoColumn)`
@@ -39,15 +37,6 @@ const ButtonRow = styled(RowFixed)`
     flex-direction: row;
     justify-content: space-between;
   `};
-`
-const InactivePositionsBadge = styled(Badge)`
-  border-radius: 12px;
-  height: 100%;
-  padding: 6px 8px;
-  display: none;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
-    display: flex;
-  }
 `
 const Menu = styled(NewMenu)`
   margin-left: 0;
@@ -105,16 +94,6 @@ export default function Pool() {
 
   const hasPositions = useMemo(() => Boolean(positions && positions.length > 0), [positions])
 
-  const numInactivePositions = useMemo(() => {
-    return hasPositions && positions
-      ? positions.reduce((acc: any, position: PositionDetails) => {
-          const { tokensOwed0, tokensOwed1 } = position
-          const limitCrossed = tokensOwed0.eq(0) || tokensOwed1.eq(0)
-          return limitCrossed ? acc + 1 : acc
-        }, 0)
-      : 0
-  }, [positions, hasPositions])
-
   const hasV2Liquidity = true
   const showMigrateHeaderLink = Boolean(hasV2Liquidity && hasPositions)
 
@@ -160,14 +139,6 @@ export default function Pool() {
                 <TYPE.mediumHeader>{t('Pool Overview')}</TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                {numInactivePositions > 0 && (
-                  <InactivePositionsBadge variant={BadgeVariant.WARNING_OUTLINE}>
-                    <Info size={20} />
-                    &nbsp;&nbsp;
-                    {numInactivePositions}{' '}
-                    {numInactivePositions === 1 ? t('Inactive position') : t('Inactive positions')}
-                  </InactivePositionsBadge>
-                )}
                 <Menu
                   flyoutAlignment={FlyoutAlignment.LEFT}
                   ToggleUI={(props: any) => (
