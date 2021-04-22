@@ -26,12 +26,16 @@ const QUERY = gql`
       }
       stakedAmount
       rewardAmounts
-    }
-    liquidityMiningPositions(where: { stakedAmount_gt: 0, user: $userId }) {
-      id
+      liquidityMiningPositions(where: { stakedAmount_gt: 0, user: $userId }) {
+        id
+      }
     }
   }
 `
+
+interface ExtendedSubgraphLiquidityMiningCampaign extends SubgraphLiquidityMiningCampaign {
+  liquidityMiningPositions: { id: string }[]
+}
 
 export function useActiveLiquidityMiningCampaignsForPair(
   pair: Pair
@@ -42,8 +46,7 @@ export function useActiveLiquidityMiningCampaignsForPair(
   const { loading: loadingReserveNativeCurrency, reserveNativeCurrency } = usePairReserveNativeCurrency(pair)
   const timestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
   const { data, loading: loadingActiveCampaigns, error } = useQuery<{
-    liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
-    liquidityMiningPositions: { id: string }[]
+    liquidityMiningCampaigns: ExtendedSubgraphLiquidityMiningCampaign[]
   }>(QUERY, {
     variables: {
       pairId: pair.liquidityToken.address.toLowerCase(),
@@ -57,16 +60,17 @@ export function useActiveLiquidityMiningCampaignsForPair(
     if (error || !data || !chainId || !lpTokenTotalSupply) return { loading: false, wrappedCampaigns: [] }
     const wrappedCampaigns = []
     for (let i = 0; i < data.liquidityMiningCampaigns.length; i++) {
+      const campaign = data.liquidityMiningCampaigns[i]
       wrappedCampaigns.push({
         campaign: toLiquidityMiningCampaign(
           chainId,
           pair,
           lpTokenTotalSupply?.raw.toString(),
           reserveNativeCurrency.raw.toString(),
-          data.liquidityMiningCampaigns[i],
+          campaign,
           nativeCurrency
         ),
-        staked: data.liquidityMiningPositions.length > 0
+        staked: campaign.liquidityMiningPositions.length > 0
       })
     }
     return { loading: false, wrappedCampaigns }

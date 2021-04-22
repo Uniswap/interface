@@ -51,7 +51,7 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, ...res
           <Box>
             <DoubleCurrencyLogo currency0={token0} currency1={token1} size={34} />
           </Box>
-          <Flex flexDirection="column">
+          <Flex flexDirection="column" alignItems="flex-end">
             {apy.greaterThan('0') && (
               <Box mb="8px">
                 <ApyBadge apy={apy} />
