@@ -43,13 +43,6 @@ export const BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS = unwrapOrThrow('BSC_NA
 export const BSC_FUSE_TOKEN_ADDRESS = unwrapOrThrow('BSC_FUSE_TOKEN_ADDRESS')
 export const PEG_SWAP_ADDRESS = unwrapOrThrow('PEG_SWAP_ADDRESS')
 
-export const HOME_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS = unwrapOrThrow(
-  'HOME_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS'
-)
-export const FOREIGN_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS = unwrapOrThrow(
-  'FOREIGN_FEE_MANAGER_AMB_NATIVE_TO_ERC20_ADDRESS'
-)
-
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]

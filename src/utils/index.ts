@@ -246,7 +246,6 @@ export function getHomeAMBNativeToErc20Contract(address: string, library: Web3Pr
 }
 
 export function getForeignAMBNativeToErc20Contract(address: string, library: Web3Provider, account?: string): Contract {
-  console.log(library)
   return getContract(address, ForeignAMBNativeToErc20ABI, library, account)
 }
 
