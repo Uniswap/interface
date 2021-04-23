@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { Position } from '@uniswap/v3-sdk'
-import { PoolState, usePool } from 'data/Pools'
+import { PoolState, usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Link, RouteComponentProps } from 'react-router-dom'

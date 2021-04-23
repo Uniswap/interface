@@ -97,7 +97,7 @@ export function useClaimCallback(
   const claimData = useUserClaimData(account)
 
   // used for popup summary
-  const unClaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(account)
+  const unclaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(account)
   const addTransaction = useTransactionAdder()
   const distributorContract = useMerkleDistributorContract()
 
@@ -111,7 +111,7 @@ export function useClaimCallback(
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Claimed ${unClaimedAmount?.toSignificant(4)} UNI`,
+            summary: `Claimed ${unclaimedAmount?.toSignificant(4)} UNI`,
             claim: { recipient: account },
           })
           return response.hash

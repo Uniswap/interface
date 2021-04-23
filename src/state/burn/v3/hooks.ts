@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TokenAmount } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-import { usePool } from 'data/Pools'
+import { usePool } from 'hooks/usePools'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
