@@ -23,10 +23,9 @@ import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { WETH9 } from '@uniswap/sdk-core'
 
-// TODO still a lot of polishing left here
-
-const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
+export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3({
@@ -53,7 +52,7 @@ export default function RemoveLiquidityV3({
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const position = useV3PositionFromTokenId(tokenId)
 
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   // burn state
   const { percent } = useBurnV3State()
@@ -71,42 +70,82 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
   const burn = useCallback(() => {
-    if (!liquidity || !positionManager || !liquidityValue0 || !liquidityValue1 || !deadline || !account) return
+    if (
+      !liquidity ||
+      !positionManager ||
+      !liquidityValue0 ||
+      !liquidityValue1 ||
+      !deadline ||
+      !account ||
+      !chainId ||
+      !feeValue0 ||
+      !feeValue1
+    )
+      return
 
     const data = []
 
     // decreaseLiquidity if necessary
+    const amount0Min = JSBI.divide(
+      JSBI.multiply(liquidityValue0.raw, JSBI.BigInt(10000 - allowedSlippage)),
+      JSBI.BigInt(10000)
+    )
+    const amount1Min = JSBI.divide(
+      JSBI.multiply(liquidityValue1.raw, JSBI.BigInt(10000 - allowedSlippage)),
+      JSBI.BigInt(10000)
+    )
     if (liquidity.gt(0)) {
       data.push(
         positionManager.interface.encodeFunctionData('decreaseLiquidity', [
           {
             tokenId,
             liquidity,
-            amount0Min: `0x${JSBI.divide(
-              JSBI.multiply(liquidityValue0.raw, JSBI.BigInt(10000 - allowedSlippage)),
-              JSBI.BigInt(10000)
-            ).toString(16)}`,
-            amount1Min: `0x${JSBI.divide(
-              JSBI.multiply(liquidityValue1.raw, JSBI.BigInt(10000 - allowedSlippage)),
-              JSBI.BigInt(10000)
-            ).toString(16)}`,
+            amount0Min: `0x${amount0Min.toString(16)}`,
+            amount1Min: `0x${amount1Min.toString(16)}`,
             deadline,
           },
         ])
       )
     }
 
-    // TODO allow collection in ETH
+    const involvesWETH = liquidityValue0.token.equals(WETH9[chainId]) || liquidityValue1.token.equals(WETH9[chainId])
+
+    // collect, hard-coding ETH collection for now
     data.push(
       positionManager.interface.encodeFunctionData('collect', [
         {
           tokenId,
-          recipient: account,
+          recipient: involvesWETH ? positionManager.address : account,
           amount0Max: UINT128MAX,
           amount1Max: UINT128MAX,
         },
       ])
     )
+
+    if (involvesWETH) {
+      // unwrap
+      data.push(
+        positionManager.interface.encodeFunctionData('unwrapWETH9', [
+          `0x${(liquidityValue0.token.equals(WETH9[chainId])
+            ? JSBI.add(amount0Min, feeValue0.raw)
+            : JSBI.add(amount1Min, feeValue1.raw)
+          ).toString(16)}`,
+          account,
+        ])
+      )
+
+      // sweep
+      data.push(
+        positionManager.interface.encodeFunctionData('sweepToken', [
+          liquidityValue0.token.equals(WETH9[chainId]) ? liquidityValue1.token.address : liquidityValue0.token.address,
+          `0x${(liquidityValue0.token.equals(WETH9[chainId])
+            ? JSBI.add(amount1Min, feeValue1.raw)
+            : JSBI.add(amount0Min, feeValue0.raw)
+          ).toString(16)}`,
+          account,
+        ])
+      )
+    }
 
     positionManager
       .multicall(data)
@@ -134,6 +173,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     account,
     addTransaction,
     positionManager,
+    chainId,
+    feeValue0,
+    feeValue1,
   ])
 
   return (

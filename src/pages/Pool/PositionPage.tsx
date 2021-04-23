@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import { PoolState, usePool } from 'data/Pools'
 import { useToken } from 'hooks/Tokens'
@@ -13,7 +13,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { TYPE } from 'theme'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { basisPointsToPercent } from 'utils'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { DarkCard, DarkGreyCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AlertTriangle } from 'react-feather'
@@ -22,6 +22,14 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
+import { WETH9 } from '@uniswap/sdk-core'
+import { useActiveWeb3React } from 'hooks'
+import { useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { UINT128MAX } from '../RemoveLiquidity/V3'
+import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
+import ReactGA from 'react-ga'
+import { TransactionResponse } from '@ethersproject/providers'
+import { Dots } from 'components/swap/styleds'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -77,7 +85,7 @@ const ActiveDot = styled.span`
 `
 
 export const DarkBadge = styled.div`
-  widthL fit-content;
+  width: fit-content;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.bg0};
   padding: 4px 6px;
@@ -89,6 +97,7 @@ export function PositionPage({
   },
 }: RouteComponentProps<{ tokenId?: string }>) {
   const { t } = useTranslation()
+  const { chainId, account } = useActiveWeb3React()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
@@ -120,12 +129,76 @@ export function PositionPage({
   const outOfRange: boolean =
     pool && tickLower && tickUpper ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper : false
 
-  const linkToIncrease =
-    currency0 && currency1
-      ? `/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`
-      : `/pool`
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
+
+  const [collecting, setCollecting] = useState<boolean>(false)
+  const [collectMigrationHash, setCollectMigrationHash] = useState<string | null>(null)
+  const isCollectPending = useIsTransactionPending(collectMigrationHash ?? undefined)
+
+  const addTransaction = useTransactionAdder()
+  const positionManager = useV3NFTPositionManagerContract()
+  const collect = useCallback(() => {
+    if (!chainId || !feeValue0 || !feeValue1 || !positionManager || !account || !tokenId) return
+
+    setCollecting(true)
+
+    const involvesWETH = feeValue0.token.equals(WETH9[chainId]) || feeValue1.token.equals(WETH9[chainId])
+
+    const data = []
+
+    // collect, hard-coding ETH collection for now
+    data.push(
+      positionManager.interface.encodeFunctionData('collect', [
+        {
+          tokenId,
+          recipient: involvesWETH ? positionManager.address : account,
+          amount0Max: UINT128MAX,
+          amount1Max: UINT128MAX,
+        },
+      ])
+    )
+
+    if (involvesWETH) {
+      // unwrap
+      data.push(
+        positionManager.interface.encodeFunctionData('unwrapWETH9', [
+          `0x${(feeValue0.token.equals(WETH9[chainId]) ? feeValue0.raw : feeValue1.raw).toString(16)}`,
+          account,
+        ])
+      )
+
+      // sweep
+      data.push(
+        positionManager.interface.encodeFunctionData('sweepToken', [
+          feeValue0.token.equals(WETH9[chainId]) ? feeValue1.token.address : feeValue0.token.address,
+          `0x${(feeValue0.token.equals(WETH9[chainId]) ? feeValue1.raw : feeValue0.raw).toString(16)}`,
+          account,
+        ])
+      )
+    }
+
+    positionManager
+      .multicall(data)
+      .then((response: TransactionResponse) => {
+        setCollectMigrationHash(response.hash)
+        setCollecting(false)
+
+        ReactGA.event({
+          category: 'Liquidity',
+          action: 'CollectV3',
+          label: [feeValue0.token.symbol, feeValue1.token.symbol].join('/'),
+        })
+
+        addTransaction(response, {
+          summary: `Collect ${feeValue0.token.symbol}/${feeValue1.token.symbol} fees`,
+        })
+      })
+      .catch((error) => {
+        setCollecting(false)
+        console.error(error)
+      })
+  }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction])
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
@@ -157,14 +230,39 @@ export function PositionPage({
               </Badge>
             </RowFixed>
             <RowFixed>
-              <Link to={linkToIncrease}>
-                <ButtonPrimary mr="20px" width="200px" padding="8px" borderRadius="12px">
-                  Increase liquidity
-                </ButtonPrimary>
-              </Link>
-              <ButtonPrimary width="200px" padding="8px" borderRadius="12px">
-                Remove liquidity
-              </ButtonPrimary>
+              {(feeValue0?.greaterThan(0) && feeValue1?.greaterThan(0)) || !!collectMigrationHash ? (
+                <ButtonConfirmed
+                  disabled={collecting || !!collectMigrationHash}
+                  confirmed={!!collectMigrationHash && !isCollectPending}
+                  mr="15px"
+                  width="175px"
+                  padding="8px"
+                  style={{ borderRadius: '12px' }}
+                  onClick={collect}
+                >
+                  {!!collectMigrationHash && !isCollectPending ? (
+                    'Collected'
+                  ) : isCollectPending || collecting ? (
+                    <Dots>Collecting</Dots>
+                  ) : (
+                    'Collect fees'
+                  )}
+                </ButtonConfirmed>
+              ) : null}
+              {currency0 && currency1 && feeAmount && tokenId ? (
+                <Link to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}>
+                  <ButtonPrimary mr="15px" width="175px" padding="8px" borderRadius="12px">
+                    Add liquidity
+                  </ButtonPrimary>
+                </Link>
+              ) : null}
+              {tokenId && (
+                <Link to={`/remove/${tokenId}`}>
+                  <ButtonPrimary width="175px" padding="8px" borderRadius="12px">
+                    Remove liquidity
+                  </ButtonPrimary>
+                </Link>
+              )}
             </RowFixed>
           </RowBetween>
           <RowBetween>
