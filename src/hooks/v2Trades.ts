@@ -1,21 +1,18 @@
-import { isTradeBetter } from 'utils/trades'
-import { Pair, Trade } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Pair, Trade } from '@uniswap/v2-sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
-
+import { useUserSingleHopOnly } from 'state/user/hooks'
+import { isTradeBetter } from 'utils/trades'
 import {
-  BASES_TO_CHECK_TRADES_AGAINST,
-  CUSTOM_BASES,
-  BETTER_TRADE_LESS_HOPS_THRESHOLD,
   ADDITIONAL_BASES,
+  BASES_TO_CHECK_TRADES_AGAINST,
+  BETTER_TRADE_LESS_HOPS_THRESHOLD,
+  CUSTOM_BASES,
 } from '../constants'
 import { PairState, usePairs } from '../data/V2'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-
 import { useActiveWeb3React } from './index'
-import { useUnsupportedTokens } from './Tokens'
-import { useUserSingleHopOnly } from 'state/user/hooks'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const { chainId } = useActiveWeb3React()
@@ -96,7 +93,7 @@ const MAX_HOPS = 3
 /**
  * Returns the best trade for the exact amount of tokens in to the given token out
  */
-export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
+export function useV2TradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
 
   const [singleHopOnly] = useUserSingleHopOnly()
@@ -130,7 +127,7 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
 /**
  * Returns the best trade for the token in to the exact amount of token out
  */
-export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
+export function useV2TradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
 
   const [singleHopOnly] = useUserSingleHopOnly()
@@ -157,24 +154,4 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
     }
     return null
   }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
-}
-
-export function useIsTransactionUnsupported(currencyIn?: Currency, currencyOut?: Currency): boolean {
-  const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
-  const { chainId } = useActiveWeb3React()
-
-  const tokenIn = wrappedCurrency(currencyIn, chainId)
-  const tokenOut = wrappedCurrency(currencyOut, chainId)
-
-  // if unsupported list loaded & either token on list, mark as unsupported
-  if (unsupportedTokens) {
-    if (tokenIn && Object.keys(unsupportedTokens).includes(tokenIn.address)) {
-      return true
-    }
-    if (tokenOut && Object.keys(unsupportedTokens).includes(tokenOut.address)) {
-      return true
-    }
-  }
-
-  return false
 }

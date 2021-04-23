@@ -69,7 +69,9 @@ const ResponsiveGrid = styled.div`
 `
 
 // responsive text
-const Label = styled(TYPE.label)<{ end?: boolean }>`
+// disable the warning because we don't use the end prop, we just want to filter it out
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Label = styled(({ end, ...props }) => <TYPE.label {...props} />)<{ end?: boolean }>`
   display: flex;
   font-size: 16px;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
