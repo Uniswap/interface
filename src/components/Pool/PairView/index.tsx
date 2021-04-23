@@ -13,6 +13,7 @@ import { usePair24hVolumeUSD } from '../../../hooks/usePairVolume24hUSD'
 import { usePairLiquidityUSD } from '../../../hooks/usePairLiquidityUSD'
 import LiquidityMiningCampaigns from './LiquidityMiningCampaigns'
 import { useActiveWeb3React } from '../../../hooks'
+import { commify } from 'ethers/lib/utils'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
@@ -74,8 +75,8 @@ function PairView({ loading, pair }: PairViewProps) {
               </Text>
             </Box>
           </Flex>
-          <DataRow loading={overallLoading} title="Liquidity:" value={`$${liquidityUSD.toFixed(2)}`} />
-          <DataRow loading={overallLoading} title="Volume:" value={`$${volume24hUSD.toFixed(2)}`} />
+          <DataRow loading={overallLoading} title="Liquidity:" value={`$${commify(liquidityUSD.toSignificant(2))}`} />
+          <DataRow loading={overallLoading} title="Volume:" value={`$${commify(volume24hUSD.toSignificant(2))}`} />
           {!!account && (
             <Box mt="18px">
               <FullPositionCard pair={pair || undefined} />

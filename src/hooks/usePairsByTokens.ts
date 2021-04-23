@@ -8,42 +8,49 @@ import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 
 const QUERY = gql`
-  query($token0Id: ID, $timestamp: BigInt!) {
-    pairs(where: { token0: $token0Id }) {
+  fragment GetPair on Pair {
+    address: id
+    reserve0
+    reserve1
+    reserveNativeCurrency
+    totalSupply
+    token0 {
       address: id
-      reserve0
-      reserve1
-      reserveNativeCurrency
-      totalSupply
-      token0 {
+      name
+      symbol
+      decimals
+    }
+    token1 {
+      address: id
+      name
+      symbol
+      decimals
+    }
+    liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
+      address: id
+      duration
+      startsAt
+      endsAt
+      locked
+      stakingCap
+      rewardTokens {
+        derivedNativeCurrency
         address: id
         name
         symbol
         decimals
       }
-      token1 {
-        address: id
-        name
-        symbol
-        decimals
-      }
-      liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
-        address: id
-        duration
-        startsAt
-        endsAt
-        locked
-        stakingCap
-        rewardTokens {
-          derivedNativeCurrency
-          address: id
-          name
-          symbol
-          decimals
-        }
-        stakedAmount
-        rewardAmounts
-      }
+      stakedAmount
+      rewardAmounts
+    }
+  }
+
+  query($token0Id: ID, $token1Id: ID, $timestamp: BigInt!) {
+    byToken0: pairs(where: { token0: $token0Id }) {
+      ...GetPair
+    }
+    byToken1: pairs(where: { token1: $token1Id }) {
+      ...GetPair
     }
   }
 `
@@ -67,11 +74,13 @@ interface SubgraphPair {
 }
 
 interface QueryResult {
-  pairs: SubgraphPair[]
+  byToken0: SubgraphPair[]
+  byToken1: SubgraphPair[]
 }
 
-export function usePairsByToken0(
-  token0?: Token | null
+export function usePairsByTokens(
+  token0?: Token | null,
+  token1?: Token | null
 ): {
   loading: boolean
   pairs: Pair[]
@@ -79,7 +88,11 @@ export function usePairsByToken0(
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
   const { error, loading: loadingPairs, data } = useQuery<QueryResult>(QUERY, {
-    variables: { token0Id: token0?.address.toLowerCase(), timestamp: Math.floor(Date.now() / 1000) }
+    variables: {
+      token0Id: token0 ? token0.address.toLowerCase() : '',
+      token1Id: token1 ? token1.address.toLowerCase() : '',
+      timestamp: Math.floor(Date.now() / 1000)
+    }
   })
 
   return useMemo(() => {
@@ -87,7 +100,7 @@ export function usePairsByToken0(
     if (!data || error) return { loading: false, pairs: [] }
     return {
       loading: false,
-      pairs: data.pairs.map(rawPair => {
+      pairs: data.byToken0.concat(data.byToken1).map(rawPair => {
         const {
           token0,
           token1,

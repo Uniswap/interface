@@ -32,6 +32,11 @@ const TitleRow = styled(RowBetween)`
 `
 
 const PointableFlex = styled(Flex)`
+  border: solid 1px ${props => props.theme.bg3};
+  border-radius: 8px;
+  height: 36px;
+  align-items: center;
+  padding: 0 10px;
   cursor: pointer;
 `
 
@@ -89,7 +94,7 @@ export default function Pair({
     [router]
   )
 
-  if (wrappedPair[0] === PairState.NOT_EXISTS) return <Redirect to="/pools" />
+  if (wrappedPair[0] === PairState.NOT_EXISTS || wrappedPair[0] === PairState.INVALID) return <Redirect to="/pools" />
   return (
     <>
       <PageWrapper>
@@ -125,10 +130,10 @@ export default function Pair({
                       {!token0 || !token1 ? <Skeleton width="60px" /> : `${token0.symbol}/${token1.symbol}`}
                     </Text>
                   </Box>
+                  <Box>
+                    <ChevronDown size={12} />
+                  </Box>
                 </PointableFlex>
-                <Box>
-                  <ChevronDown size={12} />
-                </Box>
               </Flex>
               <ButtonRow>
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="8px 14px" to="/create">

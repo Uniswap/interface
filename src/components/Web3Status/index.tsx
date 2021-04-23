@@ -1,7 +1,7 @@
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, transparentize } from 'polished'
 import React, { useMemo } from 'react'
-import { Activity, ChevronDown } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { NetworkContextName } from '../../constants'
@@ -130,15 +130,10 @@ const Text = styled.p<{ fontSize?: number }>`
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0 0.5rem 0 0.25rem;
-  font-size: 1rem;
+  font-size: 12px;
   width: fit-content;
   font-weight: 500;
   ${({ fontSize }) => (fontSize ? `font-size:${fontSize}px` : '')};
-`
-
-const NetworkIcon = styled(Activity)`
-  width: 5px;
-  height: 5px;
 `
 
 // we want the latest one to come first, so return negative if a is after b
@@ -169,7 +164,6 @@ function Web3StatusInner() {
   if (error) {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
-        <NetworkIcon />
         <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
       </Web3StatusError>
     )

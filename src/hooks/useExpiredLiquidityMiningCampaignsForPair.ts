@@ -1,15 +1,16 @@
 import { gql, useQuery } from '@apollo/client'
 import { LiquidityMiningCampaign, Pair } from 'dxswap-sdk'
+import { DateTime, Duration } from 'luxon'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
 import { usePairLiquidityTokenTotalSupply } from '../data/Reserves'
-import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
+import { toLiquidityMiningCampaign } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 import { usePairReserveNativeCurrency } from './usePairReserveNativeCurrency'
 
 const QUERY = gql`
-  query($pairId: ID, $timestamp: BigInt!, $lowerTimeLimit: BigInt!) {
+  query($pairId: ID, $timestamp: BigInt!, $lowerTimeLimit: BigInt!, $userId: ID) {
     liquidityMiningCampaigns(where: { stakablePair: $pairId, endsAt_gte: $lowerTimeLimit, endsAt_lt: $timestamp }) {
       address: id
       duration
@@ -26,44 +27,58 @@ const QUERY = gql`
       }
       stakedAmount
       rewardAmounts
+      liquidityMiningPositions(where: { stakedAmount_gt: 0, user: $userId }) {
+        id
+      }
     }
   }
 `
+interface ExtendedSubgraphLiquidityMiningCampaign extends SubgraphLiquidityMiningCampaign {
+  liquidityMiningPositions: { id: string }[]
+}
 
 export function useExpiredLiquidityMiningCampaignsForPair(
-  pair: Pair,
-  lowerTimeLimit: Date
-): { loading: boolean; liquidityMiningCampaigns: LiquidityMiningCampaign[] } {
-  const { chainId } = useActiveWeb3React()
+  pair?: Pair,
+  lowerTimeLimit: Date = DateTime.utc()
+    .minus(Duration.fromObject({ days: 30 }))
+    .toJSDate()
+): { loading: boolean; wrappedCampaigns: { campaign: LiquidityMiningCampaign; staked: boolean }[] } {
+  const { chainId, account } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
   const lpTokenTotalSupply = usePairLiquidityTokenTotalSupply(pair)
   const { loading: loadingReserveNativeCurrency, reserveNativeCurrency } = usePairReserveNativeCurrency(pair)
   const timestamp = useMemo(() => Math.floor(Date.now() / 1000), [])
   const memoizedLowerTimeLimit = useMemo(() => Math.floor(lowerTimeLimit.getTime() / 1000), [lowerTimeLimit])
   const { data, loading: loadingExpiredCampaigns, error } = useQuery<{
-    liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
+    liquidityMiningCampaigns: ExtendedSubgraphLiquidityMiningCampaign[]
   }>(QUERY, {
     variables: {
-      pairId: pair.liquidityToken.address.toLowerCase(),
+      pairId: pair ? pair.liquidityToken.address.toLowerCase() : '',
       timestamp,
-      lowerTimeLimit: memoizedLowerTimeLimit
+      lowerTimeLimit: memoizedLowerTimeLimit,
+      userId: account ? account.toLowerCase() : ''
     }
   })
 
   return useMemo(() => {
-    if (loadingExpiredCampaigns || loadingReserveNativeCurrency) return { loading: true, liquidityMiningCampaigns: [] }
-    if (error || !data || !chainId || !lpTokenTotalSupply) return { loading: false, liquidityMiningCampaigns: [] }
-    return {
-      loading: false,
-      liquidityMiningCampaigns: toLiquidityMiningCampaigns(
-        chainId,
-        pair,
-        lpTokenTotalSupply?.raw.toString(),
-        reserveNativeCurrency.raw.toString(),
-        data.liquidityMiningCampaigns,
-        nativeCurrency
-      )
+    if (loadingExpiredCampaigns || loadingReserveNativeCurrency) return { loading: true, wrappedCampaigns: [] }
+    if (error || !data || !chainId || !lpTokenTotalSupply || !pair) return { loading: false, wrappedCampaigns: [] }
+    const wrappedCampaigns = []
+    for (let i = 0; i < data.liquidityMiningCampaigns.length; i++) {
+      const campaign = data.liquidityMiningCampaigns[i]
+      wrappedCampaigns.push({
+        campaign: toLiquidityMiningCampaign(
+          chainId,
+          pair,
+          lpTokenTotalSupply?.raw.toString(),
+          reserveNativeCurrency.raw.toString(),
+          campaign,
+          nativeCurrency
+        ),
+        staked: campaign.liquidityMiningPositions.length > 0
+      })
     }
+    return { loading: false, wrappedCampaigns }
   }, [
     chainId,
     data,

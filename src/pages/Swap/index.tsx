@@ -42,8 +42,7 @@ import NetworkWarningModal from '../../components/NetworkWarningModal'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
-  width: 12px;
-  height: 10px;
+  width: 14px;
 `
 
 const SwitchIconContainer = styled.div`
@@ -289,7 +288,7 @@ export default function Swap() {
           />
 
           <AutoColumn gap="16px">
-            <AutoColumn gap="6px">
+            <AutoColumn gap="3px">
               <CurrencyInputPanel
                 label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
                 value={formattedAmounts[Field.INPUT]}
@@ -302,15 +301,14 @@ export default function Swap() {
                 id="swap-currency-input"
               />
               <SwitchIconContainer>
-                <SwitchTokensAmountsContainer>
+                <SwitchTokensAmountsContainer
+                  onClick={() => {
+                    setApprovalSubmitted(false) // reset 2 step UI for approvals
+                    onSwitchTokens()
+                  }}
+                >
                   <ArrowWrapper clickable>
-                    <RotatedRepeat
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={theme.text4}
-                    />
+                    <RotatedRepeat color={theme.text4} />
                   </ArrowWrapper>
                 </SwitchTokensAmountsContainer>
               </SwitchIconContainer>

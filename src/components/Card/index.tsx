@@ -37,8 +37,9 @@ export const DarkCard = styled(Card)<{ selectable?: boolean }>`
   position: relative;
   cursor: ${props => (props.selectable ? 'pointer' : 'auto')};
   z-index: 0;
+  position: relative;
   ::before {
-    background: linear-gradient(153.77deg, rgba(55, 82, 233, 0.35) -144.38%, rgba(55, 82, 233, 0) 65.22%), #171621;
+    background-color: ${props => props.theme.darkest};
     content: '';
     z-index: -1;
     top: 1px;
@@ -48,27 +49,6 @@ export const DarkCard = styled(Card)<{ selectable?: boolean }>`
     position: absolute;
     border-radius: 8px;
   }
-  ${props =>
-    props.selectable &&
-    css`
-      :hover::after {
-        opacity: 1;
-      }
-      ::after {
-        content: '';
-        position: absolute;
-        z-index: -1;
-        border-radius: 8px;
-        top: 1px;
-        bottom: 1px;
-        left: 1px;
-        right: 1px;
-        background: linear-gradient(110.34deg, #ffffff 0.16%, rgba(0, 0, 0, 0) 139.17%), ${({ theme }) => theme.dark1};
-        background-blend-mode: overlay, normal;
-        transition: 0.3s ease opacity;
-        opacity: 0;
-      }
-    `}
 `
 
 const BlueCardStyled = styled(Card)`
