@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -96,6 +97,20 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
+const InternalMenuItem = styled(Link)`
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  > svg {
+    margin-right: 8px;
+  }
+`
+
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
 export default function Menu() {
@@ -153,14 +168,21 @@ interface NewMenuProps {
   menuItems: {
     content: any
     link: string
+    external: boolean
   }[]
 }
 
 const NewMenuFlyout = styled(MenuFlyout)`
   top: 3rem !important;
 `
-const NewMenuItem = styled(MenuItem)`
+const NewMenuItem = styled(InternalMenuItem)`
   width: max-content;
+  text-decoration: none;
+`
+
+const ExternalMenuItem = styled(MenuItem)`
+  width: max-content;
+  text-decoration: none;
 `
 
 export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: NewMenuProps) => {
@@ -174,11 +196,17 @@ export const NewMenu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, men
       <ToggleElement onClick={toggle} />
       {open && (
         <NewMenuFlyout flyoutAlignment={flyoutAlignment}>
-          {menuItems.map(({ content, link }, i) => (
-            <NewMenuItem href={link} key={i}>
-              {content}
-            </NewMenuItem>
-          ))}
+          {menuItems.map(({ content, link, external }, i) =>
+            external ? (
+              <ExternalMenuItem id="link" href={link} key={link + i}>
+                {content}
+              </ExternalMenuItem>
+            ) : (
+              <NewMenuItem id="link" to={link} key={link + i}>
+                {content}
+              </NewMenuItem>
+            )
+          )}
         </NewMenuFlyout>
       )}
     </StyledMenu>

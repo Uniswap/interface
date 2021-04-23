@@ -77,7 +77,9 @@ export function useMintActionHandlers(
 export function useDerivedMintInfo(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined
+  feeAmount: FeeAmount | undefined,
+  // override for existing position
+  existingPosition?: Position | undefined
 ): {
   pool?: Pool | null
   poolState: PoolState
@@ -176,10 +178,14 @@ export function useDerivedMintInfo(
     [key: string]: number | undefined
   } = useMemo(() => {
     return {
-      [Bound.LOWER]: tryParseTick(tokenA, tokenB, feeAmount, lowerRangeTypedValue),
-      [Bound.UPPER]: tryParseTick(tokenA, tokenB, feeAmount, upperRangeTypedValue),
+      [Bound.LOWER]: existingPosition
+        ? existingPosition.tickLower
+        : tryParseTick(tokenA, tokenB, feeAmount, lowerRangeTypedValue),
+      [Bound.UPPER]: existingPosition
+        ? existingPosition.tickUpper
+        : tryParseTick(tokenA, tokenB, feeAmount, upperRangeTypedValue),
     }
-  }, [feeAmount, lowerRangeTypedValue, tokenA, tokenB, upperRangeTypedValue])
+  }, [existingPosition, feeAmount, lowerRangeTypedValue, tokenA, tokenB, upperRangeTypedValue])
 
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {}
   const sortedTicks = useMemo(

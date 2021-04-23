@@ -105,7 +105,8 @@ export default function Pool() {
           {t('Create a pool')}
         </MenuItem>
       ),
-      link: '/#/add',
+      link: '/add/ETH',
+      external: false,
     },
     {
       content: (
@@ -115,6 +116,7 @@ export default function Pool() {
         </MenuItem>
       ),
       link: 'https://uniswap.org/docs/v2/',
+      external: true,
     },
   ]
   if (showMigrateHeaderLink) {
@@ -125,7 +127,8 @@ export default function Pool() {
           {t('Migrate v2 liquidity')}
         </MenuItem>
       ),
-      link: '/#/migrate/v2',
+      link: '/migrate/v2',
+      external: false,
     })
   }
   return (

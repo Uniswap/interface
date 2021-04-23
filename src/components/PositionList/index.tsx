@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import PositionListItem from 'components/PositionListItem'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -37,7 +36,7 @@ const MobileHeader = styled.div`
 `
 
 export type PositionListProps = React.PropsWithChildren<{
-  positions: (PositionDetails & { tokenId: BigNumber })[]
+  positions: PositionDetails[]
 }>
 
 export default function PositionList({ positions }: PositionListProps) {
@@ -54,7 +53,7 @@ export default function PositionList({ positions }: PositionListProps) {
       <MobileHeader>Your positions</MobileHeader>
       {positions.map((p, i) => {
         const key = `${i}-${p.nonce.toString()} ${p.token0} ${p.token1} ${p.tokensOwed0} ${p.tokensOwed1}`
-        return <PositionListItem key={key} positionDetails={p} positionIndex={i} />
+        return <PositionListItem key={key} positionDetails={p} />
       })}
     </>
   )

@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, TokenAmount, Percent, ETHER, Price } from '@uniswap/sdk-core'
+import { Currency, TokenAmount, Percent, ETHER } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useState } from 'react'
 import { Link2, AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -7,12 +7,12 @@ import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonRadioChecked, ButtonText } from '../../components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { TransactionSubmittedContent, ConfirmationPendingContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { AutoRow, RowBetween } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import Review from './Review'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -27,163 +27,40 @@ import { TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
-import { Dots, Wrapper } from '../Pool/styleds'
+import { Dots } from '../Pool/styleds'
 import { currencyId } from '../../utils/currencyId'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { ToggleWrapper, ToggleElement } from 'components/Toggle/MultiToggle'
-import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import {
   DynamicSection,
   CurrencyDropdown,
   ScrollableContent,
   StyledInput,
   FixedPreview,
+  Wrapper,
+  RangeBadge,
   ScrollablePage,
 } from './styled'
 import { useTranslation } from 'react-i18next'
 import { useMintState, useMintActionHandlers, useDerivedMintInfo } from 'state/mint/hooks'
-import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { FeeAmount, NonfungiblePositionManager, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
 import JSBI from 'jsbi'
-
-export function FeeSelector({
-  disabled = false,
-  feeAmount,
-  handleFeePoolSelect,
-}: {
-  disabled?: boolean
-  feeAmount?: FeeAmount
-  handleFeePoolSelect: (feeAmount: FeeAmount) => void
-}) {
-  const { t } = useTranslation()
-
-  return (
-    <AutoColumn gap="16px">
-      <DynamicSection gap="md" disabled={disabled}>
-        <TYPE.label>{t('selectPool')}</TYPE.label>
-        <RowBetween>
-          <ButtonRadioChecked
-            width="32%"
-            active={feeAmount === FeeAmount.LOW}
-            onClick={() => handleFeePoolSelect(FeeAmount.LOW)}
-          >
-            <AutoColumn gap="sm" justify="flex-start">
-              <TYPE.label>0.05% {t('fee')}</TYPE.label>
-              <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                Optimized for stable assets.
-              </TYPE.main>
-            </AutoColumn>
-          </ButtonRadioChecked>
-          <ButtonRadioChecked
-            width="32%"
-            active={feeAmount === FeeAmount.MEDIUM}
-            onClick={() => handleFeePoolSelect(FeeAmount.MEDIUM)}
-          >
-            <AutoColumn gap="sm" justify="flex-start">
-              <TYPE.label>0.3% {t('fee')}</TYPE.label>
-              <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                The classic Uniswap pool fee.
-              </TYPE.main>
-            </AutoColumn>
-          </ButtonRadioChecked>
-          <ButtonRadioChecked
-            width="32%"
-            active={feeAmount === FeeAmount.HIGH}
-            onClick={() => handleFeePoolSelect(FeeAmount.HIGH)}
-          >
-            <AutoColumn gap="sm" justify="flex-start">
-              <TYPE.label>1% {t('fee')}</TYPE.label>
-              <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                Best for volatile assets.
-              </TYPE.main>
-            </AutoColumn>
-          </ButtonRadioChecked>
-        </RowBetween>
-      </DynamicSection>
-    </AutoColumn>
-  )
-}
-
-// currencyA is the base token
-export function RangeSelector({
-  priceLower,
-  priceUpper,
-  onLowerRangeInput,
-  onUpperRangeInput,
-  currencyA,
-  currencyB,
-}: {
-  priceLower?: Price
-  priceUpper?: Price
-  onLowerRangeInput: (typedValue: string) => void
-  onUpperRangeInput: (typedValue: string) => void
-  currencyA?: Currency | null
-  currencyB?: Currency | null
-}) {
-  return (
-    <RowBetween>
-      <StepCounter
-        value={priceLower?.toSignificant(5) ?? ''}
-        onUserInput={onLowerRangeInput}
-        width="48%"
-        label={
-          priceLower && currencyA && currencyB
-            ? `${priceLower.toSignificant(4)} ${currencyB.symbol} / 1 ${currencyA.symbol}`
-            : '-'
-        }
-      />
-      <StepCounter
-        value={priceUpper?.toSignificant(5) ?? ''}
-        onUserInput={onUpperRangeInput}
-        width="48%"
-        label={
-          priceUpper && currencyA && currencyB
-            ? `${priceUpper.toSignificant(4)} ${currencyB?.symbol} / 1 ${currencyA?.symbol}`
-            : '-'
-        }
-      />
-    </RowBetween>
-  )
-}
-
-// the order of displayed base currencies from left to right is always in sort order
-// currencyA is treated as the preferred base currency
-export function RateToggle({
-  currencyA,
-  currencyB,
-  handleRateToggle,
-}: {
-  currencyA: Currency
-  currencyB: Currency
-  handleRateToggle: () => void
-}) {
-  const { t } = useTranslation()
-  const { chainId } = useActiveWeb3React()
-
-  const tokenA = wrappedCurrency(currencyA, chainId)
-  const tokenB = wrappedCurrency(currencyB, chainId)
-
-  const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
-
-  return tokenA && tokenB ? (
-    <ToggleWrapper width="fit-content">
-      <ToggleElement isActive={isSorted} fontSize="12px" onClick={handleRateToggle}>
-        {isSorted ? currencyA.symbol : currencyB.symbol} {t('rate')}
-      </ToggleElement>
-      <ToggleElement isActive={!isSorted} fontSize="12px" onClick={handleRateToggle}>
-        {isSorted ? currencyB.symbol : currencyA.symbol} {t('rate')}
-      </ToggleElement>
-    </ToggleWrapper>
-  ) : null
-}
+import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
+import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
+import { PositionPreview } from 'components/PositionPreview'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import FeeSelector from 'components/FeeSelector'
+import RangeSelector from 'components/RangeSelector'
+import RateToggle from 'components/RateToggle'
+import { BigNumber } from '@ethersproject/bignumber'
 
 export default function AddLiquidity({
   match: {
-    params: { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl },
+    params: { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl, tokenId },
   },
   history,
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string }>) {
+}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>) {
   const { t } = useTranslation()
 
   const { account, chainId, library } = useActiveWeb3React()
@@ -193,8 +70,31 @@ export default function AddLiquidity({
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
 
+  // check for existing position if tokenId in url
+  const { position: existingPositionDetails, loading: positionLoading } = useV3PositionFromTokenId(
+    tokenId ? BigNumber.from(tokenId) : undefined
+  )
+  const hasExistingPosition = !!existingPositionDetails && !positionLoading
+  const { position: existingPosition } = useDerivedPositionInfo(existingPositionDetails)
+  const fixedValueLower =
+    hasExistingPosition && existingPosition
+      ? tickToPrice(
+          existingPosition.pool.token0,
+          existingPosition.pool.token1,
+          existingPosition.tickLower
+        ).toSignificant(4)
+      : undefined
+  const fixedValueUpper =
+    hasExistingPosition && existingPosition
+      ? tickToPrice(
+          existingPosition.pool.token0,
+          existingPosition.pool.token1,
+          existingPosition.tickUpper
+        ).toSignificant(4)
+      : undefined
+
   // fee selection from url
-  const feeAmount =
+  const feeAmount: FeeAmount | undefined =
     feeAmountFromUrl && Object.values(FeeAmount).includes(parseFloat(feeAmountFromUrl))
       ? parseFloat(feeAmountFromUrl)
       : undefined
@@ -221,7 +121,7 @@ export default function AddLiquidity({
     outOfRange,
     depositADisabled,
     depositBDisabled,
-  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, feeAmount)
+  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, feeAmount, existingPosition)
 
   const {
     onFieldAInput,
@@ -288,13 +188,21 @@ export default function AddLiquidity({
     }
 
     if (position && account && deadline && fractionalizedTolerance) {
-      const { calldata, value } = NonfungiblePositionManager.mintCallParameters(position, {
-        slippageTolerance: fractionalizedTolerance,
-        recipient: account,
-        deadline: deadline.toNumber(),
-        useEther: currencyA === ETHER || currencyB === ETHER,
-        createPool: noLiquidity,
-      })
+      const { calldata, value } =
+        hasExistingPosition && tokenId
+          ? NonfungiblePositionManager.increaseLiquidityCallParameters(position, {
+              tokenId: tokenId,
+              slippageTolerance: fractionalizedTolerance,
+              deadline: deadline.toNumber(),
+              useEther: currencyA === ETHER || currencyB === ETHER,
+            })
+          : NonfungiblePositionManager.mintCallParameters(position, {
+              slippageTolerance: fractionalizedTolerance,
+              recipient: account,
+              deadline: deadline.toNumber(),
+              useEther: currencyA === ETHER || currencyB === ETHER,
+              createPool: noLiquidity,
+            })
 
       const txn = {
         to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
@@ -423,6 +331,58 @@ export default function AddLiquidity({
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
+  const getLowerDecrement = () => {
+    if (tickLower && feeAmount && currencyA && currencyB && chainId) {
+      const tokenA = wrappedCurrency(currencyA, chainId)
+      const tokenB = wrappedCurrency(currencyB, chainId)
+      const tickAmount = TICK_SPACINGS[feeAmount]
+      const newTick = tickLower - tickAmount
+      const newPrice = tokenA && tokenB ? tickToPrice(tokenA, tokenB, newTick) : undefined
+      return newPrice ? newPrice.toFixed(10) : ''
+    } else {
+      return ''
+    }
+  }
+
+  const getLowerIncrement = () => {
+    if (tickLower && feeAmount && currencyA && currencyB && chainId) {
+      const tokenA = wrappedCurrency(currencyA, chainId)
+      const tokenB = wrappedCurrency(currencyB, chainId)
+      const tickAmount = TICK_SPACINGS[feeAmount]
+      const newTick = tickLower + tickAmount
+      const newPrice = tokenA && tokenB ? tickToPrice(tokenA, tokenB, newTick) : undefined
+      return newPrice ? newPrice.toFixed(10) : ''
+    } else {
+      return ''
+    }
+  }
+
+  const getUpperDecrement = () => {
+    if (tickUpper && feeAmount && currencyA && currencyB && chainId) {
+      const tokenA = wrappedCurrency(currencyA, chainId)
+      const tokenB = wrappedCurrency(currencyB, chainId)
+      const tickAmount = TICK_SPACINGS[feeAmount]
+      const newTick = tickUpper - tickAmount
+      const newPrice = tokenA && tokenB ? tickToPrice(tokenA, tokenB, newTick) : undefined
+      return newPrice ? newPrice.toFixed(10) : ''
+    } else {
+      return ''
+    }
+  }
+
+  const getUpperIncrement = () => {
+    if (tickUpper && feeAmount && currencyA && currencyB && chainId) {
+      const tokenA = wrappedCurrency(currencyA, chainId)
+      const tokenB = wrappedCurrency(currencyB, chainId)
+      const tickAmount = TICK_SPACINGS[feeAmount]
+      const newTick = tickUpper + tickAmount
+      const newPrice = tokenA && tokenB ? tickToPrice(tokenA, tokenB, newTick) : undefined
+      return newPrice ? newPrice.toFixed(10) : ''
+    } else {
+      return ''
+    }
+  }
+
   const handleRateToggle = useCallback(() => {
     if (currencyA && currencyB) {
       const currencyIdA = currencyId(currencyA)
@@ -477,6 +437,7 @@ export default function AddLiquidity({
               currencies={currencies}
               parsedAmounts={parsedAmounts}
               position={position}
+              existingPosition={existingPosition}
               priceLower={priceLower}
               priceUpper={priceUpper}
               outOfRange={outOfRange}
@@ -485,149 +446,180 @@ export default function AddLiquidity({
         ) : (
           <AppBody>
             <Wrapper>
-              <AutoColumn gap="40px">
-                <AutoColumn gap="md">
-                  <RowBetween paddingBottom="20px">
-                    <TYPE.label>Select a pair</TYPE.label>
-                    <ButtonText onClick={clearAll}>
-                      <TYPE.blue fontSize="12px">Clear All</TYPE.blue>
-                    </ButtonText>
-                  </RowBetween>
-                  {/* <TYPE.main fontWeight={400} fontSize="14px">
-                  {t('selectAPool')}
-                </TYPE.main> */}
-                  <RowBetween>
-                    <CurrencyDropdown
-                      value={formattedAmounts[Field.CURRENCY_A]}
-                      onUserInput={onFieldAInput}
-                      hideInput={true}
-                      onMax={() => {
-                        onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-                      }}
-                      onCurrencySelect={handleCurrencyASelect}
-                      showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-                      currency={currencies[Field.CURRENCY_A]}
-                      id="add-liquidity-input-tokena"
-                      showCommonBases
-                    />
-
-                    <CurrencyDropdown
-                      value={formattedAmounts[Field.CURRENCY_B]}
-                      hideInput={true}
-                      onUserInput={onFieldBInput}
-                      onCurrencySelect={handleCurrencyBSelect}
-                      onMax={() => {
-                        onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-                      }}
-                      showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                      currency={currencies[Field.CURRENCY_B]}
-                      id="add-liquidity-input-tokenb"
-                      showCommonBases
-                    />
-                  </RowBetween>
-                </AutoColumn>
-
-                <FeeSelector
-                  disabled={!currencyB || !currencyA}
-                  feeAmount={feeAmount}
-                  handleFeePoolSelect={handleFeePoolSelect}
-                />
-
-                {noLiquidity && (
-                  <DynamicSection disabled={!currencyA || !currencyB}>
+              <AutoColumn gap="lg">
+                {!hasExistingPosition ? (
+                  <>
                     <AutoColumn gap="md">
-                      <BlueCard width="100%" padding="1rem">
-                        You are the first to provide liquidity to this pool.
-                      </BlueCard>
+                      <RowBetween paddingBottom="20px">
+                        <TYPE.label>Select a pair</TYPE.label>
+                        <ButtonText onClick={clearAll}>
+                          <TYPE.blue fontSize="12px">Clear All</TYPE.blue>
+                        </ButtonText>
+                      </RowBetween>
+
                       <RowBetween>
-                        <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
-                        {currencyA && currencyB ? (
-                          <RateToggle currencyA={currencyA} currencyB={currencyB} handleRateToggle={handleRateToggle} />
-                        ) : null}
-                      </RowBetween>
-                      {/* <TYPE.main fontWeight={400} fontSize="14px">
-                      {t('newPoolPrice')}
-                    </TYPE.main> */}
-                      <OutlineCard padding="12px">
-                        <StyledInput
-                          className="start-price-input"
-                          value={startPriceTypedValue}
-                          onUserInput={onStartPriceInput}
+                        <CurrencyDropdown
+                          value={formattedAmounts[Field.CURRENCY_A]}
+                          onUserInput={onFieldAInput}
+                          hideInput={true}
+                          onMax={() => {
+                            onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                          }}
+                          onCurrencySelect={handleCurrencyASelect}
+                          showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                          currency={currencies[Field.CURRENCY_A]}
+                          id="add-liquidity-input-tokena"
+                          showCommonBases
                         />
-                      </OutlineCard>
-                      <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                        <TYPE.main>Starting Price</TYPE.main>
-                        {price ? (
-                          <TYPE.main>
-                            1 {currencyA?.symbol} = {price?.toSignificant(8)} {currencyB?.symbol}
-                          </TYPE.main>
-                        ) : (
-                          '-'
-                        )}
+
+                        <CurrencyDropdown
+                          value={formattedAmounts[Field.CURRENCY_B]}
+                          hideInput={true}
+                          onUserInput={onFieldBInput}
+                          onCurrencySelect={handleCurrencyBSelect}
+                          onMax={() => {
+                            onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                          }}
+                          showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                          currency={currencies[Field.CURRENCY_B]}
+                          id="add-liquidity-input-tokenb"
+                          showCommonBases
+                        />
                       </RowBetween>
-                    </AutoColumn>
-                  </DynamicSection>
+                    </AutoColumn>{' '}
+                  </>
+                ) : (
+                  <RowBetween>
+                    <RowFixed>
+                      <DoubleCurrencyLogo
+                        currency0={currencyA ?? undefined}
+                        currency1={currencyB ?? undefined}
+                        size={24}
+                        margin={true}
+                      />
+                      <TYPE.label ml="10px" fontSize="24px">
+                        {currencyA?.symbol} / {currencyB?.symbol}
+                      </TYPE.label>
+                    </RowFixed>
+                    <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
+                  </RowBetween>
                 )}
 
-                <DynamicSection gap="md" disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}>
-                  <RowBetween>
-                    <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
-                    {currencyA && currencyB && !noLiquidity && (
-                      <RateToggle currencyA={currencyA} currencyB={currencyB} handleRateToggle={handleRateToggle} />
+                {hasExistingPosition && existingPosition ? (
+                  <PositionPreview position={existingPosition} title={'Current Position'} />
+                ) : (
+                  <>
+                    <FeeSelector
+                      disabled={!currencyB || !currencyA}
+                      feeAmount={feeAmount}
+                      handleFeePoolSelect={handleFeePoolSelect}
+                    />
+
+                    {noLiquidity && (
+                      <DynamicSection disabled={!currencyA || !currencyB}>
+                        <AutoColumn gap="md">
+                          <BlueCard width="100%" padding="1rem">
+                            You are the first to provide liquidity to this pool.
+                          </BlueCard>
+                          <RowBetween>
+                            <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
+                            {currencyA && currencyB ? (
+                              <RateToggle
+                                currencyA={currencyA}
+                                currencyB={currencyB}
+                                handleRateToggle={handleRateToggle}
+                              />
+                            ) : null}
+                          </RowBetween>
+
+                          <OutlineCard padding="12px">
+                            <StyledInput
+                              className="start-price-input"
+                              value={startPriceTypedValue}
+                              onUserInput={onStartPriceInput}
+                            />
+                          </OutlineCard>
+                          <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
+                            <TYPE.main>Starting Price</TYPE.main>
+                            {price ? (
+                              <TYPE.main>
+                                1 {currencyA?.symbol} = {price?.toSignificant(8)} {currencyB?.symbol}
+                              </TYPE.main>
+                            ) : (
+                              '-'
+                            )}
+                          </RowBetween>
+                        </AutoColumn>
+                      </DynamicSection>
                     )}
-                  </RowBetween>
-                  {/* <TYPE.main fontWeight={400} fontSize="14px">
-                  {t('rangeWarning')}
-                </TYPE.main> */}
-                  {price && currencyA && !noLiquidity && (
-                    <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                      <TYPE.main>{t('currentRate', { label: currencyA.symbol })}</TYPE.main>
-                      <TYPE.main>
-                        {price.toSignificant(3)} {currencyB?.symbol}
-                      </TYPE.main>
-                    </RowBetween>
-                  )}
 
-                  <RangeSelector
-                    priceLower={priceLower}
-                    priceUpper={priceUpper}
-                    onLowerRangeInput={onLowerRangeInput}
-                    onUpperRangeInput={onUpperRangeInput}
-                    currencyA={currencyA}
-                    currencyB={currencyB}
-                  />
-
-                  {outOfRange ? (
-                    <YellowCard padding="8px 12px" borderRadius="12px">
+                    <DynamicSection
+                      gap="md"
+                      disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
+                    >
                       <RowBetween>
-                        <AlertTriangle stroke={theme.yellow3} size="16px" />
-                        <TYPE.yellow ml="12px" fontSize="12px">
-                          {t('inactiveRangeWarning')}
-                        </TYPE.yellow>
+                        <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
+                        {currencyA && currencyB && !noLiquidity && (
+                          <RateToggle currencyA={currencyA} currencyB={currencyB} handleRateToggle={handleRateToggle} />
+                        )}
                       </RowBetween>
-                    </YellowCard>
-                  ) : null}
 
-                  {invalidRange ? (
-                    <YellowCard padding="8px 12px" borderRadius="12px">
-                      <RowBetween>
-                        <AlertTriangle stroke={theme.yellow3} size="16px" />
-                        <TYPE.yellow ml="12px" fontSize="12px">
-                          {t('invalidRangeWarning')}
-                        </TYPE.yellow>
-                      </RowBetween>
-                    </YellowCard>
-                  ) : null}
-                </DynamicSection>
+                      {price && currencyA && !noLiquidity && (
+                        <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
+                          <TYPE.main>{t('currentRate', { label: currencyA.symbol })}</TYPE.main>
+                          <TYPE.main>
+                            {price.toSignificant(3)} {currencyB?.symbol}
+                          </TYPE.main>
+                        </RowBetween>
+                      )}
+
+                      <RangeSelector
+                        priceLower={priceLower}
+                        priceUpper={priceUpper}
+                        getLowerDecrement={getLowerDecrement}
+                        getLowerIncrement={getLowerIncrement}
+                        getUpperDecrement={getUpperDecrement}
+                        getUpperIncrement={getUpperIncrement}
+                        onLowerRangeInput={onLowerRangeInput}
+                        onUpperRangeInput={onUpperRangeInput}
+                        currencyA={currencyA}
+                        currencyB={currencyB}
+                        feeAmount={feeAmount}
+                        fixedValueLower={fixedValueLower}
+                        fixedValueUpper={fixedValueUpper}
+                      />
+
+                      {outOfRange ? (
+                        <YellowCard padding="8px 12px" borderRadius="12px">
+                          <RowBetween>
+                            <AlertTriangle stroke={theme.yellow3} size="16px" />
+                            <TYPE.yellow ml="12px" fontSize="12px">
+                              {t('inactiveRangeWarning')}
+                            </TYPE.yellow>
+                          </RowBetween>
+                        </YellowCard>
+                      ) : null}
+
+                      {invalidRange ? (
+                        <YellowCard padding="8px 12px" borderRadius="12px">
+                          <RowBetween>
+                            <AlertTriangle stroke={theme.yellow3} size="16px" />
+                            <TYPE.yellow ml="12px" fontSize="12px">
+                              {t('invalidRangeWarning')}
+                            </TYPE.yellow>
+                          </RowBetween>
+                        </YellowCard>
+                      ) : null}
+                    </DynamicSection>
+                  </>
+                )}
 
                 <DynamicSection
                   disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
                 >
                   <AutoColumn gap="md">
-                    <TYPE.label>{t('depositAmounts')}</TYPE.label>
-                    {/* <TYPE.main fontWeight={400} fontSize="14px">
-                    {t('chooseLiquidityAmount')}
-                  </TYPE.main> */}
+                    <TYPE.label>{hasExistingPosition ? 'Add more liquidity' : t('depositAmounts')}</TYPE.label>
+
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_A]}
                       onUserInput={onFieldAInput}

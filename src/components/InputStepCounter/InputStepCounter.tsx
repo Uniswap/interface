@@ -5,6 +5,9 @@ import { Input as NumericalInput } from '../NumericalInput'
 import styled, { keyframes, css } from 'styled-components'
 import { TYPE } from 'theme'
 import { AutoColumn } from 'components/Column'
+import { ButtonSecondary } from 'components/Button'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { formattedFeeAmount } from 'utils'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -18,6 +21,13 @@ const pulse = (color: string) => keyframes`
   100% {
     box-shadow: 0 0 0 0 ${color};
   }
+`
+
+const SmallButton = styled(ButtonSecondary)`
+  background-color: ${({ theme }) => theme.bg2};
+  border-radius: 8px;
+  padding: 4px;
+  width: 48%;
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
@@ -44,11 +54,24 @@ const ContentWrapper = styled(RowBetween)`
 interface StepCounterProps {
   value: string
   onUserInput: (value: string) => void
+  getDecrementValue?: () => string
+  getIncrementValue?: () => string
+  feeAmount?: FeeAmount
   label?: string
   width?: string
+  locked?: boolean // disable input
 }
 
-const StepCounter = ({ value, onUserInput, label, width }: StepCounterProps) => {
+const StepCounter = ({
+  value,
+  onUserInput,
+  getDecrementValue,
+  getIncrementValue,
+  feeAmount,
+  label,
+  width,
+  locked,
+}: StepCounterProps) => {
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
 
@@ -59,10 +82,28 @@ const StepCounter = ({ value, onUserInput, label, width }: StepCounterProps) => 
   // animation if parent value updates local value
   const [pulsing, setPulsing] = useState<boolean>(false)
 
+  // format fee amount
+  const feeAmountFormatted = feeAmount ? formattedFeeAmount(feeAmount) : ''
+
   const handleOnFocus = () => {
     setUseLocalValue(true)
     setActive(true)
   }
+
+  // for button clicks
+  const handleDecrement = useCallback(() => {
+    if (getDecrementValue) {
+      setLocalValue(getDecrementValue())
+      onUserInput(getDecrementValue())
+    }
+  }, [getDecrementValue, onUserInput])
+
+  const handleIncrement = useCallback(() => {
+    if (getIncrementValue) {
+      setLocalValue(getIncrementValue())
+      onUserInput(getIncrementValue())
+    }
+  }, [getIncrementValue, onUserInput])
 
   const handleOnBlur = useCallback(() => {
     setUseLocalValue(false)
@@ -90,12 +131,23 @@ const StepCounter = ({ value, onUserInput, label, width }: StepCounterProps) => 
             className="rate-input-0"
             value={localValue}
             fontSize="18px"
+            disabled={locked}
             onUserInput={(val) => {
               setLocalValue(val)
             }}
           />
         </ContentWrapper>
         {label && <TYPE.label fontSize="12px">{label}</TYPE.label>}
+        {getDecrementValue && getIncrementValue && !locked ? (
+          <RowBetween>
+            <SmallButton onClick={handleDecrement}>
+              <TYPE.main fontSize="12px">-{feeAmountFormatted}%</TYPE.main>
+            </SmallButton>
+            <SmallButton onClick={handleIncrement}>
+              <TYPE.main fontSize="12px">+{feeAmountFormatted}%</TYPE.main>
+            </SmallButton>
+          </RowBetween>
+        ) : null}
       </AutoColumn>
     </FocusedOutlineCard>
   )

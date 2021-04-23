@@ -7,22 +7,24 @@ import { BigNumber } from '@ethersproject/bignumber'
 interface UseV3PositionsResults {
   loading: boolean
   error: boolean
-  positions: (PositionDetails & { tokenId: BigNumber })[] | undefined
+  positions: PositionDetails[] | undefined
 }
 
-function useV3PositionsFromTokenIds(tokenIds: BigNumber[]): UseV3PositionsResults {
+function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
-  const inputs = useMemo(() => tokenIds.map((tokenId) => [tokenId]), [tokenIds])
+  const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
   const results = useSingleContractMultipleData(positionManager ?? undefined, 'positions', inputs)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
   const error = useMemo(() => results.some(({ error }) => error), [results])
 
   const positions = useMemo(() => {
-    if (!loading && !error) {
-      return results.map((call) => {
+    if (!loading && !error && tokenIds) {
+      return results.map((call, i) => {
+        const tokenId = tokenIds[i]
         const result = call.result as Result
         return {
+          tokenId,
           fee: result.fee,
           feeGrowthInside0LastX128: result.feeGrowthInside0LastX128,
           feeGrowthInside1LastX128: result.feeGrowthInside1LastX128,
@@ -39,7 +41,7 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[]): UseV3PositionsResult
       })
     }
     return undefined
-  }, [loading, error, results])
+  }, [loading, error, results, tokenIds])
 
   return {
     loading,
@@ -51,11 +53,11 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[]): UseV3PositionsResult
 interface UseV3PositionResults {
   loading: boolean
   error: boolean
-  position: (PositionDetails & { tokenId: BigNumber }) | undefined
+  position: PositionDetails | undefined
 }
 
-export function useV3PositionFromTokenId(tokenId: BigNumber): UseV3PositionResults {
-  const position = useV3PositionsFromTokenIds([tokenId])
+export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3PositionResults {
+  const position = useV3PositionsFromTokenIds(tokenId ? [tokenId] : undefined)
   return {
     loading: position.loading,
     error: position.error,
@@ -75,7 +77,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0] ? Number.parseInt(balanceResult[0]) : undefined
 
-  const positionIndicesArgs = useMemo(() => {
+  const tokenIdsArgs = useMemo(() => {
     if (accountBalance && account) {
       const tokenRequests = []
       for (let i = 0; i < accountBalance; i++) {
@@ -86,33 +88,27 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     return []
   }, [account, accountBalance])
 
-  const positionIndicesResults = useSingleContractMultipleData(
+  const tokenIdResults = useSingleContractMultipleData(
     positionManager ?? undefined,
     'tokenOfOwnerByIndex',
-    positionIndicesArgs
+    tokenIdsArgs
   )
-  const positionIndicesLoading = useMemo(() => positionIndicesResults.some(({ loading }) => loading), [
-    positionIndicesResults,
-  ])
-  const positionIndicesError = useMemo(() => positionIndicesResults.some(({ error }) => error), [
-    positionIndicesResults,
-  ])
 
   const tokenIds = useMemo(() => {
     if (account) {
-      return positionIndicesResults
+      return tokenIdResults
         .map(({ result }) => result)
         .filter((result): result is Result => !!result)
         .map((result) => BigNumber.from(result[0]))
     }
     return []
-  }, [account, positionIndicesResults])
+  }, [account, tokenIdResults])
 
   const positionsResults = useV3PositionsFromTokenIds(tokenIds)
 
   // wrap the return value
-  const loading = balanceLoading || positionIndicesLoading
-  const error = balanceError || positionIndicesError
+  const loading = balanceLoading || positionsResults.loading
+  const error = balanceError || positionsResults.error
 
   return {
     loading: loading || positionsResults.loading,

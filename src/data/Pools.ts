@@ -1,11 +1,11 @@
-import { Tick } from '@uniswap/v3-sdk'
+import { computePoolAddress, Tick } from '@uniswap/v3-sdk'
 import { ZERO_ADDRESS } from './../constants/index'
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../hooks'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { Pool, FeeAmount, computePoolAddress } from '@uniswap/v3-sdk'
+import { Pool, FeeAmount } from '@uniswap/v3-sdk'
 import { useV3Factory, useV3Pool } from 'hooks/useContract'
 import { V3_CORE_FACTORY_ADDRESSES } from 'constants/v3'
 import { useAllV3Ticks } from 'hooks/useAllV3Ticks'
@@ -52,11 +52,13 @@ export function usePool(currencyA?: Currency, currencyB?: Currency, feeAmount?: 
     }
   }, [chainId, feeAmount, tokenA, tokenB])
 
-  const poolContract = useV3Pool(poolAddress)
-
   // check factory if pools exists
   const addressParams = token0 && token1 && feeAmount ? [token0.address, token1.address, feeAmount] : undefined
   const addressFromFactory = useSingleCallResult(addressParams ? factoryContract : undefined, 'getPool', addressParams)
+  const { result: addressesResult, loading: addressesLoading } = addressFromFactory
+  const poolAddressFromFactory = addressesResult?.[0]
+
+  const poolContract = useV3Pool(poolAddress)
 
   // attempt to fetch pool metadata
   const slot0Datas = useSingleCallResult(poolContract, 'slot0')
@@ -66,10 +68,8 @@ export function usePool(currencyA?: Currency, currencyB?: Currency, feeAmount?: 
 
   const { result: slot0, loading: slot0Loading } = slot0Datas
   const { result: liquidityResult, loading: liquidityLoading } = liquidityDatas
-  const { result: addressesResult, loading: addressesLoading } = addressFromFactory
 
   const liquidity = liquidityResult?.[0]
-  const poolAddressFromFactory = addressesResult?.[0]
 
   // fetch tick data for pool
   const { tickData, loading: tickLoading, syncing: tickSyncing } = useAllV3Ticks(token0, token1, feeAmount)
