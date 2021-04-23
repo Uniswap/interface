@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import Pagination from '../../Pagination'
 import LoadingList from '../LoadingList'
@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import { usePage } from '../../../hooks/usePage'
 import { useResponsiveItemsPerPage } from '../../../hooks/useResponsiveItemsPerPage'
 import MyPairs from './MyPairs'
+import { useActiveWeb3React } from '../../../hooks'
 
 const ListLayout = styled.div`
   display: grid;
@@ -40,9 +41,15 @@ interface PairsListProps {
 }
 
 export default function PairsList({ aggregatedPairs, loading, userLpPairs, showMyPairs }: PairsListProps) {
+  const { chainId } = useActiveWeb3React()
   const [page, setPage] = useState(1)
   const responsiveItemsPerPgae = useResponsiveItemsPerPage()
   const itemsPage = usePage(aggregatedPairs, responsiveItemsPerPgae, page, 1)
+
+  useEffect(() => {
+    // reset page when connected chain changes
+    setPage(1)
+  }, [chainId])
 
   return (
     <Flex flexDirection="column">
