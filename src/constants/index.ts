@@ -10,7 +10,7 @@ import COINBASE_ICON_URL from '../assets/images/coinbaseWalletIcon.svg'
 import FORTMATIC_ICON_URL from '../assets/images/fortmaticIcon.png'
 import PORTIS_ICON_URL from '../assets/images/portisIcon.png'
 
-export const MULTICALL_ADDRESSES: { [chainId in ChainId]: string } = {
+export const MULTICALL2_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
   [ChainId.ROPSTEN]: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
   [ChainId.KOVAN]: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',

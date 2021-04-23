@@ -3,7 +3,7 @@ import { JSBI } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
-import { useMulticallContract } from '../../hooks/useContract'
+import { useMulticall2Contract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { useUserUnclaimedAmount } from '../claim/hooks'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
@@ -18,7 +18,7 @@ import { Erc20Interface } from 'abis/types/Erc20'
 export function useETHBalances(
   uncheckedAddresses?: (string | undefined)[]
 ): { [address: string]: CurrencyAmount | undefined } {
-  const multicallContract = useMulticallContract()
+  const multicallContract = useMulticall2Contract()
 
   const addresses: string[] = useMemo(
     () =>

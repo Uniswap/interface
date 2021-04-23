@@ -69,13 +69,13 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
   const positionManager = useV3NFTPositionManagerContract()
 
   const { loading: balanceLoading, error: balanceError, result: balanceResult } = useSingleCallResult(
-    positionManager ?? undefined,
+    positionManager,
     'balanceOf',
     [account ?? undefined]
   )
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
-  const accountBalance: number | undefined = balanceResult?.[0] ? Number.parseInt(balanceResult[0]) : undefined
+  const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
 
   const tokenIdsArgs = useMemo(() => {
     if (accountBalance && account) {
@@ -88,11 +88,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     return []
   }, [account, accountBalance])
 
-  const tokenIdResults = useSingleContractMultipleData(
-    positionManager ?? undefined,
-    'tokenOfOwnerByIndex',
-    tokenIdsArgs
-  )
+  const tokenIdResults = useSingleContractMultipleData(positionManager, 'tokenOfOwnerByIndex', tokenIdsArgs)
 
   const tokenIds = useMemo(() => {
     if (account) {
