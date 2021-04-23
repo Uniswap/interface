@@ -38,7 +38,7 @@ interface ExtendedSubgraphLiquidityMiningCampaign extends SubgraphLiquidityMinin
 }
 
 export function useActiveLiquidityMiningCampaignsForPair(
-  pair: Pair
+  pair?: Pair
 ): { loading: boolean; wrappedCampaigns: { campaign: LiquidityMiningCampaign; staked: boolean }[] } {
   const { chainId, account } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
@@ -49,7 +49,7 @@ export function useActiveLiquidityMiningCampaignsForPair(
     liquidityMiningCampaigns: ExtendedSubgraphLiquidityMiningCampaign[]
   }>(QUERY, {
     variables: {
-      pairId: pair.liquidityToken.address.toLowerCase(),
+      pairId: pair ? pair.liquidityToken.address.toLowerCase() : '',
       timestamp,
       userId: account ? account.toLowerCase() : ''
     }
@@ -57,7 +57,7 @@ export function useActiveLiquidityMiningCampaignsForPair(
 
   return useMemo(() => {
     if (loadingActiveCampaigns || loadingReserveNativeCurrency) return { loading: true, wrappedCampaigns: [] }
-    if (error || !data || !chainId || !lpTokenTotalSupply) return { loading: false, wrappedCampaigns: [] }
+    if (error || !data || !chainId || !lpTokenTotalSupply || !pair) return { loading: false, wrappedCampaigns: [] }
     const wrappedCampaigns = []
     for (let i = 0; i < data.liquidityMiningCampaigns.length; i++) {
       const campaign = data.liquidityMiningCampaigns[i]

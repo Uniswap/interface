@@ -31,7 +31,7 @@ const QUERY = gql`
 `
 
 export function useUpcomingLiquidityMiningCampaignsForPair(
-  pair: Pair
+  pair?: Pair
 ): { loading: boolean; wrappedCampaigns: { campaign: LiquidityMiningCampaign; staked: boolean }[] } {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
@@ -42,14 +42,14 @@ export function useUpcomingLiquidityMiningCampaignsForPair(
     liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
   }>(QUERY, {
     variables: {
-      pairId: pair.liquidityToken.address.toLowerCase(),
+      pairId: pair ? pair.liquidityToken.address.toLowerCase() : '',
       timestamp
     }
   })
 
   return useMemo(() => {
     if (loadingUpcomingCampaigns || loadingReserveNativeCurrency) return { loading: true, wrappedCampaigns: [] }
-    if (error || !data || !chainId || !lpTokenTotalSupply) return { loading: false, wrappedCampaigns: [] }
+    if (error || !data || !chainId || !lpTokenTotalSupply || !pair) return { loading: false, wrappedCampaigns: [] }
     const wrappedCampaigns = []
     for (let i = 0; i < data.liquidityMiningCampaigns.length; i++) {
       wrappedCampaigns.push({

@@ -1,5 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import { LiquidityMiningCampaign, Pair } from 'dxswap-sdk'
+import { DateTime, Duration } from 'luxon'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
@@ -37,8 +38,10 @@ interface ExtendedSubgraphLiquidityMiningCampaign extends SubgraphLiquidityMinin
 }
 
 export function useExpiredLiquidityMiningCampaignsForPair(
-  pair: Pair,
-  lowerTimeLimit: Date
+  pair?: Pair,
+  lowerTimeLimit: Date = DateTime.utc()
+    .minus(Duration.fromObject({ days: 30 }))
+    .toJSDate()
 ): { loading: boolean; wrappedCampaigns: { campaign: LiquidityMiningCampaign; staked: boolean }[] } {
   const { chainId, account } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
@@ -50,7 +53,7 @@ export function useExpiredLiquidityMiningCampaignsForPair(
     liquidityMiningCampaigns: ExtendedSubgraphLiquidityMiningCampaign[]
   }>(QUERY, {
     variables: {
-      pairId: pair.liquidityToken.address.toLowerCase(),
+      pairId: pair ? pair.liquidityToken.address.toLowerCase() : '',
       timestamp,
       lowerTimeLimit: memoizedLowerTimeLimit,
       userId: account ? account.toLowerCase() : ''
@@ -59,7 +62,7 @@ export function useExpiredLiquidityMiningCampaignsForPair(
 
   return useMemo(() => {
     if (loadingExpiredCampaigns || loadingReserveNativeCurrency) return { loading: true, wrappedCampaigns: [] }
-    if (error || !data || !chainId || !lpTokenTotalSupply) return { loading: false, wrappedCampaigns: [] }
+    if (error || !data || !chainId || !lpTokenTotalSupply || !pair) return { loading: false, wrappedCampaigns: [] }
     const wrappedCampaigns = []
     for (let i = 0; i < data.liquidityMiningCampaigns.length; i++) {
       const campaign = data.liquidityMiningCampaigns[i]
@@ -75,7 +78,6 @@ export function useExpiredLiquidityMiningCampaignsForPair(
         staked: campaign.liquidityMiningPositions.length > 0
       })
     }
-
     return { loading: false, wrappedCampaigns }
   }, [
     chainId,
