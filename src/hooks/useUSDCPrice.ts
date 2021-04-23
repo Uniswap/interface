@@ -2,7 +2,7 @@ import { ChainId, Currency, currencyEquals, Price, WETH9 } from '@uniswap/sdk-co
 import { JSBI } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { USDC } from '../constants'
-import { PairState, usePairs } from '../data/V2'
+import { PairState, useV2Pairs } from './useV2Pairs'
 import { useActiveWeb3React } from '../hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
@@ -24,7 +24,7 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
     ],
     [chainId, currency, wrapped]
   )
-  const [[ethPairState, ethPair], [usdcPairState, usdcPair], [usdcEthPairState, usdcEthPair]] = usePairs(tokenPairs)
+  const [[ethPairState, ethPair], [usdcPairState, usdcPair], [usdcEthPairState, usdcEthPair]] = useV2Pairs(tokenPairs)
 
   return useMemo(() => {
     if (!currency || !wrapped || !chainId) {

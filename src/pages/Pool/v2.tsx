@@ -13,7 +13,7 @@ import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
-import { usePairs } from '../../data/V2'
+import { useV2Pairs } from '../../hooks/useV2Pairs'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
@@ -100,7 +100,7 @@ export default function Pool() {
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   const v2IsLoading =
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some((V2Pair) => !V2Pair)
 
@@ -109,7 +109,7 @@ export default function Pool() {
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
   const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
-  const stakingPairs = usePairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
+  const stakingPairs = useV2Pairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
 
   // remove any pairs that also are included in pairs with stake in mining pool
   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter((v2Pair) => {

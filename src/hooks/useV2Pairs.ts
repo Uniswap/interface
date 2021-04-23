@@ -2,8 +2,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
-import { useActiveWeb3React } from '../hooks'
-
+import { useActiveWeb3React } from './index'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { Currency, TokenAmount } from '@uniswap/sdk-core'
@@ -17,7 +16,7 @@ export enum PairState {
   INVALID,
 }
 
-export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
+export function useV2Pairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
   const { chainId } = useActiveWeb3React()
 
   const tokens = useMemo(
@@ -58,6 +57,6 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   }, [results, tokens])
 }
 
-export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {
-  return usePairs([[tokenA, tokenB]])[0]
+export function useV2Pair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {
+  return useV2Pairs([[tokenA, tokenB]])[0]
 }

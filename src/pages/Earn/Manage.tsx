@@ -25,8 +25,8 @@ import { CountUp } from 'use-count-up'
 
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { currencyId } from '../../utils/currencyId'
-import { useTotalSupply } from '../../data/TotalSupply'
-import { usePair } from '../../data/V2'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
+import { useV2Pair } from '../../hooks/useV2Pairs'
 import usePrevious from '../../hooks/usePrevious'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { BIG_INT_ZERO, BIG_INT_SECONDS_IN_WEEK } from '../../constants'
@@ -100,7 +100,7 @@ export default function Manage({
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
-  const [, stakingTokenPair] = usePair(tokenA, tokenB)
+  const [, stakingTokenPair] = useV2Pair(tokenA, tokenB)
   const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
 
   // detect existing unstaked LP position to show add button if none found

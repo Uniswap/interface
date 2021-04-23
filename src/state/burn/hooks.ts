@@ -2,8 +2,8 @@ import { Currency, CurrencyAmount, Percent, TokenAmount } from '@uniswap/sdk-cor
 import { JSBI, Pair } from '@uniswap/v2-sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { usePair } from '../../data/V2'
-import { useTotalSupply } from '../../data/TotalSupply'
+import { useV2Pair } from '../../hooks/useV2Pairs'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -34,7 +34,7 @@ export function useDerivedBurnInfo(
   const { independentField, typedValue } = useBurnState()
 
   // pair + totalsupply
-  const [, pair] = usePair(currencyA, currencyB)
+  const [, pair] = useV2Pair(currencyA, currencyB)
 
   // balances
   const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])
