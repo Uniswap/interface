@@ -130,7 +130,7 @@ function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset }: Tit
           </Box>
           <PointableFlex onClick={handleAllClick}>
             {!filteredToken && (
-              <Box mr="6px">
+              <Box mr="6px" height="21px">
                 <img src={threeBlurredCircles} alt="Circles" />
               </Box>
             )}
@@ -146,7 +146,7 @@ function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset }: Tit
               <ChevronDown size={12} />
             </Box>
             {filteredToken && (
-              <Box ml="4px">
+              <Box ml="6px">
                 <ResetFilterIconContainer onClick={handleResetFilterLocal}>
                   <ResetFilterIcon />
                 </ResetFilterIconContainer>
