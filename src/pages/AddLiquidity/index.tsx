@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH } from 'libs/sdk/src'
+import { Currency, currencyEquals, ETHER, Fraction, JSBI, Token, TokenAmount, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -196,6 +196,20 @@ export default function AddLiquidity({
 
     if (pairAddress) {
       if (!pair) return
+
+      const virtualReserveA = pair.virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
+      const virtualReserveB = pair.virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
+
+      const currentRate = virtualReserveB
+        .multiply(JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112)))
+        .divide(virtualReserveA)
+      const allowedSlippageAmount = currentRate.multiply(new Fraction(JSBI.BigInt(allowedSlippage), JSBI.BigInt(10000)))
+
+      const vReserveRatioBounds = [
+        currentRate.subtract(allowedSlippageAmount).toFixed(0),
+        currentRate.add(allowedSlippageAmount).toFixed(0)
+      ]
+
       if (currencyA === ETHER || currencyB === ETHER) {
         const tokenBIsETH = currencyB === ETHER
         estimate = router.estimateGas.addLiquidityETH
@@ -207,6 +221,7 @@ export default function AddLiquidity({
           (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
           amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
           amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+          vReserveRatioBounds,
           account,
           deadline.toHexString()
         ]
@@ -223,6 +238,7 @@ export default function AddLiquidity({
           parsedAmountB.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
+          vReserveRatioBounds,
           account,
           deadline.toHexString()
         ]
