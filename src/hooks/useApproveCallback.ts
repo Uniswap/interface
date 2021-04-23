@@ -4,13 +4,13 @@ import { TokenAmount, CurrencyAmount, ETHER } from '@uniswap/sdk-core'
 import { Trade } from '@uniswap/v2-sdk'
 import { useCallback, useMemo } from 'react'
 import { ROUTER_ADDRESS } from '../constants'
-import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
+import { useTokenAllowance } from './useTokenAllowance'
 
 export enum ApprovalState {
   UNKNOWN,

@@ -13,6 +13,7 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import { TransactionSubmittedContent, ConfirmationPendingContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import Review from './Review'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -29,7 +30,6 @@ import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 import { currencyId } from '../../utils/currencyId'
-import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import {
   DynamicSection,
@@ -317,7 +317,7 @@ export default function AddLiquidity({
 
   // const isCreate = history.location.pathname.includes('/create')
 
-  const addIsUnsupported = useIsTransactionUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
+  const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
   const clearAll = useCallback(() => {
     onFieldAInput('')
