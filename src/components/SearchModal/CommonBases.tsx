@@ -41,7 +41,7 @@ export default function CommonBases({
           disabled={selectedCurrency === nativeCurrency}
         >
           <RowBetween>
-            <CurrencyLogo size="20px" currency={nativeCurrency} style={{ marginRight: 8 }} />
+            <CurrencyLogo size="20px" currency={nativeCurrency} marginRight={8} />
             <Text fontWeight={500} fontSize={16}>
               {nativeCurrency.symbol}
             </Text>
@@ -52,7 +52,7 @@ export default function CommonBases({
           return (
             <Option transparent onClick={() => !selected && onSelect(token)} disabled={selected} key={token.address}>
               <RowBetween>
-                <CurrencyLogo size="20px" currency={token} style={{ marginRight: 8 }} />
+                <CurrencyLogo size="20px" currency={token} marginRight={8} />
                 <Text fontWeight={500} fontSize={16}>
                   {token.symbol}
                 </Text>
