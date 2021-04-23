@@ -1,7 +1,7 @@
 import { BIG_INT_ZERO } from './../../constants/index'
 import { getTickToPrice } from 'utils/getTickToPrice'
 import JSBI from 'jsbi'
-import { PoolState } from './../../data/Pools'
+import { PoolState } from '../../hooks/usePools'
 import { Pool, FeeAmount, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk/dist/'
 import { Currency, CurrencyAmount, ETHER, Price } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
@@ -13,7 +13,7 @@ import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, Bound, typeInput, typeLowerRangeInput, typeUpperRangeInput, typeStartPriceInput } from './actions'
 import { tryParseTick } from './utils'
-import { usePool } from 'data/Pools'
+import { usePool } from 'hooks/usePools'
 
 export function useMintState(): AppState['mint'] {
   return useSelector<AppState, AppState['mint']>((state) => state.mint)
