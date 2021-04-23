@@ -10,7 +10,7 @@ import {
   BETTER_TRADE_LESS_HOPS_THRESHOLD,
   CUSTOM_BASES,
 } from '../constants'
-import { PairState, usePairs } from '../data/V2'
+import { PairState, useV2Pairs } from './useV2Pairs'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useActiveWeb3React } from './index'
 
@@ -69,7 +69,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     [tokenA, tokenB, bases, basePairs, chainId]
   )
 
-  const allPairs = usePairs(allPairCombinations)
+  const allPairs = useV2Pairs(allPairCombinations)
 
   // only pass along valid pairs, non-duplicated pairs
   return useMemo(

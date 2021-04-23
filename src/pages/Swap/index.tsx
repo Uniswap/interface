@@ -22,7 +22,7 @@ import ProgressSteps from '../../components/ProgressSteps'
 import SwapHeader from '../../components/swap/SwapHeader'
 
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { getTradeVersion } from '../../data/getTradeVersion'
+import { getTradeVersion } from '../../utils/getTradeVersion'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency, useAllTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -101,6 +101,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const toggledVersion = useToggledVersion()
   const tradesByVersion = {
     [Version.v2]: v2Trade,
+    [Version.v3]: undefined,
   }
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
 

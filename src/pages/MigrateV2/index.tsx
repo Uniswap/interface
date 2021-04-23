@@ -13,7 +13,7 @@ import QuestionHelper from '../../components/QuestionHelper'
 import { Dots } from '../../components/swap/styleds'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
-import { usePairs } from 'data/V2'
+import { useV2Pairs } from 'hooks/useV2Pairs'
 
 // TODO there's a bug in loading where "No V2 Liquidity found" flashes
 // TODO add support for more pairs
@@ -52,7 +52,7 @@ export default function MigrateV2() {
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   const v2IsLoading =
     fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some((V2Pair) => !V2Pair)
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))

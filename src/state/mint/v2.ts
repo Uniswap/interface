@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { Pair } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount, ETHER, Percent, Price, TokenAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { PairState, usePair } from '../../data/V2'
-import { useTotalSupply } from '../../data/TotalSupply'
+import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
+import { useTotalSupply } from '../../hooks/useTotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
@@ -46,7 +46,7 @@ export function useV2DerivedMintInfo(
   )
 
   // pair
-  const [pairState, pair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
+  const [pairState, pair] = useV2Pair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean =
