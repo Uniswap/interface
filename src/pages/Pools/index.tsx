@@ -12,16 +12,16 @@ import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
 import threeBlurredCircles from '../../assets/svg/three-blurred-circles.svg'
-import { ChevronDown } from 'react-feather'
-import AggregatedPairsList from '../../components/Pool/AggregatedPairsList'
+import { ChevronDown, X } from 'react-feather'
 import { CardSection } from '../../components/earn/styled'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
-import { useRouter } from '../../hooks/useRouter'
-import { Currency } from 'dxswap-sdk'
+import { Currency, Token } from 'dxswap-sdk'
 import { useLiquidityMiningFeatureFlag } from '../../hooks/useLiquidityMiningFeatureFlag'
-import { useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy } from '../../hooks/useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy'
-import { PairsFilterType } from '../../components/Pool/ListFilter'
+import { useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator } from '../../hooks/useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator'
+import ListFilter, { PairsFilterType } from '../../components/Pool/ListFilter'
 import { useLPPairs } from '../../hooks/useLiquidityPositions'
+import PairsList from '../../components/Pool/PairsList'
+import CurrencyLogo from '../../components/CurrencyLogo'
 
 const VoteCard = styled.div`
   overflow: hidden;
@@ -64,15 +64,37 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 `
 
 const PointableFlex = styled(Flex)`
+  border: solid 1px ${props => props.theme.bg3};
+  border-radius: 8px;
+  height: 36px;
+  align-items: center;
+  padding: 0 10px;
   cursor: pointer;
 `
 
+const ResetFilterIconContainer = styled(Flex)`
+  border: solid 1px ${props => props.theme.bg3};
+  border-radius: 8px;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+`
+
+const ResetFilterIcon = styled(X)`
+  width: 12px;
+  height: 12px;
+  color: ${props => props.theme.purple3};
+`
+
 interface TitleProps {
+  filteredToken?: Token
   onCurrencySelection: (currency: Currency) => void
+  onFilteredTokenReset: () => void
 }
 
 // decoupling the title from the rest of the component avoids full-rerender everytime the pair selection modal is opened
-function Title({ onCurrencySelection }: TitleProps) {
+function Title({ onCurrencySelection, filteredToken, onFilteredTokenReset }: TitleProps) {
   const [openTokenModal, setOpenTokenModal] = useState(false)
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
@@ -83,6 +105,14 @@ function Title({ onCurrencySelection }: TitleProps) {
   const handleModalClose = useCallback(() => {
     setOpenTokenModal(false)
   }, [])
+
+  const handleResetFilterLocal = useCallback(
+    (e: any) => {
+      onFilteredTokenReset()
+      e.stopPropagation()
+    },
+    [onFilteredTokenReset]
+  )
 
   return (
     <>
@@ -98,18 +128,30 @@ function Title({ onCurrencySelection }: TitleProps) {
               /
             </Text>
           </Box>
-          <Box mr="6px">
-            <img src={threeBlurredCircles} alt="Circles" />
-          </Box>
           <PointableFlex onClick={handleAllClick}>
-            <Box>
-              <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
-                ALL
-              </Text>
-            </Box>
+            {!filteredToken && (
+              <Box mr="6px" height="21px">
+                <img src={threeBlurredCircles} alt="Circles" />
+              </Box>
+            )}
+            {filteredToken && (
+              <Box mr="8px">
+                <CurrencyLogo currency={filteredToken} size="21px" />
+              </Box>
+            )}
+            <Text mr="8px" fontWeight="600" fontSize="16px" lineHeight="20px">
+              {filteredToken ? filteredToken.symbol : 'ALL'}
+            </Text>
             <Box>
               <ChevronDown size={12} />
             </Box>
+            {filteredToken && (
+              <Box ml="6px">
+                <ResetFilterIconContainer onClick={handleResetFilterLocal}>
+                  <ResetFilterIcon />
+                </ResetFilterIconContainer>
+              </Box>
+            )}
           </PointableFlex>
         </Flex>
         <ButtonRow>
@@ -139,22 +181,21 @@ function Title({ onCurrencySelection }: TitleProps) {
 
 export default function Pools() {
   const { account, chainId } = useActiveWeb3React()
-  const router = useRouter()
+  const [filterToken, setFilterToken] = useState<Token | undefined>()
   const [aggregatedDataFilter, setAggregatedDataFilter] = useState(PairsFilterType.ALL)
-  const {
-    loading: loadingAggregatedData,
-    aggregatedData
-  } = useAggregatedByToken0ExistingPairsWithRemainingRewardsAndMaximumApy(aggregatedDataFilter)
-  const { loading: loadingUserLpPositions, pairs: userLpPairs } = useLPPairs(account || undefined)
-
-  const handleCurrencySelect = useCallback(
-    token => {
-      router.push({
-        pathname: `/pools/${token.address}`
-      })
-    },
-    [router]
+  const { loading: loadingAggregatedData, aggregatedData } = useAllPairsWithLiquidityAndMaximumApyAndStakingIndicator(
+    aggregatedDataFilter,
+    filterToken
   )
+  const { loading: loadingUserLpPositions, data: userLpPairs } = useLPPairs(account || undefined)
+
+  const handleCurrencySelect = useCallback(token => {
+    setFilterToken(token as Token)
+  }, [])
+
+  const handleFilterTokenReset = useCallback(() => {
+    setFilterToken(undefined)
+  }, [])
 
   return (
     <>
@@ -162,13 +203,17 @@ export default function Pools() {
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="32px" style={{ width: '100%' }}>
-            <Title onCurrencySelection={handleCurrencySelect} />
-            <AggregatedPairsList
+            <Title
+              onCurrencySelection={handleCurrencySelect}
+              filteredToken={filterToken}
+              onFilteredTokenReset={handleFilterTokenReset}
+            />
+            <ListFilter filter={aggregatedDataFilter} onFilterChange={setAggregatedDataFilter} />
+            <PairsList
+              showMyPairs
               loading={loadingUserLpPositions || loadingAggregatedData}
-              aggregatedData={aggregatedData}
+              aggregatedPairs={aggregatedData}
               userLpPairs={userLpPairs}
-              filter={aggregatedDataFilter}
-              onFilterChange={setAggregatedDataFilter}
             />
           </AutoColumn>
         </AutoColumn>

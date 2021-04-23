@@ -1,51 +1,72 @@
 import { Pair } from 'dxswap-sdk'
-import React, { useCallback, useEffect, useState } from 'react'
+import { DateTime, Duration } from 'luxon'
+import React, { useMemo, useState } from 'react'
 import { useActiveWeb3React } from '../../../../hooks'
-import { TYPE } from '../../../../theme'
+import { useActiveLiquidityMiningCampaignsForPair } from '../../../../hooks/useActiveLiquidityMiningCampaignsForPair'
+import { useExpiredLiquidityMiningCampaignsForPair } from '../../../../hooks/useExpiredLiquidityMiningCampaignsForPair'
+import { useUpcomingLiquidityMiningCampaignsForPair } from '../../../../hooks/useUpcomingLiquidityMiningCampaignsForPair'
 import { AutoColumn } from '../../../Column'
 import TabBar from '../../../TabBar'
 import List from './List'
-import ActiveTab from './Tabs/Active'
-import ConnectedAccountTab from './Tabs/ConnectedAccount'
-import ExpiredTab from './Tabs/Expired'
-import UpcomingTab from './Tabs/Upcoming'
+import TabTitle from './TabTitle'
 
 interface LiquidityMiningCampaignsListProps {
   pair?: Pair
 }
 
-const INITIAL_TAB_TITLES = ['Active', 'Upcoming', 'Expired (30 days)']
-
 export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampaignsListProps) {
   const { account } = useActiveWeb3React()
-
-  const [tabTitles, setTabTitles] = useState(INITIAL_TAB_TITLES)
-  const [activeTab, setActiveTab] = useState(account ? 0 : 1)
-
-  const handleTabChange = useCallback(
-    newActiveTab => {
-      setActiveTab(account ? newActiveTab : newActiveTab + 1)
-    },
-    [account]
+  const lowerExpiredCampaignTimeLimit = useMemo(
+    () =>
+      DateTime.utc()
+        .minus(Duration.fromObject({ days: 30 }))
+        .toJSDate(),
+    []
   )
+  const { loading: loadingActive, wrappedCampaigns: activeWrappedCampaigns } = useActiveLiquidityMiningCampaignsForPair(
+    pair
+  )
+  const {
+    loading: loadingUpcoming,
+    wrappedCampaigns: upcomingWrappedCampaigns
+  } = useUpcomingLiquidityMiningCampaignsForPair(pair)
+  const {
+    loading: loadingExpired,
+    wrappedCampaigns: expiredWrappedCampaigns
+  } = useExpiredLiquidityMiningCampaignsForPair(pair, lowerExpiredCampaignTimeLimit)
 
-  useEffect(() => {
-    if (account) setTabTitles(['Your positions', ...INITIAL_TAB_TITLES])
-    else setTabTitles(INITIAL_TAB_TITLES)
-  }, [account])
+  const [activeTab, setActiveTab] = useState(account ? 0 : 1)
 
   return (
     <AutoColumn gap="16px">
-      <TYPE.mediumHeader fontSize="18px" color="white">
-        Reward pools
-      </TYPE.mediumHeader>
-      <TabBar titles={tabTitles} active={account ? activeTab : activeTab - 1} onChange={handleTabChange} />
+      <TabBar
+        titles={[
+          <TabTitle key="active" loadingAmount={!!(!pair || loadingActive)} itemsAmount={activeWrappedCampaigns.length}>
+            Active rewards
+          </TabTitle>,
+          <TabTitle
+            key="active"
+            loadingAmount={!!(!pair || loadingUpcoming)}
+            itemsAmount={upcomingWrappedCampaigns.length}
+          >
+            Upcoming
+          </TabTitle>,
+          <TabTitle
+            key="active"
+            loadingAmount={!!(!pair || loadingExpired)}
+            itemsAmount={expiredWrappedCampaigns.length}
+          >
+            Expired (30 days)
+          </TabTitle>
+        ]}
+        active={activeTab}
+        onChange={setActiveTab}
+      />
       {pair ? (
         <>
-          {activeTab === 0 && <ConnectedAccountTab pair={pair} />}
-          {activeTab === 1 && <ActiveTab pair={pair} />}
-          {activeTab === 2 && <UpcomingTab pair={pair} />}
-          {activeTab === 3 && <ExpiredTab pair={pair} />}
+          {activeTab === 0 && <List loading={loadingActive} stakablePair={pair} items={activeWrappedCampaigns} />}
+          {activeTab === 1 && <List loading={loadingUpcoming} stakablePair={pair} items={upcomingWrappedCampaigns} />}
+          {activeTab === 2 && <List loading={loadingExpired} stakablePair={pair} items={expiredWrappedCampaigns} />}
         </>
       ) : (
         <List loading />

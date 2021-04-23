@@ -34,20 +34,21 @@ export default function Logo({ srcs, alt, size, defaultText, ...rest }: LogoProp
   }
 
   const numberSize = size ? parseInt(size) : 24
-  const fontSize = Math.ceil(numberSize / 4.5)
   return (
     <svg height={numberSize} width={numberSize} {...rest} fill="none">
-      <circle cx={numberSize / 2} cy={numberSize / 2} r={numberSize / 2} fill={theme.white} />
+      <circle cx={numberSize / 2} cy={numberSize / 2} r="50%" fill={theme.white} />
       <text
+        height={numberSize}
+        width={numberSize}
         fill={theme.black}
         stroke="none"
-        fontSize={fontSize}
+        fontSize={Math.floor(numberSize / 4)}
         fontWeight="600"
-        x={numberSize / 2}
-        y={numberSize / 2 + Math.floor(fontSize / 2)}
+        y="60%"
+        x="50%"
         textAnchor="middle"
       >
-        {defaultText.length > 4 ? `${defaultText.slice(0, 4).toUpperCase()}...` : defaultText.toUpperCase()}
+        {defaultText.length > 4 ? `${defaultText.slice(0, 3).toUpperCase()}...` : defaultText.toUpperCase()}
       </text>
     </svg>
   )

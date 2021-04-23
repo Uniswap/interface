@@ -1,20 +1,24 @@
 import { gql, useQuery } from '@apollo/client'
-import { Pair, Token, TokenAmount } from 'dxswap-sdk'
+import Decimal from 'decimal.js-light'
+import { CurrencyAmount, Pair, Percent, Token, TokenAmount, USD } from 'dxswap-sdk'
 import { ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
+import { DateTime, Duration } from 'luxon'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
-import { toLiquidityMiningCampaigns } from '../utils/liquidityMining'
+import { getPairMaximumApy, toLiquidityMiningCampaigns } from '../utils/liquidityMining'
 import { useNativeCurrency } from './useNativeCurrency'
 
 const QUERY = gql`
-  query($account: ID!, $timestamp: BigInt!) {
+  query($account: ID!, $lowerTimeLimit: BigInt!) {
     liquidityPositions(where: { user: $account }) {
       pair {
         address: id
         reserve0
         reserve1
         reserveNativeCurrency
+        reserveUSD
         totalSupply
         token0 {
           address: id
@@ -28,7 +32,7 @@ const QUERY = gql`
           symbol
           decimals
         }
-        liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
+        liquidityMiningCampaigns(where: { endsAt_gt: $lowerTimeLimit }) {
           address: id
           duration
           startsAt
@@ -44,6 +48,9 @@ const QUERY = gql`
           }
           stakedAmount
           rewardAmounts
+          liquidityMiningPositions(where: { stakedAmount_gt: 0, user: $account }) {
+            id
+          }
         }
       }
     }
@@ -57,38 +64,62 @@ interface SubgraphToken {
   decimals: string
 }
 
+interface ExtendedSubgraphLiquidityMiningCampaign extends SubgraphLiquidityMiningCampaign {
+  liquidityMiningPositions: { id: string }[]
+}
+
 interface SubgraphPair {
   address: string
   reserve0: string
   reserve1: string
   reserveNativeCurrency: string
+  reserveUSD: string
   totalSupply: string
   token0: SubgraphToken
   token1: SubgraphToken
-  liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
+  liquidityMiningCampaigns: ExtendedSubgraphLiquidityMiningCampaign[]
 }
 
 interface QueryResult {
   liquidityPositions: { pair: SubgraphPair }[]
 }
 
-export function useLPPairs(account?: string): { loading: boolean; pairs: Pair[] } {
+export function useLPPairs(
+  account?: string
+): {
+  loading: boolean
+  data: {
+    pair: Pair
+    liquidityUSD: CurrencyAmount
+    maximumApy: Percent
+    staked: boolean
+  }[]
+} {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
-  const { loading, data, error } = useQuery<QueryResult>(QUERY, {
+  const memoizedLowerTimeLimit = useMemo(
+    () =>
+      Math.floor(
+        DateTime.utc()
+          .minus(Duration.fromObject({ days: 30 }))
+          .toSeconds()
+      ),
+    []
+  )
+  const { loading: loadingMyPairs, data, error } = useQuery<QueryResult>(QUERY, {
     variables: {
-      account: account?.toLowerCase(),
-      timestamp: Math.floor(Date.now() / 1000)
+      account: account?.toLowerCase() || '',
+      lowerTimeLimit: memoizedLowerTimeLimit
     }
   })
 
   return useMemo(() => {
-    if (loading) return { loading: true, pairs: [] }
+    if (loadingMyPairs) return { loading: true, data: [] }
     if (!data || !data.liquidityPositions || data.liquidityPositions.length === 0 || error || !chainId)
-      return { loading: false, pairs: [] }
+      return { loading: false, data: [] }
     return {
-      loading,
-      pairs: data.liquidityPositions.map(position => {
+      loading: false,
+      data: data.liquidityPositions.map(position => {
         const {
           token0,
           token1,
@@ -96,6 +127,7 @@ export function useLPPairs(account?: string): { loading: boolean; pairs: Pair[] 
           reserve1,
           totalSupply,
           reserveNativeCurrency,
+          reserveUSD,
           liquidityMiningCampaigns
         } = position.pair
         const tokenAmountA = new TokenAmount(
@@ -127,8 +159,15 @@ export function useLPPairs(account?: string): { loading: boolean; pairs: Pair[] 
           liquidityMiningCampaigns,
           nativeCurrency
         )
-        return pair
+        return {
+          pair,
+          liquidityUSD: CurrencyAmount.usd(
+            parseUnits(new Decimal(reserveUSD).toFixed(USD.decimals), USD.decimals).toString()
+          ),
+          maximumApy: getPairMaximumApy(pair),
+          staked: position.pair.liquidityMiningCampaigns.some(campaign => campaign.liquidityMiningPositions.length > 0)
+        }
       })
     }
-  }, [chainId, data, error, loading, nativeCurrency])
+  }, [chainId, data, error, loadingMyPairs, nativeCurrency])
 }

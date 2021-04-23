@@ -50,7 +50,7 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 export default function MyPairs() {
   const { account } = useActiveWeb3React()
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
-  const { loading: loadingPairs, pairs } = useLPPairs(account || undefined)
+  const { loading: loadingPairs, data } = useLPPairs(account || undefined)
 
   return (
     <PageWrapper>
@@ -91,7 +91,7 @@ export default function MyPairs() {
               )}
             </ButtonRow>
           </TitleRow>
-          <PairsList loading={loadingPairs} pairs={pairs} />
+          <PairsList loading={loadingPairs} aggregatedPairs={data} />
         </AutoColumn>
       </AutoColumn>
     </PageWrapper>
