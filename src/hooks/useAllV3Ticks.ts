@@ -18,7 +18,7 @@ interface TickData {
   liquidityGross: number
 }
 
-/// for now, reconsider using this function, it consumes a lot of data and cpu to fetch all the ticks.
+// for now, reconsider using this function, it consumes a lot of data and cpu to fetch all the ticks.
 export function useAllV3Ticks(
   token0: Token | undefined,
   token1: Token | undefined,
