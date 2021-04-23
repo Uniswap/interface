@@ -40,10 +40,11 @@ interface PairProps {
   token1?: Token
   apy: Percent
   usdLiquidity: CurrencyAmount
+  usdLiquidityText?: string
   staked?: boolean
 }
 
-export default function Pair({ token0, token1, usdLiquidity, apy, staked, ...rest }: PairProps) {
+export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiquidityText, ...rest }: PairProps) {
   return (
     <SizedCard selectable {...rest}>
       <Flex flexDirection="column" justifyContent="space-between" height="100%">
@@ -69,7 +70,7 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, ...res
         <Flex flexDirection="column">
           <Box>
             <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
-              ${ethers.utils.commify(usdLiquidity.toSignificant(2))} LIQUIDITY
+              ${ethers.utils.commify(usdLiquidity.toSignificant(2))} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
             </TYPE.subHeader>
           </Box>
           <Box>

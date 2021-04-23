@@ -144,3 +144,12 @@ export function toLiquidityMiningCampaigns(
     )
   )
 }
+
+export function getStakedAmountUSD(campaign: LiquidityMiningCampaign, nativeCurrencyUSDPrice: Price): CurrencyAmount {
+  return CurrencyAmount.usd(
+    parseUnits(
+      campaign.staked.nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toFixed(USD.decimals),
+      USD.decimals
+    ).toString()
+  )
+}

@@ -11,8 +11,9 @@ import { useTokenBalance } from '../../../../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../../../../hooks'
 import { useWindowSize } from '../../../../../hooks/useWindowSize'
 import { MEDIA_WIDTHS } from '../../../../../theme'
-import { usePairLiquidityUSD } from '../../../../../hooks/usePairLiquidityUSD'
 import PairCard from '../../../PairsList/Pair'
+import { useNativeCurrencyUSDPrice } from '../../../../../hooks/useNativeCurrencyUSDPrice'
+import { getStakedAmountUSD } from '../../../../../utils/liquidityMining'
 
 const ListLayout = styled.div`
   display: grid;
@@ -40,7 +41,7 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
   const stakableTokenBalance = useTokenBalance(account ?? undefined, stakablePair?.liquidityToken)
   const [selectedCampaign, setSelectedCampaign] = useState<LiquidityMiningCampaign | null>(null)
   const { width } = useWindowSize()
-  const { loading: loadingStakablePairLiquidityUSD, liquidityUSD } = usePairLiquidityUSD(stakablePair)
+  const { loading: loadingNativeCurrencyUsdPrice, nativeCurrencyUSDPrice } = useNativeCurrencyUSDPrice()
 
   const handleLiquidityMiningCampaignModalDismiss = useCallback(() => {
     setSelectedCampaign(null)
@@ -57,7 +58,7 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
     else setResponsiveItemsPerPage(3)
   }, [width])
 
-  const overallLoading = loading || loadingStakablePairLiquidityUSD || !items
+  const overallLoading = loading || loadingNativeCurrencyUsdPrice || !items
 
   return (
     <>
@@ -72,9 +73,10 @@ export default function List({ stakablePair, loading, items }: LiquidityMiningCa
                   <PairCard
                     token0={stakablePair?.token0}
                     token1={stakablePair?.token1}
-                    usdLiquidity={liquidityUSD}
+                    usdLiquidity={getStakedAmountUSD(item.campaign, nativeCurrencyUSDPrice)}
                     apy={item.campaign.apy}
                     staked={item.staked}
+                    usdLiquidityText="STAKED"
                   />
                 </div>
               ))}
