@@ -3,6 +3,7 @@ import Decimal from 'decimal.js-light'
 import { CurrencyAmount, Pair, Percent, Token, TokenAmount, USD } from 'dxswap-sdk'
 import { ethers } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
+import { DateTime, Duration } from 'luxon'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '.'
 import { SubgraphLiquidityMiningCampaign } from '../apollo'
@@ -10,7 +11,7 @@ import { getPairMaximumApy, toLiquidityMiningCampaigns } from '../utils/liquidit
 import { useNativeCurrency } from './useNativeCurrency'
 
 const QUERY = gql`
-  query($account: ID!, $timestamp: BigInt!) {
+  query($account: ID!, $lowerTimeLimit: BigInt!) {
     liquidityPositions(where: { user: $account }) {
       pair {
         address: id
@@ -31,7 +32,7 @@ const QUERY = gql`
           symbol
           decimals
         }
-        liquidityMiningCampaigns(where: { endsAt_gt: $timestamp }) {
+        liquidityMiningCampaigns(where: { endsAt_gt: $lowerTimeLimit }) {
           address: id
           duration
           startsAt
@@ -47,6 +48,9 @@ const QUERY = gql`
           }
           stakedAmount
           rewardAmounts
+          liquidityMiningPositions(where: { stakedAmount_gt: 0, user: $account }) {
+            id
+          }
         }
       }
     }
@@ -60,6 +64,10 @@ interface SubgraphToken {
   decimals: string
 }
 
+interface ExtendedSubgraphLiquidityMiningCampaign extends SubgraphLiquidityMiningCampaign {
+  liquidityMiningPositions: { id: string }[]
+}
+
 interface SubgraphPair {
   address: string
   reserve0: string
@@ -69,7 +77,7 @@ interface SubgraphPair {
   totalSupply: string
   token0: SubgraphToken
   token1: SubgraphToken
-  liquidityMiningCampaigns: SubgraphLiquidityMiningCampaign[]
+  liquidityMiningCampaigns: ExtendedSubgraphLiquidityMiningCampaign[]
 }
 
 interface QueryResult {
@@ -84,14 +92,24 @@ export function useLPPairs(
     pair: Pair
     liquidityUSD: CurrencyAmount
     maximumApy: Percent
+    staked: boolean
   }[]
 } {
   const { chainId } = useActiveWeb3React()
   const nativeCurrency = useNativeCurrency()
+  const memoizedLowerTimeLimit = useMemo(
+    () =>
+      Math.floor(
+        DateTime.utc()
+          .minus(Duration.fromObject({ days: 30 }))
+          .toSeconds()
+      ),
+    []
+  )
   const { loading: loadingMyPairs, data, error } = useQuery<QueryResult>(QUERY, {
     variables: {
-      account: account?.toLowerCase(),
-      timestamp: Math.floor(Date.now() / 1000)
+      account: account?.toLowerCase() || '',
+      lowerTimeLimit: memoizedLowerTimeLimit
     }
   })
 
@@ -146,7 +164,8 @@ export function useLPPairs(
           liquidityUSD: CurrencyAmount.usd(
             parseUnits(new Decimal(reserveUSD).toFixed(USD.decimals), USD.decimals).toString()
           ),
-          maximumApy: getPairMaximumApy(pair)
+          maximumApy: getPairMaximumApy(pair),
+          staked: position.pair.liquidityMiningCampaigns.some(campaign => campaign.liquidityMiningPositions.length > 0)
         }
       })
     }
