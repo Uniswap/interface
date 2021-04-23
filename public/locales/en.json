@@ -102,6 +102,7 @@
   "connectWallet": "Connect Wallet",
   "unsupportedAsset": "Unsupported Asset",
   "feePool": "Fee Pool",
+  "feeTier": "Fee Tier",
   "rebalanceMessage": "Your underlying tokens will be automatically rebalanced when the rate of the pool changes and may be different when you withdraw the position.",
   "addEarnHelper": "You will earn fees from trades proportional to your share of the pool.",
   "learnMoreAboutFess": " Learn more about earning fees.",

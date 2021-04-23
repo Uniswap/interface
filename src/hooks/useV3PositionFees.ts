@@ -47,7 +47,7 @@ function getCounterfactualFees(
 // compute current + counterfactual fees for a v3 position
 export function useV3PositionFees(
   pool?: Pool,
-  positionDetails?: PositionDetails & { tokenId: BigNumber }
+  positionDetails?: PositionDetails
 ): [TokenAmount, TokenAmount] | [undefined, undefined] {
   const { chainId } = useActiveWeb3React()
 

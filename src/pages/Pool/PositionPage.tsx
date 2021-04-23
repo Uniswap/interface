@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import { PoolState, usePool } from 'data/Pools'
-import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
-import { useV3Positions } from 'hooks/useV3Positions'
-import { RouteComponentProps, Link } from 'react-router-dom'
+import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { LoadingRows } from './styleds'
 import styled from 'styled-components'
@@ -19,8 +18,10 @@ import { DarkCard, DarkGreyCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AlertTriangle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import { BigNumber } from '@ethersproject/bignumber'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -75,7 +76,7 @@ const ActiveDot = styled.span`
   margin-right: 4px;
 `
 
-const DarkBadge = styled.div`
+export const DarkBadge = styled.div`
   widthL fit-content;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.bg0};
@@ -84,15 +85,13 @@ const DarkBadge = styled.div`
 
 export function PositionPage({
   match: {
-    params: { positionIndex },
+    params: { tokenId: tokenIdFromUrl },
   },
-}: RouteComponentProps<{ positionIndex?: string }>) {
-  const { account } = useActiveWeb3React()
+}: RouteComponentProps<{ tokenId?: string }>) {
   const { t } = useTranslation()
 
-  const { loading, positions } = useV3Positions(account ?? undefined)
-
-  const positionDetails = positionIndex && positions ? positions[parseInt(positionIndex)] : undefined
+  const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
+  const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
 
   const { token0: token0Address, token1: token1Address, fee: feeAmount, liquidity, tickLower, tickUpper, tokenId } =
     positionDetails || {}
@@ -121,6 +120,10 @@ export function PositionPage({
   const outOfRange: boolean =
     pool && tickLower && tickUpper ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper : false
 
+  const linkToIncrease =
+    currency0 && currency1
+      ? `/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`
+      : `/pool`
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
 
@@ -153,11 +156,16 @@ export function PositionPage({
                 <BadgeText>{basisPointsToPercent(feeAmount / 100).toSignificant()}%</BadgeText>
               </Badge>
             </RowFixed>
-            {tokenId && (
-              <ButtonPrimary width="200px" padding="8px" borderRadius="12px" as={Link} to={`/remove/${tokenId}`}>
+            <RowFixed>
+              <Link to={linkToIncrease}>
+                <ButtonPrimary mr="20px" width="200px" padding="8px" borderRadius="12px">
+                  Increase liquidity
+                </ButtonPrimary>
+              </Link>
+              <ButtonPrimary width="200px" padding="8px" borderRadius="12px">
                 Remove liquidity
               </ButtonPrimary>
-            )}
+            </RowFixed>
           </RowBetween>
           <RowBetween>
             <BadgeWrapper>

@@ -17,7 +17,7 @@ export function useBurnV3State(): AppState['burnV3'] {
 }
 
 export function useDerivedV3BurnInfo(
-  position?: PositionDetails & { tokenId: BigNumber }
+  position?: PositionDetails
 ): {
   liquidity?: BigNumber
   liquidityValue0?: TokenAmount

@@ -16,7 +16,6 @@ import { formatPrice, formatTokenAmount } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
-import { BigNumber } from '@ethersproject/bignumber'
 
 const ActiveDot = styled.span`
   background-color: ${({ theme }) => theme.success};
@@ -121,11 +120,10 @@ const DataText = styled.div`
 `
 
 export interface PositionListItemProps {
-  positionDetails: PositionDetails & { tokenId: BigNumber }
-  positionIndex: number
+  positionDetails: PositionDetails
 }
 
-export default function PositionListItem({ positionDetails, positionIndex }: PositionListItemProps) {
+export default function PositionListItem({ positionDetails }: PositionListItemProps) {
   const { t } = useTranslation()
 
   const {
@@ -172,7 +170,7 @@ export default function PositionListItem({ positionDetails, positionIndex }: Pos
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper : false
 
-  const positionSummaryLink = '/pool/' + positionIndex.toString()
+  const positionSummaryLink = '/pool/' + positionDetails.tokenId
 
   return (
     <Row to={positionSummaryLink}>
