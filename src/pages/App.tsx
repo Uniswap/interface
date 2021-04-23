@@ -46,12 +46,12 @@ const BodyWrapper = styled.div`
   /* overflow-y: auto; */
   /* overflow-x: hidden; */
 
+  z-index: 1;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 16px;
     padding-top: 2rem;
   `};
-
-  z-index: 1;
 `
 
 const HeaderWrapper = styled.div`
