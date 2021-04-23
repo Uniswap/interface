@@ -26,7 +26,7 @@ import {
   MERKLE_DISTRIBUTOR_ADDRESS,
   V1_MIGRATOR_ADDRESS,
   UNI,
-  MULTICALL_ADDRESSES,
+  MULTICALL2_ADDRESSES,
 } from 'constants/index'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import {
@@ -40,6 +40,7 @@ import { TickLens, UniswapV3Factory, UniswapV3Pool } from 'types/v3'
 import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
+import { Multicall2 } from '../abis/types'
 import { useActiveWeb3React } from './index'
 
 // returns null on errors
@@ -113,9 +114,9 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
   return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
 }
 
-export function useMulticallContract(): Contract | null {
+export function useMulticall2Contract(): Multicall2 | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MULTICALL_ADDRESSES[chainId], MULTICALL_ABI, false)
+  return useContract(chainId && MULTICALL2_ADDRESSES[chainId], MULTICALL_ABI, false) as Multicall2
 }
 
 export function useMerkleDistributorContract(): Contract | null {

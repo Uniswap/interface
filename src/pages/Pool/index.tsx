@@ -73,6 +73,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
     width: 49%;
   `};
 `
+
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.bg0};
   padding: 16px;
@@ -80,17 +81,14 @@ const MainContentWrapper = styled.main`
   display: flex;
   flex-direction: column;
 `
+
 export default function Pool() {
   const { account } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
 
-  const { error, positions } = useV3Positions(account)
-
-  if (error) {
-    console.error('error fetching v3 positions', error)
-  }
+  const { positions } = useV3Positions(account)
 
   const hasPositions = useMemo(() => Boolean(positions && positions.length > 0), [positions])
 
@@ -131,6 +129,7 @@ export default function Pool() {
       external: false,
     })
   }
+
   return (
     <>
       <PageWrapper>
