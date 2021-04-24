@@ -6,6 +6,12 @@ export const V3_CORE_FACTORY_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.KOVAN]: '0x58f6b77148BE49BF7898472268ae8f26377d0AA6',
 }
 
+export const QUOTER_ADDRESSES: { [chainId in ChainId]?: string } = {
+  [ChainId.RINKEBY]: '0x91a64CCaead471caFF912314E466D9CF7C55E0E8',
+  [ChainId.GÖRLI]: '0x3d137e860008BaF6d1c063158e5ec0baBbcFefF8',
+  [ChainId.KOVAN]: '0x865F20efC14A5186bF985aD42c64f5e71C055376',
+}
+
 export const TICK_LENS_ADDRESSES: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: '0x3d137e860008BaF6d1c063158e5ec0baBbcFefF8',
   [ChainId.GÖRLI]: '0x80AacDBEe92DC1c2Fbaa261Fb369696AF1AD9f98',

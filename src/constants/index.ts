@@ -26,7 +26,7 @@ export { PRELOADED_PROPOSALS } from './proposals'
 
 // a list of tokens by chain
 type ChainTokenList = {
-  readonly [chainId in ChainId | 1337]: Token[]
+  readonly [chainId in ChainId]: Token[]
 }
 
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
@@ -74,7 +74,6 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.RINKEBY]: [WETH9[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH9[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH9[ChainId.KOVAN]],
-  [1337]: [WETH9[ChainId.KOVAN]],
 }
 
 // used to construct intermediary pairs for trading
