@@ -13,10 +13,10 @@ import { Interface } from '@ethersproject/abi'
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateABI) as IUniswapV3PoolStateInterface
 
 export enum PoolState {
-  LOADING = 'LOADING',
-  NOT_EXISTS = 'NOT_EXISTS',
-  EXISTS = 'EXISTS',
-  INVALID = 'INVALID',
+  LOADING,
+  NOT_EXISTS,
+  EXISTS,
+  INVALID,
 }
 
 export function usePools(
