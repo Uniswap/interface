@@ -129,7 +129,7 @@
     "@ubeswap/moola": "^0.2.0",
     "@ubeswap/sdk": "^2.0.0",
     "ethers": "^5.1.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "react-circular-progressbar": "^2.0.4",
     "react-countdown": "^2.3.1",
     "rebass": "^4.0.7",
