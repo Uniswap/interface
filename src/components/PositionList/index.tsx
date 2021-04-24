@@ -51,9 +51,8 @@ export default function PositionList({ positions }: PositionListProps) {
         <div>{t('Fees Earned')}</div>
       </DesktopHeader>
       <MobileHeader>Your positions</MobileHeader>
-      {positions.map((p, i) => {
-        const key = `${i}-${p.nonce.toString()} ${p.token0} ${p.token1} ${p.tokensOwed0} ${p.tokensOwed1}`
-        return <PositionListItem key={key} positionDetails={p} />
+      {positions.map((p) => {
+        return <PositionListItem key={p.tokenId.toString()} positionDetails={p} />
       })}
     </>
   )

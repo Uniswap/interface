@@ -1,8 +1,8 @@
-import { BigNumberish } from '@ethersproject/bignumber'
+import { BigNumber } from '@ethersproject/bignumber'
 
 export interface PositionDetails {
   nonce: BigNumber
-  tokenId: BigNumberish | undefined
+  tokenId: BigNumber
   operator: string
   token0: string
   token1: string
