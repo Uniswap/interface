@@ -140,7 +140,7 @@ const BalanceText = styled(Text)`
   `};
 `
 
-const Title = styled.a`
+const Title = styled(NavLink)`
   display: flex;
   align-items: center;
   pointer-events: auto;
@@ -265,7 +265,7 @@ export default function Header() {
   return (
     <HeaderFrame>
       <HeaderRow>
-        <Title href=".">
+        <Title to="/">
           <UniIcon>
             <img width={'140px'} src={darkMode ? LogoDark : Logo} alt="logo" />
           </UniIcon>
