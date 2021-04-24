@@ -4087,17 +4087,16 @@
   resolved "https://registry.yarnpkg.com/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz#dc3d911f65a860fc3f0cae074bdcd08ed6a27a4d"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/sdk-core@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-1.0.9.tgz#67e8d506e2c563f5183245ae9c32c54ac083479b"
-  integrity sha512-CWvDhN7mU+v786HEqAcyDhRMlLt9r6/Etgcduc36PlmmWk1Bb2XyK/UGMu/MD8cB9NlJ0h17WLx/X+CFg93ivg==
+"@uniswap/sdk-core@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-1.0.10.tgz#a30118ac29319bd83113f9c90eab99f803ec9267"
+  integrity sha512-8aD3xkzNDI3Ffh7PdLIcmraZr/6knqQuamVOv96EN8lhouEYH2ZuRbBWb7eZa/W7NwOLjlXM7XHi5gWJKzvbkg==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.4"
     tiny-invariant "^1.1.0"
-    tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
 "@uniswap/token-lists@^1.0.0-beta.19":
@@ -4123,14 +4122,14 @@
     "@uniswap/lib" "1.1.1"
     "@uniswap/v2-core" "1.0.0"
 
-"@uniswap/v2-sdk@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@uniswap/v2-sdk/-/v2-sdk-1.0.7.tgz#442eadcf1283356dea7c96c21e24b70ede74ae4d"
-  integrity sha512-HutwgAVEd2vxn+yNOHlO3Tu3oExudmgo/f6AzWjq99P0JcF3d8oi7+zJ/5/PSItk3hENZ1RVUaIvivV1uMNBGg==
+"@uniswap/v2-sdk@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@uniswap/v2-sdk/-/v2-sdk-1.0.8.tgz#6ea8a7a3861a3d2be536d2f5f1405d4a1e4dd024"
+  integrity sha512-WmS2KXSfe251Q8cZ4Scb7NOapIC1llCzPLOmnz3Wiuce2wnGnx+IeQEdfeWj3N4o6Xd9QrUykXOx1B5mjn8nxA==
   dependencies:
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
-    "@uniswap/sdk-core" "^1.0.9"
+    "@uniswap/sdk-core" "^1.0.10"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
 
@@ -4159,14 +4158,14 @@
     "@uniswap/v2-core" "1.0.1"
     "@uniswap/v3-core" "1.0.0-rc.2"
 
-"@uniswap/v3-sdk@^1.0.0-alpha.18":
-  version "1.0.0-alpha.18"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-1.0.0-alpha.18.tgz#53579f46f9939ed429f6e5d7fbf52bdd784145b6"
-  integrity sha512-CQNCfCKLoAWZHUjfCAu+TxLx64vjKHzgxP5uzM4aR61pFkINNCtRnChcJ96paORieezWwM411wW2VJ1DlC/nqQ==
+"@uniswap/v3-sdk@^1.0.0-alpha.19":
+  version "1.0.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-1.0.0-alpha.19.tgz#b84d7f98278fd4be6488ebaca7f0d6cc2dec9ebd"
+  integrity sha512-SJMFbAmqFlFhuYpA+bhuCqEa/TYFKtBu3js5GpbHQTttUO6fF1W4eFn6I4D+XCWsfx9T8WQKMNAxQsgyhIQDZA==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
-    "@uniswap/sdk-core" "^1.0.9"
+    "@uniswap/sdk-core" "^1.0.10"
     "@uniswap/v3-periphery" "^1.0.0-beta.22"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
