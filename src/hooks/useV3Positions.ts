@@ -6,14 +6,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 
 interface UseV3PositionsResults {
   loading: boolean
-  error: boolean
   positions: PositionDetails[] | undefined
 }
 
 function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
-  const results = useSingleContractMultipleData(positionManager ?? undefined, 'positions', inputs)
+  const results = useSingleContractMultipleData(positionManager, 'positions', inputs)
 
   const loading = useMemo(() => results.some(({ loading }) => loading), [results])
   const error = useMemo(() => results.some(({ error }) => error), [results])
@@ -45,14 +44,12 @@ function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3Pos
 
   return {
     loading,
-    error,
     positions: positions?.map((position, i) => ({ ...position, tokenId: inputs[i][0] })),
   }
 }
 
 interface UseV3PositionResults {
   loading: boolean
-  error: boolean
   position: PositionDetails | undefined
 }
 
@@ -60,7 +57,6 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
   const position = useV3PositionsFromTokenIds(tokenId ? [tokenId] : undefined)
   return {
     loading: position.loading,
-    error: position.error,
     position: position.positions?.[0],
   }
 }
@@ -68,11 +64,9 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
 
-  const { loading: balanceLoading, error: balanceError, result: balanceResult } = useSingleCallResult(
-    positionManager,
-    'balanceOf',
-    [account ?? undefined]
-  )
+  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(positionManager, 'balanceOf', [
+    account ?? undefined,
+  ])
 
   // we don't expect any account balance to ever exceed the bounds of max safe int
   const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
@@ -89,6 +83,7 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
   }, [account, accountBalance])
 
   const tokenIdResults = useSingleContractMultipleData(positionManager, 'tokenOfOwnerByIndex', tokenIdsArgs)
+  const someTokenIdsLoading = useMemo(() => tokenIdResults.some(({ loading }) => loading), [tokenIdResults])
 
   const tokenIds = useMemo(() => {
     if (account) {
@@ -100,15 +95,10 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
     return []
   }, [account, tokenIdResults])
 
-  const positionsResults = useV3PositionsFromTokenIds(tokenIds)
-
-  // wrap the return value
-  const loading = balanceLoading || positionsResults.loading
-  const error = balanceError || positionsResults.error
+  const { positions, loading: positionsLoading } = useV3PositionsFromTokenIds(tokenIds)
 
   return {
-    loading: loading || positionsResults.loading,
-    error: error || positionsResults.error,
-    positions: loading || error ? undefined : positionsResults.positions,
+    loading: someTokenIdsLoading || balanceLoading || positionsLoading,
+    positions,
   }
 }

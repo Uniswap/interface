@@ -3,12 +3,12 @@ import { usePool } from 'hooks/usePools'
 import { PositionDetails } from 'types/position'
 import { useCurrency } from './Tokens'
 
-export const useDerivedPositionInfo = (
+export function useDerivedPositionInfo(
   positionDetails: PositionDetails | undefined
 ): {
   position: Position | undefined
   pool: Pool | undefined
-} => {
+} {
   const currency0 = useCurrency(positionDetails?.token0)
   const currency1 = useCurrency(positionDetails?.token1)
 
@@ -19,7 +19,7 @@ export const useDerivedPositionInfo = (
   if (pool && positionDetails) {
     position = new Position({
       pool,
-      liquidity: positionDetails.liquidity,
+      liquidity: positionDetails.liquidity.toString(),
       tickLower: positionDetails.tickLower,
       tickUpper: positionDetails.tickUpper,
     })

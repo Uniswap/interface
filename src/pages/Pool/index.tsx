@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext } from 'react'
 import { ButtonGray, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -88,9 +88,9 @@ export default function Pool() {
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
 
-  const { positions } = useV3Positions(account)
+  const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  const hasPositions = useMemo(() => Boolean(positions && positions.length > 0), [positions])
+  const hasPositions = Boolean(positions && positions.length > 0)
 
   const hasV2Liquidity = true
   const showMigrateHeaderLink = Boolean(hasV2Liquidity && hasPositions)
@@ -160,9 +160,24 @@ export default function Pool() {
             </TitleRow>
 
             <MainContentWrapper>
-              {hasPositions && positions ? (
+              {positionsLoading ? (
+                <LoadingRows>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRows>
+              ) : positions && positions.length > 0 ? (
                 <PositionList positions={positions} />
-              ) : positions && !hasPositions ? (
+              ) : (
                 <NoLiquidity>
                   <TYPE.largeHeader color={theme.text3} textAlign="center">
                     <Inbox />
@@ -186,21 +201,6 @@ export default function Pool() {
                     )
                   )}
                 </NoLiquidity>
-              ) : (
-                <LoadingRows>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRows>
               )}
             </MainContentWrapper>
           </AutoColumn>
