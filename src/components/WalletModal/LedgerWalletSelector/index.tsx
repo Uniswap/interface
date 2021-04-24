@@ -44,7 +44,10 @@ export const LedgerWalletSelector: React.FC<Props> = ({ tryActivation }: Props) 
       <Heading>Connect to Ledger</Heading>
       {error ? (
         <ErrorGroup>
-          <div>{error}</div>
+          <div>
+            <p>{error}</p>
+            {error.includes('Unable to claim interface.') && <p>Try restarting your Ledger.</p>}
+          </div>
           <ErrorButton
             onClick={() => {
               void connectToLedger()
