@@ -7,6 +7,7 @@ import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as V3FactoryABI } from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json'
 import { abi as V3PoolABI } from '@uniswap/v3-core/artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json'
+import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
 import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import { abi as TickLensABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
 
@@ -34,9 +35,10 @@ import {
   V3_CORE_FACTORY_ADDRESSES,
   TICK_LENS_ADDRESSES,
   V2_MIGRATOR_ADDRESSES,
+  QUOTER_ADDRESSES,
 } from 'constants/v3'
 import { useMemo } from 'react'
-import { TickLens, UniswapV3Factory, UniswapV3Pool } from 'types/v3'
+import { Quoter, TickLens, UniswapV3Factory, UniswapV3Pool } from 'types/v3'
 import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
@@ -160,6 +162,11 @@ export function useV3Factory(): UniswapV3Factory | null {
 
 export function useV3Pool(address: string | undefined): UniswapV3Pool | null {
   return useContract(address, V3PoolABI) as UniswapV3Pool | null
+}
+
+export function useV3Quoter(): Quoter | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId ? QUOTER_ADDRESSES[chainId] : undefined, QuoterABI) as Quoter | null
 }
 
 export function useTickLens(): TickLens | null {
