@@ -1,3 +1,4 @@
+import { useBestV3RouteExactIn } from '../../hooks/useBestV3Route'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, ETHER, Token, TokenAmount } from '@uniswap/sdk-core'
@@ -137,6 +138,10 @@ export function useDerivedSwapInfo(): {
 
   const bestTradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
   const bestTradeExactOut = useV2TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+
+  const bestRouteExactInV3 = useBestV3RouteExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  // todo: do something with this information
+  console.log('best v3 route for the swap', bestRouteExactInV3)
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 

@@ -27,7 +27,6 @@ function computeAllRoutes(
 
     const outputToken = pool.token0.equals(tokenIn) ? pool.token1 : pool.token0
     if (outputToken.equals(tokenOut)) {
-      console.log(startCurrencyIn, [...currentPath, pool], currencyOut)
       allPaths.push(new Route([...currentPath, pool], startCurrencyIn, currencyOut))
     } else if (maxHops > 1) {
       computeAllRoutes(
