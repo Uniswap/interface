@@ -135,7 +135,7 @@ function Web3StatusInner() {
     const accountName =
       connector instanceof ValoraConnector && connector.valoraAccount
         ? connector.valoraAccount.phoneNumber
-        : summary?.name ?? shortenAddress(account)
+        : summary?.name || shortenAddress(account)
     return (
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (

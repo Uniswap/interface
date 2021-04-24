@@ -1,7 +1,7 @@
 import { JSBI } from '@ubeswap/sdk'
+import { partition } from 'lodash'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import { OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import PoolCard from '../../components/earn/PoolCard'
 import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'
@@ -41,47 +41,19 @@ export default function Earn() {
   // staking info for connected account
   const stakingInfos = useStakingInfo()
 
-  /**
-   * only show staking cards with balance
-   * @todo only account for this if rewards are inactive
-   * @todo (sharad) - sot
-   */
-  const stakingInfosWithBalance = useMemo(
-    () => stakingInfos?.filter((s: StakingInfo) => JSBI.greaterThan(s.stakedAmount.raw, BIG_INT_ZERO)),
-    [stakingInfos]
-  )
-
-  /**
-   * Sort staking Info by provided liquidity Amount
-   */
-  const sortedStakingInfos = useMemo(
-    () =>
-      stakingInfos
-        ?.slice()
-        .sort((a: StakingInfo, b: StakingInfo) => JSBI.toNumber(JSBI.subtract(b.stakedAmount.raw, a.stakedAmount.raw))),
-    [stakingInfos]
-  )
-
   // toggle copy if rewards are inactive
   const stakingRewardsExist = true
 
-  function renderStakingInfos(stakingInfos: readonly StakingInfo[] | undefined) {
-    return stakingInfos
-      ?.filter((si) => si.active)
-      .map((stakingInfo) => {
-        // need to sort by added liquidity here
-        return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-      })
-  }
-
-  function renderInactiveStakingInfo(inactiveStakingInfos: StakingInfo[] | undefined) {
-    return (
-      <>
-        <OutlineCard>No active pools</OutlineCard>
-        {renderStakingInfos(inactiveStakingInfos)}
-      </>
+  const [stakedPools, unstakedPools] = useMemo(() => {
+    // Sort staking info by highest rewards
+    const sortedStakingInfos = stakingInfos?.slice().sort((a: StakingInfo, b: StakingInfo) => {
+      return JSBI.toNumber(JSBI.subtract(b.rewardRate.raw, a.rewardRate.raw))
+    })
+    return partition(
+      sortedStakingInfos,
+      (pool) => pool.stakedAmount && JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO)
     )
-  }
+  }, [stakingInfos])
 
   const isGenesisOver = COUNTDOWN_END < new Date().getTime()
 
@@ -115,9 +87,26 @@ export default function Earn() {
         </TopSection>
       )}
 
+      {!isGenesisOver && <LaunchCountdown />}
+
+      {stakedPools.length > 0 && (
+        <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+          <DataRow style={{ alignItems: 'baseline' }}>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Your Pools</TYPE.mediumHeader>
+            <div>{/* TODO(igm): show TVL here */}</div>
+          </DataRow>
+
+          <PoolSection>
+            {stakedPools.map((pool) => (
+              <PoolCard key={pool.stakingRewardAddress} stakingInfo={pool} />
+            ))}
+          </PoolSection>
+        </AutoColumn>
+      )}
+
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Farms</TYPE.mediumHeader>
+          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Available Pools</TYPE.mediumHeader>
           <div>
             {!isGenesisOver && (
               <span>
@@ -130,16 +119,11 @@ export default function Earn() {
           </div>
           {/* TODO(igm): show TVL here */}
         </DataRow>
-
-        {!isGenesisOver && <LaunchCountdown />}
-
         <PoolSection>
-          {stakingRewardsExist && sortedStakingInfos?.length === 0 ? (
+          {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
-          ) : !stakingRewardsExist ? (
-            renderInactiveStakingInfo(stakingInfosWithBalance)
           ) : (
-            renderStakingInfos(sortedStakingInfos)
+            unstakedPools?.map((pool) => <PoolCard key={pool.stakingRewardAddress} stakingInfo={pool} />)
           )}
         </PoolSection>
       </AutoColumn>

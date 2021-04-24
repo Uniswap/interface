@@ -1,5 +1,5 @@
 import { Percent } from '@ubeswap/sdk'
-import { LightQuestionHelper } from 'components/QuestionHelper'
+import QuestionHelper, { LightQuestionHelper } from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
 import styled from 'styled-components'
@@ -57,23 +57,28 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   opacity: ${({ showBackground }) => (showBackground ? '1' : '0.4')};
   border-radius: 0 0 12px 12px;
   display: flex;
-  flex-direction: row;
-  align-items: baseline;
+  flex-direction: column;
   justify-content: space-between;
+  gap: 12px;
   z-index: 1;
 `
 
 export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
   const [token0, token1] = stakingInfo.tokens
 
-  const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
+  const isStaking = Boolean(stakingInfo.stakedAmount && stakingInfo.stakedAmount.greaterThan('0'))
 
   // get the color of the token
   const token = token0.symbol?.startsWith('m') ? token1 : token0
   const backgroundColor = useColor(token)
 
   // get the USD value of staked WETH
-  const { valueCUSD: valueOfTotalStakedAmountInCUSD } = useStakingPoolValue(stakingInfo)
+  const {
+    valueCUSD: valueOfTotalStakedAmountInCUSD,
+    userValueCUSD,
+    userAmountTokenA,
+    userAmountTokenB,
+  } = useStakingPoolValue(stakingInfo)
   const apyFraction = valueOfTotalStakedAmountInCUSD
     ? stakingInfo.dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
     : undefined
@@ -150,22 +155,42 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <>
           <Break />
           <BottomSection showBackground={true}>
-            <TYPE.black color={'white'} fontWeight={500}>
-              <span>Your rate</span>
-            </TYPE.black>
+            <RowBetween>
+              <TYPE.black color={'white'} fontWeight={500}>
+                <span>Your rate</span>
+              </TYPE.black>
 
-            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-              <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                ⚡
-              </span>
-              {stakingInfo
-                ? stakingInfo.active
-                  ? `${stakingInfo.rewardRate
-                      ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                      ?.toSignificant(4, { groupSeparator: ',' })} UBE / week`
-                  : '0 UBE / week'
-                : '-'}
-            </TYPE.black>
+              <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+                <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
+                  ⚡
+                </span>
+                {stakingInfo
+                  ? stakingInfo.active
+                    ? `${stakingInfo.rewardRate
+                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
+                        ?.toSignificant(4, { groupSeparator: ',' })} UBE / week`
+                    : '0 UBE / week'
+                  : '-'}
+              </TYPE.black>
+            </RowBetween>
+            {userValueCUSD && (
+              <RowBetween>
+                <TYPE.black color={'white'} fontWeight={500}>
+                  <span>Your stake</span>
+                </TYPE.black>
+
+                <RowFixed>
+                  <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+                    ${userValueCUSD.toFixed(0, { groupSeparator: ',' })}
+                  </TYPE.black>
+                  <QuestionHelper
+                    text={`${userAmountTokenA?.toFixed(0, { groupSeparator: ',' })} ${
+                      userAmountTokenA?.token.symbol
+                    }, ${userAmountTokenB?.toFixed(0, { groupSeparator: ',' })} ${userAmountTokenB?.token.symbol}`}
+                  />
+                </RowFixed>
+              </RowBetween>
+            )}
           </BottomSection>
         </>
       )}

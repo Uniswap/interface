@@ -28,10 +28,12 @@ export const STAKING_GENESIS = 1619100000
 export interface StakingInfo {
   // the address of the reward contract
   readonly stakingRewardAddress: string
+  // the token of the liquidity pool
+  readonly stakingToken: Token
   // the tokens involved in this pair
   readonly tokens: readonly [Token, Token]
   // the amount of token currently staked, or undefined if no account
-  readonly stakedAmount: TokenAmount
+  readonly stakedAmount?: TokenAmount
   // the amount of reward token earned by the active account, or undefined if no account
   readonly earnedAmount: TokenAmount
   // the total amount of token staked in the contract
@@ -54,6 +56,10 @@ export interface StakingInfo {
   readonly nextPeriodRewards: TokenAmount
   readonly poolInfo: IRawPool
   readonly dollarRewardPerYear: TokenAmount | undefined
+}
+
+export const usePairStakingInfo = (pairToFilterBy?: Pair | null): StakingInfo | undefined => {
+  return useStakingInfo(pairToFilterBy)[0] ?? undefined
 }
 
 // gets the staking info from the network for the active chain id
@@ -173,6 +179,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
 
           memo.push({
             stakingRewardAddress: rewardsAddress,
+            stakingToken: totalStakedAmount.token,
             tokens,
             periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
             earnedAmount: new TokenAmount(ube, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
