@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@minswap/interface",
+  "description": "Minswap Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {
@@ -123,8 +123,5 @@
       "last 1 safari version"
     ]
   },
-  "license": "GPL-3.0-or-later",
-  "dependencies": {
-    "@uniswap/default-token-list": "^2.0.0"
-  }
+  "license": "GPL-3.0-or-later"
 }

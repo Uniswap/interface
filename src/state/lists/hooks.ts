@@ -1,5 +1,4 @@
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
-import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { ChainId, Token } from '@uniswap/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
@@ -7,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { AppState } from '../index'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
+import DEFAULT_TOKEN_LIST from '../../constants/tokenLists/minswap-default.tokenlist.json'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
@@ -142,10 +142,11 @@ export function useInactiveListUrls(): string[] {
 
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList(): TokenAddressMap {
-  const activeListUrls = useActiveListUrls()
-  const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-  const defaultTokenMap = listToTokenMap(DEFAULT_TOKEN_LIST)
-  return combineMaps(activeTokens, defaultTokenMap)
+  // const activeListUrls = useActiveListUrls()
+  // const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
+  // const defaultTokenMap = listToTokenMap(DEFAULT_TOKEN_LIST)
+  // return combineMaps(activeTokens, defaultTokenMap)
+  return listToTokenMap(DEFAULT_TOKEN_LIST)
 }
 
 // all tokens from inactive lists
