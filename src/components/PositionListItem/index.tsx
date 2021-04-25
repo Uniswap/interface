@@ -159,10 +159,10 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   const formattedAmount1 = formatTokenAmount(amount1, 4)
 
   // prices
-  const price0Lower = position ? position.token0PriceLower : undefined
-  const price0Upper = position ? position.token0PriceUpper : undefined
-  const price1Lower = price0Upper ? price0Upper.invert() : undefined
-  const price1Upper = price0Lower ? price0Lower.invert() : undefined
+  const price0Lower = position?.token0PriceLower
+  const price0Upper = position?.token0PriceUpper
+  const price1Lower = price0Lower?.invert()
+  const price1Upper = price0Upper?.invert()
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
@@ -205,13 +205,13 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           <>
             <DataLineItem>
               {formatPrice(price0Lower, 4)} <DoubleArrow>↔</DoubleArrow> {formatPrice(price0Upper, 4)}{' '}
-              {currency0?.symbol}&nbsp;/&nbsp;
-              {currency1?.symbol}
+              {currency1?.symbol}&nbsp;/&nbsp;
+              {currency0?.symbol}
             </DataLineItem>
             <DataLineItem>
               {formatPrice(price1Lower, 4)} <DoubleArrow>↔</DoubleArrow> {formatPrice(price1Upper, 4)}{' '}
-              {currency1?.symbol}&nbsp;/&nbsp;
-              {currency0?.symbol}
+              {currency0?.symbol}&nbsp;/&nbsp;
+              {currency1?.symbol}
             </DataLineItem>
           </>
         ) : (

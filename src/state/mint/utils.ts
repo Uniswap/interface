@@ -18,9 +18,10 @@ export function tryParseTick(
 
   if (!amount || !amountOne) return undefined
 
-  // parse the typed value into a price, token0 should always be base currency based on url
+  // parse the typed value into a price
   const price = new Price(baseToken, quoteToken, amountOne.raw, amount.raw)
 
+  // this function is agnostic to the base, will always return the correct tick
   const tick = priceToClosestTick(price)
 
   return nearestUsableTick(tick, TICK_SPACINGS[feeAmount])

@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, TokenAmount, Percent, ETHER } from '@uniswap/sdk-core'
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { Link2, AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
@@ -26,7 +26,6 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 import { currencyId } from '../../utils/currencyId'
@@ -42,8 +41,8 @@ import {
   ScrollablePage,
 } from './styled'
 import { useTranslation } from 'react-i18next'
-import { useMintState, useMintActionHandlers, useDerivedMintInfo } from 'state/mint/hooks'
-import { FeeAmount, NonfungiblePositionManager, tickToPrice, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { useMintState, useMintActionHandlers, useDerivedMintInfo, useRangeHopCallbacks } from 'state/mint/hooks'
+import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
 import JSBI from 'jsbi'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
@@ -76,22 +75,6 @@ export default function AddLiquidity({
   )
   const hasExistingPosition = !!existingPositionDetails && !positionLoading
   const { position: existingPosition } = useDerivedPositionInfo(existingPositionDetails)
-  const fixedValueLower =
-    hasExistingPosition && existingPosition
-      ? tickToPrice(
-          existingPosition.pool.token0,
-          existingPosition.pool.token1,
-          existingPosition.tickLower
-        ).toSignificant(4)
-      : undefined
-  const fixedValueUpper =
-    hasExistingPosition && existingPosition
-      ? tickToPrice(
-          existingPosition.pool.token0,
-          existingPosition.pool.token1,
-          existingPosition.tickUpper
-        ).toSignificant(4)
-      : undefined
 
   // fee selection from url
   const feeAmount: FeeAmount | undefined =
@@ -101,6 +84,14 @@ export default function AddLiquidity({
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
+
+  // keep track for UI display purposes of user selected base currency
+  const [baseCurrency, setBaseCurrency] = useState(currencyA)
+  const quoteCurrency = useMemo(() => (baseCurrency === currencyA ? currencyB : currencyA), [
+    baseCurrency,
+    currencyA,
+    currencyB,
+  ])
 
   // mint state
   const { independentField, typedValue, startPriceTypedValue } = useMintState()
@@ -121,17 +112,24 @@ export default function AddLiquidity({
     outOfRange,
     depositADisabled,
     depositBDisabled,
-  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, feeAmount, existingPosition)
+    invertPrice,
+  } = useDerivedMintInfo(
+    currencyA ?? undefined,
+    currencyB ?? undefined,
+    feeAmount,
+    baseCurrency ?? undefined,
+    existingPosition
+  )
 
   const {
     onFieldAInput,
     onFieldBInput,
-    onLowerRangeInput,
-    onUpperRangeInput,
+    onLeftRangeInput,
+    onRightRangeInput,
     onStartPriceInput,
   } = useMintActionHandlers(noLiquidity)
 
-  const isValid = !errorMessage
+  const isValid = !errorMessage && !invalidRange
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -322,90 +320,22 @@ export default function AddLiquidity({
   const clearAll = useCallback(() => {
     onFieldAInput('')
     onFieldBInput('')
-    onLowerRangeInput('')
-    onUpperRangeInput('')
+    onLeftRangeInput('')
+    onRightRangeInput('')
     history.push(`/add/`)
-  }, [history, onFieldAInput, onFieldBInput, onLowerRangeInput, onUpperRangeInput])
+  }, [history, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput])
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  const getLowerDecrement = () => {
-    if (tickLower && feeAmount && currencyA && currencyB && chainId) {
-      const tokenA = wrappedCurrency(currencyA, chainId)
-      const tokenB = wrappedCurrency(currencyB, chainId)
-      const tickAmount = TICK_SPACINGS[feeAmount]
-      const newTick = tickLower - tickAmount
-      const newPrice = tokenA && tokenB ? tickToPrice(tokenA, tokenB, newTick) : undefined
-      return newPrice ? newPrice.toFixed(10) : ''
-    } else {
-      return ''
-    }
-  }
-
-  const getLowerIncrement = () => {
-    if (tickLower && feeAmount && currencyA && currencyB && chainId) {
-      const tokenA = wrappedCurrency(currencyA, chainId)
-      const tokenB = wrappedCurrency(currencyB, chainId)
-      const tickAmount = TICK_SPACINGS[feeAmount]
-      const newTick = tickLower + tickAmount
-      const newPrice = tokenA && tokenB ? tickToPrice(tokenA, tokenB, newTick) : undefined
-      return newPrice ? newPrice.toFixed(10) : ''
-    } else {
-      return ''
-    }
-  }
-
-  const getUpperDecrement = () => {
-    if (tickUpper && feeAmount && currencyA && currencyB && chainId) {
-      const tokenA = wrappedCurrency(currencyA, chainId)
-      const tokenB = wrappedCurrency(currencyB, chainId)
-      const tickAmount = TICK_SPACINGS[feeAmount]
-      const newTick = tickUpper - tickAmount
-      const newPrice = tokenA && tokenB ? tickToPrice(tokenA, tokenB, newTick) : undefined
-      return newPrice ? newPrice.toFixed(10) : ''
-    } else {
-      return ''
-    }
-  }
-
-  const getUpperIncrement = () => {
-    if (tickUpper && feeAmount && currencyA && currencyB && chainId) {
-      const tokenA = wrappedCurrency(currencyA, chainId)
-      const tokenB = wrappedCurrency(currencyB, chainId)
-      const tickAmount = TICK_SPACINGS[feeAmount]
-      const newTick = tickUpper + tickAmount
-      const newPrice = tokenA && tokenB ? tickToPrice(tokenA, tokenB, newTick) : undefined
-      return newPrice ? newPrice.toFixed(10) : ''
-    } else {
-      return ''
-    }
-  }
-
-  const handleRateToggle = useCallback(() => {
-    if (currencyA && currencyB) {
-      const currencyIdA = currencyId(currencyA)
-      const currencyIdB = currencyId(currencyB)
-      // reset inputs
-      onLowerRangeInput('')
-      onUpperRangeInput('')
-      onStartPriceInput('')
-      onFieldAInput('')
-      onFieldBInput('')
-      history.push(`/add/${currencyIdB}/${currencyIdA}/${feeAmount ?? ''}`)
-    }
-  }, [
-    currencyA,
-    currencyB,
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
+    baseCurrency ?? undefined,
+    quoteCurrency ?? undefined,
     feeAmount,
-    history,
-    onFieldAInput,
-    onFieldBInput,
-    onLowerRangeInput,
-    onStartPriceInput,
-    onUpperRangeInput,
-  ])
+    tickLower,
+    tickUpper
+  )
 
   return (
     <ScrollablePage>
@@ -523,11 +453,15 @@ export default function AddLiquidity({
                           </BlueCard>
                           <RowBetween>
                             <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
-                            {currencyA && currencyB ? (
+                            {baseCurrency && quoteCurrency ? (
                               <RateToggle
-                                currencyA={currencyA}
-                                currencyB={currencyB}
-                                handleRateToggle={handleRateToggle}
+                                currencyA={baseCurrency}
+                                currencyB={quoteCurrency}
+                                handleRateToggle={() => {
+                                  onLeftRangeInput('')
+                                  onRightRangeInput('')
+                                  setBaseCurrency(quoteCurrency)
+                                }}
                               />
                             ) : null}
                           </RowBetween>
@@ -543,7 +477,9 @@ export default function AddLiquidity({
                             <TYPE.main>Starting Price</TYPE.main>
                             {price ? (
                               <TYPE.main>
-                                1 {currencyA?.symbol} = {price?.toSignificant(8)} {currencyB?.symbol}
+                                1 {currencyA?.symbol} ={' '}
+                                {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
+                                {currencyB?.symbol}
                               </TYPE.main>
                             ) : (
                               '-'
@@ -559,16 +495,25 @@ export default function AddLiquidity({
                     >
                       <RowBetween>
                         <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
-                        {currencyA && currencyB && !noLiquidity && (
-                          <RateToggle currencyA={currencyA} currencyB={currencyB} handleRateToggle={handleRateToggle} />
-                        )}
+                        {baseCurrency && quoteCurrency ? (
+                          <RateToggle
+                            currencyA={baseCurrency}
+                            currencyB={quoteCurrency}
+                            handleRateToggle={() => {
+                              onLeftRangeInput('')
+                              onRightRangeInput('')
+                              setBaseCurrency(quoteCurrency)
+                            }}
+                          />
+                        ) : null}
                       </RowBetween>
 
-                      {price && currencyA && !noLiquidity && (
+                      {price && baseCurrency && quoteCurrency && !noLiquidity && (
                         <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                          <TYPE.main>{t('currentRate', { label: currencyA.symbol })}</TYPE.main>
+                          <TYPE.main>Current Price</TYPE.main>
                           <TYPE.main>
-                            {price.toSignificant(3)} {currencyB?.symbol}
+                            {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)}{' '}
+                            {quoteCurrency?.symbol} = 1 {baseCurrency.symbol}
                           </TYPE.main>
                         </RowBetween>
                       )}
@@ -576,17 +521,15 @@ export default function AddLiquidity({
                       <RangeSelector
                         priceLower={priceLower}
                         priceUpper={priceUpper}
-                        getLowerDecrement={getLowerDecrement}
-                        getLowerIncrement={getLowerIncrement}
-                        getUpperDecrement={getUpperDecrement}
-                        getUpperIncrement={getUpperIncrement}
-                        onLowerRangeInput={onLowerRangeInput}
-                        onUpperRangeInput={onUpperRangeInput}
-                        currencyA={currencyA}
-                        currencyB={currencyB}
+                        getDecrementLower={getDecrementLower}
+                        getIncrementLower={getIncrementLower}
+                        getDecrementUpper={getDecrementUpper}
+                        getIncrementUpper={getIncrementUpper}
+                        onLeftRangeInput={onLeftRangeInput}
+                        onRightRangeInput={onRightRangeInput}
+                        currencyA={baseCurrency}
+                        currencyB={quoteCurrency}
                         feeAmount={feeAmount}
-                        fixedValueLower={fixedValueLower}
-                        fixedValueUpper={fixedValueUpper}
                       />
 
                       {outOfRange ? (
@@ -634,9 +577,11 @@ export default function AddLiquidity({
                       showCommonBases
                       locked={depositADisabled}
                     />
+
                     <ColumnCenter>
                       <Link2 stroke={theme.text2} size={'24px'} />
                     </ColumnCenter>
+
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_B]}
                       disableCurrencySelect={true}

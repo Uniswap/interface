@@ -1,67 +1,63 @@
+import React from 'react'
 import { Currency, Price } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
-import React from 'react'
+import { useActiveWeb3React } from 'hooks'
+import { wrappedCurrency } from 'utils/wrappedCurrency'
 
 // currencyA is the base token
 export default function RangeSelector({
   priceLower,
   priceUpper,
-  onUpperRangeInput,
-  onLowerRangeInput,
-  getLowerDecrement,
-  getLowerIncrement,
-  getUpperDecrement,
-  getUpperIncrement,
+  onLeftRangeInput,
+  onRightRangeInput,
+  getDecrementLower,
+  getIncrementLower,
+  getDecrementUpper,
+  getIncrementUpper,
   currencyA,
   currencyB,
   feeAmount,
-  fixedValueLower,
-  fixedValueUpper,
 }: {
   priceLower?: Price
   priceUpper?: Price
-  getLowerIncrement?: () => string
-  getLowerDecrement?: () => string
-  getUpperIncrement?: () => string
-  getUpperDecrement?: () => string
-  onLowerRangeInput: (typedValue: string) => void
-  onUpperRangeInput: (typedValue: string) => void
+  getDecrementLower: () => string
+  getIncrementLower: () => string
+  getDecrementUpper: () => string
+  getIncrementUpper: () => string
+  onLeftRangeInput: (typedValue: string) => void
+  onRightRangeInput: (typedValue: string) => void
   currencyA?: Currency | null
   currencyB?: Currency | null
   feeAmount?: number
-  fixedValueLower?: string
-  fixedValueUpper?: string
 }) {
+  const { chainId } = useActiveWeb3React()
+  const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
+  const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
+  const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
+
+  const leftPrice = isSorted ? priceLower : priceUpper?.invert()
+  const rightPrice = isSorted ? priceUpper : priceLower?.invert()
+
   return (
     <RowBetween>
       <StepCounter
-        value={fixedValueLower ?? priceLower?.toSignificant(5) ?? ''}
-        onUserInput={onLowerRangeInput}
+        value={leftPrice?.toSignificant(5) ?? ''}
+        onUserInput={onLeftRangeInput}
         width="48%"
-        getIncrementValue={getLowerIncrement}
-        getDecrementValue={getLowerDecrement}
+        decrement={isSorted ? getDecrementLower : getIncrementUpper}
+        increment={isSorted ? getIncrementLower : getDecrementUpper}
         feeAmount={feeAmount}
-        label={
-          priceLower && currencyA && currencyB
-            ? `${priceLower.toSignificant(4)} ${currencyB.symbol} / 1 ${currencyA.symbol}`
-            : '-'
-        }
-        locked={!!fixedValueLower}
+        label={leftPrice ? `${leftPrice.toSignificant(5)} ${currencyB?.symbol}/${currencyA?.symbol}` : '-'}
       />
       <StepCounter
-        value={fixedValueUpper ?? priceUpper?.toSignificant(5) ?? ''}
-        onUserInput={onUpperRangeInput}
+        value={rightPrice?.toSignificant(5) ?? ''}
+        onUserInput={onRightRangeInput}
         width="48%"
-        getDecrementValue={getUpperDecrement}
-        getIncrementValue={getUpperIncrement}
+        decrement={isSorted ? getDecrementUpper : getIncrementLower}
+        increment={isSorted ? getIncrementUpper : getDecrementLower}
         feeAmount={feeAmount}
-        label={
-          priceUpper && currencyA && currencyB
-            ? `${priceUpper.toSignificant(4)} ${currencyB?.symbol} / 1 ${currencyA?.symbol}`
-            : '-'
-        }
-        locked={!!fixedValueUpper}
+        label={rightPrice ? `${rightPrice.toSignificant(5)} ${currencyB?.symbol}/${currencyA?.symbol}` : '-'}
       />
     </RowBetween>
   )

@@ -17,7 +17,7 @@ export enum RangeType {
 }
 
 export const typeInput = createAction<{ field: Field; typedValue: string; noLiquidity: boolean }>('mint/typeInputMint')
-export const typeLowerRangeInput = createAction<{ typedValue: string }>('mint/typeLowerRangeInput')
-export const typeUpperRangeInput = createAction<{ typedValue: string }>('mint/typeUpperRangeInput')
 export const typeStartPriceInput = createAction<{ typedValue: string }>('mint/typeStartPriceInput')
+export const typeLeftRangeInput = createAction<{ typedValue: string }>('mint/typeLeftRangeInput')
+export const typeRightRangeInput = createAction<{ typedValue: string }>('mint/typeRightRangeInput')
 export const resetMintState = createAction<void>('mint/resetMintState')
