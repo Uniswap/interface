@@ -226,6 +226,7 @@ export const ButtonText = styled(Base)`
   padding: 0;
   width: fit-content;
   background: none;
+  text-decoration: none;
   &:focus {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     text-decoration: underline;

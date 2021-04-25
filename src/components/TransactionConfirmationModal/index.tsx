@@ -17,6 +17,7 @@ import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
 
 const Wrapper = styled.div`
   width: 100%;
+  padding: 1rem;
 `
 const Section = styled(AutoColumn)<{ inline?: boolean }>`
   padding: ${({ inline }) => (inline ? '0' : '24px')};

@@ -138,7 +138,7 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader>{t('Pool Overview')}</TYPE.mediumHeader>
+                <TYPE.mediumHeader>Your Positions</TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
                 <Menu

@@ -48,17 +48,17 @@ const ResponsiveGrid = styled.div`
   display: grid;
   grid-gap: 1em;
 
-  grid-template-columns: 1.5fr repeat(3, 1fr);
+  grid-template-columns: 1.5fr repeat(2, 1fr);
 
   @media screen and (max-width: 900px) {
-    grid-template-columns: 1.5fr repeat(3, 1fr);
+    grid-template-columns: 1.5fr repeat(2, 1fr);
     & :nth-child(4) {
       display: none;
     }
   }
 
   @media screen and (max-width: 700px) {
-    grid-template-columns: 20px 1.5fr repeat(3, 1fr);
+    grid-template-columns: 20px 1.5fr repeat(2, 1fr);
     & :nth-child(4) {
       display: none;
     }
@@ -288,9 +288,8 @@ export function PositionPage({
           <AutoColumn gap="lg">
             <ResponsiveGrid>
               <Label>Tokens</Label>
-              <Label end={true}>Current</Label>
+              <Label end={true}>Amount Deposited</Label>
               <Label end={true}>Fees</Label>
-              <Label end={true}>USD Value</Label>
             </ResponsiveGrid>
             <ResponsiveGrid>
               <RowFixed>
@@ -299,7 +298,6 @@ export function PositionPage({
               </RowFixed>
               <Label end={true}>{position?.amount0.toSignificant(4)}</Label>
               <Label end={true}>{feeValue0 ? formatTokenAmount(feeValue0, 4) : '-'}</Label>
-              <Label end={true}>-</Label>
             </ResponsiveGrid>
             <ResponsiveGrid>
               <RowFixed>
@@ -308,7 +306,6 @@ export function PositionPage({
               </RowFixed>
               <Label end={true}>{position?.amount1.toSignificant(4)}</Label>
               <Label end={true}>{feeValue1 ? formatTokenAmount(feeValue1, 4) : '-'}</Label>
-              <Label end={true}>-</Label>
             </ResponsiveGrid>
           </AutoColumn>
         </DarkCard>
@@ -322,13 +319,13 @@ export function PositionPage({
                   <RowFixed>
                     <TYPE.label>{price0Lower?.toSignificant(4)}</TYPE.label>
                     <TYPE.label ml="10px">
-                      {currency1?.symbol} / {currency0?.symbol}
+                      {currency0?.symbol} / {currency1?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <RowFixed>
                     <TYPE.label>{price1Lower?.toSignificant(4)}</TYPE.label>
                     <TYPE.label ml="10px">
-                      {currency0?.symbol} / {currency1?.symbol}
+                      {currency1?.symbol} / {currency0?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <DarkBadge>
@@ -346,13 +343,13 @@ export function PositionPage({
                   <RowFixed>
                     <TYPE.label>{price0Upper?.toSignificant(4)}</TYPE.label>
                     <TYPE.label ml="10px">
-                      {currency1?.symbol} / {currency0?.symbol}
+                      {currency0?.symbol} / {currency1?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <RowFixed>
                     <TYPE.label>{price1Upper?.toSignificant(4)}</TYPE.label>
                     <TYPE.label ml="10px">
-                      {currency0?.symbol} / {currency1?.symbol}
+                      {currency1?.symbol} / {currency0?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <DarkBadge>

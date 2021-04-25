@@ -1,6 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, TokenAmount, Percent, ETHER } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { WETH9 } from '@uniswap/sdk-core'
 import { Link2, AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
@@ -225,17 +226,8 @@ export default function AddLiquidity({
               setAttemptingTxn(false)
               addTransaction(response, {
                 summary: noLiquidity
-                  ? 'Create Pool + '
-                  : '' + 'Add ' + !depositADisabled
-                  ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-                    ' ' +
-                    currencies[Field.CURRENCY_A]?.symbol +
-                    !outOfRange
-                  : ''
-                  ? ' and '
-                  : '' + !depositBDisabled
-                  ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) + ' ' + currencies[Field.CURRENCY_B]?.symbol
-                  : '',
+                  ? `Create pool and add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`
+                  : `Add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
               })
               setTxHash(response.hash)
               ReactGA.event({
@@ -273,13 +265,17 @@ export default function AddLiquidity({
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
       const newCurrencyIdA = currencyId(currencyA)
+      //switch order if same selected
       if (newCurrencyIdA === currencyIdB) {
         history.push(`/add/${currencyIdB}/${currencyIdA}`)
+      } else if (chainId && newCurrencyIdA === WETH9[chainId]?.address && currencyIdB === 'ETH') {
+        // prevent eth / weth
+        history.push(`/add/${newCurrencyIdA}`)
       } else {
         history.push(`/add/${newCurrencyIdA}/${currencyIdB ?? 'ETH'}`)
       }
     },
-    [currencyIdB, history, currencyIdA]
+    [currencyIdB, chainId, history, currencyIdA]
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
@@ -290,11 +286,14 @@ export default function AddLiquidity({
         } else {
           history.push(`/add/${newCurrencyIdB}`)
         }
+      } else if (chainId && newCurrencyIdB === WETH9[chainId]?.address && currencyIdA === 'ETH') {
+        // prevent eth / weth
+        history.push(`/add/${newCurrencyIdB}`)
       } else {
         history.push(`/add/${currencyIdA ?? 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, history, currencyIdB]
+    [currencyIdA, chainId, currencyIdB, history]
   )
 
   const handleFeePoolSelect = useCallback(
