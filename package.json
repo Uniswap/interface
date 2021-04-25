@@ -53,7 +53,7 @@
     "jazzicon": "^1.5.0",
     "lint-staged": ">=10",
     "lodash.flatmap": "^4.5.0",
-    "luxon": "^1.25.0",
+    "luxon": "^1.26.0",
     "multicodec": "^2.0.0",
     "multihashes": "^3.0.1",
     "node-vibrant": "^3.1.6",
