@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import { OutlineCard } from 'components/Card'
 import { RowBetween } from 'components/Row'
 import { Input as NumericalInput } from '../NumericalInput'
-import styled, { keyframes, css } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { TYPE } from 'theme'
 import { AutoColumn } from 'components/Column'
 import { ButtonSecondary } from 'components/Button'
@@ -34,11 +34,7 @@ const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boo
   border-color: ${({ active, theme }) => active && theme.blue1};
   padding: 12px;
 
-  ${({ pulsing, theme }) =>
-    pulsing &&
-    css`
-      animation: ${pulse(theme.blue1)} 0.8s linear;
-    `}
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
@@ -54,8 +50,8 @@ const ContentWrapper = styled(RowBetween)`
 interface StepCounterProps {
   value: string
   onUserInput: (value: string) => void
-  getDecrementValue?: () => string
-  getIncrementValue?: () => string
+  decrement: () => string
+  increment: () => string
   feeAmount?: FeeAmount
   label?: string
   width?: string
@@ -64,13 +60,13 @@ interface StepCounterProps {
 
 const StepCounter = ({
   value,
-  onUserInput,
-  getDecrementValue,
-  getIncrementValue,
+  decrement,
+  increment,
   feeAmount,
   label,
   width,
   locked,
+  onUserInput,
 }: StepCounterProps) => {
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
@@ -83,7 +79,7 @@ const StepCounter = ({
   const [pulsing, setPulsing] = useState<boolean>(false)
 
   // format fee amount
-  const feeAmountFormatted = feeAmount ? formattedFeeAmount(feeAmount) : ''
+  const feeAmountFormatted = feeAmount ? formattedFeeAmount(feeAmount * 2) : ''
 
   const handleOnFocus = () => {
     setUseLocalValue(true)
@@ -92,18 +88,14 @@ const StepCounter = ({
 
   // for button clicks
   const handleDecrement = useCallback(() => {
-    if (getDecrementValue) {
-      setLocalValue(getDecrementValue())
-      onUserInput(getDecrementValue())
-    }
-  }, [getDecrementValue, onUserInput])
+    setLocalValue(decrement())
+    onUserInput(decrement())
+  }, [decrement, onUserInput])
 
   const handleIncrement = useCallback(() => {
-    if (getIncrementValue) {
-      setLocalValue(getIncrementValue())
-      onUserInput(getIncrementValue())
-    }
-  }, [getIncrementValue, onUserInput])
+    setLocalValue(increment())
+    onUserInput(increment())
+  }, [increment, onUserInput])
 
   const handleOnBlur = useCallback(() => {
     setUseLocalValue(false)
@@ -138,7 +130,7 @@ const StepCounter = ({
           />
         </ContentWrapper>
         {label && <TYPE.label fontSize="12px">{label}</TYPE.label>}
-        {getDecrementValue && getIncrementValue && !locked ? (
+        {!locked ? (
           <RowBetween>
             <SmallButton onClick={handleDecrement}>
               <TYPE.main fontSize="12px">-{feeAmountFormatted}%</TYPE.main>

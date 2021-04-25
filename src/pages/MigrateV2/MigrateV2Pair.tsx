@@ -29,10 +29,10 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import { useDerivedMintInfo, useMintActionHandlers } from 'state/mint/hooks'
+import { useDerivedMintInfo, useMintActionHandlers, useRangeHopCallbacks } from 'state/mint/hooks'
 import { Bound } from 'state/mint/actions'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown } from 'react-feather'
+import { AlertTriangle, ChevronDown } from 'react-feather'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
@@ -42,6 +42,7 @@ import { splitSignature } from '@ethersproject/bytes'
 import { BigNumber } from '@ethersproject/bignumber'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
+import useTheme from 'hooks/useTheme'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -104,6 +105,7 @@ function V2PairMigration({
 }) {
   const { t } = useTranslation()
   const { chainId, account, library } = useActiveWeb3React()
+  const theme = useTheme()
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
@@ -141,31 +143,39 @@ function V2PairMigration({
 
   const largePriceDifference = priceDifferenceFraction && !priceDifferenceFraction?.lessThan(JSBI.BigInt(4))
 
-  const [invertPrice, setInvertPrice] = useState(false)
-
   // the following is a small hack to get access to price range data/input handlers
-  const { ticks, pricesAtTicks } = useDerivedMintInfo(
-    invertPrice ? token1 : token0,
-    invertPrice ? token0 : token1,
-    feeAmount
+  const [baseToken, setBaseToken] = useState(token0)
+  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange } = useDerivedMintInfo(
+    token0,
+    token1,
+    feeAmount,
+    baseToken
   )
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  const { onLowerRangeInput, onUpperRangeInput } = useMintActionHandlers(noLiquidity)
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
+    baseToken,
+    baseToken.equals(token0) ? token1 : token0,
+    feeAmount,
+    tickLower,
+    tickUpper
+  )
+
+  const { onLeftRangeInput, onRightRangeInput } = useMintActionHandlers(noLiquidity)
 
   // the v3 tick is either the pool's tickCurrent, or the tick closest to the v2 spot price
   const tick = pool?.tickCurrent ?? priceToClosestTick(v2SpotPrice)
   // the price is either the current v3 price, or the price at the tick
   const sqrtPrice = pool?.sqrtRatioX96 ?? TickMath.getSqrtRatioAtTick(tick)
   const position =
-    typeof tickLower === 'number' && typeof tickUpper === 'number'
+    typeof tickLower === 'number' && typeof tickUpper === 'number' && !invalidRange
       ? Position.fromAmounts({
           pool: pool ?? new Pool(token0, token1, feeAmount, sqrtPrice, 0, tick, []),
-          tickLower: invertPrice ? tickUpper : tickLower,
-          tickUpper: invertPrice ? tickLower : tickUpper,
+          tickLower,
+          tickUpper,
           amount0: token0Value.raw,
           amount1: token1Value.raw,
         })
@@ -340,8 +350,8 @@ function V2PairMigration({
           token0: token0.address,
           token1: token1.address,
           fee: feeAmount,
-          tickLower: invertPrice ? tickUpper : tickLower,
-          tickUpper: invertPrice ? tickLower : tickUpper,
+          tickLower,
+          tickUpper,
           amount0Min: `0x${v3Amount0Min.raw.toString(16)}`,
           amount1Min: `0x${v3Amount1Min.raw.toString(16)}`,
           recipient: account,
@@ -379,7 +389,6 @@ function V2PairMigration({
     token1,
     feeAmount,
     pairBalance,
-    invertPrice,
     tickLower,
     tickUpper,
     sqrtPrice,
@@ -475,9 +484,9 @@ function V2PairMigration({
           currencyA={invertPrice ? token1 : token0}
           currencyB={invertPrice ? token0 : token1}
           handleRateToggle={() => {
-            onLowerRangeInput('')
-            onUpperRangeInput('')
-            setInvertPrice((invertPrice) => !invertPrice)
+            onLeftRangeInput('')
+            onRightRangeInput('')
+            setBaseToken((base) => (base.equals(token0) ? token1 : token0))
           }}
         />
       </RowBetween>
@@ -485,11 +494,38 @@ function V2PairMigration({
       <RangeSelector
         priceLower={priceLower}
         priceUpper={priceUpper}
-        onLowerRangeInput={onLowerRangeInput}
-        onUpperRangeInput={onUpperRangeInput}
+        getDecrementLower={getDecrementLower}
+        getIncrementLower={getIncrementLower}
+        getDecrementUpper={getDecrementUpper}
+        getIncrementUpper={getIncrementUpper}
+        onLeftRangeInput={onLeftRangeInput}
+        onRightRangeInput={onRightRangeInput}
         currencyA={invertPrice ? token1 : token0}
         currencyB={invertPrice ? token0 : token1}
+        feeAmount={feeAmount}
       />
+
+      {outOfRange ? (
+        <YellowCard padding="8px 12px" borderRadius="12px">
+          <RowBetween>
+            <AlertTriangle stroke={theme.yellow3} size="16px" />
+            <TYPE.yellow ml="12px" fontSize="12px">
+              {t('inactiveRangeWarning')}
+            </TYPE.yellow>
+          </RowBetween>
+        </YellowCard>
+      ) : null}
+
+      {invalidRange ? (
+        <YellowCard padding="8px 12px" borderRadius="12px">
+          <RowBetween>
+            <AlertTriangle stroke={theme.yellow3} size="16px" />
+            <TYPE.yellow ml="12px" fontSize="12px">
+              {t('invalidRangeWarning')}
+            </TYPE.yellow>
+          </RowBetween>
+        </YellowCard>
+      ) : null}
 
       <LightCard>
         {v3Amount0Min && v3Amount1Min ? (
@@ -506,6 +542,7 @@ function V2PairMigration({
                   signatureData !== null ||
                   !v3Amount0Min ||
                   !v3Amount1Min ||
+                  invalidRange ||
                   confirmingMigration
                 }
                 onClick={approve}
@@ -526,6 +563,7 @@ function V2PairMigration({
               disabled={
                 !v3Amount0Min ||
                 !v3Amount1Min ||
+                invalidRange ||
                 (approval !== ApprovalState.APPROVED && signatureData === null) ||
                 confirmingMigration ||
                 isMigrationPending ||

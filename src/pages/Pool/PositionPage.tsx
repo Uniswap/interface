@@ -122,10 +122,10 @@ export function PositionPage({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const price0Lower = position ? position.token0PriceLower : undefined
-  const price0Upper = position ? position.token0PriceUpper : undefined
-  const price1Lower = price0Upper ? price0Upper.invert() : undefined
-  const price1Upper = price0Lower ? price0Lower.invert() : undefined
+  const price0Lower = position?.token0PriceLower
+  const price0Upper = position?.token0PriceUpper
+  const price1Lower = price0Lower?.invert()
+  const price1Upper = price0Upper?.invert()
 
   // check if price is within range
   const outOfRange: boolean =
@@ -322,13 +322,13 @@ export function PositionPage({
                   <RowFixed>
                     <TYPE.label>{price0Lower?.toSignificant(4)}</TYPE.label>
                     <TYPE.label ml="10px">
-                      {currency0?.symbol} / {currency1?.symbol}
+                      {currency1?.symbol} / {currency0?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <RowFixed>
                     <TYPE.label>{price1Lower?.toSignificant(4)}</TYPE.label>
                     <TYPE.label ml="10px">
-                      {currency1?.symbol} / {currency0?.symbol}
+                      {currency0?.symbol} / {currency1?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <DarkBadge>
@@ -342,17 +342,17 @@ export function PositionPage({
               </DarkGreyCard>
               <DarkGreyCard width="49%">
                 <AutoColumn gap="sm" justify="flex-start">
-                  <TYPE.main>Lower Limit</TYPE.main>
+                  <TYPE.main>Upper Limit</TYPE.main>
                   <RowFixed>
                     <TYPE.label>{price0Upper?.toSignificant(4)}</TYPE.label>
                     <TYPE.label ml="10px">
-                      {currency0?.symbol} / {currency1?.symbol}
+                      {currency1?.symbol} / {currency0?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <RowFixed>
                     <TYPE.label>{price1Upper?.toSignificant(4)}</TYPE.label>
                     <TYPE.label ml="10px">
-                      {currency1?.symbol} / {currency0?.symbol}
+                      {currency0?.symbol} / {currency1?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <DarkBadge>
