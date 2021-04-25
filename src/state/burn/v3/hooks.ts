@@ -24,6 +24,7 @@ export function useDerivedV3BurnInfo(
   liquidityValue1?: TokenAmount
   feeValue0?: TokenAmount
   feeValue1?: TokenAmount
+  outOfRange: boolean
   error?: string
 } {
   const { account } = useActiveWeb3React()
@@ -52,6 +53,9 @@ export function useDerivedV3BurnInfo(
 
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position)
 
+  const outOfRange =
+    pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false
+
   let error: string | undefined
   if (!account) {
     error = 'Connect Wallet'
@@ -65,6 +69,7 @@ export function useDerivedV3BurnInfo(
     liquidityValue1,
     feeValue0,
     feeValue1,
+    outOfRange,
     error,
   }
 }

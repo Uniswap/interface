@@ -26,6 +26,7 @@ export const RangeBadge = styled(Card)<{ inRange?: boolean }>`
   font-weight: 500;
   border-radius: 8px;
   padding: 4px 6px;
+  color: ${({ theme }) => theme.black};
   background-color: ${({ inRange, theme }) => (inRange ? theme.green1 : theme.yellow2)};
 `
 
