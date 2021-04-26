@@ -80,13 +80,23 @@ export function LiquidityMiningCampaignModal({
   }, [callbacks, campaign.currentlyActive, stakableTokenBalance])
 
   useEffect(() => {
+    const now = JSBI.BigInt(Math.floor(Date.now() / 1000))
     setDisabledWithdrawing(
-      !JSBI.greaterThanOrEqual(JSBI.BigInt(Math.floor(Date.now() / 1000)), parseBigintIsh(campaign.startsAt)) ||
+      !JSBI.greaterThanOrEqual(now, parseBigintIsh(campaign.startsAt)) ||
         !callbacks ||
         !stakedTokenAmount ||
-        stakedTokenAmount.equalTo('0')
+        stakedTokenAmount.equalTo('0') ||
+        (campaign.locked && !JSBI.greaterThanOrEqual(now, parseBigintIsh(campaign.endsAt)))
     )
-  }, [callbacks, campaign.currentlyActive, campaign.startsAt, stakableTokenBalance, stakedTokenAmount])
+  }, [
+    callbacks,
+    campaign.currentlyActive,
+    campaign.startsAt,
+    campaign.locked,
+    campaign.endsAt,
+    stakableTokenBalance,
+    stakedTokenAmount
+  ])
 
   useEffect(() => {
     setDisabledClaim(
