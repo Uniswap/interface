@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import Badge, { BadgeVariant } from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { PoolState, usePool } from 'hooks/usePools'
+import { usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
 import { AlertTriangle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -11,11 +11,12 @@ import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
 import { basisPointsToPercent } from 'utils'
-import { TokenAmount } from '@uniswap/sdk-core'
+import { TokenAmount, WETH9, Price, Token } from '@uniswap/sdk-core'
 import { formatPrice, formatTokenAmount } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import { DAI, USDC, USDT, WBTC } from '../../constants'
 
 const ActiveDot = styled.span`
   background-color: ${({ theme }) => theme.success};
@@ -123,6 +124,62 @@ export interface PositionListItemProps {
   positionDetails: PositionDetails
 }
 
+export function getPriceOrderingFromPositionForUI(
+  position?: Position
+): {
+  priceLower?: Price
+  priceUpper?: Price
+  quote?: Token
+  base?: Token
+} {
+  if (!position) {
+    return {}
+  }
+
+  const token0 = position.amount0.token
+  const token1 = position.amount1.token
+
+  // if token0 is a dollar-stable asset, set it as the quote token
+  const stables = [DAI, USDC, USDT]
+  if (stables.some((stable) => stable.equals(token0))) {
+    return {
+      priceLower: position.token0PriceUpper.invert(),
+      priceUpper: position.token0PriceLower.invert(),
+      quote: token0,
+      base: token1,
+    }
+  }
+
+  // if token1 is an ETH-/BTC-stable asset, set it as the base token
+  const bases = [...Object.values(WETH9), WBTC]
+  if (bases.some((base) => base.equals(token1))) {
+    return {
+      priceLower: position.token0PriceUpper.invert(),
+      priceUpper: position.token0PriceLower.invert(),
+      quote: token0,
+      base: token1,
+    }
+  }
+
+  // if both prices are below 1, invert
+  if (position.token0PriceUpper.lessThan(1)) {
+    return {
+      priceLower: position.token0PriceUpper.invert(),
+      priceUpper: position.token0PriceLower.invert(),
+      quote: token0,
+      base: token1,
+    }
+  }
+
+  // otherwise, just return the default
+  return {
+    priceLower: position.token0PriceUpper.invert(),
+    priceUpper: position.token0PriceLower.invert(),
+    quote: token1,
+    base: token0,
+  }
+}
+
 export default function PositionListItem({ positionDetails }: PositionListItemProps) {
   const { t } = useTranslation()
 
@@ -142,15 +199,14 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
   // construct Position from details returned
-  const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
+  const [, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
+
   const position = useMemo(() => {
     if (pool) {
       return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
     }
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
-
-  const poolLoading = poolState === PoolState.LOADING
 
   // liquidity amounts in tokens
   const amount0: TokenAmount | undefined = position?.amount0
@@ -159,10 +215,10 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   const formattedAmount1 = formatTokenAmount(amount1, 4)
 
   // prices
-  const price0Lower = position?.token0PriceLower
-  const price0Upper = position?.token0PriceUpper
-  const price1Lower = price0Lower?.invert()
-  const price1Upper = price0Upper?.invert()
+  const { priceLower, priceUpper, base } = getPriceOrderingFromPositionForUI(position)
+  const inverted = token1 ? base?.equals(token1) : undefined
+  const currencyQuote = inverted ? currency0 : currency1
+  const currencyBase = inverted ? currency1 : currency0
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
@@ -176,9 +232,9 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
     <Row to={positionSummaryLink}>
       <LabelData>
         <PrimaryPositionIdData>
-          <DoubleCurrencyLogo currency0={currency0 ?? undefined} currency1={currency1 ?? undefined} size={16} margin />
+          <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={16} margin />
           <DataText>
-            &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
+            &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
           </DataText>
           &nbsp;
           <Badge>
@@ -201,17 +257,13 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
         </BadgeWrapper>
       </LabelData>
       <RangeData>
-        {price0Lower && price1Lower && price0Upper && price1Upper ? (
+        {priceLower && priceUpper ? (
           <>
             <DataLineItem>
-              {formatPrice(price0Lower, 4)} <DoubleArrow>↔</DoubleArrow> {formatPrice(price0Upper, 4)}{' '}
-              {currency1?.symbol}&nbsp;/&nbsp;
-              {currency0?.symbol}
-            </DataLineItem>
-            <DataLineItem>
-              {formatPrice(price1Lower, 4)} <DoubleArrow>↔</DoubleArrow> {formatPrice(price1Upper, 4)}{' '}
-              {currency0?.symbol}&nbsp;/&nbsp;
-              {currency1?.symbol}
+              {formatPrice(priceLower, 4)} <DoubleArrow>↔</DoubleArrow> {formatPrice(priceUpper, 4)}{' '}
+              {currencyQuote?.symbol}
+              &nbsp;/&nbsp;
+              {currencyBase?.symbol}
             </DataLineItem>
           </>
         ) : (
@@ -219,13 +271,13 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
         )}
       </RangeData>
       <AmountData>
-        {!poolLoading ? (
+        {formattedAmount0 && formattedAmount1 ? (
           <>
             <DataLineItem>
-              {formattedAmount0}&nbsp;{currency0?.symbol}
+              {inverted ? formattedAmount0 : formattedAmount1}&nbsp;{currencyQuote?.symbol}
             </DataLineItem>
             <DataLineItem>
-              {formattedAmount1}&nbsp;{currency1?.symbol}
+              {inverted ? formattedAmount1 : formattedAmount0}&nbsp;{currencyBase?.symbol}
             </DataLineItem>
           </>
         ) : (
@@ -236,10 +288,10 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
         {feeValue0 && feeValue1 ? (
           <>
             <DataLineItem>
-              {formatTokenAmount(feeValue0, 4)}&nbsp;{currency0?.symbol}
+              {formatTokenAmount(inverted ? feeValue0 : feeValue1, 4)}&nbsp;{currencyQuote?.symbol}
             </DataLineItem>
             <DataLineItem>
-              {formatTokenAmount(feeValue1, 4)}&nbsp;{currency1?.symbol}
+              {formatTokenAmount(inverted ? feeValue1 : feeValue0, 4)}&nbsp;{currencyBase?.symbol}
             </DataLineItem>
           </>
         ) : (

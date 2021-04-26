@@ -10,13 +10,13 @@ import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { TYPE } from 'theme'
+import { ButtonText, TYPE } from 'theme'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { basisPointsToPercent } from 'utils'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { DarkCard, DarkGreyCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, ToggleLeft, ToggleRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
@@ -30,6 +30,7 @@ import { useIsTransactionPending, useTransactionAdder } from 'state/transactions
 import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Dots } from 'components/swap/styleds'
+import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -122,10 +123,15 @@ export function PositionPage({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const price0Lower = position?.token0PriceLower
-  const price0Upper = position?.token0PriceUpper
-  const price1Lower = price0Lower?.invert()
-  const price1Upper = price0Upper?.invert()
+  let { priceLower, priceUpper, base, quote } = getPriceOrderingFromPositionForUI(position)
+  const [manuallyInverted, setManuallyInverted] = useState(false)
+  // handle manual inversion
+  if (manuallyInverted) {
+    ;[priceLower, priceUpper, base, quote] = [priceUpper?.invert(), priceLower?.invert(), quote, base]
+  }
+  const inverted = token1 ? base?.equals(token1) : undefined
+  const currencyQuote = inverted ? currency0 : currency1
+  const currencyBase = inverted ? currency1 : currency0
 
   // check if price is within range
   const outOfRange: boolean =
@@ -225,9 +231,9 @@ export function PositionPage({
         <AutoColumn gap="sm">
           <RowBetween>
             <RowFixed>
-              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} margin={true} />
+              <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={20} margin={true} />
               <TYPE.label fontSize={'20px'} mr="10px">
-                &nbsp;{currency0?.symbol}&nbsp;/&nbsp;{currency1?.symbol}
+                &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
               </TYPE.label>
               <Badge>
                 <BadgeText>{basisPointsToPercent(feeAmount / 100).toSignificant()}%</BadgeText>
@@ -290,75 +296,93 @@ export function PositionPage({
           <AutoColumn gap="lg">
             <ResponsiveGrid>
               <Label>Tokens</Label>
-              <Label end={true}>Amount Deposited</Label>
+              <Label end={true}>Liquidity</Label>
               <Label end={true}>Fees</Label>
             </ResponsiveGrid>
             <ResponsiveGrid>
               <RowFixed>
-                <CurrencyLogo currency={currency0} />
-                <TYPE.label ml="10px">{currency0?.symbol}</TYPE.label>
+                <CurrencyLogo currency={currencyQuote} />
+                <TYPE.label ml="10px">{currencyQuote?.symbol}</TYPE.label>
               </RowFixed>
-              <Label end={true}>{position?.amount0.toSignificant(4)}</Label>
-              <Label end={true}>{feeValue0 ? formatTokenAmount(feeValue0, 4) : '-'}</Label>
+              <Label end={true}>
+                {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
+              </Label>
+              <Label end={true}>
+                {inverted
+                  ? feeValue0
+                    ? formatTokenAmount(feeValue0, 4)
+                    : '-'
+                  : feeValue1
+                  ? formatTokenAmount(feeValue1, 4)
+                  : '-'}
+              </Label>
             </ResponsiveGrid>
             <ResponsiveGrid>
               <RowFixed>
-                <CurrencyLogo currency={currency1} />
-                <TYPE.label ml="10px">{currency1?.symbol}</TYPE.label>
+                <CurrencyLogo currency={currencyBase} />
+                <TYPE.label ml="10px">{currencyBase?.symbol}</TYPE.label>
               </RowFixed>
-              <Label end={true}>{position?.amount1.toSignificant(4)}</Label>
-              <Label end={true}>{feeValue1 ? formatTokenAmount(feeValue1, 4) : '-'}</Label>
+              <Label end={true}>
+                {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
+              </Label>
+
+              <Label end={true}>
+                {inverted
+                  ? feeValue1
+                    ? formatTokenAmount(feeValue1, 4)
+                    : '-'
+                  : feeValue0
+                  ? formatTokenAmount(feeValue0, 4)
+                  : '-'}
+              </Label>
             </ResponsiveGrid>
           </AutoColumn>
         </DarkCard>
         <DarkCard>
           <AutoColumn gap="lg">
-            <TYPE.label>Position Limits</TYPE.label>
+            <TYPE.label display="flex">
+              Position Limits
+              <ButtonText style={{ marginLeft: '10px', color: 'inherit' }}>
+                {manuallyInverted ? (
+                  <ToggleLeft onClick={() => setManuallyInverted(false)} />
+                ) : (
+                  <ToggleRight onClick={() => setManuallyInverted(true)} />
+                )}
+              </ButtonText>
+            </TYPE.label>
+
             <RowBetween>
-              <DarkGreyCard width="49%">
+              <DarkGreyCard width="48%">
                 <AutoColumn gap="sm" justify="flex-start">
-                  <TYPE.main>Lower Limit</TYPE.main>
+                  <TYPE.main>Lower</TYPE.main>
                   <RowFixed>
-                    <TYPE.label>{price0Lower?.toSignificant(4)}</TYPE.label>
-                    <TYPE.label ml="10px">
-                      {currency0?.symbol} / {currency1?.symbol}
-                    </TYPE.label>
-                  </RowFixed>
-                  <RowFixed>
-                    <TYPE.label>{price1Lower?.toSignificant(4)}</TYPE.label>
-                    <TYPE.label ml="10px">
-                      {currency1?.symbol} / {currency0?.symbol}
+                    <TYPE.label>
+                      {priceLower?.toSignificant(4)} {currencyQuote?.symbol} / 1 {currencyBase?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <DarkBadge>
                     <RowFixed>
                       <TYPE.label mr="6px">100%</TYPE.label>
-                      <CurrencyLogo currency={currency0} size="16px" />
-                      <TYPE.label ml="4px">{currency0?.symbol}</TYPE.label>
+                      <CurrencyLogo currency={inverted ? currency1 : currency0} size="16px" />
+                      <TYPE.label ml="4px">{inverted ? currency1?.symbol : currency0?.symbol}</TYPE.label>
                     </RowFixed>
                   </DarkBadge>
                 </AutoColumn>
               </DarkGreyCard>
-              <DarkGreyCard width="49%">
+
+              <DarkGreyCard width="48%">
                 <AutoColumn gap="sm" justify="flex-start">
-                  <TYPE.main>Upper Limit</TYPE.main>
+                  <TYPE.main>Upper</TYPE.main>
                   <RowFixed>
-                    <TYPE.label>{price0Upper?.toSignificant(4)}</TYPE.label>
-                    <TYPE.label ml="10px">
-                      {currency0?.symbol} / {currency1?.symbol}
-                    </TYPE.label>
-                  </RowFixed>
-                  <RowFixed>
-                    <TYPE.label>{price1Upper?.toSignificant(4)}</TYPE.label>
-                    <TYPE.label ml="10px">
-                      {currency1?.symbol} / {currency0?.symbol}
+                    <TYPE.label>
+                      {priceUpper?.toSignificant(4)} {currencyQuote?.symbol} / 1 {currencyBase?.symbol}
                     </TYPE.label>
                   </RowFixed>
                   <DarkBadge>
                     <RowFixed>
                       <TYPE.label mr="6px">100%</TYPE.label>
-                      <CurrencyLogo currency={currency1} size="16px" />
-                      <TYPE.label ml="4px">{currency1?.symbol}</TYPE.label>
+                      <CurrencyLogo currency={inverted ? currency0 : currency1} size="16px" />
+                      <TYPE.label ml="4px">{inverted ? currency0?.symbol : currency1?.symbol}</TYPE.label>
                     </RowFixed>
                   </DarkBadge>
                 </AutoColumn>
