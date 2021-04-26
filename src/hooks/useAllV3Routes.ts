@@ -50,13 +50,14 @@ function computeAllRoutes(
  * @param currencyIn the input currency
  * @param currencyOut the output currency
  */
-export function useAllV3Routes(currencyIn?: Currency, currencyOut?: Currency): Route[] {
+export function useAllV3Routes(currencyIn?: Currency, currencyOut?: Currency): { loading: boolean; routes: Route[] } {
   const { chainId } = useActiveWeb3React()
-  const { pools } = useV3SwapPools(currencyIn, currencyOut)
+  const { pools, loading: poolsLoading } = useV3SwapPools(currencyIn, currencyOut)
 
   return useMemo(() => {
-    if (!chainId || !pools || !currencyIn || !currencyOut) return []
+    if (poolsLoading || !chainId || !pools || !currencyIn || !currencyOut) return { loading: true, routes: [] }
 
-    return computeAllRoutes(currencyIn, currencyOut, pools, chainId)
-  }, [chainId, currencyIn, currencyOut, pools])
+    const routes = computeAllRoutes(currencyIn, currencyOut, pools, chainId)
+    return { loading: false, routes }
+  }, [chainId, currencyIn, currencyOut, pools, poolsLoading])
 }

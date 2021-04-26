@@ -1,6 +1,8 @@
+import JSBI from 'jsbi'
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
 import { CurrencyAmount, Fraction, Percent, TokenAmount } from '@uniswap/sdk-core'
-import { JSBI, Trade } from '@uniswap/v2-sdk'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
@@ -12,7 +14,7 @@ const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(BASE_FEE)
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
-  trade?: Trade | null
+  trade?: V2Trade | null
 ): { priceImpactWithoutFee: Percent | undefined; realizedLPFee: CurrencyAmount | undefined | null } {
   // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
   // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
@@ -46,7 +48,7 @@ export function computeTradePriceBreakdown(
 
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips
 export function computeSlippageAdjustedAmounts(
-  trade: Trade | undefined,
+  trade: V2Trade | V3Trade | undefined,
   allowedSlippage: number
 ): { [field in Field]?: CurrencyAmount } {
   const pct = basisPointsToPercent(allowedSlippage)
@@ -64,7 +66,7 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
   return 0
 }
 
-export function formatExecutionPrice(trade?: Trade, inverted?: boolean): string {
+export function formatExecutionPrice(trade: V2Trade | V3Trade | undefined, inverted: boolean | undefined): string {
   if (!trade) {
     return ''
   }
