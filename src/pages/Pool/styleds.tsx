@@ -67,6 +67,7 @@ const loadingAnimation = keyframes`
 
 export const LoadingRows = styled.div`
   display: grid;
+  min-width: 75%;
   grid-column-gap: 0.5em;
   grid-row-gap: 0.8em;
   grid-template-columns: repeat(3, 1fr);
