@@ -251,7 +251,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               </RowBetween>
               <LightCard>
                 <AutoColumn gap="md">
-                  <TYPE.main fontWeight={400}>Withdrawl Amount</TYPE.main>
+                  <TYPE.main fontWeight={400}>Amount</TYPE.main>
                   <RowBetween>
                     <TYPE.label fontSize="40px">{percentForSlider}%</TYPE.label>
                     <AutoRow gap="4px" justify="flex-end">
@@ -296,29 +296,33 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.token} />
                     </RowFixed>
                   </RowBetween>
-                  <Break />
-                  <RowBetween>
-                    <Text fontSize={16} fontWeight={500}>
-                      {currency0?.symbol} Fees:
-                    </Text>
-                    <RowFixed>
-                      <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                        {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
-                      </Text>
-                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.token} />
-                    </RowFixed>
-                  </RowBetween>
-                  <RowBetween>
-                    <Text fontSize={16} fontWeight={500}>
-                      {currency1?.symbol} Fees:
-                    </Text>
-                    <RowFixed>
-                      <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-                        {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
-                      </Text>
-                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.token} />
-                    </RowFixed>
-                  </RowBetween>
+                  {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
+                    <>
+                      <Break />
+                      <RowBetween>
+                        <Text fontSize={16} fontWeight={500}>
+                          {currency0?.symbol} Fees Earned:
+                        </Text>
+                        <RowFixed>
+                          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                            {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
+                          </Text>
+                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.token} />
+                        </RowFixed>
+                      </RowBetween>
+                      <RowBetween>
+                        <Text fontSize={16} fontWeight={500}>
+                          {currency1?.symbol} Fees Earned:
+                        </Text>
+                        <RowFixed>
+                          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                            {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
+                          </Text>
+                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.token} />
+                        </RowFixed>
+                      </RowBetween>
+                    </>
+                  ) : null}
                 </AutoColumn>
               </LightCard>
               <div style={{ display: 'flex' }}>

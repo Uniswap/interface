@@ -205,16 +205,18 @@ export function useDerivedMintInfo(
     [key: string]: number | undefined
   } = useMemo(() => {
     return {
-      [Bound.LOWER]: existingPosition?.tickLower
-        ? existingPosition?.tickLower
-        : invertPrice
-        ? tryParseTick(token1, token0, feeAmount, rightRangeTypedValue)
-        : tryParseTick(token0, token1, feeAmount, leftRangeTypedValue),
-      [Bound.UPPER]: existingPosition?.tickUpper
-        ? existingPosition?.tickUpper
-        : invertPrice
-        ? tryParseTick(token1, token0, feeAmount, leftRangeTypedValue)
-        : tryParseTick(token0, token1, feeAmount, rightRangeTypedValue),
+      [Bound.LOWER]:
+        existingPosition?.tickLower && typeof existingPosition.tickLower === 'number'
+          ? existingPosition.tickLower
+          : invertPrice
+          ? tryParseTick(token1, token0, feeAmount, rightRangeTypedValue)
+          : tryParseTick(token0, token1, feeAmount, leftRangeTypedValue),
+      [Bound.UPPER]:
+        existingPosition?.tickUpper && typeof existingPosition.tickUpper === 'number'
+          ? existingPosition?.tickUpper
+          : invertPrice
+          ? tryParseTick(token1, token0, feeAmount, leftRangeTypedValue)
+          : tryParseTick(token0, token1, feeAmount, rightRangeTypedValue),
     }
   }, [existingPosition, feeAmount, invertPrice, leftRangeTypedValue, rightRangeTypedValue, token0, token1])
 

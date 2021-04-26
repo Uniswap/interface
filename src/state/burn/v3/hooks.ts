@@ -37,7 +37,12 @@ export function useDerivedV3BurnInfo(
 
   const partialPosition = useMemo(
     () =>
-      pool && position?.liquidity && position?.tickLower && position?.tickLower
+      pool &&
+      position?.liquidity &&
+      position?.tickLower &&
+      position?.tickUpper &&
+      typeof position.tickLower === 'number' &&
+      typeof position.tickUpper === 'number'
         ? new Position({
             pool,
             liquidity: position.liquidity.mul(percent).div(100).toString(),
