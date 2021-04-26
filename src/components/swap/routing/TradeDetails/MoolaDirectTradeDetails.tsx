@@ -20,7 +20,8 @@ export const MoolaDirectTradeDetails: React.FC<Props> = ({ trade }: Props) => {
   const lendingPool = useLendingPool()
   const theme = useContext(ThemeContext)
 
-  const [, pair] = usePair(CELO[chainId], cUSD[chainId])
+  const celo = CELO[chainId]
+  const [, pair] = usePair(celo, cUSD[chainId])
   const cusdPrice = pair?.priceOf(cUSD[chainId])
 
   const [userData, setUserData] = useState<{
@@ -45,9 +46,11 @@ export const MoolaDirectTradeDetails: React.FC<Props> = ({ trade }: Props) => {
   let userDataArea = null
   if (userData) {
     const healthFactor = userData.healthFactor.div(BigNumber.from(10).pow(27))
-    const collateral = cusdPrice ? TokenAmount.celo(userData.totalCollateralETH.toString()).multiply(cusdPrice) : null
+    const collateral = cusdPrice
+      ? new TokenAmount(celo, userData.totalCollateralETH.toString()).multiply(cusdPrice)
+      : null
     const borrows = cusdPrice
-      ? TokenAmount.celo(userData.totalBorrowsETH.add(userData.totalFeesETH).toString()).multiply(cusdPrice)
+      ? new TokenAmount(celo, userData.totalBorrowsETH.add(userData.totalFeesETH).toString()).multiply(cusdPrice)
       : null
 
     userDataArea = (
