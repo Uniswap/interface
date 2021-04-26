@@ -12,7 +12,7 @@ import { useNativeCurrency } from './useNativeCurrency'
 
 const QUERY = gql`
   query($account: ID!, $lowerTimeLimit: BigInt!) {
-    liquidityPositions(where: { user: $account }) {
+    liquidityPositions(where: { user: $account, liquidityTokenBalance_gt: 0 }) {
       pair {
         address: id
         reserve0
