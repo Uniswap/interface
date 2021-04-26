@@ -15,6 +15,8 @@ interface ConfirmStakingModalProps {
   attemptingTxn: boolean
   txHash: string
   distributionContractAddress: string
+  timelocked: boolean
+  endingTimestamp: number
   onConfirm: (amount: TokenAmount) => void
   onDismiss: () => void
   errorMessage: string
@@ -28,6 +30,8 @@ export default function ConfirmStakingModal({
   errorMessage,
   stakableTokenBalance,
   distributionContractAddress,
+  timelocked,
+  endingTimestamp,
   onDismiss,
   onConfirm
 }: ConfirmStakingModalProps) {
@@ -51,10 +55,12 @@ export default function ConfirmStakingModal({
       <ConfirmStakingWithdrawingModalHeader
         maximumAmount={stakableTokenBalance}
         onAmountChange={handleStakedAmountChange}
+        timelocked={timelocked}
+        endingTimestamp={endingTimestamp}
         stakablePair={stakablePair}
       />
     ),
-    [handleStakedAmountChange, stakablePair, stakableTokenBalance]
+    [handleStakedAmountChange, stakablePair, stakableTokenBalance, timelocked, endingTimestamp]
   )
 
   const content = useCallback(

@@ -318,6 +318,8 @@ export function LiquidityMiningCampaignModal({
           errorMessage={errorMessage}
           onConfirm={handleStakeConfirmation}
           txHash={transactionHash}
+          timelocked={campaign.locked}
+          endingTimestamp={Number(parseBigintIsh(campaign.endsAt).toString())}
         />
       )}
       <ConfirmWithdrawalModal
