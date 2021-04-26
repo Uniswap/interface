@@ -1,6 +1,3 @@
-// should always be imported and executed first
-import './set-xdai-addresses'
-
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import '@fontsource/montserrat/400.css'
 import '@fontsource/montserrat/500.css'
