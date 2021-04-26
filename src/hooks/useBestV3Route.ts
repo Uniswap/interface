@@ -1,50 +1,11 @@
-import { Token, ChainId, Currency, CurrencyAmount, TokenAmount } from '@uniswap/sdk-core'
-import { Route } from '@uniswap/v3-sdk'
-import { Pool } from '@uniswap/v3-sdk/dist/'
+import { Token, Currency, CurrencyAmount, TokenAmount } from '@uniswap/sdk-core'
+import { encodeRouteToPath, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { useSingleContractMultipleData } from '../state/multicall/hooks'
-import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useActiveWeb3React } from './index'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useV3Quoter } from './useContract'
-import { BigNumber, utils } from 'ethers'
-
-/**
- * Converts a route to a path
- * @param route the v3 path to convert to an encoded path
- * @param chainId the current chain ID, used to wrap the route's input currency
- */
-function routeToPath(route: Route, chainId: ChainId, exactIn: boolean): string {
-  const firstInputToken = wrappedCurrency(route.input, chainId)
-
-  if (!firstInputToken) throw new Error('Could not wrap input currency')
-
-  const { path, types } = route.pools.reduce(
-    (
-      { inputToken, path, types }: { inputToken: Token; path: (string | number)[]; types: string[] },
-      pool: Pool,
-      index
-    ): { inputToken: Token; path: (string | number)[]; types: string[] } => {
-      const outputToken: Token = pool.token0.equals(inputToken) ? pool.token1 : pool.token0
-      if (index === 0) {
-        return {
-          inputToken: outputToken,
-          types: ['address', 'uint24', 'address'],
-          path: [inputToken.address, pool.fee, outputToken.address],
-        }
-      } else {
-        return {
-          inputToken: outputToken,
-          types: [...types, 'uint24', 'address'],
-          path: [...path, pool.fee, outputToken.address],
-        }
-      }
-    },
-    { inputToken: firstInputToken, path: [], types: [] }
-  )
-
-  return exactIn ? utils.solidityPack(types, path) : utils.solidityPack(types.reverse(), path.reverse())
-}
+import { BigNumber } from 'ethers'
 
 /**
  * Returns the best route for a given exact input swap, and the amount received for it
@@ -60,7 +21,7 @@ export function useBestV3RouteExactIn(
   const routes = useAllV3Routes(amountIn?.currency, currencyOut)
   const paths = useMemo(() => {
     if (!chainId) return []
-    return routes.map((route) => routeToPath(route, chainId, true))
+    return routes.map((route) => encodeRouteToPath(route, false))
   }, [chainId, routes])
 
   const quoteExactInInputs = useMemo(() => {
@@ -119,7 +80,7 @@ export function useBestV3RouteExactOut(
 
   const paths = useMemo(() => {
     if (!chainId) return []
-    return routes.map((route) => routeToPath(route, chainId, true))
+    return routes.map((route) => encodeRouteToPath(route, true))
   }, [chainId, routes])
 
   const quoteExactOutInputs = useMemo(() => {
