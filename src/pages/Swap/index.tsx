@@ -29,7 +29,6 @@ import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useAppro
 import useENSAddress from '../../hooks/useENSAddress'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useV2SwapCallback } from '../../hooks/useV2SwapCallback'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -95,7 +94,7 @@ export default function Swap({ history }: RouteComponentProps) {
     parsedAmount,
     currencies,
     inputError: swapInputError,
-    v3Trade,
+    // v3Trade,
   } = useDerivedSwapInfo()
 
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
@@ -105,7 +104,7 @@ export default function Swap({ history }: RouteComponentProps) {
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
-  const toggledVersion = useToggledVersion()
+  // const toggledVersion = useToggledVersion()
   const trade = showWrap
     ? undefined
     : v2Trade /*{
