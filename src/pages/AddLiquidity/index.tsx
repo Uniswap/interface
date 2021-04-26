@@ -401,10 +401,10 @@ export default function AddLiquidity({
         .multiply('100')
         .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
         .toSignificant(2) ?? '.'
-    : '50%'
+    : '50'
   const percentToken1 = pair
     ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
-    : '50%'
+    : '50'
 
   return (
     <>
