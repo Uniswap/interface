@@ -116,7 +116,7 @@ export function PositionPage({
   // construct Position from details returned
   const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
   const position = useMemo(() => {
-    if (pool && liquidity && tickLower && tickUpper) {
+    if (pool && liquidity && typeof tickLower === 'number' && typeof tickUpper === 'number') {
       return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
     }
     return undefined
@@ -129,7 +129,9 @@ export function PositionPage({
 
   // check if price is within range
   const outOfRange: boolean =
-    pool && tickLower && tickUpper ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper : false
+    pool && typeof tickLower === 'number' && typeof tickUpper === 'number'
+      ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper
+      : false
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
