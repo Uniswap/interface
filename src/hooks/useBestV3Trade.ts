@@ -115,7 +115,7 @@ export function useBestV3TradeExactOut(
     ])
   }, [amountOut, routes])
 
-  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactOutInputs)
+  const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactOutput', quoteExactOutInputs)
 
   return useMemo(() => {
     if (!amountOut || !currencyIn || quotesResults.some(({ valid }) => !valid)) {
