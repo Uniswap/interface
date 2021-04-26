@@ -83,7 +83,7 @@ export function useBestV3TradeExactIn(
 
     return {
       state: V3TradeState.VALID,
-      trade: new Trade({
+      trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
         inputAmount: amountIn,
@@ -165,7 +165,7 @@ export function useBestV3TradeExactOut(
 
     return {
       state: V3TradeState.VALID,
-      trade: new Trade({
+      trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
         inputAmount:
