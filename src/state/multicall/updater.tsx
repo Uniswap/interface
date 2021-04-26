@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers'
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Multicall2 } from '../../abis/types'
@@ -32,21 +31,24 @@ async function fetchChunk(
   blockNumber: number
 }> {
   console.debug('Fetching chunk', multicall2Contract, chunk, minBlockNumber)
-  let resultsBlockNumber: BigNumber
+  let resultsBlockNumber: number
   let results: { success: boolean; returnData: string }[]
   try {
-    ;[resultsBlockNumber, , results] = await multicall2Contract.callStatic.blockAndAggregate(
+    const { blockNumber, returnData } = await multicall2Contract.callStatic.tryBlockAndAggregate(
+      false,
       chunk.map((obj) => ({ target: obj.address, callData: obj.callData }))
     )
+    resultsBlockNumber = blockNumber.toNumber()
+    results = returnData
   } catch (error) {
     console.debug('Failed to fetch chunk inside retry', error)
     throw error
   }
-  if (resultsBlockNumber.toNumber() < minBlockNumber) {
+  if (resultsBlockNumber < minBlockNumber) {
     console.debug(`Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`)
     throw new RetryableError('Fetched for old block number')
   }
-  return { results, blockNumber: resultsBlockNumber.toNumber() }
+  return { results, blockNumber: resultsBlockNumber }
 }
 
 /**
@@ -175,27 +177,43 @@ export default function Updater(): null {
 
             const slice = outdatedCallKeys.slice(firstCallKeyIndex, lastCallKeyIndex)
 
-            dispatch(
-              updateMulticallResults({
-                chainId,
-                results: slice.reduce<{ [callKey: string]: string | null }>((memo, callKey, i) => {
-                  if (returnData[i].success) {
-                    memo[callKey] = returnData[i].returnData ?? null
-                  }
-                  return memo
-                }, {}),
-                blockNumber: fetchBlockNumber,
-              })
+            // split the returned slice into errors and success
+            const { erroredCalls, results } = slice.reduce<{
+              erroredCalls: Call[]
+              results: { [callKey: string]: string | null }
+            }>(
+              (memo, callKey, i) => {
+                if (returnData[i].success) {
+                  memo.results[callKey] = returnData[i].returnData ?? null
+                } else {
+                  memo.erroredCalls.push(parseCallKey(callKey))
+                }
+                return memo
+              },
+              { erroredCalls: [], results: {} }
             )
 
-            // todo: dispatch an error for each call that failed, i.e. returnData[i].success === false
-            // dispatch(
-            //   errorFetchingMulticallResults({
-            //     calls: // todo: compute this,
-            //     chainId,
-            //     fetchingBlockNumber: latestBlockNumber,
-            //   })
-            // )
+            // dispatch any new results
+            if (Object.keys(results).length > 0)
+              dispatch(
+                updateMulticallResults({
+                  chainId,
+                  results,
+                  blockNumber: fetchBlockNumber,
+                })
+              )
+
+            // dispatch any errored calls
+            if (erroredCalls.length > 0) {
+              console.debug('Errored calls', erroredCalls)
+              dispatch(
+                errorFetchingMulticallResults({
+                  calls: erroredCalls,
+                  chainId,
+                  fetchingBlockNumber: latestBlockNumber,
+                })
+              )
+            }
           })
           .catch((error: any) => {
             if (error instanceof CancelledError) {
