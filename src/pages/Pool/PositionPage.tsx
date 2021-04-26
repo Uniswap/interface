@@ -240,7 +240,7 @@ export function PositionPage({
               </Badge>
             </RowFixed>
             <RowFixed>
-              {(feeValue0?.greaterThan(0) && feeValue1?.greaterThan(0)) || !!collectMigrationHash ? (
+              {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash ? (
                 <ButtonConfirmed
                   disabled={collecting || !!collectMigrationHash}
                   confirmed={!!collectMigrationHash && !isCollectPending}
