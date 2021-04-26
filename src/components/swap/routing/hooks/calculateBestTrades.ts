@@ -37,12 +37,16 @@ export function isDualTradeBetter(
   }
 }
 
+interface BestUbeswapTradeOptions extends BestTradeOptions {
+  minimumDelta?: Percent
+}
+
 export const bestTradeExactOut = (
   pairs: readonly Pair[],
   tokenIn: Token,
   tokenAmountOut: TokenAmount,
   directTrade: UbeswapTrade | null,
-  options?: BestTradeOptions
+  options?: BestUbeswapTradeOptions
 ): UbeswapTrade | null => {
   const inDual = tokenIn && getMoolaDual(tokenIn)
   const outDual = tokenAmountOut && getMoolaDual(tokenAmountOut.token)
@@ -67,7 +71,10 @@ export const bestTradeExactOut = (
   return (
     [directTrade, inDualTrades[0], outDualTrades[0], inAndOutDualTrades[0]]
       .filter((x) => !!x)
-      .reduce((best: UbeswapTrade | null, trade) => (isDualTradeBetter(best, trade) ? trade : best), null) ?? null
+      .reduce(
+        (best: UbeswapTrade | null, trade) => (isDualTradeBetter(best, trade, options?.minimumDelta) ? trade : best),
+        null
+      ) ?? null
   )
 }
 
@@ -76,7 +83,7 @@ export const bestTradeExactIn = (
   tokenAmountIn: TokenAmount,
   tokenOut: Token,
   directTrade: UbeswapTrade | null,
-  options?: BestTradeOptions
+  options?: BestUbeswapTradeOptions
 ): UbeswapTrade | null => {
   const inDual = tokenAmountIn && getMoolaDual(tokenAmountIn.token)
   const outDual = tokenOut && getMoolaDual(tokenOut)
@@ -101,6 +108,8 @@ export const bestTradeExactIn = (
   return (
     [directTrade, inDualTrades[0], outDualTrades[0], inAndOutDualTrades[0]]
       .filter((x) => !!x)
-      .reduce((best: UbeswapTrade | null, trade) => (isDualTradeBetter(best, trade) ? trade : best), null) ?? null
+      .reduce((best: UbeswapTrade | null, trade) =>
+        best === null || isDualTradeBetter(best, trade, options?.minimumDelta) ? trade : best
+      ) ?? null
   )
 }

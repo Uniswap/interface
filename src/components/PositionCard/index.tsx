@@ -158,7 +158,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const currency0 = pair.token0
   const currency1 = pair.token1
-  console.log({ currency0, currency1 })
 
   const [showMore, setShowMore] = useState(false)
 

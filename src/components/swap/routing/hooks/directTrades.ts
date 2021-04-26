@@ -71,31 +71,29 @@ export function useDirectTradeExactIn(currencyAmountIn?: TokenAmount, currencyOu
   const [singleHopOnly] = useUserSingleHopOnly()
 
   return useMemo(() => {
-    const bestTrade = (() => {
-      if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-        if (singleHopOnly) {
-          return (
-            Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ??
-            null
-          )
-        }
-        // search through trades with varying hops, find best trade out of them
-        let bestTradeSoFar: Trade | null = null
-        for (let i = 1; i <= MAX_HOPS; i++) {
-          const currentTrade: Trade | null =
-            Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: i, maxNumResults: 1 })[0] ??
-            null
-          // if current trade is best yet, save it
-          if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
-            bestTradeSoFar = currentTrade
-          }
-        }
-        return bestTradeSoFar
+    if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
+      if (singleHopOnly) {
+        const bestTrade =
+          Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ??
+          null
+        return bestTrade ? UbeswapTrade.fromNormalTrade(bestTrade) : null
       }
+      // search through trades with varying hops, find best trade out of them
+      let bestTradeSoFar: UbeswapTrade | null = null
+      for (let i = 1; i <= MAX_HOPS; i++) {
+        const currentTradeRaw: Trade | null =
+          Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: i, maxNumResults: 1 })[0] ??
+          null
+        const currentTrade: UbeswapTrade | null = currentTradeRaw ? UbeswapTrade.fromNormalTrade(currentTradeRaw) : null
+        // if current trade is best yet, save it
+        if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
+          bestTradeSoFar = currentTrade
+        }
+      }
+      return bestTradeSoFar
+    }
 
-      return null
-    })()
-    return bestTrade ? UbeswapTrade.fromNormalTrade(bestTrade) : null
+    return null
   }, [allowedPairs, currencyAmountIn, currencyOut, singleHopOnly])
 }
 
@@ -107,20 +105,21 @@ export function useDirectTradeExactOut(currencyIn?: Token, currencyAmountOut?: T
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
-  const bestTrade = useMemo(() => {
+  return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
       if (singleHopOnly) {
-        return (
+        const bestTrade =
           Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
           null
-        )
+        return bestTrade ? UbeswapTrade.fromNormalTrade(bestTrade) : null
       }
       // search through trades with varying hops, find best trade out of them
-      let bestTradeSoFar: Trade | null = null
+      let bestTradeSoFar: UbeswapTrade | null = null
       for (let i = 1; i <= MAX_HOPS; i++) {
-        const currentTrade =
+        const currentTradeRaw =
           Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: i, maxNumResults: 1 })[0] ??
           null
+        const currentTrade = currentTradeRaw ? UbeswapTrade.fromNormalTrade(currentTradeRaw) : null
         if (isTradeBetter(bestTradeSoFar, currentTrade, BETTER_TRADE_LESS_HOPS_THRESHOLD)) {
           bestTradeSoFar = currentTrade
         }
@@ -129,5 +128,4 @@ export function useDirectTradeExactOut(currencyIn?: Token, currencyAmountOut?: T
     }
     return null
   }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
-  return useMemo(() => (bestTrade ? UbeswapTrade.fromNormalTrade(bestTrade) : null), [bestTrade])
 }

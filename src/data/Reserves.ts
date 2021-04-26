@@ -13,9 +13,9 @@ export enum PairState {
   INVALID,
 }
 
-export function usePairs(currencies: [Token | undefined, Token | undefined][]): [PairState, Pair | null][] {
-  const tokens = currencies
-
+export function usePairs(
+  tokens: readonly (readonly [Token | undefined, Token | undefined])[]
+): readonly (readonly [PairState, Pair | null])[] {
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
@@ -45,6 +45,6 @@ export function usePairs(currencies: [Token | undefined, Token | undefined][]): 
   }, [results, tokens])
 }
 
-export function usePair(tokenA?: Token, tokenB?: Token): [PairState, Pair | null] {
+export function usePair(tokenA?: Token, tokenB?: Token): readonly [PairState, Pair | null] {
   return usePairs([[tokenA, tokenB]])[0]
 }

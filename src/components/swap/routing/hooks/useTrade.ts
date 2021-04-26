@@ -28,7 +28,7 @@ export function useAllCommonPairsWithMoolaDuals(tokenA?: Token, tokenB?: Token):
 
   const bases: readonly Token[] = useMemo(() => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []), [chainId])
 
-  const basePairs: [Token, Token][] = useMemo(
+  const basePairs: readonly (readonly [Token, Token])[] = useMemo(
     () =>
       flatMap(bases, (base): [Token, Token][] => bases.map((otherBase) => [base, otherBase])).filter(
         ([t0, t1]) =>
@@ -194,6 +194,7 @@ export function useUbeswapTradeExactIn(tokenAmountIn?: TokenAmount, tokenOut?: T
           const singleHopTrade = bestTradeExactIn(allowedPairs.slice(), tokenAmountIn, tokenOut, directTrade, {
             maxHops: 1,
             maxNumResults: 1,
+            minimumDelta: BETTER_TRADE_LESS_HOPS_THRESHOLD,
           })
           return singleHopTrade
             ? convertToMoolaRouterTradeIfApplicable(tokenAmountIn.token, tokenOut, singleHopTrade)
@@ -210,6 +211,7 @@ export function useUbeswapTradeExactIn(tokenAmountIn?: TokenAmount, tokenOut?: T
             {
               maxHops: i,
               maxNumResults: 1,
+              minimumDelta: BETTER_TRADE_LESS_HOPS_THRESHOLD,
             }
           )
           // if current trade is best yet, save it

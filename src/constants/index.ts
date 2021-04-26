@@ -61,15 +61,15 @@ export const MCEUR = {
     ChainId.MAINNET,
     '0xa8d0E6799FF3Fd19c6459bf02689aE09c4d78Ba7',
     18,
-    'mCELO',
-    'Moola CELO'
+    'mCEUR',
+    'Moola Celo Euro'
   ),
   [ChainId.ALFAJORES]: new Token(
     ChainId.ALFAJORES,
     '0x32974C7335e649932b5766c5aE15595aFC269160',
     18,
-    'mCELO',
-    'Moola CELO'
+    'mCEUR',
+    'Moola Celo Euro'
   ),
 }
 
@@ -86,7 +86,7 @@ export const CEUR = {
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.MAINNET]: [cUSD, CELO, CEUR, UBE].map((el) => el[ChainId.MAINNET]),
+  [ChainId.MAINNET]: [cUSD, CELO, CEUR, UBE, MCUSD, MCEUR].map((el) => el[ChainId.MAINNET]),
   [ChainId.ALFAJORES]: [cUSD, CELO, CEUR].map((el) => el[ChainId.ALFAJORES]),
   [ChainId.BAKLAVA]: [cUSD, CELO].map((el) => el[ChainId.BAKLAVA]),
 }
