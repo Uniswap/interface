@@ -86,22 +86,22 @@ const StepCounter = ({
     setActive(true)
   }
 
-  // for button clicks
-  const handleDecrement = useCallback(() => {
-    setLocalValue(decrement())
-    onUserInput(decrement())
-  }, [decrement, onUserInput])
-
-  const handleIncrement = useCallback(() => {
-    setLocalValue(increment())
-    onUserInput(increment())
-  }, [increment, onUserInput])
-
   const handleOnBlur = useCallback(() => {
     setUseLocalValue(false)
     setActive(false)
     onUserInput(localValue) // trigger update on parent value
   }, [localValue, onUserInput])
+
+  // for button clicks
+  const handleDecrement = useCallback(() => {
+    setUseLocalValue(false)
+    onUserInput(decrement())
+  }, [decrement, onUserInput])
+
+  const handleIncrement = useCallback(() => {
+    setUseLocalValue(false)
+    onUserInput(increment())
+  }, [increment, onUserInput])
 
   useEffect(() => {
     if (localValue !== value && !useLocalValue) {
