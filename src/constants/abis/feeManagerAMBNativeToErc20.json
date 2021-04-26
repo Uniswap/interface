@@ -1,0 +1,138 @@
+[
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "removeRewardAccount",
+    "inputs": [{ "type": "address", "name": "_account" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "rewardAccountsCount",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "setFee",
+    "inputs": [{ "type": "uint256", "name": "_fee" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "renounceOwnership",
+    "inputs": [],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address", "name": "" }],
+    "name": "owner",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "calculateFee",
+    "inputs": [{ "type": "uint256", "name": "_value" }],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [{ "type": "bool", "name": "" }],
+    "name": "onTokenTransfer",
+    "inputs": [
+      { "type": "address", "name": "" },
+      { "type": "uint256", "name": "_value" },
+      { "type": "bytes", "name": "" }
+    ],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "uint256", "name": "" }],
+    "name": "fee",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "addRewardAccount",
+    "inputs": [{ "type": "address", "name": "_account" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "outputs": [],
+    "name": "transferOwnership",
+    "inputs": [{ "type": "address", "name": "_newOwner" }],
+    "constant": false
+  },
+  {
+    "type": "function",
+    "stateMutability": "view",
+    "payable": false,
+    "outputs": [{ "type": "address[]", "name": "" }],
+    "name": "rewardAccountsList",
+    "inputs": [],
+    "constant": true
+  },
+  {
+    "type": "constructor",
+    "stateMutability": "nonpayable",
+    "payable": false,
+    "inputs": [
+      { "type": "address", "name": "_owner" },
+      { "type": "uint256", "name": "_fee" },
+      { "type": "address[]", "name": "_rewardAccountList" },
+      { "type": "address", "name": "_mediatorContract" }
+    ]
+  },
+  { "type": "fallback", "stateMutability": "payable", "payable": true },
+  {
+    "type": "event",
+    "name": "FeeUpdated",
+    "inputs": [{ "type": "uint256", "name": "fee", "indexed": false }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipRenounced",
+    "inputs": [{ "type": "address", "name": "previousOwner", "indexed": true }],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OwnershipTransferred",
+    "inputs": [
+      { "type": "address", "name": "previousOwner", "indexed": true },
+      { "type": "address", "name": "newOwner", "indexed": true }
+    ],
+    "anonymous": false
+  }
+]
