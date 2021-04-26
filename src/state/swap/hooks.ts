@@ -1,9 +1,9 @@
-import { Route } from '@uniswap/v3-sdk'
-import { useBestV3RouteExactIn, useBestV3RouteExactOut } from '../../hooks/useBestV3Route'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { useBestV3TradeExactIn, useBestV3TradeExactOut } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, ETHER, Token, TokenAmount } from '@uniswap/sdk-core'
-import { JSBI, Trade } from '@uniswap/v2-sdk'
+import { JSBI, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -99,10 +99,13 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
  * @param trade to check for the given address
  * @param checksummedAddress address to check in the pairs and tokens
  */
-function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
+function involvesAddress(trade: V2Trade | V3Trade, checksummedAddress: string): boolean {
+  const path = trade instanceof V2Trade ? trade.route.path : trade.route.tokenPath
   return (
-    trade.route.path.some((token) => token.address === checksummedAddress) ||
-    trade.route.pairs.some((pair) => pair.liquidityToken.address === checksummedAddress)
+    path.some((token) => token.address === checksummedAddress) ||
+    (trade instanceof V2Trade
+      ? trade.route.pairs.some((pair) => pair.liquidityToken.address === checksummedAddress)
+      : false)
   )
 }
 
@@ -111,18 +114,9 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  v2Trade: Trade | undefined
+  v2Trade: V2Trade | undefined
   inputError?: string
-  v3Route:
-    | {
-        route: Route
-        amountIn: CurrencyAmount
-      }
-    | {
-        route: Route
-        amountOut: CurrencyAmount
-      }
-    | undefined
+  v3Trade: V3Trade | undefined
 } {
   const { account } = useActiveWeb3React()
 
@@ -147,14 +141,14 @@ export function useDerivedSwapInfo(): {
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
-  const bestTradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestTradeExactOut = useV2TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const bestV2TradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  const bestV2TradeExactOut = useV2TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const bestRouteExactInV3 = useBestV3RouteExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestRouteExactOutV3 = useBestV3RouteExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const bestV3TradeExactIn = useBestV3TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  const bestV3TradeExactOut = useBestV3TradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
-  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
-  const v3Route = (isExactIn ? bestRouteExactInV3 : bestRouteExactOutV3) ?? undefined
+  const v2Trade = isExactIn ? bestV2TradeExactIn : bestV2TradeExactOut
+  const v3Trade = (isExactIn ? bestV3TradeExactIn : bestV3TradeExactOut) ?? undefined
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -185,8 +179,8 @@ export function useDerivedSwapInfo(): {
   } else {
     if (
       BAD_RECIPIENT_ADDRESSES[formattedTo] ||
-      (bestTradeExactIn && involvesAddress(bestTradeExactIn, formattedTo)) ||
-      (bestTradeExactOut && involvesAddress(bestTradeExactOut, formattedTo))
+      (bestV2TradeExactIn && involvesAddress(bestV2TradeExactIn, formattedTo)) ||
+      (bestV2TradeExactOut && involvesAddress(bestV2TradeExactOut, formattedTo))
     ) {
       inputError = inputError ?? 'Invalid recipient'
     }
@@ -212,7 +206,7 @@ export function useDerivedSwapInfo(): {
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     inputError,
-    v3Route,
+    v3Trade: v3Trade.trade ?? undefined,
   }
 }
 
