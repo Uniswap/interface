@@ -244,7 +244,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             <AutoColumn gap="lg">
               <RowBetween>
                 <RowFixed>
-                  <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} margin={true} />
+                  <DoubleCurrencyLogo currency0={currency1} currency1={currency0} size={20} margin={true} />
                   <TYPE.label ml="10px" fontSize="20px">{`${currency0?.symbol}/${currency1?.symbol}`}</TYPE.label>
                 </RowFixed>
                 <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
@@ -282,7 +282,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {liquidityValue0 && <FormattedCurrencyAmount currencyAmount={liquidityValue0} />}
                       </Text>
-                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.token} />
+                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                     </RowFixed>
                   </RowBetween>
                   <RowBetween>
@@ -293,7 +293,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {liquidityValue1 && <FormattedCurrencyAmount currencyAmount={liquidityValue1} />}
                       </Text>
-                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.token} />
+                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                     </RowFixed>
                   </RowBetween>
                   {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
@@ -307,7 +307,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                             {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
                           </Text>
-                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.token} />
+                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                         </RowFixed>
                       </RowBetween>
                       <RowBetween>
@@ -318,7 +318,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                             {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
                           </Text>
-                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.token} />
+                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                         </RowFixed>
                       </RowBetween>
                     </>
