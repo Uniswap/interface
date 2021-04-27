@@ -108,7 +108,7 @@ export default function Swap({ history }: RouteComponentProps) {
     ? undefined
     : {
         [Version.v2]: v2Trade,
-        [Version.v3]: v3Trade,
+        [Version.v3]: v3Trade.trade ?? undefined,
       }[toggledVersion]
 
   const parsedAmounts = showWrap
@@ -360,7 +360,6 @@ export default function Swap({ history }: RouteComponentProps) {
                 otherCurrency={currencies[Field.INPUT]}
                 showCommonBases={true}
                 id="swap-currency-output"
-                trade={trade}
               />
             </div>
 
