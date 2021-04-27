@@ -1,5 +1,4 @@
 import { JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
-import { Currency, ETHER, WETH } from 'libs/sdk/src'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -209,13 +208,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const backgroundColor = useColor(pair?.token0)
 
-  const { chainId } = useActiveWeb3React()
-
-  function toWETH(currencyA: Currency) {
-    if (!chainId) return undefined
-    return currencyA === ETHER ? WETH[chainId].address : currencyId(currencyA)
-  }
-
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
@@ -325,7 +317,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 borderRadius="8px"
                 as={Link}
                 width="48%"
-                to={`/migrate/${toWETH(currency0)}/${toWETH(currency1)}`}
+                to={`/migrate/${currencyId(currency0)}/${currencyId(currency1)}`}
                 style={{ width: '100%', textAlign: 'center' }}
               >
                 Migrate
@@ -336,7 +328,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 padding="8px"
                 borderRadius="8px"
                 as={Link}
-                to={`/uni/${toWETH(currency0)}/${toWETH(currency1)}`}
+                to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="100%"
               >
                 Manage Liquidity in Rewards Pool

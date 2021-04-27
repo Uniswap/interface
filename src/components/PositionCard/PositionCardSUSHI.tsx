@@ -1,5 +1,4 @@
 import { JSBI, Pair, Percent, TokenAmount } from '@sushiswap/sdk'
-import { Currency, ETHER, WETH } from 'libs/sdk/src'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -216,11 +215,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   // const backgroundColor = useColor(tokenSushiToDmm(pair?.token0))
   const backgroundColor = useColor(undefined)
 
-  function toWETH(currencyA: Currency) {
-    if (!chainId) return undefined
-    return currencyA === ETHER ? WETH[chainId].address : currencyId(currencyA)
-  }
-
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <AutoColumn gap="12px">
@@ -334,7 +328,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   borderRadius="8px"
                   as={Link}
                   width="48%"
-                  to={`/migrateSushi/${toWETH(currency0)}/${toWETH(currency1)}`}
+                  to={`/migrateSushi/${currencyId(currency0)}/${currencyId(currency1)}`}
                   style={{ width: '100%', textAlign: 'center' }}
                 >
                   Migrate
