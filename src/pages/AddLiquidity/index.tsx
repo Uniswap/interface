@@ -2,7 +2,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, TokenAmount, Percent, ETHER } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { WETH9 } from '@uniswap/sdk-core'
-import { Link2, AlertTriangle } from 'react-feather'
+import { Link2, AlertTriangle, ChevronRight } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
@@ -339,21 +339,17 @@ export default function AddLiquidity({
   return (
     <ScrollablePage>
       <ScrollableContent>
-        <AutoRow marginBottom="20px">
+        <AutoRow gap="2px" marginBottom="20px">
           <ButtonText opacity={'0.4'} onClick={() => history.push('/pool')}>
             Pool
           </ButtonText>
-          <TYPE.label margin="0 10px" opacity={'0.4'}>
-            {' > '}
-          </TYPE.label>
+          <ChevronRight size={16} opacity={'0.4'} />
           <ButtonText opacity={showConfirm ? '0.4' : '1'} onClick={() => (showConfirm ? setShowConfirm(false) : null)}>
             Configure
           </ButtonText>
-          <TYPE.label margin="0 10px" opacity={'0.4'}>
-            {' > '}
-          </TYPE.label>
+          <ChevronRight size={16} opacity={'0.4'} />
           <ButtonText
-            opacity={showConfirm ? '1' : '0.4'}
+            opacity={showConfirm ? '1' : '0.1'}
             onClick={() => (!showConfirm ? setShowConfirm(true) : null)}
             disabled={!isValid}
           >
@@ -624,6 +620,11 @@ export default function AddLiquidity({
             <TYPE.main fontWeight={400} fontSize="14px">
               Learn more about Uniswap V3 liquidity pools.
             </TYPE.main>
+            {noLiquidity && (
+              <BlueCard width="100%" padding="1rem">
+                You are the first to provide liquidity to this pool.
+              </BlueCard>
+            )}
             {showConfirm ? (
               <div>
                 {addIsUnsupported ? (

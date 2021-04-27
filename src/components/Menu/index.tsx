@@ -30,7 +30,7 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.bg2};
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -39,12 +39,18 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg4};
+    background-color: ${({ theme }) => theme.bg3};
   }
 
   svg {
     margin-top: 2px;
   }
+`
+
+const UNIbutton = styled(ButtonPrimary)`
+  background-color: ${({ theme }) => theme.bg3};
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
+  border: none;
 `
 
 const StyledMenu = styled.div`
@@ -59,7 +65,7 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 8.125rem;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
@@ -68,7 +74,7 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 4rem;
+  top: 3rem;
   z-index: 100;
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
     flyoutAlignment === FlyoutAlignment.RIGHT
@@ -152,9 +158,9 @@ export default function Menu() {
             Analytics
           </MenuItem>
           {account && (
-            <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
+            <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
               Claim UNI
-            </ButtonPrimary>
+            </UNIbutton>
           )}
         </MenuFlyout>
       )}

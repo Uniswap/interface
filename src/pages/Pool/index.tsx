@@ -77,7 +77,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.bg0};
   padding: 16px;
-  border-radius: 1.3em;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
 `
@@ -104,6 +104,16 @@ export default function Pool() {
         </MenuItem>
       ),
       link: '/add/ETH',
+      external: false,
+    },
+    {
+      content: (
+        <MenuItem>
+          <Download size={16} style={{ marginRight: '8px' }} />
+          {t('Migrate Liquidity')}
+        </MenuItem>
+      ),
+      link: '/#/migrate/v2',
       external: false,
     },
     {
@@ -142,6 +152,7 @@ export default function Pool() {
               </HideSmall>
               <ButtonRow>
                 <Menu
+                  menuItems={menuItems}
                   flyoutAlignment={FlyoutAlignment.LEFT}
                   ToggleUI={(props: any) => (
                     <MoreOptionsButton {...props}>
@@ -151,7 +162,6 @@ export default function Pool() {
                       </TYPE.body>
                     </MoreOptionsButton>
                   )}
-                  menuItems={menuItems}
                 />
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
                   + {t('New Position')}
@@ -179,25 +189,25 @@ export default function Pool() {
                 <PositionList positions={positions} />
               ) : (
                 <NoLiquidity>
-                  <TYPE.largeHeader color={theme.text3} textAlign="center">
-                    <Inbox />
+                  <TYPE.mediumHeader color={theme.text3} textAlign="center">
+                    <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>{t('Your liquidity positions will appear here.')}</div>
-                  </TYPE.largeHeader>
+                  </TYPE.mediumHeader>
                   {!account ? (
-                    <ButtonPrimary style={{ marginTop: '1em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                    <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
                       {t('Connect a wallet')}
                     </ButtonPrimary>
                   ) : (
                     hasV2Liquidity && (
-                      <ButtonPrimary
+                      <ButtonGray
                         as={Link}
                         to="/migrate/v2"
                         id="import-pool-link"
-                        style={{ marginTop: '1em', padding: '8px 16px' }}
+                        style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
                       >
-                        {t('Migrate v2 liquidity')}&nbsp;&nbsp;
+                        {t('Migrate V2 liquidity')}&nbsp;&nbsp;
                         <Download size={16} />
-                      </ButtonPrimary>
+                      </ButtonGray>
                     )
                   )}
                 </NoLiquidity>

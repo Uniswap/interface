@@ -17,7 +17,6 @@ import { CountUp } from 'use-count-up'
 import { TYPE, ExternalLink } from '../../theme'
 
 import { YellowCard } from '../Card'
-import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
@@ -33,7 +32,7 @@ import usePrevious from '../../hooks/usePrevious'
 
 const HeaderFrame = styled.div`
   display: grid;
-  grid-template-columns: 1fr 120px;
+  grid-template-columns: 48px 1fr 120px;
   align-items: center;
   justify-content: space-between;
   align-items: center;
@@ -42,9 +41,8 @@ const HeaderFrame = styled.div`
   top: 0;
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  z-index: 2;
-
+  padding: 0.5rem 1rem;
+  z-index: 21;
   background-color: ${({ theme }) => theme.bg0};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -111,6 +109,11 @@ const HeaderRow = styled(RowFixed)`
 
 const HeaderLinks = styled(Row)`
   justify-content: center;
+  width: 100%;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    padding: 1rem 0 1rem 1rem;
+    justify-content: flex-start;
+`};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
@@ -121,7 +124,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg2)};
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -215,13 +218,15 @@ const StyledNavLink = styled(NavLink).attrs({
   color: ${({ theme }) => theme.text2};
   font-size: 1rem;
   width: fit-content;
-  margin: 0 12px;
+  margin: 0 6px;
   font-weight: 500;
+  padding: 8px 12px;
 
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
     color: ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.bg2};
   }
 
   :hover,
@@ -303,7 +308,7 @@ export default function Header() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const [darkMode] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -331,34 +336,31 @@ export default function Header() {
             <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
           </UniIcon>
         </Title>
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
-          </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
-            }
-          >
-            {t('pool')}
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            UNI
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            Vote
-          </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Charts <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledExternalLink>
-        </HeaderLinks>
       </HeaderRow>
+      <HeaderLinks>
+        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          {t('swap')}
+        </StyledNavLink>
+        <StyledNavLink
+          id={`pool-nav-link`}
+          to={'/pool'}
+          isActive={(match, { pathname }) =>
+            Boolean(match) ||
+            pathname.startsWith('/add') ||
+            pathname.startsWith('/remove') ||
+            pathname.startsWith('/create') ||
+            pathname.startsWith('/find')
+          }
+        >
+          {t('pool')}
+        </StyledNavLink>
+        <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+          Vote
+        </StyledNavLink>
+        <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
+          Charts <span style={{ fontSize: '11px' }}>↗</span>
+        </StyledExternalLink>
+      </HeaderLinks>
       <HeaderControls>
         <HeaderElement>
           <HideSmall>
@@ -376,6 +378,7 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )}
+          {/* I want to put this in the overflow menu now */}
           {!availableClaim && aggregateBalance && (
             <UNIWrapper onClick={() => setShowUniBalanceModal(true)}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
@@ -412,9 +415,6 @@ export default function Header() {
           </AccountElement>
         </HeaderElement>
         <HeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>

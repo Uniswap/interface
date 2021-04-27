@@ -20,6 +20,8 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import { Moon, Sun } from 'react-feather'
+import { useDarkModeManager } from '../../state/user/hooks'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -54,19 +56,13 @@ const StyledMenuButton = styled.button`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
-
-  padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
+  height: 20px;
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-  }
-
-  svg {
-    margin-top: 2px;
   }
 `
 const EmojiWrapper = styled.div`
@@ -136,6 +132,8 @@ export default function SettingsTab() {
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
+
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   useOnClickOutside(node, open ? toggle : undefined)
 
@@ -246,6 +244,10 @@ export default function SettingsTab() {
                 }}
               />
             </RowBetween>
+            {/* WIP */}
+            <StyledMenuButton onClick={() => toggleDarkMode()}>
+              {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+            </StyledMenuButton>
           </AutoColumn>
         </MenuFlyout>
       )}

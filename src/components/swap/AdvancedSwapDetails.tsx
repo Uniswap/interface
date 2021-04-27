@@ -2,10 +2,10 @@ import { TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
@@ -18,10 +18,35 @@ function TradeSummary({ trade, allowedSlippage }: { trade: V2Trade | V3Trade; al
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
-
+  const price = trade.executionPrice
   return (
     <>
-      <AutoColumn style={{ padding: '0 16px' }}>
+      <AutoColumn style={{ padding: '8px 16px' }} gap="8px">
+        <RowBetween>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+              Price
+            </TYPE.black>
+          </RowFixed>
+          <TYPE.black color={theme.text1} fontSize={14}>
+            {'1 ' +
+              price?.quoteCurrency?.symbol +
+              ' = ' +
+              price?.invert()?.toSignificant(6) +
+              ' ' +
+              price?.baseCurrency?.symbol}
+          </TYPE.black>
+        </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+              Inverted Price
+            </TYPE.black>
+          </RowFixed>
+          <TYPE.black color={theme.text1} fontSize={14}>
+            {'1 ' + price?.baseCurrency?.symbol + ' = ' + price?.toSignificant(6) + ' ' + price?.quoteCurrency?.symbol}
+          </TYPE.black>
+        </RowBetween>
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
@@ -86,7 +111,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
           {showRoute && (
             <>
-              <RowBetween style={{ padding: '0 16px' }}>
+              <RowBetween style={{ padding: '4px 16px' }}>
                 <span style={{ display: 'flex', alignItems: 'center' }}>
                   <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                     Route

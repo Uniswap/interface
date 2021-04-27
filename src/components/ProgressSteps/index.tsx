@@ -1,47 +1,46 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
-import { transparentize } from 'polished'
+import { ThemeContext } from 'styled-components'
+import { ArrowDown } from 'react-feather'
 
-const Wrapper = styled(AutoColumn)``
+const Wrapper = styled(AutoColumn)`
+  margin-left: 8px;
+  height: 100%;
+`
 
-const Grouping = styled(RowBetween)`
-  width: 50%;
+const Grouping = styled(AutoColumn)`
+  width: fit-content;
+  padding: 4px;
+  background-color: ${({ theme }) => theme.bg2};
+  border-radius: 16px;
 `
 
 const Circle = styled.div<{ confirmed?: boolean; disabled?: boolean }>`
-  min-width: 20px;
-  min-height: 20px;
+  width: 100%;
+  height: 100%;
   background-color: ${({ theme, confirmed, disabled }) =>
-    disabled ? theme.bg4 : confirmed ? theme.green1 : theme.primary1};
-  border-radius: 50%;
-  color: ${({ theme }) => theme.white};
+    disabled ? theme.bg3 : confirmed ? theme.green1 : theme.primary1};
+  border-radius: 12px;
+  color: ${({ theme, disabled }) => (disabled ? theme.text3 : theme.text1)};
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 8px;
-  font-size: 12px;
+  font-size: 16px;
+  padding: 1rem;
 `
 
 const CircleRow = styled.div`
-  width: calc(100% - 20px);
   display: flex;
+  flex-direction: column;
   align-items: center;
 `
 
-const Connector = styled.div<{ prevConfirmed?: boolean; disabled?: boolean }>`
-  width: 100%;
-  height: 2px;
-  background-color: ;
-  background: linear-gradient(
-    90deg,
-    ${({ theme, prevConfirmed, disabled }) =>
-        disabled ? theme.bg4 : transparentize(0.5, prevConfirmed ? theme.green1 : theme.primary1)}
-      0%,
-    ${({ theme, prevConfirmed, disabled }) => (disabled ? theme.bg4 : prevConfirmed ? theme.primary1 : theme.bg4)} 80%
-  );
-  opacity: 0.6;
+const StyledArrowDown = styled(ArrowDown)`
+  margin: 0.5rem;
+  min-height: 14px;
+  /* color: ${({ theme }) => theme.text1}; */
 `
 
 interface ProgressCirclesProps {
@@ -60,6 +59,8 @@ interface ProgressCirclesProps {
  * @param steps  array of booleans where true means step is complete
  */
 export default function ProgressCircles({ steps, disabled = false, ...rest }: ProgressCirclesProps) {
+  const theme = useContext(ThemeContext)
+
   return (
     <Wrapper justify={'center'} {...rest}>
       <Grouping>
@@ -69,7 +70,7 @@ export default function ProgressCircles({ steps, disabled = false, ...rest }: Pr
               <Circle confirmed={step} disabled={disabled || (!steps[i - 1] && i !== 0)}>
                 {step ? '✓' : i + 1}
               </Circle>
-              <Connector prevConfirmed={step} disabled={disabled} />
+              <StyledArrowDown size="16" color={theme.text3} />
             </CircleRow>
           )
         })}
