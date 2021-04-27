@@ -1,14 +1,17 @@
+import JSBI from 'jsbi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Router, SwapParameters, Trade } from '@uniswap/v2-sdk'
+import { Router, SwapParameters, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion } from '../utils/getTradeVersion'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
+import { useV2RouterContract } from './useContract'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
@@ -43,7 +46,7 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
  * @param recipientAddressOrName
  */
 function useSwapCallArguments(
-  trade: Trade | undefined, // trade to execute, required
+  trade: V2Trade | V3Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
@@ -53,43 +56,43 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
 
+  const routerContract = useV2RouterContract()
+
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!trade || !recipient || !library || !account || !chainId || !deadline || !routerContract) return []
 
-    const contract: Contract | null = getRouterContract(chainId, library, account)
-    if (!contract) {
-      return []
-    }
-
-    const swapMethods = []
-
-    swapMethods.push(
-      Router.swapCallParameters(trade, {
-        feeOnTransfer: false,
-        allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-        recipient,
-        deadline: deadline.toNumber(),
-      })
-    )
-
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
+    if (trade instanceof V2Trade) {
+      const swapMethods = []
       swapMethods.push(
         Router.swapCallParameters(trade, {
-          feeOnTransfer: true,
+          feeOnTransfer: false,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
           deadline: deadline.toNumber(),
         })
       )
+
+      if (trade.tradeType === TradeType.EXACT_INPUT) {
+        swapMethods.push(
+          Router.swapCallParameters(trade, {
+            feeOnTransfer: true,
+            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            recipient,
+            deadline: deadline.toNumber(),
+          })
+        )
+      }
+      return swapMethods.map((parameters) => ({ parameters, contract: routerContract }))
     }
-    return swapMethods.map((parameters) => ({ parameters, contract }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
+
+    return []
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, trade])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
-export function useV2SwapCallback(
-  trade: Trade | undefined, // trade to execute, required
+export function useSwapCallback(
+  trade: V2Trade | V3Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {

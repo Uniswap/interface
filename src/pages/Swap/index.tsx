@@ -29,7 +29,7 @@ import { useCurrency, useAllTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useV2SwapCallback } from '../../hooks/useV2SwapCallback'
+import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -189,7 +189,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useV2SwapCallback(
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
     trade instanceof V2Trade ? trade : undefined,
     allowedSlippage,
     recipient
