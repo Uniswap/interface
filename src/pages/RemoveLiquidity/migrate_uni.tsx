@@ -370,7 +370,7 @@ export default function MigrateLiquidity({
           amountsMinToAddPool[Field.CURRENCY_B].toString(),
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
             ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
-            : [ZERO_ADDRESS, 10000, vReserveRatioBounds],
+            : [ZERO_ADDRESS, 10000],
           deadline.toHexString()
         ]
       }
@@ -391,7 +391,7 @@ export default function MigrateLiquidity({
           amountsMinToAddPool[Field.CURRENCY_B].toString(),
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
             ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
-            : [ZERO_ADDRESS, 10000, vReserveRatioBounds],
+            : [ZERO_ADDRESS, 10000],
           signatureData.deadline,
           [false, signatureData.v, signatureData.r, signatureData.s]
         ]
