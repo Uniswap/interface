@@ -5,6 +5,5 @@ import { Version } from '../hooks/useToggledVersion'
 export function getTradeVersion(trade?: V2Trade | V3Trade): Version | undefined {
   if (!trade) return undefined
   if (trade instanceof V2Trade) return Version.v2
-  if (trade instanceof V3Trade) return Version.v3
-  throw new Error('Unknown trade type')
+  return Version.v3
 }

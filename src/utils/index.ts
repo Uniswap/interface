@@ -1,14 +1,11 @@
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-
-import { V2_ROUTER_ADDRESS } from '../constants'
 import { ChainId, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk/dist/'
 import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -100,11 +97,6 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
   return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
 }
 
-// account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
-}
-
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
@@ -126,6 +118,6 @@ export function supportedChainId(chainId: number): ChainId | undefined {
   return undefined
 }
 
-export const formattedFeeAmount = (feeAmount: FeeAmount): number => {
+export function formattedFeeAmount(feeAmount: FeeAmount): number {
   return feeAmount / 10000
 }
