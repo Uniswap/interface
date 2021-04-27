@@ -2,9 +2,10 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { TokenAmount, CurrencyAmount, ETHER, ChainId } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { SWAP_ROUTER_ADDRESS, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
 import { V2_ROUTER_ADDRESS } from '../constants'
+import { SWAP_ROUTER_ADDRESSES } from '../constants/v3'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { computeSlippageAdjustedAmounts } from '../utils/prices'
@@ -102,7 +103,7 @@ export function useApproveCallback(
 // wraps useApproveCallback in the context of a swap
 export function useApproveCallbackFromTrade(trade?: V2Trade | V3Trade, allowedSlippage = 0) {
   const { chainId } = useActiveWeb3React()
-  const swapRouterAddress = SWAP_ROUTER_ADDRESS[chainId as ChainId]
+  const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
