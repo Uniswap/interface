@@ -1,5 +1,4 @@
-import { Pair, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Pair } from '@uniswap/v2-sdk'
 import { Currency } from '@uniswap/sdk-core'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
@@ -12,16 +11,11 @@ import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-
-import { computeTradePriceBreakdown } from '../../utils/prices'
-import { SmallFormattedPriceImpact } from '../swap/FormattedPriceImpact'
-
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 import useTheme from '../../hooks/useTheme'
 import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
-import Tooltip from 'components/Tooltip'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -158,7 +152,6 @@ interface CurrencyInputPanelProps {
   disableCurrencySelect?: boolean
   hideBalance?: boolean
   pair?: Pair | null
-  trade?: V2Trade | V3Trade | null
   hideInput?: boolean
   otherCurrency?: Currency | null
   id: string
@@ -182,7 +175,6 @@ export default function CurrencyInputPanel({
   disableCurrencySelect = false,
   hideBalance = false,
   pair = null, // used for double token logo
-  trade,
   hideInput = false,
   locked = false,
   ...rest
@@ -193,13 +185,6 @@ export default function CurrencyInputPanel({
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
-
-  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
-
-  const [showToolTip, setShowToolTip] = useState<boolean>(false)
-
-  const open = useCallback(() => setShowToolTip(true), [setShowToolTip])
-  const close = useCallback(() => setShowToolTip(false), [setShowToolTip])
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -223,8 +208,7 @@ export default function CurrencyInputPanel({
                 {label}
               </TYPE.body>
 
-              <RowFixed>
-                {/* Need to compute the real USD price here... Show */}
+              {/*<RowFixed>
                 <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
                   {currency && value ? '$250' + value : '$ -'}
                 </TYPE.body>
@@ -241,7 +225,7 @@ export default function CurrencyInputPanel({
                     </Tooltip>
                   </span>
                 )}
-              </RowFixed>
+              </RowFixed>*/}
             </RowBetween>
           </LabelRow>
         )}

@@ -6,7 +6,7 @@ import { useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useAllV3Routes } from './useAllV3Routes'
 import { useV3Quoter } from './useContract'
 
-enum V3TradeState {
+export enum V3TradeState {
   LOADING,
   INVALID,
   NO_ROUTE_FOUND,
@@ -81,8 +81,10 @@ export function useBestV3TradeExactIn(
       }
     }
 
+    const isSyncing = quotesResults.some(({ syncing }) => syncing)
+
     return {
-      state: V3TradeState.VALID,
+      state: isSyncing ? V3TradeState.SYNCING : V3TradeState.VALID,
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
@@ -163,8 +165,10 @@ export function useBestV3TradeExactOut(
       }
     }
 
+    const isSyncing = quotesResults.some(({ syncing }) => syncing)
+
     return {
-      state: V3TradeState.VALID,
+      state: isSyncing ? V3TradeState.SYNCING : V3TradeState.VALID,
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,

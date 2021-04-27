@@ -1,5 +1,5 @@
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useBestV3TradeExactIn, useBestV3TradeExactOut } from '../../hooks/useBestV3Trade'
+import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, ETHER, Token, TokenAmount } from '@uniswap/sdk-core'
@@ -116,7 +116,7 @@ export function useDerivedSwapInfo(): {
   parsedAmount: CurrencyAmount | undefined
   v2Trade: V2Trade | undefined
   inputError?: string
-  v3Trade: V3Trade | undefined
+  v3Trade: { trade: V3Trade | null; state: V3TradeState }
 } {
   const { account } = useActiveWeb3React()
 
@@ -206,7 +206,7 @@ export function useDerivedSwapInfo(): {
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     inputError,
-    v3Trade: v3Trade.trade ?? undefined,
+    v3Trade,
   }
 }
 
