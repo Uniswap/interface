@@ -325,27 +325,27 @@ export default function MigrateLiquidity({
 
     let methodNames: string[], args: Array<any>
 
-    if (!dmmUnamplifiedPools[0][1]) return
-
-    const virtualReserveA = dmmUnamplifiedPools[0][1].virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
-    const virtualReserveB = dmmUnamplifiedPools[0][1].virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
-
-    const currentRate = JSBI.divide(
-      JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-      virtualReserveA.raw
-    )
-
-    const allowedSlippageAmount = JSBI.divide(
-      JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
-      JSBI.BigInt(10000)
-    )
-
-    const vReserveRatioBounds = [
-      JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
-      JSBI.add(currentRate, allowedSlippageAmount).toString()
-    ]
-
     if (!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)) {
+      if (!dmmUnamplifiedPools[0][1]) return
+
+      const virtualReserveA = dmmUnamplifiedPools[0][1].virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
+      const virtualReserveB = dmmUnamplifiedPools[0][1].virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
+
+      const currentRate = JSBI.divide(
+        JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+        virtualReserveA.raw
+      )
+
+      const allowedSlippageAmount = JSBI.divide(
+        JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
+        JSBI.BigInt(10000)
+      )
+
+      const vReserveRatioBounds = [
+        JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
+        JSBI.add(currentRate, allowedSlippageAmount).toString()
+      ]
+
       //co pool amp = 1
       if (!currencyAmountAToAddPool || !currencyAmountBToAddPool) {
         throw new Error('missing currency amounts')
@@ -370,7 +370,7 @@ export default function MigrateLiquidity({
           amountsMinToAddPool[Field.CURRENCY_B].toString(),
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
             ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
-            : [ZERO_ADDRESS, 10000, vReserveRatioBounds],
+            : [ZERO_ADDRESS, 10000],
           deadline.toHexString()
         ]
       }
@@ -391,7 +391,7 @@ export default function MigrateLiquidity({
           amountsMinToAddPool[Field.CURRENCY_B].toString(),
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
             ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
-            : [ZERO_ADDRESS, 10000, vReserveRatioBounds],
+            : [ZERO_ADDRESS, 10000],
           signatureData.deadline,
           [false, signatureData.v, signatureData.r, signatureData.s]
         ]
@@ -412,9 +412,7 @@ export default function MigrateLiquidity({
           amountsMin[Field.CURRENCY_B].toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
-          !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
-            ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
-            : [ZERO_ADDRESS, 10000],
+          [ZERO_ADDRESS, 10000, ['0', '0']],
           deadline.toHexString()
         ]
       }
@@ -433,9 +431,7 @@ export default function MigrateLiquidity({
           amountsMin[Field.CURRENCY_B].toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
-          !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
-            ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
-            : [ZERO_ADDRESS, 10000],
+          [ZERO_ADDRESS, 10000, ['0', '0']],
           signatureData.deadline,
           [false, signatureData.v, signatureData.r, signatureData.s]
         ]
