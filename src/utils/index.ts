@@ -9,14 +9,7 @@ import dayjs from 'dayjs'
 import { blockClient } from 'apollo/client'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import {
-  ROUTER_ADDRESS,
-  FACTORY_ADDRESS,
-  ROPSTEN_TOKEN_LOGOS_MAPPING,
-  MIGRATE_ADDRESS,
-  KNCL_ADDRESS,
-  KNCL_ADDRESS_ROPSTEN
-} from '../constants'
+import { ROUTER_ADDRESS, FACTORY_ADDRESS, ROPSTEN_TOKEN_LOGOS_MAPPING, MIGRATE_ADDRESS } from '../constants'
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
@@ -314,21 +307,12 @@ export const get2DayPercentChange = (valueNow: any, value24HoursAgo: any, value4
   return [currentChange, adjustedPercentChange]
 }
 
-export const getTokenLogoURL = (address: string) => {
-  if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
-    return 'https://i.imgur.com/1cDH5dy.png'
-  }
-
-  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
+export const getTokenLogoURL = (address: string) =>
+  `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
     address
   )}/logo.png`
-}
 
 export const getRopstenTokenLogoURL = (address: string) => {
-  if (address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()) {
-    return 'https://i.imgur.com/1cDH5dy.png'
-  }
-
   if (ROPSTEN_TOKEN_LOGOS_MAPPING[address.toLowerCase()]) {
     address = ROPSTEN_TOKEN_LOGOS_MAPPING[address.toLowerCase()]
   }

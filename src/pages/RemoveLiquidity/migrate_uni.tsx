@@ -1,10 +1,10 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ETHER, Fraction, WETH, CurrencyAmount, JSBI, Token } from 'libs/sdk/src'
-import { currencyEquals, Pair, Percent } from '@uniswap/sdk'
-import React, { useCallback, useContext, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
+import { ETHER, Fraction, WETH, CurrencyAmount, TokenAmount } from 'libs/sdk/src'
+import { Currency, currencyEquals, Pair, Percent } from '@uniswap/sdk'
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ArrowDown, Plus } from 'react-feather'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
@@ -12,12 +12,15 @@ import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../
 import { LightCard, YellowCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { MigrateTab } from '../../components/NavigationTabs'
+import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
+import { AddRemoveTabs, MigrateTab } from '../../components/NavigationTabs'
+import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { MIGRATE_ADDRESS, ZERO_ADDRESS } from '../../constants'
+import { MIGRATE_ADDRESS, ROUTER_ADDRESS, ROUTER_ADDRESS_UNI, ZERO_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
@@ -25,11 +28,19 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { calculateGasMargin, calculateSlippageAmount, getMigratorContract, shortenAddress } from '../../utils'
+import { StyledInternalLink, TYPE } from '../../theme'
+import {
+  calculateGasMargin,
+  calculateSlippageAmount,
+  getMigratorContract,
+  getRouterContract,
+  shortenAddress
+} from '../../utils'
+import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
-import { MaxButton, Wrapper } from '../Pool/styleds'
+import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 import { useApproveCallback as useApproveCallbackUNI, ApprovalState } from '../../hooks/useApproveCallbackUNI'
 import { Dots } from '../../components/swap/styleds'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
@@ -41,8 +52,8 @@ import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Redirect } from 'react-router-dom'
 import { useDerivedMintInfoMigration } from 'state/mint/hooks_for_migration'
+import { useMintState } from 'state/mint/hooks'
 import isZero from 'utils/isZero'
-import { useUnAmplifiedPairsFull } from 'data/Reserves'
 
 const DashedLine = styled.div`
   width: 100%;
@@ -65,8 +76,6 @@ export default function MigrateLiquidity({
     chainId
   ])
   const theme = useContext(ThemeContext)
-
-  const dmmUnamplifiedPools = useUnAmplifiedPairsFull([[currencyA, currencyB]])
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -324,28 +333,7 @@ export default function MigrateLiquidity({
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
     let methodNames: string[], args: Array<any>
-
     if (!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)) {
-      if (!dmmUnamplifiedPools[0][1]) return
-
-      const virtualReserveA = dmmUnamplifiedPools[0][1].virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
-      const virtualReserveB = dmmUnamplifiedPools[0][1].virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
-
-      const currentRate = JSBI.divide(
-        JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-        virtualReserveA.raw
-      )
-
-      const allowedSlippageAmount = JSBI.divide(
-        JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
-        JSBI.BigInt(10000)
-      )
-
-      const vReserveRatioBounds = [
-        JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
-        JSBI.add(currentRate, allowedSlippageAmount).toString()
-      ]
-
       //co pool amp = 1
       if (!currencyAmountAToAddPool || !currencyAmountBToAddPool) {
         throw new Error('missing currency amounts')
@@ -369,7 +357,7 @@ export default function MigrateLiquidity({
           amountsMinToAddPool[Field.CURRENCY_A].toString(),
           amountsMinToAddPool[Field.CURRENCY_B].toString(),
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
-            ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
+            ? [unAmplifiedPairAddress, 123]
             : [ZERO_ADDRESS, 10000],
           deadline.toHexString()
         ]
@@ -390,7 +378,7 @@ export default function MigrateLiquidity({
           amountsMinToAddPool[Field.CURRENCY_A].toString(),
           amountsMinToAddPool[Field.CURRENCY_B].toString(),
           !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
-            ? [unAmplifiedPairAddress, 123, vReserveRatioBounds]
+            ? [unAmplifiedPairAddress, 123]
             : [ZERO_ADDRESS, 10000],
           signatureData.deadline,
           [false, signatureData.v, signatureData.r, signatureData.s]
@@ -412,7 +400,9 @@ export default function MigrateLiquidity({
           amountsMin[Field.CURRENCY_B].toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
-          [ZERO_ADDRESS, 10000, ['0', '0']],
+          !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
+            ? [unAmplifiedPairAddress, 123]
+            : [ZERO_ADDRESS, 10000],
           deadline.toHexString()
         ]
       }
@@ -431,7 +421,9 @@ export default function MigrateLiquidity({
           amountsMin[Field.CURRENCY_B].toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
-          [ZERO_ADDRESS, 10000, ['0', '0']],
+          !!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)
+            ? [unAmplifiedPairAddress, 123]
+            : [ZERO_ADDRESS, 10000],
           signatureData.deadline,
           [false, signatureData.v, signatureData.r, signatureData.s]
         ]

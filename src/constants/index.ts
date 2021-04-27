@@ -3,9 +3,9 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { injected, ledger, walletconnect, walletlink, trezor } from '../connectors'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 
-export const ROUTER_ADDRESS = process.env.REACT_APP_ROUTER_ADDRESS || '0x12807818B584a3Fa65D38B6C25B13983fE888D6E'
+export const ROUTER_ADDRESS = process.env.REACT_APP_ROUTER_ADDRESS || '0xf9a856b7d8750c5d7f0aec4f586677bdfd9aaf40'
 export const FACTORY_ADDRESS = process.env.REACT_APP_FACTORY_ADDRESS || '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9'
-export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0xa650f16F41cA35bF21594eef706290D26B12FF2e'
+export const MIGRATE_ADDRESS = process.env.REACT_APP_MIGRATOR_ADDRESS || '0x8aDd712c8fde1c6f98f8e45C7E29bAA66F074056'
 export const ROUTER_ADDRESS_UNI = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 // export const ROUTER_ADDRESS = '0x8406Caa2Cc202aFB4eCfb066D472E462bee00f3b'
 // export const FACTORY_ADDRESS = '0x945c725e3eCC3dfdC350C0334f3fF42f08F719EA'
@@ -54,41 +54,38 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
 }
 
-const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
+const KNC_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
 export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.RINKEBY]: new Token(
     ChainId.RINKEBY,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x7B2810576aa1cce68F2B118CeF1F36467c648F92',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.ROPSTEN]: new Token(
     ChainId.ROPSTEN,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x7B2810576aa1cce68F2B118CeF1F36467c648F92',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.GÖRLI]: new Token(
     ChainId.GÖRLI,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x7B2810576aa1cce68F2B118CeF1F36467c648F92',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.KOVAN]: new Token(
     ChainId.KOVAN,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x7B2810576aa1cce68F2B118CeF1F36467c648F92',
     18,
     'KNC',
     'Kyber Network Crystal'
   )
 }
-
-export const KNCL_ADDRESS = '0xdd974D5C2e2928deA5F71b9825b8b646686BD200'
-export const KNCL_ADDRESS_ROPSTEN = '0x7b2810576aa1cce68f2b118cef1f36467c648f92'
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {

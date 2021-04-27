@@ -15,8 +15,7 @@
       {
         "components": [
           { "internalType": "address", "name": "poolAddress", "type": "address" },
-          { "internalType": "uint32", "name": "poolAmp", "type": "uint32" },
-          { "internalType": "uint256[2]", "name": "dmmVReserveRatioBounds", "type": "uint256[2]" }
+          { "internalType": "uint32", "name": "poolAmp", "type": "uint32" }
         ],
         "indexed": false,
         "internalType": "struct ILiquidityMigrator.PoolInfo",
@@ -80,8 +79,7 @@
       {
         "components": [
           { "internalType": "address", "name": "poolAddress", "type": "address" },
-          { "internalType": "uint32", "name": "poolAmp", "type": "uint32" },
-          { "internalType": "uint256[2]", "name": "dmmVReserveRatioBounds", "type": "uint256[2]" }
+          { "internalType": "uint32", "name": "poolAmp", "type": "uint32" }
         ],
         "internalType": "struct ILiquidityMigrator.PoolInfo",
         "name": "poolInfo",
@@ -111,8 +109,7 @@
       {
         "components": [
           { "internalType": "address", "name": "poolAddress", "type": "address" },
-          { "internalType": "uint32", "name": "poolAmp", "type": "uint32" },
-          { "internalType": "uint256[2]", "name": "dmmVReserveRatioBounds", "type": "uint256[2]" }
+          { "internalType": "uint32", "name": "poolAmp", "type": "uint32" }
         ],
         "internalType": "struct ILiquidityMigrator.PoolInfo",
         "name": "poolInfo",
