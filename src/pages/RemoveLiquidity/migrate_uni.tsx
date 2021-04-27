@@ -330,15 +330,19 @@ export default function MigrateLiquidity({
     const virtualReserveA = dmmUnamplifiedPools[0][1].virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
     const virtualReserveB = dmmUnamplifiedPools[0][1].virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
 
-    const currentRate = virtualReserveB
-      .multiply(JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112)))
-      .divide(virtualReserveA)
+    const currentRate = JSBI.divide(
+      JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+      virtualReserveA.raw
+    )
 
-    const allowedSlippageAmount = currentRate.multiply(new Fraction(JSBI.BigInt(allowedSlippage), JSBI.BigInt(10000)))
+    const allowedSlippageAmount = JSBI.divide(
+      JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
+      JSBI.BigInt(10000)
+    )
 
     const vReserveRatioBounds = [
-      currentRate.subtract(allowedSlippageAmount).toFixed(0),
-      currentRate.add(allowedSlippageAmount).toFixed(0)
+      JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
+      JSBI.add(currentRate, allowedSlippageAmount).toString()
     ]
 
     if (!!unAmplifiedPairAddress && !isZero(unAmplifiedPairAddress)) {
