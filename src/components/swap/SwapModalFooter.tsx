@@ -1,4 +1,5 @@
-import { Trade } from '@uniswap/v2-sdk'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
@@ -26,7 +27,7 @@ export default function SwapModalFooter({
   swapErrorMessage,
   disabledConfirm,
 }: {
-  trade: Trade
+  trade: V2Trade | V3Trade
   allowedSlippage: number
   onConfirm: () => void
   swapErrorMessage: string | undefined

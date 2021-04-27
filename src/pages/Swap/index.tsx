@@ -1,5 +1,7 @@
+import JSBI from 'jsbi'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { JSBI, Trade } from '@uniswap/v2-sdk'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -22,6 +24,7 @@ import ProgressSteps from '../../components/ProgressSteps'
 import SwapHeader from '../../components/swap/SwapHeader'
 
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency, useAllTokens } from '../../hooks/Tokens'
@@ -90,6 +93,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
+    v3Trade,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -104,13 +108,13 @@ export default function Swap({ history }: RouteComponentProps) {
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
-  // const toggledVersion = useToggledVersion()
+  const toggledVersion = useToggledVersion()
   const trade = showWrap
     ? undefined
-    : v2Trade /*{
+    : {
         [Version.v2]: v2Trade,
         [Version.v3]: v3Trade,
-      }[toggledVersion]*/
+      }[toggledVersion]
 
   const parsedAmounts = showWrap
     ? {
@@ -148,7 +152,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: Trade | undefined
+    tradeToConfirm: V2Trade | V3Trade | undefined
     attemptingTxn: boolean
     swapErrorMessage: string | undefined
     txHash: string | undefined
@@ -190,7 +194,11 @@ export default function Swap({ history }: RouteComponentProps) {
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useV2SwapCallback(trade, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useV2SwapCallback(
+    trade instanceof V2Trade ? trade : undefined,
+    allowedSlippage,
+    recipient
+  )
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 

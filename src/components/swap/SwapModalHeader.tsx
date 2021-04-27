@@ -1,5 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { Trade } from '@uniswap/v2-sdk'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
@@ -21,7 +22,7 @@ export default function SwapModalHeader({
   showAcceptChanges,
   onAcceptChanges,
 }: {
-  trade: Trade
+  trade: V2Trade | V3Trade
   allowedSlippage: number
   recipient: string | null
   showAcceptChanges: boolean

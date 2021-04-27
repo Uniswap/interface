@@ -1,5 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { Trade } from '@uniswap/v2-sdk'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
@@ -12,17 +13,7 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import SwapRoute from './SwapRoute'
 
-const InfoLink = styled(ExternalLink)`
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  padding: 6px 6px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 14px;
-  color: ${({ theme }) => theme.text1};
-`
-
-function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
+function TradeSummary({ trade, allowedSlippage }: { trade: V2Trade | V3Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
@@ -75,7 +66,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 }
 
 export interface AdvancedSwapDetailsProps {
-  trade?: Trade
+  trade?: V2Trade | V3Trade
 }
 
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
@@ -83,7 +74,10 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
-  const showRoute = Boolean(trade && trade.route.path.length > 2)
+  const showRoute = Boolean(
+    (trade && trade instanceof V2Trade && trade.route.pairs.length > 2) ||
+      (trade instanceof V3Trade && trade.route.pools.length > 2)
+  )
 
   return (
     <AutoColumn gap="0px">
@@ -102,16 +96,6 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
                 <SwapRoute trade={trade} />
               </RowBetween>
             </>
-          )}
-          {!showRoute && (
-            <AutoColumn style={{ padding: '12px 16px 0 16px' }}>
-              <InfoLink
-                href={'https://info.uniswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}
-                target="_blank"
-              >
-                View pair analytics ↗
-              </InfoLink>
-            </AutoColumn>
           )}
         </>
       )}
