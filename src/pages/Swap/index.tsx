@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -111,15 +111,25 @@ export default function Swap({ history }: RouteComponentProps) {
         [Version.v3]: v3Trade.trade ?? undefined,
       }[toggledVersion]
 
-  const parsedAmounts = showWrap
-    ? {
-        [Field.INPUT]: parsedAmount,
-        [Field.OUTPUT]: parsedAmount,
-      }
-    : {
-        [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-        [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
-      }
+  const parsedAmounts = useMemo(
+    () =>
+      showWrap
+        ? {
+            [Field.INPUT]: parsedAmount,
+            [Field.OUTPUT]: parsedAmount,
+          }
+        : {
+            [Field.INPUT]:
+              independentField === Field.INPUT
+                ? parsedAmount
+                : trade?.maximumAmountIn(new Percent(allowedSlippage, 10_000)),
+            [Field.OUTPUT]:
+              independentField === Field.OUTPUT
+                ? parsedAmount
+                : trade?.minimumAmountOut(new Percent(allowedSlippage, 10_000)),
+          },
+    [allowedSlippage, independentField, parsedAmount, showWrap, trade]
+  )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
@@ -185,8 +195,8 @@ export default function Swap({ history }: RouteComponentProps) {
     }
   }, [approval, approvalSubmitted])
 
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
-  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
+  const maxInputAmount: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
+  const atMaxInputAmount = Boolean(maxInputAmount && parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
@@ -255,7 +265,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  // warnings on slippage
+  // warnings on price impact
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
@@ -288,8 +298,8 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const handleMaxInput = useCallback(() => {
-    maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
-  }, [maxAmountInput, onUserInput])
+    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
+  }, [maxInputAmount, onUserInput])
 
   const handleOutputSelect = useCallback((outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency), [
     onCurrencySelection,
@@ -327,9 +337,9 @@ export default function Swap({ history }: RouteComponentProps) {
           <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
-                label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
+                label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (maximum)' : 'From'}
                 value={formattedAmounts[Field.INPUT]}
-                showMaxButton={!atMaxAmountInput}
+                showMaxButton={!atMaxInputAmount}
                 currency={currencies[Field.INPUT]}
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
@@ -388,17 +398,15 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : (
               <AutoColumn justify="space-between">
                 <AutoRow style={{ padding: '0 0.5rem', justifyContent: 'space-between' }}>
-                  {Boolean(trade) && (
-                    <AutoRow>
-                      <TradePrice
-                        price={trade?.executionPrice}
-                        showInverted={showInverted}
-                        setShowInverted={setShowInverted}
-                        showDetails={showDetails}
-                        setShowDetails={setShowDetails}
-                      />
-                    </AutoRow>
-                  )}
+                  <AutoRow>
+                    <TradePrice
+                      price={trade?.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                      showDetails={showDetails}
+                      setShowDetails={setShowDetails}
+                    />
+                  </AutoRow>
                 </AutoRow>
               </AutoColumn>
             )}

@@ -30,9 +30,6 @@ export default function TradePrice({
   const label = showInverted ? `${price?.quoteCurrency?.symbol}` : `${price?.baseCurrency?.symbol} `
   const labelInverted = showInverted ? `${price?.baseCurrency?.symbol} ` : `${price?.quoteCurrency?.symbol}`
 
-  // ? `${price?.quoteCurrency?.symbol} per ${price?.baseCurrency?.symbol}`
-  //   : `${price?.baseCurrency?.symbol} per ${price?.quoteCurrency?.symbol}`
-
   return (
     <div
       style={{
@@ -53,7 +50,7 @@ export default function TradePrice({
         <Text fontWeight={500} fontSize={14} color={theme.text2}>
           {'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} {label}
         </Text>
-        <StyledBalanceMaxMini style={{ marginLeft: ' 0.5rem' }} onClick={() => setShowInverted(!showInverted)}>
+        <StyledBalanceMaxMini style={{ marginLeft: '0.5rem' }} onClick={() => setShowInverted(!showInverted)}>
           <img width={'16px'} src={Switch} alt="logo" />
         </StyledBalanceMaxMini>
       </div>
