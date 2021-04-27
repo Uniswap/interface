@@ -109,10 +109,13 @@ export function useDerivedMintInfo(
     pair,
     nativeCurrency
   ])
-  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
-    [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
-    [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
-  }
+  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = useMemo(
+    () => ({
+      [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
+      [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
+    }),
+    [dependentAmount, independentAmount, independentField]
+  )
 
   const price = useMemo(() => {
     if (noLiquidity) {
@@ -126,20 +129,27 @@ export function useDerivedMintInfo(
       return pair && wrappedCurrencyA ? pair.priceOf(wrappedCurrencyA) : undefined
     }
   }, [chainId, currencyA, noLiquidity, pair, parsedAmounts])
+  const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   // liquidity minted
   const liquidityMinted = useMemo(() => {
-    const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
     const [tokenAmountA, tokenAmountB] = [
       wrappedCurrencyAmount(currencyAAmount, chainId),
       wrappedCurrencyAmount(currencyBAmount, chainId)
     ]
-    if (pair && totalSupply && tokenAmountA && tokenAmountB) {
+    if (
+      pair &&
+      totalSupply &&
+      tokenAmountA &&
+      tokenAmountB &&
+      tokenAmountA.greaterThan('0') &&
+      tokenAmountB.greaterThan('0')
+    ) {
       return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
     } else {
       return undefined
     }
-  }, [parsedAmounts, chainId, pair, totalSupply])
+  }, [currencyAAmount, chainId, currencyBAmount, pair, totalSupply])
 
   const poolTokenPercentage = useMemo(() => {
     if (liquidityMinted && totalSupply) {
@@ -162,7 +172,9 @@ export function useDerivedMintInfo(
     error = error ?? 'Enter amount'
   }
 
-  const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
+  if (currencyAAmount?.equalTo('0') || currencyBAmount?.equalTo('0')) {
+    error = error ?? 'Insufficient amount'
+  }
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
     error = 'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
