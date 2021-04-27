@@ -46,10 +46,8 @@ const HeaderFrame = styled.div`
   background-color: ${({ theme }) => theme.bg0};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
+    display: flex;
     padding: 0 1rem;
-    width: calc(100%);
-    position: relative;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`

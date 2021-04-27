@@ -94,7 +94,6 @@ export default function Swap({ history }: RouteComponentProps) {
     parsedAmount,
     currencies,
     inputError: swapInputError,
-    // v3Trade,
   } = useDerivedSwapInfo()
 
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
