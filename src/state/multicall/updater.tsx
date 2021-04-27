@@ -30,7 +30,7 @@ async function fetchChunk(
   results: { success: boolean; returnData: string }[]
   blockNumber: number
 }> {
-  console.debug('Fetching chunk', multicall2Contract, chunk, minBlockNumber)
+  console.debug('Fetching chunk', chunk, minBlockNumber)
   let resultsBlockNumber: number
   let results: { success: boolean; returnData: string }[]
   try {
@@ -41,7 +41,7 @@ async function fetchChunk(
     resultsBlockNumber = blockNumber.toNumber()
     results = returnData
   } catch (error) {
-    console.debug('Failed to fetch chunk inside retry', error)
+    console.debug('Failed to fetch chunk', error)
     throw error
   }
   if (resultsBlockNumber < minBlockNumber) {
@@ -205,12 +205,12 @@ export default function Updater(): null {
 
             // dispatch any errored calls
             if (erroredCalls.length > 0) {
-              console.debug('Errored calls', erroredCalls)
+              console.debug('Calls errored in fetch', erroredCalls)
               dispatch(
                 errorFetchingMulticallResults({
                   calls: erroredCalls,
                   chainId,
-                  fetchingBlockNumber: latestBlockNumber,
+                  fetchingBlockNumber: fetchBlockNumber,
                 })
               )
             }
