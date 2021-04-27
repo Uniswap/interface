@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Position } from '@uniswap/v3-sdk'
+import { Pool, Position } from '@uniswap/v3-sdk'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
@@ -22,7 +22,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9, Currency } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { UINT128MAX } from '../RemoveLiquidity/V3'
@@ -94,6 +94,36 @@ export const DarkBadge = styled.div`
   padding: 4px 6px;
 `
 
+function CurrentPriceCard({
+  inverted,
+  pool,
+  currencyQuote,
+  currencyBase,
+}: {
+  inverted?: boolean
+  pool?: Pool | null
+  currencyQuote?: Currency
+  currencyBase?: Currency
+}) {
+  if (!pool || !currencyQuote || !currencyBase) {
+    return null
+  }
+
+  return (
+    <DarkGreyCard width="32%">
+      <AutoColumn gap="sm" justify="flex-start">
+        <TYPE.main>Current</TYPE.main>
+        <RowFixed>
+          <TYPE.label>
+            {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)} {currencyQuote?.symbol} / 1{' '}
+            {currencyBase?.symbol}
+          </TYPE.label>
+        </RowFixed>
+      </AutoColumn>
+    </DarkGreyCard>
+  )
+}
+
 export function PositionPage({
   match: {
     params: { tokenId: tokenIdFromUrl },
@@ -134,10 +164,12 @@ export function PositionPage({
   const currencyBase = inverted ? currency1 : currency0
 
   // check if price is within range
-  const outOfRange: boolean =
+  const inRange: boolean =
     pool && typeof tickLower === 'number' && typeof tickUpper === 'number'
-      ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper
+      ? pool.tickCurrent >= tickLower && pool.tickCurrent < tickUpper
       : false
+  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : false
+  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : false
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
@@ -277,16 +309,16 @@ export function PositionPage({
           </RowBetween>
           <RowBetween>
             <BadgeWrapper>
-              {outOfRange ? (
+              {inRange ? (
+                <Badge variant={BadgeVariant.DEFAULT}>
+                  <ActiveDot /> &nbsp;
+                  <BadgeText>{t('Active')}</BadgeText>
+                </Badge>
+              ) : (
                 <Badge variant={BadgeVariant.WARNING}>
                   <AlertTriangle width={14} height={14} style={{ marginRight: '4px' }} />
                   &nbsp;
                   <BadgeText>{t('Out of range')}</BadgeText>
-                </Badge>
-              ) : (
-                <Badge variant={BadgeVariant.DEFAULT}>
-                  <ActiveDot /> &nbsp;
-                  <BadgeText>{t('Active')}</BadgeText>
                 </Badge>
               )}
             </BadgeWrapper>
@@ -351,8 +383,17 @@ export function PositionPage({
               </ButtonText>
             </TYPE.label>
 
+            {below && (
+              <CurrentPriceCard
+                inverted={inverted}
+                pool={pool}
+                currencyQuote={currencyQuote}
+                currencyBase={currencyBase}
+              />
+            )}
+
             <RowBetween>
-              <DarkGreyCard width="48%">
+              <DarkGreyCard width="32%">
                 <AutoColumn gap="sm" justify="flex-start">
                   <TYPE.main>Lower</TYPE.main>
                   <RowFixed>
@@ -370,7 +411,16 @@ export function PositionPage({
                 </AutoColumn>
               </DarkGreyCard>
 
-              <DarkGreyCard width="48%">
+              {inRange && (
+                <CurrentPriceCard
+                  inverted={inverted}
+                  pool={pool}
+                  currencyQuote={currencyQuote}
+                  currencyBase={currencyBase}
+                />
+              )}
+
+              <DarkGreyCard width="32%">
                 <AutoColumn gap="sm" justify="flex-start">
                   <TYPE.main>Upper</TYPE.main>
                   <RowFixed>
@@ -387,6 +437,15 @@ export function PositionPage({
                   </DarkBadge>
                 </AutoColumn>
               </DarkGreyCard>
+
+              {above && (
+                <CurrentPriceCard
+                  inverted={inverted}
+                  pool={pool}
+                  currencyQuote={currencyQuote}
+                  currencyBase={currencyBase}
+                />
+              )}
             </RowBetween>
           </AutoColumn>
         </DarkCard>
