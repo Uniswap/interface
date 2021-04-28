@@ -27,12 +27,12 @@ interface SwapHeaderProps {
   trade?: V2Trade | V3Trade | undefined
 }
 
-export default function SwapHeader({}: SwapHeaderProps) {
+export default function SwapHeader({ trade }: SwapHeaderProps) {
   return (
     <StyledSwapHeader>
       <RowBetween>
         <TYPE.black fontWeight={500} fontSize={16} style={{ opacity: '0.6' }}>
-          Swap
+          Swap {trade instanceof V2Trade ? '(V2)' : trade instanceof V3Trade ? '(V3)' : ''}
         </TYPE.black>
         <RowFixed>
           {/* Send icon appears here when expert mode is toggled on */}

@@ -305,6 +305,8 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const [showDetails, setShowDetails] = useState<boolean>(true)
 
+  const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+
   return (
     <>
       <TokenWarningModal
@@ -468,17 +470,11 @@ export default function Swap({ history }: RouteComponentProps) {
                       }}
                       width="100%"
                       id="swap-button"
-                      disabled={
-                        !isValid ||
-                        approvalState !== ApprovalState.APPROVED ||
-                        (priceImpactSeverity > 3 && !isExpertMode)
-                      }
+                      disabled={!isValid || approvalState !== ApprovalState.APPROVED || priceImpactTooHigh}
                       error={isValid && priceImpactSeverity > 2}
                     >
                       <Text fontSize={16} fontWeight={500}>
-                        {priceImpactSeverity > 3 && !isExpertMode
-                          ? `Price Impact High`
-                          : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                        {priceImpactTooHigh ? `Price Impact High` : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                       </Text>
                     </ButtonError>
                   </AutoColumn>
@@ -500,13 +496,13 @@ export default function Swap({ history }: RouteComponentProps) {
                     }
                   }}
                   id="swap-button"
-                  disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                  disabled={!isValid || priceImpactTooHigh || !!swapCallbackError}
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
                     {swapInputError
                       ? swapInputError
-                      : priceImpactSeverity > 3 && !isExpertMode
+                      : priceImpactTooHigh
                       ? `Price Impact Too High`
                       : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                   </Text>
