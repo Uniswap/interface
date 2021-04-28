@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { LiquidityMiningCampaign } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import Information from './Information'
@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { ChevronLeft } from 'react-feather'
 import { useActiveWeb3React } from '../../../hooks'
+import { usePrevious } from 'react-use'
 
 const GoBackContainer = styled.div`
   font-size: 11px;
@@ -31,7 +32,14 @@ interface PairViewProps {
 
 function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
   const history = useHistory()
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const previousChainId = usePrevious(chainId)
+
+  useEffect(() => {
+    if (chainId && previousChainId && chainId !== previousChainId) {
+      history.push('/pools')
+    }
+  }, [chainId, history, previousChainId])
 
   return (
     <AutoColumn gap="18px">

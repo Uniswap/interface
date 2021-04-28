@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { Pair } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
@@ -14,6 +14,8 @@ import { usePairLiquidityUSD } from '../../../hooks/usePairLiquidityUSD'
 import LiquidityMiningCampaigns from './LiquidityMiningCampaigns'
 import { useActiveWeb3React } from '../../../hooks'
 import { commify } from 'ethers/lib/utils'
+import { useHistory } from 'react-router-dom'
+import { usePrevious } from 'react-use'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
@@ -49,12 +51,20 @@ interface PairViewProps {
 }
 
 function PairView({ loading, pair }: PairViewProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const history = useHistory()
+  const previousChainId = usePrevious(chainId)
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
 
   const overallLoading = loading || volumeLoading || liquidityLoading
+
+  useEffect(() => {
+    if (chainId && previousChainId && chainId !== previousChainId) {
+      history.push('/pools')
+    }
+  }, [chainId, history, previousChainId])
 
   return (
     <>
