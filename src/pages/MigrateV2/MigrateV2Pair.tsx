@@ -17,7 +17,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
 import { getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
-import { V2_MIGRATOR_ADDRESSES } from 'constants/v3'
+import { V3_MIGRATOR_ADDRESSES } from 'constants/v3'
 import { PoolState, usePool } from 'hooks/usePools'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { LightCard, PinkCard, YellowCard } from 'components/Card'
@@ -219,7 +219,7 @@ function V2PairMigration({
     null
   )
 
-  const migratorAddress = chainId && V2_MIGRATOR_ADDRESSES[chainId]
+  const migratorAddress = chainId && V3_MIGRATOR_ADDRESSES[chainId]
   const [approval, approveManually] = useApproveCallback(pairBalance, migratorAddress)
   const isArgentWallet = useIsArgentWallet()
 

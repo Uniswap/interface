@@ -114,8 +114,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   font-size:  ${({ active }) => (active ? '20px' : '18px')};
 `
 
-const StyledBalanceMax = styled.button<{ enabled?: boolean }>`
-  /* height: 32px; */
+const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: ${({ theme }) => theme.primary5};
   border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
@@ -125,8 +124,8 @@ const StyledBalanceMax = styled.button<{ enabled?: boolean }>`
   cursor: pointer;
   /* margin-left: 0.5rem; */
   color: ${({ theme }) => theme.primary1};
-  opacity: ${({ enabled }) => (enabled ? 1 : 0.4)};
-  pointer-events: ${({ enabled }) => (enabled ? 'initial' : 'none')};
+  opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
+  pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
 
   :hover {
     border: 1px solid ${({ theme }) => theme.primary1};
@@ -149,7 +148,6 @@ interface CurrencyInputPanelProps {
   label?: string
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
-  disableCurrencySelect?: boolean
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
@@ -172,7 +170,6 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
-  disableCurrencySelect = false,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -189,6 +186,8 @@ export default function CurrencyInputPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
+
+  const disableCurrencySelect = typeof onCurrencySelect !== 'function'
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -207,25 +206,6 @@ export default function CurrencyInputPanel({
               <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
                 {label}
               </TYPE.body>
-
-              {/*<RowFixed>
-                <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-                  {currency && value ? '$250' + value : '$ -'}
-                </TYPE.body>
-
-                {hideBalance && currency && value && (
-                  <span style={{ marginLeft: '4px' }}>
-                    <Tooltip
-                      text="The estimated difference between the input value and output value due to allowed slippage and trade size."
-                      show={showToolTip}
-                    >
-                      <span onMouseEnter={open} onMouseLeave={close}>
-                        <SmallFormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-                      </span>
-                    </Tooltip>
-                  </span>
-                )}
-              </RowFixed>*/}
             </RowBetween>
           </LabelRow>
         )}
@@ -299,8 +279,8 @@ export default function CurrencyInputPanel({
                   </TYPE.body>
                 </RowFixed>
               )}
-              {!hideBalance && account && currency && label !== 'To' && (
-                <StyledBalanceMax enabled={showMaxButton} onClick={onMax}>
+              {showMaxButton && (
+                <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
                   Max
                 </StyledBalanceMax>
               )}
