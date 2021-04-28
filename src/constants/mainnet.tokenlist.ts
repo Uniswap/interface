@@ -117,6 +117,13 @@ export const MAINNET_TOKEN_LIST = {
       name: 'BUILD Finance',
       decimals: 18,
       logoURI: 'https://build.finance/images/logo.png'
+    },
+    {
+      chainId: 1,
+      address: '0xdB25f211AB05b1c97D595516F45794528a807ad8',
+      symbol: 'EURS',
+      name: 'STASIS EURS Token',
+      decimals: 2
     }
   ],
   version: {
