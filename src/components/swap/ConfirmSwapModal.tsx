@@ -1,4 +1,4 @@
-import { currencyEquals } from '@uniswap/sdk-core'
+import { currencyEquals, Percent } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useCallback, useMemo } from 'react'
@@ -86,10 +86,12 @@ export default function ConfirmSwapModal({
     ) : null
   }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
+  const slippageTolerancePercent = new Percent(allowedSlippage, 10_000)
+
   // text to show while loading
-  const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${
+  const pendingText = `Swapping ${trade?.maximumAmountIn(slippageTolerancePercent)?.toSignificant(6)} ${
     trade?.inputAmount?.currency?.symbol
-  } for ${trade?.outputAmount?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
+  } for ${trade?.minimumAmountOut(slippageTolerancePercent)?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
 
   const confirmationContent = useCallback(
     () =>

@@ -8,7 +8,7 @@ import { StyledBalanceMaxMini } from './styleds'
 import Switch from '../../assets/svg/switch.svg'
 
 interface TradePriceProps {
-  price?: Price
+  price: Price
   showInverted: boolean
   setShowInverted: (showInverted: boolean) => void
 }
@@ -23,10 +23,10 @@ const StyledPriceContainer = styled.div`
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
 
-  const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
+  const formattedPrice = showInverted ? price.toSignificant(6) : price.invert()?.toSignificant(6)
 
-  const label = showInverted ? `${price?.quoteCurrency?.symbol}` : `${price?.baseCurrency?.symbol} `
-  const labelInverted = showInverted ? `${price?.baseCurrency?.symbol} ` : `${price?.quoteCurrency?.symbol}`
+  const label = showInverted ? `${price.quoteCurrency?.symbol}` : `${price.baseCurrency?.symbol} `
+  const labelInverted = showInverted ? `${price.baseCurrency?.symbol} ` : `${price.quoteCurrency?.symbol}`
   const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted])
 
   return (
