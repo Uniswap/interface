@@ -391,11 +391,10 @@ export default function Swap({ history }: RouteComponentProps) {
                 setShowInverted={setShowInverted}
               />
             ) : null}
-            {toggledVersion === Version.v3 && v3TradeState === V3TradeState.VALID && isTradeBetter(v3Trade, v2Trade) ? (
+            {v3TradeState !== V3TradeState.VALID ? null : toggledVersion === Version.v3 &&
+              isTradeBetter(v3Trade, v2Trade) ? (
               <BetterTradeLink version={Version.v2} />
-            ) : toggledVersion === Version.v2 &&
-              v3TradeState === V3TradeState.VALID &&
-              isTradeBetter(v2Trade, v3Trade) ? (
+            ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
               <BetterTradeLink version={Version.v3} />
             ) : null}
             <BottomGrouping>
