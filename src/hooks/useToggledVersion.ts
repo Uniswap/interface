@@ -1,8 +1,8 @@
 import useParsedQueryString from './useParsedQueryString'
 
 export enum Version {
-  v2 = 'v2',
-  v3 = 'v3',
+  v2 = 'V2',
+  v3 = 'V3',
 }
 
 export const DEFAULT_VERSION: Version = Version.v3

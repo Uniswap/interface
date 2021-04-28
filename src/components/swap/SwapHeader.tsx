@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Version } from '../../hooks/useToggledVersion'
 import Settings from '../Settings'
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 
 // import { Info } from 'react-feather'
 
@@ -24,15 +23,15 @@ const StyledSwapHeader = styled.div`
 // `
 
 interface SwapHeaderProps {
-  trade?: V2Trade | V3Trade | undefined
+  toggledVersion: Version
 }
 
-export default function SwapHeader({ trade }: SwapHeaderProps) {
+export default function SwapHeader({ toggledVersion }: SwapHeaderProps) {
   return (
     <StyledSwapHeader>
       <RowBetween>
         <TYPE.black fontWeight={500} fontSize={16} style={{ opacity: '0.6' }}>
-          Swap {trade instanceof V2Trade ? '(V2)' : trade instanceof V3Trade ? '(V3)' : ''}
+          Swap ({toggledVersion})
         </TYPE.black>
         <RowFixed>
           {/* Send icon appears here when expert mode is toggled on */}
