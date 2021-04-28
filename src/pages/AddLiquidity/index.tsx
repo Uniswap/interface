@@ -555,7 +555,6 @@ export default function AddLiquidity({
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_A]}
                       onUserInput={onFieldAInput}
-                      disableCurrencySelect={true}
                       onMax={() => {
                         onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                       }}
@@ -573,7 +572,6 @@ export default function AddLiquidity({
 
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.CURRENCY_B]}
-                      disableCurrencySelect={true}
                       onUserInput={onFieldBInput}
                       onCurrencySelect={handleCurrencyBSelect}
                       onMax={() => {

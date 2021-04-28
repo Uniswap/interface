@@ -138,8 +138,6 @@ export function useSwapCallback(
       }
     }
 
-    const tradeVersion = getTradeVersion(trade)
-
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {
@@ -200,7 +198,7 @@ export function useSwapCallback(
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
           if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-          throw new Error('Unexpected error. Please contact support: none of the calls threw an error')
+          throw new Error('Unexpected error. Please contact support.')
         }
 
         const {
@@ -217,11 +215,12 @@ export function useSwapCallback(
             gasLimit: calculateGasMargin(gasEstimate),
             ...(value && !isZero(value) ? { value } : {}),
           })
-          .then((response: any) => {
+          .then((response) => {
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
-            const inputAmount = trade.inputAmount.toSignificant(3)
-            const outputAmount = trade.outputAmount.toSignificant(3)
+            const slippageTolerancePercent = new Percent(allowedSlippage)
+            const inputAmount = trade.maximumAmountIn(slippageTolerancePercent).toSignificant(3)
+            const outputAmount = trade.minimumAmountOut(slippageTolerancePercent).toSignificant(3)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
             const withRecipient =
@@ -233,6 +232,8 @@ export function useSwapCallback(
                       : recipientAddressOrName
                   }`
 
+            const tradeVersion = getTradeVersion(trade)
+
             const withVersion = tradeVersion === Version.v3 ? withRecipient : `${withRecipient} on ${tradeVersion}`
 
             addTransaction(response, {
@@ -241,7 +242,7 @@ export function useSwapCallback(
 
             return response.hash
           })
-          .catch((error: any) => {
+          .catch((error) => {
             // if the user rejected the tx, pass this along
             if (error?.code === 4001) {
               throw new Error('Transaction rejected.')
@@ -254,5 +255,5 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, allowedSlippage, addTransaction])
 }

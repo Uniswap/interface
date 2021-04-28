@@ -209,7 +209,6 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             currency={stakingInfo.stakedAmount.token}
             pair={dummyPair}
             label={''}
-            disableCurrencySelect={true}
             customBalanceText={'Available to deposit: '}
             id="stake-liquidity-token"
           />

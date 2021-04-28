@@ -605,7 +605,6 @@ export default function RemoveLiquidity({
                     onUserInput(Field.LIQUIDITY_PERCENT, '100')
                   }}
                   showMaxButton={!atMaxAmount}
-                  disableCurrencySelect
                   currency={pair?.liquidityToken}
                   pair={pair}
                   id="liquidity-amount"

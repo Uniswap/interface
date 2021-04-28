@@ -37,7 +37,7 @@ import {
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
   V3_CORE_FACTORY_ADDRESSES,
   TICK_LENS_ADDRESSES,
-  V2_MIGRATOR_ADDRESSES,
+  V3_MIGRATOR_ADDRESSES,
   QUOTER_ADDRESSES,
 } from 'constants/v3'
 import { useMemo } from 'react'
@@ -69,7 +69,7 @@ export function useV1MigratorContract(): Contract | null {
 
 export function useV2MigratorContract(): V3Migrator | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && V2_MIGRATOR_ADDRESSES[chainId], V2MigratorABI, true) as V3Migrator | null
+  return useContract(chainId && V3_MIGRATOR_ADDRESSES[chainId], V2MigratorABI, true) as V3Migrator | null
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
