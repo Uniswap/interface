@@ -22,7 +22,7 @@ import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { WETH9, Percent } from '@uniswap/sdk-core'
+import { WETH9, Percent, CurrencyAmount } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
 import styled from 'styled-components'
 import { Wrapper, SmallMaxButton } from './styled'
@@ -119,16 +119,21 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       return
     }
 
-    const involvesWETH = liquidityValue0.token.equals(WETH9[chainId]) || liquidityValue1.token.equals(WETH9[chainId])
-
-    const { calldata, value } = NonfungiblePositionManager.decreaseCallParameters(positionSDK, {
+    const { calldata, value } = NonfungiblePositionManager.removeCallParameters(positionSDK, {
       tokenId: tokenId.toString(),
       liquidityPercentage,
       slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-      recipient: account,
       deadline: deadline.toString(),
-      receiveEther: involvesWETH,
-      nonfungiblePositionManagerAddressOverride: positionManager.address,
+      collectOptions: {
+        expectedCurrencyOwed0: liquidityValue0.token.equals(WETH9[chainId])
+          ? CurrencyAmount.ether(feeValue0.raw)
+          : feeValue0,
+        expectedCurrencyOwed1: liquidityValue1.token.equals(WETH9[chainId])
+          ? CurrencyAmount.ether(feeValue1.raw)
+          : feeValue1,
+        recipient: account,
+        nonfungiblePositionManagerAddressOverride: positionManager.address,
+      },
     })
 
     const txn = {
@@ -215,7 +220,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         <TYPE.label margin="0 10px" opacity={'0.4'}>
           {' > '}
         </TYPE.label>
-        <TYPE.label>{liquidityPercentage?.equalTo(0) ? 'Collect Fees' : 'Remove Liquidity'}</TYPE.label>
+        <TYPE.label>Remove Liquidity</TYPE.label>
       </AutoRow>
       <AppBody>
         <Wrapper>
@@ -306,8 +311,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               </LightCard>
               <div style={{ display: 'flex' }}>
                 <AutoColumn gap="12px" style={{ flex: '1' }}>
-                  <ButtonConfirmed confirmed={false} disabled={!liquidityValue0} onClick={burn}>
-                    {error ?? liquidityPercentage?.equalTo(0) ? 'Collect Fees' : 'Remove Liquidity'}
+                  <ButtonConfirmed confirmed={false} disabled={percent === 0 || !liquidityValue0} onClick={burn}>
+                    {error ?? 'Remove Liquidity'}
                   </ButtonConfirmed>
                 </AutoColumn>
               </div>

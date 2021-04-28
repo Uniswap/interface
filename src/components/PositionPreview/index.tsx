@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import { DarkCard, DarkGreyCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -21,12 +21,10 @@ export const PositionPreview = ({ position, title }: { position: Position; title
   const sorted = baseCurrency === currency0
   const quoteCurrency = sorted ? currency1 : currency0
 
-  const quotePrice = useMemo(() => {
-    return sorted ? position.pool.priceOf(position.pool.token1) : position.pool.priceOf(position.pool.token0)
-  }, [sorted, position.pool])
+  const price = sorted ? position.pool.priceOf(position.pool.token0) : position.pool.priceOf(position.pool.token1)
 
-  const priceLower = sorted ? position.token0PriceUpper.invert() : position.token0PriceLower
-  const priceUpper = sorted ? position.token0PriceLower.invert() : position.token0PriceUpper
+  const priceLower = sorted ? position.token0PriceLower : position.token0PriceUpper.invert()
+  const priceUpper = sorted ? position.token0PriceUpper : position.token0PriceLower.invert()
 
   const handleRateChange = useCallback(() => {
     setBaseCurrency(quoteCurrency)
@@ -38,8 +36,8 @@ export const PositionPreview = ({ position, title }: { position: Position; title
         <RowBetween>
           {title ? <TYPE.main>{title}</TYPE.main> : <div />}
           <RateToggle
-            currencyA={sorted ? currency1 : currency0}
-            currencyB={sorted ? currency0 : currency1}
+            currencyA={sorted ? currency0 : currency1}
+            currencyB={sorted ? currency1 : currency0}
             handleRateToggle={handleRateChange}
           />
         </RowBetween>
@@ -68,14 +66,12 @@ export const PositionPreview = ({ position, title }: { position: Position; title
         </RowBetween>
         <RowBetween>
           <TYPE.label>Current Price</TYPE.label>
-          <TYPE.label>{`1 ${quoteCurrency?.symbol} = ${quotePrice.toSignificant(6)} ${
-            baseCurrency?.symbol
-          }`}</TYPE.label>
+          <TYPE.label>{`${price.toSignificant(6)} ${quoteCurrency?.symbol} = 1 ${baseCurrency?.symbol}`}</TYPE.label>
         </RowBetween>
         <RowBetween>
           <DarkCard width="46%" padding="8px">
             <AutoColumn gap="4px" justify="center">
-              <TYPE.main fontSize="12px">Min price</TYPE.main>
+              <TYPE.main fontSize="12px">Lower</TYPE.main>
               <TYPE.label textAlign="center">{`${priceLower.toSignificant(4)}`}</TYPE.label>
               <TYPE.main
                 textAlign="center"
@@ -88,7 +84,7 @@ export const PositionPreview = ({ position, title }: { position: Position; title
           </TYPE.main>
           <DarkCard width="46%" padding="8px">
             <AutoColumn gap="4px" justify="center">
-              <TYPE.main fontSize="12px">Max price</TYPE.main>
+              <TYPE.main fontSize="12px">Upper</TYPE.main>
               <TYPE.label textAlign="center">{`${priceUpper.toSignificant(4)}`}</TYPE.label>
               <TYPE.main
                 textAlign="center"

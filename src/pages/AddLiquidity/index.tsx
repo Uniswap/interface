@@ -190,13 +190,13 @@ export default function AddLiquidity({
     if (position && account && deadline && fractionalizedTolerance) {
       const { calldata, value } =
         hasExistingPosition && tokenId
-          ? NonfungiblePositionManager.increaseCallParameters(position, {
+          ? NonfungiblePositionManager.addCallParameters(position, {
               tokenId,
               slippageTolerance: fractionalizedTolerance,
               deadline: deadline.toString(),
               useEther: currencyA === ETHER || currencyB === ETHER,
             })
-          : NonfungiblePositionManager.increaseCallParameters(position, {
+          : NonfungiblePositionManager.addCallParameters(position, {
               slippageTolerance: fractionalizedTolerance,
               recipient: account,
               deadline: deadline.toString(),
@@ -467,9 +467,8 @@ export default function AddLiquidity({
                             <TYPE.main>Starting Price</TYPE.main>
                             {price ? (
                               <TYPE.main>
-                                1 {currencyA?.symbol} ={' '}
                                 {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
-                                {currencyB?.symbol}
+                                {currencyB?.symbol} = 1 {currencyA?.symbol}
                               </TYPE.main>
                             ) : (
                               '-'
