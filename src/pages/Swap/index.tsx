@@ -22,6 +22,7 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 import SwapHeader from '../../components/swap/SwapHeader'
 import CurrencyLogo from '../../components/CurrencyLogo'
+import { V3TradeState } from '../../hooks/useBestV3Trade'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { useActiveWeb3React } from '../../hooks'
@@ -90,7 +91,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
-    v3TradeState: { trade: v3Trade },
+    v3TradeState: { trade: v3Trade, state: v3TradeState },
     currencyBalances,
     parsedAmount,
     currencies,
@@ -390,9 +391,11 @@ export default function Swap({ history }: RouteComponentProps) {
                 setShowInverted={setShowInverted}
               />
             ) : null}
-            {toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+            {toggledVersion === Version.v3 && v3TradeState === V3TradeState.VALID && isTradeBetter(v3Trade, v2Trade) ? (
               <BetterTradeLink version={Version.v2} />
-            ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+            ) : toggledVersion === Version.v2 &&
+              v3TradeState === V3TradeState.VALID &&
+              isTradeBetter(v2Trade, v3Trade) ? (
               <BetterTradeLink version={Version.v3} />
             ) : null}
             <BottomGrouping>
