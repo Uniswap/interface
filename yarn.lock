@@ -4158,10 +4158,10 @@
     "@uniswap/v2-core" "1.0.1"
     "@uniswap/v3-core" "1.0.0-rc.2"
 
-"@uniswap/v3-sdk@^1.0.0-alpha.23":
-  version "1.0.0-alpha.23"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-1.0.0-alpha.23.tgz#0971b38acd46e08d727f17ad8b10b5c21a25b99f"
-  integrity sha512-ibVW9EnwymIQAHBCCQCorwA5yLzRfQ4OYwafTkD1fHx2UtrZoHVYLBSshMa4tcN1uMAuiglFOQv/IIJ20ZRgyw==
+"@uniswap/v3-sdk@^1.0.0-alpha.24":
+  version "1.0.0-alpha.24"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-1.0.0-alpha.24.tgz#c516d3dfb5de84e92a1d22fe065fd2223b77725f"
+  integrity sha512-X06R2y3xntZoLFSrGp/JVLYOc6l9wSFcLj3qjgCL16ktRtkTVJFoMTa4gk48/DZ0+uQe3R4S2YJrBbeqWhd5Ww==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
