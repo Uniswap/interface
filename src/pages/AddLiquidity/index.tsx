@@ -39,8 +39,6 @@ import { currencyId } from '../../utils/currencyId'
 import TradePrice from '../../components/swap/TradePrice'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import { useWrappingToken } from '../../hooks/useContract'
-import NetworkWarningModal from '../../components/NetworkWarningModal'
-import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
 
 export default function AddLiquidity({
   match: {
@@ -52,7 +50,6 @@ export default function AddLiquidity({
   const theme = useContext(ThemeContext)
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyWrapper = useWrappingToken(nativeCurrency)
-  const urlLoadedChainId = useTargetedChainIdFromUrl()
   const blockGasLimit = useBlockGasLimit()
 
   const currencyA = useCurrency(currencyIdA)
@@ -316,10 +313,6 @@ export default function AddLiquidity({
 
   return (
     <>
-      <NetworkWarningModal
-        isOpen={!!account && !!urlLoadedChainId && chainId !== urlLoadedChainId}
-        targetedNetwork={urlLoadedChainId}
-      />
       <AppBody>
         <AddRemoveTabs creating={isCreate} adding={true} />
         <Wrapper>
