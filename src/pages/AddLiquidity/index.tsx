@@ -197,26 +197,31 @@ export default function AddLiquidity({
     if (pairAddress) {
       if (!pair) return
 
-      const virtualReserveA = pair.virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
-      const virtualReserveB = pair.virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
-
-      const currentRate = JSBI.divide(
-        JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
-        virtualReserveA.raw
-      )
-
-      const allowedSlippageAmount = JSBI.divide(
-        JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
-        JSBI.BigInt(10000)
-      )
-
-      const vReserveRatioBounds = [
-        JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
-        JSBI.add(currentRate, allowedSlippageAmount).toString()
-      ]
-
       if (currencyA === ETHER || currencyB === ETHER) {
         const tokenBIsETH = currencyB === ETHER
+
+        const virtualReserveToken = pair.virtualReserveOf(
+          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId) as Token
+        )
+        const virtualReserveETH = pair.virtualReserveOf(
+          wrappedCurrency(tokenBIsETH ? currencyB : currencyA, chainId) as Token
+        )
+
+        const currentRate = JSBI.divide(
+          JSBI.multiply(virtualReserveETH.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+          virtualReserveToken.raw
+        )
+
+        const allowedSlippageAmount = JSBI.divide(
+          JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
+          JSBI.BigInt(10000)
+        )
+
+        const vReserveRatioBounds = [
+          JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
+          JSBI.add(currentRate, allowedSlippageAmount).toString()
+        ]
+
         estimate = router.estimateGas.addLiquidityETH
         method = router.addLiquidityETH
         args = [
@@ -232,6 +237,24 @@ export default function AddLiquidity({
         ]
         value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
       } else {
+        const virtualReserveA = pair.virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
+        const virtualReserveB = pair.virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
+
+        const currentRate = JSBI.divide(
+          JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+          virtualReserveA.raw
+        )
+
+        const allowedSlippageAmount = JSBI.divide(
+          JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
+          JSBI.BigInt(10000)
+        )
+
+        const vReserveRatioBounds = [
+          JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
+          JSBI.add(currentRate, allowedSlippageAmount).toString()
+        ]
+
         estimate = router.estimateGas.addLiquidity
         method = router.addLiquidity
         args = [
