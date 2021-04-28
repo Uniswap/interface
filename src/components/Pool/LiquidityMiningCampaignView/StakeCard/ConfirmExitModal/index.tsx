@@ -1,11 +1,11 @@
 import { Pair, PricedTokenAmount } from 'dxswap-sdk'
 import React, { useCallback } from 'react'
 import { Box, Flex } from 'rebass'
-import { TYPE } from '../../../../theme'
+import { TYPE } from '../../../../../theme'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
-} from '../../../TransactionConfirmationModal'
+} from '../../../../TransactionConfirmationModal'
 import ConfirmStakingModalFooter from '../ModalBase/Footer'
 
 interface ConfirmExitModalProps {

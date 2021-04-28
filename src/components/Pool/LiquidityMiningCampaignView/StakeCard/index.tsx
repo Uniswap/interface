@@ -1,49 +1,52 @@
 import { JSBI, LiquidityMiningCampaign, parseBigintIsh, TokenAmount } from 'dxswap-sdk'
-import { Link } from 'react-router-dom'
-import { transparentize } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
+import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
+
 import { useActiveWeb3React } from '../../../../hooks'
 import { useLiquidityMiningActionCallbacks } from '../../../../hooks/useLiquidityMiningActionCallbacks'
 import { useLiquidityMiningCampaignPosition } from '../../../../hooks/useLiquidityMiningCampaignPosition'
 import { useTransactionAdder } from '../../../../state/transactions/hooks'
+import { useTokenBalance } from '../../../../state/wallet/hooks'
 import { TYPE } from '../../../../theme'
 import { ButtonDark } from '../../../Button'
-import { AutoColumn } from '../../../Column'
-import Modal from '../../../Modal'
-import { RowBetween } from '../../../Row'
-import ConfirmStakingModal from '../ConfirmStakingModal'
-import ConfirmWithdrawalModal from '../ConfirmWithdrawalModal'
-import ConfirmClaimModal from '../ConfirmClaimModal'
-import ConfirmExitModal from '../ConfirmExitModal'
-import LiquidityMiningInformation from './Information'
-import LiquidityMiningYourStake from './YourStake'
 
-const Wrapper = styled.div`
-  width: 100%;
-  padding: 20px 32px;
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+import { GreyCard } from '../../../Card'
+import { AutoColumn } from '../../../Column'
+import CurrencyLogo from '../../../CurrencyLogo'
+import DoubleCurrencyLogo from '../../../DoubleLogo'
+import Row, { RowBetween } from '../../../Row'
+import DataDisplayer from '../DataDisplayer'
+import ConfirmClaimModal from './ConfirmClaimModal'
+import ConfirmExitModal from './ConfirmExitModal'
+import ConfirmStakingModal from './ConfirmStakingModal'
+import ConfirmWithdrawalModal from './ConfirmWithdrawalModal'
+
+const StyledPositionCard = styled(GreyCard)`
+  border: none;
+  padding: 24px 28px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(147.37% 164.97% at 50% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0) 100%), #1f1d2c;
+  background-blend-mode: overlay, normal;
 `
 
-interface LiquidityMiningCampaignProps {
-  show: boolean
-  onDismiss: () => void
-  campaign: LiquidityMiningCampaign
-  stakableTokenBalance?: TokenAmount
+interface FullPositionCardProps {
+  campaign?: LiquidityMiningCampaign
 }
 
-export function LiquidityMiningCampaignModal({
-  show,
-  onDismiss,
-  campaign,
-  stakableTokenBalance
-}: LiquidityMiningCampaignProps) {
+export default function StakeCard({ campaign }: FullPositionCardProps) {
   const { account } = useActiveWeb3React()
-  const callbacks = useLiquidityMiningActionCallbacks(campaign.address)
-  const { stakedTokenAmount, claimableRewardAmounts } = useLiquidityMiningCampaignPosition(
-    campaign,
-    account ?? undefined
-  )
+  const stakableTokenBalance = useTokenBalance(account || undefined, campaign?.targetedPair.liquidityToken)
+  const callbacks = useLiquidityMiningActionCallbacks(campaign?.address)
+  const {
+    stakedTokenAmount,
+    claimableRewardAmounts,
+    claimedRewardAmounts,
+    totalRewardedAmounts
+  } = useLiquidityMiningCampaignPosition(campaign, account || undefined)
   const addTransaction = useTransactionAdder()
 
   const [attemptingTransaction, setAttemptingTransaction] = useState(false)
@@ -57,11 +60,13 @@ export function LiquidityMiningCampaignModal({
   const [disabledWithdrawing, setDisabledWithdrawing] = useState(false)
   const [disabledClaim, setDisabledClaim] = useState(false)
   const [disabledExit, setDisabledExit] = useState(false)
-  const [normalizedStakableTokenBalance, setNormalizedStakableTokenBalance] = useState<TokenAmount>(
-    new TokenAmount(campaign.targetedPair.liquidityToken, '0')
-  )
+  const [normalizedStakableTokenBalance, setNormalizedStakableTokenBalance] = useState<TokenAmount | null>(null)
 
   useEffect(() => {
+    if (!campaign) {
+      setNormalizedStakableTokenBalance(null)
+      return
+    }
     if (!stakableTokenBalance) {
       setNormalizedStakableTokenBalance(new TokenAmount(campaign.targetedPair.liquidityToken, '0'))
     } else if (campaign.stakingCap.equalTo('0')) {
@@ -75,40 +80,44 @@ export function LiquidityMiningCampaignModal({
 
   useEffect(() => {
     setDisabledStaking(
-      !campaign.currentlyActive || !callbacks || !stakableTokenBalance || stakableTokenBalance.equalTo('0')
+      !campaign ||
+        !campaign.currentlyActive ||
+        !callbacks ||
+        !normalizedStakableTokenBalance ||
+        normalizedStakableTokenBalance.equalTo('0')
     )
-  }, [callbacks, campaign.currentlyActive, stakableTokenBalance])
+  }, [callbacks, campaign, normalizedStakableTokenBalance])
 
   useEffect(() => {
     const now = JSBI.BigInt(Math.floor(Date.now() / 1000))
     setDisabledWithdrawing(
-      !JSBI.greaterThanOrEqual(now, parseBigintIsh(campaign.startsAt)) ||
+      !campaign ||
+        !JSBI.greaterThanOrEqual(now, parseBigintIsh(campaign.startsAt)) ||
         !callbacks ||
         !stakedTokenAmount ||
         stakedTokenAmount.equalTo('0') ||
         (campaign.locked && !JSBI.greaterThanOrEqual(now, parseBigintIsh(campaign.endsAt)))
     )
-  }, [
-    callbacks,
-    campaign.currentlyActive,
-    campaign.startsAt,
-    campaign.locked,
-    campaign.endsAt,
-    stakableTokenBalance,
-    stakedTokenAmount
-  ])
+  }, [callbacks, campaign, stakedTokenAmount])
 
   useEffect(() => {
     setDisabledClaim(
-      !callbacks ||
+      !campaign ||
+        !callbacks ||
         !JSBI.greaterThanOrEqual(JSBI.BigInt(Math.floor(Date.now() / 1000)), parseBigintIsh(campaign.startsAt)) ||
         !claimableRewardAmounts.find(amount => amount.greaterThan('0'))
     )
-  }, [callbacks, campaign.startsAt, claimableRewardAmounts, stakableTokenBalance, stakedTokenAmount])
+  }, [callbacks, campaign, claimableRewardAmounts])
 
   useEffect(() => {
-    setDisabledExit(disabledClaim || !stakedTokenAmount || stakedTokenAmount.equalTo('0'))
-  }, [disabledClaim, stakedTokenAmount])
+    const now = JSBI.BigInt(Math.floor(Date.now() / 1000))
+    setDisabledExit(
+      disabledClaim ||
+        !stakedTokenAmount ||
+        stakedTokenAmount.equalTo('0') ||
+        !!(campaign?.locked && !JSBI.greaterThanOrEqual(now, parseBigintIsh(campaign.endsAt)))
+    )
+  }, [campaign, disabledClaim, stakedTokenAmount])
 
   const handleDismiss = useCallback(() => {
     setShowStakingConfirmationModal(false)
@@ -149,7 +158,7 @@ export function LiquidityMiningCampaignModal({
 
   const handleStakeConfirmation = useCallback(
     (amount: TokenAmount) => {
-      if (!callbacks) return
+      if (!callbacks || !campaign) return
       setAttemptingTransaction(true)
       callbacks
         .stake(amount)
@@ -173,7 +182,7 @@ export function LiquidityMiningCampaignModal({
 
   const handleWithdrawalConfirmation = useCallback(
     (amount: TokenAmount) => {
-      if (!callbacks) return
+      if (!callbacks || !campaign) return
       setAttemptingTransaction(true)
       callbacks
         .withdraw(amount)
@@ -240,84 +249,150 @@ export function LiquidityMiningCampaignModal({
   }, [account, addTransaction, callbacks])
 
   return (
-    <Modal maxWidth={670} isOpen={show} onDismiss={onDismiss}>
-      <Wrapper>
-        <AutoColumn gap="24px">
-          <TYPE.mediumHeader color="text4" lineHeight="24px" letterSpacing="-0.01em">
-            Rewards program
-          </TYPE.mediumHeader>
-          <LiquidityMiningInformation campaign={campaign} />
-          {!!account && (
-            <>
-              <div>
-                <RowBetween>
-                  <ButtonDark
-                    padding="8px"
-                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                    width="100%"
-                    marginRight="4px"
-                    disabled={disabledStaking}
-                    onClick={handleStakingRequest}
-                  >
-                    Deposit {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP
-                  </ButtonDark>
-                  <ButtonDark
-                    padding="8px"
-                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                    width="100%"
-                    marginLeft="4px"
-                    disabled={disabledWithdrawing}
-                    onClick={handleWithdrawalRequest}
-                  >
-                    Withdraw {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP
-                  </ButtonDark>
-                </RowBetween>
-                <RowBetween mt="8px">
-                  <ButtonDark
-                    as={Link}
-                    padding="8px"
-                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                    width="100%"
-                    to={`/add/${campaign.targetedPair.token0.address}/${campaign.targetedPair.token1.address}`}
-                  >
-                    Get {campaign.targetedPair.token0.symbol}/{campaign.targetedPair.token1.symbol} LP tokens
-                  </ButtonDark>
-                </RowBetween>
-              </div>
-              <div>
-                <LiquidityMiningYourStake
-                  stake={stakedTokenAmount || undefined}
-                  claimables={claimableRewardAmounts}
-                  targetedPair={campaign.targetedPair}
+    <>
+      <StyledPositionCard>
+        <AutoColumn gap="8px">
+          <Flex flexDirection="column">
+            <Box mb="20px">
+              <TYPE.body color="white" fontWeight="500" lineHeight="19.5px">
+                Your stake
+              </TYPE.body>
+            </Box>
+            <Flex mb="18px" justifyContent="space-between">
+              <Box>
+                <DataDisplayer
+                  title="REWARDED"
+                  data={
+                    totalRewardedAmounts.length === 0 ? (
+                      <Row>
+                        <Skeleton width="40px" height="14px" />
+                        <CurrencyLogo loading marginLeft={4} size="14px" />
+                      </Row>
+                    ) : (
+                      totalRewardedAmounts.map(totalRewardedAmount => {
+                        return (
+                          <Row key={totalRewardedAmount.token.address}>
+                            {totalRewardedAmount.toSignificant(4)}
+                            <CurrencyLogo size="14px" marginLeft={4} currency={totalRewardedAmount.token} />
+                          </Row>
+                        )
+                      })
+                    )
+                  }
                 />
-                <RowBetween marginTop="16px">
-                  <ButtonDark
-                    padding="8px"
-                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                    width="100%"
-                    marginRight="4px"
-                    onClick={handleClaimRequest}
-                    disabled={disabledClaim}
-                  >
-                    Claim rewards
-                  </ButtonDark>
-                  <ButtonDark
-                    padding="8px"
-                    style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
-                    width="100%"
-                    marginRight="4px"
-                    onClick={handleExitRequest}
-                    disabled={disabledExit}
-                  >
-                    Claim & withdraw
-                  </ButtonDark>
-                </RowBetween>
-              </div>
-            </>
-          )}
+              </Box>
+              <Box>
+                <DataDisplayer
+                  title="CLAIMABLE"
+                  data={
+                    claimableRewardAmounts.length === 0 ? (
+                      <Row>
+                        <Skeleton width="40px" height="14px" />
+                        <CurrencyLogo loading marginLeft={4} size="14px" />
+                      </Row>
+                    ) : (
+                      claimableRewardAmounts.map(claimableRewardAmount => {
+                        return (
+                          <Row key={claimableRewardAmount.token.address}>
+                            {claimableRewardAmount.toSignificant(4)}
+                            <CurrencyLogo size="14px" marginLeft={4} currency={claimableRewardAmount.token} />
+                          </Row>
+                        )
+                      })
+                    )
+                  }
+                />
+              </Box>
+              <Box>
+                <DataDisplayer
+                  title="CLAIMED"
+                  data={
+                    claimedRewardAmounts.length === 0 ? (
+                      <Row>
+                        <Skeleton width="40px" height="14px" />
+                        <CurrencyLogo loading marginLeft={4} size="14px" />
+                      </Row>
+                    ) : (
+                      claimedRewardAmounts.map(claimedRewardAmount => {
+                        return (
+                          <Row key={claimedRewardAmount.token.address}>
+                            {claimedRewardAmount.toSignificant(4)}
+                            <CurrencyLogo size="14px" marginLeft={4} currency={claimedRewardAmount.token} />
+                          </Row>
+                        )
+                      })
+                    )
+                  }
+                />
+              </Box>
+            </Flex>
+            <Flex justifyContent="space-between" mb="20px">
+              <Box>
+                <DataDisplayer
+                  title="STAKE SIZE"
+                  data={
+                    <Row>
+                      {stakedTokenAmount ? stakedTokenAmount.toSignificant(4) : <Skeleton width="40px" height="14px" />}
+                      <DoubleCurrencyLogo
+                        loading={!campaign}
+                        size={14}
+                        marginLeft={4}
+                        currency0={campaign?.targetedPair.token0}
+                        currency1={campaign?.targetedPair.token1}
+                      />
+                    </Row>
+                  }
+                />
+              </Box>
+            </Flex>
+          </Flex>
+          <RowBetween>
+            <ButtonDark
+              padding="8px"
+              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+              width="100%"
+              marginRight="4px"
+              disabled={disabledStaking}
+              onClick={handleStakingRequest}
+            >
+              Deposit and stake
+            </ButtonDark>
+            <ButtonDark
+              padding="8px"
+              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+              width="100%"
+              marginLeft="4px"
+              disabled={disabledClaim}
+              onClick={handleClaimRequest}
+            >
+              Claim rewards
+            </ButtonDark>
+          </RowBetween>
+          <RowBetween>
+            <ButtonDark
+              padding="8px"
+              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+              width="100%"
+              marginRight="4px"
+              disabled={disabledWithdrawing}
+              onClick={handleWithdrawalRequest}
+            >
+              Withdraw
+            </ButtonDark>
+            <ButtonDark
+              padding="8px"
+              style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
+              width="100%"
+              marginLeft="4px"
+              disabled={disabledExit}
+              onClick={handleExitRequest}
+            >
+              Claim and withdraw
+            </ButtonDark>
+          </RowBetween>
         </AutoColumn>
-      </Wrapper>
-      {campaign.address && (
+      </StyledPositionCard>
+      {campaign && campaign.address && normalizedStakableTokenBalance && (
         <ConfirmStakingModal
           isOpen={showStakingConfirmationModal}
           stakableTokenBalance={normalizedStakableTokenBalance}
@@ -336,7 +411,7 @@ export function LiquidityMiningCampaignModal({
         isOpen={showWithdrawalConfirmationModal}
         withdrawablTokenBalance={stakedTokenAmount || undefined}
         onDismiss={handleDismiss}
-        stakablePair={campaign.targetedPair}
+        stakablePair={campaign?.targetedPair}
         attemptingTxn={attemptingTransaction}
         errorMessage={errorMessage}
         onConfirm={handleWithdrawalConfirmation}
@@ -356,7 +431,7 @@ export function LiquidityMiningCampaignModal({
       <ConfirmExitModal
         isOpen={showExitConfirmationModal}
         onDismiss={handleDismiss}
-        stakablePair={campaign.targetedPair}
+        stakablePair={campaign?.targetedPair}
         claimableRewards={claimableRewardAmounts}
         stakedTokenBalance={stakedTokenAmount || undefined}
         attemptingTxn={attemptingTransaction}
@@ -364,6 +439,6 @@ export function LiquidityMiningCampaignModal({
         onConfirm={handleExitConfirmation}
         txHash={transactionHash}
       />
-    </Modal>
+    </>
   )
 }

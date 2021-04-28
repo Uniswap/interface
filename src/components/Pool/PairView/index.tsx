@@ -1,4 +1,4 @@
-import React, { memo, ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { Pair } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
@@ -99,15 +99,4 @@ function PairView({ loading, pair }: PairViewProps) {
   )
 }
 
-export default memo(PairView, (previousProps, nextProps) => {
-  // avoids pair reference changes to mess things up by reloading the whole thing
-  // (which means that if the staking modal is open, it will be closed = bad)
-  const sameLoading = previousProps.loading === nextProps.loading
-  if (previousProps.pair === nextProps.pair) {
-    return sameLoading
-  } else if ((!previousProps.pair && nextProps.pair) || (previousProps.pair && !nextProps.pair)) {
-    return false
-  } else {
-    return !!(previousProps.pair && nextProps.pair && previousProps.pair.equals(nextProps.pair) && sameLoading)
-  }
-})
+export default PairView

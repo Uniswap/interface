@@ -21,6 +21,7 @@ import CreateLiquidityMining from './LiquidityMining/Create'
 import { useActiveWeb3React } from '../hooks'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import MyPairs from './Pools/Mine'
+import LiquidityMiningCampaign from './Pools/LiquidityMiningCampaign'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -85,6 +86,12 @@ export default function App() {
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/mine" component={MyPairs} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pair} />
+                    <Route
+                      exact
+                      strict
+                      path="/pools/:currencyIdA/:currencyIdB/:liquidityMiningCampaignId"
+                      component={LiquidityMiningCampaign}
+                    />
                     <Route exact strict path="/create" component={AddLiquidity} />
                     <Route exact path="/add" component={AddLiquidity} />
                     {/* <Route exact strict path="/governance" component={GovPages} /> */}

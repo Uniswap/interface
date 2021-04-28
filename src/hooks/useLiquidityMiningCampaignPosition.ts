@@ -9,43 +9,52 @@ interface UseLiquidityMiningCampaignUserPositionHookResult {
   stakedTokenAmount: PricedTokenAmount | null
   claimedRewardAmounts: PricedTokenAmount[]
   claimableRewardAmounts: PricedTokenAmount[]
+  totalRewardedAmounts: PricedTokenAmount[]
 }
 
 export function useLiquidityMiningCampaignPosition(
-  campaign: LiquidityMiningCampaign,
+  campaign?: LiquidityMiningCampaign,
   account?: string
 ): UseLiquidityMiningCampaignUserPositionHookResult {
   const { chainId } = useActiveWeb3React()
-  const distributionContract = useStakingRewardsDistributionContract(campaign.address, true)
+  const distributionContract = useStakingRewardsDistributionContract(campaign?.address, true)
   const claimedRewardsResult = useSingleCallResult(distributionContract, 'getClaimedRewards', [account])
   const stakedTokensOfResult = useSingleCallResult(distributionContract, 'stakedTokensOf', [account])
   const claimableRewardsResult = useSingleCallResult(distributionContract, 'claimableRewards', [account])
 
   return useMemo(() => {
-    if (!chainId || !claimableRewardsResult.result || !stakedTokensOfResult.result || !claimedRewardsResult.result)
+    if (
+      !campaign ||
+      !chainId ||
+      !claimableRewardsResult.result ||
+      !stakedTokensOfResult.result ||
+      !claimedRewardsResult.result
+    )
       return {
         stakedTokenAmount: null,
         claimedRewardAmounts: [],
-        claimableRewardAmounts: []
+        claimableRewardAmounts: [],
+        totalRewardedAmounts: []
       }
     const stakedTokensOf = stakedTokensOfResult.result[0] as BigNumber
     const claimedRewards = claimedRewardsResult.result[0] as BigNumber[]
     const claimableRewards = claimableRewardsResult.result[0] as BigNumber[]
+
+    const claimedRewardAmounts = claimedRewards.map(
+      (claimed, index) => new PricedTokenAmount(campaign.rewards[index].token, claimed.toString())
+    )
+    const claimableRewardAmounts = claimableRewards.map(
+      (claimable, index) => new PricedTokenAmount(campaign.rewards[index].token, claimable.toString())
+    )
+    const totalRewardedAmounts = claimableRewardAmounts.map(
+      (claimable, index) => new PricedTokenAmount(claimable.token, claimable.add(claimedRewardAmounts[index]).raw)
+    )
+
     return {
       stakedTokenAmount: new PricedTokenAmount(campaign.staked.token, stakedTokensOf.toString()),
-      claimedRewardAmounts: claimedRewards.map(
-        (claimed, index) => new PricedTokenAmount(campaign.rewards[index].token, claimed.toString())
-      ),
-      claimableRewardAmounts: claimableRewards.map(
-        (claimable, index) => new PricedTokenAmount(campaign.rewards[index].token, claimable.toString())
-      )
+      claimedRewardAmounts,
+      claimableRewardAmounts,
+      totalRewardedAmounts
     }
-  }, [
-    campaign.rewards,
-    campaign.staked.token,
-    chainId,
-    claimableRewardsResult.result,
-    claimedRewardsResult.result,
-    stakedTokensOfResult.result
-  ])
+  }, [campaign, chainId, claimableRewardsResult.result, claimedRewardsResult.result, stakedTokensOfResult.result])
 }

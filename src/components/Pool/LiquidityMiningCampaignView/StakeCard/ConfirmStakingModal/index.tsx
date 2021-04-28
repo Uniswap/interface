@@ -1,10 +1,10 @@
 import { Pair, TokenAmount } from 'dxswap-sdk'
 import React, { useCallback, useState } from 'react'
-import { ApprovalState, useApproveCallback } from '../../../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallback } from '../../../../../hooks/useApproveCallback'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
-} from '../../../TransactionConfirmationModal'
+} from '../../../../TransactionConfirmationModal'
 import ConfirmStakingModalFooter from '../ModalBase/Footer'
 import ConfirmStakingWithdrawingModalHeader from '../ModalBase/Header'
 

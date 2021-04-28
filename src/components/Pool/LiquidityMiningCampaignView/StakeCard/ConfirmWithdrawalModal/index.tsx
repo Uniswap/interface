@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
-} from '../../../TransactionConfirmationModal'
+} from '../../../../TransactionConfirmationModal'
 import ConfirmStakingModalFooter from '../ModalBase/Footer'
 import ConfirmStakingWithdrawingModalHeader from '../ModalBase/Header'
 

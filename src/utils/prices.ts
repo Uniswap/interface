@@ -18,7 +18,7 @@ import { basisPointsToPercent } from './index'
 import Decimal from 'decimal.js-light'
 import { parseUnits } from 'ethers/lib/utils'
 
-const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
+const ONE_HUNDRED_PERCENT = new Percent(_10000, _10000)
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
@@ -31,7 +31,7 @@ export function computeTradePriceBreakdown(
     : ONE_HUNDRED_PERCENT.subtract(
         trade.route.pairs.reduce<Fraction>((currentFee: Fraction, currentIndex: Pair): Fraction => {
           return currentFee.multiply(
-            ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(10000)))
+            ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), _10000))
           )
         }, ONE_HUNDRED_PERCENT)
       )
