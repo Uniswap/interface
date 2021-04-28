@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { Pool, Position } from '@uniswap/v3-sdk'
+import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
@@ -22,10 +22,9 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9, Currency } from '@uniswap/sdk-core'
+import { WETH9, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { UINT128MAX } from '../RemoveLiquidity/V3'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -130,7 +129,7 @@ export function PositionPage({
   },
 }: RouteComponentProps<{ tokenId?: string }>) {
   const { t } = useTranslation()
-  const { chainId, account } = useActiveWeb3React()
+  const { chainId, account, library } = useActiveWeb3React()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
@@ -181,50 +180,36 @@ export function PositionPage({
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
   const collect = useCallback(() => {
-    if (!chainId || !feeValue0 || !feeValue1 || !positionManager || !account || !tokenId) return
+    if (!chainId || !feeValue0 || !feeValue1 || !positionManager || !account || !tokenId || !library) return
 
     setCollecting(true)
 
-    const involvesWETH = feeValue0.token.equals(WETH9[chainId]) || feeValue1.token.equals(WETH9[chainId])
+    const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
+      tokenId: tokenId.toString(),
+      expectedCurrencyOwed0: feeValue0.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue0.raw) : feeValue0,
+      expectedCurrencyOwed1: feeValue1.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue1.raw) : feeValue1,
+      recipient: account,
+      nonfungiblePositionManagerAddressOverride: positionManager.address,
+    })
 
-    const data: string[] = []
-
-    // collect, hard-coding ETH collection for now
-    data.push(
-      positionManager.interface.encodeFunctionData('collect', [
-        {
-          tokenId,
-          recipient: involvesWETH ? positionManager.address : account,
-          amount0Max: UINT128MAX,
-          amount1Max: UINT128MAX,
-        },
-      ])
-    )
-
-    if (involvesWETH) {
-      // unwrap
-      data.push(
-        positionManager.interface.encodeFunctionData('unwrapWETH9', [
-          `0x${(feeValue0.token.equals(WETH9[chainId]) ? feeValue0.raw : feeValue1.raw).toString(16)}`,
-          account,
-        ])
-      )
-
-      // sweep
-      data.push(
-        positionManager.interface.encodeFunctionData('sweepToken', [
-          feeValue0.token.equals(WETH9[chainId]) ? feeValue1.token.address : feeValue0.token.address,
-          `0x${(feeValue0.token.equals(WETH9[chainId]) ? feeValue1.raw : feeValue0.raw).toString(16)}`,
-          account,
-        ])
-      )
+    const txn = {
+      to: positionManager.address,
+      data: calldata,
+      value,
     }
 
-    positionManager.estimateGas
-      .multicall(data)
-      .then(async (estimate) => {
-        return positionManager
-          .multicall(data, { gasLimit: calculateGasMargin(estimate) })
+    library
+      .getSigner()
+      .estimateGas(txn)
+      .then((estimate) => {
+        const newTxn = {
+          ...txn,
+          gasLimit: calculateGasMargin(estimate),
+        }
+
+        return library
+          .getSigner()
+          .sendTransaction(newTxn)
           .then((response: TransactionResponse) => {
             setCollectMigrationHash(response.hash)
             setCollecting(false)
@@ -244,7 +229,7 @@ export function PositionPage({
         setCollecting(false)
         console.error(error)
       })
-  }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction])
+  }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
 
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>

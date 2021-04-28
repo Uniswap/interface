@@ -67,7 +67,7 @@ export function useDerivedV3BurnInfo(
     error = 'Connect Wallet'
   }
   if (percent === 0) {
-    error = error ?? 'Enter an percent'
+    error = error ?? 'Enter a percent'
   }
   return {
     position: positionSDK,
