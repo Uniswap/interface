@@ -28,17 +28,19 @@ interface SwapCall {
   value: string
 }
 
-interface SuccessfulCall {
+interface SwapCallEstimate {
+  call: SwapCall
+}
+
+interface SuccessfulCall extends SwapCallEstimate {
   call: SwapCall
   gasEstimate: BigNumber
 }
 
-interface FailedCall {
+interface FailedCall extends SwapCallEstimate {
   call: SwapCall
   error: Error
 }
-
-type EstimatedSwapCall = SuccessfulCall | FailedCall
 
 /**
  * Returns the swap calls that can be used to make the trade
@@ -141,7 +143,7 @@ export function useSwapCallback(
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {
-        const estimatedCalls: EstimatedSwapCall[] = await Promise.all(
+        const estimatedCalls: SwapCallEstimate[] = await Promise.all(
           swapCalls.map((call) => {
             const { address, calldata, value } = call
 
@@ -175,13 +177,24 @@ export function useSwapCallback(
                     console.debug('Call threw error', call, callError)
                     let errorMessage: string
                     switch (callError.reason) {
+                      case 'UniswapV2Router: EXPIRED':
+                        errorMessage =
+                          'The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.'
+                        break
                       case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
                       case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
                         errorMessage =
                           'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
+                      case 'UniswapV2: TRANSFER_FAILED':
+                        errorMessage = 'The token could not be transferred. There may be an issue with the token.'
+                        break
+                      case 'UniswapV2: K':
+                        errorMessage =
+                          'The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer.'
+                        break
                       default:
-                        errorMessage = `The transaction cannot succeed due to error: ${callError.reason}. This is probably an issue with one of the tokens you are swapping.`
+                        return { call }
                     }
                     return { call, error: new Error(errorMessage) }
                   })
@@ -190,21 +203,25 @@ export function useSwapCallback(
         )
 
         // a successful estimation is a bignumber gas estimate and the next call is also a bignumber gas estimate
-        const successfulEstimation = estimatedCalls.find(
+        let bestCallOption: SuccessfulCall | SwapCallEstimate | undefined = estimatedCalls.find(
           (el, ix, list): el is SuccessfulCall =>
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
 
-        if (!successfulEstimation) {
+        // check if any calls errored with a recognizable error
+        if (!bestCallOption) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
           if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
-          throw new Error('Unexpected error. Please contact support.')
+          const firstNoErrorCall = estimatedCalls.find<SwapCallEstimate>(
+            (call): call is SwapCallEstimate => !('error' in call)
+          )
+          if (!firstNoErrorCall) throw new Error('Unexpected error. Could not estimate gas for the swap.')
+          bestCallOption = firstNoErrorCall
         }
 
         const {
           call: { address, calldata, value },
-          gasEstimate,
-        } = successfulEstimation
+        } = bestCallOption
 
         return library
           .getSigner()
@@ -212,7 +229,10 @@ export function useSwapCallback(
             from: account,
             to: address,
             data: calldata,
-            gasLimit: calculateGasMargin(gasEstimate),
+            // let the wallet try if we can't estimate the gas
+            ...('gasEstimate' in bestCallOption
+              ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) }
+              : { gasLimit: 1_000_000 }),
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
