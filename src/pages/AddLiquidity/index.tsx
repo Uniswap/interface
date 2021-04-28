@@ -187,21 +187,14 @@ export default function AddLiquidity({
     }
 
     if (position && account && deadline && fractionalizedTolerance) {
-      const { calldata, value } =
-        hasExistingPosition && tokenId
-          ? NonfungiblePositionManager.increaseLiquidityCallParameters(position, {
-              tokenId: tokenId,
-              slippageTolerance: fractionalizedTolerance,
-              deadline: deadline.toNumber(),
-              useEther: currencyA === ETHER || currencyB === ETHER,
-            })
-          : NonfungiblePositionManager.mintCallParameters(position, {
-              slippageTolerance: fractionalizedTolerance,
-              recipient: account,
-              deadline: deadline.toNumber(),
-              useEther: currencyA === ETHER || currencyB === ETHER,
-              createPool: noLiquidity,
-            })
+      const { calldata, value } = NonfungiblePositionManager.increaseCallParameters(position, {
+        ...(hasExistingPosition && tokenId ? { tokenId } : {}),
+        slippageTolerance: fractionalizedTolerance,
+        recipient: account,
+        deadline: deadline.toNumber(),
+        useEther: currencyA === ETHER || currencyB === ETHER,
+        createPool: noLiquidity,
+      })
 
       const txn = {
         to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
