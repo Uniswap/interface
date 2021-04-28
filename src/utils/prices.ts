@@ -8,9 +8,9 @@ import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPA
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
 
-const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
+const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
-const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(BASE_FEE)
+const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
@@ -46,9 +46,26 @@ export function computeTradePriceBreakdown(
 
     return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount }
   } else {
+    const realizedLPFee = !trade
+      ? undefined
+      : ONE_HUNDRED_PERCENT.subtract(
+          trade.route.pools.reduce<Fraction>(
+            (currentFee: Fraction, pool): Fraction =>
+              currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 10_000))),
+            ONE_HUNDRED_PERCENT
+          )
+        )
+    const realizedLPFeeAmount =
+      realizedLPFee &&
+      trade &&
+      (trade.inputAmount instanceof TokenAmount
+        ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+        : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+
     return {
-      priceImpactWithoutFee: undefined,
-      realizedLPFee: undefined,
+      // TODO: real price impact
+      priceImpactWithoutFee: new Percent(0),
+      realizedLPFee: realizedLPFeeAmount,
     }
   }
 }
@@ -65,11 +82,20 @@ export function computeSlippageAdjustedAmounts(
   }
 }
 
+const IMPACT_TIERS = [
+  BLOCKED_PRICE_IMPACT_NON_EXPERT,
+  ALLOWED_PRICE_IMPACT_HIGH,
+  ALLOWED_PRICE_IMPACT_MEDIUM,
+  ALLOWED_PRICE_IMPACT_LOW,
+]
+
 export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3 | 4 {
-  if (!priceImpact?.lessThan(BLOCKED_PRICE_IMPACT_NON_EXPERT)) return 4
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) return 3
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_MEDIUM)) return 2
-  if (!priceImpact?.lessThan(ALLOWED_PRICE_IMPACT_LOW)) return 1
+  if (!priceImpact) return 4
+  let impact = IMPACT_TIERS.length
+  for (const impactLevel of IMPACT_TIERS) {
+    if (priceImpact.lessThan(impactLevel)) return impact as 0 | 1 | 2 | 3 | 4
+    impact--
+  }
   return 0
 }
 

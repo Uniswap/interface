@@ -1,11 +1,11 @@
 import JSBI from 'jsbi'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Contract } from '@ethersproject/contracts'
-import { Router, SwapParameters, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { ChainId, Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
+import { SWAP_ROUTER_ADDRESSES } from '../constants/v3'
 import { getTradeVersion } from '../utils/getTradeVersion'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, isAddress, shortenAddress } from '../utils'
@@ -23,8 +23,9 @@ export enum SwapCallbackState {
 }
 
 interface SwapCall {
-  contract: Contract
-  parameters: SwapParameters
+  address: string
+  calldata: string
+  value: string
 }
 
 interface SuccessfulCall {
@@ -55,13 +56,13 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
-
   const routerContract = useV2RouterContract()
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline || !routerContract) return []
+    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
     if (trade instanceof V2Trade) {
+      if (!routerContract) return []
       const swapMethods = []
       swapMethods.push(
         Router.swapCallParameters(trade, {
@@ -82,10 +83,28 @@ function useSwapCallArguments(
           })
         )
       }
-      return swapMethods.map((parameters) => ({ parameters, contract: routerContract }))
+      return swapMethods.map(({ methodName, args, value }) => ({
+        address: routerContract.address,
+        calldata: routerContract.interface.encodeFunctionData(methodName, args),
+        value,
+      }))
+    } else {
+      // trade is V3Trade
+      const { value, calldata } = SwapRouter.swapCallParameters(trade, {
+        recipient,
+        slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+        deadline: deadline.toNumber(),
+      })
+      const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
+      if (!swapRouterAddress) return []
+      return [
+        {
+          address: swapRouterAddress,
+          calldata,
+          value,
+        },
+      ]
     }
-
-    return []
   }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, trade])
 }
 
@@ -124,13 +143,19 @@ export function useSwapCallback(
       callback: async function onSwap(): Promise<string> {
         const estimatedCalls: EstimatedSwapCall[] = await Promise.all(
           swapCalls.map((call) => {
-            const {
-              parameters: { methodName, args, value },
-              contract,
-            } = call
-            const options = !value || isZero(value) ? {} : { value }
+            const { address, calldata, value } = call
 
-            return contract.estimateGas[methodName](...args, options)
+            const tx =
+              !value || isZero(value)
+                ? { to: address, data: calldata }
+                : {
+                    to: address,
+                    data: calldata,
+                    value,
+                  }
+
+            return library
+              .estimateGas(tx)
               .then((gasEstimate) => {
                 return {
                   call,
@@ -140,7 +165,8 @@ export function useSwapCallback(
               .catch((gasError) => {
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
-                return contract.callStatic[methodName](...args, options)
+                return library
+                  .call(tx)
                   .then((result) => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
@@ -176,17 +202,19 @@ export function useSwapCallback(
         }
 
         const {
-          call: {
-            contract,
-            parameters: { methodName, args, value },
-          },
+          call: { address, calldata, value },
           gasEstimate,
         } = successfulEstimation
 
-        return contract[methodName](...args, {
-          gasLimit: calculateGasMargin(gasEstimate),
-          ...(value && !isZero(value) ? { value, from: account } : { from: account }),
-        })
+        return library
+          .getSigner()
+          .sendTransaction({
+            from: account,
+            to: address,
+            data: calldata,
+            gasLimit: calculateGasMargin(gasEstimate),
+            ...(value && !isZero(value) ? { value } : {}),
+          })
           .then((response: any) => {
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
@@ -218,7 +246,7 @@ export function useSwapCallback(
               throw new Error('Transaction rejected.')
             } else {
               // otherwise, the error was unexpected and we need to convey that
-              console.error(`Swap failed`, error, methodName, args, value)
+              console.error(`Swap failed`, error, address, calldata, value)
               throw new Error(`Swap failed: ${error.message}`)
             }
           })
