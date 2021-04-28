@@ -7,6 +7,7 @@ import { AutoColumn } from '../../Column'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { ChevronLeft } from 'react-feather'
+import { useActiveWeb3React } from '../../../hooks'
 
 const GoBackContainer = styled.div`
   font-size: 11px;
@@ -30,6 +31,7 @@ interface PairViewProps {
 
 function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
   const history = useHistory()
+  const { account } = useActiveWeb3React()
 
   return (
     <AutoColumn gap="18px">
@@ -37,6 +39,7 @@ function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
         <StyledChevronLeft />
         Back to pair
       </GoBackContainer>
+
       <DarkCard padding="32px">
         <AutoColumn gap="18px">
           <Information
@@ -50,7 +53,7 @@ function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
             apy={campaign?.apy}
             staked={campaign?.staked}
           />
-          <StakeCard campaign={campaign || undefined} />
+          {account && <StakeCard campaign={campaign || undefined} />}
         </AutoColumn>
       </DarkCard>
     </AutoColumn>
