@@ -303,8 +303,6 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const swapIsUnsupported = useIsSwapUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 
-  const [showDetails, setShowDetails] = useState<boolean>(true)
-
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
   return (
@@ -384,30 +382,13 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
-            {!trade ? null : !showDetails ? (
-              <>
-                <AdvancedSwapDetailsDropdown trade={trade} />
-                <ButtonEmpty style={{ padding: '0.25rem' }} onClick={() => setShowDetails(!showDetails)}>
-                  <Text fontWeight={500} fontSize={14} color={theme.text2} style={{ marginRight: '.25rem' }}>
-                    Hide Details
-                  </Text>
-                </ButtonEmpty>
-              </>
-            ) : (
-              <AutoColumn justify="space-between">
-                <AutoRow style={{ padding: '0 0.5rem', justifyContent: 'space-between' }}>
-                  <AutoRow>
-                    <TradePrice
-                      price={trade?.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                      showDetails={showDetails}
-                      setShowDetails={setShowDetails}
-                    />
-                  </AutoRow>
-                </AutoRow>
-              </AutoColumn>
-            )}
+            {trade ? (
+              <TradePrice
+                price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
+                showInverted={showInverted}
+                setShowInverted={setShowInverted}
+              />
+            ) : null}
             <BottomGrouping>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
