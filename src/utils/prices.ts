@@ -45,7 +45,7 @@ export function computeTradePriceBreakdown(
         : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
 
     return { priceImpactWithoutFee: priceImpactWithoutFeePercent, realizedLPFee: realizedLPFeeAmount }
-  } else {
+  } else if (trade instanceof V3Trade) {
     const realizedLPFee = !trade
       ? undefined
       : ONE_HUNDRED_PERCENT.subtract(
@@ -66,6 +66,11 @@ export function computeTradePriceBreakdown(
       // TODO: real price impact
       priceImpactWithoutFee: new Percent(0),
       realizedLPFee: realizedLPFeeAmount,
+    }
+  } else {
+    return {
+      priceImpactWithoutFee: undefined,
+      realizedLPFee: undefined,
     }
   }
 }
@@ -93,7 +98,7 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
   if (!priceImpact) return 4
   let impact = IMPACT_TIERS.length
   for (const impactLevel of IMPACT_TIERS) {
-    if (priceImpact.lessThan(impactLevel)) return impact as 0 | 1 | 2 | 3 | 4
+    if (impactLevel.lessThan(priceImpact)) return impact as 0 | 1 | 2 | 3 | 4
     impact--
   }
   return 0
