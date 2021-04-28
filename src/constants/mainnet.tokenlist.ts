@@ -5,10 +5,18 @@ export const MAINNET_TOKEN_LIST = {
   tokens: [
     {
       chainId: 1,
-      address: '0xdd974D5C2e2928deA5F71b9825b8b646686BD200',
+      address: '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202',
       symbol: 'KNC',
-      name: 'Kyber Network Crystal',
+      name: 'Kyber Network Crystal v2',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0xdd974D5C2e2928deA5F71b9825b8b646686BD200',
+      symbol: 'KNCL',
+      name: 'Kyber Network Crystal v1',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/1cDH5dy.png'
     },
     {
       chainId: 1,
@@ -109,6 +117,13 @@ export const MAINNET_TOKEN_LIST = {
       name: 'BUILD Finance',
       decimals: 18,
       logoURI: 'https://build.finance/images/logo.png'
+    },
+    {
+      chainId: 1,
+      address: '0xdB25f211AB05b1c97D595516F45794528a807ad8',
+      symbol: 'EURS',
+      name: 'STASIS EURS Token',
+      decimals: 2
     }
   ],
   version: {

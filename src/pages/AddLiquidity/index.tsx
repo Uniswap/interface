@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, Fraction, JSBI, TokenAmount, WETH } from 'libs/sdk/src'
+import { Currency, currencyEquals, ETHER, Fraction, JSBI, Token, TokenAmount, WETH } from 'libs/sdk/src'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
@@ -196,8 +196,32 @@ export default function AddLiquidity({
 
     if (pairAddress) {
       if (!pair) return
+
       if (currencyA === ETHER || currencyB === ETHER) {
         const tokenBIsETH = currencyB === ETHER
+
+        const virtualReserveToken = pair.virtualReserveOf(
+          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId) as Token
+        )
+        const virtualReserveETH = pair.virtualReserveOf(
+          wrappedCurrency(tokenBIsETH ? currencyB : currencyA, chainId) as Token
+        )
+
+        const currentRate = JSBI.divide(
+          JSBI.multiply(virtualReserveETH.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+          virtualReserveToken.raw
+        )
+
+        const allowedSlippageAmount = JSBI.divide(
+          JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
+          JSBI.BigInt(10000)
+        )
+
+        const vReserveRatioBounds = [
+          JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
+          JSBI.add(currentRate, allowedSlippageAmount).toString()
+        ]
+
         estimate = router.estimateGas.addLiquidityETH
         method = router.addLiquidityETH
         args = [
@@ -207,11 +231,30 @@ export default function AddLiquidity({
           (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
           amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
           amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+          vReserveRatioBounds,
           account,
           deadline.toHexString()
         ]
         value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
       } else {
+        const virtualReserveA = pair.virtualReserveOf(wrappedCurrency(currencyA, chainId) as Token)
+        const virtualReserveB = pair.virtualReserveOf(wrappedCurrency(currencyB, chainId) as Token)
+
+        const currentRate = JSBI.divide(
+          JSBI.multiply(virtualReserveB.raw, JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(112))),
+          virtualReserveA.raw
+        )
+
+        const allowedSlippageAmount = JSBI.divide(
+          JSBI.multiply(currentRate, JSBI.BigInt(allowedSlippage)),
+          JSBI.BigInt(10000)
+        )
+
+        const vReserveRatioBounds = [
+          JSBI.subtract(currentRate, allowedSlippageAmount).toString(),
+          JSBI.add(currentRate, allowedSlippageAmount).toString()
+        ]
+
         estimate = router.estimateGas.addLiquidity
         method = router.addLiquidity
         args = [
@@ -223,6 +266,7 @@ export default function AddLiquidity({
           parsedAmountB.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
+          vReserveRatioBounds,
           account,
           deadline.toHexString()
         ]
@@ -385,10 +429,10 @@ export default function AddLiquidity({
         .multiply('100')
         .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
         .toSignificant(2) ?? '.'
-    : '50%'
+    : '50'
   const percentToken1 = pair
     ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
-    : '50%'
+    : '50'
 
   return (
     <>
