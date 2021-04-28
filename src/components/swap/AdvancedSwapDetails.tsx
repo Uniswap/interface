@@ -13,12 +13,14 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import SwapRoute from './SwapRoute'
 
-function TradeSummary({ trade, allowedSlippage }: { trade: V2Trade | V3Trade; allowedSlippage: number }) {
+function TradeSummary({ trade }: { trade: V2Trade | V3Trade }) {
   const theme = useContext(ThemeContext)
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
+  const [allowedSlippage] = useUserSlippageTolerance()
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
   const price = trade.executionPrice
+
   return (
     <>
       <AutoColumn style={{ padding: '8px 16px' }} gap="8px">
@@ -97,8 +99,6 @@ export interface AdvancedSwapDetailsProps {
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
-  const [allowedSlippage] = useUserSlippageTolerance()
-
   const showRoute = Boolean(
     (trade && trade instanceof V2Trade && trade.route.pairs.length > 2) ||
       (trade instanceof V3Trade && trade.route.pools.length > 2)
@@ -108,7 +108,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
     <AutoColumn gap="0px">
       {trade && (
         <>
-          <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
+          <TradeSummary trade={trade} />
           {showRoute && (
             <>
               <RowBetween style={{ padding: '4px 16px' }}>

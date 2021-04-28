@@ -183,27 +183,23 @@ export default function Swap({ history }: RouteComponentProps) {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
-    if (approval === ApprovalState.PENDING) {
+    if (approvalState === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
     }
-  }, [approval, approvalSubmitted])
+  }, [approvalState, approvalSubmitted])
 
   const maxInputAmount: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxInputAmount = Boolean(maxInputAmount && parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
-    trade instanceof V2Trade ? trade : undefined,
-    allowedSlippage,
-    recipient
-  )
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
@@ -272,9 +268,9 @@ export default function Swap({ history }: RouteComponentProps) {
   // never show if price impact is above threshold in non expert mode
   const showApproveFlow =
     !swapInputError &&
-    (approval === ApprovalState.NOT_APPROVED ||
-      approval === ApprovalState.PENDING ||
-      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
+    (approvalState === ApprovalState.NOT_APPROVED ||
+      approvalState === ApprovalState.PENDING ||
+      (approvalSubmitted && approvalState === ApprovalState.APPROVED)) &&
     !(priceImpactSeverity > 3 && !isExpertMode)
 
   const handleConfirmDismiss = useCallback(() => {
@@ -432,10 +428,10 @@ export default function Swap({ history }: RouteComponentProps) {
                   <AutoColumn style={{ width: '100%' }} gap="12px">
                     <ButtonConfirmed
                       onClick={approveCallback}
-                      disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                      disabled={approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted}
                       width="100%"
-                      altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={approval === ApprovalState.APPROVED}
+                      altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
+                      confirmed={approvalState === ApprovalState.APPROVED}
                     >
                       <AutoRow justify="space-between">
                         <span style={{ display: 'flex', alignItems: 'center' }}>
@@ -447,9 +443,9 @@ export default function Swap({ history }: RouteComponentProps) {
                           {/* we need to shorted this string on mobile */}
                           {'Allow Uniswap to spend your ' + currencies[Field.INPUT]?.symbol}
                         </span>
-                        {approval === ApprovalState.PENDING ? (
+                        {approvalState === ApprovalState.PENDING ? (
                           <Loader stroke="white" />
-                        ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                        ) : approvalSubmitted && approvalState === ApprovalState.APPROVED ? (
                           <Unlock size="16" stroke="white" />
                         ) : (
                           <Unlock size="16" stroke="white" />
@@ -473,7 +469,9 @@ export default function Swap({ history }: RouteComponentProps) {
                       width="100%"
                       id="swap-button"
                       disabled={
-                        !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
+                        !isValid ||
+                        approvalState !== ApprovalState.APPROVED ||
+                        (priceImpactSeverity > 3 && !isExpertMode)
                       }
                       error={isValid && priceImpactSeverity > 2}
                     >
@@ -484,7 +482,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       </Text>
                     </ButtonError>
                   </AutoColumn>
-                  {showApproveFlow && <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />}
+                  {showApproveFlow && <ProgressSteps steps={[approvalState === ApprovalState.APPROVED]} />}
                 </AutoRow>
               ) : (
                 <ButtonError
