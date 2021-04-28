@@ -12,7 +12,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { ButtonText, TYPE } from 'theme'
 import Badge, { BadgeVariant } from 'components/Badge'
-import { basisPointsToPercent } from 'utils'
+import { basisPointsToPercent, calculateGasMargin } from 'utils'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { DarkCard, DarkGreyCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -187,7 +187,7 @@ export function PositionPage({
 
     const involvesWETH = feeValue0.token.equals(WETH9[chainId]) || feeValue1.token.equals(WETH9[chainId])
 
-    const data = []
+    const data: string[] = []
 
     // collect, hard-coding ETH collection for now
     data.push(
@@ -220,21 +220,25 @@ export function PositionPage({
       )
     }
 
-    positionManager
+    positionManager.estimateGas
       .multicall(data)
-      .then((response: TransactionResponse) => {
-        setCollectMigrationHash(response.hash)
-        setCollecting(false)
+      .then(async (estimate) => {
+        return positionManager
+          .multicall(data, { gasLimit: calculateGasMargin(estimate) })
+          .then((response: TransactionResponse) => {
+            setCollectMigrationHash(response.hash)
+            setCollecting(false)
 
-        ReactGA.event({
-          category: 'Liquidity',
-          action: 'CollectV3',
-          label: [feeValue0.token.symbol, feeValue1.token.symbol].join('/'),
-        })
+            ReactGA.event({
+              category: 'Liquidity',
+              action: 'CollectV3',
+              label: [feeValue0.token.symbol, feeValue1.token.symbol].join('/'),
+            })
 
-        addTransaction(response, {
-          summary: `Collect ${feeValue0.token.symbol}/${feeValue1.token.symbol} fees`,
-        })
+            addTransaction(response, {
+              summary: `Collect ${feeValue0.token.symbol}/${feeValue1.token.symbol} fees`,
+            })
+          })
       })
       .catch((error) => {
         setCollecting(false)

@@ -1,5 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { TokenAmount } from '@uniswap/sdk-core'
+import { TokenAmount, Percent } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { useActiveWeb3React } from 'hooks'
@@ -19,7 +18,8 @@ export function useBurnV3State(): AppState['burnV3'] {
 export function useDerivedV3BurnInfo(
   position?: PositionDetails
 ): {
-  liquidity?: BigNumber
+  position?: Position
+  liquidityPercentage?: Percent
   liquidityValue0?: TokenAmount
   liquidityValue1?: TokenAmount
   feeValue0?: TokenAmount
@@ -35,26 +35,27 @@ export function useDerivedV3BurnInfo(
 
   const [, pool] = usePool(token0 ?? undefined, token1 ?? undefined, position?.fee)
 
-  const partialPosition = useMemo(
+  const positionSDK = useMemo(
     () =>
-      pool &&
-      position?.liquidity &&
-      position?.tickLower &&
-      position?.tickUpper &&
-      typeof position.tickLower === 'number' &&
-      typeof position.tickUpper === 'number'
+      pool && position?.liquidity && typeof position?.tickLower === 'number' && typeof position?.tickUpper === 'number'
         ? new Position({
             pool,
-            liquidity: position.liquidity.mul(percent).div(100).toString(),
+            liquidity: position.liquidity.toString(),
             tickLower: position.tickLower,
             tickUpper: position.tickUpper,
           })
         : undefined,
-    [pool, percent, position]
+    [pool, position]
   )
 
-  const liquidityValue0 = partialPosition?.amount0
-  const liquidityValue1 = partialPosition?.amount1
+  const liquidityPercentage = new Percent(percent, 100)
+
+  const liquidityValue0 =
+    positionSDK &&
+    new TokenAmount(positionSDK.amount0.token, liquidityPercentage.multiply(positionSDK.amount0.raw).quotient)
+  const liquidityValue1 =
+    positionSDK &&
+    new TokenAmount(positionSDK.amount1.token, liquidityPercentage.multiply(positionSDK.amount1.raw).quotient)
 
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position)
 
@@ -69,7 +70,8 @@ export function useDerivedV3BurnInfo(
     error = error ?? 'Enter an percent'
   }
   return {
-    liquidity: partialPosition?.liquidity ? BigNumber.from(partialPosition?.liquidity.toString()) : undefined,
+    position: positionSDK,
+    liquidityPercentage,
     liquidityValue0,
     liquidityValue1,
     feeValue0,
