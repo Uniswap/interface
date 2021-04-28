@@ -22,7 +22,7 @@ import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { WETH9 } from '@uniswap/sdk-core'
+import { WETH9, Percent } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
 import styled from 'styled-components'
 import { Wrapper, SmallMaxButton } from './styled'
@@ -32,6 +32,9 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { RangeBadge } from 'pages/AddLiquidity/styled'
 import { Break } from 'components/earn/styled'
+import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { BIPS_BASE } from '../../constants'
+import { calculateGasMargin } from 'utils'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
 
@@ -63,7 +66,7 @@ export default function RemoveLiquidityV3({
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
 
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
 
   // currencies from position
   const token0 = useToken(position?.token0)
@@ -73,9 +76,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   // burn state
   const { percent } = useBurnV3State()
-  const { liquidity, liquidityValue0, liquidityValue1, feeValue0, feeValue1, outOfRange, error } = useDerivedV3BurnInfo(
-    position
-  )
+  const {
+    position: positionSDK,
+    liquidityPercentage,
+    liquidityValue0,
+    liquidityValue1,
+    feeValue0,
+    feeValue1,
+    outOfRange,
+    error,
+  } = useDerivedV3BurnInfo(position)
   const { onPercentSelect } = useBurnV3ActionHandlers()
 
   // boilerplate for the slider
@@ -89,11 +99,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const [txnHash, setTxnHash] = useState<string | undefined>()
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
-  const burn = useCallback(() => {
+  const burn = useCallback(async () => {
     setShowConfirm(true)
     setAttemptingTxn(true)
     if (
-      !liquidity ||
       !positionManager ||
       !liquidityValue0 ||
       !liquidityValue1 ||
@@ -101,89 +110,57 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !account ||
       !chainId ||
       !feeValue0 ||
-      !feeValue1
+      !feeValue1 ||
+      !positionSDK ||
+      !liquidityPercentage ||
+      !library
     ) {
       setShowConfirm(false)
       return
     }
 
-    const data = []
-
-    // decreaseLiquidity if necessary
-    const amount0Min = JSBI.divide(
-      JSBI.multiply(liquidityValue0.raw, JSBI.BigInt(10000 - allowedSlippage)),
-      JSBI.BigInt(10000)
-    )
-    const amount1Min = JSBI.divide(
-      JSBI.multiply(liquidityValue1.raw, JSBI.BigInt(10000 - allowedSlippage)),
-      JSBI.BigInt(10000)
-    )
-    if (liquidity.gt(0)) {
-      data.push(
-        positionManager.interface.encodeFunctionData('decreaseLiquidity', [
-          {
-            tokenId,
-            liquidity,
-            amount0Min: `0x${amount0Min.toString(16)}`,
-            amount1Min: `0x${amount1Min.toString(16)}`,
-            deadline,
-          },
-        ])
-      )
-    }
-
     const involvesWETH = liquidityValue0.token.equals(WETH9[chainId]) || liquidityValue1.token.equals(WETH9[chainId])
 
-    // collect, hard-coding ETH collection for now
-    data.push(
-      positionManager.interface.encodeFunctionData('collect', [
-        {
-          tokenId,
-          recipient: involvesWETH ? positionManager.address : account,
-          amount0Max: UINT128MAX,
-          amount1Max: UINT128MAX,
-        },
-      ])
-    )
+    const { calldata, value } = NonfungiblePositionManager.decreaseCallParameters(positionSDK, {
+      tokenId: tokenId.toString(),
+      liquidityPercentage,
+      slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+      recipient: account,
+      deadline: deadline.toString(),
+      receiveEther: involvesWETH,
+      nonfungiblePositionManagerAddressOverride: positionManager.address,
+    })
 
-    if (involvesWETH) {
-      // unwrap
-      data.push(
-        positionManager.interface.encodeFunctionData('unwrapWETH9', [
-          `0x${(liquidityValue0.token.equals(WETH9[chainId])
-            ? JSBI.add(amount0Min, feeValue0.raw)
-            : JSBI.add(amount1Min, feeValue1.raw)
-          ).toString(16)}`,
-          account,
-        ])
-      )
-
-      // sweep
-      data.push(
-        positionManager.interface.encodeFunctionData('sweepToken', [
-          liquidityValue0.token.equals(WETH9[chainId]) ? liquidityValue1.token.address : liquidityValue0.token.address,
-          `0x${(liquidityValue0.token.equals(WETH9[chainId])
-            ? JSBI.add(amount1Min, feeValue1.raw)
-            : JSBI.add(amount0Min, feeValue0.raw)
-          ).toString(16)}`,
-          account,
-        ])
-      )
+    const txn = {
+      to: positionManager.address,
+      data: calldata,
+      value,
     }
 
-    positionManager
-      .multicall(data)
-      .then((response: TransactionResponse) => {
-        ReactGA.event({
-          category: 'Liquidity',
-          action: 'RemoveV3',
-          label: [liquidityValue0.token.symbol, liquidityValue1.token.symbol].join('/'),
-        })
-        setTxnHash(response.hash)
-        setAttemptingTxn(false)
-        addTransaction(response, {
-          summary: `Remove ${liquidityValue0.token.symbol}/${liquidityValue1.token.symbol} V3 liquidity`,
-        })
+    library
+      .getSigner()
+      .estimateGas(txn)
+      .then((estimate) => {
+        const newTxn = {
+          ...txn,
+          gasLimit: calculateGasMargin(estimate),
+        }
+
+        return library
+          .getSigner()
+          .sendTransaction(newTxn)
+          .then((response: TransactionResponse) => {
+            ReactGA.event({
+              category: 'Liquidity',
+              action: 'RemoveV3',
+              label: [liquidityValue0.token.symbol, liquidityValue1.token.symbol].join('/'),
+            })
+            setTxnHash(response.hash)
+            setAttemptingTxn(false)
+            addTransaction(response, {
+              summary: `Remove ${liquidityValue0.token.symbol}/${liquidityValue1.token.symbol} V3 liquidity`,
+            })
+          })
       })
       .catch((error) => {
         setShowConfirm(false)
@@ -192,7 +169,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       })
   }, [
     tokenId,
-    liquidity,
     liquidityValue0,
     liquidityValue1,
     deadline,
@@ -203,6 +179,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     chainId,
     feeValue0,
     feeValue1,
+    library,
+    liquidityPercentage,
+    positionSDK,
   ])
 
   const handleDismissConfirmation = useCallback(() => {
@@ -236,7 +215,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         <TYPE.label margin="0 10px" opacity={'0.4'}>
           {' > '}
         </TYPE.label>
-        <TYPE.label>{liquidity?.eq(0) ? 'Collect Fees' : 'Remove Liquidity'}</TYPE.label>
+        <TYPE.label>{liquidityPercentage?.equalTo(0) ? 'Collect Fees' : 'Remove Liquidity'}</TYPE.label>
       </AutoRow>
       <AppBody>
         <Wrapper>
@@ -327,8 +306,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               </LightCard>
               <div style={{ display: 'flex' }}>
                 <AutoColumn gap="12px" style={{ flex: '1' }}>
-                  <ButtonConfirmed confirmed={false} disabled={!liquidity} onClick={burn}>
-                    {error ?? liquidity?.eq(0) ? 'Collect' : 'Remove Liquidity'}
+                  <ButtonConfirmed confirmed={false} disabled={!liquidityValue0} onClick={burn}>
+                    {error ?? liquidityPercentage?.equalTo(0) ? 'Collect Fees' : 'Remove Liquidity'}
                   </ButtonConfirmed>
                 </AutoColumn>
               </div>

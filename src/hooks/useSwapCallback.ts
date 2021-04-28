@@ -90,13 +90,15 @@ function useSwapCallArguments(
       }))
     } else {
       // trade is V3Trade
+      const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
+      if (!swapRouterAddress) return []
+
       const { value, calldata } = SwapRouter.swapCallParameters(trade, {
         recipient,
         slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-        deadline: deadline.toNumber(),
+        deadline: deadline.toString(),
+        swapRouterAddressOverride: swapRouterAddress,
       })
-      const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
-      if (!swapRouterAddress) return []
       return [
         {
           address: swapRouterAddress,
