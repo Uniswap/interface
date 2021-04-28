@@ -11,6 +11,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
+import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AutoRow } from '../../components/Row'
@@ -40,6 +41,7 @@ import {
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSlippageTolerance, useUserSingleHopOnly } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
+import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
@@ -88,7 +90,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
-    v3Trade,
+    v3TradeState: { trade: v3Trade },
     currencyBalances,
     parsedAmount,
     currencies,
@@ -107,7 +109,7 @@ export default function Swap({ history }: RouteComponentProps) {
     ? undefined
     : {
         [Version.v2]: v2Trade,
-        [Version.v3]: v3Trade.trade ?? undefined,
+        [Version.v3]: v3Trade ?? undefined,
       }[toggledVersion]
 
   const parsedAmounts = useMemo(
@@ -313,7 +315,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
       <AppBody>
-        <SwapHeader trade={trade} />
+        <SwapHeader toggledVersion={toggledVersion} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -387,6 +389,11 @@ export default function Swap({ history }: RouteComponentProps) {
                 showInverted={showInverted}
                 setShowInverted={setShowInverted}
               />
+            ) : null}
+            {toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+              <BetterTradeLink version={Version.v2} />
+            ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+              <BetterTradeLink version={Version.v3} />
             ) : null}
             <BottomGrouping>
               {swapIsUnsupported ? (
