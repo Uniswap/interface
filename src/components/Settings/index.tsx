@@ -246,7 +246,7 @@ export default function SettingsTab() {
             </RowBetween>
             {/* WIP */}
             <StyledMenuButton onClick={() => toggleDarkMode()}>
-              {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+              {darkMode ? <Moon color={theme.text2} size={20} /> : <Sun size={20} />}
             </StyledMenuButton>
           </AutoColumn>
         </MenuFlyout>

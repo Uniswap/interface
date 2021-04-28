@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
+import { BLOCKED_PRICE_IMPACT_NON_EXPERT, ZERO_PERCENT } from '../constants'
 import { CurrencyAmount, Fraction, Percent, TokenAmount } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -104,15 +104,19 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
   return 0
 }
 
-export function formatExecutionPrice(trade: V2Trade | V3Trade | undefined, inverted: boolean | undefined): string {
+export function formatExecutionPrice(
+  trade: V2Trade | V3Trade | undefined,
+  inverted: boolean | undefined,
+  slippageTolerance: Percent = ZERO_PERCENT
+): string {
   if (!trade) {
     return ''
   }
   return inverted
-    ? `${trade.executionPrice.invert().toSignificant(6)} ${trade.inputAmount.currency.symbol} / ${
-        trade.outputAmount.currency.symbol
-      }`
-    : `${trade.executionPrice.toSignificant(6)} ${trade.outputAmount.currency.symbol} / ${
+    ? `${trade.worstExecutionPrice(slippageTolerance).invert().toSignificant(6)} ${
+        trade.inputAmount.currency.symbol
+      } / ${trade.outputAmount.currency.symbol}`
+    : `${trade.worstExecutionPrice(slippageTolerance).toSignificant(6)} ${trade.outputAmount.currency.symbol} / ${
         trade.inputAmount.currency.symbol
       }`
 }
