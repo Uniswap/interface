@@ -1,36 +1,38 @@
-import JSBI from 'jsbi'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, Repeat, Unlock } from 'react-feather'
 import ReactGA from 'react-ga'
+import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
-import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import CurrencyLogo from '../../components/CurrencyLogo'
+import Loader from '../../components/Loader'
+import ProgressSteps from '../../components/ProgressSteps'
 import { AutoRow } from '../../components/Row'
+import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
+import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import ProgressSteps from '../../components/ProgressSteps'
-import SwapHeader from '../../components/swap/SwapHeader'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import { V3TradeState } from '../../hooks/useBestV3Trade'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
-import { getTradeVersion } from '../../utils/getTradeVersion'
 import { useActiveWeb3React } from '../../hooks'
-import { useCurrency, useAllTokens } from '../../hooks/Tokens'
+import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { V3TradeState } from '../../hooks/useBestV3Trade'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -40,15 +42,13 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSlippageTolerance, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
+import { getTradeVersion } from '../../utils/getTradeVersion'
 import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import Loader from '../../components/Loader'
-import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { RouteComponentProps } from 'react-router-dom'
 
 export default function Swap({ history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -391,8 +391,8 @@ export default function Swap({ history }: RouteComponentProps) {
                 setShowInverted={setShowInverted}
               />
             ) : null}
-            {v3TradeState !== V3TradeState.VALID ? null : toggledVersion === Version.v3 &&
-              isTradeBetter(v3Trade, v2Trade) ? (
+            {![V3TradeState.VALID, V3TradeState.SYNCING].includes(v3TradeState) ? null : toggledVersion ===
+                Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
               <BetterTradeLink version={Version.v2} />
             ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
               <BetterTradeLink version={Version.v3} />
