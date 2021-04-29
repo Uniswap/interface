@@ -31,6 +31,7 @@ import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Dots } from 'components/swap/styleds'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
+import { useSingleCallResult } from 'state/multicall/hooks'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -233,6 +234,9 @@ export function PositionPage({
       })
   }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
 
+  const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const ownsNFT = owner === account || positionDetails?.operator === account
+
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
       <div />
@@ -262,41 +266,44 @@ export function PositionPage({
                 <BadgeText>{basisPointsToPercent(feeAmount / 100).toSignificant()}%</BadgeText>
               </Badge>
             </RowFixed>
-            <RowFixed>
-              {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash ? (
-                <ButtonConfirmed
-                  disabled={collecting || !!collectMigrationHash}
-                  confirmed={!!collectMigrationHash && !isCollectPending}
-                  mr="15px"
-                  width="175px"
-                  padding="8px"
-                  style={{ borderRadius: '12px' }}
-                  onClick={collect}
-                >
-                  {!!collectMigrationHash && !isCollectPending ? (
-                    'Collected'
-                  ) : isCollectPending || collecting ? (
-                    <Dots>Collecting</Dots>
-                  ) : (
-                    'Collect fees'
-                  )}
-                </ButtonConfirmed>
-              ) : null}
-              {currency0 && currency1 && feeAmount && tokenId ? (
-                <Link to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}>
-                  <ButtonPrimary mr="15px" width="175px" padding="8px" borderRadius="12px">
-                    Add liquidity
-                  </ButtonPrimary>
-                </Link>
-              ) : null}
-              {tokenId && (
-                <Link to={`/remove/${tokenId}`}>
-                  <ButtonPrimary width="175px" padding="8px" borderRadius="12px">
-                    Remove liquidity
-                  </ButtonPrimary>
-                </Link>
-              )}
-            </RowFixed>
+
+            {ownsNFT && (
+              <RowFixed>
+                {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash ? (
+                  <ButtonConfirmed
+                    disabled={collecting || !!collectMigrationHash}
+                    confirmed={!!collectMigrationHash && !isCollectPending}
+                    mr="15px"
+                    width="175px"
+                    padding="8px"
+                    style={{ borderRadius: '12px' }}
+                    onClick={collect}
+                  >
+                    {!!collectMigrationHash && !isCollectPending ? (
+                      'Collected'
+                    ) : isCollectPending || collecting ? (
+                      <Dots>Collecting</Dots>
+                    ) : (
+                      'Collect fees'
+                    )}
+                  </ButtonConfirmed>
+                ) : null}
+                {currency0 && currency1 && feeAmount && tokenId ? (
+                  <Link to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}>
+                    <ButtonPrimary mr="15px" width="175px" padding="8px" borderRadius="12px">
+                      Add liquidity
+                    </ButtonPrimary>
+                  </Link>
+                ) : null}
+                {tokenId && (
+                  <Link to={`/remove/${tokenId}`}>
+                    <ButtonPrimary width="175px" padding="8px" borderRadius="12px">
+                      Remove liquidity
+                    </ButtonPrimary>
+                  </Link>
+                )}
+              </RowFixed>
+            )}
           </RowBetween>
           <RowBetween>
             <BadgeWrapper>
