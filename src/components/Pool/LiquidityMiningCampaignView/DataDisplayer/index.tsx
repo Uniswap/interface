@@ -3,7 +3,7 @@ import { TYPE } from '../../../../theme'
 import { AutoColumn } from '../../../Column'
 
 interface DataDisplayerProps {
-  title: string
+  title: ReactNode
   data: ReactNode
   dataTextSize?: number
   alignTitleRight?: boolean

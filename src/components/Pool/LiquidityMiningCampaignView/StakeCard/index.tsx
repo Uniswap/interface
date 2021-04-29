@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from '../../../../hooks'
 import { useLiquidityMiningActionCallbacks } from '../../../../hooks/useLiquidityMiningActionCallbacks'
 import { useLiquidityMiningCampaignPosition } from '../../../../hooks/useLiquidityMiningCampaignPosition'
+import { useLpTokensUnderlyingAssets } from '../../../../hooks/useLpTokensUnderlyingAssets'
 import { useTransactionAdder } from '../../../../state/transactions/hooks'
 import { useTokenBalance } from '../../../../state/wallet/hooks'
 import { TYPE } from '../../../../theme'
@@ -48,6 +49,10 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
     totalRewardedAmounts
   } = useLiquidityMiningCampaignPosition(campaign, account || undefined)
   const addTransaction = useTransactionAdder()
+  const { loading: loadingLpTokensUnderlyingAssets, underlyingAssets } = useLpTokensUnderlyingAssets(
+    campaign?.targetedPair,
+    stakedTokenAmount || undefined
+  )
 
   const [attemptingTransaction, setAttemptingTransaction] = useState(false)
   const [transactionHash, setTransactionHash] = useState('')
@@ -258,8 +263,8 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                 Your stake
               </TYPE.body>
             </Box>
-            <Flex mb="18px" justifyContent="space-between">
-              <Box>
+            <Flex mb="18px">
+              <Box mr="20px">
                 <DataDisplayer
                   title="REWARDED"
                   data={
@@ -281,7 +286,7 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                   }
                 />
               </Box>
-              <Box>
+              <Box mr="20px">
                 <DataDisplayer
                   title="CLAIMABLE"
                   data={
@@ -344,6 +349,52 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                   }
                 />
               </Box>
+              <Flex>
+                <Box mr="20px">
+                  <DataDisplayer
+                    title={
+                      <Row>STAKED {campaign ? campaign.targetedPair.token0.symbol : <Skeleton width="24px" />}</Row>
+                    }
+                    data={
+                      <Row>
+                        {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                          <Skeleton width="40px" height="14px" />
+                        ) : (
+                          underlyingAssets.token0.toSignificant(4)
+                        )}
+                        <CurrencyLogo
+                          loading={!campaign}
+                          size="14px"
+                          marginLeft={4}
+                          currency={campaign?.targetedPair.token0}
+                        />
+                      </Row>
+                    }
+                  />
+                </Box>
+                <Box>
+                  <DataDisplayer
+                    title={
+                      <Row>STAKED {campaign ? campaign.targetedPair.token1.symbol : <Skeleton width="24px" />}</Row>
+                    }
+                    data={
+                      <Row>
+                        {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                          <Skeleton width="40px" height="14px" />
+                        ) : (
+                          underlyingAssets.token1.toSignificant(4)
+                        )}
+                        <CurrencyLogo
+                          loading={!campaign}
+                          size="14px"
+                          marginLeft={4}
+                          currency={campaign?.targetedPair.token1}
+                        />
+                      </Row>
+                    }
+                  />
+                </Box>
+              </Flex>
             </Flex>
           </Flex>
           <RowBetween>

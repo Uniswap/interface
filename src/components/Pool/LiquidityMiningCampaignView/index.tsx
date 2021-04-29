@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { LiquidityMiningCampaign } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
 import Information from './Information'
@@ -41,9 +41,14 @@ function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
     }
   }, [chainId, history, previousChainId])
 
+  const handleBackClick = useCallback(() => {
+    if (!campaign) return
+    history.push(`/pools/${campaign.targetedPair.token0.address}/${campaign.targetedPair.token1.address}`)
+  }, [campaign, history])
+
   return (
     <AutoColumn gap="18px">
-      <GoBackContainer onClick={history.goBack}>
+      <GoBackContainer onClick={handleBackClick}>
         <StyledChevronLeft />
         Back to pair
       </GoBackContainer>
