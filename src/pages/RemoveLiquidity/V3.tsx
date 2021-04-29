@@ -132,7 +132,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           ? CurrencyAmount.ether(feeValue1.raw)
           : feeValue1,
         recipient: account,
-        nonfungiblePositionManagerAddressOverride: positionManager.address,
       },
     })
 
