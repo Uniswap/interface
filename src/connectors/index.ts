@@ -32,9 +32,9 @@ export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42],
 })
 
-// mainnet only
 export const walletconnect = new WalletConnectConnector({
-  rpc: { 1: NETWORK_URL },
+  supportedChainIds: [1, 3, 4, 5, 42],
+  infuraId: NETWORK_URL.split('/')[NETWORK_URL.split('/').length - 1], // obviously a hack
   bridge: WALLETCONNECT_BRIDGE_URL,
   qrcode: true,
   pollingInterval: 15000,
