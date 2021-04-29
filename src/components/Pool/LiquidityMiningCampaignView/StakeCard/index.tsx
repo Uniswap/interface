@@ -263,9 +263,10 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                 Your stake
               </TYPE.body>
             </Box>
-            <Flex mb="18px">
+            <Flex mb="18px" justifyContent="flex-end">
               <Box mr="20px">
                 <DataDisplayer
+                  alignTitleRight
                   title="REWARDED"
                   data={
                     totalRewardedAmounts.length === 0 ? (
@@ -288,6 +289,7 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
               </Box>
               <Box mr="20px">
                 <DataDisplayer
+                  alignTitleRight
                   title="CLAIMABLE"
                   data={
                     claimableRewardAmounts.length === 0 ? (
@@ -311,16 +313,17 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
               <Box>
                 <DataDisplayer
                   title="CLAIMED"
+                  alignTitleRight
                   data={
                     claimedRewardAmounts.length === 0 ? (
-                      <Row>
+                      <Row justifyContent="flex-end">
                         <Skeleton width="40px" height="14px" />
                         <CurrencyLogo loading marginLeft={4} size="14px" />
                       </Row>
                     ) : (
                       claimedRewardAmounts.map(claimedRewardAmount => {
                         return (
-                          <Row key={claimedRewardAmount.token.address}>
+                          <Row justifyContent="flex-end" key={claimedRewardAmount.token.address}>
                             {claimedRewardAmount.toSignificant(4)}
                             <CurrencyLogo size="14px" marginLeft={4} currency={claimedRewardAmount.token} />
                           </Row>
@@ -356,7 +359,7 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                       <Row>STAKED {campaign ? campaign.targetedPair.token0.symbol : <Skeleton width="24px" />}</Row>
                     }
                     data={
-                      <Row>
+                      <Row justifyContent="flex-end">
                         {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
                           <Skeleton width="40px" height="14px" />
                         ) : (
@@ -378,7 +381,7 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                       <Row>STAKED {campaign ? campaign.targetedPair.token1.symbol : <Skeleton width="24px" />}</Row>
                     }
                     data={
-                      <Row>
+                      <Row justifyContent="flex-end">
                         {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
                           <Skeleton width="40px" height="14px" />
                         ) : (
