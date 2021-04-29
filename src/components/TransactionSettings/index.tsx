@@ -9,6 +9,7 @@ import { RowBetween, RowFixed } from '../Row'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import { Text } from 'rebass'
 import { Option } from '../Option'
+import Toggle from '../Toggle'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -73,9 +74,18 @@ export interface SlippageTabsProps {
   setRawSlippage: (rawSlippage: number) => void
   deadline: number
   setDeadline: (deadline: number) => void
+  multihop: boolean
+  onMultihopChange: () => void
 }
 
-export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
+export default function SlippageTabs({
+  rawSlippage,
+  setRawSlippage,
+  deadline,
+  setDeadline,
+  multihop,
+  onMultihopChange
+}: SlippageTabsProps) {
   const inputRef = useRef<HTMLInputElement>()
 
   const [slippageInput, setSlippageInput] = useState('')
@@ -138,6 +148,15 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
   return (
     <AutoColumn gap="16px">
       <AutoColumn gap="12px">
+        <RowBetween>
+          <RowFixed>
+            <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+              Multihop
+            </TYPE.body>
+            <QuestionHelper text="Forces trades to be performed without complex routes, resulting in gas savings (this might result in a worse execution price)." />
+          </RowFixed>
+          <Toggle isActive={multihop} toggle={onMultihopChange} />
+        </RowBetween>
         <RowFixed>
           <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
             Slippage tolerance

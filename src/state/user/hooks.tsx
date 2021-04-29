@@ -19,7 +19,8 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance,
   toggleURLWarning,
-  removeSerializedPair
+  removeSerializedPair,
+  updateUserMultihop
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -77,6 +78,26 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useIsMultihop(): boolean {
+  const { userMultihop } = useSelector<AppState, { userMultihop: boolean }>(
+    ({ user: { userMultihop } }) => ({ userMultihop }),
+    shallowEqual
+  )
+
+  return userMultihop
+}
+
+export function useMultihopManager(): [boolean, () => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const userMultihop = useIsMultihop()
+
+  const toggleMultihop = useCallback(() => {
+    dispatch(updateUserMultihop({ userMultihop: !userMultihop }))
+  }, [userMultihop, dispatch])
+
+  return [userMultihop, toggleMultihop]
 }
 
 export function useIsExpertMode(): boolean {

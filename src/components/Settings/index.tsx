@@ -9,7 +9,8 @@ import {
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance,
-  useDarkModeManager
+  useDarkModeManager,
+  useMultihopManager
 } from '../../state/user/hooks'
 import { TYPE, ExternalLink, LinkStyledButton, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
@@ -24,7 +25,7 @@ import DxDao from '../../assets/svg/dxdao.svg'
 import { useTransition, animated } from 'react-spring'
 import { version } from '../../../package.json'
 
-const StyledDialogOverlay = animated(styled.div`
+const DialogOverlay = styled.div`
   position: fixed;
   top: 0;
   bottom: 0;
@@ -36,7 +37,8 @@ const StyledDialogOverlay = animated(styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => transparentize(0.65, theme.black)};
-`)
+`
+const StyledDialogOverlay = animated(DialogOverlay)
 
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
@@ -213,6 +215,7 @@ export default function SettingsTab() {
   const [ttl, setTtl] = useUserTransactionTTL()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const [multihop, toggleMultihop] = useMultihopManager()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -282,6 +285,8 @@ export default function SettingsTab() {
                       setRawSlippage={setUserslippageTolerance}
                       deadline={ttl}
                       setDeadline={setTtl}
+                      multihop={multihop}
+                      onMultihopChange={toggleMultihop}
                     />
                     <Text fontWeight={600} fontSize={14}>
                       Interface settings
@@ -309,16 +314,14 @@ export default function SettingsTab() {
                         }
                       />
                     </RowBetween>
-                    {
-                      <RowBetween>
-                        <RowFixed>
-                          <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
-                            Toggle Dark Mode
-                          </TYPE.body>
-                        </RowFixed>
-                        <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
-                      </RowBetween>
-                    }
+                    <RowBetween>
+                      <RowFixed>
+                        <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+                          Toggle Dark Mode
+                        </TYPE.body>
+                      </RowFixed>
+                      <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
+                    </RowBetween>
                   </AutoColumn>
                 </MenuFlyout>
                 <FlyoutBottomAligner>
