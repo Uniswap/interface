@@ -24,7 +24,13 @@ function VersionLinkContainer({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default function BetterTradeLink({ version }: { version: Version }) {
+export default function BetterTradeLink({
+  version,
+  otherTradeNonexistent = false,
+}: {
+  version: Version
+  otherTradeNonexistent: boolean
+}) {
   const location = useLocation()
   const search = useParsedQueryString()
 
@@ -40,7 +46,7 @@ export default function BetterTradeLink({ version }: { version: Version }) {
 
   return (
     <VersionLinkContainer>
-      There is a better price for this trade on{' '}
+      {otherTradeNonexistent ? 'This trade can be executed on ' : 'There is a better price for this trade on '}
       <StyledInternalLink to={linkDestination}>
         <b>Uniswap {version.toUpperCase()} ↗</b>
       </StyledInternalLink>

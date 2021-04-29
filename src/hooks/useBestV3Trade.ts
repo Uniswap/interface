@@ -36,7 +36,7 @@ export function useBestV3TradeExactIn(
   const quotesResults = useSingleContractMultipleData(quoter, 'quoteExactInput', quoteExactInInputs)
 
   return useMemo(() => {
-    if (!amountIn || !currencyOut || quotesResults.some(({ valid }) => !valid)) {
+    if (!amountIn || !currencyOut) {
       return {
         state: V3TradeState.INVALID,
         trade: null,

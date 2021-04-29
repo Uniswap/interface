@@ -393,11 +393,12 @@ export default function Swap({ history }: RouteComponentProps) {
                 setShowInverted={setShowInverted}
               />
             ) : null}
-            {![V3TradeState.VALID, V3TradeState.SYNCING].includes(v3TradeState) ? null : toggledVersion ===
-                Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
-              <BetterTradeLink version={Version.v2} />
-            ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
-              <BetterTradeLink version={Version.v3} />
+            {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) ? (
+              toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+                <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
+              ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+                <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
+              ) : null
             ) : null}
             <BottomGrouping>
               {swapIsUnsupported ? (
