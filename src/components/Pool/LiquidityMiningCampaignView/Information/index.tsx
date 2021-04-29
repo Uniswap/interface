@@ -63,9 +63,9 @@ function Information({
                   />
                 </Box>
                 <Box>
-                  <Text fontSize="16px" fontWeight="600" lineHeight="20px">
+                  <Text fontSize="18px" fontWeight="600" lineHeight="20px">
                     {!targetedPair ? (
-                      <Skeleton width="60px" height="14px" />
+                      <Skeleton width="60px" height="18px" />
                     ) : (
                       `${targetedPair.token0.symbol}/${targetedPair.token1.symbol}`
                     )}

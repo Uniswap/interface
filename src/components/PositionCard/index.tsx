@@ -80,7 +80,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Min
             <FixedHeightRow>
               <RowFixed>
                 <TYPE.body color="text4" fontSize="15px" lineHeight="19px">
-                  Your position
+                  My position
                 </TYPE.body>
               </RowFixed>
             </FixedHeightRow>
@@ -194,7 +194,7 @@ export default function FullPositionCard({ pair, border }: FullPositionCardProps
         <AutoColumn gap="11px">
           <FixedHeightRow>
             <TYPE.body color="white" fontSize="16px" lineHeight="20px" fontWeight="500">
-              Your position:
+              My position
             </TYPE.body>
           </FixedHeightRow>
           <FixedHeightRow marginTop="12px">

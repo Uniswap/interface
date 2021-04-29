@@ -260,7 +260,7 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
           <Flex flexDirection="column">
             <Box mb="20px">
               <TYPE.body color="white" fontWeight="500" lineHeight="19.5px">
-                Your stake
+                My stake
               </TYPE.body>
             </Box>
             <Flex mb="18px" justifyContent="flex-end">

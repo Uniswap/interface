@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Link, Redirect, RouteComponentProps } from 'react-router-dom'
 import { SwapPoolTabs } from '../../../components/NavigationTabs'
 import { PageWrapper } from '../styleds'
 
 import { TYPE } from '../../../theme'
-import { Box, Flex } from 'rebass'
-import { RowBetween } from '../../../components/Row'
+import { Box, Flex, Text } from 'rebass'
+import { RowBetween, RowFixed } from '../../../components/Row'
 import { AutoColumn } from '../../../components/Column'
 
 import { useToken } from '../../../hooks/Tokens'
@@ -16,6 +16,7 @@ import { PairState, usePair } from '../../../data/Reserves'
 import LiquidityMiningCampaignView from '../../../components/Pool/LiquidityMiningCampaignView'
 import { useLiquidityMiningCampaign } from '../../../hooks/useLiquidityMiningCampaign'
 import Skeleton from 'react-loading-skeleton'
+import { ResponsiveButtonPrimary } from '../../LiquidityMining/styleds'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -23,6 +24,16 @@ const TitleRow = styled(RowBetween)`
     gap: 12px;
     width: 100%;
     flex-direction: column-reverse;
+  `};
+`
+
+const ButtonRow = styled(RowFixed)`
+  gap: 12px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 8px;
   `};
 `
 
@@ -71,6 +82,17 @@ export default function LiquidityMiningCampaign({
                 </TYPE.small>
               </Box>
             </Flex>
+            <ButtonRow>
+              <ResponsiveButtonPrimary
+                as={Link}
+                padding="8px 14px"
+                to={token0 && token1 ? `/add/${token0.address}/${token1.address}` : ''}
+              >
+                <Text fontWeight={700} fontSize={12}>
+                  ADD LIQUIDITY
+                </Text>
+              </ResponsiveButtonPrimary>
+            </ButtonRow>
           </TitleRow>
           <LiquidityMiningCampaignView campaign={campaign} />
         </AutoColumn>

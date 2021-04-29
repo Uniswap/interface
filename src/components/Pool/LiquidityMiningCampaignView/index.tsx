@@ -17,6 +17,7 @@ const GoBackContainer = styled.div`
   cursor: pointer;
   text-transform: uppercase;
   display: flex;
+  color: ${props => props.theme.text3};
 `
 
 const StyledChevronLeft = styled(ChevronLeft)`
@@ -49,7 +50,7 @@ function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
       </GoBackContainer>
 
       <DarkCard padding="32px">
-        <AutoColumn gap="18px">
+        <AutoColumn gap="36px">
           <Information
             targetedPair={campaign?.targetedPair}
             stakingCap={campaign?.stakingCap}

@@ -6,7 +6,6 @@ import { Box, Flex } from 'rebass'
 import styled from 'styled-components'
 import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'
 import { TYPE } from '../../../../theme'
-import { AutoColumn } from '../../../Column'
 import CurrencyLogo from '../../../CurrencyLogo'
 
 const StyledSwitchIcon = styled(Repeat)`
@@ -30,29 +29,27 @@ function TokenAmountDisplayer({ amount, fontSize = '14px', alignRight }: TokenAm
   }, [showUSDValue])
 
   return (
-    <AutoColumn gap="4px">
-      <Flex justifyContent={alignRight ? 'flex-end' : 'flex-start'}>
+    <Flex justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="center">
+      <Box mr="4px">
+        <TYPE.small fontWeight="500" fontSize={fontSize}>
+          {showUSDValue
+            ? `$${amount.nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toSignificant(4)}`
+            : amount.toSignificant(4)}
+        </TYPE.small>
+      </Box>
+      {!showUSDValue && (
         <Box mr="4px">
-          <TYPE.small fontWeight="500" fontSize={fontSize}>
-            {showUSDValue
-              ? `$${amount.nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toSignificant(4)}`
-              : amount.toSignificant(4)}
-          </TYPE.small>
+          <CurrencyLogo currency={amount.token} size={fontSize} />
         </Box>
-        {!showUSDValue && (
-          <Box mr="4px">
-            <CurrencyLogo currency={amount.token} size={fontSize} />
-          </Box>
+      )}
+      <Box>
+        {loading ? (
+          <Skeleton width={fontSize} height={fontSize} />
+        ) : (
+          <StyledSwitchIcon onClick={handleSwitchValueClick} size={fontSize} />
         )}
-        <Box>
-          {loading ? (
-            <Skeleton width={fontSize} height={fontSize} />
-          ) : (
-            <StyledSwitchIcon onClick={handleSwitchValueClick} size={fontSize} />
-          )}
-        </Box>
-      </Flex>
-    </AutoColumn>
+      </Box>
+    </Flex>
   )
 }
 
