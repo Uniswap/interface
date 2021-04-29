@@ -99,7 +99,7 @@ function PairView({ loading, pair }: PairViewProps) {
               style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
               width="100%"
             >
-              GOVERNANCE
+              GOVERNANCE (COMING SOON)
             </ButtonGrey>
           </RowBetween>
         </Flex>
