@@ -412,13 +412,13 @@ export default function AddLiquidity({
                   <RowBetween>
                     <RowFixed>
                       <DoubleCurrencyLogo
-                        currency0={currencyA ?? undefined}
-                        currency1={currencyB ?? undefined}
+                        currency0={baseCurrency ?? undefined}
+                        currency1={quoteCurrency ?? undefined}
                         size={24}
                         margin={true}
                       />
                       <TYPE.label ml="10px" fontSize="24px">
-                        {currencyA?.symbol} / {currencyB?.symbol}
+                        {quoteCurrency?.symbol} / {baseCurrency?.symbol}
                       </TYPE.label>
                     </RowFixed>
                     <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
@@ -468,7 +468,7 @@ export default function AddLiquidity({
                             {price ? (
                               <TYPE.main>
                                 {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
-                                {currencyB?.symbol} = 1 {currencyA?.symbol}
+                                {quoteCurrency?.symbol} = 1 {baseCurrency?.symbol}
                               </TYPE.main>
                             ) : (
                               '-'
