@@ -270,14 +270,14 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                   title="REWARDED"
                   data={
                     totalRewardedAmounts.length === 0 ? (
-                      <Row>
+                      <Row justifyContent="flex-end">
                         <Skeleton width="40px" height="14px" />
                         <CurrencyLogo loading marginLeft={4} size="14px" />
                       </Row>
                     ) : (
                       totalRewardedAmounts.map(totalRewardedAmount => {
                         return (
-                          <Row key={totalRewardedAmount.token.address}>
+                          <Row justifyContent="flex-end" key={totalRewardedAmount.token.address}>
                             {totalRewardedAmount.toSignificant(4)}
                             <CurrencyLogo size="14px" marginLeft={4} currency={totalRewardedAmount.token} />
                           </Row>
@@ -293,14 +293,14 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                   title="CLAIMABLE"
                   data={
                     claimableRewardAmounts.length === 0 ? (
-                      <Row>
+                      <Row justifyContent="flex-end">
                         <Skeleton width="40px" height="14px" />
                         <CurrencyLogo loading marginLeft={4} size="14px" />
                       </Row>
                     ) : (
                       claimableRewardAmounts.map(claimableRewardAmount => {
                         return (
-                          <Row key={claimableRewardAmount.token.address}>
+                          <Row justifyContent="flex-end" key={claimableRewardAmount.token.address}>
                             {claimableRewardAmount.toSignificant(4)}
                             <CurrencyLogo size="14px" marginLeft={4} currency={claimableRewardAmount.token} />
                           </Row>
