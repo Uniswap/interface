@@ -38,7 +38,7 @@ export default function Updater(): null {
 
     if (requiredChainId !== stringChainId) {
       searchParams.set('chainId', stringChainId)
-      history.push({ search: searchParams.toString() })
+      history.replace({ search: searchParams.toString() })
     }
   }, [chainId, connector, history, location, matchedOnce])
 
