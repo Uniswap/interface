@@ -149,8 +149,9 @@ export function useSwapCallback(
 
             const tx =
               !value || isZero(value)
-                ? { to: address, data: calldata }
+                ? { from: account, to: address, data: calldata }
                 : {
+                    from: account,
                     to: address,
                     data: calldata,
                     value,
