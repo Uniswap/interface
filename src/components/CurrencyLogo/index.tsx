@@ -1,7 +1,6 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, ETHER, Token } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
@@ -41,10 +40,11 @@ export default function CurrencyLogo({
     if (currency === ETHER) return []
 
     if (currency instanceof Token) {
+      const defaultUrls = currency.chainId === ChainId.MAINNET ? [getTokenLogoURL(currency.address)] : []
       if (currency instanceof WrappedTokenInfo) {
-        return [...uriLocations, getTokenLogoURL(currency.address)]
+        return [...uriLocations, ...defaultUrls]
       }
-      return [getTokenLogoURL(currency.address)]
+      return defaultUrls
     }
     return []
   }, [currency, uriLocations])

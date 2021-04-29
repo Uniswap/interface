@@ -216,10 +216,13 @@ export default function CurrencyInputPanel({
               <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
                 {label}
               </TYPE.body>
-              {fiatValueOfTypedAmount ? <TYPE.label>${fiatValueOfTypedAmount?.toFixed(2)}</TYPE.label> : null}
+              <TYPE.label>
+                {fiatValueOfTypedAmount ? '~' : ''}${fiatValueOfTypedAmount?.toSignificant(4) ?? '-'}
+              </TYPE.label>
             </RowBetween>
           </LabelRow>
         )}
+
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           <CurrencySelect
             selected={!!currency}
