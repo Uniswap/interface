@@ -173,8 +173,8 @@ export function getPriceOrderingFromPositionForUI(
 
   // otherwise, just return the default
   return {
-    priceLower: position.token0PriceUpper.invert(),
-    priceUpper: position.token0PriceLower.invert(),
+    priceLower: position.token0PriceLower,
+    priceUpper: position.token0PriceUpper,
     quote: token1,
     base: token0,
   }
@@ -224,7 +224,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
 
   // check if price is within range
-  const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent > tickUpper : false
+  const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
   const positionSummaryLink = '/pool/' + positionDetails.tokenId
 
