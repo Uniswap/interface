@@ -5,10 +5,11 @@ import { useToken } from 'hooks/Tokens'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { unwrappedToken } from 'utils/wrappedCurrency'
+import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { LoadingRows } from './styleds'
 import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed } from 'components/Row'
+import Row, { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { ButtonText, TYPE } from 'theme'
 import Badge, { BadgeVariant } from 'components/Badge'
@@ -139,6 +140,8 @@ export function PositionPage({
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
+
+  const metadata = usePositionTokenURI(parsedTokenId)
 
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
@@ -312,52 +315,59 @@ export function PositionPage({
             </BadgeWrapper>
           </RowBetween>
         </AutoColumn>
-        <DarkCard>
-          <AutoColumn gap="lg">
-            <ResponsiveGrid>
-              <Label>Tokens</Label>
-              <Label end={true}>Liquidity</Label>
-              <Label end={true}>Fees</Label>
-            </ResponsiveGrid>
-            <ResponsiveGrid>
-              <RowFixed>
-                <CurrencyLogo currency={currencyQuote} />
-                <TYPE.label ml="10px">{currencyQuote?.symbol}</TYPE.label>
-              </RowFixed>
-              <Label end={true}>
-                {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
-              </Label>
-              <Label end={true}>
-                {inverted
-                  ? feeValue0
-                    ? formatTokenAmount(feeValue0, 4)
-                    : '-'
-                  : feeValue1
-                  ? formatTokenAmount(feeValue1, 4)
-                  : '-'}
-              </Label>
-            </ResponsiveGrid>
-            <ResponsiveGrid>
-              <RowFixed>
-                <CurrencyLogo currency={currencyBase} />
-                <TYPE.label ml="10px">{currencyBase?.symbol}</TYPE.label>
-              </RowFixed>
-              <Label end={true}>
-                {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
-              </Label>
-
-              <Label end={true}>
-                {inverted
-                  ? feeValue1
+        <Row align="stretch">
+          {'result' in metadata ? (
+            <div style={{ marginRight: 12 }}>
+              <img src={metadata.result.image} />
+            </div>
+          ) : null}
+          <DarkCard>
+            <AutoColumn gap="lg">
+              <ResponsiveGrid>
+                <Label>Tokens</Label>
+                <Label end={true}>Liquidity</Label>
+                <Label end={true}>Fees</Label>
+              </ResponsiveGrid>
+              <ResponsiveGrid>
+                <RowFixed>
+                  <CurrencyLogo currency={currencyQuote} />
+                  <TYPE.label ml="10px">{currencyQuote?.symbol}</TYPE.label>
+                </RowFixed>
+                <Label end={true}>
+                  {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
+                </Label>
+                <Label end={true}>
+                  {inverted
+                    ? feeValue0
+                      ? formatTokenAmount(feeValue0, 4)
+                      : '-'
+                    : feeValue1
                     ? formatTokenAmount(feeValue1, 4)
-                    : '-'
-                  : feeValue0
-                  ? formatTokenAmount(feeValue0, 4)
-                  : '-'}
-              </Label>
-            </ResponsiveGrid>
-          </AutoColumn>
-        </DarkCard>
+                    : '-'}
+                </Label>
+              </ResponsiveGrid>
+              <ResponsiveGrid>
+                <RowFixed>
+                  <CurrencyLogo currency={currencyBase} />
+                  <TYPE.label ml="10px">{currencyBase?.symbol}</TYPE.label>
+                </RowFixed>
+                <Label end={true}>
+                  {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
+                </Label>
+
+                <Label end={true}>
+                  {inverted
+                    ? feeValue1
+                      ? formatTokenAmount(feeValue1, 4)
+                      : '-'
+                    : feeValue0
+                    ? formatTokenAmount(feeValue0, 4)
+                    : '-'}
+                </Label>
+              </ResponsiveGrid>
+            </AutoColumn>
+          </DarkCard>
+        </Row>
         <DarkCard>
           <AutoColumn gap="lg">
             <TYPE.label display="flex">
