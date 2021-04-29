@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import { RowBetween } from '../../components/Row'
 
@@ -19,6 +19,13 @@ export const TitleRow = styled(RowBetween)`
 `
 
 export const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  width: fit-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  width: 48%;
+`};
+`
+
+export const ResponsiveButtonSecondary = styled(ButtonSecondary)`
   width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
   width: 48%;

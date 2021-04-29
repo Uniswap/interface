@@ -16,7 +16,9 @@ import { PairState, usePair } from '../../../data/Reserves'
 import LiquidityMiningCampaignView from '../../../components/Pool/LiquidityMiningCampaignView'
 import { useLiquidityMiningCampaign } from '../../../hooks/useLiquidityMiningCampaign'
 import Skeleton from 'react-loading-skeleton'
-import { ResponsiveButtonPrimary } from '../../LiquidityMining/styleds'
+import { ResponsiveButtonPrimary, ResponsiveButtonSecondary } from '../../LiquidityMining/styleds'
+import { useActiveWeb3React } from '../../../hooks'
+import { useTokenBalance } from '../../../state/wallet/hooks'
 
 const TitleRow = styled(RowBetween)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -42,13 +44,18 @@ export default function LiquidityMiningCampaign({
     params: { currencyIdA, currencyIdB, liquidityMiningCampaignId }
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; liquidityMiningCampaignId: string }>) {
+  const { account } = useActiveWeb3React()
   const token0 = useToken(currencyIdA)
   const token1 = useToken(currencyIdB)
   const wrappedPair = usePair(token0 || undefined, token1 || undefined)
   const { campaign } = useLiquidityMiningCampaign(wrappedPair[1] || undefined, liquidityMiningCampaignId)
+  const lpTokenBalance = useTokenBalance(account || undefined, wrappedPair[1]?.liquidityToken)
 
   if (token0 && token1 && (wrappedPair[0] === PairState.NOT_EXISTS || wrappedPair[0] === PairState.INVALID))
     return <Redirect to="/pools" />
+
+  const AddLiquidityButtonComponent =
+    lpTokenBalance && lpTokenBalance.equalTo('0') ? ResponsiveButtonPrimary : ResponsiveButtonSecondary
   return (
     <PageWrapper>
       <SwapPoolTabs active={'pool'} />
@@ -83,7 +90,7 @@ export default function LiquidityMiningCampaign({
               </Box>
             </Flex>
             <ButtonRow>
-              <ResponsiveButtonPrimary
+              <AddLiquidityButtonComponent
                 as={Link}
                 padding="8px 14px"
                 to={token0 && token1 ? `/add/${token0.address}/${token1.address}` : ''}
@@ -91,7 +98,7 @@ export default function LiquidityMiningCampaign({
                 <Text fontWeight={700} fontSize={12}>
                   ADD LIQUIDITY
                 </Text>
-              </ResponsiveButtonPrimary>
+              </AddLiquidityButtonComponent>
             </ButtonRow>
           </TitleRow>
           <LiquidityMiningCampaignView campaign={campaign} />
