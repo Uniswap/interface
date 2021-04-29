@@ -1,8 +1,10 @@
 import { Pair } from '@uniswap/v2-sdk'
-import { Currency } from '@uniswap/sdk-core'
-import React, { useState, useCallback } from 'react'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import React, { useState, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
+import useUSDCPrice from '../../hooks/useUSDCPrice'
+import { tryParseAmount } from '../../state/swap/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
@@ -152,6 +154,7 @@ interface CurrencyInputPanelProps {
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
+  showFiatValue?: boolean
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
@@ -170,6 +173,7 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
+  showFiatValue = false,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -187,7 +191,13 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const disableCurrencySelect = typeof onCurrencySelect !== 'function'
+  const price = useUSDCPrice(showFiatValue ? currency ?? undefined : undefined)
+
+  const fiatValueOfTypedAmount: CurrencyAmount | null = useMemo(() => {
+    if (!price) return null
+    const amount = tryParseAmount(value, currency ?? undefined)
+    return amount ? price.quote(amount) : null
+  }, [currency, price, value])
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -206,16 +216,17 @@ export default function CurrencyInputPanel({
               <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
                 {label}
               </TYPE.body>
+              {fiatValueOfTypedAmount ? <TYPE.label>${fiatValueOfTypedAmount?.toFixed(2)}</TYPE.label> : null}
             </RowBetween>
           </LabelRow>
         )}
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
+        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           <CurrencySelect
             selected={!!currency}
             hideInput={hideInput}
             className="open-currency-select-button"
             onClick={() => {
-              if (!disableCurrencySelect) {
+              if (onCurrencySelect) {
                 setModalOpen(true)
               }
             }}
@@ -243,19 +254,17 @@ export default function CurrencyInputPanel({
                   </StyledTokenName>
                 )}
               </RowFixed>
-              {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+              {onCurrencySelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
           </CurrencySelect>
           {!hideInput && (
-            <>
-              <NumericalInput
-                className="token-amount-input"
-                value={value}
-                onUserInput={(val) => {
-                  onUserInput(val)
-                }}
-              />
-            </>
+            <NumericalInput
+              className="token-amount-input"
+              value={value}
+              onUserInput={(val) => {
+                onUserInput(val)
+              }}
+            />
           )}
         </InputRow>
         {!hideInput && !hideBalance && (
@@ -288,7 +297,7 @@ export default function CurrencyInputPanel({
           </LabelRow>
         )}
       </Container>
-      {!disableCurrencySelect && onCurrencySelect && (
+      {onCurrencySelect && (
         <CurrencySearchModal
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}

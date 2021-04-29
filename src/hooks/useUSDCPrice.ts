@@ -1,4 +1,4 @@
-import { ChainId, Currency, currencyEquals, Price, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, currencyEquals, Price, Token, WETH9 } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { USDC } from '../constants'
@@ -13,16 +13,15 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
 export default function useUSDCPrice(currency?: Currency): Price | undefined {
   const { chainId } = useActiveWeb3React()
   const wrapped = wrappedCurrency(currency, chainId)
+  const weth = WETH9[chainId as ChainId]
+
   const tokenPairs: [Currency | undefined, Currency | undefined][] = useMemo(
     () => [
-      [
-        chainId && wrapped && currencyEquals(WETH9[chainId], wrapped) ? undefined : currency,
-        chainId ? WETH9[chainId] : undefined,
-      ],
+      [chainId && wrapped && currencyEquals(weth, wrapped) ? undefined : currency, chainId ? weth : undefined],
       [wrapped?.equals(USDC) ? undefined : wrapped, chainId === ChainId.MAINNET ? USDC : undefined],
-      [chainId ? WETH9[chainId] : undefined, chainId === ChainId.MAINNET ? USDC : undefined],
+      [chainId ? weth : undefined, chainId === ChainId.MAINNET ? USDC : undefined],
     ],
-    [chainId, currency, wrapped]
+    [chainId, currency, weth, wrapped]
   )
   const [[ethPairState, ethPair], [usdcPairState, usdcPair], [usdcEthPairState, usdcEthPair]] = useV2Pairs(tokenPairs)
 
@@ -30,10 +29,21 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
     if (!currency || !wrapped || !chainId) {
       return undefined
     }
+    // return some fake price data for non-mainnet
+    if (chainId !== ChainId.MAINNET) {
+      const fakeUSDC = new Token(chainId, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'fUSDC', 'Fake USDC')
+      return new Price(
+        currency,
+        fakeUSDC,
+        10 ** Math.max(0, currency.decimals - 6),
+        15 * 10 ** Math.max(6 - currency.decimals, 0)
+      )
+    }
+
     // handle weth/eth
-    if (wrapped.equals(WETH9[chainId])) {
+    if (wrapped.equals(weth)) {
       if (usdcPair) {
-        const price = usdcPair.priceOf(WETH9[chainId])
+        const price = usdcPair.priceOf(weth)
         return new Price(currency, USDC, price.denominator, price.numerator)
       } else {
         return undefined
@@ -44,9 +54,9 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
       return new Price(USDC, USDC, '1', '1')
     }
 
-    const ethPairETHAmount = ethPair?.reserveOf(WETH9[chainId])
+    const ethPairETHAmount = ethPair?.reserveOf(weth)
     const ethPairETHUSDCValue: JSBI =
-      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(WETH9[chainId]).quote(ethPairETHAmount).raw : JSBI.BigInt(0)
+      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(weth).quote(ethPairETHAmount).raw : JSBI.BigInt(0)
 
     // all other tokens
     // first try the usdc pair
@@ -55,13 +65,13 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
       return new Price(currency, USDC, price.denominator, price.numerator)
     }
     if (ethPairState === PairState.EXISTS && ethPair && usdcEthPairState === PairState.EXISTS && usdcEthPair) {
-      if (usdcEthPair.reserveOf(USDC).greaterThan('0') && ethPair.reserveOf(WETH9[chainId]).greaterThan('0')) {
+      if (usdcEthPair.reserveOf(USDC).greaterThan('0') && ethPair.reserveOf(weth).greaterThan('0')) {
         const ethUsdcPrice = usdcEthPair.priceOf(USDC)
-        const currencyEthPrice = ethPair.priceOf(WETH9[chainId])
+        const currencyEthPrice = ethPair.priceOf(weth)
         const usdcPrice = ethUsdcPrice.multiply(currencyEthPrice).invert()
         return new Price(currency, USDC, usdcPrice.denominator, usdcPrice.numerator)
       }
     }
     return undefined
-  }, [chainId, currency, ethPair, ethPairState, usdcEthPair, usdcEthPairState, usdcPair, usdcPairState, wrapped])
+  }, [chainId, currency, ethPair, ethPairState, usdcEthPair, usdcEthPairState, usdcPair, usdcPairState, weth, wrapped])
 }
