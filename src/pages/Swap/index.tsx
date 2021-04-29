@@ -341,6 +341,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 currency={currencies[Field.INPUT]}
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
+                showFiatValue
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
                 showCommonBases={true}
@@ -363,6 +364,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 label={independentField === Field.INPUT && !showWrap && trade ? 'To (minimum)' : 'To'}
                 showMaxButton={false}
                 hideBalance={true}
+                showFiatValue
                 currency={currencies[Field.OUTPUT]}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
