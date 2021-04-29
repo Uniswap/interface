@@ -4148,25 +4148,26 @@
     "@uniswap/v2-core" "1.0.1"
     "@uniswap/v3-core" "1.0.0-rc.2"
 
-"@uniswap/v3-periphery@^1.0.0-beta.22":
-  version "1.0.0-beta.22"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0-beta.22.tgz#b084926f290494ba3e4fcfa2b6a4ca11cd6631be"
-  integrity sha512-kDi5d1/7j++JDdfr0eemZo/2ZYtMmxRaq7O6cfaOW5Pv5j2wCYsauwC3SKzjpXsFD6Z0SdPPS3pVAu7UygnJYg==
+"@uniswap/v3-periphery@^1.0.0-beta.23":
+  version "1.0.0-beta.23"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-periphery/-/v3-periphery-1.0.0-beta.23.tgz#d8f55136b894a6101e050205f0d6a61bb8d28f67"
+  integrity sha512-5cvK8/ITIVql+iZdPd0TR5EiNNm55ejAspjIxcsnGKyflaeQb+ePw6X4HTruTPGvPoaFvk+UirYeezUspXhlcg==
   dependencies:
     "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
     "@uniswap/lib" "^4.0.1-alpha"
     "@uniswap/v2-core" "1.0.1"
     "@uniswap/v3-core" "1.0.0-rc.2"
+    base64-sol "1.0.1"
 
-"@uniswap/v3-sdk@^1.0.0-alpha.28":
-  version "1.0.0-alpha.28"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-1.0.0-alpha.28.tgz#5a8187d39ed216a4907533bafd5aaa48a5b7e72a"
-  integrity sha512-4PD2RFGCu6RrKKeSbeszl+fTRerf+eFKXezKbrM7dqsqrjXuy5E5uh0DdHnsZzcqfhz2mQQtih4JJ9zgorrPeA==
+"@uniswap/v3-sdk@^1.0.0-alpha.29":
+  version "1.0.0-alpha.29"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-1.0.0-alpha.29.tgz#97099f2b34596ebb6a5e0194e8103f94abd2222e"
+  integrity sha512-fGwCin5VRzvv605I4vjt1erT9BmJJk/T7UD9GxjCs9NZTVzoJ0mqvTacGvg3EXbzmXD1PtlNmUgfYUvN4uq4bg==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
     "@uniswap/sdk-core" "^1.0.10"
-    "@uniswap/v3-periphery" "^1.0.0-beta.22"
+    "@uniswap/v3-periphery" "^1.0.0-beta.23"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
 
@@ -5912,6 +5913,11 @@ base64-js@^1.0.2, base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
+base64-sol@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/base64-sol/-/base64-sol-1.0.1.tgz#91317aa341f0bc763811783c5729f1c2574600f6"
+  integrity sha512-ld3cCNMeXt4uJXmLZBHFGMvVpK9KsLVEhPpFRXnvSVAqABKbuNZg/+dsq3NuM+wxFLb/UrVkz7m1ciWmkMfTbg==
 
 base@^0.11.1:
   version "0.11.2"

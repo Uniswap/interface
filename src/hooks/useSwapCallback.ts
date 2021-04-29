@@ -99,8 +99,8 @@ function useSwapCallArguments(
         recipient,
         slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         deadline: deadline.toString(),
-        swapRouterAddressOverride: swapRouterAddress,
       })
+
       return [
         {
           address: swapRouterAddress,

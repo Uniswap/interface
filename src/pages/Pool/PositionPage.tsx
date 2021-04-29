@@ -189,7 +189,6 @@ export function PositionPage({
       expectedCurrencyOwed0: feeValue0.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue0.raw) : feeValue0,
       expectedCurrencyOwed1: feeValue1.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue1.raw) : feeValue1,
       recipient: account,
-      nonfungiblePositionManagerAddressOverride: positionManager.address,
     })
 
     const txn = {
