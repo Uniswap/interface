@@ -16,9 +16,9 @@ import { ButtonDark } from '../../../Button'
 import { GreyCard } from '../../../Card'
 import { AutoColumn } from '../../../Column'
 import CurrencyLogo from '../../../CurrencyLogo'
-import DoubleCurrencyLogo from '../../../DoubleLogo'
 import Row, { RowBetween } from '../../../Row'
 import DataDisplayer from '../DataDisplayer'
+import TokenAmountDisplayer from '../TokenAmountDisplayer'
 import ConfirmClaimModal from './ConfirmClaimModal'
 import ConfirmExitModal from './ConfirmExitModal'
 import ConfirmStakingModal from './ConfirmStakingModal'
@@ -277,10 +277,11 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                     ) : (
                       totalRewardedAmounts.map(totalRewardedAmount => {
                         return (
-                          <Row justifyContent="flex-end" key={totalRewardedAmount.token.address}>
-                            {totalRewardedAmount.toSignificant(4)}
-                            <CurrencyLogo size="14px" marginLeft={4} currency={totalRewardedAmount.token} />
-                          </Row>
+                          <TokenAmountDisplayer
+                            key={totalRewardedAmount.token.address}
+                            amount={totalRewardedAmount}
+                            alignRight
+                          />
                         )
                       })
                     )
@@ -300,10 +301,11 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                     ) : (
                       claimableRewardAmounts.map(claimableRewardAmount => {
                         return (
-                          <Row justifyContent="flex-end" key={claimableRewardAmount.token.address}>
-                            {claimableRewardAmount.toSignificant(4)}
-                            <CurrencyLogo size="14px" marginLeft={4} currency={claimableRewardAmount.token} />
-                          </Row>
+                          <TokenAmountDisplayer
+                            key={claimableRewardAmount.token.address}
+                            amount={claimableRewardAmount}
+                            alignRight
+                          />
                         )
                       })
                     )
@@ -323,10 +325,11 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                     ) : (
                       claimedRewardAmounts.map(claimedRewardAmount => {
                         return (
-                          <Row justifyContent="flex-end" key={claimedRewardAmount.token.address}>
-                            {claimedRewardAmount.toSignificant(4)}
-                            <CurrencyLogo size="14px" marginLeft={4} currency={claimedRewardAmount.token} />
-                          </Row>
+                          <TokenAmountDisplayer
+                            key={claimedRewardAmount.token.address}
+                            amount={claimedRewardAmount}
+                            alignRight
+                          />
                         )
                       })
                     )
@@ -339,16 +342,14 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                 <DataDisplayer
                   title="STAKE SIZE"
                   data={
-                    <Row>
-                      {stakedTokenAmount ? stakedTokenAmount.toSignificant(4) : <Skeleton width="40px" height="14px" />}
-                      <DoubleCurrencyLogo
-                        loading={!campaign}
-                        size={14}
-                        marginLeft={4}
-                        currency0={campaign?.targetedPair.token0}
-                        currency1={campaign?.targetedPair.token1}
-                      />
-                    </Row>
+                    !stakedTokenAmount ? (
+                      <Row>
+                        <Skeleton width="40px" height="14px" />
+                        <CurrencyLogo marginLeft={4} loading size="14px" />
+                      </Row>
+                    ) : (
+                      <TokenAmountDisplayer amount={stakedTokenAmount} />
+                    )
                   }
                 />
               </Box>
@@ -359,19 +360,14 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                       <Row>STAKED {campaign ? campaign.targetedPair.token0.symbol : <Skeleton width="24px" />}</Row>
                     }
                     data={
-                      <Row justifyContent="flex-end">
-                        {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                      loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                        <Row justifyContent="flex-end">
                           <Skeleton width="40px" height="14px" />
-                        ) : (
-                          underlyingAssets.token0.toSignificant(4)
-                        )}
-                        <CurrencyLogo
-                          loading={!campaign}
-                          size="14px"
-                          marginLeft={4}
-                          currency={campaign?.targetedPair.token0}
-                        />
-                      </Row>
+                          <CurrencyLogo marginLeft={4} loading size="14px" />
+                        </Row>
+                      ) : (
+                        <TokenAmountDisplayer amount={underlyingAssets.token0} alignRight />
+                      )
                     }
                   />
                 </Box>
@@ -381,19 +377,14 @@ export default function StakeCard({ campaign }: FullPositionCardProps) {
                       <Row>STAKED {campaign ? campaign.targetedPair.token1.symbol : <Skeleton width="24px" />}</Row>
                     }
                     data={
-                      <Row justifyContent="flex-end">
-                        {loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                      loadingLpTokensUnderlyingAssets || !underlyingAssets ? (
+                        <Row justifyContent="flex-end">
                           <Skeleton width="40px" height="14px" />
-                        ) : (
-                          underlyingAssets.token1.toSignificant(4)
-                        )}
-                        <CurrencyLogo
-                          loading={!campaign}
-                          size="14px"
-                          marginLeft={4}
-                          currency={campaign?.targetedPair.token1}
-                        />
-                      </Row>
+                          <CurrencyLogo marginLeft={4} loading size="14px" />
+                        </Row>
+                      ) : (
+                        <TokenAmountDisplayer amount={underlyingAssets.token1} alignRight />
+                      )
                     }
                   />
                 </Box>

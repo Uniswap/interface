@@ -1,14 +1,25 @@
 import { Pair, Percent, PricedTokenAmount, TokenAmount } from 'dxswap-sdk'
 import { DateTime } from 'luxon'
 import React from 'react'
+import { Lock, Unlock } from 'react-feather'
 import Skeleton from 'react-loading-skeleton'
 import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components'
 import { useNativeCurrencyUSDPrice } from '../../../../hooks/useNativeCurrencyUSDPrice'
 import Countdown from '../../../Countdown'
 import CurrencyLogo from '../../../CurrencyLogo'
 import DoubleCurrencyLogo from '../../../DoubleLogo'
-import Row from '../../../Row'
+import Row, { AutoRow } from '../../../Row'
 import DataDisplayer from '../DataDisplayer'
+import TokenAmountDisplayer from '../TokenAmountDisplayer'
+
+const StyledLock = styled(Lock)`
+  color: ${props => props.theme.red1};
+`
+
+const StyledUnlock = styled(Unlock)`
+  color: ${props => props.theme.green1};
+`
 
 interface InformationProps {
   targetedPair?: Pair
@@ -83,7 +94,20 @@ function Information({
         <Box>
           <DataDisplayer
             title="POOL TYPE"
-            data={locked !== undefined ? locked ? 'LOCKED' : 'UNLOCKED' : <Skeleton width="40px" height="14px" />}
+            data={
+              <AutoRow gap="4px">
+                {locked !== undefined ? (
+                  locked ? (
+                    <StyledLock size="14px" />
+                  ) : (
+                    <StyledUnlock size="14px" />
+                  )
+                ) : (
+                  <Skeleton width="14px" height="14px" />
+                )}
+                {locked !== undefined ? locked ? 'LOCKED' : 'UNLOCKED' : <Skeleton width="52px" height="14px" />}
+              </AutoRow>
+            }
           />
         </Box>
       </Flex>
@@ -127,14 +151,12 @@ function Information({
                 !rewards ? (
                   <Row alignItems="center" justifyContent="flex-end" mb="4px">
                     <Skeleton width="24px" height="14px" />
-                    <CurrencyLogo loading marginLeft={4} size="14px" />
+                    <CurrencyLogo loading marginLeft={4} marginRight={4} size="14px" />
+                    <Skeleton width="14px" height="14px" />
                   </Row>
                 ) : (
                   rewards.map(reward => (
-                    <Row alignItems="center" justifyContent="flex-end" key={reward.token.address} mb="4px">
-                      {reward.toSignificant(3)}
-                      <CurrencyLogo marginLeft={4} size="12px" currency={reward.token} />
-                    </Row>
+                    <TokenAmountDisplayer key={reward.token.address} amount={reward} fontSize="12px" alignRight />
                   ))
                 )
               }
@@ -148,14 +170,17 @@ function Information({
                 !remainingRewards ? (
                   <Row alignItems="center" justifyContent="flex-end" mb="4px">
                     <Skeleton width="24px" height="14px" />
-                    <CurrencyLogo loading marginLeft={4} size="14px" />
+                    <CurrencyLogo loading marginLeft={4} marginRight={4} size="14px" />
+                    <Skeleton width="14px" height="14px" />
                   </Row>
                 ) : (
                   remainingRewards.map(remainingReward => (
-                    <Row alignItems="center" justifyContent="flex-end" key={remainingReward.token.address} mb="4px">
-                      {remainingReward.toSignificant(3)}
-                      <CurrencyLogo marginLeft={4} size="12px" currency={remainingReward.token} />
-                    </Row>
+                    <TokenAmountDisplayer
+                      key={remainingReward.token.address}
+                      amount={remainingReward}
+                      fontSize="12px"
+                      alignRight
+                    />
                   ))
                 )
               }
