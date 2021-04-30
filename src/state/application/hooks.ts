@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
@@ -9,12 +8,6 @@ export function useBlockNumber(): number | undefined {
   const { chainId } = useActiveWeb3React()
 
   return useSelector((state: AppState) => state.application.blockNumber[chainId ?? -1])
-}
-
-export function useBlockGasLimit(): BigNumber | undefined {
-  const { chainId } = useActiveWeb3React()
-  const rawBlockGasLimit = useSelector((state: AppState) => state.application.blockGasLimit[chainId ?? -1])
-  return BigNumber.from(rawBlockGasLimit ?? '0')
 }
 
 export function useModalOpen(modal: ApplicationModal): boolean {

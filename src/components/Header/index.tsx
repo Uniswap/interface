@@ -19,6 +19,7 @@ import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
+import { isMobile } from 'react-device-detect'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -83,22 +84,6 @@ const MoreLinksIcon = styled(HeaderElement)`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: flex;
   `};
-`
-
-const MobileSettingsWrap = styled.div`
-  display: none;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: block;
-    align-items: center;
-  `}
-`
-
-const DesktopSettingsWrap = styled.div`
-  display: flex;
-  align-items: center;
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `}
 `
 
 const HeaderRow = styled(RowFixed)<{ isDark: boolean }>`
@@ -269,9 +254,7 @@ function Header({ history }: { history: any }) {
               ↗
             </Text>
           </StyledExternalLink>
-          <MobileSettingsWrap>
-            <Settings />
-          </MobileSettingsWrap>
+          {isMobile && <Settings />}
           <MoreLinksIcon>
             <MobileOptions history={history} />
           </MoreLinksIcon>
@@ -296,9 +279,7 @@ function Header({ history }: { history: any }) {
             <Web3Status />
           </AccountElement>
         </HeaderElement>
-        <DesktopSettingsWrap>
-          <Settings />
-        </DesktopSettingsWrap>
+        {!isMobile && <Settings />}
       </HeaderControls>
     </HeaderFrame>
   )

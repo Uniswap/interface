@@ -22,9 +22,6 @@ export enum ApplicationModal {
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
-export const updateBlockGasLimit = createAction<{ chainId: number; blockGasLimit: string }>(
-  'application/updateBlockGasLimit'
-)
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
 export const addPopup = createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>(
   'application/addPopup'

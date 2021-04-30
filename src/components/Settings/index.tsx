@@ -19,7 +19,6 @@ import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
-import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import SwaprVersionLogo from '../SwaprVersionLogo'
 
 const StyledMenuIcon = styled(Settings)`
@@ -66,12 +65,9 @@ const StyledMenu = styled.div`
 `
 
 const MenuModal = styled(Modal)`
-  display: flex;
-  flex-direction: column;
   position: absolute;
   top: 80px;
   right: 20px;
-  z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
     top: initial;
@@ -81,29 +77,16 @@ const MenuModal = styled(Modal)`
   `};
 `
 
-const MenuFlyout = styled.div`
-  min-width: 322px;
-  max-width: 322px;
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
-  border-radius: 8px;
-  backdrop-filter: blur(16px);
-  border-radius: 8px;
-  border: 8px solid;
-  border-radius: 8px;
-  border-image: url(${border8pxRadius}) 8;
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-  height: auto;
-  box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
-`
-
 const ModalContentWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 26px 0;
   background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
+`
+
+const MenuModalContentWrapper = styled(ModalContentWrapper)`
+  padding: 12px;
 `
 
 const MenuItem = styled(ExternalLink)`
@@ -194,7 +177,7 @@ export default function SettingsTab() {
         </EmojiWrapper>
       )}
       <MenuModal maxWidth={322} isOpen={open} onDismiss={toggle}>
-        <MenuFlyout>
+        <MenuModalContentWrapper>
           <AutoColumn gap="md" style={{ padding: '8px' }}>
             <RowBetween>
               <Text fontWeight="400" fontSize="14px" lineHeight="17px">
@@ -259,7 +242,7 @@ export default function SettingsTab() {
               </TYPE.body>
             </RowBetween>
           </AutoColumn>
-        </MenuFlyout>
+        </MenuModalContentWrapper>
       </MenuModal>
     </StyledMenu>
   )
