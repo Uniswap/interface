@@ -229,7 +229,7 @@ export default function SettingsTab() {
                 <Code size={14} />
                 Code
               </MenuItem>
-              <MenuItem href="">
+              <MenuItem href="https://discord.com/invite/4QXEJQkvHH">
                 <MessageCircle size={14} />
                 Discord
               </MenuItem>
