@@ -41,6 +41,7 @@ import { Contract } from '@ethersproject/contracts'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import useTheme from 'hooks/useTheme'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -53,28 +54,31 @@ function EmptyState({ message }: { message: string }) {
 }
 
 function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: TokenAmount; token1Amount: TokenAmount }) {
+  const currency0 = unwrappedToken(token0Amount.token)
+  const currency1 = unwrappedToken(token1Amount.token)
+
   return (
     <>
       <RowBetween my="1rem">
         <Text fontSize={16} fontWeight={500}>
-          Pooled {token0Amount.token.symbol}:
+          Pooled {currency0.symbol}:
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
             <FormattedCurrencyAmount currencyAmount={token0Amount} />
           </Text>
-          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={token0Amount.token} />
+          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
         </RowFixed>
       </RowBetween>
       <RowBetween mb="1rem">
         <Text fontSize={16} fontWeight={500}>
-          Pooled {token1Amount.token.symbol}:
+          Pooled {currency1.symbol}:
         </Text>
         <RowFixed>
           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
             <FormattedCurrencyAmount currencyAmount={token1Amount} />
           </Text>
-          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={token1Amount.token} />
+          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
         </RowFixed>
       </RowBetween>
     </>
@@ -108,6 +112,9 @@ function V2PairMigration({
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+
+  const currency0 = unwrappedToken(token0)
+  const currency1 = unwrappedToken(token1)
 
   // this is just getLiquidityValue with the fee off, but for the passed pair
   const token0Value = useMemo(
@@ -295,11 +302,11 @@ function V2PairMigration({
         ReactGA.event({
           category: 'Migrate',
           action: 'V2->V3',
-          label: `${token0.symbol}/${token1.symbol}`,
+          label: `${currency0.symbol}/${currency1.symbol}`,
         })
 
         addTransaction(response, {
-          summary: `Migrate ${token0.symbol}/${token1.symbol} liquidity to V3`,
+          summary: `Migrate ${currency0.symbol}/${currency1.symbol} liquidity to V3`,
         })
         setPendingMigrationHash(response.hash)
       })
@@ -324,6 +331,8 @@ function V2PairMigration({
     signatureData,
     addTransaction,
     pair,
+    currency0,
+    currency1,
   ])
 
   const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.raw, ZERO)
@@ -357,11 +366,11 @@ function V2PairMigration({
 
           <AutoColumn gap="8px">
             <RowBetween>
-              <TYPE.body>V2 Price:</TYPE.body>
+              <TYPE.body>V2 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
               <TYPE.black>
                 {invertPrice
-                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
-                  : `${v2SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
+                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                  : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
               </TYPE.black>
             </RowBetween>
           </AutoColumn>
@@ -376,20 +385,20 @@ function V2PairMigration({
           </TYPE.body>
           <AutoColumn gap="8px">
             <RowBetween>
-              <TYPE.body>V2 Price:</TYPE.body>
+              <TYPE.body>V2 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
               <TYPE.black>
                 {invertPrice
-                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
-                  : `${v2SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
+                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                  : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
               </TYPE.black>
             </RowBetween>
 
             <RowBetween>
-              <TYPE.body>V3 Price:</TYPE.body>
+              <TYPE.body>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
               <TYPE.black>
                 {invertPrice
-                  ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
-                  : `${v3SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
+                  ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                  : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
               </TYPE.black>
             </RowBetween>
 
@@ -406,8 +415,8 @@ function V2PairMigration({
       <RowBetween>
         <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
         <RateToggle
-          currencyA={invertPrice ? token1 : token0}
-          currencyB={invertPrice ? token0 : token1}
+          currencyA={invertPrice ? currency1 : currency0}
+          currencyB={invertPrice ? currency0 : currency1}
           handleRateToggle={() => {
             onLeftRangeInput('')
             onRightRangeInput('')
@@ -425,8 +434,8 @@ function V2PairMigration({
         getIncrementUpper={getIncrementUpper}
         onLeftRangeInput={onLeftRangeInput}
         onRightRangeInput={onRightRangeInput}
-        currencyA={invertPrice ? token1 : token0}
-        currencyB={invertPrice ? token0 : token1}
+        currencyA={invertPrice ? currency1 : currency0}
+        currencyB={invertPrice ? currency0 : currency1}
         feeAmount={feeAmount}
       />
 
@@ -512,10 +521,10 @@ function V2PairMigration({
         ) : null}
       </LightCard>
       <TYPE.darkGray style={{ textAlign: 'center' }}>
-        {`Your Uniswap V2 ${invertPrice ? token0?.symbol : token1?.symbol} / ${
-          invertPrice ? token1?.symbol : token0?.symbol
-        } liquidity tokens will become a Uniswap V3 ${invertPrice ? token0?.symbol : token1?.symbol} / ${
-          invertPrice ? token1?.symbol : token0?.symbol
+        {`Your Uniswap V2 ${invertPrice ? currency0?.symbol : currency1?.symbol} / ${
+          invertPrice ? currency1?.symbol : currency0?.symbol
+        } liquidity tokens will become a Uniswap V3 ${invertPrice ? currency0?.symbol : currency1?.symbol} / ${
+          invertPrice ? currency1?.symbol : currency0?.symbol
         } NFT.`}
       </TYPE.darkGray>
     </AutoColumn>
