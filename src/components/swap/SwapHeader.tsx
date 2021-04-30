@@ -36,7 +36,7 @@ export default function SwapHeader({ toggledVersion }: SwapHeaderProps) {
         <RowFixed>
           {/* Send icon appears here when expert mode is toggled on */}
           {/* <Send style={{ marginRight: '16px' }} size="20" onClick={() => onChangeRecipient('')} /> */}
-          {/* This info icon should open uniswap.info with the pair */}
+          {/* This info icon should open info.uniswap.org with the pair */}
           {/*{trade && (*/}
           {/*  <InfoLink*/}
           {/*    href={'https://info.uniswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}*/}
