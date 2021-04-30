@@ -12,6 +12,7 @@ import { calculateGasMargin, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import { useV2RouterContract } from './useContract'
+import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
@@ -46,12 +47,14 @@ interface FailedCall extends SwapCallEstimate {
  * Returns the swap calls that can be used to make the trade
  * @param trade trade to execute
  * @param allowedSlippage user allowed slippage
- * @param recipientAddressOrName
+ * @param recipientAddressOrName the ENS name or address of the recipient of the swap output
+ * @param signatureData the signature data of the permit of the input token amount, if available
  */
 function useSwapCallArguments(
   trade: V2Trade | V3Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  signatureData: SignatureData | null | undefined
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -99,6 +102,17 @@ function useSwapCallArguments(
         recipient,
         slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         deadline: deadline.toString(),
+        ...(signatureData
+          ? {
+              inputTokenPermit: {
+                deadline: signatureData.deadline,
+                amount: signatureData.amount,
+                s: signatureData.s,
+                r: signatureData.r,
+                v: signatureData.v as any,
+              },
+            }
+          : {}),
       })
 
       return [
@@ -109,7 +123,7 @@ function useSwapCallArguments(
         },
       ]
     }
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, trade])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, signatureData, trade])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -117,11 +131,12 @@ function useSwapCallArguments(
 export function useSwapCallback(
   trade: V2Trade | V3Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  signatureData: SignatureData | undefined | null
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
 
   const addTransaction = useTransactionAdder()
 
@@ -231,9 +246,7 @@ export function useSwapCallback(
             to: address,
             data: calldata,
             // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption
-              ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) }
-              : { gasLimit: 1_000_000 }),
+            ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {

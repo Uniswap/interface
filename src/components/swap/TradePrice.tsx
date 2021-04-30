@@ -23,7 +23,12 @@ const StyledPriceContainer = styled.div`
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
 
-  const formattedPrice = showInverted ? price.toSignificant(6) : price.invert()?.toSignificant(6)
+  let formattedPrice: string
+  try {
+    formattedPrice = showInverted ? price.toSignificant(6) : price.invert()?.toSignificant(6)
+  } catch (error) {
+    formattedPrice = '0'
+  }
 
   const label = showInverted ? `${price.quoteCurrency?.symbol}` : `${price.baseCurrency?.symbol} `
   const labelInverted = showInverted ? `${price.baseCurrency?.symbol} ` : `${price.quoteCurrency?.symbol}`

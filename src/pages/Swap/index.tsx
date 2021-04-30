@@ -30,6 +30,7 @@ import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
 import useENSAddress from '../../hooks/useENSAddress'
+import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
@@ -186,6 +187,15 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // check whether the user has approved the router on the input token
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const { state: signatureState, signatureData, gatherPermitSignature } = useERC20PermitFromTrade(
+    trade,
+    allowedSlippage
+  )
+
+  const handleApprove = useCallback(() => {
+    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) gatherPermitSignature()
+    else approveCallback()
+  }, [approveCallback, gatherPermitSignature, signatureState])
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -201,7 +211,12 @@ export default function Swap({ history }: RouteComponentProps) {
   const atMaxInputAmount = Boolean(maxInputAmount && parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
+    trade,
+    allowedSlippage,
+    recipient,
+    signatureData
+  )
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
@@ -426,11 +441,17 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                   <AutoColumn style={{ width: '100%' }} gap="12px">
                     <ButtonConfirmed
-                      onClick={approveCallback}
-                      disabled={approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                      onClick={handleApprove}
+                      disabled={
+                        approvalState !== ApprovalState.NOT_APPROVED ||
+                        approvalSubmitted ||
+                        signatureState === UseERC20PermitState.SIGNED
+                      }
                       width="100%"
                       altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={approvalState === ApprovalState.APPROVED}
+                      confirmed={
+                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
+                      }
                     >
                       <AutoRow justify="space-between">
                         <span style={{ display: 'flex', alignItems: 'center' }}>
@@ -439,12 +460,13 @@ export default function Swap({ history }: RouteComponentProps) {
                             size={'16px'}
                             style={{ marginRight: '8px' }}
                           />
-                          {/* we need to shorted this string on mobile */}
+                          {/* we need to shorten this string on mobile */}
                           {'Allow Uniswap to spend your ' + currencies[Field.INPUT]?.symbol}
                         </span>
                         {approvalState === ApprovalState.PENDING ? (
                           <Loader stroke="white" />
-                        ) : approvalSubmitted && approvalState === ApprovalState.APPROVED ? (
+                        ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
+                          signatureState === UseERC20PermitState.SIGNED ? (
                           <Unlock size="16" stroke="white" />
                         ) : (
                           <Unlock size="16" stroke="white" />
@@ -467,7 +489,11 @@ export default function Swap({ history }: RouteComponentProps) {
                       }}
                       width="100%"
                       id="swap-button"
-                      disabled={!isValid || approvalState !== ApprovalState.APPROVED || priceImpactTooHigh}
+                      disabled={
+                        !isValid ||
+                        (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED) ||
+                        priceImpactTooHigh
+                      }
                       error={isValid && priceImpactSeverity > 2}
                     >
                       <Text fontSize={16} fontWeight={500}>
@@ -475,7 +501,13 @@ export default function Swap({ history }: RouteComponentProps) {
                       </Text>
                     </ButtonError>
                   </AutoColumn>
-                  {showApproveFlow && <ProgressSteps steps={[approvalState === ApprovalState.APPROVED]} />}
+                  {showApproveFlow && (
+                    <ProgressSteps
+                      steps={[
+                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED,
+                      ]}
+                    />
+                  )}
                 </AutoRow>
               ) : (
                 <ButtonError

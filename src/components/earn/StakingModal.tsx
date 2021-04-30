@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react'
-import useIsArgentWallet from '../../hooks/useIsArgentWallet'
+import { V2_ROUTER_ADDRESS } from '../../constants'
+import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -15,7 +16,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { usePairContract, useStakingContract } from '../../hooks/useContract'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
-import { splitSignature } from 'ethers/lib/utils'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { TransactionResponse } from '@ethersproject/providers'
@@ -44,7 +44,7 @@ interface StakingModalProps {
 }
 
 export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
-  const { account, chainId, library } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
 
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
@@ -76,10 +76,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
   // approval data for stake
   const deadline = useTransactionDeadline()
-  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
+  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(parsedAmountWrapped, V2_ROUTER_ADDRESS)
   const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
 
-  const isArgentWallet = useIsArgentWallet()
   const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
   async function onStake() {
     setAttempting(true)
@@ -115,7 +114,6 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
   // wrapped onUserInput to clear signatures
   const onUserInput = useCallback((typedValue: string) => {
-    setSignatureData(null)
     setTypedValue(typedValue)
   }, [])
 
@@ -128,69 +126,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
   async function onAttemptToApprove() {
     if (!pairContract || !library || !deadline) throw new Error('missing dependencies')
-    const liquidityAmount = parsedAmount
-    if (!liquidityAmount) throw new Error('missing liquidity amount')
+    if (!parsedAmount) throw new Error('missing liquidity amount')
 
-    if (isArgentWallet) {
-      return approveCallback()
-    }
-
-    // try to gather a signature for permission
-    const nonce = await pairContract.nonces(account)
-
-    const EIP712Domain = [
-      { name: 'name', type: 'string' },
-      { name: 'version', type: 'string' },
-      { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' },
-    ]
-    const domain = {
-      name: 'Uniswap V2',
-      version: '1',
-      chainId: chainId,
-      verifyingContract: pairContract.address,
-    }
-    const Permit = [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' },
-    ]
-    const message = {
-      owner: account,
-      spender: stakingInfo.stakingRewardAddress,
-      value: liquidityAmount.raw.toString(),
-      nonce: nonce.toHexString(),
-      deadline: deadline.toNumber(),
-    }
-    const data = JSON.stringify({
-      types: {
-        EIP712Domain,
-        Permit,
-      },
-      domain,
-      primaryType: 'Permit',
-      message,
-    })
-
-    library
-      .send('eth_signTypedData_v4', [account, data])
-      .then(splitSignature)
-      .then((signature) => {
-        setSignatureData({
-          v: signature.v,
-          r: signature.r,
-          s: signature.s,
-          deadline: deadline.toNumber(),
-        })
-      })
-      .catch((error) => {
-        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
-        if (error?.code !== 4001) {
-          approveCallback()
-        }
-      })
+    return gatherPermitSignature ? gatherPermitSignature() : approveCallback()
   }
 
   return (

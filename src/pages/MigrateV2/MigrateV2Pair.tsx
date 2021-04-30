@@ -8,6 +8,7 @@ import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
@@ -36,10 +37,7 @@ import { AlertTriangle, ChevronDown } from 'react-feather'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
-import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import { Contract } from '@ethersproject/contracts'
-import { splitSignature } from '@ethersproject/bytes'
-import { BigNumber } from '@ethersproject/bignumber'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import useTheme from 'hooks/useTheme'
@@ -104,7 +102,7 @@ function V2PairMigration({
   token1: Token
 }) {
   const { t } = useTranslation()
-  const { chainId, account, library } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
 
   const deadline = useTransactionDeadline() // custom from users settings
@@ -215,79 +213,13 @@ function V2PairMigration({
   const migrator = useV2MigratorContract()
 
   // approvals
-  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: BigNumber } | null>(
-    null
-  )
-
   const migratorAddress = chainId && V3_MIGRATOR_ADDRESSES[chainId]
   const [approval, approveManually] = useApproveCallback(pairBalance, migratorAddress)
-  const isArgentWallet = useIsArgentWallet()
+  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(pairBalance, migratorAddress)
 
   const approve = useCallback(async () => {
-    if (!account || !migrator || !deadline || !chainId || !library) return
-
-    if (isArgentWallet) {
-      return approveManually()
-    }
-
-    // try to gather a signature for permission
-    const nonce = await pair.nonces(account)
-
-    const EIP712Domain = [
-      { name: 'name', type: 'string' },
-      { name: 'version', type: 'string' },
-      { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' },
-    ]
-    const domain = {
-      name: 'Uniswap V2',
-      version: '1',
-      chainId: chainId,
-      verifyingContract: pair.address,
-    }
-    const Permit = [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' },
-    ]
-    const message = {
-      owner: account,
-      spender: migrator.address,
-      value: `0x${pairBalance.raw.toString(16)}`,
-      nonce: nonce.toHexString(),
-      deadline: deadline.toHexString(),
-    }
-    const data = JSON.stringify({
-      types: {
-        EIP712Domain,
-        Permit,
-      },
-      domain,
-      primaryType: 'Permit',
-      message,
-    })
-
-    library
-      .send('eth_signTypedData_v4', [account, data])
-      .then(splitSignature)
-      .then((signature) => {
-        setSignatureData({
-          v: signature.v,
-          r: signature.r,
-          s: signature.s,
-          deadline,
-        })
-      })
-      .catch((error) => {
-        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
-        if (error?.code !== 4001) {
-          console.log('here?')
-          approveManually()
-        }
-      })
-  }, [account, isArgentWallet, approveManually, pair, pairBalance, migrator, deadline, chainId, library])
+    gatherPermitSignature ? gatherPermitSignature() : approveManually ? approveManually() : null
+  }, [gatherPermitSignature, approveManually])
 
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
@@ -306,11 +238,6 @@ function V2PairMigration({
       return
 
     const deadlineToUse = signatureData?.deadline ?? deadline
-
-    // janky way to ensure that stale-ish sigs are cleared
-    if (deadline.sub(deadlineToUse).lt(deadline.sub(blockTimestamp).div(2))) {
-      setSignatureData(null)
-    }
 
     const data = []
 
@@ -365,8 +292,6 @@ function V2PairMigration({
     migrator
       .multicall(data)
       .then((response: TransactionResponse) => {
-        setSignatureData(null) // clear sig data
-
         ReactGA.event({
           category: 'Migrate',
           action: 'V2->V3',
