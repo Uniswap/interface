@@ -464,11 +464,11 @@ export default function AddLiquidity({
                             />
                           </OutlineCard>
                           <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                            <TYPE.main>Starting Price</TYPE.main>
+                            <TYPE.main>Starting {baseCurrency?.symbol} Price:</TYPE.main>
                             {price ? (
                               <TYPE.main>
                                 {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
-                                {quoteCurrency?.symbol} = 1 {baseCurrency?.symbol}
+                                {quoteCurrency?.symbol}
                               </TYPE.main>
                             ) : (
                               '-'
@@ -499,10 +499,10 @@ export default function AddLiquidity({
 
                       {price && baseCurrency && quoteCurrency && !noLiquidity && (
                         <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                          <TYPE.main>Current Price</TYPE.main>
+                          <TYPE.main>Current {baseCurrency?.symbol} Price:</TYPE.main>
                           <TYPE.main>
                             {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)}{' '}
-                            {quoteCurrency?.symbol} = 1 {baseCurrency.symbol}
+                            {quoteCurrency?.symbol}
                           </TYPE.main>
                         </RowBetween>
                       )}
@@ -609,9 +609,9 @@ export default function AddLiquidity({
         ) : (
           <AutoColumn gap="md">
             <TYPE.label fontSize="16px">{showConfirm ? 'Review and submit' : 'Configure Position'}</TYPE.label>
-            <TYPE.main fontWeight={400} fontSize="14px">
+            {/* <TYPE.main fontWeight={400} fontSize="14px">
               Learn more about Uniswap V3 liquidity pools.
-            </TYPE.main>
+            </TYPE.main> */}
             {noLiquidity && (
               <BlueCard width="100%" padding="1rem">
                 You are the first to provide liquidity to this pool.

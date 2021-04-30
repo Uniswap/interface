@@ -65,8 +65,8 @@ export const PositionPreview = ({ position, title }: { position: Position; title
           <TYPE.label>{position?.pool?.fee / 10000}%</TYPE.label>
         </RowBetween>
         <RowBetween>
-          <TYPE.label>Current Price</TYPE.label>
-          <TYPE.label>{`${price.toSignificant(6)} ${quoteCurrency?.symbol} = 1 ${baseCurrency?.symbol}`}</TYPE.label>
+          <TYPE.label>Current {baseCurrency?.symbol} Price</TYPE.label>
+          <TYPE.label>{`${price.toSignificant(6)} ${quoteCurrency?.symbol}`}</TYPE.label>
         </RowBetween>
         <RowBetween>
           <DarkCard width="46%" padding="8px">
