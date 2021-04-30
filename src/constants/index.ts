@@ -219,7 +219,7 @@ interface NetworkDetails {
 export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
   [ChainId.MAINNET]: {
     chainId: `0x${ChainId.MAINNET.toString(16)}`,
-    chainName: 'Ethereum Main Net',
+    chainName: 'Ethereum mainnet',
     nativeCurrency: {
       name: Currency.ETHER.name || 'Ether',
       symbol: Currency.ETHER.symbol || 'ETH',

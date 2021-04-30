@@ -38,7 +38,6 @@ import AppBody from '../AppBody'
 import { ClickableText } from '../Pools/styleds'
 import Loader from '../../components/Loader'
 import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
-import NetworkWarningModal from '../../components/NetworkWarningModal'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
@@ -257,10 +256,6 @@ export default function Swap() {
 
   return (
     <>
-      <NetworkWarningModal
-        isOpen={!!account && !!urlLoadedChainId && chainId !== urlLoadedChainId}
-        targetedNetwork={urlLoadedChainId}
-      />
       <TokenWarningModal
         isOpen={
           (!urlLoadedChainId || chainId === urlLoadedChainId) &&

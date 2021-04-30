@@ -10,6 +10,7 @@ import {
   SerializedToken,
   updateMatchesDarkMode,
   updateUserDarkMode,
+  updateUserMultihop,
   updateUserExpertMode,
   updateUserSlippageTolerance,
   updateUserDeadline,
@@ -32,6 +33,9 @@ export interface UserState {
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
+
+  // whether multihop trades are wnabled or not
+  userMultihop: boolean
 
   tokens: {
     [chainId: number]: {
@@ -60,6 +64,7 @@ export const initialState: UserState = {
   userExpertMode: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
+  userMultihop: true,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
@@ -92,6 +97,9 @@ export default createReducer(initialState, builder =>
       // TODO: fix this once light theme goes live
       state.matchesDarkMode = true // action.payload.matchesDarkMode
       state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserMultihop, (state, action) => {
+      state.userMultihop = action.payload.userMultihop
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode

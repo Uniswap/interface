@@ -1,7 +1,6 @@
 import { Pair } from 'dxswap-sdk'
 import { DateTime, Duration } from 'luxon'
 import React, { useMemo, useState } from 'react'
-import { useActiveWeb3React } from '../../../../hooks'
 import { useActiveLiquidityMiningCampaignsForPair } from '../../../../hooks/useActiveLiquidityMiningCampaignsForPair'
 import { useExpiredLiquidityMiningCampaignsForPair } from '../../../../hooks/useExpiredLiquidityMiningCampaignsForPair'
 import { useUpcomingLiquidityMiningCampaignsForPair } from '../../../../hooks/useUpcomingLiquidityMiningCampaignsForPair'
@@ -15,7 +14,6 @@ interface LiquidityMiningCampaignsListProps {
 }
 
 export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampaignsListProps) {
-  const { account } = useActiveWeb3React()
   const lowerExpiredCampaignTimeLimit = useMemo(
     () =>
       DateTime.utc()
@@ -35,7 +33,7 @@ export default function LiquidityMiningCampaigns({ pair }: LiquidityMiningCampai
     wrappedCampaigns: expiredWrappedCampaigns
   } = useExpiredLiquidityMiningCampaignsForPair(pair, lowerExpiredCampaignTimeLimit)
 
-  const [activeTab, setActiveTab] = useState(account ? 0 : 1)
+  const [activeTab, setActiveTab] = useState(0)
 
   return (
     <AutoColumn gap="16px">

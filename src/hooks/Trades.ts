@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 
 import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
+import { useIsMultihop } from '../state/user/hooks'
 import { sortTradesByExecutionPrice } from '../utils/prices'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
@@ -78,15 +79,19 @@ export function useTradeExactIn(
 ): Trade | undefined {
   const { chainId } = useActiveWeb3React()
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut, platform)
+  const multihop = useIsMultihop()
 
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0 && chainId && platform.supportsChain(chainId)) {
       return (
-        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 3, maxNumResults: 1 })[0] ?? null
+        Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, {
+          maxHops: multihop ? 3 : 1,
+          maxNumResults: 1
+        })[0] ?? null
       )
     }
     return undefined
-  }, [currencyAmountIn, currencyOut, allowedPairs, chainId, platform])
+  }, [currencyAmountIn, currencyOut, allowedPairs, chainId, platform, multihop])
 }
 
 /**
@@ -99,16 +104,19 @@ export function useTradeExactOut(
 ): Trade | undefined {
   const { chainId } = useActiveWeb3React()
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency, platform)
+  const multihop = useIsMultihop()
 
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0 && chainId && platform.supportsChain(chainId)) {
       return (
-        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 3, maxNumResults: 1 })[0] ??
-        null
+        Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, {
+          maxHops: multihop ? 3 : 1,
+          maxNumResults: 1
+        })[0] ?? null
       )
     }
     return undefined
-  }, [currencyIn, currencyAmountOut, allowedPairs, chainId, platform])
+  }, [currencyIn, currencyAmountOut, allowedPairs, chainId, platform, multihop])
 }
 
 /**

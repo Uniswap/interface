@@ -10,7 +10,6 @@ import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import { useNativeCurrency } from './useNativeCurrency'
-import { useBlockGasLimit } from '../state/application/hooks'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -29,7 +28,6 @@ export function useApproveCallback(
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
   const nativeCurrency = useNativeCurrency()
-  const blockGasLimit = useBlockGasLimit()
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
@@ -74,11 +72,6 @@ export function useApproveCallback(
       return
     }
 
-    if (!blockGasLimit) {
-      console.error('no block gas limit')
-      return
-    }
-
     let useExact = false
     const estimatedGas = await tokenContract.estimateGas.approve(spender, MaxUint256).catch(() => {
       // general fallback for tokens who restrict approval amounts
@@ -88,7 +81,7 @@ export function useApproveCallback(
 
     return tokenContract
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas, blockGasLimit)
+        gasLimit: calculateGasMargin(estimatedGas)
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
@@ -100,7 +93,7 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, blockGasLimit, addTransaction])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
 
   return [approvalState, approve]
 }

@@ -19,6 +19,8 @@ import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
 import DxDao from '../../assets/svg/dxdao.svg'
+import { AutoRow } from '../Row'
+import { AlertTriangle } from 'react-feather'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -30,7 +32,11 @@ const CloseIcon = styled.div`
 const CloseColor = styled(Close)`
   width: 16px;
   height: 16px;
-  color: ${({ theme }) => theme.text5};
+  color: ${({ theme }) => theme.text3};
+`
+
+const StyledWarningIcon = styled(AlertTriangle)`
+  stroke: ${({ theme }) => theme.text3};
 `
 
 const Wrapper = styled.div`
@@ -272,17 +278,20 @@ export default function WalletModal({
             <CloseColor />
           </CloseIcon>
           <HeaderRow>
-            <TYPE.body fontWeight={500} fontSize={16}>
-              {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
-            </TYPE.body>
+            <AutoRow gap="6px">
+              <StyledWarningIcon size="20px" />
+              <TYPE.main fontSize="16px" lineHeight="22px" color={'text3'}>
+                {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
+              </TYPE.main>
+            </AutoRow>
           </HeaderRow>
           <ContentWrapper>
-            <TYPE.yellow>
-              {error instanceof UnsupportedChainIdError ? (
-                <h5>Please connect to the appropriate Ethereum network.</h5>
-              ) : (
-                'Error connecting. Try refreshing the page.'
-              )}
+            <TYPE.yellow color="text4">
+              <h5>
+                {error instanceof UnsupportedChainIdError
+                  ? 'Please connect to the appropriate network.'
+                  : 'Error connecting. Try refreshing the page.'}
+              </h5>
             </TYPE.yellow>
           </ContentWrapper>
         </UpperSection>

@@ -1,4 +1,4 @@
-import React, { memo, ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import { Box, Flex, Text } from 'rebass'
 import { Pair } from 'dxswap-sdk'
 import { DarkCard } from '../../Card'
@@ -14,6 +14,9 @@ import { usePairLiquidityUSD } from '../../../hooks/usePairLiquidityUSD'
 import LiquidityMiningCampaigns from './LiquidityMiningCampaigns'
 import { useActiveWeb3React } from '../../../hooks'
 import { commify } from 'ethers/lib/utils'
+import { useHistory } from 'react-router-dom'
+import { usePrevious } from 'react-use'
+import { useIsSwitchingToCorrectChain } from '../../../state/multi-chain-links/hooks'
 
 const StyledDarkCard = styled(DarkCard)`
   ::before {
@@ -49,12 +52,23 @@ interface PairViewProps {
 }
 
 function PairView({ loading, pair }: PairViewProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
+  const history = useHistory()
+  const previousChainId = usePrevious(chainId)
   const { loading: volumeLoading, volume24hUSD } = usePair24hVolumeUSD(pair)
   const { loading: liquidityLoading, liquidityUSD } = usePairLiquidityUSD(pair)
   const liquidityMiningEnabled = useLiquidityMiningFeatureFlag()
+  const switchingToCorrectChain = useIsSwitchingToCorrectChain()
 
   const overallLoading = loading || volumeLoading || liquidityLoading
+
+  useEffect(() => {
+    // when the chain is switched, and not as a reaction to following a multi chain link
+    // (which might require changing chains), redirect to generic pools page
+    if (chainId && previousChainId && chainId !== previousChainId && !switchingToCorrectChain) {
+      history.push('/pools')
+    }
+  }, [chainId, history, previousChainId, switchingToCorrectChain])
 
   return (
     <>
@@ -89,7 +103,7 @@ function PairView({ loading, pair }: PairViewProps) {
               style={{ fontSize: '12px', fontWeight: 'bold', lineHeight: '15px' }}
               width="100%"
             >
-              GOVERNANCE
+              GOVERNANCE (COMING SOON)
             </ButtonGrey>
           </RowBetween>
         </Flex>
@@ -99,15 +113,4 @@ function PairView({ loading, pair }: PairViewProps) {
   )
 }
 
-export default memo(PairView, (previousProps, nextProps) => {
-  // avoids pair reference changes to mess things up by reloading the whole thing
-  // (which means that if the staking modal is open, it will be closed = bad)
-  const sameLoading = previousProps.loading === nextProps.loading
-  if (previousProps.pair === nextProps.pair) {
-    return sameLoading
-  } else if ((!previousProps.pair && nextProps.pair) || (previousProps.pair && !nextProps.pair)) {
-    return false
-  } else {
-    return !!(previousProps.pair && nextProps.pair && previousProps.pair.equals(nextProps.pair) && sameLoading)
-  }
-})
+export default PairView

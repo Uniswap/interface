@@ -21,7 +21,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useBlockGasLimit, useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
@@ -39,8 +39,6 @@ import { currencyId } from '../../utils/currencyId'
 import TradePrice from '../../components/swap/TradePrice'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import { useWrappingToken } from '../../hooks/useContract'
-import NetworkWarningModal from '../../components/NetworkWarningModal'
-import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
 
 export default function AddLiquidity({
   match: {
@@ -52,8 +50,6 @@ export default function AddLiquidity({
   const theme = useContext(ThemeContext)
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyWrapper = useWrappingToken(nativeCurrency)
-  const urlLoadedChainId = useTargetedChainIdFromUrl()
-  const blockGasLimit = useBlockGasLimit()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -136,7 +132,7 @@ export default function AddLiquidity({
   const addTransaction = useTransactionAdder()
 
   async function onAdd() {
-    if (!chainId || !library || !account || !blockGasLimit) return
+    if (!chainId || !library || !account) return
     const router = getRouterContract(chainId, library, RoutablePlatform.SWAPR, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
@@ -187,7 +183,7 @@ export default function AddLiquidity({
       .then(estimatedGasLimit =>
         method(...args, {
           ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit, blockGasLimit)
+          gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
           setAttemptingTxn(false)
 
@@ -316,10 +312,6 @@ export default function AddLiquidity({
 
   return (
     <>
-      <NetworkWarningModal
-        isOpen={!!account && !!urlLoadedChainId && chainId !== urlLoadedChainId}
-        targetedNetwork={urlLoadedChainId}
-      />
       <AppBody>
         <AddRemoveTabs creating={isCreate} adding={true} />
         <Wrapper>

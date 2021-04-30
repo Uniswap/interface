@@ -32,7 +32,7 @@ const BadgeText = styled.div`
   font-size: 9px;
   line-height: 11px;
   letter-spacing: 0.02em;
-  color: #0e9f6e;
+  color: ${props => props.theme.green2};
 `
 
 interface PairProps {
