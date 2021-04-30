@@ -9,6 +9,7 @@ import styled from 'styled-components'
 import { ChevronLeft } from 'react-feather'
 import { useActiveWeb3React } from '../../../hooks'
 import { usePrevious } from 'react-use'
+import { useIsSwitchingToCorrectChain } from '../../../state/multi-chain-links/hooks'
 
 const GoBackContainer = styled.div`
   font-size: 11px;
@@ -35,12 +36,15 @@ function LiquidityMiningCampaignView({ campaign }: PairViewProps) {
   const history = useHistory()
   const { account, chainId } = useActiveWeb3React()
   const previousChainId = usePrevious(chainId)
+  const switchingToCorrectChain = useIsSwitchingToCorrectChain()
 
   useEffect(() => {
-    if (chainId && previousChainId && chainId !== previousChainId) {
+    // when the chain is switched, and not as a reaction to following a multi chain link
+    // (which might require changing chains) redirect to generic pools page
+    if (chainId && previousChainId && chainId !== previousChainId && !switchingToCorrectChain) {
       history.push('/pools')
     }
-  }, [chainId, history, previousChainId])
+  }, [chainId, history, previousChainId, switchingToCorrectChain])
 
   return (
     <AutoColumn gap="18px">

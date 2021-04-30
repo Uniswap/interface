@@ -11,6 +11,7 @@ import mint from './mint/reducer'
 import burn from './burn/reducer'
 import multicall from './multicall/reducer'
 import tokenList from './lists/reducer'
+import multiChainLinks from './multi-chain-links/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions']
 
@@ -25,7 +26,8 @@ const store = configureStore({
     mint,
     burn,
     multicall,
-    tokenList
+    tokenList,
+    multiChainLinks
   },
   middleware: [
     ...getDefaultMiddleware({ thunk: false }),

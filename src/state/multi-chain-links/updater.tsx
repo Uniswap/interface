@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useActiveWeb3React } from '../../hooks'
+import { useIsSwitchingToCorrectChain, useIsSwitchingToCorrectChainUpdater } from './hooks'
 
 export default function Updater(): null {
   const { chainId, connector } = useActiveWeb3React()
   const location = useLocation()
   const history = useHistory()
-
-  const [matchedOnce, setMatchedOnce] = useState(false)
+  const switchingToCorrectChain = useIsSwitchingToCorrectChain()
+  const updateSwitchingToCorrectChain = useIsSwitchingToCorrectChainUpdater()
 
   // this effect updates the chain id in the URL.
   // Scenarios:
@@ -31,16 +32,16 @@ export default function Updater(): null {
       connector.supportedChainIds &&
       connector.supportedChainIds.indexOf(parseInt(requiredChainId)) >= 0
 
-    if (requiredChainId && requiredChainIdSupported && !matchedOnce) {
+    if (requiredChainId && requiredChainIdSupported && switchingToCorrectChain) {
       if (requiredChainId !== stringChainId) return
-      else setMatchedOnce(true)
+      else updateSwitchingToCorrectChain(false)
     }
 
     if (requiredChainId !== stringChainId) {
       searchParams.set('chainId', stringChainId)
       history.replace({ search: searchParams.toString() })
     }
-  }, [chainId, connector, history, location, matchedOnce])
+  }, [chainId, connector, history, location, switchingToCorrectChain, updateSwitchingToCorrectChain])
 
   return null
 }

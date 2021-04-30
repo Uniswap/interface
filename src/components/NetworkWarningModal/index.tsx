@@ -8,8 +8,8 @@ import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
 import { NETWORK_DETAIL } from '../../constants'
 import { ButtonPrimary } from '../Button'
-import { useActiveWeb3React } from '../../hooks'
 import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
+import { useIsSwitchingToCorrectChain } from '../../state/multi-chain-links/hooks'
 import { useDebounce } from 'react-use'
 
 const WarningContainer = styled.div`
@@ -30,21 +30,17 @@ const StyledWarningIcon = styled(AlertTriangle)`
 `
 
 export default function NetworkWarningModal() {
-  const { account, chainId } = useActiveWeb3React()
   const urlLoadedChainId = useTargetedChainIdFromUrl()
+  const switchingToCorrectChain = useIsSwitchingToCorrectChain()
 
-  const [debouncedOpen, setDebouncedOpen] = useState(false)
+  const [open, setOpen] = useState(false)
 
-  // the value here is debounced to avoid the network warning modal flashing in front of the user.
-  // this is because there's a short time between the user changing chain and the change being
-  // actually reflected in the URL by the dedicated updater (the inconsistency between the 2
-  // values would trigger the warning modal for a fraction of a second).
   useDebounce(
     () => {
-      setDebouncedOpen(!!account && !!urlLoadedChainId && !!chainId && chainId !== urlLoadedChainId)
+      setOpen(!!switchingToCorrectChain)
     },
     500,
-    [account, urlLoadedChainId, chainId]
+    [switchingToCorrectChain]
   )
 
   const handleDismiss = useCallback(() => null, [])
@@ -62,7 +58,7 @@ export default function NetworkWarningModal() {
   }, [urlLoadedChainId])
 
   return (
-    <Modal isOpen={debouncedOpen} onDismiss={handleDismiss} maxHeight={90}>
+    <Modal isOpen={open} onDismiss={handleDismiss} maxHeight={90}>
       <OuterContainer>
         <WarningContainer className="network-warning-container">
           <AutoColumn>
