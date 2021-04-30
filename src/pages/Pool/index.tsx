@@ -90,11 +90,6 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  const hasPositions = Boolean(positions && positions.length > 0)
-
-  const hasV2Liquidity = true
-  const showMigrateHeaderLink = Boolean(hasV2Liquidity && hasPositions)
-
   const menuItems = [
     {
       content: (
@@ -110,7 +105,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <Download size={16} style={{ marginRight: '8px' }} />
-          {t('Migrate Liquidity')}
+          {t('Migrate V2 Liquidity')}
         </MenuItem>
       ),
       link: '/migrate/v2',
@@ -127,18 +122,6 @@ export default function Pool() {
       external: true,
     },
   ]
-  if (showMigrateHeaderLink) {
-    menuItems.unshift({
-      content: (
-        <MenuItem>
-          <Download size={16} style={{ marginRight: '8px' }} />
-          {t('Migrate v2 liquidity')}
-        </MenuItem>
-      ),
-      link: '/migrate/v2',
-      external: false,
-    })
-  }
 
   return (
     <>
@@ -191,24 +174,22 @@ export default function Pool() {
                 <NoLiquidity>
                   <TYPE.mediumHeader color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
-                    <div>{t('Your liquidity positions will appear here.')}</div>
+                    <div>{t('Your V3 liquidity positions will appear here.')}</div>
                   </TYPE.mediumHeader>
                   {!account ? (
                     <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
                       {t('Connect a wallet')}
                     </ButtonPrimary>
                   ) : (
-                    hasV2Liquidity && (
-                      <ButtonGray
-                        as={Link}
-                        to="/migrate/v2"
-                        id="import-pool-link"
-                        style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
-                      >
-                        {t('Migrate V2 liquidity')}&nbsp;&nbsp;
-                        <Download size={16} />
-                      </ButtonGray>
-                    )
+                    <ButtonGray
+                      as={Link}
+                      to="/migrate/v2"
+                      id="import-pool-link"
+                      style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
+                    >
+                      {t('Migrate V2 liquidity')}?&nbsp;&nbsp;
+                      <Download size={16} />
+                    </ButtonGray>
                   )}
                 </NoLiquidity>
               )}
