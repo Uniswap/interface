@@ -153,7 +153,7 @@ export default function Menu() {
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem href="https://uniswap.info/">
+          <MenuItem href="https://info.uniswap.org/">
             <PieChart size={14} />
             Analytics
           </MenuItem>
