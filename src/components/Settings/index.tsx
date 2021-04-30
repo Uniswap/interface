@@ -9,7 +9,6 @@ import {
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance,
-  useDarkModeManager,
   useMultihopManager
 } from '../../state/user/hooks'
 import { TYPE, ExternalLink, LinkStyledButton, CloseIcon } from '../../theme'
@@ -214,7 +213,6 @@ export default function SettingsTab() {
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
   const [ttl, setTtl] = useUserTransactionTTL()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
   const [multihop, toggleMultihop] = useMultihopManager()
 
   // show confirmation view before turning on
@@ -313,14 +311,6 @@ export default function SettingsTab() {
                               }
                         }
                       />
-                    </RowBetween>
-                    <RowBetween>
-                      <RowFixed>
-                        <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
-                          Toggle Dark Mode
-                        </TYPE.body>
-                      </RowFixed>
-                      <Toggle disabled isActive={darkMode} toggle={toggleDarkMode} />
                     </RowBetween>
                   </AutoColumn>
                 </MenuFlyout>
