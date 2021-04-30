@@ -1,8 +1,14 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
+import { Colors } from '../../theme/styled'
 
-const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean; disabled?: boolean }>`
+const ToggleElement = styled.span<{
+  isActive?: boolean
+  isOnSwitch?: boolean
+  disabled?: boolean
+  highlightColor: keyof Colors
+}>`
   border-radius: 8px;
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   ${({ isActive }) =>
@@ -15,16 +21,17 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean; di
       : css`
           padding: 8px 10px;
         `}
-  background: ${({ theme, disabled, isActive }) => {
+  background: ${({ theme, disabled, isActive, highlightColor }) => {
     if (isActive) {
-      return disabled ? theme.bg4 : theme.primary1
+      return disabled ? theme.bg4 : theme[highlightColor]
     }
     return theme.bg3
   }};
   color: ${({ theme, disabled, isActive }) => (!disabled && isActive ? theme.white : theme.text3)};
-  font-size: 16px;
-  line-height: 19px;
+  font-size: 13px;
+  line-height: 15.85px;
   font-weight: 500;
+  text-transform: uppercase;
   :hover {
     user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
   }
@@ -51,10 +58,10 @@ export interface ToggleProps {
 export default function Toggle({ id, isActive, disabled, toggle }: ToggleProps) {
   return (
     <StyledToggle disabled={disabled} id={id} isActive={isActive} onClick={toggle}>
-      <ToggleElement disabled={disabled} isActive={isActive} isOnSwitch={true}>
+      <ToggleElement disabled={disabled} isActive={isActive} isOnSwitch={true} highlightColor="green2">
         On
       </ToggleElement>
-      <ToggleElement disabled={disabled} isActive={!isActive} isOnSwitch={false}>
+      <ToggleElement disabled={disabled} isActive={!isActive} isOnSwitch={false} highlightColor="red1">
         Off
       </ToggleElement>
     </StyledToggle>
