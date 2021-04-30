@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Settings, X, Info, Code } from 'react-feather'
+import { Settings, X, Info, Code, MessageCircle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { transparentize } from 'polished'
@@ -20,24 +20,7 @@ import Row, { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
-import DxDao from '../../assets/svg/dxdao.svg'
-import { useTransition, animated } from 'react-spring'
-import { version } from '../../../package.json'
-
-const DialogOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ theme }) => transparentize(0.65, theme.black)};
-`
-const StyledDialogOverlay = animated(DialogOverlay)
+import SwaprVersionLogo from '../SwaprVersionLogo'
 
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
@@ -82,13 +65,12 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuContainer = styled.div`
+const MenuModal = styled(Modal)`
   display: flex;
   flex-direction: column;
   position: absolute;
   top: 80px;
   right: 20px;
-  width: 322px;
   z-index: 100;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     position: fixed;
@@ -116,62 +98,6 @@ const MenuFlyout = styled.div`
   box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
 `
 
-const MenuFlyoutBottom = styled.div`
-  width: 215px;
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
-  backdrop-filter: blur(16px);
-  border: 8px solid;
-  border-radius: 8px;
-  border-image: url(${border8pxRadius}) 8;
-  font-size: 1rem;
-  box-shadow: 0px 0px 12px ${({ theme }) => transparentize(0.84, theme.black)};
-  margin-top: 16px;
-  padding: 21px 13px;
-`
-
-const MenuFlyoutBottomItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 16px;
-`
-
-const InfoBadge = styled.div`
-  background: ${({ theme }) => theme.bg3};
-  padding: 3px 4px;
-  color: ${({ theme }) => theme.text1};
-  border-radius: 4px;
-  margin-right: 8px;
-`
-
-const MenuBanner = styled(ExternalLink)`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  background: ${({ theme }) => theme.primary1};
-  border-radius: 4px;
-  padding: 9px 16px;
-  :hover {
-    color: ${({ theme }) => theme.text1};
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  img {
-    top: 0;
-    left: 10px;
-    height: 100%;
-    position: absolute;
-  }
-`
-
-const FlyoutBottomAligner = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    justify-content: center;
-  `};
-`
-
 const ModalContentWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -179,9 +105,12 @@ const ModalContentWrapper = styled.div`
   padding: 26px 0;
   background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
 `
+
 const MenuItem = styled(ExternalLink)`
   width: 50%;
   color: ${({ theme }) => theme.text2};
+  display: flex;
+  align-items: center;
   :hover {
     color: ${({ theme }) => theme.text1};
     cursor: pointer;
@@ -198,17 +127,16 @@ const CloseTextButton = styled(LinkStyledButton)`
   text-decoration: underline;
 `
 
+const Divider = styled.div<{ horizontal?: boolean }>`
+  border: 0.5px solid ${props => props.theme.bg2};
+  margin: ${props => (props.horizontal ? '0 10px' : '10px 0')};
+  height: ${props => (props.horizontal ? '100%' : 'auto')};
+`
+
 const CODE_LINK = 'https://github.com/levelkdev/dxswap-dapp'
 
 export default function SettingsTab() {
   const open = useModalOpen(ApplicationModal.SETTINGS)
-  const fadeTransition = useTransition(open, null, {
-    config: { duration: 200 },
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 }
-  })
-
   const toggle = useToggleSettingsMenu()
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
   const [ttl, setTtl] = useUserTransactionTTL()
@@ -265,91 +193,74 @@ export default function SettingsTab() {
           </span>
         </EmojiWrapper>
       )}
-      {fadeTransition.map(
-        ({ item, key, props }) =>
-          item && (
-            <StyledDialogOverlay key={key} style={props}>
-              <MenuContainer>
-                <MenuFlyout>
-                  <AutoColumn gap="md" style={{ padding: '8px' }}>
-                    <RowBetween>
-                      <Text fontWeight={600} fontSize={14}>
-                        Transaction settings
-                      </Text>
-                      <CloseIcon onClick={toggle} />
-                    </RowBetween>
-                    <TransactionSettings
-                      rawSlippage={userSlippageTolerance}
-                      setRawSlippage={setUserslippageTolerance}
-                      deadline={ttl}
-                      setDeadline={setTtl}
-                      multihop={multihop}
-                      onMultihopChange={toggleMultihop}
-                    />
-                    <Text fontWeight={600} fontSize={14}>
-                      Interface settings
-                    </Text>
-                    <RowBetween>
-                      <RowFixed>
-                        <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
-                          Toggle expert mode
-                        </TYPE.body>
-                        <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
-                      </RowFixed>
-                      <Toggle
-                        id="toggle-expert-mode-button"
-                        isActive={expertMode}
-                        toggle={
-                          expertMode
-                            ? () => {
-                                toggleExpertMode()
-                                setShowConfirmation(false)
-                              }
-                            : () => {
-                                toggle()
-                                setShowConfirmation(true)
-                              }
-                        }
-                      />
-                    </RowBetween>
-                  </AutoColumn>
-                </MenuFlyout>
-                <FlyoutBottomAligner>
-                  <MenuFlyoutBottom>
-                    <MenuFlyoutBottomItem>
-                      <MenuItem id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
-                        <Info size={14} />
-                        About
-                      </MenuItem>
-                      <MenuItem id="link" href={CODE_LINK}>
-                        <Code size={14} />
-                        Code
-                      </MenuItem>
-                    </MenuFlyoutBottomItem>
-
-                    <MenuFlyoutBottomItem>
-                      <InfoBadge>
-                        <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="0.16em" color="text1">
-                          v{version}
-                        </TYPE.body>
-                      </InfoBadge>
-                    </MenuFlyoutBottomItem>
-
-                    <MenuBanner id="link" href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
-                      <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="text1" marginBottom="4px">
-                        A DXDAO PRODUCT
-                      </TYPE.body>
-                      <TYPE.body fontWeight={500} fontSize="8px" letterSpacing="3px" color="text1">
-                        DXDAO.ETH
-                      </TYPE.body>
-                      <img src={DxDao} alt="dxdao" />
-                    </MenuBanner>
-                  </MenuFlyoutBottom>
-                </FlyoutBottomAligner>
-              </MenuContainer>
-            </StyledDialogOverlay>
-          )
-      )}
+      <MenuModal maxWidth={322} isOpen={open} onDismiss={toggle}>
+        <MenuFlyout>
+          <AutoColumn gap="md" style={{ padding: '8px' }}>
+            <RowBetween>
+              <Text fontWeight="400" fontSize="14px" lineHeight="17px">
+                Transaction settings
+              </Text>
+              <CloseIcon onClick={toggle} />
+            </RowBetween>
+            <TransactionSettings
+              rawSlippage={userSlippageTolerance}
+              setRawSlippage={setUserslippageTolerance}
+              deadline={ttl}
+              setDeadline={setTtl}
+              multihop={multihop}
+              onMultihopChange={toggleMultihop}
+            />
+            <Text fontWeight="400" fontSize="14px" lineHeight="17px">
+              Interface settings
+            </Text>
+            <RowBetween>
+              <RowFixed>
+                <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
+                  Toggle expert mode
+                </TYPE.body>
+                <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+              </RowFixed>
+              <Toggle
+                id="toggle-expert-mode-button"
+                isActive={expertMode}
+                toggle={
+                  expertMode
+                    ? () => {
+                        toggleExpertMode()
+                        setShowConfirmation(false)
+                      }
+                    : () => {
+                        toggle()
+                        setShowConfirmation(true)
+                      }
+                }
+              />
+            </RowBetween>
+            <Divider />
+            <RowBetween width="100%" marginBottom="12px">
+              <MenuItem href="https://dxdao.eth.link/" rel="noopener noreferrer" target="_blank">
+                <Info size={14} />
+                About
+              </MenuItem>
+              <MenuItem href={CODE_LINK}>
+                <Code size={14} />
+                Code
+              </MenuItem>
+              <MenuItem href="">
+                <MessageCircle size={14} />
+                Discord
+              </MenuItem>
+            </RowBetween>
+            <RowBetween alignItems="center" marginBottom="8px">
+              <SwaprVersionLogo />
+              <Divider horizontal style={{ height: 48 }} />
+              <TYPE.body fontWeight={700} fontSize="8px" letterSpacing="3px" color="white">
+                A DXDAO PRODUCT
+              </TYPE.body>
+            </RowBetween>
+          </AutoColumn>
+        </MenuFlyout>
+      </MenuModal>
     </StyledMenu>
   )
 }

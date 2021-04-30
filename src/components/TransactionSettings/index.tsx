@@ -150,7 +150,7 @@ export default function SlippageTabs({
       <AutoColumn gap="12px">
         <RowBetween>
           <RowFixed>
-            <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+            <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
               Multihop
             </TYPE.body>
             <QuestionHelper text="Forces trades to be performed without complex routes, resulting in gas savings (this might result in a worse execution price)." />
@@ -158,7 +158,7 @@ export default function SlippageTabs({
           <Toggle isActive={multihop} toggle={onMultihopChange} />
         </RowBetween>
         <RowFixed>
-          <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+          <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
             Slippage tolerance
           </TYPE.body>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
@@ -238,7 +238,7 @@ export default function SlippageTabs({
 
       <AutoColumn gap="12px">
         <RowFixed>
-          <TYPE.body fontWeight={500} fontSize="12px" lineHeight="15px">
+          <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
             Transaction deadline
           </TYPE.body>
           <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
@@ -257,7 +257,7 @@ export default function SlippageTabs({
               onChange={e => parseCustomDeadline(e.target.value)}
             />
           </OptionCustom>
-          <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
+          <TYPE.body color="text4" style={{ paddingLeft: '8px' }} fontSize={14}>
             minutes
           </TYPE.body>
         </RowFixed>

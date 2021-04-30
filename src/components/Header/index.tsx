@@ -4,8 +4,6 @@ import { NavLink, withRouter } from 'react-router-dom'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/svg/swapr.svg'
-import LogoDark from '../../assets/svg/swapr_white.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useNativeCurrencyBalances } from '../../state/wallet/hooks'
@@ -20,6 +18,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
+import SwaprVersionLogo from '../SwaprVersionLogo'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -142,7 +141,8 @@ const Title = styled.a`
   align-items: center;
   pointer-events: auto;
   justify-self: flex-start;
-  margin-right: 35px;
+  margin-right: 12px;
+  margin-left: 8px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
@@ -151,13 +151,6 @@ const Title = styled.a`
   `};
   :hover {
     cursor: pointer;
-  }
-`
-
-const DXswapIcon = styled.div`
-  img {
-    margin-left: 5px;
-    margin-bottom: -5px;
   }
 `
 
@@ -244,9 +237,7 @@ function Header({ history }: { history: any }) {
     <HeaderFrame>
       <HeaderRow isDark={isDark}>
         <Title href=".">
-          <DXswapIcon>
-            <img src={isDark ? LogoDark : Logo} alt="logo" />
-          </DXswapIcon>
+          <SwaprVersionLogo />
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => history.location.pathname.includes('/swap')}>
