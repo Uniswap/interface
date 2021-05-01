@@ -4,24 +4,31 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, Repeat, Unlock } from 'react-feather'
+import { ArrowDown, Repeat, Unlock, X } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { GreyCard } from '../../components/Card'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonGray } from '../../components/Button'
+import { GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
-import { AutoRow } from '../../components/Row'
+import { AutoRow, RowBetween } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import {
+  ArrowWrapper,
+  BottomGrouping,
+  Dots,
+  SwapCallbackError,
+  Wrapper,
+  V2TradeAlertWrapper,
+} from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -378,6 +385,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 onUserInput={handleTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
                 showMaxButton={false}
+                hideBalance={false}
                 showFiatValue
                 currency={currencies[Field.OUTPUT]}
                 onCurrencySelect={handleOutputSelect}
@@ -401,19 +409,58 @@ export default function Swap({ history }: RouteComponentProps) {
               </>
             ) : null}
             {trade ? (
-              <TradePrice
-                price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
-                showInverted={showInverted}
-                setShowInverted={setShowInverted}
-              />
+              <RowBetween>
+                <TradePrice
+                  price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
+                  showInverted={showInverted}
+                  setShowInverted={setShowInverted}
+                />
+
+                {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) ? (
+                  toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+                    <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
+                  ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+                    <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
+                  ) : (
+                    <V2TradeAlertWrapper to="/swap">
+                      <TYPE.black fontSize={12} color={theme.text2}>
+                        Routed via V2
+                      </TYPE.black>
+                      &nbsp;
+                      <ButtonGray
+                        width="fit-content"
+                        padding="2px"
+                        as={Link}
+                        to="/swap"
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          height: '16px',
+                        }}
+                      >
+                        <X size={14} />
+                      </ButtonGray>
+                    </V2TradeAlertWrapper>
+                  )
+                ) : (
+                  <ButtonGray
+                    width="fit-content"
+                    padding="0.1rem 0.5rem"
+                    disabled
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      height: '22px',
+                      opacity: 0.4,
+                      marginRight: '.5rem',
+                    }}
+                  >
+                    <TYPE.black fontSize={12}>V3</TYPE.black>
+                  </ButtonGray>
+                )}
+              </RowBetween>
             ) : null}
-            {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) ? (
-              toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
-                <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
-              ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
-                <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
-              ) : null
-            ) : null}
+
             <BottomGrouping>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
@@ -438,13 +485,6 @@ export default function Swap({ history }: RouteComponentProps) {
                 </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                  {showApproveFlow && (
-                    <ProgressSteps
-                      steps={[
-                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED,
-                      ]}
-                    />
-                  )}
                   <AutoColumn style={{ width: '100%' }} gap="12px">
                     <ButtonConfirmed
                       onClick={handleApprove}
@@ -507,6 +547,13 @@ export default function Swap({ history }: RouteComponentProps) {
                       </Text>
                     </ButtonError>
                   </AutoColumn>
+                  {showApproveFlow && (
+                    <ProgressSteps
+                      steps={[
+                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED,
+                      ]}
+                    />
+                  )}
                 </AutoRow>
               ) : (
                 <ButtonError

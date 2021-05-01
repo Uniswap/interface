@@ -120,23 +120,23 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
+  background-color: transparent;
+  border: none;
   border-radius: 12px;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  /* margin-left: 0.5rem; */
-  padding: 7px 12px;
+  height: 16px;
+  padding: 0;
   color: ${({ theme }) => theme.primary1};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    /* border: 1px solid ${({ theme }) => theme.primary1}; */
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    /* border: 1px solid ${({ theme }) => theme.primary1}; */
     outline: none;
   }
 
@@ -260,11 +260,7 @@ export default function CurrencyInputPanel({
               />
             </>
           )}
-          {showMaxButton && (
-            <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
-              Max
-            </StyledBalanceMax>
-          )}
+
           <CurrencySelect
             selected={!!currency}
             hideInput={hideInput}
@@ -302,6 +298,15 @@ export default function CurrencyInputPanel({
                 {fiatValueOfTypedAmount ? '~' : ''}$
                 {fiatValueOfTypedAmount ? Number(fiatValueOfTypedAmount?.toSignificant(4)).toLocaleString('en') : '-'}
               </TYPE.body>
+              {showMaxButton ? (
+                <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
+                  Input Max
+                </StyledBalanceMax>
+              ) : (
+                <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
+                  {''}
+                </StyledBalanceMax>
+              )}
             </RowBetween>
           </FiatRow>
         )}

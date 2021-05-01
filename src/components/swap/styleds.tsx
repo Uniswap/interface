@@ -1,5 +1,7 @@
 import { transparentize } from 'polished'
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { Text } from 'rebass'
@@ -183,4 +185,15 @@ export const Separator = styled.div`
   width: 100%;
   height: 1px;
   background-color: ${({ theme }) => theme.bg2};
+`
+
+export const V2TradeAlertWrapper = styled(Link)`
+  background-color: ${({ theme }) => theme.bg2};
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  height: 22px;
+  margin-right: 0.5rem;
+  padding: 0 0.25rem 0 0.5rem;
+  text-decoration: none !important;
 `

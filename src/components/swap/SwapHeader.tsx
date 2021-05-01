@@ -46,11 +46,10 @@ export default function SwapHeader({ toggledVersion }: SwapHeaderProps) {
             <ButtonGray
               width="fit-content"
               padding="0rem 0.5rem"
-              as={Link}
-              to="/swap"
-              style={{ display: 'flex', justifyContent: 'space-between', height: '22px' }}
+              style={{ display: 'flex', justifyContent: 'space-between', height: '22px', opacity: 0.4 }}
+              disabled
             >
-              <TYPE.black fontSize={12}>V2</TYPE.black>&nbsp; <X size={14} />
+              <TYPE.black fontSize={12}>V2</TYPE.black>
             </ButtonGray>
           ) : (
             <ButtonGray

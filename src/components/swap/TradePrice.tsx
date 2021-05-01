@@ -17,7 +17,7 @@ const StyledPriceContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   display: flex;
-  width: 100%;
+  /* width: 100%; */
   padding: 0 0.75rem;
 `
 
@@ -37,17 +37,17 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   return (
     <StyledPriceContainer>
-      <Text fontWeight={500} fontSize={14} color={theme.text2}>
-        {'Price:'}
-      </Text>
       <div style={{ alignItems: 'center', display: 'flex', width: 'fit-content' }}>
+        <StyledBalanceMaxMini style={{ marginRight: '0.5rem' }} onClick={flipPrice}>
+          <img width={'16px'} src={Switch} alt="logo" />
+        </StyledBalanceMaxMini>
         <Text fontWeight={500} fontSize={14} color={theme.text2}>
           {'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} {label}
         </Text>
-        <StyledBalanceMaxMini style={{ marginLeft: '0.5rem' }} onClick={flipPrice}>
-          <img width={'16px'} src={Switch} alt="logo" />
-        </StyledBalanceMaxMini>
       </div>
+      <Text fontWeight={500} fontSize={14} color={theme.text2}>
+        {''}
+      </Text>
     </StyledPriceContainer>
   )
 }
