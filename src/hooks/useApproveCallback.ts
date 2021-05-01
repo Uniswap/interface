@@ -99,13 +99,13 @@ export function useApproveCallback(
 }
 
 // wraps useApproveCallback in the context of a swap
-export function useApproveCallbackFromTrade(trade: V2Trade | V3Trade | undefined, allowedSlippage: number) {
+export function useApproveCallbackFromTrade(trade: V2Trade | V3Trade | undefined, allowedSlippage: Percent) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
-  const amountToApprove = useMemo(
-    () => (trade ? trade.maximumAmountIn(new Percent(allowedSlippage, 10_000)) : undefined),
-    [trade, allowedSlippage]
-  )
+  const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [
+    trade,
+    allowedSlippage,
+  ])
   return useApproveCallback(
     amountToApprove,
     trade instanceof V2Trade ? V2_ROUTER_ADDRESS : trade instanceof V3Trade ? swapRouterAddress : undefined

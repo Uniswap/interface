@@ -1,4 +1,4 @@
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -122,14 +122,8 @@ export default function Swap({ history }: RouteComponentProps) {
             [Field.OUTPUT]: parsedAmount,
           }
         : {
-            [Field.INPUT]:
-              independentField === Field.INPUT
-                ? parsedAmount
-                : trade?.maximumAmountIn(new Percent(allowedSlippage, 10_000)),
-            [Field.OUTPUT]:
-              independentField === Field.OUTPUT
-                ? parsedAmount
-                : trade?.minimumAmountOut(new Percent(allowedSlippage, 10_000)),
+            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.maximumAmountIn(allowedSlippage),
+            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.minimumAmountOut(allowedSlippage),
           },
     [allowedSlippage, independentField, parsedAmount, showWrap, trade]
   )
@@ -246,12 +240,8 @@ export default function Swap({ history }: RouteComponentProps) {
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
             getTradeVersion(trade),
+            singleHopOnly ? 'SH' : 'MH',
           ].join('/'),
-        })
-
-        ReactGA.event({
-          category: 'Routing',
-          action: singleHopOnly ? 'Swap with multihop disabled' : 'Swap with multihop enabled',
         })
       })
       .catch((error) => {
@@ -403,7 +393,7 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
             {trade ? (
               <TradePrice
-                price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
+                price={trade.worstExecutionPrice(allowedSlippage)}
                 showInverted={showInverted}
                 setShowInverted={setShowInverted}
               />

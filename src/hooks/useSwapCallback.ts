@@ -1,10 +1,9 @@
-import JSBI from 'jsbi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ChainId, Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
+import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/v3'
 import { getTradeVersion } from '../utils/getTradeVersion'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -52,7 +51,7 @@ interface FailedCall extends SwapCallEstimate {
  */
 function useSwapCallArguments(
   trade: V2Trade | V3Trade | undefined, // trade to execute, required
-  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
+  allowedSlippage: Percent = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined
 ): SwapCall[] {
@@ -72,7 +71,7 @@ function useSwapCallArguments(
       swapMethods.push(
         Router.swapCallParameters(trade, {
           feeOnTransfer: false,
-          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          allowedSlippage,
           recipient,
           deadline: deadline.toNumber(),
         })
@@ -82,7 +81,7 @@ function useSwapCallArguments(
         swapMethods.push(
           Router.swapCallParameters(trade, {
             feeOnTransfer: true,
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            allowedSlippage,
             recipient,
             deadline: deadline.toNumber(),
           })
@@ -100,7 +99,7 @@ function useSwapCallArguments(
 
       const { value, calldata } = SwapRouter.swapCallParameters(trade, {
         recipient,
-        slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+        slippageTolerance: allowedSlippage,
         deadline: deadline.toString(),
         ...(signatureData
           ? {
@@ -139,7 +138,7 @@ function useSwapCallArguments(
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade: V2Trade | V3Trade | undefined, // trade to execute, required
-  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
+  allowedSlippage: Percent = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | undefined | null
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
@@ -261,9 +260,8 @@ export function useSwapCallback(
           .then((response) => {
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
-            const slippageTolerancePercent = new Percent(allowedSlippage)
-            const inputAmount = trade.maximumAmountIn(slippageTolerancePercent).toSignificant(3)
-            const outputAmount = trade.minimumAmountOut(slippageTolerancePercent).toSignificant(3)
+            const inputAmount = trade.maximumAmountIn(allowedSlippage).toSignificant(4)
+            const outputAmount = trade.minimumAmountOut(allowedSlippage).toSignificant(4)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
             const withRecipient =

@@ -269,13 +269,13 @@ export function useV2LiquidityTokenPermit(
   return useERC20Permit(liquidityAmount, spender, REMOVE_V2_LIQUIDITY_PERMIT_INFO)
 }
 
-export function useERC20PermitFromTrade(trade: V2Trade | V3Trade | undefined, allowedSlippage: number) {
+export function useERC20PermitFromTrade(trade: V2Trade | V3Trade | undefined, allowedSlippage: Percent) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
-  const amountToApprove = useMemo(
-    () => (trade ? trade.maximumAmountIn(new Percent(allowedSlippage, 10_000)) : undefined),
-    [trade, allowedSlippage]
-  )
+  const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [
+    trade,
+    allowedSlippage,
+  ])
 
   return useERC20Permit(
     amountToApprove,

@@ -6,7 +6,6 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
-import { basisPointsToPercent } from './index'
 
 const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
@@ -78,12 +77,11 @@ export function computeTradePriceBreakdown(
 // computes the minimum amount out and maximum amount in for a trade given a user specified allowed slippage in bips
 export function computeSlippageAdjustedAmounts(
   trade: V2Trade | V3Trade | undefined,
-  allowedSlippage: number
+  allowedSlippage: Percent
 ): { [field in Field]?: CurrencyAmount } {
-  const pct = basisPointsToPercent(allowedSlippage)
   return {
-    [Field.INPUT]: trade?.maximumAmountIn(pct),
-    [Field.OUTPUT]: trade?.minimumAmountOut(pct),
+    [Field.INPUT]: trade?.maximumAmountIn(allowedSlippage),
+    [Field.OUTPUT]: trade?.minimumAmountOut(allowedSlippage),
   }
 }
 

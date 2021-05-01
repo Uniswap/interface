@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
@@ -100,11 +100,13 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
   return [singleHopOnly, setSingleHopOnly]
 }
 
-export function useUserSlippageTolerance(): [number, (slippage: number) => void] {
+export function useUserSlippageTolerance(): [Percent, (slippageBips: number) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userSlippageTolerance = useSelector<AppState, AppState['user']['userSlippageTolerance']>((state) => {
     return state.user.userSlippageTolerance
   })
+
+  const percentage = useMemo(() => new Percent(userSlippageTolerance, 10_000), [userSlippageTolerance])
 
   const setUserSlippageTolerance = useCallback(
     (userSlippageTolerance: number) => {
@@ -113,7 +115,7 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
     [dispatch]
   )
 
-  return [userSlippageTolerance, setUserSlippageTolerance]
+  return [percentage, setUserSlippageTolerance]
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {

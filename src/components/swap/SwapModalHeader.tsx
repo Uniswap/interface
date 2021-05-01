@@ -21,14 +21,13 @@ export default function SwapModalHeader({
   onAcceptChanges,
 }: {
   trade: V2Trade | V3Trade
-  allowedSlippage: number
+  allowedSlippage: Percent
   recipient: string | null
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
-  const slippageTolerancePercent = new Percent(allowedSlippage, 10_000)
-  const maximumAmountIn = trade.maximumAmountIn(slippageTolerancePercent)
-  const minimumAmountOut = trade.minimumAmountOut(slippageTolerancePercent)
+  const maximumAmountIn = trade.maximumAmountIn(allowedSlippage)
+  const minimumAmountOut = trade.minimumAmountOut(allowedSlippage)
 
   const theme = useContext(ThemeContext)
 

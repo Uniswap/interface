@@ -19,14 +19,13 @@ export default function SwapModalFooter({
   disabledConfirm,
 }: {
   trade: V2Trade | V3Trade
-  allowedSlippage: number
+  allowedSlippage: Percent
   onConfirm: () => void
   swapErrorMessage: string | undefined
   disabledConfirm: boolean
 }) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const theme = useContext(ThemeContext)
-  const slippageTolerancePercent = new Percent(allowedSlippage, 10_000)
   const { priceImpactWithoutFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
   const severity = warningSeverity(priceImpactWithoutFee)
 
@@ -49,7 +48,7 @@ export default function SwapModalFooter({
               paddingLeft: '10px',
             }}
           >
-            {formatExecutionPrice(trade, showInverted, slippageTolerancePercent)}
+            {formatExecutionPrice(trade, showInverted, allowedSlippage)}
             <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
               <Repeat size={14} />
             </StyledBalanceMaxMini>
