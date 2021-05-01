@@ -191,7 +191,10 @@ function V2PairMigration({
       position &&
       new TokenAmount(
         token0,
-        JSBI.divide(JSBI.multiply(position.amount0.raw, JSBI.BigInt(10000 - allowedSlippage)), JSBI.BigInt(10000))
+        JSBI.divide(
+          JSBI.multiply(position.amount0.raw, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
+          JSBI.BigInt(10000)
+        )
       ),
     [token0, position, allowedSlippage]
   )
@@ -200,7 +203,10 @@ function V2PairMigration({
       position &&
       new TokenAmount(
         token1,
-        JSBI.divide(JSBI.multiply(position.amount1.raw, JSBI.BigInt(10000 - allowedSlippage)), JSBI.BigInt(10000))
+        JSBI.divide(
+          JSBI.multiply(position.amount1.raw, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
+          JSBI.BigInt(10000)
+        )
       ),
     [token1, position, allowedSlippage]
   )

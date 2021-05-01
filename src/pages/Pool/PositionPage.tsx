@@ -13,7 +13,7 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { ButtonText, TYPE } from 'theme'
 import Badge, { BadgeVariant } from 'components/Badge'
-import { basisPointsToPercent, calculateGasMargin } from 'utils'
+import { calculateGasMargin } from 'utils'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { DarkCard, DarkGreyCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -23,7 +23,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9, Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { WETH9, Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -263,7 +263,7 @@ export function PositionPage({
                 &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
               </TYPE.label>
               <Badge>
-                <BadgeText>{basisPointsToPercent(feeAmount / 100).toSignificant()}%</BadgeText>
+                <BadgeText>{new Percent(feeAmount, 1_000_000).toSignificant()}%</BadgeText>
               </Badge>
             </RowFixed>
 

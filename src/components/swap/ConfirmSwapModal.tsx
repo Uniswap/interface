@@ -43,7 +43,7 @@ export default function ConfirmSwapModal({
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
-  allowedSlippage: number
+  allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
   swapErrorMessage: string | undefined
@@ -86,12 +86,10 @@ export default function ConfirmSwapModal({
     ) : null
   }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
-  const slippageTolerancePercent = new Percent(allowedSlippage, 10_000)
-
   // text to show while loading
-  const pendingText = `Swapping ${trade?.maximumAmountIn(slippageTolerancePercent)?.toSignificant(6)} ${
+  const pendingText = `Swapping ${trade?.maximumAmountIn(allowedSlippage)?.toSignificant(6)} ${
     trade?.inputAmount?.currency?.symbol
-  } for ${trade?.minimumAmountOut(slippageTolerancePercent)?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
+  } for ${trade?.minimumAmountOut(allowedSlippage)?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
 
   const confirmationContent = useCallback(
     () =>

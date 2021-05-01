@@ -1,3 +1,4 @@
+import JSBI from 'jsbi'
 import React, { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -194,7 +195,7 @@ export default function SettingsTab() {
               Transaction Settings
             </Text>
             <TransactionSettings
-              rawSlippage={userSlippageTolerance}
+              rawSlippage={JSBI.toNumber(userSlippageTolerance.numerator)}
               setRawSlippage={setUserslippageTolerance}
               deadline={ttl}
               setDeadline={setTtl}

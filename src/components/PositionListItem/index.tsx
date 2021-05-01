@@ -10,8 +10,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
-import { basisPointsToPercent } from 'utils'
-import { TokenAmount, WETH9, Price, Token } from '@uniswap/sdk-core'
+import { TokenAmount, WETH9, Price, Token, Percent } from '@uniswap/sdk-core'
 import { formatPrice, formatTokenAmount } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/wrappedCurrency'
@@ -238,7 +237,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           </DataText>
           &nbsp;
           <Badge>
-            <BadgeText>{basisPointsToPercent(feeAmount / 100).toSignificant()}%</BadgeText>
+            <BadgeText>{new Percent(feeAmount, 1_000_000).toSignificant()}%</BadgeText>
           </Badge>
         </PrimaryPositionIdData>
         <BadgeWrapper>
