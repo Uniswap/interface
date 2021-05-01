@@ -39,6 +39,7 @@ const PERMITTABLE_TOKENS: {
     [UNI[ChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
   [ChainId.RINKEBY]: {
+    ['0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735']: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
     [UNI[ChainId.RINKEBY].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
   [ChainId.ROPSTEN]: {
@@ -60,18 +61,28 @@ export enum UseERC20PermitState {
   SIGNED,
 }
 
-export interface SignatureData {
+interface BaseSignatureData {
   v: number
   r: string
   s: string
   deadline: number
   nonce: number
-  amount: string
   owner: string
   spender: string
   chainId: ChainId | number
   tokenAddress: string
+  permitType: PermitType
 }
+
+export interface StandardSignatureData extends BaseSignatureData {
+  amount: string
+}
+
+export interface AllowedSignatureData extends BaseSignatureData {
+  allowed: true
+}
+
+export type SignatureData = StandardSignatureData | AllowedSignatureData
 
 const EIP712_DOMAIN_TYPE = [
   { name: 'name', type: 'string' },
@@ -92,6 +103,14 @@ const EIP2612_TYPE = [
   { name: 'value', type: 'uint256' },
   { name: 'nonce', type: 'uint256' },
   { name: 'deadline', type: 'uint256' },
+]
+
+const PERMIT_ALLOWED_TYPE = [
+  { name: 'holder', type: 'address' },
+  { name: 'spender', type: 'address' },
+  { name: 'nonce', type: 'uint256' },
+  { name: 'expiry', type: 'uint256' },
+  { name: 'allowed', type: 'bool' },
 ]
 
 export function useERC20Permit(
@@ -127,9 +146,7 @@ export function useERC20Permit(
       !tokenNonceState.valid ||
       !tokenAddress ||
       !spender ||
-      !permitInfo ||
-      // todo: support allowed permit
-      permitInfo.type !== PermitType.AMOUNT
+      !permitInfo
     ) {
       return {
         state: UseERC20PermitState.NOT_APPLICABLE,
@@ -153,23 +170,31 @@ export function useERC20Permit(
       signatureData.deadline >= transactionDeadline.toNumber() &&
       signatureData.tokenAddress === tokenAddress &&
       signatureData.spender === spender &&
-      JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.raw)
+      ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.raw))
 
     return {
       state: isSignatureDataValid ? UseERC20PermitState.SIGNED : UseERC20PermitState.NOT_SIGNED,
       signatureData: isSignatureDataValid ? signatureData : null,
       gatherPermitSignature: async function gatherPermitSignature() {
+        const allowed = permitInfo.type === PermitType.ALLOWED
         const signatureDeadline = transactionDeadline.toNumber() + PERMIT_VALIDITY_BUFFER
-
         const value = currencyAmount.raw.toString()
 
-        const message = {
-          owner: account,
-          spender,
-          value,
-          nonce: nonceNumber,
-          deadline: signatureDeadline,
-        }
+        const message = allowed
+          ? {
+              holder: account,
+              spender,
+              allowed,
+              nonce: nonceNumber,
+              expiry: signatureDeadline,
+            }
+          : {
+              owner: account,
+              spender,
+              value,
+              nonce: nonceNumber,
+              deadline: signatureDeadline,
+            }
         const domain = permitInfo.version
           ? {
               name: permitInfo.name,
@@ -185,7 +210,7 @@ export function useERC20Permit(
         const data = JSON.stringify({
           types: {
             EIP712Domain: permitInfo.version ? EIP712_DOMAIN_TYPE : EIP712_DOMAIN_TYPE_NO_VERSION,
-            Permit: EIP2612_TYPE,
+            Permit: allowed ? PERMIT_ALLOWED_TYPE : EIP2612_TYPE,
           },
           domain,
           primaryType: 'Permit',
@@ -201,12 +226,13 @@ export function useERC20Permit(
               r: signature.r,
               s: signature.s,
               deadline: signatureDeadline,
-              amount: value,
+              ...(allowed ? { allowed } : { amount: value }),
               nonce: nonceNumber,
               chainId,
               owner: account,
               spender,
               tokenAddress,
+              permitType: permitInfo.type,
             })
           })
       },

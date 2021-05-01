@@ -104,13 +104,22 @@ function useSwapCallArguments(
         deadline: deadline.toString(),
         ...(signatureData
           ? {
-              inputTokenPermit: {
-                deadline: signatureData.deadline,
-                amount: signatureData.amount,
-                s: signatureData.s,
-                r: signatureData.r,
-                v: signatureData.v as any,
-              },
+              inputTokenPermit:
+                'allowed' in signatureData
+                  ? {
+                      expiry: signatureData.deadline,
+                      nonce: signatureData.nonce,
+                      s: signatureData.s,
+                      r: signatureData.r,
+                      v: signatureData.v as any,
+                    }
+                  : {
+                      deadline: signatureData.deadline,
+                      amount: signatureData.amount,
+                      s: signatureData.s,
+                      r: signatureData.r,
+                      v: signatureData.v as any,
+                    },
             }
           : {}),
       })
