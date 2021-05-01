@@ -17,12 +17,11 @@ import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import JSBI from 'jsbi'
 import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { WETH9, Percent, CurrencyAmount } from '@uniswap/sdk-core'
+import { WETH9, CurrencyAmount } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
 import styled from 'styled-components'
 import { Wrapper, SmallMaxButton } from './styled'
@@ -33,7 +32,6 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { RangeBadge } from 'pages/AddLiquidity/styled'
 import { Break } from 'components/earn/styled'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { BIPS_BASE } from '../../constants'
 import { calculateGasMargin } from 'utils'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
@@ -122,7 +120,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     const { calldata, value } = NonfungiblePositionManager.removeCallParameters(positionSDK, {
       tokenId: tokenId.toString(),
       liquidityPercentage,
-      slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+      slippageTolerance: allowedSlippage,
       deadline: deadline.toString(),
       collectOptions: {
         expectedCurrencyOwed0: liquidityValue0.token.equals(WETH9[chainId])
