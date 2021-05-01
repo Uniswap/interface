@@ -14,10 +14,11 @@ interface TradePriceProps {
 }
 
 const StyledPriceContainer = styled.div`
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   display: flex;
   width: 100%;
+  padding: 0 0.75rem;
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
@@ -36,6 +37,9 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   return (
     <StyledPriceContainer>
+      <Text fontWeight={500} fontSize={14} color={theme.text2}>
+        {'Price:'}
+      </Text>
       <div style={{ alignItems: 'center', display: 'flex', width: 'fit-content' }}>
         <Text fontWeight={500} fontSize={14} color={theme.text2}>
           {'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} {label}

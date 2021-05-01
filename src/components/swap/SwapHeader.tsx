@@ -2,8 +2,12 @@ import React from 'react'
 import styled from 'styled-components'
 import { Version } from '../../hooks/useToggledVersion'
 import Settings from '../Settings'
+import { Link } from 'react-router-dom'
+
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
+import { ButtonGray } from 'components/Button'
+import { X } from 'react-feather'
 
 // import { Info } from 'react-feather'
 
@@ -27,25 +31,37 @@ interface SwapHeaderProps {
 }
 
 export default function SwapHeader({ toggledVersion }: SwapHeaderProps) {
+  console.log(toggledVersion === 'V2')
+
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <TYPE.black fontWeight={500} fontSize={16} style={{ opacity: '0.6' }}>
-          Swap ({toggledVersion})
-        </TYPE.black>
         <RowFixed>
-          {/* Send icon appears here when expert mode is toggled on */}
-          {/* <Send style={{ marginRight: '16px' }} size="20" onClick={() => onChangeRecipient('')} /> */}
-          {/* This info icon should open info.uniswap.org with the pair */}
-          {/*{trade && (*/}
-          {/*  <InfoLink*/}
-          {/*    href={'https://info.uniswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}*/}
-          {/*    target="_blank"*/}
-          {/*  >*/}
-          {/*    <Info size="20" style={{ opacity: '0.6' }} />*/}
-          {/*  </InfoLink>*/}
-          {/*)}*/}
-
+          <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
+            Swap{' '}
+          </TYPE.black>
+        </RowFixed>
+        <RowFixed>
+          {toggledVersion === 'V2' ? (
+            <ButtonGray
+              width="fit-content"
+              padding="0rem 0.5rem"
+              as={Link}
+              to="/swap"
+              style={{ display: 'flex', justifyContent: 'space-between', height: '22px' }}
+            >
+              <TYPE.black fontSize={12}>V2</TYPE.black>&nbsp; <X size={14} />
+            </ButtonGray>
+          ) : (
+            <ButtonGray
+              width="fit-content"
+              padding="0.1rem 0.5rem"
+              disabled
+              style={{ display: 'flex', justifyContent: 'space-between', height: '22px', opacity: 0.4 }}
+            >
+              <TYPE.black fontSize={12}>V3</TYPE.black>
+            </ButtonGray>
+          )}
           <Settings />
         </RowFixed>
       </RowBetween>

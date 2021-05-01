@@ -378,7 +378,6 @@ export default function Swap({ history }: RouteComponentProps) {
                 onUserInput={handleTypeOutput}
                 label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
                 showMaxButton={false}
-                hideBalance={true}
                 showFiatValue
                 currency={currencies[Field.OUTPUT]}
                 onCurrencySelect={handleOutputSelect}
@@ -439,6 +438,13 @@ export default function Swap({ history }: RouteComponentProps) {
                 </GreyCard>
               ) : showApproveFlow ? (
                 <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
+                  {showApproveFlow && (
+                    <ProgressSteps
+                      steps={[
+                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED,
+                      ]}
+                    />
+                  )}
                   <AutoColumn style={{ width: '100%' }} gap="12px">
                     <ButtonConfirmed
                       onClick={handleApprove}
@@ -501,13 +507,6 @@ export default function Swap({ history }: RouteComponentProps) {
                       </Text>
                     </ButtonError>
                   </AutoColumn>
-                  {showApproveFlow && (
-                    <ProgressSteps
-                      steps={[
-                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED,
-                      ]}
-                    />
-                  )}
                 </AutoRow>
               ) : (
                 <ButtonError
