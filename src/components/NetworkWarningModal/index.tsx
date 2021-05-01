@@ -39,7 +39,7 @@ export default function NetworkWarningModal() {
     () => {
       setOpen(!!switchingToCorrectChain)
     },
-    500,
+    1000,
     [switchingToCorrectChain]
   )
 

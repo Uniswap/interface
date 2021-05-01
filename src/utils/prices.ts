@@ -135,10 +135,19 @@ export function getLpTokenPrice(
   totalSupply: string,
   reserveNativeCurrency: string
 ): Price {
+  const decimalTotalSupply = new Decimal(totalSupply)
+  // the following check avoids division by zero when total supply is zero
+  // (case in which a pair has been created but liquidity has never been proviided)
+  const priceDenominator = decimalTotalSupply.isZero()
+    ? '1'
+    : parseUnits(
+        new Decimal(totalSupply).toFixed(pair.liquidityToken.decimals),
+        pair.liquidityToken.decimals
+      ).toString()
   return new Price(
     pair.liquidityToken,
     nativeCurrency,
-    parseUnits(new Decimal(totalSupply).toFixed(pair.liquidityToken.decimals), pair.liquidityToken.decimals).toString(),
+    priceDenominator,
     parseUnits(new Decimal(reserveNativeCurrency).toFixed(nativeCurrency.decimals), nativeCurrency.decimals).toString()
   )
 }
