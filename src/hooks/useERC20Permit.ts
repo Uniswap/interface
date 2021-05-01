@@ -169,6 +169,7 @@ export function useERC20Permit(
       signatureData.owner === account &&
       signatureData.deadline >= transactionDeadline.toNumber() &&
       signatureData.tokenAddress === tokenAddress &&
+      signatureData.nonce === nonceNumber &&
       signatureData.spender === spender &&
       ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.raw))
 
