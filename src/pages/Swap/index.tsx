@@ -1,36 +1,28 @@
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { MouseoverTooltip } from 'components/Tooltip'
+import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, Repeat, Unlock, X, Lock, HelpCircle, CheckCircle } from 'react-feather'
+import { ArrowDown, Repeat, HelpCircle, CheckCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps, Link } from 'react-router-dom'
+import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonGray } from '../../components/Button'
-import { GreyCard, LightCard } from '../../components/Card'
+import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
-import ProgressSteps from '../../components/ProgressSteps'
 import { AutoRow, RowBetween } from '../../components/Row'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 
-import {
-  ArrowWrapper,
-  BottomGrouping,
-  Dots,
-  SwapCallbackError,
-  Wrapper,
-  V2TradeAlertWrapper,
-} from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -55,7 +47,6 @@ import {
 import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
 import { getTradeVersion } from '../../utils/getTradeVersion'
-import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
@@ -410,58 +401,31 @@ export default function Swap({ history }: RouteComponentProps) {
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
             ) : null}
-            {trade ? (
+
+            {trade && (
               <RowBetween>
                 <TradePrice
                   price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
                   showInverted={showInverted}
                   setShowInverted={setShowInverted}
                 />
-
-                {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) ? (
-                  toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
-                    <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
-                  ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
-                    <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
-                  ) : (
-                    <V2TradeAlertWrapper to="/swap">
-                      <TYPE.black fontSize={12} color={theme.text2}>
-                        Routed via V2
-                      </TYPE.black>
-                      &nbsp;
-                      <ButtonGray
-                        width="fit-content"
-                        padding="2px"
-                        as={Link}
-                        to="/swap"
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          height: '16px',
-                        }}
-                      >
-                        <X size={14} />
-                      </ButtonGray>
-                    </V2TradeAlertWrapper>
-                  )
-                ) : (
+                <MouseoverTooltipContent content={<AdvancedSwapDetails trade={trade} />}>
                   <ButtonGray
                     width="fit-content"
-                    padding="0.1rem 0.5rem"
-                    disabled
+                    padding="0.1rem 6px 0.1rem 2px"
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       height: '22px',
-                      opacity: 0.4,
                       marginRight: '.5rem',
                     }}
                   >
-                    <TYPE.black fontSize={12}>V3</TYPE.black>
+                    <Info size={16} style={{ marginRight: '.25rem' }} />{' '}
+                    <TYPE.main fontSize={11}>Trade Details</TYPE.main>
                   </ButtonGray>
-                )}
+                </MouseoverTooltipContent>
               </RowBetween>
-            ) : null}
+            )}
 
             <BottomGrouping>
               {swapIsUnsupported ? (
@@ -523,7 +487,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             text={
                               'You cannot swap until you give Uniswap permission to spend your ' +
                               currencies[Field.INPUT]?.symbol +
-                              ', You only have to do this once per token and only when you are selling a token for the first time.'
+                              '. You only have to do this once per token and only when you are selling a token for the first time.'
                             }
                           >
                             <HelpCircle size="20" color={'white'} />

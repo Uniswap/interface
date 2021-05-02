@@ -2,7 +2,6 @@ import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
 import { ThemeContext } from 'styled-components'
-import { ArrowDown } from 'react-feather'
 import { TYPE } from '../../theme'
 
 const Wrapper = styled(AutoColumn)`
@@ -36,12 +35,6 @@ const CircleRow = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
-
-const StyledArrowDown = styled(ArrowDown)`
-  margin: 0.5rem;
-  min-height: 14px;
-  /* color: ${({ theme }) => theme.text1}; */
 `
 
 interface ProgressCirclesProps {

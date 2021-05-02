@@ -34,13 +34,19 @@ export default function BetterTradeLink({
     <ButtonPrimary
       as={Link}
       to={linkDestination}
-      style={{ width: 'fit-content', padding: '.2rem .5rem', wordBreak: 'keep-all', marginRight: '0.5rem' }}
+      style={{
+        width: 'fit-content',
+        padding: '.2rem .5rem',
+        wordBreak: 'keep-all',
+        marginRight: '0.25rem',
+        height: '20px',
+      }}
     >
-      <Zap size={12} style={{ marginRight: '0.25rem' }} />
-      <TYPE.small>
+      <Zap size={11} style={{ marginRight: '0.25rem' }} />
+      <TYPE.small fontSize={11}>
         {otherTradeNonexistent
-          ? `Click to trade with ${version.toUpperCase()}`
-          : `Get a better price via ${version.toUpperCase()}`}
+          ? `No liquidity! Click to trade with ${version.toUpperCase()}`
+          : `Get a better price with ${version.toUpperCase()}`}
       </TYPE.small>
     </ButtonPrimary>
   )

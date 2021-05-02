@@ -58,7 +58,7 @@ const CurrencySelect = styled.button<{ selected: boolean; hideInput?: boolean }>
   font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.bg2 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 12px;
+  border-radius: 20px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   /* box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075); */
   margin-left: 8px;
@@ -105,7 +105,7 @@ const Aligner = styled.span`
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
-  margin: 0 0.25rem 0 0.5rem;
+  margin: 0 0.25rem 0 0.35rem;
   height: 35%;
 
   path {
@@ -296,9 +296,9 @@ export default function CurrencyInputPanel({
             <RowBetween>
               <TYPE.body fontSize={14} color={fiatValueOfTypedAmount ? theme.text2 : theme.text4}>
                 {fiatValueOfTypedAmount ? '~' : ''}$
-                {fiatValueOfTypedAmount ? Number(fiatValueOfTypedAmount?.toSignificant(4)).toLocaleString('en') : '-'}
+                {fiatValueOfTypedAmount ? Number(fiatValueOfTypedAmount?.toSignificant(6)).toLocaleString('en') : '-'}
               </TYPE.body>
-              {showMaxButton ? (
+              {showMaxButton && selectedCurrencyBalance ? (
                 <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
                   Input Max
                 </StyledBalanceMax>
