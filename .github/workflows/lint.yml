@@ -19,12 +19,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
-
       - name: Install dependencies
         run: yarn install
-
       - name: Run linters
-        uses: wearerequired/lint-action@v1
-        with:
-          eslint: true
-          eslint_extensions: js,jsx,ts,tsx,json
+        run: yarn eslint . --max-warnings 0
