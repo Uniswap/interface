@@ -188,9 +188,7 @@ export default function VotePage({
             <ArrowLeft size={20} /> All Proposals
           </ArrowWrapper>
           {proposalData && (
-            <ProposalStatus status={ProposalState[proposalData?.status] ?? ''}>
-              {ProposalState[proposalData?.status]}
-            </ProposalStatus>
+            <ProposalStatus status={proposalData?.status}>{ProposalState[proposalData?.status]}</ProposalStatus>
           )}
         </RowBetween>
         <AutoColumn gap="10px" style={{ width: '100%' }}>
