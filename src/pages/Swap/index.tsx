@@ -2,9 +2,10 @@ import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { MouseoverTooltip } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, Repeat, Unlock, X } from 'react-feather'
+import { ArrowDown, Repeat, Unlock, X, Lock, HelpCircle, CheckCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps, Link } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -21,6 +22,7 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
+
 import {
   ArrowWrapper,
   BottomGrouping,
@@ -503,19 +505,29 @@ export default function Swap({ history }: RouteComponentProps) {
                         <span style={{ display: 'flex', alignItems: 'center' }}>
                           <CurrencyLogo
                             currency={currencies[Field.INPUT]}
-                            size={'16px'}
+                            size={'20px'}
                             style={{ marginRight: '8px' }}
                           />
                           {/* we need to shorten this string on mobile */}
-                          {'Allow Uniswap to spend your ' + currencies[Field.INPUT]?.symbol}
+                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
+                            ? currencies[Field.INPUT]?.symbol + ' unlocked for trading.'
+                            : 'Allow Uniswap to spend your ' + currencies[Field.INPUT]?.symbol}
                         </span>
                         {approvalState === ApprovalState.PENDING ? (
                           <Loader stroke="white" />
                         ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                           signatureState === UseERC20PermitState.SIGNED ? (
-                          <Unlock size="16" stroke="white" />
+                          <CheckCircle size="20" color={theme.green1} />
                         ) : (
-                          <Unlock size="16" stroke="white" />
+                          <MouseoverTooltip
+                            text={
+                              'You cannot swap until you give Uniswap permission to spend your ' +
+                              currencies[Field.INPUT]?.symbol +
+                              ', You only have to do this once per token and only when you are selling a token for the first time.'
+                            }
+                          >
+                            <HelpCircle size="20" color={'white'} />
+                          </MouseoverTooltip>
                         )}
                       </AutoRow>
                     </ButtonConfirmed>
@@ -547,13 +559,6 @@ export default function Swap({ history }: RouteComponentProps) {
                       </Text>
                     </ButtonError>
                   </AutoColumn>
-                  {showApproveFlow && (
-                    <ProgressSteps
-                      steps={[
-                        approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED,
-                      ]}
-                    />
-                  )}
                 </AutoRow>
               ) : (
                 <ButtonError
