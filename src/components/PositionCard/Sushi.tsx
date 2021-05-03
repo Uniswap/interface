@@ -17,6 +17,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
 import { FixedHeightRow } from '.'
+import Badge, { BadgeVariant } from 'components/Badge'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;
@@ -49,7 +50,8 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
             <Text fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>
-            (Sushi)
+
+            <Badge variant={BadgeVariant.WARNING}>Sushi</Badge>
           </AutoRow>
           <RowFixed gap="8px">
             <ButtonEmpty

@@ -7,7 +7,9 @@ export enum BadgeVariant {
   DEFAULT = 'DEFAULT',
   NEGATIVE = 'NEGATIVE',
   POSITIVE = 'POSITIVE',
+  PRIMARY = 'PRIMARY',
   WARNING = 'WARNING',
+
   WARNING_OUTLINE = 'WARNING_OUTLINE',
 }
 
@@ -21,6 +23,8 @@ function pickBackgroundColor(variant: BadgeVariant | undefined, theme: DefaultTh
       return theme.error
     case BadgeVariant.POSITIVE:
       return theme.success
+    case BadgeVariant.PRIMARY:
+      return theme.primary1
     case BadgeVariant.WARNING:
       return theme.warning
     case BadgeVariant.WARNING_OUTLINE:
