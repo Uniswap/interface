@@ -24,7 +24,6 @@ const Section = styled(AutoColumn)<{ inline?: boolean }>`
 `
 
 const BottomSection = styled(Section)`
-  // background-color: ${({ theme }) => theme.bg2};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 `
@@ -157,7 +156,7 @@ export function ConfirmationModalContent({
   bottomContent?: () => React.ReactNode | undefined
 }) {
   return (
-    <Wrapper>
+    <Wrapper style={{ padding: 0 }}>
       <Section>
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
