@@ -34,6 +34,7 @@ import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
@@ -132,6 +133,9 @@ export default function Swap({ history }: RouteComponentProps) {
     [allowedSlippage, independentField, parsedAmount, showWrap, trade]
   )
 
+  const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
+  const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
+
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -216,15 +220,15 @@ export default function Swap({ history }: RouteComponentProps) {
     signatureData
   )
 
-  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
+  const { priceImpactWithoutFee: priceImpact } = computeTradePriceBreakdown(trade)
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
   const handleSwap = useCallback(() => {
-    if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
+    if (!swapCallback) {
       return
     }
-    if (!swapCallback) {
+    if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
       return
     }
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
@@ -258,7 +262,7 @@ export default function Swap({ history }: RouteComponentProps) {
         })
       })
   }, [
-    priceImpactWithoutFee,
+    priceImpact,
     swapCallback,
     tradeToConfirm,
     showConfirm,
@@ -273,7 +277,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // warnings on price impact
-  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
+  const priceImpactSeverity = warningSeverity(priceImpact)
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
@@ -350,7 +354,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 currency={currencies[Field.INPUT]}
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
-                showFiatValue
+                fiatValue={fiatValueInput ?? undefined}
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
                 showCommonBases={true}
@@ -372,7 +376,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
                 showMaxButton={false}
                 hideBalance={false}
-                showFiatValue
+                fiatValue={fiatValueOutput ?? undefined}
                 currency={currencies[Field.OUTPUT]}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
