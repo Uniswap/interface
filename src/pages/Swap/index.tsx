@@ -400,7 +400,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <RowFixed>
                 {trade ? (
                   <TradePrice
-                    price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
+                    price={trade.worstExecutionPrice(allowedSlippage)}
                     showInverted={showInverted}
                     setShowInverted={setShowInverted}
                   />

@@ -114,7 +114,7 @@ export default function SwapModalHeader({
       </DarkGreyCard>
       <RowBetween style={{ marginTop: '0.25rem' }}>
         <TradePrice
-          price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
+          price={trade.worstExecutionPrice(allowedSlippage)}
           showInverted={showInverted}
           setShowInverted={setShowInverted}
         />
