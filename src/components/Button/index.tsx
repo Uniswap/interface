@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { darken, lighten } from 'polished'
+import { darken } from 'polished'
 
 import { RowBetween } from '../Row'
 import { ChevronDown, Check } from 'react-feather'
@@ -32,6 +32,15 @@ const Base = styled(RebassButton)<{
   z-index: 1;
   &:disabled {
     cursor: auto;
+    pointer-events: none;
+  }
+
+  will-change: transform;
+  transition: transform 450ms ease;
+  transform: perspective(1px) translateZ(0);
+
+  &:hover {
+    transform: scale(0.99);
   }
 
   > * {
@@ -59,14 +68,14 @@ export const ButtonPrimary = styled(Base)`
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.bg3 : theme.primary1) : theme.bg3};
-    color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.text3 : 'white') : theme.text3};
+      altDisabledStyle ? (disabled ? theme.primary1 : theme.primary1) : theme.primary1};
+    color: white;
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
     outline: none;
-    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.5' : '1')};
+    opacity: 0.4;
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.5' : '0.4')};
   }
 `
 
@@ -270,12 +279,14 @@ export const ButtonWhite = styled(Base)`
 `
 
 const ButtonConfirmedStyle = styled(Base)`
-  background-color: ${({ theme }) => lighten(0.5, theme.green1)};
-  color: ${({ theme }) => theme.green1};
-  border: 1px solid ${({ theme }) => theme.green1};
+  background-color: ${({ theme }) => theme.bg3};
+  color: ${({ theme }) => theme.text1};
+  /* border: 1px solid ${({ theme }) => theme.green1}; */
 
   &:disabled {
-    opacity: 50%;
+    /* opacity: 50%; */
+    background-color: ${({ theme }) => theme.bg2};
+    color: ${({ theme }) => theme.text2};
     cursor: auto;
   }
 `

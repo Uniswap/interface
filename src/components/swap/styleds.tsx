@@ -1,5 +1,7 @@
 import { transparentize } from 'polished'
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { Text } from 'rebass'
@@ -84,10 +86,11 @@ export const StyledBalanceMaxMini = styled.button`
   background-color: ${({ theme }) => theme.bg1};
   border: none;
   border-radius: 8px;
-  padding: 0.25rem 0.35rem;
+  padding: 0;
   font-size: 0.875rem;
   font-weight: 400;
-
+  opacity: 0.6;
+  margin-right: 0.5rem;
   cursor: pointer;
   color: ${({ theme }) => theme.text1};
   display: flex;
@@ -106,8 +109,9 @@ export const StyledBalanceMaxMini = styled.button`
 
 export const TruncatedText = styled(Text)`
   text-overflow: ellipsis;
-  width: 220px;
+  max-width: 220px;
   overflow: hidden;
+  text-align: right;
 `
 
 // styles
@@ -183,4 +187,15 @@ export const Separator = styled.div`
   width: 100%;
   height: 1px;
   background-color: ${({ theme }) => theme.bg2};
+`
+
+export const V2TradeAlertWrapper = styled(Link)`
+  background-color: ${({ theme }) => theme.bg2};
+  display: flex;
+  align-items: center;
+  border-radius: 12px;
+  height: 22px;
+  margin-right: 0.5rem;
+  padding: 0 0.25rem 0 0.5rem;
+  text-decoration: none !important;
 `

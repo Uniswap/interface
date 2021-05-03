@@ -9,7 +9,7 @@ import { ErrorText, ErrorPill } from './styleds'
  */
 export default function FormattedPriceImpact({ priceImpact }: { priceImpact?: Percent }) {
   return (
-    <ErrorText fontWeight={500} fontSize={14} severity={warningSeverity(priceImpact)}>
+    <ErrorText fontWeight={500} fontSize={12} severity={warningSeverity(priceImpact)}>
       {priceImpact
         ? priceImpact.lessThan(ONE_BIPS)
           ? `-${priceImpact.toFixed(2)}%`
@@ -21,7 +21,7 @@ export default function FormattedPriceImpact({ priceImpact }: { priceImpact?: Pe
 
 export function SmallFormattedPriceImpact({ priceImpact }: { priceImpact?: Percent }) {
   return (
-    <ErrorPill fontWeight={500} fontSize={14} severity={warningSeverity(priceImpact)}>
+    <ErrorPill fontWeight={500} fontSize={12} severity={warningSeverity(priceImpact)}>
       {priceImpact
         ? priceImpact.lessThan(ONE_BIPS)
           ? `(-${priceImpact.toFixed(2)}%)`

@@ -9,6 +9,7 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
+import { ButtonGray } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -52,24 +53,24 @@ const Container = styled.div<{ hideInput: boolean }>`
   }
 `
 
-const CurrencySelect = styled.button<{ selected: boolean; hideInput?: boolean }>`
+const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boolean }>`
   align-items: center;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.bg2 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 12px;
-  /* box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')}; */
+  border-radius: 16px;
+  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-
   outline: none;
   cursor: pointer;
   user-select: none;
   border: none;
-
-  height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
+  height: ${({ hideInput }) => (hideInput ? '2.4rem' : '2.4rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-
+  padding: 0 8px;
+  justify-content: space-between;
+  margin-right: 12px;
   :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg3 : darken(0.05, theme.primary1))};
@@ -79,7 +80,7 @@ const CurrencySelect = styled.button<{ selected: boolean; hideInput?: boolean }>
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
-  padding: ${({ selected }) => (selected ? '.75rem 0.75rem .75rem 1rem' : '.75rem 0.75rem .75rem 1rem')};
+  padding: ${({ selected }) => (selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 0.75rem 1rem')};
 `
 
 const LabelRow = styled.div`
@@ -88,11 +89,15 @@ const LabelRow = styled.div`
   color: ${({ theme }) => theme.text1};
   font-size: 0.75rem;
   line-height: 1rem;
-  padding: 0rem 1rem 0.75rem 1rem;
+  padding: 0 1rem 1rem;
   span:hover {
     cursor: pointer;
     color: ${({ theme }) => darken(0.2, theme.text2)};
   }
+`
+
+const FiatRow = styled(LabelRow)`
+  justify-content: flex-end;
 `
 
 const Aligner = styled.span`
@@ -102,7 +107,7 @@ const Aligner = styled.span`
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
-  margin: 0 0.25rem 0 0.5rem;
+  margin: 0 0.25rem 0 0.35rem;
   height: 35%;
 
   path {
@@ -113,27 +118,27 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '20px' : '18px')};
+  font-size:  ${({ active }) => (active ? '18px' : '18px')};
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 0.5rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 12px;
   font-size: 14px;
-
   font-weight: 500;
   cursor: pointer;
-  /* margin-left: 0.5rem; */
+  padding: 0;
   color: ${({ theme }) => theme.primary1};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
+  margin-left: 0.25rem;
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    /* border: 1px solid ${({ theme }) => theme.primary1}; */
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    /* border: 1px solid ${({ theme }) => theme.primary1}; */
     outline: none;
   }
 
@@ -166,7 +171,6 @@ export default function CurrencyInputPanel({
   onUserInput,
   onMax,
   showMaxButton,
-  label = 'Input',
   onCurrencySelect,
   currency,
   otherCurrency,
@@ -210,19 +214,6 @@ export default function CurrencyInputPanel({
         </FixedContainer>
       )}
       <Container hideInput={hideInput}>
-        {!hideInput && (
-          <LabelRow style={{ padding: ' 1rem 1rem 0rem 1rem' }}>
-            <RowBetween>
-              <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-                {label}
-              </TYPE.body>
-              <TYPE.label>
-                {fiatValueOfTypedAmount ? '~' : ''}${fiatValueOfTypedAmount?.toSignificant(4) ?? '-'}
-              </TYPE.label>
-            </RowBetween>
-          </LabelRow>
-        )}
-
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           <CurrencySelect
             selected={!!currency}
@@ -261,24 +252,27 @@ export default function CurrencyInputPanel({
             </Aligner>
           </CurrencySelect>
           {!hideInput && (
-            <NumericalInput
-              className="token-amount-input"
-              value={value}
-              onUserInput={(val) => {
-                onUserInput(val)
-              }}
-            />
+            <>
+              {' '}
+              <NumericalInput
+                className="token-amount-input"
+                value={value}
+                onUserInput={(val) => {
+                  onUserInput(val)
+                }}
+              />
+            </>
           )}
         </InputRow>
         {!hideInput && !hideBalance && (
-          <LabelRow>
+          <FiatRow>
             <RowBetween>
               {account && (
-                <RowFixed>
+                <RowFixed style={{ height: '17px' }}>
                   <TYPE.body
                     onClick={onMax}
-                    color={theme.text3}
-                    fontWeight={500}
+                    color={theme.text2}
+                    fontWeight={400}
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
@@ -287,17 +281,26 @@ export default function CurrencyInputPanel({
                         selectedCurrencyBalance?.toSignificant(4) +
                         ' ' +
                         currency.symbol
-                      : ' '}
+                      : '-'}
                   </TYPE.body>
+                  {showMaxButton && selectedCurrencyBalance ? (
+                    <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
+                      (Max)
+                    </StyledBalanceMax>
+                  ) : (
+                    <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
+                      {''}
+                    </StyledBalanceMax>
+                  )}
                 </RowFixed>
               )}
-              {showMaxButton && (
-                <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
-                  Max
-                </StyledBalanceMax>
-              )}
+
+              <TYPE.body fontSize={14} color={fiatValueOfTypedAmount ? theme.text2 : theme.text4}>
+                {fiatValueOfTypedAmount ? '~' : ''}$
+                {fiatValueOfTypedAmount ? Number(fiatValueOfTypedAmount?.toSignificant(6)).toLocaleString('en') : '-'}
+              </TYPE.body>
             </RowBetween>
-          </LabelRow>
+          </FiatRow>
         )}
       </Container>
       {onCurrencySelect && (
