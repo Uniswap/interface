@@ -21,7 +21,7 @@ import { BodyWrapper } from '../AppBody'
 import { V3_MIGRATOR_ADDRESSES } from 'constants/v3'
 import { PoolState, usePool } from 'hooks/usePools'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
-import { LightCard, PinkCard, YellowCard } from 'components/Card'
+import { BlueCard, DarkGreyCard, LightCard, YellowCard } from 'components/Card'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { Dots } from 'components/swap/styleds'
 import { ButtonConfirmed } from 'components/Button'
@@ -33,7 +33,7 @@ import { useIsTransactionPending, useTransactionAdder } from 'state/transactions
 import { useDerivedMintInfo, useMintActionHandlers, useRangeHopCallbacks } from 'state/mint/hooks'
 import { Bound } from 'state/mint/actions'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle, ChevronDown } from 'react-feather'
+import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
@@ -42,6 +42,8 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import useTheme from 'hooks/useTheme'
 import { unwrappedToken } from 'utils/wrappedCurrency'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import Badge, { BadgeVariant } from 'components/Badge'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -58,30 +60,31 @@ function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: TokenAmou
   const currency1 = unwrappedToken(token1Amount.token)
 
   return (
-    <>
-      <RowBetween my="1rem">
-        <Text fontSize={16} fontWeight={500}>
-          Pooled {currency0.symbol}:
-        </Text>
+    <AutoColumn gap="8px">
+      <RowBetween>
         <RowFixed>
-          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            <FormattedCurrencyAmount currencyAmount={token0Amount} />
+          <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency0} />
+          <Text fontSize={16} fontWeight={500}>
+            {currency0.symbol}
           </Text>
-          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
         </RowFixed>
-      </RowBetween>
-      <RowBetween mb="1rem">
         <Text fontSize={16} fontWeight={500}>
-          Pooled {currency1.symbol}:
+          <FormattedCurrencyAmount currencyAmount={token0Amount} />
         </Text>
-        <RowFixed>
-          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            <FormattedCurrencyAmount currencyAmount={token1Amount} />
-          </Text>
-          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
-        </RowFixed>
       </RowBetween>
-    </>
+      <RowBetween>
+        <RowFixed>
+          <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency1} />
+          <Text fontSize={16} fontWeight={500}>
+            {currency1.symbol}
+          </Text>
+        </RowFixed>
+
+        <Text fontSize={16} fontWeight={500}>
+          <FormattedCurrencyAmount currencyAmount={token1Amount} />
+        </Text>
+      </RowBetween>
+    </AutoColumn>
   )
 }
 
@@ -310,7 +313,7 @@ function V2PairMigration({
       .then((response: TransactionResponse) => {
         ReactGA.event({
           category: 'Migrate',
-          action: 'V2->V3',
+          action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
           label: `${currency0.symbol}/${currency1.symbol}`,
         })
 
@@ -323,6 +326,7 @@ function V2PairMigration({
         setConfirmingMigration(false)
       })
   }, [
+    isNotUniswap,
     migrator,
     noLiquidity,
     blockTimestamp,
@@ -349,7 +353,8 @@ function V2PairMigration({
   return (
     <AutoColumn gap="20px">
       <TYPE.body my={9} style={{ fontWeight: 400 }}>
-        This tool will safely migrate your V2 liquidity to V3. The process is completely trustless thanks to the{' '}
+        This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
+        completely trustless thanks to the{' '}
         {chainId && migratorAddress && (
           <ExternalLink href={getEtherscanLink(chainId, migratorAddress, 'address')}>
             <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
@@ -359,183 +364,218 @@ function V2PairMigration({
       </TYPE.body>
 
       <LightCard>
-        <LiquidityInfo token0Amount={token0Value} token1Amount={token1Value} />
+        <AutoColumn gap="lg">
+          <RowBetween>
+            <RowFixed style={{ marginLeft: '8px' }}>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
+              <TYPE.mediumHeader style={{ marginLeft: '8px' }}>
+                {currency0.symbol}/{currency1.symbol} LP Tokens
+              </TYPE.mediumHeader>
+            </RowFixed>
+            <Badge variant={BadgeVariant.WARNING}>{isNotUniswap ? 'Sushi' : 'V2'}</Badge>
+          </RowBetween>
+          <LiquidityInfo token0Amount={token0Value} token1Amount={token1Value} />
+        </AutoColumn>
       </LightCard>
 
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <ChevronDown size={24} />
+        <ArrowDown size={24} />
       </div>
 
-      {noLiquidity && (
-        <PinkCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will be migrated at the
-            current V2 price. Your transaction cost will include the gas to create the pool.
-          </TYPE.body>
+      <LightCard>
+        <AutoColumn gap="lg">
+          <RowBetween>
+            <RowFixed style={{ marginLeft: '8px' }}>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
+              <TYPE.mediumHeader style={{ marginLeft: '8px' }}>
+                {currency0.symbol}/{currency1.symbol} LP NFT
+              </TYPE.mediumHeader>
+            </RowFixed>
+            <Badge variant={BadgeVariant.PRIMARY}>V3</Badge>
+          </RowBetween>
 
-          <AutoColumn gap="8px">
-            <RowBetween>
-              <TYPE.body>V2 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
-              <TYPE.black>
-                {invertPrice
-                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
-                  : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
-              </TYPE.black>
-            </RowBetween>
-          </AutoColumn>
-        </PinkCard>
-      )}
+          <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
+          {noLiquidity && (
+            <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <AlertCircle color={theme.text1} style={{ marginBottom: '12px', opacity: 0.8 }} />
+              <TYPE.body fontSize={14} style={{ marginBottom: 8, fontWeight: 400, opacity: 0.8 }} textAlign="center">
+                You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will be migrated at the
+                current {isNotUniswap ? 'SushiSwap' : 'V2'} price. Your transaction cost will include the gas to create
+                the pool.
+              </TYPE.body>
 
-      {largePriceDifference && (
-        <YellowCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            You should only deposit liquidity into Uniswap V3 at a price you believe is correct. If the price seems
-            incorrect, you can either make a swap to move the price or wait for someone else to do so.
-          </TYPE.body>
-          <AutoColumn gap="8px">
-            <RowBetween>
-              <TYPE.body>V2 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
-              <TYPE.black>
-                {invertPrice
-                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
-                  : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
-              </TYPE.black>
-            </RowBetween>
+              {v2SpotPrice && (
+                <AutoColumn gap="8px">
+                  <RowBetween>
+                    <TYPE.body fontWeight={600} fontSize={14}>
+                      {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:{' '}
+                      {invertPrice
+                        ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                        : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+                    </TYPE.body>
+                  </RowBetween>
+                </AutoColumn>
+              )}
+            </BlueCard>
+          )}
 
+          {largePriceDifference ? (
+            <YellowCard>
+              <AutoColumn gap="8px">
+                <RowBetween>
+                  <TYPE.body fontSize={14}>
+                    {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
+                  </TYPE.body>
+                  <TYPE.black fontSize={14}>
+                    {invertPrice
+                      ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                      : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+                  </TYPE.black>
+                </RowBetween>
+
+                <RowBetween>
+                  <TYPE.body fontSize={14}>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
+                  <TYPE.black fontSize={14}>
+                    {invertPrice
+                      ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                      : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+                  </TYPE.black>
+                </RowBetween>
+
+                <RowBetween>
+                  <TYPE.body fontSize={14} color="inherit">
+                    Price Difference:
+                  </TYPE.body>
+                  <TYPE.black fontSize={14} color="inherit">
+                    {priceDifferenceFraction?.toSignificant(4)}%
+                  </TYPE.black>
+                </RowBetween>
+              </AutoColumn>
+              <TYPE.body fontSize={14} style={{ marginTop: 8, fontWeight: 400 }}>
+                You should only deposit liquidity into Uniswap V3 at a price you believe is correct. If the price seems
+                incorrect, you can either make a swap to move the price or wait for someone else to do so.
+              </TYPE.body>
+            </YellowCard>
+          ) : !noLiquidity && v3SpotPrice ? (
             <RowBetween>
-              <TYPE.body>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
-              <TYPE.black>
+              <TYPE.body fontSize={14}>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
+              <TYPE.black fontSize={14}>
                 {invertPrice
                   ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
                   : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
               </TYPE.black>
             </RowBetween>
+          ) : null}
 
-            <RowBetween>
-              <TYPE.body color="inherit">Price Difference:</TYPE.body>
-              <TYPE.black color="inherit">{priceDifferenceFraction?.toSignificant(4)}%</TYPE.black>
-            </RowBetween>
-          </AutoColumn>
-        </YellowCard>
-      )}
-
-      <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
-
-      <RowBetween>
-        <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
-        <RateToggle
-          currencyA={invertPrice ? currency1 : currency0}
-          currencyB={invertPrice ? currency0 : currency1}
-          handleRateToggle={() => {
-            onLeftRangeInput('')
-            onRightRangeInput('')
-            setBaseToken((base) => (base.equals(token0) ? token1 : token0))
-          }}
-        />
-      </RowBetween>
-
-      <RangeSelector
-        priceLower={priceLower}
-        priceUpper={priceUpper}
-        getDecrementLower={getDecrementLower}
-        getIncrementLower={getIncrementLower}
-        getDecrementUpper={getDecrementUpper}
-        getIncrementUpper={getIncrementUpper}
-        onLeftRangeInput={onLeftRangeInput}
-        onRightRangeInput={onRightRangeInput}
-        currencyA={invertPrice ? currency1 : currency0}
-        currencyB={invertPrice ? currency0 : currency1}
-        feeAmount={feeAmount}
-      />
-
-      {outOfRange ? (
-        <YellowCard padding="8px 12px" borderRadius="12px">
           <RowBetween>
-            <AlertTriangle stroke={theme.yellow3} size="16px" />
-            <TYPE.yellow ml="12px" fontSize="12px">
-              {t('inactiveRangeWarning')}
-            </TYPE.yellow>
+            <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
+            <RateToggle
+              currencyA={invertPrice ? currency1 : currency0}
+              currencyB={invertPrice ? currency0 : currency1}
+              handleRateToggle={() => {
+                onLeftRangeInput('')
+                onRightRangeInput('')
+                setBaseToken((base) => (base.equals(token0) ? token1 : token0))
+              }}
+            />
           </RowBetween>
-        </YellowCard>
-      ) : null}
 
-      {invalidRange ? (
-        <YellowCard padding="8px 12px" borderRadius="12px">
-          <RowBetween>
-            <AlertTriangle stroke={theme.yellow3} size="16px" />
-            <TYPE.yellow ml="12px" fontSize="12px">
-              {t('invalidRangeWarning')}
-            </TYPE.yellow>
-          </RowBetween>
-        </YellowCard>
-      ) : null}
+          <RangeSelector
+            priceLower={priceLower}
+            priceUpper={priceUpper}
+            getDecrementLower={getDecrementLower}
+            getIncrementLower={getIncrementLower}
+            getDecrementUpper={getDecrementUpper}
+            getIncrementUpper={getIncrementUpper}
+            onLeftRangeInput={onLeftRangeInput}
+            onRightRangeInput={onRightRangeInput}
+            currencyA={invertPrice ? currency1 : currency0}
+            currencyB={invertPrice ? currency0 : currency1}
+            feeAmount={feeAmount}
+          />
 
-      <LightCard>
-        {v3Amount0Min && v3Amount1Min ? (
-          <LiquidityInfo token0Amount={v3Amount0Min} token1Amount={v3Amount1Min} />
-        ) : null}
+          {outOfRange ? (
+            <YellowCard padding="8px 12px" borderRadius="12px">
+              <RowBetween>
+                <AlertTriangle stroke={theme.yellow3} size="16px" />
+                <TYPE.yellow ml="12px" fontSize="12px">
+                  {t('inactiveRangeWarning')}
+                </TYPE.yellow>
+              </RowBetween>
+            </YellowCard>
+          ) : null}
 
-        <div style={{ display: 'flex', marginTop: '1rem' }}>
-          {!isSuccessfullyMigrated && !isMigrationPending ? (
-            <AutoColumn gap="12px" style={{ flex: '1', marginRight: 12 }}>
+          {invalidRange ? (
+            <YellowCard padding="8px 12px" borderRadius="12px">
+              <RowBetween>
+                <AlertTriangle stroke={theme.yellow3} size="16px" />
+                <TYPE.yellow ml="12px" fontSize="12px">
+                  {t('invalidRangeWarning')}
+                </TYPE.yellow>
+              </RowBetween>
+            </YellowCard>
+          ) : null}
+
+          {v3Amount0Min && v3Amount1Min ? (
+            <DarkGreyCard>
+              <AutoColumn gap="md">
+                <LiquidityInfo token0Amount={v3Amount0Min} token1Amount={v3Amount1Min} />
+                {chainId && refund0 && refund1 ? (
+                  <TYPE.black fontSize={12}>
+                    {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
+                    {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be
+                    refunded to your wallet due to selected price range.
+                  </TYPE.black>
+                ) : null}
+              </AutoColumn>
+            </DarkGreyCard>
+          ) : null}
+
+          <AutoColumn gap="12px">
+            {!isSuccessfullyMigrated && !isMigrationPending ? (
+              <AutoColumn gap="12px" style={{ flex: '1' }}>
+                <ButtonConfirmed
+                  confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                  disabled={
+                    approval !== ApprovalState.NOT_APPROVED ||
+                    signatureData !== null ||
+                    !v3Amount0Min ||
+                    !v3Amount1Min ||
+                    invalidRange ||
+                    confirmingMigration
+                  }
+                  onClick={approve}
+                >
+                  {approval === ApprovalState.PENDING ? (
+                    <Dots>Approving</Dots>
+                  ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
+                    'Approved'
+                  ) : (
+                    'Unlock LP tokens for migration'
+                  )}
+                </ButtonConfirmed>
+              </AutoColumn>
+            ) : null}
+            <AutoColumn gap="12px" style={{ flex: '1' }}>
               <ButtonConfirmed
-                confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                confirmed={isSuccessfullyMigrated}
                 disabled={
-                  approval !== ApprovalState.NOT_APPROVED ||
-                  signatureData !== null ||
                   !v3Amount0Min ||
                   !v3Amount1Min ||
                   invalidRange ||
-                  confirmingMigration
+                  (approval !== ApprovalState.APPROVED && signatureData === null) ||
+                  confirmingMigration ||
+                  isMigrationPending ||
+                  isSuccessfullyMigrated
                 }
-                onClick={approve}
+                onClick={migrate}
               >
-                {approval === ApprovalState.PENDING ? (
-                  <Dots>Approving</Dots>
-                ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                  'Approved'
-                ) : (
-                  'Approve'
-                )}
+                {isSuccessfullyMigrated ? 'Success!' : isMigrationPending ? <Dots>Migrating</Dots> : 'Migrate'}
               </ButtonConfirmed>
             </AutoColumn>
-          ) : null}
-          <AutoColumn gap="12px" style={{ flex: '1' }}>
-            <ButtonConfirmed
-              confirmed={isSuccessfullyMigrated}
-              disabled={
-                !v3Amount0Min ||
-                !v3Amount1Min ||
-                invalidRange ||
-                (approval !== ApprovalState.APPROVED && signatureData === null) ||
-                confirmingMigration ||
-                isMigrationPending ||
-                isSuccessfullyMigrated
-              }
-              onClick={migrate}
-            >
-              {isSuccessfullyMigrated ? 'Success!' : isMigrationPending ? <Dots>Migrating</Dots> : 'Migrate'}
-            </ButtonConfirmed>
           </AutoColumn>
-        </div>
-
-        {chainId && refund0 && refund1 ? (
-          <div style={{ marginTop: '1rem' }}>
-            <TYPE.darkGray style={{ textAlign: 'center' }}>
-              {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
-              {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be refunded
-              to your wallet.
-            </TYPE.darkGray>
-          </div>
-        ) : null}
+        </AutoColumn>
       </LightCard>
-      <TYPE.darkGray style={{ textAlign: 'center' }}>
-        {`Your Uniswap V2 ${invertPrice ? currency0?.symbol : currency1?.symbol} / ${
-          invertPrice ? currency1?.symbol : currency0?.symbol
-        } liquidity tokens will become a Uniswap V3 ${invertPrice ? currency0?.symbol : currency1?.symbol} / ${
-          invertPrice ? currency1?.symbol : currency0?.symbol
-        } NFT.`}
-      </TYPE.darkGray>
     </AutoColumn>
   )
 }
@@ -562,7 +602,7 @@ export default function MigrateV2Pair({
 
   // get liquidity token balance
   const liquidityToken: Token | undefined = useMemo(
-    () => (chainId && validatedAddress ? new Token(chainId, validatedAddress, 18, 'UNI-V2', 'Uniswap V2') : undefined),
+    () => (chainId && validatedAddress ? new Token(chainId, validatedAddress, 18) : undefined),
     [chainId, validatedAddress]
   )
 

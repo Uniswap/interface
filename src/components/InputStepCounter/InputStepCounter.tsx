@@ -38,7 +38,7 @@ const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boo
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: transparent;
   text-align: left;
   margin-right: 2px;
 `
