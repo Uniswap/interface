@@ -23,7 +23,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9, Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { WETH9, Currency, CurrencyAmount, Percent, Fraction } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -39,6 +39,7 @@ import RateToggle from '../../components/RateToggle'
 import { useSingleCallResult } from 'state/multicall/hooks'
 
 import RangeBadge from '../../components/Badge/RangeBadge'
+import useUSDCPrice from 'hooks/useUSDCPrice'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -241,6 +242,23 @@ export function PositionPage({
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
 
+  const price0 = useUSDCPrice(token0 ?? undefined)
+  const price1 = useUSDCPrice(token1 ?? undefined)
+
+  const fiatValueOfFees: CurrencyAmount | null = useMemo(() => {
+    if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
+    const amount0 = price0.quote(feeValue0)
+    const amount1 = price1.quote(feeValue1)
+    return amount0.add(amount1)
+  }, [price0, price1, feeValue0, feeValue1])
+
+  const fiatValueOfLiquidity: CurrencyAmount | null = useMemo(() => {
+    if (!price0 || !price1 || !position) return null
+    const amount0 = price0.quote(position.amount0)
+    const amount1 = price1.quote(position.amount1)
+    return amount0.add(amount1)
+  }, [price0, price1, position])
+
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
       <div />
@@ -330,9 +348,11 @@ export function PositionPage({
               <AutoColumn gap="lg" style={{ width: '100%' }}>
                 <AutoColumn gap="md">
                   <Label>Position liquidity</Label>
-                  <TYPE.largeHeader fontSize="36px" fontWeight={500}>
-                    $1222.22
-                  </TYPE.largeHeader>
+                  {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) && (
+                    <TYPE.largeHeader fontSize="36px" fontWeight={500}>
+                      ${fiatValueOfLiquidity.toFixed(2)}
+                    </TYPE.largeHeader>
+                  )}
                 </AutoColumn>
 
                 <LightCard padding="12px 16px">
@@ -366,9 +386,11 @@ export function PositionPage({
                   <RowBetween style={{ alignItems: 'flex-start' }}>
                     <AutoColumn gap="md">
                       <Label>Fees Earned</Label>
-                      <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
-                        $2.22
-                      </TYPE.largeHeader>
+                      {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) && (
+                        <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
+                          ${fiatValueOfFees.toFixed(2)}
+                        </TYPE.largeHeader>
+                      )}
                     </AutoColumn>
                     {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash ? (
                       <ButtonConfirmed
