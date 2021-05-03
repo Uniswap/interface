@@ -82,11 +82,12 @@
     "wcag-contrast": "^3.0.0"
   },
   "scripts": {
+    "build": "IS_CI=true CI='' npm run build:local",
+    "build:local": "npm run typechain && craco build",
+    "start": "HTTPS=true craco start",
     "clean": "rm -fr src/generated/",
-    "start": "HTTPS=true react-scripts start",
-    "start:alfajores": "REACT_APP_CHAIN_ID=44787 react-scripts start",
+    "start:alfajores": "REACT_APP_CHAIN_ID=44787 craco start",
     "typechain": "typechain --target=ethers-v5 'src/**/abis/**/*.json' --outDir src/generated/",
-    "build": "CI='' npm run typechain && react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint .",
@@ -122,6 +123,7 @@
     "@celo/contractkit": "^1.1.0",
     "@celo/utils": "^1.0.1",
     "@celo/wallet-ledger": "^1.0.2",
+    "@craco/craco": "^6.1.2",
     "@ledgerhq/hw-transport-webusb": "^5.43.0",
     "@ubeswap/default-token-list": "^2.1.0",
     "@ubeswap/moola": "^0.2.0",

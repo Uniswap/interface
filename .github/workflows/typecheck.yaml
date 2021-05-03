@@ -1,4 +1,5 @@
-name: Tests
+name: Typecheck
+
 on:
   push:
     branches:
@@ -8,9 +9,10 @@ on:
       - main
 
 jobs:
-  unit-tests:
-    name: Unit tests
+  typecheck:
+    name: Typecheck
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -24,5 +26,7 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install dependencies
         run: yarn install
-      - name: Run Tests
-        run: yarn test
+      - name: Codegen
+        run: yarn typechain
+      - name: Run typechecking
+        run: yarn tsc
