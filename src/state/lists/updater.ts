@@ -7,7 +7,7 @@ import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useInterval from '../../hooks/useInterval'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { AppDispatch } from '../index'
-import { acceptListUpdate, removeList } from './actions'
+import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
 import { useAllInactiveTokens } from 'hooks/Tokens'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
@@ -34,13 +34,6 @@ export default function Updater(): null {
 
   // fetch all lists every 10 minutes, but only after we initialize library
   useInterval(fetchAllListsCallback, library ? 1000 * 60 * 10 : null)
-
-  // hot fix for fetching error
-  useEffect(() => {
-    if (lists['https://tokens.coingecko.com/uniswap/all.json']) {
-      dispatch(removeList('https://tokens.coingecko.com/uniswap/all.json'))
-    }
-  }, [dispatch, lists])
 
   // whenever a list is not loaded and not loading, try again to load it
   useEffect(() => {
