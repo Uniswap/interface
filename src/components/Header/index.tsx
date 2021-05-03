@@ -1,13 +1,17 @@
-import { ChainId, cUSD } from '@ubeswap/sdk'
+import { CELO, ChainId, TokenAmount } from '@ubeswap/sdk'
+import { CardNoise } from 'components/earn/styled'
+import Modal from 'components/Modal'
+import usePrevious from 'hooks/usePrevious'
 import { darken } from 'polished'
-import React from 'react'
+import React, { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Moon, Sun } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
-import { useTokenBalance } from 'state/wallet/hooks'
+import { useAggregateUbeBalance, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components'
+import { TYPE } from 'theme'
 import { ExternalLink } from 'theme/components'
 import LogoDark from '../../assets/svg/logo-dark.svg'
 import Logo from '../../assets/svg/logo.svg'
@@ -17,6 +21,9 @@ import { YellowCard } from '../Card'
 import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
+import UbeBalanceContent from './UbeBalanceContent'
+import { CountUp } from 'use-count-up'
+
 const HeaderFrame = styled.div`
   display: grid;
   grid-template-columns: 1fr 120px;
@@ -154,7 +161,7 @@ const Title = styled(NavLink)`
   }
 `
 
-const UniIcon = styled.div`
+const UbeIcon = styled.div`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
@@ -259,16 +266,23 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const userCusdBalance = useTokenBalance(account ?? undefined, cUSD[chainId])
+  const userCELOBalance = useTokenBalance(account ?? undefined, CELO[chainId])
   const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const [showUbeBalanceModal, setShowUbeBalanceModal] = useState<boolean>(false)
+  const aggregateBalance: TokenAmount | undefined = useAggregateUbeBalance()
+  const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
+  const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   return (
     <HeaderFrame>
+      <Modal isOpen={showUbeBalanceModal} onDismiss={() => setShowUbeBalanceModal(false)}>
+        <UbeBalanceContent setShowUbeBalanceModal={setShowUbeBalanceModal} />
+      </Modal>
       <HeaderRow>
         <Title to="/">
-          <UniIcon>
+          <UbeIcon>
             <img width={'140px'} src={darkMode ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
+          </UbeIcon>
         </Title>
         <HeaderLinks>
           {isMobile && chainId && NETWORK_LABELS[chainId] && (
@@ -305,10 +319,38 @@ export default function Header() {
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
           </HideSmall>
+
+          {aggregateBalance && (
+            <UBEWrapper onClick={() => setShowUbeBalanceModal(true)}>
+              <UBEAmount active={!!account} style={{ pointerEvents: 'auto' }}>
+                {account && (
+                  <HideSmall>
+                    <TYPE.white
+                      style={{
+                        paddingRight: '.4rem',
+                      }}
+                    >
+                      <CountUp
+                        key={countUpValue}
+                        isCounting
+                        start={parseFloat(countUpValuePrevious)}
+                        end={parseFloat(countUpValue)}
+                        thousandsSeparator={','}
+                        duration={1}
+                      />
+                    </TYPE.white>
+                  </HideSmall>
+                )}
+                UBE
+              </UBEAmount>
+              <CardNoise />
+            </UBEWrapper>
+          )}
+
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userCusdBalance ? (
+            {account && userCELOBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userCusdBalance?.toFixed(2) ?? '0.00'} cUSD
+                {userCELOBalance?.toFixed(2, { groupSeparator: ',' }) ?? '0.00'} CELO
               </BalanceText>
             ) : null}
             <Web3Status />
@@ -324,3 +366,24 @@ export default function Header() {
     </HeaderFrame>
   )
 }
+
+const UBEAmount = styled(AccountElement)`
+  color: white;
+  padding: 4px 8px;
+  height: 36px;
+  font-weight: 500;
+  background-color: ${({ theme }) => theme.bg3};
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, ${({ theme }) => theme.primary1} 0%, #2172e5 100%), #edeef2;
+`
+
+const UBEWrapper = styled.span`
+  width: fit-content;
+  position: relative;
+  cursor: pointer;
+  :hover {
+    opacity: 0.8;
+  }
+  :active {
+    opacity: 0.9;
+  }
+`

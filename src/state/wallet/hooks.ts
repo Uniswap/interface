@@ -90,14 +90,14 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
 }
 
 // get the total owned, unclaimed, and unharvested UBE for account
-export function useAggregateUniBalance(): TokenAmount | undefined {
+export function useAggregateUbeBalance(): TokenAmount | undefined {
   const { account, chainId } = useActiveWeb3React()
 
-  const uni = chainId ? UBE[chainId] : undefined
+  const ube = chainId ? UBE[chainId] : undefined
 
-  const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, uni)
+  const ubeBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, ube)
 
-  if (!uni) return undefined
+  if (!ube) return undefined
 
-  return uniBalance
+  return ubeBalance
 }

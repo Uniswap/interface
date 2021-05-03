@@ -1,13 +1,15 @@
 import { Contract } from '@ethersproject/contracts'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { ReleaseUbe } from 'generated/ReleaseUbe'
 import { useMemo } from 'react'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import POOL_MANAGER_ABI from '../constants/abis/pool-manager.json'
+import RELEASE_UBE_ABI from '../constants/abis/ReleaseUbe.json'
 import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
-import { PoolManager, StakingRewards } from '../generated'
+import { Erc20, PoolManager, StakingRewards } from '../generated'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 
@@ -26,8 +28,8 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
   }, [address, ABI, library, withSignerIfPossible, account])
 }
 
-export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
+export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Erc20 | null {
+  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible) as Erc20
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -62,4 +64,8 @@ export function usePoolManagerContract(
   withSignerIfPossible?: boolean
 ): PoolManager | null {
   return useContract(poolManagerAddress, POOL_MANAGER_ABI, withSignerIfPossible) as PoolManager
+}
+
+export function useReleaseUbeContract(withSignerIfPossible?: boolean): ReleaseUbe | null {
+  return useContract('0x5Ed248077bD07eE9B530f7C40BE0c1dAE4c131C0', RELEASE_UBE_ABI, withSignerIfPossible) as ReleaseUbe
 }

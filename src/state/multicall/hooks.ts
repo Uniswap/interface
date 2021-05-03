@@ -165,7 +165,7 @@ export function useSingleContractMultipleData<T extends Contract = Contract>(
   methodName: keyof T['estimateGas'] & string,
   callInputs: OptionalMethodInputs[],
   options?: ListenerOptions
-): CallState[] {
+): readonly CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
   const calls = useMemo(

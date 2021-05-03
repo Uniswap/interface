@@ -5,6 +5,7 @@ import { BigNumber } from 'ethers'
 import { PoolManager } from 'generated/'
 import { useAllTokens } from 'hooks/Tokens'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { zip } from 'lodash'
 // Hooks
 import { useMemo } from 'react'
 import useCUSDPrice from 'utils/useCUSDPrice'
@@ -13,7 +14,7 @@ import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 // Interfaces
 import { UNISWAP_V2_PAIR_INTERFACE } from '../../constants/abis/uniswap-v2-pair'
 import { useActiveWeb3React } from '../../hooks'
-import { usePoolManagerContract } from '../../hooks/useContract'
+import { usePoolManagerContract, useTokenContract } from '../../hooks/useContract'
 import {
   NEVER_RELOAD,
   useMultipleContractSingleData,
@@ -23,7 +24,6 @@ import {
 import { tryParseAmount } from '../swap/hooks'
 
 export const STAKING_GENESIS = 1619100000
-// 1617003867
 
 export interface StakingInfo {
   // the address of the reward contract
@@ -60,6 +60,83 @@ export interface StakingInfo {
 
 export const usePairStakingInfo = (pairToFilterBy?: Pair | null): StakingInfo | undefined => {
   return useStakingInfo(pairToFilterBy)[0] ?? undefined
+}
+
+interface UnclaimedInfo {
+  /**
+   * Total tokens left in the contract
+   */
+  balanceRemaining: BigNumber | null
+  /**
+   * Earned but unclaimed tokens
+   */
+  earned: BigNumber | null
+  /**
+   * Tokens not in the circulating supply
+   */
+  noncirculatingSupply: BigNumber | null
+}
+
+export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
+  const { chainId } = useActiveWeb3React()
+  const ube = chainId ? UBE[chainId] : undefined
+  const ubeContract = useTokenContract(ube?.address)
+  const poolManagerContract = usePoolManagerContract(chainId !== ChainId.BAKLAVA ? POOL_MANAGER[chainId] : undefined)
+  const poolsCountBigNumber = useSingleCallResult(poolManagerContract, 'poolsCount').result?.[0] as
+    | BigNumber
+    | undefined
+  const poolsCount = poolsCountBigNumber?.toNumber() ?? 0
+  const poolAddresses = useStakingPoolAddresses(poolManagerContract, poolsCount)
+
+  // compute amount that is locked up
+  const balancesRaw = useSingleContractMultipleData(
+    ubeContract,
+    'balanceOf',
+    poolAddresses.map((addr) => [addr])
+  )
+  const balances = balancesRaw.find((b) => !b.result)
+    ? null
+    : (balancesRaw.map((b) => b.result?.[0] ?? BigNumber.from(0)) as readonly BigNumber[])
+  const balanceRemaining = balances?.reduce((sum, b) => b.add(sum)) ?? null
+
+  // tokens per second, constants
+  const rewardRates = useMultipleContractSingleData(
+    poolAddresses,
+    STAKING_REWARDS_INTERFACE,
+    'rewardRate',
+    undefined,
+    NEVER_RELOAD
+  )
+
+  const periodFinishes = useMultipleContractSingleData(
+    poolAddresses,
+    STAKING_REWARDS_INTERFACE,
+    'periodFinish',
+    undefined,
+    NEVER_RELOAD
+  )
+
+  const now = useCurrentBlockTimestamp()
+  const amounts = now
+    ? zip(rewardRates, periodFinishes).map(
+        ([rate, finish]): BigNumber => {
+          const rawRate = rate?.result?.[0] as BigNumber | undefined
+          const finishTime = finish?.result?.[0] as BigNumber | undefined
+          if (rawRate && finishTime && finishTime.gt(now)) {
+            return rawRate.mul(finishTime.sub(now).toNumber())
+          }
+          return BigNumber.from(0)
+        }
+      )
+    : undefined
+  const earned =
+    rewardRates?.[0]?.loading || !amounts ? null : amounts.reduce((sum, amt) => sum.add(amt), BigNumber.from(0))
+
+  return {
+    balanceRemaining,
+    earned,
+    noncirculatingSupply: balanceRemaining && earned ? balanceRemaining.sub(earned) : null,
+  }
 }
 
 // gets the staking info from the network for the active chain id
@@ -262,8 +339,10 @@ export function useStakingPools(pairToFilterBy?: Pair | null): readonly IStaking
   }, [ube, pools, poolPairs, pairToFilterBy])
 }
 
-// Todo - returns string array
-export function useStakingPoolAddresses(poolManagerContract: PoolManager | null, poolsCount: number): string[][] {
+export function useStakingPoolAddresses(
+  poolManagerContract: PoolManager | null,
+  poolsCount: number
+): readonly string[] {
   // Get rewards pools addresses
   const inputs = [...Array(poolsCount).keys()].map((i) => [i])
   const poolAddresses = useSingleContractMultipleData(poolManagerContract, 'poolsByIndex', inputs)
@@ -271,7 +350,7 @@ export function useStakingPoolAddresses(poolManagerContract: PoolManager | null,
   return useMemo(() => {
     return !poolAddresses.length || !poolAddresses[0] || poolAddresses[0].loading
       ? []
-      : poolAddresses.map((p) => [p?.result?.[0]])
+      : poolAddresses.map((p) => p?.result?.[0]).filter((x): x is string => !!x)
   }, [poolAddresses])
 }
 
@@ -286,12 +365,18 @@ interface IRawPool {
 
 export function useStakingPoolsInfo(
   poolManagerContract: PoolManager | null,
-  poolAddresses: string[][]
+  poolAddresses: readonly string[]
 ): readonly IRawPool[] {
-  const pools = useSingleContractMultipleData(poolManagerContract, 'pools', poolAddresses)
+  const pools = useSingleContractMultipleData(
+    poolManagerContract,
+    'pools',
+    poolAddresses.map((addr) => [addr])
+  )
 
   const rawPools = useMemo(() => {
-    return !pools || !pools[0] || pools[0].loading ? [] : pools.map((p) => (p?.result as unknown) as IRawPool)
+    return !pools || !pools[0] || pools[0].loading
+      ? []
+      : pools.map((p) => (p?.result as unknown) as IRawPool | undefined).filter((x): x is IRawPool => !!x)
   }, [pools])
 
   const nextPeriod = useSingleCallResult(poolManagerContract, 'nextPeriod')
