@@ -1,9 +1,10 @@
 import { Pair } from '@uniswap/v2-sdk'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React, { useState, useCallback } from 'react'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import React, { useState, useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { warningSeverity } from '../../utils/prices'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -158,6 +159,7 @@ interface CurrencyInputPanelProps {
   hideInput?: boolean
   otherCurrency?: Currency | null
   fiatValue?: CurrencyAmount
+  priceImpact?: Percent
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
@@ -176,6 +178,7 @@ export default function CurrencyInputPanel({
   showCommonBases,
   customBalanceText,
   fiatValue,
+  priceImpact,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -192,6 +195,15 @@ export default function CurrencyInputPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
+
+  const priceImpactColor = useMemo(() => {
+    if (!priceImpact) return undefined
+    if (priceImpact.lessThan('0')) return theme.green1
+    const severity = warningSeverity(priceImpact)
+    if (severity < 1) return undefined
+    if (severity < 2) return theme.yellow1
+    return theme.red1
+  }, [priceImpact, theme.green1, theme.red1, theme.yellow1])
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -287,6 +299,9 @@ export default function CurrencyInputPanel({
 
               <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
                 {fiatValue ? '~' : ''}${fiatValue ? Number(fiatValue?.toSignificant(6)).toLocaleString('en') : '-'}
+                {priceImpact ? (
+                  <span style={{ color: priceImpactColor }}> ({priceImpact.multiply(-1).toSignificant(3)}%)</span>
+                ) : null}
               </TYPE.body>
             </RowBetween>
           </FiatRow>

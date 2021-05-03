@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, currencyEquals, Percent, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
@@ -48,13 +48,24 @@ import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } 
 import { LinkStyledButton, TYPE } from '../../theme'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
 import { Link } from 'react-router-dom'
 import { isTradeBetter } from '../../utils/isTradeBetter'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import SwapHeader from '../../components/swap/SwapHeader'
+
+const ONE_HUNDRED_PERCENT = new Percent(100, 100)
+function computeFiatValuePriceImpact(
+  fiatValueInput: CurrencyAmount | undefined | null,
+  fiatValueOutput: CurrencyAmount | undefined | null
+): Percent | undefined {
+  if (!fiatValueOutput || !fiatValueInput) return undefined
+  if (!currencyEquals(fiatValueInput.currency, fiatValueOutput.currency)) return undefined
+  if (JSBI.equal(fiatValueInput.raw, JSBI.BigInt(0))) return undefined
+  return ONE_HUNDRED_PERCENT.subtract(fiatValueOutput.divide(fiatValueInput)).multiply(100)
+}
 
 export default function Swap({ history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -135,6 +146,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValue(parsedAmounts[Field.OUTPUT])
+  const priceImpact = computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
@@ -219,8 +231,6 @@ export default function Swap({ history }: RouteComponentProps) {
     recipient,
     signatureData
   )
-
-  const { priceImpactWithoutFee: priceImpact } = computeTradePriceBreakdown(trade)
 
   const [singleHopOnly] = useUserSingleHopOnly()
 
@@ -377,6 +387,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
+                priceImpact={priceImpact}
                 currency={currencies[Field.OUTPUT]}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
