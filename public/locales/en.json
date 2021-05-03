@@ -89,7 +89,7 @@
   "toleranceExplanation": "Lowering this limit decreases your risk of frontrunning. However, this makes more likely that your transaction will fail due to normal price movements.",
   "tokenSearchPlaceholder": "Search name or paste address",
   "selectFee": "Select Fee",
-  "selectLiquidityRange": "Select Liquidity Range",
+  "selectLiquidityRange": "Select Price Range",
   "selectPool": "Select Fee Tier",
   "depositAmounts": "Deposit Amounts",
   "fee": "fee",

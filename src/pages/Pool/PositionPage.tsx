@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+
 import { PoolState, usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
@@ -9,15 +10,14 @@ import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { LoadingRows } from './styleds'
 import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
-import Row, { RowBetween, RowFixed } from 'components/Row'
+import { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { ButtonText, TYPE } from 'theme'
-import Badge, { BadgeVariant } from 'components/Badge'
+import { TYPE } from 'theme'
+import Badge from 'components/Badge'
 import { calculateGasMargin } from 'utils'
-import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
-import { DarkCard, DarkGreyCard } from 'components/Card'
+import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
+import { DarkCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { AlertTriangle, ToggleLeft, ToggleRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
@@ -31,43 +31,23 @@ import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Dots } from 'components/swap/styleds'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
+
+import useTheme from '../../hooks/useTheme'
+import { MinusCircle, PlusCircle } from 'react-feather'
+
+import RateToggle from '../../components/RateToggle'
 import { useSingleCallResult } from 'state/multicall/hooks'
+
+import RangeBadge from '../../components/Badge/RangeBadge'
 
 const PageWrapper = styled.div`
   min-width: 800px;
-`
-
-const BadgeWrapper = styled.div`
-  font-size: 14px;
+  max-width: 960px;
 `
 
 const BadgeText = styled.div`
   font-weight: 500;
   font-size: 14px;
-`
-const ResponsiveGrid = styled.div`
-  width: 100%;
-  display: grid;
-  grid-gap: 1em;
-
-  grid-template-columns: 1.5fr repeat(2, 1fr);
-
-  @media screen and (max-width: 900px) {
-    grid-template-columns: 1.5fr repeat(2, 1fr);
-    & :nth-child(4) {
-      display: none;
-    }
-  }
-
-  @media screen and (max-width: 700px) {
-    grid-template-columns: 20px 1.5fr repeat(2, 1fr);
-    & :nth-child(4) {
-      display: none;
-    }
-    & :nth-child(5) {
-      display: none;
-    }
-  }
 `
 
 // responsive text
@@ -80,19 +60,42 @@ const Label = styled(({ end, ...props }) => <TYPE.label {...props} />)<{ end?: b
   align-items: center;
 `
 
-const ActiveDot = styled.span`
-  background-color: ${({ theme }) => theme.success};
-  border-radius: 50%;
-  height: 8px;
-  width: 8px;
-  margin-right: 4px;
-`
-
 export const DarkBadge = styled.div`
   width: fit-content;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.bg0};
   padding: 4px 6px;
+`
+
+const ExtentsText = styled.span`
+  color: ${({ theme }) => theme.text3};
+  font-size: 14px;
+  text-align: center;
+  margin-right: 4px;
+`
+
+const HoverText = styled(TYPE.main)`
+  text-decoration: none;
+  color: ${({ theme }) => theme.text3};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    text-decoration: none;
+  }
+`
+
+const DoubleArrow = styled.span`
+  color: ${({ theme }) => theme.text3};
+  margin: 0 1rem;
+`
+
+const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  border-radius: 12px;
+  padding: 6px 8px;
+  width: fit-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex: 1 1 auto;
+    width: 49%;
+  `};
 `
 
 function CurrentPriceCard({
@@ -106,22 +109,20 @@ function CurrentPriceCard({
   currencyQuote?: Currency
   currencyBase?: Currency
 }) {
+  const { t } = useTranslation()
   if (!pool || !currencyQuote || !currencyBase) {
     return null
   }
 
   return (
-    <DarkGreyCard width="32%">
-      <AutoColumn gap="sm" justify="flex-start">
-        <TYPE.main>Current</TYPE.main>
-        <RowFixed>
-          <TYPE.label>
-            {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)} {currencyQuote?.symbol} / 1{' '}
-            {currencyBase?.symbol}
-          </TYPE.label>
-        </RowFixed>
+    <LightCard padding="12px ">
+      <AutoColumn gap="md" justify="center">
+        <ExtentsText>{t('Current price')}</ExtentsText>
+        <TYPE.label textAlign="center">
+          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)} {currencyQuote?.symbol}
+        </TYPE.label>
       </AutoColumn>
-    </DarkGreyCard>
+    </LightCard>
   )
 }
 
@@ -132,6 +133,7 @@ export function PositionPage({
 }: RouteComponentProps<{ tokenId?: string }>) {
   const { t } = useTranslation()
   const { chainId, account, library } = useActiveWeb3React()
+  const theme = useTheme()
 
   const parsedTokenId = tokenIdFromUrl ? BigNumber.from(tokenIdFromUrl) : undefined
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
@@ -171,8 +173,10 @@ export function PositionPage({
     pool && typeof tickLower === 'number' && typeof tickUpper === 'number'
       ? pool.tickCurrent >= tickLower && pool.tickCurrent < tickUpper
       : false
-  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : false
-  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : false
+
+  // keep will need to be able to draw the range visualization
+  // const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : false
+  // const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : false
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
@@ -254,204 +258,240 @@ export function PositionPage({
     </LoadingRows>
   ) : (
     <PageWrapper>
-      <AutoColumn gap="lg">
+      <AutoColumn gap="md">
         <AutoColumn gap="sm">
+          <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
+            <HoverText>{'← Back to overview'}</HoverText>
+          </Link>
           <RowBetween>
             <RowFixed>
-              <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={20} margin={true} />
-              <TYPE.label fontSize={'20px'} mr="10px">
+              <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
+              <TYPE.label fontSize={'24px'} mr="10px">
                 &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
               </TYPE.label>
-              <Badge>
+              <Badge style={{ marginRight: '8px' }}>
                 <BadgeText>{new Percent(feeAmount, 1_000_000).toSignificant()}%</BadgeText>
               </Badge>
+              <RangeBadge inRange={inRange} />
             </RowFixed>
 
             {ownsNFT && (
               <RowFixed>
-                {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash ? (
-                  <ButtonConfirmed
-                    disabled={collecting || !!collectMigrationHash}
-                    confirmed={!!collectMigrationHash && !isCollectPending}
-                    mr="15px"
-                    width="175px"
-                    padding="8px"
-                    style={{ borderRadius: '12px' }}
-                    onClick={collect}
-                  >
-                    {!!collectMigrationHash && !isCollectPending ? (
-                      'Collected'
-                    ) : isCollectPending || collecting ? (
-                      <Dots>Collecting</Dots>
-                    ) : (
-                      'Collect fees'
-                    )}
-                  </ButtonConfirmed>
-                ) : null}
                 {currency0 && currency1 && feeAmount && tokenId ? (
-                  <Link to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}>
-                    <ButtonPrimary mr="15px" width="175px" padding="8px" borderRadius="12px">
-                      Add liquidity
-                    </ButtonPrimary>
-                  </Link>
+                  <ButtonGray
+                    as={Link}
+                    to={`/increase/${currencyId(currency0)}/${currencyId(currency1)}/${feeAmount}/${tokenId}`}
+                    width="fit-content"
+                    padding="6px 8px"
+                    borderRadius="12px"
+                    style={{ marginRight: '8px' }}
+                  >
+                    <PlusCircle size={16} style={{ marginRight: '8px' }} />{' '}
+                    <TYPE.body color={theme.text1}>{t('Add Liquidity')}</TYPE.body>
+                  </ButtonGray>
                 ) : null}
                 {tokenId && (
-                  <Link to={`/remove/${tokenId}`}>
-                    <ButtonPrimary width="175px" padding="8px" borderRadius="12px">
-                      Remove liquidity
-                    </ButtonPrimary>
-                  </Link>
+                  <ResponsiveButtonPrimary
+                    as={Link}
+                    to={`/remove/${tokenId}`}
+                    width="fit-content"
+                    padding="6px 8px"
+                    borderRadius="12px"
+                  >
+                    <MinusCircle size={16} style={{ marginRight: '8px' }} /> {t('Remove Liquidity')}
+                  </ResponsiveButtonPrimary>
                 )}
               </RowFixed>
             )}
           </RowBetween>
-          <RowBetween>
-            <BadgeWrapper>
-              {inRange ? (
-                <Badge variant={BadgeVariant.DEFAULT}>
-                  <ActiveDot /> &nbsp;
-                  <BadgeText>{t('Active')}</BadgeText>
-                </Badge>
-              ) : (
-                <Badge variant={BadgeVariant.WARNING}>
-                  <AlertTriangle width={14} height={14} style={{ marginRight: '4px' }} />
-                  &nbsp;
-                  <BadgeText>{t('Out of range')}</BadgeText>
-                </Badge>
-              )}
-            </BadgeWrapper>
-          </RowBetween>
+          <RowBetween></RowBetween>
         </AutoColumn>
-        <Row align="stretch">
+        <RowBetween align="flex-start">
           {'result' in metadata ? (
-            <div style={{ marginRight: 12 }}>
-              <img src={metadata.result.image} />
-            </div>
+            <DarkCard
+              width="100%"
+              height="100%"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                marginRight: '12px',
+                maxWidth: '360px',
+              }}
+            >
+              <div style={{ marginRight: 12 }}>
+                <img height="400px" src={metadata.result.image} />
+              </div>
+            </DarkCard>
           ) : null}
-          <DarkCard>
-            <AutoColumn gap="lg">
-              <ResponsiveGrid>
-                <Label>Tokens</Label>
-                <Label end={true}>Liquidity</Label>
-                <Label end={true}>Fees</Label>
-              </ResponsiveGrid>
-              <ResponsiveGrid>
-                <RowFixed>
-                  <CurrencyLogo currency={currencyQuote} />
-                  <TYPE.label ml="10px">{currencyQuote?.symbol}</TYPE.label>
-                </RowFixed>
-                <Label end={true}>
-                  {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
-                </Label>
-                <Label end={true}>
-                  {inverted
-                    ? feeValue0
-                      ? formatTokenAmount(feeValue0, 4)
-                      : '-'
-                    : feeValue1
-                    ? formatTokenAmount(feeValue1, 4)
-                    : '-'}
-                </Label>
-              </ResponsiveGrid>
-              <ResponsiveGrid>
-                <RowFixed>
-                  <CurrencyLogo currency={currencyBase} />
-                  <TYPE.label ml="10px">{currencyBase?.symbol}</TYPE.label>
-                </RowFixed>
-                <Label end={true}>
-                  {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
-                </Label>
+          <AutoColumn gap="sm" style={{ width: '100%' }}>
+            <DarkCard>
+              <AutoColumn gap="lg" style={{ width: '100%' }}>
+                <AutoColumn gap="md">
+                  <Label>Position liquidity</Label>
+                  <TYPE.largeHeader fontSize="36px" fontWeight={500}>
+                    $1222.22
+                  </TYPE.largeHeader>
+                </AutoColumn>
 
-                <Label end={true}>
-                  {inverted
-                    ? feeValue1
-                      ? formatTokenAmount(feeValue1, 4)
-                      : '-'
-                    : feeValue0
-                    ? formatTokenAmount(feeValue0, 4)
-                    : '-'}
-                </Label>
-              </ResponsiveGrid>
-            </AutoColumn>
-          </DarkCard>
-        </Row>
+                <LightCard padding="12px 16px">
+                  <AutoColumn gap="md">
+                    <RowBetween>
+                      <RowFixed>
+                        <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                        <TYPE.main>
+                          {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
+                        </TYPE.main>
+                      </RowFixed>
+                      <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
+                    </RowBetween>
+                    <RowBetween>
+                      <RowFixed>
+                        <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                        <TYPE.main>
+                          {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
+                        </TYPE.main>
+                      </RowFixed>
+                      <TYPE.main>{currencyBase?.symbol}</TYPE.main>
+                    </RowBetween>
+                  </AutoColumn>
+                </LightCard>
+              </AutoColumn>
+            </DarkCard>
+            <span style={{ width: '24px' }}></span>
+            <DarkCard>
+              <AutoColumn gap="lg" style={{ width: '100%' }}>
+                <AutoColumn gap="md">
+                  <RowBetween style={{ alignItems: 'flex-start' }}>
+                    <AutoColumn gap="md">
+                      <Label>Fees Earned</Label>
+                      <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
+                        $2.22
+                      </TYPE.largeHeader>
+                    </AutoColumn>
+                    {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash ? (
+                      <ButtonConfirmed
+                        disabled={collecting || !!collectMigrationHash}
+                        confirmed={!!collectMigrationHash && !isCollectPending}
+                        width="fit-content"
+                        style={{ borderRadius: '12px' }}
+                        padding="4px 8px"
+                        onClick={collect}
+                      >
+                        {!!collectMigrationHash && !isCollectPending ? (
+                          <TYPE.main color={theme.text1}> Collected</TYPE.main>
+                        ) : isCollectPending || collecting ? (
+                          <TYPE.main color={theme.text1}>
+                            {' '}
+                            <Dots>Collecting</Dots>
+                          </TYPE.main>
+                        ) : (
+                          <>
+                            <TYPE.main color={theme.white}>Collect fees</TYPE.main>
+                          </>
+                        )}
+                      </ButtonConfirmed>
+                    ) : null}
+                  </RowBetween>
+                </AutoColumn>
+
+                <LightCard padding="12px 16px">
+                  <AutoColumn gap="md">
+                    <RowBetween>
+                      <RowFixed>
+                        <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                        <TYPE.main>
+                          {inverted
+                            ? feeValue0
+                              ? formatTokenAmount(feeValue0, 4)
+                              : '-'
+                            : feeValue1
+                            ? formatTokenAmount(feeValue1, 4)
+                            : '-'}
+                        </TYPE.main>
+                      </RowFixed>
+                      <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
+                    </RowBetween>
+                    <RowBetween>
+                      <RowFixed>
+                        <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                        <TYPE.main>
+                          {inverted
+                            ? feeValue0
+                              ? formatTokenAmount(feeValue1, 4)
+                              : '-'
+                            : feeValue1
+                            ? formatTokenAmount(feeValue0, 4)
+                            : '-'}
+                        </TYPE.main>
+                      </RowFixed>
+                      <TYPE.main>{currencyBase?.symbol}</TYPE.main>
+                    </RowBetween>
+                  </AutoColumn>
+                </LightCard>
+              </AutoColumn>
+            </DarkCard>
+          </AutoColumn>
+        </RowBetween>
         <DarkCard>
-          <AutoColumn gap="lg">
-            <TYPE.label display="flex">
-              Position Limits
-              <ButtonText style={{ marginLeft: '10px', color: 'inherit' }}>
-                {manuallyInverted ? (
-                  <ToggleLeft onClick={() => setManuallyInverted(false)} />
-                ) : (
-                  <ToggleRight onClick={() => setManuallyInverted(true)} />
-                )}
-              </ButtonText>
-            </TYPE.label>
+          <AutoColumn gap="md">
+            <RowBetween>
+              <Label display="flex" style={{ marginRight: '12px' }}>
+                Price range
+              </Label>
 
-            {below && (
-              <CurrentPriceCard
-                inverted={inverted}
-                pool={pool}
-                currencyQuote={currencyQuote}
-                currencyBase={currencyBase}
-              />
-            )}
+              <RowFixed>
+                <RangeBadge inRange={inRange} />
+                <span style={{ width: '8px' }} />
+                {currencyBase && currencyQuote && (
+                  <RateToggle
+                    currencyA={currencyBase}
+                    currencyB={currencyQuote}
+                    handleRateToggle={() => setManuallyInverted(!manuallyInverted)}
+                  />
+                )}
+              </RowFixed>
+            </RowBetween>
 
             <RowBetween>
-              <DarkGreyCard width="32%">
-                <AutoColumn gap="sm" justify="flex-start">
-                  <TYPE.main>Lower</TYPE.main>
+              <LightCard padding="12px" width="100%">
+                <AutoColumn gap="12px" justify="center">
+                  <ExtentsText>Min</ExtentsText>
                   <RowFixed>
-                    <TYPE.label>
-                      {priceLower?.toSignificant(4)} {currencyQuote?.symbol} / 1 {currencyBase?.symbol}
+                    <TYPE.label textAlign="center">
+                      {priceLower?.toSignificant(4)} {currencyQuote?.symbol}
                     </TYPE.label>
                   </RowFixed>
-                  <DarkBadge>
-                    <RowFixed>
-                      <TYPE.label mr="6px">100%</TYPE.label>
-                      <CurrencyLogo currency={inverted ? currency1 : currency0} size="16px" />
-                      <TYPE.label ml="4px">{inverted ? currency1?.symbol : currency0?.symbol}</TYPE.label>
-                    </RowFixed>
-                  </DarkBadge>
+                  <TYPE.subHeader color={theme.text3} textAlign="center">
+                    Your position will be <CurrencyLogo currency={inverted ? currency1 : currency0} size="12px" /> 100%{' '}
+                    {inverted ? currency1?.symbol : currency0?.symbol} at this price
+                  </TYPE.subHeader>
                 </AutoColumn>
-              </DarkGreyCard>
+              </LightCard>
 
-              {inRange && (
-                <CurrentPriceCard
-                  inverted={inverted}
-                  pool={pool}
-                  currencyQuote={currencyQuote}
-                  currencyBase={currencyBase}
-                />
-              )}
-
-              <DarkGreyCard width="32%">
-                <AutoColumn gap="sm" justify="flex-start">
-                  <TYPE.main>Upper</TYPE.main>
+              <DoubleArrow>⟷</DoubleArrow>
+              <LightCard padding="12px" width="100%">
+                <AutoColumn gap="12px" justify="center">
+                  <ExtentsText>Max</ExtentsText>
                   <RowFixed>
-                    <TYPE.label>
-                      {priceUpper?.toSignificant(4)} {currencyQuote?.symbol} / 1 {currencyBase?.symbol}
+                    <TYPE.label textAlign="center">
+                      {priceUpper?.toSignificant(4)} {currencyQuote?.symbol}
                     </TYPE.label>
                   </RowFixed>
-                  <DarkBadge>
-                    <RowFixed>
-                      <TYPE.label mr="6px">100%</TYPE.label>
-                      <CurrencyLogo currency={inverted ? currency0 : currency1} size="16px" />
-                      <TYPE.label ml="4px">{inverted ? currency0?.symbol : currency1?.symbol}</TYPE.label>
-                    </RowFixed>
-                  </DarkBadge>
+                  <TYPE.subHeader color={theme.text3} textAlign="center">
+                    Your position will be <CurrencyLogo currency={inverted ? currency0 : currency1} size="12px" /> 100%{' '}
+                    {inverted ? currency0?.symbol : currency1?.symbol} at this price
+                  </TYPE.subHeader>
                 </AutoColumn>
-              </DarkGreyCard>
-
-              {above && (
-                <CurrentPriceCard
-                  inverted={inverted}
-                  pool={pool}
-                  currencyQuote={currencyQuote}
-                  currencyBase={currencyBase}
-                />
-              )}
+              </LightCard>
             </RowBetween>
+            <CurrentPriceCard
+              inverted={inverted}
+              pool={pool}
+              currencyQuote={currencyQuote}
+              currencyBase={currencyBase}
+            />
           </AutoColumn>
         </DarkCard>
       </AutoColumn>
