@@ -1,21 +1,22 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import Badge, { BadgeVariant } from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
-import { AlertTriangle } from 'react-feather'
+import { AlertCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
-import { TokenAmount, WETH9, Price, Token, Percent } from '@uniswap/sdk-core'
-import { formatPrice, formatTokenAmount } from 'utils/formatTokenAmount'
+import { WETH9, Price, Token, Percent } from '@uniswap/sdk-core'
+import { formatPrice } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { DAI, USDC, USDT, WBTC } from '../../constants'
+import { MouseoverTooltip } from '../Tooltip'
+import { RowFixed } from 'components/Row'
 
 const ActiveDot = styled.span`
   background-color: ${({ theme }) => theme.success};
@@ -28,28 +29,28 @@ const Row = styled(Link)`
   align-items: center;
   border-radius: 20px;
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   color: ${({ theme }) => theme.text1};
   margin: 8px 0;
-  padding: 8px;
+  padding: 16px;
   text-decoration: none;
   font-weight: 500;
+  background-color: ${({ theme }) => theme.bg1};
+
   &:first-of-type {
     margin: 0 0 8px 0;
   }
   &:last-of-type {
     margin: 8px 0 0 0;
   }
-
   & > div:not(:first-child) {
     text-align: right;
-    min-width: 18%;
+  }
+  :hover {
+    background-color: ${({ theme }) => theme.bg2};
   }
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     flex-direction: row;
-  }
-  :hover {
-    background-color: ${({ theme }) => theme.bg1};
   }
 `
 const BadgeText = styled.div`
@@ -60,63 +61,44 @@ const BadgeWrapper = styled.div`
   font-size: 14px;
 `
 const DataLineItem = styled.div`
-  text-align: right;
   font-size: 14px;
 `
+
+const RangeLineItem = styled(DataLineItem)`
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  justify-self: flex-end;
+`
+
 const DoubleArrow = styled.span`
   color: ${({ theme }) => theme.text3};
 `
-const RangeData = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  & > div {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    display: block;
-    & > div {
-      display: block;
-    }
-  }
+
+const RangeText = styled.span`
+  background-color: ${({ theme }) => theme.bg2};
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
 `
-const AmountData = styled.div`
-  display: none;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    display: block;
-  }
+
+const ExtentsText = styled.span`
+  color: ${({ theme }) => theme.text3};
+  font-size: 14px;
+  margin-right: 4px;
 `
-const FeeData = styled.div`
-  display: none;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    display: block;
-  }
-`
-const LabelData = styled.div`
-  align-items: center;
-  display: flex;
-  flex: 1 1 auto;
-  justify-content: space-between;
-  width: 100%;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
-    display: block;
-  }
-`
+
 const PrimaryPositionIdData = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 6px 0 12px 0;
   > * {
     margin-right: 8px;
   }
 `
 
 const DataText = styled.div`
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 18px;
 `
 
 export interface PositionListItemProps {
@@ -207,31 +189,33 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  // liquidity amounts in tokens
-  const amount0: TokenAmount | undefined = position?.amount0
-  const amount1: TokenAmount | undefined = position?.amount1
-  const formattedAmount0 = formatTokenAmount(amount0, 4)
-  const formattedAmount1 = formatTokenAmount(amount1, 4)
-
   // prices
-  const { priceLower, priceUpper, base } = getPriceOrderingFromPositionForUI(position)
+  let { priceLower, priceUpper, base, quote } = getPriceOrderingFromPositionForUI(position)
   const inverted = token1 ? base?.equals(token1) : undefined
   const currencyQuote = inverted ? currency0 : currency1
   const currencyBase = inverted ? currency1 : currency0
-
-  // fees
-  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
 
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
   const positionSummaryLink = '/pool/' + positionDetails.tokenId
 
+  const [manuallyInverted, setManuallyInverted] = useState(true)
+  if (manuallyInverted) {
+    ;[priceLower, priceUpper, base, quote] = [priceUpper?.invert(), priceLower?.invert(), quote, base]
+  }
+
+  const quotePrice = useMemo(() => {
+    return manuallyInverted
+      ? position?.pool.priceOf(position?.pool.token0)
+      : position?.pool.priceOf(position?.pool.token1)
+  }, [manuallyInverted, position?.pool])
+
   return (
     <Row to={positionSummaryLink}>
-      <LabelData>
+      <RowFixed>
         <PrimaryPositionIdData>
-          <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={16} margin />
+          <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
           <DataText>
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
           </DataText>
@@ -242,61 +226,63 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
         </PrimaryPositionIdData>
         <BadgeWrapper>
           {outOfRange ? (
-            <Badge variant={BadgeVariant.WARNING}>
-              <AlertTriangle width={14} height={14} style={{ marginRight: '4px' }} />
-              &nbsp;
-              <BadgeText>{t('Out of range')}</BadgeText>
-            </Badge>
+            <MouseoverTooltip
+              text={`The price of this pair is outside of your selected range. Your positions is not earning fees. Current price: ${quotePrice?.toSignificant(
+                6
+              )} ${manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} / ${
+                manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol
+              }`}
+            >
+              <Badge variant={BadgeVariant.WARNING}>
+                <AlertCircle width={14} height={14} style={{ marginRight: '' }} />
+                &nbsp;
+                <BadgeText>{t('Out of range')}</BadgeText>
+              </Badge>
+            </MouseoverTooltip>
           ) : (
-            <Badge variant={BadgeVariant.DEFAULT}>
-              <ActiveDot /> &nbsp;
-              <BadgeText>{t('Active')}</BadgeText>
-            </Badge>
+            <MouseoverTooltip
+              text={`The price of this pair is within your selected range. Your positions is earning fees. Current price: ${quotePrice?.toSignificant(
+                6
+              )} ${manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} / ${
+                manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol
+              }`}
+            >
+              <Badge variant={BadgeVariant.DEFAULT}>
+                <ActiveDot /> &nbsp;
+                <BadgeText>{t('In range')}</BadgeText>
+              </Badge>
+            </MouseoverTooltip>
           )}
         </BadgeWrapper>
-      </LabelData>
-      <RangeData>
-        {priceLower && priceUpper ? (
-          <>
-            <DataLineItem>
-              {formatPrice(priceLower, 4)} <DoubleArrow>↔</DoubleArrow> {formatPrice(priceUpper, 4)}{' '}
-              {currencyQuote?.symbol}
-              &nbsp;/&nbsp;
-              {currencyBase?.symbol}
-            </DataLineItem>
-          </>
-        ) : (
-          <Loader />
-        )}
-      </RangeData>
-      <AmountData>
-        {formattedAmount0 && formattedAmount1 ? (
-          <>
-            <DataLineItem>
-              {inverted ? formattedAmount0 : formattedAmount1}&nbsp;{currencyQuote?.symbol}
-            </DataLineItem>
-            <DataLineItem>
-              {inverted ? formattedAmount1 : formattedAmount0}&nbsp;{currencyBase?.symbol}
-            </DataLineItem>
-          </>
-        ) : (
-          <Loader />
-        )}
-      </AmountData>
-      <FeeData>
-        {feeValue0 && feeValue1 ? (
-          <>
-            <DataLineItem>
-              {formatTokenAmount(inverted ? feeValue0 : feeValue1, 4)}&nbsp;{currencyQuote?.symbol}
-            </DataLineItem>
-            <DataLineItem>
-              {formatTokenAmount(inverted ? feeValue1 : feeValue0, 4)}&nbsp;{currencyBase?.symbol}
-            </DataLineItem>
-          </>
-        ) : (
-          <Loader />
-        )}
-      </FeeData>
+      </RowFixed>
+
+      {priceLower && priceUpper ? (
+        <>
+          {' '}
+          <RangeLineItem
+            onClick={(e) => {
+              e.stopPropagation()
+              setManuallyInverted(!manuallyInverted)
+            }}
+          >
+            <span>
+              <RangeText>
+                <ExtentsText>Min: </ExtentsText>
+                {formatPrice(priceLower, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
+                {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
+              </RangeText>{' '}
+              <DoubleArrow>⟷</DoubleArrow>{' '}
+              <RangeText>
+                <ExtentsText>Max:</ExtentsText>
+                {formatPrice(priceUpper, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
+                {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
+              </RangeText>{' '}
+            </span>
+          </RangeLineItem>
+        </>
+      ) : (
+        <Loader />
+      )}
     </Row>
   )
 }

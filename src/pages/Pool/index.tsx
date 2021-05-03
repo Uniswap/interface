@@ -15,6 +15,8 @@ import styled, { ThemeContext } from 'styled-components'
 import { HideSmall, TYPE } from 'theme'
 import { LoadingRows } from './styleds'
 
+import CTACards from './CTACards'
+
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
   width: 100%;
@@ -76,7 +78,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.bg0};
-  padding: 16px;
+  padding: 8px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -131,7 +133,7 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader>Your Positions</TYPE.mediumHeader>
+                <TYPE.mediumHeader>{t('Pools Overview')}</TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
                 <Menu
@@ -151,6 +153,8 @@ export default function Pool() {
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
+
+            <CTACards />
 
             <MainContentWrapper>
               {positionsLoading ? (
@@ -194,6 +198,16 @@ export default function Pool() {
                 </NoLiquidity>
               )}
             </MainContentWrapper>
+            <RowFixed justify="center" style={{ width: '100%' }}>
+              <ButtonGray
+                as={Link}
+                to="/migrate/v2"
+                id="import-pool-link"
+                style={{ padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
+              >
+                <TYPE.subHeader>{t('Looking for your V2 Liquidity')}?</TYPE.subHeader>
+              </ButtonGray>
+            </RowFixed>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
