@@ -4,8 +4,8 @@ import { useContext } from 'react'
 import { Text } from 'rebass'
 
 import styled, { ThemeContext } from 'styled-components'
-import { StyledBalanceMaxMini } from './styleds'
-import Switch from '../../assets/svg/switch.svg'
+
+import { TYPE } from '../../theme'
 
 interface TradePriceProps {
   price: Price
@@ -13,12 +13,19 @@ interface TradePriceProps {
   setShowInverted: (showInverted: boolean) => void
 }
 
-const StyledPriceContainer = styled.div`
-  justify-content: space-between;
+const StyledPriceContainer = styled.button`
+  justify-content: center;
   align-items: center;
   display: flex;
-  /* width: 100%; */
-  padding: 0 0.75rem;
+  width: fit-content;
+  padding: 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  background-color: transparent;
+  border: none;
+  margin-left: 1rem;
+  height: 24px;
+  cursor: pointer;
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
@@ -26,7 +33,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   let formattedPrice: string
   try {
-    formattedPrice = showInverted ? price.toSignificant(6) : price.invert()?.toSignificant(6)
+    formattedPrice = showInverted ? price.toSignificant(4) : price.invert()?.toSignificant(4)
   } catch (error) {
     formattedPrice = '0'
   }
@@ -36,18 +43,15 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted])
 
   return (
-    <StyledPriceContainer>
+    <StyledPriceContainer onClick={flipPrice}>
+      <TYPE.main style={{ marginRight: '4px' }} fontSize={14}>
+        Price:{' '}
+      </TYPE.main>
       <div style={{ alignItems: 'center', display: 'flex', width: 'fit-content' }}>
-        <StyledBalanceMaxMini style={{ marginRight: '0.5rem' }} onClick={flipPrice}>
-          <img width={'16px'} src={Switch} alt="logo" />
-        </StyledBalanceMaxMini>
-        <Text fontWeight={500} fontSize={14} color={theme.text2}>
+        <Text fontWeight={500} fontSize={14} color={theme.text1}>
           {'1 ' + labelInverted + ' = ' + formattedPrice ?? '-'} {label}
         </Text>
       </div>
-      <Text fontWeight={500} fontSize={14} color={theme.text2}>
-        {''}
-      </Text>
     </StyledPriceContainer>
   )
 }

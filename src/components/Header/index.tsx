@@ -19,7 +19,6 @@ import { TYPE, ExternalLink } from '../../theme'
 
 import { YellowCard } from '../Card'
 import Menu from '../Menu'
-import Settings from '../Settings'
 
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
@@ -415,7 +414,6 @@ export default function Header() {
           </AccountElement>
         </HeaderElement>
         <HeaderElementWrap>
-          <Settings />
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>

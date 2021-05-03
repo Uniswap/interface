@@ -81,10 +81,9 @@ export default function ConfirmSwapModal({
         trade={trade}
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
-        allowedSlippage={allowedSlippage}
       />
     ) : null
-  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   const slippageTolerancePercent = new Percent(allowedSlippage, 10_000)
 

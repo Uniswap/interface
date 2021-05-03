@@ -9,6 +9,7 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
+import { ButtonGray } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -52,23 +53,23 @@ const Container = styled.div<{ hideInput: boolean }>`
   }
 `
 
-const CurrencySelect = styled.button<{ selected: boolean; hideInput?: boolean }>`
+const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boolean }>`
   align-items: center;
   font-size: 24px;
   font-weight: 500;
   background-color: ${({ selected, theme }) => (selected ? theme.bg2 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 20px;
+  border-radius: 12px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  /* box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075); */
-  margin-left: 8px;
+  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   outline: none;
   cursor: pointer;
   user-select: none;
   border: none;
-  height: ${({ hideInput }) => (hideInput ? 'auto' : '2.4rem')};
+  height: ${({ hideInput }) => (hideInput ? '2.4rem' : '2.4rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: 0 8px;
+  justify-content: space-between;
   :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg3 : darken(0.05, theme.primary1))};

@@ -20,8 +20,6 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
-import { Moon, Sun } from 'react-feather'
-import { useDarkModeManager } from '../../state/user/hooks'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -93,7 +91,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 3rem;
+  top: 2rem;
   right: 0rem;
   z-index: 100;
 
@@ -133,8 +131,6 @@ export default function SettingsTab() {
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
-
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   useOnClickOutside(node, open ? toggle : undefined)
 
@@ -245,10 +241,6 @@ export default function SettingsTab() {
                 }}
               />
             </RowBetween>
-            {/* WIP */}
-            <StyledMenuButton onClick={() => toggleDarkMode()}>
-              {darkMode ? <Moon color={theme.text2} size={20} /> : <Sun size={20} />}
-            </StyledMenuButton>
           </AutoColumn>
         </MenuFlyout>
       )}

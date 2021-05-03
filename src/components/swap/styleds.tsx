@@ -86,10 +86,11 @@ export const StyledBalanceMaxMini = styled.button`
   background-color: ${({ theme }) => theme.bg1};
   border: none;
   border-radius: 8px;
-  padding: 0.25rem 0.35rem;
+  padding: 0;
   font-size: 0.875rem;
   font-weight: 400;
-
+  opacity: 0.6;
+  margin-right: 0.5rem;
   cursor: pointer;
   color: ${({ theme }) => theme.text1};
   display: flex;

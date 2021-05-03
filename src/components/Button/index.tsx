@@ -32,6 +32,15 @@ const Base = styled(RebassButton)<{
   z-index: 1;
   &:disabled {
     cursor: auto;
+    pointer-events: none;
+  }
+
+  will-change: transform;
+  transition: transform 450ms ease;
+  transform: perspective(1px) translateZ(0);
+
+  &:hover {
+    transform: scale(1.05);
   }
 
   > * {

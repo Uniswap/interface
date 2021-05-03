@@ -6,7 +6,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, Repeat, HelpCircle, CheckCircle, Info } from 'react-feather'
+import { ArrowDown, Repeat, HelpCircle, CheckCircle, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -18,7 +18,7 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
-import { AutoRow, RowBetween } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 
@@ -50,6 +50,10 @@ import { getTradeVersion } from '../../utils/getTradeVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+
+import { Link } from 'react-router-dom'
+import { isTradeBetter } from '../../utils/isTradeBetter'
+import BetterTradeLink from '../../components/swap/BetterTradeLink'
 
 export default function Swap({ history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -331,7 +335,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
       <AppBody>
-        <SwapHeader toggledVersion={toggledVersion} />
+        <SwapHeader />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -402,30 +406,79 @@ export default function Swap({ history }: RouteComponentProps) {
               </>
             ) : null}
 
-            {trade && (
-              <RowBetween>
-                <TradePrice
-                  price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
-                  showInverted={showInverted}
-                  setShowInverted={setShowInverted}
-                />
-                <MouseoverTooltipContent content={<AdvancedSwapDetails trade={trade} />}>
+            <RowBetween style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
+              <RowFixed>
+                {trade ? (
+                  <TradePrice
+                    price={trade.worstExecutionPrice(new Percent(allowedSlippage, 10_000))}
+                    showInverted={showInverted}
+                    setShowInverted={setShowInverted}
+                  />
+                ) : (
+                  <TYPE.main></TYPE.main>
+                )}
+              </RowFixed>
+
+              <RowFixed>
+                {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
+                  (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
+                    <BetterTradeLink version={Version.v2} otherTradeNonexistent={!v3Trade} />
+                  ) : toggledVersion === Version.v2 && isTradeBetter(v2Trade, v3Trade) ? (
+                    <BetterTradeLink version={Version.v3} otherTradeNonexistent={!v2Trade} />
+                  ) : (
+                    toggledVersion === Version.v2 && (
+                      <ButtonGray
+                        width="fit-content"
+                        padding="0.1rem 0.35rem 0.1rem 0.5rem"
+                        as={Link}
+                        to="/swap"
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          height: '24px',
+                          opacity: 0.8,
+                          lineHeight: '120%',
+                        }}
+                      >
+                        <TYPE.main fontSize={12}>V2</TYPE.main>
+                        &nbsp; <X color={theme.text3} size={12} />
+                      </ButtonGray>
+                    )
+                  ))}
+
+                {toggledVersion === Version.v3 && trade && isTradeBetter(v2Trade, v3Trade) && (
                   <ButtonGray
                     width="fit-content"
-                    padding="0.1rem 6px 0.1rem 2px"
+                    padding="0.1rem 0.5rem"
+                    disabled
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      height: '22px',
-                      marginRight: '.5rem',
+                      height: '24px',
+                      opacity: 0.4,
                     }}
                   >
-                    <Info size={16} style={{ marginRight: '.25rem' }} />{' '}
-                    <TYPE.main fontSize={11}>Trade Details</TYPE.main>
+                    <TYPE.black fontSize={12}>V3</TYPE.black>
                   </ButtonGray>
-                </MouseoverTooltipContent>
-              </RowBetween>
-            )}
+                )}
+                {trade && (
+                  <MouseoverTooltipContent content={<AdvancedSwapDetails trade={trade} />}>
+                    <Info
+                      size={20}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        height: '24px',
+                        opacity: 0.4,
+                        margin: '0 1rem 0 .5rem',
+                      }}
+                      color={theme.text1}
+                    />
+                  </MouseoverTooltipContent>
+                )}
+              </RowFixed>
+            </RowBetween>
 
             <BottomGrouping>
               {swapIsUnsupported ? (

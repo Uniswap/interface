@@ -5,7 +5,6 @@ import { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
 import { computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import SwapRoute from './SwapRoute'
@@ -16,7 +15,7 @@ function TradeSummary({ trade }: { trade: V2Trade | V3Trade }) {
 
   return (
     <>
-      <AutoColumn style={{}}>
+      <AutoColumn gap={'8px'}>
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
@@ -67,7 +66,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
                   <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                     Route
                   </TYPE.black>
-                  <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
+                  {/* <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." /> */}
                 </span>
                 <SwapRoute trade={trade} />
               </RowBetween>
