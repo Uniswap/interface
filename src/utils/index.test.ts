@@ -1,16 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { TokenAmount, Token, ChainId, Percent } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
-
-import {
-  getEtherscanLink,
-  calculateSlippageAmount,
-  isAddress,
-  shortenAddress,
-  calculateGasMargin,
-  basisPointsToPercent,
-} from '.'
+import { getEtherscanLink, calculateSlippageAmount, isAddress, shortenAddress, calculateGasMargin } from '.'
 
 describe('utils', () => {
   describe('#getEtherscanLink', () => {
@@ -37,12 +28,23 @@ describe('utils', () => {
   describe('#calculateSlippageAmount', () => {
     it('bounds are correct', () => {
       const tokenAmount = new TokenAmount(new Token(ChainId.MAINNET, AddressZero, 0), '100')
-      expect(() => calculateSlippageAmount(tokenAmount, -1)).toThrow()
-      expect(calculateSlippageAmount(tokenAmount, 0).map((bound) => bound.toString())).toEqual(['100', '100'])
-      expect(calculateSlippageAmount(tokenAmount, 100).map((bound) => bound.toString())).toEqual(['99', '101'])
-      expect(calculateSlippageAmount(tokenAmount, 200).map((bound) => bound.toString())).toEqual(['98', '102'])
-      expect(calculateSlippageAmount(tokenAmount, 10000).map((bound) => bound.toString())).toEqual(['0', '200'])
-      expect(() => calculateSlippageAmount(tokenAmount, 10001)).toThrow()
+      expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow()
+      expect(calculateSlippageAmount(tokenAmount, new Percent(0, 10_000)).map((bound) => bound.toString())).toEqual([
+        '100',
+        '100',
+      ])
+      expect(calculateSlippageAmount(tokenAmount, new Percent(100, 10_000)).map((bound) => bound.toString())).toEqual([
+        '99',
+        '101',
+      ])
+      expect(calculateSlippageAmount(tokenAmount, new Percent(200, 10_000)).map((bound) => bound.toString())).toEqual([
+        '98',
+        '102',
+      ])
+      expect(
+        calculateSlippageAmount(tokenAmount, new Percent(10000, 10_000)).map((bound) => bound.toString())
+      ).toEqual(['0', '200'])
+      expect(() => calculateSlippageAmount(tokenAmount, new Percent(10001, 10_000))).toThrow()
     })
   })
 
@@ -90,14 +92,6 @@ describe('utils', () => {
     it('adds 10%', () => {
       expect(calculateGasMargin(BigNumber.from(1000)).toString()).toEqual('1100')
       expect(calculateGasMargin(BigNumber.from(50)).toString()).toEqual('55')
-    })
-  })
-
-  describe('#basisPointsToPercent', () => {
-    it('converts basis points numbers to percents', () => {
-      expect(basisPointsToPercent(100).equalTo(new Percent(JSBI.BigInt(1), JSBI.BigInt(100)))).toBeTruthy()
-      expect(basisPointsToPercent(500).equalTo(new Percent(JSBI.BigInt(5), JSBI.BigInt(100)))).toBeTruthy()
-      expect(basisPointsToPercent(50).equalTo(new Percent(JSBI.BigInt(5), JSBI.BigInt(1000)))).toBeTruthy()
     })
   })
 })

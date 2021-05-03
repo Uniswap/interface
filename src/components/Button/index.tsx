@@ -46,6 +46,10 @@ const Base = styled(RebassButton)<{
   > * {
     user-select: none;
   }
+
+  > a {
+    text-decoration: none;
+  }
 `
 
 export const ButtonPrimary = styled(Base)`

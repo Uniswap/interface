@@ -1,5 +1,5 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, TokenAmount, Percent, ETHER } from '@uniswap/sdk-core'
+import { Currency, TokenAmount, ETHER } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { WETH9 } from '@uniswap/sdk-core'
 import { Link2, AlertTriangle, ChevronRight } from 'react-feather'
@@ -45,7 +45,6 @@ import { useTranslation } from 'react-i18next'
 import { useMintState, useMintActionHandlers, useDerivedMintInfo, useRangeHopCallbacks } from 'state/mint/hooks'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
-import JSBI from 'jsbi'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
 import { PositionPreview } from 'components/PositionPreview'
@@ -140,7 +139,6 @@ export default function AddLiquidity({
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
   const [allowedSlippage] = useUserSlippageTolerance() // custom from users
-  const fractionalizedTolerance = new Percent(JSBI.BigInt(allowedSlippage), JSBI.BigInt(10000))
   const [txHash, setTxHash] = useState<string>('')
 
   // get formatted amounts
@@ -187,17 +185,17 @@ export default function AddLiquidity({
       return
     }
 
-    if (position && account && deadline && fractionalizedTolerance) {
+    if (position && account && deadline) {
       const { calldata, value } =
         hasExistingPosition && tokenId
           ? NonfungiblePositionManager.addCallParameters(position, {
               tokenId,
-              slippageTolerance: fractionalizedTolerance,
+              slippageTolerance: allowedSlippage,
               deadline: deadline.toString(),
               useEther: currencyA === ETHER || currencyB === ETHER,
             })
           : NonfungiblePositionManager.addCallParameters(position, {
-              slippageTolerance: fractionalizedTolerance,
+              slippageTolerance: allowedSlippage,
               recipient: account,
               deadline: deadline.toString(),
               useEther: currencyA === ETHER || currencyB === ETHER,

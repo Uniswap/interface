@@ -171,7 +171,7 @@ export function useBestV3TradeExactOut(
       state: isSyncing ? V3TradeState.SYNCING : V3TradeState.VALID,
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
-        tradeType: TradeType.EXACT_INPUT,
+        tradeType: TradeType.EXACT_OUTPUT,
         inputAmount:
           currencyIn instanceof Token
             ? new TokenAmount(currencyIn, amountIn.toString())

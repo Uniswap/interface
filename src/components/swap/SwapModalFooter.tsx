@@ -1,6 +1,6 @@
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Text } from 'rebass'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { ButtonError } from '../Button'
