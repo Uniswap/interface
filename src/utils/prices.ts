@@ -92,11 +92,12 @@ const IMPACT_TIERS = [
   ALLOWED_PRICE_IMPACT_LOW,
 ]
 
-export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3 | 4 {
+type WarningSeverity = 0 | 1 | 2 | 3 | 4
+export function warningSeverity(priceImpact: Percent | undefined): WarningSeverity {
   if (!priceImpact) return 4
-  let impact = IMPACT_TIERS.length
+  let impact: WarningSeverity = IMPACT_TIERS.length as WarningSeverity
   for (const impactLevel of IMPACT_TIERS) {
-    if (impactLevel.lessThan(priceImpact)) return impact as 0 | 1 | 2 | 3 | 4
+    if (impactLevel.lessThan(priceImpact)) return impact
     impact--
   }
   return 0
