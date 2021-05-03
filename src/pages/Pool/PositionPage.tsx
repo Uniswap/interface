@@ -23,7 +23,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9, Currency, CurrencyAmount, Percent, Fraction } from '@uniswap/sdk-core'
+import { WETH9, Currency, CurrencyAmount, Percent, Fraction, Price } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -104,11 +104,13 @@ function CurrentPriceCard({
   pool,
   currencyQuote,
   currencyBase,
+  ratio,
 }: {
   inverted?: boolean
   pool?: Pool | null
   currencyQuote?: Currency
   currencyBase?: Currency
+  ratio?: number
 }) {
   const { t } = useTranslation()
   if (!pool || !currencyQuote || !currencyBase) {
@@ -122,9 +124,32 @@ function CurrentPriceCard({
         <TYPE.label textAlign="center">
           {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)} {currencyQuote?.symbol}
         </TYPE.label>
+        {typeof ratio === 'number' && (
+          <TYPE.label textAlign="center">
+            Your position is <CurrencyLogo currency={currencyBase} size="12px" /> {ratio}% {currencyBase?.symbol} and{' '}
+            <CurrencyLogo currency={currencyQuote} size="12px" /> {100 - ratio}% {currencyQuote?.symbol}
+          </TYPE.label>
+        )}
       </AutoColumn>
     </LightCard>
   )
+}
+
+function getRatio(lower: Price, current: Price, upper: Price) {
+  try {
+    const a = Number.parseFloat(lower.toSignificant(15))
+    const b = Number.parseFloat(upper.toSignificant(15))
+    const c = Number.parseFloat(current.toSignificant(15))
+
+    const ratio = Math.floor(((Math.sqrt(a * b) - Math.sqrt(b * c)) / (c - Math.sqrt(b * c))) * 100)
+    if (ratio < 0 || ratio > 100) {
+      throw Error('Precision error')
+    }
+
+    return ratio
+  } catch {
+    return undefined
+  }
 }
 
 export function PositionPage({
@@ -178,6 +203,15 @@ export function PositionPage({
   // keep will need to be able to draw the range visualization
   // const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : false
   // const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : false
+
+  const ratio =
+    priceLower && pool && priceUpper
+      ? getRatio(
+          inverted ? priceUpper.invert() : priceLower,
+          pool.token0Price,
+          inverted ? priceLower.invert() : priceUpper
+        )
+      : undefined
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
@@ -513,6 +547,7 @@ export function PositionPage({
               pool={pool}
               currencyQuote={currencyQuote}
               currencyBase={currencyBase}
+              ratio={typeof ratio === 'number' && inRange ? (inverted ? 100 - ratio : ratio) : undefined}
             />
           </AutoColumn>
         </DarkCard>
