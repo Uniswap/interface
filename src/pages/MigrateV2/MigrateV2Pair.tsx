@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import { FACTORY_ADDRESS, JSBI } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
@@ -108,6 +108,9 @@ function V2PairMigration({
   const { t } = useTranslation()
   const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
+
+  const pairFactory = useSingleCallResult(pair, 'factory')
+  const isNotUniswap = pairFactory.result?.[0] !== FACTORY_ADDRESS
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
@@ -231,8 +234,8 @@ function V2PairMigration({
   const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(pairBalance, migratorAddress)
 
   const approve = useCallback(async () => {
-    gatherPermitSignature ? gatherPermitSignature() : approveManually ? approveManually() : null
-  }, [gatherPermitSignature, approveManually])
+    isNotUniswap ? approveManually() : gatherPermitSignature ? gatherPermitSignature() : approveManually()
+  }, [isNotUniswap, gatherPermitSignature, approveManually])
 
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
