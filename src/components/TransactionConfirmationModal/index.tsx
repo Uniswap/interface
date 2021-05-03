@@ -20,7 +20,7 @@ const Wrapper = styled.div`
   padding: 1rem;
 `
 const Section = styled(AutoColumn)<{ inline?: boolean }>`
-  padding: ${({ inline }) => (inline ? '0' : '24px')};
+  padding: ${({ inline }) => (inline ? '0' : '0')};
 `
 
 const BottomSection = styled(Section)`

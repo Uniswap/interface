@@ -81,10 +81,9 @@ export default function ConfirmSwapModal({
         trade={trade}
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
-        allowedSlippage={allowedSlippage}
       />
     ) : null
-  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   // text to show while loading
   const pendingText = `Swapping ${trade?.maximumAmountIn(allowedSlippage)?.toSignificant(6)} ${

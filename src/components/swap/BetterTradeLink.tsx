@@ -1,28 +1,14 @@
 import { stringify } from 'qs'
-import React, { useContext, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useLocation } from 'react-router'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import { Link } from 'react-router-dom'
+
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion, { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
+import { TYPE } from '../../theme'
+import { ButtonPrimary } from '../Button'
 
-import { StyledInternalLink } from '../../theme'
-import { YellowCard } from '../Card'
-import { AutoColumn } from '../Column'
-
-function VersionLinkContainer({ children }: { children: React.ReactNode }) {
-  const theme = useContext(ThemeContext)
-
-  return (
-    <YellowCard style={{ marginTop: '4px', padding: '0.5rem 0.5rem' }}>
-      <AutoColumn gap="sm" justify="center" style={{ alignItems: 'center', textAlign: 'center' }}>
-        <Text lineHeight="145.23%;" fontSize={14} fontWeight={400} color={theme.text1}>
-          {children}
-        </Text>
-      </AutoColumn>
-    </YellowCard>
-  )
-}
+import { Zap } from 'react-feather'
 
 export default function BetterTradeLink({
   version,
@@ -45,12 +31,24 @@ export default function BetterTradeLink({
   }, [location, search, version])
 
   return (
-    <VersionLinkContainer>
-      {otherTradeNonexistent ? 'This trade can be executed on ' : 'There is a better price for this trade on '}
-      <StyledInternalLink to={linkDestination}>
-        <b>Uniswap {version.toUpperCase()} ↗</b>
-      </StyledInternalLink>
-    </VersionLinkContainer>
+    <ButtonPrimary
+      as={Link}
+      to={linkDestination}
+      style={{
+        width: 'fit-content',
+        padding: '.2rem .5rem',
+        wordBreak: 'keep-all',
+        height: '24px',
+        marginLeft: '.25rem',
+      }}
+    >
+      <Zap size={12} style={{ marginRight: '0.25rem' }} />
+      <TYPE.small style={{ lineHeight: '120%' }} fontSize={12}>
+        {otherTradeNonexistent
+          ? `No liquidity! Click to trade with ${version.toUpperCase()}`
+          : `Get a better price on ${version.toUpperCase()}`}
+      </TYPE.small>
+    </ButtonPrimary>
   )
 }
 
@@ -70,11 +68,12 @@ export function DefaultVersionLink() {
   }, [location, search])
 
   return (
-    <VersionLinkContainer>
-      Showing {version.toUpperCase()} price.{' '}
-      <StyledInternalLink to={linkDestination}>
-        <b>Switch to Uniswap {DEFAULT_VERSION.toUpperCase()} ↗</b>
-      </StyledInternalLink>
-    </VersionLinkContainer>
+    <ButtonPrimary
+      as={Link}
+      to={linkDestination}
+      style={{ width: 'fit-content', marginTop: '4px', padding: '0.5rem 0.5rem' }}
+    >
+      Showing {version.toUpperCase()} price. <b>Switch to Uniswap {DEFAULT_VERSION.toUpperCase()} ↗</b>
+    </ButtonPrimary>
   )
 }

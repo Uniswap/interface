@@ -2,26 +2,26 @@ import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
 import { ThemeContext } from 'styled-components'
-import { ArrowDown } from 'react-feather'
+import { TYPE } from '../../theme'
 
 const Wrapper = styled(AutoColumn)`
-  margin-left: 8px;
+  margin-right: 8px;
   height: 100%;
 `
 
 const Grouping = styled(AutoColumn)`
   width: fit-content;
   padding: 4px;
-  background-color: ${({ theme }) => theme.bg2};
+  /* background-color: ${({ theme }) => theme.bg2}; */
   border-radius: 16px;
 `
 
 const Circle = styled.div<{ confirmed?: boolean; disabled?: boolean }>`
-  width: 100%;
-  height: 100%;
+  width: 48px;
+  height: 48px;
   background-color: ${({ theme, confirmed, disabled }) =>
     disabled ? theme.bg3 : confirmed ? theme.green1 : theme.primary1};
-  border-radius: 12px;
+  border-radius: 50%;
   color: ${({ theme, disabled }) => (disabled ? theme.text3 : theme.text1)};
   display: flex;
   align-items: center;
@@ -35,12 +35,6 @@ const CircleRow = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
-
-const StyledArrowDown = styled(ArrowDown)`
-  margin: 0.5rem;
-  min-height: 14px;
-  /* color: ${({ theme }) => theme.text1}; */
 `
 
 interface ProgressCirclesProps {
@@ -68,13 +62,13 @@ export default function ProgressCircles({ steps, disabled = false, ...rest }: Pr
           return (
             <CircleRow key={i}>
               <Circle confirmed={step} disabled={disabled || (!steps[i - 1] && i !== 0)}>
-                {step ? '✓' : i + 1}
+                {step ? '✓' : i + 1 + '.'}
               </Circle>
-              <StyledArrowDown size="16" color={theme.text3} />
+              <TYPE.main color={theme.text4}>|</TYPE.main>
             </CircleRow>
           )
         })}
-        <Circle disabled={disabled || !steps[steps.length - 1]}>{steps.length + 1}</Circle>
+        <Circle disabled={disabled || !steps[steps.length - 1]}>{steps.length + 1 + '.'}</Circle>
       </Grouping>
     </Wrapper>
   )
