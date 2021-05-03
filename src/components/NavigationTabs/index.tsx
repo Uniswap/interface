@@ -8,10 +8,7 @@ import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
 // import QuestionHelper from '../QuestionHelper'
 import Settings from '../Settings'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from 'state'
-import { resetMintState } from 'state/mint/actions'
-
+ 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
@@ -86,7 +83,6 @@ export function FindPoolTabs() {
 
 export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
   // reset states on back
-  const dispatch = useDispatch<AppDispatch>()
 
   return (
     <Tabs>
@@ -94,7 +90,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
         <HistoryLink
           to="/pool"
           onClick={() => {
-            adding && dispatch(resetMintState())
+            adding 
           }}
         >
           <StyledArrowLeft />

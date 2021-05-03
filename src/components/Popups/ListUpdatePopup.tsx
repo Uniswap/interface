@@ -1,12 +1,8 @@
 import { diffTokenLists, TokenList } from '@uniswap/token-lists'
 import React, { useCallback, useMemo } from 'react'
-import ReactGA from 'react-ga'
-import { useDispatch } from 'react-redux'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { AppDispatch } from '../../state'
 import { useRemovePopup } from '../../state/application/hooks'
-import { acceptListUpdate } from '../../state/lists/actions'
 import { TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { ButtonSecondary } from '../Button'
@@ -20,7 +16,6 @@ export const ChangesList = styled.ul`
 
 export default function ListUpdatePopup({
   popKey,
-  listUrl,
   oldList,
   newList,
   auto
@@ -33,18 +28,8 @@ export default function ListUpdatePopup({
 }) {
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
-  const dispatch = useDispatch<AppDispatch>()
 
-  const handleAcceptUpdate = useCallback(() => {
-    if (auto) return
-    ReactGA.event({
-      category: 'Lists',
-      action: 'Update List from Popup',
-      label: listUrl
-    })
-    dispatch(acceptListUpdate(listUrl))
-    removeThisPopup()
-  }, [auto, dispatch, listUrl, removeThisPopup])
+ 
 
   const { added: tokensAdded, changed: tokensChanged, removed: tokensRemoved } = useMemo(() => {
     return diffTokenLists(oldList.tokens, newList.tokens)
@@ -97,9 +82,7 @@ export default function ListUpdatePopup({
               </ChangesList>
             </div>
             <AutoRow>
-              <div style={{ flexGrow: 1, marginRight: 12 }}>
-                <ButtonSecondary onClick={handleAcceptUpdate}>Accept update</ButtonSecondary>
-              </div>
+           
               <div style={{ flexGrow: 1 }}>
                 <ButtonSecondary onClick={removeThisPopup}>Dismiss</ButtonSecondary>
               </div>
