@@ -2,7 +2,7 @@ import { Currency, ETHER as FUSE, Token, ChainId } from '@fuseio/fuse-swap-sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
-import FuseLogo from '../../assets/images/fuse-logo.png'
+import FuseLogo from '../../assets/svg/fuse-logo.svg'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo, useSelectedSwapTokenList } from '../../state/lists/hooks'
