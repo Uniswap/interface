@@ -1,8 +1,10 @@
-import invariant from 'tiny-invariant'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { JSBI, Percent, Router, SwapParameters, Trade } from '@ubeswap/sdk'
+import { MoolaRouterTrade } from 'components/swap/routing/hooks/useTrade'
 import { useMemo } from 'react'
+import invariant from 'tiny-invariant'
+
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getMoolaRouterContract, getRouterContract, isAddress, shortenAddress } from '../utils'
@@ -10,7 +12,6 @@ import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import useENS from './useENS'
 import useTransactionDeadline from './useTransactionDeadline'
-import { MoolaRouterTrade } from 'components/swap/routing/hooks/useTrade'
 
 export enum SwapCallbackState {
   INVALID,

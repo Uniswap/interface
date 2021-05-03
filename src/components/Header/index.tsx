@@ -13,8 +13,10 @@ import { useAggregateUbeBalance, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components'
 import { TYPE } from 'theme'
 import { ExternalLink } from 'theme/components'
-import LogoDark from '../../assets/svg/logo-dark.svg'
+import { CountUp } from 'use-count-up'
+
 import Logo from '../../assets/svg/logo.svg'
+import LogoDark from '../../assets/svg/logo-dark.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { YellowCard } from '../Card'
@@ -22,7 +24,6 @@ import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import UbeBalanceContent from './UbeBalanceContent'
-import { CountUp } from 'use-count-up'
 
 const HeaderFrame = styled.div`
   display: grid;

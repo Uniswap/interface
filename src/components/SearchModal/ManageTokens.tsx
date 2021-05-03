@@ -10,6 +10,7 @@ import { useRemoveUserAddedToken, useUserAddedTokens } from 'state/user/hooks'
 import styled from 'styled-components'
 import { ButtonText, ExternalLink, ExternalLinkIcon, TrashIcon, TYPE } from 'theme'
 import { isAddress } from 'utils'
+
 import useTheme from '../../hooks/useTheme'
 import { CurrencyModalView } from './CurrencySearchModal'
 import ImportRow from './ImportRow'

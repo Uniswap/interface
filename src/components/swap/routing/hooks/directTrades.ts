@@ -4,6 +4,7 @@ import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 import { useUserSingleHopOnly } from 'state/user/hooks'
 import { isTradeBetter } from 'utils/trades'
+
 import { BASES_TO_CHECK_TRADES_AGAINST, BETTER_TRADE_LESS_HOPS_THRESHOLD } from '../../../../constants'
 import { PairState, usePairs } from '../../../../data/Reserves'
 import { UbeswapTrade } from '../trade'

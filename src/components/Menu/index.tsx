@@ -1,7 +1,8 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Send, Info, MessageCircle, PieChart } from 'react-feather'
+import { BookOpen, Code, Info, MessageCircle, PieChart,Send } from 'react-feather'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'

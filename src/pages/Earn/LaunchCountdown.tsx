@@ -4,6 +4,7 @@ import React from 'react'
 import Countdown, { CountdownRenderProps } from 'react-countdown'
 import { STAKING_GENESIS } from 'state/stake/hooks'
 import styled from 'styled-components'
+
 import { Dial } from './Dial'
 
 const COUNTDOWN_LENGTH = 12 * 24 * 60 * 60 * 1000

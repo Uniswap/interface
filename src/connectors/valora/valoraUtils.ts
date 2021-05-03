@@ -16,6 +16,7 @@ import { parse } from 'url'
 // Gets the url redirected from Valora that is used to update the page
 async function waitForValoraResponse() {
   const localStorageKey = 'valoraRedirect'
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const value = localStorage.getItem(localStorageKey)
     if (value) {
@@ -69,6 +70,7 @@ export const awaitDappkitResponse = async <T extends DappKitResponse>(): Promise
           resolve((response as unknown) as T)
         }
         clearInterval(timer)
+        // eslint-disable-next-line no-empty
       } catch (e) {}
     }, 200)
   })

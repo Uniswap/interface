@@ -4,6 +4,7 @@ import React from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import useCUSDPrice from 'utils/useCUSDPrice'
+
 import tokenLogo from '../../assets/images/token-logo.png'
 import { UBE } from '../../constants'
 import { useTotalSupply } from '../../data/TotalSupply'

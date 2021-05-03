@@ -1,6 +1,7 @@
 import { darken } from 'polished'
 import React, { useContext, useRef, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
@@ -128,6 +129,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
       if (!Number.isNaN(valueAsIntFromRoundedFloat) && valueAsIntFromRoundedFloat < 5000) {
         setRawSlippage(valueAsIntFromRoundedFloat)
       }
+      // eslint-disable-next-line no-empty
     } catch {}
   }
 
@@ -139,6 +141,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
       if (!Number.isNaN(valueAsInt) && valueAsInt > 0) {
         setDeadline(valueAsInt)
       }
+      // eslint-disable-next-line no-empty
     } catch {}
   }
 
@@ -231,7 +234,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
         <RowFixed>
           <OptionCustom style={{ width: '80px' }} tabIndex={-1}>
             <Input
-              color={!!deadlineError ? 'red' : undefined}
+              color={deadlineError ? 'red' : undefined}
               onBlur={() => {
                 parseCustomDeadline((deadline / 60).toString())
               }}

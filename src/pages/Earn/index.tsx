@@ -2,6 +2,7 @@ import { JSBI } from '@ubeswap/sdk'
 import { partition } from 'lodash'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
+
 import { AutoColumn } from '../../components/Column'
 import PoolCard from '../../components/earn/PoolCard'
 import { CardNoise, CardSection, DataCard } from '../../components/earn/styled'

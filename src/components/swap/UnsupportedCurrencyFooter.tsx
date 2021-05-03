@@ -9,6 +9,7 @@ import { useActiveWeb3React } from 'hooks'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, ExternalLink, TYPE } from 'theme'
+
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 
 const DetailsFooter = styled.div<{ show: boolean }>`

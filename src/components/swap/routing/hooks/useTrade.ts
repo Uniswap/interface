@@ -10,6 +10,7 @@ import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
 import { useUserDisableSmartRouting, useUserSingleHopOnly } from 'state/user/hooks'
 import { isTradeBetter } from 'utils/trades'
+
 import { MoolaDirectTrade } from '../moola/MoolaDirectTrade'
 import { getMoolaDual } from '../moola/useMoola'
 import { useMoolaDirectRoute } from '../moola/useMoolaDirectRoute'

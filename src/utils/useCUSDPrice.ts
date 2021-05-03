@@ -1,5 +1,6 @@
 import { CELO, currencyEquals, cUSD, Price, Token } from '@ubeswap/sdk'
 import { useMemo } from 'react'
+
 import { usePairs } from '../data/Reserves'
 import { useActiveWeb3React } from '../hooks'
 

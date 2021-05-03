@@ -3,6 +3,7 @@ import { CELO, ChainId, currencyEquals, cUSD, Token } from '@ubeswap/sdk'
 import { CEUR, MCELO, MCEUR, MCUSD } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useMemo } from 'react'
+
 import { LendingPool, LendingPool__factory } from '../../../../generated'
 
 export const moolaLendingPools = {

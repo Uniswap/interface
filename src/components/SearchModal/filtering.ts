@@ -1,4 +1,5 @@
 import { Token } from '@ubeswap/sdk'
+
 import { isAddress } from '../../utils'
 
 export function filterTokens(tokens: Token[], search: string): Token[] {

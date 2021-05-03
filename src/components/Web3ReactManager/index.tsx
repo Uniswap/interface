@@ -3,6 +3,7 @@ import { useValora } from 'connectors/valora/useValora'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+
 import { network } from '../../connectors'
 import { NetworkContextName } from '../../constants'
 import { useEagerConnect, useInactiveListener } from '../../hooks'

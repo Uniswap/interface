@@ -1,5 +1,6 @@
-import { DialogContent, DialogOverlay } from '@reach/dialog'
 import '@reach/dialog/styles.css'
+
+import { DialogContent, DialogOverlay } from '@reach/dialog'
 import { transparentize } from 'polished'
 import React from 'react'
 import { isMobile } from 'react-device-detect'

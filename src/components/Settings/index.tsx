@@ -3,6 +3,7 @@ import { Settings, X } from 'react-feather'
 import { Text } from 'rebass'
 import { useUserAllowMoolaWithdrawal, useUserDisableSmartRouting, useUserMinApprove } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components'
+
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'

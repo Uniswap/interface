@@ -4,7 +4,7 @@
 import { ContractKit, newKit } from '@celo/contractkit'
 import { AddressValidation, LedgerWallet, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb'
-import { ChainId, CHAIN_INFO } from '@ubeswap/sdk'
+import { CHAIN_INFO,ChainId } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { ConnectorUpdate } from '@web3-react/types'
 import { NETWORK_CHAIN_ID } from 'connectors'

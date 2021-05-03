@@ -7,6 +7,7 @@ import { Link as HistoryLink, NavLink } from 'react-router-dom'
 import { AppDispatch } from 'state'
 import { resetMintState } from 'state/mint/actions'
 import styled from 'styled-components'
+
 import { RowBetween } from '../Row'
 // import QuestionHelper from '../QuestionHelper'
 import Settings from '../Settings'

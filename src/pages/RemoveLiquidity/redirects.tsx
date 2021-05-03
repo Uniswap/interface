@@ -1,5 +1,5 @@
 import React from 'react'
-import { RouteComponentProps, Redirect } from 'react-router-dom'
+import { Redirect,RouteComponentProps } from 'react-router-dom'
 
 const OLD_PATH_STRUCTURE = /^(0x[a-fA-F0-9]{40})-(0x[a-fA-F0-9]{40})$/
 

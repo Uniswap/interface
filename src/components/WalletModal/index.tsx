@@ -7,6 +7,7 @@ import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
 import { useValoraAccount } from 'state/user/hooks'
 import styled from 'styled-components'
+
 import CeloLogo from '../../assets/images/celo_logo.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected } from '../../connectors'

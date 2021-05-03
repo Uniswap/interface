@@ -1,6 +1,7 @@
 import { Token } from '@ubeswap/sdk'
 import React from 'react'
 import styled from 'styled-components'
+
 import CurrencyLogo from '../CurrencyLogo'
 
 const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`

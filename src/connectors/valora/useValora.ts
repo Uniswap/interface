@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import { valora } from 'connectors'
 import { useEffect } from 'react'
 import { useValoraAccount } from 'state/user/hooks'
+
 import { ValoraConnector } from './ValoraConnector'
 
 /**

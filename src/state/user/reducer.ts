@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+
 import { DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 import { updateVersion } from '../global/actions'
 import {
@@ -12,13 +13,13 @@ import {
   setValoraAccount,
   toggleURLWarning,
   updateMatchesDarkMode,
+  updateUserAllowMoolaWithdrawal,
   updateUserDarkMode,
   updateUserDeadline,
-  updateUserExpertMode,
-  updateUserSingleHopOnly,
-  updateUserMinApprove,
-  updateUserAllowMoolaWithdrawal,
   updateUserDisableSmartRouting,
+  updateUserExpertMode,
+  updateUserMinApprove,
+  updateUserSingleHopOnly,
   updateUserSlippageTolerance,
 } from './actions'
 

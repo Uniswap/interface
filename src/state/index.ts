@@ -1,15 +1,15 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { save, load } from 'redux-localstorage-simple'
+import { load,save } from 'redux-localstorage-simple'
 
 import application from './application/reducer'
-import { updateVersion } from './global/actions'
-import user from './user/reducer'
-import transactions from './transactions/reducer'
-import swap from './swap/reducer'
-import mint from './mint/reducer'
-import lists from './lists/reducer'
 import burn from './burn/reducer'
+import { updateVersion } from './global/actions'
+import lists from './lists/reducer'
+import mint from './mint/reducer'
 import multicall from './multicall/reducer'
+import swap from './swap/reducer'
+import transactions from './transactions/reducer'
+import user from './user/reducer'
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
 

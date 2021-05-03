@@ -1,6 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import React, { useState } from 'react'
 import styled from 'styled-components'
+
 import { useActiveWeb3React } from '../../hooks'
 import { useStakingContract } from '../../hooks/useContract'
 import { StakingInfo } from '../../state/stake/hooks'

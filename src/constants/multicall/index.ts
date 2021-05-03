@@ -1,4 +1,5 @@
 import { ChainId } from '@ubeswap/sdk'
+
 import MULTICALL_ABI from './abi.json'
 
 const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {

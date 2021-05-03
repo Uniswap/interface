@@ -1,5 +1,6 @@
-import { Pair, Token, TokenAmount, BestTradeOptions, Trade, Percent, currencyEquals } from '@ubeswap/sdk'
+import { BestTradeOptions, currencyEquals,Pair, Percent, Token, TokenAmount, Trade } from '@ubeswap/sdk'
 import { ONE_HUNDRED_PERCENT, ZERO_PERCENT } from 'constants/index'
+
 import { getMoolaDual } from '../moola/useMoola'
 import { UbeswapTrade } from '../trade'
 import { MoolaRouterTrade } from './useTrade'

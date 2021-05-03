@@ -1,6 +1,7 @@
 import { DappKitRequestTypes, DappKitResponseStatus } from '@celo/utils'
 import { ConnectorUpdate } from '@web3-react/types'
 import { MiniRpcProvider, NetworkConnector } from 'connectors/NetworkConnector'
+
 import { ValoraProvider } from './ValoraProvider'
 import { IValoraAccount, parseDappkitResponse } from './valoraUtils'
 

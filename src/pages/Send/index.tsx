@@ -6,6 +6,7 @@ import React, { useCallback } from 'react'
 import { Text } from 'rebass'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { getContract } from 'utils'
+
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonLight, ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'

@@ -3,6 +3,7 @@ import React, { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+
 import { StyledBalanceMaxMini } from './styleds'
 
 interface TradePriceProps {

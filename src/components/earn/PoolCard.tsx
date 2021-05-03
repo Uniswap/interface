@@ -3,6 +3,7 @@ import QuestionHelper, { LightQuestionHelper } from 'components/QuestionHelper'
 import { useStakingPoolValue } from 'pages/Earn/useStakingPoolValue'
 import React from 'react'
 import styled from 'styled-components'
+
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { useColor } from '../../hooks/useColor'
 import { StakingInfo } from '../../state/stake/hooks'

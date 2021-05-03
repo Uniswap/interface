@@ -1,6 +1,7 @@
 import { Token } from '@ubeswap/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
+
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'

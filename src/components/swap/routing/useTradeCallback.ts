@@ -2,8 +2,9 @@ import { ChainId, Trade } from '@ubeswap/sdk'
 import { useActiveWeb3React } from 'hooks'
 import { SwapCallbackState, useSwapCallback } from 'hooks/useSwapCallback'
 import { useCallback } from 'react'
-import { useDoTransaction } from '.'
+
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../../constants'
+import { useDoTransaction } from '.'
 import { executeMoolaDirectTrade } from './moola/executeMoolaDirectTrade'
 import { MoolaDirectTrade } from './moola/MoolaDirectTrade'
 

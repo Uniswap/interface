@@ -4,6 +4,7 @@ import React, { useCallback, useState } from 'react'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import styled from 'styled-components'
 import { CountUp } from 'use-count-up'
+
 import { ButtonEmpty, ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'

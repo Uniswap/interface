@@ -1,3 +1,5 @@
+import './i18n'
+
 import { ChainId } from '@ubeswap/sdk'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { NETWORK_CHAIN_ID } from 'connectors'
@@ -7,8 +9,8 @@ import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
+
 import { NetworkContextName } from './constants'
-import './i18n'
 import App from './pages/App'
 import store from './state'
 import ApplicationUpdater from './state/application/updater'
@@ -21,7 +23,7 @@ import getLibrary from './utils/getLibrary'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-if (!!window.celo) {
+if (window.celo) {
   window.celo.autoRefreshOnNetworkChange = false
 }
 

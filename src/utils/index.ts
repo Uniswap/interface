@@ -4,11 +4,12 @@ import { AddressZero } from '@ethersproject/constants'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { JSBI, Percent, Token, TokenAmount } from '@ubeswap/sdk'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS, UBESWAP_MOOLA_ROUTER_ADDRESS } from '../constants'
-import { TokenAddressMap } from '../state/lists/hooks'
-import UbeswapMoolaRouterABI from '../constants/abis/UbeswapMoolaRouter.json'
 import { IUniswapV2Router02, UbeswapMoolaRouter } from 'generated/index'
+
+import { ROUTER_ADDRESS, UBESWAP_MOOLA_ROUTER_ADDRESS } from '../constants'
+import IUniswapV2Router02ABI from '../constants/abis/IUniswapV2Router02.json'
+import UbeswapMoolaRouterABI from '../constants/abis/UbeswapMoolaRouter.json'
+import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {

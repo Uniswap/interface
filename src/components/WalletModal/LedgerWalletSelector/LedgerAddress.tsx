@@ -5,6 +5,7 @@ import { LedgerConnector, LedgerKit } from 'connectors/ledger/LedgerConnector'
 import React from 'react'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { shortenAddress } from 'utils'
+
 import { InfoCard } from '.'
 
 interface Props {

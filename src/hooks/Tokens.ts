@@ -2,6 +2,7 @@ import { parseBytes32String } from '@ethersproject/strings'
 import { currencyEquals, Token } from '@ubeswap/sdk'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
+
 import { filterTokens } from '../components/SearchModal/filtering'
 import { useCombinedActiveList, useCombinedInactiveList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'

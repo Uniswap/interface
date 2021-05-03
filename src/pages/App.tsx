@@ -2,6 +2,7 @@ import { DappKitResponseStatus } from '@celo/utils'
 import React, { Suspense } from 'react'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'

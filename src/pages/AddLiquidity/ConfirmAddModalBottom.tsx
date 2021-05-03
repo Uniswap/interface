@@ -1,6 +1,7 @@
 import { Fraction, Percent, Token, TokenAmount } from '@ubeswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
+
 import { ButtonPrimary } from '../../components/Button'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { RowBetween, RowFixed } from '../../components/Row'

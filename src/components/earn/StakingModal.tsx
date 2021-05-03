@@ -1,13 +1,15 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Pair, TokenAmount } from '@ubeswap/sdk'
+import Loader from 'components/Loader'
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
+
 import { useActiveWeb3React } from '../../hooks'
-import { useTransactionAdder } from '../../state/transactions/hooks'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract, useStakingContract } from '../../hooks/useContract'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
+import { useTransactionAdder } from '../../state/transactions/hooks'
 import { CloseIcon, TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { ButtonConfirmed, ButtonError } from '../Button'
@@ -17,7 +19,6 @@ import Modal from '../Modal'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import ProgressCircles from '../ProgressSteps'
 import { AutoRow, RowBetween } from '../Row'
-import Loader from 'components/Loader'
 
 const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;

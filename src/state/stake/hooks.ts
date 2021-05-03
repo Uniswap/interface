@@ -9,6 +9,7 @@ import { zip } from 'lodash'
 // Hooks
 import { useMemo } from 'react'
 import useCUSDPrice from 'utils/useCUSDPrice'
+
 import ERC_20_INTERFACE from '../../constants/abis/erc20'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 // Interfaces

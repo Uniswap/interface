@@ -6,6 +6,7 @@ import { ExternalLink as LinkIcon } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import { useValoraAccount } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components'
+
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants'

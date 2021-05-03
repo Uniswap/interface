@@ -1,8 +1,10 @@
 import moolaRouterAddresses from '@ubeswap/moola/deployments/router.mainnet.addresses.json'
 import { CELO, ChainId, cUSD, JSBI, Percent, Token } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+
 import { injected, ledger, valora } from '../connectors'
 import { UBE } from './tokens'
+
 export { UBE } from './tokens'
 
 export const ROUTER_ADDRESS = '0xE3D8bd6Aed4F159bc8000a9cD47CffDb95F96121'

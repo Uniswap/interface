@@ -15,6 +15,7 @@ import { useCombinedInactiveList } from 'state/lists/hooks'
 import { useAddUserToken } from 'state/user/hooks'
 import styled from 'styled-components'
 import { CloseIcon, TYPE } from 'theme'
+
 import { ExternalLink } from '../../theme/components'
 import { Checkbox, PaddedColumn } from './styleds'
 

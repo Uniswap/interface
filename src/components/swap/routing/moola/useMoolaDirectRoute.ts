@@ -2,6 +2,7 @@ import { ChainId, currencyEquals, JSBI, Pair, Route, Token, TokenAmount } from '
 import { useActiveWeb3React } from 'hooks/index'
 import { useMemo } from 'react'
 import { useUserAllowMoolaWithdrawal } from 'state/user/hooks'
+
 import { moolaDuals } from './useMoola'
 
 const BIG_NUMBER = JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(255))

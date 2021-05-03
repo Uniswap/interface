@@ -1,4 +1,5 @@
 import { Fraction, JSBI, Percent, TokenAmount, Trade } from '@ubeswap/sdk'
+
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,

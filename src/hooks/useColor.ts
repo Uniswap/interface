@@ -1,3 +1,5 @@
+import * as UbeswapDefaultList from '@ubeswap/default-token-list'
+import * as UbeswapExperimentalList from '@ubeswap/default-token-list/ubeswap-experimental.token-list.json'
 import { ChainId, Token } from '@ubeswap/sdk'
 import Vibrant from 'node-vibrant'
 import { shade } from 'polished'
@@ -5,8 +7,6 @@ import { useLayoutEffect, useState } from 'react'
 import { useTheme } from 'styled-components'
 import uriToHttp from 'utils/uriToHttp'
 import { hex } from 'wcag-contrast'
-import * as UbeswapDefaultList from '@ubeswap/default-token-list'
-import * as UbeswapExperimentalList from '@ubeswap/default-token-list/ubeswap-experimental.token-list.json'
 
 const images: Record<string, string> = {}
 

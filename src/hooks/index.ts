@@ -4,6 +4,7 @@ import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+
 import { injected, NETWORK_CHAIN_ID } from '../connectors'
 import { NetworkContextName } from '../constants'
 

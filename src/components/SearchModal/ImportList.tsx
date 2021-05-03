@@ -17,6 +17,7 @@ import { enableList, removeList } from 'state/lists/actions'
 import { useAllLists } from 'state/lists/hooks'
 import styled from 'styled-components'
 import { CloseIcon, TYPE } from 'theme'
+
 import { ExternalLink } from '../../theme/components'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { Checkbox, PaddedColumn, TextDot } from './styleds'

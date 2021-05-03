@@ -1,5 +1,6 @@
 import { currencyEquals, Trade } from '@ubeswap/sdk'
 import React, { useCallback, useMemo } from 'react'
+
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,

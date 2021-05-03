@@ -1,7 +1,9 @@
-import { useAllLists } from 'state/lists/hooks'
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
+import { useAllInactiveTokens } from 'hooks/Tokens'
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { useAllLists } from 'state/lists/hooks'
+
 import { useActiveWeb3React } from '../../hooks'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useInterval from '../../hooks/useInterval'
@@ -9,7 +11,6 @@ import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { AppDispatch } from '../index'
 import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
-import { useAllInactiveTokens } from 'hooks/Tokens'
 
 export default function Updater(): null {
   const { library } = useActiveWeb3React()
@@ -54,7 +55,7 @@ export default function Updater(): null {
           case VersionUpgrade.NONE:
             throw new Error('unexpected no version bump')
           case VersionUpgrade.PATCH:
-          case VersionUpgrade.MINOR:
+          case VersionUpgrade.MINOR: {
             const min = minVersionBump(list.current.tokens, list.pendingUpdate.tokens)
             // automatically update minor/patch as long as bump matches the min update
             if (bump >= min) {
@@ -65,7 +66,7 @@ export default function Updater(): null {
               )
             }
             break
-
+          }
           // update any active or inactive lists
           case VersionUpgrade.MAJOR:
             dispatch(acceptListUpdate(listUrl))

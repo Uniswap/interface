@@ -1,6 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { ChainId, parseNetwork } from '@ubeswap/sdk'
 import { InjectedConnector } from '@ubeswap/injected-connector'
+import { ChainId, parseNetwork } from '@ubeswap/sdk'
+
 import { LedgerConnector } from './ledger/LedgerConnector'
 import { NetworkConnector } from './NetworkConnector'
 import { ValoraConnector } from './valora/ValoraConnector'

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+
 import { useActivePopups } from '../../state/application/hooks'
 import { useURLWarningVisible } from '../../state/user/hooks'
 import { AutoColumn } from '../Column'

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
+
 import { AppDispatch } from '../../state'
 import { ApplicationModal, setOpenModal } from '../../state/application/actions'
 

@@ -5,6 +5,7 @@ import { LedgerKit } from 'connectors/ledger/LedgerConnector'
 import { darken } from 'polished'
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
+
 import { LedgerAddress } from './LedgerAddress'
 
 interface Props {

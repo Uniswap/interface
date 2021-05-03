@@ -2,6 +2,7 @@ import { getBlockscoutLink } from '@ubeswap/sdk'
 import React from 'react'
 import { CheckCircle, Triangle } from 'react-feather'
 import styled from 'styled-components'
+
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { ExternalLink } from '../../theme'

@@ -4,6 +4,7 @@ import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+
 import { AppDispatch } from '../../state'
 import { useRemovePopup } from '../../state/application/hooks'
 import { acceptListUpdate } from '../../state/lists/actions'
