@@ -1,10 +1,8 @@
 import { Pair } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import useUSDCPrice from '../../hooks/useUSDCPrice'
-import { tryParseAmount } from '../../state/swap/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
@@ -159,7 +157,7 @@ interface CurrencyInputPanelProps {
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
-  showFiatValue?: boolean
+  fiatValue?: CurrencyAmount
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
@@ -177,7 +175,7 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
-  showFiatValue = false,
+  fiatValue,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -194,14 +192,6 @@ export default function CurrencyInputPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
-
-  const price = useUSDCPrice(showFiatValue ? currency ?? undefined : undefined)
-
-  const fiatValueOfTypedAmount: CurrencyAmount | null = useMemo(() => {
-    if (!price) return null
-    const amount = tryParseAmount(value, currency ?? undefined)
-    return amount ? price.quote(amount) : null
-  }, [currency, price, value])
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -295,9 +285,8 @@ export default function CurrencyInputPanel({
                 </RowFixed>
               )}
 
-              <TYPE.body fontSize={14} color={fiatValueOfTypedAmount ? theme.text2 : theme.text4}>
-                {fiatValueOfTypedAmount ? '~' : ''}$
-                {fiatValueOfTypedAmount ? Number(fiatValueOfTypedAmount?.toSignificant(6)).toLocaleString('en') : '-'}
+              <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
+                {fiatValue ? '~' : ''}${fiatValue ? Number(fiatValue?.toSignificant(6)).toLocaleString('en') : '-'}
               </TYPE.body>
             </RowBetween>
           </FiatRow>

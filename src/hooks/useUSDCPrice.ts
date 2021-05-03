@@ -1,4 +1,4 @@
-import { ChainId, Currency, currencyEquals, Price, Token, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, currencyEquals, Price, Token, WETH9 } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { USDC } from '../constants'
@@ -74,4 +74,13 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
     }
     return undefined
   }, [chainId, currency, ethPair, ethPairState, usdcEthPair, usdcEthPairState, usdcPair, usdcPairState, weth, wrapped])
+}
+
+export function useUSDCValue(currencyAmount: CurrencyAmount | undefined | null) {
+  const price = useUSDCPrice(currencyAmount?.currency)
+
+  return useMemo(() => {
+    if (!price || !currencyAmount) return null
+    return price.quote(currencyAmount)
+  }, [currencyAmount, price])
 }
