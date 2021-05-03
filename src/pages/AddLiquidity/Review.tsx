@@ -12,8 +12,7 @@ import { PositionPreview } from 'components/PositionPreview'
 import { RangeBadge } from './styled'
 
 const Wrapper = styled.div`
-  padding: 20px;
-  min-width: 460px;
+  padding-top: 20px;
 `
 
 export const Badge = styled(Card)<{ inRange?: boolean }>`

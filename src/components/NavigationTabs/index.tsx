@@ -11,6 +11,8 @@ import Settings from '../Settings'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { resetMintState } from 'state/mint/actions'
+import { TYPE } from 'theme'
+import useTheme from 'hooks/useTheme'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -85,6 +87,8 @@ export function FindPoolTabs({ origin }: { origin: string }) {
 }
 
 export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+  const theme = useTheme()
+
   // reset states on back
   const dispatch = useDispatch<AppDispatch>()
 
@@ -97,9 +101,11 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
             adding && dispatch(resetMintState())
           }}
         >
-          <StyledArrowLeft />
+          <StyledArrowLeft stroke={theme.text2} opacity="0.6" />
         </HistoryLink>
-        <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
+        <TYPE.black fontWeight={500} fontSize={16} style={{ opacity: '0.6' }}>
+          {creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}
+        </TYPE.black>
         <Settings />
       </RowBetween>
     </Tabs>

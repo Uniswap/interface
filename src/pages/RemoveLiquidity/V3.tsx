@@ -1,15 +1,15 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Redirect, RouteComponentProps, Link } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import AppBody from '../AppBody'
 import { BigNumber } from '@ethersproject/bignumber'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import Slider from 'components/Slider'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import TransactionConfirmationModal from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { AutoColumn } from 'components/Column'
-import { ButtonConfirmed, ButtonText } from 'components/Button'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
 import { Text } from 'rebass'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -23,7 +23,6 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { WETH9, CurrencyAmount } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
-import styled from 'styled-components'
 import { Wrapper, SmallMaxButton } from './styled'
 import Loader from 'components/Loader'
 import { useToken } from 'hooks/Tokens'
@@ -33,12 +32,10 @@ import { RangeBadge } from 'pages/AddLiquidity/styled'
 import { Break } from 'components/earn/styled'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { calculateGasMargin } from 'utils'
+import useTheme from 'hooks/useTheme'
+import { AddRemoveTabs } from 'components/NavigationTabs'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
-
-const UnstyledLink = styled(Link)`
-  text-decoration: none;
-`
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3({
@@ -63,7 +60,7 @@ export default function RemoveLiquidityV3({
 }
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
-
+  const theme = useTheme()
   const { account, chainId, library } = useActiveWeb3React()
 
   // currencies from position
@@ -98,7 +95,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
   const burn = useCallback(async () => {
-    setShowConfirm(true)
     setAttemptingTxn(true)
     if (
       !positionManager ||
@@ -113,7 +109,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !liquidityPercentage ||
       !library
     ) {
-      setShowConfirm(false)
       return
     }
 
@@ -165,7 +160,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           })
       })
       .catch((error) => {
-        setShowConfirm(false)
         setAttemptingTxn(false)
         console.error(error)
       })
@@ -200,6 +194,67 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     currency0?.symbol
   } and ${liquidityValue1?.toSignificant(6)} ${currency1?.symbol}`
 
+  function modalHeader() {
+    return (
+      <AutoColumn gap={'sm'} style={{ marginTop: '20px' }}>
+        <RowBetween align="flex-end">
+          <Text fontSize={16} fontWeight={500}>
+            {currency0?.symbol}:
+          </Text>
+          <RowFixed>
+            <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+              {liquidityValue0 && <FormattedCurrencyAmount currencyAmount={liquidityValue0} />}
+            </Text>
+            <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
+          </RowFixed>
+        </RowBetween>
+        <RowBetween align="flex-end">
+          <Text fontSize={16} fontWeight={500}>
+            {currency1?.symbol}:
+          </Text>
+          <RowFixed>
+            <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+              {liquidityValue1 && <FormattedCurrencyAmount currencyAmount={liquidityValue1} />}
+            </Text>
+            <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
+          </RowFixed>
+        </RowBetween>
+        {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
+          <>
+            <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'8px 0 0 0'}>
+              {`You will also collect fees earned from this position.`}
+            </TYPE.italic>
+            <RowBetween>
+              <Text fontSize={16} fontWeight={500}>
+                {currency0?.symbol} from fees:
+              </Text>
+              <RowFixed>
+                <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
+                </Text>
+                <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
+              </RowFixed>
+            </RowBetween>
+            <RowBetween>
+              <Text fontSize={16} fontWeight={500}>
+                {currency1?.symbol} from fees:
+              </Text>
+              <RowFixed>
+                <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
+                </Text>
+                <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
+              </RowFixed>
+            </RowBetween>
+          </>
+        ) : null}
+        <ButtonPrimary mt="16px" onClick={burn}>
+          Remove
+        </ButtonPrimary>
+      </AutoColumn>
+    )
+  }
+
   return (
     <AutoColumn>
       <TransactionConfirmationModal
@@ -207,19 +262,17 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         onDismiss={handleDismissConfirmation}
         attemptingTxn={attemptingTxn}
         hash={txnHash ?? ''}
-        content={() => <div />}
+        content={() => (
+          <ConfirmationModalContent
+            title={'Remove Liquidity'}
+            onDismiss={handleDismissConfirmation}
+            topContent={modalHeader}
+          />
+        )}
         pendingText={pendingText}
       />
-      <AutoRow marginBottom="20px">
-        <UnstyledLink to="pool">
-          <ButtonText opacity={'0.4'}>Pool</ButtonText>
-        </UnstyledLink>
-        <TYPE.label margin="0 10px" opacity={'0.4'}>
-          {' > '}
-        </TYPE.label>
-        <TYPE.label>Remove Liquidity</TYPE.label>
-      </AutoRow>
       <AppBody>
+        <AddRemoveTabs creating={false} adding={false} />
         <Wrapper>
           {position ? (
             <AutoColumn gap="lg">
@@ -308,8 +361,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               </LightCard>
               <div style={{ display: 'flex' }}>
                 <AutoColumn gap="12px" style={{ flex: '1' }}>
-                  <ButtonConfirmed confirmed={false} disabled={percent === 0 || !liquidityValue0} onClick={burn}>
-                    {error ?? 'Remove Liquidity'}
+                  <ButtonConfirmed
+                    confirmed={false}
+                    disabled={percent === 0 || !liquidityValue0}
+                    onClick={() => setShowConfirm(true)}
+                  >
+                    {error ?? 'Remove'}
                   </ButtonConfirmed>
                 </AutoColumn>
               </div>
