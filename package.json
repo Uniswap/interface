@@ -82,7 +82,7 @@
     "wcag-contrast": "^3.0.0"
   },
   "scripts": {
-    "build": "IS_CI=true CI='' npm run build:local",
+    "build": "IS_CI=true CI='' REACT_APP_VERCEL_ENV=\"$VERCEL_ENV\" REACT_APP_VERCEL_GIT_COMMIT_REF=\"$VERCEL_GIT_COMMIT_REF\" REACT_APP_VERCEL_GIT_COMMIT_SHA=\"$VERCEL_GIT_COMMIT_SHA\" npm run build:local",
     "build:local": "npm run typechain && craco build",
     "start": "HTTPS=true craco start",
     "clean": "rm -fr src/generated/",
@@ -125,6 +125,8 @@
     "@celo/wallet-ledger": "^1.0.2",
     "@craco/craco": "^6.1.2",
     "@ledgerhq/hw-transport-webusb": "^5.43.0",
+    "@sentry/react": "^6.3.5",
+    "@sentry/tracing": "^6.3.5",
     "@ubeswap/default-token-list": "^2.1.0",
     "@ubeswap/moola": "^0.2.0",
     "@ubeswap/sdk": "^2.0.0",
