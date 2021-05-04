@@ -124,6 +124,13 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'EURS',
       name: 'STASIS EURS Token',
       decimals: 2
+    },
+    {
+      chainId: 1,
+      address: '0xff56Cc6b1E6dEd347aA0B7676C85AB0B3D08B0FA',
+      symbol: 'ORBS',
+      name: 'ORBS',
+      decimals: 18
     }
   ],
   version: {
