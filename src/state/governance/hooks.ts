@@ -39,7 +39,7 @@ export enum ProposalState {
   Succeeded,
   Queued,
   Expired,
-  Executed
+  Executed,
 }
 
 // get count of all proposals made
