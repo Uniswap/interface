@@ -286,14 +286,8 @@ export default function CurrencyInputPanel({
                       : '-'}
                   </TYPE.body>
                   {showMaxButton && selectedCurrencyBalance ? (
-                    <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
-                      (Max)
-                    </StyledBalanceMax>
-                  ) : (
-                    <StyledBalanceMax disabled={!showMaxButton} onClick={onMax}>
-                      {''}
-                    </StyledBalanceMax>
-                  )}
+                    <StyledBalanceMax onClick={onMax}>(Max)</StyledBalanceMax>
+                  ) : null}
                 </RowFixed>
               )}
 
