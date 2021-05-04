@@ -201,7 +201,7 @@ export default function CurrencyInputPanel({
     if (priceImpact.lessThan('0')) return theme.green1
     const severity = warningSeverity(priceImpact)
     if (severity < 1) return undefined
-    if (severity < 2) return theme.yellow1
+    if (severity < 3) return theme.yellow1
     return theme.red1
   }, [priceImpact, theme.green1, theme.red1, theme.yellow1])
 
@@ -300,7 +300,7 @@ export default function CurrencyInputPanel({
               <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
                 {fiatValue ? '~' : ''}${fiatValue ? Number(fiatValue?.toSignificant(6)).toLocaleString('en') : '-'}
                 {priceImpact ? (
-                  <span style={{ color: priceImpactColor }}> ({priceImpact.multiply(-1).toSignificant(3)}%)</span>
+                  <span style={{ color: priceImpactColor }}> ({priceImpact.multiply(-100).toSignificant(3)}%)</span>
                 ) : null}
               </TYPE.body>
             </RowBetween>

@@ -24,7 +24,7 @@ describe('application reducer', () => {
       expect(typeof list[0].key).toEqual('string')
       expect(list[0].show).toEqual(true)
       expect(list[0].content).toEqual({ txn: { hash: 'abc', summary: 'test', success: true } })
-      expect(list[0].removeAfterMs).toEqual(15000)
+      expect(list[0].removeAfterMs).toEqual(25000)
     })
 
     it('replaces any existing popups with the same key', () => {
@@ -35,7 +35,7 @@ describe('application reducer', () => {
       expect(list[0].key).toEqual('abc')
       expect(list[0].show).toEqual(true)
       expect(list[0].content).toEqual({ txn: { hash: 'def', summary: 'test2', success: false } })
-      expect(list[0].removeAfterMs).toEqual(15000)
+      expect(list[0].removeAfterMs).toEqual(25000)
     })
   })
 
