@@ -103,18 +103,19 @@ interface ListItemProps {
 export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps) => {
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
 
-  const percentToken0 = pool
+  const realPercentToken0 = pool
     ? pool.reserve0
         .divide(pool.virtualReserve0)
         .multiply('100')
         .divide(pool.reserve0.divide(pool.virtualReserve0).add(pool.reserve1.divide(pool.virtualReserve1)))
-        .toSignificant(2) ?? '.'
-    : '50'
-  const percentToken1 = pool
-    ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
-    : '50'
+    : new Fraction(JSBI.BigInt(50))
 
-  const isWarning = parseFloat(percentToken0) < 10 || parseFloat(percentToken1) < 10
+  const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
+
+  const percentToken0 = realPercentToken0.toSignificant(5)
+  const percentToken1 = realPercentToken1.toSignificant(5)
+
+  const isWarning = realPercentToken0.lessThan(JSBI.BigInt(10)) || realPercentToken1.lessThan(JSBI.BigInt(10))
 
   // Shorten address with 0x + 3 characters at start and end
   const shortenPoolAddress = shortenAddress(pool?.liquidityToken.address, 3)
@@ -227,18 +228,19 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
 
-  const percentToken0 = pool
+  const realPercentToken0 = pool
     ? pool.reserve0
         .divide(pool.virtualReserve0)
         .multiply('100')
         .divide(pool.reserve0.divide(pool.virtualReserve0).add(pool.reserve1.divide(pool.virtualReserve1)))
-        .toSignificant(2) ?? '.'
-    : '50'
-  const percentToken1 = pool
-    ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
-    : '50'
+    : new Fraction(JSBI.BigInt(50))
 
-  const isWarning = parseFloat(percentToken0) < 10 || parseFloat(percentToken1) < 10
+  const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
+
+  const percentToken0 = realPercentToken0.toSignificant(5)
+  const percentToken1 = realPercentToken1.toSignificant(5)
+
+  const isWarning = realPercentToken0.lessThan(JSBI.BigInt(10)) || realPercentToken1.lessThan(JSBI.BigInt(10))
 
   // Shorten address with 0x + 3 characters at start and end
   const shortenPoolAddress = shortenAddress(pool?.liquidityToken.address, 3)
