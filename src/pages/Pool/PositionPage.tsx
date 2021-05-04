@@ -222,14 +222,9 @@ export function PositionPage({
   const currencyBase = inverted ? currency1 : currency0
 
   // check if price is within range
-  const inRange: boolean =
-    pool && typeof tickLower === 'number' && typeof tickUpper === 'number'
-      ? pool.tickCurrent >= tickLower && pool.tickCurrent < tickUpper
-      : false
-
-  // keep will need to be able to draw the range visualization
-  // const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : false
-  // const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : false
+  const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : undefined
+  const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : undefined
+  const inRange: boolean = typeof below === 'boolean' && typeof above === 'boolean' ? !below && !above : false
 
   const ratio = useMemo(() => {
     return priceLower && pool && priceUpper
@@ -616,10 +611,17 @@ export function PositionPage({
                       {priceLower?.toSignificant(4)} {currencyQuote?.symbol}
                     </TYPE.label>
                   </RowFixed>
-                  <TYPE.subHeader color={theme.text3} textAlign="center">
-                    Your position will be <CurrencyLogo currency={inverted ? currency1 : currency0} size="12px" /> 100%{' '}
-                    {inverted ? currency1?.symbol : currency0?.symbol} at this price
-                  </TYPE.subHeader>
+                  {(inverted ? below : above) ? (
+                    <TYPE.subHeader color={theme.text3} textAlign="center">
+                      Your position will be <CurrencyLogo currency={inverted ? currency1 : currency0} size="12px" />{' '}
+                      100% {inverted ? currency1?.symbol : currency0?.symbol} at this price
+                    </TYPE.subHeader>
+                  ) : (
+                    <TYPE.label textAlign="center">
+                      Your position is <CurrencyLogo currency={inverted ? currency1 : currency0} size="12px" /> 100%{' '}
+                      {inverted ? currency1?.symbol : currency0?.symbol}
+                    </TYPE.label>
+                  )}
                 </AutoColumn>
               </LightCard>
 
@@ -632,10 +634,17 @@ export function PositionPage({
                       {priceUpper?.toSignificant(4)} {currencyQuote?.symbol}
                     </TYPE.label>
                   </RowFixed>
-                  <TYPE.subHeader color={theme.text3} textAlign="center">
-                    Your position will be <CurrencyLogo currency={inverted ? currency0 : currency1} size="12px" /> 100%{' '}
-                    {inverted ? currency0?.symbol : currency1?.symbol} at this price
-                  </TYPE.subHeader>
+                  {(inverted ? above : below) ? (
+                    <TYPE.subHeader color={theme.text3} textAlign="center">
+                      Your position will be <CurrencyLogo currency={inverted ? currency0 : currency1} size="12px" />{' '}
+                      100% {inverted ? currency0?.symbol : currency1?.symbol} at this price
+                    </TYPE.subHeader>
+                  ) : (
+                    <TYPE.label textAlign="center">
+                      Your position is <CurrencyLogo currency={inverted ? currency0 : currency1} size="12px" /> 100%{' '}
+                      {inverted ? currency0?.symbol : currency1?.symbol}
+                    </TYPE.label>
+                  )}
                 </AutoColumn>
               </LightCard>
             </RowBetween>
