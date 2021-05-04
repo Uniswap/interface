@@ -20,6 +20,14 @@ import CTACards from './CTACards'
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
   width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    max-width: 800px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    max-width: 500px;
+  `};
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.text2};

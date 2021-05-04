@@ -5,10 +5,22 @@ import { Link } from 'react-router-dom'
 
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import useToggledVersion, { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
-import { TYPE } from '../../theme'
+import { HideSmall, TYPE, SmallOnly } from '../../theme'
 import { ButtonPrimary } from '../Button'
-
+import styled from 'styled-components'
 import { Zap } from 'react-feather'
+
+const ResponsiveButton = styled(ButtonPrimary)`
+  width: fit-content;
+  padding: 0.2rem 0.5rem;
+  wordbreak: keep-all;
+  height: 24px;
+  marginleft: 0.25rem;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+     padding: 4px;
+    border-radius: 8px;
+  `};
+`
 
 export default function BetterTradeLink({
   version,
@@ -31,24 +43,23 @@ export default function BetterTradeLink({
   }, [location, search, version])
 
   return (
-    <ButtonPrimary
-      as={Link}
-      to={linkDestination}
-      style={{
-        width: 'fit-content',
-        padding: '.2rem .5rem',
-        wordBreak: 'keep-all',
-        height: '24px',
-        marginLeft: '.25rem',
-      }}
-    >
+    <ResponsiveButton as={Link} to={linkDestination}>
       <Zap size={12} style={{ marginRight: '0.25rem' }} />
-      <TYPE.small style={{ lineHeight: '120%' }} fontSize={12}>
-        {otherTradeNonexistent
-          ? `No liquidity! Click to trade with ${version.toUpperCase()}`
-          : `Get a better price on ${version.toUpperCase()}`}
-      </TYPE.small>
-    </ButtonPrimary>
+      <HideSmall>
+        <TYPE.small style={{ lineHeight: '120%' }} fontSize={12}>
+          {otherTradeNonexistent
+            ? `No liquidity! Click to trade with ${version.toUpperCase()}`
+            : `Get a better price on ${version.toUpperCase()}`}
+        </TYPE.small>
+      </HideSmall>
+      <SmallOnly>
+        <TYPE.small style={{ lineHeight: '120%' }} fontSize={12}>
+          {otherTradeNonexistent
+            ? `No liquidity! Click to trade with ${version.toUpperCase()}`
+            : `Better ${version.toUpperCase()} price`}
+        </TYPE.small>
+      </SmallOnly>
+    </ResponsiveButton>
   )
 }
 

@@ -399,6 +399,10 @@ const CheckboxWrapper = styled.div`
   right: 10px;
 `
 
+const ResponsiveCheck = styled(Check)`
+  size: 13px;
+`
+
 export function ButtonRadioChecked({ active = false, children, ...rest }: { active?: boolean } & ButtonProps) {
   const theme = useTheme()
 
@@ -416,7 +420,7 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
             {children}
             <CheckboxWrapper>
               <Circle>
-                <Check size={13} stroke={theme.white} />
+                <ResponsiveCheck size={13} stroke={theme.white} />
               </Circle>
             </CheckboxWrapper>
           </RowBetween>

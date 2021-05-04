@@ -6,6 +6,13 @@ import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { TYPE } from 'theme'
 import { RowBetween } from 'components/Row'
 import { ButtonRadioChecked } from 'components/Button'
+import styled from 'styled-components'
+
+const ResponsiveText = styled(TYPE.label)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 12px;
+  `};
+`
 
 export default function FeeSelector({
   disabled = false,
@@ -29,7 +36,7 @@ export default function FeeSelector({
             onClick={() => handleFeePoolSelect(FeeAmount.LOW)}
           >
             <AutoColumn gap="sm" justify="flex-start">
-              <TYPE.label>0.05% {t('fee')}</TYPE.label>
+              <ResponsiveText>0.05% {t('fee')}</ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                 Optimized for stable assets.
               </TYPE.main>
@@ -41,7 +48,7 @@ export default function FeeSelector({
             onClick={() => handleFeePoolSelect(FeeAmount.MEDIUM)}
           >
             <AutoColumn gap="sm" justify="flex-start">
-              <TYPE.label>0.3% {t('fee')}</TYPE.label>
+              <ResponsiveText>0.3% {t('fee')}</ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                 The classic Uniswap pool fee.
               </TYPE.main>
@@ -53,7 +60,7 @@ export default function FeeSelector({
             onClick={() => handleFeePoolSelect(FeeAmount.HIGH)}
           >
             <AutoColumn gap="sm" justify="flex-start">
-              <TYPE.label>1% {t('fee')}</TYPE.label>
+              <ResponsiveText>1% {t('fee')}</ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                 Best for volatile assets.
               </TYPE.main>

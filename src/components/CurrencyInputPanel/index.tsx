@@ -246,7 +246,6 @@ export default function CurrencyInputPanel({
           </CurrencySelect>
           {!hideInput && (
             <>
-              {' '}
               <NumericalInput
                 className="token-amount-input"
                 value={value}
