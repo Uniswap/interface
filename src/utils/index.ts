@@ -119,4 +119,3 @@ export function supportedChainId(chainId: number): ChainId | undefined {
 export function formattedFeeAmount(feeAmount: FeeAmount): number {
   return feeAmount / 10000
 }
-export { computeFiatValuePriceImpact } from './computeFiatValuePriceImpact'
