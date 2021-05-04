@@ -16,4 +16,7 @@ export interface Farm extends FarmConfig {
     stakedBalance: BigNumber
     earnings: BigNumber
   }
+  id: string
+  token0: any
+  token1: any
 }
