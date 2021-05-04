@@ -4,7 +4,7 @@ import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
-
+import { Moon, Sun } from 'react-feather'
 import styled from 'styled-components'
 
 import Logo from '../../assets/svg/logo.svg'
@@ -272,7 +272,7 @@ export const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.bg2};
   margin-left: 8px;
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -305,7 +305,7 @@ export default function Header() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
-  const [darkMode] = useDarkModeManager()
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -381,6 +381,9 @@ export default function Header() {
           </AccountElement>
         </HeaderElement>
         <HeaderElementWrap>
+          <StyledMenuButton onClick={() => toggleDarkMode()}>
+            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+          </StyledMenuButton>
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>
