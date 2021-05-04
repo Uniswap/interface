@@ -168,9 +168,13 @@ function getRatio(lower: Price, current: Price, upper: Price) {
     const b = Number.parseFloat(upper.toSignificant(15))
     const c = Number.parseFloat(current.toSignificant(15))
 
-    const ratio = Math.floor(((Math.sqrt(a * b) - Math.sqrt(b * c)) / (c - Math.sqrt(b * c))) * 100)
+    let ratio = Math.floor(((Math.sqrt(a * b) - Math.sqrt(b * c)) / (c - Math.sqrt(b * c))) * 100)
+    if (ratio > 100) {
+      ratio -= 100
+    }
+
     if (ratio < 0 || ratio > 100) {
-      throw Error('Precision error')
+      throw Error('Out of range')
     }
 
     return ratio
