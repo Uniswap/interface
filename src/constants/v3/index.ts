@@ -1,43 +1,29 @@
 import { ChainId } from '@uniswap/sdk-core'
+import gorli from './gorli.json'
+import ropsten from './ropsten.json'
+import rinkeby from './rinkeby.json'
+import kovan from './kovan.json'
+import mainnet from './mainnet.json'
 
-export const V3_CORE_FACTORY_ADDRESSES: { [chainId in ChainId]?: string } = {
-  [ChainId.ROPSTEN]: '0x273Edaa13C845F605b5886Dd66C89AB497A6B17b',
-  [ChainId.KOVAN]: '0x74e838ECf981Aaef2523aa5B666175DA319D8D31',
-  [ChainId.RINKEBY]: '0x815BCC87613315327E04e4A3b7c96a79Ae80760c',
-  [ChainId.GÖRLI]: '0x288be1A33bcdfA9A09cCa95CA1eD628A5294e82c',
+function constructAddressMap(
+  key: keyof typeof gorli | keyof typeof ropsten | keyof typeof rinkeby | keyof typeof mainnet
+): { [chainId in ChainId]?: string } {
+  return {
+    [ChainId.ROPSTEN]: ropsten[key],
+    [ChainId.KOVAN]: kovan[key],
+    [ChainId.RINKEBY]: rinkeby[key],
+    [ChainId.GÖRLI]: gorli[key],
+  }
 }
 
-export const QUOTER_ADDRESSES: { [chainId in ChainId]?: string } = {
-  [ChainId.ROPSTEN]: '0x2F9e608FD881861B8916257B76613Cb22EE0652c',
-  [ChainId.KOVAN]: '0xE7F35392a478CaAF3a8dA8E777078Fa3aBe0BaEF',
-  [ChainId.RINKEBY]: '0x49B91cc934D63ad7c7FC1abA74B7AebCA413deaD',
-  [ChainId.GÖRLI]: '0xf5Be6D3a408F06F00F2d6D4BB923fa9b695916f5',
-}
+export const V3_CORE_FACTORY_ADDRESSES = constructAddressMap('v3CoreFactoryAddress')
 
-export const TICK_LENS_ADDRESSES: { [chainId in ChainId]?: string } = {
-  [ChainId.ROPSTEN]: '0xd6852c52B9c97cBfb7e79B6ab4407AA20Ba31439',
-  [ChainId.KOVAN]: '0xe2CE8F6cF0bc1c32605beaD58577ab1f08e086e6',
-  [ChainId.RINKEBY]: '0xf5Be6D3a408F06F00F2d6D4BB923fa9b695916f5',
-  [ChainId.GÖRLI]: '0x6744951a0DD149A31Df7B6d42eA69607eD692029',
-}
+export const QUOTER_ADDRESSES = constructAddressMap('quoterAddress')
 
-export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES: { [chainId in ChainId]?: string } = {
-  [ChainId.ROPSTEN]: '0x74e838ECf981Aaef2523aa5B666175DA319D8D31',
-  [ChainId.KOVAN]: '0x815BCC87613315327E04e4A3b7c96a79Ae80760c',
-  [ChainId.RINKEBY]: '0x3255160392215494bee8B5aBf8C4C40965d0986C',
-  [ChainId.GÖRLI]: '0xa1944Bb261511bB15Ce8CC054d996B3cFfA7f4d6',
-}
+export const TICK_LENS_ADDRESSES = constructAddressMap('tickLensAddress')
 
-export const SWAP_ROUTER_ADDRESSES: { [chainId in ChainId]?: string } = {
-  [ChainId.ROPSTEN]: '0x03782388516e94FcD4c18666303601A12Aa729Ea',
-  [ChainId.KOVAN]: '0x8a0B62Fbcb1B862BbF1ad31c26a72b7b746EdFC1',
-  [ChainId.RINKEBY]: '0x483B27F0cF5AF935371d52A7F810799cD141E3dc',
-  [ChainId.GÖRLI]: '0x49B91cc934D63ad7c7FC1abA74B7AebCA413deaD',
-}
+export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = constructAddressMap('nonfungibleTokenPositionManagerAddress')
 
-export const V3_MIGRATOR_ADDRESSES: { [chainId in ChainId]?: string } = {
-  [ChainId.ROPSTEN]: '0x764a2557D2af049bd026D382eEE05fBC7C5425E4',
-  [ChainId.KOVAN]: '0x6744951a0DD149A31Df7B6d42eA69607eD692029',
-  [ChainId.RINKEBY]: '0x94D53BC4cb886eDDb9C0426DFc1edB581D2C98B4',
-  [ChainId.GÖRLI]: '0x3255160392215494bee8B5aBf8C4C40965d0986C',
-}
+export const SWAP_ROUTER_ADDRESSES = constructAddressMap('swapRouter')
+
+export const V3_MIGRATOR_ADDRESSES = constructAddressMap('v3MigratorAddress')
