@@ -95,7 +95,7 @@ const DoubleArrow = styled.span`
 `
 
 const RangeText = styled.span`
-  background-color: ${({ theme }) => theme.bg2};
+  /* background-color: ${({ theme }) => theme.bg2}; */
   padding: 0.25rem 0.5rem;
   border-radius: 8px;
 `

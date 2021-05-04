@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react'
-import { OutlineCard } from 'components/Card'
+import { LightCard } from 'components/Card'
 import { RowBetween } from 'components/Row'
 import { Input as NumericalInput } from '../NumericalInput'
 import styled, { keyframes } from 'styled-components'
 import { TYPE } from 'theme'
 import { AutoColumn } from 'components/Column'
-import { ButtonSecondary } from 'components/Button'
+import { ButtonPrimary } from 'components/Button'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { formattedFeeAmount } from 'utils'
 
@@ -23,28 +23,31 @@ const pulse = (color: string) => keyframes`
   }
 `
 
-const SmallButton = styled(ButtonSecondary)`
-  background-color: ${({ theme }) => theme.bg2};
+const SmallButton = styled(ButtonPrimary)`
+  /* background-color: ${({ theme }) => theme.bg2}; */
   border-radius: 8px;
-  padding: 4px;
+  padding: 4px 6px;
   width: 48%;
 `
 
-const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
+const FocusedOutlineCard = styled(LightCard)<{ active?: boolean; pulsing?: boolean }>`
   border-color: ${({ active, theme }) => active && theme.blue1};
   padding: 12px;
-
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
-  background-color: transparent;
-  text-align: left;
-  margin-right: 2px;
+  /* background-color: ${({ theme }) => theme.bg0}; */
+  text-align: center;
+  margin-right: 12px;
+  width: 100%;
+  font-weight: 500;
 `
 
-const ContentWrapper = styled(RowBetween)`
-  width: 92%;
+const InputTitle = styled(TYPE.small)`
+  color: ${({ theme }) => theme.text2};
+  font-size: 12px;
+  font-weight: 500;
 `
 
 interface StepCounterProps {
@@ -56,6 +59,9 @@ interface StepCounterProps {
   label?: string
   width?: string
   locked?: boolean // disable input
+  title: string
+  tokenA: string | undefined
+  tokenB: string | undefined
 }
 
 const StepCounter = ({
@@ -63,10 +69,12 @@ const StepCounter = ({
   decrement,
   increment,
   feeAmount,
-  label,
   width,
   locked,
   onUserInput,
+  title,
+  tokenA,
+  tokenB,
 }: StepCounterProps) => {
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
@@ -117,30 +125,33 @@ const StepCounter = ({
 
   return (
     <FocusedOutlineCard pulsing={pulsing} active={active} onFocus={handleOnFocus} onBlur={handleOnBlur} width={width}>
-      <AutoColumn gap="md">
-        <ContentWrapper>
-          <StyledInput
-            className="rate-input-0"
-            value={localValue}
-            fontSize="18px"
-            disabled={locked}
-            onUserInput={(val) => {
-              setLocalValue(val)
-            }}
-          />
-        </ContentWrapper>
-        {label && <TYPE.label fontSize="12px">{label}</TYPE.label>}
-        {!locked ? (
-          <RowBetween>
-            <SmallButton onClick={handleDecrement}>
-              <TYPE.main fontSize="12px">-{feeAmountFormatted}%</TYPE.main>
-            </SmallButton>
-            <SmallButton onClick={handleIncrement}>
-              <TYPE.main fontSize="12px">+{feeAmountFormatted}%</TYPE.main>
-            </SmallButton>
-          </RowBetween>
-        ) : null}
+      <AutoColumn gap="6px" style={{ marginBottom: '12px' }}>
+        <InputTitle fontSize={12} textAlign="center">
+          {title}
+        </InputTitle>
+        <StyledInput
+          className="rate-input-0"
+          value={localValue}
+          fontSize="20px"
+          disabled={locked}
+          onUserInput={(val) => {
+            setLocalValue(val)
+          }}
+        />
+        <InputTitle fontSize={12} textAlign="center">
+          {tokenB + ' / ' + tokenA}
+        </InputTitle>
       </AutoColumn>
+      {!locked ? (
+        <RowBetween>
+          <SmallButton onClick={handleDecrement}>
+            <TYPE.black fontSize="12px">-{feeAmountFormatted}%</TYPE.black>
+          </SmallButton>
+          <SmallButton onClick={handleIncrement}>
+            <TYPE.black fontSize="12px">+{feeAmountFormatted}%</TYPE.black>
+          </SmallButton>
+        </RowBetween>
+      ) : null}
     </FocusedOutlineCard>
   )
 }

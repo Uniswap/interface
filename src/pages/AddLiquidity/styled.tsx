@@ -7,7 +7,7 @@ import Input from 'components/NumericalInput'
 export const Wrapper = styled.div`
   position: relative;
   padding: 20px;
-  min-width: 460px;
+  min-width: 480px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 400px;
@@ -45,7 +45,7 @@ export const FixedPreview = styled.div`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   position: sticky;
-  top: 90px;
+  top: 64px;
 `
 
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`

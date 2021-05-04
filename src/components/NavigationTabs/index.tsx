@@ -101,11 +101,11 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
             adding && dispatch(resetMintState())
           }}
         >
-          <StyledArrowLeft stroke={theme.text2} opacity="0.6" />
+          <StyledArrowLeft stroke={theme.text2} />
         </HistoryLink>
-        <TYPE.black fontWeight={500} fontSize={16} style={{ opacity: '0.6' }}>
+        <TYPE.mediumHeader fontWeight={500} fontSize={20}>
           {creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}
-        </TYPE.black>
+        </TYPE.mediumHeader>
         <Settings />
       </RowBetween>
     </Tabs>

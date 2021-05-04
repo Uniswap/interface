@@ -16,7 +16,7 @@ import { HideExtraSmall, TYPE } from 'theme'
 import Badge from 'components/Badge'
 import { calculateGasMargin } from 'utils'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
-import { DarkCard, LightCard } from 'components/Card'
+import { DarkCard, DarkGreyCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useTranslation } from 'react-i18next'
 import { currencyId } from 'utils/currencyId'
@@ -33,7 +33,6 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Dots } from 'components/swap/styleds'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
 import useTheme from '../../hooks/useTheme'
-import { MinusCircle, PlusCircle } from 'react-feather'
 import RateToggle from '../../components/RateToggle'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import RangeBadge from '../../components/Badge/RangeBadge'
@@ -88,10 +87,11 @@ export const DarkBadge = styled.div`
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.text2};
   font-size: 14px;
   text-align: center;
   margin-right: 4px;
+  font-weight: 500;
 `
 
 const HoverText = styled(TYPE.main)`
@@ -139,6 +139,8 @@ function CurrentPriceCard({
   currencyBase?: Currency
   ratio?: number
 }) {
+  const theme = useTheme()
+
   const { t } = useTranslation()
   if (!pool || !currencyQuote || !currencyBase) {
     return null
@@ -146,18 +148,19 @@ function CurrentPriceCard({
 
   return (
     <LightCard padding="12px ">
-      <AutoColumn gap="md" justify="center">
+      <AutoColumn gap="8px" justify="center">
         <ExtentsText>{t('Current price')}</ExtentsText>
-        <TYPE.label textAlign="center">
-          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)} {currencyQuote?.symbol}
-        </TYPE.label>
-        {typeof ratio === 'number' && (
-          <TYPE.label textAlign="center">
-            Your position is <CurrencyLogo currency={currencyBase} size="12px" /> {ratio}% {currencyBase?.symbol} and{' '}
-            <CurrencyLogo currency={currencyQuote} size="12px" /> {100 - ratio}% {currencyQuote?.symbol}
-          </TYPE.label>
-        )}
+        <TYPE.mediumHeader textAlign="center">
+          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)}{' '}
+        </TYPE.mediumHeader>
+        <ExtentsText>{currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
       </AutoColumn>
+
+      {typeof ratio === 'number' && (
+        <TYPE.small color={theme.text3} textAlign="center" style={{ marginTop: '8px' }}>
+          Your position is currently {ratio}% {currencyBase?.symbol} and {100 - ratio}% {currencyQuote?.symbol}
+        </TYPE.small>
+      )}
     </LightCard>
   )
 }
@@ -422,8 +425,7 @@ export function PositionPage({
                     borderRadius="12px"
                     style={{ marginRight: '8px' }}
                   >
-                    <PlusCircle size={16} style={{ marginRight: '8px' }} />{' '}
-                    <TYPE.body color={theme.text1}>{t('Add Liquidity')}</TYPE.body>
+                    {t('Add Liquidity')}
                   </ButtonGray>
                 ) : null}
                 {tokenId && (
@@ -434,7 +436,7 @@ export function PositionPage({
                     padding="6px 8px"
                     borderRadius="12px"
                   >
-                    <MinusCircle size={16} style={{ marginRight: '8px' }} /> {t('Remove Liquidity')}
+                    {t('Remove Liquidity')}
                   </ResponsiveButtonPrimary>
                 )}
               </RowFixed>
@@ -475,10 +477,14 @@ export function PositionPage({
             <DarkCard>
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <AutoColumn gap="md">
-                  <Label>Position liquidity</Label>
-                  {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) && (
+                  <Label>Liquidity</Label>
+                  {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
                     <TYPE.largeHeader fontSize="36px" fontWeight={500}>
                       ${fiatValueOfLiquidity.toFixed(2)}
+                    </TYPE.largeHeader>
+                  ) : (
+                    <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
+                      $-
                     </TYPE.largeHeader>
                   )}
                 </AutoColumn>
@@ -487,20 +493,38 @@ export function PositionPage({
                     <RowBetween>
                       <RowFixed>
                         <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>
-                          {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
-                        </TYPE.main>
+                        <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
                       </RowFixed>
-                      <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
+                      <RowFixed>
+                        <TYPE.main>
+                          {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)} (
+                        </TYPE.main>
+                        {typeof ratio === 'number' && (
+                          <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
+                            <TYPE.main color={theme.text2} fontSize={11}>
+                              {100 - ratio}%
+                            </TYPE.main>
+                          </DarkGreyCard>
+                        )}
+                      </RowFixed>
                     </RowBetween>
                     <RowBetween>
                       <RowFixed>
                         <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>
-                          {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
-                        </TYPE.main>
+                        <TYPE.main>{currencyBase?.symbol}</TYPE.main>
                       </RowFixed>
-                      <TYPE.main>{currencyBase?.symbol}</TYPE.main>
+                      <RowFixed>
+                        <TYPE.main>
+                          {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)} (
+                        </TYPE.main>
+                        {typeof ratio === 'number' && (
+                          <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
+                            <TYPE.main color={theme.text2} fontSize={11}>
+                              {ratio}%
+                            </TYPE.main>
+                          </DarkGreyCard>
+                        )}
+                      </RowFixed>
                     </RowBetween>
                   </AutoColumn>
                 </LightCard>
@@ -512,9 +536,13 @@ export function PositionPage({
                   <RowBetween style={{ alignItems: 'flex-start' }}>
                     <AutoColumn gap="md">
                       <Label>Fees Earned</Label>
-                      {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) && (
+                      {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                         <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
                           ${fiatValueOfFees.toFixed(2)}
+                        </TYPE.largeHeader>
+                      ) : (
+                        <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
+                          $-
                         </TYPE.largeHeader>
                       )}
                     </AutoColumn>
@@ -548,6 +576,9 @@ export function PositionPage({
                     <RowBetween>
                       <RowFixed>
                         <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                        <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
+                      </RowFixed>
+                      <RowFixed>
                         <TYPE.main>
                           {inverted
                             ? feeValue0
@@ -558,11 +589,13 @@ export function PositionPage({
                             : '-'}
                         </TYPE.main>
                       </RowFixed>
-                      <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
                     </RowBetween>
                     <RowBetween>
                       <RowFixed>
                         <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                        <TYPE.main>{currencyBase?.symbol}</TYPE.main>
+                      </RowFixed>
+                      <RowFixed>
                         <TYPE.main>
                           {inverted
                             ? feeValue0
@@ -573,7 +606,6 @@ export function PositionPage({
                             : '-'}
                         </TYPE.main>
                       </RowFixed>
-                      <TYPE.main>{currencyBase?.symbol}</TYPE.main>
                     </RowBetween>
                   </AutoColumn>
                 </LightCard>
@@ -608,47 +640,27 @@ export function PositionPage({
 
             <RowBetween>
               <LightCard padding="12px" width="100%">
-                <AutoColumn gap="12px" justify="center">
-                  <ExtentsText>Min</ExtentsText>
-                  <RowFixed>
-                    <TYPE.label textAlign="center">
-                      {priceLower?.toSignificant(4)} {currencyQuote?.symbol}
-                    </TYPE.label>
-                  </RowFixed>
-                  {(inverted ? below : above) ? (
-                    <TYPE.subHeader color={theme.text3} textAlign="center">
-                      Your position will be <CurrencyLogo currency={inverted ? currency1 : currency0} size="12px" />{' '}
-                      100% {inverted ? currency1?.symbol : currency0?.symbol} at this price
-                    </TYPE.subHeader>
-                  ) : (
-                    <TYPE.label textAlign="center">
-                      Your position is <CurrencyLogo currency={inverted ? currency1 : currency0} size="12px" /> 100%{' '}
-                      {inverted ? currency1?.symbol : currency0?.symbol}
-                    </TYPE.label>
-                  )}
+                <AutoColumn gap="8px" justify="center">
+                  <ExtentsText>Min price</ExtentsText>
+                  <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(4)}</TYPE.mediumHeader>
+                  <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
+                  <TYPE.small color={theme.text3}>
+                    {' Your position is will be 100% '}
+                    {currencyBase?.symbol} {' at this price.'}
+                  </TYPE.small>
                 </AutoColumn>
               </LightCard>
 
               <DoubleArrow>⟷</DoubleArrow>
               <LightCard padding="12px" width="100%">
-                <AutoColumn gap="12px" justify="center">
-                  <ExtentsText>Max</ExtentsText>
-                  <RowFixed>
-                    <TYPE.label textAlign="center">
-                      {priceUpper?.toSignificant(4)} {currencyQuote?.symbol}
-                    </TYPE.label>
-                  </RowFixed>
-                  {(inverted ? above : below) ? (
-                    <TYPE.subHeader color={theme.text3} textAlign="center">
-                      Your position will be <CurrencyLogo currency={inverted ? currency0 : currency1} size="12px" />{' '}
-                      100% {inverted ? currency0?.symbol : currency1?.symbol} at this price
-                    </TYPE.subHeader>
-                  ) : (
-                    <TYPE.label textAlign="center">
-                      Your position is <CurrencyLogo currency={inverted ? currency0 : currency1} size="12px" /> 100%{' '}
-                      {inverted ? currency0?.symbol : currency1?.symbol}
-                    </TYPE.label>
-                  )}
+                <AutoColumn gap="8px" justify="center">
+                  <ExtentsText>Max price</ExtentsText>
+                  <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(4)}</TYPE.mediumHeader>
+                  <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
+                  <TYPE.small color={theme.text3}>
+                    {' Your position is will be 100% '}
+                    {currencyQuote?.symbol} {' at this price.'}
+                  </TYPE.small>
                 </AutoColumn>
               </LightCard>
             </RowBetween>
