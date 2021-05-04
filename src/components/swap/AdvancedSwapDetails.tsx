@@ -8,6 +8,7 @@ import { TYPE } from '../../theme'
 import { computeRealizedLPFeeAmount } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
+import FormattedPriceImpact from './FormattedPriceImpact'
 import SwapRoute from './SwapRoute'
 
 export interface AdvancedSwapDetailsProps {
@@ -66,7 +67,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
           </TYPE.black>
         </RowFixed>
         <TYPE.black fontSize={12} color={theme.text1}>
-          {computePriceImpactWithMaximumSlippage(trade, allowedSlippage).toSignificant(4)}%
+          <FormattedPriceImpact priceImpact={computePriceImpactWithMaximumSlippage(trade, allowedSlippage)} />
         </TYPE.black>
       </RowBetween>
     </AutoColumn>
