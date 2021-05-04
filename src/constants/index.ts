@@ -282,7 +282,7 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
 
 export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '0x72C482Bc54d6D58c548e5256EE569fb0c08ae2Df',
+  [ChainId.ROPSTEN]: '0x98A591C8f389059dddE151FebC3047Bc65CF2c96',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: ''

@@ -8,7 +8,8 @@ import Panel from 'components/Panel'
 import FarmsList from 'components/FarmsList'
 import FarmClaimModal from 'components/FarmClaimModal'
 import FarmStakeModal from 'components/FarmStakeModal'
-import { useFarmsPublicData } from 'state/farms/hooks'
+import { useFarmsPublicData, useFarmsUserData } from 'state/farms/hooks'
+import { useActiveWeb3React } from 'hooks'
 
 const PageWrapper = styled.div`
   padding: 0 17em;
@@ -53,17 +54,27 @@ const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
 
 const Farms = () => {
   const { t } = useTranslation()
+  const { account } = useActiveWeb3React()
   const { loading: publicDataLoading, error: publicDataError, data: allFarms } = useFarmsPublicData()
-  const { loading: userDataLoading, error: userDataError, data: userFarms } = useFarmsPublicData()
+  const { loading: userFarmsLoading, data: farmsUserData } = useFarmsUserData(account, allFarms)
   const [activeTab, setActiveTab] = useState(0)
 
-  if (publicDataLoading || userDataLoading) {
+  if (publicDataLoading || userFarmsLoading) {
     return <LocalLoader />
   }
 
-  if (publicDataError || userDataError) {
+  if (publicDataError) {
     return <div>Error</div>
   }
+
+  const farms = farmsUserData.map(farmUserData => {
+    const { pid } = farmUserData
+    const index = allFarms.findIndex(farm => farm.pid === pid)
+
+    return { ...allFarms[index], userData: farmUserData }
+  })
+
+  console.log('farms', farms)
 
   return (
     <>
@@ -73,19 +84,11 @@ const Farms = () => {
             <div>{t('allPools')}</div>
           </Tab>
           <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
-            <div>{t('yourPools')}</div>
+            <div>{t('vesting')}</div>
           </Tab>
         </TabContainer>
 
-        <Panel>
-          {activeTab === 0 ? (
-            <FarmsList farmsList={allFarms} />
-          ) : (
-            <div>
-              <FarmsList farmsList={userFarms} />
-            </div>
-          )}
-        </Panel>
+        <Panel>{activeTab === 0 ? <FarmsList farms={allFarms} /> : <div>Vesting</div>}</Panel>
       </PageWrapper>
       <FarmClaimModal />
       <FarmStakeModal />

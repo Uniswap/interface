@@ -106,5 +106,6 @@
   "claim": "Claim",
   "stake": "Stake",
   "unstake": "Unstake",
-  "stakeUnstake": "Stake/Unstake"
+  "stakeUnstake": "Stake/Unstake",
+  "vesting": "Vesting"
 }

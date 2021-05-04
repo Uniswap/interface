@@ -170,3 +170,22 @@ export const POOLS_HISTORICAL_BULK = (block: number, pools: string[]) => {
 
   return gql(queryString)
 }
+
+export const FARM_DATA = gql`
+  query farmData($poolsList: [Bytes]!) {
+    pools(where: { id_in: $poolsList }) {
+      id
+      token0 {
+        id
+        symbol
+        name
+      }
+      token1 {
+        id
+        symbol
+        name
+      }
+      amp
+    }
+  }
+`

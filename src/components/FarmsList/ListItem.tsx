@@ -3,19 +3,25 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Flex } from 'rebass'
 import { useTranslation } from 'react-i18next'
+import { BigNumber } from '@ethersproject/bignumber'
 
+import { Token } from 'libs/sdk/src'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { Farm } from 'state/types'
+import { Farm } from 'state/farms/types'
 import { formattedNum, shortenAddress } from 'utils'
 import { useFarmClaimModalToggle, useFarmStakeModalToggle } from 'state/application/hooks'
 import { ButtonPrimary } from 'components/Button'
 import InputGroup from './InputGroup'
+import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
+import { useCurrency, useToken } from 'hooks/Tokens'
+
+const ON_GOING = 'On Going'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 2fr 1fr 1fr 0.5fr 1fr 1fr 1fr;
-  grid-template-areas: 'pools liq apy amp end_in earnings balance';
+  grid-template-columns: 2fr 1fr 1fr 0.5fr 1fr 1fr 1fr 1fr;
+  grid-template-areas: 'pools liq apy amp end_in earnings balance available_balance';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
   align-items: center;
@@ -94,7 +100,7 @@ interface ListItemProps {
 export const ItemCard = ({ farm }: ListItemProps) => {
   return (
     <div>
-      <StyledItemCard>{farm.lpAddress}</StyledItemCard>
+      <StyledItemCard>{farm.id}</StyledItemCard>
     </div>
   )
 }
@@ -104,6 +110,19 @@ const ListItem = ({ farm }: ListItemProps) => {
   const [expand, setExpand] = useState<boolean>(false)
   const toggleFarmClaimModal = useFarmClaimModalToggle()
   const toggleFarmStakeModal = useFarmStakeModalToggle()
+
+  const currency0 = useToken(farm.token0?.id) as Token
+  const currency1 = useCurrency(farm.token1?.id) as Token
+
+  const liquidity = BigNumber.from(farm.totalStake).toString()
+  const endTimestamp = useTimestampFromBlock(farm.endBlock) || ON_GOING
+
+  const userTokenBalance = farm.userData?.tokenBalance ? BigNumber.from(farm.userData?.tokenBalance) : BigNumber.from(0)
+  const userStakedBalance = farm.userData?.stakedBalance
+    ? BigNumber.from(farm.userData?.stakedBalance)
+    : BigNumber.from(0)
+  const availableBalance = userTokenBalance.sub(userStakedBalance)
+  const userEarning = farm.userData?.earnings ? BigNumber.from(farm.userData?.earnings).toString() : BigNumber.from(0)
 
   const amp = farm.amp / 10000
 
@@ -115,7 +134,6 @@ const ListItem = ({ farm }: ListItemProps) => {
     toggleFarmStakeModal()
   }
 
-  console.log('farm', farm)
   return (
     <>
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
@@ -123,9 +141,9 @@ const ListItem = ({ farm }: ListItemProps) => {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {amp === 1 ? (
               <>
-                <DoubleCurrencyLogo currency0={farm.token} currency1={farm.quoteToken} size={16} margin={true} />
+                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
                 <span>
-                  {farm.token?.symbol} - {farm.quoteToken?.symbol}
+                  {farm.token0?.symbol} - {farm.token1?.symbol}
                 </span>
               </>
             ) : (
@@ -133,16 +151,19 @@ const ListItem = ({ farm }: ListItemProps) => {
             )}
           </div>
         </DataText>
-        <DataText grid-area="liq">{formattedNum(farm.reserveUSD, true)}</DataText>
+        <DataText grid-area="liq">{liquidity}</DataText>
         <DataText grid-area="apy" style={{ color: 'rgba(137, 255, 120, 0.67)' }}>
           24.5%
         </DataText>
         <DataText grid-area="amp">{amp}</DataText>
-        <DataText grid-area="end_in">15d 3hr 5m</DataText>
-        <DataText grid-area="earnings">{farm.userData?.earnings || '320 KNC'}</DataText>
-        <DataText grid-area="balance">
-          {farm.userData?.tokenBalance || `280 LP ${farm.token?.symbol}-${farm.quoteToken?.symbol}`}
-        </DataText>
+        <DataText grid-area="end_in">{`${farm.endBlock} (${endTimestamp})`}</DataText>
+        <DataText grid-area="earnings">{`${userEarning.toString()} KNC`}</DataText>
+        <DataText grid-area="balance">{`${userStakedBalance.toString()} ${farm.token0?.symbol}-${
+          farm.token1?.symbol
+        } LP`}</DataText>
+        <DataText grid-area="available_balance">{`${availableBalance.toString()} ${farm.token0?.symbol}-${
+          farm.token1?.symbol
+        } LP`}</DataText>
       </TableRow>
 
       {expand && (
@@ -151,24 +172,24 @@ const ListItem = ({ farm }: ListItemProps) => {
             <StakeGroup style={{ marginBottom: '14px' }}>
               <div grid-area="stake">
                 <GreyText>
-                  Balance: 280 {farm.token?.symbol}-{farm.quoteToken?.symbol} LP
+                  Balance: {availableBalance.toString()} {farm.token0?.symbol}-{farm.token1?.symbol} LP
                 </GreyText>
               </div>
               <div grid-area="unstake">
                 <GreyText>
-                  Deposit: 280 {farm.token?.symbol}-{farm.quoteToken?.symbol} LP
+                  Deposit: {userStakedBalance.toString()} {farm.token0?.symbol}-{farm.token1?.symbol} LP
                 </GreyText>
               </div>
               <div grid-area="harvest">
                 <GreyText>KNC Reward</GreyText>
-                <div>320 KNC</div>
+                <div>{`${userEarning.toString()} KNC`}</div>
                 <div>$940</div>
               </div>
             </StakeGroup>
             <StakeGroup>
               <InputGroup
                 pid={0}
-                pairAddress={farm.lpAddress}
+                pairAddress={farm.id}
                 pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}
                 token0Address={farm.token0.id}
                 token1Address={farm.token1.id}
@@ -192,11 +213,11 @@ const ListItem = ({ farm }: ListItemProps) => {
             <LPInfoContainer>
               <LPInfo>
                 <div>ADDRESS</div>
-                <div>{shortenAddress(farm.lpAddress)}</div>
+                <div>{shortenAddress(farm.id)}</div>
               </LPInfo>
               <div>
-                <Link to={`/add/${farm.token?.address}/${farm.quoteToken?.address}/${farm.lpAddress}`}>
-                  Get {farm.token?.symbol}-{farm.quoteToken?.symbol} LP ↗
+                <Link to={`/add/${farm.token0?.address}/${farm.token1?.address}/${farm.id}`}>
+                  Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
                 </Link>
               </div>
             </LPInfoContainer>
