@@ -2,18 +2,18 @@ import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, TokenAmount, ETHER, currencyEquals } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
-import { Link2, AlertTriangle } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
-import { YellowCard, OutlineCard, BlueCard } from '../../components/Card'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { YellowCard, OutlineCard, BlueCard, LightCard } from '../../components/Card'
+import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { RowBetween } from '../../components/Row'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import Review from './Review'
 import { useActiveWeb3React } from '../../hooks'
@@ -25,13 +25,13 @@ import { Field, Bound } from '../../state/mint/actions'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { TYPE, ExternalLink } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 import { currencyId } from '../../utils/currencyId'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { DynamicSection, CurrencyDropdown, StyledInput, Wrapper, RangeBadge, ScrollablePage } from './styled'
+import { DynamicSection, CurrencyDropdown, StyledInput, Wrapper, ScrollablePage } from './styled'
 import { useTranslation } from 'react-i18next'
 import { useMintState, useMintActionHandlers, useDerivedMintInfo, useRangeHopCallbacks } from 'state/mint/hooks'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
@@ -39,7 +39,6 @@ import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useDerivedPositionInfo } from 'hooks/useDerivedPositionInfo'
 import { PositionPreview } from 'components/PositionPreview'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
@@ -352,18 +351,16 @@ export default function AddLiquidity({
             onDismiss={handleDismissConfirmation}
             topContent={() => (
               <Review
-                currencies={currencies}
                 parsedAmounts={parsedAmounts}
                 position={position}
                 existingPosition={existingPosition}
                 priceLower={priceLower}
                 priceUpper={priceUpper}
                 outOfRange={outOfRange}
-                baseCurrency={baseCurrency ?? undefined}
               />
             )}
             bottomContent={() => (
-              <ButtonPrimary onClick={onAdd} mt="16px">
+              <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
                 <Text fontWeight={500} fontSize={20}>
                   Add
                 </Text>
@@ -376,8 +373,8 @@ export default function AddLiquidity({
       <AppBody>
         <AddRemoveTabs creating={false} adding={true} />
         <Wrapper>
-          <AutoColumn gap="lg">
-            {!hasExistingPosition ? (
+          <AutoColumn gap="32px">
+            {!hasExistingPosition && (
               <>
                 <AutoColumn gap="md">
                   <RowBetween paddingBottom="20px">
@@ -401,6 +398,7 @@ export default function AddLiquidity({
                       id="add-liquidity-input-tokena"
                       showCommonBases
                     />
+                    <div style={{ width: '12px' }}></div>
 
                     <CurrencyDropdown
                       value={formattedAmounts[Field.CURRENCY_B]}
@@ -418,25 +416,10 @@ export default function AddLiquidity({
                   </RowBetween>
                 </AutoColumn>{' '}
               </>
-            ) : (
-              <RowBetween>
-                <RowFixed>
-                  <DoubleCurrencyLogo
-                    currency0={currencyA ?? undefined}
-                    currency1={currencyB ?? undefined}
-                    size={24}
-                    margin={true}
-                  />
-                  <TYPE.label ml="10px" fontSize="24px">
-                    {currencyA?.symbol} / {currencyB?.symbol}
-                  </TYPE.label>
-                </RowFixed>
-                <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
-              </RowBetween>
             )}
 
             {hasExistingPosition && existingPosition ? (
-              <PositionPreview position={existingPosition} title={'Current Position'} />
+              <PositionPreview position={existingPosition} title={'Selected Range'} inRange={!outOfRange} />
             ) : (
               <>
                 <FeeSelector
@@ -493,6 +476,7 @@ export default function AddLiquidity({
                 <DynamicSection gap="md" disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}>
                   <RowBetween>
                     <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
+
                     {baseCurrency && quoteCurrency ? (
                       <RateToggle
                         currencyA={baseCurrency}
@@ -505,16 +489,13 @@ export default function AddLiquidity({
                       />
                     ) : null}
                   </RowBetween>
-
-                  {price && baseCurrency && quoteCurrency && !noLiquidity && (
-                    <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                      <TYPE.main>Current Price</TYPE.main>
-                      <TYPE.main>
-                        {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)} {quoteCurrency?.symbol}{' '}
-                        = 1 {baseCurrency.symbol}
-                      </TYPE.main>
-                    </RowBetween>
-                  )}
+                  <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
+                    Your liquidity will only be active and earning fees when the price of the pool is within this price
+                    range.{' '}
+                    <ExternalLink href={''} style={{ fontSize: '14px' }}>
+                      Need help picking a range?
+                    </ExternalLink>
+                  </TYPE.main>
 
                   <RangeSelector
                     priceLower={priceLower}
@@ -529,6 +510,23 @@ export default function AddLiquidity({
                     currencyB={quoteCurrency}
                     feeAmount={feeAmount}
                   />
+
+                  {price && baseCurrency && quoteCurrency && !noLiquidity && (
+                    <LightCard style={{ padding: '12px' }}>
+                      <AutoColumn gap="4px">
+                        <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
+                          Current Price
+                        </TYPE.main>
+                        <TYPE.body fontWeight={500} textAlign="center" fontSize={20}>
+                          {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)}{' '}
+                        </TYPE.body>
+                        <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
+                          {quoteCurrency?.symbol} {' / '}
+                          {baseCurrency.symbol}
+                        </TYPE.main>
+                      </AutoColumn>
+                    </LightCard>
+                  )}
 
                   {outOfRange ? (
                     <YellowCard padding="8px 12px" borderRadius="12px">
@@ -574,10 +572,6 @@ export default function AddLiquidity({
                   showCommonBases
                   locked={depositADisabled}
                 />
-
-                <ColumnCenter>
-                  <Link2 stroke={theme.text2} size={'24px'} />
-                </ColumnCenter>
 
                 <CurrencyInputPanel
                   value={formattedAmounts[Field.CURRENCY_B]}
@@ -662,7 +656,6 @@ export default function AddLiquidity({
           </AutoColumn>
         </Wrapper>
       </AppBody>
-      {/* )} */}
       {addIsUnsupported && (
         <UnsupportedCurrencyFooter
           show={addIsUnsupported}

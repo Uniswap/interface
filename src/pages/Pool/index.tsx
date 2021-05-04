@@ -115,7 +115,17 @@ export default function Pool() {
       content: (
         <MenuItem>
           <Download size={16} style={{ marginRight: '8px' }} />
-          {t('Migrate V2 Liquidity')}
+          {t('Migrate')}
+        </MenuItem>
+      ),
+      link: '/migrate/v2',
+      external: false,
+    },
+    {
+      content: (
+        <MenuItem>
+          <Download size={16} style={{ marginRight: '8px' }} />
+          {t('V2 liquidity')}
         </MenuItem>
       ),
       link: '/migrate/v2',
@@ -209,7 +219,7 @@ export default function Pool() {
             <RowFixed justify="center" style={{ width: '100%' }}>
               <ButtonGray
                 as={Link}
-                to="/migrate/v2"
+                to="/pool/v2"
                 id="import-pool-link"
                 style={{ padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
               >
