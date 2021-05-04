@@ -223,7 +223,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [approvalState, approvalSubmitted])
 
   const maxInputAmount: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
-  const atMaxInputAmount = Boolean(maxInputAmount && parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
+  const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
@@ -361,7 +361,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <CurrencyInputPanel
                 label={independentField === Field.OUTPUT && !showWrap ? 'From (at most)' : 'From'}
                 value={formattedAmounts[Field.INPUT]}
-                showMaxButton={!atMaxInputAmount}
+                showMaxButton={showMaxButton}
                 currency={currencies[Field.INPUT]}
                 onUserInput={handleTypeInput}
                 onMax={handleMaxInput}
