@@ -3,27 +3,33 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 
 import { RouteComponentProps } from 'react-router-dom'
-import { TYPE, StyledInternalLink, ExternalLink } from '../../theme'
-import { RowFixed, RowBetween } from '../../components/Row'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { CardSection, DataCard } from '../../components/earn/styled'
 import { ArrowLeft } from 'react-feather'
 import { ButtonPrimary } from '../../components/Button'
 import { ProposalStatus } from './styled'
-import { useProposalData, useUserVotesAsOfBlock, ProposalData, useUserDelegatee } from '../../state/governance/hooks'
+import {
+  ProposalData,
+  ProposalState,
+  useProposalData,
+  useUserDelegatee,
+  useUserVotesAsOfBlock
+} from '../../state/governance/hooks'
 import { DateTime } from 'luxon'
 import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
-import { TokenAmount, JSBI } from '@uniswap/sdk'
+import { JSBI, TokenAmount } from '@uniswap/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
-import { isAddress, getEtherscanLink } from '../../utils'
+import { getEtherscanLink, isAddress } from '../../utils'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleDelegateModal, useToggleVoteModal, useBlockNumber } from '../../state/application/hooks'
+import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
-import { GreyCard } from '../../components/Card'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { BigNumber } from 'ethers'
+import { GreyCard } from '../../components/Card'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -152,7 +158,7 @@ export default function VotePage({
     availableVotes &&
     JSBI.greaterThan(availableVotes.raw, JSBI.BigInt(0)) &&
     proposalData &&
-    proposalData.status === 'active'
+    proposalData.status === ProposalState.Active
 
   const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
   const userDelegatee: string | undefined = useUserDelegatee()
@@ -181,7 +187,9 @@ export default function VotePage({
           <ArrowWrapper to="/vote">
             <ArrowLeft size={20} /> All Proposals
           </ArrowWrapper>
-          {proposalData && <ProposalStatus status={proposalData?.status ?? ''}>{proposalData?.status}</ProposalStatus>}
+          {proposalData && (
+            <ProposalStatus status={proposalData?.status}>{ProposalState[proposalData?.status]}</ProposalStatus>
+          )}
         </RowBetween>
         <AutoColumn gap="10px" style={{ width: '100%' }}>
           <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
@@ -194,7 +202,7 @@ export default function VotePage({
                 : ''}
             </TYPE.main>
           </RowBetween>
-          {proposalData && proposalData.status === 'active' && !showVotingButtons && (
+          {proposalData && proposalData.status === ProposalState.Active && !showVotingButtons && (
             <GreyCard>
               <TYPE.black>
                 Only UNI votes that were self delegated or delegated to another address before block{' '}
