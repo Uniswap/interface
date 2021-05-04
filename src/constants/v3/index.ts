@@ -1,18 +1,18 @@
 import { ChainId } from '@uniswap/sdk-core'
-import gorli from './gorli.json'
+import goerli from './goerli.json'
 import ropsten from './ropsten.json'
 import rinkeby from './rinkeby.json'
 import kovan from './kovan.json'
 import mainnet from './mainnet.json'
 
 function constructAddressMap(
-  key: keyof typeof gorli | keyof typeof ropsten | keyof typeof rinkeby | keyof typeof mainnet
+  key: keyof typeof goerli | keyof typeof ropsten | keyof typeof rinkeby | keyof typeof mainnet
 ): { [chainId in ChainId]?: string } {
   return {
     [ChainId.ROPSTEN]: ropsten[key],
     [ChainId.KOVAN]: kovan[key],
     [ChainId.RINKEBY]: rinkeby[key],
-    [ChainId.GÖRLI]: gorli[key],
+    [ChainId.GÖRLI]: goerli[key],
   }
 }
 
