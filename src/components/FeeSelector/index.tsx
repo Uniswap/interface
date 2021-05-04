@@ -29,6 +29,9 @@ export default function FeeSelector({
     <AutoColumn gap="16px">
       <DynamicSection gap="md" disabled={disabled}>
         <TYPE.label>{t('selectPool')}</TYPE.label>
+        <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
+          Select a pool type based on your preferred liquidity provider fee.
+        </TYPE.main>
         <RowBetween>
           <ButtonRadioChecked
             width="32%"
