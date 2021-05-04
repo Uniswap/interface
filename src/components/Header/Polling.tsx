@@ -9,19 +9,22 @@ import { useActiveWeb3React } from '../../hooks'
 const StyledPolling = styled.div`
   position: fixed;
   display: flex;
+  align-items: center;
   right: 0;
   bottom: 0;
   padding: 1rem;
-  color: white;
-  transition: opacity 0.25s ease;
   color: ${({ theme }) => theme.green1};
-  :hover {
-    opacity: 1;
-  }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
   `}
+`
+const StyledPollingNumber = styled(TYPE.small)<{ breathe: boolean; hovering: boolean }>`
+  transition: opacity 0.25s ease;
+  opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.2)};
+  :hover {
+    opacity: 1;
+  }
 `
 const StyledPollingDot = styled.div`
   width: 8px;
@@ -29,7 +32,6 @@ const StyledPollingDot = styled.div`
   min-height: 8px;
   min-width: 8px;
   margin-left: 0.5rem;
-  margin-top: 3px;
   border-radius: 50%;
   position: relative;
   background-color: ${({ theme }) => theme.green1};
@@ -67,16 +69,21 @@ export default function Polling() {
 
   const blockNumber = useBlockNumber()
 
-  const [isMounted, setIsMounted] = useState(true)
+  const [isMounting, setIsMounting] = useState(false)
+  const [isHover, setIsHover] = useState(false)
 
   useEffect(
     () => {
-      const timer1 = setTimeout(() => setIsMounted(true), 1000)
+      if (!blockNumber) {
+        return
+      }
+
+      setIsMounting(true)
+      const mountingTimer = setTimeout(() => setIsMounting(false), 1000)
 
       // this will clear Timeout when component unmount like in willComponentUnmount
       return () => {
-        setIsMounted(false)
-        clearTimeout(timer1)
+        clearTimeout(mountingTimer)
       }
     },
     [blockNumber] //useEffect will run only one time
@@ -85,9 +92,11 @@ export default function Polling() {
 
   return (
     <ExternalLink href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}>
-      <StyledPolling>
-        <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{blockNumber}</TYPE.small>
-        <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>
+      <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
+        <StyledPollingNumber breathe={isMounting} hovering={isHover}>
+          {blockNumber}
+        </StyledPollingNumber>
+        <StyledPollingDot>{isMounting && <Spinner />}</StyledPollingDot>
       </StyledPolling>
     </ExternalLink>
   )
