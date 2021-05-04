@@ -22,7 +22,7 @@ export interface ProposalData {
   title: string
   description: string
   proposer: string
-  status: string
+  status: ProposalState
   forCount: number
   againstCount: number
   startBlock: number
@@ -30,9 +30,16 @@ export interface ProposalData {
   details: ProposalDetail[]
 }
 
-const enumerateProposalState = (state: number) => {
-  const proposalStates = ['pending', 'active', 'canceled', 'defeated', 'succeeded', 'queued', 'expired', 'executed']
-  return proposalStates[state]
+export enum ProposalState {
+  Undetermined = -1,
+  Pending,
+  Active,
+  Canceled,
+  Defeated,
+  Succeeded,
+  Queued,
+  Expired,
+  Executed
 }
 
 // get count of all proposals made
@@ -129,7 +136,7 @@ export function useAllProposalData() {
           title: description?.split(/# |\n/g)[1] || 'Untitled',
           description: description || 'No description.',
           proposer: allProposals[i]?.result?.proposer,
-          status: enumerateProposalState(allProposalStates[i]?.result?.[0]) ?? 'Undetermined',
+          status: allProposalStates[i]?.result?.[0] ?? ProposalState.Undetermined,
           forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString(), 18)),
           againstCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.againstVotes.toString(), 18)),
           startBlock: parseInt(allProposals[i]?.result?.startBlock?.toString()),

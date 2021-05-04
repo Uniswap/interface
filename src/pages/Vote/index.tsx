@@ -1,15 +1,21 @@
 import React from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
-import { TYPE, ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Link } from 'react-router-dom'
 import { ProposalStatus } from './styled'
 import { ButtonPrimary } from '../../components/Button'
 import { Button } from 'rebass/styled-components'
 import { darken } from 'polished'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { useAllProposalData, ProposalData, useUserVotes, useUserDelegatee } from '../../state/governance/hooks'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import {
+  ProposalData,
+  ProposalState,
+  useAllProposalData,
+  useUserDelegatee,
+  useUserVotes,
+} from '../../state/governance/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
@@ -223,7 +229,7 @@ export default function Vote() {
             <Proposal as={Link} to={'/vote/' + p.id} key={i}>
               <ProposalNumber>{p.id}</ProposalNumber>
               <ProposalTitle>{p.title}</ProposalTitle>
-              <ProposalStatus status={p.status}>{p.status}</ProposalStatus>
+              <ProposalStatus status={p.status}>{ProposalState[p.status]}</ProposalStatus>
             </Proposal>
           )
         })}
