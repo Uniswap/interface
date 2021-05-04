@@ -23,7 +23,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { WETH9, CurrencyAmount } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
-import { Wrapper, SmallMaxButton } from './styled'
+import { Wrapper, SmallMaxButton, ResponsiveHeaderText } from './styled'
 import Loader from 'components/Loader'
 import { useToken } from 'hooks/Tokens'
 import { unwrappedToken } from 'utils/wrappedCurrency'
@@ -196,7 +196,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   function modalHeader() {
     return (
-      <AutoColumn gap={'sm'} style={{ marginTop: '20px' }}>
+      <AutoColumn gap={'sm'} style={{ padding: '16px' }}>
         <RowBetween align="flex-end">
           <Text fontSize={16} fontWeight={500}>
             {currency0?.symbol}:
@@ -287,7 +287,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 <AutoColumn gap="md">
                   <TYPE.main fontWeight={400}>Amount</TYPE.main>
                   <RowBetween>
-                    <TYPE.label fontSize="40px">{percentForSlider}%</TYPE.label>
+                    <ResponsiveHeaderText>{percentForSlider}%</ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
                         25%

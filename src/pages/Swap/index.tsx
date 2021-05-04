@@ -18,7 +18,7 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
-import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowResponsive, RowFixed } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -398,7 +398,7 @@ export default function Swap({ history }: RouteComponentProps) {
               </>
             ) : null}
 
-            <RowBetween style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
+            <RowResponsive style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
               <RowFixed>
                 {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                   (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
@@ -473,7 +473,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   </MouseoverTooltipContent>
                 )}
               </RowFixed>
-            </RowBetween>
+            </RowResponsive>
 
             <BottomGrouping>
               {swapIsUnsupported ? (

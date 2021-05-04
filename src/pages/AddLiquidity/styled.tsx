@@ -8,16 +8,20 @@ export const Wrapper = styled.div`
   position: relative;
   padding: 20px;
   min-width: 460px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    min-width: 400px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  min-width: 340px;
+`};
 `
 
 export const ScrollablePage = styled.div`
   position: relative;
   display: flex;
   flex-direction: row;
-`
-
-export const ScrollableContent = styled.div`
-  margin-right: 16px;
 `
 
 export const RangeBadge = styled(Card)<{ inRange?: boolean }>`

@@ -71,9 +71,9 @@ const VoteCard = styled(DataCard)`
 `
 
 const WrapSmall = styled(RowBetween)`
+  margin-bottom: 1rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-wrap: wrap;
-  
   `};
 `
 

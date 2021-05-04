@@ -31,15 +31,7 @@ import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 import { currencyId } from '../../utils/currencyId'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import {
-  DynamicSection,
-  CurrencyDropdown,
-  ScrollableContent,
-  StyledInput,
-  Wrapper,
-  RangeBadge,
-  ScrollablePage,
-} from './styled'
+import { DynamicSection, CurrencyDropdown, StyledInput, Wrapper, RangeBadge, ScrollablePage } from './styled'
 import { useTranslation } from 'react-i18next'
 import { useMintState, useMintActionHandlers, useDerivedMintInfo, useRangeHopCallbacks } from 'state/mint/hooks'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
@@ -329,332 +321,327 @@ export default function AddLiquidity({
 
   return (
     <ScrollablePage>
-      <ScrollableContent>
-        <TransactionConfirmationModal
-          isOpen={showConfirm}
-          onDismiss={handleDismissConfirmation}
-          attemptingTxn={attemptingTxn}
-          hash={txHash}
-          content={() => (
-            <ConfirmationModalContent
-              title={'Add Liquidity'}
-              onDismiss={handleDismissConfirmation}
-              topContent={() => (
-                <Review
-                  currencies={currencies}
-                  parsedAmounts={parsedAmounts}
-                  position={position}
-                  existingPosition={existingPosition}
-                  priceLower={priceLower}
-                  priceUpper={priceUpper}
-                  outOfRange={outOfRange}
-                />
-              )}
-              bottomContent={() => (
-                <ButtonPrimary onClick={onAdd}>
-                  <Text fontWeight={500} fontSize={20}>
-                    Add
-                  </Text>
-                </ButtonPrimary>
-              )}
-            />
-          )}
-          pendingText={pendingText}
-        />
-        <AppBody>
-          <AddRemoveTabs creating={false} adding={true} />
-          <Wrapper>
-            <AutoColumn gap="lg">
-              {!hasExistingPosition ? (
-                <>
-                  <AutoColumn gap="md">
-                    <RowBetween paddingBottom="20px">
-                      <TYPE.label>Select a pair</TYPE.label>
-                      <ButtonText onClick={clearAll}>
-                        <TYPE.blue fontSize="12px">Clear All</TYPE.blue>
-                      </ButtonText>
-                    </RowBetween>
+      <TransactionConfirmationModal
+        isOpen={showConfirm}
+        onDismiss={handleDismissConfirmation}
+        attemptingTxn={attemptingTxn}
+        hash={txHash}
+        content={() => (
+          <ConfirmationModalContent
+            title={'Add Liquidity'}
+            onDismiss={handleDismissConfirmation}
+            topContent={() => (
+              <Review
+                currencies={currencies}
+                parsedAmounts={parsedAmounts}
+                position={position}
+                existingPosition={existingPosition}
+                priceLower={priceLower}
+                priceUpper={priceUpper}
+                outOfRange={outOfRange}
+              />
+            )}
+            bottomContent={() => (
+              <ButtonPrimary onClick={onAdd} mt="16px">
+                <Text fontWeight={500} fontSize={20}>
+                  Add
+                </Text>
+              </ButtonPrimary>
+            )}
+          />
+        )}
+        pendingText={pendingText}
+      />
+      <AppBody>
+        <AddRemoveTabs creating={false} adding={true} />
+        <Wrapper>
+          <AutoColumn gap="lg">
+            {!hasExistingPosition ? (
+              <>
+                <AutoColumn gap="md">
+                  <RowBetween paddingBottom="20px">
+                    <TYPE.label>Select a pair</TYPE.label>
+                    <ButtonText onClick={clearAll}>
+                      <TYPE.blue fontSize="12px">Clear All</TYPE.blue>
+                    </ButtonText>
+                  </RowBetween>
 
-                    <RowBetween>
-                      <CurrencyDropdown
-                        value={formattedAmounts[Field.CURRENCY_A]}
-                        onUserInput={onFieldAInput}
-                        hideInput={true}
-                        onMax={() => {
-                          onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-                        }}
-                        onCurrencySelect={handleCurrencyASelect}
-                        showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-                        currency={currencies[Field.CURRENCY_A]}
-                        id="add-liquidity-input-tokena"
-                        showCommonBases
-                      />
-
-                      <CurrencyDropdown
-                        value={formattedAmounts[Field.CURRENCY_B]}
-                        hideInput={true}
-                        onUserInput={onFieldBInput}
-                        onCurrencySelect={handleCurrencyBSelect}
-                        onMax={() => {
-                          onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-                        }}
-                        showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                        currency={currencies[Field.CURRENCY_B]}
-                        id="add-liquidity-input-tokenb"
-                        showCommonBases
-                      />
-                    </RowBetween>
-                  </AutoColumn>{' '}
-                </>
-              ) : (
-                <RowBetween>
-                  <RowFixed>
-                    <DoubleCurrencyLogo
-                      currency0={currencyA ?? undefined}
-                      currency1={currencyB ?? undefined}
-                      size={24}
-                      margin={true}
+                  <RowBetween>
+                    <CurrencyDropdown
+                      value={formattedAmounts[Field.CURRENCY_A]}
+                      onUserInput={onFieldAInput}
+                      hideInput={true}
+                      onMax={() => {
+                        onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                      }}
+                      onCurrencySelect={handleCurrencyASelect}
+                      showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                      currency={currencies[Field.CURRENCY_A]}
+                      id="add-liquidity-input-tokena"
+                      showCommonBases
                     />
-                    <TYPE.label ml="10px" fontSize="24px">
-                      {currencyA?.symbol} / {currencyB?.symbol}
-                    </TYPE.label>
-                  </RowFixed>
-                  <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
-                </RowBetween>
-              )}
 
-              {hasExistingPosition && existingPosition ? (
-                <PositionPreview position={existingPosition} title={'Current Position'} />
-              ) : (
-                <>
-                  <FeeSelector
-                    disabled={!currencyB || !currencyA}
-                    feeAmount={feeAmount}
-                    handleFeePoolSelect={handleFeePoolSelect}
+                    <CurrencyDropdown
+                      value={formattedAmounts[Field.CURRENCY_B]}
+                      hideInput={true}
+                      onUserInput={onFieldBInput}
+                      onCurrencySelect={handleCurrencyBSelect}
+                      onMax={() => {
+                        onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                      }}
+                      showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                      currency={currencies[Field.CURRENCY_B]}
+                      id="add-liquidity-input-tokenb"
+                      showCommonBases
+                    />
+                  </RowBetween>
+                </AutoColumn>{' '}
+              </>
+            ) : (
+              <RowBetween>
+                <RowFixed>
+                  <DoubleCurrencyLogo
+                    currency0={currencyA ?? undefined}
+                    currency1={currencyB ?? undefined}
+                    size={24}
+                    margin={true}
                   />
+                  <TYPE.label ml="10px" fontSize="24px">
+                    {currencyA?.symbol} / {currencyB?.symbol}
+                  </TYPE.label>
+                </RowFixed>
+                <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
+              </RowBetween>
+            )}
 
-                  {noLiquidity && (
-                    <DynamicSection disabled={!currencyA || !currencyB}>
-                      <AutoColumn gap="md">
-                        <BlueCard width="100%" padding="1rem">
-                          You are the first to provide liquidity to this pool.
-                        </BlueCard>
-                        <RowBetween>
-                          <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
-                          {baseCurrency && quoteCurrency ? (
-                            <RateToggle
-                              currencyA={baseCurrency}
-                              currencyB={quoteCurrency}
-                              handleRateToggle={() => {
-                                onLeftRangeInput('')
-                                onRightRangeInput('')
-                                setBaseCurrency(quoteCurrency)
-                              }}
-                            />
-                          ) : null}
-                        </RowBetween>
+            {hasExistingPosition && existingPosition ? (
+              <PositionPreview position={existingPosition} title={'Current Position'} />
+            ) : (
+              <>
+                <FeeSelector
+                  disabled={!currencyB || !currencyA}
+                  feeAmount={feeAmount}
+                  handleFeePoolSelect={handleFeePoolSelect}
+                />
 
-                        <OutlineCard padding="12px">
-                          <StyledInput
-                            className="start-price-input"
-                            value={startPriceTypedValue}
-                            onUserInput={onStartPriceInput}
+                {noLiquidity && (
+                  <DynamicSection disabled={!currencyA || !currencyB}>
+                    <AutoColumn gap="md">
+                      <BlueCard width="100%" padding="1rem">
+                        You are the first to provide liquidity to this pool.
+                      </BlueCard>
+                      <RowBetween>
+                        <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
+                        {baseCurrency && quoteCurrency ? (
+                          <RateToggle
+                            currencyA={baseCurrency}
+                            currencyB={quoteCurrency}
+                            handleRateToggle={() => {
+                              onLeftRangeInput('')
+                              onRightRangeInput('')
+                              setBaseCurrency(quoteCurrency)
+                            }}
                           />
-                        </OutlineCard>
-                        <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                          <TYPE.main>Current {baseCurrency?.symbol} Price:</TYPE.main>
-                          <TYPE.main>
-                            {price ? (
-                              <TYPE.main>
-                                {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
-                                {quoteCurrency?.symbol}
-                              </TYPE.main>
-                            ) : (
-                              '-'
-                            )}
-                          </TYPE.main>
-                        </RowBetween>
-                      </AutoColumn>
-                    </DynamicSection>
-                  )}
+                        ) : null}
+                      </RowBetween>
 
-                  <DynamicSection
-                    gap="md"
-                    disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}
-                  >
-                    <RowBetween>
-                      <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
-                      {baseCurrency && quoteCurrency ? (
-                        <RateToggle
-                          currencyA={baseCurrency}
-                          currencyB={quoteCurrency}
-                          handleRateToggle={() => {
-                            onLeftRangeInput('')
-                            onRightRangeInput('')
-                            setBaseCurrency(quoteCurrency)
-                          }}
+                      <OutlineCard padding="12px">
+                        <StyledInput
+                          className="start-price-input"
+                          value={startPriceTypedValue}
+                          onUserInput={onStartPriceInput}
                         />
-                      ) : null}
-                    </RowBetween>
-
-                    {price && baseCurrency && quoteCurrency && !noLiquidity && (
+                      </OutlineCard>
                       <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                        <TYPE.main>Current Price</TYPE.main>
+                        <TYPE.main>Current {baseCurrency?.symbol} Price:</TYPE.main>
                         <TYPE.main>
-                          {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)}{' '}
-                          {quoteCurrency?.symbol} = 1 {baseCurrency.symbol}
+                          {price ? (
+                            <TYPE.main>
+                              {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
+                              {quoteCurrency?.symbol}
+                            </TYPE.main>
+                          ) : (
+                            '-'
+                          )}
                         </TYPE.main>
                       </RowBetween>
-                    )}
-
-                    <RangeSelector
-                      priceLower={priceLower}
-                      priceUpper={priceUpper}
-                      getDecrementLower={getDecrementLower}
-                      getIncrementLower={getIncrementLower}
-                      getDecrementUpper={getDecrementUpper}
-                      getIncrementUpper={getIncrementUpper}
-                      onLeftRangeInput={onLeftRangeInput}
-                      onRightRangeInput={onRightRangeInput}
-                      currencyA={baseCurrency}
-                      currencyB={quoteCurrency}
-                      feeAmount={feeAmount}
-                    />
-
-                    {outOfRange ? (
-                      <YellowCard padding="8px 12px" borderRadius="12px">
-                        <RowBetween>
-                          <AlertTriangle stroke={theme.yellow3} size="16px" />
-                          <TYPE.yellow ml="12px" fontSize="12px">
-                            {t('inactiveRangeWarning')}
-                          </TYPE.yellow>
-                        </RowBetween>
-                      </YellowCard>
-                    ) : null}
-
-                    {invalidRange ? (
-                      <YellowCard padding="8px 12px" borderRadius="12px">
-                        <RowBetween>
-                          <AlertTriangle stroke={theme.yellow3} size="16px" />
-                          <TYPE.yellow ml="12px" fontSize="12px">
-                            {t('invalidRangeWarning')}
-                          </TYPE.yellow>
-                        </RowBetween>
-                      </YellowCard>
-                    ) : null}
+                    </AutoColumn>
                   </DynamicSection>
-                </>
-              )}
-
-              <DynamicSection
-                disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
-              >
-                <AutoColumn gap="md">
-                  <TYPE.label>{hasExistingPosition ? 'Add more liquidity' : t('depositAmounts')}</TYPE.label>
-
-                  <CurrencyInputPanel
-                    value={formattedAmounts[Field.CURRENCY_A]}
-                    onUserInput={onFieldAInput}
-                    onMax={() => {
-                      onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-                    }}
-                    onCurrencySelect={handleCurrencyASelect}
-                    showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-                    currency={currencies[Field.CURRENCY_A]}
-                    id="add-liquidity-input-tokena"
-                    showCommonBases
-                    locked={depositADisabled}
-                  />
-
-                  <ColumnCenter>
-                    <Link2 stroke={theme.text2} size={'24px'} />
-                  </ColumnCenter>
-
-                  <CurrencyInputPanel
-                    value={formattedAmounts[Field.CURRENCY_B]}
-                    onUserInput={onFieldBInput}
-                    onCurrencySelect={handleCurrencyBSelect}
-                    onMax={() => {
-                      onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-                    }}
-                    showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                    currency={currencies[Field.CURRENCY_B]}
-                    id="add-liquidity-input-tokenb"
-                    showCommonBases
-                    locked={depositBDisabled}
-                  />
-                </AutoColumn>
-              </DynamicSection>
-              <div>
-                {addIsUnsupported ? (
-                  <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
-                    <TYPE.main mb="4px">{t('unsupportedAsset')}</TYPE.main>
-                  </ButtonPrimary>
-                ) : !account ? (
-                  <ButtonLight onClick={toggleWalletModal} borderRadius="12px" padding={'12px'}>
-                    {t('connectWallet')}
-                  </ButtonLight>
-                ) : (
-                  <AutoColumn gap={'md'}>
-                    {(approvalA === ApprovalState.NOT_APPROVED ||
-                      approvalA === ApprovalState.PENDING ||
-                      approvalB === ApprovalState.NOT_APPROVED ||
-                      approvalB === ApprovalState.PENDING) &&
-                      isValid && (
-                        <RowBetween>
-                          {approvalA !== ApprovalState.APPROVED && (
-                            <ButtonPrimary
-                              borderRadius="12px"
-                              padding={'12px'}
-                              onClick={approveACallback}
-                              disabled={approvalA === ApprovalState.PENDING}
-                              width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
-                            >
-                              {approvalA === ApprovalState.PENDING ? (
-                                <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
-                              ) : (
-                                'Approve ' + currencies[Field.CURRENCY_A]?.symbol
-                              )}
-                            </ButtonPrimary>
-                          )}
-                          {approvalB !== ApprovalState.APPROVED && (
-                            <ButtonPrimary
-                              borderRadius="12px"
-                              padding={'12px'}
-                              onClick={approveBCallback}
-                              disabled={approvalB === ApprovalState.PENDING}
-                              width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
-                            >
-                              {approvalB === ApprovalState.PENDING ? (
-                                <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
-                              ) : (
-                                'Approve ' + currencies[Field.CURRENCY_B]?.symbol
-                              )}
-                            </ButtonPrimary>
-                          )}
-                        </RowBetween>
-                      )}
-                    <ButtonError
-                      onClick={() => {
-                        expertMode ? onAdd() : setShowConfirm(true)
-                      }}
-                      disabled={
-                        !isValid ||
-                        (approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
-                        (approvalB !== ApprovalState.APPROVED && !depositBDisabled)
-                      }
-                      error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-                    >
-                      <Text fontWeight={500}>{errorMessage ? errorMessage : 'Add'}</Text>
-                    </ButtonError>
-                  </AutoColumn>
                 )}
-              </div>
-            </AutoColumn>
-          </Wrapper>
-        </AppBody>
-        {/* )} */}
-      </ScrollableContent>
+
+                <DynamicSection gap="md" disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}>
+                  <RowBetween>
+                    <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
+                    {baseCurrency && quoteCurrency ? (
+                      <RateToggle
+                        currencyA={baseCurrency}
+                        currencyB={quoteCurrency}
+                        handleRateToggle={() => {
+                          onLeftRangeInput('')
+                          onRightRangeInput('')
+                          setBaseCurrency(quoteCurrency)
+                        }}
+                      />
+                    ) : null}
+                  </RowBetween>
+
+                  {price && baseCurrency && quoteCurrency && !noLiquidity && (
+                    <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
+                      <TYPE.main>Current Price</TYPE.main>
+                      <TYPE.main>
+                        {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)} {quoteCurrency?.symbol}{' '}
+                        = 1 {baseCurrency.symbol}
+                      </TYPE.main>
+                    </RowBetween>
+                  )}
+
+                  <RangeSelector
+                    priceLower={priceLower}
+                    priceUpper={priceUpper}
+                    getDecrementLower={getDecrementLower}
+                    getIncrementLower={getIncrementLower}
+                    getDecrementUpper={getDecrementUpper}
+                    getIncrementUpper={getIncrementUpper}
+                    onLeftRangeInput={onLeftRangeInput}
+                    onRightRangeInput={onRightRangeInput}
+                    currencyA={baseCurrency}
+                    currencyB={quoteCurrency}
+                    feeAmount={feeAmount}
+                  />
+
+                  {outOfRange ? (
+                    <YellowCard padding="8px 12px" borderRadius="12px">
+                      <RowBetween>
+                        <AlertTriangle stroke={theme.yellow3} size="16px" />
+                        <TYPE.yellow ml="12px" fontSize="12px">
+                          {t('inactiveRangeWarning')}
+                        </TYPE.yellow>
+                      </RowBetween>
+                    </YellowCard>
+                  ) : null}
+
+                  {invalidRange ? (
+                    <YellowCard padding="8px 12px" borderRadius="12px">
+                      <RowBetween>
+                        <AlertTriangle stroke={theme.yellow3} size="16px" />
+                        <TYPE.yellow ml="12px" fontSize="12px">
+                          {t('invalidRangeWarning')}
+                        </TYPE.yellow>
+                      </RowBetween>
+                    </YellowCard>
+                  ) : null}
+                </DynamicSection>
+              </>
+            )}
+
+            <DynamicSection
+              disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
+            >
+              <AutoColumn gap="md">
+                <TYPE.label>{hasExistingPosition ? 'Add more liquidity' : t('depositAmounts')}</TYPE.label>
+
+                <CurrencyInputPanel
+                  value={formattedAmounts[Field.CURRENCY_A]}
+                  onUserInput={onFieldAInput}
+                  onMax={() => {
+                    onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                  }}
+                  onCurrencySelect={handleCurrencyASelect}
+                  showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                  currency={currencies[Field.CURRENCY_A]}
+                  id="add-liquidity-input-tokena"
+                  showCommonBases
+                  locked={depositADisabled}
+                />
+
+                <ColumnCenter>
+                  <Link2 stroke={theme.text2} size={'24px'} />
+                </ColumnCenter>
+
+                <CurrencyInputPanel
+                  value={formattedAmounts[Field.CURRENCY_B]}
+                  onUserInput={onFieldBInput}
+                  onCurrencySelect={handleCurrencyBSelect}
+                  onMax={() => {
+                    onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                  }}
+                  showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                  currency={currencies[Field.CURRENCY_B]}
+                  id="add-liquidity-input-tokenb"
+                  showCommonBases
+                  locked={depositBDisabled}
+                />
+              </AutoColumn>
+            </DynamicSection>
+            <div>
+              {addIsUnsupported ? (
+                <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
+                  <TYPE.main mb="4px">{t('unsupportedAsset')}</TYPE.main>
+                </ButtonPrimary>
+              ) : !account ? (
+                <ButtonLight onClick={toggleWalletModal} borderRadius="12px" padding={'12px'}>
+                  {t('connectWallet')}
+                </ButtonLight>
+              ) : (
+                <AutoColumn gap={'md'}>
+                  {(approvalA === ApprovalState.NOT_APPROVED ||
+                    approvalA === ApprovalState.PENDING ||
+                    approvalB === ApprovalState.NOT_APPROVED ||
+                    approvalB === ApprovalState.PENDING) &&
+                    isValid && (
+                      <RowBetween>
+                        {approvalA !== ApprovalState.APPROVED && (
+                          <ButtonPrimary
+                            borderRadius="12px"
+                            padding={'12px'}
+                            onClick={approveACallback}
+                            disabled={approvalA === ApprovalState.PENDING}
+                            width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                          >
+                            {approvalA === ApprovalState.PENDING ? (
+                              <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
+                            ) : (
+                              'Approve ' + currencies[Field.CURRENCY_A]?.symbol
+                            )}
+                          </ButtonPrimary>
+                        )}
+                        {approvalB !== ApprovalState.APPROVED && (
+                          <ButtonPrimary
+                            borderRadius="12px"
+                            padding={'12px'}
+                            onClick={approveBCallback}
+                            disabled={approvalB === ApprovalState.PENDING}
+                            width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                          >
+                            {approvalB === ApprovalState.PENDING ? (
+                              <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
+                            ) : (
+                              'Approve ' + currencies[Field.CURRENCY_B]?.symbol
+                            )}
+                          </ButtonPrimary>
+                        )}
+                      </RowBetween>
+                    )}
+                  <ButtonError
+                    onClick={() => {
+                      expertMode ? onAdd() : setShowConfirm(true)
+                    }}
+                    disabled={
+                      !isValid ||
+                      (approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
+                      (approvalB !== ApprovalState.APPROVED && !depositBDisabled)
+                    }
+                    error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                  >
+                    <Text fontWeight={500}>{errorMessage ? errorMessage : 'Add'}</Text>
+                  </ButtonError>
+                </AutoColumn>
+              )}
+            </div>
+          </AutoColumn>
+        </Wrapper>
+      </AppBody>
+      {/* )} */}
       {addIsUnsupported && (
         <UnsupportedCurrencyFooter
           show={addIsUnsupported}

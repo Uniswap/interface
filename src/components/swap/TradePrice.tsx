@@ -24,6 +24,11 @@ const StyledPriceContainer = styled.button`
   margin-left: 1rem;
   height: 24px;
   cursor: pointer;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin-left: 0;
+    margin-top: 8px;
+  `}
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {

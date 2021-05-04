@@ -12,7 +12,7 @@ import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { TYPE } from 'theme'
+import { HideExtraSmall, TYPE } from 'theme'
 import Badge from 'components/Badge'
 import { calculateGasMargin } from 'utils'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
@@ -31,19 +31,37 @@ import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Dots } from 'components/swap/styleds'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
-
 import useTheme from '../../hooks/useTheme'
 import { MinusCircle, PlusCircle } from 'react-feather'
-
 import RateToggle from '../../components/RateToggle'
 import { useSingleCallResult } from 'state/multicall/hooks'
-
 import RangeBadge from '../../components/Badge/RangeBadge'
 import useUSDCPrice from 'hooks/useUSDCPrice'
+import Loader from 'components/Loader'
 
 const PageWrapper = styled.div`
   min-width: 800px;
   max-width: 960px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    min-width: 680px;
+    max-width: 680px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    min-width: 600px;
+    max-width: 600px;
+  `};
+
+  @media only screen and (max-width: 620px) {
+    min-width: 500px;
+    max-width: 500px;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    min-width: 340px;
+    max-width: 340px;
+  `};
 `
 
 const BadgeText = styled.div`
@@ -87,6 +105,14 @@ const HoverText = styled(TYPE.main)`
 const DoubleArrow = styled.span`
   color: ${({ theme }) => theme.text3};
   margin: 0 1rem;
+`
+const ResponsiveRow = styled(RowBetween)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 16px;
+    width: 100%:
+  `};
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
@@ -315,7 +341,7 @@ export function PositionPage({
           <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
             <HoverText>{'← Back to overview'}</HoverText>
           </Link>
-          <RowBetween>
+          <ResponsiveRow>
             <RowFixed>
               <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
               <TYPE.label fontSize={'24px'} mr="10px">
@@ -326,7 +352,6 @@ export function PositionPage({
               </Badge>
               <RangeBadge inRange={inRange} />
             </RowFixed>
-
             {ownsNFT && (
               <RowFixed>
                 {currency0 && currency1 && feeAmount && tokenId ? (
@@ -355,10 +380,10 @@ export function PositionPage({
                 )}
               </RowFixed>
             )}
-          </RowBetween>
+          </ResponsiveRow>
           <RowBetween></RowBetween>
         </AutoColumn>
-        <RowBetween align="flex-start">
+        <ResponsiveRow align="flex-start">
           {'result' in metadata ? (
             <DarkCard
               width="100%"
@@ -369,17 +394,27 @@ export function PositionPage({
                 flexDirection: 'column',
                 justifyContent: 'space-around',
                 marginRight: '12px',
-                maxWidth: '360px',
               }}
             >
               <div style={{ marginRight: 12 }}>
                 <img height="400px" src={metadata.result.image} />
               </div>
             </DarkCard>
-          ) : null}
-          <AutoColumn gap="sm" style={{ width: '100%' }}>
+          ) : (
+            <DarkCard
+              width="100%"
+              height="100%"
+              style={{
+                marginRight: '12px',
+                minWidth: '340px',
+              }}
+            >
+              <Loader />
+            </DarkCard>
+          )}
+          <AutoColumn gap="sm" style={{ width: '100%', height: '100%' }}>
             <DarkCard>
-              <AutoColumn gap="lg" style={{ width: '100%' }}>
+              <AutoColumn gap="md" style={{ width: '100%' }}>
                 <AutoColumn gap="md">
                   <Label>Position liquidity</Label>
                   {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) && (
@@ -388,7 +423,6 @@ export function PositionPage({
                     </TYPE.largeHeader>
                   )}
                 </AutoColumn>
-
                 <LightCard padding="12px 16px">
                   <AutoColumn gap="md">
                     <RowBetween>
@@ -413,9 +447,8 @@ export function PositionPage({
                 </LightCard>
               </AutoColumn>
             </DarkCard>
-            <span style={{ width: '24px' }}></span>
             <DarkCard>
-              <AutoColumn gap="lg" style={{ width: '100%' }}>
+              <AutoColumn gap="md" style={{ width: '100%' }}>
                 <AutoColumn gap="md">
                   <RowBetween style={{ alignItems: 'flex-start' }}>
                     <AutoColumn gap="md">
@@ -451,7 +484,6 @@ export function PositionPage({
                     ) : null}
                   </RowBetween>
                 </AutoColumn>
-
                 <LightCard padding="12px 16px">
                   <AutoColumn gap="md">
                     <RowBetween>
@@ -489,17 +521,22 @@ export function PositionPage({
               </AutoColumn>
             </DarkCard>
           </AutoColumn>
-        </RowBetween>
+        </ResponsiveRow>
         <DarkCard>
           <AutoColumn gap="md">
             <RowBetween>
-              <Label display="flex" style={{ marginRight: '12px' }}>
-                Price range
-              </Label>
-
               <RowFixed>
-                <RangeBadge inRange={inRange} />
-                <span style={{ width: '8px' }} />
+                <Label display="flex" style={{ marginRight: '12px' }}>
+                  Price range
+                </Label>
+                <HideExtraSmall>
+                  <>
+                    <RangeBadge inRange={inRange} />
+                    <span style={{ width: '8px' }} />
+                  </>
+                </HideExtraSmall>
+              </RowFixed>
+              <RowFixed>
                 {currencyBase && currencyQuote && (
                   <RateToggle
                     currencyA={currencyBase}

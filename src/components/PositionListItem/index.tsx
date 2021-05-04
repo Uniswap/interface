@@ -8,7 +8,7 @@ import { AlertCircle } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { MEDIA_WIDTHS } from 'theme'
+import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
 import { PositionDetails } from 'types/position'
 import { WETH9, Price, Token, Percent } from '@uniswap/sdk-core'
 import { formatPrice } from 'utils/formatTokenAmount'
@@ -52,10 +52,18 @@ const Row = styled(Link)`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     flex-direction: row;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-direction: column;
+    row-gap: 24px;
+  `};
 `
 const BadgeText = styled.div`
   font-weight: 500;
   font-size: 14px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 12px;
+  `};
 `
 const BadgeWrapper = styled.div`
   font-size: 14px;
@@ -66,13 +74,24 @@ const DataLineItem = styled.div`
 
 const RangeLineItem = styled(DataLineItem)`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   cursor: pointer;
+  align-items: center;
   justify-self: flex-end;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  flex-direction: column;
+  row-gap: 4px;
+`};
 `
 
 const DoubleArrow = styled.span`
+  margin: 0 2px;
   color: ${({ theme }) => theme.text3};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin: 4px;
+    padding: 20px;
+  `};
 `
 
 const RangeText = styled.span`
@@ -99,6 +118,10 @@ const PrimaryPositionIdData = styled.div`
 const DataText = styled.div`
   font-weight: 600;
   font-size: 18px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 14px;
+  `};
 `
 
 export interface PositionListItemProps {
@@ -258,26 +281,28 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
 
       {priceLower && priceUpper ? (
         <>
-          {' '}
           <RangeLineItem
             onClick={(e) => {
               e.stopPropagation()
               setManuallyInverted(!manuallyInverted)
             }}
           >
-            <span>
-              <RangeText>
-                <ExtentsText>Min: </ExtentsText>
-                {formatPrice(priceLower, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
-                {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
-              </RangeText>{' '}
+            <RangeText>
+              <ExtentsText>Min: </ExtentsText>
+              {formatPrice(priceLower, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
+              {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
+            </RangeText>{' '}
+            <HideSmall>
               <DoubleArrow>⟷</DoubleArrow>{' '}
-              <RangeText>
-                <ExtentsText>Max:</ExtentsText>
-                {formatPrice(priceUpper, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
-                {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
-              </RangeText>{' '}
-            </span>
+            </HideSmall>
+            <SmallOnly>
+              <DoubleArrow>↕</DoubleArrow>{' '}
+            </SmallOnly>
+            <RangeText>
+              <ExtentsText>Max:</ExtentsText>
+              {formatPrice(priceUpper, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
+              {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
+            </RangeText>{' '}
           </RangeLineItem>
         </>
       ) : (

@@ -33,19 +33,15 @@ const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: flex-start;
-  /* overflow-x: hidden; */
 `
 
 const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 160px;
+  padding-top: 120px;
   align-items: center;
   flex: 1;
-  /* overflow-y: auto; */
-  /* overflow-x: hidden; */
-
   z-index: 1;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
