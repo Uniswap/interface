@@ -200,10 +200,10 @@ export default function CurrencyInputPanel({
     if (!priceImpact) return undefined
     if (priceImpact.lessThan('0')) return theme.green1
     const severity = warningSeverity(priceImpact)
-    if (severity < 1) return undefined
+    if (severity < 1) return theme.text4
     if (severity < 3) return theme.yellow1
     return theme.red1
-  }, [priceImpact, theme.green1, theme.red1, theme.yellow1])
+  }, [priceImpact, theme.green1, theme.red1, theme.text4, theme.yellow1])
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
