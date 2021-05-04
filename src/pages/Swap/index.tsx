@@ -25,6 +25,7 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
+import { ONE_HUNDRED_PERCENT } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -56,7 +57,6 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import SwapHeader from '../../components/swap/SwapHeader'
 
-const ONE_HUNDRED_PERCENT = new Percent(100, 100)
 function computeFiatValuePriceImpact(
   fiatValueInput: CurrencyAmount | undefined | null,
   fiatValueOutput: CurrencyAmount | undefined | null
@@ -64,7 +64,8 @@ function computeFiatValuePriceImpact(
   if (!fiatValueOutput || !fiatValueInput) return undefined
   if (!currencyEquals(fiatValueInput.currency, fiatValueOutput.currency)) return undefined
   if (JSBI.equal(fiatValueInput.raw, JSBI.BigInt(0))) return undefined
-  return ONE_HUNDRED_PERCENT.subtract(fiatValueOutput.divide(fiatValueInput)).multiply(100)
+  const pct = ONE_HUNDRED_PERCENT.subtract(fiatValueOutput.divide(fiatValueInput))
+  return new Percent(pct.numerator, pct.denominator)
 }
 
 export default function Swap({ history }: RouteComponentProps) {
