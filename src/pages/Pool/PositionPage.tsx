@@ -12,9 +12,9 @@ import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { HideExtraSmall, TYPE } from 'theme'
+import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
 import Badge from 'components/Badge'
-import { calculateGasMargin } from 'utils'
+import { calculateGasMargin, getEtherscanLink } from 'utils'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
 import { DarkCard, DarkGreyCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -456,6 +456,9 @@ export function PositionPage({
               <div style={{ marginRight: 12 }}>
                 <img height="400px" src={metadata.result.image} />
               </div>
+              {typeof chainId === 'number' && owner && !ownsNFT ? (
+                <ExternalLink href={getEtherscanLink(chainId, owner, 'address')}>Owner</ExternalLink>
+              ) : null}
             </DarkCard>
           ) : (
             <DarkCard
@@ -542,7 +545,7 @@ export function PositionPage({
                         </TYPE.largeHeader>
                       )}
                     </AutoColumn>
-                    {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash ? (
+                    {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
                       <ButtonConfirmed
                         disabled={collecting || !!collectMigrationHash}
                         confirmed={!!collectMigrationHash && !isCollectPending}
