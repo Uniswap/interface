@@ -1,6 +1,6 @@
 import { ChainId, Percent, Token, TokenAmount, TradeType } from '@uniswap/sdk-core'
 import { JSBI, Trade, Pair, Route } from '@uniswap/v2-sdk'
-import { computeTradePriceBreakdown, warningSeverity } from './prices'
+import { computeRealizedLPFeeAmount, warningSeverity } from './prices'
 
 describe('prices', () => {
   const token1 = new Token(ChainId.MAINNET, '0x0000000000000000000000000000000000000001', 18)
@@ -12,7 +12,7 @@ describe('prices', () => {
 
   describe('#computeTradePriceBreakdown', () => {
     it('returns undefined for undefined', () => {
-      expect(computeTradePriceBreakdown(undefined)).toEqual({
+      expect(computeRealizedLPFeeAmount(undefined)).toEqual({
         priceImpactWithoutFee: undefined,
         realizedLPFee: undefined,
       })
@@ -20,7 +20,7 @@ describe('prices', () => {
 
     it('correct realized lp fee for single hop', () => {
       expect(
-        computeTradePriceBreakdown(
+        computeRealizedLPFeeAmount(
           new Trade(new Route([pair12], token1), new TokenAmount(token1, JSBI.BigInt(1000)), TradeType.EXACT_INPUT)
         ).realizedLPFee
       ).toEqual(new TokenAmount(token1, JSBI.BigInt(3)))
@@ -28,7 +28,7 @@ describe('prices', () => {
 
     it('correct realized lp fee for double hop', () => {
       expect(
-        computeTradePriceBreakdown(
+        computeRealizedLPFeeAmount(
           new Trade(
             new Route([pair12, pair23], token1),
             new TokenAmount(token1, JSBI.BigInt(1000)),

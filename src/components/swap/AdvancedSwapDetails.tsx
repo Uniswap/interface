@@ -3,7 +3,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
-import { computeTradePriceBreakdown } from '../../utils/prices'
+import { computeRealizedLPFeeAmount } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import SwapRoute from './SwapRoute'
@@ -15,12 +15,7 @@ export interface AdvancedSwapDetailsProps {
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
-  const { realizedLPFee } = computeTradePriceBreakdown(trade)
-
-  const showRoute = Boolean(
-    (trade && trade instanceof V2Trade && trade.route.pairs.length > 1) ||
-      (trade instanceof V3Trade && trade.route.pools.length > 1)
-  )
+  const realizedLPFee = computeRealizedLPFeeAmount(trade)
 
   return !trade ? null : (
     <AutoColumn gap="8px">
@@ -35,18 +30,16 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
         </TYPE.black>
       </RowBetween>
 
-      {showRoute && (
-        <RowBetween>
-          <RowFixed>
-            <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-              Route
-            </TYPE.black>
-          </RowFixed>
-          <TYPE.black fontSize={12} color={theme.text1}>
-            <SwapRoute trade={trade} />
+      <RowBetween>
+        <RowFixed>
+          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+            Route
           </TYPE.black>
-        </RowBetween>
-      )}
+        </RowFixed>
+        <TYPE.black fontSize={12} color={theme.text1}>
+          <SwapRoute trade={trade} />
+        </TYPE.black>
+      </RowBetween>
     </AutoColumn>
   )
 }
