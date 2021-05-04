@@ -293,9 +293,10 @@ export default function AddLiquidity({
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onFieldAInput('')
+      history.push('/pool')
     }
     setTxHash('')
-  }, [onFieldAInput, txHash])
+  }, [history, onFieldAInput, txHash])
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
@@ -304,7 +305,7 @@ export default function AddLiquidity({
     onFieldBInput('')
     onLeftRangeInput('')
     onRightRangeInput('')
-    history.push(`/add/`)
+    history.push(`/add`)
   }, [history, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput])
 
   // get value and prices at ticks
@@ -339,6 +340,7 @@ export default function AddLiquidity({
                 priceLower={priceLower}
                 priceUpper={priceUpper}
                 outOfRange={outOfRange}
+                baseCurrency={baseCurrency ?? undefined}
               />
             )}
             bottomContent={() => (

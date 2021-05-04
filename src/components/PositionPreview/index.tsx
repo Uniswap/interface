@@ -8,16 +8,33 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { Break } from 'components/earn/styled'
 import { useTranslation } from 'react-i18next'
+import { Currency } from '@uniswap/sdk-core'
 import RateToggle from 'components/RateToggle'
 
-export const PositionPreview = ({ position, title }: { position: Position; title?: string }) => {
+export const PositionPreview = ({
+  position,
+  title,
+  baseCurrencyDefault,
+}: {
+  position: Position
+  title?: string
+  baseCurrencyDefault?: Currency | undefined
+}) => {
   const { t } = useTranslation()
 
   const currency0 = unwrappedToken(position.pool.token0)
   const currency1 = unwrappedToken(position.pool.token1)
 
   // track which currency should be base
-  const [baseCurrency, setBaseCurrency] = useState(currency0)
+  const [baseCurrency, setBaseCurrency] = useState(
+    baseCurrencyDefault
+      ? baseCurrencyDefault === currency0
+        ? currency0
+        : baseCurrencyDefault === currency1
+        ? currency1
+        : currency0
+      : currency0
+  )
   const sorted = baseCurrency === currency0
   const quoteCurrency = sorted ? currency1 : currency0
 
