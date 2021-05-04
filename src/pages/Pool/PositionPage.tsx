@@ -28,6 +28,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import ReactGA from 'react-ga'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Dots } from 'components/swap/styleds'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
@@ -230,14 +231,15 @@ export function PositionPage({
   // const below = pool && typeof tickLower === 'number' ? pool.tickCurrent < tickLower : false
   // const above = pool && typeof tickUpper === 'number' ? pool.tickCurrent >= tickUpper : false
 
-  const ratio =
-    priceLower && pool && priceUpper
+  const ratio = useMemo(() => {
+    return priceLower && pool && priceUpper
       ? getRatio(
           inverted ? priceUpper.invert() : priceLower,
           pool.token0Price,
           inverted ? priceLower.invert() : priceUpper
         )
       : undefined
+  }, [inverted, pool, priceLower, priceUpper])
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
@@ -245,6 +247,7 @@ export function PositionPage({
   const [collecting, setCollecting] = useState<boolean>(false)
   const [collectMigrationHash, setCollectMigrationHash] = useState<string | null>(null)
   const isCollectPending = useIsTransactionPending(collectMigrationHash ?? undefined)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
@@ -319,6 +322,49 @@ export function PositionPage({
     return amount0.add(amount1)
   }, [price0, price1, position])
 
+  function modalHeader() {
+    return (
+      <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
+        <LightCard padding="12px 16px">
+          <AutoColumn gap="md">
+            <RowBetween>
+              <RowFixed>
+                <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                <TYPE.main>
+                  {inverted
+                    ? feeValue0
+                      ? formatTokenAmount(feeValue0, 4)
+                      : '-'
+                    : feeValue1
+                    ? formatTokenAmount(feeValue1, 4)
+                    : '-'}
+                </TYPE.main>
+              </RowFixed>
+              <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
+            </RowBetween>
+            <RowBetween>
+              <RowFixed>
+                <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                <TYPE.main>
+                  {inverted
+                    ? feeValue0
+                      ? formatTokenAmount(feeValue1, 4)
+                      : '-'
+                    : feeValue1
+                    ? formatTokenAmount(feeValue0, 4)
+                    : '-'}
+                </TYPE.main>
+              </RowFixed>
+              <TYPE.main>{currencyBase?.symbol}</TYPE.main>
+            </RowBetween>
+          </AutoColumn>
+        </LightCard>
+        <TYPE.italic>Collecting fees will withdraw currently available fees for you.</TYPE.italic>
+        <ButtonPrimary onClick={collect}>Collect</ButtonPrimary>
+      </AutoColumn>
+    )
+  }
+
   return loading || poolState === PoolState.LOADING || !feeAmount ? (
     <LoadingRows>
       <div />
@@ -336,6 +382,20 @@ export function PositionPage({
     </LoadingRows>
   ) : (
     <PageWrapper>
+      <TransactionConfirmationModal
+        isOpen={showConfirm}
+        onDismiss={() => setShowConfirm(false)}
+        attemptingTxn={collecting}
+        hash={collectMigrationHash ?? ''}
+        content={() => (
+          <ConfirmationModalContent
+            title={'Collect fees'}
+            onDismiss={() => setShowConfirm(false)}
+            topContent={modalHeader}
+          />
+        )}
+        pendingText={'Collecting fees'}
+      />
       <AutoColumn gap="md">
         <AutoColumn gap="sm">
           <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
@@ -466,7 +526,7 @@ export function PositionPage({
                         width="fit-content"
                         style={{ borderRadius: '12px' }}
                         padding="4px 8px"
-                        onClick={collect}
+                        onClick={() => setShowConfirm(true)}
                       >
                         {!!collectMigrationHash && !isCollectPending ? (
                           <TYPE.main color={theme.text1}> Collected</TYPE.main>

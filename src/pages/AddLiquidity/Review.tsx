@@ -28,6 +28,7 @@ export function Review({
   position,
   currencies,
   outOfRange,
+  baseCurrency,
 }: {
   position?: Position
   existingPosition?: Position
@@ -36,6 +37,7 @@ export function Review({
   priceLower?: Price
   priceUpper?: Price
   outOfRange: boolean
+  baseCurrency?: Currency
 }) {
   const currencyA: Currency | undefined = currencies[Field.CURRENCY_A]
   const currencyB: Currency | undefined = currencies[Field.CURRENCY_B]
@@ -52,18 +54,9 @@ export function Review({
           </RowFixed>
           <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
         </RowBetween>
-        {position ? <PositionPreview position={position} title={'Tokens To Add'} /> : null}
-        {/* <YellowCard>
-          <AutoColumn gap="md">
-            <RowBetween>
-              <TYPE.label color={theme.text2}>Efficiency Comparison</TYPE.label>
-              <AlertCircle stroke={theme.text2} />
-            </RowBetween>
-            <TYPE.label fontWeight={400} color={theme.text2}>
-              This liquidity position has an increased capital efficiency relative to an unbounded price limit.
-            </TYPE.label>
-          </AutoColumn>
-        </YellowCard> */}
+        {position ? (
+          <PositionPreview position={position} title={'Tokens To Add'} baseCurrencyDefault={baseCurrency} />
+        ) : null}
       </AutoColumn>
     </Wrapper>
   )
