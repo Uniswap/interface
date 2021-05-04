@@ -22,8 +22,8 @@ import { FiatValue } from './FiatValue'
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '12px' : '20px')};
-  background-color: ${({ theme }) => theme.bg2};
+  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
+  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.bg2)};
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
 `
@@ -42,13 +42,13 @@ const FixedContainer = styled.div`
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '12px' : '20px')};
-  border: 1px solid ${({ theme }) => theme.bg2};
+  border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
+  border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg2)};
   background-color: ${({ theme }) => theme.bg1};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   :focus,
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg3};
+    border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
   }
 `
 
@@ -65,11 +65,11 @@ const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boole
   cursor: pointer;
   user-select: none;
   border: none;
-  height: ${({ hideInput }) => (hideInput ? '2.4rem' : '2.4rem')};
+  height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   padding: 0 8px;
   justify-content: space-between;
-  margin-right: 12px;
+  margin-right: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
     background-color: ${({ selected, theme }) => (selected ? theme.bg3 : darken(0.05, theme.primary1))};
@@ -103,6 +103,7 @@ const Aligner = styled.span`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`

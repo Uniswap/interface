@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import { Position } from '@uniswap/v3-sdk'
-import { DarkCard, DarkGreyCard } from 'components/Card'
+import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { TYPE } from 'theme'
 import { RowBetween, RowFixed } from 'components/Row'
@@ -10,17 +10,24 @@ import { Break } from 'components/earn/styled'
 import { useTranslation } from 'react-i18next'
 import { Currency } from '@uniswap/sdk-core'
 import RateToggle from 'components/RateToggle'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import RangeBadge from 'components/Badge/RangeBadge'
+import { ThemeContext } from 'styled-components'
 
 export const PositionPreview = ({
   position,
   title,
+  inRange,
   baseCurrencyDefault,
 }: {
   position: Position
   title?: string
+  inRange: boolean
   baseCurrencyDefault?: Currency | undefined
 }) => {
   const { t } = useTranslation()
+
+  const theme = useContext(ThemeContext)
 
   const currency0 = unwrappedToken(position.pool.token0)
   const currency1 = unwrappedToken(position.pool.token1)
@@ -48,7 +55,50 @@ export const PositionPreview = ({
   }, [quoteCurrency])
 
   return (
-    <DarkGreyCard>
+    <AutoColumn gap="md" style={{ marginTop: '0.5rem' }}>
+      <RowBetween style={{ marginBottom: '0.5rem' }}>
+        <RowFixed>
+          <DoubleCurrencyLogo
+            currency0={currency0 ?? undefined}
+            currency1={currency1 ?? undefined}
+            size={24}
+            margin={true}
+          />
+          <TYPE.label ml="10px" fontSize="24px">
+            {currency0?.symbol} / {currency1?.symbol}
+          </TYPE.label>
+        </RowFixed>
+        <RangeBadge inRange={inRange} />
+      </RowBetween>
+
+      <LightCard>
+        <AutoColumn gap="md">
+          <RowBetween>
+            <RowFixed>
+              <CurrencyLogo currency={currency0} />
+              <TYPE.label ml="8px">{currency0?.symbol}</TYPE.label>
+            </RowFixed>
+            <RowFixed>
+              <TYPE.label mr="8px">{position.amount0.toSignificant(4)}</TYPE.label>
+            </RowFixed>
+          </RowBetween>
+          <RowBetween>
+            <RowFixed>
+              <CurrencyLogo currency={currency1} />
+              <TYPE.label ml="8px">{currency1?.symbol}</TYPE.label>
+            </RowFixed>
+            <RowFixed>
+              <TYPE.label mr="8px">{position.amount1.toSignificant(4)}</TYPE.label>
+            </RowFixed>
+          </RowBetween>
+          <Break />
+          <RowBetween>
+            <TYPE.label>{t('feeTier')}</TYPE.label>
+            <TYPE.label>{position?.pool?.fee / 10000}%</TYPE.label>
+          </RowBetween>
+        </AutoColumn>
+      </LightCard>
+
       <AutoColumn gap="md">
         <RowBetween>
           {title ? <TYPE.main>{title}</TYPE.main> : <div />}
@@ -58,59 +108,48 @@ export const PositionPreview = ({
             handleRateToggle={handleRateChange}
           />
         </RowBetween>
+
         <RowBetween>
-          <RowFixed>
-            <CurrencyLogo currency={currency0} />
-            <TYPE.label ml="8px">{currency0?.symbol}</TYPE.label>
-          </RowFixed>
-          <RowFixed>
-            <TYPE.label mr="8px">{position.amount0.toSignificant(4)}</TYPE.label>
-          </RowFixed>
-        </RowBetween>
-        <RowBetween>
-          <RowFixed>
-            <CurrencyLogo currency={currency1} />
-            <TYPE.label ml="8px">{currency1?.symbol}</TYPE.label>
-          </RowFixed>
-          <RowFixed>
-            <TYPE.label mr="8px">{position.amount1.toSignificant(4)}</TYPE.label>
-          </RowFixed>
-        </RowBetween>
-        <Break />
-        <RowBetween>
-          <TYPE.label>{t('feeTier')}</TYPE.label>
-          <TYPE.label>{position?.pool?.fee / 10000}%</TYPE.label>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.label>Current {baseCurrency?.symbol} Price</TYPE.label>
-          <TYPE.label>{`${price.toSignificant(6)} ${quoteCurrency?.symbol}`}</TYPE.label>
-        </RowBetween>
-        <RowBetween>
-          <DarkCard width="46%" padding="8px">
+          <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
-              <TYPE.main fontSize="12px">Lower</TYPE.main>
-              <TYPE.label textAlign="center">{`${priceLower.toSignificant(4)}`}</TYPE.label>
+              <TYPE.main fontSize="12px">Min price</TYPE.main>
+              <TYPE.mediumHeader textAlign="center">{`${priceLower.toSignificant(4)}`}</TYPE.mediumHeader>
               <TYPE.main
                 textAlign="center"
                 fontSize="12px"
               >{` ${quoteCurrency.symbol}/${baseCurrency.symbol}`}</TYPE.main>
+              <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
+                {'Position will be'} <CurrencyLogo currency={baseCurrency} size="10px" /> {' 100% at this price.'}
+              </TYPE.small>
             </AutoColumn>
-          </DarkCard>
-          <TYPE.main ml="4px" mr="4px">
-            ⟷
-          </TYPE.main>
-          <DarkCard width="46%" padding="8px">
+          </LightCard>
+
+          <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
-              <TYPE.main fontSize="12px">Upper</TYPE.main>
-              <TYPE.label textAlign="center">{`${priceUpper.toSignificant(4)}`}</TYPE.label>
+              <TYPE.main fontSize="12px">Max price</TYPE.main>
+              <TYPE.mediumHeader textAlign="center">{`${priceUpper.toSignificant(4)}`}</TYPE.mediumHeader>
               <TYPE.main
                 textAlign="center"
                 fontSize="12px"
               >{` ${quoteCurrency.symbol}/${baseCurrency.symbol}`}</TYPE.main>
+              <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
+                {' Position will be 100% '}
+                {quoteCurrency?.symbol} {' at this price.'}
+              </TYPE.small>
             </AutoColumn>
-          </DarkCard>
+          </LightCard>
         </RowBetween>
+        <LightCard padding="12px ">
+          <AutoColumn gap="4px" justify="center">
+            <TYPE.main fontSize="12px">Current price</TYPE.main>
+            <TYPE.mediumHeader>{`${price.toSignificant(6)} `}</TYPE.mediumHeader>
+            <TYPE.main
+              textAlign="center"
+              fontSize="12px"
+            >{` ${quoteCurrency.symbol}/${baseCurrency.symbol}`}</TYPE.main>
+          </AutoColumn>
+        </LightCard>
       </AutoColumn>
-    </DarkGreyCard>
+    </AutoColumn>
   )
 }

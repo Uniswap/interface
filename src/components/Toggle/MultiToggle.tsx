@@ -5,10 +5,10 @@ export const ToggleWrapper = styled.button<{ width?: string }>`
   display: flex;
   align-items: center;
   width: ${({ width }) => width ?? '100%'};
-  padding: 2px;
+  padding: 1px;
   background: ${({ theme }) => theme.bg1};
   border-radius: 8px;
-  border: ${({ theme }) => '1px solid ' + theme.bg1};
+  border: ${({ theme }) => '1px solid ' + theme.bg2};
   cursor: pointer;
   outline: none;
 `

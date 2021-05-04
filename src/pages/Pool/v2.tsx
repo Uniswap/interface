@@ -155,7 +155,7 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your liquidity
+                  Your V2 liquidity
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>

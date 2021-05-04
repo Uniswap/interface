@@ -48,7 +48,10 @@ export default function RangeSelector({
         decrement={isSorted ? getDecrementLower : getIncrementUpper}
         increment={isSorted ? getIncrementLower : getDecrementUpper}
         feeAmount={feeAmount}
-        label={leftPrice ? `${leftPrice.toSignificant(5)} ${currencyB?.symbol}/${currencyA?.symbol}` : '-'}
+        label={leftPrice ? `${currencyB?.symbol}` : '-'}
+        title={'Min price'}
+        tokenA={currencyA?.symbol}
+        tokenB={currencyB?.symbol}
       />
       <StepCounter
         value={rightPrice?.toSignificant(5) ?? ''}
@@ -57,7 +60,10 @@ export default function RangeSelector({
         decrement={isSorted ? getDecrementUpper : getIncrementLower}
         increment={isSorted ? getIncrementUpper : getDecrementLower}
         feeAmount={feeAmount}
-        label={rightPrice ? `${rightPrice.toSignificant(5)} ${currencyB?.symbol}/${currencyA?.symbol}` : '-'}
+        label={rightPrice ? `${currencyB?.symbol}` : '-'}
+        tokenA={currencyA?.symbol}
+        tokenB={currencyB?.symbol}
+        title={'Max price'}
       />
     </RowBetween>
   )
