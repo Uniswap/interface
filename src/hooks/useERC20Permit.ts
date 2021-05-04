@@ -34,7 +34,7 @@ const PERMITTABLE_TOKENS: {
   }
 } = {
   [ChainId.MAINNET]: {
-    [USDC.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '1' },
+    [USDC.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
     [UNI[ChainId.MAINNET].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
@@ -44,6 +44,7 @@ const PERMITTABLE_TOKENS: {
   },
   [ChainId.ROPSTEN]: {
     [UNI[ChainId.ROPSTEN].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+    ['0x07865c6E87B9F70255377e024ace6630C1Eaa37F']: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
   },
   [ChainId.GÖRLI]: {
     [UNI[ChainId.GÖRLI].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
