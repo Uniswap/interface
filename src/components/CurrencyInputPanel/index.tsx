@@ -1,10 +1,9 @@
 import { Pair } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { warningSeverity } from '../../utils/prices'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -18,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import useTheme from '../../hooks/useTheme'
 import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
+import { FiatValue } from './FiatValue'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -196,15 +196,6 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const priceImpactColor = useMemo(() => {
-    if (!priceImpact) return undefined
-    if (priceImpact.lessThan('0')) return theme.green1
-    const severity = warningSeverity(priceImpact)
-    if (severity < 1) return theme.text4
-    if (severity < 3) return theme.yellow1
-    return theme.red1
-  }, [priceImpact, theme.green1, theme.red1, theme.text4, theme.yellow1])
-
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
       {locked && (
@@ -291,12 +282,7 @@ export default function CurrencyInputPanel({
                 </RowFixed>
               )}
 
-              <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
-                {fiatValue ? '~' : ''}${fiatValue ? Number(fiatValue?.toSignificant(6)).toLocaleString('en') : '-'}
-                {priceImpact ? (
-                  <span style={{ color: priceImpactColor }}> ({priceImpact.multiply(-100).toSignificant(3)}%)</span>
-                ) : null}
-              </TYPE.body>
+              <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
             </RowBetween>
           </FiatRow>
         )}
