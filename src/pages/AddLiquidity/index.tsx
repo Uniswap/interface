@@ -1,6 +1,6 @@
-import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, TokenAmount, ETHER } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { TransactionResponse } from '@ethersproject/providers'
+import { Currency, TokenAmount, ETHER, currencyEquals } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
 import { Link2, AlertTriangle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -80,11 +80,15 @@ export default function AddLiquidity({
 
   // keep track for UI display purposes of user selected base currency
   const [baseCurrency, setBaseCurrency] = useState(currencyA)
-  const quoteCurrency = useMemo(() => (baseCurrency === currencyA ? currencyB : currencyA), [
-    baseCurrency,
-    currencyA,
-    currencyB,
-  ])
+  const quoteCurrency = useMemo(
+    () =>
+      currencyA && currencyB && baseCurrency
+        ? currencyEquals(baseCurrency, currencyA)
+          ? currencyB
+          : currencyA
+        : undefined,
+    [currencyA, currencyB, baseCurrency]
+  )
 
   // mint state
   const { independentField, typedValue, startPriceTypedValue } = useMintState()
@@ -247,38 +251,53 @@ export default function AddLiquidity({
     !depositBDisabled ? currencies[Field.CURRENCY_B]?.symbol : ''
   }`
 
-  const handleCurrencyASelect = useCallback(
-    (currencyA: Currency) => {
-      const newCurrencyIdA = currencyId(currencyA)
-      //switch order if same selected
-      if (newCurrencyIdA === currencyIdB) {
-        history.push(`/add/${currencyIdB}/${currencyIdA}`)
-      } else if (chainId && newCurrencyIdA === WETH9[chainId]?.address && currencyIdB === 'ETH') {
-        // prevent eth / weth
-        history.push(`/add/${newCurrencyIdA}`)
+  const handleCurrencySelect = useCallback(
+    (currencyNew: Currency, currencyIdOther?: string): (string | undefined)[] => {
+      const currencyIdNew = currencyId(currencyNew)
+
+      if (currencyIdNew === currencyIdOther) {
+        // not ideal, but for now clobber the other if the currency ids are equal
+        return [currencyIdNew, undefined]
       } else {
-        history.push(`/add/${newCurrencyIdA}/${currencyIdB ?? 'ETH'}`)
-      }
-    },
-    [currencyIdB, chainId, history, currencyIdA]
-  )
-  const handleCurrencyBSelect = useCallback(
-    (currencyB: Currency) => {
-      const newCurrencyIdB = currencyId(currencyB)
-      if (currencyIdA === newCurrencyIdB) {
-        if (currencyIdB) {
-          history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)
+        // prevent weth + eth
+        const isETHOrWETHNew =
+          currencyIdNew === 'ETH' || (chainId !== undefined && currencyIdNew === WETH9[chainId]?.address)
+        const isETHOrWETHOther =
+          currencyIdOther !== undefined &&
+          (currencyIdOther === 'ETH' || (chainId !== undefined && currencyIdOther === WETH9[chainId]?.address))
+
+        if (isETHOrWETHNew && isETHOrWETHOther) {
+          return [currencyIdNew, undefined]
         } else {
-          history.push(`/add/${newCurrencyIdB}`)
+          return [currencyIdNew, currencyIdOther]
         }
-      } else if (chainId && newCurrencyIdB === WETH9[chainId]?.address && currencyIdA === 'ETH') {
-        // prevent eth / weth
-        history.push(`/add/${newCurrencyIdB}`)
-      } else {
-        history.push(`/add/${currencyIdA ?? 'ETH'}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, chainId, currencyIdB, history]
+    [chainId]
+  )
+
+  const handleCurrencyASelect = useCallback(
+    (currencyANew: Currency) => {
+      const [idA, idB] = handleCurrencySelect(currencyANew, currencyIdB)
+      if (idB === undefined) {
+        history.push(`/add/${idA}`)
+      } else {
+        history.push(`/add/${idA}/${idB}`)
+      }
+    },
+    [handleCurrencySelect, currencyIdB, history]
+  )
+
+  const handleCurrencyBSelect = useCallback(
+    (currencyBNew: Currency) => {
+      const [idB, idA] = handleCurrencySelect(currencyBNew, currencyIdA)
+      if (idA === undefined) {
+        history.push(`/add/${idB}`)
+      } else {
+        history.push(`/add/${idA}/${idB}`)
+      }
+    },
+    [handleCurrencySelect, currencyIdA, history]
   )
 
   const handleFeePoolSelect = useCallback(
