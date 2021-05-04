@@ -5,10 +5,12 @@ import React, { useContext, useState } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import { TYPE } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import { isAddress, shortenAddress } from '../../utils'
+import { computeFiatValuePriceImpact, isAddress, shortenAddress } from '../../utils'
 import { AutoColumn } from '../Column'
+import { FiatValue } from '../CurrencyInputPanel/FiatValue'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText, SwapShowAcceptChanges } from './styleds'
@@ -57,17 +59,18 @@ export default function SwapModalHeader({
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
+  const fiatValueInput = useUSDCValue(maximumAmountIn)
+  const fiatValueOutput = useUSDCValue(minimumAmountOut)
+
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
       <DarkGreyCard padding="0.75rem 1rem">
         <AutoColumn gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-              {'From'}
+              From
             </TYPE.body>
-            <TYPE.body fontSize={14} color={theme.text3}>
-              {'$-'}
-            </TYPE.body>
+            <FiatValue fiatValue={fiatValueInput} />
           </RowBetween>
           <RowBetween align="center">
             <RowFixed gap={'0px'}>
@@ -95,10 +98,13 @@ export default function SwapModalHeader({
         <AutoColumn gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-              {'To'}
+              To
             </TYPE.body>
             <TYPE.body fontSize={14} color={theme.text3}>
-              {'$-'}
+              <FiatValue
+                fiatValue={fiatValueOutput}
+                priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
+              />
             </TYPE.body>
           </RowBetween>
           <RowBetween align="flex-end">

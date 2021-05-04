@@ -1,4 +1,4 @@
-import { CurrencyAmount, currencyEquals, Percent, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
@@ -6,26 +6,27 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, HelpCircle, CheckCircle, Info, X } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle, Info, X } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary, ButtonGray } from '../../components/Button'
+import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import { ONE_HUNDRED_PERCENT } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -47,26 +48,12 @@ import {
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
 import { LinkStyledButton, TYPE } from '../../theme'
+import { computeFiatValuePriceImpact } from '../../utils'
 import { getTradeVersion } from '../../utils/getTradeVersion'
+import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-
-import { Link } from 'react-router-dom'
-import { isTradeBetter } from '../../utils/isTradeBetter'
-import BetterTradeLink from '../../components/swap/BetterTradeLink'
-import SwapHeader from '../../components/swap/SwapHeader'
-
-function computeFiatValuePriceImpact(
-  fiatValueInput: CurrencyAmount | undefined | null,
-  fiatValueOutput: CurrencyAmount | undefined | null
-): Percent | undefined {
-  if (!fiatValueOutput || !fiatValueInput) return undefined
-  if (!currencyEquals(fiatValueInput.currency, fiatValueOutput.currency)) return undefined
-  if (JSBI.equal(fiatValueInput.raw, JSBI.BigInt(0))) return undefined
-  const pct = ONE_HUNDRED_PERCENT.subtract(fiatValueOutput.divide(fiatValueInput))
-  return new Percent(pct.numerator, pct.denominator)
-}
 
 export default function Swap({ history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
