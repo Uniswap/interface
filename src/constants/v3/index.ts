@@ -7,8 +7,9 @@ import mainnet from './mainnet.json'
 
 function constructAddressMap(
   key: keyof typeof goerli | keyof typeof ropsten | keyof typeof rinkeby | keyof typeof mainnet
-): { [chainId in ChainId]?: string } {
+): { [chainId in ChainId]: string } {
   return {
+    [ChainId.MAINNET]: mainnet[key],
     [ChainId.ROPSTEN]: ropsten[key],
     [ChainId.KOVAN]: kovan[key],
     [ChainId.RINKEBY]: rinkeby[key],
