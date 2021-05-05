@@ -54,16 +54,18 @@ export function PoolPriceBar({
   pair: Pair | null | undefined
 }) {
   const theme = useContext(ThemeContext)
-  const percentToken0 = pair
+  const realPercentToken0 = pair
     ? pair.reserve0
         .divide(pair.virtualReserve0)
         .multiply('100')
         .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
-        .toSignificant(2) ?? '.'
-    : '50%'
-  const percentToken1 = pair
-    ? new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(percentToken0).toSignificant(2) ?? '.'
-    : '50%'
+    : new Fraction(JSBI.BigInt(50))
+
+  const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
+
+  const percentToken0 = realPercentToken0.toSignificant(5)
+  const percentToken1 = realPercentToken1.toSignificant(5)
+
   return (
     <AutoColumn gap="md">
       <AutoRow justify="space-between" gap="4px">
@@ -89,7 +91,7 @@ export function PoolPriceBar({
               %
             </Text>
             <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              Ratio: {percentToken0}&nbsp;{currencies[Field.CURRENCY_A]?.symbol}&nbsp;-&nbsp;{percentToken1}&nbsp;
+              Ratio: {percentToken0}%&nbsp;{currencies[Field.CURRENCY_A]?.symbol}&nbsp;-&nbsp;{percentToken1}%&nbsp;
               {currencies[Field.CURRENCY_B]?.symbol}
             </Text>
           </OutlineCard2>
