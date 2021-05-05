@@ -41,7 +41,7 @@ export function computeRealizedLPFeeAmount(trade?: V2Trade | V3Trade | null): Cu
       : ONE_HUNDRED_PERCENT.subtract(
           trade.route.pools.reduce<Fraction>(
             (currentFee: Fraction, pool): Fraction =>
-              currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 10_000))),
+              currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
             ONE_HUNDRED_PERCENT
           )
         )

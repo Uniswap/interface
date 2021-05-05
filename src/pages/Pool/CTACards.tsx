@@ -21,15 +21,15 @@ const CTASection = styled.section`
 
 const CTA1 = styled(ExternalLink)`
   background-size: 40px 40px;
-  background-image: linear-gradient(to right, #2d2d2d 1px, transparent 1px),
-    linear-gradient(to bottom, #2d2d2d 1px, transparent 1px);
-  background-color: ${({ theme }) => theme.bg1};
+  background-image: linear-gradient(to right, ${({ theme }) => theme.bg3} 1px, transparent 1px),
+    linear-gradient(to bottom, ${({ theme }) => theme.bg3} 1px, transparent 1px);
+  background-color: ${({ theme }) => theme.bg2};
   padding: 32px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid ${({ theme }) => theme.bg4};
+  border: 1px solid ${({ theme }) => theme.bg3};
 
   * {
     color: ${({ theme }) => theme.text1};
