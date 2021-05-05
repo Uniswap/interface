@@ -56,7 +56,7 @@ const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boole
   align-items: center;
   font-size: 24px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg2 : theme.primary1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.bg0 : theme.primary1)};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
   border-radius: 16px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
@@ -72,7 +72,7 @@ const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boole
   margin-right: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg3 : darken(0.05, theme.primary1))};
+    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
   }
 `
 

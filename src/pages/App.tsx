@@ -5,7 +5,7 @@ import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsRepo
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
-import URLWarning from '../components/Header/URLWarning'
+// import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import { ApplicationModal } from '../state/application/actions'
@@ -28,6 +28,7 @@ import VotePage from './Vote/VotePage'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import { PositionPage } from './Pool/PositionPage'
 import AddLiquidity from './AddLiquidity'
+import { ThemedBackground } from '../theme'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -75,11 +76,11 @@ export default function App() {
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
-        <URLWarning />
         <HeaderWrapper>
           <Header />
         </HeaderWrapper>
         <BodyWrapper>
+          <ThemedBackground />
           <Popups />
           <Polling />
           <TopLevelModals />

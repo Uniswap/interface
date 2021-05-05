@@ -29,7 +29,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             Liquidity Provider Fee
           </TYPE.black>
         </RowFixed>
-        <TYPE.black fontSize={12} color={theme.text1}>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
           {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
         </TYPE.black>
       </RowBetween>
@@ -40,7 +40,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             Route
           </TYPE.black>
         </RowFixed>
-        <TYPE.black fontSize={12} color={theme.text1}>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
           <SwapRoute trade={trade} />
         </TYPE.black>
       </RowBetween>
@@ -51,7 +51,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             Execution price vs. spot price
           </TYPE.black>
         </RowFixed>
-        <TYPE.black fontSize={12} color={theme.text1}>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
           <FormattedPriceImpact priceImpact={computePriceImpactWithMaximumSlippage(trade, allowedSlippage)} />
         </TYPE.black>
       </RowBetween>
