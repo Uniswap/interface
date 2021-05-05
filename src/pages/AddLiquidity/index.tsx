@@ -15,6 +15,7 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from '../../co
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { RowBetween } from '../../components/Row'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import Review from './Review'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -154,6 +155,11 @@ export default function AddLiquidity({
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+  }
+
+  const usdcValues = {
+    [Field.CURRENCY_A]: useUSDCValue(parsedAmounts[Field.CURRENCY_A]),
+    [Field.CURRENCY_B]: useUSDCValue(parsedAmounts[Field.CURRENCY_B]),
   }
 
   // get the max amounts user can add
@@ -588,6 +594,7 @@ export default function AddLiquidity({
                   showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                   currency={currencies[Field.CURRENCY_A]}
                   id="add-liquidity-input-tokena"
+                  fiatValue={usdcValues[Field.CURRENCY_A]}
                   showCommonBases
                   locked={depositADisabled}
                 />
@@ -599,6 +606,7 @@ export default function AddLiquidity({
                     onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                   }}
                   showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                  fiatValue={usdcValues[Field.CURRENCY_B]}
                   currency={currencies[Field.CURRENCY_B]}
                   id="add-liquidity-input-tokenb"
                   showCommonBases
