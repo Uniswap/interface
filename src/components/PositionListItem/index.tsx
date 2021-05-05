@@ -1,11 +1,9 @@
 import React, { useMemo, useState } from 'react'
 import { Position } from '@uniswap/v3-sdk'
-import Badge, { BadgeVariant } from 'components/Badge'
+import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
-import { AlertCircle } from 'react-feather'
-import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
@@ -15,16 +13,9 @@ import { formatPrice } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { DAI, USDC, USDT, WBTC } from '../../constants'
-import { MouseoverTooltip } from '../Tooltip'
+import RangeBadge from 'components/Badge/RangeBadge'
 import { RowFixed } from 'components/Row'
 
-const ActiveDot = styled.span`
-  background-color: ${({ theme }) => theme.success};
-  border-radius: 50%;
-  height: 8px;
-  width: 8px;
-  margin-right: 4px;
-`
 const Row = styled(Link)`
   align-items: center;
   border-radius: 20px;
@@ -65,9 +56,7 @@ const BadgeText = styled.div`
     font-size: 12px;
   `};
 `
-const BadgeWrapper = styled.div`
-  font-size: 14px;
-`
+
 const DataLineItem = styled.div`
   font-size: 14px;
 `
@@ -185,8 +174,6 @@ export function getPriceOrderingFromPositionForUI(
 }
 
 export default function PositionListItem({ positionDetails }: PositionListItemProps) {
-  const { t } = useTranslation()
-
   const {
     token0: token0Address,
     token1: token1Address,
@@ -228,11 +215,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
     ;[priceLower, priceUpper, base, quote] = [priceUpper?.invert(), priceLower?.invert(), quote, base]
   }
 
-  const quotePrice = useMemo(() => {
-    return manuallyInverted
-      ? position?.pool.priceOf(position?.pool.token0)
-      : position?.pool.priceOf(position?.pool.token1)
-  }, [manuallyInverted, position?.pool])
+  const removed = liquidity?.eq(0)
 
   return (
     <Row to={positionSummaryLink}>
@@ -247,36 +230,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             <BadgeText>{new Percent(feeAmount, 1_000_000).toSignificant()}%</BadgeText>
           </Badge>
         </PrimaryPositionIdData>
-        <BadgeWrapper>
-          {outOfRange ? (
-            <MouseoverTooltip
-              text={`The price of this pair is outside of your selected range. Your positions is not earning fees. Current price: ${quotePrice?.toSignificant(
-                6
-              )} ${manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} / ${
-                manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol
-              }`}
-            >
-              <Badge variant={BadgeVariant.WARNING}>
-                <AlertCircle width={14} height={14} style={{ marginRight: '' }} />
-                &nbsp;
-                <BadgeText>{t('Out of range')}</BadgeText>
-              </Badge>
-            </MouseoverTooltip>
-          ) : (
-            <MouseoverTooltip
-              text={`The price of this pair is within your selected range. Your positions is earning fees. Current price: ${quotePrice?.toSignificant(
-                6
-              )} ${manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} / ${
-                manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol
-              }`}
-            >
-              <Badge variant={BadgeVariant.DEFAULT}>
-                <ActiveDot /> &nbsp;
-                <BadgeText>{t('In range')}</BadgeText>
-              </Badge>
-            </MouseoverTooltip>
-          )}
-        </BadgeWrapper>
+        <RangeBadge removed={removed} inRange={!outOfRange} />
       </RowFixed>
 
       {priceLower && priceUpper ? (
