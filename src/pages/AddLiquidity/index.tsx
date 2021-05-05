@@ -481,7 +481,7 @@ export default function AddLiquidity({
                           onUserInput={onStartPriceInput}
                         />
                       </OutlineCard>
-                      <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
+                      <RowBetween style={{ backgroundColor: theme.bg1, padding: '12px', borderRadius: '12px' }}>
                         <TYPE.main>Current {baseCurrency?.symbol} Price:</TYPE.main>
                         <TYPE.main>
                           {price ? (
@@ -538,7 +538,7 @@ export default function AddLiquidity({
                     ) : null}
                   </RowBetween>
                   <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
-                    Your liquidity will only earn fees when the market price of the pair is within your range.
+                    Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
                     <ExternalLink
                       href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}
                       style={{ fontSize: '14px' }}
