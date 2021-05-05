@@ -131,6 +131,27 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'ORBS',
       name: 'ORBS',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0xbE9375C6a420D2eEB258962efB95551A5b722803',
+      symbol: 'STMX',
+      name: 'StormX',
+      decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0xEBd9D99A3982d547C5Bb4DB7E3b1F9F14b67Eb83',
+      symbol: 'ID',
+      name: 'Everest ID',
+      decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0xC57d533c50bC22247d49a368880fb49a1caA39F7',
+      symbol: 'PTF',
+      name: 'PowerTrade Fuel Token',
+      decimals: 18
     }
   ],
   version: {
