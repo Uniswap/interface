@@ -89,6 +89,7 @@ export default function AddLiquidity({
     [currencyA, currencyB, baseCurrency]
   )
 
+  // url params are the source truth, so we have to do this
   useEffect(() => {
     setBaseCurrency(currencyA)
     return () => {
@@ -449,7 +450,8 @@ export default function AddLiquidity({
                             handleRateToggle={() => {
                               onLeftRangeInput('')
                               onRightRangeInput('')
-                              setBaseCurrency(quoteCurrency)
+                              console.log('test')
+                              history.push(`/add/${currencyIdB as string}/${currencyIdA as string}`)
                             }}
                           />
                         ) : null}
@@ -490,7 +492,8 @@ export default function AddLiquidity({
                         handleRateToggle={() => {
                           onLeftRangeInput('')
                           onRightRangeInput('')
-                          setBaseCurrency(quoteCurrency)
+                          console.log('test')
+                          history.push(`/add/${currencyIdB as string}/${currencyIdA as string}`)
                         }}
                       />
                     ) : null}
