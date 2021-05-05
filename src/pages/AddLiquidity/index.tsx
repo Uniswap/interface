@@ -106,6 +106,7 @@ export default function AddLiquidity({
   const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
   const {
+    pool,
     ticks,
     dependentField,
     price,
@@ -348,7 +349,8 @@ export default function AddLiquidity({
     quoteCurrency ?? undefined,
     feeAmount,
     tickLower,
-    tickUpper
+    tickUpper,
+    pool
   )
 
   return (
