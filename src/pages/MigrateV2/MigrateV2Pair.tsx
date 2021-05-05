@@ -239,7 +239,21 @@ function V2PairMigration({
   const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(pairBalance, migratorAddress)
 
   const approve = useCallback(async () => {
-    isNotUniswap ? approveManually() : gatherPermitSignature ? gatherPermitSignature() : approveManually()
+    if (isNotUniswap) {
+      // sushi has to be manually approved
+      await approveManually()
+    } else if (gatherPermitSignature) {
+      try {
+        await gatherPermitSignature()
+      } catch (error) {
+        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+        if (error?.code !== 4001) {
+          await approveManually()
+        }
+      }
+    } else {
+      await approveManually()
+    }
   }, [isNotUniswap, gatherPermitSignature, approveManually])
 
   const addTransaction = useTransactionAdder()
