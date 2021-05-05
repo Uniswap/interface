@@ -168,7 +168,7 @@ function useSwapCallArguments(
                     swapRouterAddress,
                     toHex(trade.maximumAmountIn(allowedSlippage).raw),
                   ]),
-                  value: '0x',
+                  value: '0x0',
                 },
                 {
                   to: swapRouterAddress,
@@ -177,7 +177,7 @@ function useSwapCallArguments(
                 },
               ],
             ]),
-            value: '0x',
+            value: '0x0',
           },
         ]
       }
