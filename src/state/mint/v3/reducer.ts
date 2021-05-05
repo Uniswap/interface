@@ -1,10 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, resetMintState, typeInput } from './actions'
+import {
+  Field,
+  resetMintState,
+  typeInput,
+  typeStartPriceInput,
+  typeLeftRangeInput,
+  typeRightRangeInput,
+} from './actions'
 
 export interface MintState {
   readonly independentField: Field
   readonly typedValue: string
-  readonly otherTypedValue: string // for the case when there's no liquidity
   readonly startPriceTypedValue: string // for the case when there's no liquidity
   readonly leftRangeTypedValue: string
   readonly rightRangeTypedValue: string
@@ -13,7 +19,6 @@ export interface MintState {
 export const initialState: MintState = {
   independentField: Field.CURRENCY_A,
   typedValue: '',
-  otherTypedValue: '',
   startPriceTypedValue: '',
   leftRangeTypedValue: '',
   rightRangeTypedValue: '',
@@ -22,6 +27,24 @@ export const initialState: MintState = {
 export default createReducer<MintState>(initialState, (builder) =>
   builder
     .addCase(resetMintState, () => initialState)
+    .addCase(typeStartPriceInput, (state, { payload: { typedValue } }) => {
+      return {
+        ...state,
+        startPriceTypedValue: typedValue,
+      }
+    })
+    .addCase(typeLeftRangeInput, (state, { payload: { typedValue } }) => {
+      return {
+        ...state,
+        leftRangeTypedValue: typedValue,
+      }
+    })
+    .addCase(typeRightRangeInput, (state, { payload: { typedValue } }) => {
+      return {
+        ...state,
+        rightRangeTypedValue: typedValue,
+      }
+    })
     .addCase(typeInput, (state, { payload: { field, typedValue, noLiquidity } }) => {
       if (noLiquidity) {
         // they're typing into the field they've last typed in
@@ -38,7 +61,6 @@ export default createReducer<MintState>(initialState, (builder) =>
             ...state,
             independentField: field,
             typedValue,
-            otherTypedValue: state.typedValue,
           }
         }
       } else {
@@ -46,7 +68,6 @@ export default createReducer<MintState>(initialState, (builder) =>
           ...state,
           independentField: field,
           typedValue,
-          otherTypedValue: '',
         }
       }
     })

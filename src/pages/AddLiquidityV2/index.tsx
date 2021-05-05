@@ -27,7 +27,7 @@ import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
-import { useMintActionHandlers, useMintState } from '../../state/mint/hooks'
+import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
@@ -41,7 +41,6 @@ import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { useV2DerivedMintInfo } from 'state/mint/v2'
 
 export default function AddLiquidity({
   match: {
@@ -79,7 +78,7 @@ export default function AddLiquidity({
     liquidityMinted,
     poolTokenPercentage,
     error,
-  } = useV2DerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
+  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
 
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 

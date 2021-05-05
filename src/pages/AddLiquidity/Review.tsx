@@ -1,5 +1,5 @@
 import React from 'react'
-import { Field } from '../../state/mint/actions'
+import { Field } from '../../state/mint/v3/actions'
 import { AutoColumn } from 'components/Column'
 import Card from 'components/Card'
 import styled from 'styled-components'
