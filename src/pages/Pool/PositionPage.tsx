@@ -387,7 +387,7 @@ export function PositionPage({
         hash={collectMigrationHash ?? ''}
         content={() => (
           <ConfirmationModalContent
-            title={'Collect fees'}
+            title={'Claim fees'}
             onDismiss={() => setShowConfirm(false)}
             topContent={modalHeader}
           />
@@ -397,7 +397,7 @@ export function PositionPage({
       <AutoColumn gap="md">
         <AutoColumn gap="sm">
           <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
-            <HoverText>{'← Back to overview'}</HoverText>
+            <HoverText>{'← Back to Pools Overview'}</HoverText>
           </Link>
           <ResponsiveRow>
             <RowFixed>
@@ -534,7 +534,7 @@ export function PositionPage({
                 <AutoColumn gap="md">
                   <RowBetween style={{ alignItems: 'flex-start' }}>
                     <AutoColumn gap="md">
-                      <Label>Fees Earned</Label>
+                      <Label>Unclaimed fees</Label>
                       {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                         <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
                           ${fiatValueOfFees.toFixed(2)}

@@ -40,7 +40,7 @@ export default function RangeBadge({ inRange }: { inRange?: boolean }) {
     <BadgeWrapper>
       {inRange ? (
         <MouseoverTooltip
-          text={`The price of this pair is within your selected range. Your positions is earning fees.`}
+          text={`The price of this pair is within your selected range. Your position is currently earning fees.`}
         >
           <Badge variant={BadgeVariant.DEFAULT}>
             <ActiveDot /> &nbsp;
@@ -49,7 +49,7 @@ export default function RangeBadge({ inRange }: { inRange?: boolean }) {
         </MouseoverTooltip>
       ) : (
         <MouseoverTooltip
-          text={`The price of this pair is outside of your selected range. Your positions is not earning fees.`}
+          text={`The price of this pair is outside of your selected range. Your position is not currently earning fees. `}
         >
           <Badge variant={BadgeVariant.WARNING}>
             <AlertCircle width={14} height={14} />

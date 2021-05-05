@@ -400,16 +400,19 @@ function V2PairMigration({
           {noLiquidity && (
             <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <AlertCircle color={theme.text1} style={{ marginBottom: '12px', opacity: 0.8 }} />
-              <TYPE.body fontSize={14} style={{ marginBottom: 8, fontWeight: 400, opacity: 0.8 }} textAlign="center">
-                You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will be migrated at the
-                current {isNotUniswap ? 'SushiSwap' : 'V2'} price. Your transaction cost will include the gas to create
-                the pool.
+              <TYPE.body fontSize={14} style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }} textAlign="center">
+                You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the
+                current {isNotUniswap ? 'SushiSwap' : 'V2'} price.
+              </TYPE.body>
+
+              <TYPE.body fontWeight={500} textAlign="center" fontSize={14} style={{ marginTop: '8px', opacity: 0.8 }}>
+                Your transaction cost will be much higher as it includes the gas to create the pool.
               </TYPE.body>
 
               {v2SpotPrice && (
-                <AutoColumn gap="8px">
+                <AutoColumn gap="8px" style={{ marginTop: '12px' }}>
                   <RowBetween>
-                    <TYPE.body fontWeight={600} fontSize={14}>
+                    <TYPE.body fontWeight={500} fontSize={14}>
                       {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:{' '}
                       {invertPrice
                         ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
@@ -454,8 +457,9 @@ function V2PairMigration({
                 </RowBetween>
               </AutoColumn>
               <TYPE.body fontSize={14} style={{ marginTop: 8, fontWeight: 400 }}>
-                You should only deposit liquidity into Uniswap V3 at a price you believe is correct. If the price seems
-                incorrect, you can either make a swap to move the price or wait for someone else to do so.
+                You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <br />
+                If the price seems incorrect, you can either make a swap to move the price or wait for someone else to
+                do so.
               </TYPE.body>
             </YellowCard>
           ) : !noLiquidity && v3SpotPrice ? (
@@ -551,9 +555,9 @@ function V2PairMigration({
                   {approval === ApprovalState.PENDING ? (
                     <Dots>Approving</Dots>
                   ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                    'Approved'
+                    'Allowed'
                   ) : (
-                    'Unlock LP tokens for migration'
+                    'Allow LP token migration'
                   )}
                 </ButtonConfirmed>
               </AutoColumn>
@@ -650,7 +654,7 @@ export default function MigrateV2Pair({
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
           <TYPE.mediumHeader>Migrate V2 Liquidity</TYPE.mediumHeader>
-          <div>
+          <div style={{ opacity: 0 }}>
             <QuestionHelper text="Migrate your liquidity tokens from Uniswap V2 to Uniswap V3." />
           </div>
         </AutoRow>

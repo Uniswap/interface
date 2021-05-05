@@ -228,12 +228,6 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
     ;[priceLower, priceUpper, base, quote] = [priceUpper?.invert(), priceLower?.invert(), quote, base]
   }
 
-  const quotePrice = useMemo(() => {
-    return manuallyInverted
-      ? position?.pool.priceOf(position?.pool.token0)
-      : position?.pool.priceOf(position?.pool.token1)
-  }, [manuallyInverted, position?.pool])
-
   return (
     <Row to={positionSummaryLink}>
       <RowFixed>
@@ -250,11 +244,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
         <BadgeWrapper>
           {outOfRange ? (
             <MouseoverTooltip
-              text={`The price of this pair is outside of your selected range. Your positions is not earning fees. Current price: ${quotePrice?.toSignificant(
-                6
-              )} ${manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} / ${
-                manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol
-              }`}
+              text={`The price of this pair is outside of your selected range. Your position is not currently earning fees.`}
             >
               <Badge variant={BadgeVariant.WARNING}>
                 <AlertCircle width={14} height={14} style={{ marginRight: '' }} />
@@ -264,11 +254,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             </MouseoverTooltip>
           ) : (
             <MouseoverTooltip
-              text={`The price of this pair is within your selected range. Your positions is earning fees. Current price: ${quotePrice?.toSignificant(
-                6
-              )} ${manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} / ${
-                manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol
-              }`}
+              text={`The price of this pair is within your selected range. Your position is currently earning fees.`}
             >
               <Badge variant={BadgeVariant.DEFAULT}>
                 <ActiveDot /> &nbsp;

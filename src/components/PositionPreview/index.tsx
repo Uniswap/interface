@@ -113,30 +113,28 @@ export const PositionPreview = ({
         <RowBetween>
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
-              <TYPE.main fontSize="12px">Min price</TYPE.main>
+              <TYPE.main fontSize="12px">Min Price</TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${priceLower.toSignificant(5)}`}</TYPE.mediumHeader>
               <TYPE.main
                 textAlign="center"
                 fontSize="12px"
               >{` ${quoteCurrency.symbol}/${baseCurrency.symbol}`}</TYPE.main>
               <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
-                Position will be <CurrencyLogo currency={baseCurrency} size="10px" /> 100% {baseCurrency?.symbol} at
-                this price.
+                Your position will be 100% composed of {baseCurrency?.symbol} at this price
               </TYPE.small>
             </AutoColumn>
           </LightCard>
 
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
-              <TYPE.main fontSize="12px">Max price</TYPE.main>
+              <TYPE.main fontSize="12px">Max Price</TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${priceUpper.toSignificant(5)}`}</TYPE.mediumHeader>
               <TYPE.main
                 textAlign="center"
                 fontSize="12px"
               >{` ${quoteCurrency.symbol}/${baseCurrency.symbol}`}</TYPE.main>
               <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
-                Position will be <CurrencyLogo currency={quoteCurrency} size="10px" /> 100% {quoteCurrency?.symbol} at
-                this price.
+                Your position will be 100% composed of {quoteCurrency?.symbol} at this price
               </TYPE.small>
             </AutoColumn>
           </LightCard>
