@@ -141,7 +141,7 @@ export default function Menu() {
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem href="https://uniswap.org/docs/v2">
+          <MenuItem href="https://docs.uniswap.org/">
             <BookOpen size={14} />
             Docs
           </MenuItem>
