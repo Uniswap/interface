@@ -532,8 +532,8 @@ export default function Swap({ history }: RouteComponentProps) {
                           />
                           {/* we need to shorten this string on mobile */}
                           {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                            ? currencies[Field.INPUT]?.symbol + ' unlocked for trading.'
-                            : 'Allow Uniswap to spend your ' + currencies[Field.INPUT]?.symbol}
+                            ? 'You can now trade ' + currencies[Field.INPUT]?.symbol
+                            : 'Allow the Uniswap Protocol to use your UNI ' + currencies[Field.INPUT]?.symbol}
                         </span>
                         {approvalState === ApprovalState.PENDING ? (
                           <Loader stroke="white" />
@@ -543,9 +543,9 @@ export default function Swap({ history }: RouteComponentProps) {
                         ) : (
                           <MouseoverTooltip
                             text={
-                              'You cannot swap until you give Uniswap permission to spend your ' +
+                              'You must give the Uniswap smart contracts permission to use your' +
                               currencies[Field.INPUT]?.symbol +
-                              '. You only have to do this once per token and only when you are selling a token for the first time.'
+                              '. You only have to do this once per token.'
                             }
                           >
                             <HelpCircle size="20" color={'white'} />
@@ -577,7 +577,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       error={isValid && priceImpactSeverity > 2}
                     >
                       <Text fontSize={16} fontWeight={500}>
-                        {priceImpactTooHigh ? `Price Impact High` : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                        {priceImpactTooHigh ? `High Price Impact` : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                       </Text>
                     </ButtonError>
                   </AutoColumn>

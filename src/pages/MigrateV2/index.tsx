@@ -158,7 +158,7 @@ export default function MigrateV2() {
 
         <AutoColumn justify={'center'} gap="md">
           <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-            {"Don't see a pool you joined?"}{' '}
+            {'Don’t see one of your v2 positions?'}{' '}
             <StyledInternalLink id="import-pool-link" to={'/find?origin=/migrate/v2'}>
               {'Import it.'}
             </StyledInternalLink>

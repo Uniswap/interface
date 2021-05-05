@@ -49,7 +49,7 @@ export default function RangeSelector({
         increment={isSorted ? getIncrementLower : getDecrementUpper}
         feeAmount={feeAmount}
         label={leftPrice ? `${currencyB?.symbol}` : '-'}
-        title={'Min price'}
+        title={'Min Price'}
         tokenA={currencyA?.symbol}
         tokenB={currencyB?.symbol}
       />
@@ -63,7 +63,7 @@ export default function RangeSelector({
         label={rightPrice ? `${currencyB?.symbol}` : '-'}
         tokenA={currencyA?.symbol}
         tokenB={currencyB?.symbol}
-        title={'Max price'}
+        title={'Max Price'}
       />
     </RowBetween>
   )
