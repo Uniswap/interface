@@ -6,7 +6,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle, Info, X } from 'react-feather'
+import { ArrowDown, CheckCircle, HelpCircle, Info, ArrowLeft } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -419,12 +419,12 @@ export default function Swap({ history }: RouteComponentProps) {
                           height: '24px',
                           opacity: 0.8,
                           lineHeight: '120%',
-                          marginLeft: '0.25rem',
+                          marginLeft: '0.75rem',
                         }}
                       >
-                        <X color={theme.text3} size={12} /> &nbsp;
+                        <ArrowLeft color={theme.text3} size={12} /> &nbsp;
                         <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
-                          Routed via V2
+                          Back to V3
                         </TYPE.main>
                       </ButtonGray>
                     )
