@@ -14,11 +14,13 @@ export interface Colors {
   text5: Color
 
   // backgrounds / greys
+  bg0: Color
   bg1: Color
   bg2: Color
   bg3: Color
   bg4: Color
   bg5: Color
+  bg6: Color
 
   modalBG: Color
   advancedBG: Color
@@ -44,7 +46,13 @@ export interface Colors {
   green1: Color
   yellow1: Color
   yellow2: Color
+  yellow3: Color
   blue1: Color
+  blue2: Color
+
+  error: Color
+  success: Color
+  warning: Color
 }
 
 export interface Grids {

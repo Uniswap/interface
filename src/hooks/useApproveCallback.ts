@@ -1,23 +1,22 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@uniswap/sdk'
+import { TokenAmount, CurrencyAmount, ETHER, ChainId, Percent } from '@uniswap/sdk-core'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
-import { ROUTER_ADDRESS } from '../constants'
-import { useTokenAllowance } from '../data/Allowances'
-import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
-import { Field } from '../state/swap/actions'
+import { V2_ROUTER_ADDRESS } from '../constants'
+import { SWAP_ROUTER_ADDRESSES } from '../constants/v3'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
-import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
-import { Version } from './useToggledVersion'
+import { useTokenAllowance } from './useTokenAllowance'
 
 export enum ApprovalState {
-  UNKNOWN,
-  NOT_APPROVED,
-  PENDING,
-  APPROVED
+  UNKNOWN = 'UNKNOWN',
+  NOT_APPROVED = 'NOT_APPROVED',
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
 }
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
@@ -82,12 +81,12 @@ export function useApproveCallback(
 
     return tokenContract
       .approve(spender, useExact ? amountToApprove.raw.toString() : MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas)
+        gasLimit: calculateGasMargin(estimatedGas),
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
           summary: 'Approve ' + amountToApprove.currency.symbol,
-          approval: { tokenAddress: token.address, spender: spender }
+          approval: { tokenAddress: token.address, spender: spender },
         })
       })
       .catch((error: Error) => {
@@ -100,12 +99,15 @@ export function useApproveCallback(
 }
 
 // wraps useApproveCallback in the context of a swap
-export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) {
-  const amountToApprove = useMemo(
-    () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
-    [trade, allowedSlippage]
+export function useApproveCallbackFromTrade(trade: V2Trade | V3Trade | undefined, allowedSlippage: Percent) {
+  const { chainId } = useActiveWeb3React()
+  const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
+  const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [
+    trade,
+    allowedSlippage,
+  ])
+  return useApproveCallback(
+    amountToApprove,
+    trade instanceof V2Trade ? V2_ROUTER_ADDRESS : trade instanceof V3Trade ? swapRouterAddress : undefined
   )
-  const tradeIsV1 = getTradeVersion(trade) === Version.v1
-  const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
-  return useApproveCallback(amountToApprove, tradeIsV1 ? v1ExchangeAddress : ROUTER_ADDRESS)
 }

@@ -5,15 +5,21 @@ export interface MintState {
   readonly independentField: Field
   readonly typedValue: string
   readonly otherTypedValue: string // for the case when there's no liquidity
+  readonly startPriceTypedValue: string // for the case when there's no liquidity
+  readonly leftRangeTypedValue: string
+  readonly rightRangeTypedValue: string
 }
 
-const initialState: MintState = {
+export const initialState: MintState = {
   independentField: Field.CURRENCY_A,
   typedValue: '',
-  otherTypedValue: ''
+  otherTypedValue: '',
+  startPriceTypedValue: '',
+  leftRangeTypedValue: '',
+  rightRangeTypedValue: '',
 }
 
-export default createReducer<MintState>(initialState, builder =>
+export default createReducer<MintState>(initialState, (builder) =>
   builder
     .addCase(resetMintState, () => initialState)
     .addCase(typeInput, (state, { payload: { field, typedValue, noLiquidity } }) => {
@@ -23,7 +29,7 @@ export default createReducer<MintState>(initialState, builder =>
           return {
             ...state,
             independentField: field,
-            typedValue
+            typedValue,
           }
         }
         // they're typing into a new field, store the other value
@@ -32,7 +38,7 @@ export default createReducer<MintState>(initialState, builder =>
             ...state,
             independentField: field,
             typedValue,
-            otherTypedValue: state.typedValue
+            otherTypedValue: state.typedValue,
           }
         }
       } else {
@@ -40,7 +46,7 @@ export default createReducer<MintState>(initialState, builder =>
           ...state,
           independentField: field,
           typedValue,
-          otherTypedValue: ''
+          otherTypedValue: '',
         }
       }
     })

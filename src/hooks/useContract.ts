@@ -1,30 +1,56 @@
 import { Contract } from '@ethersproject/contracts'
+import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { ChainId, WETH } from '@uniswap/sdk'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
-import { useMemo } from 'react'
-import { GOVERNANCE_ADDRESS, MERKLE_DISTRIBUTOR_ADDRESS, UNI } from '../constants'
+import { abi as V3FactoryABI } from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json'
+import { abi as V3PoolABI } from '@uniswap/v3-core/artifacts/contracts/UniswapV3Pool.sol/UniswapV3Pool.json'
+import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
+import { abi as V2MigratorABI } from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
+import { abi as TickLensABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/TickLens.sol/TickLens.json'
+import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+
+import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
+import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
+import ENS_ABI from 'abis/ens-registrar.json'
+import ERC20_ABI from 'abis/erc20.json'
+import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
+import MIGRATOR_ABI from 'abis/migrator.json'
+import MULTICALL_ABI from 'abis/multicall2.json'
+import { Unisocks } from 'abis/types/Unisocks'
+import UNISOCKS_ABI from 'abis/unisocks.json'
+import WETH_ABI from 'abis/weth.json'
+import EIP_2612 from 'abis/eip_2612.json'
+
 import {
-  ARGENT_WALLET_DETECTOR_ABI,
-  ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
-} from '../constants/abis/argent-wallet-detector'
-import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
-import ENS_ABI from '../constants/abis/ens-registrar.json'
-import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
-import ERC20_ABI from '../constants/abis/erc20.json'
-import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
-import UNISOCKS_ABI from '../constants/abis/unisocks.json'
-import WETH_ABI from '../constants/abis/weth.json'
-import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
-import { V1_EXCHANGE_ABI, V1_FACTORY_ABI, V1_FACTORY_ADDRESSES } from '../constants/v1'
-import { getContract } from '../utils'
+  ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
+  GOVERNANCE_ADDRESS,
+  MERKLE_DISTRIBUTOR_ADDRESS,
+  V1_MIGRATOR_ADDRESS,
+  UNI,
+  MULTICALL2_ADDRESSES,
+  V2_ROUTER_ADDRESS,
+} from 'constants/index'
+import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
+import {
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  V3_CORE_FACTORY_ADDRESSES,
+  TICK_LENS_ADDRESSES,
+  V3_MIGRATOR_ADDRESSES,
+  QUOTER_ADDRESSES,
+} from 'constants/v3'
+import { useMemo } from 'react'
+import { Quoter, TickLens, UniswapV3Factory, UniswapV3Pool } from 'types/v3'
+import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
+import { V3Migrator } from 'types/v3/V3Migrator'
+import { getContract } from 'utils'
+import { Multicall2 } from '../abis/types'
 import { useActiveWeb3React } from './index'
 
 // returns null on errors
-function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
+export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
@@ -38,17 +64,13 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
   }, [address, ABI, library, withSignerIfPossible, account])
 }
 
-export function useV1FactoryContract(): Contract | null {
+export function useV1MigratorContract(): Contract | null {
+  return useContract(V1_MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
+}
+
+export function useV2MigratorContract(): V3Migrator | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && V1_FACTORY_ADDRESSES[chainId], V1_FACTORY_ABI, false)
-}
-
-export function useV2MigratorContract(): Contract | null {
-  return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
-}
-
-export function useV1ExchangeContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(address, V1_EXCHANGE_ABI, withSignerIfPossible)
+  return useContract(chainId && V3_MIGRATOR_ADDRESSES[chainId], V2MigratorABI, true) as V3Migrator | null
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -57,7 +79,8 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? WETH[chainId].address : undefined, WETH_ABI, withSignerIfPossible)
+  const address = chainId && chainId in WETH9 ? WETH9[chainId].address : undefined
+  return useContract(address, WETH_ABI, withSignerIfPossible)
 }
 
 export function useArgentWalletDetectorContract(): Contract | null {
@@ -93,13 +116,21 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
   return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }
 
+export function useEIP2612Contract(tokenAddress?: string): Contract | null {
+  return useContract(tokenAddress, EIP_2612, false)
+}
+
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
 }
 
-export function useMulticallContract(): Contract | null {
+export function useV2RouterContract(): Contract | null {
+  return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, true)
+}
+
+export function useMulticall2Contract(): Multicall2 | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
+  return useContract(chainId && MULTICALL2_ADDRESSES[chainId], MULTICALL_ABI, false) as Multicall2
 }
 
 export function useMerkleDistributorContract(): Contract | null {
@@ -120,11 +151,38 @@ export function useStakingContract(stakingAddress?: string, withSignerIfPossible
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
 }
 
-export function useSocksController(): Contract | null {
+export function useSocksController(): Unisocks | null {
   const { chainId } = useActiveWeb3React()
   return useContract(
     chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
     UNISOCKS_ABI,
     false
-  )
+  ) as Unisocks | null
+}
+
+export function useV3NFTPositionManagerContract(): NonfungiblePositionManager | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
+  return useContract(address, NFTPositionManagerABI) as NonfungiblePositionManager | null
+}
+
+export function useV3Factory(): UniswapV3Factory | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
+  return useContract(address, V3FactoryABI) as UniswapV3Factory | null
+}
+
+export function useV3Pool(address: string | undefined): UniswapV3Pool | null {
+  return useContract(address, V3PoolABI) as UniswapV3Pool | null
+}
+
+export function useV3Quoter(): Quoter | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId ? QUOTER_ADDRESSES[chainId] : undefined, QuoterABI) as Quoter | null
+}
+
+export function useTickLens(): TickLens | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId ? TICK_LENS_ADDRESSES[chainId] : undefined
+  return useContract(address, TickLensABI) as TickLens | null
 }

@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk'
+import { Currency, ETHER, Token } from '@uniswap/sdk-core'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
@@ -61,7 +61,7 @@ export function CurrencySearch({
   isOpen,
   showManageView,
   showImportView,
-  setImportToken
+  setImportToken,
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
@@ -79,7 +79,9 @@ export function CurrencySearch({
 
   // if they input an address, use it
   const isAddressSearch = isAddress(debouncedQuery)
+
   const searchToken = useToken(debouncedQuery)
+
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   useEffect(() => {
@@ -87,7 +89,7 @@ export function CurrencySearch({
       ReactGA.event({
         category: 'Currency Select',
         action: 'Search by address',
-        label: isAddressSearch
+        label: isAddressSearch,
       })
     }
   }, [isAddressSearch])
@@ -124,7 +126,7 @@ export function CurrencySearch({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)
@@ -224,7 +226,7 @@ export function CurrencySearch({
               <IconWrapper size="16px" marginRight="6px">
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.blue1}>Manage</TYPE.main>
+              <TYPE.main color={theme.blue1}>Manage Token Lists</TYPE.main>
             </RowFixed>
           </ButtonText>
         </Row>

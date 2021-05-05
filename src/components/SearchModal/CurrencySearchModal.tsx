@@ -1,4 +1,4 @@
-import { Currency, Token } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk-core'
 import React, { useCallback, useEffect, useState } from 'react'
 import useLast from '../../hooks/useLast'
 import Modal from '../Modal'
@@ -22,7 +22,7 @@ export enum CurrencyModalView {
   search,
   manage,
   importToken,
-  importList
+  importList,
 }
 
 export default function CurrencySearchModal({
@@ -31,7 +31,7 @@ export default function CurrencySearchModal({
   onCurrencySelect,
   selectedCurrency,
   otherSelectedCurrency,
-  showCommonBases = false
+  showCommonBases = false,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)

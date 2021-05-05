@@ -5,7 +5,7 @@ import { ArrowLeft } from 'react-feather'
 import { Text } from 'rebass'
 import { CloseIcon } from 'theme'
 import styled from 'styled-components'
-import { Token } from '@uniswap/sdk'
+import { Token } from '@uniswap/sdk-core'
 import { ManageLists } from './ManageLists'
 import ManageTokens from './ManageTokens'
 import { TokenList } from '@uniswap/token-lists'
@@ -46,7 +46,7 @@ export default function Manage({
   setModalView,
   setImportList,
   setImportToken,
-  setListUrl
+  setListUrl,
 }: {
   onDismiss: () => void
   setModalView: (view: CurrencyModalView) => void

@@ -20,7 +20,7 @@ if (typeof NETWORK_URL === 'undefined') {
 }
 
 export const network = new NetworkConnector({
-  urls: { [NETWORK_CHAIN_ID]: NETWORK_URL }
+  urls: { [NETWORK_CHAIN_ID]: NETWORK_URL },
 })
 
 let networkLibrary: Web3Provider | undefined
@@ -29,7 +29,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42]
+  supportedChainIds: [1, 3, 4, 5, 42],
 })
 
 // mainnet only
@@ -37,24 +37,24 @@ export const walletconnect = new WalletConnectConnector({
   rpc: { 1: NETWORK_URL },
   bridge: WALLETCONNECT_BRIDGE_URL,
   qrcode: true,
-  pollingInterval: 15000
+  pollingInterval: 15000,
 })
 
 // mainnet only
 export const fortmatic = new FortmaticConnector({
   apiKey: FORMATIC_KEY ?? '',
-  chainId: 1
+  chainId: 1,
 })
 
 // mainnet only
 export const portis = new PortisConnector({
   dAppId: PORTIS_ID ?? '',
-  networks: [1]
+  networks: [1],
 })
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
   appName: 'Uniswap',
-  appLogoUrl: UNISWAP_LOGO_URL
+  appLogoUrl: UNISWAP_LOGO_URL,
 })

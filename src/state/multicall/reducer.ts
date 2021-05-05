@@ -5,7 +5,7 @@ import {
   fetchingMulticallResults,
   removeMulticallListeners,
   toCallKey,
-  updateMulticallResults
+  updateMulticallResults,
 } from './actions'
 
 export interface MulticallState {
@@ -32,17 +32,17 @@ export interface MulticallState {
 }
 
 const initialState: MulticallState = {
-  callResults: {}
+  callResults: {},
 }
 
-export default createReducer(initialState, builder =>
+export default createReducer(initialState, (builder) =>
   builder
     .addCase(addMulticallListeners, (state, { payload: { calls, chainId, options: { blocksPerFetch = 1 } = {} } }) => {
       const listeners: MulticallState['callListeners'] = state.callListeners
         ? state.callListeners
         : (state.callListeners = {})
       listeners[chainId] = listeners[chainId] ?? {}
-      calls.forEach(call => {
+      calls.forEach((call) => {
         const callKey = toCallKey(call)
         listeners[chainId][callKey] = listeners[chainId][callKey] ?? {}
         listeners[chainId][callKey][blocksPerFetch] = (listeners[chainId][callKey][blocksPerFetch] ?? 0) + 1
@@ -56,7 +56,7 @@ export default createReducer(initialState, builder =>
           : (state.callListeners = {})
 
         if (!listeners[chainId]) return
-        calls.forEach(call => {
+        calls.forEach((call) => {
           const callKey = toCallKey(call)
           if (!listeners[chainId][callKey]) return
           if (!listeners[chainId][callKey][blocksPerFetch]) return
@@ -71,12 +71,12 @@ export default createReducer(initialState, builder =>
     )
     .addCase(fetchingMulticallResults, (state, { payload: { chainId, fetchingBlockNumber, calls } }) => {
       state.callResults[chainId] = state.callResults[chainId] ?? {}
-      calls.forEach(call => {
+      calls.forEach((call) => {
         const callKey = toCallKey(call)
         const current = state.callResults[chainId][callKey]
         if (!current) {
           state.callResults[chainId][callKey] = {
-            fetchingBlockNumber
+            fetchingBlockNumber,
           }
         } else {
           if ((current.fetchingBlockNumber ?? 0) >= fetchingBlockNumber) return
@@ -86,11 +86,11 @@ export default createReducer(initialState, builder =>
     })
     .addCase(errorFetchingMulticallResults, (state, { payload: { fetchingBlockNumber, chainId, calls } }) => {
       state.callResults[chainId] = state.callResults[chainId] ?? {}
-      calls.forEach(call => {
+      calls.forEach((call) => {
         const callKey = toCallKey(call)
         const current = state.callResults[chainId][callKey]
-        if (!current) return // only should be dispatched if we are already fetching
-        if (current.fetchingBlockNumber === fetchingBlockNumber) {
+        if (!current || typeof current.fetchingBlockNumber !== 'number') return // only should be dispatched if we are already fetching
+        if (current.fetchingBlockNumber <= fetchingBlockNumber) {
           delete current.fetchingBlockNumber
           current.data = null
           current.blockNumber = fetchingBlockNumber
@@ -99,12 +99,12 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateMulticallResults, (state, { payload: { chainId, results, blockNumber } }) => {
       state.callResults[chainId] = state.callResults[chainId] ?? {}
-      Object.keys(results).forEach(callKey => {
+      Object.keys(results).forEach((callKey) => {
         const current = state.callResults[chainId][callKey]
         if ((current?.blockNumber ?? 0) > blockNumber) return
         state.callResults[chainId][callKey] = {
           data: results[callKey],
-          blockNumber
+          blockNumber,
         }
       })
     })
