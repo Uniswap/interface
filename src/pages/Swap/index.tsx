@@ -205,9 +205,19 @@ export default function Swap({ history }: RouteComponentProps) {
     allowedSlippage
   )
 
-  const handleApprove = useCallback(() => {
-    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) gatherPermitSignature()
-    else approveCallback()
+  const handleApprove = useCallback(async () => {
+    if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
+      try {
+        await gatherPermitSignature()
+      } catch (error) {
+        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+        if (error?.code !== 4001) {
+          await approveCallback()
+        }
+      }
+    } else {
+      await approveCallback()
+    }
   }, [approveCallback, gatherPermitSignature, signatureState])
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
