@@ -5,7 +5,7 @@ import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { ONE_BIPS } from '../../constants'
-import { Field } from '../../state/mint/actions'
+import { Field } from '../../state/mint/v3/actions'
 import { TYPE } from '../../theme'
 
 export function PoolPriceBar({
