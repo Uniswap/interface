@@ -50,6 +50,7 @@ import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { calculateGasMargin } from 'utils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
+import { useV2SpotPrice } from 'hooks/useV2SpotPrice'
 
 export default function AddLiquidity({
   match: {
@@ -140,6 +141,9 @@ export default function AddLiquidity({
   } = useV3MintActionHandlers(noLiquidity)
 
   const isValid = !errorMessage && !invalidRange
+
+  // get equivilant price from v2
+  const { v2SpotPriceAdjustedToBase } = useV2SpotPrice({ currencyA, currencyB, baseCurrency })
 
   // modal and loading
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
@@ -450,6 +454,7 @@ export default function AddLiquidity({
                       </BlueCard>
                       <RowBetween>
                         <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
+
                         {baseCurrency && quoteCurrency ? (
                           <RateToggle
                             currencyA={baseCurrency}
@@ -467,27 +472,35 @@ export default function AddLiquidity({
                         ) : null}
                       </RowBetween>
 
-                      <OutlineCard padding="12px">
-                        <StyledInput
-                          className="start-price-input"
-                          value={startPriceTypedValue}
-                          onUserInput={onStartPriceInput}
-                        />
+                      <OutlineCard padding="12px" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <TYPE.main color={theme.text3}>{'1 ' + baseCurrency?.symbol + ' ='}</TYPE.main>
+                        <span style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <StyledInput
+                            className="start-price-input"
+                            value={startPriceTypedValue}
+                            onUserInput={onStartPriceInput}
+                            style={{ textAlign: 'right', marginRight: '.5rem' }}
+                          />
+                          <TYPE.main color={theme.text3}>{' ' + quoteCurrency?.symbol}</TYPE.main>
+                        </span>
                       </OutlineCard>
-                      <RowBetween style={{ backgroundColor: theme.bg6, padding: '12px', borderRadius: '12px' }}>
-                        <TYPE.main>Current {baseCurrency?.symbol} Price:</TYPE.main>
-                        <TYPE.main>
-                          {price ? (
-                            <TYPE.main>
-                              {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
-                              {quoteCurrency?.symbol}
-                            </TYPE.main>
-                          ) : (
-                            '-'
-                          )}
-                        </TYPE.main>
-                      </RowBetween>
                     </AutoColumn>
+
+                    {v2SpotPriceAdjustedToBase ? (
+                      <ButtonPrimary
+                        width="fit-content"
+                        padding="4px"
+                        borderRadius="8px"
+                        fontSize="12px"
+                        mt="12px"
+                        onClick={() => {
+                          onStartPriceInput(v2SpotPriceAdjustedToBase.toSignificant(6))
+                        }}
+                        disabled={startPriceTypedValue === v2SpotPriceAdjustedToBase.toSignificant(6)}
+                      >
+                        Use V2 Price
+                      </ButtonPrimary>
+                    ) : undefined}
                   </DynamicSection>
                 )}
 
@@ -531,7 +544,7 @@ export default function AddLiquidity({
                     feeAmount={feeAmount}
                   />
 
-                  {price && baseCurrency && quoteCurrency && !noLiquidity && (
+                  {price && baseCurrency && quoteCurrency && (
                     <LightCard style={{ padding: '12px' }}>
                       <AutoColumn gap="4px">
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
