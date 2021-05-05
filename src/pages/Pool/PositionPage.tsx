@@ -12,9 +12,9 @@ import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { HideExtraSmall, TYPE } from 'theme'
+import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
 import Badge from 'components/Badge'
-import { calculateGasMargin } from 'utils'
+import { calculateGasMargin, getEtherscanLink } from 'utils'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
 import { DarkCard, DarkGreyCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -131,16 +131,12 @@ function CurrentPriceCard({
   pool,
   currencyQuote,
   currencyBase,
-  ratio,
 }: {
   inverted?: boolean
   pool?: Pool | null
   currencyQuote?: Currency
   currencyBase?: Currency
-  ratio?: number
 }) {
-  const theme = useTheme()
-
   const { t } = useTranslation()
   if (!pool || !currencyQuote || !currencyBase) {
     return null
@@ -155,26 +151,23 @@ function CurrentPriceCard({
         </TYPE.mediumHeader>
         <ExtentsText>{currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
       </AutoColumn>
-
-      {typeof ratio === 'number' && (
-        <TYPE.small color={theme.text3} textAlign="center" style={{ marginTop: '8px' }}>
-          Your position is currently {ratio}% {currencyBase?.symbol} and {100 - ratio}% {currencyQuote?.symbol}
-        </TYPE.small>
-      )}
     </LightCard>
   )
 }
 
 function getRatio(lower: Price, current: Price, upper: Price) {
   try {
+    if (!current.greaterThan(lower)) {
+      return 100
+    } else if (!current.lessThan(upper)) {
+      return 0
+    }
+
     const a = Number.parseFloat(lower.toSignificant(15))
     const b = Number.parseFloat(upper.toSignificant(15))
     const c = Number.parseFloat(current.toSignificant(15))
 
-    let ratio = Math.floor(((Math.sqrt(a * b) - Math.sqrt(b * c)) / (c - Math.sqrt(b * c))) * 100)
-    if (ratio > 100) {
-      ratio -= 100
-    }
+    const ratio = Math.floor((1 / ((Math.sqrt(a * b) - Math.sqrt(b * c)) / (c - Math.sqrt(b * c)) + 1)) * 100)
 
     if (ratio < 0 || ratio > 100) {
       throw Error('Out of range')
@@ -242,6 +235,9 @@ export function PositionPage({
         )
       : undefined
   }, [inverted, pool, priceLower, priceUpper])
+
+  // really can't figure out why i have to do this, getting conditional hook call errors otherwise
+  const WORKAROUND = typeof ratio === 'number' ? (inverted ? 100 - ratio : ratio) : undefined
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
@@ -460,6 +456,9 @@ export function PositionPage({
               <div style={{ marginRight: 12 }}>
                 <img height="400px" src={metadata.result.image} />
               </div>
+              {typeof chainId === 'number' && owner && !ownsNFT ? (
+                <ExternalLink href={getEtherscanLink(chainId, owner, 'address')}>Owner</ExternalLink>
+              ) : null}
             </DarkCard>
           ) : (
             <DarkCard
@@ -497,12 +496,12 @@ export function PositionPage({
                       </RowFixed>
                       <RowFixed>
                         <TYPE.main>
-                          {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)} (
+                          {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
                         </TYPE.main>
                         {typeof ratio === 'number' && (
                           <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
                             <TYPE.main color={theme.text2} fontSize={11}>
-                              {100 - ratio}%
+                              {inverted ? ratio : 100 - ratio}%
                             </TYPE.main>
                           </DarkGreyCard>
                         )}
@@ -515,12 +514,12 @@ export function PositionPage({
                       </RowFixed>
                       <RowFixed>
                         <TYPE.main>
-                          {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)} (
+                          {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
                         </TYPE.main>
                         {typeof ratio === 'number' && (
                           <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
                             <TYPE.main color={theme.text2} fontSize={11}>
-                              {ratio}%
+                              {WORKAROUND}%
                             </TYPE.main>
                           </DarkGreyCard>
                         )}
@@ -546,7 +545,7 @@ export function PositionPage({
                         </TYPE.largeHeader>
                       )}
                     </AutoColumn>
-                    {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash ? (
+                    {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
                       <ButtonConfirmed
                         disabled={collecting || !!collectMigrationHash}
                         confirmed={!!collectMigrationHash && !isCollectPending}
@@ -644,10 +643,12 @@ export function PositionPage({
                   <ExtentsText>Min price</ExtentsText>
                   <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(4)}</TYPE.mediumHeader>
                   <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
-                  <TYPE.small color={theme.text3}>
-                    {' Your position is will be 100% '}
-                    {currencyBase?.symbol} {' at this price.'}
-                  </TYPE.small>
+
+                  {inRange && (
+                    <TYPE.small color={theme.text3}>
+                      Your position will be 100% {currencyBase?.symbol} at this price.
+                    </TYPE.small>
+                  )}
                 </AutoColumn>
               </LightCard>
 
@@ -657,10 +658,12 @@ export function PositionPage({
                   <ExtentsText>Max price</ExtentsText>
                   <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(4)}</TYPE.mediumHeader>
                   <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
-                  <TYPE.small color={theme.text3}>
-                    {' Your position is will be 100% '}
-                    {currencyQuote?.symbol} {' at this price.'}
-                  </TYPE.small>
+
+                  {inRange && (
+                    <TYPE.small color={theme.text3}>
+                      Your position will be 100% {currencyQuote?.symbol} at this price.
+                    </TYPE.small>
+                  )}
                 </AutoColumn>
               </LightCard>
             </RowBetween>
@@ -669,7 +672,6 @@ export function PositionPage({
               pool={pool}
               currencyQuote={currencyQuote}
               currencyBase={currencyBase}
-              ratio={typeof ratio === 'number' && inRange ? (inverted ? 100 - ratio : ratio) : undefined}
             />
           </AutoColumn>
         </DarkCard>

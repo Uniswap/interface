@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
 import { FACTORY_ADDRESS, JSBI } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -113,7 +113,7 @@ function V2PairMigration({
   const theme = useTheme()
 
   const pairFactory = useSingleCallResult(pair, 'factory')
-  const isNotUniswap = pairFactory.result?.[0] !== FACTORY_ADDRESS
+  const isNotUniswap = pairFactory.result?.[0] !== FACTORY_ADDRESS ?? false
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
@@ -162,6 +162,11 @@ function V2PairMigration({
     feeAmount,
     baseToken
   )
+
+  // reset the initial state, dont need cleanup token always defined
+  useEffect(() => {
+    setBaseToken(token0)
+  }, [baseToken, token0])
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
@@ -218,12 +223,12 @@ function V2PairMigration({
   )
 
   const refund0 = useMemo(
-    () => v3Amount0Min && new TokenAmount(token0, JSBI.subtract(token0Value.raw, v3Amount0Min.raw)),
-    [token0Value, v3Amount0Min, token0]
+    () => position && new TokenAmount(token0, JSBI.subtract(token0Value.raw, position.amount0.raw)),
+    [token0Value, position, token0]
   )
   const refund1 = useMemo(
-    () => v3Amount1Min && new TokenAmount(token1, JSBI.subtract(token1Value.raw, v3Amount1Min.raw)),
-    [token1Value, v3Amount1Min, token1]
+    () => position && new TokenAmount(token1, JSBI.subtract(token1Value.raw, position.amount1.raw)),
+    [token1Value, position, token1]
   )
 
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
@@ -516,13 +521,13 @@ function V2PairMigration({
             </YellowCard>
           ) : null}
 
-          {v3Amount0Min && v3Amount1Min ? (
+          {position ? (
             <DarkGreyCard>
               <AutoColumn gap="md">
-                <LiquidityInfo token0Amount={v3Amount0Min} token1Amount={v3Amount1Min} />
+                <LiquidityInfo token0Amount={position.amount0} token1Amount={position.amount1} />
                 {chainId && refund0 && refund1 ? (
                   <TYPE.black fontSize={12}>
-                    {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
+                    At least {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
                     {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be
                     refunded to your wallet due to selected price range.
                   </TYPE.black>

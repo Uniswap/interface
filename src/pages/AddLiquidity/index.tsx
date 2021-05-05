@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, TokenAmount, ETHER, currencyEquals } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
@@ -88,6 +88,13 @@ export default function AddLiquidity({
         : undefined,
     [currencyA, currencyB, baseCurrency]
   )
+
+  useEffect(() => {
+    setBaseCurrency(currencyA)
+    return () => {
+      setBaseCurrency(undefined)
+    }
+  }, [currencyA, currencyB])
 
   // mint state
   const { independentField, typedValue, startPriceTypedValue } = useMintState()
@@ -371,7 +378,7 @@ export default function AddLiquidity({
         pendingText={pendingText}
       />
       <AppBody>
-        <AddRemoveTabs creating={false} adding={true} />
+        <AddRemoveTabs creating={false} adding={true} positionID={tokenId} />
         <Wrapper>
           <AutoColumn gap="32px">
             {!hasExistingPosition && (
@@ -383,7 +390,6 @@ export default function AddLiquidity({
                       <TYPE.blue fontSize="12px">Clear All</TYPE.blue>
                     </ButtonText>
                   </RowBetween>
-
                   <RowBetween>
                     <CurrencyDropdown
                       value={formattedAmounts[Field.CURRENCY_A]}
@@ -565,7 +571,6 @@ export default function AddLiquidity({
                   onMax={() => {
                     onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                   }}
-                  onCurrencySelect={handleCurrencyASelect}
                   showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                   currency={currencies[Field.CURRENCY_A]}
                   id="add-liquidity-input-tokena"
@@ -576,7 +581,6 @@ export default function AddLiquidity({
                 <CurrencyInputPanel
                   value={formattedAmounts[Field.CURRENCY_B]}
                   onUserInput={onFieldBInput}
-                  onCurrencySelect={handleCurrencyBSelect}
                   onMax={() => {
                     onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                   }}
