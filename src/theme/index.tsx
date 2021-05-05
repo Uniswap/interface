@@ -47,9 +47,9 @@ export function colors(darkMode: boolean): Colors {
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? '#191B1F' : '#F7F8FA',
-    bg1: darkMode ? '#212429' : '#EDEEF2',
-    bg2: darkMode ? '#2C2F36' : '#F0F0F0',
+    bg0: darkMode ? '#191B1F' : '#FFF',
+    bg1: darkMode ? '#212429' : '#F7F8FA',
+    bg2: darkMode ? '#2C2F36' : '#EDEEF2',
     bg3: darkMode ? '#40444F' : '#CED0D9',
     bg4: darkMode ? '#565A69' : '#888D9B',
     bg5: darkMode ? '#6C7284' : '#888D9B',
@@ -185,6 +185,25 @@ export const TYPE = {
     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
   },
 }
+
+export const ThemedBackground = styled.div<{ backgroundColor?: string | undefined }>`
+  position: fixed;
+  top: 0;
+  left: calc(-100vw / 2);
+  right: 0;
+  pointer-events: none;
+  /* max-width: 100vw !important; */
+  width: 200vw;
+  height: 200vh;
+  mix-blend-mode: color;
+  background: ${({ backgroundColor }) =>
+    `radial-gradient(50% 50% at 50% 50%, ${
+      backgroundColor ? backgroundColor : '#fc077d15'
+    } 0%, rgba(255, 255, 255, 0) 100%)`};
+  transform: translateY(-100vh);
+  will-change: background;
+  transition: background 450ms ease;
+`
 
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
