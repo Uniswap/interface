@@ -79,6 +79,10 @@ export default function RewardAmount({
   const [stakingCapString, setStakingCapString] = useState('')
 
   useEffect(() => {
+    if (!reward) setAmount('')
+  }, [reward])
+
+  useEffect(() => {
     if (unlimitedPool) {
       setStakingCapString('')
       onStakingCapChange(null)
