@@ -7,7 +7,7 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { BookOpen, ChevronDown, Download, Inbox, PlusCircle } from 'react-feather'
+import { BookOpen, ChevronDown, Download, Inbox, PlusCircle, ChevronsRight, Layers } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
@@ -104,7 +104,7 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <PlusCircle size={16} style={{ marginRight: '8px' }} />
+          <PlusCircle size={16} style={{ marginRight: '12px' }} />
           {t('Create a pool')}
         </MenuItem>
       ),
@@ -114,7 +114,7 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <Download size={16} style={{ marginRight: '8px' }} />
+          <ChevronsRight size={16} style={{ marginRight: '12px' }} />
           {t('Migrate')}
         </MenuItem>
       ),
@@ -124,7 +124,7 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <Download size={16} style={{ marginRight: '8px' }} />
+          <Layers size={16} style={{ marginRight: '12px' }} />
           {t('V2 liquidity')}
         </MenuItem>
       ),
@@ -134,7 +134,7 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <BookOpen size={16} style={{ marginRight: '8px' }} />
+          <BookOpen size={16} style={{ marginRight: '12px' }} />
           {t('Learn')}
         </MenuItem>
       ),
