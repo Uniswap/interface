@@ -539,7 +539,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         ) : (
                           <MouseoverTooltip
                             text={
-                              'You must give the Uniswap smart contracts permission to use your' +
+                              'You must give the Uniswap smart contracts permission to use your ' +
                               currencies[Field.INPUT]?.symbol +
                               '. You only have to do this once per token.'
                             }
