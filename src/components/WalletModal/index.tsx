@@ -338,9 +338,9 @@ export default function WalletModal({
           <LightCard style={{ marginBottom: '16px' }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
               <TYPE.main fontSize={14}>
-                By connecting a wallet, you agree to Uniswap Labs’ <ExternalLink href="">Terms of Service</ExternalLink>{' '}
+                By connecting a wallet, you agree to Uniswap Labs’ <ExternalLink href="https://uniswap.org/terms-of-service">Terms of Service</ExternalLink>{' '}
                 and acknowledge that you have read and understand the{' '}
-                <ExternalLink href="">Uniswap protocol disclaimer</ExternalLink>.
+                <ExternalLink href="https://uniswap.org/disclaimer">Uniswap protocol disclaimer</ExternalLink>.
               </TYPE.main>
             </AutoRow>
           </LightCard>
