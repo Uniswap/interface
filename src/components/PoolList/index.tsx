@@ -91,12 +91,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   })
 
   userLiquidityPositions.forEach(position => {
-    if (
-      !transformedUserLiquidityPositions[position.pool.id] ||
-      position.timestamp > transformedUserLiquidityPositions[position.pool.id].timestamp
-    ) {
-      transformedUserLiquidityPositions[position.pool.id] = position
-    }
+    transformedUserLiquidityPositions[position.pool.id] = position
   })
 
   // pagination
