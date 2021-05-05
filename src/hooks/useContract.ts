@@ -46,7 +46,7 @@ import { Quoter, TickLens, UniswapV3Factory, UniswapV3Pool } from 'types/v3'
 import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
-import { Multicall2 } from '../abis/types'
+import { Erc20, Multicall2 } from '../abis/types'
 import { useActiveWeb3React } from './index'
 
 // returns null on errors
@@ -73,8 +73,8 @@ export function useV2MigratorContract(): V3Migrator | null {
   return useContract(chainId && V3_MIGRATOR_ADDRESSES[chainId], V2MigratorABI, true) as V3Migrator | null
 }
 
-export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
+export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Erc20 | null {
+  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible) as Erc20
 }
 
 export function useWETHContract(withSignerIfPossible?: boolean): Contract | null {

@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { SwapRouter, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ChainId, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
@@ -96,13 +96,7 @@ function useSwapCallArguments(
         )
       }
       return swapMethods.map(({ methodName, args, value }) => {
-        if (!argentWalletContract || !inputTokenContract) {
-          return {
-            address: routerContract.address,
-            calldata: routerContract.interface.encodeFunctionData(methodName, args),
-            value,
-          }
-        } else {
+        if (argentWalletContract && inputTokenContract) {
           return {
             address: argentWalletContract.address,
             calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
@@ -110,7 +104,8 @@ function useSwapCallArguments(
                 {
                   to: inputTokenContract.address,
                   data: inputTokenContract.interface.encodeFunctionData('approve', [
-                    trade.maximumAmountIn(allowedSlippage),
+                    routerContract.address,
+                    toHex(trade.maximumAmountIn(allowedSlippage).raw),
                   ]),
                   value: '0x',
                 },
@@ -122,6 +117,12 @@ function useSwapCallArguments(
               ],
             ]),
             value: '0x',
+          }
+        } else {
+          return {
+            address: routerContract.address,
+            calldata: routerContract.interface.encodeFunctionData(methodName, args),
+            value,
           }
         }
       })
@@ -155,7 +156,31 @@ function useSwapCallArguments(
             }
           : {}),
       })
-
+      if (argentWalletContract && inputTokenContract) {
+        return [
+          {
+            address: argentWalletContract.address,
+            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
+              [
+                {
+                  to: inputTokenContract.address,
+                  data: inputTokenContract.interface.encodeFunctionData('approve', [
+                    swapRouterAddress,
+                    toHex(trade.maximumAmountIn(allowedSlippage).raw),
+                  ]),
+                  value: '0x',
+                },
+                {
+                  to: swapRouterAddress,
+                  value: value,
+                  data: calldata,
+                },
+              ],
+            ]),
+            value: '0x',
+          },
+        ]
+      }
       return [
         {
           address: swapRouterAddress,
