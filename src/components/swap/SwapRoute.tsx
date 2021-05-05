@@ -11,7 +11,7 @@ function LabeledArrow({}: { fee: FeeAmount }) {
   const theme = useContext(ThemeContext)
 
   // todo: render the fee in the label
-  return <ChevronRight size={12} color={theme.text2} />
+  return <ChevronRight size={14} color={theme.text2} />
 }
 
 export default memo(function SwapRoute({ trade }: { trade: V2Trade | V3Trade }) {
@@ -25,12 +25,12 @@ export default memo(function SwapRoute({ trade }: { trade: V2Trade | V3Trade }) 
         return (
           <Fragment key={i}>
             <Flex alignItems="end">
-              <TYPE.black fontSize={12} color={theme.text1} ml="0.125rem" mr="0.125rem">
+              <TYPE.black fontSize={14} color={theme.text1} ml="0.145rem" mr="0.145rem">
                 {currency.symbol}
               </TYPE.black>
             </Flex>
             {isLastItem ? null : trade instanceof V2Trade ? (
-              <ChevronRight size={12} color={theme.text2} />
+              <ChevronRight size={14} color={theme.text2} />
             ) : (
               <LabeledArrow fee={trade.route.pools[i].fee} />
             )}

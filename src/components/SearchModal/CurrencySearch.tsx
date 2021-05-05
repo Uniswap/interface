@@ -226,7 +226,7 @@ export function CurrencySearch({
               <IconWrapper size="16px" marginRight="6px">
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.blue1}>Manage</TYPE.main>
+              <TYPE.main color={theme.blue1}>Manage Token Lists</TYPE.main>
             </RowFixed>
           </ButtonText>
         </Row>
