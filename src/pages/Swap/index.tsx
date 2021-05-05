@@ -10,7 +10,7 @@ import { ArrowDown, CheckCircle, HelpCircle, Info, ArrowLeft } from 'react-feath
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
@@ -18,7 +18,7 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
-import { AutoRow, RowResponsive, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowFixed } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -47,13 +47,24 @@ import {
   useSwapState,
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
+import { computePriceImpactWithMaximumSlippage } from '../../utils/computePriceImpactWithMaximumSlippage'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+
+const StyledInfo = styled(Info)`
+  opacity: 0.4;
+  color: ${({ theme }) => theme.text1};
+  height: 16px;
+  width: 16px;
+  :hover {
+    opacity: 0.8;
+  }
+`
 
 export default function Swap({ history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -274,8 +285,17 @@ export default function Swap({ history }: RouteComponentProps) {
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  // warnings on price impact
-  const priceImpactSeverity = warningSeverity(priceImpact)
+  // warnings on the greater of fiat value price impact and execution price impact
+  const priceImpactSeverity = useMemo(() => {
+    const executionPriceImpact = trade ? computePriceImpactWithMaximumSlippage(trade, allowedSlippage) : undefined
+    return warningSeverity(
+      executionPriceImpact && priceImpact
+        ? executionPriceImpact.greaterThan(priceImpact)
+          ? executionPriceImpact
+          : priceImpact
+        : executionPriceImpact ?? priceImpact
+    )
+  }, [allowedSlippage, priceImpact, trade])
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
@@ -398,7 +418,7 @@ export default function Swap({ history }: RouteComponentProps) {
               </>
             ) : null}
 
-            <RowResponsive style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
+            <Row style={{ justifyContent: !trade ? 'center' : 'space-between' }}>
               <RowFixed>
                 {[V3TradeState.VALID, V3TradeState.SYNCING, V3TradeState.NO_ROUTE_FOUND].includes(v3TradeState) &&
                   (toggledVersion === Version.v3 && isTradeBetter(v3Trade, v2Trade) ? (
@@ -424,7 +444,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       >
                         <ArrowLeft color={theme.text3} size={12} /> &nbsp;
                         <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
-                          Back to V3
+                          <HideSmall>Back to </HideSmall>V3
                         </TYPE.main>
                       </ButtonGray>
                     )
@@ -447,33 +467,19 @@ export default function Swap({ history }: RouteComponentProps) {
                   </ButtonGray>
                 )}
               </RowFixed>
-              <RowFixed>
-                {trade ? (
+              {trade ? (
+                <RowFixed>
                   <TradePrice
                     price={trade.worstExecutionPrice(allowedSlippage)}
                     showInverted={showInverted}
                     setShowInverted={setShowInverted}
                   />
-                ) : (
-                  <TYPE.main></TYPE.main>
-                )}
-                {trade && (
                   <MouseoverTooltipContent content={<AdvancedSwapDetails trade={trade} />}>
-                    <Info
-                      size={16}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        height: '24px',
-                        opacity: 0.4,
-                        margin: '0 .75rem 0 .5rem',
-                      }}
-                      color={theme.text1}
-                    />
+                    <StyledInfo />
                   </MouseoverTooltipContent>
-                )}
-              </RowFixed>
-            </RowResponsive>
+                </RowFixed>
+              ) : null}
+            </Row>
 
             <BottomGrouping>
               {swapIsUnsupported ? (
