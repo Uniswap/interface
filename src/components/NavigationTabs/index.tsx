@@ -6,7 +6,6 @@ import { NavLink, Link as HistoryLink } from 'react-router-dom'
 
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
-// import QuestionHelper from '../QuestionHelper'
 import Settings from '../Settings'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
@@ -86,7 +85,15 @@ export function FindPoolTabs({ origin }: { origin: string }) {
   )
 }
 
-export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+export function AddRemoveTabs({
+  adding,
+  creating,
+  positionID,
+}: {
+  adding: boolean
+  creating: boolean
+  positionID?: string | undefined
+}) {
   const theme = useTheme()
 
   // reset states on back
@@ -96,7 +103,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <HistoryLink
-          to="/pool"
+          to={'/pool' + (!!positionID ? `/${positionID.toString()}` : '')}
           onClick={() => {
             adding && dispatch(resetMintState())
           }}

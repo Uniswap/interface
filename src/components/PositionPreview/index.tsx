@@ -42,6 +42,7 @@ export const PositionPreview = ({
         : currency0
       : currency0
   )
+
   const sorted = baseCurrency === currency0
   const quoteCurrency = sorted ? currency1 : currency0
 
