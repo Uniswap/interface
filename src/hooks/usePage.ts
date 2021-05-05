@@ -10,7 +10,7 @@ export function usePage<T>(dataset: T[], itemsPerPage: number, page: number, pin
   return useMemo(() => {
     const zeroIndexPage = page - 1
     const normalizedItemsPerPage = zeroIndexPage === 0 ? itemsPerPage - pinnedItemsAmount : itemsPerPage
-    const pageOffset = zeroIndexPage * normalizedItemsPerPage
+    const pageOffset = Math.max(zeroIndexPage * normalizedItemsPerPage - pinnedItemsAmount, 0)
     return dataset.slice(pageOffset, pageOffset + normalizedItemsPerPage)
   }, [dataset, itemsPerPage, page, pinnedItemsAmount])
 }

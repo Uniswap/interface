@@ -86,7 +86,12 @@ export default function PairsList({ aggregatedPairs, loading, userLpPairs, showM
       </Box>
       <Flex width="100%" justifyContent="flex-end">
         <Box>
-          <Pagination page={page} totalItems={aggregatedPairs.length} itemsPerPage={12} onPageChange={setPage} />
+          <Pagination
+            page={page}
+            totalItems={aggregatedPairs.length + 1}
+            itemsPerPage={responsiveItemsPerPgae}
+            onPageChange={setPage}
+          />
         </Box>
       </Flex>
     </Flex>
