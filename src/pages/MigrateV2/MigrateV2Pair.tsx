@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
 import { FACTORY_ADDRESS, JSBI } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -30,8 +30,8 @@ import { useUserSlippageTolerance } from 'state/user/hooks'
 import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import { useDerivedMintInfo, useMintActionHandlers, useRangeHopCallbacks } from 'state/mint/hooks'
-import { Bound } from 'state/mint/actions'
+import { useV3DerivedMintInfo, useRangeHopCallbacks, useV3MintActionHandlers } from 'state/mint/v3/hooks'
+import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import FeeSelector from 'components/FeeSelector'
@@ -44,6 +44,8 @@ import useTheme from 'hooks/useTheme'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Badge, { BadgeVariant } from 'components/Badge'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -156,7 +158,7 @@ function V2PairMigration({
 
   // the following is a small hack to get access to price range data/input handlers
   const [baseToken, setBaseToken] = useState(token0)
-  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange } = useDerivedMintInfo(
+  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange } = useV3DerivedMintInfo(
     token0,
     token1,
     feeAmount,
@@ -175,7 +177,7 @@ function V2PairMigration({
     tickUpper
   )
 
-  const { onLeftRangeInput, onRightRangeInput } = useMintActionHandlers(noLiquidity)
+  const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(noLiquidity)
 
   // the v3 tick is either the pool's tickCurrent, or the tick closest to the v2 spot price
   const tick = pool?.tickCurrent ?? priceToClosestTick(v2SpotPrice)
@@ -585,6 +587,15 @@ export default function MigrateV2Pair({
     params: { address },
   },
 }: RouteComponentProps<{ address: string }>) {
+  // reset mint state on component mount, and as a cleanup (on unmount)
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    dispatch(resetMintState())
+    return () => {
+      dispatch(resetMintState())
+    }
+  }, [dispatch])
+
   const { chainId, account } = useActiveWeb3React()
 
   // get pair contract

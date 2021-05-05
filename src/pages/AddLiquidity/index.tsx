@@ -21,7 +21,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { Field, Bound } from '../../state/mint/actions'
+import { Field, Bound } from '../../state/mint/v3/actions'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
@@ -33,7 +33,12 @@ import { currencyId } from '../../utils/currencyId'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { DynamicSection, CurrencyDropdown, StyledInput, Wrapper, ScrollablePage } from './styled'
 import { useTranslation } from 'react-i18next'
-import { useMintState, useMintActionHandlers, useDerivedMintInfo, useRangeHopCallbacks } from 'state/mint/hooks'
+import {
+  useV3MintState,
+  useV3MintActionHandlers,
+  useRangeHopCallbacks,
+  useV3DerivedMintInfo,
+} from 'state/mint/v3/hooks'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'constants/v3'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
@@ -98,7 +103,7 @@ export default function AddLiquidity({
   }, [currencyA, currencyB])
 
   // mint state
-  const { independentField, typedValue, startPriceTypedValue } = useMintState()
+  const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
   const {
     ticks,
@@ -117,7 +122,7 @@ export default function AddLiquidity({
     depositADisabled,
     depositBDisabled,
     invertPrice,
-  } = useDerivedMintInfo(
+  } = useV3DerivedMintInfo(
     currencyA ?? undefined,
     currencyB ?? undefined,
     feeAmount,
@@ -131,7 +136,7 @@ export default function AddLiquidity({
     onLeftRangeInput,
     onRightRangeInput,
     onStartPriceInput,
-  } = useMintActionHandlers(noLiquidity)
+  } = useV3MintActionHandlers(noLiquidity)
 
   const isValid = !errorMessage && !invalidRange
 
