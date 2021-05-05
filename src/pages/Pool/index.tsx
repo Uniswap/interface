@@ -128,7 +128,7 @@ export default function Pool() {
           {t('V2 liquidity')}
         </MenuItem>
       ),
-      link: '/migrate/v2',
+      link: '/pool/v2',
       external: false,
     },
     {
