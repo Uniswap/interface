@@ -28,12 +28,12 @@ import Loader from 'components/Loader'
 import { useToken } from 'hooks/Tokens'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { RangeBadge } from 'pages/AddLiquidity/styled'
 import { Break } from 'components/earn/styled'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { calculateGasMargin } from 'utils'
 import useTheme from 'hooks/useTheme'
 import { AddRemoveTabs } from 'components/NavigationTabs'
+import RangeBadge from 'components/Badge/RangeBadge'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
 
@@ -82,6 +82,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     error,
   } = useDerivedV3BurnInfo(position)
   const { onPercentSelect } = useBurnV3ActionHandlers()
+
+  const removed = position?.liquidity?.eq(0)
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
@@ -281,7 +283,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   <DoubleCurrencyLogo currency0={currency1} currency1={currency0} size={20} margin={true} />
                   <TYPE.label ml="10px" fontSize="20px">{`${currency0?.symbol}/${currency1?.symbol}`}</TYPE.label>
                 </RowFixed>
-                <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
+                <RangeBadge removed={removed} inRange={!outOfRange} />
               </RowBetween>
               <LightCard>
                 <AutoColumn gap="md">
@@ -363,10 +365,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 <AutoColumn gap="12px" style={{ flex: '1' }}>
                   <ButtonConfirmed
                     confirmed={false}
-                    disabled={percent === 0 || !liquidityValue0}
+                    disabled={removed || percent === 0 || !liquidityValue0}
                     onClick={() => setShowConfirm(true)}
                   >
-                    {error ?? 'Remove'}
+                    {removed ? 'Inactive' : error ?? 'Remove'}
                   </ButtonConfirmed>
                 </AutoColumn>
               </div>

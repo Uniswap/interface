@@ -194,6 +194,8 @@ export function PositionPage({
   const { token0: token0Address, token1: token1Address, fee: feeAmount, liquidity, tickLower, tickUpper, tokenId } =
     positionDetails || {}
 
+  const removed = liquidity?.eq(0)
+
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
 
@@ -235,9 +237,6 @@ export function PositionPage({
         )
       : undefined
   }, [inverted, pool, priceLower, priceUpper])
-
-  // really can't figure out why i have to do this, getting conditional hook call errors otherwise
-  const WORKAROUND = typeof ratio === 'number' ? (inverted ? 100 - ratio : ratio) : undefined
 
   // fees
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
@@ -408,7 +407,7 @@ export function PositionPage({
               <Badge style={{ marginRight: '8px' }}>
                 <BadgeText>{new Percent(feeAmount, 1_000_000).toSignificant()}%</BadgeText>
               </Badge>
-              <RangeBadge inRange={inRange} />
+              <RangeBadge removed={removed} inRange={inRange} />
             </RowFixed>
             {ownsNFT && (
               <RowFixed>
@@ -424,7 +423,7 @@ export function PositionPage({
                     {t('Add Liquidity')}
                   </ButtonGray>
                 ) : null}
-                {tokenId && (
+                {tokenId && !removed ? (
                   <ResponsiveButtonPrimary
                     as={Link}
                     to={`/remove/${tokenId}`}
@@ -434,7 +433,7 @@ export function PositionPage({
                   >
                     {t('Remove Liquidity')}
                   </ResponsiveButtonPrimary>
-                )}
+                ) : null}
               </RowFixed>
             )}
           </ResponsiveRow>
@@ -498,13 +497,13 @@ export function PositionPage({
                         <TYPE.main>
                           {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
                         </TYPE.main>
-                        {typeof ratio === 'number' && (
+                        {typeof ratio === 'number' && !removed ? (
                           <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
                             <TYPE.main color={theme.text2} fontSize={11}>
                               {inverted ? ratio : 100 - ratio}%
                             </TYPE.main>
                           </DarkGreyCard>
-                        )}
+                        ) : null}
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
@@ -516,13 +515,13 @@ export function PositionPage({
                         <TYPE.main>
                           {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
                         </TYPE.main>
-                        {typeof ratio === 'number' && (
+                        {typeof ratio === 'number' && !removed ? (
                           <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
                             <TYPE.main color={theme.text2} fontSize={11}>
-                              {WORKAROUND}%
+                              {inverted ? 100 - ratio : ratio}%
                             </TYPE.main>
                           </DarkGreyCard>
-                        )}
+                        ) : null}
                       </RowFixed>
                     </RowBetween>
                   </AutoColumn>
@@ -621,7 +620,7 @@ export function PositionPage({
                 </Label>
                 <HideExtraSmall>
                   <>
-                    <RangeBadge inRange={inRange} />
+                    <RangeBadge removed={removed} inRange={inRange} />
                     <span style={{ width: '8px' }} />
                   </>
                 </HideExtraSmall>
