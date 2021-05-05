@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
 import { FACTORY_ADDRESS, JSBI } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
@@ -162,11 +162,6 @@ function V2PairMigration({
     feeAmount,
     baseToken
   )
-
-  // reset the initial state, dont need cleanup token always defined
-  useEffect(() => {
-    setBaseToken(token0)
-  }, [baseToken, token0])
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
