@@ -41,7 +41,7 @@ export default function FeeSelector({
             <AutoColumn gap="sm" justify="flex-start">
               <ResponsiveText>0.05% {t('fee')}</ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                Optimized for stable assets.
+                Best for stable pairs.
               </TYPE.main>
             </AutoColumn>
           </ButtonRadioChecked>
@@ -53,7 +53,7 @@ export default function FeeSelector({
             <AutoColumn gap="sm" justify="flex-start">
               <ResponsiveText>0.3% {t('fee')}</ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                The classic Uniswap pool fee.
+                Best for most pairs.
               </TYPE.main>
             </AutoColumn>
           </ButtonRadioChecked>
@@ -65,7 +65,7 @@ export default function FeeSelector({
             <AutoColumn gap="sm" justify="flex-start">
               <ResponsiveText>1% {t('fee')}</ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                Best for volatile assets.
+                Best for exotic pairs.
               </TYPE.main>
             </AutoColumn>
           </ButtonRadioChecked>

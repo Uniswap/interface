@@ -444,7 +444,7 @@ export default function RemoveLiquidity({
             <LightCard>
               <AutoColumn gap="20px">
                 <RowBetween>
-                  <Text fontWeight={500}>Amount</Text>
+                  <Text fontWeight={500}>Remove Amount</Text>
                   <ClickableText
                     fontWeight={500}
                     onClick={() => {

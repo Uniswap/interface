@@ -100,9 +100,11 @@ const HeaderText = styled(TYPE.label)`
 
 const ResponsiveColumn = styled(AutoColumn)`
   gap: 12px;
+  height: 100%;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     gap: 8px;
   `};
+  justify-content: space-between;
 `
 
 const StyledImage = styled.img`
@@ -118,13 +120,11 @@ export default function CTACards() {
 
   return (
     <CTASection>
-      <CTA1 href={''}>
+      <CTA1 href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}>
         <ResponsiveColumn>
-          <HeaderText>{t('What’s new in V3 Liquidity Pools?')}</HeaderText>
+          <HeaderText>{t('Uniswap V3 is here!')}</HeaderText>
           <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
-            {t(
-              'Learn all about concentrated liquidity and get informed about how to choose ranges that make sense for you.'
-            )}
+            {t('Check out our v3 LP walkthrough and migration guides.')}
           </TYPE.body>
           <RowBetween align="flex-end">
             <HeaderText>{t('↗')}</HeaderText>
@@ -132,14 +132,15 @@ export default function CTACards() {
           </RowBetween>
         </ResponsiveColumn>
       </CTA1>
-      <CTA2 href={''}>
-        {/* <TextureBG /> */}
+      <CTA2 href={'https://info.uniswap.org/#/pools'}>
         <ResponsiveColumn>
-          <HeaderText>{t('Top pools')}</HeaderText>
-          <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex' }}>
-            {t('Explore the top pools with Uniswap Analytics.')}
-          </TYPE.body>
-          <HeaderText>{t('↗')}</HeaderText>
+          <AutoColumn gap="0px">
+            <HeaderText style={{ alignSelf: 'flex-start' }}>{t('Top pools')}</HeaderText>
+            <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
+              {t('Explore popular pools on Uniswap Analytics.')}
+            </TYPE.body>
+          </AutoColumn>
+          <HeaderText style={{ alignSelf: 'flex-end' }}>{t('↗')}</HeaderText>
         </ResponsiveColumn>
       </CTA2>
     </CTASection>

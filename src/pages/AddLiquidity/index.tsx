@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useMemo, useState, useEffect } from 're
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, TokenAmount, ETHER, currencyEquals } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, AlertCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
@@ -391,7 +391,7 @@ export default function AddLiquidity({
               <>
                 <AutoColumn gap="md">
                   <RowBetween paddingBottom="20px">
-                    <TYPE.label>Select a pair</TYPE.label>
+                    <TYPE.label>Select pair</TYPE.label>
                     <ButtonText onClick={clearAll}>
                       <TYPE.blue fontSize="12px">Clear All</TYPE.blue>
                     </ButtonText>
@@ -443,9 +443,6 @@ export default function AddLiquidity({
                 {noLiquidity && (
                   <DynamicSection disabled={!currencyA || !currencyB}>
                     <AutoColumn gap="md">
-                      <BlueCard width="100%" padding="1rem">
-                        You are the first to provide liquidity to this pool.
-                      </BlueCard>
                       <RowBetween>
                         <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
                         {baseCurrency && quoteCurrency ? (
@@ -482,6 +479,27 @@ export default function AddLiquidity({
                           )}
                         </TYPE.main>
                       </RowBetween>
+                      <BlueCard
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          padding: ' 1.5rem 1.25rem',
+                        }}
+                      >
+                        <AlertCircle color={theme.text1} size={32} style={{ marginBottom: '12px', opacity: 0.8 }} />
+                        <TYPE.body
+                          fontSize={14}
+                          style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }}
+                          textAlign="center"
+                        >
+                          You are the first liquidity provider for this Uniswap V3 pool.
+                        </TYPE.body>
+
+                        <TYPE.body fontWeight={500} textAlign="center" fontSize={14} style={{ opacity: 0.8 }}>
+                          The transaction cost will be much higher as it includes the gas to create the pool.
+                        </TYPE.body>
+                      </BlueCard>
                     </AutoColumn>
                   </DynamicSection>
                 )}
@@ -504,9 +522,11 @@ export default function AddLiquidity({
                     ) : null}
                   </RowBetween>
                   <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
-                    Your liquidity will only be active and earning fees when the price of the pool is within this price
-                    range.{' '}
-                    <ExternalLink href={''} style={{ fontSize: '14px' }}>
+                    Your liquidity will only earn fees when the market price of the pair is within your range.
+                    <ExternalLink
+                      href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}
+                      style={{ fontSize: '14px' }}
+                    >
                       Need help picking a range?
                     </ExternalLink>
                   </TYPE.main>
