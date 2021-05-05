@@ -353,6 +353,10 @@ export default function AddLiquidity({
     pool
   )
 
+  // we need an existence check on parsed amounts for single-asset deposits
+  const showApprovalA = approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
+  const showApprovalB = approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
+
   return (
     <ScrollablePage>
       <TransactionConfirmationModal
@@ -623,13 +627,13 @@ export default function AddLiquidity({
                     approvalB === ApprovalState.PENDING) &&
                     isValid && (
                       <RowBetween>
-                        {approvalA !== ApprovalState.APPROVED && (
+                        {showApprovalA && (
                           <ButtonPrimary
                             borderRadius="12px"
                             padding={'12px'}
                             onClick={approveACallback}
                             disabled={approvalA === ApprovalState.PENDING}
-                            width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                            width={showApprovalB ? '48%' : '100%'}
                           >
                             {approvalA === ApprovalState.PENDING ? (
                               <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
@@ -638,13 +642,13 @@ export default function AddLiquidity({
                             )}
                           </ButtonPrimary>
                         )}
-                        {approvalB !== ApprovalState.APPROVED && (
+                        {showApprovalB && (
                           <ButtonPrimary
                             borderRadius="12px"
                             padding={'12px'}
                             onClick={approveBCallback}
                             disabled={approvalB === ApprovalState.PENDING}
-                            width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                            width={showApprovalA ? '48%' : '100%'}
                           >
                             {approvalB === ApprovalState.PENDING ? (
                               <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
