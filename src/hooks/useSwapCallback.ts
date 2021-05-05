@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { ChainId, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/v3'
@@ -10,7 +10,8 @@ import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
-import { useV2RouterContract } from './useContract'
+import { useArgentWalletContract } from './useArgentWalletContract'
+import { useTokenContract, useV2RouterContract } from './useContract'
 import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
@@ -61,6 +62,12 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
+  const argentWalletContract = useArgentWalletContract()
+  const inputTokenContract = useTokenContract(
+    trade && trade.inputAmount && trade.inputAmount.currency && trade.inputAmount.currency instanceof Token
+      ? trade.inputAmount.currency.address
+      : undefined
+  )
 
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
@@ -68,6 +75,7 @@ function useSwapCallArguments(
     if (trade instanceof V2Trade) {
       if (!routerContract) return []
       const swapMethods = []
+
       swapMethods.push(
         Router.swapCallParameters(trade, {
           feeOnTransfer: false,
@@ -87,11 +95,36 @@ function useSwapCallArguments(
           })
         )
       }
-      return swapMethods.map(({ methodName, args, value }) => ({
-        address: routerContract.address,
-        calldata: routerContract.interface.encodeFunctionData(methodName, args),
-        value,
-      }))
+      return swapMethods.map(({ methodName, args, value }) => {
+        if (!argentWalletContract || !inputTokenContract) {
+          return {
+            address: routerContract.address,
+            calldata: routerContract.interface.encodeFunctionData(methodName, args),
+            value,
+          }
+        } else {
+          return {
+            address: argentWalletContract.address,
+            calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
+              [
+                {
+                  to: inputTokenContract.address,
+                  data: inputTokenContract.interface.encodeFunctionData('approve', [
+                    trade.maximumAmountIn(allowedSlippage),
+                  ]),
+                  value: '0x',
+                },
+                {
+                  to: routerContract.address,
+                  value: value,
+                  data: routerContract.interface.encodeFunctionData(methodName, args),
+                },
+              ],
+            ]),
+            value: '0x',
+          }
+        }
+      })
     } else {
       // trade is V3Trade
       const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
@@ -131,7 +164,19 @@ function useSwapCallArguments(
         },
       ]
     }
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, signatureData, trade])
+  }, [
+    account,
+    allowedSlippage,
+    argentWalletContract,
+    chainId,
+    deadline,
+    inputTokenContract,
+    library,
+    recipient,
+    routerContract,
+    signatureData,
+    trade,
+  ])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
