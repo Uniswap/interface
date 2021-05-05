@@ -13,9 +13,9 @@ import { Zap } from 'react-feather'
 const ResponsiveButton = styled(ButtonPrimary)`
   width: fit-content;
   padding: 0.2rem 0.5rem;
-  wordbreak: keep-all;
+  word-break: keep-all;
   height: 24px;
-  marginleft: 0.25rem;
+  margin-left: 0.75rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
      padding: 4px;
     border-radius: 8px;

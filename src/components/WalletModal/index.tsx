@@ -1,6 +1,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { AutoRow } from 'components/Row'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
@@ -13,12 +14,13 @@ import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import AccountDetails from '../AccountDetails'
 
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
+import { LightCard } from '../Card'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -54,12 +56,12 @@ const HeaderRow = styled.div`
 `
 
 const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
-  padding: 2rem;
+  background-color: ${({ theme }) => theme.bg0};
+  padding: 0 1rem 1rem 1rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
+  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0 1rem 1rem 1rem`};
 `
 
 const UpperSection = styled.div`
@@ -82,18 +84,6 @@ const UpperSection = styled.div`
   }
 `
 
-const Blurb = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 1rem;
-    font-size: 12px;
-  `};
-`
-
 const OptionGrid = styled.div`
   display: grid;
   grid-gap: 10px;
@@ -104,6 +94,11 @@ const OptionGrid = styled.div`
 `
 
 const HoverText = styled.div`
+  text-decoration: none;
+  color: ${({ theme }) => theme.text1};
+  display: flex;
+  align-items: center;
+
   :hover {
     cursor: pointer;
   }
@@ -338,7 +333,17 @@ export default function WalletModal({
             <HoverText>Connect to a wallet</HoverText>
           </HeaderRow>
         )}
+
         <ContentWrapper>
+          <LightCard style={{ marginBottom: '16px' }}>
+            <AutoRow style={{ flexWrap: 'nowrap' }}>
+              <TYPE.main fontSize={14}>
+                By connecting a wallet, you agree to Uniswap Labs’ <ExternalLink href="">Terms of Service</ExternalLink>{' '}
+                and acknowledge that you have read and understand the{' '}
+                <ExternalLink href="">Uniswap protocol disclaimer</ExternalLink>.
+              </TYPE.main>
+            </AutoRow>
+          </LightCard>
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
               connector={pendingWallet}
@@ -348,12 +353,6 @@ export default function WalletModal({
             />
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>
-          )}
-          {walletView !== WALLET_VIEWS.PENDING && (
-            <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
-            </Blurb>
           )}
         </ContentWrapper>
       </UpperSection>

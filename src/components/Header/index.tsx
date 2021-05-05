@@ -31,7 +31,7 @@ import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div`
   display: grid;
-  grid-template-columns: 48px 1fr 120px;
+  grid-template-columns: 120px 1fr 120px;
   align-items: center;
   justify-content: space-between;
   align-items: center;
@@ -39,18 +39,20 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  /* border-bottom: 1px solid rgba(0, 0, 0, 0.1); */
-  padding: 0.5rem 1rem;
+  /* border-bottom: 1px solid ${({ theme }) => theme.bg2}; */
+  padding: 1rem;
   z-index: 21;
-  background-color: ${({ theme }) => theme.bg1};
+  /* background-color: ${({ theme }) => theme.bg1}; */
+  position: relative;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: flex;
-    padding: 0 1rem;
+    padding:  1rem;
+    grid-template-columns: 120px 1fr;
+
   `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
+    padding: 1rem;
   `}
 `
 
@@ -105,16 +107,15 @@ const HeaderRow = styled(RowFixed)`
 `
 
 const HeaderLinks = styled(Row)`
-  justify-content: center;
-  width: 100%;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 1rem 0 1rem 1rem;
-    justify-content: flex-start;
-`};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
-    justify-content: flex-end;
-`};
+  justify-self: center;
+  background-color: ${({ theme }) => theme.bg0};
+  width: fit-content;
+  padding: 4px;
+  border-radius: 16px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 10px;
+  overflow: auto;
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -215,7 +216,6 @@ const StyledNavLink = styled(NavLink).attrs({
   color: ${({ theme }) => theme.text2};
   font-size: 1rem;
   width: fit-content;
-  margin: 0 6px;
   font-weight: 500;
   padding: 8px 12px;
 
@@ -350,7 +350,7 @@ export default function Header() {
           Vote
         </StyledNavLink>
         <StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>
-          Charts <span style={{ fontSize: '11px' }}>↗</span>
+          Charts <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
         </StyledExternalLink>
       </HeaderLinks>
       <HeaderControls>
