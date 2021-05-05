@@ -272,7 +272,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         pendingText={pendingText}
       />
       <AppBody>
-        <AddRemoveTabs creating={false} adding={false} />
+        <AddRemoveTabs creating={false} adding={false} positionID={tokenId.toString()} />
         <Wrapper>
           {position ? (
             <AutoColumn gap="lg">

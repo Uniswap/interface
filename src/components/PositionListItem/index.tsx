@@ -283,6 +283,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
         <>
           <RangeLineItem
             onClick={(e) => {
+              e.preventDefault()
               e.stopPropagation()
               setManuallyInverted(!manuallyInverted)
             }}

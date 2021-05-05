@@ -213,12 +213,12 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             >
               {showMore ? (
                 <>
-                  Manage
+                  Migrate
                   <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                 </>
               ) : (
                 <>
-                  Manage
+                  Migrate
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                 </>
               )}
