@@ -90,7 +90,10 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
 `
 
 const MenuItem = styled(ExternalLink)`
+  display: flex;
   flex: 1;
+  flex-direction: row;
+  align-items: center;
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.text2};
   :hover {
@@ -139,23 +142,23 @@ export default function Menu() {
         <MenuFlyout>
           <MenuItem href="https://uniswap.org/">
             <Info size={14} />
-            About
+            <div>About</div>
           </MenuItem>
           <MenuItem href="https://docs.uniswap.org/">
             <BookOpen size={14} />
-            Docs
+            <div>Docs</div>
           </MenuItem>
           <MenuItem href={CODE_LINK}>
             <Code size={14} />
-            Code
+            <div>Code</div>
           </MenuItem>
           <MenuItem href="https://discord.gg/FCfyBSbCU5">
             <MessageCircle size={14} />
-            Discord
+            <div>Discord</div>
           </MenuItem>
           <MenuItem href="https://info.uniswap.org/">
             <PieChart size={14} />
-            Analytics
+            <div>Analytics</div>
           </MenuItem>
           {account && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">

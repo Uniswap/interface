@@ -27,7 +27,7 @@ describe('swap reducer', () => {
       } as any)
       store.dispatch(updateVersion())
       expect(store.getState().userDeadline).toEqual(DEFAULT_DEADLINE_FROM_NOW)
-      expect(store.getState().userSlippageTolerance).toEqual(50)
+      expect(store.getState().userSlippageTolerance).toEqual(10)
     })
   })
 })

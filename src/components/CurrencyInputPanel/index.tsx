@@ -159,7 +159,7 @@ interface CurrencyInputPanelProps {
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
-  fiatValue?: CurrencyAmount
+  fiatValue?: CurrencyAmount | null
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean
@@ -203,7 +203,9 @@ export default function CurrencyInputPanel({
         <FixedContainer>
           <AutoColumn gap="sm" justify="center">
             <Lock />
-            <TYPE.label fontSize="12px">Single-asset deposit only, price out of range.</TYPE.label>
+            <TYPE.label fontSize="12px" textAlign="center">
+              The market price is outside your specified price range. Single-asset deposit only.
+            </TYPE.label>
           </AutoColumn>
         </FixedContainer>
       )}

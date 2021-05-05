@@ -43,12 +43,4 @@ export const RowFixed = styled(Row)<{ gap?: string; justify?: string }>`
   margin: ${({ gap }) => gap && `-${gap}`};
 `
 
-export const RowResponsive = styled(Row)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-      flex-direction: column;
-      justify-content: flext-start;
-      align-items: flex-start;
-  `}
-`
-
 export default Row

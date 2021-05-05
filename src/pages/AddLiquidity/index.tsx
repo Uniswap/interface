@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useMemo, useState, useEffect } from 're
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, TokenAmount, ETHER, currencyEquals } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, AlertCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
@@ -15,6 +15,7 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from '../../co
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { RowBetween } from '../../components/Row'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import Review from './Review'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -158,6 +159,11 @@ export default function AddLiquidity({
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+  }
+
+  const usdcValues = {
+    [Field.CURRENCY_A]: useUSDCValue(parsedAmounts[Field.CURRENCY_A]),
+    [Field.CURRENCY_B]: useUSDCValue(parsedAmounts[Field.CURRENCY_B]),
   }
 
   // get the max amounts user can add
@@ -357,6 +363,10 @@ export default function AddLiquidity({
     pool
   )
 
+  // we need an existence check on parsed amounts for single-asset deposits
+  const showApprovalA = approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
+  const showApprovalB = approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
+
   return (
     <ScrollablePage>
       <TransactionConfirmationModal
@@ -397,7 +407,7 @@ export default function AddLiquidity({
               <>
                 <AutoColumn gap="md">
                   <RowBetween paddingBottom="20px">
-                    <TYPE.label>Select a pair</TYPE.label>
+                    <TYPE.label>Select pair</TYPE.label>
                     <ButtonText onClick={clearAll}>
                       <TYPE.blue fontSize="12px">Clear All</TYPE.blue>
                     </ButtonText>
@@ -449,9 +459,6 @@ export default function AddLiquidity({
                 {noLiquidity && (
                   <DynamicSection disabled={!currencyA || !currencyB}>
                     <AutoColumn gap="md">
-                      <BlueCard width="100%" padding="1rem">
-                        You are the first to provide liquidity to this pool.
-                      </BlueCard>
                       <RowBetween>
                         <TYPE.label>{t('selectStartingPrice')}</TYPE.label>
 
@@ -484,23 +491,43 @@ export default function AddLiquidity({
                           <TYPE.main color={theme.text3}>{' ' + quoteCurrency?.symbol}</TYPE.main>
                         </span>
                       </OutlineCard>
-                    </AutoColumn>
-
-                    {v2SpotPriceAdjustedToBase ? (
-                      <ButtonPrimary
-                        width="fit-content"
-                        padding="4px"
-                        borderRadius="8px"
-                        fontSize="12px"
-                        mt="12px"
-                        onClick={() => {
-                          onStartPriceInput(v2SpotPriceAdjustedToBase.toSignificant(6))
+                      {v2SpotPriceAdjustedToBase ? (
+                        <ButtonPrimary
+                          width="fit-content"
+                          padding="4px"
+                          borderRadius="8px"
+                          fontSize="12px"
+                          mt="12px"
+                          onClick={() => {
+                            onStartPriceInput(v2SpotPriceAdjustedToBase.toSignificant(6))
+                          }}
+                          disabled={startPriceTypedValue === v2SpotPriceAdjustedToBase.toSignificant(6)}
+                        >
+                          Use V2 Price
+                        </ButtonPrimary>
+                      ) : null}
+                      <BlueCard
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          padding: ' 1.5rem 1.25rem',
                         }}
-                        disabled={startPriceTypedValue === v2SpotPriceAdjustedToBase.toSignificant(6)}
                       >
-                        Use V2 Price
-                      </ButtonPrimary>
-                    ) : undefined}
+                        <AlertCircle color={theme.text1} size={32} style={{ marginBottom: '12px', opacity: 0.8 }} />
+                        <TYPE.body
+                          fontSize={14}
+                          style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }}
+                          textAlign="center"
+                        >
+                          You are the first liquidity provider for this Uniswap V3 pool.
+                        </TYPE.body>
+
+                        <TYPE.body fontWeight={500} textAlign="center" fontSize={14} style={{ opacity: 0.8 }}>
+                          The transaction cost will be much higher as it includes the gas to create the pool.
+                        </TYPE.body>
+                      </BlueCard>
+                    </AutoColumn>
                   </DynamicSection>
                 )}
 
@@ -523,9 +550,11 @@ export default function AddLiquidity({
                     ) : null}
                   </RowBetween>
                   <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
-                    Your liquidity will only be active and earning fees when the price of the pool is within this price
-                    range.{' '}
-                    <ExternalLink href={''} style={{ fontSize: '14px' }}>
+                    Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
+                    <ExternalLink
+                      href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}
+                      style={{ fontSize: '14px' }}
+                    >
                       Need help picking a range?
                     </ExternalLink>
                   </TYPE.main>
@@ -601,6 +630,7 @@ export default function AddLiquidity({
                   showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                   currency={currencies[Field.CURRENCY_A]}
                   id="add-liquidity-input-tokena"
+                  fiatValue={usdcValues[Field.CURRENCY_A]}
                   showCommonBases
                   locked={depositADisabled}
                 />
@@ -612,6 +642,7 @@ export default function AddLiquidity({
                     onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                   }}
                   showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                  fiatValue={usdcValues[Field.CURRENCY_B]}
                   currency={currencies[Field.CURRENCY_B]}
                   id="add-liquidity-input-tokenb"
                   showCommonBases
@@ -636,13 +667,13 @@ export default function AddLiquidity({
                     approvalB === ApprovalState.PENDING) &&
                     isValid && (
                       <RowBetween>
-                        {approvalA !== ApprovalState.APPROVED && (
+                        {showApprovalA && (
                           <ButtonPrimary
                             borderRadius="12px"
                             padding={'12px'}
                             onClick={approveACallback}
                             disabled={approvalA === ApprovalState.PENDING}
-                            width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                            width={showApprovalB ? '48%' : '100%'}
                           >
                             {approvalA === ApprovalState.PENDING ? (
                               <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
@@ -651,13 +682,13 @@ export default function AddLiquidity({
                             )}
                           </ButtonPrimary>
                         )}
-                        {approvalB !== ApprovalState.APPROVED && (
+                        {showApprovalB && (
                           <ButtonPrimary
                             borderRadius="12px"
                             padding={'12px'}
                             onClick={approveBCallback}
                             disabled={approvalB === ApprovalState.PENDING}
-                            width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                            width={showApprovalA ? '48%' : '100%'}
                           >
                             {approvalB === ApprovalState.PENDING ? (
                               <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>

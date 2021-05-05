@@ -145,10 +145,10 @@ const StepCounter = ({
       {!locked ? (
         <RowBetween>
           <SmallButton onClick={handleDecrement}>
-            <TYPE.black fontSize="12px">-{feeAmountFormatted}%</TYPE.black>
+            <TYPE.white fontSize="12px">-{feeAmountFormatted}%</TYPE.white>
           </SmallButton>
           <SmallButton onClick={handleIncrement}>
-            <TYPE.black fontSize="12px">+{feeAmountFormatted}%</TYPE.black>
+            <TYPE.white fontSize="12px">+{feeAmountFormatted}%</TYPE.white>
           </SmallButton>
         </RowBetween>
       ) : null}
