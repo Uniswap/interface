@@ -340,7 +340,7 @@ export default function WalletModal({
               <TYPE.main fontSize={14}>
                 By connecting a wallet, you agree to Uniswap Labs’ <ExternalLink href="">Terms of Service</ExternalLink>{' '}
                 and acknowledge that you have read and understand the{' '}
-                <ExternalLink href="">Uniswap protocol disclaimer</ExternalLink>.
+                <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
               </TYPE.main>
             </AutoRow>
           </LightCard>
