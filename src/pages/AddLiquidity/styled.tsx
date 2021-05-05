@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import Card, { DarkGreyCard } from 'components/Card'
+import { DarkGreyCard } from 'components/Card'
 import Input from 'components/NumericalInput'
 
 export const Wrapper = styled.div`
@@ -24,16 +24,6 @@ export const ScrollablePage = styled.div`
   flex-direction: row;
 `
 
-export const RangeBadge = styled(Card)<{ inRange?: boolean }>`
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 8px;
-  padding: 4px 6px;
-  color: ${({ theme }) => theme.black};
-  background-color: ${({ inRange, theme }) => (inRange ? theme.green1 : theme.yellow2)};
-`
-
 export const FixedPreview = styled.div`
   position: relative;
   padding: 16px;
@@ -49,8 +39,8 @@ export const FixedPreview = styled.div`
 `
 
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
-    opacity: ${({ disabled }) => (disabled ? '0.3' : '1')}
-    pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')}
+  opacity: ${({ disabled }) => (disabled ? '0.3' : '1')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
 `
 
 export const CurrencyDropdown = styled(CurrencyInputPanel)`

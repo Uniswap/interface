@@ -27,7 +27,7 @@ interface PermitInfo {
   version?: string
 }
 
-// todo: read this information from extensions on token lists
+// todo: read this information from extensions on token lists or elsewhere (permit registry?)
 const PERMITTABLE_TOKENS: {
   [chainId in ChainId]: {
     [checksummedTokenAddress: string]: PermitInfo
