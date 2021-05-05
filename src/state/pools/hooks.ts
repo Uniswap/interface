@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useDeepCompareEffect } from 'react-use'
 
 import { client } from 'apollo/client'
-import { USER_LIQUIDITY_POSITION_SNAPSHOTS, POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK } from 'apollo/queries'
+import { POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK, USER_POSITIONS } from 'apollo/queries'
 import { Currency } from 'libs/sdk/src'
 import { AppState } from '../index'
 import { updatePools, setLoading, setError } from './actions'
@@ -24,24 +24,24 @@ export interface SubgraphPoolData {
 export interface UserLiquidityPosition {
   id: string
   liquidityTokenBalance: string
-  liquidityTokenTotalSupply: string
-  reserveUSD: string
-  timestamp: number
   pool: {
     id: string
+    reserveUSD: string
+    totalSupply: string
   }
 }
 
 /**
  * Get my liquidity for all pools
  *
- * @param account string
+ * @param user string
  */
-export function useUserLiquidityPositions(account: string | null | undefined) {
-  const { loading, error, data } = useQuery(USER_LIQUIDITY_POSITION_SNAPSHOTS, {
+export function useUserLiquidityPositions(user: string | null | undefined) {
+  const { loading, error, data } = useQuery(USER_POSITIONS, {
     variables: {
-      account: account?.toLowerCase()
-    }
+      user: user?.toLowerCase()
+    },
+    fetchPolicy: 'no-cache'
   })
 
   return { loading, error, data }

@@ -153,7 +153,8 @@ const Pools = ({
   // const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
   const temp = useUserLiquidityPositions(account)
   const loadingUserLiquidityPositions = !account ? false : temp.loading
-  const userLiquidityPositions = !account ? { liquidityPositionSnapshots: [] } : temp.data
+  const userLiquidityPositions = !account ? { liquidityPositions: [] } : temp.data
+
   return (
     <>
       <PageWrapper>
@@ -230,11 +231,11 @@ const Pools = ({
         <Panel>
           {loadingUserLiquidityPositions || loadingPoolsData ? (
             <LocalLoader />
-          ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositionSnapshots ? (
+          ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositions ? (
             <PoolList
               poolsList={poolsList}
               subgraphPoolsData={poolsData}
-              userLiquidityPositions={userLiquidityPositions.liquidityPositionSnapshots}
+              userLiquidityPositions={userLiquidityPositions.liquidityPositions}
               maxItems={3}
             />
           ) : (
