@@ -124,11 +124,22 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     maxAmountInput && onUserInput(maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  async function onAttemptToApprove() {
+  function onAttemptToApprove() {
     if (!pairContract || !library || !deadline) throw new Error('missing dependencies')
     if (!parsedAmount) throw new Error('missing liquidity amount')
 
-    return gatherPermitSignature ? gatherPermitSignature() : approveCallback()
+    if (gatherPermitSignature) {
+      try {
+        gatherPermitSignature()
+      } catch (error) {
+        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
+        if (error?.code !== 4001) {
+          approveCallback()
+        }
+      }
+    } else {
+      approveCallback()
+    }
   }
 
   return (
