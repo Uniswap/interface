@@ -15,6 +15,7 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from '../../co
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { RowBetween } from '../../components/Row'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
+import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import Review from './Review'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -106,6 +107,7 @@ export default function AddLiquidity({
   const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
 
   const {
+    pool,
     ticks,
     dependentField,
     price,
@@ -153,6 +155,11 @@ export default function AddLiquidity({
   const formattedAmounts = {
     [independentField]: typedValue,
     [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+  }
+
+  const usdcValues = {
+    [Field.CURRENCY_A]: useUSDCValue(parsedAmounts[Field.CURRENCY_A]),
+    [Field.CURRENCY_B]: useUSDCValue(parsedAmounts[Field.CURRENCY_B]),
   }
 
   // get the max amounts user can add
@@ -348,8 +355,13 @@ export default function AddLiquidity({
     quoteCurrency ?? undefined,
     feeAmount,
     tickLower,
-    tickUpper
+    tickUpper,
+    pool
   )
+
+  // we need an existence check on parsed amounts for single-asset deposits
+  const showApprovalA = approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
+  const showApprovalB = approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
 
   return (
     <ScrollablePage>
@@ -452,8 +464,11 @@ export default function AddLiquidity({
                             handleRateToggle={() => {
                               onLeftRangeInput('')
                               onRightRangeInput('')
-                              console.log('test')
-                              history.push(`/add/${currencyIdB as string}/${currencyIdA as string}`)
+                              history.push(
+                                `/add/${currencyIdB as string}/${currencyIdA as string}${
+                                  feeAmount ? '/' + feeAmount : ''
+                                }`
+                              )
                             }}
                           />
                         ) : null}
@@ -515,8 +530,9 @@ export default function AddLiquidity({
                         handleRateToggle={() => {
                           onLeftRangeInput('')
                           onRightRangeInput('')
-                          console.log('test')
-                          history.push(`/add/${currencyIdB as string}/${currencyIdA as string}`)
+                          history.push(
+                            `/add/${currencyIdB as string}/${currencyIdA as string}${feeAmount ? '/' + feeAmount : ''}`
+                          )
                         }}
                       />
                     ) : null}
@@ -602,6 +618,7 @@ export default function AddLiquidity({
                   showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                   currency={currencies[Field.CURRENCY_A]}
                   id="add-liquidity-input-tokena"
+                  fiatValue={usdcValues[Field.CURRENCY_A]}
                   showCommonBases
                   locked={depositADisabled}
                 />
@@ -613,6 +630,7 @@ export default function AddLiquidity({
                     onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
                   }}
                   showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                  fiatValue={usdcValues[Field.CURRENCY_B]}
                   currency={currencies[Field.CURRENCY_B]}
                   id="add-liquidity-input-tokenb"
                   showCommonBases
@@ -637,13 +655,13 @@ export default function AddLiquidity({
                     approvalB === ApprovalState.PENDING) &&
                     isValid && (
                       <RowBetween>
-                        {approvalA !== ApprovalState.APPROVED && (
+                        {showApprovalA && (
                           <ButtonPrimary
                             borderRadius="12px"
                             padding={'12px'}
                             onClick={approveACallback}
                             disabled={approvalA === ApprovalState.PENDING}
-                            width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
+                            width={showApprovalB ? '48%' : '100%'}
                           >
                             {approvalA === ApprovalState.PENDING ? (
                               <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
@@ -652,13 +670,13 @@ export default function AddLiquidity({
                             )}
                           </ButtonPrimary>
                         )}
-                        {approvalB !== ApprovalState.APPROVED && (
+                        {showApprovalB && (
                           <ButtonPrimary
                             borderRadius="12px"
                             padding={'12px'}
                             onClick={approveBCallback}
                             disabled={approvalB === ApprovalState.PENDING}
-                            width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
+                            width={showApprovalA ? '48%' : '100%'}
                           >
                             {approvalB === ApprovalState.PENDING ? (
                               <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>

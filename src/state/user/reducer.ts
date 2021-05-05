@@ -62,7 +62,7 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   userExpertMode: false,
   userSingleHopOnly: false,
-  userSlippageTolerance: 50,
+  userSlippageTolerance: 10,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
@@ -76,7 +76,7 @@ export default createReducer(initialState, (builder) =>
       // slippage isnt being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
       if (typeof state.userSlippageTolerance !== 'number') {
-        state.userSlippageTolerance = 50
+        state.userSlippageTolerance = 10
       }
 
       // deadline isnt being tracked in local storage, reset to default

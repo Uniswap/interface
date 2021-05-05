@@ -13,6 +13,7 @@ import RateToggle from 'components/RateToggle'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ThemeContext } from 'styled-components'
+import { JSBI } from '@uniswap/v2-sdk'
 
 export const PositionPreview = ({
   position,
@@ -55,6 +56,8 @@ export const PositionPreview = ({
     setBaseCurrency(quoteCurrency)
   }, [quoteCurrency])
 
+  const removed = position?.liquidity && JSBI.equal(position?.liquidity, JSBI.BigInt(0))
+
   return (
     <AutoColumn gap="md" style={{ marginTop: '0.5rem' }}>
       <RowBetween style={{ marginBottom: '0.5rem' }}>
@@ -69,7 +72,7 @@ export const PositionPreview = ({
             {currency0?.symbol} / {currency1?.symbol}
           </TYPE.label>
         </RowFixed>
-        <RangeBadge inRange={inRange} />
+        <RangeBadge removed={removed} inRange={inRange} />
       </RowBetween>
 
       <LightCard>

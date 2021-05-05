@@ -33,14 +33,28 @@ export const DarkBadge = styled.div`
   padding: 4px 6px;
 `
 
-export default function RangeBadge({ inRange }: { inRange?: boolean }) {
+export default function RangeBadge({
+  removed,
+  inRange,
+}: {
+  removed: boolean | undefined
+  inRange: boolean | undefined
+}) {
   const { t } = useTranslation()
 
   return (
     <BadgeWrapper>
-      {inRange ? (
+      {removed ? (
+        <MouseoverTooltip text={`Your position has 0 liquidity, and is not earning fees.`}>
+          <Badge variant={BadgeVariant.WARNING_OUTLINE}>
+            <AlertCircle width={14} height={14} />
+            &nbsp;
+            <BadgeText>{t('Inactive')}</BadgeText>
+          </Badge>
+        </MouseoverTooltip>
+      ) : inRange ? (
         <MouseoverTooltip
-          text={`The price of this pair is within your selected range. Your position is currently earning fees.`}
+          text={`The price of this pool is within your selected range. Your position is currently earning fees.`}
         >
           <Badge variant={BadgeVariant.DEFAULT}>
             <ActiveDot /> &nbsp;
@@ -49,7 +63,7 @@ export default function RangeBadge({ inRange }: { inRange?: boolean }) {
         </MouseoverTooltip>
       ) : (
         <MouseoverTooltip
-          text={`The price of this pair is outside of your selected range. Your position is not currently earning fees. `}
+          text={`The price of this pool is outside of your selected range. Your position is not currently earning fees.`}
         >
           <Badge variant={BadgeVariant.WARNING}>
             <AlertCircle width={14} height={14} />
