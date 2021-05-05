@@ -61,7 +61,7 @@ const mAssetsAdditionalBases: { [tokenAddress: string]: Token[] } = {
   '0x1d350417d9787E000cc1b95d70E9536DcD91F373': [MIR, UST], // mIAU
   '0x9d1555d8cB3C846Bb4f7D5B1B1080872c3166676': [MIR, UST], // mSLV
   '0x31c63146a635EB7465e5853020b39713AC356991': [MIR, UST], // mUSO
-  '0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86': [MIR, UST] // mVIXY
+  '0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86': [MIR, UST], // mVIXY
 }
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
