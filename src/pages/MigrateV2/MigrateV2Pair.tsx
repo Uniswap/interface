@@ -241,18 +241,18 @@ function V2PairMigration({
   const approve = useCallback(async () => {
     if (isNotUniswap) {
       // sushi has to be manually approved
-      approveManually()
+      await approveManually()
     } else if (gatherPermitSignature) {
       try {
-        gatherPermitSignature()
+        await gatherPermitSignature()
       } catch (error) {
         // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
         if (error?.code !== 4001) {
-          approveManually()
+          await approveManually()
         }
       }
     } else {
-      approveManually()
+      await approveManually()
     }
   }, [isNotUniswap, gatherPermitSignature, approveManually])
 

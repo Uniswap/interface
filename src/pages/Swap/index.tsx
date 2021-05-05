@@ -205,18 +205,18 @@ export default function Swap({ history }: RouteComponentProps) {
     allowedSlippage
   )
 
-  const handleApprove = useCallback(() => {
+  const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
       try {
-        gatherPermitSignature()
+        await gatherPermitSignature()
       } catch (error) {
         // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
         if (error?.code !== 4001) {
-          approveCallback()
+          await approveCallback()
         }
       }
     } else {
-      approveCallback()
+      await approveCallback()
     }
   }, [approveCallback, gatherPermitSignature, signatureState])
 
