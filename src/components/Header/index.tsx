@@ -340,7 +340,7 @@ export default function Header() {
             Boolean(match) ||
             pathname.startsWith('/add') ||
             pathname.startsWith('/remove') ||
-            pathname.startsWith('/create') ||
+            pathname.startsWith('/increase') ||
             pathname.startsWith('/find')
           }
         >
@@ -370,7 +370,6 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )}
-
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
