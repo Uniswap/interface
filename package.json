@@ -73,7 +73,7 @@
     "react-use-gesture": "^6.0.14",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.5",
-    "redux-localstorage-simple": "^2.3.1",
+    "redux-localstorage-simple": "^2.4.0",
     "serve": "^11.3.0",
     "start-server-and-test": "^1.12.1",
     "styled-components": "^5.2.3",
