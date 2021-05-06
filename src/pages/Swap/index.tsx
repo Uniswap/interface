@@ -38,6 +38,7 @@ import AppBody from '../AppBody'
 import { ClickableText } from '../Pools/styleds'
 import Loader from '../../components/Loader'
 import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
+import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
@@ -428,8 +429,9 @@ export default function Swap() {
             </div>
             {!showWrap && !!trade && (
               <RowBetween align="center">
-                <RowFixed>
-                  <ClickableText fontSize="14px" fontWeight="600" color="white">
+                <RowFixed alignItems="center">
+                  {ROUTABLE_PLATFORM_LOGO[trade.platform.name]}
+                  <ClickableText marginLeft="4px" fontSize="14px" fontWeight="600" color="white">
                     {trade.platform.name}
                   </ClickableText>
                 </RowFixed>

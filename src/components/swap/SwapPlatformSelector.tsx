@@ -1,29 +1,20 @@
-import React, { ReactNode, useCallback } from 'react'
-import { RoutablePlatform, Trade, TradeType } from 'dxswap-sdk'
+import React, { useCallback } from 'react'
+import { CurrencyAmount, RoutablePlatform, Trade, TradeType } from 'dxswap-sdk'
 import { AutoColumn } from '../Column'
-import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import CurrencyLogo from '../CurrencyLogo'
 import { Box, Flex } from 'rebass'
 import Radio from '../Radio'
 import QuestionHelper from '../QuestionHelper'
+import WarningHelper from '../WarningHelper'
 import SwapRoute from './SwapRoute'
-import UniswapLogo from '../../assets/svg/uniswap-logo.svg'
-import SwaprLogo from '../../assets/svg/logo.svg'
-import SushiswapLogo from '../../assets/svg/sushiswap-logo.svg'
-import HoneyswapLogo from '../../assets/svg/honeyswap-logo.svg'
-import BaoswapLogo from '../../assets/images/baoswap-logo.png'
-import LevinswapLogo from '../../assets/images/levinswap-logo.svg'
-
-const ROUTABLE_PLATFORM_LOGO: { [routablePaltformName: string]: ReactNode } = {
-  [RoutablePlatform.UNISWAP.name]: <img width={16} height={16} src={UniswapLogo} alt="uniswap" />,
-  [RoutablePlatform.SUSHISWAP.name]: <img width={16} height={16} src={SushiswapLogo} alt="sushiswap" />,
-  [RoutablePlatform.SWAPR.name]: <img width={16} height={16} src={SwaprLogo} alt="swapr" />,
-  [RoutablePlatform.HONEYSWAP.name]: <img width={16} height={16} src={HoneyswapLogo} alt="honeyswap" />,
-  [RoutablePlatform.BAOSWAP.name]: <img width={16} height={16} src={BaoswapLogo} alt="baoswap" />,
-  [RoutablePlatform.LEVINSWAP.name]: <img width={16} height={16} src={LevinswapLogo} alt="levinswap" />
-
-}
+import { useSwapsGasEstimations } from '../../hooks/useSwapsGasEstimate'
+import { useUserSlippageTolerance } from '../../state/user/hooks'
+import { useSwapState } from '../../state/swap/hooks'
+import { useGasFeesUSD } from '../../hooks/useGasFees'
+import { RowFixed } from '../Row'
+import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
+import { Dots } from '../../pages/Pools/styleds'
 
 export interface SwapPlatformSelectorProps {
   allPlatformTrades: (Trade | undefined)[] | undefined
@@ -31,11 +22,48 @@ export interface SwapPlatformSelectorProps {
   onSelectedPlatformChange: (newPlatform: RoutablePlatform) => void
 }
 
+interface GasFeeProps {
+  loading: boolean
+  gasFeeUSD: CurrencyAmount | null
+}
+
+function GasFee({ loading, gasFeeUSD }: GasFeeProps) {
+  if (loading) {
+    return <Dots />
+  }
+  if (gasFeeUSD) {
+    return (
+      <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
+        ${gasFeeUSD.toFixed(2)} GAS FEE
+      </TYPE.main>
+    )
+  }
+  return (
+    <RowFixed>
+      <TYPE.main color="yellow2" fontSize="10px" lineHeight="12px">
+        N.A.
+      </TYPE.main>
+      <WarningHelper text="Could not estimate gas fee. Please make sure you've approved the traded token and that you have enough funds." />
+    </RowFixed>
+  )
+}
+
 export function SwapPlatformSelector({
   allPlatformTrades,
   selectedTrade,
   onSelectedPlatformChange
 }: SwapPlatformSelectorProps) {
+  const [allowedSlippage] = useUserSlippageTolerance()
+  const { recipient } = useSwapState()
+  const { loading: loadingTradesGasEstimates, estimations } = useSwapsGasEstimations(
+    allowedSlippage,
+    recipient,
+    allPlatformTrades
+  )
+  const { loading: loadingGasFeesUSD, gasFeesUSD } = useGasFeesUSD(
+    estimations.map(estimation => (estimation && estimation.length > 0 ? estimation[0] : null))
+  )
+
   const handleSelectedTradeOverride = useCallback(
     event => {
       const newTrade = allPlatformTrades?.find(trade => trade?.platform.name.toLowerCase() === event.target.value)
@@ -45,39 +73,47 @@ export function SwapPlatformSelector({
     [allPlatformTrades, onSelectedPlatformChange]
   )
 
+  const loadingGasFees = loadingGasFeesUSD || loadingTradesGasEstimates
+
   return (
-    <AutoColumn gap="18px" style={{ borderBottom: '1px solid #292643', paddingBottom: '18px', marginBottom: '18px' }}>
-      <AutoColumn gap="8px">
-        {allPlatformTrades?.map((trade, i) => {
-          if (!trade) return null // some platforms might not be compatible with the currently selected network
-          const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
-          return (
-            <RowBetween key={i}>
-              <Radio
-                checked={selectedTrade?.platform.name === trade.platform.name}
-                label={trade.platform.name}
-                icon={ROUTABLE_PLATFORM_LOGO[trade.platform.name]}
-                value={trade.platform.name.toLowerCase()}
-                onChange={handleSelectedTradeOverride}
-              />
-              <Flex>
-                <Box>
-                  <TYPE.subHeader color="white" fontSize="12px" fontWeight="600">
-                    {isExactIn ? trade.outputAmount.toSignificant(4) : trade.inputAmount.toSignificant(4)}
-                  </TYPE.subHeader>
-                </Box>
-                <Box>
-                  <CurrencyLogo
-                    currency={isExactIn ? trade.outputAmount.currency : trade.inputAmount.currency}
-                    size="14px"
-                    marginLeft={4}
+    <AutoColumn gap="18px" style={{ borderBottom: '1px solid #292643', paddingBottom: '12px', marginBottom: '12px' }}>
+      <table style={{ width: '100%', margin: 0, padding: 0 }}>
+        <tbody>
+          {allPlatformTrades?.map((trade, i) => {
+            if (!trade) return null // some platforms might not be compatible with the currently selected network
+            const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
+            const gasFeeUSD = gasFeesUSD[i]
+            return (
+              <tr key={i} style={{ height: '20px', maxHeight: '20px', minHeight: '20px' }}>
+                <td>
+                  <Radio
+                    checked={selectedTrade?.platform.name === trade.platform.name}
+                    label={trade.platform.name}
+                    icon={ROUTABLE_PLATFORM_LOGO[trade.platform.name]}
+                    value={trade.platform.name.toLowerCase()}
+                    onChange={handleSelectedTradeOverride}
                   />
-                </Box>
-              </Flex>
-            </RowBetween>
-          )
-        })}
-      </AutoColumn>
+                </td>
+                <td align="right">
+                  <GasFee loading={loadingGasFees} gasFeeUSD={gasFeeUSD} />
+                </td>
+                <td align="right">
+                  <RowFixed>
+                    <TYPE.subHeader color="white" fontSize="12px" fontWeight="600">
+                      {isExactIn ? trade.outputAmount.toSignificant(4) : trade.inputAmount.toSignificant(4)}
+                    </TYPE.subHeader>
+                    <CurrencyLogo
+                      currency={isExactIn ? trade.outputAmount.currency : trade.inputAmount.currency}
+                      size="14px"
+                      marginLeft={4}
+                    />
+                  </RowFixed>
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
       {selectedTrade && selectedTrade.route.path.length > 2 && (
         <Flex mx="2px" width="100%">
           <Flex>

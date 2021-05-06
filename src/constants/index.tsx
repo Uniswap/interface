@@ -1,7 +1,26 @@
+import React, { ReactNode } from 'react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { ChainId, JSBI, Percent, CurrencyAmount, WETH, WSPOA, DXD, WXDAI, Token, Currency } from 'dxswap-sdk'
+import {
+  ChainId,
+  JSBI,
+  Percent,
+  CurrencyAmount,
+  WETH,
+  WSPOA,
+  DXD,
+  WXDAI,
+  Token,
+  Currency,
+  RoutablePlatform
+} from 'dxswap-sdk'
 import { tokens } from './tokens'
 import { authereum, injected, walletConnect } from '../connectors'
+import UniswapLogo from '../assets/svg/uniswap-logo.svg'
+import SwaprLogo from '../assets/svg/logo.svg'
+import SushiswapLogo from '../assets/svg/sushiswap-logo.svg'
+import HoneyswapLogo from '../assets/svg/honeyswap-logo.svg'
+import BaoswapLogo from '../assets/images/baoswap-logo.png'
+import LevinswapLogo from '../assets/images/levinswap-logo.svg'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -240,4 +259,13 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
     blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
     metamaskAddable: true
   }
+}
+
+export const ROUTABLE_PLATFORM_LOGO: { [routablePaltformName: string]: ReactNode } = {
+  [RoutablePlatform.UNISWAP.name]: <img width={16} height={16} src={UniswapLogo} alt="uniswap" />,
+  [RoutablePlatform.SUSHISWAP.name]: <img width={16} height={16} src={SushiswapLogo} alt="sushiswap" />,
+  [RoutablePlatform.SWAPR.name]: <img width={16} height={16} src={SwaprLogo} alt="swapr" />,
+  [RoutablePlatform.HONEYSWAP.name]: <img width={16} height={16} src={HoneyswapLogo} alt="honeyswap" />,
+  [RoutablePlatform.BAOSWAP.name]: <img width={16} height={16} src={BaoswapLogo} alt="baoswap" />,
+  [RoutablePlatform.LEVINSWAP.name]: <img width={16} height={16} src={LevinswapLogo} alt="levinswap" />
 }

@@ -39,11 +39,11 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
  * @param allowedSlippage user allowed slippage
  * @param recipientAddressOrName
  */
-function useSwapCallArguments(
-  trade: Trade | undefined, // trade to execute, required
+export function useSwapsCallArguments(
+  trades: (Trade | undefined)[] | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-): SwapCall[] {
+): SwapCall[][] {
   const { account, chainId, library } = useActiveWeb3React()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
@@ -51,36 +51,41 @@ function useSwapCallArguments(
   const deadline = useTransactionDeadline()
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!trades || trades.length === 0 || !recipient || !library || !account || !chainId || !deadline) return []
 
-    const contract: Contract | null = getRouterContract(chainId, library, trade.platform, account)
-    if (!contract) {
-      return []
-    }
+    return trades.map(trade => {
+      if (!trade) {
+        return []
+      }
+      const contract: Contract | null = getRouterContract(chainId, library, trade.platform, account)
+      if (!contract) {
+        return []
+      }
 
-    const swapMethods = []
-    swapMethods.push(
-      Router.swapCallParameters(trade, {
-        feeOnTransfer: false,
-        allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-        recipient,
-        ttl: deadline.toNumber()
-      })
-    )
-
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
+      const swapMethods = []
       swapMethods.push(
         Router.swapCallParameters(trade, {
-          feeOnTransfer: true,
+          feeOnTransfer: false,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
           ttl: deadline.toNumber()
         })
       )
-    }
 
-    return swapMethods.map(parameters => ({ parameters, contract }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
+      if (trade.tradeType === TradeType.EXACT_INPUT) {
+        swapMethods.push(
+          Router.swapCallParameters(trade, {
+            feeOnTransfer: true,
+            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            recipient,
+            ttl: deadline.toNumber()
+          })
+        )
+      }
+
+      return swapMethods.map(parameters => ({ parameters, contract }))
+    })
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, trades])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -92,7 +97,8 @@ export function useSwapCallback(
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
+  const memoizedTrades = useMemo(() => (trade ? [trade] : undefined), [trade])
+  const [swapCalls] = useSwapsCallArguments(memoizedTrades, allowedSlippage, recipientAddressOrName)
 
   const addTransaction = useTransactionAdder()
 

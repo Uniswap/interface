@@ -35,7 +35,7 @@ const Label = styled.span`
 const Icon = styled.div`
   width: 20px;
   height: 20px;
-  margin-right: 2px;
+  margin-right: 4px;
 `
 
 const Checkmark = styled.span<{ checked?: boolean }>`
