@@ -56,6 +56,8 @@ export default function Earn() {
     )
   }, [stakingInfos])
 
+  const [activePools, inactivePools] = partition(unstakedPools, (pool) => pool.active)
+
   const isGenesisOver = COUNTDOWN_END < new Date().getTime()
 
   return (
@@ -124,10 +126,25 @@ export default function Earn() {
           {stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
           ) : (
-            unstakedPools?.map((pool) => <PoolCard key={pool.stakingRewardAddress} stakingInfo={pool} />)
+            activePools?.map((pool) => <PoolCard key={pool.stakingRewardAddress} stakingInfo={pool} />)
           )}
         </PoolSection>
       </AutoColumn>
+
+      {inactivePools.length > 0 && (
+        <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+          <DataRow style={{ alignItems: 'baseline' }}>
+            <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Inactive Pools</TYPE.mediumHeader>
+            <div>{/* TODO(igm): show TVL here */}</div>
+          </DataRow>
+
+          <PoolSection>
+            {inactivePools.map((pool) => (
+              <PoolCard key={pool.stakingRewardAddress} stakingInfo={pool} />
+            ))}
+          </PoolSection>
+        </AutoColumn>
+      )}
     </PageWrapper>
   )
 }

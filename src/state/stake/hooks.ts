@@ -249,7 +249,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
 
           // compare period end timestamp vs current block timestamp (in seconds)
           const active =
-            periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : true
+            periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : false
 
           if (!tokens) {
             return memo
