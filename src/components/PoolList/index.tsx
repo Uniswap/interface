@@ -16,7 +16,7 @@ import PoolDetailModal from './PoolDetailModal'
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(8, 1fr) 1fr;
+  grid-template-columns: repeat(8, 1fr) 1fr 1.5fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;

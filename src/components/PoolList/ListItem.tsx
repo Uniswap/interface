@@ -6,7 +6,7 @@ import { MoreHorizontal } from 'react-feather'
 import { useDispatch } from 'react-redux'
 
 import { Fraction, JSBI, Pair } from 'libs/sdk/src'
-import { ButtonEmpty } from 'components/Button'
+import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -22,7 +22,7 @@ import { setSelectedPool } from 'state/pools/actions'
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(8, 1fr) 1fr;
+  grid-template-columns: repeat(8, 1fr) 1fr 1.5fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -44,7 +44,7 @@ const StyledItemCard = styled.div`
   grid-column-gap: 4px;
   border-radius: 10px;
   margin-bottom: 0;
-  padding: 8px 20px 4px 20px;
+  padding: 8px 20px 24px 20px;
   background-color: ${({ theme }) => theme.bg6};
   font-size: 12px;
 
@@ -58,6 +58,16 @@ const GridItem = styled.div<{ noBorder?: boolean }>`
   margin-bottom: 8px;
   border-bottom: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px dashed ${theme.border}`)};
   padding-bottom: 12px;
+`
+
+const TradeButtonWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  grid-column: 1 / span 3;
+`
+
+const TradeButtonText = styled.span`
+  font-size: 14px;
 `
 
 const DataTitle = styled.div`
@@ -217,6 +227,17 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
             {feeRangeCalc(!!pool?.amp ? +new Fraction(pool.amp).divide(JSBI.BigInt(10000)).toSignificant(5) : +amp)}
           </DataText>
         </GridItem>
+
+        <TradeButtonWrapper>
+          <ButtonPrimary
+            padding="8px 48px"
+            as={Link}
+            to={`/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`}
+            width="fit-content"
+          >
+            <TradeButtonText>Trade</TradeButtonText>
+          </ButtonPrimary>
+        </TradeButtonWrapper>
       </StyledItemCard>
     </div>
   )
@@ -300,6 +321,16 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         >
           <AddCircle />
         </ButtonEmpty>
+      </ButtonWrapper>
+      <ButtonWrapper>
+        <ButtonPrimary
+          padding="8px 16px"
+          as={Link}
+          to={`/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`}
+          width="fit-content"
+        >
+          Trade
+        </ButtonPrimary>
         <ButtonEmpty padding="0" width="fit-content" onClick={handleShowMore}>
           <StyledMoreHorizontal />
         </ButtonEmpty>
