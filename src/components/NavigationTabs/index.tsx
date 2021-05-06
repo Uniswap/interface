@@ -6,7 +6,7 @@ import { NavLink, Link as HistoryLink } from 'react-router-dom'
 
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
-import Settings from '../Settings'
+import SettingsTab from '../Settings'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import { resetMintState } from 'state/mint/actions'
@@ -80,7 +80,7 @@ export function FindPoolTabs({ origin }: { origin: string }) {
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>Import Pool</ActiveText>
-        <Settings />
+        <SettingsTab />
       </RowBetween>
     </Tabs>
   )
@@ -118,7 +118,7 @@ export function AddRemoveTabs({
         <TYPE.mediumHeader fontWeight={500} fontSize={20}>
           {creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}
         </TYPE.mediumHeader>
-        <Settings />
+        <SettingsTab />
       </RowBetween>
     </Tabs>
   )

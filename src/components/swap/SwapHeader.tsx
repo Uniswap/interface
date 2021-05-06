@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Settings from '../Settings'
+import SettingsTab from '../Settings'
 
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
@@ -23,7 +23,7 @@ export default function SwapHeader() {
         <RowFixed>
           {/* <TradeInfo disabled={!trade} trade={trade} /> */}
           {/* <div style={{ width: '8px' }}></div> */}
-          <Settings />
+          <SettingsTab />
         </RowFixed>
       </RowBetween>
     </StyledSwapHeader>
