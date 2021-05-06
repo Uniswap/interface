@@ -1,3 +1,4 @@
+import { Percent } from '@uniswap/sdk-core'
 import React, { useState, useRef, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
@@ -86,13 +87,18 @@ const SlippageEmojiContainer = styled.span`
 `
 
 export interface SlippageTabsProps {
-  rawSlippage: number
-  setRawSlippage: (rawSlippage: number) => void
+  userSlippageTolerance: Percent | 'auto'
+  setUserSlippageTolerance: (newUserSlippageTolerance: Percent | 'auto') => void
   deadline: number
   setDeadline: (deadline: number) => void
 }
 
-export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
+export default function SlippageTabs({
+  userSlippageTolerance,
+  setUserSlippageTolerance,
+  deadline,
+  setDeadline,
+}: SlippageTabsProps) {
   const theme = useContext(ThemeContext)
 
   const inputRef = useRef<HTMLInputElement>()
@@ -101,18 +107,20 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
   const [deadlineInput, setDeadlineInput] = useState('')
 
   const slippageInputIsValid =
-    slippageInput === '' || (rawSlippage / 100).toFixed(2) === Number.parseFloat(slippageInput).toFixed(2)
+    slippageInput === '' ||
+    (userSlippageTolerance !== 'auto' &&
+      userSlippageTolerance.toFixed(2) === Number.parseFloat(slippageInput).toFixed(2))
   const deadlineInputIsValid = deadlineInput === '' || (deadline / 60).toString() === deadlineInput
 
   let slippageError: SlippageError | undefined
-  if (slippageInput !== '' && !slippageInputIsValid) {
-    slippageError = SlippageError.InvalidInput
-  } else if (slippageInputIsValid && rawSlippage < 5) {
-    slippageError = SlippageError.RiskyLow
-  } else if (slippageInputIsValid && rawSlippage > 100) {
-    slippageError = SlippageError.RiskyHigh
-  } else {
-    slippageError = undefined
+  if (userSlippageTolerance !== 'auto') {
+    if (slippageInput !== '' && !slippageInputIsValid) {
+      slippageError = SlippageError.InvalidInput
+    } else if (slippageInputIsValid && userSlippageTolerance.lessThan(new Percent(5, 10_000))) {
+      slippageError = SlippageError.RiskyLow
+    } else if (slippageInputIsValid && userSlippageTolerance.greaterThan(new Percent(1, 100))) {
+      slippageError = SlippageError.RiskyHigh
+    }
   }
 
   let deadlineError: DeadlineError | undefined
@@ -126,9 +134,9 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     setSlippageInput(value)
 
     try {
-      const valueAsIntFromRoundedFloat = Number.parseInt((Number.parseFloat(value) * 100).toString())
-      if (!Number.isNaN(valueAsIntFromRoundedFloat) && valueAsIntFromRoundedFloat < 5000) {
-        setRawSlippage(valueAsIntFromRoundedFloat)
+      const valueAsPercent = new Percent(Number.parseInt((Number.parseFloat(value) * 100).toString()), 10_000)
+      if (valueAsPercent && valueAsPercent.lessThan(new Percent(5_000, 10_000)) && !valueAsPercent.lessThan('0')) {
+        setUserSlippageTolerance(valueAsPercent)
       }
     } catch {}
   }
@@ -157,31 +165,13 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
           <Option
             onClick={() => {
               setSlippageInput('')
-              setRawSlippage(10)
+              setUserSlippageTolerance('auto')
             }}
-            active={rawSlippage === 10}
+            active={userSlippageTolerance === 'auto'}
           >
-            0.1%
+            Auto
           </Option>
-          <Option
-            onClick={() => {
-              setSlippageInput('')
-              setRawSlippage(50)
-            }}
-            active={rawSlippage === 50}
-          >
-            0.5%
-          </Option>
-          <Option
-            onClick={() => {
-              setSlippageInput('')
-              setRawSlippage(100)
-            }}
-            active={rawSlippage === 100}
-          >
-            1%
-          </Option>
-          <OptionCustom active={![10, 50, 100].includes(rawSlippage)} warning={!slippageInputIsValid} tabIndex={-1}>
+          <OptionCustom active={userSlippageTolerance !== 'auto'} warning={!slippageInputIsValid} tabIndex={-1}>
             <RowBetween>
               {!!slippageInput &&
               (slippageError === SlippageError.RiskyLow || slippageError === SlippageError.RiskyHigh) ? (
@@ -194,11 +184,8 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
               {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
               <Input
                 ref={inputRef as any}
-                placeholder={(rawSlippage / 100).toFixed(2)}
+                placeholder={userSlippageTolerance !== 'auto' ? userSlippageTolerance.toFixed(2) : ''}
                 value={slippageInput}
-                onBlur={() => {
-                  parseCustomSlippage((rawSlippage / 100).toFixed(2))
-                }}
                 onChange={(e) => parseCustomSlippage(e.target.value)}
                 color={!slippageInputIsValid ? 'red' : ''}
               />

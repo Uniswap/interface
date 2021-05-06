@@ -192,8 +192,8 @@ export default function SettingsTab() {
               Transaction Settings
             </Text>
             <TransactionSettings
-              rawSlippage={JSBI.toNumber(userSlippageTolerance.numerator)}
-              setRawSlippage={setUserslippageTolerance}
+              userSlippageTolerance={userSlippageTolerance}
+              setUserSlippageTolerance={setUserslippageTolerance}
               deadline={ttl}
               setDeadline={setTtl}
             />

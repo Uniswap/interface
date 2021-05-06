@@ -1,8 +1,8 @@
+import { Percent } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
-import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { computePriceImpactWithMaximumSlippage } from '../../utils/computePriceImpactWithMaximumSlippage'
 import { computeRealizedLPFeeAmount } from '../../utils/prices'
@@ -13,13 +13,13 @@ import SwapRoute from './SwapRoute'
 
 export interface AdvancedSwapDetailsProps {
   trade?: V2Trade | V3Trade
+  allowedSlippage: Percent
 }
 
-export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
+export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
 
   const realizedLPFee = computeRealizedLPFeeAmount(trade)
-  const [allowedSlippage] = useUserSlippageTolerance()
 
   return !trade ? null : (
     <AutoColumn gap="8px">

@@ -31,7 +31,7 @@ export interface UserState {
   userSingleHopOnly: boolean // only allow swaps on direct pairs
 
   // user defined slippage tolerance in bips, used in all txns
-  userSlippageTolerance: number
+  userSlippageTolerance: number | 'auto'
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
@@ -62,7 +62,7 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   userExpertMode: false,
   userSingleHopOnly: false,
-  userSlippageTolerance: 10,
+  userSlippageTolerance: 'auto',
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
@@ -75,8 +75,11 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateVersion, (state) => {
       // slippage isnt being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
-      if (typeof state.userSlippageTolerance !== 'number') {
-        state.userSlippageTolerance = 10
+      if (
+        typeof state.userSlippageTolerance !== 'number' ||
+        [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
+      ) {
+        state.userSlippageTolerance = 'auto'
       }
 
       // deadline isnt being tracked in local storage, reset to default

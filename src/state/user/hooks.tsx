@@ -1,5 +1,6 @@
 import { ChainId, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -100,7 +101,7 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
   return [singleHopOnly, setSingleHopOnly]
 }
 
-export function useUserSlippageTolerance(): [Percent, (slippageBips: number) => void] {
+export function useUserSlippageTolerance(): [Percent | 'auto', (slippageBips: Percent | 'auto') => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userSlippageTolerance = useSelector<AppState, AppState['user']['userSlippageTolerance']>((state) => {
     return state.user.userSlippageTolerance
@@ -109,8 +110,19 @@ export function useUserSlippageTolerance(): [Percent, (slippageBips: number) => 
   const percentage = useMemo(() => new Percent(userSlippageTolerance, 10_000), [userSlippageTolerance])
 
   const setUserSlippageTolerance = useCallback(
-    (userSlippageTolerance: number) => {
-      dispatch(updateUserSlippageTolerance({ userSlippageTolerance }))
+    (userSlippageTolerance: Percent | 'auto') => {
+      let value: 'auto' | number
+      try {
+        value =
+          userSlippageTolerance === 'auto' ? 'auto' : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
+      } catch (error) {
+        value = 'auto'
+      }
+      dispatch(
+        updateUserSlippageTolerance({
+          userSlippageTolerance: value,
+        })
+      )
     },
     [dispatch]
   )

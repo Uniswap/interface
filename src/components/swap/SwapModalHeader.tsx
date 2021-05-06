@@ -135,7 +135,7 @@ export default function SwapModalHeader({
       </RowBetween>
 
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <AdvancedSwapDetails trade={trade} />
+        <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />
       </LightCard>
 
       {showAcceptChanges ? (
