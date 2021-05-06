@@ -98,7 +98,7 @@ export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
   const balances = balancesRaw.find((b) => !b.result)
     ? null
     : (balancesRaw.map((b) => b.result?.[0] ?? BigNumber.from(0)) as readonly BigNumber[])
-  const balanceRemaining = balances?.reduce((sum, b) => b.add(sum)) ?? null
+  const balanceRemaining = balances?.reduce((sum, b) => b.add(sum), BigNumber.from(0)) ?? null
 
   // tokens per second, constants
   const rewardRates = useMultipleContractSingleData(
@@ -249,7 +249,9 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): readonly StakingIn
 
           // compare period end timestamp vs current block timestamp (in seconds)
           const active =
-            periodFinishSeconds && currentBlockTimestamp ? periodFinishSeconds > currentBlockTimestamp.toNumber() : false
+            periodFinishSeconds && currentBlockTimestamp
+              ? periodFinishSeconds > currentBlockTimestamp.toNumber()
+              : false
 
           if (!tokens) {
             return memo
