@@ -1,3 +1,4 @@
+import JSBI from 'jsbi'
 import React, { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -10,7 +11,7 @@ import {
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance,
-  useUserSingleHopOnly
+  useUserSingleHopOnly,
 } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
@@ -54,19 +55,13 @@ const StyledMenuButton = styled.button`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
-
-  padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
+  height: 20px;
 
   :hover,
   :focus {
     cursor: pointer;
     outline: none;
-  }
-
-  svg {
-    margin-top: 2px;
   }
 `
 const EmojiWrapper = styled.div`
@@ -89,6 +84,7 @@ const StyledMenu = styled.div`
 const MenuFlyout = styled.span`
   min-width: 20.125rem;
   background-color: ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
@@ -96,7 +92,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: 3rem;
+  top: 2rem;
   right: 0rem;
   z-index: 100;
 
@@ -196,7 +192,7 @@ export default function SettingsTab() {
               Transaction Settings
             </Text>
             <TransactionSettings
-              rawSlippage={userSlippageTolerance}
+              rawSlippage={JSBI.toNumber(userSlippageTolerance.numerator)}
               setRawSlippage={setUserslippageTolerance}
               deadline={ttl}
               setDeadline={setTtl}
@@ -209,7 +205,7 @@ export default function SettingsTab() {
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   Toggle Expert Mode
                 </TYPE.black>
-                <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                <QuestionHelper text="Allow high price impact trades and skip the confirm screen. Use at your own risk." />
               </RowFixed>
               <Toggle
                 id="toggle-expert-mode-button"
@@ -240,7 +236,7 @@ export default function SettingsTab() {
                 toggle={() => {
                   ReactGA.event({
                     category: 'Routing',
-                    action: singleHopOnly ? 'disable single hop' : 'enable single hop'
+                    action: singleHopOnly ? 'disable single hop' : 'enable single hop',
                   })
                   setSingleHopOnly(!singleHopOnly)
                 }}

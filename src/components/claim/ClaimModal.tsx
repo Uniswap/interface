@@ -1,4 +1,5 @@
-import { JSBI, TokenAmount } from '@uniswap/sdk'
+import { TokenAmount } from '@uniswap/sdk-core'
+import { JSBI } from '@uniswap/v2-sdk'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
@@ -67,7 +68,7 @@ export default function ClaimModal() {
     setAttempting(true)
     claimCallback()
       // reset modal and log error
-      .catch(error => {
+      .catch((error) => {
         setAttempting(false)
         console.log(error)
       })

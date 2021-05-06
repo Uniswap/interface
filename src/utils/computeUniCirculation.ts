@@ -1,4 +1,5 @@
-import { JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import { Token, TokenAmount } from '@uniswap/sdk-core'
+import { JSBI } from '@uniswap/v2-sdk'
 import { BigNumber } from 'ethers'
 import { STAKING_GENESIS } from '../state/stake/hooks'
 

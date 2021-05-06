@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainId } from '@uniswap/sdk-core'
 import { createStore, Store } from 'redux'
 import { addPopup, ApplicationModal, removePopup, setOpenModal, updateBlockNumber } from './actions'
 import reducer, { ApplicationState } from './reducer'
@@ -10,9 +10,9 @@ describe('application reducer', () => {
     store = createStore(reducer, {
       popupList: [],
       blockNumber: {
-        [ChainId.MAINNET]: 3
+        [ChainId.MAINNET]: 3,
       },
-      openModal: null
+      openModal: null,
     })
   })
 
@@ -24,7 +24,7 @@ describe('application reducer', () => {
       expect(typeof list[0].key).toEqual('string')
       expect(list[0].show).toEqual(true)
       expect(list[0].content).toEqual({ txn: { hash: 'abc', summary: 'test', success: true } })
-      expect(list[0].removeAfterMs).toEqual(15000)
+      expect(list[0].removeAfterMs).toEqual(25000)
     })
 
     it('replaces any existing popups with the same key', () => {
@@ -35,7 +35,7 @@ describe('application reducer', () => {
       expect(list[0].key).toEqual('abc')
       expect(list[0].show).toEqual(true)
       expect(list[0].content).toEqual({ txn: { hash: 'def', summary: 'test2', success: false } })
-      expect(list[0].removeAfterMs).toEqual(15000)
+      expect(list[0].removeAfterMs).toEqual(25000)
     })
   })
 
@@ -65,7 +65,7 @@ describe('application reducer', () => {
       store.dispatch(updateBlockNumber({ chainId: ChainId.ROPSTEN, blockNumber: 2 }))
       expect(store.getState().blockNumber).toEqual({
         [ChainId.MAINNET]: 3,
-        [ChainId.ROPSTEN]: 2
+        [ChainId.ROPSTEN]: 2,
       })
     })
   })

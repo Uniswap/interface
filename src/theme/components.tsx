@@ -24,7 +24,7 @@ export const ButtonText = styled.button`
 `
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
-  backgroundColor: warning ? theme.red1 : theme.primary1
+  backgroundColor: warning ? theme.red1 : theme.primary1,
 }))`
   padding: 1rem 2rem 1rem 2rem;
   border-radius: 3rem;
@@ -296,6 +296,13 @@ export const HideSmall = styled.span`
 export const HideExtraSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
+  `};
+`
+
+export const SmallOnly = styled.span`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: block;
   `};
 `
 

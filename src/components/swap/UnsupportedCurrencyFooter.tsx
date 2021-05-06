@@ -9,7 +9,7 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useActiveWeb3React } from 'hooks'
 import { getEtherscanLink } from 'utils'
-import { Currency, Token } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 
@@ -40,7 +40,7 @@ const AddressText = styled(TYPE.blue)`
 
 export default function UnsupportedCurrencyFooter({
   show,
-  currencies
+  currencies,
 }: {
   show: boolean
   currencies: (Currency | undefined)[]
@@ -50,7 +50,7 @@ export default function UnsupportedCurrencyFooter({
 
   const tokens =
     chainId && currencies
-      ? currencies.map(currency => {
+      ? currencies.map((currency) => {
           return wrappedCurrency(currency, chainId)
         })
       : []
@@ -66,7 +66,7 @@ export default function UnsupportedCurrencyFooter({
               <TYPE.mediumHeader>Unsupported Assets</TYPE.mediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
-            {tokens.map(token => {
+            {tokens.map((token) => {
               return (
                 token &&
                 unsupportedTokens &&
@@ -89,8 +89,8 @@ export default function UnsupportedCurrencyFooter({
             })}
             <AutoColumn gap="lg">
               <TYPE.body fontWeight={500}>
-                Some assets are not available through this interface because they may not work well with our smart
-                contract or we are unable to allow trading for legal reasons.
+                Some assets are not available through this interface because they may not work well with the smart
+                contracts or we are unable to allow trading for legal reasons.
               </TYPE.body>
             </AutoColumn>
           </AutoColumn>
