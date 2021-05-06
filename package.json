@@ -63,7 +63,7 @@
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.8",
     "react-ga": "^2.5.7",
-    "react-i18next": "^10.7.0",
+    "react-i18next": "^11.8.15",
     "react-markdown": "^4.3.1",
     "react-popper": "^2.2.3",
     "react-redux": "^7.2.0",
