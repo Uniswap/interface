@@ -11,7 +11,6 @@ import {
 } from '@celo/utils'
 import { identity, mapValues } from 'lodash'
 import * as querystring from 'querystring'
-import { parse } from 'url'
 
 // Gets the url redirected from Valora that is used to update the page
 async function waitForValoraResponse() {
@@ -46,7 +45,7 @@ export const parseDappkitResponse = (
   const allSearch = searchNonDeduped.split('?')
   const newQs = allSearch.filter(identity).reduce((acc, qs) => ({ ...acc, ...querystring.parse(qs) }), {})
   const realQs = querystring.stringify(newQs)
-  const { protocol, host } = parse(url)
+  const { protocol, host } = new URL(url)
   const result = parseDappkitResponseDeeplink(`${protocol}//${host}/?${realQs}`)
   if (!result.requestId) {
     return null
@@ -90,7 +89,7 @@ export const removeQueryParams = (url: string, keys: string[]): string => {
   keys.forEach((key) => {
     delete newQs[key]
   })
-  const { protocol, host, hash } = parse(url)
+  const { protocol, host, hash } = new URL(url)
   const queryParams = `${querystring.stringify(newQs)}`
   const resultUrl = `${protocol}//${host}/${hash?.slice(0, hash.indexOf('?'))}`
   if (queryParams) {
