@@ -46,6 +46,7 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
+import SettingsTab from 'components/Settings'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -673,9 +674,7 @@ export default function MigrateV2Pair({
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
           <TYPE.mediumHeader>Migrate V2 Liquidity</TYPE.mediumHeader>
-          <div style={{ opacity: 0 }}>
-            <QuestionHelper text="Migrate your liquidity tokens from Uniswap V2 to Uniswap V3." />
-          </div>
+          <SettingsTab />
         </AutoRow>
 
         {!account ? (
