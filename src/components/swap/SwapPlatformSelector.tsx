@@ -15,6 +15,7 @@ import { useGasFeesUSD } from '../../hooks/useGasFees'
 import { RowFixed } from '../Row'
 import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
 import { Dots } from '../../pages/Pools/styleds'
+import { useActiveWeb3React } from '../../hooks'
 
 export interface SwapPlatformSelectorProps {
   allPlatformTrades: (Trade | undefined)[] | undefined
@@ -53,6 +54,7 @@ export function SwapPlatformSelector({
   selectedTrade,
   onSelectedPlatformChange
 }: SwapPlatformSelectorProps) {
+  const { account } = useActiveWeb3React()
   const [allowedSlippage] = useUserSlippageTolerance()
   const { recipient } = useSwapState()
   const { loading: loadingTradesGasEstimates, estimations } = useSwapsGasEstimations(
@@ -94,9 +96,11 @@ export function SwapPlatformSelector({
                     onChange={handleSelectedTradeOverride}
                   />
                 </td>
-                <td align="right">
-                  <GasFee loading={loadingGasFees} gasFeeUSD={gasFeeUSD} />
-                </td>
+                {!!account && (
+                  <td align="right">
+                    <GasFee loading={loadingGasFees} gasFeeUSD={gasFeeUSD} />
+                  </td>
+                )}
                 <td align="right">
                   <RowFixed>
                     <TYPE.subHeader color="white" fontSize="12px" fontWeight="600">
