@@ -22,7 +22,7 @@ import { setSelectedPool } from 'state/pools/actions'
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(8, 1fr) 1fr 1.5fr;
+  grid-template-columns: 1.5fr repeat(7, 1fr) 1fr 1.5fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
