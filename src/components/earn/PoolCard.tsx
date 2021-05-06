@@ -80,9 +80,10 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
     userAmountTokenA,
     userAmountTokenB,
   } = useStakingPoolValue(stakingInfo)
-  const apyFraction = valueOfTotalStakedAmountInCUSD
-    ? stakingInfo.dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
-    : undefined
+  const apyFraction =
+    stakingInfo.active && valueOfTotalStakedAmountInCUSD
+      ? stakingInfo.dollarRewardPerYear?.divide(valueOfTotalStakedAmountInCUSD)
+      : undefined
   const apy = apyFraction ? new Percent(apyFraction.numerator, apyFraction.denominator) : undefined
 
   return (
@@ -104,7 +105,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
 
       <StatContainer>
         <RowBetween>
-          <TYPE.white> Total deposited</TYPE.white>
+          <TYPE.white>Total deposited</TYPE.white>
           <TYPE.white>
             {valueOfTotalStakedAmountInCUSD
               ? `$${valueOfTotalStakedAmountInCUSD.toFixed(0, {
@@ -114,7 +115,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           </TYPE.white>
         </RowBetween>
         <RowBetween>
-          <TYPE.white> Pool rate </TYPE.white>
+          <TYPE.white>Pool rate</TYPE.white>
           <TYPE.white>
             {stakingInfo
               ? stakingInfo.active
@@ -132,24 +133,25 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
               <LightQuestionHelper text="The annualized, non-compounding rate of rewards based on the current value of UBE relative to the tokens in this pool." />
             </RowFixed>
             <TYPE.white>
-              {apy && apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
+              {apy.denominator.toString() !== '0' ? `${apy.toFixed(0, { groupSeparator: ',' })}%` : '-'}
             </TYPE.white>
           </RowBetween>
         )}
 
-        {!stakingInfo.active && (
-          <RowBetween>
-            <RowFixed>
-              <TYPE.white>Next pool rate</TYPE.white>
-              <LightQuestionHelper text="The rate of emissions this pool will receive on the next rewards refresh." />
-            </RowFixed>
-            <TYPE.white>
-              {`${stakingInfo.nextPeriodRewards.toFixed(0, {
-                groupSeparator: ',',
-              })} UBE / week`}
-            </TYPE.white>
-          </RowBetween>
-        )}
+        {(stakingInfo.active && stakingInfo.nextPeriodRewards.equalTo('0')) ||
+          (!stakingInfo.active && stakingInfo.nextPeriodRewards.greaterThan('0') && (
+            <RowBetween>
+              <RowFixed>
+                <TYPE.white>Next pool rate</TYPE.white>
+                <LightQuestionHelper text="The rate of emissions this pool will receive on the next rewards refresh." />
+              </RowFixed>
+              <TYPE.white>
+                {`${stakingInfo.nextPeriodRewards.toFixed(0, {
+                  groupSeparator: ',',
+                })} UBE / week`}
+              </TYPE.white>
+            </RowBetween>
+          ))}
       </StatContainer>
 
       {isStaking && (

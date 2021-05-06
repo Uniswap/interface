@@ -48,7 +48,7 @@ export default function Earn() {
   const [stakedPools, unstakedPools] = useMemo(() => {
     // Sort staking info by highest rewards
     const sortedStakingInfos = stakingInfos?.slice().sort((a: StakingInfo, b: StakingInfo) => {
-      return JSBI.toNumber(JSBI.subtract(b.rewardRate.raw, a.rewardRate.raw))
+      return JSBI.toNumber(JSBI.subtract(b.totalRewardRate.raw, a.totalRewardRate.raw))
     })
     return partition(
       sortedStakingInfos,
