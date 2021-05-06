@@ -6,18 +6,21 @@ import { SwapPoolTabs } from '../../components/NavigationTabs'
 
 import Question from '../../components/QuestionHelper'
 import FullPositionCard from '../../components/PositionCard'
-import { useUserHasLiquidityInAllTokens } from '../../data/V1'
+// import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
 import { LightCard } from '../../components/Card'
 import { RowBetween } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary/*, ButtonSecondary*/ } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
+import AddressInputPanel from '../../components/AddressInputPanel'
 
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import useENSAddress from '../../hooks/useENSAddress'
 import AppBody from '../AppBody'
 import { Dots } from '../../components/swap/styleds'
 
@@ -34,8 +37,14 @@ export default function Pool() {
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
+  // define recipient
+  const { onChangeRecipient } = useSwapActionHandlers()
+  const { recipient } = useSwapState()
+  const { address: recipientAddress } = useENSAddress(recipient)
+  // TODO: fix following condition to load when recipient === undefined
+  //const liquidityAccount = recipientAddress != null ? recipientAddress: account
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
+    recipientAddress ?? undefined,
     liquidityTokens
   )
 
@@ -54,7 +63,8 @@ export default function Pool() {
 
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
-  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+  const hasV1Liquidity = false
+  // const hasV1Liquidity = useUserHasLiquidityInAllTokens()
 
   return (
     <>
@@ -67,6 +77,7 @@ export default function Pool() {
             </Text>
           </ButtonPrimary>
 
+          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
           <AutoColumn gap="12px" style={{ width: '100%' }}>
             <RowBetween padding={'0 8px'}>
               <Text color={theme.text1} fontWeight={500}>
@@ -113,11 +124,12 @@ export default function Pool() {
         </AutoColumn>
       </AppBody>
 
-      <div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
+      {/*}<div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
         <ButtonSecondary as={Link} style={{ width: 'initial' }} to="/migrate/v1">
           Migrate V1 Liquidity
         </ButtonSecondary>
       </div>
+      */}
     </>
   )
 }

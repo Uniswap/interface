@@ -91,7 +91,8 @@ export default function Swap() {
 
   const betterTradeLinkVersion: Version | undefined =
     toggledVersion === Version.v2 && isTradeBetter(v2Trade, v1Trade, BETTER_TRADE_LINK_THRESHOLD)
-      ? Version.v1
+      // amended as we always want to return Version.v2
+      ? Version.v2
       : toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade)
       ? Version.v2
       : undefined
@@ -152,18 +153,23 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
+  // RigoBlock note: protocol handles approvals, approval is true
   const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
-  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+  // RigoBlock note: protocol handles approvals, approval is true
+  // const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(true)
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
-    if (approval === ApprovalState.PENDING) {
+    setApprovalSubmitted(true)
+    /*if (approval === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
-    }
+    }*/
   }, [approval, approvalSubmitted])
 
+  // TODO: must check drago balances instead of user balances
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
@@ -225,9 +231,9 @@ export default function Swap() {
   // never show if price impact is above threshold in non expert mode
   const showApproveFlow =
     !swapInputError &&
-    (approval === ApprovalState.NOT_APPROVED ||
+    /*(approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
-      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
+      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&*/
     !(priceImpactSeverity > 3 && !isExpertMode)
 
   const [dismissedToken0] = useTokenWarningDismissal(chainId, currencies[Field.INPUT])
@@ -323,9 +329,9 @@ export default function Swap() {
                   <ArrowWrapper clickable={false}>
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                  {/*<LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                     - Remove send
-                  </LinkStyledButton>
+                  </LinkStyledButton>*/}
                 </AutoRow>
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
               </>
@@ -383,11 +389,12 @@ export default function Swap() {
                 >
                   {approval === ApprovalState.PENDING ? (
                     <Dots>Approving</Dots>
-                  ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                    'Approved'
-                  ) : (
+                  ) : /*approvalSubmitted && approval === ApprovalState.APPROVED ? ( */
+                    'Drago Curabit ' + currencies[Field.INPUT]?.symbol
+                  /* ) : (
                     'Approve ' + currencies[Field.INPUT]?.symbol
-                  )}
+                  ) */
+                  }
                 </ButtonPrimary>
                 <ButtonError
                   onClick={() => {
@@ -406,7 +413,7 @@ export default function Swap() {
                   width="48%"
                   id="swap-button"
                   disabled={
-                    !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
+                    !isValid /*|| approval !== ApprovalState.APPROVED */|| (priceImpactSeverity > 3 && !isExpertMode)
                   }
                   error={isValid && priceImpactSeverity > 2}
                 >

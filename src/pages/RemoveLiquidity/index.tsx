@@ -17,17 +17,19 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
+import AddressInputPanel from '../../components/AddressInputPanel'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { ROUTER_ADDRESS } from '../../constants'
+import { AUniswap_INTERFACE } from '../../constants/abis/auniswap'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, getDragoContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -35,10 +37,14 @@ import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { Dots } from '../../components/swap/styleds'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
+// TODO: amend burn hooks to include the following:
+import { useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+
 import { useDerivedBurnInfo, useBurnState } from '../../state/burn/hooks'
 import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
+import useENSAddress from '../../hooks/useENSAddress'
 import { BigNumber } from '@ethersproject/bignumber'
 
 export default function RemoveLiquidity({
@@ -97,7 +103,12 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  let approval, approveCallback
+  [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ROUTER_ADDRESS)
+  // RigoBlock already handles approvals, never will have pending approvals unless user error
+  if (account !== undefined) {
+    approval = ApprovalState.APPROVED
+  }
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
@@ -181,15 +192,21 @@ export default function RemoveLiquidity({
     onUserInput
   ])
 
+  // define recipient
+  const { onChangeRecipient } = useSwapActionHandlers()
+  const { recipient } = useSwapState()
+  const { address: recipientAddress } = useENSAddress(recipient)
+
   // tx sending
   const addTransaction = useTransactionAdder()
   async function onRemove() {
-    if (!chainId || !library || !account) throw new Error('missing dependencies')
+    if (!chainId || !library || !account || !recipientAddress) throw new Error('missing dependencies')
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
     }
-    const router = getRouterContract(chainId, library, account)
+    // const router = getRouterContract(chainId, library, account)
+    const drago = getDragoContract(chainId, library, account, recipientAddress)
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
@@ -206,13 +223,15 @@ export default function RemoveLiquidity({
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
-    let methodNames: string[], args: Array<string | string[] | number | boolean>
+    let methodNames: string[],
+      args: Array<string | string[] | number | boolean>,
+      argsAdapter: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
       if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
-        args = [
+        argsAdapter = [
           currencyBIsETH ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
@@ -224,7 +243,7 @@ export default function RemoveLiquidity({
       // removeLiquidity
       else {
         methodNames = ['removeLiquidity']
-        args = [
+        argsAdapter = [
           tokenA.address,
           tokenB.address,
           liquidityAmount.raw.toString(),
@@ -240,7 +259,7 @@ export default function RemoveLiquidity({
       // removeLiquidityETHWithPermit
       if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
-        args = [
+        argsAdapter = [
           currencyBIsETH ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
@@ -256,7 +275,7 @@ export default function RemoveLiquidity({
       // removeLiquidityETHWithPermit
       else {
         methodNames = ['removeLiquidityWithPermit']
-        args = [
+        argsAdapter = [
           tokenA.address,
           tokenB.address,
           liquidityAmount.raw.toString(),
@@ -275,14 +294,21 @@ export default function RemoveLiquidity({
     }
 
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
-      methodNames.map(methodName =>
-        router.estimateGas[methodName](...args)
-          .then(calculateGasMargin)
-          .catch(error => {
-            console.error(`estimateGas failed`, methodName, args, error)
-            return undefined
-          })
-      )
+      methodNames.map(methodName => {
+        const fragment = AUniswap_INTERFACE.getFunction(methodName)
+        const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+              ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsAdapter)
+              : undefined
+        args = [ROUTER_ADDRESS, [callData]]
+        return(
+          drago.estimateGas['operateOnExchange'](...args)
+            .then(calculateGasMargin)
+            .catch(error => {
+              console.error(`estimateGas failed`, methodName, args, error)
+              return undefined
+            })
+        )
+      })
     )
 
     const indexOfSuccessfulEstimation = safeGasEstimates.findIndex(safeGasEstimate =>
@@ -296,8 +322,16 @@ export default function RemoveLiquidity({
       const methodName = methodNames[indexOfSuccessfulEstimation]
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
+      const fragment = AUniswap_INTERFACE.getFunction(methodName)
+      const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+            ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsAdapter)
+            : undefined
+      args = [ROUTER_ADDRESS, [callData]]
+
       setAttemptingTxn(true)
-      await router[methodName](...args, {
+      // await router[methodName](...args, {
+      const dragoMethod = 'operateOnExchange'
+      await drago[dragoMethod](...args, {
         gasLimit: safeGasEstimate
       })
         .then((response: TransactionResponse) => {
@@ -523,6 +557,7 @@ export default function RemoveLiquidity({
             </LightCard>
             {!showDetailed && (
               <>
+                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
                 <ColumnCenter>
                   <ArrowDown size="16" color={theme.text2} />
                 </ColumnCenter>
@@ -578,6 +613,7 @@ export default function RemoveLiquidity({
 
             {showDetailed && (
               <>
+                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
                 <CurrencyInputPanel
                   value={formattedAmounts[Field.LIQUIDITY]}
                   onUserInput={onLiquidityInput}
@@ -659,7 +695,7 @@ export default function RemoveLiquidity({
                     {approval === ApprovalState.PENDING ? (
                       <Dots>Approving</Dots>
                     ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                      'Approved'
+                      'Drago Curabit'
                     ) : (
                       'Approve'
                     )}

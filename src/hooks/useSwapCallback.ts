@@ -5,9 +5,11 @@ import { useMemo } from 'react'
 import { BIPS_BASE, DEFAULT_DEADLINE_FROM_NOW, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, getDragoContract, isAddress, shortenAddress } from '../utils'
+import { ROUTER_ADDRESS } from '../constants'
+import { AUniswap_INTERFACE } from '../constants/abis/auniswap'
 import isZero from '../utils/isZero'
-import v1SwapArguments from '../utils/v1SwapArguments'
+//import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
 import { useV1ExchangeContract } from './useContract'
 import useENS from './useENS'
@@ -61,7 +63,7 @@ function useSwapCallArguments(
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId) return []
 
     const contract: Contract | null =
-      tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
+      tradeVersion === Version.v2 ? getDragoContract(chainId, library, account, recipient) : v1Exchange
     if (!contract) {
       return []
     }
@@ -70,26 +72,73 @@ function useSwapCallArguments(
 
     switch (tradeVersion) {
       case Version.v2:
+        const swapParameters = Router.swapCallParameters(trade, {
+          feeOnTransfer: false,
+          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          recipient,
+          ttl: deadline
+        })
+        const uniswapMethodName = swapParameters.methodName
+        const argsWithEth = swapParameters.args
+
+        if (!isZero(swapParameters.value)) {
+          argsWithEth.unshift(swapParameters.value)
+        }
+
+        const fragment =  AUniswap_INTERFACE.getFunction(uniswapMethodName)
+        const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+              ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
+              : undefined
+
         swapMethods.push(
-          Router.swapCallParameters(trade, {
+          {
+            methodName: 'operateOnExchange',
+            args: [ROUTER_ADDRESS, [callData]],
+            value: '0x0'
+          }
+          /*Router.swapCallParameters(trade, {
             feeOnTransfer: false,
             allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
             recipient,
             ttl: deadline
-          })
+          })*/
         )
 
         if (trade.tradeType === TradeType.EXACT_INPUT) {
+          const swapParameters = Router.swapCallParameters(trade, {
+            feeOnTransfer: true,
+            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            recipient,
+            ttl: deadline
+          })
+          const uniswapMethodName = swapParameters.methodName
+          const argsWithEth = swapParameters.args
+
+          if (!isZero(swapParameters.value)) {
+            argsWithEth.unshift(swapParameters.value)
+          }
+
+          const fragment =  AUniswap_INTERFACE.getFunction(uniswapMethodName)
+          const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+                ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
+                : undefined
+
           swapMethods.push(
-            Router.swapCallParameters(trade, {
+            {
+              methodName: 'operateOnExchange',
+              args: [ROUTER_ADDRESS, [callData]],
+              value : '0x0'
+            }
+            /*Router.swapCallParameters(trade, {
               feeOnTransfer: true,
               allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
               recipient,
               ttl: deadline
-            })
+            })*/
           )
         }
         break
+/*
       case Version.v1:
         swapMethods.push(
           v1SwapArguments(trade, {
@@ -99,6 +148,7 @@ function useSwapCallArguments(
           })
         )
         break
+*/
     }
     return swapMethods.map(parameters => ({ parameters, contract }))
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, v1Exchange])

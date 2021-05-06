@@ -290,7 +290,7 @@ function V1PairMigration({ liquidityTokenAmount, token }: { liquidityTokenAmount
               {approval === ApprovalState.PENDING ? (
                 <Dots>Approving</Dots>
               ) : approval === ApprovalState.APPROVED ? (
-                'Approved'
+                'Drago Curabit'
               ) : (
                 'Approve'
               )}

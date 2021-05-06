@@ -18,6 +18,7 @@ import { SwapState } from './reducer'
 import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+// import { ROUTER_ADDRESS } from '../../constants/index'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -94,6 +95,7 @@ export function useDerivedSwapInfo(): {
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
   v2Trade: Trade | undefined
+  //dragoTrade: any | undefined
   inputError?: string
   v1Trade: Trade | undefined
 } {
@@ -114,7 +116,9 @@ export function useDerivedSwapInfo(): {
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
-  const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
+  // recipientLookup is drago address
+  const dragoAddress = recipientLookup.address
+  const relevantTokenBalances = useCurrencyBalances(dragoAddress ?? undefined, [
     inputCurrency ?? undefined,
     outputCurrency ?? undefined
   ])
@@ -154,7 +158,7 @@ export function useDerivedSwapInfo(): {
   }
 
   if (!to) {
-    inputError = inputError ?? 'Enter a recipient'
+    inputError = inputError ?? 'Enter your Drago address'
   }
 
   const [allowedSlippage] = useUserSlippageTolerance()
@@ -180,10 +184,13 @@ export function useDerivedSwapInfo(): {
     inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
   }
 
+  //const dragoTrade = { ROUTER_ADDRESS, ...v2Trade }
+
   return {
     currencies,
     currencyBalances,
     parsedAmount,
+    //dragoTrade: dragoTrade ?? undefined,
     v2Trade: v2Trade ?? undefined,
     inputError,
     v1Trade
@@ -211,7 +218,7 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
 const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
 function validatedRecipient(recipient: any): string | null {
-  if (typeof recipient !== 'string') return null
+  if (typeof recipient !== 'string') return ''
   const address = isAddress(recipient)
   if (address) return address
   if (ENS_NAME_REGEX.test(recipient)) return recipient

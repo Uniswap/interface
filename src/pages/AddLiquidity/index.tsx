@@ -2,11 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@uniswap/sdk'
 import React, { useCallback, useContext, useState } from 'react'
-import { Plus } from 'react-feather'
+import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, GreyCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -15,9 +16,11 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { RowBetween, RowFlat } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
+import { ArrowWrapper } from '../../components/swap/styleds'
 
 import { ROUTER_ADDRESS } from '../../constants'
+import { AUniswap_INTERFACE } from '../../constants/abis/auniswap'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -25,11 +28,13 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
+// TODO: create custom hook on mint hooks
+import { useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserDeadline, useUserSlippageTolerance } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount, getRouterContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, getDragoContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -37,6 +42,7 @@ import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
+import useENSAddress from '../../hooks/useENSAddress'
 
 export default function AddLiquidity({
   match: {
@@ -115,15 +121,24 @@ export default function AddLiquidity({
     {}
   )
 
-  // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+  const { onChangeRecipient } = useSwapActionHandlers()
+  const { recipient } = useSwapState()
+  const { address: recipientAddress } = useENSAddress(recipient)
+
+  let [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
+  let [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+  // RigoBlock already handles approvals, never will have pending approvals unless user error
+  if (account !== undefined) {
+    approvalA = ApprovalState.APPROVED
+    approvalB = ApprovalState.APPROVED
+  }
 
   const addTransaction = useTransactionAdder()
 
   async function onAdd() {
     if (!chainId || !library || !account) return
-    const router = getRouterContract(chainId, library, account)
+
+    const drago = getDragoContract(chainId, library, account, recipientAddress)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB) {
@@ -138,14 +153,17 @@ export default function AddLiquidity({
     const deadlineFromNow = Math.ceil(Date.now() / 1000) + deadline
 
     let estimate,
+      fragment,
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
+      argsAdapter: Array<string | string[] | number>,
       value: BigNumber | null
     if (currencyA === ETHER || currencyB === ETHER) {
       const tokenBIsETH = currencyB === ETHER
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
-      args = [
+      //estimate = router.estimateGas.addLiquidityETH
+      fragment = AUniswap_INTERFACE.getFunction('addLiquidityETH')
+      argsAdapter = [
+        (tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString(), // eth
         wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
@@ -153,11 +171,12 @@ export default function AddLiquidity({
         account,
         deadlineFromNow
       ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      // value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      value = null
     } else {
-      estimate = router.estimateGas.addLiquidity
-      method = router.addLiquidity
-      args = [
+      //estimate = router.estimateGas.addLiquidity
+      fragment = AUniswap_INTERFACE.getFunction('addLiquidity')
+      argsAdapter = [
         wrappedCurrency(currencyA, chainId)?.address ?? '',
         wrappedCurrency(currencyB, chainId)?.address ?? '',
         parsedAmountA.raw.toString(),
@@ -169,6 +188,13 @@ export default function AddLiquidity({
       ]
       value = null
     }
+    estimate = drago.estimateGas.operateOnExchange
+    method = drago.operateOnExchange
+
+    const callData: string | undefined = fragment /*&& isValidMethodArgs(callInputs)*/
+          ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsAdapter)
+          : undefined
+    args = [ROUTER_ADDRESS, [callData]]
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
@@ -368,6 +394,12 @@ export default function AddLiquidity({
               id="add-liquidity-input-tokenb"
               showCommonBases
             />
+            <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+              <ArrowWrapper clickable={false}>
+                <ArrowDown size="16" color={theme.text2} />
+              </ArrowWrapper>
+            </AutoRow>
+            <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
             {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
               <>
                 <GreyCard padding="0px" borderRadius={'20px'}>
