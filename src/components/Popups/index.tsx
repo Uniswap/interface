@@ -33,7 +33,7 @@ const MobilePopupInner = styled.div`
 
 const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean }>`
   position: fixed;
-  top: ${({ extraPadding }) => (extraPadding ? '108px' : '88px')};
+  top: ${({ extraPadding }) => (extraPadding ? '72px' : '88px')};
   right: 1rem;
   max-width: 355px !important;
   width: 100%;
@@ -54,7 +54,7 @@ export default function Popups() {
     <>
       <FixedPopupColumn gap="20px" extraPadding={urlWarningActive}>
         <ClaimPopup />
-        {activePopups.map(item => (
+        {activePopups.map((item) => (
           <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
         ))}
       </FixedPopupColumn>
@@ -63,7 +63,7 @@ export default function Popups() {
           {activePopups // reverse so new items up front
             .slice(0)
             .reverse()
-            .map(item => (
+            .map((item) => (
               <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
             ))}
         </MobilePopupInner>

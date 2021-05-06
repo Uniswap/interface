@@ -3,9 +3,9 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import { ROUTER_ADDRESS } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk'
+import { ChainId, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk-core'
+import { JSBI } from '@uniswap/v2-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk/dist/'
 import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -22,7 +22,7 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   3: 'ropsten.',
   4: 'rinkeby.',
   5: 'goerli.',
-  42: 'kovan.'
+  42: 'kovan.',
 }
 
 export function getEtherscanLink(
@@ -63,18 +63,16 @@ export function calculateGasMargin(value: BigNumber): BigNumber {
   return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000))
 }
 
-// converts a basis points value to a sdk percent
-export function basisPointsToPercent(num: number): Percent {
-  return new Percent(JSBI.BigInt(num), JSBI.BigInt(10000))
-}
-
-export function calculateSlippageAmount(value: CurrencyAmount, slippage: number): [JSBI, JSBI] {
-  if (slippage < 0 || slippage > 10000) {
-    throw Error(`Unexpected slippage value: ${slippage}`)
-  }
+export function calculateSlippageAmount(value: CurrencyAmount, slippage: Percent): [JSBI, JSBI] {
+  if (
+    JSBI.lessThan(slippage.numerator, JSBI.BigInt(0)) ||
+    JSBI.greaterThan(slippage.numerator, JSBI.BigInt(10_000)) ||
+    !JSBI.equal(slippage.denominator, JSBI.BigInt(10_000))
+  )
+    throw new Error('Unexpected slippage')
   return [
-    JSBI.divide(JSBI.multiply(value.raw, JSBI.BigInt(10000 - slippage)), JSBI.BigInt(10000)),
-    JSBI.divide(JSBI.multiply(value.raw, JSBI.BigInt(10000 + slippage)), JSBI.BigInt(10000))
+    JSBI.divide(JSBI.multiply(value.raw, JSBI.subtract(JSBI.BigInt(10000), slippage.numerator)), JSBI.BigInt(10000)),
+    JSBI.divide(JSBI.multiply(value.raw, JSBI.add(JSBI.BigInt(10000), slippage.numerator)), JSBI.BigInt(10000)),
   ]
 }
 
@@ -97,16 +95,27 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
   return new Contract(address, ABI, getProviderOrSigner(library, account) as any)
 }
 
-// account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
-}
-
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
-  return Boolean(currency instanceof Token && defaultTokens[currency.chainId]?.[currency.address])
+  return Boolean(currency instanceof Token && defaultTokens[currency.chainId as ChainId]?.[currency.address])
+}
+
+/**
+ * Returns chain id if chain from chainId supports WETH
+ * if not, return undefined
+ * @param chainId
+ */
+export function supportedChainId(chainId: number): ChainId | undefined {
+  if (chainId in ChainId) {
+    return chainId
+  }
+  return undefined
+}
+
+export function formattedFeeAmount(feeAmount: FeeAmount): number {
+  return feeAmount / 10000
 }

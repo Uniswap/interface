@@ -1,5 +1,6 @@
 import { UNI } from './../../constants/index'
-import { TokenAmount, JSBI, ChainId } from '@uniswap/sdk'
+import { JSBI } from '@uniswap/v2-sdk'
+import { TokenAmount, ChainId } from '@uniswap/sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useEffect, useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
@@ -33,12 +34,12 @@ function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | 
       body: JSON.stringify({ chainId, address: formatted }),
       headers: {
         'Content-Type': 'application/json',
-        'Referrer-Policy': 'no-referrer'
+        'Referrer-Policy': 'no-referrer',
       },
-      method: 'POST'
+      method: 'POST',
     })
-      .then(res => (res.ok ? res.json() : console.log(`No claim for account ${formatted} on chain ID ${chainId}`)))
-      .catch(error => console.error('Failed to get claim data', error)))
+      .then((res) => (res.ok ? res.json() : console.log(`No claim for account ${formatted} on chain ID ${chainId}`)))
+      .catch((error) => console.error('Failed to get claim data', error)))
 }
 
 // parse distributorContract blob and detect if user has claim data
@@ -51,11 +52,11 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
 
   useEffect(() => {
     if (!account || !chainId) return
-    fetchClaim(account, chainId).then(accountClaimInfo =>
-      setClaimInfo(claimInfo => {
+    fetchClaim(account, chainId).then((accountClaimInfo) =>
+      setClaimInfo((claimInfo) => {
         return {
           ...claimInfo,
-          [key]: accountClaimInfo
+          [key]: accountClaimInfo,
         }
       })
     )
@@ -96,22 +97,22 @@ export function useClaimCallback(
   const claimData = useUserClaimData(account)
 
   // used for popup summary
-  const unClaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(account)
+  const unclaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(account)
   const addTransaction = useTransactionAdder()
   const distributorContract = useMerkleDistributorContract()
 
-  const claimCallback = async function() {
+  const claimCallback = async function () {
     if (!claimData || !account || !library || !chainId || !distributorContract) return
 
     const args = [claimData.index, account, claimData.amount, claimData.proof]
 
-    return distributorContract.estimateGas['claim'](...args, {}).then(estimatedGasLimit => {
+    return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Claimed ${unClaimedAmount?.toSignificant(4)} UNI`,
-            claim: { recipient: account }
+            summary: `Claimed ${unclaimedAmount?.toSignificant(4)} UNI`,
+            claim: { recipient: account },
           })
           return response.hash
         })

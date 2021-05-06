@@ -1,4 +1,4 @@
-import { TokenAmount } from '@uniswap/sdk'
+import { TokenAmount } from '@uniswap/sdk-core'
 import React, { useEffect } from 'react'
 import { X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
@@ -10,7 +10,7 @@ import {
   useModalOpen,
   useShowClaimPopup,
   useToggleSelfClaimModal,
-  useToggleShowClaimPopup
+  useToggleShowClaimPopup,
 } from '../../state/application/hooks'
 
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'

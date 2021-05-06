@@ -1,14 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import Settings from '../Settings'
-import { RowBetween } from '../Row'
+
+import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
 
 const StyledSwapHeader = styled.div`
-  padding: 12px 1rem 0px 1.5rem;
-  margin-bottom: -4px;
+  padding: 1rem 1.25rem 0.5rem 1.25rem;
   width: 100%;
-  max-width: 420px;
   color: ${({ theme }) => theme.text2};
 `
 
@@ -16,8 +15,16 @@ export default function SwapHeader() {
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <TYPE.black fontWeight={500}>Swap</TYPE.black>
-        <Settings />
+        <RowFixed>
+          <TYPE.black fontWeight={500} fontSize={16} style={{ marginRight: '8px' }}>
+            Swap{' '}
+          </TYPE.black>
+        </RowFixed>
+        <RowFixed>
+          {/* <TradeInfo disabled={!trade} trade={trade} /> */}
+          {/* <div style={{ width: '8px' }}></div> */}
+          <Settings />
+        </RowFixed>
       </RowBetween>
     </StyledSwapHeader>
   )

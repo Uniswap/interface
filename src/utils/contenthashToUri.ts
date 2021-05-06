@@ -12,7 +12,7 @@ export function hexToUint8Array(hex: string): Uint8Array {
   return arr
 }
 
-const UTF_8_DECODER = new TextDecoder()
+const UTF_8_DECODER = new TextDecoder('utf-8')
 
 /**
  * Returns the URI representation of the content hash for supported codecs
