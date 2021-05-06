@@ -16,7 +16,7 @@ import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink, isAddress } from '../../utils'
+import { calculateGasMargin, getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { V3_MIGRATOR_ADDRESSES } from 'constants/v3'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -274,7 +274,7 @@ function V2PairMigration({
 
     const deadlineToUse = signatureData?.deadline ?? deadline
 
-    const data = []
+    const data: string[] = []
 
     // permit if necessary
     if (signatureData) {
@@ -324,19 +324,24 @@ function V2PairMigration({
     )
 
     setConfirmingMigration(true)
-    migrator
-      .multicall(data)
-      .then((response: TransactionResponse) => {
-        ReactGA.event({
-          category: 'Migrate',
-          action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
-          label: `${currency0.symbol}/${currency1.symbol}`,
-        })
 
-        addTransaction(response, {
-          summary: `Migrate ${currency0.symbol}/${currency1.symbol} liquidity to V3`,
-        })
-        setPendingMigrationHash(response.hash)
+    migrator.estimateGas
+      .multicall(data)
+      .then((gasEstimate) => {
+        return migrator
+          .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
+          .then((response: TransactionResponse) => {
+            ReactGA.event({
+              category: 'Migrate',
+              action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
+              label: `${currency0.symbol}/${currency1.symbol}`,
+            })
+
+            addTransaction(response, {
+              summary: `Migrate ${currency0.symbol}/${currency1.symbol} liquidity to V3`,
+            })
+            setPendingMigrationHash(response.hash)
+          })
       })
       .catch(() => {
         setConfirmingMigration(false)
