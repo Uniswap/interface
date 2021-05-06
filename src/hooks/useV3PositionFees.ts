@@ -12,7 +12,7 @@ import { TokenAmount } from '@uniswap/sdk-core'
 
 function subIn256(x: BigNumber, y: BigNumber): BigNumber {
   const difference = x.sub(y)
-  return difference.lt(0) ? BigNumber.from(2).pow(256).sub(difference) : difference
+  return difference.lt(0) ? BigNumber.from(2).pow(256).add(difference) : difference
 }
 
 function getCounterfactualFees(
