@@ -133,6 +133,11 @@ export default function SlippageTabs({
   }
 
   function parseCustomSlippage(value: string) {
+    // set to auto if nothing is typed
+    if (value.length === 0) {
+      setUserSlippageTolerance('auto')
+    }
+
     setSlippageInput(value)
 
     try {
@@ -140,7 +145,9 @@ export default function SlippageTabs({
       if (valueAsPercent && valueAsPercent.lessThan(new Percent(5_000, 10_000)) && !valueAsPercent.lessThan('0')) {
         setUserSlippageTolerance(valueAsPercent)
       }
-    } catch {}
+    } catch {
+      setUserSlippageTolerance('auto')
+    }
   }
 
   function parseCustomDeadline(value: string) {
