@@ -9,6 +9,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
+import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
+import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useV2TradeExactIn, useV2TradeExactOut } from '../../hooks/useV2Trade'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
@@ -16,7 +18,6 @@ import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
-import { useUserSlippageTolerance } from '../user/hooks'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>((state) => state.swap)
@@ -185,7 +186,8 @@ export function useDerivedSwapInfo(): {
     }
   }
 
-  const [allowedSlippage] = useUserSlippageTolerance()
+  const version = useToggledVersion()
+  const allowedSlippage = useSwapSlippageTolerance((version === Version.v2 ? v2Trade : v3Trade.trade) ?? undefined)
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], v2Trade?.maximumAmountIn(allowedSlippage)]

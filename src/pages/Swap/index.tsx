@@ -35,6 +35,7 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
+import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -46,7 +47,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
 import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { computePriceImpactWithMaximumSlippage } from '../../utils/computePriceImpactWithMaximumSlippage'
@@ -100,9 +101,6 @@ export default function Swap({ history }: RouteComponentProps) {
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
 
-  // get custom setting values for user
-  const [allowedSlippage] = useUserSlippageTolerance()
-
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
@@ -128,6 +126,9 @@ export default function Swap({ history }: RouteComponentProps) {
         [Version.v2]: v2Trade,
         [Version.v3]: v3Trade ?? undefined,
       }[toggledVersion]
+
+  // get custom setting values for user
+  const allowedSlippage = useSwapSlippageTolerance(trade)
 
   const parsedAmounts = useMemo(
     () =>
@@ -484,7 +485,9 @@ export default function Swap({ history }: RouteComponentProps) {
                     showInverted={showInverted}
                     setShowInverted={setShowInverted}
                   />
-                  <MouseoverTooltipContent content={<AdvancedSwapDetails trade={trade} />}>
+                  <MouseoverTooltipContent
+                    content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
+                  >
                     <StyledInfo />
                   </MouseoverTooltipContent>
                 </RowFixed>

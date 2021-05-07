@@ -55,6 +55,17 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
           <FormattedPriceImpact priceImpact={computePriceImpactWithMaximumSlippage(trade, allowedSlippage)} />
         </TYPE.black>
       </RowBetween>
+
+      <RowBetween>
+        <RowFixed>
+          <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
+            Slippage tolerance
+          </TYPE.black>
+        </RowFixed>
+        <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
+          {allowedSlippage.toFixed(2)}%
+        </TYPE.black>
+      </RowBetween>
     </AutoColumn>
   )
 }

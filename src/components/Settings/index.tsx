@@ -1,4 +1,3 @@
-import JSBI from 'jsbi'
 import React, { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -12,6 +11,7 @@ import {
   useUserTransactionTTL,
   useUserSlippageTolerance,
   useUserSingleHopOnly,
+  useSetUserSlippageTolerance,
 } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
@@ -122,7 +122,8 @@ export default function SettingsTab() {
   const toggle = useToggleSettingsMenu()
 
   const theme = useContext(ThemeContext)
-  const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
+  const userSlippageTolerance = useUserSlippageTolerance()
+  const setUserslippageTolerance = useSetUserSlippageTolerance()
 
   const [ttl, setTtl] = useUserTransactionTTL()
 

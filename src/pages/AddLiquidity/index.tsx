@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, TokenAmount, ETHER, currencyEquals } from '@uniswap/sdk-core'
+import { Currency, TokenAmount, ETHER, currencyEquals, Percent } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
 import { AlertTriangle, AlertCircle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -25,7 +25,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field, Bound } from '../../state/mint/v3/actions'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
@@ -51,6 +51,8 @@ import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { calculateGasMargin } from 'utils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
+
+const DEFAULT_ADD_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function AddLiquidity({
   match: {
@@ -148,7 +150,7 @@ export default function AddLiquidity({
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
-  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+  const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_ADD_SLIPPAGE_TOLERANCE)
   const [txHash, setTxHash] = useState<string>('')
 
   // get formatted amounts
