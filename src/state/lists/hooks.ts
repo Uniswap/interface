@@ -1,3 +1,4 @@
+import { isAddress } from '../../utils'
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { ChainId, Token } from '@uniswap/sdk-core'
@@ -14,15 +15,42 @@ export interface TagInfo extends TagDetails {
 }
 
 /**
- * Token instances created from token info.
+ * Token instances created from token info on a token list.
  */
-export class WrappedTokenInfo extends Token {
+export class WrappedTokenInfo implements Token {
   public readonly tokenInfo: TokenInfo
   public readonly tags: TagInfo[]
   constructor(tokenInfo: TokenInfo, tags: TagInfo[]) {
-    super(tokenInfo.chainId, tokenInfo.address, tokenInfo.decimals, tokenInfo.symbol, tokenInfo.name)
     this.tokenInfo = tokenInfo
     this.tags = tags
+  }
+  private _address: string | null = null
+  public get address(): string {
+    if (this._address) return this._address
+    const address = isAddress(this.tokenInfo.address)
+    if (!address) throw new Error('Invalid address')
+    return (this._address = address)
+  }
+
+  public get chainId(): ChainId | number {
+    return this.tokenInfo.chainId
+  }
+  public get decimals(): number {
+    return this.tokenInfo.decimals
+  }
+  public get name(): string {
+    return this.tokenInfo.name
+  }
+
+  public get symbol(): string {
+    return this.tokenInfo.symbol
+  }
+
+  equals(other: Token): boolean {
+    return other.address.toLowerCase() === this.address.toLowerCase()
+  }
+  sortsBefore(other: Token): boolean {
+    return this.address.toLowerCase() < other.address.toLowerCase()
   }
   public get logoURI(): string | undefined {
     return this.tokenInfo.logoURI
