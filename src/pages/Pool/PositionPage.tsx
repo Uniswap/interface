@@ -23,7 +23,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9, Currency, CurrencyAmount, Percent, Fraction, Price } from '@uniswap/sdk-core'
+import { WETH9, Currency, CurrencyAmount, Percent, Fraction, Price, currencyEquals } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -255,8 +255,12 @@ export function PositionPage({
 
     const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
       tokenId: tokenId.toString(),
-      expectedCurrencyOwed0: feeValue0.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue0.raw) : feeValue0,
-      expectedCurrencyOwed1: feeValue1.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue1.raw) : feeValue1,
+      expectedCurrencyOwed0: currencyEquals(feeValue0.currency, WETH9[chainId])
+        ? CurrencyAmount.ether(feeValue0.raw)
+        : feeValue0,
+      expectedCurrencyOwed1: currencyEquals(feeValue1.currency, WETH9[chainId])
+        ? CurrencyAmount.ether(feeValue1.raw)
+        : feeValue1,
       recipient: account,
     })
 
@@ -285,11 +289,11 @@ export function PositionPage({
             ReactGA.event({
               category: 'Liquidity',
               action: 'CollectV3',
-              label: [feeValue0.token.symbol, feeValue1.token.symbol].join('/'),
+              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
             })
 
             addTransaction(response, {
-              summary: `Collect ${feeValue0.token.symbol}/${feeValue1.token.symbol} fees`,
+              summary: `Collect ${feeValue0.currency.symbol}/${feeValue1.currency.symbol} fees`,
             })
           })
       })

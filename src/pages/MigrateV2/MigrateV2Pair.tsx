@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
-import { Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
+import { Fraction, Price, Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { FACTORY_ADDRESS, JSBI } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
@@ -57,9 +57,9 @@ function EmptyState({ message }: { message: string }) {
   )
 }
 
-function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: TokenAmount; token1Amount: TokenAmount }) {
-  const currency0 = unwrappedToken(token0Amount.token)
-  const currency1 = unwrappedToken(token1Amount.token)
+function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: CurrencyAmount; token1Amount: CurrencyAmount }) {
+  const currency0 = unwrappedToken(token0Amount.currency)
+  const currency1 = unwrappedToken(token1Amount.currency)
 
   return (
     <AutoColumn gap="8px">
@@ -103,10 +103,10 @@ function V2PairMigration({
   token1,
 }: {
   pair: Contract
-  pairBalance: TokenAmount
-  totalSupply: TokenAmount
-  reserve0: TokenAmount
-  reserve1: TokenAmount
+  pairBalance: CurrencyAmount
+  totalSupply: CurrencyAmount
+  reserve0: CurrencyAmount
+  reserve1: CurrencyAmount
   token0: Token
   token1: Token
 }) {
@@ -126,11 +126,11 @@ function V2PairMigration({
 
   // this is just getLiquidityValue with the fee off, but for the passed pair
   const token0Value = useMemo(
-    () => new TokenAmount(token0, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve0.raw), totalSupply.raw)),
+    () => new CurrencyAmount(token0, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve0.raw), totalSupply.raw)),
     [token0, pairBalance, reserve0, totalSupply]
   )
   const token1Value = useMemo(
-    () => new TokenAmount(token1, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve1.raw), totalSupply.raw)),
+    () => new CurrencyAmount(token1, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve1.raw), totalSupply.raw)),
     [token1, pairBalance, reserve1, totalSupply]
   )
 
@@ -197,7 +197,7 @@ function V2PairMigration({
   const v3Amount0Min = useMemo(
     () =>
       position &&
-      new TokenAmount(
+      new CurrencyAmount(
         token0,
         JSBI.divide(
           JSBI.multiply(position.amount0.raw, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
@@ -209,7 +209,7 @@ function V2PairMigration({
   const v3Amount1Min = useMemo(
     () =>
       position &&
-      new TokenAmount(
+      new CurrencyAmount(
         token1,
         JSBI.divide(
           JSBI.multiply(position.amount1.raw, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
@@ -220,11 +220,11 @@ function V2PairMigration({
   )
 
   const refund0 = useMemo(
-    () => position && new TokenAmount(token0, JSBI.subtract(token0Value.raw, position.amount0.raw)),
+    () => position && new CurrencyAmount(token0, JSBI.subtract(token0Value.raw, position.amount0.raw)),
     [token0Value, position, token0]
   )
   const refund1 = useMemo(
-    () => position && new TokenAmount(token1, JSBI.subtract(token1Value.raw, position.amount1.raw)),
+    () => position && new CurrencyAmount(token1, JSBI.subtract(token1Value.raw, position.amount1.raw)),
     [token1Value, position, token1]
   )
 
@@ -644,11 +644,11 @@ export default function MigrateV2Pair({
   const pairBalance = useTokenBalance(account ?? undefined, liquidityToken)
   const totalSupply = useTotalSupply(liquidityToken)
   const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
-  const reserve0 = useMemo(() => (token0 && reserve0Raw ? new TokenAmount(token0, reserve0Raw) : undefined), [
+  const reserve0 = useMemo(() => (token0 && reserve0Raw ? new CurrencyAmount(token0, reserve0Raw) : undefined), [
     token0,
     reserve0Raw,
   ])
-  const reserve1 = useMemo(() => (token1 && reserve1Raw ? new TokenAmount(token1, reserve1Raw) : undefined), [
+  const reserve1 = useMemo(() => (token1 && reserve1Raw ? new CurrencyAmount(token1, reserve1Raw) : undefined), [
     token1,
     reserve1Raw,
   ])

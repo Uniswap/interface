@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH9 } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, ETHER, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -100,7 +100,7 @@ export default function AddLiquidity({
   }
 
   // get the max amounts user can add
-  const maxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
+  const maxAmounts: { [field in Field]?: CurrencyAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,
@@ -110,7 +110,7 @@ export default function AddLiquidity({
     {}
   )
 
-  const atMaxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
+  const atMaxAmounts: { [field in Field]?: CurrencyAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,

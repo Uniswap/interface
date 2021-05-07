@@ -11,7 +11,7 @@ import {
   tickToPrice,
   TICK_SPACINGS,
 } from '@uniswap/v3-sdk/dist/'
-import { Currency, CurrencyAmount, ETHER, Price, Rounding } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Price, Rounding } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../../hooks'
@@ -258,7 +258,7 @@ export function useV3DerivedMintInfo(
         return undefined
       }
 
-      const position: Position | undefined = wrappedIndependentAmount.token.equals(poolForPosition.token0)
+      const position: Position | undefined = currencyEquals(wrappedIndependentAmount.currency, poolForPosition.token0)
         ? Position.fromAmount0({
             pool: poolForPosition,
             tickLower,
@@ -272,7 +272,7 @@ export function useV3DerivedMintInfo(
             amount1: independentAmount.raw,
           })
 
-      const dependentTokenAmount = wrappedIndependentAmount.token.equals(poolForPosition.token0)
+      const dependentTokenAmount = currencyEquals(wrappedIndependentAmount.currency, poolForPosition.token0)
         ? position.amount1
         : position.amount0
       return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount

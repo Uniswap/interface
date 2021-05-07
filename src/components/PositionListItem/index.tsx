@@ -129,8 +129,9 @@ export function getPriceOrderingFromPositionForUI(
     return {}
   }
 
-  const token0 = position.amount0.token
-  const token1 = position.amount1.token
+  const token0 = position.amount0.currency
+  const token1 = position.amount1.currency
+  if (!token0.isToken || !token1.isToken) throw new Error('Not tokens')
 
   // if token0 is a dollar-stable asset, set it as the quote token
   const stables = [DAI, USDC, USDT]

@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { CurrencyAmount, Fraction, Percent, TokenAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import {
@@ -31,9 +31,7 @@ export function computeRealizedLPFeeAmount(trade?: V2Trade | V3Trade | null): Cu
     return (
       realizedLPFee &&
       trade &&
-      (trade.inputAmount instanceof TokenAmount
-        ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-        : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+      new CurrencyAmount(trade.inputAmount.currency, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
     )
   } else if (trade instanceof V3Trade) {
     const realizedLPFee = !trade
@@ -48,9 +46,7 @@ export function computeRealizedLPFeeAmount(trade?: V2Trade | V3Trade | null): Cu
     return (
       realizedLPFee &&
       trade &&
-      (trade.inputAmount instanceof TokenAmount
-        ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-        : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+      new CurrencyAmount(trade.inputAmount.currency, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
     )
   }
   return undefined

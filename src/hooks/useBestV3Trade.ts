@@ -1,4 +1,4 @@
-import { Token, Currency, CurrencyAmount, TokenAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { encodeRouteToPath, Route, Trade } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
@@ -89,10 +89,9 @@ export function useBestV3TradeExactIn(
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
         inputAmount: amountIn,
-        outputAmount:
-          currencyOut instanceof Token
-            ? new TokenAmount(currencyOut, amountOut.toString())
-            : CurrencyAmount.ether(amountOut.toString()),
+        outputAmount: currencyOut.isToken
+          ? new CurrencyAmount(currencyOut, amountOut.toString())
+          : CurrencyAmount.ether(amountOut.toString()),
       }),
     }
   }, [amountIn, currencyOut, quotesResults, routes, routesLoading])
@@ -172,10 +171,7 @@ export function useBestV3TradeExactOut(
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_OUTPUT,
-        inputAmount:
-          currencyIn instanceof Token
-            ? new TokenAmount(currencyIn, amountIn.toString())
-            : CurrencyAmount.ether(amountIn.toString()),
+        inputAmount: new CurrencyAmount(currencyIn, amountIn.toString()),
         outputAmount: amountOut,
       }),
     }

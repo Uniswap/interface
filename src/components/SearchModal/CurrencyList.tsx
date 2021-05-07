@@ -4,7 +4,8 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
+import { useCombinedActiveList } from '../../state/lists/hooks'
+import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
@@ -23,7 +24,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
 
 function currencyKey(currency: Currency): string {
-  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
+  return currency.isToken ? currency.address : currency === ETHER ? 'ETHER' : ''
 }
 
 const StyledBalanceText = styled(Text)`
@@ -167,7 +168,7 @@ export default function CurrencyList({
   breakIndex: number | undefined
 }) {
   const itemData: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = showETH ? [Currency.ETHER, ...currencies] : currencies
+    let formatted: (Currency | undefined)[] = showETH ? [ETHER, ...currencies] : currencies
     if (breakIndex !== undefined) {
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }

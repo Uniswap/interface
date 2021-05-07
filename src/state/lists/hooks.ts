@@ -1,59 +1,17 @@
-import { isAddress } from '../../utils'
-import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
-import { ChainId, Token } from '@uniswap/sdk-core'
-import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
+import { ChainId } from '@uniswap/sdk-core'
+import { Tags, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { AppState } from '../index'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
+import { AppState } from '../index'
+import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import { WrappedTokenInfo } from './wrappedTokenInfo'
 
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
   id: string
-}
-
-/**
- * Token instances created from token info on a token list.
- */
-export class WrappedTokenInfo implements Token {
-  public readonly tokenInfo: TokenInfo
-  public readonly tags: TagInfo[]
-  constructor(tokenInfo: TokenInfo, tags: TagInfo[]) {
-    this.tokenInfo = tokenInfo
-    this.tags = tags
-  }
-  private _checksummedAddress: string | null = null
-  public get address(): string {
-    if (this._checksummedAddress) return this._checksummedAddress
-    const checksummedAddress = isAddress(this.tokenInfo.address)
-    if (!checksummedAddress) throw new Error(`Invalid token address: ${this.tokenInfo.address}`)
-    return (this._checksummedAddress = checksummedAddress)
-  }
-  public get chainId(): ChainId | number {
-    return this.tokenInfo.chainId
-  }
-  public get decimals(): number {
-    return this.tokenInfo.decimals
-  }
-  public get name(): string {
-    return this.tokenInfo.name
-  }
-  public get symbol(): string {
-    return this.tokenInfo.symbol
-  }
-  public get logoURI(): string | undefined {
-    return this.tokenInfo.logoURI
-  }
-
-  equals(other: Token): boolean {
-    return other.address.toLowerCase() === this.address.toLowerCase()
-  }
-  sortsBefore(other: Token): boolean {
-    if (this.equals(other)) throw new Error('Addresses should not be equal')
-    return this.address.toLowerCase() < other.address.toLowerCase()
-  }
 }
 
 export type TokenAddressMap = Readonly<

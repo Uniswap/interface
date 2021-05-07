@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { TokenAmount, CurrencyAmount, ETHER, ChainId, Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount, ETHER, ChainId, Percent } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
@@ -25,7 +25,7 @@ export function useApproveCallback(
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
   const { account } = useActiveWeb3React()
-  const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
+  const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
 

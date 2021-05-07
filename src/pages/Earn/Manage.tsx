@@ -3,7 +3,7 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
-import { TokenAmount, ETHER } from '@uniswap/sdk-core'
+import { CurrencyAmount, ETHER } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { RouteComponentProps } from 'react-router-dom'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
@@ -18,7 +18,7 @@ import StakingModal from '../../components/earn/StakingModal'
 import { useStakingInfo } from '../../state/stake/hooks'
 import UnstakingModal from '../../components/earn/UnstakingModal'
 import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
-import { useTokenBalance } from '../../state/wallet/hooks'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { useColor } from '../../hooks/useColor'
 import { CountUp } from 'use-count-up'
@@ -104,7 +104,7 @@ export default function Manage({
   const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
 
   // detect existing unstaked LP position to show add button if none found
-  const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
+  const userLiquidityUnstaked = useCurrencyBalance(account ?? undefined, stakingInfo?.stakedAmount?.currency)
   const showAddLiquidityButton = Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
 
   // toggle for staking modal and unstaking modal
@@ -120,11 +120,11 @@ export default function Manage({
   const backgroundColor = useColor(token)
 
   // get WETH value of staked LP tokens
-  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)
-  let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
+  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.currency)
+  let valueOfTotalStakedAmountInWETH: CurrencyAmount | undefined
   if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && WETH) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
-    valueOfTotalStakedAmountInWETH = new TokenAmount(
+    valueOfTotalStakedAmountInWETH = new CurrencyAmount(
       WETH,
       JSBI.divide(
         JSBI.multiply(

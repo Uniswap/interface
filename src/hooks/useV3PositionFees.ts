@@ -6,7 +6,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { computePoolAddress, Pool } from '@uniswap/v3-sdk'
 import { V3_CORE_FACTORY_ADDRESSES } from 'constants/v3'
 import { useActiveWeb3React } from 'hooks'
-import { TokenAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 
 // TODO port these utility functions to the SDK
 
@@ -48,7 +48,7 @@ function getCounterfactualFees(
 export function useV3PositionFees(
   pool?: Pool,
   positionDetails?: PositionDetails
-): [TokenAmount, TokenAmount] | [undefined, undefined] {
+): [CurrencyAmount, CurrencyAmount] | [undefined, undefined] {
   const { chainId } = useActiveWeb3React()
 
   const poolAddress = useMemo(() => {
@@ -119,8 +119,8 @@ export function useV3PositionFees(
     counterfactualFees1
   ) {
     return [
-      new TokenAmount(pool.token0, positionDetails.tokensOwed0.add(counterfactualFees0).toString()),
-      new TokenAmount(pool.token1, positionDetails.tokensOwed1.add(counterfactualFees1).toString()),
+      new CurrencyAmount(pool.token0, positionDetails.tokensOwed0.add(counterfactualFees0).toString()),
+      new CurrencyAmount(pool.token1, positionDetails.tokensOwed1.add(counterfactualFees1).toString()),
     ]
   } else {
     return [undefined, undefined]

@@ -4,7 +4,7 @@ import { RowBetween } from '../Row'
 import styled from 'styled-components'
 import { TYPE, StyledInternalLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { ETHER, TokenAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, ETHER } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { ButtonPrimary } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
@@ -83,14 +83,16 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const WETH = currency0 === ETHER ? token0 : token1
   const backgroundColor = useColor(token)
 
-  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.token)
+  const totalSupplyOfStakingToken = useTotalSupply(
+    stakingInfo.stakedAmount.currency.isToken ? stakingInfo.stakedAmount.currency : undefined
+  )
   const [, stakingTokenPair] = useV2Pair(...stakingInfo.tokens)
 
   // let returnOverMonth: Percent = new Percent('0')
-  let valueOfTotalStakedAmountInWETH: TokenAmount | undefined
+  let valueOfTotalStakedAmountInWETH: CurrencyAmount | undefined
   if (totalSupplyOfStakingToken && stakingTokenPair) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
-    valueOfTotalStakedAmountInWETH = new TokenAmount(
+    valueOfTotalStakedAmountInWETH = new CurrencyAmount(
       WETH,
       JSBI.divide(
         JSBI.multiply(

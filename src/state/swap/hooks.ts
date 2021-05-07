@@ -2,7 +2,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, Token, TokenAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, ETHER, Token } from '@uniswap/sdk-core'
 import { JSBI, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
@@ -75,9 +75,7 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
   try {
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
     if (typedValueParsed !== '0') {
-      return currency instanceof Token
-        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+      return new CurrencyAmount(currency, JSBI.BigInt(typedValueParsed))
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)

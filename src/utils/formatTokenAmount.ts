@@ -1,7 +1,7 @@
-import { Price, TokenAmount } from '@uniswap/sdk-core'
+import { Price, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
-export function formatTokenAmount(amount: TokenAmount | undefined, sigFigs: number) {
+export function formatTokenAmount(amount: CurrencyAmount | undefined, sigFigs: number) {
   if (!amount) {
     return '-'
   }

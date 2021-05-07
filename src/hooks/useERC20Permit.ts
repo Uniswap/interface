@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { ChainId, CurrencyAmount, Percent, TokenAmount } from '@uniswap/sdk-core'
+import { ChainId, Percent, CurrencyAmount } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { splitSignature } from 'ethers/lib/utils'
@@ -125,7 +125,7 @@ export function useERC20Permit(
 } {
   const { account, chainId, library } = useActiveWeb3React()
   const transactionDeadline = useTransactionDeadline()
-  const tokenAddress = currencyAmount instanceof TokenAmount ? currencyAmount.token.address : undefined
+  const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
   const eip2612Contract = useEIP2612Contract(tokenAddress)
   const isArgentWallet = useIsArgentWallet()
   const nonceInputs = useMemo(() => [account ?? undefined], [account])
@@ -264,7 +264,7 @@ const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
 }
 
 export function useV2LiquidityTokenPermit(
-  liquidityAmount: TokenAmount | null | undefined,
+  liquidityAmount: CurrencyAmount | null | undefined,
   spender: string | null | undefined
 ) {
   return useERC20Permit(liquidityAmount, spender, REMOVE_V2_LIQUIDITY_PERMIT_INFO)

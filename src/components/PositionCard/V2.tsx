@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Percent, TokenAmount } from '@uniswap/sdk-core'
+import { Percent, CurrencyAmount } from '@uniswap/sdk-core'
 import { JSBI, Pair } from '@uniswap/v2-sdk'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -38,7 +38,7 @@ interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
   border?: string
-  stakedBalance?: TokenAmount // optional balance to indicate that liquidity is deposited in mining pool
+  stakedBalance?: CurrencyAmount // optional balance to indicate that liquidity is deposited in mining pool
 }
 
 export default function V2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {

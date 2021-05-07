@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
 import { Pair } from '@uniswap/v2-sdk'
-import { Currency, CurrencyAmount, ETHER, Percent, Price, TokenAmount } from '@uniswap/sdk-core'
+import { Currency, ETHER, Percent, Price, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -59,7 +59,7 @@ export function useDerivedMintInfo(
   parsedAmounts: { [field in Field]?: CurrencyAmount }
   price?: Price
   noLiquidity?: boolean
-  liquidityMinted?: TokenAmount
+  liquidityMinted?: CurrencyAmount
   poolTokenPercentage?: Percent
   error?: string
 } {

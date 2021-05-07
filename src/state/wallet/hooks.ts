@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, Token, TokenAmount } from '@uniswap/sdk-core'
+import { Currency, ETHER, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
@@ -54,7 +54,7 @@ export function useETHBalances(
 export function useTokenBalancesWithLoadingIndicator(
   address?: string,
   tokens?: (Token | undefined)[]
-): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
+): [{ [tokenAddress: string]: CurrencyAmount | undefined }, boolean] {
   const validatedTokens: Token[] = useMemo(
     () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
     [tokens]
@@ -77,11 +77,11 @@ export function useTokenBalancesWithLoadingIndicator(
     useMemo(
       () =>
         address && validatedTokens.length > 0
-          ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
+          ? validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount | undefined }>((memo, token, i) => {
               const value = balances?.[i]?.result?.[0]
               const amount = value ? JSBI.BigInt(value.toString()) : undefined
               if (amount) {
-                memo[token.address] = new TokenAmount(token, amount)
+                memo[token.address] = new CurrencyAmount(token, amount)
               }
               return memo
             }, {})
@@ -95,12 +95,12 @@ export function useTokenBalancesWithLoadingIndicator(
 export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[]
-): { [tokenAddress: string]: TokenAmount | undefined } {
+): { [tokenAddress: string]: CurrencyAmount | undefined } {
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 
 // get the balance for a single token/account combo
-export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
+export function useTokenBalance(account?: string, token?: Token): CurrencyAmount | undefined {
   const tokenBalances = useTokenBalances(account, [token])
   if (!token) return undefined
   return tokenBalances[token.address]
@@ -135,7 +135,7 @@ export function useCurrencyBalance(account?: string, currency?: Currency): Curre
 }
 
 // mimics useAllBalances
-export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | undefined } {
+export function useAllTokenBalances(): { [tokenAddress: string]: CurrencyAmount | undefined } {
   const { account } = useActiveWeb3React()
   const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
@@ -144,18 +144,18 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
 }
 
 // get the total owned, unclaimed, and unharvested UNI for account
-export function useAggregateUniBalance(): TokenAmount | undefined {
+export function useAggregateUniBalance(): CurrencyAmount | undefined {
   const { account, chainId } = useActiveWeb3React()
 
   const uni = chainId ? UNI[chainId] : undefined
 
-  const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, uni)
-  const uniUnclaimed: TokenAmount | undefined = useUserUnclaimedAmount(account)
-  const uniUnHarvested: TokenAmount | undefined = useTotalUniEarned()
+  const uniBalance: CurrencyAmount | undefined = useTokenBalance(account ?? undefined, uni)
+  const uniUnclaimed: CurrencyAmount | undefined = useUserUnclaimedAmount(account)
+  const uniUnHarvested: CurrencyAmount | undefined = useTotalUniEarned()
 
   if (!uni) return undefined
 
-  return new TokenAmount(
+  return new CurrencyAmount(
     uni,
     JSBI.add(
       JSBI.add(uniBalance?.raw ?? JSBI.BigInt(0), uniUnclaimed?.raw ?? JSBI.BigInt(0)),
