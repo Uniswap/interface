@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { RoutablePlatform, Trade } from 'dxswap-sdk'
 import { useLastTruthy } from '../../hooks/useLast'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
@@ -16,7 +16,7 @@ import { useMultihopManager, useUserPreferredGasPrice } from '../../state/user/h
 import { transparentize } from 'polished'
 
 const HideableAutoColumn = styled(AutoColumn)<{ show: boolean }>`
-  transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
+  transform: ${({ show }) => (show ? 'translateY(8px)' : 'translateY(-100%)')};
   transition: transform 300ms ease;
   z-index: -1;
 `
@@ -24,7 +24,6 @@ const HideableAutoColumn = styled(AutoColumn)<{ show: boolean }>`
 const AdvancedDetailsFooter = styled.div<{
   clickable?: boolean
   fullWidth?: boolean
-  fullRoundedBorder?: boolean
   padding: string
   height?: string
 }>`
@@ -34,14 +33,8 @@ const AdvancedDetailsFooter = styled.div<{
   color: ${({ theme }) => theme.purple3};
   background-color: ${props => transparentize(0.45, props.theme.bg1)};
   border: solid 1px #292643;
-  border-radius: 8px;
+  border-radius: 12px;
   backdrop-filter: blur(16px);
-  ${props =>
-    !props.fullRoundedBorder &&
-    css`
-      border-top-left-radius: 0px;
-      border-top-right-radius: 0px;
-    `}
   cursor: ${props => (props.clickable ? 'pointer' : 'auto')};
   box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.1);
 `
@@ -88,7 +81,7 @@ export default function AdvancedSwapDetailsDropdown({
 
   return (
     <HideableAutoColumn gap="8px" show={!!trade}>
-      <AdvancedDetailsFooter fullWidth padding="12px 16px">
+      <AdvancedDetailsFooter fullWidth padding="12px">
         <SwapPlatformSelector
           selectedTrade={trade}
           allPlatformTrades={allPlatformTrades}
@@ -98,7 +91,7 @@ export default function AdvancedSwapDetailsDropdown({
       </AdvancedDetailsFooter>
       <Flex>
         <Box flex="1">
-          <AdvancedDetailsFooter padding="8px" fullRoundedBorder height="33px">
+          <AdvancedDetailsFooter padding="8px" height="33px">
             <Flex justifyContent="space-between">
               <Box>
                 {!!mainnetGasPrices ? (
@@ -142,7 +135,7 @@ export default function AdvancedSwapDetailsDropdown({
           </AdvancedDetailsFooter>
         </Box>
         <Box ml="8px">
-          <AdvancedDetailsFooter padding="8px" clickable onClick={toggleSettingsMenu} fullRoundedBorder height="33px">
+          <AdvancedDetailsFooter padding="8px" clickable onClick={toggleSettingsMenu} height="33px">
             <Settings size="16px" />
           </AdvancedDetailsFooter>
         </Box>

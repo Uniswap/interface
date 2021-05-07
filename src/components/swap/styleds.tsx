@@ -22,30 +22,17 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
 `
 
 export const SwitchTokensAmountsContainer = styled.div`
-  background-image: linear-gradient(180deg, rgba(41, 38, 67, 0) 0%, rgba(68, 65, 99, 0.5) 100%);
+  background-color: ${props => props.theme.bg1And2};
   width: 37px;
   height: 37px;
-  box-sizing: border-box;
   position: absolute;
   left: 50%;
   top: -16px;
   transform: translateX(-50%);
   z-index: 2;
   border-radius: 50%;
-  border: solid 4px ${props => props.theme.dark1};
+  border: solid 5px ${props => props.theme.dark1};
   cursor: pointer;
-  transition: opacity 0.2s ease;
-  ::before {
-    border-radius: 50%;
-    background-color: ${({ theme }) => theme.bg1And2};
-    content: '';
-    z-index: -1;
-    top: 1px;
-    left: 1px;
-    bottom: 1px;
-    right: 1px;
-    position: absolute;
-  }
 `
 
 export const SectionBreak = styled.div`

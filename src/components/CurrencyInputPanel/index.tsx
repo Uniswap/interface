@@ -12,7 +12,6 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
-import { DarkCard } from '../Card'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -69,14 +68,13 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   z-index: 1;
 `
 
-const Container = styled(DarkCard)<{ hideInput: boolean; focused: boolean }>`
+const Container = styled.div<{ focused: boolean }>`
   height: 80px;
-  ::before {
-    background: ${({ theme }) => theme.bg1And2};
-  }
-  background: ${({ focused, theme }) => (focused ? theme.bg3 : 'auto')};
-  transition: background 0.3s ease;
-  padding: 16px;
+  background-color: ${({ theme }) => theme.bg1And2};
+  border: solid 1px ${({ focused, theme }) => (focused ? theme.bg3 : theme.bg1And2)};
+  border-radius: 12px;
+  transition: border 0.3s ease;
+  padding: 17px 22px;
 `
 
 const Content = styled.div`
@@ -165,7 +163,7 @@ export default function CurrencyInputPanel({
 
   return (
     <InputPanel id={id}>
-      <Container hideInput={hideInput} focused={focused} padding="20px">
+      <Container focused={focused}>
         <Content>
           {!hideInput && (
             <LabelRow>

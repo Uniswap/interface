@@ -14,8 +14,21 @@ import { useSwapState } from '../../state/swap/hooks'
 import { useGasFeesUSD } from '../../hooks/useGasFees'
 import { RowFixed } from '../Row'
 import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
-import { Dots } from '../../pages/Pools/styleds'
 import { useActiveWeb3React } from '../../hooks'
+import styled from 'styled-components'
+import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
+import { Field } from '../../state/swap/actions'
+
+const TableHeaderText = styled.span`
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 12px;
+  color: ${props => props.theme.bg5};
+`
+
+const Spacer = styled.tr`
+  height: 6px;
+`
 
 export interface SwapPlatformSelectorProps {
   allPlatformTrades: (Trade | undefined)[] | undefined
@@ -30,12 +43,16 @@ interface GasFeeProps {
 
 function GasFee({ loading, gasFeeUSD }: GasFeeProps) {
   if (loading) {
-    return <Dots />
+    return (
+      <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
+        -
+      </TYPE.main>
+    )
   }
   if (gasFeeUSD) {
     return (
       <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
-        ${gasFeeUSD.toFixed(2)} GAS FEE
+        ${gasFeeUSD.toFixed(2)}
       </TYPE.main>
     )
   }
@@ -80,14 +97,35 @@ export function SwapPlatformSelector({
   return (
     <AutoColumn gap="18px" style={{ borderBottom: '1px solid #292643', paddingBottom: '12px', marginBottom: '12px' }}>
       <table style={{ width: '100%', margin: 0, padding: 0 }}>
+        <thead>
+          <tr>
+            <td colSpan={4}>
+              <TableHeaderText>EXCHANGE</TableHeaderText>
+            </td>
+            <td>
+              <TableHeaderText>FEE</TableHeaderText>
+            </td>
+            {!!account && (
+              <td align="right">
+                <TableHeaderText>GAS</TableHeaderText>
+              </td>
+            )}
+            <td align="right">
+              <TableHeaderText>MIN. RECEIVED</TableHeaderText>
+            </td>
+          </tr>
+        </thead>
         <tbody>
+          <Spacer />
           {allPlatformTrades?.map((trade, i) => {
             if (!trade) return null // some platforms might not be compatible with the currently selected network
             const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
             const gasFeeUSD = gasFeesUSD[i]
+            const { realizedLPFee } = computeTradePriceBreakdown(trade)
+            const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
             return (
               <tr key={i} style={{ height: '20px', maxHeight: '20px', minHeight: '20px' }}>
-                <td>
+                <td colSpan={4}>
                   <Radio
                     checked={selectedTrade?.platform.name === trade.platform.name}
                     label={trade.platform.name}
@@ -95,6 +133,11 @@ export function SwapPlatformSelector({
                     value={trade.platform.name.toLowerCase()}
                     onChange={handleSelectedTradeOverride}
                   />
+                </td>
+                <td>
+                  <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
+                    {realizedLPFee ? `${realizedLPFee.toFixed(2)}%` : '-'}
+                  </TYPE.main>
                 </td>
                 {!!account && (
                   <td align="right">
@@ -104,7 +147,9 @@ export function SwapPlatformSelector({
                 <td align="right">
                   <RowFixed>
                     <TYPE.subHeader color="white" fontSize="12px" fontWeight="600">
-                      {isExactIn ? trade.outputAmount.toSignificant(4) : trade.inputAmount.toSignificant(4)}
+                      {isExactIn
+                        ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)}` ?? '-'
+                        : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)}` ?? '-'}
                     </TYPE.subHeader>
                     <CurrencyLogo
                       currency={isExactIn ? trade.outputAmount.currency : trade.inputAmount.currency}
