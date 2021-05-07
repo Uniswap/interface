@@ -5,17 +5,29 @@ import { useMemo } from 'react'
 import { ZERO_PERCENT } from '../constants'
 import { useUserSlippageToleranceWithDefault } from '../state/user/hooks'
 import { computePriceImpactWithMaximumSlippage } from '../utils/computePriceImpactWithMaximumSlippage'
+import { computeRealizedLPFee } from 'utils/prices'
 
-const ONE_TENTHS_PERCENT = new Percent(10, 10_000)
-const ONE_PERCENT = new Percent(1, 100)
+const ONE_BIP = new Percent(1, 10_000) // .01%
+const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .1%
+const V2_SWAP_DEFAULT_SLIPPAGE = new Percent(45, 10_000) // .45%
+const ONE_PERCENT = new Percent(1, 100) // 1%
 
 export default function useSwapSlippageTolerance(trade: V2Trade | V3Trade | undefined): Percent {
   const defaultSlippageTolerance = useMemo(() => {
     if (!trade) return ONE_TENTHS_PERCENT
+    if (trade instanceof V2Trade) return V2_SWAP_DEFAULT_SLIPPAGE
+
+    // compute price impact with 0 slippage (inclusive of LP fee)
     let executionPriceImpact = computePriceImpactWithMaximumSlippage(trade, ZERO_PERCENT)
-    if (trade instanceof V3Trade && trade.route.pools.length === 1) {
-      executionPriceImpact = executionPriceImpact.subtract(new Percent(trade.route.pools[0].fee, 1_000_000))
-    }
+
+    // compute lp fee
+    const realizedLPFee = computeRealizedLPFee(trade)
+
+    // subtract the lp fee from the price impact, with a ceiling of 1 bip
+    executionPriceImpact = executionPriceImpact.subtract(realizedLPFee)
+    if (executionPriceImpact.lessThan(ONE_BIP)) executionPriceImpact = ONE_BIP
+
+    // floor of 1%
     return executionPriceImpact.lessThan(ONE_PERCENT) ? executionPriceImpact : ONE_PERCENT
   }, [trade])
   return useUserSlippageToleranceWithDefault(defaultSlippageTolerance)
