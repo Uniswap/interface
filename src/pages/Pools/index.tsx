@@ -82,7 +82,7 @@ const Pools = ({
   const { account } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
-  const above1200 = useMedia('(min-width: 1200px)')
+  const above1400 = useMedia('(min-width: 1400px)')
 
   // Pool selection
   const { onCurrencySelection } = usePairActionHandlers()
@@ -158,7 +158,7 @@ const Pools = ({
   return (
     <>
       <PageWrapper>
-        {above1200 ? (
+        {above1400 ? (
           <>
             <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
             <ToolbarWrapper>

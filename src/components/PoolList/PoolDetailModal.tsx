@@ -35,6 +35,10 @@ export default function PoolDetailModal() {
   const togglePoolDetailModal = usePoolDetailModalToggle()
   const selectedPool = useSelectedPool()
 
+  if (!selectedPool) {
+    return null
+  }
+
   return (
     <Modal
       isOpen={poolDetailModalOpen}
@@ -42,25 +46,21 @@ export default function PoolDetailModal() {
       maxWidth="fit-content"
       maxHeight="fit-content"
     >
-      {!selectedPool ? (
-        <LocalLoader />
-      ) : (
-        <div>
-          <ModalHeader>
-            <div>
-              {selectedPool?.pool.token0.symbol} / {selectedPool?.pool.token1.symbol}
-            </div>
-            <CloseIcon onClick={togglePoolDetailModal}>
-              <CloseColor />
-            </CloseIcon>
-          </ModalHeader>
-          <ItemCard
-            pool={selectedPool?.pool}
-            subgraphPoolData={selectedPool?.subgraphPoolData}
-            myLiquidity={selectedPool?.myLiquidity}
-          />
-        </div>
-      )}
+      <div>
+        <ModalHeader>
+          <div>
+            {selectedPool?.pool.token0.symbol} / {selectedPool?.pool.token1.symbol}
+          </div>
+          <CloseIcon onClick={togglePoolDetailModal}>
+            <CloseColor />
+          </CloseIcon>
+        </ModalHeader>
+        <ItemCard
+          pool={selectedPool?.pool}
+          subgraphPoolData={selectedPool?.subgraphPoolData}
+          myLiquidity={selectedPool?.myLiquidity}
+        />
+      </div>
     </Modal>
   )
 }

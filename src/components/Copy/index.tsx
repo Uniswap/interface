@@ -7,7 +7,7 @@ import useCopyClipboard from '../../hooks/useCopyClipboard'
 const CopyIcon = styled.div`
   flex-shrink: 0;
   margin-right: 1rem;
-  margin-left: 0.5rem;
+  margin-left: 2px;
   text-decoration: none;
   :hover,
   :active,
