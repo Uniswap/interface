@@ -4,6 +4,7 @@ import { Currency, TokenAmount, ETHER, currencyEquals, Percent } from '@uniswap/
 import { WETH9 } from '@uniswap/sdk-core'
 import { AlertTriangle, AlertCircle } from 'react-feather'
 import ReactGA from 'react-ga'
+import { ZERO_PERCENT } from '../../constants'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -52,7 +53,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { calculateGasMargin } from 'utils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 
-const DEFAULT_ADD_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
+const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function AddLiquidity({
   match: {
@@ -150,7 +151,7 @@ export default function AddLiquidity({
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
-  const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_ADD_SLIPPAGE_TOLERANCE)
+
   const [txHash, setTxHash] = useState<string>('')
 
   // get formatted amounts
@@ -193,6 +194,10 @@ export default function AddLiquidity({
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
     chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
+  )
+
+  const allowedSlippage = useUserSlippageToleranceWithDefault(
+    outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE
   )
 
   async function onAdd() {
