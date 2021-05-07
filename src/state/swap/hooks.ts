@@ -2,7 +2,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, Token, TokenAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, ETHER, Token, TokenAmount, Percent } from '@uniswap/sdk-core'
 import { JSBI, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
-import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
+import { Version } from '../../hooks/useToggledVersion'
 import { useV2TradeExactIn, useV2TradeExactOut } from '../../hooks/useV2Trade'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
@@ -110,13 +110,17 @@ function involvesAddress(trade: V2Trade | V3Trade, checksummedAddress: string): 
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(): {
+export function useDerivedSwapInfo(
+  toggledVersion: Version
+): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  v2Trade: V2Trade | undefined
   inputError?: string
+  v2Trade: V2Trade | undefined
   v3TradeState: { trade: V3Trade | null; state: V3TradeState }
+  toggledTrade: V2Trade | V3Trade | undefined
+  allowedSlippage: Percent
 } {
   const { account } = useActiveWeb3React()
 
@@ -186,8 +190,8 @@ export function useDerivedSwapInfo(): {
     }
   }
 
-  const version = useToggledVersion()
-  const allowedSlippage = useSwapSlippageTolerance((version === Version.v2 ? v2Trade : v3Trade.trade) ?? undefined)
+  const toggledTrade = (toggledVersion === Version.v2 ? v2Trade : v3Trade.trade) ?? undefined
+  const allowedSlippage = useSwapSlippageTolerance(toggledTrade)
 
   // compare input balance to max input based on version
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], v2Trade?.maximumAmountIn(allowedSlippage)]
@@ -200,9 +204,11 @@ export function useDerivedSwapInfo(): {
     currencies,
     currencyBalances,
     parsedAmount,
-    v2Trade: v2Trade ?? undefined,
     inputError,
+    v2Trade: v2Trade ?? undefined,
     v3TradeState: v3Trade,
+    toggledTrade,
+    allowedSlippage,
   }
 }
 
