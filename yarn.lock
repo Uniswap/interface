@@ -4122,10 +4122,10 @@
     "@uniswap/lib" "1.1.1"
     "@uniswap/v2-core" "1.0.0"
 
-"@uniswap/v2-sdk@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/v2-sdk/-/v2-sdk-2.0.0.tgz#349f9b36818d3828727526088a31fa788150c84d"
-  integrity sha512-rvQtW3vhVrqzfxlWxpKjbfAO/B1mTbuguOYeYKZwl3fDrmp1vxR1jPDo+LbrlrU9t9awrFMWE6BSd67gF0qMYg==
+"@uniswap/v2-sdk@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/v2-sdk/-/v2-sdk-2.0.2.tgz#1dbd9759e62b2cb8825bf68fa737ffe37b9240e0"
+  integrity sha512-9AG9SeukGNeP9Pu5pkxrS37tKn6loT6Y3r77Qzp40YOKsO9/fdffBngZe20479VU22LVCbd+JmVEIwPlVzdtEg==
   dependencies:
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
@@ -4149,10 +4149,10 @@
     "@uniswap/v3-core" "1.0.0"
     base64-sol "1.0.1"
 
-"@uniswap/v3-sdk@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-2.0.0.tgz#883bab7a140600f761983e0b1119f51e945075f0"
-  integrity sha512-BfzMsCOYF2xzP7HJnl1t12PMQZEvzZ6TuEbt5oCowjKCLPQn3SN1fph5QBnWxZOaBZCXODDs0fewS/S5zwbLxA==
+"@uniswap/v3-sdk@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-2.0.1.tgz#9208f3828118ba648969ddc65576124a08b4c998"
+  integrity sha512-oycuEqGLW+iTcmeZHKOea1H5j9M9tknsEMonSKu5awQ4PPPjtALUYucxyO8W2INTGakLonEPWu6eTv/Q47PDmg==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
