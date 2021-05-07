@@ -152,6 +152,14 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'PTF',
       name: 'PowerTrade Fuel Token',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0x0bfEc35a1A3550Deed3F6fC76Dde7FC412729a91',
+      symbol: 'XKNCA',
+      name: 'xKNCa',
+      decimals: 18,
+      logoURI: 'https://assets.coingecko.com/coins/images/13995/thumb/Token-4.png?1613545763'
     }
   ],
   version: {
