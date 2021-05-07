@@ -110,7 +110,7 @@ export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[]
 ): (CurrencyAmount | undefined)[] {
-  const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
+  const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency?.isToken ?? false) ?? [], [
     currencies,
   ])
 
@@ -122,7 +122,7 @@ export function useCurrencyBalances(
     () =>
       currencies?.map((currency) => {
         if (!account || !currency) return undefined
-        if (currency instanceof Token) return tokenBalances[currency.address]
+        if (currency.isToken) return tokenBalances[currency.address]
         if (currency === ETHER) return ethBalance[account]
         return undefined
       }) ?? [],

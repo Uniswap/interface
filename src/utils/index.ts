@@ -3,7 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk-core'
+import { ChainId, Percent, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk/dist/'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -101,7 +101,7 @@ export function escapeRegExp(string: string): string {
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
   if (currency === ETHER) return true
-  return Boolean(currency instanceof Token && defaultTokens[currency.chainId as ChainId]?.[currency.address])
+  return Boolean(currency?.isToken && defaultTokens[currency.chainId as ChainId]?.[currency.address])
 }
 
 /**

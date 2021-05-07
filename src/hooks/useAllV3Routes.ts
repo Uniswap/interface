@@ -19,12 +19,8 @@ function computeAllRoutes(
   const tokenIn = wrappedCurrency(currencyIn, chainId)
   const tokenOut = wrappedCurrency(currencyOut, chainId)
 
-  if (!tokenIn || !tokenOut) {
-    throw new Error('Could not wrap currencies')
-  }
-
   for (const pool of pools) {
-    if (currentPath.indexOf(pool) !== -1 || !pool.involvesToken(tokenIn)) continue
+    if (currentPath.indexOf(pool) !== -1 || !tokenIn || !tokenOut || !pool.involvesToken(tokenIn)) continue
 
     const outputToken = pool.token0.equals(tokenIn) ? pool.token1 : pool.token0
     if (outputToken.equals(tokenOut)) {

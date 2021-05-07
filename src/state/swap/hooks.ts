@@ -2,7 +2,7 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, ETHER } from '@uniswap/sdk-core'
 import { JSBI, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
@@ -34,7 +34,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : '',
+          currencyId: currency.isToken ? currency.address : currency === ETHER ? 'ETH' : '',
         })
       )
     },
