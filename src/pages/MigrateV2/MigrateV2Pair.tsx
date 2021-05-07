@@ -675,7 +675,7 @@ export default function MigrateV2Pair({
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
           <TYPE.mediumHeader>Migrate V2 Liquidity</TYPE.mediumHeader>
-          <SettingsTab />
+          <SettingsTab placeholderSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
         </AutoRow>
 
         {!account ? (

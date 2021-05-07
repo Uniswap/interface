@@ -88,6 +88,7 @@ const SlippageEmojiContainer = styled.span`
 
 export interface SlippageTabsProps {
   userSlippageTolerance: Percent | 'auto'
+  placeholderSlippage: Percent
   setUserSlippageTolerance: (newUserSlippageTolerance: Percent | 'auto') => void
   deadline: number
   setDeadline: (deadline: number) => void
@@ -95,6 +96,7 @@ export interface SlippageTabsProps {
 
 export default function SlippageTabs({
   userSlippageTolerance,
+  placeholderSlippage,
   setUserSlippageTolerance,
   deadline,
   setDeadline,
@@ -184,7 +186,9 @@ export default function SlippageTabs({
               {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
               <Input
                 ref={inputRef as any}
-                placeholder={userSlippageTolerance !== 'auto' ? userSlippageTolerance.toFixed(2) : ''}
+                placeholder={
+                  userSlippageTolerance !== 'auto' ? userSlippageTolerance.toFixed(2) : placeholderSlippage.toFixed(2)
+                }
                 value={slippageInput}
                 onChange={(e) => parseCustomSlippage(e.target.value)}
                 color={!slippageInputIsValid ? 'red' : ''}

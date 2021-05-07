@@ -21,6 +21,7 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import { Percent } from '@uniswap/sdk-core'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
@@ -116,7 +117,7 @@ const ModalContentWrapper = styled.div`
   border-radius: 20px;
 `
 
-export default function SettingsTab() {
+export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
@@ -195,6 +196,7 @@ export default function SettingsTab() {
             <TransactionSettings
               userSlippageTolerance={userSlippageTolerance}
               setUserSlippageTolerance={setUserslippageTolerance}
+              placeholderSlippage={placeholderSlippage}
               deadline={ttl}
               setDeadline={setTtl}
             />

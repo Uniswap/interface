@@ -403,7 +403,12 @@ export default function AddLiquidity({
         pendingText={pendingText}
       />
       <AppBody>
-        <AddRemoveTabs creating={false} adding={true} positionID={tokenId} />
+        <AddRemoveTabs
+          creating={false}
+          adding={true}
+          positionID={tokenId}
+          defaultSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
+        />
         <Wrapper>
           <AutoColumn gap="32px">
             {!hasExistingPosition && (
