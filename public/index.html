@@ -12,6 +12,26 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta name="title" content="Swapr" />
+    <meta name="description" content="A governance-enabled automated market maker with adjustable fees." />
+    <meta name="image" content="%PUBLIC_URL%/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@SwaprEth" />
+    <meta name="twitter:image" content="%PUBLIC_URL%/og.png" />
+    <meta name="twitter:image:alt" content="Swapr" />
+    <meta name="twitter:title" content="Swapr" />
+    <meta name="twitter:description" content="A governance-enabled automated market maker with adjustable fees." />
+    <script>
+      ;(function() {
+        const { pathname, hostname, protocol } = window.location
+
+        // redirect to https on non-localhost
+        if (protocol === 'http:' && hostname !== 'localhost') {
+          window.location.protocol = 'https'
+          return
+        }
+      })()
+    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
