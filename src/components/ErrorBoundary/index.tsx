@@ -3,7 +3,7 @@ import { ExternalLink, ThemedBackground, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import ReactGA from 'react-ga'
-import { deviceDetect } from 'react-device-detect'
+import { getUserAgent } from '../../utils/getUserAgent'
 
 const FallbackWrapper = styled.div`
   display: flex;
@@ -63,7 +63,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   render() {
     const { error } = this.state
     if (error !== null) {
-      const encodedBody = encodeURIComponent(issueBody(error, deviceDetect))
+      const encodedBody = encodeURIComponent(issueBody(error))
       return (
         <FallbackWrapper>
           <ThemedBackground />
@@ -100,9 +100,9 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   }
 }
 
-function issueBody(error: Error, deviceDetect: () => Record<string, unknown>): string {
+function issueBody(error: Error): string {
   if (!error) throw new Error('no error to report')
-  const deviceData = deviceDetect()
+  const deviceData = getUserAgent()
   return `**Bug Description**
   
 App crashed
