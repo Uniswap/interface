@@ -15,7 +15,7 @@ jobs:
       changelog: ${{ steps.github_tag_action.outputs.changelog }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Bump version and push tag
         id: github_tag_action
@@ -31,17 +31,14 @@ jobs:
     if: ${{ needs.bump_version.outputs.new_tag != null }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
-
-      - uses: actions/setup-node@v1
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v2
         with:
-          node-version: '12'
-          always-auth: true
-          registry-url: https://registry.npmjs.org
+          node-version: '14'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
+        run: yarn install
       - name: Build the IPFS bundle
         run: yarn build
 
@@ -49,22 +46,22 @@ jobs:
         id: upload
         uses: anantaramdas/ipfs-pinata-deploy-action@39bbda1ce1fe24c69c6f57861b8038278d53688d
         with:
-          pin-name: Uniswap ${{ needs.bump_version.outputs.new_tag }}
+          pin-name: Ubeswap ${{ needs.bump_version.outputs.new_tag }}
           path: './build'
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
 
       - name: Convert CIDv0 to CIDv1
         id: convert_cidv0
-        uses: uniswap/convert-cidv0-cidv1@v1.0.0
+        uses: ubeswap/convert-cidv0-cidv1@v1.0.0
         with:
           cidv0: ${{ steps.upload.outputs.hash }}
 
       - name: Update DNS with new IPFS hash
         env:
           CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
-          RECORD_DOMAIN: 'uniswap.org'
-          RECORD_NAME: '_dnslink.app'
+          RECORD_DOMAIN: 'ubeswap.org'
+          RECORD_NAME: '_dnslink.app-ipfs'
           CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
         uses: textileio/cloudflare-update-dnslink@0fe7b7a1ffc865db3a4da9773f0f987447ad5848
         with:
@@ -83,12 +80,12 @@ jobs:
             - CIDv0: `${{ steps.upload.outputs.hash }}`
             - CIDv1: `${{ steps.convert_cidv0.outputs.cidv1 }}`
 
-            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [app.ubeswap.org](https://app.ubeswap.org).
+            The latest release is always accessible via our alias to the Cloudflare IPFS gateway at [app-ipfs.ubeswap.org](https://app-ipfs.ubeswap.org).
 
             You can also access the Ubeswap Interface directly from an IPFS gateway.
-            The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
-            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Uniswap interface without your permission.
-            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app.ubeswap.org](https://app.ubeswap.org).
+            The Ubeswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to store your settings.
+            **Beware** that other sites you access via the _same_ IPFS gateway can read and modify your settings on the Ubeswap interface without your permission.
+            You can avoid this issue by using a subdomain IPFS gateway, or our alias to the latest release at [app-ipfs.ubeswap.org](https://app-ipfs.ubeswap.org).
             The preferred URLs below are safe to use to access this specific release.
 
             Preferred URLs:
