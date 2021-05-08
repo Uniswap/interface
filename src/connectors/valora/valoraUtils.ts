@@ -1,22 +1,79 @@
+import { ContractKit } from '@celo/contractkit'
 import {
-  AccountAuthRequest,
   AccountAuthResponseSuccess,
+  DappKitRequestTypes,
   DappKitResponse,
   DappKitResponseStatus,
   parseDappkitResponseDeeplink,
-  serializeDappKitRequestDeeplink,
-  SignTxRequest,
   SignTxResponseSuccess,
   TxToSignParam,
 } from '@celo/utils'
-import { identity, mapValues } from 'lodash'
-import * as querystring from 'querystring'
+import { requestAccountAddress, requestTxSig } from '@celo-tools/use-contractkit/lib/dappkit-wallet/dappkit'
+import { identity } from 'lodash'
 
-// Gets the url redirected from Valora that is used to update the page
-async function waitForValoraResponse() {
-  const localStorageKey = 'valoraRedirect'
+const removeQueryParams = (url: string, keys: string[]): string => {
+  const params = parseSearchParamsHashAware(url)
+  const whereQuery = url.indexOf('?')
+  const urlNoSearchParams = whereQuery !== -1 ? url.slice(0, whereQuery) : url
+  keys.forEach((key) => {
+    params.delete(key)
+  })
+  if ([...params.keys()].length > 0) {
+    return `${urlNoSearchParams}?${params}`
+  }
+  return url
+}
+
+const parseSearchParamsHashAware = (url: string): URLSearchParams => {
+  const whereQuery = url.indexOf('?')
+  if (whereQuery === -1) {
+    return new URLSearchParams()
+  }
+  const searchNonDeduped = url.slice(whereQuery + 1)
+  const allSearch = searchNonDeduped.split('?')
+  const newQs = allSearch
+    .filter(identity)
+    .reduce((acc, qs) => ({ ...acc, ...Object.fromEntries(new URLSearchParams(qs).entries()) }), {})
+  return new URLSearchParams(newQs)
+}
+
+export const parseDappkitResponseDeeplinkHashAware = (
+  url: string
+):
+  | (DappKitResponse & {
+      requestId: string
+    })
+  | null => {
+  const realQs = parseSearchParamsHashAware(url)
+  if (!realQs.get('type') || !realQs.get('requestId')) {
+    return null
+  }
+  return parseDappkitResponseDeeplink(`https://fakehost/?${realQs.toString()}`)
+}
+
+const localStorageKey = 'ubeswap/dappkit'
+
+// hack to get around deeplinking issue where new tabs are opened
+// and the url hash state is not respected (Note this implementation
+// of dappkit doesn't use URL hashes to always force the newtab experience).
+// don't do this on IOS
+if (typeof window !== 'undefined' && !navigator.userAgent.includes('iPhone')) {
+  const params = parseSearchParamsHashAware(window.location.href)
+  if (params.get('type') && params.get('requestId')) {
+    localStorage.setItem(localStorageKey, window.location.href)
+    window.close()
+  }
+}
+
+async function waitForResponse() {
   // eslint-disable-next-line no-constant-condition
   while (true) {
+    // handle redirect
+    const params = parseSearchParamsHashAware(window.location.href)
+    if (params.get('type') && params.get('requestId')) {
+      localStorage.setItem(localStorageKey, window.location.href)
+    }
+
     const value = localStorage.getItem(localStorageKey)
     if (value) {
       localStorage.removeItem(localStorageKey)
@@ -26,116 +83,83 @@ async function waitForValoraResponse() {
   }
 }
 
-/**
- * Parses the response from Dappkit.
- * @param url
- */
-export const parseDappkitResponse = (
-  url: string
-):
-  | (DappKitResponse & {
-      requestId: string
-    })
-  | null => {
-  const whereQuery = url.indexOf('?')
-  if (whereQuery === -1) {
-    return null
+async function waitForAccountAuth(requestId: string): Promise<AccountAuthResponseSuccess> {
+  const url = await waitForResponse()
+  const dappKitResponse = parseDappkitResponseDeeplinkHashAware(url)
+  if (!dappKitResponse) {
+    throw new Error('no dappkit response')
   }
-  const searchNonDeduped = url.slice(whereQuery + 1)
-  const allSearch = searchNonDeduped.split('?')
-  const newQs = allSearch.filter(identity).reduce((acc, qs) => ({ ...acc, ...querystring.parse(qs) }), {})
-  const realQs = querystring.stringify(newQs)
-  const { protocol, host } = new URL(url)
-  const result = parseDappkitResponseDeeplink(`${protocol}//${host}/?${realQs}`)
-  if (!result.requestId) {
-    return null
+  if (
+    requestId === dappKitResponse.requestId &&
+    dappKitResponse.type === DappKitRequestTypes.ACCOUNT_ADDRESS &&
+    dappKitResponse.status === DappKitResponseStatus.SUCCESS
+  ) {
+    return dappKitResponse
   }
-  return result
+
+  console.warn('Unable to parse url', url)
+  throw new Error('Unable to parse Valora response')
 }
 
-export const awaitDappkitResponse = async <T extends DappKitResponse>(): Promise<T> => {
-  return await new Promise((resolve, reject) => {
-    const timer = setInterval(() => {
-      console.log('awaiting')
-      const url = window.location.href
-      try {
-        const response = parseDappkitResponse(url)
-        if (!response) {
-          return
-        }
-        if (response.status === DappKitResponseStatus.UNAUTHORIZED) {
-          reject(new Error('Unauthorized'))
-        } else {
-          resolve((response as unknown) as T)
-        }
-        clearInterval(timer)
-        // eslint-disable-next-line no-empty
-      } catch (e) {}
-    }, 200)
-  })
+async function waitForSignedTxs(requestId: string): Promise<SignTxResponseSuccess> {
+  const url = await waitForResponse()
+  const dappKitResponse = parseDappkitResponseDeeplinkHashAware(url)
+  if (!dappKitResponse) {
+    throw new Error('no dappkit response')
+  }
+  if (
+    requestId === dappKitResponse.requestId &&
+    dappKitResponse.type === DappKitRequestTypes.SIGN_TX &&
+    dappKitResponse.status === DappKitResponseStatus.SUCCESS
+  ) {
+    return dappKitResponse
+  }
+
+  console.warn('Unable to parse url', url)
+  throw new Error('Unable to parse Valora response')
 }
 
-export const removeQueryParams = (url: string, keys: string[]): string => {
-  const whereQuery = url.indexOf('?')
-  if (whereQuery === -1) {
-    return url
-  }
-  const searchNonDeduped = url.slice(whereQuery + 1)
-  const allSearch = searchNonDeduped.split('?')
-  const newQs: Record<string, string> = allSearch.reduce(
-    (acc, qs) => ({ ...acc, ...mapValues(querystring.parse(qs), (v) => v?.toString() ?? null) }),
-    {}
-  )
-  keys.forEach((key) => {
-    delete newQs[key]
-  })
-  const { protocol, host, hash } = new URL(url)
-  const queryParams = `${querystring.stringify(newQs)}`
-  const resultUrl = `${protocol}//${host}/${hash?.slice(0, hash.indexOf('?'))}`
-  if (queryParams) {
-    return `${resultUrl}?${queryParams}`
-  }
-  return resultUrl
-}
-
-const cleanCallbackUrl = (url: string): string => {
-  return removeQueryParams(url, [])
-}
+const randomString = () => (Math.random() * 100).toString().slice(0, 6)
 
 /**
  * Requests auth from the Valora app.
  */
 export const requestValoraAuth = async (): Promise<AccountAuthResponseSuccess> => {
-  const requestId = 'login'
-  const dappName = 'Ubeswap'
-  const callback = cleanCallbackUrl(window.location.href)
-  window.location.href = serializeDappKitRequestDeeplink(
-    AccountAuthRequest({
-      requestId,
-      dappName,
-      callback,
-    })
-  )
-  window.location.href = await waitForValoraResponse()
-  return await awaitDappkitResponse<AccountAuthResponseSuccess>()
+  // clean URL before requesting
+  window.location.href = removeQueryParams(window.location.href, [
+    'requestId',
+    'type',
+    'status',
+    'address',
+    'phoneNumber',
+    'pepper',
+  ])
+  localStorage.removeItem(localStorageKey)
+  const requestId = `login-${randomString()}`
+  requestAccountAddress({
+    requestId,
+    dappName: 'Ubeswap',
+    callback: window.location.href,
+  })
+  return await waitForAccountAuth(requestId)
 }
 
 /**
- * Requests auth from the Valora app.
+ * Requests a transaction from the Valora app.
  */
-export const requestValoraTransaction = async (txs: TxToSignParam[]): Promise<SignTxResponseSuccess> => {
-  const requestId = 'make-transaction'
-  const dappName = 'Ubeswap'
-  const callback = cleanCallbackUrl(window.location.href)
-  window.location.href = serializeDappKitRequestDeeplink(
-    SignTxRequest(txs, {
-      requestId,
-      dappName,
-      callback,
-    })
-  )
-  window.location.href = await waitForValoraResponse()
-  return await awaitDappkitResponse<SignTxResponseSuccess>()
+export const requestValoraTransaction = async (
+  kit: ContractKit,
+  txs: TxToSignParam[]
+): Promise<SignTxResponseSuccess> => {
+  window.location.href = removeQueryParams(window.location.href, ['requestId', 'type', 'status', 'rawTxs'])
+  localStorage.removeItem(localStorageKey)
+  const requestId = `signTransaction-${randomString()}`
+  await requestTxSig(kit, txs, {
+    requestId,
+    dappName: 'Ubeswap',
+    callback: window.location.href,
+  })
+  return await waitForSignedTxs(requestId)
 }
 
 export type IValoraAccount = Pick<AccountAuthResponseSuccess, 'address' | 'phoneNumber'>

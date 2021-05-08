@@ -1,7 +1,6 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { ValoraConnector } from 'connectors/valora/ValoraConnector'
-import { removeQueryParams, requestValoraAuth } from 'connectors/valora/valoraUtils'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
@@ -187,15 +186,16 @@ export default function WalletModal({
 
     if (connector instanceof ValoraConnector) {
       // valora should connect by deep linking
-      const resp = await requestValoraAuth()
-      setValoraAccount(resp)
-
-      await activate(connector, undefined, true).catch(() => {
-        setPendingError(true)
-      })
-
-      // clear dappkit response from href
-      window.location.href = removeQueryParams(window.location.href, [...Object.keys(resp), 'account'])
+      await activate(connector, undefined, true)
+        .then(() => {
+          if (connector.valoraAccount) {
+            setValoraAccount(connector.valoraAccount)
+          }
+        })
+        .catch((error) => {
+          console.error('[Valora Activation error]', error)
+          setPendingError(true)
+        })
       return
     }
 

@@ -1,9 +1,8 @@
-import { DappKitRequestTypes, DappKitResponseStatus } from '@celo/utils'
 import { ConnectorUpdate } from '@web3-react/types'
 import { MiniRpcProvider, NetworkConnector } from 'connectors/NetworkConnector'
 
 import { ValoraProvider } from './ValoraProvider'
-import { IValoraAccount, parseDappkitResponse } from './valoraUtils'
+import { IValoraAccount, requestValoraAuth } from './valoraUtils'
 
 export class ValoraConnector extends NetworkConnector {
   private account: string | null = null
@@ -16,32 +15,16 @@ export class ValoraConnector extends NetworkConnector {
   }
 
   public async activate(): Promise<ConnectorUpdate> {
-    if (this.valoraAccount) {
-      this.account = this.valoraAccount.address
-      this.mainProvider = new ValoraProvider(this.currentChainId)
-      return {
-        provider: this.mainProvider,
-        chainId: this.currentChainId,
-        account: this.valoraAccount.address,
-      }
+    if (!this.valoraAccount) {
+      this.valoraAccount = await requestValoraAuth()
     }
-
-    const data = parseDappkitResponse(window.location.href)
-    if (!data) {
-      throw new Error('Dappkit response not found')
+    this.account = this.valoraAccount.address
+    this.mainProvider = new ValoraProvider(this.currentChainId)
+    return {
+      provider: this.mainProvider,
+      chainId: this.currentChainId,
+      account: this.valoraAccount.address,
     }
-    if (data.type === DappKitRequestTypes.ACCOUNT_ADDRESS) {
-      if (data.status === DappKitResponseStatus.SUCCESS) {
-        this.account = data.address
-        this.mainProvider = new ValoraProvider(this.currentChainId)
-        return {
-          provider: this.mainProvider,
-          chainId: this.currentChainId,
-          account: this.account,
-        }
-      }
-    }
-    throw new Error('Could not activate')
   }
 
   public get provider(): MiniRpcProvider | null {

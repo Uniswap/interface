@@ -11,7 +11,10 @@ import { NetworkContextName } from '../constants'
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId: ChainId } {
   const context = useWeb3ReactCore<Web3Provider>()
   const contextNetwork = useWeb3ReactCore<Web3Provider>(NetworkContextName)
-  return { ...(context.active ? context : contextNetwork), chainId: NETWORK_CHAIN_ID }
+  return {
+    ...(context.active ? context : contextNetwork),
+    chainId: NETWORK_CHAIN_ID,
+  }
 }
 
 export function useEagerConnect() {

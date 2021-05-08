@@ -60,17 +60,16 @@ export class ValoraProvider extends MiniRpcProvider {
           })
         )
         console.debug('Sending txs', txs)
-        const resp = await requestValoraTransaction(txs)
+        const resp = await requestValoraTransaction(this.kit, txs)
         if (resp.type === DappKitRequestTypes.SIGN_TX && resp.status === DappKitResponseStatus.SUCCESS) {
-          const tx = await this.kit.web3.eth.sendSignedTransaction(resp.rawTxs[0])
-          console.log('Valora TX sent', tx)
-          return tx.transactionHash
-          // const result = await Promise.all(
-          //   resp.rawTxs.map(async rawTx => {
-          //     return await toTxResult(this.kit.web3.eth.sendSignedTransaction(rawTx)).waitReceipt()
-          //   })
-          // )
-          // return result
+          const sent = this.kit.web3.eth.sendSignedTransaction(resp.rawTxs[0])
+          return new Promise((resolve, reject) => {
+            sent.on('transactionHash', (hash) => {
+              console.log('Valora TX sent', hash)
+              resolve(hash)
+            })
+            sent.catch((err) => reject(err))
+          })
         }
       } catch (e) {
         console.error('[Valora] Failed to send transaction', { method, params }, e)

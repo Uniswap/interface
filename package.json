@@ -85,6 +85,7 @@
     "build": "IS_CI=true CI='' REACT_APP_VERCEL_ENV=\"$VERCEL_ENV\" REACT_APP_VERCEL_GIT_COMMIT_REF=\"$VERCEL_GIT_COMMIT_REF\" REACT_APP_VERCEL_GIT_COMMIT_SHA=\"$VERCEL_GIT_COMMIT_SHA\" npm run build:local",
     "build:local": "npm run typechain && craco build",
     "start": "HTTPS=true craco start",
+    "start:local": "craco start",
     "clean": "rm -fr src/generated/",
     "start:alfajores": "REACT_APP_CHAIN_ID=44787 craco start",
     "typechain": "typechain --target=ethers-v5 'src/**/abis/**/*.json' --outDir src/generated/",
@@ -114,10 +115,12 @@
   },
   "license": "GPL-3.0-or-later",
   "resolutions": {
+    "@ethersproject/abi": "5.1.2",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3"
   },
   "dependencies": {
+    "@celo-tools/use-contractkit": "^1.0.0-beta.8",
     "@celo/connect": "^1.2.0",
     "@celo/contractkit": "^1.2.0",
     "@celo/utils": "^1.2.1",
@@ -130,6 +133,7 @@
     "@ubeswap/moola": "^0.2.0",
     "@ubeswap/sdk": "^2.1.0",
     "ethers": "^5.1.4",
+    "eventemitter3": "^4.0.7",
     "lodash": "^4.17.21",
     "react-circular-progressbar": "^2.0.4",
     "react-countdown": "^2.3.1",
