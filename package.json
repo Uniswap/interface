@@ -52,7 +52,7 @@
     "lint-staged": ">=10",
     "lodash.flatmap": "^4.5.0",
     "luxon": "^1.26.0",
-    "multicodec": "^2.0.0",
+    "multicodec": "^3.0.1",
     "multihashes": "^3.0.1",
     "node-vibrant": "^3.1.6",
     "polished": "^4.1.2",
