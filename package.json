@@ -46,7 +46,7 @@
     "eslint-plugin-unused-imports": "^1.1.1",
     "husky": ">=6",
     "i18next": "^20.2.2",
-    "i18next-browser-languagedetector": "^3.0.1",
+    "i18next-browser-languagedetector": "^6.1.0",
     "i18next-xhr-backend": "^3.2.2",
     "jazzicon": "^1.5.0",
     "lint-staged": ">=10",
