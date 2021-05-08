@@ -62,7 +62,7 @@
     "react-device-detect": "^1.17.0",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
-    "react-ga": "^2.5.7",
+    "react-ga": "^3.3.0",
     "react-i18next": "^11.8.15",
     "react-markdown": "^4.3.1",
     "react-popper": "^2.2.5",
