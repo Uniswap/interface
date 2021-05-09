@@ -28,7 +28,8 @@ describe('utils', () => {
   describe('#calculateSlippageAmount', () => {
     it('bounds are correct', () => {
       const tokenAmount = new TokenAmount(new Token(ChainId.MAINNET, AddressZero, 0), '100')
-      expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow()
+      expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow('Unexpected slippage')
+      expect(() => calculateSlippageAmount(tokenAmount, new Percent(10_001, 10_000))).toThrow('Unexpected slippage')
       expect(calculateSlippageAmount(tokenAmount, new Percent(0, 10_000)).map((bound) => bound.toString())).toEqual([
         '100',
         '100',
@@ -44,7 +45,6 @@ describe('utils', () => {
       expect(
         calculateSlippageAmount(tokenAmount, new Percent(10000, 10_000)).map((bound) => bound.toString())
       ).toEqual(['0', '200'])
-      expect(() => calculateSlippageAmount(tokenAmount, new Percent(10001, 10_000))).toThrow()
     })
   })
 
