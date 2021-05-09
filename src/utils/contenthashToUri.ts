@@ -1,5 +1,5 @@
 import CID from 'cids'
-import { getCodec, rmPrefix } from 'multicodec'
+import { getNameFromData, rmPrefix } from 'multicodec'
 import { decode, toB58String } from 'multihashes'
 
 export function hexToUint8Array(hex: string): Uint8Array {
@@ -20,7 +20,7 @@ const UTF_8_DECODER = new TextDecoder()
  */
 export default function contenthashToUri(contenthash: string): string {
   const buff = hexToUint8Array(contenthash)
-  const codec = getCodec(buff as Buffer) // the typing is wrong for @types/multicodec
+  const codec = getNameFromData(buff)
   switch (codec) {
     case 'ipfs-ns': {
       const data = rmPrefix(buff as Buffer)
