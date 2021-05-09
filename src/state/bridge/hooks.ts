@@ -3,7 +3,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as Sentry from '@sentry/react'
 import { useCallback, useMemo } from 'react'
 import { useAsyncMemo } from 'use-async-memo'
-import { typeInput, Field, BridgeTransactionStatus, selectBridgeDirection, selectCurrency } from './actions'
+import {
+  typeInput,
+  Field,
+  BridgeTransactionStatus,
+  selectBridgeDirection,
+  selectCurrency,
+  setRecipient
+} from './actions'
 import { Currency, CurrencyAmount, ChainId } from '@fuseio/fuse-swap-sdk'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { useActiveWeb3React, useChain } from '../../hooks'
@@ -171,6 +178,7 @@ export function useBridgeActionHandlers(): {
   onFieldInput: (typedValue: string) => void
   onSelectBridgeDirection: (direction: BridgeDirection) => void
   onSelectCurrency: (currencyId: string | undefined) => void
+  onSetRecipient: (recipient: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
 
@@ -195,7 +203,14 @@ export function useBridgeActionHandlers(): {
     [dispatch]
   )
 
-  return { onFieldInput, onSelectBridgeDirection, onSelectCurrency }
+  const onSetRecipient = useCallback(
+    (recipient: string) => {
+      dispatch(setRecipient(recipient))
+    },
+    [dispatch]
+  )
+
+  return { onFieldInput, onSelectBridgeDirection, onSelectCurrency, onSetRecipient }
 }
 
 export function useBridgeFee(tokenAddress: string | undefined, bridgeDirection: BridgeDirection | undefined) {
@@ -304,8 +319,14 @@ export function useDefaultsFromURLSearch() {
   const parsedQs = useParsedQueryString()
 
   const inputCurrencyId = parsedQs.inputCurrencyId?.toString()
+  const amount = parsedQs.amount?.toString()
+  const recipient = parsedQs.recipient?.toString()
+  const sourceChain = Number(parsedQs.sourceChain)
 
   return {
-    inputCurrencyId
+    inputCurrencyId,
+    amount,
+    sourceChain,
+    recipient
   }
 }
