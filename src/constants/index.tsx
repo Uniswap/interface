@@ -199,6 +199,7 @@ export const NetworkContextName = 'NETWORK'
 export const INITIAL_ALLOWED_SLIPPAGE = 50
 // 20 minutes, denominated in seconds
 export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
+export const DEFAULT_USER_MULTIHOP_ENABLED = true
 
 export const BIG_INT_ZERO = JSBI.BigInt(0)
 

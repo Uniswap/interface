@@ -1,4 +1,4 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
+import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW, DEFAULT_USER_MULTIHOP_ENABLED } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
 import { updateVersion } from '../global/actions'
 import {
@@ -69,7 +69,7 @@ export const initialState: UserState = {
   userExpertMode: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
-  userMultihop: true,
+  userMultihop: DEFAULT_USER_MULTIHOP_ENABLED,
   userPreferredGasPrice: null,
   tokens: {},
   pairs: {},
@@ -90,6 +90,11 @@ export default createReducer(initialState, builder =>
       // noinspection SuspiciousTypeOfGuard
       if (typeof state.userDeadline !== 'number') {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
+      }
+
+      // multihop isnt being tracked in local storage, reset to default
+      if (typeof state.userMultihop !== 'boolean') {
+        state.userMultihop = DEFAULT_USER_MULTIHOP_ENABLED
       }
 
       state.lastUpdateVersionTimestamp = currentTimestamp()
