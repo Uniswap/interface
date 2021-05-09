@@ -3,7 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Percent, Token, CurrencyAmount, Currency, ETHER } from '@uniswap/sdk-core'
+import { ChainId, Percent, Token, CurrencyAmount, Currency, ETHER, Fraction } from '@uniswap/sdk-core'
 import { JSBI } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk/dist/'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -63,17 +63,10 @@ export function calculateGasMargin(value: BigNumber): BigNumber {
   return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000))
 }
 
+const ONE = new Fraction(1, 1)
 export function calculateSlippageAmount(value: CurrencyAmount, slippage: Percent): [JSBI, JSBI] {
-  if (
-    JSBI.lessThan(slippage.numerator, JSBI.BigInt(0)) ||
-    JSBI.greaterThan(slippage.numerator, JSBI.BigInt(10_000)) ||
-    !JSBI.equal(slippage.denominator, JSBI.BigInt(10_000))
-  )
-    throw new Error('Unexpected slippage')
-  return [
-    JSBI.divide(JSBI.multiply(value.raw, JSBI.subtract(JSBI.BigInt(10000), slippage.numerator)), JSBI.BigInt(10000)),
-    JSBI.divide(JSBI.multiply(value.raw, JSBI.add(JSBI.BigInt(10000), slippage.numerator)), JSBI.BigInt(10000)),
-  ]
+  if (slippage.lessThan(0) || slippage.greaterThan(ONE)) throw new Error('Unexpected slippage')
+  return [value.multiply(ONE.subtract(slippage)).quotient, value.multiply(ONE.add(slippage)).quotient]
 }
 
 // account is not optional
