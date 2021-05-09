@@ -18,6 +18,7 @@ import { useActiveWeb3React } from '../../hooks'
 import styled from 'styled-components'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { Field } from '../../state/swap/actions'
+import Skeleton from 'react-loading-skeleton'
 
 const TableHeaderText = styled.span`
   font-size: 10px;
@@ -43,11 +44,7 @@ interface GasFeeProps {
 
 function GasFee({ loading, gasFeeUSD }: GasFeeProps) {
   if (loading) {
-    return (
-      <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
-        -
-      </TYPE.main>
-    )
+    return <Skeleton width="36px" height="12px" />
   }
   if (gasFeeUSD) {
     return (
@@ -124,7 +121,7 @@ export function SwapPlatformSelector({
             const { realizedLPFee } = computeTradePriceBreakdown(trade)
             const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
             return (
-              <tr key={i} style={{ height: '20px', maxHeight: '20px', minHeight: '20px' }}>
+              <tr key={i} style={{ lineHeight: '22px' }}>
                 <td colSpan={4}>
                   <Radio
                     checked={selectedTrade?.platform.name === trade.platform.name}
@@ -140,7 +137,7 @@ export function SwapPlatformSelector({
                   </TYPE.main>
                 </td>
                 {!!account && (
-                  <td align="right">
+                  <td width="44px" align="right">
                     <GasFee loading={loadingGasFees} gasFeeUSD={gasFeeUSD} />
                   </td>
                 )}
