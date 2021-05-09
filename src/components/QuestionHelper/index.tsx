@@ -48,7 +48,7 @@ const QuestionMark = styled.span`
   font-size: 1rem;
 `
 
-export default function QuestionHelper({ text }: { text: string }) {
+export default function QuestionHelper({ text }: { text: React.ReactNode }) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
@@ -65,7 +65,7 @@ export default function QuestionHelper({ text }: { text: string }) {
   )
 }
 
-export function LightQuestionHelper({ text }: { text: string }) {
+export function LightQuestionHelper({ text }: { text: React.ReactNode }) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
