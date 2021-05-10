@@ -160,10 +160,10 @@ export function useSocksController(): Unisocks | null {
   ) as Unisocks | null
 }
 
-export function useV3NFTPositionManagerContract(): NonfungiblePositionManager | null {
+export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
   const { chainId } = useActiveWeb3React()
   const address = chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
-  return useContract(address, NFTPositionManagerABI) as NonfungiblePositionManager | null
+  return useContract(address, NFTPositionManagerABI, withSignerIfPossible) as NonfungiblePositionManager | null
 }
 
 export function useV3Factory(): UniswapV3Factory | null {
