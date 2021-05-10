@@ -14,7 +14,7 @@ export function useV3PositionFees(
   pool?: Pool,
   positionDetails?: PositionDetails
 ): [TokenAmount, TokenAmount] | [undefined, undefined] {
-  const positionManager = useV3NFTPositionManagerContract()
+  const positionManager = useV3NFTPositionManagerContract(false)
   const owner = useSingleCallResult(positionDetails?.tokenId ? positionManager : null, 'ownerOf', [
     positionDetails?.tokenId,
   ]).result?.[0]
