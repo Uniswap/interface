@@ -10,12 +10,13 @@ describe('Lists', () => {
     })
 
     it('change list', () => {
-      const customListUrl = 'https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json'
+      const customListUrl =
+        'https://raw.githubusercontent.com/fuseio/fuseswap-interface/master/src/constants/qa/beta-tokenlist.json'
       cy.get('#bridge-input-token .open-currency-select-button').click()
       cy.get('#currency-search-change-list-button').click()
       cy.get('#list-add-input').type(customListUrl)
       cy.get('#list-add-button').click({ force: true })
-      cy.get('.sc-dxgOiQ').should('contain', 'CoinGecko DeFi 100')
+      cy.get('.sc-dxgOiQ').should('contain', 'FuseSwap Beta List')
     })
   })
 
@@ -30,12 +31,13 @@ describe('Lists', () => {
     })
 
     it('change list', () => {
-      const customListUrl = 'https://www.coingecko.com/tokens_list/uniswap/defi_100/v_0_0_0.json'
+      const customListUrl =
+        'https://raw.githubusercontent.com/fuseio/fuseswap-interface/master/src/constants/qa/beta-tokenlist.json'
       cy.get('#swap-currency-output .open-currency-select-button').click()
       cy.get('#currency-search-change-list-button').click()
       cy.get('#list-add-input').type(customListUrl)
       cy.get('#list-add-button').click()
-      cy.get('.sc-dxgOiQ').should('contain', 'CoinGecko DeFi 100')
+      cy.get('.sc-dxgOiQ').should('contain', 'FuseSwap Beta List')
     })
   })
 })
