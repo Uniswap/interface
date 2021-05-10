@@ -22,8 +22,6 @@ export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Perce
           </TYPE.black>
         </RowFixed>
         <RowFixed>
-          {/* <TradeInfo disabled={!trade} trade={trade} /> */}
-          {/* <div style={{ width: '8px' }}></div> */}
           <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
       </RowBetween>
