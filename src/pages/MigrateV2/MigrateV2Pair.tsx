@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
-import { Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
+import { Fraction, Percent, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
 import { FACTORY_ADDRESS, JSBI } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
@@ -25,7 +25,7 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { Dots } from 'components/swap/styleds'
 import { ButtonConfirmed } from 'components/Button'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useUserSlippageTolerance } from 'state/user/hooks'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -48,6 +48,8 @@ import { AppDispatch } from 'state'
 import SettingsTab from 'components/Settings'
 
 const ZERO = JSBI.BigInt(0)
+
+const DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE = new Percent(75, 10_000)
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -119,7 +121,7 @@ function V2PairMigration({
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
-  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+  const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE) // custom from users
 
   const currency0 = unwrappedToken(token0)
   const currency1 = unwrappedToken(token1)
@@ -673,7 +675,7 @@ export default function MigrateV2Pair({
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
           <TYPE.mediumHeader>Migrate V2 Liquidity</TYPE.mediumHeader>
-          <SettingsTab />
+          <SettingsTab placeholderSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
         </AutoRow>
 
         {!account ? (
