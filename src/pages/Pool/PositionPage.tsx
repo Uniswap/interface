@@ -215,8 +215,6 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
     height = targetHeight
     width = Math.round(ratio * targetHeight)
 
-    debugger
-
     // Ensure crispness at high DPIs
     canvas.width = width * devicePixelRatio
     canvas.height = height * devicePixelRatio
