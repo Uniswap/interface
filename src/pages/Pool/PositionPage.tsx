@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { SyntheticEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 
 import { PoolState, usePool } from 'hooks/usePools'
@@ -177,6 +177,43 @@ function getRatio(lower: Price, current: Price, upper: Price) {
   } catch {
     return undefined
   }
+}
+
+function NFT({ image }: { image: string }) {
+  const [animate, setAnimate] = useState(true)
+
+  const canvasRef = useRef<HTMLCanvasElement>()
+  const imageRef = useRef<HTMLImageElement>()
+
+  const getSnapshot = (src: HTMLImageElement) => {
+    if (!canvasRef.current) {
+      return
+    }
+
+    canvasRef.current.width = src.width
+    canvasRef.current.height = src.height
+    canvasRef.current.getContext('2d')?.drawImage(src, 0, 0, src.width, src.height)
+  }
+
+  const mouseLeave = () => {
+    if (!imageRef.current) {
+      return
+    }
+    getSnapshot(imageRef.current)
+    setAnimate(false)
+  }
+
+  const onLoad = (e: SyntheticEvent<HTMLImageElement>) => {
+    getSnapshot(e.target as HTMLImageElement)
+    setAnimate(false)
+  }
+
+  return (
+    <div onMouseEnter={() => setAnimate(true)} onMouseLeave={mouseLeave}>
+      <canvas ref={canvasRef as any} hidden={animate} />
+      <img height="400px" src={image} onLoad={onLoad} ref={imageRef as any} hidden={!animate} />
+    </div>
+  )
 }
 
 export function PositionPage({
@@ -453,7 +490,7 @@ export function PositionPage({
               }}
             >
               <div style={{ marginRight: 12 }}>
-                <img height="400px" src={metadata.result.image} />
+                <NFT image={metadata.result.image} />
               </div>
               {typeof chainId === 'number' && owner && !ownsNFT ? (
                 <ExternalLink href={getEtherscanLink(chainId, owner, 'address')}>Owner</ExternalLink>
