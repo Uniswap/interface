@@ -24,6 +24,8 @@ import Loader from '../Loader'
 
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
+import useAddChain from '../../hooks/useAddChain'
+import { FUSE_CHAIN } from '../../constants/chains'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -164,6 +166,7 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 function Web3StatusInner() {
   const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
+  const { addChain } = useAddChain()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -197,10 +200,19 @@ function Web3StatusInner() {
       </Web3StatusConnected>
     )
   } else if (error) {
+    let handler, text
+
+    if (error instanceof UnsupportedChainIdError) {
+      handler = () => addChain(FUSE_CHAIN)
+      text = 'Switch to Fuse'
+    } else {
+      handler = toggleWalletModal
+      text = 'Error'
+    }
     return (
-      <Web3StatusError onClick={toggleWalletModal}>
+      <Web3StatusError onClick={handler}>
         <NetworkIcon />
-        <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
+        <Text>{text}</Text>
       </Web3StatusError>
     )
   } else {
