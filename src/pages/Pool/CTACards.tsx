@@ -28,6 +28,7 @@ const CTA1 = styled(ExternalLink)`
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+  position: relative;
   justify-content: space-between;
   border: 1px solid ${({ theme }) => theme.bg3};
 
@@ -99,8 +100,8 @@ const HeaderText = styled(TYPE.label)`
 `
 
 const ResponsiveColumn = styled(AutoColumn)`
+  grid-template-columns: 1fr;
   gap: 12px;
-  height: 100%;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     gap: 8px;
   `};
@@ -134,12 +135,10 @@ export default function CTACards() {
       </CTA1>
       <CTA2 href={'https://info.uniswap.org/#/pools'}>
         <ResponsiveColumn>
-          <AutoColumn gap="0px">
-            <HeaderText style={{ alignSelf: 'flex-start' }}>{t('Top pools')}</HeaderText>
-            <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
-              {t('Explore popular pools on Uniswap Analytics.')}
-            </TYPE.body>
-          </AutoColumn>
+          <HeaderText style={{ alignSelf: 'flex-start' }}>{t('Top pools')}</HeaderText>
+          <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
+            {t('Explore popular pools on Uniswap Analytics.')}
+          </TYPE.body>
           <HeaderText style={{ alignSelf: 'flex-end' }}>{t('↗')}</HeaderText>
         </ResponsiveColumn>
       </CTA2>
