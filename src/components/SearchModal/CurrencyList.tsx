@@ -144,9 +144,10 @@ function CurrencyRow({
   )
 }
 
-const BREAK = 'BREAK'
-function isNotBreak(x: Currency | typeof BREAK): x is Currency {
-  return x !== BREAK
+const BREAK_LINE = 'BREAK'
+type BreakLine = typeof BREAK_LINE
+function isBreakLine(x: Currency | BreakLine): x is BreakLine {
+  return x === BREAK_LINE
 }
 
 export default function CurrencyList({
@@ -172,10 +173,10 @@ export default function CurrencyList({
   setImportToken: (token: Token) => void
   breakIndex: number | undefined
 }) {
-  const itemData: (Currency | typeof BREAK)[] = useMemo(() => {
-    let formatted: (Currency | typeof BREAK)[] = showETH ? [ETHER, ...currencies] : currencies
+  const itemData: (Currency | BreakLine)[] = useMemo(() => {
+    let formatted: (Currency | BreakLine)[] = showETH ? [ETHER, ...currencies] : currencies
     if (breakIndex !== undefined) {
-      formatted = [...formatted.slice(0, breakIndex), BREAK, ...formatted.slice(breakIndex, formatted.length)]
+      formatted = [...formatted.slice(0, breakIndex), BREAK_LINE, ...formatted.slice(breakIndex, formatted.length)]
     }
     return formatted
   }, [breakIndex, currencies, showETH])
@@ -189,16 +190,17 @@ export default function CurrencyList({
 
   const Row = useCallback(
     ({ data, index, style }) => {
-      const currency: Currency | typeof BREAK = data[index]
-      const isSelected = Boolean(isNotBreak(currency) && selectedCurrency && currencyEquals(selectedCurrency, currency))
-      const otherSelected = Boolean(isNotBreak(currency) && otherCurrency && currencyEquals(otherCurrency, currency))
-      const handleSelect = () => isNotBreak(currency) && onCurrencySelect(currency)
+      const row: Currency | BreakLine = data[index]
+      const currency = isBreakLine(row) ? undefined : row
+      const isSelected = Boolean(currency && selectedCurrency && currencyEquals(selectedCurrency, currency))
+      const otherSelected = Boolean(currency && otherCurrency && currencyEquals(otherCurrency, currency))
+      const handleSelect = () => currency && onCurrencySelect(currency)
 
-      const token = isNotBreak(currency) ? wrappedCurrency(currency, chainId) : undefined
+      const token = wrappedCurrency(currency, chainId)
 
       const showImport = inactiveTokens && token && token.address in inactiveTokens
 
-      if (!isNotBreak(currency)) {
+      if (currency) {
         return (
           <FixedContentRow style={style}>
             <LightGreyCard padding="8px 12px" borderRadius="8px">
@@ -226,7 +228,7 @@ export default function CurrencyList({
             dim={true}
           />
         )
-      } else {
+      } else if (currency) {
         return (
           <CurrencyRow
             style={style}
@@ -236,6 +238,8 @@ export default function CurrencyList({
             otherSelected={otherSelected}
           />
         )
+      } else {
+        return null
       }
     },
     [
@@ -252,8 +256,8 @@ export default function CurrencyList({
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {
     const currency = data[index]
-    if (isNotBreak(currency)) currencyKey(currency)
-    return 'BREAK'
+    if (isBreakLine(currency)) return BREAK_LINE
+    return currencyKey(currency)
   }, [])
 
   return (
