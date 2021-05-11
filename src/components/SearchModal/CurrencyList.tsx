@@ -200,7 +200,7 @@ export default function CurrencyList({
 
       const showImport = inactiveTokens && token && token.address in inactiveTokens
 
-      if (currency) {
+      if (!currency) {
         return (
           <FixedContentRow style={style}>
             <LightGreyCard padding="8px 12px" borderRadius="8px">
