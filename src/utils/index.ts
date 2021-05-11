@@ -66,7 +66,11 @@ export function calculateGasMargin(value: BigNumber): BigNumber {
 const ONE = new Fraction(1, 1)
 export function calculateSlippageAmount(value: CurrencyAmount, slippage: Percent): [JSBI, JSBI] {
   if (slippage.lessThan(0) || slippage.greaterThan(ONE)) throw new Error('Unexpected slippage')
-  return [value.multiply(ONE.subtract(slippage)).quotient, value.multiply(ONE.add(slippage)).quotient]
+  const decimalScaled = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(value.currency.decimals))
+  return [
+    value.multiply(ONE.subtract(slippage)).multiply(decimalScaled).quotient,
+    value.multiply(ONE.add(slippage)).multiply(decimalScaled).quotient,
+  ]
 }
 
 // account is not optional

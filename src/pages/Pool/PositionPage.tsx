@@ -16,7 +16,7 @@ import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
 import Badge from 'components/Badge'
 import { calculateGasMargin, getEtherscanLink } from 'utils'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
-import { DarkCard, DarkGreyCard, LightCard } from 'components/Card'
+import { DarkCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useTranslation } from 'react-i18next'
 import { currencyId } from 'utils/currencyId'
@@ -147,9 +147,9 @@ function CurrentPriceCard({
       <AutoColumn gap="8px" justify="center">
         <ExtentsText>{t('Current price')}</ExtentsText>
         <TYPE.mediumHeader textAlign="center">
-          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)}{' '}
+          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(5)}{' '}
         </TYPE.mediumHeader>
-        <ExtentsText>{currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
+        <ExtentsText>{currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
       </AutoColumn>
     </LightCard>
   )
@@ -424,7 +424,7 @@ export function PositionPage({
                     borderRadius="12px"
                     style={{ marginRight: '8px' }}
                   >
-                    {t('Add Liquidity')}
+                    {t('Increase Liquidity')}
                   </ButtonGray>
                 ) : null}
                 {tokenId && !removed ? (
@@ -502,11 +502,9 @@ export function PositionPage({
                           {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
                         </TYPE.main>
                         {typeof ratio === 'number' && !removed ? (
-                          <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
-                            <TYPE.main color={theme.text2} fontSize={11}>
-                              {inverted ? ratio : 100 - ratio}%
-                            </TYPE.main>
-                          </DarkGreyCard>
+                          <Badge style={{ marginLeft: '10px' }}>
+                            <TYPE.main fontSize={11}>{inverted ? ratio : 100 - ratio}%</TYPE.main>
+                          </Badge>
                         ) : null}
                       </RowFixed>
                     </RowBetween>
@@ -520,11 +518,11 @@ export function PositionPage({
                           {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
                         </TYPE.main>
                         {typeof ratio === 'number' && !removed ? (
-                          <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
+                          <Badge style={{ marginLeft: '10px' }}>
                             <TYPE.main color={theme.text2} fontSize={11}>
                               {inverted ? 100 - ratio : ratio}%
                             </TYPE.main>
-                          </DarkGreyCard>
+                          </Badge>
                         ) : null}
                       </RowFixed>
                     </RowBetween>
@@ -644,8 +642,8 @@ export function PositionPage({
               <LightCard padding="12px" width="100%">
                 <AutoColumn gap="8px" justify="center">
                   <ExtentsText>Min price</ExtentsText>
-                  <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(4)}</TYPE.mediumHeader>
-                  <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
+                  <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(5)}</TYPE.mediumHeader>
+                  <ExtentsText> {currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
 
                   {inRange && (
                     <TYPE.small color={theme.text3}>
@@ -659,8 +657,8 @@ export function PositionPage({
               <LightCard padding="12px" width="100%">
                 <AutoColumn gap="8px" justify="center">
                   <ExtentsText>Max price</ExtentsText>
-                  <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(4)}</TYPE.mediumHeader>
-                  <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
+                  <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(5)}</TYPE.mediumHeader>
+                  <ExtentsText> {currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
 
                   {inRange && (
                     <TYPE.small color={theme.text3}>
