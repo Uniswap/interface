@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ExternalLink } from '../../theme'
 import { AutoColumn } from 'components/Column'
 import Squiggle from '../../assets/images/squiggle.png'
-import Texture from '../../assets/images/sandtexture.png'
+import Texture from '../../assets/images/sandtexture.webp'
 import { RowBetween } from 'components/Row'
 
 const CTASection = styled.section`
