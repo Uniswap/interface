@@ -420,7 +420,7 @@ export function PositionPage({
                     borderRadius="12px"
                     style={{ marginRight: '8px' }}
                   >
-                    {t('Add Liquidity')}
+                    {t('Increase Liquidity')}
                   </ButtonGray>
                 ) : null}
                 {tokenId && !removed ? (

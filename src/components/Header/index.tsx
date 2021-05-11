@@ -90,7 +90,7 @@ const HeaderElement = styled.div`
   }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-   flex-direction: row-reverse;
+    flex-direction: row-reverse;
     align-items: center;
   `};
 `
@@ -116,6 +116,9 @@ const HeaderLinks = styled(Row)`
   grid-auto-flow: column;
   grid-gap: 10px;
   overflow: auto;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    justify-self: flex-end;
+  `};
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
