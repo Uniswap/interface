@@ -202,8 +202,8 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   // prices
   let { priceLower, priceUpper, base, quote } = getPriceOrderingFromPositionForUI(position)
   const inverted = token1 ? base?.equals(token1) : undefined
-  const currencyQuote = inverted ? currency0 : currency1
-  const currencyBase = inverted ? currency1 : currency0
+  const currencyQuote = inverted ? currency1 : currency0
+  const currencyBase = inverted ? currency0 : currency1
 
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
@@ -244,7 +244,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           >
             <RangeText>
               <ExtentsText>Min: </ExtentsText>
-              {formatPrice(priceLower, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
+              {formatPrice(priceLower, 5)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' per '}{' '}
               {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
             </RangeText>{' '}
             <HideSmall>
@@ -255,7 +255,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             </SmallOnly>
             <RangeText>
               <ExtentsText>Max:</ExtentsText>
-              {formatPrice(priceUpper, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
+              {formatPrice(priceUpper, 5)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' per '}{' '}
               {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
             </RangeText>{' '}
           </RangeLineItem>

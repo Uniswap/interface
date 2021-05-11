@@ -1,12 +1,11 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
-import { Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
+import { Fraction, Percent, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
 import { FACTORY_ADDRESS, JSBI } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
-import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -16,7 +15,7 @@ import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink, isAddress } from '../../utils'
+import { calculateGasMargin, getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { V3_MIGRATOR_ADDRESSES } from 'constants/v3'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -26,7 +25,7 @@ import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { Dots } from 'components/swap/styleds'
 import { ButtonConfirmed } from 'components/Button'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useUserSlippageTolerance } from 'state/user/hooks'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -46,8 +45,11 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
+import SettingsTab from 'components/Settings'
 
 const ZERO = JSBI.BigInt(0)
+
+const DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE = new Percent(75, 10_000)
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -119,7 +121,7 @@ function V2PairMigration({
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
-  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+  const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE) // custom from users
 
   const currency0 = unwrappedToken(token0)
   const currency1 = unwrappedToken(token1)
@@ -274,7 +276,7 @@ function V2PairMigration({
 
     const deadlineToUse = signatureData?.deadline ?? deadline
 
-    const data = []
+    const data: string[] = []
 
     // permit if necessary
     if (signatureData) {
@@ -324,19 +326,24 @@ function V2PairMigration({
     )
 
     setConfirmingMigration(true)
-    migrator
-      .multicall(data)
-      .then((response: TransactionResponse) => {
-        ReactGA.event({
-          category: 'Migrate',
-          action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
-          label: `${currency0.symbol}/${currency1.symbol}`,
-        })
 
-        addTransaction(response, {
-          summary: `Migrate ${currency0.symbol}/${currency1.symbol} liquidity to V3`,
-        })
-        setPendingMigrationHash(response.hash)
+    migrator.estimateGas
+      .multicall(data)
+      .then((gasEstimate) => {
+        return migrator
+          .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
+          .then((response: TransactionResponse) => {
+            ReactGA.event({
+              category: 'Migrate',
+              action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
+              label: `${currency0.symbol}/${currency1.symbol}`,
+            })
+
+            addTransaction(response, {
+              summary: `Migrate ${currency0.symbol}/${currency1.symbol} liquidity to V3`,
+            })
+            setPendingMigrationHash(response.hash)
+          })
       })
       .catch(() => {
         setConfirmingMigration(false)
@@ -668,9 +675,7 @@ export default function MigrateV2Pair({
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
           <TYPE.mediumHeader>Migrate V2 Liquidity</TYPE.mediumHeader>
-          <div style={{ opacity: 0 }}>
-            <QuestionHelper text="Migrate your liquidity tokens from Uniswap V2 to Uniswap V3." />
-          </div>
+          <SettingsTab placeholderSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
         </AutoRow>
 
         {!account ? (

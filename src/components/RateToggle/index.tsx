@@ -26,10 +26,10 @@ export default function RateToggle({
     <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }}>
       <ToggleWrapper width="fit-content">
         <ToggleElement isActive={isSorted} fontSize="12px" onClick={handleRateToggle}>
-          {isSorted ? currencyB.symbol + ' / ' + currencyA.symbol : currencyA.symbol + ' / ' + currencyB.symbol}{' '}
+          {isSorted ? currencyA.symbol + ' price ' : currencyB.symbol + ' price '}
         </ToggleElement>
         <ToggleElement isActive={!isSorted} fontSize="12px" onClick={handleRateToggle}>
-          {isSorted ? currencyA.symbol + ' / ' + currencyB.symbol : currencyB.symbol + ' / ' + currencyA.symbol}
+          {isSorted ? currencyB.symbol + ' price ' : currencyA.symbol + ' price '}
         </ToggleElement>
       </ToggleWrapper>
     </div>
