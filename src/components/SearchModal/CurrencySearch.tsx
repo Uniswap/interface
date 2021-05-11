@@ -1,22 +1,46 @@
-import { Currency, ETHER, Token } from 'libs/sdk/src'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components'
+import { Edit } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
+import AutoSizer from 'react-virtualized-auto-sizer'
+
+import { Currency, ETHER, Token } from 'libs/sdk/src'
+import ImportRow from './ImportRow'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken } from '../../hooks/Tokens'
-import { CloseIcon } from '../../theme'
+import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } from 'hooks/Tokens'
+import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
+import Row, { RowBetween, RowFixed } from '../Row'
 import Column from '../Column'
 import QuestionHelper from '../QuestionHelper'
-import { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens } from './filtering'
+import { filterTokens, useSortedTokensByQuery } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import AutoSizer from 'react-virtualized-auto-sizer'
+import useTheme from 'hooks/useTheme'
+import useToggle from 'hooks/useToggle'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useDebounce from 'hooks/useDebounce'
+
+const ContentWrapper = styled(Column)`
+  width: 100%;
+  flex: 1 1;
+  position: relative;
+`
+
+const Footer = styled.div`
+  width: 100%;
+  border-radius: 20px;
+  padding: 20px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-color: ${({ theme }) => theme.bg1};
+  border-top: 1px solid ${({ theme }) => theme.bg2};
+`
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -25,6 +49,9 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
+  showManageView: () => void
+  showImportView: () => void
+  setImportToken: (token: Token) => void
 }
 
 export function CurrencySearch({
@@ -33,19 +60,27 @@ export function CurrencySearch({
   otherSelectedCurrency,
   showCommonBases,
   onDismiss,
-  isOpen
+  isOpen,
+  showManageView,
+  showImportView,
+  setImportToken
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
+  const theme = useTheme()
 
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const debouncedQuery = useDebounce(searchQuery, 200)
+
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
   const allTokens = useAllTokens()
 
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
   const searchToken = useToken(searchQuery)
+
+  const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
@@ -117,8 +152,17 @@ export function CurrencySearch({
     [filteredSortedTokens, handleCurrencySelect, searchQuery]
   )
 
+  // menu ui
+  const [open, toggle] = useToggle(false)
+  const node = useRef<HTMLDivElement>()
+  useOnClickOutside(node, open ? toggle : undefined)
+
+  // if no results on main list, show option to expand into inactive
+  const inactiveTokens = useFoundOnInactiveList(debouncedQuery)
+  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, debouncedQuery)
+
   return (
-    <Column style={{ width: '100%', flex: '1 1' }}>
+    <ContentWrapper>
       <PaddedColumn gap="14px">
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
@@ -149,23 +193,51 @@ export function CurrencySearch({
 
       <Separator />
 
-      <div style={{ flex: '1' }}>
-        <AutoSizer disableWidth>
-          {({ height }) => (
-            <CurrencyList
-              height={height}
-              showETH={showETH}
-              currencies={filteredSortedTokens}
-              onCurrencySelect={handleCurrencySelect}
-              otherCurrency={otherSelectedCurrency}
-              selectedCurrency={selectedCurrency}
-              fixedListRef={fixedList}
-            />
-          )}
-        </AutoSizer>
-      </div>
+      {searchToken && !searchTokenIsAdded ? (
+        <Column style={{ padding: '20px 0', height: '100%' }}>
+          <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
+        </Column>
+      ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
+        <div style={{ flex: '1' }}>
+          <AutoSizer disableWidth>
+            {({ height }) => (
+              <CurrencyList
+                height={height}
+                showETH={showETH}
+                currencies={
+                  filteredInactiveTokens ? filteredSortedTokens.concat(filteredInactiveTokens) : filteredSortedTokens
+                }
+                breakIndex={inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined}
+                onCurrencySelect={handleCurrencySelect}
+                otherCurrency={otherSelectedCurrency}
+                selectedCurrency={selectedCurrency}
+                fixedListRef={fixedList}
+                showImportView={showImportView}
+                setImportToken={setImportToken}
+              />
+            )}
+          </AutoSizer>
+        </div>
+      ) : (
+        <Column style={{ padding: '20px', height: '100%' }}>
+          <TYPE.main color={theme.text3} textAlign="center" mb="20px">
+            No results found.
+          </TYPE.main>
+        </Column>
+      )}
 
-      <Separator />
-    </Column>
+      <Footer>
+        <Row justify="center">
+          <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
+            <RowFixed>
+              <IconWrapper size="16px" marginRight="6px">
+                <Edit />
+              </IconWrapper>
+              <TYPE.main color={theme.blue1}>Manage Token Lists</TYPE.main>
+            </RowFixed>
+          </ButtonText>
+        </Row>
+      </Footer>
+    </ContentWrapper>
   )
 }
