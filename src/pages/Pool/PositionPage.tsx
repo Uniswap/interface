@@ -210,10 +210,12 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
 
     let { width, height } = src
 
-    // resize to target height
+    // src may be hidden and not have the target dimensions.
     const ratio = width / height
     height = targetHeight
     width = Math.round(ratio * targetHeight)
+
+    debugger
 
     // Ensure crispness at high DPIs
     canvas.width = width * devicePixelRatio
@@ -236,14 +238,10 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
     getSnapshot(e.target as HTMLImageElement)
   }
 
-  // permanently mounted to allow snapshots onto canvas
-  // `hidden`: won't cause performance issues with layout changes
-  const hiddenImg = <img src={image} hidden onLoad={onLoad} ref={imageRef as any} />
-
   return (
     <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={() => setAnimate(false)}>
-      {hiddenImg}
-      {animate ? <NFTImage src={image} /> : <NFTCanvas ref={canvasRef as any} />}
+      <NFTImage src={image} hidden={!animate} onLoad={onLoad} ref={imageRef as any} />
+      <NFTCanvas ref={canvasRef as any} hidden={animate} />
     </NFTGrid>
   )
 }
