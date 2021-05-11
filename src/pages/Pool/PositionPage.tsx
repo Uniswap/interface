@@ -194,8 +194,7 @@ function getRatio(lower: Price, current: Price, upper: Price) {
 }
 
 function NFT({ image }: { image: string }) {
-  // Initialize to true to mount the <img> to set the width/height.
-  const [animate, setAnimate] = useState(true)
+  const [animate, setAnimate] = useState(false)
   const animatedStyles = useSpring({ opacity: animate ? 1 : 0 })
   const staticStyles = useSpring({ opacity: animate ? 0 : 1 })
 
