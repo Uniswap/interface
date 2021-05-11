@@ -540,7 +540,7 @@ export default function AddLiquidity({
                   <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
                     Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
                     <ExternalLink
-                      href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}
+                      href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'}
                       style={{ fontSize: '14px' }}
                     >
                       Need help picking a range?
@@ -571,7 +571,7 @@ export default function AddLiquidity({
                           {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)}{' '}
                         </TYPE.body>
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
-                          {quoteCurrency?.symbol} {' / '}
+                          {quoteCurrency?.symbol} {' per '}
                           {baseCurrency.symbol}
                         </TYPE.main>
                       </AutoColumn>

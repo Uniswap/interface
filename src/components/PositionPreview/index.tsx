@@ -135,7 +135,7 @@ export const PositionPreview = ({
               <TYPE.main
                 textAlign="center"
                 fontSize="12px"
-              >{` ${quoteCurrency.symbol}/${baseCurrency.symbol}`}</TYPE.main>
+              >{` ${quoteCurrency.symbol} per ${baseCurrency.symbol}`}</TYPE.main>
               <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
                 Your position will be 100% composed of {quoteCurrency?.symbol} at this price
               </TYPE.small>
@@ -149,7 +149,7 @@ export const PositionPreview = ({
             <TYPE.main
               textAlign="center"
               fontSize="12px"
-            >{` ${quoteCurrency.symbol}/${baseCurrency.symbol}`}</TYPE.main>
+            >{` ${quoteCurrency.symbol} per ${baseCurrency.symbol}`}</TYPE.main>
           </AutoColumn>
         </LightCard>
       </AutoColumn>
