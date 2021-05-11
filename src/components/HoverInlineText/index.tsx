@@ -8,10 +8,6 @@ const TextWrapper = styled.div<{ margin: boolean; link: boolean; fontSize?: stri
   color: ${({ theme, link }) => (link ? theme.blue1 : theme.text1)};
   font-size: ${({ fontSize }) => fontSize ?? 'inherit'};
 
-  :hover {
-    cursor: pointer;
-  }
-
   @media screen and (max-width: 600px) {
     font-size: ${({ adjustSize }) => adjustSize && '12px'};
   }
