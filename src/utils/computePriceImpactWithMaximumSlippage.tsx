@@ -3,9 +3,9 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 
 function computePriceImpact(midPrice: Price, inputAmount: CurrencyAmount, outputAmount: CurrencyAmount): Percent {
-  const exactQuote = midPrice.raw.multiply(inputAmount.raw)
+  const exactQuote = midPrice.quotient.multiply(inputAmount.quotient)
   // calculate slippage := (exactQuote - outputAmount) / exactQuote
-  const slippage = exactQuote.subtract(outputAmount.raw).divide(exactQuote)
+  const slippage = exactQuote.subtract(outputAmount.quotient).divide(exactQuote)
   return new Percent(slippage.numerator, slippage.denominator)
 }
 

@@ -123,10 +123,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       deadline: deadline.toString(),
       collectOptions: {
         expectedCurrencyOwed0: currencyEquals(liquidityValue0.currency, WETH9[chainId])
-          ? CurrencyAmount.ether(feeValue0.raw)
+          ? CurrencyAmount.ether(feeValue0.quotient)
           : feeValue0,
         expectedCurrencyOwed1: currencyEquals(liquidityValue1.currency, WETH9[chainId])
-          ? CurrencyAmount.ether(feeValue1.raw)
+          ? CurrencyAmount.ether(feeValue1.quotient)
           : feeValue1,
         recipient: account,
       },

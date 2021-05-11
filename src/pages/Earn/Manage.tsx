@@ -2,9 +2,8 @@ import React, { useCallback, useState } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-
-import { CurrencyAmount, ETHER } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
+import { Token, CurrencyAmount, ETHER } from '@uniswap/sdk-core'
 import { RouteComponentProps } from 'react-router-dom'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
@@ -121,17 +120,17 @@ export default function Manage({
 
   // get WETH value of staked LP tokens
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.currency)
-  let valueOfTotalStakedAmountInWETH: CurrencyAmount | undefined
+  let valueOfTotalStakedAmountInWETH: CurrencyAmount<Token> | undefined
   if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && WETH) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
     valueOfTotalStakedAmountInWETH = CurrencyAmount.fromRawAmount(
       WETH,
       JSBI.divide(
         JSBI.multiply(
-          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(WETH).raw),
+          JSBI.multiply(stakingInfo.totalStakedAmount.quotient, stakingTokenPair.reserveOf(WETH).quotient),
           JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the WETH they entitle owner to
         ),
-        totalSupplyOfStakingToken.raw
+        totalSupplyOfStakingToken.quotient
       )
     )
   }
@@ -269,7 +268,7 @@ export default function Manage({
                 <div>
                   <TYPE.black>Your unclaimed UNI</TYPE.black>
                 </div>
-                {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
+                {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.quotient) && (
                   <ButtonEmpty
                     padding="8px"
                     borderRadius="8px"

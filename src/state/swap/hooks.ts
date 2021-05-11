@@ -1,9 +1,10 @@
+import JSBI from 'jsbi'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, Token, TokenAmount, Percent } from '@uniswap/sdk-core'
-import { JSBI, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, ETHER, Percent } from '@uniswap/sdk-core'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -69,7 +70,7 @@ export function useSwapActionHandlers(): {
 }
 
 // try to parse a user entered amount for a given token
-export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmount | undefined {
+export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmount<Currency> | undefined {
   if (!value || !currency) {
     return undefined
   }
@@ -112,8 +113,8 @@ export function useDerivedSwapInfo(
   toggledVersion: Version
 ): {
   currencies: { [field in Field]?: Currency }
-  currencyBalances: { [field in Field]?: CurrencyAmount }
-  parsedAmount: CurrencyAmount | undefined
+  currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+  parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: string
   v2Trade: V2Trade | undefined
   v3TradeState: { trade: V3Trade | null; state: V3TradeState }

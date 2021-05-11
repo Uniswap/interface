@@ -24,6 +24,8 @@ export function isTradeBetter(
   if (minimumDelta.equalTo(ZERO_PERCENT)) {
     return tradeA.executionPrice.lessThan(tradeB.executionPrice)
   } else {
-    return tradeA.executionPrice.raw.multiply(minimumDelta.add(ONE_HUNDRED_PERCENT)).lessThan(tradeB.executionPrice)
+    return tradeA.executionPrice.quotient
+      .multiply(minimumDelta.add(ONE_HUNDRED_PERCENT))
+      .lessThan(tradeB.executionPrice)
   }
 }

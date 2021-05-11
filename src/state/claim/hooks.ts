@@ -1,6 +1,6 @@
 import { UNI } from './../../constants/index'
-import { JSBI } from '@uniswap/v2-sdk'
-import { CurrencyAmount, ChainId } from '@uniswap/sdk-core'
+import JSBI from 'jsbi'
+import { CurrencyAmount, ChainId, Token } from '@uniswap/sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useEffect, useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
@@ -74,7 +74,7 @@ export function useUserHasAvailableClaim(account: string | null | undefined): bo
   return Boolean(userClaimData && !isClaimedResult.loading && isClaimedResult.result?.[0] === false)
 }
 
-export function useUserUnclaimedAmount(account: string | null | undefined): CurrencyAmount | undefined {
+export function useUserUnclaimedAmount(account: string | null | undefined): CurrencyAmount<Token> | undefined {
   const { chainId } = useActiveWeb3React()
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
@@ -97,7 +97,7 @@ export function useClaimCallback(
   const claimData = useUserClaimData(account)
 
   // used for popup summary
-  const unclaimedAmount: CurrencyAmount | undefined = useUserUnclaimedAmount(account)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const addTransaction = useTransactionAdder()
   const distributorContract = useMerkleDistributorContract()
 

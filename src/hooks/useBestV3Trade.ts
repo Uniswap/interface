@@ -29,7 +29,7 @@ export function useBestV3TradeExactIn(
   const quoteExactInInputs = useMemo(() => {
     return routes.map((route) => [
       encodeRouteToPath(route, false),
-      amountIn ? `0x${amountIn.raw.toString(16)}` : undefined,
+      amountIn ? `0x${amountIn.quotient.toString(16)}` : undefined,
     ])
   }, [amountIn, routes])
 
@@ -112,7 +112,7 @@ export function useBestV3TradeExactOut(
   const quoteExactOutInputs = useMemo(() => {
     return routes.map((route) => [
       encodeRouteToPath(route, true),
-      amountOut ? `0x${amountOut.raw.toString(16)}` : undefined,
+      amountOut ? `0x${amountOut.quotient.toString(16)}` : undefined,
     ])
   }, [amountOut, routes])
 

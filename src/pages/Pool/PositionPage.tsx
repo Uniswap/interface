@@ -256,10 +256,10 @@ export function PositionPage({
     const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
       tokenId: tokenId.toString(),
       expectedCurrencyOwed0: currencyEquals(feeValue0.currency, WETH9[chainId])
-        ? CurrencyAmount.ether(feeValue0.raw)
+        ? CurrencyAmount.ether(feeValue0.quotient)
         : feeValue0,
       expectedCurrencyOwed1: currencyEquals(feeValue1.currency, WETH9[chainId])
-        ? CurrencyAmount.ether(feeValue1.raw)
+        ? CurrencyAmount.ether(feeValue1.quotient)
         : feeValue1,
       recipient: account,
     })

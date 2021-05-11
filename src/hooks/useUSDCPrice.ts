@@ -1,5 +1,5 @@
 import { ChainId, Currency, CurrencyAmount, currencyEquals, Price, Token, WETH9 } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { USDC } from '../constants'
 import { PairState, useV2Pairs } from './useV2Pairs'
@@ -56,7 +56,7 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
 
     const ethPairETHAmount = ethPair?.reserveOf(weth)
     const ethPairETHUSDCValue: JSBI =
-      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(weth).quote(ethPairETHAmount).raw : JSBI.BigInt(0)
+      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(weth).quote(ethPairETHAmount).quotient : JSBI.BigInt(0)
 
     // all other tokens
     // first try the usdc pair

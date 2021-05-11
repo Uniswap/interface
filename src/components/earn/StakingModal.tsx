@@ -91,11 +91,11 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     setAttempting(true)
     if (stakingContract && parsedAmount && deadline) {
       if (approval === ApprovalState.APPROVED) {
-        await stakingContract.stake(`0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })
+        await stakingContract.stake(`0x${parsedAmount.quotient.toString(16)}`, { gasLimit: 350000 })
       } else if (signatureData) {
         stakingContract
           .stakeWithPermit(
-            `0x${parsedAmount.raw.toString(16)}`,
+            `0x${parsedAmount.quotient.toString(16)}`,
             signatureData.deadline,
             signatureData.v,
             signatureData.r,

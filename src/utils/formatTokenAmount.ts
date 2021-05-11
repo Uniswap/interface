@@ -6,7 +6,7 @@ export function formatTokenAmount(amount: CurrencyAmount | undefined, sigFigs: n
     return '-'
   }
 
-  if (JSBI.equal(amount.raw, JSBI.BigInt(0))) {
+  if (JSBI.equal(amount.quotient, JSBI.BigInt(0))) {
     return '0'
   }
 

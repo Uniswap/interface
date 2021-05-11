@@ -20,7 +20,7 @@ import { DateTime } from 'luxon'
 import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
 import { useActiveWeb3React } from '../../hooks'
 import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
 import { getEtherscanLink, isAddress } from '../../utils'
@@ -157,7 +157,7 @@ export default function VotePage({
   // only show voting if user has > 0 votes at proposal start block and proposal is active,
   const showVotingButtons =
     availableVotes &&
-    JSBI.greaterThan(availableVotes.raw, JSBI.BigInt(0)) &&
+    JSBI.greaterThan(availableVotes.quotient, JSBI.BigInt(0)) &&
     proposalData &&
     proposalData.status === ProposalState.Active
 
@@ -169,7 +169,7 @@ export default function VotePage({
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.raw, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
   // show links in propsoal details if content is an address

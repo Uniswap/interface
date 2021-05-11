@@ -19,7 +19,7 @@ export function tryParseTick(
   if (!amount || !amountOne) return undefined
 
   // parse the typed value into a price
-  const price = new Price(baseToken, quoteToken, amountOne.raw, amount.raw)
+  const price = new Price(baseToken, quoteToken, amountOne.quotient, amount.quotient)
 
   // this function is agnostic to the base, will always return the correct tick
   const tick = priceToClosestTick(price)

@@ -172,7 +172,7 @@ export function useERC20Permit(
       signatureData.tokenAddress === tokenAddress &&
       signatureData.nonce === nonceNumber &&
       signatureData.spender === spender &&
-      ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.raw))
+      ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
 
     return {
       state: isSignatureDataValid ? UseERC20PermitState.SIGNED : UseERC20PermitState.NOT_SIGNED,
@@ -180,7 +180,7 @@ export function useERC20Permit(
       gatherPermitSignature: async function gatherPermitSignature() {
         const allowed = permitInfo.type === PermitType.ALLOWED
         const signatureDeadline = transactionDeadline.toNumber() + PERMIT_VALIDITY_BUFFER
-        const value = currencyAmount.raw.toString()
+        const value = currencyAmount.quotient.toString()
 
         const message = allowed
           ? {

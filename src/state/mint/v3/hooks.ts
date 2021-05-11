@@ -175,7 +175,12 @@ export function useV3DerivedMintInfo(
         const baseAmount = tryParseAmount('1', invertPrice ? token1 : token0)
         const price =
           baseAmount && parsedQuoteAmount
-            ? new Price(baseAmount.currency, parsedQuoteAmount.currency, baseAmount.raw, parsedQuoteAmount.raw)
+            ? new Price(
+                baseAmount.currency,
+                parsedQuoteAmount.currency,
+                baseAmount.quotient,
+                parsedQuoteAmount.quotient
+              )
             : undefined
         return (invertPrice ? price?.invert() : price) ?? undefined
       }
@@ -188,7 +193,7 @@ export function useV3DerivedMintInfo(
 
   // check for invalid price input (converts to invalid ratio)
   const invalidPrice = useMemo(() => {
-    const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.raw.numerator, price.raw.denominator) : undefined
+    const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.quotient.numerator, price.quotient.denominator) : undefined
     const invalid =
       price &&
       sqrtRatioX96 &&
@@ -277,19 +282,19 @@ export function useV3DerivedMintInfo(
             pool: poolForPosition,
             tickLower,
             tickUpper,
-            amount0: independentAmount.raw,
+            amount0: independentAmount.quotient,
           })
         : Position.fromAmount1({
             pool: poolForPosition,
             tickLower,
             tickUpper,
-            amount1: independentAmount.raw,
+            amount1: independentAmount.quotient,
           })
 
       const dependentTokenAmount = currencyEquals(wrappedIndependentAmount.currency, poolForPosition.token0)
         ? position.amount1
         : position.amount0
-      return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
+      return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.quotient) : dependentTokenAmount
     }
 
     return undefined
@@ -350,10 +355,10 @@ export function useV3DerivedMintInfo(
 
     // mark as 0 if disbaled because out of range
     const amount0 = !deposit0Disabled
-      ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_A : Field.CURRENCY_B]?.raw
+      ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_A : Field.CURRENCY_B]?.quotient
       : BIG_INT_ZERO
     const amount1 = !deposit1Disabled
-      ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_B : Field.CURRENCY_A]?.raw
+      ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_B : Field.CURRENCY_A]?.quotient
       : BIG_INT_ZERO
 
     if (amount0 !== undefined && amount1 !== undefined) {

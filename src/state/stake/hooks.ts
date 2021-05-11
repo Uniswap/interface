@@ -178,8 +178,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         ): CurrencyAmount => {
           return CurrencyAmount.fromRawAmount(
             uni,
-            JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
-              ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
+            JSBI.greaterThan(totalStakedAmount.quotient, JSBI.BigInt(0))
+              ? JSBI.divide(JSBI.multiply(totalRewardRate.quotient, stakedAmount.quotient), totalStakedAmount.quotient)
               : JSBI.BigInt(0)
           )
         }
@@ -252,7 +252,7 @@ export function useDerivedStakeInfo(
   const parsedInput: CurrencyAmount | undefined = tryParseAmount(typedValue, stakingToken)
 
   const parsedAmount =
-    parsedInput && userLiquidityUnstaked && JSBI.lessThanOrEqual(parsedInput.raw, userLiquidityUnstaked.raw)
+    parsedInput && userLiquidityUnstaked && JSBI.lessThanOrEqual(parsedInput.quotient, userLiquidityUnstaked.quotient)
       ? parsedInput
       : undefined
 
@@ -282,7 +282,8 @@ export function useDerivedUnstakeInfo(
 
   const parsedInput: CurrencyAmount | undefined = tryParseAmount(typedValue, stakingAmount.currency)
 
-  const parsedAmount = parsedInput && JSBI.lessThanOrEqual(parsedInput.raw, stakingAmount.raw) ? parsedInput : undefined
+  const parsedAmount =
+    parsedInput && JSBI.lessThanOrEqual(parsedInput.quotient, stakingAmount.quotient) ? parsedInput : undefined
 
   let error: string | undefined
   if (!account) {

@@ -1,5 +1,5 @@
 import { Currency, ETHER, Token, CurrencyAmount } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -158,8 +158,8 @@ export function useAggregateUniBalance(): CurrencyAmount | undefined {
   return CurrencyAmount.fromRawAmount(
     uni,
     JSBI.add(
-      JSBI.add(uniBalance?.raw ?? JSBI.BigInt(0), uniUnclaimed?.raw ?? JSBI.BigInt(0)),
-      uniUnHarvested?.raw ?? JSBI.BigInt(0)
+      JSBI.add(uniBalance?.quotient ?? JSBI.BigInt(0), uniUnclaimed?.quotient ?? JSBI.BigInt(0)),
+      uniUnHarvested?.quotient ?? JSBI.BigInt(0)
     )
   )
 }

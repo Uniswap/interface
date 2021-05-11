@@ -54,13 +54,13 @@ export function useDerivedV3BurnInfo(
     positionSDK &&
     CurrencyAmount.fromRawAmount(
       positionSDK.amount0.currency,
-      liquidityPercentage.multiply(positionSDK.amount0.raw).quotient
+      liquidityPercentage.multiply(positionSDK.amount0.quotient).quotient
     )
   const liquidityValue1 =
     positionSDK &&
     CurrencyAmount.fromRawAmount(
       positionSDK.amount1.currency,
-      liquidityPercentage.multiply(positionSDK.amount1.raw).quotient
+      liquidityPercentage.multiply(positionSDK.amount1.quotient).quotient
     )
 
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position)
