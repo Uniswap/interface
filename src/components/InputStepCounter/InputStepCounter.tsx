@@ -139,7 +139,7 @@ const StepCounter = ({
           }}
         />
         <InputTitle fontSize={12} textAlign="center">
-          {tokenB + ' / ' + tokenA}
+          {tokenB + ' per ' + tokenA}
         </InputTitle>
       </AutoColumn>
       {!locked ? (

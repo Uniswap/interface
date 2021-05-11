@@ -244,7 +244,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           >
             <RangeText>
               <ExtentsText>Min: </ExtentsText>
-              {formatPrice(priceLower, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
+              {formatPrice(priceLower, 5)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' per '}{' '}
               {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
             </RangeText>{' '}
             <HideSmall>
@@ -255,7 +255,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             </SmallOnly>
             <RangeText>
               <ExtentsText>Max:</ExtentsText>
-              {formatPrice(priceUpper, 4)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' / '}{' '}
+              {formatPrice(priceUpper, 5)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' per '}{' '}
               {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
             </RangeText>{' '}
           </RangeLineItem>
