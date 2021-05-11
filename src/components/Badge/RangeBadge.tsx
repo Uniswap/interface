@@ -46,7 +46,7 @@ export default function RangeBadge({
     <BadgeWrapper>
       {removed ? (
         <MouseoverTooltip text={`Your position has 0 liquidity, and is not earning fees.`}>
-          <Badge variant={BadgeVariant.WARNING_OUTLINE}>
+          <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>{t('Inactive')}</BadgeText>
