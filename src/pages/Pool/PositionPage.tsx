@@ -210,7 +210,7 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
 
     let { width, height } = src
 
-    // src may be hidden and not have the target dimensions.
+    // src may be hidden and not have the target dimensions
     const ratio = width / height
     height = targetHeight
     width = Math.round(ratio * targetHeight)
@@ -226,20 +226,14 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
     context.drawImage(src, 0, 0, width, height)
   }
 
-  const onMouseLeave = () => {
-    if (!imageRef.current) return
-    getSnapshot(imageRef.current)
-    setAnimate(false)
-  }
-
   const onLoad = (e: SyntheticEvent<HTMLImageElement>) => {
     getSnapshot(e.target as HTMLImageElement)
   }
 
   return (
-    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={onMouseLeave}>
+    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={() => setAnimate(false)}>
+      <NFTCanvas ref={canvasRef as any} style={{ visibility: animate ? 'hidden' : 'visible' }} />
       <NFTImage src={image} hidden={!animate} onLoad={onLoad} ref={imageRef as any} />
-      <NFTCanvas ref={canvasRef as any} hidden={animate} />
     </NFTGrid>
   )
 }
