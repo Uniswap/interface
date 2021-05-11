@@ -6,13 +6,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import {
-  useExpertModeManager,
-  useUserTransactionTTL,
-  useUserSlippageTolerance,
-  useUserSingleHopOnly,
-  useSetUserSlippageTolerance,
-} from '../../state/user/hooks'
+import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -123,10 +117,6 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const toggle = useToggleSettingsMenu()
 
   const theme = useContext(ThemeContext)
-  const userSlippageTolerance = useUserSlippageTolerance()
-  const setUserslippageTolerance = useSetUserSlippageTolerance()
-
-  const [ttl, setTtl] = useUserTransactionTTL()
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
@@ -193,13 +183,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
             <Text fontWeight={600} fontSize={14}>
               Transaction Settings
             </Text>
-            <TransactionSettings
-              userSlippageTolerance={userSlippageTolerance}
-              setUserSlippageTolerance={setUserslippageTolerance}
-              placeholderSlippage={placeholderSlippage}
-              deadline={ttl}
-              setDeadline={setTtl}
-            />
+            <TransactionSettings placeholderSlippage={placeholderSlippage} />
             <Text fontWeight={600} fontSize={14}>
               Interface Settings
             </Text>

@@ -1,5 +1,5 @@
-import { Percent } from '@uniswap/sdk-core'
 import React, { useState, useContext } from 'react'
+import { Percent } from '@uniswap/sdk-core'
 import styled, { ThemeContext } from 'styled-components'
 
 import QuestionHelper from '../QuestionHelper'
@@ -8,6 +8,7 @@ import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/index'
 import { darken } from 'polished'
+import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -85,22 +86,17 @@ const SlippageEmojiContainer = styled.span`
   `}
 `
 
-export interface SlippageTabsProps {
-  userSlippageTolerance: Percent | 'auto'
-  placeholderSlippage: Percent
-  setUserSlippageTolerance: (newUserSlippageTolerance: Percent | 'auto') => void
-  deadline: number
-  setDeadline: (deadline: number) => void
+export interface TransactionSettingsProps {
+  placeholderSlippage: Percent // varies according to the context in which the settings dialog is placed
 }
 
-export default function SlippageTabs({
-  userSlippageTolerance,
-  placeholderSlippage,
-  setUserSlippageTolerance,
-  deadline,
-  setDeadline,
-}: SlippageTabsProps) {
+export default function TransactionSettings({ placeholderSlippage }: TransactionSettingsProps) {
   const theme = useContext(ThemeContext)
+
+  const userSlippageTolerance = useUserSlippageTolerance()
+  const setUserSlippageTolerance = useSetUserSlippageTolerance()
+
+  const [deadline, setDeadline] = useUserTransactionTTL()
 
   const [slippageInput, setSlippageInput] = useState('')
   const [slippageError, setSlippageError] = useState<SlippageError | false>(false)
