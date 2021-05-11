@@ -28,6 +28,8 @@ import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 
+const TOKEN_LIST_FAILED_VALIDATION = 'Token list failed validation'
+
 const Wrapper = styled(Column)`
   width: 100%;
   height: 100%;
@@ -262,7 +264,13 @@ export function ManageLists({
     async function fetchTempList() {
       fetchList(listUrlInput, false)
         .then(list => setTempList(list))
-        .catch(() => setAddError('Error importing list'))
+        .catch((err: Error) => {
+          if (err.message.includes(TOKEN_LIST_FAILED_VALIDATION)) {
+            setAddError(TOKEN_LIST_FAILED_VALIDATION)
+          } else {
+            setAddError('Error importing list')
+          }
+        })
     }
     // if valid url, fetch details for card
     if (validUrl) {
