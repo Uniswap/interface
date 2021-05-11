@@ -1,3 +1,4 @@
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 
@@ -12,7 +13,7 @@ export default function SwapModalFooter({
   swapErrorMessage,
   disabledConfirm,
 }: {
-  trade: V2Trade | V3Trade
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   onConfirm: () => void
   swapErrorMessage: string | undefined
   disabledConfirm: boolean

@@ -1,5 +1,5 @@
 import { UNI, PRELOADED_PROPOSALS } from './../../constants/index'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
@@ -164,7 +164,7 @@ export function useUserDelegatee(): string {
 }
 
 // gets the users current votes
-export function useUserVotes(): CurrencyAmount | undefined {
+export function useUserVotes(): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useActiveWeb3React()
   const uniContract = useUniContract()
 

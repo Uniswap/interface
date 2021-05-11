@@ -49,7 +49,7 @@ export default function CommonBases({
               onSelect(ETHER)
             }
           }}
-          disable={selectedCurrency === ETHER}
+          disable={selectedCurrency?.isEther}
         >
           <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>

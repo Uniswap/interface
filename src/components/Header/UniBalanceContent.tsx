@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'
@@ -45,14 +45,14 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
   const uni = chainId ? UNI[chainId] : undefined
 
   const total = useAggregateUniBalance()
-  const uniBalance: CurrencyAmount | undefined = useTokenBalance(account ?? undefined, uni)
-  const uniToClaim: CurrencyAmount | undefined = useTotalUniEarned()
+  const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(account ?? undefined, uni)
+  const uniToClaim: CurrencyAmount<Token> | undefined = useTotalUniEarned()
 
-  const totalSupply: CurrencyAmount | undefined = useTotalSupply(uni)
+  const totalSupply: CurrencyAmount<Token> | undefined = useTotalSupply(uni)
   const uniPrice = useUSDCPrice(uni)
   const blockTimestamp = useCurrentBlockTimestamp()
   const unclaimedUni = useTokenBalance(useMerkleDistributorContract()?.address, uni)
-  const circulation: CurrencyAmount | undefined = useMemo(
+  const circulation: CurrencyAmount<Token> | undefined = useMemo(
     () =>
       blockTimestamp && uni && chainId === ChainId.MAINNET
         ? computeUniCirculation(uni, blockTimestamp, unclaimedUni)

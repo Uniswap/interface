@@ -20,9 +20,9 @@ export enum V3TradeState {
  * @param currencyOut the desired output currency
  */
 export function useBestV3TradeExactIn(
-  amountIn?: CurrencyAmount,
+  amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
-): { state: V3TradeState; trade: Trade | null } {
+): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
   const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(amountIn?.currency, currencyOut)
 
@@ -51,7 +51,7 @@ export function useBestV3TradeExactIn(
     }
 
     const { bestRoute, amountOut } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route | null; amountOut: BigNumber | null }, { result }, i) => {
+      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountOut: BigNumber | null }, { result }, i) => {
         if (!result) return currentBest
 
         if (currentBest.amountOut === null) {
@@ -104,8 +104,8 @@ export function useBestV3TradeExactIn(
  */
 export function useBestV3TradeExactOut(
   currencyIn?: Currency,
-  amountOut?: CurrencyAmount
-): { state: V3TradeState; trade: Trade | null } {
+  amountOut?: CurrencyAmount<Currency>
+): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
   const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, amountOut?.currency)
 
@@ -134,7 +134,7 @@ export function useBestV3TradeExactOut(
     }
 
     const { bestRoute, amountIn } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route | null; amountIn: BigNumber | null }, { result }, i) => {
+      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountIn: BigNumber | null }, { result }, i) => {
         if (!result) return currentBest
 
         if (currentBest.amountIn === null) {

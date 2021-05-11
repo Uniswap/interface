@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { ChainId, Percent, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, Percent, CurrencyAmount, Currency, TradeType, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { splitSignature } from 'ethers/lib/utils'
@@ -115,7 +115,7 @@ const PERMIT_ALLOWED_TYPE = [
 ]
 
 export function useERC20Permit(
-  currencyAmount: CurrencyAmount | null | undefined,
+  currencyAmount: CurrencyAmount<Currency> | null | undefined,
   spender: string | null | undefined,
   overridePermitInfo: PermitInfo | undefined | null
 ): {
@@ -264,13 +264,16 @@ const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
 }
 
 export function useV2LiquidityTokenPermit(
-  liquidityAmount: CurrencyAmount | null | undefined,
+  liquidityAmount: CurrencyAmount<Token> | null | undefined,
   spender: string | null | undefined
 ) {
   return useERC20Permit(liquidityAmount, spender, REMOVE_V2_LIQUIDITY_PERMIT_INFO)
 }
 
-export function useERC20PermitFromTrade(trade: V2Trade | V3Trade | undefined, allowedSlippage: Percent) {
+export function useERC20PermitFromTrade(
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined,
+  allowedSlippage: Percent
+) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
   const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [

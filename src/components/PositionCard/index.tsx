@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { Percent, CurrencyAmount } from '@uniswap/sdk-core'
+import { Percent, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
@@ -50,7 +50,7 @@ interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
   border?: string
-  stakedBalance?: CurrencyAmount // optional balance to indicate that liquidity is deposited in mining pool
+  stakedBalance?: CurrencyAmount<Token> // optional balance to indicate that liquidity is deposited in mining pool
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {

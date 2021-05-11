@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react'
-import { Price } from '@uniswap/sdk-core'
+import { Price, Currency } from '@uniswap/sdk-core'
 import { useContext } from 'react'
 import { Text } from 'rebass'
-
 import styled, { ThemeContext } from 'styled-components'
 
 interface TradePriceProps {
-  price: Price
+  price: Price<Currency, Currency>
   showInverted: boolean
   setShowInverted: (showInverted: boolean) => void
 }
