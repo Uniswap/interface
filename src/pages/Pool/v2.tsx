@@ -9,7 +9,7 @@ import { ExternalLink, TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import Card from '../../components/Card'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary, ButtonLight } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -170,7 +170,7 @@ export default function Pool() {
                   to="/add/v2/ETH"
                 >
                   <Text fontWeight={500} fontSize={16}>
-                    Add Liquidity
+                    Add V2 Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -211,6 +211,15 @@ export default function Pool() {
                       />
                     )
                 )}
+
+                <ButtonPrimary
+                  as={Link}
+                  to="/migrate/v2"
+                  id="import-pool-link"
+                  style={{ padding: '12px 16px', width: '100%' }}
+                >
+                  {'Migrate your liquidity to V3'}
+                </ButtonPrimary>
               </>
             ) : (
               <EmptyProposals>
