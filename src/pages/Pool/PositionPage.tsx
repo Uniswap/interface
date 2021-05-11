@@ -147,7 +147,7 @@ function CurrentPriceCard({
       <AutoColumn gap="8px" justify="center">
         <ExtentsText>{t('Current price')}</ExtentsText>
         <TYPE.mediumHeader textAlign="center">
-          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)}{' '}
+          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(5)}{' '}
         </TYPE.mediumHeader>
         <ExtentsText>{currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
       </AutoColumn>
@@ -640,7 +640,7 @@ export function PositionPage({
               <LightCard padding="12px" width="100%">
                 <AutoColumn gap="8px" justify="center">
                   <ExtentsText>Min price</ExtentsText>
-                  <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(4)}</TYPE.mediumHeader>
+                  <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(5)}</TYPE.mediumHeader>
                   <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
 
                   {inRange && (
@@ -655,7 +655,7 @@ export function PositionPage({
               <LightCard padding="12px" width="100%">
                 <AutoColumn gap="8px" justify="center">
                   <ExtentsText>Max price</ExtentsText>
-                  <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(4)}</TYPE.mediumHeader>
+                  <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(5)}</TYPE.mediumHeader>
                   <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
 
                   {inRange && (
