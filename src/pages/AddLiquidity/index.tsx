@@ -14,7 +14,7 @@ import { YellowCard, OutlineCard, BlueCard, LightCard } from '../../components/C
 import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { RowBetween } from '../../components/Row'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import Review from './Review'
@@ -52,6 +52,7 @@ import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { calculateGasMargin } from 'utils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
+import HoverInlineText from 'components/HoverInlineText'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -498,8 +499,13 @@ export default function AddLiquidity({
                         <TYPE.main>
                           {price ? (
                             <TYPE.main>
-                              {invertPrice ? price?.invert()?.toSignificant(5) : price?.toSignificant(5)}{' '}
-                              {quoteCurrency?.symbol}
+                              <RowFixed>
+                                <HoverInlineText
+                                  maxCharacters={20}
+                                  text={invertPrice ? price?.invert()?.toSignificant(5) : price?.toSignificant(5)}
+                                />{' '}
+                                <span style={{ marginLeft: '4px' }}>{quoteCurrency?.symbol}</span>
+                              </RowFixed>
                             </TYPE.main>
                           ) : (
                             '-'
@@ -580,7 +586,10 @@ export default function AddLiquidity({
                           Current Price
                         </TYPE.main>
                         <TYPE.body fontWeight={500} textAlign="center" fontSize={20}>
-                          {invertPrice ? price.invert().toSignificant(5) : price.toSignificant(5)}{' '}
+                          <HoverInlineText
+                            maxCharacters={20}
+                            text={invertPrice ? price.invert().toSignificant(5) : price.toSignificant(5)}
+                          />{' '}
                         </TYPE.body>
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
                           {quoteCurrency?.symbol} {' per '}

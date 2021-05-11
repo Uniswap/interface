@@ -16,7 +16,7 @@ import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
 import Badge from 'components/Badge'
 import { calculateGasMargin, getEtherscanLink } from 'utils'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
-import { DarkCard, DarkGreyCard, LightCard } from 'components/Card'
+import { DarkCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useTranslation } from 'react-i18next'
 import { currencyId } from 'utils/currencyId'
@@ -498,11 +498,9 @@ export function PositionPage({
                           {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
                         </TYPE.main>
                         {typeof ratio === 'number' && !removed ? (
-                          <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
-                            <TYPE.main color={theme.text2} fontSize={11}>
-                              {inverted ? ratio : 100 - ratio}%
-                            </TYPE.main>
-                          </DarkGreyCard>
+                          <Badge style={{ marginLeft: '10px' }}>
+                            <TYPE.main fontSize={11}>{inverted ? ratio : 100 - ratio}%</TYPE.main>
+                          </Badge>
                         ) : null}
                       </RowFixed>
                     </RowBetween>
@@ -516,11 +514,11 @@ export function PositionPage({
                           {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
                         </TYPE.main>
                         {typeof ratio === 'number' && !removed ? (
-                          <DarkGreyCard padding="4px 6px" style={{ width: 'fit-content', marginLeft: '8px' }}>
+                          <Badge style={{ marginLeft: '10px' }}>
                             <TYPE.main color={theme.text2} fontSize={11}>
                               {inverted ? 100 - ratio : ratio}%
                             </TYPE.main>
-                          </DarkGreyCard>
+                          </Badge>
                         ) : null}
                       </RowFixed>
                     </RowBetween>
