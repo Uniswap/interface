@@ -32,6 +32,7 @@ export interface UserState {
 
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number | 'auto'
+  userSlippageToleranceHasBeenMigratedToAuto: boolean // temporary flag for migration status
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
@@ -63,6 +64,7 @@ export const initialState: UserState = {
   userExpertMode: false,
   userSingleHopOnly: false,
   userSlippageTolerance: 'auto',
+  userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
@@ -77,14 +79,24 @@ export default createReducer(initialState, (builder) =>
       // noinspection SuspiciousTypeOfGuard
       if (
         typeof state.userSlippageTolerance !== 'number' ||
-        [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
+        !Number.isInteger(state.userSlippageTolerance) ||
+        state.userSlippageTolerance < 0 ||
+        state.userSlippageTolerance > 5000
       ) {
         state.userSlippageTolerance = 'auto'
+      } else {
+        if (
+          !state.userSlippageToleranceHasBeenMigratedToAuto &&
+          [10, 50, 100].indexOf(state.userSlippageTolerance) !== -1
+        ) {
+          state.userSlippageTolerance = 'auto'
+          state.userSlippageToleranceHasBeenMigratedToAuto = true
+        }
       }
 
       // deadline isnt being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
-      if (typeof state.userDeadline !== 'number') {
+      if (typeof state.userDeadline !== 'number' || !Number.isInteger(state.userDeadline) || state.userDeadline < 60) {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
 
