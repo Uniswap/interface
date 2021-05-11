@@ -38,6 +38,7 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import Loader from 'components/Loader'
+import { animated, useSpring } from 'react-spring'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -126,6 +127,19 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   `};
 `
 
+const NFTGrid = styled.div`
+  display: grid;
+  grid-template: 'overlap';
+`
+
+const NFTCanvas = styled(animated.canvas)`
+  grid-area: overlap;
+`
+
+const NFTImage = styled(animated.img)`
+  grid-area: overlap;
+`
+
 function CurrentPriceCard({
   inverted,
   pool,
@@ -182,6 +196,8 @@ function getRatio(lower: Price, current: Price, upper: Price) {
 function NFT({ image }: { image: string }) {
   // Initialize to true to mount the <img> to set the width/height.
   const [animate, setAnimate] = useState(true)
+  const animatedStyles = useSpring({ opacity: animate ? 1 : 0 })
+  const staticStyles = useSpring({ opacity: animate ? 0 : 1 })
 
   const canvasRef = useRef<HTMLCanvasElement>()
   const imageRef = useRef<HTMLImageElement>()
@@ -224,10 +240,10 @@ function NFT({ image }: { image: string }) {
   }
 
   return (
-    <div onMouseEnter={() => setAnimate(true)} onMouseLeave={mouseLeave}>
-      <canvas ref={canvasRef as any} hidden={animate} />
-      <img height="400px" src={image} onLoad={onLoad} ref={imageRef as any} hidden={!animate} />
-    </div>
+    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={mouseLeave}>
+      <NFTCanvas ref={canvasRef as any} style={staticStyles} />
+      <NFTImage src={image} onLoad={onLoad} ref={imageRef as any} style={animatedStyles} />
+    </NFTGrid>
   )
 }
 
