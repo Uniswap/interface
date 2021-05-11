@@ -9,7 +9,9 @@ import { ExternalLink, TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import Card from '../../components/Card'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary, ButtonLight } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary, ButtonOutlined } from '../../components/Button'
+import { ChevronsRight } from 'react-feather'
+
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -151,7 +153,7 @@ export default function Pool() {
         </VoteCard>
 
         <AutoColumn gap="lg" justify="center">
-          <AutoColumn gap="lg" style={{ width: '100%' }}>
+          <AutoColumn gap="md" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
@@ -211,15 +213,23 @@ export default function Pool() {
                       />
                     )
                 )}
-
-                <ButtonPrimary
-                  as={Link}
-                  to="/migrate/v2"
-                  id="import-pool-link"
-                  style={{ padding: '12px 16px', width: '100%' }}
-                >
-                  {'Migrate your liquidity to V3'}
-                </ButtonPrimary>
+                <RowFixed justify="center" style={{ width: '100%' }}>
+                  <ButtonOutlined
+                    as={Link}
+                    to="/migrate/v2"
+                    id="import-pool-link"
+                    style={{
+                      padding: '8px 16px',
+                      margin: '0 4px',
+                      borderRadius: '12px',
+                      width: 'fit-content',
+                      fontSize: '14px',
+                    }}
+                  >
+                    <ChevronsRight size={16} style={{ marginRight: '8px' }} />
+                    Migrate Liquidity to V3
+                  </ButtonOutlined>
+                </RowFixed>
               </>
             ) : (
               <EmptyProposals>

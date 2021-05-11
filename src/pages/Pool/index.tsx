@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ButtonGray, ButtonLight, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
@@ -236,7 +236,7 @@ export default function Pool() {
               {positions && positions.length > 0 && (
                 <ButtonOutlined
                   as={Link}
-                  to="/pool/v2"
+                  to="/migrate/v2"
                   id="import-pool-link"
                   style={{
                     padding: '8px 16px',
