@@ -13,46 +13,48 @@ const THIRTY_BIPS_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)
 
-// computes price breakdown for the trade
-export function computeRealizedLPFeeAmount(trade?: V2Trade | V3Trade | null): CurrencyAmount | undefined {
+// computes realized lp fee as a percent
+export function computeRealizedLPFeePercent(trade: V2Trade | V3Trade): Percent {
+  let percent: Percent
   if (trade instanceof V2Trade) {
     // for each hop in our trade, take away the x*y=k price impact from 0.3% fees
     // e.g. for 3 tokens/2 hops: 1 - ((1 - .03) * (1-.03))
-    const realizedLPFee = !trade
-      ? undefined
-      : ONE_HUNDRED_PERCENT.subtract(
-          trade.route.pairs.reduce<Fraction>(
-            (currentFee: Fraction): Fraction => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
-            ONE_HUNDRED_PERCENT
-          )
-        )
-
-    // the amount of the input that accrues to LPs
-    return (
-      realizedLPFee &&
-      trade &&
-      (trade.inputAmount instanceof TokenAmount
-        ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-        : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+    percent = ONE_HUNDRED_PERCENT.subtract(
+      trade.route.pairs.reduce<Fraction>(
+        (currentFee: Fraction): Fraction => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
+        ONE_HUNDRED_PERCENT
+      )
     )
-  } else if (trade instanceof V3Trade) {
-    const realizedLPFee = !trade
-      ? undefined
-      : ONE_HUNDRED_PERCENT.subtract(
-          trade.route.pools.reduce<Fraction>(
-            (currentFee: Fraction, pool): Fraction =>
-              currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
-            ONE_HUNDRED_PERCENT
-          )
-        )
-    return (
-      realizedLPFee &&
-      trade &&
-      (trade.inputAmount instanceof TokenAmount
-        ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
-        : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient))
+  } else {
+    percent = ONE_HUNDRED_PERCENT.subtract(
+      trade.route.pools.reduce<Fraction>(
+        (currentFee: Fraction, pool): Fraction =>
+          currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
+        ONE_HUNDRED_PERCENT
+      )
     )
   }
+
+  return new Percent(percent.numerator, percent.denominator)
+}
+
+// computes price breakdown for the trade
+export function computeRealizedLPFeeAmount(trade?: V2Trade | V3Trade | null): CurrencyAmount | undefined {
+  if (trade instanceof V2Trade) {
+    const realizedLPFee = computeRealizedLPFeePercent(trade)
+
+    // the amount of the input that accrues to LPs
+    return trade.inputAmount instanceof TokenAmount
+      ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+      : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+  } else if (trade instanceof V3Trade) {
+    const realizedLPFee = computeRealizedLPFeePercent(trade)
+
+    return trade.inputAmount instanceof TokenAmount
+      ? new TokenAmount(trade.inputAmount.token, realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+      : CurrencyAmount.ether(realizedLPFee.multiply(trade.inputAmount.raw).quotient)
+  }
+
   return undefined
 }
 

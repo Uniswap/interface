@@ -1,9 +1,10 @@
 import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, TokenAmount, ETHER, currencyEquals } from '@uniswap/sdk-core'
+import { Currency, TokenAmount, ETHER, currencyEquals, Percent } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
 import { AlertTriangle, AlertCircle } from 'react-feather'
 import ReactGA from 'react-ga'
+import { ZERO_PERCENT } from '../../constants'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -25,7 +26,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field, Bound } from '../../state/mint/v3/actions'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import AppBody from '../AppBody'
@@ -51,6 +52,8 @@ import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { calculateGasMargin } from 'utils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
+
+const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function AddLiquidity({
   match: {
@@ -148,7 +151,7 @@ export default function AddLiquidity({
 
   // txn values
   const deadline = useTransactionDeadline() // custom from users settings
-  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+
   const [txHash, setTxHash] = useState<string>('')
 
   // get formatted amounts
@@ -191,6 +194,10 @@ export default function AddLiquidity({
   const [approvalB, approveBCallback] = useApproveCallback(
     parsedAmounts[Field.CURRENCY_B],
     chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
+  )
+
+  const allowedSlippage = useUserSlippageToleranceWithDefault(
+    outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE
   )
 
   async function onAdd() {
@@ -396,7 +403,12 @@ export default function AddLiquidity({
         pendingText={pendingText}
       />
       <AppBody>
-        <AddRemoveTabs creating={false} adding={true} positionID={tokenId} />
+        <AddRemoveTabs
+          creating={false}
+          adding={true}
+          positionID={tokenId}
+          defaultSlippage={DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE}
+        />
         <Wrapper>
           <AutoColumn gap="32px">
             {!hasExistingPosition && (
@@ -486,7 +498,7 @@ export default function AddLiquidity({
                         <TYPE.main>
                           {price ? (
                             <TYPE.main>
-                              {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
+                              {invertPrice ? price?.invert()?.toSignificant(5) : price?.toSignificant(5)}{' '}
                               {quoteCurrency?.symbol}
                             </TYPE.main>
                           ) : (
@@ -568,7 +580,7 @@ export default function AddLiquidity({
                           Current Price
                         </TYPE.main>
                         <TYPE.body fontWeight={500} textAlign="center" fontSize={20}>
-                          {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)}{' '}
+                          {invertPrice ? price.invert().toSignificant(5) : price.toSignificant(5)}{' '}
                         </TYPE.body>
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
                           {quoteCurrency?.symbol} {' per '}

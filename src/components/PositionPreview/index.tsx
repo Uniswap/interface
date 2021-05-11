@@ -145,7 +145,7 @@ export const PositionPreview = ({
         <LightCard padding="12px ">
           <AutoColumn gap="4px" justify="center">
             <TYPE.main fontSize="12px">Current price</TYPE.main>
-            <TYPE.mediumHeader>{`${price.toSignificant(6)} `}</TYPE.mediumHeader>
+            <TYPE.mediumHeader>{`${price.toSignificant(5)} `}</TYPE.mediumHeader>
             <TYPE.main
               textAlign="center"
               fontSize="12px"

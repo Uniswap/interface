@@ -205,10 +205,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
 
 export const NetworkContextName = 'NETWORK'
 
-// default allowed slippage, in bips
-export const INITIAL_ALLOWED_SLIPPAGE = new Percent(10, 10_000)
-// 20 minutes, denominated in seconds
-export const DEFAULT_DEADLINE_FROM_NOW = 60 * 20
+// 30 minutes, denominated in seconds
+export const DEFAULT_DEADLINE_FROM_NOW = 60 * 30
 
 // used for rewards deadlines
 export const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)

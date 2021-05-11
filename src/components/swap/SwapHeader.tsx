@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import SettingsTab from '../Settings'
+import { Percent } from '@uniswap/sdk-core'
 
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'
@@ -11,7 +12,7 @@ const StyledSwapHeader = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
-export default function SwapHeader() {
+export default function SwapHeader({ allowedSlippage }: { allowedSlippage: Percent }) {
   return (
     <StyledSwapHeader>
       <RowBetween>
@@ -21,9 +22,7 @@ export default function SwapHeader() {
           </TYPE.black>
         </RowFixed>
         <RowFixed>
-          {/* <TradeInfo disabled={!trade} trade={trade} /> */}
-          {/* <div style={{ width: '8px' }}></div> */}
-          <SettingsTab />
+          <SettingsTab placeholderSlippage={allowedSlippage} />
         </RowFixed>
       </RowBetween>
     </StyledSwapHeader>
