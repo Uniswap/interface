@@ -486,7 +486,7 @@ export default function AddLiquidity({
                         <TYPE.main>
                           {price ? (
                             <TYPE.main>
-                              {invertPrice ? price?.invert()?.toSignificant(8) : price?.toSignificant(8)}{' '}
+                              {invertPrice ? price?.invert()?.toSignificant(5) : price?.toSignificant(5)}{' '}
                               {quoteCurrency?.symbol}
                             </TYPE.main>
                           ) : (
@@ -568,7 +568,7 @@ export default function AddLiquidity({
                           Current Price
                         </TYPE.main>
                         <TYPE.body fontWeight={500} textAlign="center" fontSize={20}>
-                          {invertPrice ? price.invert().toSignificant(3) : price.toSignificant(3)}{' '}
+                          {invertPrice ? price.invert().toSignificant(5) : price.toSignificant(5)}{' '}
                         </TYPE.body>
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
                           {quoteCurrency?.symbol} {' / '}
