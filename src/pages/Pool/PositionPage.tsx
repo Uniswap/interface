@@ -180,6 +180,7 @@ function getRatio(lower: Price, current: Price, upper: Price) {
 }
 
 function NFT({ image }: { image: string }) {
+  // Initialize to true to mount the <img> to set the width/height.
   const [animate, setAnimate] = useState(true)
 
   const canvasRef = useRef<HTMLCanvasElement>()
@@ -190,9 +191,23 @@ function NFT({ image }: { image: string }) {
       return
     }
 
-    canvasRef.current.width = src.width
-    canvasRef.current.height = src.height
-    canvasRef.current.getContext('2d')?.drawImage(src, 0, 0, src.width, src.height)
+    const { current: canvas } = canvasRef
+    const context = canvas.getContext('2d')
+    if (!context) {
+      return
+    }
+
+    const { width, height } = src
+
+    // Ensure crispness at high DPIs
+    canvas.width = width * devicePixelRatio
+    canvas.height = height * devicePixelRatio
+    canvas.style.width = width + 'px'
+    canvas.style.height = height + 'px'
+    context.scale(devicePixelRatio, devicePixelRatio)
+
+    context.clearRect(0, 0, width, height)
+    context.drawImage(src, 0, 0, width, height)
   }
 
   const mouseLeave = () => {
