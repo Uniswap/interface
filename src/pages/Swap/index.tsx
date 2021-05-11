@@ -46,7 +46,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
 import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { computePriceImpactWithMaximumSlippage } from '../../utils/computePriceImpactWithMaximumSlippage'
@@ -100,19 +100,21 @@ export default function Swap({ history }: RouteComponentProps) {
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
 
-  // get custom setting values for user
-  const [allowedSlippage] = useUserSlippageTolerance()
+  // get version from the url
+  const toggledVersion = useToggledVersion()
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
     v3TradeState: { trade: v3Trade, state: v3TradeState },
+    toggledTrade: trade,
+    allowedSlippage,
     currencyBalances,
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedSwapInfo()
+  } = useDerivedSwapInfo(toggledVersion)
 
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
@@ -121,13 +123,6 @@ export default function Swap({ history }: RouteComponentProps) {
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
-  const toggledVersion = useToggledVersion()
-  const trade = showWrap
-    ? undefined
-    : {
-        [Version.v2]: v2Trade,
-        [Version.v3]: v3Trade ?? undefined,
-      }[toggledVersion]
 
   const parsedAmounts = useMemo(
     () =>
@@ -357,7 +352,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onDismiss={handleDismissTokenWarning}
       />
       <AppBody>
-        <SwapHeader />
+        <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -484,7 +479,9 @@ export default function Swap({ history }: RouteComponentProps) {
                     showInverted={showInverted}
                     setShowInverted={setShowInverted}
                   />
-                  <MouseoverTooltipContent content={<AdvancedSwapDetails trade={trade} />}>
+                  <MouseoverTooltipContent
+                    content={<AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} />}
+                  >
                     <StyledInfo />
                   </MouseoverTooltipContent>
                 </RowFixed>
