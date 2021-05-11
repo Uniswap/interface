@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useCallback, useMemo, useRef, useState } from 'react'
+import React, { SyntheticEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 
 import { PoolState, usePool } from 'hooks/usePools'
@@ -38,7 +38,6 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import Loader from 'components/Loader'
-import { animated, useSpring } from 'react-spring'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -130,14 +129,16 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 const NFTGrid = styled.div`
   display: grid;
   grid-template: 'overlap';
+  min-height: 400px;
 `
 
-const NFTCanvas = styled(animated.canvas)`
+const NFTCanvas = styled.canvas`
   grid-area: overlap;
 `
 
-const NFTImage = styled(animated.img)`
+const NFTImage = styled.img`
   grid-area: overlap;
+  height: 400px;
 `
 
 function CurrentPriceCard({
@@ -193,26 +194,26 @@ function getRatio(lower: Price, current: Price, upper: Price) {
   }
 }
 
-function NFT({ image }: { image: string }) {
+function NFT({ image, height: targetHeight }: { image: string; height: number }) {
   const [animate, setAnimate] = useState(false)
-  const animatedStyles = useSpring({ opacity: animate ? 1 : 0 })
-  const staticStyles = useSpring({ opacity: animate ? 0 : 1 })
 
   const canvasRef = useRef<HTMLCanvasElement>()
   const imageRef = useRef<HTMLImageElement>()
 
   const getSnapshot = (src: HTMLImageElement) => {
-    if (!canvasRef.current) {
-      return
-    }
+    if (!canvasRef.current) return
 
     const { current: canvas } = canvasRef
     const context = canvas.getContext('2d')
-    if (!context) {
-      return
-    }
 
-    const { width, height } = src
+    if (!context) return
+
+    let { width, height } = src
+
+    // resize to target height
+    const ratio = width / height
+    height = targetHeight
+    width = Math.round(ratio * targetHeight)
 
     // Ensure crispness at high DPIs
     canvas.width = width * devicePixelRatio
@@ -225,23 +226,24 @@ function NFT({ image }: { image: string }) {
     context.drawImage(src, 0, 0, width, height)
   }
 
-  const mouseLeave = () => {
-    if (!imageRef.current) {
-      return
-    }
+  useEffect(() => {
+    if (!imageRef.current) return
+    if (animate) return
     getSnapshot(imageRef.current)
-    setAnimate(false)
-  }
+  })
 
   const onLoad = (e: SyntheticEvent<HTMLImageElement>) => {
     getSnapshot(e.target as HTMLImageElement)
-    setAnimate(false)
   }
 
+  // permanently mounted to allow snapshots onto canvas
+  // `hidden`: won't cause performance issues with layout changes
+  const hiddenImg = <img src={image} hidden onLoad={onLoad} ref={imageRef as any} />
+
   return (
-    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={mouseLeave}>
-      <NFTCanvas ref={canvasRef as any} style={staticStyles} />
-      <NFTImage src={image} onLoad={onLoad} ref={imageRef as any} style={animatedStyles} />
+    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={() => setAnimate(false)}>
+      {hiddenImg}
+      {animate ? <NFTImage src={image} /> : <NFTCanvas ref={canvasRef as any} />}
     </NFTGrid>
   )
 }
@@ -520,7 +522,7 @@ export function PositionPage({
               }}
             >
               <div style={{ marginRight: 12 }}>
-                <NFT image={metadata.result.image} />
+                <NFT image={metadata.result.image} height={400} />
               </div>
               {typeof chainId === 'number' && owner && !ownsNFT ? (
                 <ExternalLink href={getEtherscanLink(chainId, owner, 'address')}>Owner</ExternalLink>
