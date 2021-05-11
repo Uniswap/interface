@@ -108,7 +108,7 @@ const StyledBalanceMax = styled.button`
 `
 
 const Card2 = styled(Card)`
-  padding: 0 .75rem .4rem .75rem;
+  padding: 0 0.75rem 0.4rem 0.75rem;
   text-align: right;
 `
 

@@ -9,6 +9,7 @@ import { Farm } from 'state/types'
 import { formattedNum, shortenAddress } from 'utils'
 import { useFarmClaimModalToggle, useFarmStakeModalToggle } from 'state/application/hooks'
 import { ButtonPrimary } from 'components/Button'
+import InputGroup from './InputGroup'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
@@ -114,6 +115,7 @@ const ListItem = ({ farm }: ListItemProps) => {
     toggleFarmStakeModal()
   }
 
+  console.log('farm', farm)
   return (
     <>
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
@@ -164,7 +166,14 @@ const ListItem = ({ farm }: ListItemProps) => {
               </div>
             </StakeGroup>
             <StakeGroup>
-              <div grid-area="stake">
+              <InputGroup
+                pid={0}
+                pairAddress={farm.lpAddress}
+                pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}
+                token0Address={farm.token0.id}
+                token1Address={farm.token1.id}
+              />
+              {/* <div grid-area="stake">
                 <ButtonPrimary padding="12px" onClick={handleClickStake}>
                   Stake
                 </ButtonPrimary>
@@ -178,7 +187,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                 <ButtonPrimary padding="12px" onClick={handleClickHarvest}>
                   Harvest
                 </ButtonPrimary>
-              </div>
+              </div> */}
             </StakeGroup>
             <LPInfoContainer>
               <LPInfo>

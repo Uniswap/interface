@@ -15,11 +15,12 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
-import { FACTORY_ADDRESS } from '../constants'
+import { FACTORY_ADDRESS, MASTERCHEF_ADDRESS } from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
+import MASTERCHEF_ABI from '../constants/abis/masterchef.json'
 
 // returns null on errors
-function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
+export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()
 
   return useMemo(() => {
@@ -95,4 +96,9 @@ export function useSocksController(): Contract | null {
 
 export function useFactoryContract(): Contract | null {
   return useContract(FACTORY_ADDRESS, FACTORY_ABI)
+}
+
+export function useMasterChefContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && MASTERCHEF_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
 }

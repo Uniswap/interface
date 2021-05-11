@@ -32,6 +32,14 @@ export function isAddress(value: any): string | false {
   }
 }
 
+export function isAddressString(value: any): string {
+  try {
+    return getAddress(value)
+  } catch {
+    return ''
+  }
+}
+
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: '',
   3: 'ropsten.',
