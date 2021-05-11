@@ -226,18 +226,18 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
     context.drawImage(src, 0, 0, width, height)
   }
 
-  useEffect(() => {
+  const onMouseLeave = () => {
     if (!imageRef.current) return
-    if (animate) return
     getSnapshot(imageRef.current)
-  })
+    setAnimate(false)
+  }
 
   const onLoad = (e: SyntheticEvent<HTMLImageElement>) => {
     getSnapshot(e.target as HTMLImageElement)
   }
 
   return (
-    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={() => setAnimate(false)}>
+    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={onMouseLeave}>
       <NFTImage src={image} hidden={!animate} onLoad={onLoad} ref={imageRef as any} />
       <NFTCanvas ref={canvasRef as any} hidden={animate} />
     </NFTGrid>
