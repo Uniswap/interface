@@ -121,7 +121,7 @@ export default function ClaimModal() {
                     <TYPE.subHeader color="white">Liquidity</TYPE.subHeader>
                     <TYPE.subHeader color="white">
                       {unclaimedAmount
-                        .subtract(new CurrencyAmount(unclaimedAmount.currency, nonLPAmount))
+                        .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
                         .toFixed(0, { groupSeparator: ',' })}{' '}
                       UNI
                     </TYPE.subHeader>

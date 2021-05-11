@@ -90,7 +90,7 @@ export function useBestV3TradeExactIn(
         tradeType: TradeType.EXACT_INPUT,
         inputAmount: amountIn,
         outputAmount: currencyOut.isToken
-          ? new CurrencyAmount(currencyOut, amountOut.toString())
+          ? CurrencyAmount.fromRawAmount(currencyOut, amountOut.toString())
           : CurrencyAmount.ether(amountOut.toString()),
       }),
     }
@@ -171,7 +171,7 @@ export function useBestV3TradeExactOut(
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_OUTPUT,
-        inputAmount: new CurrencyAmount(currencyIn, amountIn.toString()),
+        inputAmount: CurrencyAmount.fromRawAmount(currencyIn, amountIn.toString()),
         outputAmount: amountOut,
       }),
     }

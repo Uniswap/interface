@@ -10,5 +10,5 @@ export function useTotalSupply(token?: Currency): CurrencyAmount | undefined {
 
   const totalSupply: BigNumber = useSingleCallResult(contract, 'totalSupply')?.result?.[0]
 
-  return token && totalSupply ? new CurrencyAmount(token, totalSupply.toString()) : undefined
+  return token && totalSupply ? CurrencyAmount.fromRawAmount(token, totalSupply.toString()) : undefined
 }

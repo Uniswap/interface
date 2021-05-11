@@ -124,7 +124,7 @@ export default function Manage({
   let valueOfTotalStakedAmountInWETH: CurrencyAmount | undefined
   if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && WETH) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
-    valueOfTotalStakedAmountInWETH = new CurrencyAmount(
+    valueOfTotalStakedAmountInWETH = CurrencyAmount.fromRawAmount(
       WETH,
       JSBI.divide(
         JSBI.multiply(

@@ -81,7 +81,7 @@ export function useTokenBalancesWithLoadingIndicator(
               const value = balances?.[i]?.result?.[0]
               const amount = value ? JSBI.BigInt(value.toString()) : undefined
               if (amount) {
-                memo[token.address] = new CurrencyAmount(token, amount)
+                memo[token.address] = CurrencyAmount.fromRawAmount(token, amount)
               }
               return memo
             }, {})
@@ -155,7 +155,7 @@ export function useAggregateUniBalance(): CurrencyAmount | undefined {
 
   if (!uni) return undefined
 
-  return new CurrencyAmount(
+  return CurrencyAmount.fromRawAmount(
     uni,
     JSBI.add(
       JSBI.add(uniBalance?.raw ?? JSBI.BigInt(0), uniUnclaimed?.raw ?? JSBI.BigInt(0)),

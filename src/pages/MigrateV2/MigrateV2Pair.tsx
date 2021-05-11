@@ -128,11 +128,13 @@ function V2PairMigration({
 
   // this is just getLiquidityValue with the fee off, but for the passed pair
   const token0Value = useMemo(
-    () => new CurrencyAmount(token0, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve0.raw), totalSupply.raw)),
+    () =>
+      CurrencyAmount.fromRawAmount(token0, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve0.raw), totalSupply.raw)),
     [token0, pairBalance, reserve0, totalSupply]
   )
   const token1Value = useMemo(
-    () => new CurrencyAmount(token1, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve1.raw), totalSupply.raw)),
+    () =>
+      CurrencyAmount.fromRawAmount(token1, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve1.raw), totalSupply.raw)),
     [token1, pairBalance, reserve1, totalSupply]
   )
 
@@ -199,7 +201,7 @@ function V2PairMigration({
   const v3Amount0Min = useMemo(
     () =>
       position &&
-      new CurrencyAmount(
+      CurrencyAmount.fromRawAmount(
         token0,
         JSBI.divide(
           JSBI.multiply(position.amount0.raw, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
@@ -211,7 +213,7 @@ function V2PairMigration({
   const v3Amount1Min = useMemo(
     () =>
       position &&
-      new CurrencyAmount(
+      CurrencyAmount.fromRawAmount(
         token1,
         JSBI.divide(
           JSBI.multiply(position.amount1.raw, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
@@ -222,11 +224,11 @@ function V2PairMigration({
   )
 
   const refund0 = useMemo(
-    () => position && new CurrencyAmount(token0, JSBI.subtract(token0Value.raw, position.amount0.raw)),
+    () => position && CurrencyAmount.fromRawAmount(token0, JSBI.subtract(token0Value.raw, position.amount0.raw)),
     [token0Value, position, token0]
   )
   const refund1 = useMemo(
-    () => position && new CurrencyAmount(token1, JSBI.subtract(token1Value.raw, position.amount1.raw)),
+    () => position && CurrencyAmount.fromRawAmount(token1, JSBI.subtract(token1Value.raw, position.amount1.raw)),
     [token1Value, position, token1]
   )
 
@@ -646,14 +648,14 @@ export default function MigrateV2Pair({
   const pairBalance = useTokenBalance(account ?? undefined, liquidityToken)
   const totalSupply = useTotalSupply(liquidityToken)
   const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
-  const reserve0 = useMemo(() => (token0 && reserve0Raw ? new CurrencyAmount(token0, reserve0Raw) : undefined), [
-    token0,
-    reserve0Raw,
-  ])
-  const reserve1 = useMemo(() => (token1 && reserve1Raw ? new CurrencyAmount(token1, reserve1Raw) : undefined), [
-    token1,
-    reserve1Raw,
-  ])
+  const reserve0 = useMemo(
+    () => (token0 && reserve0Raw ? CurrencyAmount.fromRawAmount(token0, reserve0Raw) : undefined),
+    [token0, reserve0Raw]
+  )
+  const reserve1 = useMemo(
+    () => (token1 && reserve1Raw ? CurrencyAmount.fromRawAmount(token1, reserve1Raw) : undefined),
+    [token1, reserve1Raw]
+  )
 
   // redirect for invalid url params
   if (

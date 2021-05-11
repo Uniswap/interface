@@ -51,7 +51,10 @@ export function useV2Pairs(currencies: [Currency | undefined, Currency | undefin
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [
         PairState.EXISTS,
-        new Pair(new CurrencyAmount(token0, reserve0.toString()), new CurrencyAmount(token1, reserve1.toString())),
+        new Pair(
+          CurrencyAmount.fromRawAmount(token0, reserve0.toString()),
+          CurrencyAmount.fromRawAmount(token1, reserve1.toString())
+        ),
       ]
     })
   }, [results, tokens])

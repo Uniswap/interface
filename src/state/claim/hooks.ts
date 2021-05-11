@@ -82,9 +82,9 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   const uni = chainId ? UNI[chainId] : undefined
   if (!uni) return undefined
   if (!canClaim || !userClaimData) {
-    return new CurrencyAmount(uni, JSBI.BigInt(0))
+    return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(0))
   }
-  return new CurrencyAmount(uni, JSBI.BigInt(userClaimData.amount))
+  return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(userClaimData.amount))
 }
 
 export function useClaimCallback(

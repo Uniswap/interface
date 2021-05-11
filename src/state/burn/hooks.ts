@@ -56,7 +56,7 @@ export function useDerivedBurnInfo(
     tokenA &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
-      ? new CurrencyAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity, false).raw)
+      ? CurrencyAmount.fromRawAmount(tokenA, pair.getLiquidityValue(tokenA, totalSupply, userLiquidity, false).raw)
       : undefined
   const liquidityValueB =
     pair &&
@@ -65,7 +65,7 @@ export function useDerivedBurnInfo(
     tokenB &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
     JSBI.greaterThanOrEqual(totalSupply.raw, userLiquidity.raw)
-      ? new CurrencyAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity, false).raw)
+      ? CurrencyAmount.fromRawAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity, false).raw)
       : undefined
   const liquidityValues: { [Field.CURRENCY_A]?: CurrencyAmount; [Field.CURRENCY_B]?: CurrencyAmount } = {
     [Field.CURRENCY_A]: liquidityValueA,
@@ -106,15 +106,15 @@ export function useDerivedBurnInfo(
     [Field.LIQUIDITY_PERCENT]: percentToRemove,
     [Field.LIQUIDITY]:
       userLiquidity && percentToRemove && percentToRemove.greaterThan('0')
-        ? new CurrencyAmount(userLiquidity.currency, percentToRemove.multiply(userLiquidity.raw).quotient)
+        ? CurrencyAmount.fromRawAmount(userLiquidity.currency, percentToRemove.multiply(userLiquidity.raw).quotient)
         : undefined,
     [Field.CURRENCY_A]:
       tokenA && percentToRemove && percentToRemove.greaterThan('0') && liquidityValueA
-        ? new CurrencyAmount(tokenA, percentToRemove.multiply(liquidityValueA.raw).quotient)
+        ? CurrencyAmount.fromRawAmount(tokenA, percentToRemove.multiply(liquidityValueA.raw).quotient)
         : undefined,
     [Field.CURRENCY_B]:
       tokenB && percentToRemove && percentToRemove.greaterThan('0') && liquidityValueB
-        ? new CurrencyAmount(tokenB, percentToRemove.multiply(liquidityValueB.raw).quotient)
+        ? CurrencyAmount.fromRawAmount(tokenB, percentToRemove.multiply(liquidityValueB.raw).quotient)
         : undefined,
   }
 

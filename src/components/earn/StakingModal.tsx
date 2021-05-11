@@ -55,7 +55,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   )
   const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
 
-  let hypotheticalRewardRate: CurrencyAmount = new CurrencyAmount(stakingInfo.rewardRate.currency, '0')
+  let hypotheticalRewardRate: CurrencyAmount = CurrencyAmount.fromRawAmount(stakingInfo.rewardRate.currency, '0')
   if (parsedAmountWrapped?.greaterThan('0')) {
     hypotheticalRewardRate = stakingInfo.getHypotheticalRewardRate(
       stakingInfo.stakedAmount.add(parsedAmountWrapped),
@@ -76,8 +76,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
   // pair contract for this token to be staked
   const dummyPair = new Pair(
-    new CurrencyAmount(stakingInfo.tokens[0], '0'),
-    new CurrencyAmount(stakingInfo.tokens[1], '0')
+    CurrencyAmount.fromRawAmount(stakingInfo.tokens[0], '0'),
+    CurrencyAmount.fromRawAmount(stakingInfo.tokens[1], '0')
   )
   const pairContract = usePairContract(dummyPair.liquidityToken.address)
 

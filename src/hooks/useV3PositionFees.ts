@@ -46,8 +46,8 @@ export function useV3PositionFees(
 
   if (pool && positionDetails && amounts) {
     return [
-      new CurrencyAmount(pool.token0, positionDetails.tokensOwed0.add(amounts[0]).toString()),
-      new CurrencyAmount(pool.token1, positionDetails.tokensOwed1.add(amounts[1]).toString()),
+      CurrencyAmount.fromRawAmount(pool.token0, positionDetails.tokensOwed0.add(amounts[0]).toString()),
+      CurrencyAmount.fromRawAmount(pool.token1, positionDetails.tokensOwed1.add(amounts[1]).toString()),
     ]
   } else {
     return [undefined, undefined]

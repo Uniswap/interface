@@ -171,7 +171,7 @@ export function useUserVotes(): CurrencyAmount | undefined {
   // check for available votes
   const uni = chainId ? UNI[chainId] : undefined
   const votes = useSingleCallResult(uniContract, 'getCurrentVotes', [account ?? undefined])?.result?.[0]
-  return votes && uni ? new CurrencyAmount(uni, votes) : undefined
+  return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
 // fetch available votes as of block (usually proposal start block)
@@ -183,7 +183,7 @@ export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount
   const uni = chainId ? UNI[chainId] : undefined
   const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account ?? undefined, block ?? undefined])
     ?.result?.[0]
-  return votes && uni ? new CurrencyAmount(uni, votes) : undefined
+  return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
 export function useDelegateCallback(): (delegatee: string | undefined) => undefined | Promise<string> {

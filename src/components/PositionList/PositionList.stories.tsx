@@ -12,8 +12,8 @@
 //   THIRTY: basisPointsToPercent(30),
 //   ONE_HUNDRED: basisPointsToPercent(100),
 // }
-// const daiAmount = new CurrencyAmount(DAI, JSBI.BigInt(500 * 10 ** 18))
-// const wbtcAmount = new CurrencyAmount(WBTC, JSBI.BigInt(10 ** 7))
+// const daiAmount = CurrencyAmount.fromRawAmount(DAI, JSBI.BigInt(500 * 10 ** 18))
+// const wbtcAmount = CurrencyAmount.fromRawAmount(WBTC, JSBI.BigInt(10 ** 7))
 // const positions = [
 //   {
 //     feesEarned: {

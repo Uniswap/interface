@@ -154,23 +154,29 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
 
         // get the LP token
         const tokens = info[index].tokens
-        const dummyPair = new Pair(new CurrencyAmount(tokens[0], '0'), new CurrencyAmount(tokens[1], '0'))
+        const dummyPair = new Pair(
+          CurrencyAmount.fromRawAmount(tokens[0], '0'),
+          CurrencyAmount.fromRawAmount(tokens[1], '0')
+        )
 
         // check for account, if no account set to 0
 
-        const stakedAmount = new CurrencyAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
-        const totalStakedAmount = new CurrencyAmount(
+        const stakedAmount = CurrencyAmount.fromRawAmount(
+          dummyPair.liquidityToken,
+          JSBI.BigInt(balanceState?.result?.[0] ?? 0)
+        )
+        const totalStakedAmount = CurrencyAmount.fromRawAmount(
           dummyPair.liquidityToken,
           JSBI.BigInt(totalSupplyState.result?.[0])
         )
-        const totalRewardRate = new CurrencyAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
+        const totalRewardRate = CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
 
         const getHypotheticalRewardRate = (
           stakedAmount: CurrencyAmount,
           totalStakedAmount: CurrencyAmount,
           totalRewardRate: CurrencyAmount
         ): CurrencyAmount => {
-          return new CurrencyAmount(
+          return CurrencyAmount.fromRawAmount(
             uni,
             JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
               ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
@@ -191,7 +197,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           stakingRewardAddress: rewardsAddress,
           tokens: info[index].tokens,
           periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
-          earnedAmount: new CurrencyAmount(uni, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
+          earnedAmount: CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
           rewardRate: individualRewardRate,
           totalRewardRate: totalRewardRate,
           stakedAmount: stakedAmount,
@@ -226,8 +232,8 @@ export function useTotalUniEarned(): CurrencyAmount | undefined {
     return (
       stakingInfos?.reduce(
         (accumulator, stakingInfo) => accumulator.add(stakingInfo.earnedAmount),
-        new CurrencyAmount(uni, '0')
-      ) ?? new CurrencyAmount(uni, '0')
+        CurrencyAmount.fromRawAmount(uni, '0')
+      ) ?? CurrencyAmount.fromRawAmount(uni, '0')
     )
   }, [stakingInfos, uni])
 }
