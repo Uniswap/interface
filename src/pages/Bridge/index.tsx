@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/react'
 import AppBody from '../AppBody'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { Currency, TokenAmount } from '@fuseio/fuse-swap-sdk'
+import { Currency, TokenAmount, ChainId } from '@fuseio/fuse-swap-sdk'
 import { currencyId } from '../../utils/currencyId'
 import {
   useBridgeActionHandlers,
@@ -279,7 +279,13 @@ export default function Bridge() {
           </AutoColumn>
           {recipient && (
             <AutoColumn gap="md" style={{ marginTop: '1rem' }}>
-              <AddressInputPanel id="recipient" value={recipient} onChange={onSetRecipient} />
+              <AddressInputPanel
+                id="recipient"
+                value={recipient}
+                onChange={onSetRecipient}
+                readOnly
+                chainId={ChainId.FUSE}
+              />
             </AutoColumn>
           )}
           {!isHome && (
