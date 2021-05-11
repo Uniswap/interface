@@ -57,6 +57,10 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
     return this.homeContract
   }
 
+  private get receiver() {
+    return this.receiverAddress || this.account
+  }
+
   async transferToForeign() {
     this.dispatch(tokenTransferPending())
 
@@ -78,9 +82,9 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
     this.dispatch(tokenTransferPending())
 
     const contract = getForeignMultiAMBErc20ToErc677Contract(this.foreignBridgeAddress, this.library, this.account)
-    const estimate = contract.estimateGas['relayTokens(address,uint256)']
-    const method = contract['relayTokens(address,uint256)']
-    const args = [this.tokenAddress, this.amount.raw.toString()]
+    const estimate = contract.estimateGas['relayTokens(address,address,uint256)']
+    const method = contract['relayTokens(address,address,uint256)']
+    const args = [this.tokenAddress, this.receiver, this.amount.raw.toString()]
 
     const estimatedGas = await estimate(...args, {})
     const response = await method(...args, { gasLimit: calculateGasMargin(estimatedGas) })
@@ -101,7 +105,10 @@ export default class Erc20ToErc677Bridge extends TokenBridge {
       async (eventArgs: any[]) => {
         const [homeTokenAddress, recipient] = eventArgs
         const address = await this.homeBridgeContract.foreignTokenAddress(homeTokenAddress)
-        return recipient === this.account && this.tokenAddress === address
+        return (
+          recipient.toLowerCase() === this.receiver.toLowerCase() &&
+          this.tokenAddress.toLowerCase() === address.toLowerCase()
+        )
       }
     )
 

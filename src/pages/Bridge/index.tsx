@@ -152,7 +152,8 @@ export default function Bridge() {
         account,
         dispatch,
         isHome,
-        addTransaction
+        addTransaction,
+        recipient
       )
 
       await bridge?.executeTransaction()
@@ -162,6 +163,7 @@ export default function Bridge() {
       }
 
       onFieldInput('')
+      onSetRecipient('')
       updateCompletedBridgeTransfer()
     } catch (error) {
       if (error?.code !== 4001) {

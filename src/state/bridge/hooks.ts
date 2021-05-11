@@ -24,7 +24,8 @@ import {
   getNativeAMBBridgeFee,
   calculateMultiBridgeFee,
   calculateNativeAMBBridgeFee,
-  getBscFuseInverseLibrary
+  getBscFuseInverseLibrary,
+  isAddress
 } from '../../utils'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import {
@@ -73,7 +74,8 @@ export function useDerivedBridgeInfo(
     typedValue,
     bridgeTransactionStatus,
     confirmations,
-    [Field.INPUT]: { currencyId: inputCurrencyId }
+    [Field.INPUT]: { currencyId: inputCurrencyId },
+    recipient
   } = useBridgeState()
 
   const inputCurrency = useCurrency(inputCurrencyId, 'Bridge')
@@ -126,6 +128,10 @@ export function useDerivedBridgeInfo(
 
   if (!parsedAmount) {
     inputError = inputError ?? 'Enter an amount'
+  }
+
+  if (recipient && !isAddress(recipient)) {
+    inputError = inputError ?? 'Enter a valid address'
   }
 
   if (minMaxAmount && Number(typedValue) < Number(minMaxAmount.minAmount)) {
