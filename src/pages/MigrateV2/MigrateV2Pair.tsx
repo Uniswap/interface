@@ -49,7 +49,7 @@ import SettingsTab from 'components/Settings'
 
 const ZERO = JSBI.BigInt(0)
 
-const DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
+const DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE = new Percent(75, 10_000)
 
 function EmptyState({ message }: { message: string }) {
   return (

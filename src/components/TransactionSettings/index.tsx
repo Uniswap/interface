@@ -120,8 +120,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
           setSlippageError(SlippageError.InvalidInput)
         }
       } else {
-        const parsedAsPercent = new Percent(parsed, 10_000)
-        setUserSlippageTolerance(parsedAsPercent)
+        setUserSlippageTolerance(new Percent(parsed, 10_000))
       }
     }
   }
