@@ -175,7 +175,7 @@ export function useUserVotes(): CurrencyAmount<Token> | undefined {
 }
 
 // fetch available votes as of block (usually proposal start block)
-export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount | undefined {
+export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useActiveWeb3React()
   const uniContract = useUniContract()
 

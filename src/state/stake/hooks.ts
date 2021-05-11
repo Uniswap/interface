@@ -45,26 +45,26 @@ export interface StakingInfo {
   // the tokens involved in this pair
   tokens: [Token, Token]
   // the amount of token currently staked, or undefined if no account
-  stakedAmount: CurrencyAmount
+  stakedAmount: CurrencyAmount<Token>
   // the amount of reward token earned by the active account, or undefined if no account
-  earnedAmount: CurrencyAmount
+  earnedAmount: CurrencyAmount<Token>
   // the total amount of token staked in the contract
-  totalStakedAmount: CurrencyAmount
+  totalStakedAmount: CurrencyAmount<Token>
   // the amount of token distributed per second to all LPs, constant
-  totalRewardRate: CurrencyAmount
+  totalRewardRate: CurrencyAmount<Token>
   // the current amount of token distributed to the active account per second.
   // equivalent to percent of total supply * reward rate
-  rewardRate: CurrencyAmount
+  rewardRate: CurrencyAmount<Token>
   // when the period ends
   periodFinish: Date | undefined
   // if pool is active
   active: boolean
   // calculates a hypothetical amount of token distributed to the active account per second.
   getHypotheticalRewardRate: (
-    stakedAmount: CurrencyAmount,
-    totalStakedAmount: CurrencyAmount,
-    totalRewardRate: CurrencyAmount
-  ) => CurrencyAmount
+    stakedAmount: CurrencyAmount<Token>,
+    totalStakedAmount: CurrencyAmount<Token>,
+    totalRewardRate: CurrencyAmount<Token>
+  ) => CurrencyAmount<Token>
 }
 
 // gets the staking info from the network for the active chain id
@@ -172,10 +172,10 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const totalRewardRate = CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(rewardRateState.result?.[0]))
 
         const getHypotheticalRewardRate = (
-          stakedAmount: CurrencyAmount,
-          totalStakedAmount: CurrencyAmount,
-          totalRewardRate: CurrencyAmount
-        ): CurrencyAmount => {
+          stakedAmount: CurrencyAmount<Token>,
+          totalStakedAmount: CurrencyAmount<Token>,
+          totalRewardRate: CurrencyAmount<Token>
+        ): CurrencyAmount<Token> => {
           return CurrencyAmount.fromRawAmount(
             uni,
             JSBI.greaterThan(totalStakedAmount.quotient, JSBI.BigInt(0))
@@ -222,7 +222,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   ])
 }
 
-export function useTotalUniEarned(): CurrencyAmount | undefined {
+export function useTotalUniEarned(): CurrencyAmount<Token> | undefined {
   const { chainId } = useActiveWeb3React()
   const uni = chainId ? UNI[chainId] : undefined
   const stakingInfos = useStakingInfo()
@@ -242,14 +242,14 @@ export function useTotalUniEarned(): CurrencyAmount | undefined {
 export function useDerivedStakeInfo(
   typedValue: string,
   stakingToken: Token | undefined,
-  userLiquidityUnstaked: CurrencyAmount | undefined
+  userLiquidityUnstaked: CurrencyAmount<Token> | undefined
 ): {
-  parsedAmount?: CurrencyAmount
+  parsedAmount?: CurrencyAmount<Token>
   error?: string
 } {
   const { account } = useActiveWeb3React()
 
-  const parsedInput: CurrencyAmount | undefined = tryParseAmount(typedValue, stakingToken)
+  const parsedInput: CurrencyAmount<Token> | undefined = tryParseAmount(typedValue, stakingToken)
 
   const parsedAmount =
     parsedInput && userLiquidityUnstaked && JSBI.lessThanOrEqual(parsedInput.quotient, userLiquidityUnstaked.quotient)
@@ -273,14 +273,14 @@ export function useDerivedStakeInfo(
 // based on typed value
 export function useDerivedUnstakeInfo(
   typedValue: string,
-  stakingAmount: CurrencyAmount
+  stakingAmount: CurrencyAmount<Token>
 ): {
-  parsedAmount?: CurrencyAmount
+  parsedAmount?: CurrencyAmount<Token>
   error?: string
 } {
   const { account } = useActiveWeb3React()
 
-  const parsedInput: CurrencyAmount | undefined = tryParseAmount(typedValue, stakingAmount.currency)
+  const parsedInput: CurrencyAmount<Token> | undefined = tryParseAmount(typedValue, stakingAmount.currency)
 
   const parsedAmount =
     parsedInput && JSBI.lessThanOrEqual(parsedInput.quotient, stakingAmount.quotient) ? parsedInput : undefined

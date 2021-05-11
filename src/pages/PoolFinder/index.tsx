@@ -1,4 +1,4 @@
-import { Currency, ETHER, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, ETHER, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
@@ -60,7 +60,7 @@ export default function PoolFinder() {
         JSBI.equal(pair.reserve1.quotient, JSBI.BigInt(0))
     )
 
-  const position: CurrencyAmount | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
+  const position: CurrencyAmount<Token> | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
   const hasPosition = Boolean(position && JSBI.greaterThan(position.quotient, JSBI.BigInt(0)))
 
   const handleCurrencySelect = useCallback(

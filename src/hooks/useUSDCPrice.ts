@@ -10,7 +10,7 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
-export default function useUSDCPrice(currency?: Currency): Price | undefined {
+export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const { chainId } = useActiveWeb3React()
   const wrapped = wrappedCurrency(currency, chainId)
   const weth = WETH9[chainId as ChainId]
@@ -76,7 +76,7 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
   }, [chainId, currency, ethPair, ethPairState, usdcEthPair, usdcEthPairState, usdcPair, usdcPairState, weth, wrapped])
 }
 
-export function useUSDCValue(currencyAmount: CurrencyAmount | undefined | null) {
+export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
   const price = useUSDCPrice(currencyAmount?.currency)
 
   return useMemo(() => {

@@ -17,7 +17,7 @@ export function PoolPriceBar({
   currencies: { [field in Field]?: Currency }
   noLiquidity?: boolean
   poolTokenPercentage?: Percent
-  price?: Price
+  price?: Price<Currency, Currency>
 }) {
   const theme = useContext(ThemeContext)
   return (

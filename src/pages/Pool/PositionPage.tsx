@@ -23,7 +23,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9, Currency, CurrencyAmount, Percent, Fraction, Price, currencyEquals } from '@uniswap/sdk-core'
+import { Token, WETH9, Currency, CurrencyAmount, Percent, Fraction, Price, currencyEquals } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -155,7 +155,11 @@ function CurrentPriceCard({
   )
 }
 
-function getRatio(lower: Price, current: Price, upper: Price) {
+function getRatio(
+  lower: Price<Currency, Currency>,
+  current: Price<Currency, Currency>,
+  upper: Price<Currency, Currency>
+) {
   try {
     if (!current.greaterThan(lower)) {
       return 100
@@ -309,14 +313,14 @@ export function PositionPage({
   const price0 = useUSDCPrice(token0 ?? undefined)
   const price1 = useUSDCPrice(token1 ?? undefined)
 
-  const fiatValueOfFees: CurrencyAmount | null = useMemo(() => {
+  const fiatValueOfFees: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
     const amount0 = price0.quote(feeValue0)
     const amount1 = price1.quote(feeValue1)
     return amount0.add(amount1)
   }, [price0, price1, feeValue0, feeValue1])
 
-  const fiatValueOfLiquidity: CurrencyAmount | null = useMemo(() => {
+  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !position) return null
     const amount0 = price0.quote(position.amount0)
     const amount1 = price1.quote(position.amount1)

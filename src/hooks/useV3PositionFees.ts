@@ -4,7 +4,7 @@ import { PositionDetails } from 'types/position'
 import { useV3NFTPositionManagerContract } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Pool } from '@uniswap/v3-sdk'
-import { CurrencyAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useBlockNumber } from 'state/application/hooks'
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
@@ -13,7 +13,7 @@ const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 export function useV3PositionFees(
   pool?: Pool,
   positionDetails?: PositionDetails
-): [CurrencyAmount, CurrencyAmount] | [undefined, undefined] {
+): [CurrencyAmount<Token>, CurrencyAmount<Token>] | [undefined, undefined] {
   const positionManager = useV3NFTPositionManagerContract(false)
   const owner = useSingleCallResult(positionDetails?.tokenId ? positionManager : null, 'ownerOf', [
     positionDetails?.tokenId,

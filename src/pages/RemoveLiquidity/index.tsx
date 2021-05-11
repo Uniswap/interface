@@ -383,7 +383,7 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH = currencyA.isEther || currencyB.isEther
+  const oneCurrencyIsETH = currencyA?.isEther || currencyB?.isEther
   const oneCurrencyIsWETH = Boolean(
     chainId &&
       ((currencyA && currencyEquals(WETH9[chainId], currencyA)) ||
@@ -526,8 +526,8 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA.isEther ? WETH9[chainId].address : currencyIdA}/${
-                              currencyB.isEther ? WETH9[chainId].address : currencyIdB
+                            to={`/remove/v2/${currencyA?.isEther ? WETH9[chainId].address : currencyIdA}/${
+                              currencyB?.isEther ? WETH9[chainId].address : currencyIdB
                             }`}
                           >
                             Receive WETH

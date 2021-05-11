@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { Currency, Percent, CurrencyAmount } from '@uniswap/sdk-core'
+import { Token, Currency, Percent, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,9 +24,9 @@ export function useDerivedBurnInfo(
   pair?: Pair | null
   parsedAmounts: {
     [Field.LIQUIDITY_PERCENT]: Percent
-    [Field.LIQUIDITY]?: CurrencyAmount
-    [Field.CURRENCY_A]?: CurrencyAmount
-    [Field.CURRENCY_B]?: CurrencyAmount
+    [Field.LIQUIDITY]?: CurrencyAmount<Token>
+    [Field.CURRENCY_A]?: CurrencyAmount<Currency>
+    [Field.CURRENCY_B]?: CurrencyAmount<Currency>
   }
   error?: string
 } {
@@ -39,7 +39,7 @@ export function useDerivedBurnInfo(
 
   // balances
   const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])
-  const userLiquidity: undefined | CurrencyAmount = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
+  const userLiquidity: undefined | CurrencyAmount<Token> = relevantTokenBalances?.[pair?.liquidityToken?.address ?? '']
 
   const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
   const tokens = {
@@ -68,7 +68,7 @@ export function useDerivedBurnInfo(
     JSBI.greaterThanOrEqual(totalSupply.quotient, userLiquidity.quotient)
       ? CurrencyAmount.fromRawAmount(tokenB, pair.getLiquidityValue(tokenB, totalSupply, userLiquidity, false).quotient)
       : undefined
-  const liquidityValues: { [Field.CURRENCY_A]?: CurrencyAmount; [Field.CURRENCY_B]?: CurrencyAmount } = {
+  const liquidityValues: { [Field.CURRENCY_A]?: CurrencyAmount<Token>; [Field.CURRENCY_B]?: CurrencyAmount<Token> } = {
     [Field.CURRENCY_A]: liquidityValueA,
     [Field.CURRENCY_B]: liquidityValueB,
   }
@@ -100,9 +100,9 @@ export function useDerivedBurnInfo(
 
   const parsedAmounts: {
     [Field.LIQUIDITY_PERCENT]: Percent
-    [Field.LIQUIDITY]?: CurrencyAmount
-    [Field.CURRENCY_A]?: CurrencyAmount
-    [Field.CURRENCY_B]?: CurrencyAmount
+    [Field.LIQUIDITY]?: CurrencyAmount<Token>
+    [Field.CURRENCY_A]?: CurrencyAmount<Currency>
+    [Field.CURRENCY_B]?: CurrencyAmount<Currency>
   } = {
     [Field.LIQUIDITY_PERCENT]: percentToRemove,
     [Field.LIQUIDITY]:

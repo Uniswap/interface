@@ -20,7 +20,7 @@ import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { UNI, ZERO_ADDRESS } from '../../constants'
-import { CurrencyAmount, ChainId } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount, ChainId } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { shortenAddress, getEtherscanLink } from '../../utils'
 import Loader from '../../components/Loader'
@@ -119,8 +119,8 @@ export default function Vote() {
   const allProposals: ProposalData[] = useAllProposalData()
 
   // user data
-  const availableVotes: CurrencyAmount | undefined = useUserVotes()
-  const uniBalance: CurrencyAmount | undefined = useTokenBalance(
+  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
+  const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
     account ?? undefined,
     chainId ? UNI[chainId] : undefined
   )

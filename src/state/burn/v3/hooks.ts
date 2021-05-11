@@ -1,4 +1,4 @@
-import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { useActiveWeb3React } from 'hooks'
@@ -20,10 +20,10 @@ export function useDerivedV3BurnInfo(
 ): {
   position?: Position
   liquidityPercentage?: Percent
-  liquidityValue0?: CurrencyAmount
-  liquidityValue1?: CurrencyAmount
-  feeValue0?: CurrencyAmount
-  feeValue1?: CurrencyAmount
+  liquidityValue0?: CurrencyAmount<Token>
+  liquidityValue1?: CurrencyAmount<Token>
+  feeValue0?: CurrencyAmount<Token>
+  feeValue1?: CurrencyAmount<Token>
   outOfRange: boolean
   error?: string
 } {
