@@ -6,6 +6,7 @@ import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { getExplorerLink, getExplorerLinkText } from '../../utils'
+import { ChainId } from '@fuseio/fuse-swap-sdk'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -68,15 +69,19 @@ const Input = styled.input<{ error?: boolean }>`
 export default function AddressInputPanel({
   id,
   value,
-  onChange
+  onChange,
+  chainId,
+  readOnly = false
 }: {
   id?: string
   // the typed string value
   value: string
   // triggers whenever the typed value changes
   onChange: (value: string) => void
+  chainId?: ChainId
+  readOnly?: boolean
 }) {
-  const { chainId } = useActiveWeb3React()
+  const { chainId: activeChainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const { address, loading, name } = useENS(value)
@@ -91,6 +96,7 @@ export default function AddressInputPanel({
   )
 
   const error = Boolean(value.length > 0 && !loading && !address)
+  const chain = chainId || activeChainId
 
   return (
     <InputPanel id={id}>
@@ -101,9 +107,9 @@ export default function AddressInputPanel({
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
                 Recipient
               </TYPE.black>
-              {address && chainId && (
-                <ExternalLink href={getExplorerLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
-                  ({getExplorerLinkText(chainId)})
+              {address && chain && (
+                <ExternalLink href={getExplorerLink(chain, name ?? address, 'address')} style={{ fontSize: '14px' }}>
+                  ({getExplorerLinkText(chain)})
                 </ExternalLink>
               )}
             </RowBetween>
@@ -119,6 +125,7 @@ export default function AddressInputPanel({
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}
               value={value}
+              readOnly={readOnly}
             />
           </AutoColumn>
         </InputContainer>

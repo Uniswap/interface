@@ -40,7 +40,7 @@ import HomeBridgeNativeToErc from '../constants/abis/homeBridgeNativeToErc.json'
 import ForeignBriddgeNativeToErc from '../constants/abis/foreignBridgeNativeToErc.json'
 import { formatUnits, Interface, id, formatEther } from 'ethers/lib/utils'
 import { BridgeDirection, BridgeType } from '../state/bridge/hooks'
-import BinanceBridge from '../state/bridge/bridges/binance'
+import BscErc20ToErc677Bridge from '../state/bridge/bridges/bscErc20ToErc677'
 import NativeToErcBridge from '../state/bridge/bridges/nativeToErc'
 import Erc677ToErc677Bridge from '../state/bridge/bridges/erc677Toerc677'
 import Erc20ToErc677Bridge from '../state/bridge/bridges/erc20Toerc677'
@@ -331,7 +331,7 @@ export function getBnbFuseBridge(tokenAddress: string) {
   if (isFuse(tokenAddress)) {
     return BscNativeToErcBridge
   } else {
-    return BinanceBridge
+    return BscErc20ToErc677Bridge
   }
 }
 

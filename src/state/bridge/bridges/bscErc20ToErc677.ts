@@ -79,10 +79,20 @@ export default class BinanceBridge extends TokenBridge {
     this.dispatch(tokenTransferPending())
 
     const contract = getForeignMultiAMBErc20ToErc677Contract(this.foreignBridgeAddress, this.library, this.account)
-    const method = contract['relayTokens(address,uint256)']
-    const args = [this.tokenAddress, this.amount.raw.toString()]
 
-    const response = await method(...args)
+    let estimate, method, args
+    if (this.receiverAddress) {
+      estimate = contract.estimateGas['relayTokens(address,address,uint256)']
+      method = contract['relayTokens(address,address,uint256)']
+      args = [this.tokenAddress, this.receiverAddress, this.amount.raw.toString()]
+    } else {
+      estimate = contract.estimateGas['relayTokens(address,uint256)']
+      method = contract['relayTokens(address,uint256)']
+      args = [this.tokenAddress, this.amount.raw.toString()]
+    }
+
+    const estimatedGas = await estimate(...args, {})
+    const response = await method(...args, { gasLimit: calculateGasMargin(estimatedGas) })
 
     this.dispatch(tokenTransferSuccess())
 
@@ -100,7 +110,11 @@ export default class BinanceBridge extends TokenBridge {
       async (eventArgs: any[]) => {
         const [homeTokenAddress, recipient] = eventArgs
         const address = await this.homeBridgeContract.foreignTokenAddress(homeTokenAddress)
-        return recipient === this.account && this.tokenAddress === address
+        const receiver = this.receiverAddress ? this.receiverAddress : this.account
+        return (
+          recipient.toLowerCase() === receiver.toLowerCase() &&
+          this.tokenAddress.toLowerCase() === address.toLowerCase()
+        )
       }
     )
 

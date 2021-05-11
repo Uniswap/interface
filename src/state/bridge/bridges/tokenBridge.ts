@@ -19,6 +19,7 @@ abstract class TokenBridge {
   readonly dispatch: AppDispatch
   readonly isHome: boolean
   readonly addTransaction: (...args: any) => void
+  readonly receiverAddress?: string
 
   constructor(
     tokenAddress: string,
@@ -29,7 +30,8 @@ abstract class TokenBridge {
     account: string,
     dispatch: AppDispatch,
     isHome: boolean,
-    addTransaction: (...args: any) => void
+    addTransaction: (...args: any) => void,
+    receiverAddress?: string
   ) {
     this.tokenAddress = tokenAddress
     this.tokenSymbol = tokenSymbol
@@ -40,6 +42,7 @@ abstract class TokenBridge {
     this.dispatch = dispatch
     this.isHome = isHome
     this.addTransaction = addTransaction
+    this.receiverAddress = receiverAddress
   }
 
   transferToHome() {

@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/react'
 import AppBody from '../AppBody'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { Currency, TokenAmount } from '@fuseio/fuse-swap-sdk'
+import { Currency, TokenAmount, ChainId } from '@fuseio/fuse-swap-sdk'
 import { currencyId } from '../../utils/currencyId'
 import {
   useBridgeActionHandlers,
@@ -55,20 +55,27 @@ import DestinationButton from '../../components/bridge/DestinationButton'
 import FeeModal from '../../components/FeeModal'
 import TokenMigrationModal from '../../components/TokenMigration'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
+import AutoSwitchNetwork from '../../components/AutoSwitchNetwork'
+import AddressInputPanel from '../../components/AddressInputPanel'
 
 export default function Bridge() {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
-  const { inputCurrencyId: defaultInputCurrencyId } = useDefaultsFromURLSearch()
+  const {
+    inputCurrencyId: defaultInputCurrencyId,
+    sourceChain,
+    amount,
+    recipient: defaultRecipient
+  } = useDefaultsFromURLSearch()
 
   const [selectedBridgeDirection, setSelectedBridgeDirection] = useState<BridgeDirection | undefined>()
   const bridgeDirection = useDetectBridgeDirection(selectedBridgeDirection)
 
   const [migrationCurrency, setMigrationCurrency] = useState<Currency | undefined>()
 
-  const { independentField, typedValue } = useBridgeState()
+  const { independentField, typedValue, recipient } = useBridgeState()
 
   const {
     currencies,
@@ -85,7 +92,7 @@ export default function Bridge() {
 
   const { updateCompletedBridgeTransfer } = useUserActionHandlers()
 
-  const { onFieldInput, onSelectBridgeDirection, onSelectCurrency } = useBridgeActionHandlers()
+  const { onFieldInput, onSelectBridgeDirection, onSelectCurrency, onSetRecipient } = useBridgeActionHandlers()
 
   // unsupportedBridge modal
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -145,7 +152,8 @@ export default function Bridge() {
         account,
         dispatch,
         isHome,
-        addTransaction
+        addTransaction,
+        recipient
       )
 
       await bridge?.executeTransaction()
@@ -155,6 +163,7 @@ export default function Bridge() {
       }
 
       onFieldInput('')
+      onSetRecipient('')
       updateCompletedBridgeTransfer()
     } catch (error) {
       if (error?.code !== 4001) {
@@ -199,15 +208,26 @@ export default function Bridge() {
     [onSelectCurrency]
   )
 
+  // set defaults from url params
+
   useEffect(() => {
     onSelectCurrency(defaultInputCurrencyId)
   }, [defaultInputCurrencyId, onSelectCurrency])
+
+  useEffect(() => {
+    if (amount) onFieldInput(amount)
+  }, [amount, onFieldInput])
+
+  useEffect(() => {
+    if (defaultRecipient) onSetRecipient(defaultRecipient)
+  }, [defaultRecipient, onSetRecipient])
 
   return (
     <>
       <AppBody>
         <SwapPoolTabs active={'bridge'} />
         <Wrapper id="bridge-page">
+          <AutoSwitchNetwork chainId={sourceChain} />
           <UnsupportedBridgeTokenModal isOpen={modalOpen} setIsOpen={setModalOpen} />
           <FeeModal isOpen={feeModalOpen} onDismiss={() => setFeeModalOpen(false)} />
           <TokenMigrationModal
@@ -257,6 +277,17 @@ export default function Bridge() {
               listType="Bridge"
             />
           </AutoColumn>
+          {recipient && (
+            <AutoColumn gap="md" style={{ marginTop: '1rem' }}>
+              <AddressInputPanel
+                id="recipient"
+                value={recipient}
+                onChange={onSetRecipient}
+                readOnly
+                chainId={ChainId.FUSE}
+              />
+            </AutoColumn>
+          )}
           {!isHome && (
             <>
               <ColumnCenter>
