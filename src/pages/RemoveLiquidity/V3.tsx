@@ -15,13 +15,13 @@ import { Text } from 'rebass'
 import CurrencyLogo from 'components/CurrencyLogo'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { useUserSlippageTolerance } from 'state/user/hooks'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { WETH9, CurrencyAmount } from '@uniswap/sdk-core'
+import { WETH9, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
 import { Wrapper, SmallMaxButton, ResponsiveHeaderText } from './styled'
 import Loader from 'components/Loader'
@@ -36,6 +36,8 @@ import { AddRemoveTabs } from 'components/NavigationTabs'
 import RangeBadge from 'components/Badge/RangeBadge'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
+
+const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3({
@@ -89,7 +91,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
 
   const deadline = useTransactionDeadline() // custom from users settings
-  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+  const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
   const [showConfirm, setShowConfirm] = useState(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false)
@@ -274,7 +276,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         pendingText={pendingText}
       />
       <AppBody>
-        <AddRemoveTabs creating={false} adding={false} positionID={tokenId.toString()} />
+        <AddRemoveTabs
+          creating={false}
+          adding={false}
+          positionID={tokenId.toString()}
+          defaultSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
+        />
         <Wrapper>
           {position ? (
             <AutoColumn gap="lg">

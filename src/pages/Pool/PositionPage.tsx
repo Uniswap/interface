@@ -147,9 +147,9 @@ function CurrentPriceCard({
       <AutoColumn gap="8px" justify="center">
         <ExtentsText>{t('Current price')}</ExtentsText>
         <TYPE.mediumHeader textAlign="center">
-          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(4)}{' '}
+          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(5)}{' '}
         </TYPE.mediumHeader>
-        <ExtentsText>{currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
+        <ExtentsText>{currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
       </AutoColumn>
     </LightCard>
   )
@@ -420,7 +420,7 @@ export function PositionPage({
                     borderRadius="12px"
                     style={{ marginRight: '8px' }}
                   >
-                    {t('Add Liquidity')}
+                    {t('Increase Liquidity')}
                   </ButtonGray>
                 ) : null}
                 {tokenId && !removed ? (
@@ -638,8 +638,8 @@ export function PositionPage({
               <LightCard padding="12px" width="100%">
                 <AutoColumn gap="8px" justify="center">
                   <ExtentsText>Min price</ExtentsText>
-                  <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(4)}</TYPE.mediumHeader>
-                  <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
+                  <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(5)}</TYPE.mediumHeader>
+                  <ExtentsText> {currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
 
                   {inRange && (
                     <TYPE.small color={theme.text3}>
@@ -653,8 +653,8 @@ export function PositionPage({
               <LightCard padding="12px" width="100%">
                 <AutoColumn gap="8px" justify="center">
                   <ExtentsText>Max price</ExtentsText>
-                  <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(4)}</TYPE.mediumHeader>
-                  <ExtentsText> {currencyQuote?.symbol + ' / ' + currencyBase?.symbol}</ExtentsText>
+                  <TYPE.mediumHeader textAlign="center">{priceUpper?.toSignificant(5)}</TYPE.mediumHeader>
+                  <ExtentsText> {currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
 
                   {inRange && (
                     <TYPE.small color={theme.text3}>
