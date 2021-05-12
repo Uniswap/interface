@@ -10,8 +10,8 @@ export function formatTokenAmount(amount: CurrencyAmount<Currency> | undefined, 
     return '0'
   }
 
-  if (parseFloat(amount.toFixed(Math.min(sigFigs, amount.currency.decimals))) < 0.000001) {
-    return '<0.0001'
+  if (parseFloat(amount.toSignificant(Math.min(sigFigs, amount.currency.decimals))) < 0.000001) {
+    return '<0.000001'
   }
 
   return amount.toSignificant(Math.min(sigFigs, amount.currency.decimals))
