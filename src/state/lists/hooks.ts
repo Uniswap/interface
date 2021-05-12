@@ -56,7 +56,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           ...tokenMap[token.chainId as ChainId],
           [token.address]: {
             token,
-            list: list,
+            list,
           },
         },
       }
@@ -69,14 +69,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
 
 const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
 
-export function useAllLists(): {
-  readonly [url: string]: {
-    readonly current: TokenList | null
-    readonly pendingUpdate: TokenList | null
-    readonly loadingRequestId: string | null
-    readonly error: string | null
-  }
-} {
+export function useAllLists(): AppState['lists']['byUrl'] {
   return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
 }
 
@@ -104,8 +97,7 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
           const current = lists[currentUrl]?.current
           if (!current) return allTokens
           try {
-            const newTokens = Object.assign(listToTokenMap(current))
-            return combineMaps(allTokens, newTokens)
+            return combineMaps(allTokens, listToTokenMap(current))
           } catch (error) {
             console.error('Could not show token list due to error', error)
             return allTokens
@@ -150,7 +142,10 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
-  return combineMaps(localUnsupportedListMap, loadedUnsupportedListMap)
+  return useMemo(() => combineMaps(localUnsupportedListMap, loadedUnsupportedListMap), [
+    localUnsupportedListMap,
+    loadedUnsupportedListMap,
+  ])
 }
 
 export function useIsListActive(url: string): boolean {
