@@ -11,10 +11,14 @@ const BaseGasPriceOption = styled(Option)<{ active?: boolean; compact?: boolean 
   align-items: center;
   justify-content: center;
   border-radius: 4px;
+  box-sizing: border-box;
   font-size: 9px;
   font-weight: 600;
   line-height: 11px;
   letter-spacing: 0em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 export const OrangeGasPriceOption = styled(BaseGasPriceOption)`

@@ -28,7 +28,7 @@ const AdvancedDetailsFooter = styled.div<{
   height?: string
 }>`
   width: ${props => (props.fullWidth ? '100%' : 'auto')};
-  max-width: 400px;
+  max-width: 412px;
   height: ${props => (props.height ? props.height : 'auto')};
   padding: ${props => props.padding};
   color: ${({ theme }) => theme.purple3};
