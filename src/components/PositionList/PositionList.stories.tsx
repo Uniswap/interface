@@ -4,7 +4,7 @@
 // import { basisPointsToPercent } from 'utils'
 // import { DAI, WBTC } from '../../constants'
 // import Component, { PositionListProps } from './index'
-// import { TokenAmount } from '@uniswap/sdk-core'
+// import { CurrencyAmount } from '@uniswap/sdk-core'
 // import JSBI from 'jsbi'
 
 // const FEE_BIPS = {
@@ -12,8 +12,8 @@
 //   THIRTY: basisPointsToPercent(30),
 //   ONE_HUNDRED: basisPointsToPercent(100),
 // }
-// const daiAmount = new TokenAmount(DAI, JSBI.BigInt(500 * 10 ** 18))
-// const wbtcAmount = new TokenAmount(WBTC, JSBI.BigInt(10 ** 7))
+// const daiAmount = CurrencyAmount.fromRawAmount(DAI, JSBI.BigInt(500 * 10 ** 18))
+// const wbtcAmount = CurrencyAmount.fromRawAmount(WBTC, JSBI.BigInt(10 ** 7))
 // const positions = [
 //   {
 //     feesEarned: {

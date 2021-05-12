@@ -1,5 +1,5 @@
-import { TokenAmount } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
@@ -60,7 +60,7 @@ export default function ClaimModal() {
 
   // monitor the status of the claim from contracts and txns
   const { claimCallback } = useClaimCallback(account)
-  const unclaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(account)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const { claimSubmitted, claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
   const claimConfirmed = Boolean(claimTxn?.receipt)
 
@@ -116,12 +116,12 @@ export default function ClaimModal() {
               )}
               {userClaimData?.flags?.isLP &&
                 unclaimedAmount &&
-                JSBI.greaterThanOrEqual(unclaimedAmount.raw, nonLPAmount) && (
+                JSBI.greaterThanOrEqual(unclaimedAmount.quotient, nonLPAmount) && (
                   <RowBetween>
                     <TYPE.subHeader color="white">Liquidity</TYPE.subHeader>
                     <TYPE.subHeader color="white">
                       {unclaimedAmount
-                        .subtract(new TokenAmount(unclaimedAmount.token, nonLPAmount))
+                        .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
                         .toFixed(0, { groupSeparator: ',' })}{' '}
                       UNI
                     </TYPE.subHeader>

@@ -1,5 +1,5 @@
 import { Pair } from '@uniswap/v2-sdk'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
@@ -157,7 +157,7 @@ interface CurrencyInputPanelProps {
   pair?: Pair | null
   hideInput?: boolean
   otherCurrency?: Currency | null
-  fiatValue?: CurrencyAmount | null
+  fiatValue?: CurrencyAmount<Token> | null
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean

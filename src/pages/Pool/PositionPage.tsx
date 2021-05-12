@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { SyntheticEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 
 import { PoolState, usePool } from 'hooks/usePools'
@@ -23,7 +23,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9, Currency, CurrencyAmount, Percent, Fraction, Price } from '@uniswap/sdk-core'
+import { Token, WETH9, Currency, CurrencyAmount, Percent, Fraction, Price, currencyEquals } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -126,6 +126,23 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   `};
 `
 
+const NFTGrid = styled.div`
+  display: grid;
+  grid-template: 'overlap';
+  min-height: 400px;
+`
+
+const NFTCanvas = styled.canvas`
+  grid-area: overlap;
+`
+
+const NFTImage = styled.img`
+  grid-area: overlap;
+  height: 400px;
+  /* Ensures SVG appears on top of canvas. */
+  z-index: 1;
+`
+
 function CurrentPriceCard({
   inverted,
   pool,
@@ -155,7 +172,11 @@ function CurrentPriceCard({
   )
 }
 
-function getRatio(lower: Price, current: Price, upper: Price) {
+function getRatio(
+  lower: Price<Currency, Currency>,
+  current: Price<Currency, Currency>,
+  upper: Price<Currency, Currency>
+) {
   try {
     if (!current.greaterThan(lower)) {
       return 100
@@ -177,6 +198,50 @@ function getRatio(lower: Price, current: Price, upper: Price) {
   } catch {
     return undefined
   }
+}
+
+function NFT({ image, height: targetHeight }: { image: string; height: number }) {
+  const [animate, setAnimate] = useState(false)
+
+  const canvasRef = useRef<HTMLCanvasElement>()
+  const imageRef = useRef<HTMLImageElement>()
+
+  const getSnapshot = (src: HTMLImageElement) => {
+    if (!canvasRef.current) return
+
+    const { current: canvas } = canvasRef
+    const context = canvas.getContext('2d')
+
+    if (!context) return
+
+    let { width, height } = src
+
+    // src may be hidden and not have the target dimensions
+    const ratio = width / height
+    height = targetHeight
+    width = Math.round(ratio * targetHeight)
+
+    // Ensure crispness at high DPIs
+    canvas.width = width * devicePixelRatio
+    canvas.height = height * devicePixelRatio
+    canvas.style.width = width + 'px'
+    canvas.style.height = height + 'px'
+    context.scale(devicePixelRatio, devicePixelRatio)
+
+    context.clearRect(0, 0, width, height)
+    context.drawImage(src, 0, 0, width, height)
+  }
+
+  const onLoad = (e: SyntheticEvent<HTMLImageElement>) => {
+    getSnapshot(e.target as HTMLImageElement)
+  }
+
+  return (
+    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={() => setAnimate(false)}>
+      <NFTCanvas ref={canvasRef as any} />
+      <NFTImage src={image} hidden={!animate} onLoad={onLoad} ref={imageRef as any} />
+    </NFTGrid>
+  )
 }
 
 export function PositionPage({
@@ -239,7 +304,7 @@ export function PositionPage({
   }, [inverted, pool, priceLower, priceUpper])
 
   // fees
-  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails)
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails?.tokenId)
 
   const [collecting, setCollecting] = useState<boolean>(false)
   const [collectMigrationHash, setCollectMigrationHash] = useState<string | null>(null)
@@ -255,8 +320,12 @@ export function PositionPage({
 
     const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
       tokenId: tokenId.toString(),
-      expectedCurrencyOwed0: feeValue0.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue0.raw) : feeValue0,
-      expectedCurrencyOwed1: feeValue1.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue1.raw) : feeValue1,
+      expectedCurrencyOwed0: currencyEquals(feeValue0.currency, WETH9[chainId])
+        ? CurrencyAmount.ether(feeValue0.quotient)
+        : feeValue0,
+      expectedCurrencyOwed1: currencyEquals(feeValue1.currency, WETH9[chainId])
+        ? CurrencyAmount.ether(feeValue1.quotient)
+        : feeValue1,
       recipient: account,
     })
 
@@ -285,11 +354,11 @@ export function PositionPage({
             ReactGA.event({
               category: 'Liquidity',
               action: 'CollectV3',
-              label: [feeValue0.token.symbol, feeValue1.token.symbol].join('/'),
+              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
             })
 
             addTransaction(response, {
-              summary: `Collect ${feeValue0.token.symbol}/${feeValue1.token.symbol} fees`,
+              summary: `Collect ${feeValue0.currency.symbol}/${feeValue1.currency.symbol} fees`,
             })
           })
       })
@@ -305,14 +374,14 @@ export function PositionPage({
   const price0 = useUSDCPrice(token0 ?? undefined)
   const price1 = useUSDCPrice(token1 ?? undefined)
 
-  const fiatValueOfFees: CurrencyAmount | null = useMemo(() => {
+  const fiatValueOfFees: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
     const amount0 = price0.quote(feeValue0)
     const amount1 = price1.quote(feeValue1)
     return amount0.add(amount1)
   }, [price0, price1, feeValue0, feeValue1])
 
-  const fiatValueOfLiquidity: CurrencyAmount | null = useMemo(() => {
+  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !position) return null
     const amount0 = price0.quote(position.amount0)
     const amount1 = price1.quote(position.amount1)
@@ -453,7 +522,7 @@ export function PositionPage({
               }}
             >
               <div style={{ marginRight: 12 }}>
-                <img height="400px" src={metadata.result.image} />
+                <NFT image={metadata.result.image} height={400} />
               </div>
               {typeof chainId === 'number' && owner && !ownsNFT ? (
                 <ExternalLink href={getEtherscanLink(chainId, owner, 'address')}>Owner</ExternalLink>

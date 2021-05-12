@@ -12,7 +12,7 @@ import {
   TICK_SPACINGS,
   encodeSqrtRatioX96,
 } from '@uniswap/v3-sdk/dist/'
-import { Currency, CurrencyAmount, ETHER, Price, Rounding } from '@uniswap/sdk-core'
+import { Currency, Token, CurrencyAmount, currencyEquals, Price, Rounding } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../../hooks'
@@ -94,14 +94,14 @@ export function useV3DerivedMintInfo(
   pool?: Pool | null
   poolState: PoolState
   ticks: { [bound in Bound]?: number | undefined }
-  price?: Price
+  price?: Price<Token, Token>
   pricesAtTicks: {
-    [bound in Bound]?: Price | undefined
+    [bound in Bound]?: Price<Token, Token> | undefined
   }
   currencies: { [field in Field]?: Currency }
-  currencyBalances: { [field in Field]?: CurrencyAmount }
+  currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   dependentField: Field
-  parsedAmounts: { [field in Field]?: CurrencyAmount }
+  parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   position: Position | undefined
   noLiquidity?: boolean
   errorMessage?: string
@@ -154,7 +154,7 @@ export function useV3DerivedMintInfo(
     currencies[Field.CURRENCY_A],
     currencies[Field.CURRENCY_B],
   ])
-  const currencyBalances: { [field in Field]?: CurrencyAmount } = {
+  const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
     [Field.CURRENCY_A]: balances[0],
     [Field.CURRENCY_B]: balances[1],
   }
@@ -167,7 +167,7 @@ export function useV3DerivedMintInfo(
   const invertPrice = Boolean(baseToken && token0 && !baseToken.equals(token0))
 
   // always returns the price with 0 as base token
-  const price = useMemo(() => {
+  const price: Price<Token, Token> | undefined = useMemo(() => {
     // if no liquidity use typed value
     if (noLiquidity) {
       const parsedQuoteAmount = tryParseAmount(startPriceTypedValue, invertPrice ? token0 : token1)
@@ -175,7 +175,12 @@ export function useV3DerivedMintInfo(
         const baseAmount = tryParseAmount('1', invertPrice ? token1 : token0)
         const price =
           baseAmount && parsedQuoteAmount
-            ? new Price(baseAmount.currency, parsedQuoteAmount.currency, baseAmount.raw, parsedQuoteAmount.raw)
+            ? new Price(
+                baseAmount.currency,
+                parsedQuoteAmount.currency,
+                baseAmount.quotient,
+                parsedQuoteAmount.quotient
+              )
             : undefined
         return (invertPrice ? price?.invert() : price) ?? undefined
       }
@@ -188,7 +193,7 @@ export function useV3DerivedMintInfo(
 
   // check for invalid price input (converts to invalid ratio)
   const invalidPrice = useMemo(() => {
-    const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.raw.numerator, price.raw.denominator) : undefined
+    const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.numerator, price.denominator) : undefined
     const invalid =
       price &&
       sqrtRatioX96 &&
@@ -254,9 +259,12 @@ export function useV3DerivedMintInfo(
   )
 
   // amounts
-  const independentAmount: CurrencyAmount | undefined = tryParseAmount(typedValue, currencies[independentField])
+  const independentAmount: CurrencyAmount<Currency> | undefined = tryParseAmount(
+    typedValue,
+    currencies[independentField]
+  )
 
-  const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
+  const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
     // we wrap the currencies just to get the price in terms of the other token
     const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
     const dependentCurrency = dependentField === Field.CURRENCY_B ? currencyB : currencyA
@@ -272,24 +280,24 @@ export function useV3DerivedMintInfo(
         return undefined
       }
 
-      const position: Position | undefined = wrappedIndependentAmount.token.equals(poolForPosition.token0)
+      const position: Position | undefined = currencyEquals(wrappedIndependentAmount.currency, poolForPosition.token0)
         ? Position.fromAmount0({
             pool: poolForPosition,
             tickLower,
             tickUpper,
-            amount0: independentAmount.raw,
+            amount0: independentAmount.quotient,
           })
         : Position.fromAmount1({
             pool: poolForPosition,
             tickLower,
             tickUpper,
-            amount1: independentAmount.raw,
+            amount1: independentAmount.quotient,
           })
 
-      const dependentTokenAmount = wrappedIndependentAmount.token.equals(poolForPosition.token0)
+      const dependentTokenAmount = currencyEquals(wrappedIndependentAmount.currency, poolForPosition.token0)
         ? position.amount1
         : position.amount0
-      return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
+      return dependentCurrency?.isEther ? CurrencyAmount.ether(dependentTokenAmount.quotient) : dependentTokenAmount
     }
 
     return undefined
@@ -306,7 +314,7 @@ export function useV3DerivedMintInfo(
     invalidRange,
   ])
 
-  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = useMemo(() => {
+  const parsedAmounts: { [field in Field]: CurrencyAmount<Currency> | undefined } = useMemo(() => {
     return {
       [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
       [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount,
@@ -350,10 +358,10 @@ export function useV3DerivedMintInfo(
 
     // mark as 0 if disbaled because out of range
     const amount0 = !deposit0Disabled
-      ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_A : Field.CURRENCY_B]?.raw
+      ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_A : Field.CURRENCY_B]?.quotient
       : BIG_INT_ZERO
     const amount1 = !deposit1Disabled
-      ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_B : Field.CURRENCY_A]?.raw
+      ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_B : Field.CURRENCY_A]?.quotient
       : BIG_INT_ZERO
 
     if (amount0 !== undefined && amount1 !== undefined) {

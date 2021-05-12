@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { ChainId, CurrencyAmount, Percent, TokenAmount } from '@uniswap/sdk-core'
+import { ChainId, Percent, CurrencyAmount, Currency, TradeType, Token } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { splitSignature } from 'ethers/lib/utils'
@@ -115,7 +115,7 @@ const PERMIT_ALLOWED_TYPE = [
 ]
 
 export function useERC20Permit(
-  currencyAmount: CurrencyAmount | null | undefined,
+  currencyAmount: CurrencyAmount<Currency> | null | undefined,
   spender: string | null | undefined,
   overridePermitInfo: PermitInfo | undefined | null
 ): {
@@ -125,7 +125,7 @@ export function useERC20Permit(
 } {
   const { account, chainId, library } = useActiveWeb3React()
   const transactionDeadline = useTransactionDeadline()
-  const tokenAddress = currencyAmount instanceof TokenAmount ? currencyAmount.token.address : undefined
+  const tokenAddress = currencyAmount?.currency?.isToken ? currencyAmount.currency.address : undefined
   const eip2612Contract = useEIP2612Contract(tokenAddress)
   const isArgentWallet = useIsArgentWallet()
   const nonceInputs = useMemo(() => [account ?? undefined], [account])
@@ -172,7 +172,7 @@ export function useERC20Permit(
       signatureData.tokenAddress === tokenAddress &&
       signatureData.nonce === nonceNumber &&
       signatureData.spender === spender &&
-      ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.raw))
+      ('allowed' in signatureData || JSBI.equal(JSBI.BigInt(signatureData.amount), currencyAmount.quotient))
 
     return {
       state: isSignatureDataValid ? UseERC20PermitState.SIGNED : UseERC20PermitState.NOT_SIGNED,
@@ -180,7 +180,7 @@ export function useERC20Permit(
       gatherPermitSignature: async function gatherPermitSignature() {
         const allowed = permitInfo.type === PermitType.ALLOWED
         const signatureDeadline = transactionDeadline.toNumber() + PERMIT_VALIDITY_BUFFER
-        const value = currencyAmount.raw.toString()
+        const value = currencyAmount.quotient.toString()
 
         const message = allowed
           ? {
@@ -264,13 +264,16 @@ const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
 }
 
 export function useV2LiquidityTokenPermit(
-  liquidityAmount: TokenAmount | null | undefined,
+  liquidityAmount: CurrencyAmount<Token> | null | undefined,
   spender: string | null | undefined
 ) {
   return useERC20Permit(liquidityAmount, spender, REMOVE_V2_LIQUIDITY_PERMIT_INFO)
 }
 
-export function useERC20PermitFromTrade(trade: V2Trade | V3Trade | undefined, allowedSlippage: Percent) {
+export function useERC20PermitFromTrade(
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined,
+  allowedSlippage: Percent
+) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId as ChainId]
   const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [
