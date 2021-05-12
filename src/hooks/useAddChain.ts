@@ -1,12 +1,12 @@
 import { useCallback, useState } from 'react'
-import { useInactiveWeb3 } from './index'
+import { useInjectedProvider } from './index'
 import { Chain } from '../constants/chains'
 
 const SWITCH_ERROR_MSG = 'Failed to Switch Network'
 
 export default function useAddChain() {
   const [error, setError] = useState<string | undefined>()
-  const provider = useInactiveWeb3()
+  const provider = useInjectedProvider()
 
   const addChain = useCallback(
     async (chain: Chain) => {

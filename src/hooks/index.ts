@@ -119,7 +119,7 @@ export function useUpgradedTokenAddress(token: Currency | undefined) {
   }, [library, account, token])
 }
 
-export function useInactiveWeb3() {
+export function useInjectedProvider() {
   const { ethereum: library } = window
   return useMemo(() => library, [library])
 }
