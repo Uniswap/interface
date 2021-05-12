@@ -27,7 +27,7 @@ export function FiatValue({
       {fiatValue ? '~' : ''}$
       <HoverInlineText text={fiatValue ? Number(fiatValue?.toSignificant(6)).toLocaleString('en') : '-'} />{' '}
       {priceImpact ? (
-        <span style={{ color: priceImpactColor }}> ({priceImpact.multiply(-100).toSignificant(3)}%)</span>
+        <span style={{ color: priceImpactColor }}> ({priceImpact.multiply(-1).toSignificant(3)}%)</span>
       ) : null}
     </TYPE.body>
   )
