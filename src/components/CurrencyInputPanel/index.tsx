@@ -18,6 +18,7 @@ import useTheme from '../../hooks/useTheme'
 import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
+import { formatTokenAmount } from 'utils/formatTokenAmount'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -134,11 +135,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
   margin-left: 0.25rem;
 
-  :hover {
-    /* border: 1px solid ${({ theme }) => theme.primary1}; */
-  }
   :focus {
-    /* border: 1px solid ${({ theme }) => theme.primary1}; */
     outline: none;
   }
 
@@ -273,7 +270,7 @@ export default function CurrencyInputPanel({
                   >
                     {!hideBalance && !!currency && selectedCurrencyBalance
                       ? (customBalanceText ?? 'Balance: ') +
-                        selectedCurrencyBalance?.toSignificant(4) +
+                        formatTokenAmount(selectedCurrencyBalance, 4) +
                         ' ' +
                         currency.symbol
                       : '-'}
@@ -285,7 +282,6 @@ export default function CurrencyInputPanel({
               ) : (
                 '-'
               )}
-
               <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
             </RowBetween>
           </FiatRow>

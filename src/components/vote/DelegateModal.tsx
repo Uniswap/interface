@@ -15,6 +15,7 @@ import { useDelegateCallback } from '../../state/governance/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { UNI } from '../../constants'
 import { LoadingView, SubmittedView } from '../ModalViews'
+import { formatTokenAmount } from 'utils/formatTokenAmount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -116,7 +117,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>{usingDelegate ? 'Delegating votes' : 'Unlocking Votes'}</TYPE.largeHeader>
-            <TYPE.main fontSize={36}>{uniBalance?.toSignificant(4)}</TYPE.main>
+            <TYPE.main fontSize={36}> {formatTokenAmount(uniBalance, 4)}</TYPE.main>
           </AutoColumn>
         </LoadingView>
       )}
@@ -124,7 +125,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.main fontSize={36}>{uniBalance?.toSignificant(4)}</TYPE.main>
+            <TYPE.main fontSize={36}>{formatTokenAmount(uniBalance, 4)}</TYPE.main>
           </AutoColumn>
         </SubmittedView>
       )}
