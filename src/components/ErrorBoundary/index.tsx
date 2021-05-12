@@ -1,4 +1,5 @@
 import React, { ErrorInfo } from 'react'
+import store, { AppState } from '../../state'
 import { ExternalLink, ThemedBackground, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
@@ -114,26 +115,45 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   }
 }
 
+function getRelevantState(): null | keyof AppState {
+  const path = window.location.hash
+  if (!path.startsWith('#/')) {
+    return null
+  }
+  const pieces = path.substring(2).split(/[\/\\?]/)
+  switch (pieces[0]) {
+    case 'swap':
+      return 'swap'
+    case 'add':
+      if (pieces[1] === 'v2') return 'mint'
+      else return 'mintV3'
+    case 'remove':
+      if (pieces[1] === 'v2') return 'burn'
+      else return 'burnV3'
+  }
+  return null
+}
+
 function issueBody(error: Error): string {
-  if (!error) throw new Error('no error to report')
+  const relevantState = getRelevantState()
   const deviceData = getUserAgent()
-  return `**Bug Description**
+  return `## URL
   
-App crashed
-
-**Steps to Reproduce**
-
-1. Go to ...
-2. Click on ...
-   ...
-
-**URL**
-
 ${window.location.href}
 
 ${
+  relevantState
+    ? `## \`${relevantState}\` state
+    
+\`\`\`json
+${JSON.stringify(store.getState()[relevantState], null, 2)}
+\`\`\`
+`
+    : ''
+}
+${
   error.name &&
-  `**Error**
+  `## Error
 
 \`\`\`
 ${error.name}${error.message && `: ${error.message}`}
@@ -142,7 +162,7 @@ ${error.name}${error.message && `: ${error.message}`}
 }
 ${
   error.stack &&
-  `**Stacktrace**
+  `## Stacktrace
 
 \`\`\`
 ${error.stack}
@@ -151,9 +171,9 @@ ${error.stack}
 }
 ${
   deviceData &&
-  `**Device data**
+  `## Device data
 
-\`\`\`json5
+\`\`\`json
 ${JSON.stringify(deviceData, null, 2)}
 \`\`\`
 `
