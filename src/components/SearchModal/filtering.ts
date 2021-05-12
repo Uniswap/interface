@@ -3,13 +3,18 @@ import { useMemo } from 'react'
 import { isAddress } from '../../utils'
 import { Token } from '@uniswap/sdk-core'
 
-export function filterTokens<T extends Token | TokenInfo>(tokens: T[], search: string): T[] {
-  if (search.length === 0) return tokens
+const alwaysTrue = () => true
 
+/**
+ * Create a filter function to apply to a token for whether it matches a particular search query
+ * @param search the search query to apply to the token
+ */
+export function createTokenFilterFunction<T extends Token | TokenInfo>(search: string): (tokens: T) => boolean {
   const searchingAddress = isAddress(search)
 
   if (searchingAddress) {
-    return tokens.filter((token) => token.address === searchingAddress)
+    const lower = searchingAddress.toLowerCase()
+    return (t: T) => ('isToken' in t ? searchingAddress === t.address : lower === t.address.toLowerCase())
   }
 
   const lowerSearchParts = search
@@ -17,9 +22,7 @@ export function filterTokens<T extends Token | TokenInfo>(tokens: T[], search: s
     .split(/\s+/)
     .filter((s) => s.length > 0)
 
-  if (lowerSearchParts.length === 0) {
-    return tokens
-  }
+  if (lowerSearchParts.length === 0) return alwaysTrue
 
   const matchesSearch = (s: string): boolean => {
     const sParts = s
@@ -30,10 +33,11 @@ export function filterTokens<T extends Token | TokenInfo>(tokens: T[], search: s
     return lowerSearchParts.every((p) => p.length === 0 || sParts.some((sp) => sp.startsWith(p) || sp.endsWith(p)))
   }
 
-  return tokens.filter((token) => {
-    const { symbol, name } = token
-    return (symbol && matchesSearch(symbol)) || (name && matchesSearch(name))
-  })
+  return ({ name, symbol }: T): boolean => Boolean((symbol && matchesSearch(symbol)) || (name && matchesSearch(name)))
+}
+
+export function filterTokens<T extends Token | TokenInfo>(tokens: T[], search: string): T[] {
+  return tokens.filter(createTokenFilterFunction(search))
 }
 
 export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery: string): Token[] {
