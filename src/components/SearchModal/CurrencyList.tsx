@@ -1,5 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap/sdk-core'
-import { TokenList } from '@uniswap/token-lists/dist/types'
+import { Currency, CurrencyAmount, currencyEquals, Token } from '@uniswap/sdk-core'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
