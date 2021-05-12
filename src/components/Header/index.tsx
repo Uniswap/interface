@@ -3,7 +3,7 @@ import useScrollPosition from '@react-hook/window-scroll'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
-import { darken } from 'polished'
+import { darken, linearGradient } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { Moon, Sun } from 'react-feather'
 import styled from 'styled-components'
@@ -42,10 +42,14 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   position: relative;
   padding: 1rem;
   z-index: 21;
-  background-color: ${({ theme, showBackground }) => (showBackground ? theme.bg0 : 'transparent')};
-  border-bottom: 1px solid ${({ theme, showBackground }) => (showBackground ? theme.bg2 : 'none;')};
   position: relative;
-  transition: background-color 100ms linear;
+
+  /* Background slide effect on scroll. */
+  background-image: ${({ theme }) => `linear-gradient(to bottom, transparent 50%, ${theme.bg0} 50% )}}`}
+  background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
+  background-size: 100% 200%;
+  box-shadow: 0px 0px 0px 1px ${({ theme, showBackground }) => (showBackground ? theme.bg2 : 'transparent;')};
+  transition: background-position .1s, box-shadow .1s;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding:  1rem;
@@ -321,7 +325,7 @@ export default function Header() {
   const scrollY = useScrollPosition()
 
   return (
-    <HeaderFrame showBackground={scrollY > 50}>
+    <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
