@@ -2,7 +2,7 @@ import Tooltip from 'components/Tooltip'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-const TextWrapper = styled.div<{ margin: boolean; link: boolean; fontSize?: string; adjustSize?: boolean }>`
+const TextWrapper = styled.span<{ margin: boolean; link: boolean; fontSize?: string; adjustSize?: boolean }>`
   position: relative;
   margin-left: ${({ margin }) => margin && '4px'};
   color: ${({ theme, link }) => (link ? theme.blue1 : theme.text1)};
