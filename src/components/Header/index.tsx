@@ -1,4 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
+import useScrollPosition from '@react-hook/window-scroll'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
@@ -29,7 +30,7 @@ import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import UniBalanceContent from './UniBalanceContent'
 
-const HeaderFrame = styled.div`
+const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
   grid-template-columns: 120px 1fr 120px;
   align-items: center;
@@ -39,11 +40,12 @@ const HeaderFrame = styled.div`
   width: 100%;
   top: 0;
   position: relative;
-  /* border-bottom: 1px solid ${({ theme }) => theme.bg2}; */
   padding: 1rem;
   z-index: 21;
-  /* background-color: ${({ theme }) => theme.bg1}; */
+  background-color: ${({ theme, showBackground }) => (showBackground ? theme.bg0 : 'transparent')};
+  border-bottom: 1px solid ${({ theme, showBackground }) => (showBackground ? theme.bg2 : 'none;')};
   position: relative;
+  transition: background-color 100ms linear;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding:  1rem;
@@ -316,8 +318,10 @@ export default function Header() {
   const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
   const showClaimPopup = useShowClaimPopup()
 
+  const scrollY = useScrollPosition()
+
   return (
-    <HeaderFrame>
+    <HeaderFrame showBackground={scrollY > 50}>
       <ClaimModal />
       <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
         <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
