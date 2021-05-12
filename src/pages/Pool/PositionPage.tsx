@@ -139,6 +139,7 @@ const NFTCanvas = styled.canvas`
 const NFTImage = styled.img`
   grid-area: overlap;
   height: 400px;
+  z-index: 1;
 `
 
 function CurrentPriceCard({
@@ -232,7 +233,7 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
 
   return (
     <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={() => setAnimate(false)}>
-      <NFTCanvas ref={canvasRef as any} style={{ visibility: animate ? 'hidden' : 'visible' }} />
+      <NFTCanvas ref={canvasRef as any} />
       <NFTImage src={image} hidden={!animate} onLoad={onLoad} ref={imageRef as any} />
     </NFTGrid>
   )
