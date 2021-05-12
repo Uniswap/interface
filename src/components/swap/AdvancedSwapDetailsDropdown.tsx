@@ -27,7 +27,10 @@ const AdvancedDetailsFooter = styled.div<{
   padding: string
   height?: string
 }>`
-  width: ${props => (props.fullWidth ? '100%' : 'auto')};
+  width: ${props => (props.fullWidth ? '400px' : 'auto')};
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    width: calc(100% - 8px);
+  `}
   max-width: 412px;
   height: ${props => (props.height ? props.height : 'auto')};
   padding: ${props => props.padding};
