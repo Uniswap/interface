@@ -1,5 +1,6 @@
 import { ChainId, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -14,12 +15,12 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  toggleURLWarning,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance,
-  toggleURLWarning,
   updateUserSingleHopOnly,
+  updateUserSlippageTolerance,
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -100,22 +101,51 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
   return [singleHopOnly, setSingleHopOnly]
 }
 
-export function useUserSlippageTolerance(): [Percent, (slippageBips: number) => void] {
+export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {
   const dispatch = useDispatch<AppDispatch>()
+
+  return useCallback(
+    (userSlippageTolerance: Percent | 'auto') => {
+      let value: 'auto' | number
+      try {
+        value =
+          userSlippageTolerance === 'auto' ? 'auto' : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
+      } catch (error) {
+        value = 'auto'
+      }
+      dispatch(
+        updateUserSlippageTolerance({
+          userSlippageTolerance: value,
+        })
+      )
+    },
+    [dispatch]
+  )
+}
+
+/**
+ * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
+ */
+export function useUserSlippageTolerance(): Percent | 'auto' {
   const userSlippageTolerance = useSelector<AppState, AppState['user']['userSlippageTolerance']>((state) => {
     return state.user.userSlippageTolerance
   })
 
-  const percentage = useMemo(() => new Percent(userSlippageTolerance, 10_000), [userSlippageTolerance])
+  return useMemo(() => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)), [
+    userSlippageTolerance,
+  ])
+}
 
-  const setUserSlippageTolerance = useCallback(
-    (userSlippageTolerance: number) => {
-      dispatch(updateUserSlippageTolerance({ userSlippageTolerance }))
-    },
-    [dispatch]
-  )
-
-  return [percentage, setUserSlippageTolerance]
+/**
+ * Same as above but replaces the auto with a default value
+ * @param defaultSlippageTolerance the default value to replace auto with
+ */
+export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
+  const allowedSlippage = useUserSlippageTolerance()
+  return useMemo(() => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage), [
+    allowedSlippage,
+    defaultSlippageTolerance,
+  ])
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {

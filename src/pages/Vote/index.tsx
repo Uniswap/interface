@@ -235,7 +235,7 @@ export default function Vote() {
         })}
       </TopSection>
       <TYPE.subHeader color="text3">
-        A minimum threshhold of 1% of the total UNI supply is required to submit proposals
+        A minimum threshold of 1% of the total UNI supply is required to submit proposals
       </TYPE.subHeader>
     </PageWrapper>
   )

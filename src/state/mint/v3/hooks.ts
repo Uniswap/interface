@@ -10,6 +10,7 @@ import {
   TickMath,
   tickToPrice,
   TICK_SPACINGS,
+  encodeSqrtRatioX96,
 } from '@uniswap/v3-sdk/dist/'
 import { Currency, CurrencyAmount, ETHER, Price, Rounding } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
@@ -185,16 +186,29 @@ export function useV3DerivedMintInfo(
     }
   }, [noLiquidity, startPriceTypedValue, invertPrice, token1, token0, pool])
 
+  // check for invalid price input (converts to invalid ratio)
+  const invalidPrice = useMemo(() => {
+    const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.raw.numerator, price.raw.denominator) : undefined
+    const invalid =
+      price &&
+      sqrtRatioX96 &&
+      !(
+        JSBI.greaterThanOrEqual(sqrtRatioX96, TickMath.MIN_SQRT_RATIO) &&
+        JSBI.lessThan(sqrtRatioX96, TickMath.MAX_SQRT_RATIO)
+      )
+    return invalid
+  }, [price])
+
   // used for ratio calculation when pool not initialized
   const mockPool = useMemo(() => {
-    if (tokenA && tokenB && feeAmount && price) {
+    if (tokenA && tokenB && feeAmount && price && !invalidPrice) {
       const currentTick = priceToClosestTick(price)
       const currentSqrt = TickMath.getSqrtRatioAtTick(currentTick)
       return new Pool(tokenA, tokenB, feeAmount, currentSqrt, JSBI.BigInt(0), currentTick, [])
     } else {
       return undefined
     }
-  }, [feeAmount, price, tokenA, tokenB])
+  }, [feeAmount, invalidPrice, price, tokenA, tokenB])
 
   // if pool exists use it, if not use the mock pool
   const poolForPosition: Pool | undefined = pool ?? mockPool
@@ -372,6 +386,10 @@ export function useV3DerivedMintInfo(
 
   if (poolState === PoolState.INVALID) {
     errorMessage = errorMessage ?? 'Invalid pair'
+  }
+
+  if (invalidPrice) {
+    errorMessage = errorMessage ?? 'Invalid price input'
   }
 
   if (

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ButtonGray, ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
@@ -217,14 +217,40 @@ export default function Pool() {
               )}
             </MainContentWrapper>
             <RowFixed justify="center" style={{ width: '100%' }}>
-              <ButtonGray
+              <ButtonOutlined
                 as={Link}
                 to="/pool/v2"
                 id="import-pool-link"
-                style={{ padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
+                style={{
+                  padding: '8px 16px',
+                  margin: '0 4px',
+                  borderRadius: '12px',
+                  width: 'fit-content',
+                  fontSize: '14px',
+                }}
               >
-                <TYPE.subHeader>{t('Looking for your V2 Liquidity')}?</TYPE.subHeader>
-              </ButtonGray>
+                <Layers size={14} style={{ marginRight: '8px' }} />
+
+                {t('View V2 Liquidity')}
+              </ButtonOutlined>
+              {positions && positions.length > 0 && (
+                <ButtonOutlined
+                  as={Link}
+                  to="/migrate/v2"
+                  id="import-pool-link"
+                  style={{
+                    padding: '8px 16px',
+                    margin: '0 4px',
+                    borderRadius: '12px',
+                    width: 'fit-content',
+                    fontSize: '14px',
+                  }}
+                >
+                  <ChevronsRight size={16} style={{ marginRight: '8px' }} />
+
+                  {t('Migrate Liquidity')}
+                </ButtonOutlined>
+              )}
             </RowFixed>
           </AutoColumn>
         </AutoColumn>

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
 import { NavLink, Link as HistoryLink } from 'react-router-dom'
+import { Percent } from '@uniswap/sdk-core'
 
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
@@ -80,7 +81,6 @@ export function FindPoolTabs({ origin }: { origin: string }) {
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>Import Pool</ActiveText>
-        <SettingsTab />
       </RowBetween>
     </Tabs>
   )
@@ -90,10 +90,12 @@ export function AddRemoveTabs({
   adding,
   creating,
   positionID,
+  defaultSlippage,
 }: {
   adding: boolean
   creating: boolean
   positionID?: string | undefined
+  defaultSlippage: Percent
 }) {
   const theme = useTheme()
 
@@ -118,7 +120,7 @@ export function AddRemoveTabs({
         <TYPE.mediumHeader fontWeight={500} fontSize={20}>
           {creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}
         </TYPE.mediumHeader>
-        <SettingsTab />
+        <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>
     </Tabs>
   )
