@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { AutoColumn } from '../Column'
 
 import uImage from '../../assets/images/big_unicorn.png'

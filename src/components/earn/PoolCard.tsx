@@ -1,7 +1,7 @@
 import React from 'react'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { TYPE, StyledInternalLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'

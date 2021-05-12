@@ -1,6 +1,6 @@
 import React from 'react'
 import { AutoColumn } from '../../components/Column'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { ExternalLink, TYPE } from '../../theme'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Link } from 'react-router-dom'

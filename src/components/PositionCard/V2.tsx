@@ -5,7 +5,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'

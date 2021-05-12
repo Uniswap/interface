@@ -1,7 +1,7 @@
 import React, { ErrorInfo } from 'react'
 import { ExternalLink, ThemedBackground, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import ReactGA from 'react-ga'
 import { getUserAgent } from '../../utils/getUserAgent'
 import { AutoRow } from '../Row'
