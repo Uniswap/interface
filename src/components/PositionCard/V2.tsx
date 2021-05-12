@@ -1,6 +1,7 @@
+import JSBI from 'jsbi'
 import React, { useState } from 'react'
-import { Percent, TokenAmount } from '@uniswap/sdk-core'
-import { JSBI, Pair } from '@uniswap/v2-sdk'
+import { Percent, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -38,7 +39,7 @@ interface PositionCardProps {
   pair: Pair
   showUnwrapped?: boolean
   border?: string
-  stakedBalance?: TokenAmount // optional balance to indicate that liquidity is deposited in mining pool
+  stakedBalance?: CurrencyAmount<Token> // optional balance to indicate that liquidity is deposited in mining pool
 }
 
 export default function V2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {
@@ -56,8 +57,10 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
   const userPoolBalance = stakedBalance ? userDefaultPoolBalance?.add(stakedBalance) : userDefaultPoolBalance
 
   const poolTokenPercentage =
-    !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
-      ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
+    !!userPoolBalance &&
+    !!totalPoolTokens &&
+    JSBI.greaterThanOrEqual(totalPoolTokens.quotient, userPoolBalance.quotient)
+      ? new Percent(userPoolBalance.quotient, totalPoolTokens.quotient)
       : undefined
 
   const [token0Deposited, token1Deposited] =
@@ -65,7 +68,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
     !!totalPoolTokens &&
     !!userPoolBalance &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
-    JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+    JSBI.greaterThanOrEqual(totalPoolTokens.quotient, userPoolBalance.quotient)
       ? [
           pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
           pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false),
@@ -174,7 +177,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
               </Text>
             </FixedHeightRow>
 
-            {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.raw, BIG_INT_ZERO) && (
+            {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
               <RowBetween marginTop="10px">
                 <ButtonPrimary
                   padding="8px"

@@ -12,16 +12,13 @@ function computeAllRoutes(
   pools: Pool[],
   chainId: ChainId,
   currentPath: Pool[] = [],
-  allPaths: Route[] = [],
+  allPaths: Route<Currency, Currency>[] = [],
   startCurrencyIn: Currency = currencyIn,
   maxHops = 2
-): Route[] {
+): Route<Currency, Currency>[] {
   const tokenIn = wrappedCurrency(currencyIn, chainId)
   const tokenOut = wrappedCurrency(currencyOut, chainId)
-
-  if (!tokenIn || !tokenOut) {
-    throw new Error('Could not wrap currencies')
-  }
+  if (!tokenIn || !tokenOut) throw new Error('Missing tokenIn/tokenOut')
 
   for (const pool of pools) {
     if (currentPath.indexOf(pool) !== -1 || !pool.involvesToken(tokenIn)) continue
@@ -51,7 +48,10 @@ function computeAllRoutes(
  * @param currencyIn the input currency
  * @param currencyOut the output currency
  */
-export function useAllV3Routes(currencyIn?: Currency, currencyOut?: Currency): { loading: boolean; routes: Route[] } {
+export function useAllV3Routes(
+  currencyIn?: Currency,
+  currencyOut?: Currency
+): { loading: boolean; routes: Route<Currency, Currency>[] } {
   const { chainId } = useActiveWeb3React()
   const { pools, loading: poolsLoading } = useV3SwapPools(currencyIn, currencyOut)
 

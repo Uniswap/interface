@@ -1,4 +1,4 @@
-import { TokenAmount, Percent } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { useActiveWeb3React } from 'hooks'
@@ -20,10 +20,10 @@ export function useDerivedV3BurnInfo(
 ): {
   position?: Position
   liquidityPercentage?: Percent
-  liquidityValue0?: TokenAmount
-  liquidityValue1?: TokenAmount
-  feeValue0?: TokenAmount
-  feeValue1?: TokenAmount
+  liquidityValue0?: CurrencyAmount<Token>
+  liquidityValue1?: CurrencyAmount<Token>
+  feeValue0?: CurrencyAmount<Token>
+  feeValue1?: CurrencyAmount<Token>
   outOfRange: boolean
   error?: string
 } {
@@ -52,10 +52,16 @@ export function useDerivedV3BurnInfo(
 
   const liquidityValue0 =
     positionSDK &&
-    new TokenAmount(positionSDK.amount0.token, liquidityPercentage.multiply(positionSDK.amount0.raw).quotient)
+    CurrencyAmount.fromRawAmount(
+      positionSDK.amount0.currency,
+      liquidityPercentage.multiply(positionSDK.amount0.quotient).quotient
+    )
   const liquidityValue1 =
     positionSDK &&
-    new TokenAmount(positionSDK.amount1.token, liquidityPercentage.multiply(positionSDK.amount1.raw).quotient)
+    CurrencyAmount.fromRawAmount(
+      positionSDK.amount1.currency,
+      liquidityPercentage.multiply(positionSDK.amount1.quotient).quotient
+    )
 
   const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position)
 

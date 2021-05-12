@@ -1,20 +1,29 @@
 import { supportedChainId } from 'utils'
-import { ChainId, Currency, CurrencyAmount, ETHER, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
+import {
+  ChainId,
+  Currency,
+  ETHER,
+  Token,
+  CurrencyAmount,
+  WETH9,
+  wrappedCurrency as wrappedCurrencyInternal,
+  wrappedCurrencyAmount as wrappedCurrencyAmountInternal,
+} from '@uniswap/sdk-core'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
-  return chainId && currency === ETHER ? WETH9[chainId] : currency instanceof Token ? currency : undefined
+  return chainId && currency ? wrappedCurrencyInternal(currency, chainId) : undefined
 }
 
 export function wrappedCurrencyAmount(
-  currencyAmount: CurrencyAmount | undefined,
+  currencyAmount: CurrencyAmount<Currency> | undefined,
   chainId: ChainId | undefined
-): TokenAmount | undefined {
-  const token = currencyAmount && chainId ? wrappedCurrency(currencyAmount.currency, chainId) : undefined
-  return token && currencyAmount ? new TokenAmount(token, currencyAmount.raw) : undefined
+): CurrencyAmount<Token> | undefined {
+  return currencyAmount && chainId ? wrappedCurrencyAmountInternal(currencyAmount, chainId) : undefined
 }
 
-export function unwrappedToken(token: Token): Currency {
-  const formattedChainId = supportedChainId(token.chainId)
-  if (formattedChainId && token.equals(WETH9[formattedChainId])) return ETHER
-  return token
+export function unwrappedToken(currency: Currency): Currency {
+  if (currency.isEther) return currency
+  const formattedChainId = supportedChainId(currency.chainId)
+  if (formattedChainId && currency.equals(WETH9[formattedChainId])) return ETHER
+  return currency
 }

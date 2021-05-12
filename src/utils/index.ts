@@ -3,9 +3,9 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Percent, Token, CurrencyAmount, Currency, ETHER, Fraction } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import { ChainId, Percent, CurrencyAmount, Currency, Fraction } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk/dist/'
+import JSBI from 'jsbi'
 import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -64,13 +64,9 @@ export function calculateGasMargin(value: BigNumber): BigNumber {
 }
 
 const ONE = new Fraction(1, 1)
-export function calculateSlippageAmount(value: CurrencyAmount, slippage: Percent): [JSBI, JSBI] {
+export function calculateSlippageAmount(value: CurrencyAmount<Currency>, slippage: Percent): [JSBI, JSBI] {
   if (slippage.lessThan(0) || slippage.greaterThan(ONE)) throw new Error('Unexpected slippage')
-  const decimalScaled = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(value.currency.decimals))
-  return [
-    value.multiply(ONE.subtract(slippage)).multiply(decimalScaled).quotient,
-    value.multiply(ONE.add(slippage)).multiply(decimalScaled).quotient,
-  ]
+  return [value.multiply(ONE.subtract(slippage)).quotient, value.multiply(ONE.add(slippage)).quotient]
 }
 
 // account is not optional
@@ -97,8 +93,8 @@ export function escapeRegExp(string: string): string {
 }
 
 export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (currency === ETHER) return true
-  return Boolean(currency instanceof Token && defaultTokens[currency.chainId as ChainId]?.[currency.address])
+  if (currency?.isEther) return true
+  return Boolean(currency?.isToken && defaultTokens[currency.chainId as ChainId]?.[currency.address])
 }
 
 /**

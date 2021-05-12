@@ -3,7 +3,7 @@ import { Field } from '../../state/mint/v3/actions'
 import { AutoColumn } from 'components/Column'
 import Card from 'components/Card'
 import styled from 'styled-components'
-import { CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { PositionPreview } from 'components/PositionPreview'
 
@@ -26,9 +26,9 @@ export function Review({
 }: {
   position?: Position
   existingPosition?: Position
-  parsedAmounts: { [field in Field]?: CurrencyAmount }
-  priceLower?: Price
-  priceUpper?: Price
+  parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
+  priceLower?: Price<Currency, Currency>
+  priceUpper?: Price<Currency, Currency>
   outOfRange: boolean
 }) {
   return (

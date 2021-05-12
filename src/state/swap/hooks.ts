@@ -1,9 +1,10 @@
+import JSBI from 'jsbi'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, Token, TokenAmount, Percent } from '@uniswap/sdk-core'
-import { JSBI, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -35,7 +36,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : '',
+          currencyId: currency.isToken ? currency.address : currency.isEther ? 'ETH' : '',
         })
       )
     },
@@ -69,16 +70,14 @@ export function useSwapActionHandlers(): {
 }
 
 // try to parse a user entered amount for a given token
-export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmount | undefined {
+export function tryParseAmount<T extends Currency>(value?: string, currency?: T): CurrencyAmount<T> | undefined {
   if (!value || !currency) {
     return undefined
   }
   try {
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
     if (typedValueParsed !== '0') {
-      return currency instanceof Token
-        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+      return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(typedValueParsed))
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -99,7 +98,10 @@ const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
  * @param trade to check for the given address
  * @param checksummedAddress address to check in the pairs and tokens
  */
-function involvesAddress(trade: V2Trade | V3Trade, checksummedAddress: string): boolean {
+function involvesAddress(
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>,
+  checksummedAddress: string
+): boolean {
   const path = trade instanceof V2Trade ? trade.route.path : trade.route.tokenPath
   return (
     path.some((token) => token.address === checksummedAddress) ||
@@ -114,12 +116,12 @@ export function useDerivedSwapInfo(
   toggledVersion: Version
 ): {
   currencies: { [field in Field]?: Currency }
-  currencyBalances: { [field in Field]?: CurrencyAmount }
-  parsedAmount: CurrencyAmount | undefined
+  currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+  parsedAmount: CurrencyAmount<Currency> | undefined
   inputError?: string
-  v2Trade: V2Trade | undefined
-  v3TradeState: { trade: V3Trade | null; state: V3TradeState }
-  toggledTrade: V2Trade | V3Trade | undefined
+  v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
+  v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
+  toggledTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
 } {
   const { account } = useActiveWeb3React()

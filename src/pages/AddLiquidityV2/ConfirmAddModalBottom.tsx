@@ -18,7 +18,7 @@ export function ConfirmAddModalBottom({
   noLiquidity?: boolean
   price?: Fraction
   currencies: { [field in Field]?: Currency }
-  parsedAmounts: { [field in Field]?: CurrencyAmount }
+  parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   poolTokenPercentage?: Percent
   onAdd: () => void
 }) {
