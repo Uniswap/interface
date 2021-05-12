@@ -1,5 +1,5 @@
 import { ChainId, Currency, CurrencyAmount, currencyEquals, Price, Token, WETH9 } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { USDC } from '../constants'
 import { PairState, useV2Pairs } from './useV2Pairs'
@@ -10,7 +10,7 @@ import { wrappedCurrency } from '../utils/wrappedCurrency'
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
-export default function useUSDCPrice(currency?: Currency): Price | undefined {
+export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const { chainId } = useActiveWeb3React()
   const wrapped = wrappedCurrency(currency, chainId)
   const weth = WETH9[chainId as ChainId]
@@ -56,7 +56,7 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
 
     const ethPairETHAmount = ethPair?.reserveOf(weth)
     const ethPairETHUSDCValue: JSBI =
-      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(weth).quote(ethPairETHAmount).raw : JSBI.BigInt(0)
+      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(weth).quote(ethPairETHAmount).quotient : JSBI.BigInt(0)
 
     // all other tokens
     // first try the usdc pair
@@ -76,7 +76,7 @@ export default function useUSDCPrice(currency?: Currency): Price | undefined {
   }, [chainId, currency, ethPair, ethPairState, usdcEthPair, usdcEthPairState, usdcPair, usdcPairState, weth, wrapped])
 }
 
-export function useUSDCValue(currencyAmount: CurrencyAmount | undefined | null) {
+export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
   const price = useUSDCPrice(currencyAmount?.currency)
 
   return useMemo(() => {

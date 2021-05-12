@@ -23,7 +23,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { WETH9, Currency, CurrencyAmount, Percent, Fraction, Price } from '@uniswap/sdk-core'
+import { Token, WETH9, Currency, CurrencyAmount, Percent, Fraction, Price, currencyEquals } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -155,7 +155,11 @@ function CurrentPriceCard({
   )
 }
 
-function getRatio(lower: Price, current: Price, upper: Price) {
+function getRatio(
+  lower: Price<Currency, Currency>,
+  current: Price<Currency, Currency>,
+  upper: Price<Currency, Currency>
+) {
   try {
     if (!current.greaterThan(lower)) {
       return 100
@@ -255,8 +259,12 @@ export function PositionPage({
 
     const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
       tokenId: tokenId.toString(),
-      expectedCurrencyOwed0: feeValue0.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue0.raw) : feeValue0,
-      expectedCurrencyOwed1: feeValue1.token.equals(WETH9[chainId]) ? CurrencyAmount.ether(feeValue1.raw) : feeValue1,
+      expectedCurrencyOwed0: currencyEquals(feeValue0.currency, WETH9[chainId])
+        ? CurrencyAmount.ether(feeValue0.quotient)
+        : feeValue0,
+      expectedCurrencyOwed1: currencyEquals(feeValue1.currency, WETH9[chainId])
+        ? CurrencyAmount.ether(feeValue1.quotient)
+        : feeValue1,
       recipient: account,
     })
 
@@ -285,11 +293,11 @@ export function PositionPage({
             ReactGA.event({
               category: 'Liquidity',
               action: 'CollectV3',
-              label: [feeValue0.token.symbol, feeValue1.token.symbol].join('/'),
+              label: [feeValue0.currency.symbol, feeValue1.currency.symbol].join('/'),
             })
 
             addTransaction(response, {
-              summary: `Collect ${feeValue0.token.symbol}/${feeValue1.token.symbol} fees`,
+              summary: `Collect ${feeValue0.currency.symbol}/${feeValue1.currency.symbol} fees`,
             })
           })
       })
@@ -305,14 +313,14 @@ export function PositionPage({
   const price0 = useUSDCPrice(token0 ?? undefined)
   const price1 = useUSDCPrice(token1 ?? undefined)
 
-  const fiatValueOfFees: CurrencyAmount | null = useMemo(() => {
+  const fiatValueOfFees: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
     const amount0 = price0.quote(feeValue0)
     const amount1 = price1.quote(feeValue1)
     return amount0.add(amount1)
   }, [price0, price1, feeValue0, feeValue1])
 
-  const fiatValueOfLiquidity: CurrencyAmount | null = useMemo(() => {
+  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !position) return null
     const amount0 = price0.quote(position.amount0)
     const amount1 = price1.quote(position.amount1)

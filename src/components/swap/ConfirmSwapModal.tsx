@@ -1,4 +1,4 @@
-import { currencyEquals, Percent } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useCallback, useMemo } from 'react'
@@ -13,7 +13,11 @@ import SwapModalHeader from './SwapModalHeader'
  * Returns true if the trade requires a confirmation of details before we can submit it
  * @param args either a pair of V2 trades or a pair of V3 trades
  */
-function tradeMeaningfullyDiffers(...args: [V2Trade, V2Trade] | [V3Trade, V3Trade]): boolean {
+function tradeMeaningfullyDiffers(
+  ...args:
+    | [V2Trade<Currency, Currency, TradeType>, V2Trade<Currency, Currency, TradeType>]
+    | [V3Trade<Currency, Currency, TradeType>, V3Trade<Currency, Currency, TradeType>]
+): boolean {
   const [tradeA, tradeB] = args
   return (
     tradeA.tradeType !== tradeB.tradeType ||
@@ -38,8 +42,8 @@ export default function ConfirmSwapModal({
   txHash,
 }: {
   isOpen: boolean
-  trade: V2Trade | V3Trade | undefined
-  originalTrade: V2Trade | V3Trade | undefined
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  originalTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null

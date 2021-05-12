@@ -121,8 +121,8 @@ export interface PositionListItemProps {
 export function getPriceOrderingFromPositionForUI(
   position?: Position
 ): {
-  priceLower?: Price
-  priceUpper?: Price
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
   quote?: Token
   base?: Token
 } {
@@ -130,8 +130,8 @@ export function getPriceOrderingFromPositionForUI(
     return {}
   }
 
-  const token0 = position.amount0.token
-  const token1 = position.amount1.token
+  const token0 = position.amount0.currency
+  const token1 = position.amount1.currency
 
   // if token0 is a dollar-stable asset, set it as the quote token
   const stables = [DAI, USDC, USDT]

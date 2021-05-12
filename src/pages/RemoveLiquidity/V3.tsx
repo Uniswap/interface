@@ -21,7 +21,7 @@ import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { WETH9, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { WETH9, CurrencyAmount, currencyEquals, Percent } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
 import { Wrapper, SmallMaxButton, ResponsiveHeaderText } from './styled'
 import Loader from 'components/Loader'
@@ -122,11 +122,11 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       slippageTolerance: allowedSlippage,
       deadline: deadline.toString(),
       collectOptions: {
-        expectedCurrencyOwed0: liquidityValue0.token.equals(WETH9[chainId])
-          ? CurrencyAmount.ether(feeValue0.raw)
+        expectedCurrencyOwed0: currencyEquals(liquidityValue0.currency, WETH9[chainId])
+          ? CurrencyAmount.ether(feeValue0.quotient)
           : feeValue0,
-        expectedCurrencyOwed1: liquidityValue1.token.equals(WETH9[chainId])
-          ? CurrencyAmount.ether(feeValue1.raw)
+        expectedCurrencyOwed1: currencyEquals(liquidityValue1.currency, WETH9[chainId])
+          ? CurrencyAmount.ether(feeValue1.quotient)
           : feeValue1,
         recipient: account,
       },
@@ -154,12 +154,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             ReactGA.event({
               category: 'Liquidity',
               action: 'RemoveV3',
-              label: [liquidityValue0.token.symbol, liquidityValue1.token.symbol].join('/'),
+              label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
             })
             setTxnHash(response.hash)
             setAttemptingTxn(false)
             addTransaction(response, {
-              summary: `Remove ${liquidityValue0.token.symbol}/${liquidityValue1.token.symbol} V3 liquidity`,
+              summary: `Remove ${liquidityValue0.currency.symbol}/${liquidityValue1.currency.symbol} V3 liquidity`,
             })
           })
       })

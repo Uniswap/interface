@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
-import { TokenAmount, Token, ChainId, Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token, ChainId, Percent } from '@uniswap/sdk-core'
 import { getEtherscanLink, calculateSlippageAmount, isAddress, shortenAddress, calculateGasMargin } from '.'
 
 describe('utils', () => {
@@ -27,7 +27,7 @@ describe('utils', () => {
 
   describe('#calculateSlippageAmount', () => {
     it('bounds are correct', () => {
-      const tokenAmount = new TokenAmount(new Token(ChainId.MAINNET, AddressZero, 0), '100')
+      const tokenAmount = CurrencyAmount.fromRawAmount(new Token(ChainId.MAINNET, AddressZero, 0), '100')
       expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow('Unexpected slippage')
       expect(() => calculateSlippageAmount(tokenAmount, new Percent(10_001, 10_000))).toThrow('Unexpected slippage')
       expect(calculateSlippageAmount(tokenAmount, new Percent(0, 10_000)).map((bound) => bound.toString())).toEqual([
@@ -51,7 +51,7 @@ describe('utils', () => {
       ).toEqual(['0', '200'])
     })
     it('works for 18 decimals', () => {
-      const tokenAmount = new TokenAmount(new Token(ChainId.MAINNET, AddressZero, 18), '100')
+      const tokenAmount = CurrencyAmount.fromRawAmount(new Token(ChainId.MAINNET, AddressZero, 18), '100')
       expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow('Unexpected slippage')
       expect(() => calculateSlippageAmount(tokenAmount, new Percent(10_001, 10_000))).toThrow('Unexpected slippage')
       expect(calculateSlippageAmount(tokenAmount, new Percent(0, 10_000)).map((bound) => bound.toString())).toEqual([

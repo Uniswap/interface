@@ -1,16 +1,18 @@
-import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, ETHER, Token, currencyEquals } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, ETHER, Token } from '@uniswap/sdk-core'
+import { TokenList } from '@uniswap/token-lists/dist/types'
+import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
-import { useCombinedActiveList, useCombinedInactiveList } from '../state/lists/hooks'
+import { filterTokens } from '../components/SearchModal/filtering'
+import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
+import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
+import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks'
 
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
-import { filterTokens } from '../components/SearchModal/filtering'
-import { arrayify } from 'ethers/lib/utils'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -51,28 +53,30 @@ export function useAllTokens(): { [address: string]: Token } {
   return useTokensFromMap(allTokens, true)
 }
 
-export function useAllInactiveTokens(): { [address: string]: Token } {
-  // get inactive tokens
-  const inactiveTokensMap = useCombinedInactiveList()
-  const inactiveTokens = useTokensFromMap(inactiveTokensMap, false)
-
-  // filter out any token that are on active list
-  const activeTokensAddresses = Object.keys(useAllTokens())
-  const filteredInactive = activeTokensAddresses
-    ? Object.keys(inactiveTokens).reduce<{ [address: string]: Token }>((newMap, address) => {
-        if (!activeTokensAddresses.includes(address)) {
-          newMap[address] = inactiveTokens[address]
-        }
-        return newMap
-      }, {})
-    : inactiveTokens
-
-  return filteredInactive
-}
-
 export function useUnsupportedTokens(): { [address: string]: Token } {
   const unsupportedTokensMap = useUnsupportedTokenList()
   return useTokensFromMap(unsupportedTokensMap, false)
+}
+
+export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
+  const lists = useAllLists()
+  const inactiveUrls = useInactiveListUrls()
+  const { chainId } = useActiveWeb3React()
+  return useMemo(() => {
+    if (!search || search.trim().length === 0) return []
+    let result: WrappedTokenInfo[] = []
+    for (const url of inactiveUrls) {
+      const list = lists[url].current
+      if (!list) continue
+      const matching = filterTokens(
+        list.tokens.filter((token) => token.chainId === chainId),
+        search
+      )
+      result = [...result, ...matching.map((tokenInfo) => new WrappedTokenInfo(tokenInfo, list))]
+      if (result.length >= minResults) return result
+    }
+    return result
+  }, [chainId, inactiveUrls, lists, minResults, search])
 }
 
 export function useIsTokenActive(token: Token | undefined | null): boolean {
@@ -83,21 +87,6 @@ export function useIsTokenActive(token: Token | undefined | null): boolean {
   }
 
   return !!activeTokens[token.address]
-}
-
-// used to detect extra search results
-export function useFoundOnInactiveList(searchQuery: string): Token[] | undefined {
-  const { chainId } = useActiveWeb3React()
-  const inactiveTokens = useAllInactiveTokens()
-
-  return useMemo(() => {
-    if (!chainId || searchQuery === '') {
-      return undefined
-    } else {
-      const tokens = filterTokens(Object.values(inactiveTokens), searchQuery)
-      return tokens
-    }
-  }, [chainId, inactiveTokens, searchQuery])
 }
 
 // Check if currency is included in custom list from user storage

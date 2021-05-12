@@ -1,5 +1,5 @@
 import React from 'react'
-import { Currency, Price } from '@uniswap/sdk-core'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
@@ -19,8 +19,8 @@ export default function RangeSelector({
   currencyB,
   feeAmount,
 }: {
-  priceLower?: Price
-  priceUpper?: Price
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
   getDecrementLower: () => string
   getIncrementLower: () => string
   getDecrementUpper: () => string

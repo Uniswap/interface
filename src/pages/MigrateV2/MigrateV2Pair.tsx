@@ -1,6 +1,7 @@
+import JSBI from 'jsbi'
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
-import { Fraction, Percent, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
-import { FACTORY_ADDRESS, JSBI } from '@uniswap/v2-sdk'
+import { Fraction, Percent, Price, Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
@@ -59,9 +60,15 @@ function EmptyState({ message }: { message: string }) {
   )
 }
 
-function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: TokenAmount; token1Amount: TokenAmount }) {
-  const currency0 = unwrappedToken(token0Amount.token)
-  const currency1 = unwrappedToken(token1Amount.token)
+function LiquidityInfo({
+  token0Amount,
+  token1Amount,
+}: {
+  token0Amount: CurrencyAmount<Token>
+  token1Amount: CurrencyAmount<Token>
+}) {
+  const currency0 = unwrappedToken(token0Amount.currency)
+  const currency1 = unwrappedToken(token1Amount.currency)
 
   return (
     <AutoColumn gap="8px">
@@ -105,10 +112,10 @@ function V2PairMigration({
   token1,
 }: {
   pair: Contract
-  pairBalance: TokenAmount
-  totalSupply: TokenAmount
-  reserve0: TokenAmount
-  reserve1: TokenAmount
+  pairBalance: CurrencyAmount<Token>
+  totalSupply: CurrencyAmount<Token>
+  reserve0: CurrencyAmount<Token>
+  reserve1: CurrencyAmount<Token>
   token0: Token
   token1: Token
 }) {
@@ -128,11 +135,19 @@ function V2PairMigration({
 
   // this is just getLiquidityValue with the fee off, but for the passed pair
   const token0Value = useMemo(
-    () => new TokenAmount(token0, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve0.raw), totalSupply.raw)),
+    () =>
+      CurrencyAmount.fromRawAmount(
+        token0,
+        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve0.quotient), totalSupply.quotient)
+      ),
     [token0, pairBalance, reserve0, totalSupply]
   )
   const token1Value = useMemo(
-    () => new TokenAmount(token1, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve1.raw), totalSupply.raw)),
+    () =>
+      CurrencyAmount.fromRawAmount(
+        token1,
+        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve1.quotient), totalSupply.quotient)
+      ),
     [token1, pairBalance, reserve1, totalSupply]
   )
 
@@ -142,7 +157,7 @@ function V2PairMigration({
   const noLiquidity = poolState === PoolState.NOT_EXISTS
 
   // get spot prices + price difference
-  const v2SpotPrice = useMemo(() => new Price(token0, token1, reserve0.raw, reserve1.raw), [
+  const v2SpotPrice = useMemo(() => new Price(token0, token1, reserve0.quotient, reserve1.quotient), [
     token0,
     token1,
     reserve0,
@@ -191,18 +206,18 @@ function V2PairMigration({
           pool: pool ?? new Pool(token0, token1, feeAmount, sqrtPrice, 0, tick, []),
           tickLower,
           tickUpper,
-          amount0: token0Value.raw,
-          amount1: token1Value.raw,
+          amount0: token0Value.quotient,
+          amount1: token1Value.quotient,
         })
       : undefined
 
   const v3Amount0Min = useMemo(
     () =>
       position &&
-      new TokenAmount(
+      CurrencyAmount.fromRawAmount(
         token0,
         JSBI.divide(
-          JSBI.multiply(position.amount0.raw, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
+          JSBI.multiply(position.amount0.quotient, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
           JSBI.BigInt(10000)
         )
       ),
@@ -211,10 +226,10 @@ function V2PairMigration({
   const v3Amount1Min = useMemo(
     () =>
       position &&
-      new TokenAmount(
+      CurrencyAmount.fromRawAmount(
         token1,
         JSBI.divide(
-          JSBI.multiply(position.amount1.raw, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
+          JSBI.multiply(position.amount1.quotient, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
           JSBI.BigInt(10000)
         )
       ),
@@ -222,11 +237,13 @@ function V2PairMigration({
   )
 
   const refund0 = useMemo(
-    () => position && new TokenAmount(token0, JSBI.subtract(token0Value.raw, position.amount0.raw)),
+    () =>
+      position && CurrencyAmount.fromRawAmount(token0, JSBI.subtract(token0Value.quotient, position.amount0.quotient)),
     [token0Value, position, token0]
   )
   const refund1 = useMemo(
-    () => position && new TokenAmount(token1, JSBI.subtract(token1Value.raw, position.amount1.raw)),
+    () =>
+      position && CurrencyAmount.fromRawAmount(token1, JSBI.subtract(token1Value.quotient, position.amount1.quotient)),
     [token1Value, position, token1]
   )
 
@@ -283,7 +300,7 @@ function V2PairMigration({
       data.push(
         migrator.interface.encodeFunctionData('selfPermit', [
           pair.address,
-          `0x${pairBalance.raw.toString(16)}`,
+          `0x${pairBalance.quotient.toString(16)}`,
           deadlineToUse,
           signatureData.v,
           signatureData.r,
@@ -309,15 +326,15 @@ function V2PairMigration({
       migrator.interface.encodeFunctionData('migrate', [
         {
           pair: pair.address,
-          liquidityToMigrate: `0x${pairBalance.raw.toString(16)}`,
+          liquidityToMigrate: `0x${pairBalance.quotient.toString(16)}`,
           percentageToMigrate,
           token0: token0.address,
           token1: token1.address,
           fee: feeAmount,
           tickLower,
           tickUpper,
-          amount0Min: `0x${v3Amount0Min.raw.toString(16)}`,
-          amount1Min: `0x${v3Amount1Min.raw.toString(16)}`,
+          amount0Min: `0x${v3Amount0Min.quotient.toString(16)}`,
+          amount1Min: `0x${v3Amount1Min.quotient.toString(16)}`,
           recipient: account,
           deadline: deadlineToUse,
           refundAsETH: true, // hard-code this for now
@@ -371,7 +388,7 @@ function V2PairMigration({
     currency1,
   ])
 
-  const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.raw, ZERO)
+  const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.quotient, ZERO)
 
   return (
     <AutoColumn gap="20px">
@@ -646,14 +663,14 @@ export default function MigrateV2Pair({
   const pairBalance = useTokenBalance(account ?? undefined, liquidityToken)
   const totalSupply = useTotalSupply(liquidityToken)
   const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
-  const reserve0 = useMemo(() => (token0 && reserve0Raw ? new TokenAmount(token0, reserve0Raw) : undefined), [
-    token0,
-    reserve0Raw,
-  ])
-  const reserve1 = useMemo(() => (token1 && reserve1Raw ? new TokenAmount(token1, reserve1Raw) : undefined), [
-    token1,
-    reserve1Raw,
-  ])
+  const reserve0 = useMemo(
+    () => (token0 && reserve0Raw ? CurrencyAmount.fromRawAmount(token0, reserve0Raw) : undefined),
+    [token0, reserve0Raw]
+  )
+  const reserve1 = useMemo(
+    () => (token1 && reserve1Raw ? CurrencyAmount.fromRawAmount(token1, reserve1Raw) : undefined),
+    [token1, reserve1Raw]
+  )
 
   // redirect for invalid url params
   if (
