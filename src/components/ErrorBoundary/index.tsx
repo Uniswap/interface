@@ -108,6 +108,7 @@ function issueBody(error: Error): string {
 App crashed
 
 **Steps to Reproduce**
+PLEASE LET US KNOW WHAT YOU DID BEFORE THE CRASH HERE SO WE CAN REPRODUCE THE ISSUE
 
 1. Go to ...
 2. Click on ...
