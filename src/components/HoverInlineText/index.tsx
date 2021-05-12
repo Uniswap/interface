@@ -2,8 +2,8 @@ import Tooltip from 'components/Tooltip'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-const TextWrapper = styled.span<{ margin: boolean; link: boolean; fontSize?: string; adjustSize?: boolean }>`
-  position: relative;
+const TextWrapper = styled.span<{ margin: boolean; link?: boolean; fontSize?: string; adjustSize?: boolean }>`
+  cursor: auto;
   margin-left: ${({ margin }) => margin && '4px'};
   color: ${({ theme, link }) => (link ? theme.blue1 : theme.text1)};
   font-size: ${({ fontSize }) => fontSize ?? 'inherit'};
@@ -32,7 +32,7 @@ const HoverInlineText = ({
   const [showHover, setShowHover] = useState(false)
 
   if (!text) {
-    return <span></span>
+    return <span />
   }
 
   if (text.length > maxCharacters) {
@@ -43,7 +43,7 @@ const HoverInlineText = ({
           onMouseLeave={() => setShowHover(false)}
           margin={margin}
           adjustSize={adjustSize}
-          link={!!link}
+          link={link}
           fontSize={fontSize}
           {...rest}
         >
@@ -54,7 +54,7 @@ const HoverInlineText = ({
   }
 
   return (
-    <TextWrapper margin={margin} adjustSize={adjustSize} link={!!link} fontSize={fontSize} {...rest}>
+    <TextWrapper margin={margin} adjustSize={adjustSize} link={link} fontSize={fontSize} {...rest}>
       {text}
     </TextWrapper>
   )
