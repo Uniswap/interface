@@ -93,6 +93,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const deadline = useTransactionDeadline() // custom from users settings
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
+  // dummy flag for receiving WETH
+  const receiveWETH = true
+
   const [showConfirm, setShowConfirm] = useState(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false)
   const [txnHash, setTxnHash] = useState<string | undefined>()
@@ -122,12 +125,14 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       slippageTolerance: allowedSlippage,
       deadline: deadline.toString(),
       collectOptions: {
-        expectedCurrencyOwed0: currencyEquals(liquidityValue0.currency, WETH9[chainId])
-          ? CurrencyAmount.ether(feeValue0.quotient)
-          : feeValue0,
-        expectedCurrencyOwed1: currencyEquals(liquidityValue1.currency, WETH9[chainId])
-          ? CurrencyAmount.ether(feeValue1.quotient)
-          : feeValue1,
+        expectedCurrencyOwed0:
+          currencyEquals(liquidityValue0.currency, WETH9[chainId]) && !receiveWETH
+            ? CurrencyAmount.ether(feeValue0.quotient)
+            : feeValue0,
+        expectedCurrencyOwed1:
+          currencyEquals(liquidityValue1.currency, WETH9[chainId]) && !receiveWETH
+            ? CurrencyAmount.ether(feeValue1.quotient)
+            : feeValue1,
         recipient: account,
       },
     })

@@ -269,6 +269,9 @@ export function PositionPage({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
+  // dummy flag for receiving WETH
+  const receiveWETH = true
+
   // construct Position from details returned
   const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
   const position = useMemo(() => {
@@ -320,12 +323,14 @@ export function PositionPage({
 
     const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
       tokenId: tokenId.toString(),
-      expectedCurrencyOwed0: currencyEquals(feeValue0.currency, WETH9[chainId])
-        ? CurrencyAmount.ether(feeValue0.quotient)
-        : feeValue0,
-      expectedCurrencyOwed1: currencyEquals(feeValue1.currency, WETH9[chainId])
-        ? CurrencyAmount.ether(feeValue1.quotient)
-        : feeValue1,
+      expectedCurrencyOwed0:
+        currencyEquals(feeValue0.currency, WETH9[chainId]) && !receiveWETH
+          ? CurrencyAmount.ether(feeValue0.quotient)
+          : feeValue0,
+      expectedCurrencyOwed1:
+        currencyEquals(feeValue1.currency, WETH9[chainId]) && !receiveWETH
+          ? CurrencyAmount.ether(feeValue1.quotient)
+          : feeValue1,
       recipient: account,
     })
 
@@ -366,7 +371,7 @@ export function PositionPage({
         setCollecting(false)
         console.error(error)
       })
-  }, [chainId, feeValue0, feeValue1, positionManager, account, tokenId, addTransaction, library])
+  }, [chainId, feeValue0, feeValue1, positionManager, receiveWETH, account, tokenId, addTransaction, library])
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
