@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { RoutablePlatform, Trade } from 'dxswap-sdk'
+import { ChainId, RoutablePlatform, Trade } from 'dxswap-sdk'
 import { useLastTruthy } from '../../hooks/useLast'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapPlatformSelector } from './SwapPlatformSelector'
@@ -14,6 +14,7 @@ import { MainnetGasPrice } from '../../state/application/actions'
 import { RowFixed } from '../Row'
 import { useMultihopManager, useUserPreferredGasPrice } from '../../state/user/hooks'
 import { transparentize } from 'polished'
+import { useActiveWeb3React } from '../../hooks'
 
 const HideableAutoColumn = styled(AutoColumn)<{ show: boolean }>`
   transform: ${({ show }) => (show ? 'translateY(8px)' : 'translateY(-100%)')};
@@ -30,8 +31,8 @@ const AdvancedDetailsFooter = styled.div<{
   width: ${props => (props.fullWidth ? '400px' : 'auto')};
   ${props => props.theme.mediaWidth.upToExtraSmall`
     width: calc(100% - 8px);
-  `}
-  max-width: 412px;
+    `}
+  max-width: 400px;
   height: ${props => (props.height ? props.height : 'auto')};
   padding: ${props => props.padding};
   color: ${({ theme }) => theme.purple3};
@@ -41,6 +42,14 @@ const AdvancedDetailsFooter = styled.div<{
   backdrop-filter: blur(16px);
   cursor: ${props => (props.clickable ? 'pointer' : 'auto')};
   box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.1);
+`
+
+const SettingsFlex = styled(Flex)`
+  width: 400px;
+  ${props => props.theme.mediaWidth.upToExtraSmall`
+    width: calc(100% - 8px);
+  `}
+  max-width: 400px;
 `
 
 export const MultihopSwitch = styled.div<{ active: boolean }>`
@@ -73,6 +82,7 @@ export default function AdvancedSwapDetailsDropdown({
   onSelectedPlatformChange,
   ...rest
 }: AdvancedSwapDetailsDropdownProps) {
+  const { chainId } = useActiveWeb3React()
   const [userPreferredMainnetGasPrice, setUserPreferredMainnetGasPrice] = useUserPreferredGasPrice()
   const [multihopEnabled, toggleMultihop] = useMultihopManager()
   const toggleSettingsMenu = useToggleSettingsMenu()
@@ -93,12 +103,12 @@ export default function AdvancedSwapDetailsDropdown({
         />
         <AdvancedSwapDetails {...rest} trade={trade ?? lastTrade ?? undefined} />
       </AdvancedDetailsFooter>
-      <Flex>
-        <Box flex="1">
-          <AdvancedDetailsFooter padding="8px" height="33px">
-            <Flex justifyContent="space-between">
-              <Box>
-                {!!mainnetGasPrices ? (
+      {chainId === ChainId.MAINNET && !!mainnetGasPrices && (
+        <SettingsFlex>
+          <Box flex="1">
+            <AdvancedDetailsFooter padding="8px" height="33px">
+              <Flex justifyContent="space-between">
+                <Box>
                   <RowFixed>
                     <PurpleGasPriceOption
                       compact
@@ -126,24 +136,22 @@ export default function AdvancedSwapDetailsDropdown({
                       {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.NORMAL], 'gwei')).toFixed(0)} gwei
                     </GreenGasPriceOption>
                   </RowFixed>
-                ) : (
-                  <div />
-                )}
-              </Box>
-              <Box>
-                <MultihopSwitch onClick={toggleMultihop} active={multihopEnabled}>
-                  MULTIHOP
-                </MultihopSwitch>
-              </Box>
-            </Flex>
-          </AdvancedDetailsFooter>
-        </Box>
-        <Box ml="8px">
-          <AdvancedDetailsFooter padding="8px" clickable onClick={toggleSettingsMenu} height="33px">
-            <Settings size="16px" />
-          </AdvancedDetailsFooter>
-        </Box>
-      </Flex>
+                </Box>
+                <Box>
+                  <MultihopSwitch onClick={toggleMultihop} active={multihopEnabled}>
+                    MULTIHOP
+                  </MultihopSwitch>
+                </Box>
+              </Flex>
+            </AdvancedDetailsFooter>
+          </Box>
+          <Box ml="8px">
+            <AdvancedDetailsFooter padding="8px" clickable onClick={toggleSettingsMenu} height="33px">
+              <Settings size="16px" />
+            </AdvancedDetailsFooter>
+          </Box>
+        </SettingsFlex>
+      )}
     </HideableAutoColumn>
   )
 }
