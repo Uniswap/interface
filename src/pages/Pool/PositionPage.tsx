@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { SyntheticEvent, useCallback, useMemo, useRef, useState } from 'react'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 
 import { PoolState, usePool } from 'hooks/usePools'
@@ -126,6 +126,23 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   `};
 `
 
+const NFTGrid = styled.div`
+  display: grid;
+  grid-template: 'overlap';
+  min-height: 400px;
+`
+
+const NFTCanvas = styled.canvas`
+  grid-area: overlap;
+`
+
+const NFTImage = styled.img`
+  grid-area: overlap;
+  height: 400px;
+  /* Ensures SVG appears on top of canvas. */
+  z-index: 1;
+`
+
 function CurrentPriceCard({
   inverted,
   pool,
@@ -181,6 +198,50 @@ function getRatio(
   } catch {
     return undefined
   }
+}
+
+function NFT({ image, height: targetHeight }: { image: string; height: number }) {
+  const [animate, setAnimate] = useState(false)
+
+  const canvasRef = useRef<HTMLCanvasElement>()
+  const imageRef = useRef<HTMLImageElement>()
+
+  const getSnapshot = (src: HTMLImageElement) => {
+    if (!canvasRef.current) return
+
+    const { current: canvas } = canvasRef
+    const context = canvas.getContext('2d')
+
+    if (!context) return
+
+    let { width, height } = src
+
+    // src may be hidden and not have the target dimensions
+    const ratio = width / height
+    height = targetHeight
+    width = Math.round(ratio * targetHeight)
+
+    // Ensure crispness at high DPIs
+    canvas.width = width * devicePixelRatio
+    canvas.height = height * devicePixelRatio
+    canvas.style.width = width + 'px'
+    canvas.style.height = height + 'px'
+    context.scale(devicePixelRatio, devicePixelRatio)
+
+    context.clearRect(0, 0, width, height)
+    context.drawImage(src, 0, 0, width, height)
+  }
+
+  const onLoad = (e: SyntheticEvent<HTMLImageElement>) => {
+    getSnapshot(e.target as HTMLImageElement)
+  }
+
+  return (
+    <NFTGrid onMouseEnter={() => setAnimate(true)} onMouseLeave={() => setAnimate(false)}>
+      <NFTCanvas ref={canvasRef as any} />
+      <NFTImage src={image} hidden={!animate} onLoad={onLoad} ref={imageRef as any} />
+    </NFTGrid>
+  )
 }
 
 export function PositionPage({
@@ -461,7 +522,7 @@ export function PositionPage({
               }}
             >
               <div style={{ marginRight: 12 }}>
-                <img height="400px" src={metadata.result.image} />
+                <NFT image={metadata.result.image} height={400} />
               </div>
               {typeof chainId === 'number' && owner && !ownsNFT ? (
                 <ExternalLink href={getEtherscanLink(chainId, owner, 'address')}>Owner</ExternalLink>
