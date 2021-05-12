@@ -14,8 +14,8 @@ export function useIsSwapUnsupported(currencyIn?: Currency, currencyOut?: Curren
     // if unsupported list loaded & either token on list, mark as unsupported
     return Boolean(
       unsupportedTokens &&
-        ((currencyIn && currencyIn.isToken && unsupportedTokens[currencyIn.address]) ||
-          (currencyOut && currencyOut.isToken && unsupportedTokens[currencyOut.address]))
+        ((currencyIn?.isToken && unsupportedTokens[currencyIn.address]) ||
+          (currencyOut?.isToken && unsupportedTokens[currencyOut.address]))
     )
   }, [currencyIn, currencyOut, unsupportedTokens])
 }

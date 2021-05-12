@@ -83,9 +83,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const WETH = currency0.isEther ? token0 : token1
   const backgroundColor = useColor(token)
 
-  const totalSupplyOfStakingToken = useTotalSupply(
-    stakingInfo.stakedAmount.currency.isToken ? stakingInfo.stakedAmount.currency : undefined
-  )
+  const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.currency)
   const [, stakingTokenPair] = useV2Pair(...stakingInfo.tokens)
 
   // let returnOverMonth: Percent = new Percent('0')
