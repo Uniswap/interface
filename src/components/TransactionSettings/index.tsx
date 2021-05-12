@@ -307,69 +307,79 @@ export default function SlippageTabs({
           </OptionCustom>
         </RowBetween>
 
-        <RowFixed>
-          <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
-            Preferred gas price
-          </TYPE.body>
-          <QuestionHelper text="The gas price used to show gas fees and to submit transactions on Ethereum mainnet." />
-        </RowFixed>
-        <RowFixed>
-          {mainnetGasPrices && (
-            <>
-              <PurpleGasPriceOption
-                onClick={() => {
-                  setPreferredGasPriceInput('')
-                  setRawPreferredGasPrice(MainnetGasPrice.INSTANT)
-                }}
-                active={rawPreferredGasPrice === MainnetGasPrice.INSTANT}
+        {chainId === ChainId.MAINNET && (
+          <>
+            <RowFixed>
+              <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
+                Preferred gas price
+              </TYPE.body>
+              <QuestionHelper text="The gas price used to show gas fees and to submit transactions on Ethereum mainnet." />
+            </RowFixed>
+            <RowFixed>
+              {mainnetGasPrices && (
+                <>
+                  <PurpleGasPriceOption
+                    onClick={() => {
+                      setPreferredGasPriceInput('')
+                      setRawPreferredGasPrice(MainnetGasPrice.INSTANT)
+                    }}
+                    active={rawPreferredGasPrice === MainnetGasPrice.INSTANT}
+                  >
+                    INSTANT
+                    <br />
+                    {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.INSTANT], 'gwei')).toFixed(0)} gwei
+                  </PurpleGasPriceOption>
+                  <OrangeGasPriceOption
+                    onClick={() => {
+                      setPreferredGasPriceInput('')
+                      setRawPreferredGasPrice(MainnetGasPrice.FAST)
+                    }}
+                    active={rawPreferredGasPrice === MainnetGasPrice.FAST}
+                  >
+                    FAST
+                    <br />
+                    {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.FAST], 'gwei')).toFixed(0)} gwei
+                  </OrangeGasPriceOption>
+                  <GreenGasPriceOption
+                    onClick={() => {
+                      setPreferredGasPriceInput('')
+                      setRawPreferredGasPrice(MainnetGasPrice.NORMAL)
+                    }}
+                    active={rawPreferredGasPrice === MainnetGasPrice.NORMAL}
+                  >
+                    NORMAL
+                    <br />
+                    {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.NORMAL], 'gwei')).toFixed(0)} gwei
+                  </GreenGasPriceOption>
+                </>
+              )}
+              <OptionCustom
+                focused={preferredGasPriceFocused}
+                style={{ width: '52px', minWidth: '52px' }}
+                tabIndex={-1}
               >
-                INSTANT
-                <br />
-                {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.INSTANT], 'gwei')).toFixed(0)} gwei
-              </PurpleGasPriceOption>
-              <OrangeGasPriceOption
-                onClick={() => {
-                  setPreferredGasPriceInput('')
-                  setRawPreferredGasPrice(MainnetGasPrice.FAST)
-                }}
-                active={rawPreferredGasPrice === MainnetGasPrice.FAST}
-              >
-                FAST
-                <br />
-                {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.FAST], 'gwei')).toFixed(0)} gwei
-              </OrangeGasPriceOption>
-              <GreenGasPriceOption
-                onClick={() => {
-                  setPreferredGasPriceInput('')
-                  setRawPreferredGasPrice(MainnetGasPrice.NORMAL)
-                }}
-                active={rawPreferredGasPrice === MainnetGasPrice.NORMAL}
-              >
-                NORMAL
-                <br />
-                {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.NORMAL], 'gwei')).toFixed(0)} gwei
-              </GreenGasPriceOption>
-            </>
-          )}
-          <OptionCustom focused={preferredGasPriceFocused} style={{ width: '52px', minWidth: '52px' }} tabIndex={-1}>
-            <Input
-              color={!!!preferredGasPriceInputIsValid ? 'red' : undefined}
-              onFocus={handlePreferredGasPriceFocus}
-              onBlur={() => {
-                setPreferredGasPriceFocused(false)
-                if (typeof rawPreferredGasPrice === 'string') {
-                  parseCustomPreferredGasPrice(Number.parseFloat(formatUnits(rawPreferredGasPrice, 'gwei')).toFixed(0))
-                }
-              }}
-              placeholder={preferredGasPricePlaceholder}
-              value={preferredGasPriceInput}
-              onChange={e => parseCustomPreferredGasPrice(e.target.value)}
-            />
-          </OptionCustom>
-          <TYPE.body color="text4" fontSize={14}>
-            gwei
-          </TYPE.body>
-        </RowFixed>
+                <Input
+                  color={!!!preferredGasPriceInputIsValid ? 'red' : undefined}
+                  onFocus={handlePreferredGasPriceFocus}
+                  onBlur={() => {
+                    setPreferredGasPriceFocused(false)
+                    if (typeof rawPreferredGasPrice === 'string') {
+                      parseCustomPreferredGasPrice(
+                        Number.parseFloat(formatUnits(rawPreferredGasPrice, 'gwei')).toFixed(0)
+                      )
+                    }
+                  }}
+                  placeholder={preferredGasPricePlaceholder}
+                  value={preferredGasPriceInput}
+                  onChange={e => parseCustomPreferredGasPrice(e.target.value)}
+                />
+              </OptionCustom>
+              <TYPE.body color="text4" fontSize={14}>
+                gwei
+              </TYPE.body>
+            </RowFixed>
+          </>
+        )}
         <RowBetween mt="2px">
           <RowFixed>
             <TYPE.body color="text4" fontWeight={500} fontSize="12px" lineHeight="15px">
