@@ -109,6 +109,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 `
 
 const StyledImage = styled.img`
+  height: 114px;
   margin-top: -28px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     height: 80px;

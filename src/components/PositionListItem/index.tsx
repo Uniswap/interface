@@ -15,6 +15,7 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 import { DAI, USDC, USDT, WBTC } from '../../constants'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { RowFixed } from 'components/Row'
+import HoverInlineText from 'components/HoverInlineText'
 
 const Row = styled(Link)`
   align-items: center;
@@ -244,8 +245,10 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           >
             <RangeText>
               <ExtentsText>Min: </ExtentsText>
-              {formatPrice(priceLower, 5)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' per '}{' '}
-              {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
+              {formatPrice(priceLower, 5)}{' '}
+              <HoverInlineText text={manuallyInverted ? currencyQuote?.symbol ?? '' : currencyBase?.symbol ?? ''} />{' '}
+              {' per '}{' '}
+              <HoverInlineText text={manuallyInverted ? currencyBase?.symbol ?? '' : currencyQuote?.symbol ?? ''} />
             </RangeText>{' '}
             <HideSmall>
               <DoubleArrow>⟷</DoubleArrow>{' '}
@@ -255,8 +258,13 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             </SmallOnly>
             <RangeText>
               <ExtentsText>Max:</ExtentsText>
-              {formatPrice(priceUpper, 5)} {manuallyInverted ? currencyQuote?.symbol : currencyBase?.symbol} {' per '}{' '}
-              {manuallyInverted ? currencyBase?.symbol : currencyQuote?.symbol}
+              {formatPrice(priceUpper, 5)}{' '}
+              <HoverInlineText text={manuallyInverted ? currencyQuote?.symbol ?? '' : currencyBase?.symbol ?? ''} />{' '}
+              {' per '}{' '}
+              <HoverInlineText
+                maxCharacters={10}
+                text={manuallyInverted ? currencyBase?.symbol ?? '' : currencyQuote?.symbol ?? ''}
+              />
             </RangeText>{' '}
           </RangeLineItem>
         </>
