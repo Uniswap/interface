@@ -1,3 +1,4 @@
+import { TokenList } from '@uniswap/token-lists/dist/types'
 import React from 'react'
 import { Token, Currency } from '@uniswap/sdk-core'
 import styled from 'styled-components'
@@ -15,7 +16,6 @@ import { useAddUserToken } from 'state/user/hooks'
 import { getEtherscanLink } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { ExternalLink } from '../../theme/components'
-import { useCombinedInactiveList } from 'state/lists/hooks'
 import ListLogo from 'components/ListLogo'
 import { PaddedColumn } from './styleds'
 
@@ -41,28 +41,26 @@ const AddressText = styled(TYPE.blue)`
 
 interface ImportProps {
   tokens: Token[]
+  list?: TokenList
   onBack?: () => void
   onDismiss?: () => void
   handleCurrencySelect?: (currency: Currency) => void
 }
 
-export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
+export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
   const theme = useTheme()
 
   const { chainId } = useActiveWeb3React()
 
   const addToken = useAddUserToken()
 
-  // use for showing import source on inactive tokens
-  const inactiveTokenList = useCombinedInactiveList()
-
   return (
     <Wrapper>
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
-          {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div></div>}
+          {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
           <TYPE.mediumHeader>Import {tokens.length > 1 ? 'Tokens' : 'Token'}</TYPE.mediumHeader>
-          {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div></div>}
+          {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div />}
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
@@ -76,7 +74,6 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }:
           </TYPE.body>
         </AutoColumn>
         {tokens.map((token) => {
-          const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
           return (
             <Card
               backgroundColor={theme.bg2}

@@ -1,21 +1,25 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
-import { TokenInfo } from '@uniswap/token-lists'
+import { Tags, TokenInfo } from '@uniswap/token-lists'
+import { TokenList } from '@uniswap/token-lists/dist/types'
 import { isAddress } from '../../utils'
-import { TagInfo } from './hooks'
 
+type TagDetails = Tags[keyof Tags]
+export interface TagInfo extends TagDetails {
+  id: string
+}
 /**
  * Token instances created from token info on a token list.
  */
 export class WrappedTokenInfo implements Token {
   public readonly isEther: false = false
   public readonly isToken: true = true
+  public readonly list: TokenList
 
   public readonly tokenInfo: TokenInfo
-  public readonly tags: TagInfo[]
 
-  constructor(tokenInfo: TokenInfo, tags: TagInfo[]) {
+  constructor(tokenInfo: TokenInfo, list: TokenList) {
     this.tokenInfo = tokenInfo
-    this.tags = tags
+    this.list = list
   }
 
   private _checksummedAddress: string | null = null
@@ -45,6 +49,21 @@ export class WrappedTokenInfo implements Token {
 
   public get logoURI(): string | undefined {
     return this.tokenInfo.logoURI
+  }
+
+  private _tags: TagInfo[] | null = null
+  public get tags(): TagInfo[] {
+    if (this._tags !== null) return this._tags
+    if (!this.tokenInfo.tags) return (this._tags = [])
+    const listTags = this.list.tags
+    if (!listTags) return (this._tags = [])
+
+    return (this._tags = this.tokenInfo.tags.map((tagId) => {
+      return {
+        ...listTags[tagId],
+        id: tagId,
+      }
+    }))
   }
 
   equals(other: Token): boolean {
