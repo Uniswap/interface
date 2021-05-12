@@ -14,7 +14,7 @@ export function formatTokenAmount(amount: CurrencyAmount<Currency> | undefined, 
     return '<0.00001'
   }
 
-  return amount.toSignificant(Math.min(sigFigs, amount.currency.decimals))
+  return amount.toSignificant(sigFigs)
 }
 
 export function formatPrice(price: Price<Currency, Currency> | undefined, sigFigs: number) {
