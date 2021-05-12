@@ -18,6 +18,8 @@ import useTheme from '../../hooks/useTheme'
 import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
+import { formatTokenAmount } from 'utils/formatTokenAmount'
+import { wrappedCurrencyAmount } from 'utils/wrappedCurrency'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -134,11 +136,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
   margin-left: 0.25rem;
 
-  :hover {
-    /* border: 1px solid ${({ theme }) => theme.primary1}; */
-  }
   :focus {
-    /* border: 1px solid ${({ theme }) => theme.primary1}; */
     outline: none;
   }
 
@@ -189,8 +187,9 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
+  const selectedTokenBalance = wrappedCurrencyAmount(selectedCurrencyBalance, chainId)
   const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {
@@ -271,9 +270,9 @@ export default function CurrencyInputPanel({
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
-                    {!hideBalance && !!currency && selectedCurrencyBalance
+                    {!hideBalance && !!currency && selectedTokenBalance
                       ? (customBalanceText ?? 'Balance: ') +
-                        selectedCurrencyBalance?.toSignificant(4) +
+                        formatTokenAmount(selectedTokenBalance, 4) +
                         ' ' +
                         currency.symbol
                       : '-'}
@@ -285,7 +284,6 @@ export default function CurrencyInputPanel({
               ) : (
                 '-'
               )}
-
               <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
             </RowBetween>
           </FiatRow>

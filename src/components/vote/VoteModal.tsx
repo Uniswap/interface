@@ -13,6 +13,7 @@ import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme/components'
 import { TokenAmount } from '@uniswap/sdk-core'
+import { formatTokenAmount } from 'utils/formatTokenAmount'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -92,7 +93,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
               } proposal ${proposalId}`}</TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
-            <TYPE.largeHeader>{availableVotes?.toSignificant(4)} Votes</TYPE.largeHeader>
+            <TYPE.largeHeader>{formatTokenAmount(availableVotes, 4)} Votes</TYPE.largeHeader>
             <ButtonPrimary onClick={onVote}>
               <TYPE.mediumHeader color="white">{`Vote ${
                 support ? 'for ' : 'against'

@@ -10,11 +10,11 @@ export function formatTokenAmount(amount: TokenAmount | undefined, sigFigs: numb
     return '0'
   }
 
-  if (parseFloat(amount.toFixed(Math.min(sigFigs, amount.token.decimals))) < 0.0001) {
+  if (parseFloat(amount.toFixed(Math.min(sigFigs, amount.token.decimals))) < 0.000001) {
     return '<0.0001'
   }
 
-  return amount.toFixed(Math.min(sigFigs, amount.token.decimals))
+  return amount.toSignificant(Math.min(sigFigs, amount.token.decimals))
 }
 
 export function formatPrice(price: Price | undefined, sigFigs: number) {
