@@ -1,4 +1,4 @@
-import { Price, CurrencyAmount, Currency } from '@uniswap/sdk-core'
+import { Price, CurrencyAmount, Currency, Fraction } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
 export function formatTokenAmount(amount: CurrencyAmount<Currency> | undefined, sigFigs: number) {
@@ -10,7 +10,7 @@ export function formatTokenAmount(amount: CurrencyAmount<Currency> | undefined, 
     return '0'
   }
 
-  if (parseFloat(amount.toSignificant(Math.min(sigFigs, amount.currency.decimals))) < 0.000001) {
+  if (amount.divide(amount.decimalScale).lessThan(new Fraction(1, 100000))) {
     return '<0.000001'
   }
 

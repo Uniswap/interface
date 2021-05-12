@@ -19,7 +19,6 @@ import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
-import { wrappedCurrencyAmount } from 'utils/wrappedCurrency'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -187,9 +186,8 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
-  const selectedTokenBalance = wrappedCurrencyAmount(selectedCurrencyBalance, chainId)
   const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {
@@ -270,9 +268,9 @@ export default function CurrencyInputPanel({
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
-                    {!hideBalance && !!currency && selectedTokenBalance
+                    {!hideBalance && !!currency && selectedCurrencyBalance
                       ? (customBalanceText ?? 'Balance: ') +
-                        formatTokenAmount(selectedTokenBalance, 4) +
+                        formatTokenAmount(selectedCurrencyBalance, 4) +
                         ' ' +
                         currency.symbol
                       : '-'}
