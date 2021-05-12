@@ -20,7 +20,6 @@ function useExpertModeQueryParamReader(search: string): null {
       ignoreQueryPrefix: true,
     })
 
-    console.log(parsed)
     const expertMode = parsed['expert_mode'] || parsed.ape
 
     if (typeof expertMode !== 'string') return
