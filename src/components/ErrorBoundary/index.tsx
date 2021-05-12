@@ -4,6 +4,7 @@ import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import ReactGA from 'react-ga'
 import { getUserAgent } from '../../utils/getUserAgent'
+import { AutoRow } from '../Row'
 
 const FallbackWrapper = styled.div`
   display: flex;
@@ -14,14 +15,15 @@ const FallbackWrapper = styled.div`
 `
 
 const BodyWrapper = styled.div<{ margin?: string }>`
-  position: relative;
-  margin-top: 1rem;
-  max-width: 60%;
+  padding: 1rem;
   width: 100%;
+  white-space: ;
 `
 
 const CodeBlockWrapper = styled.div`
   background: ${({ theme }) => theme.bg0};
+  overflow: auto;
+  white-space: pre;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
@@ -79,18 +81,30 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                   <TYPE.main fontSize={10}>{error.stack}</TYPE.main>
                 </code>
               </CodeBlockWrapper>
-              <LinkWrapper>
-                <ExternalLink
-                  id={`create-github-issue-link`}
-                  href={`https://github.com/Uniswap/uniswap-interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=Crash report`}
-                  target="_blank"
-                >
-                  <TYPE.link fontSize={16}>
-                    Create an issue on GitHub
-                    <span>↗</span>
-                  </TYPE.link>
-                </ExternalLink>
-              </LinkWrapper>
+              <AutoRow>
+                <LinkWrapper>
+                  <ExternalLink
+                    id="create-github-issue-link"
+                    href={`https://github.com/Uniswap/uniswap-interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=${encodeURIComponent(
+                      `Crash report: \`${error.name}\``
+                    )}`}
+                    target="_blank"
+                  >
+                    <TYPE.link fontSize={16}>
+                      Create an issue on GitHub
+                      <span>↗</span>
+                    </TYPE.link>
+                  </ExternalLink>
+                </LinkWrapper>
+                <LinkWrapper>
+                  <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
+                    <TYPE.link fontSize={16}>
+                      Get support on Discord
+                      <span>↗</span>
+                    </TYPE.link>
+                  </ExternalLink>
+                </LinkWrapper>
+              </AutoRow>
             </AutoColumn>
           </BodyWrapper>
         </FallbackWrapper>
