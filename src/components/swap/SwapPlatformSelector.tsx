@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { CurrencyAmount, RoutablePlatform, Trade, TradeType } from 'dxswap-sdk'
+import { ChainId, CurrencyAmount, RoutablePlatform, Trade, TradeType } from 'dxswap-sdk'
 import { AutoColumn } from '../Column'
 import { TYPE } from '../../theme'
 import CurrencyLogo from '../CurrencyLogo'
@@ -68,7 +68,7 @@ export function SwapPlatformSelector({
   selectedTrade,
   onSelectedPlatformChange
 }: SwapPlatformSelectorProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [allowedSlippage] = useUserSlippageTolerance()
   const { recipient } = useSwapState()
   const { loading: loadingTradesGasEstimates, estimations } = useSwapsGasEstimations(
@@ -102,7 +102,7 @@ export function SwapPlatformSelector({
             <td>
               <TableHeaderText>FEE</TableHeaderText>
             </td>
-            {!!account && (
+            {!!account && chainId === ChainId.MAINNET && (
               <td align="right">
                 <TableHeaderText>GAS</TableHeaderText>
               </td>
@@ -136,7 +136,7 @@ export function SwapPlatformSelector({
                     {realizedLPFee ? `${realizedLPFee.toFixed(2)}%` : '-'}
                   </TYPE.main>
                 </td>
-                {!!account && (
+                {!!account && chainId === ChainId.MAINNET && (
                   <td width="44px" align="right">
                     <GasFee loading={loadingGasFees} gasFeeUSD={gasFeeUSD} />
                   </td>
