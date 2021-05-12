@@ -1,14 +1,15 @@
-import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import useTheme from '../../hooks/useTheme'
 import { TYPE } from '../../theme'
 import { warningSeverity } from '../../utils/prices'
+import HoverInlineText from 'components/HoverInlineText'
 
 export function FiatValue({
   fiatValue,
   priceImpact,
 }: {
-  fiatValue: CurrencyAmount | null | undefined
+  fiatValue: CurrencyAmount<Currency> | null | undefined
   priceImpact?: Percent
 }) {
   const theme = useTheme()
@@ -23,7 +24,8 @@ export function FiatValue({
 
   return (
     <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
-      {fiatValue ? '~' : ''}${fiatValue ? Number(fiatValue?.toSignificant(6)).toLocaleString('en') : '-'}
+      {fiatValue ? '~' : ''}$
+      <HoverInlineText text={fiatValue ? Number(fiatValue?.toSignificant(6)).toLocaleString('en') : '-'} />{' '}
       {priceImpact ? (
         <span style={{ color: priceImpactColor }}> ({priceImpact.multiply(-100).toSignificant(3)}%)</span>
       ) : null}

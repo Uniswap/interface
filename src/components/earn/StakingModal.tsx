@@ -11,7 +11,7 @@ import { ButtonConfirmed, ButtonError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { Pair } from '@uniswap/v2-sdk'
-import { TokenAmount } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { usePairContract, useStakingContract } from '../../hooks/useContract'
@@ -40,7 +40,7 @@ interface StakingModalProps {
   isOpen: boolean
   onDismiss: () => void
   stakingInfo: StakingInfo
-  userLiquidityUnstaked: TokenAmount | undefined
+  userLiquidityUnstaked: CurrencyAmount<Token> | undefined
 }
 
 export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
@@ -48,10 +48,14 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
-  const { parsedAmount, error } = useDerivedStakeInfo(typedValue, stakingInfo.stakedAmount.token, userLiquidityUnstaked)
+  const { parsedAmount, error } = useDerivedStakeInfo(
+    typedValue,
+    stakingInfo.stakedAmount.currency.isToken ? stakingInfo.stakedAmount.currency : undefined,
+    userLiquidityUnstaked
+  )
   const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
 
-  let hypotheticalRewardRate: TokenAmount = new TokenAmount(stakingInfo.rewardRate.token, '0')
+  let hypotheticalRewardRate: CurrencyAmount<Token> = CurrencyAmount.fromRawAmount(stakingInfo.rewardRate.currency, '0')
   if (parsedAmountWrapped?.greaterThan('0')) {
     hypotheticalRewardRate = stakingInfo.getHypotheticalRewardRate(
       stakingInfo.stakedAmount.add(parsedAmountWrapped),
@@ -71,7 +75,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   }, [onDismiss])
 
   // pair contract for this token to be staked
-  const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
+  const dummyPair = new Pair(
+    CurrencyAmount.fromRawAmount(stakingInfo.tokens[0], '0'),
+    CurrencyAmount.fromRawAmount(stakingInfo.tokens[1], '0')
+  )
   const pairContract = usePairContract(dummyPair.liquidityToken.address)
 
   // approval data for stake
@@ -84,11 +91,11 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     setAttempting(true)
     if (stakingContract && parsedAmount && deadline) {
       if (approval === ApprovalState.APPROVED) {
-        await stakingContract.stake(`0x${parsedAmount.raw.toString(16)}`, { gasLimit: 350000 })
+        await stakingContract.stake(`0x${parsedAmount.quotient.toString(16)}`, { gasLimit: 350000 })
       } else if (signatureData) {
         stakingContract
           .stakeWithPermit(
-            `0x${parsedAmount.raw.toString(16)}`,
+            `0x${parsedAmount.quotient.toString(16)}`,
             signatureData.deadline,
             signatureData.v,
             signatureData.r,
@@ -155,7 +162,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             onUserInput={onUserInput}
             onMax={handleMax}
             showMaxButton={!atMaxAmount}
-            currency={stakingInfo.stakedAmount.token}
+            currency={stakingInfo.stakedAmount.currency}
             pair={dummyPair}
             label={''}
             customBalanceText={'Available to deposit: '}

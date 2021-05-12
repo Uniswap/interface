@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, toHex, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { ChainId, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/v3'
 import { getTradeVersion } from '../utils/getTradeVersion'
@@ -50,7 +50,7 @@ interface FailedCall extends SwapCallEstimate {
  * @param signatureData the signature data of the permit of the input token amount, if available
  */
 function useSwapCallArguments(
-  trade: V2Trade | V3Trade | undefined, // trade to execute, required
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | null | undefined
@@ -104,7 +104,7 @@ function useSwapCallArguments(
                   to: inputTokenContract.address,
                   data: inputTokenContract.interface.encodeFunctionData('approve', [
                     routerContract.address,
-                    toHex(trade.maximumAmountIn(allowedSlippage).raw),
+                    toHex(trade.maximumAmountIn(allowedSlippage).quotient),
                   ]),
                   value: '0x',
                 },
@@ -165,7 +165,7 @@ function useSwapCallArguments(
                   to: inputTokenContract.address,
                   data: inputTokenContract.interface.encodeFunctionData('approve', [
                     swapRouterAddress,
-                    toHex(trade.maximumAmountIn(allowedSlippage).raw),
+                    toHex(trade.maximumAmountIn(allowedSlippage).quotient),
                   ]),
                   value: '0x0',
                 },
@@ -206,7 +206,7 @@ function useSwapCallArguments(
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade: V2Trade | V3Trade | undefined, // trade to execute, required
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | undefined | null

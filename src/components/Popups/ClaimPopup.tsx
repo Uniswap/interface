@@ -1,4 +1,4 @@
-import { TokenAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import React, { useEffect } from 'react'
 import { X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
@@ -65,7 +65,7 @@ export default function ClaimPopup() {
 
   // const userHasAvailableclaim = useUserHasAvailableClaim()
   const userHasAvailableclaim: boolean = useUserHasAvailableClaim(account)
-  const unclaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(account)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
 
   // listen for available claim and show popup if needed
   useEffect(() => {

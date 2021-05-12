@@ -12,7 +12,7 @@ import Circle from '../../assets/images/blue-loader.svg'
 import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme/components'
-import { TokenAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -48,7 +48,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
   }: {
     voteCallback: (proposalId: string | undefined, support: boolean) => Promise<string> | undefined
   } = useVoteCallback()
-  const availableVotes: TokenAmount | undefined = useUserVotes()
+  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
 
   // monitor call to help UI loading state
   const [hash, setHash] = useState<string | undefined>()

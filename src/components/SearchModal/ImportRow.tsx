@@ -1,3 +1,4 @@
+import { TokenList } from '@uniswap/token-lists/dist/types'
 import React, { CSSProperties } from 'react'
 import { Token } from '@uniswap/sdk-core'
 import { AutoRow, RowFixed } from 'components/Row'
@@ -5,8 +6,6 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { TYPE } from 'theme'
 import ListLogo from 'components/ListLogo'
-import { useActiveWeb3React } from 'hooks'
-import { useCombinedInactiveList } from 'state/lists/hooks'
 import useTheme from 'hooks/useTheme'
 import { ButtonPrimary } from 'components/Button'
 import styled from 'styled-components'
@@ -44,22 +43,18 @@ export default function ImportRow({
   token,
   style,
   dim,
+  list,
   showImportView,
   setImportToken,
 }: {
   token: Token
   style?: CSSProperties
   dim?: boolean
+  list?: TokenList
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
-  // gloabls
-  const { chainId } = useActiveWeb3React()
   const theme = useTheme()
-
-  // check if token comes from list
-  const inactiveTokenList = useCombinedInactiveList()
-  const list = chainId && inactiveTokenList?.[chainId]?.[token.address]?.list
 
   // check if already active on list or local storage tokens
   const isAdded = useIsUserAddedToken(token)

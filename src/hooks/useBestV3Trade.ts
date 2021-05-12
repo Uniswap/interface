@@ -1,4 +1,4 @@
-import { Token, Currency, CurrencyAmount, TokenAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { encodeRouteToPath, Route, Trade } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
@@ -20,16 +20,16 @@ export enum V3TradeState {
  * @param currencyOut the desired output currency
  */
 export function useBestV3TradeExactIn(
-  amountIn?: CurrencyAmount,
+  amountIn?: CurrencyAmount<Currency>,
   currencyOut?: Currency
-): { state: V3TradeState; trade: Trade | null } {
+): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null } {
   const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(amountIn?.currency, currencyOut)
 
   const quoteExactInInputs = useMemo(() => {
     return routes.map((route) => [
       encodeRouteToPath(route, false),
-      amountIn ? `0x${amountIn.raw.toString(16)}` : undefined,
+      amountIn ? `0x${amountIn.quotient.toString(16)}` : undefined,
     ])
   }, [amountIn, routes])
 
@@ -51,7 +51,7 @@ export function useBestV3TradeExactIn(
     }
 
     const { bestRoute, amountOut } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route | null; amountOut: BigNumber | null }, { result }, i) => {
+      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountOut: BigNumber | null }, { result }, i) => {
         if (!result) return currentBest
 
         if (currentBest.amountOut === null) {
@@ -89,10 +89,9 @@ export function useBestV3TradeExactIn(
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
         inputAmount: amountIn,
-        outputAmount:
-          currencyOut instanceof Token
-            ? new TokenAmount(currencyOut, amountOut.toString())
-            : CurrencyAmount.ether(amountOut.toString()),
+        outputAmount: currencyOut.isToken
+          ? CurrencyAmount.fromRawAmount(currencyOut, amountOut.toString())
+          : CurrencyAmount.ether(amountOut.toString()),
       }),
     }
   }, [amountIn, currencyOut, quotesResults, routes, routesLoading])
@@ -105,15 +104,15 @@ export function useBestV3TradeExactIn(
  */
 export function useBestV3TradeExactOut(
   currencyIn?: Currency,
-  amountOut?: CurrencyAmount
-): { state: V3TradeState; trade: Trade | null } {
+  amountOut?: CurrencyAmount<Currency>
+): { state: V3TradeState; trade: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null } {
   const quoter = useV3Quoter()
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, amountOut?.currency)
 
   const quoteExactOutInputs = useMemo(() => {
     return routes.map((route) => [
       encodeRouteToPath(route, true),
-      amountOut ? `0x${amountOut.raw.toString(16)}` : undefined,
+      amountOut ? `0x${amountOut.quotient.toString(16)}` : undefined,
     ])
   }, [amountOut, routes])
 
@@ -135,7 +134,7 @@ export function useBestV3TradeExactOut(
     }
 
     const { bestRoute, amountIn } = quotesResults.reduce(
-      (currentBest: { bestRoute: Route | null; amountIn: BigNumber | null }, { result }, i) => {
+      (currentBest: { bestRoute: Route<Currency, Currency> | null; amountIn: BigNumber | null }, { result }, i) => {
         if (!result) return currentBest
 
         if (currentBest.amountIn === null) {
@@ -172,10 +171,7 @@ export function useBestV3TradeExactOut(
       trade: Trade.createUncheckedTrade({
         route: bestRoute,
         tradeType: TradeType.EXACT_OUTPUT,
-        inputAmount:
-          currencyIn instanceof Token
-            ? new TokenAmount(currencyIn, amountIn.toString())
-            : CurrencyAmount.ether(amountIn.toString()),
+        inputAmount: CurrencyAmount.fromRawAmount(currencyIn, amountIn.toString()),
         outputAmount: amountOut,
       }),
     }

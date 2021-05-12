@@ -5,7 +5,7 @@ import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from './index'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { Currency, TokenAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 
@@ -51,7 +51,10 @@ export function useV2Pairs(currencies: [Currency | undefined, Currency | undefin
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [
         PairState.EXISTS,
-        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString())),
+        new Pair(
+          CurrencyAmount.fromRawAmount(token0, reserve0.toString()),
+          CurrencyAmount.fromRawAmount(token1, reserve1.toString())
+        ),
       ]
     })
   }, [results, tokens])

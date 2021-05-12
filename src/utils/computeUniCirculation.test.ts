@@ -1,5 +1,5 @@
-import { ChainId, Token, TokenAmount } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
+import { ChainId, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { ZERO_ADDRESS } from '../constants'
 import { computeUniCirculation } from './computeUniCirculation'
@@ -12,7 +12,7 @@ describe('computeUniCirculation', () => {
   }
 
   function tokenAmount(num: JSBI | string | number) {
-    return new TokenAmount(token, expandTo18Decimals(num))
+    return CurrencyAmount.fromRawAmount(token, expandTo18Decimals(num))
   }
 
   it('before staking', () => {
