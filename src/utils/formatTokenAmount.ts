@@ -11,7 +11,7 @@ export function formatTokenAmount(amount: CurrencyAmount<Currency> | undefined, 
   }
 
   if (amount.divide(amount.decimalScale).lessThan(new Fraction(1, 100000))) {
-    return '<0.000001'
+    return '<0.00001'
   }
 
   return amount.toSignificant(Math.min(sigFigs, amount.currency.decimals))
