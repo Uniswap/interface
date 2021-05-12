@@ -50,7 +50,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const [typedValue, setTypedValue] = useState('')
   const { parsedAmount, error } = useDerivedStakeInfo(
     typedValue,
-    stakingInfo.stakedAmount.currency.isToken ? stakingInfo.stakedAmount.currency : undefined,
+    stakingInfo.stakedAmount.currency,
     userLiquidityUnstaked
   )
   const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
