@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap/sdk-core'
+import { TokenList } from '@uniswap/token-lists/dist/types'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -146,73 +147,76 @@ function CurrencyRow({
 
 const BREAK_LINE = 'BREAK'
 type BreakLine = typeof BREAK_LINE
-function isBreakLine(x: Currency | BreakLine): x is BreakLine {
+function isBreakLine(x: unknown): x is BreakLine {
   return x === BREAK_LINE
+}
+
+function BreakLineComponent({ style }: { style: CSSProperties }) {
+  const theme = useTheme()
+  return (
+    <FixedContentRow style={style}>
+      <LightGreyCard padding="8px 12px" borderRadius="8px">
+        <RowBetween>
+          <RowFixed>
+            <TokenListLogoWrapper src={TokenListLogo} />
+            <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
+              Expanded results from inactive Token Lists
+            </TYPE.main>
+          </RowFixed>
+          <QuestionHelper text="Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists." />
+        </RowBetween>
+      </LightGreyCard>
+    </FixedContentRow>
+  )
 }
 
 export default function CurrencyList({
   height,
   currencies,
+  otherListTokens,
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
   fixedListRef,
-  showETH,
   showImportView,
   setImportToken,
-  breakIndex,
 }: {
   height: number
   currencies: Currency[]
+  otherListTokens?: WrappedTokenInfo[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
-  showETH: boolean
   showImportView: () => void
   setImportToken: (token: Token) => void
-  breakIndex: number | undefined
 }) {
   const itemData: (Currency | BreakLine)[] = useMemo(() => {
-    let formatted: (Currency | BreakLine)[] = showETH ? [ETHER, ...currencies] : currencies
-    if (breakIndex !== undefined) {
-      formatted = [...formatted.slice(0, breakIndex), BREAK_LINE, ...formatted.slice(breakIndex, formatted.length)]
+    if (otherListTokens && otherListTokens?.length > 0) {
+      return [...currencies, BREAK_LINE, ...otherListTokens]
     }
-    return formatted
-  }, [breakIndex, currencies, showETH])
+    return currencies
+  }, [currencies, otherListTokens])
 
   const { chainId } = useActiveWeb3React()
-  const theme = useTheme()
 
   const Row = useCallback(
     function TokenRow({ data, index, style }) {
       const row: Currency | BreakLine = data[index]
-      const currency = isBreakLine(row) ? undefined : row
+
+      if (isBreakLine(row)) {
+        return <BreakLineComponent style={style} />
+      }
+
+      const currency = row
+
       const isSelected = Boolean(currency && selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(currency && otherCurrency && currencyEquals(otherCurrency, currency))
       const handleSelect = () => currency && onCurrencySelect(currency)
 
       const token = wrappedCurrency(currency, chainId)
 
-      if (!currency) {
-        return (
-          <FixedContentRow style={style}>
-            <LightGreyCard padding="8px 12px" borderRadius="8px">
-              <RowBetween>
-                <RowFixed>
-                  <TokenListLogoWrapper src={TokenListLogo} />
-                  <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
-                    Expanded results from inactive Token Lists
-                  </TYPE.main>
-                </RowFixed>
-                <QuestionHelper text="Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists." />
-              </RowBetween>
-            </LightGreyCard>
-          </FixedContentRow>
-        )
-      }
-
-      const showImport = breakIndex && index > breakIndex
+      const showImport = index > currencies.length
 
       if (showImport && token) {
         return (
@@ -232,16 +236,7 @@ export default function CurrencyList({
         return null
       }
     },
-    [
-      breakIndex,
-      chainId,
-      onCurrencySelect,
-      otherCurrency,
-      selectedCurrency,
-      setImportToken,
-      showImportView,
-      theme.text1,
-    ]
+    [chainId, currencies.length, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
   )
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {

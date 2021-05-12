@@ -58,16 +58,13 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
   return useTokensFromMap(unsupportedTokensMap, false)
 }
 
-export function useSearchInactiveTokenLists(
-  search: string | undefined,
-  minResults = 3
-): { token: Token; list: TokenList }[] {
+export function useSearchInactiveTokenLists(search: string | undefined, minResults = 10): WrappedTokenInfo[] {
   const lists = useAllLists()
   const inactiveUrls = useInactiveListUrls()
   const { chainId } = useActiveWeb3React()
   return useMemo(() => {
     if (!search || search.trim().length === 0) return []
-    let result: { token: Token; list: TokenList }[] = []
+    let result: WrappedTokenInfo[] = []
     for (const url of inactiveUrls) {
       const list = lists[url].current
       if (!list) continue
@@ -75,7 +72,7 @@ export function useSearchInactiveTokenLists(
         list.tokens.filter((token) => token.chainId === chainId),
         search
       )
-      result = [...result, ...matching.map((tokenInfo) => ({ token: new WrappedTokenInfo(tokenInfo, []), list }))]
+      result = [...result, ...matching.map((tokenInfo) => new WrappedTokenInfo(tokenInfo, list))]
       if (result.length >= minResults) return result
     }
     return result
