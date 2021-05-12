@@ -136,11 +136,16 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
     if (value.length === 0) {
       setDeadline(DEFAULT_DEADLINE_FROM_NOW)
     } else {
-      const parsed: number = Math.floor(Number.parseFloat(value) * 60)
-      if (!Number.isInteger(parsed) || parsed < 60) {
+      try {
+        const parsed: number = Math.floor(Number.parseFloat(value) * 60)
+        if (!Number.isInteger(parsed) || parsed < 60 || parsed > 180 * 60) {
+          setDeadlineError(DeadlineError.InvalidInput)
+        } else {
+          setDeadline(parsed)
+        }
+      } catch (error) {
+        console.error(error)
         setDeadlineError(DeadlineError.InvalidInput)
-      } else {
-        setDeadline(parsed)
       }
     }
   }

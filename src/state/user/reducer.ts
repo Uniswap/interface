@@ -96,7 +96,12 @@ export default createReducer(initialState, (builder) =>
 
       // deadline isnt being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
-      if (typeof state.userDeadline !== 'number' || !Number.isInteger(state.userDeadline) || state.userDeadline < 60) {
+      if (
+        typeof state.userDeadline !== 'number' ||
+        !Number.isInteger(state.userDeadline) ||
+        state.userDeadline < 60 ||
+        state.userDeadline > 180 * 60
+      ) {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
 
