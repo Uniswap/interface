@@ -139,6 +139,7 @@ const NFTCanvas = styled.canvas`
 const NFTImage = styled.img`
   grid-area: overlap;
   height: 400px;
+  /* Ensures SVG appears on top of canvas. */
   z-index: 1;
 `
 
