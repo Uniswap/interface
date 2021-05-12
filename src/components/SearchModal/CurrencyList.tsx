@@ -8,7 +8,7 @@ import { useCombinedActiveList } from '../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
-import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
+import { useIsUserAddedToken } from '../../hooks/Tokens'
 import Column from '../Column'
 import { RowFixed, RowBetween } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
@@ -184,12 +184,8 @@ export default function CurrencyList({
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 
-  const inactiveTokens: {
-    [address: string]: Token
-  } = useAllInactiveTokens()
-
   const Row = useCallback(
-    ({ data, index, style }) => {
+    function TokenRow({ data, index, style }) {
       const row: Currency | BreakLine = data[index]
       const currency = isBreakLine(row) ? undefined : row
       const isSelected = Boolean(currency && selectedCurrency && currencyEquals(selectedCurrency, currency))
@@ -197,8 +193,6 @@ export default function CurrencyList({
       const handleSelect = () => currency && onCurrencySelect(currency)
 
       const token = wrappedCurrency(currency, chainId)
-
-      const showImport = inactiveTokens && token && token.address in inactiveTokens
 
       if (!currency) {
         return (
@@ -218,15 +212,11 @@ export default function CurrencyList({
         )
       }
 
+      const showImport = breakIndex && index > breakIndex
+
       if (showImport && token) {
         return (
-          <ImportRow
-            style={style}
-            token={token}
-            showImportView={showImportView}
-            setImportToken={setImportToken}
-            dim={true}
-          />
+          <ImportRow style={style} token={token} showImportView={showImportView} setImportToken={setImportToken} dim />
         )
       } else if (currency) {
         return (
@@ -243,8 +233,8 @@ export default function CurrencyList({
       }
     },
     [
+      breakIndex,
       chainId,
-      inactiveTokens,
       onCurrencySelect,
       otherCurrency,
       selectedCurrency,

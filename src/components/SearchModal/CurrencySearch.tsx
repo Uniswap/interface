@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken, useIsUserAddedToken, useSearchInactiveLists } from '../../hooks/Tokens'
+import { useAllTokens, useToken, useIsUserAddedToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -158,8 +158,7 @@ export function CurrencySearch({
   useOnClickOutside(node, open ? toggle : undefined)
 
   // if no results on main list, show option to expand into inactive
-  const inactiveTokens = useSearchInactiveLists(filteredTokens.length === 0 ? debouncedQuery : '')
-  const filteredInactiveTokens: Token[] = useSortedTokensByQuery(inactiveTokens, debouncedQuery)
+  const filteredInactiveTokens = useSearchInactiveTokenLists(filteredTokens.length === 0 ? debouncedQuery : undefined)
 
   return (
     <ContentWrapper>
@@ -199,9 +198,15 @@ export function CurrencySearch({
                 height={height}
                 showETH={showETH}
                 currencies={
-                  filteredInactiveTokens ? filteredSortedTokens.concat(filteredInactiveTokens) : filteredSortedTokens
+                  filteredInactiveTokens
+                    ? filteredSortedTokens.concat(filteredInactiveTokens.map(({ token }) => token))
+                    : filteredSortedTokens
                 }
-                breakIndex={inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined}
+                breakIndex={
+                  filteredInactiveTokens && filteredInactiveTokens.length > 0 && filteredSortedTokens
+                    ? filteredSortedTokens.length
+                    : undefined
+                }
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
                 selectedCurrency={selectedCurrency}
