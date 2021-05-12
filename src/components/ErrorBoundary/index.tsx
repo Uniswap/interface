@@ -126,7 +126,11 @@ App crashed
 1. Go to ...
 2. Click on ...
    ...
-   
+
+**URL**
+
+${window.location.href}
+
 ${
   error.name &&
   `**Error**
