@@ -1,4 +1,3 @@
-import { TokenList } from '@uniswap/token-lists/dist/types'
 import React, { CSSProperties } from 'react'
 import { Token } from '@uniswap/sdk-core'
 import { AutoRow, RowFixed } from 'components/Row'
@@ -11,6 +10,7 @@ import { ButtonPrimary } from 'components/Button'
 import styled from 'styled-components'
 import { useIsUserAddedToken, useIsTokenActive } from 'hooks/Tokens'
 import { CheckCircle } from 'react-feather'
+import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 
 const TokenSection = styled.div<{ dim?: boolean }>`
   padding: 4px 20px;
@@ -43,14 +43,12 @@ export default function ImportRow({
   token,
   style,
   dim,
-  list,
   showImportView,
   setImportToken,
 }: {
   token: Token
   style?: CSSProperties
   dim?: boolean
-  list?: TokenList
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
@@ -59,6 +57,8 @@ export default function ImportRow({
   // check if already active on list or local storage tokens
   const isAdded = useIsUserAddedToken(token)
   const isActive = useIsTokenActive(token)
+
+  const list = token instanceof WrappedTokenInfo ? token.list : undefined
 
   return (
     <TokenSection style={style}>
