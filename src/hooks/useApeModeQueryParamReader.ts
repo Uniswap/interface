@@ -15,7 +15,8 @@ function useApeModeQueryParamReader() {
 
   useEffect(() => {
     if (typeof ape !== 'string') return
-
-    dispatch(updateUserExpertMode({ userExpertMode: ape.toLowerCase() === 'true' }))
+    if (ape === '' || ape.toLowerCase() === 'true') {
+      dispatch(updateUserExpertMode({ userExpertMode: true }))
+    }
   })
 }
