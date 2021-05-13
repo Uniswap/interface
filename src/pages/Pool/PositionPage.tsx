@@ -5,7 +5,7 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { unwrappedToken } from 'utils/wrappedCurrency'
+import { unwrappedToken, wrappedCurrencyAmount } from 'utils/wrappedCurrency'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { LoadingRows } from './styleds'
 import styled from 'styled-components/macro'
@@ -23,7 +23,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Token, WETH9, Currency, CurrencyAmount, Percent, Fraction, Price, currencyEquals } from '@uniswap/sdk-core'
+import { Token, Currency, CurrencyAmount, Percent, Fraction, Price, Ether } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -38,6 +38,7 @@ import { useSingleCallResult } from 'state/multicall/hooks'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import useUSDCPrice from 'hooks/useUSDCPrice'
 import Loader from 'components/Loader'
+import Toggle from 'components/Toggle'
 
 const PageWrapper = styled.div`
   min-width: 800px;
@@ -269,8 +270,11 @@ export function PositionPage({
   const currency0 = token0 ? unwrappedToken(token0) : undefined
   const currency1 = token1 ? unwrappedToken(token1) : undefined
 
+  // flag for receiving WETH
+  const [receiveWETH, setReceiveWETH] = useState(false)
+
   // construct Position from details returned
-  const [poolState, pool] = usePool(currency0 ?? undefined, currency1 ?? undefined, feeAmount)
+  const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, feeAmount)
   const position = useMemo(() => {
     if (pool && liquidity && typeof tickLower === 'number' && typeof tickUpper === 'number') {
       return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
@@ -304,7 +308,7 @@ export function PositionPage({
   }, [inverted, pool, priceLower, priceUpper])
 
   // fees
-  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails?.tokenId)
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, positionDetails?.tokenId, receiveWETH)
 
   const [collecting, setCollecting] = useState<boolean>(false)
   const [collectMigrationHash, setCollectMigrationHash] = useState<string | null>(null)
@@ -320,12 +324,8 @@ export function PositionPage({
 
     const { calldata, value } = NonfungiblePositionManager.collectCallParameters({
       tokenId: tokenId.toString(),
-      expectedCurrencyOwed0: currencyEquals(feeValue0.currency, WETH9[chainId])
-        ? CurrencyAmount.ether(feeValue0.quotient)
-        : feeValue0,
-      expectedCurrencyOwed1: currencyEquals(feeValue1.currency, WETH9[chainId])
-        ? CurrencyAmount.ether(feeValue1.quotient)
-        : feeValue1,
+      expectedCurrencyOwed0: feeValue0,
+      expectedCurrencyOwed1: feeValue1,
       recipient: account,
     })
 
@@ -371,15 +371,23 @@ export function PositionPage({
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || positionDetails?.operator === account
 
+  // usdc prices always in terms of tokens
   const price0 = useUSDCPrice(token0 ?? undefined)
   const price1 = useUSDCPrice(token1 ?? undefined)
 
-  const fiatValueOfFees: CurrencyAmount<Token> | null = useMemo(() => {
+  const fiatValueOfFees: CurrencyAmount<Token | Ether> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
-    const amount0 = price0.quote(feeValue0)
-    const amount1 = price1.quote(feeValue1)
+
+    // we wrap because it doesn't matter, the quote returns a USDC amount
+    const feeValue0Wrapped = wrappedCurrencyAmount(feeValue0, chainId)
+    const feeValue1Wrapped = wrappedCurrencyAmount(feeValue1, chainId)
+
+    if (!feeValue0Wrapped || !feeValue1Wrapped) return null
+
+    const amount0 = price0.quote(feeValue0Wrapped)
+    const amount1 = price1.quote(feeValue1Wrapped)
     return amount0.add(amount1)
-  }, [price0, price1, feeValue0, feeValue1])
+  }, [price0, price1, feeValue0, feeValue1, chainId])
 
   const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !position) return null
@@ -388,6 +396,9 @@ export function PositionPage({
     return amount0.add(amount1)
   }, [price0, price1, position])
 
+  const feeValueUpper = inverted ? feeValue0 : feeValue1
+  const feeValueLower = inverted ? feeValue1 : feeValue0
+
   function modalHeader() {
     return (
       <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
@@ -395,33 +406,17 @@ export function PositionPage({
           <AutoColumn gap="md">
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                <TYPE.main>
-                  {inverted
-                    ? feeValue0
-                      ? formatTokenAmount(feeValue0, 4)
-                      : '-'
-                    : feeValue1
-                    ? formatTokenAmount(feeValue1, 4)
-                    : '-'}
-                </TYPE.main>
+                <CurrencyLogo currency={feeValueUpper?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                <TYPE.main>{feeValueUpper ? formatTokenAmount(feeValueUpper, 4) : '-'}</TYPE.main>
               </RowFixed>
-              <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
+              <TYPE.main>{feeValueUpper?.currency?.symbol}</TYPE.main>
             </RowBetween>
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                <TYPE.main>
-                  {inverted
-                    ? feeValue0
-                      ? formatTokenAmount(feeValue1, 4)
-                      : '-'
-                    : feeValue1
-                    ? formatTokenAmount(feeValue0, 4)
-                    : '-'}
-                </TYPE.main>
+                <CurrencyLogo currency={feeValueLower?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                <TYPE.main>{feeValueLower ? formatTokenAmount(feeValueLower, 4) : '-'}</TYPE.main>
               </RowFixed>
-              <TYPE.main>{currencyBase?.symbol}</TYPE.main>
+              <TYPE.main>{feeValueLower?.currency?.symbol}</TYPE.main>
             </RowBetween>
           </AutoColumn>
         </LightCard>
@@ -640,40 +635,44 @@ export function PositionPage({
                   <AutoColumn gap="md">
                     <RowBetween>
                       <RowFixed>
-                        <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
+                        <CurrencyLogo
+                          currency={feeValueUpper?.currency}
+                          size={'20px'}
+                          style={{ marginRight: '0.5rem' }}
+                        />
+                        <TYPE.main>{feeValueUpper?.currency?.symbol}</TYPE.main>
                       </RowFixed>
                       <RowFixed>
-                        <TYPE.main>
-                          {inverted
-                            ? feeValue0
-                              ? formatTokenAmount(feeValue0, 4)
-                              : '-'
-                            : feeValue1
-                            ? formatTokenAmount(feeValue1, 4)
-                            : '-'}
-                        </TYPE.main>
+                        <TYPE.main>{feeValueUpper ? formatTokenAmount(feeValueUpper, 4) : '-'}</TYPE.main>
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
                       <RowFixed>
-                        <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>{currencyBase?.symbol}</TYPE.main>
+                        <CurrencyLogo
+                          currency={feeValueLower?.currency}
+                          size={'20px'}
+                          style={{ marginRight: '0.5rem' }}
+                        />
+                        <TYPE.main>{feeValueLower?.currency?.symbol}</TYPE.main>
                       </RowFixed>
                       <RowFixed>
-                        <TYPE.main>
-                          {inverted
-                            ? feeValue0
-                              ? formatTokenAmount(feeValue1, 4)
-                              : '-'
-                            : feeValue1
-                            ? formatTokenAmount(feeValue0, 4)
-                            : '-'}
-                        </TYPE.main>
+                        <TYPE.main>{feeValueLower ? formatTokenAmount(feeValueLower, 4) : '-'}</TYPE.main>
                       </RowFixed>
                     </RowBetween>
                   </AutoColumn>
                 </LightCard>
+                {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) && !collectMigrationHash ? (
+                  <AutoColumn gap="md">
+                    <RowBetween>
+                      <TYPE.main>Collect as WETH</TYPE.main>
+                      <Toggle
+                        id="receive-as-weth"
+                        isActive={receiveWETH}
+                        toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                      />
+                    </RowBetween>
+                  </AutoColumn>
+                ) : null}
               </AutoColumn>
             </DarkCard>
           </AutoColumn>
