@@ -661,16 +661,18 @@ export function PositionPage({
                     </RowBetween>
                   </AutoColumn>
                 </LightCard>
-                <AutoColumn gap="md">
-                  <RowBetween>
-                    <TYPE.main>Collect as WETH</TYPE.main>
-                    <Toggle
-                      id="receive-as-weth"
-                      isActive={receiveWETH}
-                      toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
-                    />
-                  </RowBetween>
-                </AutoColumn>
+                {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) && !collectMigrationHash ? (
+                  <AutoColumn gap="md">
+                    <RowBetween>
+                      <TYPE.main>Collect as WETH</TYPE.main>
+                      <Toggle
+                        id="receive-as-weth"
+                        isActive={receiveWETH}
+                        toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                      />
+                    </RowBetween>
+                  </AutoColumn>
+                ) : null}
               </AutoColumn>
             </DarkCard>
           </AutoColumn>
