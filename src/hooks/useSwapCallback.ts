@@ -133,6 +133,7 @@ function useSwapCallArguments(
   }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, signatureData, trade])
 }
 
+const ERROR_REASON_SEARCH_STRING = 'execution reverted: '
 /**
  * This is hacking out the revert reason from the ethers provider thrown error however it can.
  * This object seems to be undocumented by ethers.
@@ -142,10 +143,12 @@ export function swapErrorToUserReadableMessage(error: any): string {
   let reason: string | undefined
   while (Boolean(error)) {
     reason = error.reason ?? error.message ?? reason
+    if (reason?.indexOf(ERROR_REASON_SEARCH_STRING) === 0) {
+      reason = reason.substr(ERROR_REASON_SEARCH_STRING.length)
+      break
+    }
     error = error.error ?? error.data?.originalError
   }
-
-  if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
 
   switch (reason) {
     case 'UniswapV2Router: EXPIRED':
@@ -166,7 +169,9 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'TF':
       return 'The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
     default:
-      return `Unknown error${reason ? `: "${reason}"` : ''}. Please join the Discord to get help.`
+      return `Unexpected error: "${
+        reason ? reason : error.message ?? error.reason
+      }". Please join the Discord to get help.`
   }
 }
 
