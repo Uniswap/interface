@@ -166,7 +166,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'TF':
       return 'The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
     default:
-      return 'Unknown error. Please join the Discord to get help.'
+      return `Unknown error${reason ? `: "${reason}"` : ''}. Please join the Discord to get help.`
   }
 }
 
@@ -306,9 +306,7 @@ export function useSwapCallback(
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, address, calldata, value)
 
-              throw new Error(
-                `Swap failed: ${'reason' in error ? swapErrorToUserReadableMessage(error) : error.message}`
-              )
+              throw new Error(`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
             }
           })
       },
