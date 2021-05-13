@@ -19,6 +19,7 @@ import styled from 'styled-components'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { Field } from '../../state/swap/actions'
 import Skeleton from 'react-loading-skeleton'
+import useDebounce from '../../hooks/useDebounce'
 
 const TableHeaderText = styled.span`
   font-size: 10px;
@@ -54,12 +55,7 @@ function GasFee({ loading, gasFeeUSD }: GasFeeProps) {
     )
   }
   return (
-    <RowFixed>
-      <TYPE.main color="yellow2" fontSize="10px" lineHeight="12px">
-        N.A.
-      </TYPE.main>
-      <WarningHelper text="Could not estimate gas fee. Please make sure you've approved the traded token and that you have enough funds." />
-    </RowFixed>
+    <WarningHelper text="Could not estimate gas fee. Please make sure you've approved the traded token and that you have enough funds." />
   )
 }
 
@@ -79,6 +75,8 @@ export function SwapPlatformSelector({
   const { loading: loadingGasFeesUSD, gasFeesUSD } = useGasFeesUSD(
     estimations.map(estimation => (estimation && estimation.length > 0 ? estimation[0] : null))
   )
+  const loadingGasFees = loadingGasFeesUSD || loadingTradesGasEstimates
+  const debouncedLoadingGasFees = useDebounce(loadingGasFees, 1000)
 
   const handleSelectedTradeOverride = useCallback(
     event => {
@@ -88,8 +86,6 @@ export function SwapPlatformSelector({
     },
     [allPlatformTrades, onSelectedPlatformChange]
   )
-
-  const loadingGasFees = loadingGasFeesUSD || loadingTradesGasEstimates
 
   return (
     <AutoColumn gap="18px" style={{ borderBottom: '1px solid #292643', paddingBottom: '12px', marginBottom: '12px' }}>
@@ -138,7 +134,7 @@ export function SwapPlatformSelector({
                 </td>
                 {!!account && chainId === ChainId.MAINNET && (
                   <td width="44px" align="right">
-                    <GasFee loading={loadingGasFees} gasFeeUSD={gasFeeUSD} />
+                    <GasFee loading={debouncedLoadingGasFees} gasFeeUSD={gasFeeUSD} />
                   </td>
                 )}
                 <td align="right">
