@@ -6,7 +6,6 @@ import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useBlockNumber } from '../state/application/hooks'
 import { calculateGasMargin } from '../utils'
 import isZero from '../utils/isZero'
-import useDebounce from './useDebounce'
 import useENS from './useENS'
 import { useSwapsCallArguments } from './useSwapCallback'
 
@@ -21,7 +20,6 @@ export function useSwapsGasEstimations(
 
   const [loading, setLoading] = useState(false)
   const [estimations, setEstimations] = useState<(BigNumber | null)[][]>([])
-  const debouncedLoading = useDebounce(loading, 300)
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddress || account
@@ -55,12 +53,12 @@ export function useSwapsGasEstimations(
   }, [platformSwapCalls])
 
   useEffect(() => {
-    if (!trades || trades.length === 0 || !library || !chainId || !recipient) {
+    if (!trades || trades.length === 0 || !library || !chainId || !recipient || !account) {
       setEstimations([])
       return
     }
     updateEstimations()
-  }, [chainId, library, recipient, trades, updateEstimations, blockNumber])
+  }, [chainId, library, recipient, trades, updateEstimations, blockNumber, account])
 
-  return { loading: debouncedLoading, estimations }
+  return { loading: loading, estimations }
 }
