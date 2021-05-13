@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { DataCard, CardSection, Break } from '../earn/styled'
 import { RowBetween } from '../Row'
 import { TYPE, ExternalLink, CloseIcon, CustomLightSpinner, UniTokenAnimated } from '../../theme'
@@ -17,7 +17,7 @@ import { isAddress } from 'ethers/lib/utils'
 import Confetti from '../Confetti'
 import { CardNoise, CardBGImage, CardBGImageSmaller } from '../earn/styled'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
-import { TokenAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { getEtherscanLink, shortenAddress } from '../../utils'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -59,7 +59,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
 
   // monitor the status of the claim from contracts and txns
   const { claimCallback } = useClaimCallback(parsedAddress)
-  const unclaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(parsedAddress)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(parsedAddress)
 
   // check if the user has something available
   const hasAvailableClaim = useUserHasAvailableClaim(parsedAddress)

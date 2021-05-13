@@ -1,46 +1,42 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Redirect, RouteComponentProps, Link } from 'react-router-dom'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
 import AppBody from '../AppBody'
 import { BigNumber } from '@ethersproject/bignumber'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import Slider from 'components/Slider'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import TransactionConfirmationModal from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { AutoColumn } from 'components/Column'
-import { ButtonConfirmed, ButtonText } from 'components/Button'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
 import { Text } from 'rebass'
 import CurrencyLogo from 'components/CurrencyLogo'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { useUserSlippageTolerance } from 'state/user/hooks'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import JSBI from 'jsbi'
 import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { WETH9, Percent, CurrencyAmount } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
-import styled from 'styled-components'
-import { Wrapper, SmallMaxButton } from './styled'
+import { Wrapper, SmallMaxButton, ResponsiveHeaderText } from './styled'
 import Loader from 'components/Loader'
-import { useToken } from 'hooks/Tokens'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { RangeBadge } from 'pages/AddLiquidity/styled'
 import { Break } from 'components/earn/styled'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
-import { BIPS_BASE } from '../../constants'
 import { calculateGasMargin } from 'utils'
+import useTheme from 'hooks/useTheme'
+import { AddRemoveTabs } from 'components/NavigationTabs'
+import RangeBadge from 'components/Badge/RangeBadge'
+import Toggle from 'components/Toggle'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
 
-const UnstyledLink = styled(Link)`
-  text-decoration: none;
-`
+const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3({
@@ -65,14 +61,11 @@ export default function RemoveLiquidityV3({
 }
 function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { position } = useV3PositionFromTokenId(tokenId)
-
+  const theme = useTheme()
   const { account, chainId, library } = useActiveWeb3React()
 
-  // currencies from position
-  const token0 = useToken(position?.token0)
-  const token1 = useToken(position?.token1)
-  const currency0 = token0 ? unwrappedToken(token0) : undefined
-  const currency1 = token1 ? unwrappedToken(token1) : undefined
+  // flag for receiving WETH
+  const [receiveWETH, setReceiveWETH] = useState(false)
 
   // burn state
   const { percent } = useBurnV3State()
@@ -85,14 +78,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     feeValue1,
     outOfRange,
     error,
-  } = useDerivedV3BurnInfo(position)
+  } = useDerivedV3BurnInfo(position, receiveWETH)
   const { onPercentSelect } = useBurnV3ActionHandlers()
+
+  const removed = position?.liquidity?.eq(0)
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
 
   const deadline = useTransactionDeadline() // custom from users settings
-  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+  const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
   const [showConfirm, setShowConfirm] = useState(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false)
@@ -100,7 +95,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const addTransaction = useTransactionAdder()
   const positionManager = useV3NFTPositionManagerContract()
   const burn = useCallback(async () => {
-    setShowConfirm(true)
     setAttemptingTxn(true)
     if (
       !positionManager ||
@@ -115,22 +109,17 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !liquidityPercentage ||
       !library
     ) {
-      setShowConfirm(false)
       return
     }
 
     const { calldata, value } = NonfungiblePositionManager.removeCallParameters(positionSDK, {
       tokenId: tokenId.toString(),
       liquidityPercentage,
-      slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+      slippageTolerance: allowedSlippage,
       deadline: deadline.toString(),
       collectOptions: {
-        expectedCurrencyOwed0: liquidityValue0.token.equals(WETH9[chainId])
-          ? CurrencyAmount.ether(feeValue0.raw)
-          : feeValue0,
-        expectedCurrencyOwed1: liquidityValue1.token.equals(WETH9[chainId])
-          ? CurrencyAmount.ether(feeValue1.raw)
-          : feeValue1,
+        expectedCurrencyOwed0: feeValue0,
+        expectedCurrencyOwed1: feeValue1,
         recipient: account,
       },
     })
@@ -157,17 +146,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             ReactGA.event({
               category: 'Liquidity',
               action: 'RemoveV3',
-              label: [liquidityValue0.token.symbol, liquidityValue1.token.symbol].join('/'),
+              label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
             })
             setTxnHash(response.hash)
             setAttemptingTxn(false)
             addTransaction(response, {
-              summary: `Remove ${liquidityValue0.token.symbol}/${liquidityValue1.token.symbol} V3 liquidity`,
+              summary: `Remove ${liquidityValue0.currency.symbol}/${liquidityValue1.currency.symbol} V3 liquidity`,
             })
           })
       })
       .catch((error) => {
-        setShowConfirm(false)
         setAttemptingTxn(false)
         console.error(error)
       })
@@ -199,8 +187,69 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   }, [onPercentSelectForSlider, txnHash])
 
   const pendingText = `Removing ${liquidityValue0?.toSignificant(6)} ${
-    currency0?.symbol
-  } and ${liquidityValue1?.toSignificant(6)} ${currency1?.symbol}`
+    liquidityValue0?.currency?.symbol
+  } and ${liquidityValue1?.toSignificant(6)} ${liquidityValue1?.currency?.symbol}`
+
+  function modalHeader() {
+    return (
+      <AutoColumn gap={'sm'} style={{ padding: '16px' }}>
+        <RowBetween align="flex-end">
+          <Text fontSize={16} fontWeight={500}>
+            Pooled {liquidityValue0?.currency?.symbol}:
+          </Text>
+          <RowFixed>
+            <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+              {liquidityValue0 && <FormattedCurrencyAmount currencyAmount={liquidityValue0} />}
+            </Text>
+            <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
+          </RowFixed>
+        </RowBetween>
+        <RowBetween align="flex-end">
+          <Text fontSize={16} fontWeight={500}>
+            Pooled {liquidityValue1?.currency?.symbol}:
+          </Text>
+          <RowFixed>
+            <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+              {liquidityValue1 && <FormattedCurrencyAmount currencyAmount={liquidityValue1} />}
+            </Text>
+            <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
+          </RowFixed>
+        </RowBetween>
+        {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
+          <>
+            <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'8px 0 0 0'}>
+              {`You will also collect fees earned from this position.`}
+            </TYPE.italic>
+            <RowBetween>
+              <Text fontSize={16} fontWeight={500}>
+                {feeValue0?.currency?.symbol} Fees Earned:
+              </Text>
+              <RowFixed>
+                <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
+                </Text>
+                <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
+              </RowFixed>
+            </RowBetween>
+            <RowBetween>
+              <Text fontSize={16} fontWeight={500}>
+                {feeValue1?.currency?.symbol} Fees Earned:
+              </Text>
+              <RowFixed>
+                <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
+                  {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
+                </Text>
+                <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
+              </RowFixed>
+            </RowBetween>
+          </>
+        ) : null}
+        <ButtonPrimary mt="16px" onClick={burn}>
+          Remove
+        </ButtonPrimary>
+      </AutoColumn>
+    )
+  }
 
   return (
     <AutoColumn>
@@ -209,34 +258,45 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         onDismiss={handleDismissConfirmation}
         attemptingTxn={attemptingTxn}
         hash={txnHash ?? ''}
-        content={() => <div />}
+        content={() => (
+          <ConfirmationModalContent
+            title={'Remove Liquidity'}
+            onDismiss={handleDismissConfirmation}
+            topContent={modalHeader}
+          />
+        )}
         pendingText={pendingText}
       />
-      <AutoRow marginBottom="20px">
-        <UnstyledLink to="pool">
-          <ButtonText opacity={'0.4'}>Pool</ButtonText>
-        </UnstyledLink>
-        <TYPE.label margin="0 10px" opacity={'0.4'}>
-          {' > '}
-        </TYPE.label>
-        <TYPE.label>Remove Liquidity</TYPE.label>
-      </AutoRow>
       <AppBody>
+        <AddRemoveTabs
+          creating={false}
+          adding={false}
+          positionID={tokenId.toString()}
+          defaultSlippage={DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE}
+        />
         <Wrapper>
           {position ? (
             <AutoColumn gap="lg">
               <RowBetween>
                 <RowFixed>
-                  <DoubleCurrencyLogo currency0={currency1} currency1={currency0} size={20} margin={true} />
-                  <TYPE.label ml="10px" fontSize="20px">{`${currency0?.symbol}/${currency1?.symbol}`}</TYPE.label>
+                  <DoubleCurrencyLogo
+                    currency0={feeValue0?.currency}
+                    currency1={feeValue1?.currency}
+                    size={20}
+                    margin={true}
+                  />
+                  <TYPE.label
+                    ml="10px"
+                    fontSize="20px"
+                  >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</TYPE.label>
                 </RowFixed>
-                <RangeBadge inRange={!outOfRange}>{outOfRange ? 'Out of range' : 'In Range'}</RangeBadge>
+                <RangeBadge removed={removed} inRange={!outOfRange} />
               </RowBetween>
               <LightCard>
                 <AutoColumn gap="md">
                   <TYPE.main fontWeight={400}>Amount</TYPE.main>
                   <RowBetween>
-                    <TYPE.label fontSize="40px">{percentForSlider}%</TYPE.label>
+                    <ResponsiveHeaderText>{percentForSlider}%</ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
                         25%
@@ -259,24 +319,24 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 <AutoColumn gap="md">
                   <RowBetween>
                     <Text fontSize={16} fontWeight={500}>
-                      Pooled {currency0?.symbol}:
+                      Pooled {liquidityValue0?.currency?.symbol}:
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {liquidityValue0 && <FormattedCurrencyAmount currencyAmount={liquidityValue0} />}
                       </Text>
-                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
+                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue0?.currency} />
                     </RowFixed>
                   </RowBetween>
                   <RowBetween>
                     <Text fontSize={16} fontWeight={500}>
-                      Pooled {currency1?.symbol}:
+                      Pooled {liquidityValue1?.currency?.symbol}:
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                         {liquidityValue1 && <FormattedCurrencyAmount currencyAmount={liquidityValue1} />}
                       </Text>
-                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
+                      <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={liquidityValue1?.currency} />
                     </RowFixed>
                   </RowBetween>
                   {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
@@ -284,34 +344,48 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       <Break />
                       <RowBetween>
                         <Text fontSize={16} fontWeight={500}>
-                          {currency0?.symbol} Fees Earned:
+                          {feeValue0?.currency?.symbol} Fees Earned:
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                             {feeValue0 && <FormattedCurrencyAmount currencyAmount={feeValue0} />}
                           </Text>
-                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
+                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue0?.currency} />
                         </RowFixed>
                       </RowBetween>
                       <RowBetween>
                         <Text fontSize={16} fontWeight={500}>
-                          {currency1?.symbol} Fees Earned:
+                          {feeValue1?.currency?.symbol} Fees Earned:
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
                             {feeValue1 && <FormattedCurrencyAmount currencyAmount={feeValue1} />}
                           </Text>
-                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
+                          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={feeValue1?.currency} />
                         </RowFixed>
                       </RowBetween>
                     </>
                   ) : null}
                 </AutoColumn>
               </LightCard>
+
+              <RowBetween>
+                <TYPE.main>Collect as WETH</TYPE.main>
+                <Toggle
+                  id="receive-as-weth"
+                  isActive={receiveWETH}
+                  toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                />
+              </RowBetween>
+
               <div style={{ display: 'flex' }}>
                 <AutoColumn gap="12px" style={{ flex: '1' }}>
-                  <ButtonConfirmed confirmed={false} disabled={percent === 0 || !liquidityValue0} onClick={burn}>
-                    {error ?? 'Remove Liquidity'}
+                  <ButtonConfirmed
+                    confirmed={false}
+                    disabled={removed || percent === 0 || !liquidityValue0}
+                    onClick={() => setShowConfirm(true)}
+                  >
+                    {removed ? 'Inactive' : error ?? 'Remove'}
                   </ButtonConfirmed>
                 </AutoColumn>
               </div>

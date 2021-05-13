@@ -22,6 +22,7 @@ import MULTICALL_ABI from 'abis/multicall2.json'
 import { Unisocks } from 'abis/types/Unisocks'
 import UNISOCKS_ABI from 'abis/unisocks.json'
 import WETH_ABI from 'abis/weth.json'
+import EIP_2612 from 'abis/eip_2612.json'
 
 import {
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
@@ -115,6 +116,10 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
   return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }
 
+export function useEIP2612Contract(tokenAddress?: string): Contract | null {
+  return useContract(tokenAddress, EIP_2612, false)
+}
+
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
 }
@@ -155,10 +160,10 @@ export function useSocksController(): Unisocks | null {
   ) as Unisocks | null
 }
 
-export function useV3NFTPositionManagerContract(): NonfungiblePositionManager | null {
+export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
   const { chainId } = useActiveWeb3React()
   const address = chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
-  return useContract(address, NFTPositionManagerABI) as NonfungiblePositionManager | null
+  return useContract(address, NFTPositionManagerABI, withSignerIfPossible) as NonfungiblePositionManager | null
 }
 
 export function useV3Factory(): UniswapV3Factory | null {

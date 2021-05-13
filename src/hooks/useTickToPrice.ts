@@ -5,7 +5,7 @@ export function getTickToPrice(
   baseToken: Token | undefined,
   quoteToken: Token | undefined,
   tick: number | undefined
-): Price | undefined {
+): Price<Token, Token> | undefined {
   if (!baseToken || !quoteToken || !tick) {
     return undefined
   }

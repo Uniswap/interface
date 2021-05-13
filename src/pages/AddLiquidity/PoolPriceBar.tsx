@@ -5,7 +5,7 @@ import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { ONE_BIPS } from '../../constants'
-import { Field } from '../../state/mint/actions'
+import { Field } from '../../state/mint/v3/actions'
 import { TYPE } from '../../theme'
 
 export function PoolPriceBar({
@@ -17,7 +17,7 @@ export function PoolPriceBar({
   currencies: { [field in Field]?: Currency }
   noLiquidity?: boolean
   poolTokenPercentage?: Percent
-  price?: Price
+  price?: Price<Currency, Currency>
 }) {
   const theme = useContext(ThemeContext)
   return (

@@ -1,13 +1,14 @@
-import React, { useCallback, useMemo, useState } from 'react'
-import { Fraction, Price, Token, TokenAmount, WETH9 } from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import JSBI from 'jsbi'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import { Fraction, Percent, Price, Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
-import QuestionHelper from '../../components/QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 import { useToken } from '../../hooks/Tokens'
@@ -15,36 +16,41 @@ import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
-import { getEtherscanLink, isAddress } from '../../utils'
+import { calculateGasMargin, getEtherscanLink, isAddress } from '../../utils'
 import { BodyWrapper } from '../AppBody'
 import { V3_MIGRATOR_ADDRESSES } from 'constants/v3'
 import { PoolState, usePool } from 'hooks/usePools'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
-import { LightCard, PinkCard, YellowCard } from 'components/Card'
+import { BlueCard, DarkGreyCard, LightCard, YellowCard } from 'components/Card'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { Dots } from 'components/swap/styleds'
 import { ButtonConfirmed } from 'components/Button'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useUserSlippageTolerance } from 'state/user/hooks'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import ReactGA from 'react-ga'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import { useDerivedMintInfo, useMintActionHandlers, useRangeHopCallbacks } from 'state/mint/hooks'
-import { Bound } from 'state/mint/actions'
+import { useV3DerivedMintInfo, useRangeHopCallbacks, useV3MintActionHandlers } from 'state/mint/v3/hooks'
+import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle, ChevronDown } from 'react-feather'
+import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
-import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import { Contract } from '@ethersproject/contracts'
-import { splitSignature } from '@ethersproject/bytes'
-import { BigNumber } from '@ethersproject/bignumber'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import useTheme from 'hooks/useTheme'
+import { unwrappedToken } from 'utils/wrappedCurrency'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import Badge, { BadgeVariant } from 'components/Badge'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from 'state'
+import SettingsTab from 'components/Settings'
 
 const ZERO = JSBI.BigInt(0)
+
+const DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE = new Percent(75, 10_000)
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -54,32 +60,42 @@ function EmptyState({ message }: { message: string }) {
   )
 }
 
-function LiquidityInfo({ token0Amount, token1Amount }: { token0Amount: TokenAmount; token1Amount: TokenAmount }) {
+function LiquidityInfo({
+  token0Amount,
+  token1Amount,
+}: {
+  token0Amount: CurrencyAmount<Token>
+  token1Amount: CurrencyAmount<Token>
+}) {
+  const currency0 = unwrappedToken(token0Amount.currency)
+  const currency1 = unwrappedToken(token1Amount.currency)
+
   return (
-    <>
-      <RowBetween my="1rem">
-        <Text fontSize={16} fontWeight={500}>
-          Pooled {token0Amount.token.symbol}:
-        </Text>
+    <AutoColumn gap="8px">
+      <RowBetween>
         <RowFixed>
-          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            <FormattedCurrencyAmount currencyAmount={token0Amount} />
+          <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency0} />
+          <Text fontSize={16} fontWeight={500}>
+            {currency0.symbol}
           </Text>
-          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={token0Amount.token} />
         </RowFixed>
-      </RowBetween>
-      <RowBetween mb="1rem">
         <Text fontSize={16} fontWeight={500}>
-          Pooled {token1Amount.token.symbol}:
+          <FormattedCurrencyAmount currencyAmount={token0Amount} />
         </Text>
-        <RowFixed>
-          <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
-            <FormattedCurrencyAmount currencyAmount={token1Amount} />
-          </Text>
-          <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={token1Amount.token} />
-        </RowFixed>
       </RowBetween>
-    </>
+      <RowBetween>
+        <RowFixed>
+          <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency1} />
+          <Text fontSize={16} fontWeight={500}>
+            {currency1.symbol}
+          </Text>
+        </RowFixed>
+
+        <Text fontSize={16} fontWeight={500}>
+          <FormattedCurrencyAmount currencyAmount={token1Amount} />
+        </Text>
+      </RowBetween>
+    </AutoColumn>
   )
 }
 
@@ -96,28 +112,42 @@ function V2PairMigration({
   token1,
 }: {
   pair: Contract
-  pairBalance: TokenAmount
-  totalSupply: TokenAmount
-  reserve0: TokenAmount
-  reserve1: TokenAmount
+  pairBalance: CurrencyAmount<Token>
+  totalSupply: CurrencyAmount<Token>
+  reserve0: CurrencyAmount<Token>
+  reserve1: CurrencyAmount<Token>
   token0: Token
   token1: Token
 }) {
   const { t } = useTranslation()
-  const { chainId, account, library } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
+
+  const pairFactory = useSingleCallResult(pair, 'factory')
+  const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== FACTORY_ADDRESS
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
-  const [allowedSlippage] = useUserSlippageTolerance() // custom from users
+  const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE) // custom from users
+
+  const currency0 = unwrappedToken(token0)
+  const currency1 = unwrappedToken(token1)
 
   // this is just getLiquidityValue with the fee off, but for the passed pair
   const token0Value = useMemo(
-    () => new TokenAmount(token0, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve0.raw), totalSupply.raw)),
+    () =>
+      CurrencyAmount.fromRawAmount(
+        token0,
+        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve0.quotient), totalSupply.quotient)
+      ),
     [token0, pairBalance, reserve0, totalSupply]
   )
   const token1Value = useMemo(
-    () => new TokenAmount(token1, JSBI.divide(JSBI.multiply(pairBalance.raw, reserve1.raw), totalSupply.raw)),
+    () =>
+      CurrencyAmount.fromRawAmount(
+        token1,
+        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve1.quotient), totalSupply.quotient)
+      ),
     [token1, pairBalance, reserve1, totalSupply]
   )
 
@@ -127,7 +157,7 @@ function V2PairMigration({
   const noLiquidity = poolState === PoolState.NOT_EXISTS
 
   // get spot prices + price difference
-  const v2SpotPrice = useMemo(() => new Price(token0, token1, reserve0.raw, reserve1.raw), [
+  const v2SpotPrice = useMemo(() => new Price(token0, token1, reserve0.quotient, reserve1.quotient), [
     token0,
     token1,
     reserve0,
@@ -141,11 +171,11 @@ function V2PairMigration({
     priceDifferenceFraction = priceDifferenceFraction.multiply(-1)
   }
 
-  const largePriceDifference = priceDifferenceFraction && !priceDifferenceFraction?.lessThan(JSBI.BigInt(4))
+  const largePriceDifference = priceDifferenceFraction && !priceDifferenceFraction?.lessThan(JSBI.BigInt(2))
 
   // the following is a small hack to get access to price range data/input handlers
   const [baseToken, setBaseToken] = useState(token0)
-  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange } = useDerivedMintInfo(
+  const { ticks, pricesAtTicks, invertPrice, invalidRange, outOfRange } = useV3DerivedMintInfo(
     token0,
     token1,
     feeAmount,
@@ -164,7 +194,7 @@ function V2PairMigration({
     tickUpper
   )
 
-  const { onLeftRangeInput, onRightRangeInput } = useMintActionHandlers(noLiquidity)
+  const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(noLiquidity)
 
   // the v3 tick is either the pool's tickCurrent, or the tick closest to the v2 spot price
   const tick = pool?.tickCurrent ?? priceToClosestTick(v2SpotPrice)
@@ -176,37 +206,45 @@ function V2PairMigration({
           pool: pool ?? new Pool(token0, token1, feeAmount, sqrtPrice, 0, tick, []),
           tickLower,
           tickUpper,
-          amount0: token0Value.raw,
-          amount1: token1Value.raw,
+          amount0: token0Value.quotient,
+          amount1: token1Value.quotient,
         })
       : undefined
 
   const v3Amount0Min = useMemo(
     () =>
       position &&
-      new TokenAmount(
+      CurrencyAmount.fromRawAmount(
         token0,
-        JSBI.divide(JSBI.multiply(position.amount0.raw, JSBI.BigInt(10000 - allowedSlippage)), JSBI.BigInt(10000))
+        JSBI.divide(
+          JSBI.multiply(position.amount0.quotient, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
+          JSBI.BigInt(10000)
+        )
       ),
     [token0, position, allowedSlippage]
   )
   const v3Amount1Min = useMemo(
     () =>
       position &&
-      new TokenAmount(
+      CurrencyAmount.fromRawAmount(
         token1,
-        JSBI.divide(JSBI.multiply(position.amount1.raw, JSBI.BigInt(10000 - allowedSlippage)), JSBI.BigInt(10000))
+        JSBI.divide(
+          JSBI.multiply(position.amount1.quotient, JSBI.BigInt(10000 - JSBI.toNumber(allowedSlippage.numerator))),
+          JSBI.BigInt(10000)
+        )
       ),
     [token1, position, allowedSlippage]
   )
 
   const refund0 = useMemo(
-    () => v3Amount0Min && new TokenAmount(token0, JSBI.subtract(token0Value.raw, v3Amount0Min.raw)),
-    [token0Value, v3Amount0Min, token0]
+    () =>
+      position && CurrencyAmount.fromRawAmount(token0, JSBI.subtract(token0Value.quotient, position.amount0.quotient)),
+    [token0Value, position, token0]
   )
   const refund1 = useMemo(
-    () => v3Amount1Min && new TokenAmount(token1, JSBI.subtract(token1Value.raw, v3Amount1Min.raw)),
-    [token1Value, v3Amount1Min, token1]
+    () =>
+      position && CurrencyAmount.fromRawAmount(token1, JSBI.subtract(token1Value.quotient, position.amount1.quotient)),
+    [token1Value, position, token1]
   )
 
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
@@ -215,79 +253,27 @@ function V2PairMigration({
   const migrator = useV2MigratorContract()
 
   // approvals
-  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: BigNumber } | null>(
-    null
-  )
-
   const migratorAddress = chainId && V3_MIGRATOR_ADDRESSES[chainId]
   const [approval, approveManually] = useApproveCallback(pairBalance, migratorAddress)
-  const isArgentWallet = useIsArgentWallet()
+  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(pairBalance, migratorAddress)
 
   const approve = useCallback(async () => {
-    if (!account || !migrator || !deadline || !chainId || !library) return
-
-    if (isArgentWallet) {
-      return approveManually()
-    }
-
-    // try to gather a signature for permission
-    const nonce = await pair.nonces(account)
-
-    const EIP712Domain = [
-      { name: 'name', type: 'string' },
-      { name: 'version', type: 'string' },
-      { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' },
-    ]
-    const domain = {
-      name: 'Uniswap V2',
-      version: '1',
-      chainId: chainId,
-      verifyingContract: pair.address,
-    }
-    const Permit = [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'nonce', type: 'uint256' },
-      { name: 'deadline', type: 'uint256' },
-    ]
-    const message = {
-      owner: account,
-      spender: migrator.address,
-      value: `0x${pairBalance.raw.toString(16)}`,
-      nonce: nonce.toHexString(),
-      deadline: deadline.toHexString(),
-    }
-    const data = JSON.stringify({
-      types: {
-        EIP712Domain,
-        Permit,
-      },
-      domain,
-      primaryType: 'Permit',
-      message,
-    })
-
-    library
-      .send('eth_signTypedData_v4', [account, data])
-      .then(splitSignature)
-      .then((signature) => {
-        setSignatureData({
-          v: signature.v,
-          r: signature.r,
-          s: signature.s,
-          deadline,
-        })
-      })
-      .catch((error) => {
-        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
+    if (isNotUniswap) {
+      // sushi has to be manually approved
+      await approveManually()
+    } else if (gatherPermitSignature) {
+      try {
+        await gatherPermitSignature()
+      } catch (error) {
+        // try to approve if gatherPermitSignature failed for any reason other than the user rejecting it
         if (error?.code !== 4001) {
-          console.log('here?')
-          approveManually()
+          await approveManually()
         }
-      })
-  }, [account, isArgentWallet, approveManually, pair, pairBalance, migrator, deadline, chainId, library])
+      }
+    } else {
+      await approveManually()
+    }
+  }, [isNotUniswap, gatherPermitSignature, approveManually])
 
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
@@ -307,19 +293,14 @@ function V2PairMigration({
 
     const deadlineToUse = signatureData?.deadline ?? deadline
 
-    // janky way to ensure that stale-ish sigs are cleared
-    if (deadline.sub(deadlineToUse).lt(deadline.sub(blockTimestamp).div(2))) {
-      setSignatureData(null)
-    }
-
-    const data = []
+    const data: string[] = []
 
     // permit if necessary
     if (signatureData) {
       data.push(
         migrator.interface.encodeFunctionData('selfPermit', [
           pair.address,
-          `0x${pairBalance.raw.toString(16)}`,
+          `0x${pairBalance.quotient.toString(16)}`,
           deadlineToUse,
           signatureData.v,
           signatureData.r,
@@ -345,15 +326,15 @@ function V2PairMigration({
       migrator.interface.encodeFunctionData('migrate', [
         {
           pair: pair.address,
-          liquidityToMigrate: `0x${pairBalance.raw.toString(16)}`,
+          liquidityToMigrate: `0x${pairBalance.quotient.toString(16)}`,
           percentageToMigrate,
           token0: token0.address,
           token1: token1.address,
           fee: feeAmount,
           tickLower,
           tickUpper,
-          amount0Min: `0x${v3Amount0Min.raw.toString(16)}`,
-          amount1Min: `0x${v3Amount1Min.raw.toString(16)}`,
+          amount0Min: `0x${v3Amount0Min.quotient.toString(16)}`,
+          amount1Min: `0x${v3Amount1Min.quotient.toString(16)}`,
           recipient: account,
           deadline: deadlineToUse,
           refundAsETH: true, // hard-code this for now
@@ -362,26 +343,30 @@ function V2PairMigration({
     )
 
     setConfirmingMigration(true)
-    migrator
+
+    migrator.estimateGas
       .multicall(data)
-      .then((response: TransactionResponse) => {
-        setSignatureData(null) // clear sig data
+      .then((gasEstimate) => {
+        return migrator
+          .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
+          .then((response: TransactionResponse) => {
+            ReactGA.event({
+              category: 'Migrate',
+              action: `${isNotUniswap ? 'SushiSwap' : 'V2'}->V3`,
+              label: `${currency0.symbol}/${currency1.symbol}`,
+            })
 
-        ReactGA.event({
-          category: 'Migrate',
-          action: 'V2->V3',
-          label: `${token0.symbol}/${token1.symbol}`,
-        })
-
-        addTransaction(response, {
-          summary: `Migrate ${token0.symbol}/${token1.symbol} liquidity to V3`,
-        })
-        setPendingMigrationHash(response.hash)
+            addTransaction(response, {
+              summary: `Migrate ${currency0.symbol}/${currency1.symbol} liquidity to V3`,
+            })
+            setPendingMigrationHash(response.hash)
+          })
       })
       .catch(() => {
         setConfirmingMigration(false)
       })
   }, [
+    isNotUniswap,
     migrator,
     noLiquidity,
     blockTimestamp,
@@ -399,14 +384,17 @@ function V2PairMigration({
     signatureData,
     addTransaction,
     pair,
+    currency0,
+    currency1,
   ])
 
-  const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.raw, ZERO)
+  const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.quotient, ZERO)
 
   return (
     <AutoColumn gap="20px">
       <TYPE.body my={9} style={{ fontWeight: 400 }}>
-        This tool will safely migrate your V2 liquidity to V3. The process is completely trustless thanks to the{' '}
+        This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
+        completely trustless thanks to the{' '}
         {chainId && migratorAddress && (
           <ExternalLink href={getEtherscanLink(chainId, migratorAddress, 'address')}>
             <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
@@ -416,183 +404,222 @@ function V2PairMigration({
       </TYPE.body>
 
       <LightCard>
-        <LiquidityInfo token0Amount={token0Value} token1Amount={token1Value} />
+        <AutoColumn gap="lg">
+          <RowBetween>
+            <RowFixed style={{ marginLeft: '8px' }}>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
+              <TYPE.mediumHeader style={{ marginLeft: '8px' }}>
+                {currency0.symbol}/{currency1.symbol} LP Tokens
+              </TYPE.mediumHeader>
+            </RowFixed>
+            <Badge variant={BadgeVariant.WARNING}>{isNotUniswap ? 'Sushi' : 'V2'}</Badge>
+          </RowBetween>
+          <LiquidityInfo token0Amount={token0Value} token1Amount={token1Value} />
+        </AutoColumn>
       </LightCard>
 
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <ChevronDown size={24} />
+        <ArrowDown size={24} />
       </div>
 
-      {noLiquidity && (
-        <PinkCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will be migrated at the
-            current V2 price. Your transaction cost will include the gas to create the pool.
-          </TYPE.body>
-
-          <AutoColumn gap="8px">
-            <RowBetween>
-              <TYPE.body>V2 Price:</TYPE.body>
-              <TYPE.black>
-                {invertPrice
-                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
-                  : `${v2SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
-              </TYPE.black>
-            </RowBetween>
-          </AutoColumn>
-        </PinkCard>
-      )}
-
-      {largePriceDifference && (
-        <YellowCard>
-          <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-            You should only deposit liquidity into Uniswap V3 at a price you believe is correct. If the price seems
-            incorrect, you can either make a swap to move the price or wait for someone else to do so.
-          </TYPE.body>
-          <AutoColumn gap="8px">
-            <RowBetween>
-              <TYPE.body>V2 Price:</TYPE.body>
-              <TYPE.black>
-                {invertPrice
-                  ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
-                  : `${v2SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
-              </TYPE.black>
-            </RowBetween>
-
-            <RowBetween>
-              <TYPE.body>V3 Price:</TYPE.body>
-              <TYPE.black>
-                {invertPrice
-                  ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${token0.symbol} / ${token1.symbol}`
-                  : `${v3SpotPrice?.toSignificant(6)} ${token1.symbol} / ${token0.symbol}`}
-              </TYPE.black>
-            </RowBetween>
-
-            <RowBetween>
-              <TYPE.body color="inherit">Price Difference:</TYPE.body>
-              <TYPE.black color="inherit">{priceDifferenceFraction?.toSignificant(4)}%</TYPE.black>
-            </RowBetween>
-          </AutoColumn>
-        </YellowCard>
-      )}
-
-      <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
-
-      <RowBetween>
-        <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
-        <RateToggle
-          currencyA={invertPrice ? token1 : token0}
-          currencyB={invertPrice ? token0 : token1}
-          handleRateToggle={() => {
-            onLeftRangeInput('')
-            onRightRangeInput('')
-            setBaseToken((base) => (base.equals(token0) ? token1 : token0))
-          }}
-        />
-      </RowBetween>
-
-      <RangeSelector
-        priceLower={priceLower}
-        priceUpper={priceUpper}
-        getDecrementLower={getDecrementLower}
-        getIncrementLower={getIncrementLower}
-        getDecrementUpper={getDecrementUpper}
-        getIncrementUpper={getIncrementUpper}
-        onLeftRangeInput={onLeftRangeInput}
-        onRightRangeInput={onRightRangeInput}
-        currencyA={invertPrice ? token1 : token0}
-        currencyB={invertPrice ? token0 : token1}
-        feeAmount={feeAmount}
-      />
-
-      {outOfRange ? (
-        <YellowCard padding="8px 12px" borderRadius="12px">
-          <RowBetween>
-            <AlertTriangle stroke={theme.yellow3} size="16px" />
-            <TYPE.yellow ml="12px" fontSize="12px">
-              {t('inactiveRangeWarning')}
-            </TYPE.yellow>
-          </RowBetween>
-        </YellowCard>
-      ) : null}
-
-      {invalidRange ? (
-        <YellowCard padding="8px 12px" borderRadius="12px">
-          <RowBetween>
-            <AlertTriangle stroke={theme.yellow3} size="16px" />
-            <TYPE.yellow ml="12px" fontSize="12px">
-              {t('invalidRangeWarning')}
-            </TYPE.yellow>
-          </RowBetween>
-        </YellowCard>
-      ) : null}
-
       <LightCard>
-        {v3Amount0Min && v3Amount1Min ? (
-          <LiquidityInfo token0Amount={v3Amount0Min} token1Amount={v3Amount1Min} />
-        ) : null}
+        <AutoColumn gap="lg">
+          <RowBetween>
+            <RowFixed style={{ marginLeft: '8px' }}>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
+              <TYPE.mediumHeader style={{ marginLeft: '8px' }}>
+                {currency0.symbol}/{currency1.symbol} LP NFT
+              </TYPE.mediumHeader>
+            </RowFixed>
+            <Badge variant={BadgeVariant.PRIMARY}>V3</Badge>
+          </RowBetween>
 
-        <div style={{ display: 'flex', marginTop: '1rem' }}>
-          {!isSuccessfullyMigrated && !isMigrationPending ? (
-            <AutoColumn gap="12px" style={{ flex: '1', marginRight: 12 }}>
+          <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
+          {noLiquidity && (
+            <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <AlertCircle color={theme.text1} style={{ marginBottom: '12px', opacity: 0.8 }} />
+              <TYPE.body fontSize={14} style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }} textAlign="center">
+                You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the
+                current {isNotUniswap ? 'SushiSwap' : 'V2'} price.
+              </TYPE.body>
+
+              <TYPE.body fontWeight={500} textAlign="center" fontSize={14} style={{ marginTop: '8px', opacity: 0.8 }}>
+                Your transaction cost will be much higher as it includes the gas to create the pool.
+              </TYPE.body>
+
+              {v2SpotPrice && (
+                <AutoColumn gap="8px" style={{ marginTop: '12px' }}>
+                  <RowBetween>
+                    <TYPE.body fontWeight={500} fontSize={14}>
+                      {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:{' '}
+                      {invertPrice
+                        ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                        : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+                    </TYPE.body>
+                  </RowBetween>
+                </AutoColumn>
+              )}
+            </BlueCard>
+          )}
+
+          {largePriceDifference ? (
+            <YellowCard>
+              <AutoColumn gap="8px">
+                <RowBetween>
+                  <TYPE.body fontSize={14}>
+                    {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
+                  </TYPE.body>
+                  <TYPE.black fontSize={14}>
+                    {invertPrice
+                      ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                      : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+                  </TYPE.black>
+                </RowBetween>
+
+                <RowBetween>
+                  <TYPE.body fontSize={14}>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
+                  <TYPE.black fontSize={14}>
+                    {invertPrice
+                      ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                      : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+                  </TYPE.black>
+                </RowBetween>
+
+                <RowBetween>
+                  <TYPE.body fontSize={14} color="inherit">
+                    Price Difference:
+                  </TYPE.body>
+                  <TYPE.black fontSize={14} color="inherit">
+                    {priceDifferenceFraction?.toSignificant(4)}%
+                  </TYPE.black>
+                </RowBetween>
+              </AutoColumn>
+              <TYPE.body fontSize={14} style={{ marginTop: 8, fontWeight: 400 }}>
+                You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <br />
+                If the price seems incorrect, you can either make a swap to move the price or wait for someone else to
+                do so.
+              </TYPE.body>
+            </YellowCard>
+          ) : !noLiquidity && v3SpotPrice ? (
+            <RowBetween>
+              <TYPE.body fontSize={14}>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</TYPE.body>
+              <TYPE.black fontSize={14}>
+                {invertPrice
+                  ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
+                  : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
+              </TYPE.black>
+            </RowBetween>
+          ) : null}
+
+          <RowBetween>
+            <TYPE.label>{t('selectLiquidityRange')}</TYPE.label>
+            <RateToggle
+              currencyA={invertPrice ? currency1 : currency0}
+              currencyB={invertPrice ? currency0 : currency1}
+              handleRateToggle={() => {
+                onLeftRangeInput('')
+                onRightRangeInput('')
+                setBaseToken((base) => (base.equals(token0) ? token1 : token0))
+              }}
+            />
+          </RowBetween>
+
+          <RangeSelector
+            priceLower={priceLower}
+            priceUpper={priceUpper}
+            getDecrementLower={getDecrementLower}
+            getIncrementLower={getIncrementLower}
+            getDecrementUpper={getDecrementUpper}
+            getIncrementUpper={getIncrementUpper}
+            onLeftRangeInput={onLeftRangeInput}
+            onRightRangeInput={onRightRangeInput}
+            currencyA={invertPrice ? currency1 : currency0}
+            currencyB={invertPrice ? currency0 : currency1}
+            feeAmount={feeAmount}
+          />
+
+          {outOfRange ? (
+            <YellowCard padding="8px 12px" borderRadius="12px">
+              <RowBetween>
+                <AlertTriangle stroke={theme.yellow3} size="16px" />
+                <TYPE.yellow ml="12px" fontSize="12px">
+                  {t('inactiveRangeWarning')}
+                </TYPE.yellow>
+              </RowBetween>
+            </YellowCard>
+          ) : null}
+
+          {invalidRange ? (
+            <YellowCard padding="8px 12px" borderRadius="12px">
+              <RowBetween>
+                <AlertTriangle stroke={theme.yellow3} size="16px" />
+                <TYPE.yellow ml="12px" fontSize="12px">
+                  {t('invalidRangeWarning')}
+                </TYPE.yellow>
+              </RowBetween>
+            </YellowCard>
+          ) : null}
+
+          {position ? (
+            <DarkGreyCard>
+              <AutoColumn gap="md">
+                <LiquidityInfo token0Amount={position.amount0} token1Amount={position.amount1} />
+                {chainId && refund0 && refund1 ? (
+                  <TYPE.black fontSize={12}>
+                    At least {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
+                    {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be
+                    refunded to your wallet due to selected price range.
+                  </TYPE.black>
+                ) : null}
+              </AutoColumn>
+            </DarkGreyCard>
+          ) : null}
+
+          <AutoColumn gap="12px">
+            {!isSuccessfullyMigrated && !isMigrationPending ? (
+              <AutoColumn gap="12px" style={{ flex: '1' }}>
+                <ButtonConfirmed
+                  confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                  disabled={
+                    approval !== ApprovalState.NOT_APPROVED ||
+                    signatureData !== null ||
+                    !v3Amount0Min ||
+                    !v3Amount1Min ||
+                    invalidRange ||
+                    confirmingMigration
+                  }
+                  onClick={approve}
+                >
+                  {approval === ApprovalState.PENDING ? (
+                    <Dots>Approving</Dots>
+                  ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
+                    'Allowed'
+                  ) : (
+                    'Allow LP token migration'
+                  )}
+                </ButtonConfirmed>
+              </AutoColumn>
+            ) : null}
+            <AutoColumn gap="12px" style={{ flex: '1' }}>
               <ButtonConfirmed
-                confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                confirmed={isSuccessfullyMigrated}
                 disabled={
-                  approval !== ApprovalState.NOT_APPROVED ||
-                  signatureData !== null ||
                   !v3Amount0Min ||
                   !v3Amount1Min ||
                   invalidRange ||
-                  confirmingMigration
+                  (approval !== ApprovalState.APPROVED && signatureData === null) ||
+                  confirmingMigration ||
+                  isMigrationPending ||
+                  isSuccessfullyMigrated
                 }
-                onClick={approve}
+                onClick={migrate}
               >
-                {approval === ApprovalState.PENDING ? (
-                  <Dots>Approving</Dots>
-                ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                  'Approved'
-                ) : (
-                  'Approve'
-                )}
+                {isSuccessfullyMigrated ? 'Success!' : isMigrationPending ? <Dots>Migrating</Dots> : 'Migrate'}
               </ButtonConfirmed>
             </AutoColumn>
-          ) : null}
-          <AutoColumn gap="12px" style={{ flex: '1' }}>
-            <ButtonConfirmed
-              confirmed={isSuccessfullyMigrated}
-              disabled={
-                !v3Amount0Min ||
-                !v3Amount1Min ||
-                invalidRange ||
-                (approval !== ApprovalState.APPROVED && signatureData === null) ||
-                confirmingMigration ||
-                isMigrationPending ||
-                isSuccessfullyMigrated
-              }
-              onClick={migrate}
-            >
-              {isSuccessfullyMigrated ? 'Success!' : isMigrationPending ? <Dots>Migrating</Dots> : 'Migrate'}
-            </ButtonConfirmed>
           </AutoColumn>
-        </div>
-
-        {chainId && refund0 && refund1 ? (
-          <div style={{ marginTop: '1rem' }}>
-            <TYPE.darkGray style={{ textAlign: 'center' }}>
-              {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
-              {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be refunded
-              to your wallet.
-            </TYPE.darkGray>
-          </div>
-        ) : null}
+        </AutoColumn>
       </LightCard>
-      <TYPE.darkGray style={{ textAlign: 'center' }}>
-        {`Your Uniswap V2 ${invertPrice ? token0?.symbol : token1?.symbol} / ${
-          invertPrice ? token1?.symbol : token0?.symbol
-        } liquidity tokens will become a Uniswap V3 ${invertPrice ? token0?.symbol : token1?.symbol} / ${
-          invertPrice ? token1?.symbol : token0?.symbol
-        } NFT.`}
-      </TYPE.darkGray>
     </AutoColumn>
   )
 }
@@ -602,6 +629,15 @@ export default function MigrateV2Pair({
     params: { address },
   },
 }: RouteComponentProps<{ address: string }>) {
+  // reset mint state on component mount, and as a cleanup (on unmount)
+  const dispatch = useDispatch<AppDispatch>()
+  useEffect(() => {
+    dispatch(resetMintState())
+    return () => {
+      dispatch(resetMintState())
+    }
+  }, [dispatch])
+
   const { chainId, account } = useActiveWeb3React()
 
   // get pair contract
@@ -619,7 +655,7 @@ export default function MigrateV2Pair({
 
   // get liquidity token balance
   const liquidityToken: Token | undefined = useMemo(
-    () => (chainId && validatedAddress ? new Token(chainId, validatedAddress, 18, 'UNI-V2', 'Uniswap V2') : undefined),
+    () => (chainId && validatedAddress ? new Token(chainId, validatedAddress, 18) : undefined),
     [chainId, validatedAddress]
   )
 
@@ -627,14 +663,14 @@ export default function MigrateV2Pair({
   const pairBalance = useTokenBalance(account ?? undefined, liquidityToken)
   const totalSupply = useTotalSupply(liquidityToken)
   const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
-  const reserve0 = useMemo(() => (token0 && reserve0Raw ? new TokenAmount(token0, reserve0Raw) : undefined), [
-    token0,
-    reserve0Raw,
-  ])
-  const reserve1 = useMemo(() => (token1 && reserve1Raw ? new TokenAmount(token1, reserve1Raw) : undefined), [
-    token1,
-    reserve1Raw,
-  ])
+  const reserve0 = useMemo(
+    () => (token0 && reserve0Raw ? CurrencyAmount.fromRawAmount(token0, reserve0Raw) : undefined),
+    [token0, reserve0Raw]
+  )
+  const reserve1 = useMemo(
+    () => (token1 && reserve1Raw ? CurrencyAmount.fromRawAmount(token1, reserve1Raw) : undefined),
+    [token1, reserve1Raw]
+  )
 
   // redirect for invalid url params
   if (
@@ -656,9 +692,7 @@ export default function MigrateV2Pair({
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
           <TYPE.mediumHeader>Migrate V2 Liquidity</TYPE.mediumHeader>
-          <div>
-            <QuestionHelper text="Migrate your liquidity tokens from Uniswap V2 to Uniswap V3." />
-          </div>
+          <SettingsTab placeholderSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
         </AutoRow>
 
         {!account ? (

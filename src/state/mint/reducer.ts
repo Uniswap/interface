@@ -1,12 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import {
-  Field,
-  resetMintState,
-  typeInput,
-  typeStartPriceInput,
-  typeLeftRangeInput,
-  typeRightRangeInput,
-} from './actions'
+import { Field, resetMintState, typeInput } from './actions'
 
 export interface MintState {
   readonly independentField: Field
@@ -29,24 +22,6 @@ export const initialState: MintState = {
 export default createReducer<MintState>(initialState, (builder) =>
   builder
     .addCase(resetMintState, () => initialState)
-    .addCase(typeStartPriceInput, (state, { payload: { typedValue } }) => {
-      return {
-        ...state,
-        startPriceTypedValue: typedValue,
-      }
-    })
-    .addCase(typeLeftRangeInput, (state, { payload: { typedValue } }) => {
-      return {
-        ...state,
-        leftRangeTypedValue: typedValue,
-      }
-    })
-    .addCase(typeRightRangeInput, (state, { payload: { typedValue } }) => {
-      return {
-        ...state,
-        rightRangeTypedValue: typedValue,
-      }
-    })
     .addCase(typeInput, (state, { payload: { field, typedValue, noLiquidity } }) => {
       if (noLiquidity) {
         // they're typing into the field they've last typed in

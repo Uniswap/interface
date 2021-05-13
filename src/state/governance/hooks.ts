@@ -1,5 +1,5 @@
 import { UNI, PRELOADED_PROPOSALS } from './../../constants/index'
-import { TokenAmount } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
@@ -22,7 +22,7 @@ export interface ProposalData {
   title: string
   description: string
   proposer: string
-  status: string
+  status: ProposalState
   forCount: number
   againstCount: number
   startBlock: number
@@ -30,9 +30,16 @@ export interface ProposalData {
   details: ProposalDetail[]
 }
 
-const enumerateProposalState = (state: number) => {
-  const proposalStates = ['pending', 'active', 'canceled', 'defeated', 'succeeded', 'queued', 'expired', 'executed']
-  return proposalStates[state]
+export enum ProposalState {
+  Undetermined = -1,
+  Pending,
+  Active,
+  Canceled,
+  Defeated,
+  Succeeded,
+  Queued,
+  Expired,
+  Executed,
 }
 
 // get count of all proposals made
@@ -129,7 +136,7 @@ export function useAllProposalData() {
           title: description?.split(/# |\n/g)[1] || 'Untitled',
           description: description || 'No description.',
           proposer: allProposals[i]?.result?.proposer,
-          status: enumerateProposalState(allProposalStates[i]?.result?.[0]) ?? 'Undetermined',
+          status: allProposalStates[i]?.result?.[0] ?? ProposalState.Undetermined,
           forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString(), 18)),
           againstCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.againstVotes.toString(), 18)),
           startBlock: parseInt(allProposals[i]?.result?.startBlock?.toString()),
@@ -157,18 +164,18 @@ export function useUserDelegatee(): string {
 }
 
 // gets the users current votes
-export function useUserVotes(): TokenAmount | undefined {
+export function useUserVotes(): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useActiveWeb3React()
   const uniContract = useUniContract()
 
   // check for available votes
   const uni = chainId ? UNI[chainId] : undefined
   const votes = useSingleCallResult(uniContract, 'getCurrentVotes', [account ?? undefined])?.result?.[0]
-  return votes && uni ? new TokenAmount(uni, votes) : undefined
+  return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
 // fetch available votes as of block (usually proposal start block)
-export function useUserVotesAsOfBlock(block: number | undefined): TokenAmount | undefined {
+export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount<Token> | undefined {
   const { account, chainId } = useActiveWeb3React()
   const uniContract = useUniContract()
 
@@ -176,7 +183,7 @@ export function useUserVotesAsOfBlock(block: number | undefined): TokenAmount | 
   const uni = chainId ? UNI[chainId] : undefined
   const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account ?? undefined, block ?? undefined])
     ?.result?.[0]
-  return votes && uni ? new TokenAmount(uni, votes) : undefined
+  return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
 export function useDelegateCallback(): (delegatee: string | undefined) => undefined | Promise<string> {

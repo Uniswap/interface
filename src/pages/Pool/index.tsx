@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ButtonGray, ButtonPrimary } from 'components/Button'
+import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
 import { SwapPoolTabs } from 'components/NavigationTabs'
@@ -7,7 +7,7 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { BookOpen, ChevronDown, Download, Inbox, PlusCircle } from 'react-feather'
+import { BookOpen, ChevronDown, Download, Inbox, PlusCircle, ChevronsRight, Layers } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
@@ -15,9 +15,19 @@ import styled, { ThemeContext } from 'styled-components'
 import { HideSmall, TYPE } from 'theme'
 import { LoadingRows } from './styleds'
 
+import CTACards from './CTACards'
+
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
   width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    max-width: 800px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    max-width: 500px;
+  `};
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.text2};
@@ -76,7 +86,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 
 const MainContentWrapper = styled.main`
   background-color: ${({ theme }) => theme.bg0};
-  padding: 16px;
+  padding: 8px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -90,16 +100,11 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  const hasPositions = Boolean(positions && positions.length > 0)
-
-  const hasV2Liquidity = true
-  const showMigrateHeaderLink = Boolean(hasV2Liquidity && hasPositions)
-
   const menuItems = [
     {
       content: (
         <MenuItem>
-          <PlusCircle size={16} style={{ marginRight: '8px' }} />
+          <PlusCircle size={16} style={{ marginRight: '12px' }} />
           {t('Create a pool')}
         </MenuItem>
       ),
@@ -109,36 +114,34 @@ export default function Pool() {
     {
       content: (
         <MenuItem>
-          <Download size={16} style={{ marginRight: '8px' }} />
-          {t('Migrate Liquidity')}
+          <ChevronsRight size={16} style={{ marginRight: '12px' }} />
+          {t('Migrate')}
         </MenuItem>
       ),
-      link: '/#/migrate/v2',
+      link: '/migrate/v2',
       external: false,
     },
     {
       content: (
         <MenuItem>
-          <BookOpen size={16} style={{ marginRight: '8px' }} />
+          <Layers size={16} style={{ marginRight: '12px' }} />
+          {t('V2 liquidity')}
+        </MenuItem>
+      ),
+      link: '/pool/v2',
+      external: false,
+    },
+    {
+      content: (
+        <MenuItem>
+          <BookOpen size={16} style={{ marginRight: '12px' }} />
           {t('Learn')}
         </MenuItem>
       ),
-      link: 'https://uniswap.org/docs/v2/',
+      link: 'https://docs.uniswap.org/',
       external: true,
     },
   ]
-  if (showMigrateHeaderLink) {
-    menuItems.unshift({
-      content: (
-        <MenuItem>
-          <Download size={16} style={{ marginRight: '8px' }} />
-          {t('Migrate v2 liquidity')}
-        </MenuItem>
-      ),
-      link: '/migrate/v2',
-      external: false,
-    })
-  }
 
   return (
     <>
@@ -148,7 +151,7 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader>Your Positions</TYPE.mediumHeader>
+                <TYPE.mediumHeader>{t('Pools Overview')}</TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
                 <Menu
@@ -168,6 +171,8 @@ export default function Pool() {
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
+
+            <CTACards />
 
             <MainContentWrapper>
               {positionsLoading ? (
@@ -191,28 +196,62 @@ export default function Pool() {
                 <NoLiquidity>
                   <TYPE.mediumHeader color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
-                    <div>{t('Your liquidity positions will appear here.')}</div>
+                    <div>{t('Your V3 liquidity positions will appear here.')}</div>
                   </TYPE.mediumHeader>
                   {!account ? (
                     <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
                       {t('Connect a wallet')}
                     </ButtonPrimary>
                   ) : (
-                    hasV2Liquidity && (
-                      <ButtonGray
-                        as={Link}
-                        to="/migrate/v2"
-                        id="import-pool-link"
-                        style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
-                      >
-                        {t('Migrate V2 liquidity')}&nbsp;&nbsp;
-                        <Download size={16} />
-                      </ButtonGray>
-                    )
+                    <ButtonGray
+                      as={Link}
+                      to="/migrate/v2"
+                      id="import-pool-link"
+                      style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
+                    >
+                      {t('Migrate V2 liquidity')}?&nbsp;&nbsp;
+                      <Download size={16} />
+                    </ButtonGray>
                   )}
                 </NoLiquidity>
               )}
             </MainContentWrapper>
+            <RowFixed justify="center" style={{ width: '100%' }}>
+              <ButtonOutlined
+                as={Link}
+                to="/pool/v2"
+                id="import-pool-link"
+                style={{
+                  padding: '8px 16px',
+                  margin: '0 4px',
+                  borderRadius: '12px',
+                  width: 'fit-content',
+                  fontSize: '14px',
+                }}
+              >
+                <Layers size={14} style={{ marginRight: '8px' }} />
+
+                {t('View V2 Liquidity')}
+              </ButtonOutlined>
+              {positions && positions.length > 0 && (
+                <ButtonOutlined
+                  as={Link}
+                  to="/migrate/v2"
+                  id="import-pool-link"
+                  style={{
+                    padding: '8px 16px',
+                    margin: '0 4px',
+                    borderRadius: '12px',
+                    width: 'fit-content',
+                    fontSize: '14px',
+                  }}
+                >
+                  <ChevronsRight size={16} style={{ marginRight: '8px' }} />
+
+                  {t('Migrate Liquidity')}
+                </ButtonOutlined>
+              )}
+            </RowFixed>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>

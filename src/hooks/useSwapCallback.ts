@@ -1,10 +1,8 @@
-import JSBI from 'jsbi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
-import { ChainId, Percent, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/v3'
 import { getTradeVersion } from '../utils/getTradeVersion'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -12,6 +10,7 @@ import { calculateGasMargin, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import { useV2RouterContract } from './useContract'
+import { SignatureData } from './useERC20Permit'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
@@ -46,12 +45,14 @@ interface FailedCall extends SwapCallEstimate {
  * Returns the swap calls that can be used to make the trade
  * @param trade trade to execute
  * @param allowedSlippage user allowed slippage
- * @param recipientAddressOrName
+ * @param recipientAddressOrName the ENS name or address of the recipient of the swap output
+ * @param signatureData the signature data of the permit of the input token amount, if available
  */
 function useSwapCallArguments(
-  trade: V2Trade | V3Trade | undefined, // trade to execute, required
-  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  allowedSlippage: Percent, // in bips
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  signatureData: SignatureData | null | undefined
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -69,7 +70,7 @@ function useSwapCallArguments(
       swapMethods.push(
         Router.swapCallParameters(trade, {
           feeOnTransfer: false,
-          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          allowedSlippage,
           recipient,
           deadline: deadline.toNumber(),
         })
@@ -79,7 +80,7 @@ function useSwapCallArguments(
         swapMethods.push(
           Router.swapCallParameters(trade, {
             feeOnTransfer: true,
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+            allowedSlippage,
             recipient,
             deadline: deadline.toNumber(),
           })
@@ -97,8 +98,28 @@ function useSwapCallArguments(
 
       const { value, calldata } = SwapRouter.swapCallParameters(trade, {
         recipient,
-        slippageTolerance: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+        slippageTolerance: allowedSlippage,
         deadline: deadline.toString(),
+        ...(signatureData
+          ? {
+              inputTokenPermit:
+                'allowed' in signatureData
+                  ? {
+                      expiry: signatureData.deadline,
+                      nonce: signatureData.nonce,
+                      s: signatureData.s,
+                      r: signatureData.r,
+                      v: signatureData.v as any,
+                    }
+                  : {
+                      deadline: signatureData.deadline,
+                      amount: signatureData.amount,
+                      s: signatureData.s,
+                      r: signatureData.r,
+                      v: signatureData.v as any,
+                    },
+            }
+          : {}),
       })
 
       return [
@@ -109,19 +130,57 @@ function useSwapCallArguments(
         },
       ]
     }
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, trade])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, signatureData, trade])
+}
+
+/**
+ * This is hacking out the revert reason from the ethers provider thrown error however it can.
+ * This object seems to be undocumented by ethers.
+ * @param error an error from the ethers provider
+ */
+export function swapErrorToUserReadableMessage(error: any): string {
+  let reason: string | undefined
+  while (Boolean(error)) {
+    reason = error.reason ?? error.message ?? reason
+    error = error.error ?? error.data?.originalError
+  }
+
+  if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
+
+  switch (reason) {
+    case 'UniswapV2Router: EXPIRED':
+      return 'The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.'
+    case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
+    case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
+      return 'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
+    case 'TransferHelper: TRANSFER_FROM_FAILED':
+      return 'The input token cannot be transferred. There may be an issue with the input token.'
+    case 'UniswapV2: TRANSFER_FAILED':
+      return 'The output token cannot be transferred. There may be an issue with the output token.'
+    case 'UniswapV2: K':
+      return 'The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer.'
+    case 'Too little received':
+    case 'Too much requested':
+    case 'STF':
+      return 'This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
+    case 'TF':
+      return 'The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
+    default:
+      return `Unknown error${reason ? `: "${reason}"` : ''}. Please join the Discord to get help.`
+  }
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
-  trade: V2Trade | V3Trade | undefined, // trade to execute, required
-  allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
+  allowedSlippage: Percent, // in bips
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  signatureData: SignatureData | undefined | null
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
 
   const addTransaction = useTransactionAdder()
 
@@ -176,28 +235,7 @@ export function useSwapCallback(
                   })
                   .catch((callError) => {
                     console.debug('Call threw error', call, callError)
-                    let errorMessage: string
-                    switch (callError.reason) {
-                      case 'UniswapV2Router: EXPIRED':
-                        errorMessage =
-                          'The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.'
-                        break
-                      case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
-                      case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
-                        errorMessage =
-                          'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
-                        break
-                      case 'UniswapV2: TRANSFER_FAILED':
-                        errorMessage = 'The token could not be transferred. There may be an issue with the token.'
-                        break
-                      case 'UniswapV2: K':
-                        errorMessage =
-                          'The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer.'
-                        break
-                      default:
-                        return { call }
-                    }
-                    return { call, error: new Error(errorMessage) }
+                    return { call, error: new Error(swapErrorToUserReadableMessage(callError)) }
                   })
               })
           })
@@ -231,17 +269,14 @@ export function useSwapCallback(
             to: address,
             data: calldata,
             // let the wallet try if we can't estimate the gas
-            ...('gasEstimate' in bestCallOption
-              ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) }
-              : { gasLimit: 1_000_000 }),
+            ...('gasEstimate' in bestCallOption ? { gasLimit: calculateGasMargin(bestCallOption.gasEstimate) } : {}),
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
-            const slippageTolerancePercent = new Percent(allowedSlippage)
-            const inputAmount = trade.maximumAmountIn(slippageTolerancePercent).toSignificant(3)
-            const outputAmount = trade.minimumAmountOut(slippageTolerancePercent).toSignificant(3)
+            const inputAmount = trade.maximumAmountIn(allowedSlippage).toSignificant(4)
+            const outputAmount = trade.minimumAmountOut(allowedSlippage).toSignificant(4)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
             const withRecipient =
@@ -270,7 +305,8 @@ export function useSwapCallback(
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, address, calldata, value)
-              throw new Error(`Swap failed: ${error.message}`)
+
+              throw new Error(`Swap failed: ${swapErrorToUserReadableMessage(error)}`)
             }
           })
       },

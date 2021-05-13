@@ -1,4 +1,4 @@
-import { TokenAmount, Percent } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount, Percent, Ether, currencyEquals, ETHER } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { useActiveWeb3React } from 'hooks'
@@ -10,20 +10,22 @@ import { PositionDetails } from 'types/position'
 
 import { AppDispatch, AppState } from '../../index'
 import { selectPercent } from './actions'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 
 export function useBurnV3State(): AppState['burnV3'] {
   return useSelector<AppState, AppState['burnV3']>((state) => state.burnV3)
 }
 
 export function useDerivedV3BurnInfo(
-  position?: PositionDetails
+  position?: PositionDetails,
+  asWETH = false
 ): {
   position?: Position
   liquidityPercentage?: Percent
-  liquidityValue0?: TokenAmount
-  liquidityValue1?: TokenAmount
-  feeValue0?: TokenAmount
-  feeValue1?: TokenAmount
+  liquidityValue0?: CurrencyAmount<Token | Ether>
+  liquidityValue1?: CurrencyAmount<Token | Ether>
+  feeValue0?: CurrencyAmount<Token | Ether>
+  feeValue1?: CurrencyAmount<Token | Ether>
   outOfRange: boolean
   error?: string
 } {
@@ -50,14 +52,27 @@ export function useDerivedV3BurnInfo(
 
   const liquidityPercentage = new Percent(percent, 100)
 
-  const liquidityValue0 =
-    positionSDK &&
-    new TokenAmount(positionSDK.amount0.token, liquidityPercentage.multiply(positionSDK.amount0.raw).quotient)
-  const liquidityValue1 =
-    positionSDK &&
-    new TokenAmount(positionSDK.amount1.token, liquidityPercentage.multiply(positionSDK.amount1.raw).quotient)
+  const discountedAmount0 = positionSDK
+    ? liquidityPercentage.multiply(positionSDK.amount0.quotient).quotient
+    : undefined
+  const discountedAmount1 = positionSDK
+    ? liquidityPercentage.multiply(positionSDK.amount1.quotient).quotient
+    : undefined
 
-  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position)
+  const liquidityValue0 =
+    token0 && discountedAmount0
+      ? currencyEquals(unwrappedToken(token0), ETHER) && !asWETH
+        ? CurrencyAmount.ether(discountedAmount0)
+        : CurrencyAmount.fromRawAmount(token0, discountedAmount0)
+      : undefined
+  const liquidityValue1 =
+    token1 && discountedAmount1
+      ? currencyEquals(unwrappedToken(token1), ETHER) && !asWETH
+        ? CurrencyAmount.ether(discountedAmount1)
+        : CurrencyAmount.fromRawAmount(token1, discountedAmount1)
+      : undefined
+
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position?.tokenId, asWETH)
 
   const outOfRange =
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false

@@ -1,33 +1,27 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import Card, { DarkGreyCard } from 'components/Card'
+import { DarkGreyCard } from 'components/Card'
 import Input from 'components/NumericalInput'
 
 export const Wrapper = styled.div`
   position: relative;
   padding: 20px;
-  min-width: 460px;
+  min-width: 480px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    min-width: 400px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  min-width: 340px;
+`};
 `
 
 export const ScrollablePage = styled.div`
   position: relative;
   display: flex;
   flex-direction: row;
-`
-
-export const ScrollableContent = styled.div`
-  margin-right: 16px;
-`
-
-export const RangeBadge = styled(Card)<{ inRange?: boolean }>`
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 8px;
-  padding: 4px 6px;
-  color: ${({ theme }) => theme.black};
-  background-color: ${({ inRange, theme }) => (inRange ? theme.green1 : theme.yellow2)};
 `
 
 export const FixedPreview = styled.div`
@@ -41,12 +35,12 @@ export const FixedPreview = styled.div`
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   position: sticky;
-  top: 90px;
+  top: 64px;
 `
 
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
-    opacity: ${({ disabled }) => (disabled ? '0.3' : '1')}
-    pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')}
+  opacity: ${({ disabled }) => (disabled ? '0.3' : '1')};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
 `
 
 export const CurrencyDropdown = styled(CurrencyInputPanel)`

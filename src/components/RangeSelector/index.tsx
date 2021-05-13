@@ -1,5 +1,5 @@
 import React from 'react'
-import { Currency, Price } from '@uniswap/sdk-core'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
@@ -19,8 +19,8 @@ export default function RangeSelector({
   currencyB,
   feeAmount,
 }: {
-  priceLower?: Price
-  priceUpper?: Price
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
   getDecrementLower: () => string
   getIncrementLower: () => string
   getDecrementUpper: () => string
@@ -48,7 +48,10 @@ export default function RangeSelector({
         decrement={isSorted ? getDecrementLower : getIncrementUpper}
         increment={isSorted ? getIncrementLower : getDecrementUpper}
         feeAmount={feeAmount}
-        label={leftPrice ? `${leftPrice.toSignificant(5)} ${currencyB?.symbol}/${currencyA?.symbol}` : '-'}
+        label={leftPrice ? `${currencyB?.symbol}` : '-'}
+        title={'Min Price'}
+        tokenA={currencyA?.symbol}
+        tokenB={currencyB?.symbol}
       />
       <StepCounter
         value={rightPrice?.toSignificant(5) ?? ''}
@@ -57,7 +60,10 @@ export default function RangeSelector({
         decrement={isSorted ? getDecrementUpper : getIncrementLower}
         increment={isSorted ? getIncrementUpper : getDecrementLower}
         feeAmount={feeAmount}
-        label={rightPrice ? `${rightPrice.toSignificant(5)} ${currencyB?.symbol}/${currencyA?.symbol}` : '-'}
+        label={rightPrice ? `${currencyB?.symbol}` : '-'}
+        tokenA={currencyA?.symbol}
+        tokenB={currencyB?.symbol}
+        title={'Max Price'}
       />
     </RowBetween>
   )

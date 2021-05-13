@@ -66,7 +66,14 @@ export function usePools(
 
       if (!slot0 || !liquidity) return [PoolState.NOT_EXISTS, null]
 
-      return [PoolState.EXISTS, new Pool(token0, token1, fee, slot0.sqrtPriceX96, liquidity[0], slot0.tick)]
+      if (!slot0.sqrtPriceX96 || slot0.sqrtPriceX96.eq(0)) return [PoolState.NOT_EXISTS, null]
+
+      try {
+        return [PoolState.EXISTS, new Pool(token0, token1, fee, slot0.sqrtPriceX96, liquidity[0], slot0.tick)]
+      } catch (error) {
+        console.error('Error when constructing the pool', error)
+        return [PoolState.NOT_EXISTS, null]
+      }
     })
   }, [liquidities, poolKeys, slot0s, transformed])
 }

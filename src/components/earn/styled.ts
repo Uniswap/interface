@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { AutoColumn } from '../Column'
 
 import uImage from '../../assets/images/big_unicorn.png'
@@ -35,7 +35,6 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   left: -100px;
   transform: rotate(-15deg);
   user-select: none;
-
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
 `
 

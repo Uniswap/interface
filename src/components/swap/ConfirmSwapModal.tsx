@@ -1,4 +1,4 @@
-import { currencyEquals, Percent } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import React, { useCallback, useMemo } from 'react'
@@ -13,7 +13,11 @@ import SwapModalHeader from './SwapModalHeader'
  * Returns true if the trade requires a confirmation of details before we can submit it
  * @param args either a pair of V2 trades or a pair of V3 trades
  */
-function tradeMeaningfullyDiffers(...args: [V2Trade, V2Trade] | [V3Trade, V3Trade]): boolean {
+function tradeMeaningfullyDiffers(
+  ...args:
+    | [V2Trade<Currency, Currency, TradeType>, V2Trade<Currency, Currency, TradeType>]
+    | [V3Trade<Currency, Currency, TradeType>, V3Trade<Currency, Currency, TradeType>]
+): boolean {
   const [tradeA, tradeB] = args
   return (
     tradeA.tradeType !== tradeB.tradeType ||
@@ -38,12 +42,12 @@ export default function ConfirmSwapModal({
   txHash,
 }: {
   isOpen: boolean
-  trade: V2Trade | V3Trade | undefined
-  originalTrade: V2Trade | V3Trade | undefined
+  trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  originalTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
-  allowedSlippage: number
+  allowedSlippage: Percent
   onAcceptChanges: () => void
   onConfirm: () => void
   swapErrorMessage: string | undefined
@@ -81,17 +85,14 @@ export default function ConfirmSwapModal({
         trade={trade}
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
-        allowedSlippage={allowedSlippage}
       />
     ) : null
-  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
-
-  const slippageTolerancePercent = new Percent(allowedSlippage, 10_000)
+  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   // text to show while loading
-  const pendingText = `Swapping ${trade?.maximumAmountIn(slippageTolerancePercent)?.toSignificant(6)} ${
+  const pendingText = `Swapping ${trade?.maximumAmountIn(allowedSlippage)?.toSignificant(6)} ${
     trade?.inputAmount?.currency?.symbol
-  } for ${trade?.minimumAmountOut(slippageTolerancePercent)?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
+  } for ${trade?.minimumAmountOut(allowedSlippage)?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
 
   const confirmationContent = useCallback(
     () =>

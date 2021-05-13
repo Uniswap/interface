@@ -1,7 +1,7 @@
 import PositionListItem from 'components/PositionListItem'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
 
@@ -9,19 +9,17 @@ const DesktopHeader = styled.div`
   display: none;
   font-size: 14px;
   font-weight: 500;
-  opacity: 0.6;
-  padding: 8px 8px 0 8px;
+  padding: 8px;
 
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     align-items: center;
     display: flex;
-    margin: 0 0 8px 0;
-    & > div:first-child {
-      flex: 1 1 auto;
-    }
-    & > div:not(:first-child) {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    & > div:last-child {
       text-align: right;
-      min-width: 18%;
+      margin-right: 12px;
     }
   }
 `
@@ -29,7 +27,8 @@ const DesktopHeader = styled.div`
 const MobileHeader = styled.div`
   font-weight: medium;
   font-size: 16px;
-  margin-bottom: 16px;
+  font-weight: 500;
+  padding: 8px;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     display: none;
   }
@@ -45,10 +44,11 @@ export default function PositionList({ positions }: PositionListProps) {
   return (
     <>
       <DesktopHeader>
-        <div>{t('Position')}</div>
-        <div>{t('Range')}</div>
-        <div>{t('Liquidity')}</div>
-        <div>{t('Fees Earned')}</div>
+        <div>
+          {t('Your positions')}
+          {positions && ' (' + positions.length + ')'}
+        </div>
+        <div>{t('Price range')}</div>
       </DesktopHeader>
       <MobileHeader>Your positions</MobileHeader>
       {positions.map((p) => {

@@ -9,7 +9,9 @@ import { ExternalLink, TYPE, HideSmall } from '../../theme'
 import { Text } from 'rebass'
 import Card from '../../components/Card'
 import { RowBetween, RowFixed } from '../../components/Row'
-import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { ButtonPrimary, ButtonSecondary, ButtonOutlined } from '../../components/Button'
+import { ChevronsRight } from 'react-feather'
+
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -108,7 +110,9 @@ export default function Pool() {
 
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
-  const stakingInfosWithBalance = stakingInfo?.filter((pool) => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
+  const stakingInfosWithBalance = stakingInfo?.filter((pool) =>
+    JSBI.greaterThan(pool.stakedAmount.quotient, BIG_INT_ZERO)
+  )
   const stakingPairs = useV2Pairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
 
   // remove any pairs that also are included in pairs with stake in mining pool
@@ -151,15 +155,15 @@ export default function Pool() {
         </VoteCard>
 
         <AutoColumn gap="lg" justify="center">
-          <AutoColumn gap="lg" style={{ width: '100%' }}>
+          <AutoColumn gap="md" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your liquidity
+                  Your V2 liquidity
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
+                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
                   Create a pair
                 </ResponsiveButtonSecondary>
                 <ResponsiveButtonPrimary
@@ -170,7 +174,7 @@ export default function Pool() {
                   to="/add/v2/ETH"
                 >
                   <Text fontWeight={500} fontSize={16}>
-                    Add Liquidity
+                    Add V2 Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -192,7 +196,7 @@ export default function Pool() {
               <>
                 <ButtonSecondary>
                   <RowBetween>
-                    <ExternalLink href={'https://uniswap.info/account/' + account}>
+                    <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
                       Account analytics and accrued fees
                     </ExternalLink>
                     <span> ↗</span>
@@ -211,6 +215,23 @@ export default function Pool() {
                       />
                     )
                 )}
+                <RowFixed justify="center" style={{ width: '100%' }}>
+                  <ButtonOutlined
+                    as={Link}
+                    to="/migrate/v2"
+                    id="import-pool-link"
+                    style={{
+                      padding: '8px 16px',
+                      margin: '0 4px',
+                      borderRadius: '12px',
+                      width: 'fit-content',
+                      fontSize: '14px',
+                    }}
+                  >
+                    <ChevronsRight size={16} style={{ marginRight: '8px' }} />
+                    Migrate Liquidity to V3
+                  </ButtonOutlined>
+                </RowFixed>
               </>
             ) : (
               <EmptyProposals>

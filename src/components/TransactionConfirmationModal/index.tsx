@@ -20,11 +20,10 @@ const Wrapper = styled.div`
   padding: 1rem;
 `
 const Section = styled(AutoColumn)<{ inline?: boolean }>`
-  padding: ${({ inline }) => (inline ? '0' : '24px')};
+  padding: ${({ inline }) => (inline ? '0' : '0')};
 `
 
 const BottomSection = styled(Section)`
-  // background-color: ${({ theme }) => theme.bg2};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 `
