@@ -153,14 +153,18 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
     case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
       return 'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
+    case 'TransferHelper: TRANSFER_FROM_FAILED':
+      return 'The input token cannot be transferred. There may be an issue with the input token.'
     case 'UniswapV2: TRANSFER_FAILED':
-      return 'The token could not be transferred. There may be an issue with the token.'
+      return 'The output token cannot be transferred. There may be an issue with the output token.'
     case 'UniswapV2: K':
       return 'The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer.'
     case 'Too little received':
     case 'Too much requested':
     case 'STF':
-      return 'This transaction will not succeed due to price movement. Try increasing your slippage tolerance.'
+      return 'This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer tokens are incompatible with Uniswap V3.'
+    case 'TF':
+      return 'The output token cannot be transferred. There may be an issue with the output token.'
     default:
       return 'Unknown error. Please join the Discord to get help.'
   }
