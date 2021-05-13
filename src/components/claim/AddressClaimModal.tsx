@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { DataCard, CardSection, Break } from '../earn/styled'
 import { RowBetween } from '../Row'
 import { TYPE, ExternalLink, CloseIcon, CustomLightSpinner, UniTokenAnimated } from '../../theme'

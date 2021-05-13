@@ -1,7 +1,7 @@
 import PositionListItem from 'components/PositionListItem'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
 

@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, currencyEquals, Token } from '@uniswap/sdk-co
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks'
 import { useCombinedActiveList } from '../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'

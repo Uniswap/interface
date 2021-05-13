@@ -2,7 +2,7 @@ import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import React, { useCallback, useState } from 'react'
 import { usePopper } from 'react-popper'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import useInterval from '../../hooks/useInterval'
 import Portal from '@reach/portal'
 
