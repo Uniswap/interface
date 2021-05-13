@@ -133,6 +133,39 @@ function useSwapCallArguments(
   }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, signatureData, trade])
 }
 
+/**
+ * This is hacking out the revert reason from the ethers provider thrown error however it can.
+ * This object seems to be undocumented by ethers.
+ * @param error an error from the ethers provider
+ */
+export function swapErrorToUserReadableMessage(error: any): string {
+  let reason: string | undefined
+  while (Boolean(error)) {
+    reason = error.reason ?? error.message ?? reason
+    error = error.error ?? error.data?.originalError
+  }
+
+  if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
+
+  switch (reason) {
+    case 'UniswapV2Router: EXPIRED':
+      return 'The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.'
+    case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
+    case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
+      return 'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
+    case 'UniswapV2: TRANSFER_FAILED':
+      return 'The token could not be transferred. There may be an issue with the token.'
+    case 'UniswapV2: K':
+      return 'The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer.'
+    case 'Too little received':
+    case 'Too much requested':
+    case 'STF':
+      return 'This transaction will not succeed due to price movement. Try increasing your slippage tolerance.'
+    default:
+      return 'Unknown error. Please join the Discord to get help.'
+  }
+}
+
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
@@ -198,28 +231,7 @@ export function useSwapCallback(
                   })
                   .catch((callError) => {
                     console.debug('Call threw error', call, callError)
-                    let errorMessage: string
-                    switch (callError.reason) {
-                      case 'UniswapV2Router: EXPIRED':
-                        errorMessage =
-                          'The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.'
-                        break
-                      case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
-                      case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
-                        errorMessage =
-                          'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
-                        break
-                      case 'UniswapV2: TRANSFER_FAILED':
-                        errorMessage = 'The token could not be transferred. There may be an issue with the token.'
-                        break
-                      case 'UniswapV2: K':
-                        errorMessage =
-                          'The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer.'
-                        break
-                      default:
-                        return { call }
-                    }
-                    return { call, error: new Error(errorMessage) }
+                    return { call, error: new Error(swapErrorToUserReadableMessage(callError)) }
                   })
               })
           })
@@ -289,7 +301,10 @@ export function useSwapCallback(
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, address, calldata, value)
-              throw new Error(`Swap failed: ${error.message}`)
+
+              throw new Error(
+                `Swap failed: ${'reason' in error ? swapErrorToUserReadableMessage(error) : error.message}`
+              )
             }
           })
       },

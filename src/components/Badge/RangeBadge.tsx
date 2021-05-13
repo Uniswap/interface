@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Badge, { BadgeVariant } from 'components/Badge'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 import { MouseoverTooltip } from '../../components/Tooltip'
 import { useTranslation } from 'react-i18next'

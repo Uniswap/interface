@@ -1,6 +1,6 @@
 import { Story } from '@storybook/react/types-6-0'
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import Component from './index'
 
 const Wrapper = styled.div`

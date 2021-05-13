@@ -6,7 +6,7 @@ import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { TYPE } from 'theme'
 import { RowBetween } from 'components/Row'
 import { ButtonRadioChecked } from 'components/Button'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 const ResponsiveText = styled(TYPE.label)`
   ${({ theme }) => theme.mediaWidth.upToSmall`

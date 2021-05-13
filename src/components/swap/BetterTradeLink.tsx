@@ -7,7 +7,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
 import { HideSmall, TYPE, SmallOnly } from '../../theme'
 import { ButtonPrimary } from '../Button'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { Zap } from 'react-feather'
 
 const ResponsiveButton = styled(ButtonPrimary)`

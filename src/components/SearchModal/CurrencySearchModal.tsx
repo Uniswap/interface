@@ -1,6 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import React, { useCallback, useEffect, useState } from 'react'
 import useLast from '../../hooks/useLast'
+import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
 import { ImportToken } from './ImportToken'
@@ -81,6 +82,7 @@ export default function CurrencySearchModal({
         <ImportToken
           tokens={[importToken]}
           onDismiss={onDismiss}
+          list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
           onBack={() =>
             setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search)
           }
