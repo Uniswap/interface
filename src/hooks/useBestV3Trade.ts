@@ -89,9 +89,7 @@ export function useBestV3TradeExactIn(
         route: bestRoute,
         tradeType: TradeType.EXACT_INPUT,
         inputAmount: amountIn,
-        outputAmount: currencyOut.isToken
-          ? CurrencyAmount.fromRawAmount(currencyOut, amountOut.toString())
-          : CurrencyAmount.ether(amountOut.toString()),
+        outputAmount: CurrencyAmount.fromRawAmount(currencyOut, amountOut.toString()),
       }),
     }
   }, [amountIn, currencyOut, quotesResults, routes, routesLoading])

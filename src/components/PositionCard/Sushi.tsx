@@ -2,7 +2,7 @@ import React from 'react'
 import { Token } from '@uniswap/sdk-core'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonEmpty } from '../Button'

@@ -4,7 +4,7 @@ import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonConfirmed, ButtonError } from '../Button'
@@ -50,7 +50,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   const [typedValue, setTypedValue] = useState('')
   const { parsedAmount, error } = useDerivedStakeInfo(
     typedValue,
-    stakingInfo.stakedAmount.currency.isToken ? stakingInfo.stakedAmount.currency : undefined,
+    stakingInfo.stakedAmount.currency,
     userLiquidityUnstaked
   )
   const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)

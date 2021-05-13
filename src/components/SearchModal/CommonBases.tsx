@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from 'rebass'
 import { ChainId, Currency, currencyEquals, Token, ETHER } from '@uniswap/sdk-core'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'

@@ -3,7 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, Percent, CurrencyAmount, Currency, Fraction } from '@uniswap/sdk-core'
+import { ChainId, Percent, CurrencyAmount, Currency, Fraction, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk/dist/'
 import JSBI from 'jsbi'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -58,9 +58,9 @@ export function shortenAddress(address: string, chars = 4): string {
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
-// add 10%
+// add 20%
 export function calculateGasMargin(value: BigNumber): BigNumber {
-  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000))
+  return value.mul(BigNumber.from(10000 + 2000)).div(BigNumber.from(10000))
 }
 
 const ONE = new Fraction(1, 1)
@@ -92,9 +92,8 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-export function isTokenOnList(defaultTokens: TokenAddressMap, currency?: Currency): boolean {
-  if (currency?.isEther) return true
-  return Boolean(currency?.isToken && defaultTokens[currency.chainId as ChainId]?.[currency.address])
+export function isTokenOnList(tokenAddressMap: TokenAddressMap, token?: Token): boolean {
+  return Boolean(token?.isToken && tokenAddressMap[token.chainId as ChainId]?.[token.address])
 }
 
 /**

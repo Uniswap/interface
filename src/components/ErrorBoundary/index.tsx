@@ -1,9 +1,11 @@
 import React, { ErrorInfo } from 'react'
+import store, { AppState } from '../../state'
 import { ExternalLink, ThemedBackground, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import ReactGA from 'react-ga'
 import { getUserAgent } from '../../utils/getUserAgent'
+import { AutoRow } from '../Row'
 
 const FallbackWrapper = styled.div`
   display: flex;
@@ -14,14 +16,15 @@ const FallbackWrapper = styled.div`
 `
 
 const BodyWrapper = styled.div<{ margin?: string }>`
-  position: relative;
-  margin-top: 1rem;
-  max-width: 60%;
+  padding: 1rem;
   width: 100%;
+  white-space: ;
 `
 
 const CodeBlockWrapper = styled.div`
   background: ${({ theme }) => theme.bg0};
+  overflow: auto;
+  white-space: pre;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 24px;
@@ -79,18 +82,30 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                   <TYPE.main fontSize={10}>{error.stack}</TYPE.main>
                 </code>
               </CodeBlockWrapper>
-              <LinkWrapper>
-                <ExternalLink
-                  id={`create-github-issue-link`}
-                  href={`https://github.com/Uniswap/uniswap-interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=Crash report`}
-                  target="_blank"
-                >
-                  <TYPE.link fontSize={16}>
-                    Create an issue on GitHub
-                    <span>↗</span>
-                  </TYPE.link>
-                </ExternalLink>
-              </LinkWrapper>
+              <AutoRow>
+                <LinkWrapper>
+                  <ExternalLink
+                    id="create-github-issue-link"
+                    href={`https://github.com/Uniswap/uniswap-interface/issues/new?assignees=&labels=bug&body=${encodedBody}&title=${encodeURIComponent(
+                      `Crash report: \`${error.name}${error.message && `: ${error.message}`}\``
+                    )}`}
+                    target="_blank"
+                  >
+                    <TYPE.link fontSize={16}>
+                      Create an issue on GitHub
+                      <span>↗</span>
+                    </TYPE.link>
+                  </ExternalLink>
+                </LinkWrapper>
+                <LinkWrapper>
+                  <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
+                    <TYPE.link fontSize={16}>
+                      Get support on Discord
+                      <span>↗</span>
+                    </TYPE.link>
+                  </ExternalLink>
+                </LinkWrapper>
+              </AutoRow>
             </AutoColumn>
           </BodyWrapper>
         </FallbackWrapper>
@@ -100,22 +115,45 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
   }
 }
 
+function getRelevantState(): null | keyof AppState {
+  const path = window.location.hash
+  if (!path.startsWith('#/')) {
+    return null
+  }
+  const pieces = path.substring(2).split(/[\/\\?]/)
+  switch (pieces[0]) {
+    case 'swap':
+      return 'swap'
+    case 'add':
+      if (pieces[1] === 'v2') return 'mint'
+      else return 'mintV3'
+    case 'remove':
+      if (pieces[1] === 'v2') return 'burn'
+      else return 'burnV3'
+  }
+  return null
+}
+
 function issueBody(error: Error): string {
-  if (!error) throw new Error('no error to report')
+  const relevantState = getRelevantState()
   const deviceData = getUserAgent()
-  return `**Bug Description**
+  return `## URL
   
-App crashed
+${window.location.href}
 
-**Steps to Reproduce**
-
-1. Go to ...
-2. Click on ...
-   ...
-   
+${
+  relevantState
+    ? `## \`${relevantState}\` state
+    
+\`\`\`json
+${JSON.stringify(store.getState()[relevantState], null, 2)}
+\`\`\`
+`
+    : ''
+}
 ${
   error.name &&
-  `**Error**
+  `## Error
 
 \`\`\`
 ${error.name}${error.message && `: ${error.message}`}
@@ -124,7 +162,7 @@ ${error.name}${error.message && `: ${error.message}`}
 }
 ${
   error.stack &&
-  `**Stacktrace**
+  `## Stacktrace
 
 \`\`\`
 ${error.stack}
@@ -133,9 +171,9 @@ ${error.stack}
 }
 ${
   deviceData &&
-  `**Device data**
+  `## Device data
 
-\`\`\`json5
+\`\`\`json
 ${JSON.stringify(deviceData, null, 2)}
 \`\`\`
 `

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { AutoColumn } from '../../components/Column'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { Link } from 'react-router-dom'
 import JSBI from 'jsbi'
 import { Token, CurrencyAmount } from '@uniswap/sdk-core'

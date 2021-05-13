@@ -63,7 +63,7 @@ export function useDerivedV3BurnInfo(
       liquidityPercentage.multiply(positionSDK.amount1.quotient).quotient
     )
 
-  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position)
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, position?.tokenId)
 
   const outOfRange =
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false

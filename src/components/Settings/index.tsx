@@ -94,6 +94,8 @@ const MenuFlyout = styled.span`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 18.125rem;
   `};
+
+  user-select: none;
 `
 
 const Break = styled.div`

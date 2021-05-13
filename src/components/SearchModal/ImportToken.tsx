@@ -1,7 +1,7 @@
 import { TokenList } from '@uniswap/token-lists/dist/types'
 import React from 'react'
 import { Token, Currency } from '@uniswap/sdk-core'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { TYPE, CloseIcon } from 'theme'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'

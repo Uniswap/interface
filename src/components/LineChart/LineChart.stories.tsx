@@ -1,7 +1,7 @@
 import { Story } from '@storybook/react/types-6-0'
 import React from 'react'
 // import Row, { RowFixed } from 'components/Row'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import Component, { LineChartProps } from './'
 import { dummyData } from './data'
 // import { AutoColumn } from 'components/Column'

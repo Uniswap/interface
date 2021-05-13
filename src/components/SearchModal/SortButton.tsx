@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { RowFixed } from '../Row'
 
 export const FilterWrapper = styled(RowFixed)`

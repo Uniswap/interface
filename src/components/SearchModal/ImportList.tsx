@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import ReactGA from 'react-ga'
 import { TYPE, CloseIcon } from 'theme'
 import Card from 'components/Card'
