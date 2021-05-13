@@ -56,7 +56,9 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
 
     const ethPairETHAmount = ethPair?.reserveOf(weth)
     const ethPairETHUSDCValue: JSBI =
-      ethPairETHAmount && usdcEthPair ? usdcEthPair.priceOf(weth).quote(ethPairETHAmount).quotient : JSBI.BigInt(0)
+      ethPairETHAmount?.greaterThan(0) && usdcEthPair?.reserveOf(weth)?.greaterThan(0)
+        ? usdcEthPair.priceOf(weth).quote(ethPairETHAmount).quotient
+        : JSBI.BigInt(0)
 
     // all other tokens
     // first try the usdc pair
@@ -81,6 +83,10 @@ export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefine
 
   return useMemo(() => {
     if (!price || !currencyAmount) return null
-    return price.quote(currencyAmount)
+    try {
+      return price.quote(currencyAmount)
+    } catch (error) {
+      return null
+    }
   }, [currencyAmount, price])
 }
