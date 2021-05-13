@@ -29,6 +29,7 @@ import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import { PositionPage } from './Pool/PositionPage'
 import AddLiquidity from './AddLiquidity'
 import { ThemedBackground } from '../theme'
+import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -76,6 +77,7 @@ export default function App() {
       <Suspense fallback={null}>
         <Route component={GoogleAnalyticsReporter} />
         <Route component={DarkModeQueryParamReader} />
+        <Route component={ApeModeQueryParamReader} />
         <AppWrapper>
           <HeaderWrapper>
             <Header />
