@@ -8,7 +8,8 @@ import {
   WXDAI,
   STAKING_REWARDS_FACTORY_ADDRESS,
   STAKING_REWARDS_FACTORY_ABI,
-  STAKING_REWARDS_DISTRIBUTION_ABI
+  STAKING_REWARDS_DISTRIBUTION_ABI,
+  SWPR_CLAIMER_ABI
 } from 'dxswap-sdk'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { useMemo } from 'react'
@@ -129,4 +130,8 @@ export function useStakingRewardsDistributionContract(
   withSignerIfPossible?: boolean
 ): Contract | null {
   return useContract(address, STAKING_REWARDS_DISTRIBUTION_ABI, withSignerIfPossible)
+}
+
+export function useSWPRClaimerContract(address?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(address, SWPR_CLAIMER_ABI, withSignerIfPossible)
 }

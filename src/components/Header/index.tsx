@@ -20,6 +20,9 @@ import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import SwaprVersionLogo from '../SwaprVersionLogo'
 import { isMobile } from 'react-device-detect'
+import useIsClaimAvailable from '../../hooks/useIsClaimAvailable'
+import { useToggleShowClaimPopup } from '../../state/application/hooks'
+import ClaimModal from '../claim/ClaimModal'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -205,6 +208,34 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   `};
 `
 
+const SWPRAmount = styled.div`
+  border-radius: 8px;
+  padding: 4px 12px;
+  height: 36px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  background-color: ${({ theme }) => theme.bg3};
+  background: radial-gradient(
+      174.47% 188.91% at 1.84% 0%,
+      ${props => props.theme.primary1} 0%,
+      ${props => props.theme.purpleBase} 100%
+    ),
+    #edeef2;
+`
+
+const SWPRWrapper = styled.div`
+  margin-right: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  :hover {
+    opacity: 0.8;
+  }
+`
+
 function Header({ history }: { history: any }) {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -212,7 +243,9 @@ function Header({ history }: { history: any }) {
   const nativeCurrency = useNativeCurrency()
   const userNativeCurrencyBalances = useNativeCurrencyBalances(account ? [account] : [])
   const userNativeCurrencyBalance = userNativeCurrencyBalances?.[account || '']
+  const { available: availableSwprClaim } = useIsClaimAvailable(account)
   const [isDark] = useDarkModeManager()
+  const toggleClaimPopup = useToggleShowClaimPopup()
 
   const handleDisabledAnchorClick = useCallback(event => {
     event.preventDefault()
@@ -220,6 +253,7 @@ function Header({ history }: { history: any }) {
 
   return (
     <HeaderFrame>
+      <ClaimModal onDismiss={toggleClaimPopup} />
       <HeaderRow isDark={isDark}>
         <Title href=".">
           <SwaprVersionLogo />
@@ -262,6 +296,11 @@ function Header({ history }: { history: any }) {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
+          {availableSwprClaim && (
+            <SWPRWrapper onClick={toggleClaimPopup}>
+              <SWPRAmount>Claim SWPR</SWPRAmount>
+            </SWPRWrapper>
+          )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userNativeCurrencyBalance ? (
               <TYPE.white

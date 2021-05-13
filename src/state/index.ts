@@ -12,8 +12,9 @@ import burn from './burn/reducer'
 import multicall from './multicall/reducer'
 import tokenList from './lists/reducer'
 import multiChainLinks from './multi-chain-links/reducer'
+import claim from './claim/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'claim']
 
 const persistenceNamespace = 'swapr'
 const store = configureStore({
@@ -27,7 +28,8 @@ const store = configureStore({
     burn,
     multicall,
     tokenList,
-    multiChainLinks
+    multiChainLinks,
+    claim
   },
   middleware: [
     ...getDefaultMiddleware({ thunk: false }),
