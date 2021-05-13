@@ -133,8 +133,21 @@ function useSwapCallArguments(
   }, [account, allowedSlippage, chainId, deadline, library, recipient, routerContract, signatureData, trade])
 }
 
-export function swapErrorToUserReadableMessage(error: { reason: string }): string {
-  switch (error.reason) {
+/**
+ * This is hacking out the revert reason from the ethers provider thrown error however it can.
+ * This object seems to be undocumented by ethers.
+ * @param error an error from the ethers provider
+ */
+export function swapErrorToUserReadableMessage(error: any): string {
+  let reason: string | undefined
+  while (Boolean(error)) {
+    reason = error.reason ?? error.message ?? reason
+    error = error.error ?? error.data.originalError
+  }
+
+  if (reason?.indexOf('execution reverted: ') === 0) reason = reason.substr('execution reverted: '.length)
+
+  switch (reason) {
     case 'UniswapV2Router: EXPIRED':
       return 'The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low.'
     case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
