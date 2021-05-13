@@ -162,9 +162,9 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'Too little received':
     case 'Too much requested':
     case 'STF':
-      return 'This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer tokens are incompatible with Uniswap V3.'
+      return 'This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
     case 'TF':
-      return 'The output token cannot be transferred. There may be an issue with the output token.'
+      return 'The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
     default:
       return 'Unknown error. Please join the Discord to get help.'
   }
