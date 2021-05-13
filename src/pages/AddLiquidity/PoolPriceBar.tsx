@@ -54,48 +54,44 @@ export function PoolPriceBar({
   pair: Pair | null | undefined
 }) {
   const theme = useContext(ThemeContext)
-  const realPercentToken0 = pair
-    ? pair.reserve0
-        .divide(pair.virtualReserve0)
-        .multiply('100')
-        .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
-    : new Fraction(JSBI.BigInt(50))
+  // const realPercentToken0 = pair
+  //   ? pair.reserve0
+  //       .divide(pair.virtualReserve0)
+  //       .multiply('100')
+  //       .divide(pair.reserve0.divide(pair.virtualReserve0).add(pair.reserve1.divide(pair.virtualReserve1)))
+  //   : new Fraction(JSBI.BigInt(50))
 
-  const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
+  // const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
 
-  const percentToken0 = realPercentToken0.toSignificant(5)
-  const percentToken1 = realPercentToken1.toSignificant(5)
+  // const percentToken0 = realPercentToken0.toSignificant(5)
+  // const percentToken1 = realPercentToken1.toSignificant(5)
 
   return (
     <AutoColumn gap="md">
-      <AutoRow justify="space-between" gap="4px">
-        <AutoColumn2>
-          <OutlineCard2>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {currencies[Field.CURRENCY_A]?.symbol}/{currencies[Field.CURRENCY_B]?.symbol} ={' '}
-              {price?.toSignificant(6) ?? '-'}
-            </Text>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              {currencies[Field.CURRENCY_B]?.symbol}/{currencies[Field.CURRENCY_A]?.symbol} ={' '}
-              {price?.invert()?.toSignificant(6) ?? '-'}
-            </Text>
-          </OutlineCard2>
-        </AutoColumn2>
-        <AutoColumn2>
-          <OutlineCard2>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              Share of Pool :{' '}
-              {noLiquidity && price
-                ? '100'
-                : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
-              %
-            </Text>
-            <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
-              Ratio: {percentToken0}%&nbsp;{currencies[Field.CURRENCY_A]?.symbol}&nbsp;-&nbsp;{percentToken1}%&nbsp;
-              {currencies[Field.CURRENCY_B]?.symbol}
-            </Text>
-          </OutlineCard2>
-        </AutoColumn2>
+      <AutoRow justify="space-around" gap="4px">
+        <AutoColumn justify="center">
+          <TYPE.black>{price?.toSignificant(6) ?? '-'}</TYPE.black>
+          <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+            {currencies[Field.CURRENCY_B]?.symbol} per {currencies[Field.CURRENCY_A]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <TYPE.black>{price?.invert()?.toSignificant(6) ?? '-'}</TYPE.black>
+          <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+            {currencies[Field.CURRENCY_A]?.symbol} per {currencies[Field.CURRENCY_B]?.symbol}
+          </Text>
+        </AutoColumn>
+        <AutoColumn justify="center">
+          <TYPE.black>
+            {noLiquidity && price
+              ? '100'
+              : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
+            %
+          </TYPE.black>
+          <Text fontWeight={500} fontSize={14} color={theme.text2} pt={1}>
+            Share of Pool
+          </Text>
+        </AutoColumn>
       </AutoRow>
     </AutoColumn>
   )

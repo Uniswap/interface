@@ -325,11 +325,11 @@ img {
       margin: 32px 10px 0 10px;
       border-radius: 10px;
       height: 80px;
-      max-width: 160px;
+      max-width: 180px;
       @include mobile {
         flex-basis: 50%;
         max-height: 55px;
-        max-width: 97px;
+        max-width: 130px;
         margin-top: 20px;
         margin-bottom: 40px;
       }
