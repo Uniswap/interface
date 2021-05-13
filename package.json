@@ -56,7 +56,7 @@
     "@web3-react/fortmatic-connector": "^6.0.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/portis-connector": "^6.0.9",
-    "@web3-react/walletconnect-connector": "^6.1.1",
+    "@web3-react/walletconnect-connector": "^6.2.0",
     "@web3-react/walletlink-connector": "^6.2.0",
     "ajv": "^6.12.3",
     "cids": "^1.0.0",
