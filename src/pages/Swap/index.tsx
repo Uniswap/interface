@@ -52,6 +52,14 @@ const SwitchIconContainer = styled.div`
   width: 100%;
 `
 
+const PaddedRowBetween = styled(RowBetween)`
+  padding: 0 8px;
+`
+
+const PaddedCard = styled(Card)`
+  padding: 0 8px;
+`
+
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [platformOverride, setPlatformOverride] = useState<RoutablePlatform | null>(null)
@@ -321,8 +329,8 @@ export default function Swap() {
               />
             </AutoColumn>
             {!showWrap && !!trade && (
-              <>
-                <Card padding="0">
+              <AutoColumn gap="8px">
+                <PaddedCard py="0px" px="8px">
                   <RowBetween alignItems="center">
                     <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
                       Best price found on{' '}
@@ -336,8 +344,8 @@ export default function Swap() {
                     </TYPE.body>
                     <QuestionHelper text="The trade is routed directly to the selected platform, so no swap or network fees are ever added by Swapr." />
                   </RowBetween>
-                </Card>
-                <RowBetween align="center">
+                </PaddedCard>
+                <PaddedRowBetween align="center" px="8px">
                   <RowFixed alignItems="center">
                     {ROUTABLE_PLATFORM_LOGO[trade.platform.name]}
                     <ClickableText marginLeft="4px" fontSize="14px" fontWeight="600" color="white">
@@ -351,8 +359,8 @@ export default function Swap() {
                       setShowInverted={setShowInverted}
                     />
                   </RowFixed>
-                </RowBetween>
-              </>
+                </PaddedRowBetween>
+              </AutoColumn>
             )}
             <div>
               {!account ? (
