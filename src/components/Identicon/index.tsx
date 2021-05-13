@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 
 import { useActiveWeb3React } from '../../hooks'
 import Jazzicon from 'jazzicon'

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { Box } from 'rebass/styled-components'
 
 const Row = styled(Box)<{

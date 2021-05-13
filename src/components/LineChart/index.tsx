@@ -3,7 +3,7 @@ import { createChart, IChartApi } from 'lightweight-charts'
 import { darken } from 'polished'
 import { RowBetween } from 'components/Row'
 import Card from '../Card'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled(Card)`

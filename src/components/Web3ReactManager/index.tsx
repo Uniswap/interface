@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { useTranslation } from 'react-i18next'
 
 import { network } from '../../connectors'

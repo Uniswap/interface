@@ -1,7 +1,7 @@
 import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { X } from 'react-feather'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import tokenLogo from '../../assets/images/token-logo.png'
 import { UNI } from '../../constants'
 import { useTotalSupply } from '../../hooks/useTotalSupply'

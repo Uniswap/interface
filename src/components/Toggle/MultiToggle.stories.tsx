@@ -1,5 +1,5 @@
 import { Story } from '@storybook/react/types-6-0'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import React, { useState } from 'react'
 import MultiToggle from './MultiToggle'
 
