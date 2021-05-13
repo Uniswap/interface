@@ -3679,10 +3679,10 @@
   resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-2.1.0.tgz#6393c62e7dc0f9338a0d7e3b0f420449ce8e493c"
   integrity sha512-b82XfUf9u8daWkpm7JOk17eozIETQNqoFaYR+nBjQ+BzreM/OwgW2v8+GSjXauTC3NZvhuot5gMJ8X05ZJc0/Q==
 
-"@ubeswap/injected-connector@^6.0.8":
-  version "6.0.8"
-  resolved "https://registry.yarnpkg.com/@ubeswap/injected-connector/-/injected-connector-6.0.8.tgz#a2a72793e5adb9f72752b348a01e9c272fd54744"
-  integrity sha512-nCOmlvrsR8C++aglzc0QafZMaCEyl4lGi+rCmvOnqdNz7JxeNenuXAyoiBJdJ4IB3ackHd4FzEzcOGsma149yg==
+"@ubeswap/injected-connector@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@ubeswap/injected-connector/-/injected-connector-6.1.0.tgz#867f8074d362e390a01be385319082fb9e998b11"
+  integrity sha512-1YpAoZX49PfNldzcX6OUgxvytDoeVvYh6/L/kVP8xVUlI34ISQ4GGACzC49BwXNzIfBp72KY2V0RTuYCzOCaPw==
   dependencies:
     "@web3-react/abstract-connector" "^6.0.7"
     "@web3-react/types" "^6.0.7"
