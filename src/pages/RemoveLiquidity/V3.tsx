@@ -292,16 +292,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 </RowFixed>
                 <RangeBadge removed={removed} inRange={!outOfRange} />
               </RowBetween>
-
-              <>
-                <TYPE.main>Collect as WETH</TYPE.main>
-                <Toggle
-                  id="receive-as-weth"
-                  isActive={receiveWETH}
-                  toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
-                />
-              </>
-
               <LightCard>
                 <AutoColumn gap="md">
                   <TYPE.main fontWeight={400}>Amount</TYPE.main>
@@ -378,6 +368,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   ) : null}
                 </AutoColumn>
               </LightCard>
+
+              <RowBetween>
+                <TYPE.main>Collect as WETH</TYPE.main>
+                <Toggle
+                  id="receive-as-weth"
+                  isActive={receiveWETH}
+                  toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                />
+              </RowBetween>
+
               <div style={{ display: 'flex' }}>
                 <AutoColumn gap="12px" style={{ flex: '1' }}>
                   <ButtonConfirmed

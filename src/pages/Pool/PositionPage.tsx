@@ -607,37 +607,27 @@ export function PositionPage({
                       )}
                     </AutoColumn>
                     {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || !!collectMigrationHash) ? (
-                      <div>
-                        <ButtonConfirmed
-                          disabled={collecting || !!collectMigrationHash}
-                          confirmed={!!collectMigrationHash && !isCollectPending}
-                          width="fit-content"
-                          style={{ borderRadius: '12px' }}
-                          padding="4px 8px"
-                          onClick={() => setShowConfirm(true)}
-                        >
-                          {!!collectMigrationHash && !isCollectPending ? (
-                            <TYPE.main color={theme.text1}> Collected</TYPE.main>
-                          ) : isCollectPending || collecting ? (
-                            <TYPE.main color={theme.text1}>
-                              {' '}
-                              <Dots>Collecting</Dots>
-                            </TYPE.main>
-                          ) : (
-                            <>
-                              <TYPE.main color={theme.white}>Collect fees</TYPE.main>
-                            </>
-                          )}
-                        </ButtonConfirmed>
-                        <>
-                          <TYPE.main>Collect as WETH</TYPE.main>
-                          <Toggle
-                            id="receive-as-weth"
-                            isActive={receiveWETH}
-                            toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
-                          />
-                        </>
-                      </div>
+                      <ButtonConfirmed
+                        disabled={collecting || !!collectMigrationHash}
+                        confirmed={!!collectMigrationHash && !isCollectPending}
+                        width="fit-content"
+                        style={{ borderRadius: '12px' }}
+                        padding="4px 8px"
+                        onClick={() => setShowConfirm(true)}
+                      >
+                        {!!collectMigrationHash && !isCollectPending ? (
+                          <TYPE.main color={theme.text1}> Collected</TYPE.main>
+                        ) : isCollectPending || collecting ? (
+                          <TYPE.main color={theme.text1}>
+                            {' '}
+                            <Dots>Collecting</Dots>
+                          </TYPE.main>
+                        ) : (
+                          <>
+                            <TYPE.main color={theme.white}>Collect fees</TYPE.main>
+                          </>
+                        )}
+                      </ButtonConfirmed>
                     ) : null}
                   </RowBetween>
                 </AutoColumn>
@@ -671,6 +661,16 @@ export function PositionPage({
                     </RowBetween>
                   </AutoColumn>
                 </LightCard>
+                <AutoColumn gap="md">
+                  <RowBetween>
+                    <TYPE.main>Collect as WETH</TYPE.main>
+                    <Toggle
+                      id="receive-as-weth"
+                      isActive={receiveWETH}
+                      toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                    />
+                  </RowBetween>
+                </AutoColumn>
               </AutoColumn>
             </DarkCard>
           </AutoColumn>
