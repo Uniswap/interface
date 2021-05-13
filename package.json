@@ -9,7 +9,7 @@
     "@reach/portal": "^0.10.3",
     "@reduxjs/toolkit": "^1.5.1",
     "@typechain/ethers-v5": "^6.0.5",
-    "@types/jest": "^25.2.1",
+    "@types/jest": "^26.0.23",
     "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
     "@types/lodash": "^4.14.168",
     "@types/lodash.flatmap": "^4.5.6",
