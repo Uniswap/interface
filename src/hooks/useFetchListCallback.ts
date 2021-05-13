@@ -3,7 +3,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { getNetworkLibrary, NETWORK_CHAIN_ID } from '../connectors'
+import { getNetworkLibrary } from '../connectors'
 import { AppDispatch } from '../state'
 import { fetchTokenList } from '../state/lists/actions'
 import getTokenList from '../utils/getTokenList'
@@ -15,13 +15,12 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
   const dispatch = useDispatch<AppDispatch>()
 
   const ensResolver = useCallback(
-    (ensName: string) => {
+    async (ensName: string) => {
       if (!library || chainId !== ChainId.MAINNET) {
-        if (NETWORK_CHAIN_ID === ChainId.MAINNET) {
-          const networkLibrary = getNetworkLibrary()
-          if (networkLibrary) {
-            return resolveENSContentHash(ensName, networkLibrary)
-          }
+        const networkLibrary = getNetworkLibrary()
+        const network = await networkLibrary.getNetwork()
+        if (networkLibrary && network.chainId === ChainId.MAINNET) {
+          return resolveENSContentHash(ensName, networkLibrary)
         }
         throw new Error('Could not construct mainnet ENS resolver')
       }
