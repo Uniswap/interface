@@ -11,6 +11,13 @@ import { NetworkConnector } from './NetworkConnector'
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
+const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
+const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
+const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
+
+if (typeof INFURA_KEY === 'undefined') {
+  throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
+}
 
 const NETWORK_URLS: {
   [chainId in ChainId]: string
@@ -22,15 +29,7 @@ const NETWORK_URLS: {
   [ChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
 }
 
-const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
-const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
-const WALLETCONNECT_BRIDGE_URL = process.env.REACT_APP_WALLETCONNECT_BRIDGE_URL
-
 const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ROPSTEN, ChainId.KOVAN, ChainId.GÖRLI]
-
-if (typeof INFURA_KEY === 'undefined') {
-  throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
-}
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
