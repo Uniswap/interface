@@ -15,7 +15,7 @@
     "@types/lodash.flatmap": "^4.5.6",
     "@types/multicodec": "^1.0.0",
     "@types/node": "^14.14.37",
-    "@types/qs": "^6.9.2",
+    "@types/qs": "^6.9.6",
     "@types/react": "^17.0.4",
     "@types/react-dom": "^17.0.3",
     "@types/react-redux": "^7.1.8",
