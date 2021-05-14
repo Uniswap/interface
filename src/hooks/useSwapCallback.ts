@@ -27,19 +27,17 @@ interface SwapCall {
   value: string
 }
 
-interface SwapCallEstimate {
-  call: SwapCall
-}
-
-interface SuccessfulCall extends SwapCallEstimate {
+interface SuccessfulCall {
   call: SwapCall
   gasEstimate: BigNumber
 }
 
-interface FailedCall extends SwapCallEstimate {
+interface FailedCall {
   call: SwapCall
   error: Error
 }
+
+type SwapCallEstimate = SuccessfulCall | FailedCall
 
 /**
  * Returns the swap calls that can be used to make the trade
@@ -140,6 +138,10 @@ const ERROR_REASON_SEARCH_STRING = 'execution reverted: '
  * @param error an error from the ethers provider
  */
 export function swapErrorToUserReadableMessage(error: any): string {
+  if (typeof error === 'string') return `Swap error: "${error}"`
+  if (typeof error === 'undefined' || error === null || typeof error !== 'object')
+    return `Received an unexpected error.`
+
   let reason: string | undefined
   while (Boolean(error)) {
     for (const field of [error.reason, error.message]) {
@@ -171,7 +173,9 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'TF':
       return 'The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
     default:
-      return `Unexpected error: "${reason ?? error.message ?? error.reason}". Please join the Discord to get help.`
+      return `Unexpected error: "${
+        reason ?? error?.message ?? error?.reason ?? 'error could not be parsed'
+      }". Please join the Discord to get help.`
   }
 }
 
