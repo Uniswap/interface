@@ -171,7 +171,7 @@ export function SwapCallbackError({ error }: { error: string }) {
       <SwapCallbackErrorInnerAlertTriangle>
         <AlertTriangle size={24} />
       </SwapCallbackErrorInnerAlertTriangle>
-      <p>{error}</p>
+      <p style={{ wordBreak: 'break-word' }}>{error}</p>
     </SwapCallbackErrorInner>
   )
 }
