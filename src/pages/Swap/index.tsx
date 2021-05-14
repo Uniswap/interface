@@ -526,12 +526,12 @@ export default function Swap({ history }: RouteComponentProps) {
                         approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                       }
                     >
-                      <AutoRow justify="space-between">
+                      <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
                         <span style={{ display: 'flex', alignItems: 'center' }}>
                           <CurrencyLogo
                             currency={currencies[Field.INPUT]}
                             size={'20px'}
-                            style={{ marginRight: '8px' }}
+                            style={{ marginRight: '8px', flexShrink: 0 }}
                           />
                           {/* we need to shorten this string on mobile */}
                           {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
@@ -551,7 +551,7 @@ export default function Swap({ history }: RouteComponentProps) {
                               '. You only have to do this once per token.'
                             }
                           >
-                            <HelpCircle size="20" color={'white'} />
+                            <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
                           </MouseoverTooltip>
                         )}
                       </AutoRow>
