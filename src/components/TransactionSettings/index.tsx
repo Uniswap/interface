@@ -323,6 +323,12 @@ export default function SlippageTabs({
                       setPreferredGasPriceInput('')
                       setRawPreferredGasPrice(MainnetGasPrice.INSTANT)
                     }}
+                    onDoubleClick={() => {
+                      if (rawPreferredGasPrice === MainnetGasPrice.INSTANT) {
+                        setPreferredGasPriceInput('')
+                        setRawPreferredGasPrice(null)
+                      }
+                    }}
                     active={rawPreferredGasPrice === MainnetGasPrice.INSTANT}
                   >
                     INSTANT
@@ -334,6 +340,12 @@ export default function SlippageTabs({
                       setPreferredGasPriceInput('')
                       setRawPreferredGasPrice(MainnetGasPrice.FAST)
                     }}
+                    onDoubleClick={() => {
+                      if (rawPreferredGasPrice === MainnetGasPrice.FAST) {
+                        setPreferredGasPriceInput('')
+                        setRawPreferredGasPrice(null)
+                      }
+                    }}
                     active={rawPreferredGasPrice === MainnetGasPrice.FAST}
                   >
                     FAST
@@ -344,6 +356,12 @@ export default function SlippageTabs({
                     onClick={() => {
                       setPreferredGasPriceInput('')
                       setRawPreferredGasPrice(MainnetGasPrice.NORMAL)
+                    }}
+                    onDoubleClick={() => {
+                      if (rawPreferredGasPrice === MainnetGasPrice.NORMAL) {
+                        setPreferredGasPriceInput('')
+                        setRawPreferredGasPrice(null)
+                      }
                     }}
                     active={rawPreferredGasPrice === MainnetGasPrice.NORMAL}
                   >
