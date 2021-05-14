@@ -135,7 +135,7 @@ export function useTradeExactInAllPlatforms(
     useTradeExactIn(currencyAmountIn, currencyOut, RoutablePlatform.BAOSWAP),
     useTradeExactIn(currencyAmountIn, currencyOut, RoutablePlatform.LEVINSWAP)
   ]
-  return sortTradesByExecutionPrice(bestTrades)
+  return sortTradesByExecutionPrice(bestTrades).filter(trade => !!trade)
 }
 
 /**
@@ -154,5 +154,5 @@ export function useTradeExactOutAllPlatforms(
     useTradeExactOut(currencyIn, currencyAmountOut, RoutablePlatform.BAOSWAP),
     useTradeExactOut(currencyIn, currencyAmountOut, RoutablePlatform.LEVINSWAP)
   ]
-  return sortTradesByExecutionPrice(bestTrades)
+  return sortTradesByExecutionPrice(bestTrades).filter(trade => !!trade)
 }

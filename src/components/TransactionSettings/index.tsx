@@ -202,7 +202,7 @@ export default function SlippageTabs({
     if (rawPreferredGasPrice) {
       if (chainId !== ChainId.MAINNET && rawPreferredGasPrice in MainnetGasPrice) {
         setPreferredGasPricePalceholder('')
-      } else {
+      } else if (!(rawPreferredGasPrice in MainnetGasPrice)) {
         setPreferredGasPricePalceholder(
           Number.parseFloat(
             formatUnits(
