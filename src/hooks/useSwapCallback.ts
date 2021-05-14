@@ -275,8 +275,8 @@ export function useSwapCallback(
           .then((response) => {
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
-            const inputAmount = trade.maximumAmountIn(allowedSlippage).toSignificant(4)
-            const outputAmount = trade.minimumAmountOut(allowedSlippage).toSignificant(4)
+            const inputAmount = trade.inputAmount.toSignificant(4)
+            const outputAmount = trade.outputAmount.toSignificant(4)
 
             const base = `Swap ${inputAmount} ${inputSymbol} for ${outputAmount} ${outputSymbol}`
             const withRecipient =
@@ -312,5 +312,5 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, allowedSlippage, addTransaction])
+  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
 }
