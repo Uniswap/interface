@@ -19,6 +19,7 @@ export function useGasFeesUSD(
   return useMemo(() => {
     if (loadingNativeCurrencyUSDPrice) return { loading: true, gasFeesUSD: [] }
     if (
+      !gasEstimations ||
       gasEstimations.length === 0 ||
       !preferredGasPrice ||
       !chainId ||

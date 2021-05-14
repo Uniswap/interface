@@ -1,9 +1,10 @@
 import { Trade } from 'dxswap-sdk'
 import { BigNumber } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useActiveWeb3React } from '.'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
-import { useBlockNumber } from '../state/application/hooks'
+import { MainnetGasPrice } from '../state/application/actions'
+import { useMainnetGasPrices } from '../state/application/hooks'
 import { Field } from '../state/swap/actions'
 import { tryParseAmount, useSwapState } from '../state/swap/hooks'
 import { useUserPreferredGasPrice } from '../state/user/hooks'
@@ -19,9 +20,9 @@ export function useSwapsGasEstimations(
   recipientAddressOrName: string | null,
   trades?: (Trade | undefined)[]
 ): { loading: boolean; estimations: (BigNumber | null)[][] } {
-  const blockNumber = useBlockNumber() // used to force updates at each block
   const { account, library, chainId } = useActiveWeb3React()
   const platformSwapCalls = useSwapsCallArguments(trades, allowedSlippage, recipientAddressOrName)
+  const mainnetGasPrices = useMainnetGasPrices()
   const [preferredGasPrice] = useUserPreferredGasPrice()
 
   const {
@@ -39,13 +40,19 @@ export function useSwapsGasEstimations(
   // this boolean represents whether the user has approved the traded token and whether they
   // have enough balance for the trade to go through or not. If any of the preconditions are
   // not satisfied, the trade won't go through, so no gas estimations are performed
-  const calculateGasFees =
-    !!account &&
-    !!preferredGasPrice &&
-    typedIndependentCurrencyAmount &&
-    independentCurrencyBalance &&
-    (independentCurrencyBalance.greaterThan(typedIndependentCurrencyAmount) ||
-      independentCurrencyBalance.equalTo(typedIndependentCurrencyAmount))
+  const calculateGasFees = useMemo(() => {
+    return (
+      !!account &&
+      !!trades &&
+      trades.length > 0 &&
+      !!preferredGasPrice &&
+      (preferredGasPrice in MainnetGasPrice ? !!mainnetGasPrices : true) &&
+      typedIndependentCurrencyAmount &&
+      independentCurrencyBalance &&
+      (independentCurrencyBalance.greaterThan(typedIndependentCurrencyAmount) ||
+        independentCurrencyBalance.equalTo(typedIndependentCurrencyAmount))
+    )
+  }, [account, independentCurrencyBalance, mainnetGasPrices, preferredGasPrice, trades, typedIndependentCurrencyAmount])
 
   const [loading, setLoading] = useState(false)
   const [estimations, setEstimations] = useState<(BigNumber | null)[][]>([])
@@ -87,7 +94,7 @@ export function useSwapsGasEstimations(
       return
     }
     updateEstimations()
-  }, [chainId, library, recipient, trades, updateEstimations, blockNumber, account, calculateGasFees])
+  }, [chainId, library, recipient, trades, updateEstimations, account, calculateGasFees])
 
   return { loading: loading, estimations }
 }
