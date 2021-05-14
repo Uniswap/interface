@@ -142,12 +142,14 @@ const ERROR_REASON_SEARCH_STRING = 'execution reverted: '
 export function swapErrorToUserReadableMessage(error: any): string {
   let reason: string | undefined
   while (Boolean(error)) {
-    reason = error.reason ?? error.message ?? reason
-    if (reason?.indexOf(ERROR_REASON_SEARCH_STRING) === 0) {
-      reason = reason.substr(ERROR_REASON_SEARCH_STRING.length)
-      break
+    for (const field of [error.reason, error.message]) {
+      if (typeof field === 'string' && field.indexOf(ERROR_REASON_SEARCH_STRING) === 0) {
+        reason = field.substr(ERROR_REASON_SEARCH_STRING.length)
+        break
+      }
+      error = error.data?.originalError ?? error.error
     }
-    error = error.error ?? error.data?.originalError
+    if (reason) break
   }
 
   switch (reason) {
@@ -169,9 +171,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'TF':
       return 'The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
     default:
-      return `Unexpected error: "${
-        reason ? reason : error.message ?? error.reason
-      }". Please join the Discord to get help.`
+      return `Unexpected error: "${reason ?? error.message ?? error.reason}". Please join the Discord to get help.`
   }
 }
 
