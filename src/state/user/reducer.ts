@@ -70,7 +70,7 @@ export const initialState: UserState = {
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   userMultihop: DEFAULT_USER_MULTIHOP_ENABLED,
-  userPreferredGasPrice: null,
+  userPreferredGasPrice: MainnetGasPrice.FAST,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
