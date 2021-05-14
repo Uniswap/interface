@@ -216,17 +216,15 @@ export function useSwapCallback(
           swapCalls.map((call) => {
             const { address, calldata, value } = call
 
-            const tx = {
-              ...(!value || isZero(value)
+            const tx =
+              !value || isZero(value)
                 ? { from: account, to: address, data: calldata }
                 : {
                     from: account,
                     to: address,
                     data: calldata,
                     value,
-                  }),
-              gasPrice: BigNumber.from(100e9),
-            }
+                  }
 
             return library
               .estimateGas(tx)
@@ -240,7 +238,7 @@ export function useSwapCallback(
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
                 return library
-                  .call({ ...tx })
+                  .call(tx)
                   .then((result) => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
