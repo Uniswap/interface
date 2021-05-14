@@ -142,17 +142,20 @@ export function swapErrorToUserReadableMessage(error: any): string {
   if (typeof error === 'undefined' || error === null || typeof error !== 'object')
     return `Received an unexpected error.`
 
+  let errorSearch = error
   let reason: string | undefined
-  while (Boolean(error)) {
-    for (const field of [error.reason, error.message]) {
+  while (Boolean(errorSearch)) {
+    for (const field of [errorSearch.reason, errorSearch.message]) {
       if (typeof field === 'string' && field.indexOf(ERROR_REASON_SEARCH_STRING) === 0) {
         reason = field.substr(ERROR_REASON_SEARCH_STRING.length)
         break
       }
-      error = error.data?.originalError ?? error.error
+      errorSearch = errorSearch.data?.originalError ?? errorSearch.error
     }
     if (reason) break
   }
+
+  const fallbackText = reason ?? error?.message ?? error?.reason
 
   switch (reason) {
     case 'UniswapV2Router: EXPIRED':
@@ -173,9 +176,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'TF':
       return 'The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.'
     default:
-      return `Unexpected error: "${
-        reason ?? error?.message ?? error?.reason ?? 'error could not be parsed'
-      }". Please join the Discord to get help.`
+      return `Unexpected error${fallbackText ? `: "${fallbackText}"` : ''}. Please join the Discord to get help.`
   }
 }
 
