@@ -32,7 +32,7 @@ import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
-  grid-template-columns: 120px 1fr 120px;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   justify-content: space-between;
   align-items: center;
