@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { ChainId, CurrencyAmount, RoutablePlatform, Trade, TradeType } from 'dxswap-sdk'
+import { CurrencyAmount, RoutablePlatform, Trade, TradeType } from 'dxswap-sdk'
 import { AutoColumn } from '../Column'
 import { TYPE } from '../../theme'
 import CurrencyLogo from '../CurrencyLogo'
@@ -14,7 +14,6 @@ import { useSwapState } from '../../state/swap/hooks'
 import { useGasFeesUSD } from '../../hooks/useGasFees'
 import { RowFixed } from '../Row'
 import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 import styled from 'styled-components'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { Field } from '../../state/swap/actions'
@@ -54,9 +53,7 @@ function GasFee({ loading, gasFeeUSD }: GasFeeProps) {
       </TYPE.main>
     )
   }
-  return (
-    <WarningHelper text="Could not estimate gas fee. Please make sure you've approved the traded token and that you have enough funds." />
-  )
+  return <WarningHelper text="Could not estimate gas fee. Please make sure you've approved the traded token." />
 }
 
 export function SwapPlatformSelector({
@@ -64,7 +61,6 @@ export function SwapPlatformSelector({
   selectedTrade,
   onSelectedPlatformChange
 }: SwapPlatformSelectorProps) {
-  const { account, chainId } = useActiveWeb3React()
   const [allowedSlippage] = useUserSlippageTolerance()
   const { recipient } = useSwapState()
   const { loading: loadingTradesGasEstimates, estimations } = useSwapsGasEstimations(
@@ -77,6 +73,8 @@ export function SwapPlatformSelector({
   )
   const loadingGasFees = loadingGasFeesUSD || loadingTradesGasEstimates
   const debouncedLoadingGasFees = useDebounce(loadingGasFees, 1000)
+
+  const showGasFees = estimations.length === allPlatformTrades?.length
 
   const handleSelectedTradeOverride = useCallback(
     event => {
@@ -98,7 +96,7 @@ export function SwapPlatformSelector({
             <td>
               <TableHeaderText>FEE</TableHeaderText>
             </td>
-            {!!account && chainId === ChainId.MAINNET && (
+            {showGasFees && (
               <td align="right">
                 <TableHeaderText>GAS</TableHeaderText>
               </td>
@@ -132,7 +130,7 @@ export function SwapPlatformSelector({
                     {realizedLPFee ? `${realizedLPFee.toFixed(2)}%` : '-'}
                   </TYPE.main>
                 </td>
-                {!!account && chainId === ChainId.MAINNET && (
+                {showGasFees && (
                   <td width="44px" align="right">
                     <GasFee loading={debouncedLoadingGasFees} gasFeeUSD={gasFeeUSD} />
                   </td>
