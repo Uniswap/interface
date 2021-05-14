@@ -6,6 +6,7 @@ import { INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useBlockNumber } from '../state/application/hooks'
 import { Field } from '../state/swap/actions'
 import { tryParseAmount, useSwapState } from '../state/swap/hooks'
+import { useUserPreferredGasPrice } from '../state/user/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { calculateGasMargin } from '../utils'
 import isZero from '../utils/isZero'
@@ -21,6 +22,7 @@ export function useSwapsGasEstimations(
   const blockNumber = useBlockNumber() // used to force updates at each block
   const { account, library, chainId } = useActiveWeb3React()
   const platformSwapCalls = useSwapsCallArguments(trades, allowedSlippage, recipientAddressOrName)
+  const [preferredGasPrice] = useUserPreferredGasPrice()
 
   const {
     independentField,
@@ -39,6 +41,7 @@ export function useSwapsGasEstimations(
   // not satisfied, the trade won't go through, so no gas estimations are performed
   const calculateGasFees =
     !!account &&
+    !!preferredGasPrice &&
     typedIndependentCurrencyAmount &&
     independentCurrencyBalance &&
     (independentCurrencyBalance.greaterThan(typedIndependentCurrencyAmount) ||

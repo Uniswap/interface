@@ -93,6 +93,12 @@ export default function AdvancedSwapDetailsDropdown({
     setUserPreferredMainnetGasPrice(priceVariant)
   }
 
+  const getGasPriceDoubleClickHandler = (priceVariant: MainnetGasPrice) => () => {
+    if (userPreferredMainnetGasPrice === priceVariant) {
+      setUserPreferredMainnetGasPrice(null)
+    }
+  }
+
   return (
     <HideableAutoColumn gap="8px" show={!!trade}>
       <AdvancedDetailsFooter fullWidth padding="12px">
@@ -113,6 +119,7 @@ export default function AdvancedSwapDetailsDropdown({
                     <PurpleGasPriceOption
                       compact
                       onClick={getGasPriceClickHandler(MainnetGasPrice.INSTANT)}
+                      onDoubleClick={getGasPriceDoubleClickHandler(MainnetGasPrice.INSTANT)}
                       active={userPreferredMainnetGasPrice === MainnetGasPrice.INSTANT}
                     >
                       INSTANT{' '}
@@ -122,6 +129,7 @@ export default function AdvancedSwapDetailsDropdown({
                     <OrangeGasPriceOption
                       compact
                       onClick={getGasPriceClickHandler(MainnetGasPrice.FAST)}
+                      onDoubleClick={getGasPriceDoubleClickHandler(MainnetGasPrice.FAST)}
                       active={userPreferredMainnetGasPrice === MainnetGasPrice.FAST}
                     >
                       FAST {Number.parseFloat(formatUnits(mainnetGasPrices[MainnetGasPrice.FAST], 'gwei')).toFixed(0)}{' '}
@@ -130,6 +138,7 @@ export default function AdvancedSwapDetailsDropdown({
                     <GreenGasPriceOption
                       compact
                       onClick={getGasPriceClickHandler(MainnetGasPrice.NORMAL)}
+                      onDoubleClick={getGasPriceDoubleClickHandler(MainnetGasPrice.NORMAL)}
                       active={userPreferredMainnetGasPrice === MainnetGasPrice.NORMAL}
                     >
                       NORMAL{' '}
