@@ -72,7 +72,7 @@ export function SwapPlatformSelector({
     estimations.map(estimation => (estimation && estimation.length > 0 ? estimation[0] : null))
   )
   const loadingGasFees = loadingGasFeesUSD || loadingTradesGasEstimates
-  const debouncedLoadingGasFees = useDebounce(loadingGasFees, 1000)
+  const debouncedLoadingGasFees = useDebounce(loadingGasFees, 2000)
 
   const showGasFees = estimations.length === allPlatformTrades?.length
 
