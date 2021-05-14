@@ -9,7 +9,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { Currency, ETHER, Token } from 'libs/sdk/src'
 import ImportRow from './ImportRow'
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } from 'hooks/Tokens'
+import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList, useIsTokenActive } from 'hooks/Tokens'
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Row, { RowBetween, RowFixed } from '../Row'
@@ -81,6 +81,7 @@ export function CurrencySearch({
   const searchToken = useToken(searchQuery)
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
+  const isSearchTokenActive = useIsTokenActive(searchToken)
 
   const showETH: boolean = useMemo(() => {
     const s = searchQuery.toLowerCase().trim()
@@ -193,7 +194,7 @@ export function CurrencySearch({
 
       <Separator />
 
-      {searchToken && !searchTokenIsAdded ? (
+      {searchToken && !searchTokenIsAdded && !isSearchTokenActive ? (
         <Column style={{ padding: '20px 0', height: '100%' }}>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
