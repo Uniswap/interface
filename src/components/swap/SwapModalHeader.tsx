@@ -31,12 +31,10 @@ export const ArrowWrapper = styled.div`
   margin-top: -18px;
   margin-bottom: -18px;
   left: calc(50% - 16px);
-  /* transform: rotate(90deg); */
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: ${({ theme }) => theme.bg1};
-  /* border: 4px solid ${({ theme }) => theme.bg0}; */
   z-index: 2;
 `
 
@@ -53,15 +51,12 @@ export default function SwapModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
-  const maximumAmountIn = trade.maximumAmountIn(allowedSlippage)
-  const minimumAmountOut = trade.minimumAmountOut(allowedSlippage)
-
   const theme = useContext(ThemeContext)
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const fiatValueInput = useUSDCValue(maximumAmountIn)
-  const fiatValueOutput = useUSDCValue(minimumAmountOut)
+  const fiatValueInput = useUSDCValue(trade.inputAmount)
+  const fiatValueOutput = useUSDCValue(trade.outputAmount)
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -86,7 +81,7 @@ export default function SwapModalHeader({
                 fontWeight={500}
                 color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary1 : ''}
               >
-                {maximumAmountIn.toSignificant(6)}
+                {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
           </RowBetween>
@@ -117,7 +112,7 @@ export default function SwapModalHeader({
             </RowFixed>
             <RowFixed gap={'0px'}>
               <TruncatedText fontSize={24} fontWeight={500}>
-                {minimumAmountOut.toSignificant(6)}
+                {trade.outputAmount.toSignificant(6)}
               </TruncatedText>
             </RowFixed>
           </RowBetween>
@@ -127,11 +122,7 @@ export default function SwapModalHeader({
         <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
           {'Price:'}
         </TYPE.body>
-        <TradePrice
-          price={trade.worstExecutionPrice(allowedSlippage)}
-          showInverted={showInverted}
-          setShowInverted={setShowInverted}
-        />
+        <TradePrice price={trade.executionPrice} showInverted={showInverted} setShowInverted={setShowInverted} />
       </RowBetween>
 
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
@@ -155,12 +146,12 @@ export default function SwapModalHeader({
         </SwapShowAcceptChanges>
       ) : null}
 
-      {/* <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
+      <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
           <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             {`Output is estimated. You will receive at least `}
             <b>
-              {minimumAmountOut.toSignificant(6)} {trade.outputAmount.currency.symbol}
+              {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>
@@ -168,12 +159,12 @@ export default function SwapModalHeader({
           <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             {`Input is estimated. You will sell at most `}
             <b>
-              {maximumAmountIn.toSignificant(6)} {trade.inputAmount.currency.symbol}
+              {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>
         )}
-      </AutoColumn> */}
+      </AutoColumn>
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
           <TYPE.main>

@@ -49,7 +49,6 @@ import {
 import { useExpertModeManager, useUserSingleHopOnly } from '../../state/user/hooks'
 import { HideSmall, LinkStyledButton, TYPE } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
-import { computePriceImpactWithMaximumSlippage } from '../../utils/computePriceImpactWithMaximumSlippage'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -132,10 +131,10 @@ export default function Swap({ history }: RouteComponentProps) {
             [Field.OUTPUT]: parsedAmount,
           }
         : {
-            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.maximumAmountIn(allowedSlippage),
-            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.minimumAmountOut(allowedSlippage),
+            [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
+            [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
           },
-    [allowedSlippage, independentField, parsedAmount, showWrap, trade]
+    [independentField, parsedAmount, showWrap, trade]
   )
 
   const fiatValueInput = useUSDCValue(parsedAmounts[Field.INPUT])
@@ -292,7 +291,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // warnings on the greater of fiat value price impact and execution price impact
   const priceImpactSeverity = useMemo(() => {
-    const executionPriceImpact = trade ? computePriceImpactWithMaximumSlippage(trade, allowedSlippage) : undefined
+    const executionPriceImpact = trade?.priceImpact
     return warningSeverity(
       executionPriceImpact && priceImpact
         ? executionPriceImpact.greaterThan(priceImpact)
@@ -300,7 +299,7 @@ export default function Swap({ history }: RouteComponentProps) {
           : priceImpact
         : executionPriceImpact ?? priceImpact
     )
-  }, [allowedSlippage, priceImpact, trade])
+  }, [priceImpact, trade])
 
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
@@ -475,7 +474,7 @@ export default function Swap({ history }: RouteComponentProps) {
               {trade ? (
                 <RowFixed>
                   <TradePrice
-                    price={trade.worstExecutionPrice(allowedSlippage)}
+                    price={trade.executionPrice}
                     showInverted={showInverted}
                     setShowInverted={setShowInverted}
                   />
