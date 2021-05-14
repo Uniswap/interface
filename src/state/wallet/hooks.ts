@@ -134,5 +134,5 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
   const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
-  return balances ?? {}
+  return useMemo(() => balances ?? {}, [balances])
 }

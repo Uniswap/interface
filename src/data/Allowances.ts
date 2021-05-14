@@ -60,7 +60,7 @@ export function useTokenAllowancesForMultipleSpenders(
   const contract = useTokenContract(token?.address, false)
 
   const inputs = useMemo(() => {
-    if (spenders && spenders.length > 0) return spenders.map(spender => [owner, spender])
+    if (spenders && spenders.length > 0 && !!owner) return spenders.map(spender => [owner, spender])
     return []
   }, [owner, spenders])
   const allowances = useSingleContractMultipleData(contract, 'allowance', inputs)

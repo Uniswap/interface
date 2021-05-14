@@ -36,7 +36,10 @@ export function useSwapsGasEstimations(
   const independentCurrencyId = isExactIn ? inputCurrencyId : outputCurrencyId
   const independentCurrency = useCurrency(independentCurrencyId)
   const independentCurrencyBalance = useCurrencyBalance(account || undefined, independentCurrency || undefined)
-  const typedIndependentCurrencyAmount = tryParseAmount(typedValue, independentCurrency || undefined, chainId)
+  const typedIndependentCurrencyAmount = useMemo(
+    () => tryParseAmount(typedValue, independentCurrency || undefined, chainId),
+    [chainId, independentCurrency, typedValue]
+  )
   const routerAddresses = useMemo(() => {
     if (!trades) return undefined
     const rawRouterAddresses = trades.map(trade => trade?.platform?.routerAddress[chainId || ChainId.MAINNET])
