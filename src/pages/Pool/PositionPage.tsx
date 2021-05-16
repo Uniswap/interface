@@ -568,10 +568,22 @@ export function PositionPage({
                 <LightCard padding="12px 16px">
                   <AutoColumn gap="md">
                     <RowBetween>
-                      <RowFixed>
-                        <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
-                      </RowFixed>
+                      {typeof chainId === 'number' &&
+                      typeof position?.pool.token0.address === 'string' &&
+                      typeof position?.pool.token1.address === 'string' ? (
+                        <ExternalLink
+                          href={getEtherscanLink(
+                            chainId,
+                            inverted ? position?.pool.token0.address : position?.pool.token1.address,
+                            'address'
+                          )}
+                        >
+                          <RowFixed>
+                            <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                            <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
+                          </RowFixed>
+                        </ExternalLink>
+                      ) : null}
                       <RowFixed>
                         <TYPE.main>
                           {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
@@ -584,10 +596,22 @@ export function PositionPage({
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
-                      <RowFixed>
-                        <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>{currencyBase?.symbol}</TYPE.main>
-                      </RowFixed>
+                      {typeof chainId === 'number' &&
+                      typeof position?.pool.token0.address === 'string' &&
+                      typeof position?.pool.token1.address === 'string' ? (
+                        <ExternalLink
+                          href={getEtherscanLink(
+                            chainId,
+                            inverted ? position?.pool.token1.address : position?.pool.token0.address,
+                            'address'
+                          )}
+                        >
+                          <RowFixed>
+                            <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                            <TYPE.main>{currencyBase?.symbol}</TYPE.main>
+                          </RowFixed>
+                        </ExternalLink>
+                      ) : null}
                       <RowFixed>
                         <TYPE.main>
                           {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
