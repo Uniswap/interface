@@ -29,7 +29,7 @@ import {
   ROUTER_ADDRESS
 } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
-import { useActiveWeb3React, useChain } from '../../hooks'
+import { useActiveWeb3React, useChain, useInjectedProvider } from '../../hooks'
 import { useCurrency, useAllSwapTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
@@ -58,10 +58,14 @@ import TokenMigrationModal from '../../components/TokenMigration'
 import { isTokenOnTokenList } from '../../utils'
 import Maintenance from '../../components/swap/Maintenance'
 import usePegSwapCallback, { PegSwapType } from '../../hooks/usePegSwapCallback'
+import useAddChain from '../../hooks/useAddChain'
+import { FUSE_CHAIN } from '../../constants/chains'
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const tokens = useAllSwapTokens()
+  const injectedProvider = useInjectedProvider()
+  const { addChain } = useAddChain()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -495,7 +499,11 @@ export default function Swap() {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              injectedProvider?.isMetaMask && injectedProvider?._state?.isUnlocked ? (
+                <ButtonLight onClick={() => addChain(FUSE_CHAIN)}>Switch to Fuse</ButtonLight>
+              ) : (
+                <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              )
             ) : showPegSwap ? (
               <>
                 {(approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING) && (

@@ -11,6 +11,9 @@ interface Window {
     isMetaMask?: true
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
+    request?: (...args: any[]) => any
+    chainId?: string
+    _state?: { isConnected?: boolean; isUnlocked?: boolean }
   }
   web3?: {}
 }

@@ -1,20 +1,20 @@
 import { useCallback, useState } from 'react'
-import { useActiveWeb3React } from './index'
+import { useInjectedProvider } from './index'
 import { Chain } from '../constants/chains'
 
 const SWITCH_ERROR_MSG = 'Failed to Switch Network'
 
 export default function useAddChain() {
-  const { library } = useActiveWeb3React()
   const [error, setError] = useState<string | undefined>()
+  const provider = useInjectedProvider()
 
   const addChain = useCallback(
     async (chain: Chain) => {
-      if (library && library.provider && library.provider.request) {
+      if (provider && provider.request) {
         setError(undefined)
 
         try {
-          const response = await library.provider.request({
+          const response = await provider.request({
             method: 'wallet_addEthereumChain',
             params: [
               {
@@ -36,7 +36,7 @@ export default function useAddChain() {
         }
       }
     },
-    [library]
+    [provider]
   )
 
   return { error, addChain }
