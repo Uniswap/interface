@@ -6,7 +6,7 @@ import { tryParseAmount } from 'state/swap/hooks'
 import { useBestV3TradeExactOut, V3TradeState } from './useBestV3Trade'
 
 // USDC amount used when calculating spot price for a given currency.
-// The amount is large enouhg to filter low liquidity pairs.
+// The amount is large enough to filter low liquidity pairs.
 const usdcCurrencyAmount = tryParseAmount('10000', USDC)
 
 /**
