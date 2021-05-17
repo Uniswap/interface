@@ -63,7 +63,7 @@ function useSwapCallArguments(
   const routerContract = useV2RouterContract()
   const argentWalletContract = useArgentWalletContract()
   const inputTokenContract = useTokenContract(
-    trade && trade.inputAmount && trade.inputAmount.currency && trade.inputAmount.currency instanceof Token
+    trade && trade.inputAmount && trade.inputAmount.currency && trade.inputAmount.currency.isToken
       ? trade.inputAmount.currency.address
       : undefined
   )
@@ -96,6 +96,7 @@ function useSwapCallArguments(
       }
       return swapMethods.map(({ methodName, args, value }) => {
         if (argentWalletContract && inputTokenContract) {
+          debugger
           return {
             address: argentWalletContract.address,
             calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
