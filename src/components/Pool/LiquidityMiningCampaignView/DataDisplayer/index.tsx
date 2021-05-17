@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 import { TYPE } from '../../../../theme'
+import { Colors } from '../../../../theme/styled'
 import { AutoColumn } from '../../../Column'
 
 interface DataDisplayerProps {
@@ -8,9 +9,10 @@ interface DataDisplayerProps {
   dataTextSize?: number
   fontWeight?: number
   alignTitleRight?: boolean
+  color?: keyof Colors
 }
 
-function DataDisplayer({ title, dataTextSize, data, alignTitleRight, fontWeight }: DataDisplayerProps) {
+function DataDisplayer({ title, dataTextSize, data, alignTitleRight, fontWeight, color }: DataDisplayerProps) {
   return (
     <AutoColumn gap="4px">
       <TYPE.small
@@ -23,7 +25,11 @@ function DataDisplayer({ title, dataTextSize, data, alignTitleRight, fontWeight 
       >
         {title}
       </TYPE.small>
-      <TYPE.small fontWeight={fontWeight ?? '500'} fontSize={dataTextSize ? `${dataTextSize}px` : '14px'}>
+      <TYPE.small
+        fontWeight={fontWeight ?? '500'}
+        fontSize={dataTextSize ? `${dataTextSize}px` : '14px'}
+        color={color || 'text3'}
+      >
         {data}
       </TYPE.small>
     </AutoColumn>

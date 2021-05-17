@@ -18,7 +18,7 @@ function TokenAmountDisplayer({ amount, fontSize = '14px', alignRight, showUSDVa
   return (
     <Flex justifyContent={alignRight ? 'flex-end' : 'flex-start'} alignItems="center">
       <Box mr="4px">
-        <TYPE.small fontWeight="500" fontSize={fontSize}>
+        <TYPE.small fontWeight="500" fontSize={fontSize} color="text3">
           {showUSDValue
             ? `$${amount.nativeCurrencyAmount.multiply(nativeCurrencyUSDPrice).toSignificant(4)}`
             : amount.toSignificant(4)}

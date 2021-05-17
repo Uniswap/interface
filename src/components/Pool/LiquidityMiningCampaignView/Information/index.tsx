@@ -176,7 +176,9 @@ function Information({
                 {!endsAt || !startsAt ? (
                   <Skeleton width="136px" height="14px" />
                 ) : (
-                  <Countdown to={upcoming ? startsAt : endsAt} />
+                  <TYPE.body fontSize="14px" fontWeight="500" lineHeight="14px" color="text3">
+                    <Countdown to={upcoming ? startsAt : endsAt} />
+                  </TYPE.body>
                 )}
               </TYPE.small>
             </Box>
@@ -188,6 +190,7 @@ function Information({
               data={!apy ? <Skeleton width="80px" height="22px" /> : `${apy.toFixed(2)}%`}
               dataTextSize={22}
               fontWeight={600}
+              color="white"
             />
           </Box>
         </Flex>
