@@ -6,10 +6,11 @@ interface DataDisplayerProps {
   title: ReactNode
   data: ReactNode
   dataTextSize?: number
+  fontWeight?: number
   alignTitleRight?: boolean
 }
 
-function DataDisplayer({ title, dataTextSize, data, alignTitleRight }: DataDisplayerProps) {
+function DataDisplayer({ title, dataTextSize, data, alignTitleRight, fontWeight }: DataDisplayerProps) {
   return (
     <AutoColumn gap="4px">
       <TYPE.small
@@ -22,7 +23,7 @@ function DataDisplayer({ title, dataTextSize, data, alignTitleRight }: DataDispl
       >
         {title}
       </TYPE.small>
-      <TYPE.small fontWeight="500" fontSize={dataTextSize ? `${dataTextSize}px` : '14px'}>
+      <TYPE.small fontWeight={fontWeight ?? '500'} fontSize={dataTextSize ? `${dataTextSize}px` : '14px'}>
         {data}
       </TYPE.small>
     </AutoColumn>
