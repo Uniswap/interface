@@ -241,7 +241,9 @@ export default function About() {
           <Text fontSize={[12, 18]} fontWeight={500}>
             Code Audited
           </Text>
-          <img src={require('../../assets/svg/chainsecurity.svg')} />
+          <ExternalLink href="https://chainsecurity.com/wp-content/uploads/2021/04/ChainSecurity_KyberNetwork_DMM_Dynamic-Market-Making_Final.pdf">
+            <img src={require('../../assets/svg/chainsecurity.svg')} />
+          </ExternalLink>
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
