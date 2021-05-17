@@ -104,7 +104,7 @@ function useSwapCallArguments(
                 },
               ],
             ]),
-            value: '0x',
+            value: '0x0',
           }
         } else {
           return {
