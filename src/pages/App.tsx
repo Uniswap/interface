@@ -12,24 +12,25 @@ import { ApplicationModal } from '../state/application/actions'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
-import Earn from './Earn'
-import Manage from './Earn/Manage'
-import MigrateV2 from './MigrateV2'
-import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
-import Pool from './Pool'
-import PoolV2 from './Pool/v2'
-import PoolFinder from './PoolFinder'
-import RemoveLiquidity from './RemoveLiquidity'
-import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import Vote from './Vote'
-import VotePage from './Vote/VotePage'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import { PositionPage } from './Pool/PositionPage'
-import AddLiquidity from './AddLiquidity'
 import { ThemedBackground } from '../theme'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+
+const AddLiquidity = React.lazy(() => import('./AddLiquidity'))
+const Earn = React.lazy(() => import('./Earn'))
+const Manage = React.lazy(() => import('./Earn/Manage'))
+const MigrateV2 = React.lazy(() => import('./MigrateV2'))
+const MigrateV2Pair = React.lazy(() => import('./MigrateV2/MigrateV2Pair'))
+const Pool = React.lazy(() => import('./Pool'))
+const PoolFinder = React.lazy(() => import('./PoolFinder'))
+const PoolV2 = React.lazy(() => import('./Pool/v2'))
+const RemoveLiquidity = React.lazy(() => import('./RemoveLiquidity'))
+const RemoveLiquidityV3 = React.lazy(() => import('./RemoveLiquidity/V3'))
+const Vote = React.lazy(() => import('./Vote'))
+const VotePage = React.lazy(() => import('./Vote/VotePage'))
 
 const AppWrapper = styled.div`
   display: flex;
