@@ -173,6 +173,53 @@ function CurrentPriceCard({
   )
 }
 
+function LinkedCurrency({
+  position0_address,
+  position1_address,
+  chainId,
+  inverted,
+  currency,
+}: {
+  position0_address?: string
+  position1_address?: string
+  chainId?: number
+  inverted?: boolean
+  currency?: Currency
+}) {
+  let address: string | undefined = ''
+  if (inverted) {
+    address = position0_address
+  } else {
+    address = position1_address
+  }
+
+  if (typeof address === 'string' && typeof chainId === 'number') {
+    const row = (
+      <RowFixed>
+        <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+        <TYPE.main>{currency?.symbol}</TYPE.main>
+      </RowFixed>
+    )
+    const row_with_link = (
+      <ExternalLink href={getEtherscanLink(chainId, address, 'address')}>
+        <RowFixed>
+          <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+          <TYPE.main>
+            {currency?.symbol}
+            <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
+          </TYPE.main>
+        </RowFixed>
+      </ExternalLink>
+    )
+    if (address.toLowerCase() == '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'.toLowerCase()) {
+      return row
+    } else {
+      return row_with_link
+    }
+  }
+  return null
+}
+
 function getRatio(
   lower: Price<Currency, Currency>,
   current: Price<Currency, Currency>,
@@ -568,22 +615,13 @@ export function PositionPage({
                 <LightCard padding="12px 16px">
                   <AutoColumn gap="md">
                     <RowBetween>
-                      {typeof chainId === 'number' &&
-                      typeof position?.pool.token0.address === 'string' &&
-                      typeof position?.pool.token1.address === 'string' ? (
-                        <ExternalLink
-                          href={getEtherscanLink(
-                            chainId,
-                            inverted ? position?.pool.token0.address : position?.pool.token1.address,
-                            'address'
-                          )}
-                        >
-                          <RowFixed>
-                            <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                            <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
-                          </RowFixed>
-                        </ExternalLink>
-                      ) : null}
+                      <LinkedCurrency
+                        position0_address={position?.pool.token0.address}
+                        position1_address={position?.pool.token1.address}
+                        chainId={chainId}
+                        inverted={inverted}
+                        currency={currencyQuote}
+                      />
                       <RowFixed>
                         <TYPE.main>
                           {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
@@ -596,22 +634,13 @@ export function PositionPage({
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
-                      {typeof chainId === 'number' &&
-                      typeof position?.pool.token0.address === 'string' &&
-                      typeof position?.pool.token1.address === 'string' ? (
-                        <ExternalLink
-                          href={getEtherscanLink(
-                            chainId,
-                            inverted ? position?.pool.token1.address : position?.pool.token0.address,
-                            'address'
-                          )}
-                        >
-                          <RowFixed>
-                            <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                            <TYPE.main>{currencyBase?.symbol}</TYPE.main>
-                          </RowFixed>
-                        </ExternalLink>
-                      ) : null}
+                      <LinkedCurrency
+                        position0_address={position?.pool.token1.address}
+                        position1_address={position?.pool.token0.address}
+                        chainId={chainId}
+                        inverted={inverted}
+                        currency={currencyBase}
+                      />
                       <RowFixed>
                         <TYPE.main>
                           {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
