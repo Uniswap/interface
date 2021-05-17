@@ -208,6 +208,7 @@ function V2PairMigration({
           tickUpper,
           amount0: token0Value.quotient,
           amount1: token1Value.quotient,
+          useFullPrecision: false, // we don't want full precision as this is used to calculate slippage amounts
         })
       : undefined
 
