@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { Settings, X, Info, Code, MessageCircle } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
   useExpertModeManager,
   useUserTransactionTTL,
   useUserSlippageTolerance,
+  useUserPreferredGasPrice,
   useMultihopManager
 } from '../../state/user/hooks'
 import { TYPE, ExternalLink, LinkStyledButton, CloseIcon } from '../../theme'
@@ -20,6 +20,7 @@ import Row, { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import SwaprVersionLogo from '../SwaprVersionLogo'
+import { DarkCard } from '../Card'
 
 const StyledMenuIcon = styled(Settings)`
   height: 18px;
@@ -77,12 +78,11 @@ const MenuModal = styled(Modal)`
   `};
 `
 
-const ModalContentWrapper = styled.div`
+const ModalContentWrapper = styled(DarkCard)`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 26px 0;
-  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
 `
 
 const MenuModalContentWrapper = styled(ModalContentWrapper)`
@@ -122,6 +122,7 @@ export default function SettingsTab() {
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
+  const [userPreferredGasPrice, setUserPreferredGasPrice] = useUserPreferredGasPrice()
   const [ttl, setTtl] = useUserTransactionTTL()
   const [expertMode, toggleExpertMode] = useExpertModeManager()
   const [multihop, toggleMultihop] = useMultihopManager()
@@ -188,6 +189,8 @@ export default function SettingsTab() {
             <TransactionSettings
               rawSlippage={userSlippageTolerance}
               setRawSlippage={setUserslippageTolerance}
+              rawPreferredGasPrice={userPreferredGasPrice}
+              setRawPreferredGasPrice={setUserPreferredGasPrice}
               deadline={ttl}
               setDeadline={setTtl}
               multihop={multihop}

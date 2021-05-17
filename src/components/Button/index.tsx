@@ -22,7 +22,7 @@ const Base = styled(RebassButton)<{
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-align: center;
-  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '8px')};
+  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '12px')};
   outline: none;
   border: none;
   color: ${({ theme }) => theme.white};

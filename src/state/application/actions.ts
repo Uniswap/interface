@@ -21,7 +21,16 @@ export enum ApplicationModal {
   NETWORK_SWITCHER
 }
 
+export enum MainnetGasPrice {
+  INSTANT = 'INSTANT',
+  FAST = 'FAST',
+  NORMAL = 'NORMAL'
+}
+
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
+export const updateMainnetGasPrices = createAction<{ [variant in MainnetGasPrice]: string } | null>(
+  'application/updateMainnetGasPrices'
+)
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
 export const addPopup = createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>(
   'application/addPopup'

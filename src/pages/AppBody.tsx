@@ -1,3 +1,4 @@
+import { transparentize } from 'polished'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { DarkCard } from '../components/Card'
@@ -6,11 +7,17 @@ export const BodyWrapper = styled(DarkCard)<{ tradeDetailsOpen?: boolean }>`
   position: relative;
   max-width: 420px;
   width: 100%;
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: 12px;
+  padding: 12px;
   transition: box-shadow 0.3s ease;
-  box-shadow: 0px 6px 14px 0px #000000 10%;
   ::before {
+    border-radius: 12px;
+    background: linear-gradient(
+        130.17deg,
+        ${props => transparentize(0.75, props.theme.white)} -5.69%,
+        ${props => transparentize(1, props.theme.black)} 106.79%
+      ),
+      ${props => props.theme.dark1};
     background: ${props => props.theme.dark1};
   }
 `

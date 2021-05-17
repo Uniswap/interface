@@ -4,7 +4,11 @@ import { useMemo } from 'react'
 import ERC20_INTERFACE from '../constants/abis/erc20'
 
 import { useMulticallContract, useTokenContract } from '../hooks/useContract'
-import { useMultipleContractSingleData, useSingleCallResult } from '../state/multicall/hooks'
+import {
+  useMultipleContractSingleData,
+  useSingleCallResult,
+  useSingleContractMultipleData
+} from '../state/multicall/hooks'
 
 export function useTokenAllowance(token?: Token, owner?: string, spender?: string): TokenAmount | undefined {
   const contract = useTokenContract(token?.address, false)
@@ -46,4 +50,23 @@ export function useTokenAllowances(
       return new TokenAmount(relatedToken, allowance.toString())
     })
   }, [multicall, tokens, rawAllowances])
+}
+
+export function useTokenAllowancesForMultipleSpenders(
+  token?: Token,
+  owner?: string,
+  spenders?: string[]
+): TokenAmount[] | undefined {
+  const contract = useTokenContract(token?.address, false)
+
+  const inputs = useMemo(() => {
+    if (spenders && spenders.length > 0 && !!owner) return spenders.map(spender => [owner, spender])
+    return []
+  }, [owner, spenders])
+  const allowances = useSingleContractMultipleData(contract, 'allowance', inputs)
+
+  return useMemo(() => {
+    if (!token) return undefined
+    return allowances.map(allowance => new TokenAmount(token, allowance.result?.[0] ?? '0'))
+  }, [token, allowances])
 }

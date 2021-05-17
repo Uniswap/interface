@@ -107,7 +107,9 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const nativeCurrency = useNativeCurrency()
-  const isNativeCurrency = currencyId?.toUpperCase() === nativeCurrency.symbol?.toUpperCase()
-  const token = useToken(isNativeCurrency ? undefined : currencyId)
-  return isNativeCurrency ? nativeCurrency : token
+  const token = useToken(currencyId)
+  return useMemo(() => {
+    const isNativeCurrency = currencyId?.toUpperCase() === nativeCurrency.symbol?.toUpperCase()
+    return isNativeCurrency ? nativeCurrency : token
+  }, [currencyId, nativeCurrency, token])
 }

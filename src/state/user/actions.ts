@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { MainnetGasPrice } from '../application/actions'
 
 export interface SerializedToken {
   chainId: number
@@ -17,6 +18,9 @@ export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>(
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserMultihop = createAction<{ userMultihop: boolean }>('user/updateUserMultihop')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
+export const updateUserPreferredGasPrice = createAction<MainnetGasPrice | string | null>(
+  'user/updateUserPreferredGasPrice'
+)
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number }>(
   'user/updateUserSlippageTolerance'
 )
