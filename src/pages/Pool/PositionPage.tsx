@@ -24,7 +24,17 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Token, Currency, CurrencyAmount, Percent, Fraction, Price, Ether } from '@uniswap/sdk-core'
+import {
+  Token,
+  Currency,
+  CurrencyAmount,
+  Percent,
+  Fraction,
+  Price,
+  Ether,
+  currencyEquals,
+  ETHER,
+} from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -171,6 +181,28 @@ function CurrentPriceCard({
         <ExtentsText>{currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
       </AutoColumn>
     </LightCard>
+  )
+}
+
+function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Currency }) {
+  const address = (currency as Token)?.address
+
+  if (typeof chainId === 'number' && address) {
+    return (
+      <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
+        <RowFixed>
+          <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+          <TYPE.main>{currency?.symbol} ↗</TYPE.main>
+        </RowFixed>
+      </ExternalLink>
+    )
+  }
+
+  return (
+    <RowFixed>
+      <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+      <TYPE.main>{currency?.symbol}</TYPE.main>
+    </RowFixed>
   )
 }
 
@@ -569,10 +601,7 @@ export function PositionPage({
                 <LightCard padding="12px 16px">
                   <AutoColumn gap="md">
                     <RowBetween>
-                      <RowFixed>
-                        <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
-                      </RowFixed>
+                      <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                       <RowFixed>
                         <TYPE.main>
                           {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
@@ -585,10 +614,7 @@ export function PositionPage({
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
-                      <RowFixed>
-                        <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>{currencyBase?.symbol}</TYPE.main>
-                      </RowFixed>
+                      <LinkedCurrency chainId={chainId} currency={currencyBase} />
                       <RowFixed>
                         <TYPE.main>
                           {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
@@ -677,7 +703,12 @@ export function PositionPage({
                     </RowBetween>
                   </AutoColumn>
                 </LightCard>
-                {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) && !collectMigrationHash ? (
+                {ownsNFT &&
+                (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+                currency0 &&
+                currency1 &&
+                (currencyEquals(currency0, ETHER) || currencyEquals(currency1, ETHER)) &&
+                !collectMigrationHash ? (
                   <AutoColumn gap="md">
                     <RowBetween>
                       <TYPE.main>Collect as WETH</TYPE.main>
