@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, currencyEquals, Percent } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
