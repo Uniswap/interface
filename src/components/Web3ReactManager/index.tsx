@@ -4,8 +4,8 @@ import styled from 'styled-components/macro'
 import { useTranslation } from 'react-i18next'
 
 import { network } from '../../connectors'
-import { useEagerConnect, useInactiveListener } from '../../hooks'
-import { NetworkContextName } from '../../constants'
+import { useEagerConnect, useInactiveListener } from '../../hooks/web3'
+import { NetworkContextName } from '../../constants/misc'
 import Loader from '../Loader'
 
 const MessageWrapper = styled.div`

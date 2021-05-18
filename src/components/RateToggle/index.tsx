@@ -1,7 +1,7 @@
 import React from 'react'
 import { Currency } from '@uniswap/sdk-core'
 import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 
 // the order of displayed base currencies from left to right is always in sort order

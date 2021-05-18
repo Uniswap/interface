@@ -3,7 +3,7 @@ import { Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { useUserSingleHopOnly } from '../state/user/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { useActiveWeb3React } from './index'
+import { useActiveWeb3React } from './web3'
 import { useV3SwapPools } from './useV3SwapPools'
 
 function computeAllRoutes(

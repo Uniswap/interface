@@ -1,7 +1,7 @@
 import { Token, CurrencyAmount, Percent, Ether, currencyEquals, ETHER } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useCallback, useMemo } from 'react'

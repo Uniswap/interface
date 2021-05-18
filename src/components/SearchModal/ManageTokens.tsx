@@ -1,5 +1,6 @@
 import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
 import Column from 'components/Column'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { PaddedColumn, Separator, SearchInput } from './styleds'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { TYPE, ExternalLinkIcon, TrashIcon, ButtonText, ExternalLink } from 'theme'
@@ -8,8 +9,8 @@ import styled from 'styled-components/macro'
 import { useUserAddedTokens, useRemoveUserAddedToken } from 'state/user/hooks'
 import { Token } from '@uniswap/sdk-core'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { getEtherscanLink, isAddress } from 'utils'
-import { useActiveWeb3React } from 'hooks'
+import { isAddress } from 'utils'
+import { useActiveWeb3React } from 'hooks/web3'
 import Card from 'components/Card'
 import ImportRow from './ImportRow'
 import useTheme from '../../hooks/useTheme'
@@ -78,7 +79,7 @@ export default function ManageTokens({
         <RowBetween key={token.address} width="100%">
           <RowFixed>
             <CurrencyLogo currency={token} size={'20px'} />
-            <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+            <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
               <TYPE.main ml={'10px'} fontWeight={600}>
                 {token.symbol}
               </TYPE.main>
@@ -86,7 +87,7 @@ export default function ManageTokens({
           </RowFixed>
           <RowFixed>
             <TrashIcon onClick={() => removeToken(chainId, token.address)} />
-            <ExternalLinkIcon href={getEtherscanLink(chainId, token.address, 'address')} />
+            <ExternalLinkIcon href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)} />
           </RowFixed>
         </RowBetween>
       ))

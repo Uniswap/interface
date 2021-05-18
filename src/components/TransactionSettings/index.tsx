@@ -6,7 +6,7 @@ import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/index'
+import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { darken } from 'polished'
 import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 
