@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { MIN_ETH } from '../constants'
+import { MIN_ETH } from '../constants/misc'
 
 /**
  * Given some token amount, return the max that can be spent of it

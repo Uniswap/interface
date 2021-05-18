@@ -3,7 +3,7 @@ import { Text } from 'rebass'
 import { ChainId, Currency, currencyEquals, Token, ETHER } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
-import { SUGGESTED_BASES } from '../../constants'
+import { SUGGESTED_BASES } from '../../constants/routing'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'

@@ -1,5 +1,5 @@
 import { createStore, Store } from 'redux'
-import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
+import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { updateVersion } from '../global/actions'
 import reducer, { initialState, UserState } from './reducer'
 

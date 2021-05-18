@@ -1,9 +1,9 @@
 import { ChainId, Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { USDC } from '../constants'
+import { USDC } from '../constants/tokens'
 import { useV2TradeExactOut } from './useV2Trade'
 import { useBestV3TradeExactOut, V3TradeState } from './useBestV3Trade'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from './web3'
 
 // USDC amount used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
