@@ -8,7 +8,6 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
-import { V3_MIGRATOR_ADDRESSES } from '../../constants/addresses'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -17,7 +16,8 @@ import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
-import { calculateGasMargin, isAddress } from '../../utils'
+import { isAddress } from '../../utils'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import { BodyWrapper } from '../AppBody'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -255,9 +255,8 @@ function V2PairMigration({
   const migrator = useV2MigratorContract()
 
   // approvals
-  const migratorAddress = chainId && V3_MIGRATOR_ADDRESSES[chainId]
-  const [approval, approveManually] = useApproveCallback(pairBalance, migratorAddress)
-  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(pairBalance, migratorAddress)
+  const [approval, approveManually] = useApproveCallback(pairBalance, migrator?.address)
+  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(pairBalance, migrator?.address)
 
   const approve = useCallback(async () => {
     if (isNotUniswap) {
@@ -397,8 +396,8 @@ function V2PairMigration({
       <TYPE.body my={9} style={{ fontWeight: 400 }}>
         This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
         completely trustless thanks to the{' '}
-        {chainId && migratorAddress && (
-          <ExternalLink href={getExplorerLink(chainId, migratorAddress, ExplorerDataType.ADDRESS)}>
+        {chainId && migrator && (
+          <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
             <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
           </ExternalLink>
         )}

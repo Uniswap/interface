@@ -18,7 +18,6 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFlat } from '../../components/Row'
 
 import { ZERO_PERCENT } from '../../constants/misc'
-import { V2_ROUTER_ADDRESS } from '../../constants/addresses'
 import { useV2RouterContract } from '../../hooks/useContract'
 import { PairState } from '../../hooks/useV2Pairs'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -33,7 +32,8 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageToleranceWithDefault } from '../../state/user/hooks'
 import { TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount } from '../../utils'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
+import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
@@ -123,13 +123,13 @@ export default function AddLiquidity({
     {}
   )
 
+  const router = useV2RouterContract()
+
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], V2_ROUTER_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], V2_ROUTER_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], router?.address)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], router?.address)
 
   const addTransaction = useTransactionAdder()
-
-  const router = useV2RouterContract()
 
   async function onAdd() {
     if (!chainId || !library || !account || !router) return

@@ -1,84 +1,6 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { AddressZero } from '@ethersproject/constants'
-import { ChainId, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { calculateGasMargin, calculateSlippageAmount, isAddress, shortenAddress } from '.'
-import { ExplorerDataType, getExplorerLink } from './getExplorerLink'
+import { isAddress, shortenAddress } from '.'
 
 describe('utils', () => {
-  describe('#getExplorerLink', () => {
-    it('correct for tx', () => {
-      expect(getExplorerLink(1, 'abc', ExplorerDataType.TRANSACTION)).toEqual('https://etherscan.io/tx/abc')
-    })
-    it('correct for token', () => {
-      expect(getExplorerLink(1, 'abc', ExplorerDataType.TOKEN)).toEqual('https://etherscan.io/token/abc')
-    })
-    it('correct for address', () => {
-      expect(getExplorerLink(1, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://etherscan.io/address/abc')
-    })
-    it('unrecognized chain id defaults to mainnet', () => {
-      expect(getExplorerLink(2, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://etherscan.io/address/abc')
-    })
-    it('ropsten', () => {
-      expect(getExplorerLink(3, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://ropsten.etherscan.io/address/abc')
-    })
-    it('enum', () => {
-      expect(getExplorerLink(ChainId.RINKEBY, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-        'https://rinkeby.etherscan.io/address/abc'
-      )
-    })
-  })
-
-  describe('#calculateSlippageAmount', () => {
-    it('bounds are correct', () => {
-      const tokenAmount = CurrencyAmount.fromRawAmount(new Token(ChainId.MAINNET, AddressZero, 0), '100')
-      expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow('Unexpected slippage')
-      expect(() => calculateSlippageAmount(tokenAmount, new Percent(10_001, 10_000))).toThrow('Unexpected slippage')
-      expect(calculateSlippageAmount(tokenAmount, new Percent(0, 10_000)).map((bound) => bound.toString())).toEqual([
-        '100',
-        '100',
-      ])
-      expect(calculateSlippageAmount(tokenAmount, new Percent(5, 100)).map((bound) => bound.toString())).toEqual([
-        '95',
-        '105',
-      ])
-      expect(calculateSlippageAmount(tokenAmount, new Percent(100, 10_000)).map((bound) => bound.toString())).toEqual([
-        '99',
-        '101',
-      ])
-      expect(calculateSlippageAmount(tokenAmount, new Percent(200, 10_000)).map((bound) => bound.toString())).toEqual([
-        '98',
-        '102',
-      ])
-      expect(
-        calculateSlippageAmount(tokenAmount, new Percent(10000, 10_000)).map((bound) => bound.toString())
-      ).toEqual(['0', '200'])
-    })
-    it('works for 18 decimals', () => {
-      const tokenAmount = CurrencyAmount.fromRawAmount(new Token(ChainId.MAINNET, AddressZero, 18), '100')
-      expect(() => calculateSlippageAmount(tokenAmount, new Percent(-1, 10_000))).toThrow('Unexpected slippage')
-      expect(() => calculateSlippageAmount(tokenAmount, new Percent(10_001, 10_000))).toThrow('Unexpected slippage')
-      expect(calculateSlippageAmount(tokenAmount, new Percent(0, 10_000)).map((bound) => bound.toString())).toEqual([
-        '100',
-        '100',
-      ])
-      expect(calculateSlippageAmount(tokenAmount, new Percent(5, 100)).map((bound) => bound.toString())).toEqual([
-        '95',
-        '105',
-      ])
-      expect(calculateSlippageAmount(tokenAmount, new Percent(100, 10_000)).map((bound) => bound.toString())).toEqual([
-        '99',
-        '101',
-      ])
-      expect(calculateSlippageAmount(tokenAmount, new Percent(200, 10_000)).map((bound) => bound.toString())).toEqual([
-        '98',
-        '102',
-      ])
-      expect(
-        calculateSlippageAmount(tokenAmount, new Percent(10000, 10_000)).map((bound) => bound.toString())
-      ).toEqual(['0', '200'])
-    })
-  })
-
   describe('#isAddress', () => {
     it('returns false if not', () => {
       expect(isAddress('')).toBe(false)
@@ -116,13 +38,6 @@ describe('utils', () => {
 
     it('renders checksummed address', () => {
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'.toLowerCase())).toBe('0x2E1b...54CC')
-    })
-  })
-
-  describe('#calculateGasMargin', () => {
-    it('adds 20%', () => {
-      expect(calculateGasMargin(BigNumber.from(1000)).toString()).toEqual('1200')
-      expect(calculateGasMargin(BigNumber.from(50)).toString()).toEqual('60')
     })
   })
 })
