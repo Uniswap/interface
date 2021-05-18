@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, currencyEquals, Percent } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
@@ -88,7 +88,7 @@ export default function AddLiquidity({
   const currencyB = useCurrency(currencyIdB)
 
   // keep track for UI display purposes of user selected base currency
-  const [baseCurrency, setBaseCurrency] = useState(currencyA)
+  const baseCurrency = currencyA
   const quoteCurrency = useMemo(
     () =>
       currencyA && currencyB && baseCurrency
@@ -98,14 +98,6 @@ export default function AddLiquidity({
         : undefined,
     [currencyA, currencyB, baseCurrency]
   )
-
-  // url params are the source truth, so we have to do this
-  useEffect(() => {
-    setBaseCurrency(currencyA)
-    return () => {
-      setBaseCurrency(undefined)
-    }
-  }, [currencyA, currencyB])
 
   // mint state
   const { independentField, typedValue, startPriceTypedValue } = useV3MintState()
