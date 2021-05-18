@@ -61,5 +61,6 @@ export function useV2Pairs(currencies: [Currency | undefined, Currency | undefin
 }
 
 export function useV2Pair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {
-  return useV2Pairs([[tokenA, tokenB]])[0]
+  const inputs: [[Currency | undefined, Currency | undefined]] = useMemo(() => [[tokenA, tokenB]], [tokenA, tokenB])
+  return useV2Pairs(inputs)[0]
 }
