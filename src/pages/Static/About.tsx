@@ -226,7 +226,7 @@ export default function About() {
         <ButtonOutlined
           padding="12px 28px"
           as={ExternalLink}
-          href={`https://docs.dmm.exchange`}
+          href={`https://discord.com/invite/HdXWUb2pQM`}
           style={{ width: 'auto', fontSize: '16px' }}
         >
           Developer Support
@@ -241,7 +241,9 @@ export default function About() {
           <Text fontSize={[12, 18]} fontWeight={500}>
             Code Audited
           </Text>
-          <img src={require('../../assets/svg/about_icon_insurance.svg')} />
+          <ExternalLink href="https://chainsecurity.com/wp-content/uploads/2021/04/ChainSecurity_KyberNetwork_DMM_Dynamic-Market-Making_Final.pdf">
+            <img src={require('../../assets/svg/chainsecurity.svg')} />
+          </ExternalLink>
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
@@ -297,15 +299,15 @@ export default function About() {
             </Text>
           </div>
           <div className={style.right}>
-            <a>
+            <ExternalLink href={`https://twitter.com/KyberNetwork/`}>
               <Image src={require('../../assets/svg/about_icon_twitter.svg')} />
-            </a>
-            <a>
+            </ExternalLink>
+            <ExternalLink href={`https://discord.gg/HdXWUb2pQM`}>
               <Image src={require('../../assets/svg/about_icon_discord.svg')} />
-            </a>
-            <a>
+            </ExternalLink>
+            <ExternalLink href={`https://blog.kyber.network`}>
               <Image src={require('../../assets/svg/about_icon_medium.svg')} />
-            </a>
+            </ExternalLink>
             <Text fontSize={12} ml={['auto', 0]}>
               (c) dmm.exchange
             </Text>

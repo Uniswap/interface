@@ -97,6 +97,14 @@ export const MAINNET_TOKEN_LIST = {
       name: 'xKNCa',
       decimals: 18,
       logoURI: 'https://assets.coingecko.com/coins/images/13995/thumb/Token-4.png?1613545763'
+    },
+    {
+      chainId: 1,
+      address: '0x6710c63432A2De02954fc0f851db07146a6c0312',
+      symbol: 'MFG',
+      name: 'Smart MFG',
+      decimals: 18,
+      logoURI: 'https://svgshare.com/i/XRH.svg'
     }
   ],
   version: {

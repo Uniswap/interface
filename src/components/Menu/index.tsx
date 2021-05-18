@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react'
-import { Info, PieChart, Menu as MenuIcon, Zap } from 'react-feather'
+import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
@@ -124,6 +124,10 @@ export default function Menu() {
           <MenuItem id="link" href={DMM_INFO_URL}>
             <PieChart size={14} />
             Analytics
+          </MenuItem>
+          <MenuItem id="link" href="https://docs.dmm.exchange">
+            <BookOpen size={14} />
+            Docs
           </MenuItem>
         </MenuFlyout>
       )}
