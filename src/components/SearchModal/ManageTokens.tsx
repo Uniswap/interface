@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: calc(100% - 60px);
   position: relative;
-  padding-bottom: 60px;
+  padding-bottom: 80px;
 `
 
 const Footer = styled.div`
@@ -96,7 +96,7 @@ export default function ManageTokens({
 
   return (
     <Wrapper>
-      <Column style={{ width: '100%', flex: '1 1' }}>
+      <Column style={{ width: '100%', height: '100%', flex: '1 1' }}>
         <PaddedColumn gap="14px">
           <Row>
             <SearchInput
@@ -122,7 +122,7 @@ export default function ManageTokens({
           )}
         </PaddedColumn>
         <Separator />
-        <PaddedColumn gap="lg">
+        <PaddedColumn gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
           <RowBetween>
             <TYPE.main fontWeight={600}>
               {userAddedTokens?.length} Custom {userAddedTokens.length === 1 ? 'Token' : 'Tokens'}
