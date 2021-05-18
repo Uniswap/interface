@@ -229,7 +229,7 @@ export default function AddLiquidity({
               createPool: noLiquidity,
             })
 
-      let txn = {
+      let txn: { to: string; data: string; value: string } = {
         to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
         data: calldata,
         value,
