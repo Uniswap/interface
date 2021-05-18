@@ -24,7 +24,17 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Token, Currency, CurrencyAmount, Percent, Fraction, Price, Ether } from '@uniswap/sdk-core'
+import {
+  Token,
+  Currency,
+  CurrencyAmount,
+  Percent,
+  Fraction,
+  Price,
+  Ether,
+  currencyEquals,
+  ETHER,
+} from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -677,7 +687,12 @@ export function PositionPage({
                     </RowBetween>
                   </AutoColumn>
                 </LightCard>
-                {ownsNFT && (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) && !collectMigrationHash ? (
+                {ownsNFT &&
+                (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
+                currency0 &&
+                currency1 &&
+                (currencyEquals(currency0, ETHER) || currencyEquals(currency1, ETHER)) &&
+                !collectMigrationHash ? (
                   <AutoColumn gap="md">
                     <RowBetween>
                       <TYPE.main>Collect as WETH</TYPE.main>
