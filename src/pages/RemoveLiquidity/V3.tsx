@@ -21,7 +21,7 @@ import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent, currencyEquals, ETHER } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
 import { Wrapper, SmallMaxButton, ResponsiveHeaderText } from './styled'
 import Loader from 'components/Loader'
@@ -33,6 +33,7 @@ import useTheme from 'hooks/useTheme'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import RangeBadge from 'components/Badge/RangeBadge'
 import Toggle from 'components/Toggle'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
 
@@ -369,14 +370,19 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 </AutoColumn>
               </LightCard>
 
-              <RowBetween>
-                <TYPE.main>Collect as WETH</TYPE.main>
-                <Toggle
-                  id="receive-as-weth"
-                  isActive={receiveWETH}
-                  toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
-                />
-              </RowBetween>
+              {liquidityValue0?.currency &&
+              liquidityValue1?.currency &&
+              (currencyEquals(unwrappedToken(liquidityValue0.currency), ETHER) ||
+                currencyEquals(unwrappedToken(liquidityValue1.currency), ETHER)) ? (
+                <RowBetween>
+                  <TYPE.main>Collect as WETH</TYPE.main>
+                  <Toggle
+                    id="receive-as-weth"
+                    isActive={receiveWETH}
+                    toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                  />
+                </RowBetween>
+              ) : null}
 
               <div style={{ display: 'flex' }}>
                 <AutoColumn gap="12px" style={{ flex: '1' }}>
