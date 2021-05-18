@@ -89,15 +89,17 @@ export default function AddLiquidity({
 
   // keep track for UI display purposes of user selected base currency
   const [baseCurrency, setBaseCurrency] = useState(currencyA)
-  const quoteCurrency = useMemo(
-    () =>
-      currencyA && currencyB && baseCurrency
-        ? currencyEquals(baseCurrency, currencyA)
-          ? currencyB
-          : currencyA
-        : undefined,
-    [currencyA, currencyB, baseCurrency]
-  )
+  const quoteCurrency = useMemo(() => {
+    return currencyA &&
+      currencyB &&
+      baseCurrency &&
+      // need this for case where it evaluates on url change before baseCurrency is updated
+      (currencyEquals(baseCurrency, currencyA) || currencyEquals(baseCurrency, currencyB))
+      ? currencyEquals(baseCurrency, currencyA)
+        ? currencyB
+        : currencyA
+      : undefined
+  }, [currencyA, currencyB, baseCurrency])
 
   // url params are the source truth, so we have to do this
   useEffect(() => {
