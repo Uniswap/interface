@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { Farm } from 'state/types'
-import { setFarmsPublicData, setLoading, setError } from './actions'
+import { Farm } from 'state/farms/types'
+import { setFarmsPublicData, setLoading, setError, setFarmsUserData } from './actions'
 
 export interface FarmsState {
   readonly data: Farm[]
@@ -22,6 +22,13 @@ export default createReducer<FarmsState>(initialState, builder =>
         ...state,
         data: farms
       }
+    })
+    .addCase(setFarmsUserData, (state, { payload: { farmsUserData } }) => {
+      farmsUserData.forEach(farmUserData => {
+        const { pid } = farmUserData
+        const index = state.data.findIndex(farm => farm.pid === pid)
+        state.data[index] = { ...state.data[index], userData: farmUserData }
+      })
     })
     .addCase(setLoading, (state, { payload: loading }) => {
       return {

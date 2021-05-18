@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { useMedia } from 'react-use'
 
 import ListItem, { ItemCard } from './ListItem'
-import { Farm } from 'state/types'
+import { Farm } from 'state/farms/types'
 
 const FarmListWrapper = styled.div`
   padding-bottom: 80px;
@@ -14,8 +14,8 @@ const FarmListWrapper = styled.div`
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 2fr 1fr 1fr 0.5fr 1fr 1fr 1fr;
-  grid-template-areas: 'pools liq apy amp end_in earnings balance';
+  grid-template-columns: 2fr 1fr 1fr 0.5fr 1fr 1fr 1fr 1fr;
+  grid-template-areas: 'pools liq apy amp end_in earnings balance available_balance';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
   align-items: center;
@@ -40,10 +40,10 @@ const ClickableText = styled(Text)`
 `
 
 interface FarmsListProps {
-  farmsList: Farm[]
+  farms: Farm[]
 }
 
-const FarmsList = ({ farmsList }: FarmsListProps) => {
+const FarmsList = ({ farms }: FarmsListProps) => {
   const above1200 = useMedia('(min-width: 1200px)') // Extra large screen
 
   const renderHeader = () => {
@@ -76,13 +76,13 @@ const FarmsList = ({ farmsList }: FarmsListProps) => {
         <Flex grid-area="balance" alignItems="center" justifyContent="flexEnd">
           <ClickableText>Balance</ClickableText>
         </Flex>
+
+        <Flex grid-area="available_balance" alignItems="center" justifyContent="flexEnd">
+          <ClickableText>Available Balance</ClickableText>
+        </Flex>
       </TableHeader>
     ) : null
   }
-
-  const farms: Farm[] = useMemo(() => {
-    return farmsList
-  }, [farmsList])
 
   return (
     <FarmListWrapper>
@@ -90,9 +90,9 @@ const FarmsList = ({ farmsList }: FarmsListProps) => {
       {farms.map((farm, index) => {
         if (farm) {
           return above1200 ? (
-            <ListItem key={farm.lpAddress} farm={farm} oddRow={(index + 1) % 2 !== 0} />
+            <ListItem key={farm.id} farm={farm} oddRow={(index + 1) % 2 !== 0} />
           ) : (
-            <ItemCard key={farm.lpAddress} farm={farm} oddRow={(index + 1) % 2 !== 0} />
+            <ItemCard key={farm.id} farm={farm} oddRow={(index + 1) % 2 !== 0} />
           )
         }
 

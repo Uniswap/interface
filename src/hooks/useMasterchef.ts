@@ -7,6 +7,31 @@ const useMasterChef = () => {
   const addTransaction = useTransactionAdder()
   const masterChefContract = useMasterChefContract() // withSigner
 
+  const getPoolLength = useCallback(async () => {
+    try {
+      const poolLength = await masterChefContract?.poolLength()
+
+      return poolLength
+    } catch (err) {
+      console.error(err)
+      return err
+    }
+  }, [masterChefContract])
+
+  const getPoolInfo = useCallback(
+    async (pid: number) => {
+      try {
+        const poolInfo = await masterChefContract?.poolInfo(pid)
+
+        return poolInfo
+      } catch (err) {
+        console.error(err)
+        return err
+      }
+    },
+    [masterChefContract]
+  )
+
   // Deposit
   const deposit = useCallback(
     async (pid: number, amount: string, name: string, shouldHaverst = false) => {
@@ -51,7 +76,7 @@ const useMasterChef = () => {
     [addTransaction, masterChefContract]
   )
 
-  return { deposit, withdraw, harvest }
+  return { masterChefContract, getPoolLength, getPoolInfo, deposit, withdraw, harvest }
 }
 
 export default useMasterChef
