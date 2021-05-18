@@ -184,6 +184,28 @@ function CurrentPriceCard({
   )
 }
 
+function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Currency }) {
+  const address = (currency as Token)?.address
+
+  if (typeof chainId === 'number' && address) {
+    return (
+      <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.ADDRESS)}>
+        <RowFixed>
+          <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+          <TYPE.main>{currency?.symbol} ↗</TYPE.main>
+        </RowFixed>
+      </ExternalLink>
+    )
+  }
+
+  return (
+    <RowFixed>
+      <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+      <TYPE.main>{currency?.symbol}</TYPE.main>
+    </RowFixed>
+  )
+}
+
 function getRatio(
   lower: Price<Currency, Currency>,
   current: Price<Currency, Currency>,
@@ -579,10 +601,7 @@ export function PositionPage({
                 <LightCard padding="12px 16px">
                   <AutoColumn gap="md">
                     <RowBetween>
-                      <RowFixed>
-                        <CurrencyLogo currency={currencyQuote} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>{currencyQuote?.symbol}</TYPE.main>
-                      </RowFixed>
+                      <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                       <RowFixed>
                         <TYPE.main>
                           {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
@@ -595,10 +614,7 @@ export function PositionPage({
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
-                      <RowFixed>
-                        <CurrencyLogo currency={currencyBase} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                        <TYPE.main>{currencyBase?.symbol}</TYPE.main>
-                      </RowFixed>
+                      <LinkedCurrency chainId={chainId} currency={currencyBase} />
                       <RowFixed>
                         <TYPE.main>
                           {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
