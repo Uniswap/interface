@@ -8,17 +8,18 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { V3_MIGRATOR_ADDRESSES } from '../../constants/addresses'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useToken } from '../../hooks/Tokens'
 import { usePairContract, useV2MigratorContract } from '../../hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from '../../state/multicall/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { BackArrow, ExternalLink, TYPE } from '../../theme'
-import { calculateGasMargin, getEtherscanLink, isAddress } from '../../utils'
+import { calculateGasMargin, isAddress } from '../../utils'
+import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import { BodyWrapper } from '../AppBody'
-import { V3_MIGRATOR_ADDRESSES } from 'constants/v3'
 import { PoolState, usePool } from 'hooks/usePools'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { BlueCard, DarkGreyCard, LightCard, YellowCard } from 'components/Card'
@@ -397,7 +398,7 @@ function V2PairMigration({
         This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
         completely trustless thanks to the{' '}
         {chainId && migratorAddress && (
-          <ExternalLink href={getEtherscanLink(chainId, migratorAddress, 'address')}>
+          <ExternalLink href={getExplorerLink(chainId, migratorAddress, ExplorerDataType.ADDRESS)}>
             <TYPE.blue display="inline">Uniswap migration contract↗</TYPE.blue>
           </ExternalLink>
         )}

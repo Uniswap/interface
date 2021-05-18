@@ -4,12 +4,11 @@ import { CurrencyAmount, ChainId, Percent, Currency, TradeType } from '@uniswap/
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useCallback, useMemo } from 'react'
-import { V2_ROUTER_ADDRESS } from '../constants'
-import { SWAP_ROUTER_ADDRESSES } from '../constants/v3'
+import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
-import { useActiveWeb3React } from './index'
+import { useActiveWeb3React } from './web3'
 import { useTokenAllowance } from './useTokenAllowance'
 
 export enum ApprovalState {
