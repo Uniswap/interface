@@ -165,7 +165,7 @@ function CurrentPriceCard({
       <AutoColumn gap="8px" justify="center">
         <ExtentsText>{t('Current price')}</ExtentsText>
         <TYPE.mediumHeader textAlign="center">
-          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(5)}{' '}
+          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(6)}{' '}
         </TYPE.mediumHeader>
         <ExtentsText>{currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
       </AutoColumn>
@@ -557,7 +557,7 @@ export function PositionPage({
                   <Label>Liquidity</Label>
                   {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
                     <TYPE.largeHeader fontSize="36px" fontWeight={500}>
-                      ${fiatValueOfLiquidity.toFixed(2)}
+                      ${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}
                     </TYPE.largeHeader>
                   ) : (
                     <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
@@ -613,7 +613,7 @@ export function PositionPage({
                       <Label>Unclaimed fees</Label>
                       {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                         <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
-                          ${fiatValueOfFees.toFixed(2)}
+                          ${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}
                         </TYPE.largeHeader>
                       ) : (
                         <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>

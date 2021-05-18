@@ -619,7 +619,7 @@ export default function AddLiquidity({
                         <TYPE.body fontWeight={500} textAlign="center" fontSize={20}>
                           <HoverInlineText
                             maxCharacters={20}
-                            text={invertPrice ? price.invert().toSignificant(5) : price.toSignificant(5)}
+                            text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
                           />{' '}
                         </TYPE.body>
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
