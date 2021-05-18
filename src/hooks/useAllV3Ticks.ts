@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk/dist/'
-import { ZERO_ADDRESS } from '../constants'
+import { ZERO_ADDRESS } from '../constants/misc'
 import { useEffect, useMemo, useState } from 'react'
 import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useTickLens, useV3Factory } from './useContract'

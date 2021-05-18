@@ -1,7 +1,7 @@
 import JSBI from 'jsbi'
 import { ChainId, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
-import { ZERO_ADDRESS } from '../constants'
+import { ZERO_ADDRESS } from '../constants/misc'
 import { computeUniCirculation } from './computeUniCirculation'
 
 describe('computeUniCirculation', () => {

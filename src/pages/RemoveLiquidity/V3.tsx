@@ -18,7 +18,7 @@ import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import ReactGA from 'react-ga'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { Percent, currencyEquals, ETHER } from '@uniswap/sdk-core'
@@ -33,7 +33,6 @@ import useTheme from 'hooks/useTheme'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import RangeBadge from 'components/Badge/RangeBadge'
 import Toggle from 'components/Toggle'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
 
@@ -372,8 +371,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
               {liquidityValue0?.currency &&
               liquidityValue1?.currency &&
-              (currencyEquals(unwrappedToken(liquidityValue0.currency), ETHER) ||
-                currencyEquals(unwrappedToken(liquidityValue1.currency), ETHER)) ? (
+              (currencyEquals(liquidityValue0.currency, ETHER) || currencyEquals(liquidityValue1.currency, ETHER)) ? (
                 <RowBetween>
                   <TYPE.main>Collect as WETH</TYPE.main>
                   <Toggle

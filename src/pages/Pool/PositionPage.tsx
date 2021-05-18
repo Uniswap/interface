@@ -7,6 +7,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { unwrappedToken, wrappedCurrencyAmount } from 'utils/wrappedCurrency'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
+import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 import styled from 'styled-components/macro'
 import { AutoColumn } from 'components/Column'
@@ -14,7 +15,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { ExternalLink, HideExtraSmall, TYPE } from 'theme'
 import Badge from 'components/Badge'
-import { calculateGasMargin, getEtherscanLink } from 'utils'
+import { calculateGasMargin } from 'utils'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
@@ -34,7 +35,7 @@ import {
   currencyEquals,
   ETHER,
 } from '@uniswap/sdk-core'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import ReactGA from 'react-ga'
@@ -545,7 +546,7 @@ export function PositionPage({
                 <NFT image={metadata.result.image} height={400} />
               </div>
               {typeof chainId === 'number' && owner && !ownsNFT ? (
-                <ExternalLink href={getEtherscanLink(chainId, owner, 'address')}>Owner</ExternalLink>
+                <ExternalLink href={getExplorerLink(chainId, owner, ExplorerDataType.ADDRESS)}>Owner</ExternalLink>
               ) : null}
             </DarkCard>
           ) : (

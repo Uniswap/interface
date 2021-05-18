@@ -1,9 +1,11 @@
 import React from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components/macro'
+import { UNI } from '../../constants/tokens'
 import { ExternalLink, TYPE } from '../../theme'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Link } from 'react-router-dom'
+import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 import { ButtonPrimary } from '../../components/Button'
 import { Button } from 'rebass/styled-components'
@@ -18,11 +20,11 @@ import {
 } from '../../state/governance/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { useActiveWeb3React } from '../../hooks'
-import { UNI, ZERO_ADDRESS } from '../../constants'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { ZERO_ADDRESS } from '../../constants/misc'
 import { Token, CurrencyAmount, ChainId } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { shortenAddress, getEtherscanLink } from '../../utils'
+import { shortenAddress } from '../../utils'
 import Loader from '../../components/Loader'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { useModalOpen, useToggleDelegateModal } from '../../state/application/hooks'
@@ -204,7 +206,7 @@ export default function Vote() {
                 </TYPE.body>
                 <AddressButton>
                   <StyledExternalLink
-                    href={getEtherscanLink(ChainId.MAINNET, userDelegatee, 'address')}
+                    href={getExplorerLink(ChainId.MAINNET, userDelegatee, ExplorerDataType.ADDRESS)}
                     style={{ margin: '0 4px' }}
                   >
                     {userDelegatee === account ? 'Self' : shortenAddress(userDelegatee)}

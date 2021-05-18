@@ -7,11 +7,11 @@ import Card, { OutlineCard } from 'components/Card'
 import { RowBetween, AutoRow } from 'components/Row'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { useActiveWeb3React } from 'hooks'
-import { getEtherscanLink } from 'utils'
+import { useActiveWeb3React } from 'hooks/web3'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
@@ -78,7 +78,7 @@ export default function UnsupportedCurrencyFooter({
                         <TYPE.body fontWeight={500}>{token.symbol}</TYPE.body>
                       </AutoRow>
                       {chainId && (
-                        <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+                        <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
                           <AddressText>{token.address}</AddressText>
                         </ExternalLink>
                       )}
