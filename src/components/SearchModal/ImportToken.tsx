@@ -13,10 +13,10 @@ import useTheme from 'hooks/useTheme'
 import { ButtonPrimary } from 'components/Button'
 import { SectionBreak } from 'components/swap/styleds'
 import { useAddUserToken } from 'state/user/hooks'
-import { getEtherscanLink } from 'utils'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 import { ExternalLink } from '../../theme/components'
 import ListLogo from 'components/ListLogo'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { PaddedColumn } from './styleds'
 
 const Wrapper = styled.div`
@@ -93,7 +93,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
                   </TYPE.darkGray>
                 </AutoColumn>
                 {chainId && (
-                  <ExternalLink href={getEtherscanLink(chainId, token.address, 'address')}>
+                  <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
                     <AddressText fontSize={12}>{token.address}</AddressText>
                   </ExternalLink>
                 )}

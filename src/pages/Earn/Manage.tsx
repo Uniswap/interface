@@ -18,7 +18,7 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import UnstakingModal from '../../components/earn/UnstakingModal'
 import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useColor } from '../../hooks/useColor'
 import { CountUp } from 'use-count-up'
 
@@ -28,7 +28,7 @@ import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import usePrevious from '../../hooks/usePrevious'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
-import { BIG_INT_ZERO, BIG_INT_SECONDS_IN_WEEK } from '../../constants'
+import { BIG_INT_ZERO, BIG_INT_SECONDS_IN_WEEK } from '../../constants/misc'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;

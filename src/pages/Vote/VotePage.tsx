@@ -1,14 +1,27 @@
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import JSBI from 'jsbi'
+import { DateTime } from 'luxon'
 import React, { useState } from 'react'
-import { AutoColumn } from '../../components/Column'
-import styled from 'styled-components/macro'
+import { ArrowLeft } from 'react-feather'
+import ReactMarkdown from 'react-markdown'
 
 import { RouteComponentProps } from 'react-router-dom'
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
-import { RowBetween, RowFixed } from '../../components/Row'
-import { CardSection, DataCard } from '../../components/earn/styled'
-import { ArrowLeft } from 'react-feather'
+import styled from 'styled-components/macro'
 import { ButtonPrimary } from '../../components/Button'
-import { ProposalStatus } from './styled'
+import { GreyCard } from '../../components/Card'
+import { AutoColumn } from '../../components/Column'
+import { CardSection, DataCard } from '../../components/earn/styled'
+import { RowBetween, RowFixed } from '../../components/Row'
+import DelegateModal from '../../components/vote/DelegateModal'
+import VoteModal from '../../components/vote/VoteModal'
+import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES } from '../../constants/governance'
+import { ZERO_ADDRESS } from '../../constants/misc'
+import { UNI } from '../../constants/tokens'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { ApplicationModal } from '../../state/application/actions'
+import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
 import {
   ProposalData,
   ProposalState,
@@ -16,21 +29,11 @@ import {
   useUserDelegatee,
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
-import { DateTime } from 'luxon'
-import ReactMarkdown from 'react-markdown'
-import VoteModal from '../../components/vote/VoteModal'
-import { Token, CurrencyAmount } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
-import { useActiveWeb3React } from '../../hooks'
-import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
-import { getEtherscanLink, isAddress } from '../../utils'
-import { ApplicationModal } from '../../state/application/actions'
-import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
-import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import { BigNumber } from 'ethers'
-import { GreyCard } from '../../components/Card'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { isAddress } from '../../utils'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -177,7 +180,9 @@ export default function VotePage({
   const linkIfAddress = (content: string) => {
     if (isAddress(content) && chainId) {
       const commonName = COMMON_CONTRACT_NAMES[content] ?? content
-      return <ExternalLink href={getEtherscanLink(chainId, content, 'address')}>{commonName}</ExternalLink>
+      return (
+        <ExternalLink href={getExplorerLink(chainId, content, ExplorerDataType.ADDRESS)}>{commonName}</ExternalLink>
+      )
     }
     return <span>{content}</span>
   }
@@ -307,7 +312,11 @@ export default function VotePage({
         <AutoColumn gap="md">
           <TYPE.mediumHeader fontWeight={600}>Proposer</TYPE.mediumHeader>
           <ProposerAddressLink
-            href={proposalData?.proposer && chainId ? getEtherscanLink(chainId, proposalData?.proposer, 'address') : ''}
+            href={
+              proposalData?.proposer && chainId
+                ? getExplorerLink(chainId, proposalData?.proposer, ExplorerDataType.ADDRESS)
+                : ''
+            }
           >
             <ReactMarkdown source={proposalData?.proposer} />
           </ProposerAddressLink>

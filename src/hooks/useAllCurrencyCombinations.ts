@@ -1,9 +1,9 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
-import { ADDITIONAL_BASES, BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
+import { ADDITIONAL_BASES, BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants/routing'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { useActiveWeb3React } from './index'
+import { useActiveWeb3React } from './web3'
 
 export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Currency): [Token, Token][] {
   const { chainId } = useActiveWeb3React()

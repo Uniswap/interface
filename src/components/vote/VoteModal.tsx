@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -10,7 +11,6 @@ import { X, ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary } from '../Button'
 import Circle from '../../assets/images/blue-loader.svg'
 import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
-import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme/components'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
@@ -133,7 +133,10 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
               <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
             </AutoColumn>
             {chainId && (
-              <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')} style={{ marginLeft: '4px' }}>
+              <ExternalLink
+                href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
+                style={{ marginLeft: '4px' }}
+              >
                 <TYPE.subHeader>View transaction on Etherscan</TYPE.subHeader>
               </ExternalLink>
             )}

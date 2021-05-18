@@ -1,14 +1,14 @@
-import { supportedChainId } from 'utils'
 import {
   ChainId,
   Currency,
   ETHER,
   Token,
   CurrencyAmount,
-  WETH9,
   wrappedCurrency as wrappedCurrencyInternal,
   wrappedCurrencyAmount as wrappedCurrencyAmountInternal,
+  WETH9,
 } from '@uniswap/sdk-core'
+import { supportedChainId } from './supportedChainId'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {
   return chainId && currency ? wrappedCurrencyInternal(currency, chainId) : undefined
@@ -21,9 +21,9 @@ export function wrappedCurrencyAmount(
   return currencyAmount && chainId ? wrappedCurrencyAmountInternal(currencyAmount, chainId) : undefined
 }
 
-export function unwrappedToken(currency: Currency): Currency {
-  if (currency.isEther) return currency
-  const formattedChainId = supportedChainId(currency.chainId)
-  if (formattedChainId && currency.equals(WETH9[formattedChainId])) return ETHER
-  return currency
+export function unwrappedToken(token: Token): Currency {
+  if (token.isEther) return token
+  const formattedChainId = supportedChainId(token.chainId)
+  if (formattedChainId && token.equals(WETH9[formattedChainId])) return ETHER
+  return token
 }

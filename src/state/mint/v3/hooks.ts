@@ -1,4 +1,4 @@
-import { BIG_INT_ZERO } from '../../../constants/index'
+import { BIG_INT_ZERO } from '../../../constants/misc'
 import { getTickToPrice } from 'utils/getTickToPrice'
 import JSBI from 'jsbi'
 import { PoolState } from '../../../hooks/usePools'
@@ -15,7 +15,7 @@ import {
 import { Currency, Token, CurrencyAmount, currencyEquals, Price, Rounding } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useActiveWeb3React } from '../../../hooks'
+import { useActiveWeb3React } from '../../../hooks/web3'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../../index'
 import { tryParseAmount } from '../../swap/hooks'
@@ -286,6 +286,7 @@ export function useV3DerivedMintInfo(
             tickLower,
             tickUpper,
             amount0: independentAmount.quotient,
+            useFullPrecision: true, // we want full precision for the theoretical position
           })
         : Position.fromAmount1({
             pool: poolForPosition,
@@ -356,7 +357,7 @@ export function useV3DerivedMintInfo(
       return undefined
     }
 
-    // mark as 0 if disbaled because out of range
+    // mark as 0 if disabled because out of range
     const amount0 = !deposit0Disabled
       ? parsedAmounts?.[tokenA.equals(poolForPosition.token0) ? Field.CURRENCY_A : Field.CURRENCY_B]?.quotient
       : BIG_INT_ZERO
@@ -371,6 +372,7 @@ export function useV3DerivedMintInfo(
         tickUpper,
         amount0,
         amount1,
+        useFullPrecision: true, // we want full precision for the theoretical position
       })
     } else {
       return undefined

@@ -12,10 +12,10 @@ import { WETH9, Price, Token, Percent } from '@uniswap/sdk-core'
 import { formatPrice } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { DAI, USDC, USDT, WBTC } from '../../constants'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { RowFixed } from 'components/Row'
 import HoverInlineText from 'components/HoverInlineText'
+import { DAI, USDC, USDT, WBTC } from '../../constants/tokens'
 
 const Row = styled(Link)`
   align-items: center;

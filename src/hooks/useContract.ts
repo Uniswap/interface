@@ -17,7 +17,6 @@ import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
 import ENS_ABI from 'abis/ens-registrar.json'
 import ERC20_ABI from 'abis/erc20.json'
 import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
-import MIGRATOR_ABI from 'abis/migrator.json'
 import MULTICALL_ABI from 'abis/multicall2.json'
 import { Unisocks } from 'abis/types/Unisocks'
 import UNISOCKS_ABI from 'abis/unisocks.json'
@@ -25,29 +24,26 @@ import WETH_ABI from 'abis/weth.json'
 import EIP_2612 from 'abis/eip_2612.json'
 
 import {
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  QUOTER_ADDRESSES,
+  TICK_LENS_ADDRESSES,
+  V3_CORE_FACTORY_ADDRESSES,
+  V3_MIGRATOR_ADDRESSES,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS,
   GOVERNANCE_ADDRESS,
   MERKLE_DISTRIBUTOR_ADDRESS,
-  V1_MIGRATOR_ADDRESS,
-  UNI,
   MULTICALL2_ADDRESSES,
   V2_ROUTER_ADDRESS,
-} from 'constants/index'
+} from 'constants/addresses'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
-import {
-  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  V3_CORE_FACTORY_ADDRESSES,
-  TICK_LENS_ADDRESSES,
-  V3_MIGRATOR_ADDRESSES,
-  QUOTER_ADDRESSES,
-} from 'constants/v3'
 import { useMemo } from 'react'
 import { Quoter, TickLens, UniswapV3Factory, UniswapV3Pool } from 'types/v3'
 import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 import { Multicall2 } from '../abis/types'
-import { useActiveWeb3React } from './index'
+import { UNI } from '../constants/tokens'
+import { useActiveWeb3React } from './web3'
 
 // returns null on errors
 export function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -62,10 +58,6 @@ export function useContract(address: string | undefined, ABI: any, withSignerIfP
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])
-}
-
-export function useV1MigratorContract(): Contract | null {
-  return useContract(V1_MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
 }
 
 export function useV2MigratorContract(): V3Migrator | null {

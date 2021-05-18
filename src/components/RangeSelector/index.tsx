@@ -2,7 +2,7 @@ import React from 'react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 
 // currencyA is the base token
