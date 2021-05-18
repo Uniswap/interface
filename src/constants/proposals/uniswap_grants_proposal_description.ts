@@ -1,4 +1,4 @@
-export const UNISWAP_GRANTS = `# Uniswap Grants Program v0.1
+export const UNISWAP_GRANTS_PROPOSAL_DESCRIPTION = `# Uniswap Grants Program v0.1
 
 *co-authored with [Ken Ng](https://twitter.com/nkennethk?lang=en)*
 

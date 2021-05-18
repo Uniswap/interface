@@ -83,7 +83,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
   // approval data for stake
   const deadline = useTransactionDeadline()
-  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(parsedAmountWrapped, V2_ROUTER_ADDRESS)
+  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(
+    parsedAmountWrapped,
+    chainId && V2_ROUTER_ADDRESS[chainId]
+  )
   const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
 
   const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)

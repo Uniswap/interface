@@ -19,7 +19,6 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { V2_ROUTER_ADDRESS } from '../../constants/addresses'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
@@ -28,7 +27,8 @@ import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
-import { calculateGasMargin, calculateSlippageAmount } from '../../utils'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
+import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -99,12 +99,14 @@ export default function RemoveLiquidity({
   // pair contract
   const pairContract: Contract | null = usePairContract(pair?.liquidityToken?.address)
 
+  const router = useV2RouterContract()
+
   // allowance handling
   const { gatherPermitSignature, signatureData } = useV2LiquidityTokenPermit(
     parsedAmounts[Field.LIQUIDITY],
-    V2_ROUTER_ADDRESS
+    router?.address
   )
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], V2_ROUTER_ADDRESS)
+  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address)
 
   async function onAttemptToApprove() {
     if (!pairContract || !pair || !library || !deadline) throw new Error('missing dependencies')
@@ -145,7 +147,6 @@ export default function RemoveLiquidity({
 
   // tx sending
   const addTransaction = useTransactionAdder()
-  const router = useV2RouterContract()
 
   async function onRemove() {
     if (!chainId || !library || !account || !deadline || !router) throw new Error('missing dependencies')
