@@ -21,7 +21,7 @@ export function wrappedCurrencyAmount(
   return currencyAmount && chainId ? wrappedCurrencyAmountInternal(currencyAmount, chainId) : undefined
 }
 
-export function unwrappedToken(token: Currency): Currency {
+export function unwrappedToken(token: Token): Currency {
   if (token.isEther) return token
   const formattedChainId = supportedChainId(token.chainId)
   if (formattedChainId && token.equals(WETH9[formattedChainId])) return ETHER
