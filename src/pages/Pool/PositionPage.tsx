@@ -590,7 +590,7 @@ export function PositionPage({
                   <Label>Liquidity</Label>
                   {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
                     <TYPE.largeHeader fontSize="36px" fontWeight={500}>
-                      ${fiatValueOfLiquidity.toFixed(2)}
+                      ${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}
                     </TYPE.largeHeader>
                   ) : (
                     <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
@@ -640,7 +640,7 @@ export function PositionPage({
                       <Label>Unclaimed fees</Label>
                       {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                         <TYPE.largeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
-                          ${fiatValueOfFees.toFixed(2)}
+                          ${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}
                         </TYPE.largeHeader>
                       ) : (
                         <TYPE.largeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
