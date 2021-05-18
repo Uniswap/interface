@@ -16,7 +16,11 @@ import { CardSection, DataCard } from '../../components/earn/styled'
 import { RowBetween, RowFixed } from '../../components/Row'
 import DelegateModal from '../../components/vote/DelegateModal'
 import VoteModal from '../../components/vote/VoteModal'
-import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES } from '../../constants/governance'
+import {
+  AVERAGE_BLOCK_TIME_IN_SECS,
+  COMMON_CONTRACT_NAMES,
+  DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+} from '../../constants/governance'
 import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -141,7 +145,11 @@ export default function VotePage({
     proposalData && currentTimestamp && currentBlock
       ? DateTime.fromSeconds(
           currentTimestamp
-            .add(BigNumber.from(AVERAGE_BLOCK_TIME_IN_SECS).mul(BigNumber.from(proposalData.endBlock - currentBlock)))
+            .add(
+              BigNumber.from(
+                (chainId && AVERAGE_BLOCK_TIME_IN_SECS[chainId]) ?? DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS
+              ).mul(BigNumber.from(proposalData.endBlock - currentBlock))
+            )
             .toNumber()
         )
       : undefined
@@ -179,7 +187,7 @@ export default function VotePage({
   // if content is contract with common name, replace address with common name
   const linkIfAddress = (content: string) => {
     if (isAddress(content) && chainId) {
-      const commonName = COMMON_CONTRACT_NAMES[content] ?? content
+      const commonName = COMMON_CONTRACT_NAMES[chainId]?.[content] ?? content
       return (
         <ExternalLink href={getExplorerLink(chainId, content, ExplorerDataType.ADDRESS)}>{commonName}</ExternalLink>
       )

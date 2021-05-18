@@ -1,12 +1,12 @@
-import { PRELOADED_PROPOSALS } from '../../constants/misc'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
+import { PROPOSAL_DESCRIPTION_TEXT } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
+import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ethers, utils } from 'ethers'
-import { calculateGasMargin } from '../../utils'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../transactions/hooks'
 import { useState, useEffect, useCallback, useMemo } from 'react'
@@ -131,7 +131,7 @@ export function useAllProposalData() {
         return Boolean(p.result) && Boolean(allProposalStates[i]?.result) && Boolean(formattedEvents[i])
       })
       .map((p, i) => {
-        const description = PRELOADED_PROPOSALS.get(allProposals.length - i - 1) || formattedEvents[i].description
+        const description = PROPOSAL_DESCRIPTION_TEXT[allProposals.length - i - 1] || formattedEvents[i].description
         const formattedProposal: ProposalData = {
           id: allProposals[i]?.result?.id.toString(),
           title: description?.split(/# |\n/g)[1] || 'Untitled',

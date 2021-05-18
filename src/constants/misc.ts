@@ -3,8 +3,6 @@ import JSBI from 'jsbi'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export { PRELOADED_PROPOSALS } from './proposals'
-
 export const NetworkContextName = 'NETWORK'
 
 // 30 minutes, denominated in seconds
