@@ -9,8 +9,8 @@ import { RowBetween } from '../../components/Row'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { Countdown } from './Countdown'
 import Loader from '../../components/Loader'
-import { useActiveWeb3React } from '../../hooks'
-import { BIG_INT_ZERO } from '../../constants'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { BIG_INT_ZERO } from '../../constants/misc'
 import { OutlineCard } from '../../components/Card'
 
 const PageWrapper = styled(AutoColumn)`

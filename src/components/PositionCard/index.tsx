@@ -9,7 +9,7 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
@@ -26,7 +26,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO } from '../../constants/misc'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;

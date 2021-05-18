@@ -1,7 +1,7 @@
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-import { useActiveWeb3React } from './index'
+import { useActiveWeb3React } from './web3'
 import { useSocksController } from './useContract'
 
 export default function useSocksBalance(): JSBI | undefined {

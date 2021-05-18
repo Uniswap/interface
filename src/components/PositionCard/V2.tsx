@@ -8,7 +8,7 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -24,7 +24,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO } from '../../constants/misc'
 import { FixedHeightRow } from '.'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`

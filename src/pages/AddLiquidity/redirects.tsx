@@ -1,4 +1,4 @@
-import { useActiveWeb3React } from 'hooks'
+import { useActiveWeb3React } from 'hooks/web3'
 import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import AddLiquidity from './index'

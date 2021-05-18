@@ -1,9 +1,9 @@
 import { ChainId, Currency, CurrencyAmount, currencyEquals, Price, Token, WETH9 } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
-import { USDC } from '../constants'
+import { USDC } from '../constants/tokens'
 import { PairState, useV2Pairs } from './useV2Pairs'
-import { useActiveWeb3React } from '../hooks'
+import { useActiveWeb3React } from './web3'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 /**

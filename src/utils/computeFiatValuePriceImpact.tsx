@@ -1,6 +1,6 @@
 import { Token, CurrencyAmount, currencyEquals, Percent } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { ONE_HUNDRED_PERCENT } from '../constants'
+import { ONE_HUNDRED_PERCENT } from '../constants/misc'
 
 export function computeFiatValuePriceImpact(
   fiatValueInput: CurrencyAmount<Token> | undefined | null,
