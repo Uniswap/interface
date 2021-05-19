@@ -7,7 +7,7 @@ import { useActiveWeb3React } from './web3'
 
 // USDC amount used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC, 10_000e6)
+const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC, 100_000e6)
 
 /**
  * Returns the price in USDC of the input currency
@@ -16,7 +16,9 @@ const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC, 10_000e6)
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const { chainId } = useActiveWeb3React()
 
-  const v2USDCTrade = useV2TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined)
+  const v2USDCTrade = useV2TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined, {
+    maxHops: 2,
+  })
   const v3USDCTrade = useBestV3TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined)
 
   return useMemo(() => {
