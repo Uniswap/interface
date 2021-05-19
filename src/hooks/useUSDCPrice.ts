@@ -17,7 +17,8 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
   const { chainId } = useActiveWeb3React()
 
   const v2USDCTrade = useV2TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined, {
-    forcedMaxHops: 2,
+    singleHopOnly: false,
+    maxHops: 2,
   })
   const v3USDCTrade = useBestV3TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined)
 
