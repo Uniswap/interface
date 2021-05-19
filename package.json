@@ -114,7 +114,7 @@
     "@types/react-dom": "^17.0.3"
   },
   "dependencies": {
-    "@celo-tools/use-contractkit": "^1.0.0-beta.8",
+    "@celo-tools/use-contractkit": "^1.0.0-beta.10",
     "@celo/connect": "^1.2.0",
     "@celo/contractkit": "^1.2.0",
     "@celo/utils": "^1.2.1",
