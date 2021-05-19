@@ -21,7 +21,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'prettier',
+    'plugin:prettier/recommended',
   ],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'off',

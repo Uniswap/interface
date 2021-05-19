@@ -119,16 +119,14 @@ export const useUnclaimedStakingRewards = (): UnclaimedInfo => {
 
   const now = useCurrentBlockTimestamp()
   const amounts = now
-    ? zip(rewardRates, periodFinishes).map(
-        ([rate, finish]): BigNumber => {
-          const rawRate = rate?.result?.[0] as BigNumber | undefined
-          const finishTime = finish?.result?.[0] as BigNumber | undefined
-          if (rawRate && finishTime && finishTime.gt(now)) {
-            return rawRate.mul(finishTime.sub(now).toNumber())
-          }
-          return BigNumber.from(0)
+    ? zip(rewardRates, periodFinishes).map(([rate, finish]): BigNumber => {
+        const rawRate = rate?.result?.[0] as BigNumber | undefined
+        const finishTime = finish?.result?.[0] as BigNumber | undefined
+        if (rawRate && finishTime && finishTime.gt(now)) {
+          return rawRate.mul(finishTime.sub(now).toNumber())
         }
-      )
+        return BigNumber.from(0)
+      })
     : undefined
   const earned =
     rewardRates?.[0]?.loading || !amounts ? null : amounts.reduce((sum, amt) => sum.add(amt), BigNumber.from(0))
@@ -379,7 +377,7 @@ export function useStakingPoolsInfo(
   const rawPools = useMemo(() => {
     return !pools || !pools[0] || pools[0].loading
       ? []
-      : pools.map((p) => (p?.result as unknown) as IRawPool | undefined).filter((x): x is IRawPool => !!x)
+      : pools.map((p) => p?.result as unknown as IRawPool | undefined).filter((x): x is IRawPool => !!x)
   }, [pools])
 
   const nextPeriod = useSingleCallResult(poolManagerContract, 'nextPeriod')

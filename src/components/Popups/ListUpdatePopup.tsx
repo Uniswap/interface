@@ -47,7 +47,11 @@ export default function ListUpdatePopup({
     removeThisPopup()
   }, [auto, dispatch, listUrl, removeThisPopup])
 
-  const { added: tokensAdded, changed: tokensChanged, removed: tokensRemoved } = useMemo(() => {
+  const {
+    added: tokensAdded,
+    changed: tokensChanged,
+    removed: tokensRemoved,
+  } = useMemo(() => {
     return diffTokenLists(oldList.tokens, newList.tokens)
   }, [newList.tokens, oldList.tokens])
   const numTokensChanged = useMemo(

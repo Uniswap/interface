@@ -108,15 +108,18 @@ export default function RemoveLiquidity({
     [_onUserInput]
   )
 
-  const onLiquidityInput = useCallback((typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue), [
-    onUserInput,
-  ])
-  const onCurrencyAInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue), [
-    onUserInput,
-  ])
-  const onCurrencyBInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue), [
-    onUserInput,
-  ])
+  const onLiquidityInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue),
+    [onUserInput]
+  )
+  const onCurrencyAInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue),
+    [onUserInput]
+  )
+  const onCurrencyBInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue),
+    [onUserInput]
+  )
 
   // tx sending
   const addTransaction = useTransactionAdder()

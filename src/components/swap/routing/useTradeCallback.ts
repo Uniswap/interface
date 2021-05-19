@@ -23,11 +23,11 @@ export const useTradeCallback = (
   const { library, chainId, account } = useActiveWeb3React()
   const doTransaction = useDoTransaction()
 
-  const { state: swapState, callback: swapCallback, error } = useSwapCallback(
-    trade,
-    allowedSlippage,
-    recipientAddressOrName
-  )
+  const {
+    state: swapState,
+    callback: swapCallback,
+    error,
+  } = useSwapCallback(trade, allowedSlippage, recipientAddressOrName)
 
   const tradeCallback = useCallback(async () => {
     if (!library || !trade || !account) {

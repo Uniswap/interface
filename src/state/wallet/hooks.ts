@@ -60,9 +60,10 @@ export function useTokenBalance(account?: string, token?: Token): TokenAmount | 
 }
 
 export function useCurrencyBalances(account?: string, currencies?: (Token | undefined)[]): (TokenAmount | undefined)[] {
-  const tokens = useMemo(() => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [], [
-    currencies,
-  ])
+  const tokens = useMemo(
+    () => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [],
+    [currencies]
+  )
 
   const tokenBalances = useTokenBalances(account, tokens)
 

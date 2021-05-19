@@ -131,9 +131,10 @@ export default function Updater(): null {
     return outdatedListeningKeys(state.callResults, listeningKeys, chainId, latestBlockNumber)
   }, [chainId, state.callResults, listeningKeys, latestBlockNumber])
 
-  const serializedOutdatedCallKeys = useMemo(() => JSON.stringify(unserializedOutdatedCallKeys.sort()), [
-    unserializedOutdatedCallKeys,
-  ])
+  const serializedOutdatedCallKeys = useMemo(
+    () => JSON.stringify(unserializedOutdatedCallKeys.sort()),
+    [unserializedOutdatedCallKeys]
+  )
 
   useEffect(() => {
     if (!latestBlockNumber || !chainId || !multicallContract) return

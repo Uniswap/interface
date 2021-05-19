@@ -252,9 +252,10 @@ export default function Swap() {
     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  const handleOutputSelect = useCallback((outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency), [
-    onCurrencySelection,
-  ])
+  const handleOutputSelect = useCallback(
+    (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
+    [onCurrencySelection]
+  )
 
   const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
 

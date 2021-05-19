@@ -26,11 +26,13 @@ export const moolaLendingPools = {
   },
 }
 
-export const moolaDuals = ([
-  [MCUSD, cUSD],
-  [MCELO, CELO],
-  [MCEUR, CEUR],
-] as const).flatMap((dual) => [dual, [dual[1], dual[0]] as const])
+export const moolaDuals = (
+  [
+    [MCUSD, cUSD],
+    [MCELO, CELO],
+    [MCEUR, CEUR],
+  ] as const
+).flatMap((dual) => [dual, [dual[1], dual[0]] as const])
 
 /**
  * Gets the Moola token that the token can be converted to/from.

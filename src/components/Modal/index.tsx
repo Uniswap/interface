@@ -124,7 +124,7 @@ export default function Modal({
                   ? {
                       ...bind(),
                       style: {
-                        transform: y.interpolate((n) => `translateY(${((n as unknown) as number) > 0 ? n : 0}px)`),
+                        transform: y.interpolate((n) => `translateY(${(n as unknown as number) > 0 ? n : 0}px)`),
                       },
                     }
                   : {})}

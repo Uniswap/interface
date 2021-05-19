@@ -25,16 +25,17 @@ export const MoolaDirectTradeDetails: React.FC<Props> = ({ trade }: Props) => {
   const [, pair] = usePair(celo, cUSD[chainId])
   const cusdPrice = pair?.priceOf(cUSD[chainId])
 
-  const [userData, setUserData] = useState<{
-    totalLiquidityETH: BigNumber
-    totalCollateralETH: BigNumber
-    totalBorrowsETH: BigNumber
-    totalFeesETH: BigNumber
-    availableBorrowsETH: BigNumber
-    currentLiquidationThreshold: BigNumber
-    ltv: BigNumber
-    healthFactor: BigNumber
-  } | null>(null)
+  const [userData, setUserData] =
+    useState<{
+      totalLiquidityETH: BigNumber
+      totalCollateralETH: BigNumber
+      totalBorrowsETH: BigNumber
+      totalFeesETH: BigNumber
+      availableBorrowsETH: BigNumber
+      currentLiquidationThreshold: BigNumber
+      ltv: BigNumber
+      healthFactor: BigNumber
+    } | null>(null)
   useEffect(() => {
     if (account) {
       ;(async () => {
