@@ -11,7 +11,7 @@
     "@typechain/ethers-v5": "^6.0.5",
     "@types/jest": "^26.0.23",
     "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
-    "@types/lodash": "^4.14.168",
+    "@types/lodash": "^4.14.169",
     "@types/lodash.flatmap": "^4.5.6",
     "@types/multicodec": "^1.0.0",
     "@types/node": "^14.14.37",
