@@ -228,9 +228,14 @@ export default function AccountDetails({
   function formatConnectorName() {
     const { celo } = window
     const isCEW = !!celo
+    const isMetamask = window.ethereum && window.ethereum.isMetaMask
     const name =
       connector instanceof LedgerConnector
         ? 'Ledger'
+        : connector === injected
+        ? isMetamask
+          ? 'MetaMask'
+          : 'Injected'
         : Object.keys(SUPPORTED_WALLETS)
             .filter(
               (k) =>
@@ -269,17 +274,15 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  {connector !== injected && (
-                    <WalletAction
-                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                      onClick={() => {
-                        ;(connector as any).close()
-                        clearValoraAccount()
-                      }}
-                    >
-                      Disconnect
-                    </WalletAction>
-                  )}
+                  <WalletAction
+                    style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                    onClick={() => {
+                      ;(connector as any).close?.()
+                      clearValoraAccount()
+                    }}
+                  >
+                    Disconnect
+                  </WalletAction>
                   <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {

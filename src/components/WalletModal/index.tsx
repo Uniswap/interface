@@ -8,8 +8,9 @@ import { useValoraAccount } from 'state/user/hooks'
 import styled from 'styled-components'
 
 import CeloLogo from '../../assets/images/celo_logo.png'
+import MetaMaskLogo from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected } from '../../connectors'
+import { celoExtensionWallet, injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
 import { ApplicationModal } from '../../state/application/actions'
@@ -213,7 +214,8 @@ export default function WalletModal({
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
-    const isCEW = window.celo && window.celo
+    const isMetamask = window.ethereum && window.ethereum.isMetaMask
+    const isCEW = window.celo
     return Object.keys(SUPPORTED_WALLETS).map((key) => {
       const option = SUPPORTED_WALLETS[key]
 
@@ -244,6 +246,36 @@ export default function WalletModal({
 
       // overwrite injected when needed
       if (option.connector === injected) {
+        // don't show injected if there's no injected provider
+        if (!(window.web3 || window.ethereum)) {
+          if (option.name === 'MetaMask') {
+            return (
+              <Option
+                id={`connect-${key}`}
+                key={key}
+                color={'#E8831D'}
+                header={'Install MetaMask'}
+                subheader={null}
+                link={'https://metamask.io/'}
+                icon={MetaMaskLogo}
+              />
+            )
+          } else {
+            return null //dont want to return install twice
+          }
+        }
+        // don't return metamask if injected provider isn't metamask
+        else if (option.name === 'MetaMask' && !isMetamask) {
+          return null
+        }
+        // likewise for generic
+        else if (option.name === 'Injected' && isMetamask) {
+          return null
+        }
+      }
+
+      // overwrite injected when needed
+      if (option.connector === celoExtensionWallet) {
         // don't show injected if there's no injected provider
         if (!window.celo) {
           if (option.name === 'Celo Extension Wallet') {
@@ -373,11 +405,6 @@ export default function WalletModal({
             <>
               {!isMobile && (
                 <Blurb>
-                  <span>
-                    Looking for MetaMask? Celo currently don&apos;t support it.
-                    <br />
-                    <br />
-                  </span>
                   <ExternalLink href="https://docs.ubeswap.org/wallet-support/wallets">
                     Learn more about Celo wallets
                   </ExternalLink>

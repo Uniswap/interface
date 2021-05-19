@@ -126,6 +126,7 @@
     "@ubeswap/default-token-list": "^2.1.0",
     "@ubeswap/moola": "^0.2.0",
     "@ubeswap/sdk": "^2.1.0",
+    "@web3-react/injected-connector": "^6.0.7",
     "ethers": "^5.1.4",
     "eventemitter3": "^4.0.7",
     "lodash": "^4.17.21",

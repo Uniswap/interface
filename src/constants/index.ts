@@ -2,7 +2,7 @@ import moolaRouterAddresses from '@ubeswap/moola/deployments/router.mainnet.addr
 import { CELO, ChainId, cUSD, JSBI, Percent, Token } from '@ubeswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-import { injected, ledger, valora } from '../connectors'
+import { celoExtensionWallet, injected, ledger, valora } from '../connectors'
 import { UBE } from './tokens'
 
 export { UBE } from './tokens'
@@ -131,11 +131,28 @@ export interface WalletInfo {
 }
 
 export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
-  CELO_EXTENSION_WALLET: {
+  INJECTED: {
     connector: injected,
+    name: 'Injected',
+    description: 'Injected web3 provider.',
+    iconName: 'arrow-right.svg',
+    href: null,
+    color: '#010101',
+    primary: true,
+  },
+  METAMASK: {
+    connector: injected,
+    name: 'MetaMask',
+    iconName: 'metamask.png',
+    description: 'Easy-to-use browser extension.',
+    href: null,
+    color: '#E8831D',
+  },
+  CELO_EXTENSION_WALLET: {
+    connector: celoExtensionWallet,
     name: 'Celo Extension Wallet',
     iconName: 'celo_logo.png',
-    description: 'Easy-to-use browser extension.',
+    description: 'Celo version of MetaMask.',
     href: null,
     color: '#35D07F',
   },

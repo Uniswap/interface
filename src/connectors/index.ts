@@ -1,6 +1,7 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { InjectedConnector } from '@ubeswap/injected-connector'
+import { InjectedConnector as CEWConnector } from '@ubeswap/injected-connector'
 import { ChainId, parseNetwork } from '@ubeswap/sdk'
+import { InjectedConnector } from '@web3-react/injected-connector'
 
 import { LedgerConnector } from './ledger/LedgerConnector'
 import { NetworkConnector } from './NetworkConnector'
@@ -43,6 +44,10 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
+  supportedChainIds: [NETWORK_CHAIN_ID],
+})
+
+export const celoExtensionWallet = new CEWConnector({
   supportedChainIds: [NETWORK_CHAIN_ID],
 })
 
