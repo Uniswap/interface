@@ -141,13 +141,9 @@ export function useDerivedMintInfo(
   const price = useMemo(() => {
     if (noLiquidity) {
       const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
-      if (currencyAAmount && currencyBAmount) {
-        return new Price(
-          currencyAAmount.currency,
-          currencyBAmount.currency,
-          currencyAAmount.quotient,
-          currencyBAmount.quotient
-        )
+      if (currencyAAmount?.greaterThan(0) && currencyBAmount?.greaterThan(0)) {
+        const value = currencyBAmount.divide(currencyAAmount)
+        return new Price(currencyAAmount.currency, currencyBAmount.currency, value.denominator, value.numerator)
       }
       return undefined
     } else {
