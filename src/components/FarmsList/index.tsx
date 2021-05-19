@@ -14,8 +14,8 @@ const FarmListWrapper = styled.div`
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 2fr 1fr 1fr 0.5fr 1fr 1fr 1fr 1fr;
-  grid-template-areas: 'pools liq apy amp end_in earnings balance available_balance';
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 2fr 2fr;
+  grid-template-areas: 'pools liq apy end_in reward staked_balance stakeable_balance';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
   align-items: center;
@@ -50,7 +50,7 @@ const FarmsList = ({ farms }: FarmsListProps) => {
     return above1200 ? (
       <TableHeader>
         <Flex grid-area="pools" alignItems="center" justifyContent="flexStart">
-          <ClickableText>Pools</ClickableText>
+          <ClickableText>Pools | AMP</ClickableText>
         </Flex>
 
         <Flex grid-area="liq" alignItems="center" justifyContent="flexEnd">
@@ -61,24 +61,20 @@ const FarmsList = ({ farms }: FarmsListProps) => {
           <ClickableText>APY</ClickableText>
         </Flex>
 
-        <Flex grid-area="amp" alignItems="center">
-          <ClickableText>AMP</ClickableText>
-        </Flex>
-
         <Flex grid-area="end_in" alignItems="center">
           <ClickableText>End In</ClickableText>
         </Flex>
 
-        <Flex grid-area="earnings" alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Earnings</ClickableText>
+        <Flex grid-area="reward" alignItems="center" justifyContent="flexEnd">
+          <ClickableText>Your Rewards</ClickableText>
         </Flex>
 
-        <Flex grid-area="balance" alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Balance</ClickableText>
+        <Flex grid-area="staked_balance" alignItems="center" justifyContent="flexEnd">
+          <ClickableText>Your Stake Balance</ClickableText>
         </Flex>
 
-        <Flex grid-area="available_balance" alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Available Balance</ClickableText>
+        <Flex grid-area="staked_balance" alignItems="center" justifyContent="flexEnd">
+          <ClickableText>Your Stake-able Balance</ClickableText>
         </Flex>
       </TableHeader>
     ) : null
