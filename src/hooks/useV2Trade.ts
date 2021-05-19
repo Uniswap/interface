@@ -36,15 +36,14 @@ const MAX_HOPS = 3
  */
 export function useV2TradeExactIn(
   currencyAmountIn?: CurrencyAmount<Currency>,
-  currencyOut?: Currency
+  currencyOut?: Currency,
+  { maxHops = MAX_HOPS } = {}
 ): Trade<Currency, Currency, TradeType.EXACT_INPUT> | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
 
-  const [singleHopOnly] = useUserSingleHopOnly()
-
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
-      if (singleHopOnly) {
+      if (maxHops === 1) {
         return (
           Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: 1, maxNumResults: 1 })[0] ??
           null
@@ -52,7 +51,7 @@ export function useV2TradeExactIn(
       }
       // search through trades with varying hops, find best trade out of them
       let bestTradeSoFar: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null = null
-      for (let i = 1; i <= MAX_HOPS; i++) {
+      for (let i = 1; i <= maxHops; i++) {
         const currentTrade: Trade<Currency, Currency, TradeType.EXACT_INPUT> | null =
           Trade.bestTradeExactIn(allowedPairs, currencyAmountIn, currencyOut, { maxHops: i, maxNumResults: 1 })[0] ??
           null
@@ -65,7 +64,7 @@ export function useV2TradeExactIn(
     }
 
     return null
-  }, [allowedPairs, currencyAmountIn, currencyOut, singleHopOnly])
+  }, [allowedPairs, currencyAmountIn, currencyOut, maxHops])
 }
 
 /**
@@ -73,15 +72,14 @@ export function useV2TradeExactIn(
  */
 export function useV2TradeExactOut(
   currencyIn?: Currency,
-  currencyAmountOut?: CurrencyAmount<Currency>
+  currencyAmountOut?: CurrencyAmount<Currency>,
+  { maxHops = MAX_HOPS } = {}
 ): Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
 
-  const [singleHopOnly] = useUserSingleHopOnly()
-
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
-      if (singleHopOnly) {
+      if (maxHops === 1) {
         return (
           Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: 1, maxNumResults: 1 })[0] ??
           null
@@ -89,7 +87,7 @@ export function useV2TradeExactOut(
       }
       // search through trades with varying hops, find best trade out of them
       let bestTradeSoFar: Trade<Currency, Currency, TradeType.EXACT_OUTPUT> | null = null
-      for (let i = 1; i <= MAX_HOPS; i++) {
+      for (let i = 1; i <= maxHops; i++) {
         const currentTrade =
           Trade.bestTradeExactOut(allowedPairs, currencyIn, currencyAmountOut, { maxHops: i, maxNumResults: 1 })[0] ??
           null
@@ -100,5 +98,5 @@ export function useV2TradeExactOut(
       return bestTradeSoFar
     }
     return null
-  }, [currencyIn, currencyAmountOut, allowedPairs, singleHopOnly])
+  }, [currencyIn, currencyAmountOut, allowedPairs, maxHops])
 }
