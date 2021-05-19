@@ -54,7 +54,7 @@
     "node-vibrant": "^3.1.6",
     "polished": "^4.1.2",
     "prettier": "^2.2.1",
-    "qs": "^6.9.4",
+    "qs": "^6.10.1",
     "react": "^17.0.2",
     "react-device-detect": "^1.17.0",
     "react-dom": "^17.0.2",
