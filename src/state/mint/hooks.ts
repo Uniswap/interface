@@ -204,7 +204,7 @@ export function useDerivedMintInfo(
   }
 
   if (!liquidityMinted?.greaterThan(ZERO)) {
-    error = `Insuffcient input amount`
+    error = `Insufficient input amount`
   }
 
   return {
