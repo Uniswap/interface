@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
-import { InsufficientInputAmountError, Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@uniswap/v2-sdk'
 import { Currency, Token, Percent, Price, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
@@ -162,8 +162,8 @@ export function useDerivedMintInfo(
     if (pair && totalSupply && tokenAmountA && tokenAmountB) {
       try {
         return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
-      } catch (e) {
-        if (e instanceof InsufficientInputAmountError) {
+      } catch (error) {
+        if (error.InsufficientInputAmountError) {
           return CurrencyAmount.fromRawAmount(pair.liquidityToken, ZERO)
         }
         return undefined
