@@ -25,7 +25,9 @@ import {
   calculateMultiBridgeFee,
   calculateNativeAMBBridgeFee,
   getBscFuseInverseLibrary,
-  isAddress
+  isAddress,
+  calculateBnbNativeAMBBridgeFee,
+  getBnbNativeAMBBridgeFee
 } from '../../utils'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import {
@@ -39,7 +41,8 @@ export enum BridgeType {
   ETH_FUSE_ERC677_TO_ERC677 = 'ETH_FUSE_ERC677_TO_ERC677',
   ETH_FUSE_ERC20_TO_ERC677 = 'ETH_FUSE_ERC20_TO_ERC677',
   BSC_FUSE_ERC20_TO_ERC677 = 'BSC_FUSE_ERC20_TO_ERC677',
-  BSC_FUSE_NATIVE = 'BSC_FUSE_NATIVE'
+  BSC_FUSE_NATIVE = 'BSC_FUSE_NATIVE',
+  BSC_FUSE_BNB_NATIVE = 'BSC_FUSE_BNB_NATIVE'
 }
 
 export enum BridgeDirection {
@@ -245,6 +248,10 @@ export function useBridgeFee(tokenAddress: string | undefined, bridgeDirection: 
           method = getNativeAMBBridgeFee
           args = [isHome, getBscFuseInverseLibrary(isHome), account]
           break
+        case BridgeType.BSC_FUSE_BNB_NATIVE:
+          method = getBnbNativeAMBBridgeFee
+          args = [isHome, getBscFuseInverseLibrary(isHome), account]
+          break
         default:
           throw new Error(`Unsupported bridgeType for token: ${tokenAddress}`)
       }
@@ -287,6 +294,10 @@ export function useCalculatedBridgeFee(
           break
         case BridgeType.BSC_FUSE_NATIVE:
           method = calculateNativeAMBBridgeFee
+          args = [currencyAmount, isHome, getBscFuseInverseLibrary(isHome), account]
+          break
+        case BridgeType.BSC_FUSE_BNB_NATIVE:
+          method = calculateBnbNativeAMBBridgeFee
           args = [currencyAmount, isHome, getBscFuseInverseLibrary(isHome), account]
           break
         default:

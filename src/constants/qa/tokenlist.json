@@ -72,6 +72,14 @@
         "chainId": 122,
         "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdd974D5C2e2928deA5F71b9825b8b646686BD200/logo.png",
         "isDeprecated": true
+      },
+      {
+        "name": "BNB on Fuse",
+        "address": "0x904a6D704b91DdaF4d0931f71b9807d95f9777cb",
+        "symbol": "BNB",
+        "decimals": 18,
+        "chainId": 122,
+        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xB8c77482e45F1F44dE1745F52C74426C631bDD52/logo.png"
       }
     ]
   }

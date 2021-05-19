@@ -4,7 +4,7 @@ import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { useEffect, useState, useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
-import { injected } from '../connectors'
+import { injected, BINANCE_CHAIN_ID } from '../connectors'
 import { NetworkContextName } from '../constants'
 import { useAsyncMemo } from 'use-async-memo'
 import { WrappedTokenInfo } from '../state/lists/hooks'
@@ -96,8 +96,9 @@ export function useChain() {
     const isHome = chainId === ChainId.FUSE
     const isEtheruem = chainId === ChainId.MAINNET
     const isForeign = chainId === ChainId.MAINNET || chainId === ChainId.ROPSTEN
+    const isBsc = chainId === BINANCE_CHAIN_ID
 
-    return { isHome, isEtheruem, isForeign }
+    return { isHome, isEtheruem, isForeign, isBsc }
   }, [chainId])
 }
 

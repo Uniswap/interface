@@ -4,10 +4,12 @@ import styled from 'styled-components'
 
 import FuseLogo from '../../assets/svg/fuse-logo.svg'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import BnbLogo from '../../assets/images/bnb.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo, useSelectedSwapTokenList } from '../../state/lists/hooks'
 import Logo from '../Logo'
 import { useActiveWeb3React } from '../../hooks'
+import { BNB } from '../../data/Currency'
 
 const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
@@ -64,6 +66,10 @@ export default function CurrencyLogo({
     } else {
       return <StyledEthereumLogo src={FuseLogo} size={size} style={style} />
     }
+  }
+
+  if (currency === BNB) {
+    return <StyledEthereumLogo src={BnbLogo} size={size} style={style} />
   }
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />
