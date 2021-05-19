@@ -484,24 +484,11 @@ export default function AddLiquidity({
                 <BlueCard>
                   <AutoColumn gap="10px">
                     {isPoolExisted &&
-                      (() => {
-                        const pool = poolsList[0]
-                        if (pool) {
-                          const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
-                          const price = pool.priceOf(wrappedCurrency(currencyB || undefined, chainId) as Token)
-                          return (
-                            <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
-                              Note: There are existing pools for this token pair
-                              <br />
-                              <strong>
-                                Market price: {price.toSignificant(5)} {currencyA?.symbol} per {currencyB?.symbol} (AMP=
-                                {formattedNum(amp.toSignificant(5))})
-                              </strong>
-                            </TYPE.link>
-                          )
-                        }
-                        return null
-                      })()}
+                      <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
+                        Note: There are existing pools for this token pair. Please check {' '}
+                        <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>here</Link>
+                      </TYPE.link>
+                    }
                     <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
                       You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
                       supply below will set the initial price of this pool. Once you are satisfied with the rate,
