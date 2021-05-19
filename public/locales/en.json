@@ -107,5 +107,6 @@
   "stake": "Stake",
   "unstake": "Unstake",
   "stakeUnstake": "Stake/Unstake",
-  "vesting": "Vesting"
+  "vesting": "Vesting",
+  "connectWalletFarm": "Connect to a wallet to see available farms"
 }

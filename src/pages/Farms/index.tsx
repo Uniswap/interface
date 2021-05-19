@@ -52,12 +52,29 @@ const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   }
 `
 
+const ConnectWalletFarm = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+`
+
 const Farms = () => {
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
   const { loading: publicDataLoading, error: publicDataError, data: allFarms } = useFarmsPublicData()
   const { loading: userFarmsLoading, data: farmsUserData } = useFarmsUserData(account, allFarms)
   const [activeTab, setActiveTab] = useState(0)
+
+  if (!account) {
+    return (
+      <PageWrapper>
+        <Panel>
+          <ConnectWalletFarm>{t('connectWalletFarm')}</ConnectWalletFarm>
+        </Panel>
+      </PageWrapper>
+    )
+  }
 
   if (publicDataLoading || userFarmsLoading) {
     return <LocalLoader />
@@ -88,7 +105,7 @@ const Farms = () => {
           </Tab>
         </TabContainer>
 
-        <Panel>{activeTab === 0 ? <FarmsList farms={allFarms} /> : <div>Vesting</div>}</Panel>
+        <Panel>{activeTab === 0 ? <FarmsList farms={farms} /> : <div>Vesting</div>}</Panel>
       </PageWrapper>
       <FarmClaimModal />
       <FarmStakeModal />
