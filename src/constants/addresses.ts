@@ -15,7 +15,6 @@ export const ARGENT_WALLET_DETECTOR_ADDRESS: { [chainId in ChainId]?: string } =
 }
 export const V3_CORE_FACTORY_ADDRESSES = constructSameAddressMap(V3_FACTORY_ADDRESS)
 export const QUOTER_ADDRESSES = constructSameAddressMap('0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6')
-export const TICK_LENS_ADDRESSES = constructSameAddressMap('0xbfd8137f7d1516D3ea5cA83523914859ec47F573')
 export const NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = constructSameAddressMap(
   '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
 )
