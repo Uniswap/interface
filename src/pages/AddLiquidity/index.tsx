@@ -124,8 +124,13 @@ export default function AddLiquidity({
     existingPosition
   )
 
-  const { onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, onStartPriceInput } =
-    useV3MintActionHandlers(noLiquidity)
+  const {
+    onFieldAInput,
+    onFieldBInput,
+    onLeftRangeInput,
+    onRightRangeInput,
+    onStartPriceInput,
+  } = useV3MintActionHandlers(noLiquidity)
 
   const isValid = !errorMessage && !invalidRange
 

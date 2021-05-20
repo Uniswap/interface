@@ -18,7 +18,9 @@ export function useMintState(): AppState['mint'] {
   return useSelector<AppState, AppState['mint']>((state) => state.mint)
 }
 
-export function useMintActionHandlers(noLiquidity: boolean | undefined): {
+export function useMintActionHandlers(
+  noLiquidity: boolean | undefined
+): {
   onFieldAInput: (typedValue: string) => void
   onFieldBInput: (typedValue: string) => void
 } {

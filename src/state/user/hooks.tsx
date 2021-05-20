@@ -131,10 +131,9 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
     return state.user.userSlippageTolerance
   })
 
-  return useMemo(
-    () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
-    [userSlippageTolerance]
-  )
+  return useMemo(() => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)), [
+    userSlippageTolerance,
+  ])
 }
 
 /**
@@ -143,10 +142,10 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
  */
 export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
   const allowedSlippage = useUserSlippageTolerance()
-  return useMemo(
-    () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
-    [allowedSlippage, defaultSlippageTolerance]
-  )
+  return useMemo(() => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage), [
+    allowedSlippage,
+    defaultSlippageTolerance,
+  ])
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
@@ -279,10 +278,11 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     })
   }, [savedSerializedPairs, chainId])
 
-  const combinedList = useMemo(
-    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
-    [generatedPairs, pinnedPairs, userPairs]
-  )
+  const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
+    generatedPairs,
+    pinnedPairs,
+    userPairs,
+  ])
 
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list

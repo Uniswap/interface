@@ -3,7 +3,9 @@ import { usePool } from 'hooks/usePools'
 import { PositionDetails } from 'types/position'
 import { useCurrency } from './Tokens'
 
-export function useDerivedPositionInfo(positionDetails: PositionDetails | undefined): {
+export function useDerivedPositionInfo(
+  positionDetails: PositionDetails | undefined
+): {
   position: Position | undefined
   pool: Pool | undefined
 } {
