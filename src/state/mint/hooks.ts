@@ -163,7 +163,7 @@ export function useDerivedMintInfo(
       try {
         return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
       } catch (error) {
-        if (error.InsufficientInputAmountError) {
+        if (error.isInsufficientInputAmountError) {
           return CurrencyAmount.fromRawAmount(pair.liquidityToken, ZERO)
         }
         return undefined
