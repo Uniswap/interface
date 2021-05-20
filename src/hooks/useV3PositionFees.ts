@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react'
 import { useV3NFTPositionManagerContract } from './useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Pool } from '@uniswap/v3-sdk'
-import { CurrencyAmount, Token, currencyEquals, ETHER, Ether } from '@uniswap/sdk-core'
+import { CurrencyAmount, Currency } from '@uniswap/sdk-core'
 import { useBlockNumber } from 'state/application/hooks'
-import { unwrappedToken } from 'utils/wrappedCurrency'
+import { unwrappedToken } from 'utils/unwrappedToken'
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 
@@ -14,7 +14,7 @@ export function useV3PositionFees(
   pool?: Pool,
   tokenId?: BigNumber,
   asWETH = false
-): [CurrencyAmount<Token | Ether>, CurrencyAmount<Token | Ether>] | [undefined, undefined] {
+): [CurrencyAmount<Currency>, CurrencyAmount<Currency>] | [undefined, undefined] {
   const positionManager = useV3NFTPositionManagerContract(false)
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
 
@@ -45,11 +45,11 @@ export function useV3PositionFees(
 
   if (pool && amounts) {
     return [
-      !asWETH && currencyEquals(unwrappedToken(pool.token0), ETHER)
-        ? CurrencyAmount.ether(amounts[0].toString())
+      !asWETH && unwrappedToken(pool.token0).isNative
+        ? CurrencyAmount.ether(pool.chainId, amounts[0].toString())
         : CurrencyAmount.fromRawAmount(pool.token0, amounts[0].toString()),
-      !asWETH && currencyEquals(unwrappedToken(pool.token1), ETHER)
-        ? CurrencyAmount.ether(amounts[1].toString())
+      !asWETH && unwrappedToken(pool.token1).isNative
+        ? CurrencyAmount.ether(pool.chainId, amounts[1].toString())
         : CurrencyAmount.fromRawAmount(pool.token1, amounts[1].toString()),
     ]
   } else {

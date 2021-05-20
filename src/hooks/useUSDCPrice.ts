@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { USDC } from '../constants/tokens'
 import { useV2TradeExactOut } from './useV2Trade'
@@ -16,10 +16,10 @@ const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC, 100_000e6)
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const { chainId } = useActiveWeb3React()
 
-  const v2USDCTrade = useV2TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined, {
+  const v2USDCTrade = useV2TradeExactOut(currency, chainId === 1 ? usdcCurrencyAmount : undefined, {
     maxHops: 2,
   })
-  const v3USDCTrade = useBestV3TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined)
+  const v3USDCTrade = useBestV3TradeExactOut(currency, chainId === 1 ? usdcCurrencyAmount : undefined)
 
   return useMemo(() => {
     if (!currency || !chainId) {
@@ -27,7 +27,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     }
 
     // return some fake price data for non-mainnet
-    if (chainId !== ChainId.MAINNET) {
+    if (chainId !== 1) {
       const fakeUSDC = new Token(chainId, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'fUSDC', 'Fake USDC')
       return new Price(
         currency,

@@ -1,6 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, Percent, WETH9 } from '@uniswap/sdk-core'
+import { Currency, Percent, WETH9 } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -31,7 +31,6 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
@@ -53,11 +52,7 @@ export default function RemoveLiquidity({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
-  const [tokenA, tokenB] = useMemo(() => [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)], [
-    currencyA,
-    currencyB,
-    chainId,
-  ])
+  const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
   const theme = useContext(ThemeContext)
 
@@ -164,8 +159,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB.isEther
-    const oneCurrencyIsETH = currencyA.isEther || currencyBIsETH
+    const currencyBIsETH = currencyB.isNative
+    const oneCurrencyIsETH = currencyA.isNative || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
@@ -384,11 +379,9 @@ export default function RemoveLiquidity({
     [onUserInput]
   )
 
-  const oneCurrencyIsETH = currencyA?.isEther || currencyB?.isEther
+  const oneCurrencyIsETH = currencyA?.isNative || currencyB?.isNative
   const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(WETH9[chainId], currencyA)) ||
-        (currencyB && currencyEquals(WETH9[chainId], currencyB)))
+    chainId && WETH9[chainId] && (currencyA?.equals(WETH9[chainId]) || currencyB?.equals(WETH9[chainId]))
   )
 
   const handleSelectCurrencyA = useCallback(
@@ -527,17 +520,17 @@ export default function RemoveLiquidity({
                       <RowBetween style={{ justifyContent: 'flex-end' }}>
                         {oneCurrencyIsETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${currencyA?.isEther ? WETH9[chainId].address : currencyIdA}/${
-                              currencyB?.isEther ? WETH9[chainId].address : currencyIdB
+                            to={`/remove/v2/${currencyA?.isNative ? WETH9[chainId].address : currencyIdA}/${
+                              currencyB?.isNative ? WETH9[chainId].address : currencyIdB
                             }`}
                           >
                             Receive WETH
                           </StyledInternalLink>
                         ) : oneCurrencyIsWETH ? (
                           <StyledInternalLink
-                            to={`/remove/v2/${
-                              currencyA && currencyEquals(currencyA, WETH9[chainId]) ? 'ETH' : currencyIdA
-                            }/${currencyB && currencyEquals(currencyB, WETH9[chainId]) ? 'ETH' : currencyIdB}`}
+                            to={`/remove/v2/${currencyA?.equals(WETH9[chainId]) ? 'ETH' : currencyIdA}/${
+                              currencyB?.equals(WETH9[chainId]) ? 'ETH' : currencyIdB
+                            }`}
                           >
                             Receive ETH
                           </StyledInternalLink>

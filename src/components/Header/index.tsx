@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import useScrollPosition from '@react-hook/window-scroll'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
@@ -301,11 +300,11 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ROPSTEN]: 'Ropsten',
-  [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan',
+const NETWORK_LABELS: { [chainId: number]: string } = {
+  [4]: 'Rinkeby',
+  [3]: 'Ropsten',
+  [5]: 'Görli',
+  [42]: 'Kovan',
 }
 
 export default function Header() {

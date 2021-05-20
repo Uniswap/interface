@@ -9,7 +9,6 @@ import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 
 import { useActiveWeb3React } from '../../hooks/web3'
-import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
 
@@ -63,7 +62,7 @@ export function useDerivedMintInfo(
   poolTokenPercentage?: Percent
   error?: string
 } {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
 
   const { independentField, typedValue, otherTypedValue } = useMintState()
 
@@ -115,21 +114,23 @@ export function useDerivedMintInfo(
       return undefined
     } else if (independentAmount) {
       // we wrap the currencies just to get the price in terms of the other token
-      const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
-      const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
+      const wrappedIndependentAmount = independentAmount?.wrapped
+      const [tokenA, tokenB] = [currencyA?.wrapped, currencyB?.wrapped]
       if (tokenA && tokenB && wrappedIndependentAmount && pair) {
         const dependentCurrency = dependentField === Field.CURRENCY_B ? currencyB : currencyA
         const dependentTokenAmount =
           dependentField === Field.CURRENCY_B
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
-        return dependentCurrency?.isEther ? CurrencyAmount.ether(dependentTokenAmount.quotient) : dependentTokenAmount
+        return dependentCurrency?.isNative
+          ? CurrencyAmount.ether(dependentCurrency.chainId, dependentTokenAmount.quotient)
+          : dependentTokenAmount
       }
       return undefined
     } else {
       return undefined
     }
-  }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, chainId, currencyB, pair])
+  }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, currencyB, pair])
 
   const parsedAmounts: { [field in Field]: CurrencyAmount<Currency> | undefined } = useMemo(() => {
     return {
@@ -147,18 +148,15 @@ export function useDerivedMintInfo(
       }
       return undefined
     } else {
-      const wrappedCurrencyA = wrappedCurrency(currencyA, chainId)
+      const wrappedCurrencyA = currencyA?.wrapped
       return pair && wrappedCurrencyA ? pair.priceOf(wrappedCurrencyA) : undefined
     }
-  }, [chainId, currencyA, noLiquidity, pair, parsedAmounts])
+  }, [currencyA, noLiquidity, pair, parsedAmounts])
 
   // liquidity minted
   const liquidityMinted = useMemo(() => {
     const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
-    const [tokenAmountA, tokenAmountB] = [
-      wrappedCurrencyAmount(currencyAAmount, chainId),
-      wrappedCurrencyAmount(currencyBAmount, chainId),
-    ]
+    const [tokenAmountA, tokenAmountB] = [currencyAAmount?.wrapped, currencyBAmount?.wrapped]
     if (pair && totalSupply && tokenAmountA && tokenAmountB) {
       try {
         return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
@@ -170,7 +168,7 @@ export function useDerivedMintInfo(
       }
     }
     return undefined
-  }, [parsedAmounts, chainId, pair, totalSupply])
+  }, [parsedAmounts, pair, totalSupply])
 
   const poolTokenPercentage = useMemo(() => {
     if (liquidityMinted && totalSupply) {
