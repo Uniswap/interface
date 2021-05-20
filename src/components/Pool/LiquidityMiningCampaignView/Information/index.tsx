@@ -23,23 +23,24 @@ const StyledUnlock = styled(Unlock)`
   color: ${props => props.theme.green1};
 `
 
-const BadgeRoot = styled.div<{ upcoming?: boolean }>`
+const BadgeRoot = styled.div<{ upcoming?: boolean; expired?: boolean }>`
   height: 16px;
   width: fit-content;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${props => transparentize(0.9, props.upcoming ? props.theme.yellow2 : props.theme.green2)};
+  background-color: ${props =>
+    transparentize(0.9, props.expired ? props.theme.red2 : props.upcoming ? props.theme.yellow2 : props.theme.green2)};
   border-radius: 4px;
   padding: 0 4px;
 `
 
-const BadgeText = styled.div<{ upcoming?: boolean }>`
+const BadgeText = styled.div<{ upcoming?: boolean; expired?: boolean }>`
   font-weight: 600;
   font-size: 9px;
   line-height: 11px;
   letter-spacing: 0.02em;
-  color: ${props => (props.upcoming ? props.theme.yellow2 : props.theme.green2)};
+  color: ${props => (props.expired ? props.theme.red2 : props.upcoming ? props.theme.yellow2 : props.theme.green2)};
 `
 
 interface InformationProps {
@@ -71,6 +72,9 @@ function Information({
   const upcoming = useMemo(() => {
     return !!(startsAt && startsAt > Math.floor(Date.now() / 1000))
   }, [startsAt])
+  const expired = useMemo(() => {
+    return !!(endsAt && endsAt < Math.floor(Date.now() / 1000))
+  }, [endsAt])
 
   return (
     <Flex justifyContent="space-between">
@@ -166,8 +170,10 @@ function Information({
               {!endsAt ? (
                 <Skeleton width="40px" height="14px" />
               ) : (
-                <BadgeRoot upcoming={upcoming}>
-                  <BadgeText upcoming={upcoming}>{upcoming ? 'UPCOMING' : 'ACTIVE'}</BadgeText>
+                <BadgeRoot expired={expired} upcoming={upcoming}>
+                  <BadgeText expired={expired} upcoming={upcoming}>
+                    {expired ? 'EXPIRED' : upcoming ? 'UPCOMING' : 'ACTIVE'}
+                  </BadgeText>
                 </BadgeRoot>
               )}
             </Box>

@@ -283,16 +283,8 @@ export default function StakeCard({ campaign, showUSDValue }: FullPositionCardPr
                         </>
                       ) : (
                         <>
-                          <TokenAmountDisplayer
-                            amount={underlyingAssets.token0}
-                            alignRight
-                            showUSDValue={showUSDValue}
-                          />
-                          <TokenAmountDisplayer
-                            amount={underlyingAssets.token1}
-                            alignRight
-                            showUSDValue={showUSDValue}
-                          />
+                          <TokenAmountDisplayer amount={underlyingAssets.token0} showUSDValue={showUSDValue} />
+                          <TokenAmountDisplayer amount={underlyingAssets.token1} showUSDValue={showUSDValue} />
                         </>
                       )}
                     </AutoColumn>
