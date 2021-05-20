@@ -16,16 +16,18 @@ export function useV3PositionFees(
   asWETH = false
 ): [CurrencyAmount<Currency>, CurrencyAmount<Currency>] | [undefined, undefined] {
   const positionManager = useV3NFTPositionManagerContract(false)
-  const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const owner: string | undefined = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId])
+    .result?.[0]
 
   const tokenIdHexString = tokenId?.toHexString()
   const latestBlockNumber = useBlockNumber()
 
   // TODO find a way to get this into multicall
-  // because these amounts don't ever go down, we don't actually need to clear this state
   // latestBlockNumber is included to ensure data stays up-to-date every block
   const [amounts, setAmounts] = useState<[BigNumber, BigNumber]>()
   useEffect(() => {
+    let stale = false
+
     if (positionManager && tokenIdHexString && owner && typeof latestBlockNumber === 'number') {
       positionManager.callStatic
         .collect(
@@ -38,8 +40,12 @@ export function useV3PositionFees(
           { from: owner } // need to simulate the call as the owner
         )
         .then((results) => {
-          setAmounts([results.amount0, results.amount1])
+          if (!stale) setAmounts([results.amount0, results.amount1])
         })
+    }
+
+    return () => {
+      stale = true
     }
   }, [positionManager, tokenIdHexString, owner, latestBlockNumber])
 
