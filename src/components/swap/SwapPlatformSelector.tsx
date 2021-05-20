@@ -19,13 +19,7 @@ import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../.
 import { Field } from '../../state/swap/actions'
 import Skeleton from 'react-loading-skeleton'
 import useDebounce from '../../hooks/useDebounce'
-
-const TableHeaderText = styled.span`
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 12px;
-  color: ${props => props.theme.bg5};
-`
+import { Table, Th } from '../Table'
 
 const Spacer = styled.tr`
   height: 6px;
@@ -87,23 +81,13 @@ export function SwapPlatformSelector({
 
   return (
     <AutoColumn gap="18px" style={{ borderBottom: '1px solid #292643', paddingBottom: '12px', marginBottom: '12px' }}>
-      <table style={{ width: '100%', margin: 0, padding: 0 }}>
+      <Table>
         <thead>
           <tr>
-            <td colSpan={4}>
-              <TableHeaderText>EXCHANGE</TableHeaderText>
-            </td>
-            <td>
-              <TableHeaderText>FEE</TableHeaderText>
-            </td>
-            {showGasFees && (
-              <td align="right">
-                <TableHeaderText>GAS</TableHeaderText>
-              </td>
-            )}
-            <td align="right">
-              <TableHeaderText>MIN. RECEIVED</TableHeaderText>
-            </td>
+            <Th colSpan={4}>EXCHANGE</Th>
+            <Th>FEE</Th>
+            {showGasFees && <Th align="right">GAS</Th>}
+            <Th align="right">MIN. RECEIVED</Th>
           </tr>
         </thead>
         <tbody>
@@ -153,7 +137,7 @@ export function SwapPlatformSelector({
             )
           })}
         </tbody>
-      </table>
+      </Table>
       {selectedTrade && selectedTrade.route.path.length > 2 && (
         <Flex mx="2px" width="100%">
           <Flex>
