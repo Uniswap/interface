@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
@@ -86,7 +86,7 @@ export function TransactionSubmittedContent({
 }: {
   onDismiss: () => void
   hash: string | undefined
-  chainId: ChainId
+  chainId: number
   currencyToAdd?: Currency | undefined
   inline?: boolean // not in modal
 }) {

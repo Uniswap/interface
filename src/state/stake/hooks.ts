@@ -1,4 +1,4 @@
-import { ChainId, Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
@@ -17,26 +17,26 @@ export const STAKING_GENESIS = 1600387200
 export const REWARDS_DURATION_DAYS = 60
 
 export const STAKING_REWARDS_INFO: {
-  [chainId in ChainId]?: {
+  [chainId: number]: {
     tokens: [Token, Token]
     stakingRewardAddress: string
   }[]
 } = {
-  [ChainId.MAINNET]: [
+  [1]: [
     {
-      tokens: [WETH9[ChainId.MAINNET], DAI],
+      tokens: [WETH9[1], DAI],
       stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711',
     },
     {
-      tokens: [WETH9[ChainId.MAINNET], USDC],
+      tokens: [WETH9[1], USDC],
       stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b',
     },
     {
-      tokens: [WETH9[ChainId.MAINNET], USDT],
+      tokens: [WETH9[1], USDT],
       stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a',
     },
     {
-      tokens: [WETH9[ChainId.MAINNET], WBTC],
+      tokens: [WETH9[1], WBTC],
       stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e',
     },
   ],

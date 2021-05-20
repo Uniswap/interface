@@ -4422,10 +4422,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz#dc3d911f65a860fc3f0cae074bdcd08ed6a27a4d"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/sdk-core@^3.0.0-alpha.1":
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.0.0-alpha.1.tgz#8d735755818658fd4a6113cb6d30ed637f9e8347"
-  integrity sha512-dCRBMKtmVmQCoG6sju3j/ki81e82zyqcWm0g+eU3JU0hzbSo6i31wzkOQPHMRO6FcYIJ6+9qx3Sy0B7VoZ6t9g==
+"@uniswap/sdk-core@^3.0.0-alpha.2":
+  version "3.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.0.0-alpha.2.tgz#58f850a3a4e31c366a7471a92bcf704c35491cdd"
+  integrity sha512-X4tqngp/HLNIbfzHLXtf25OeLtgDVHafp6bCGYR29qsWwlOJR+GlQ+cYDuR+3tOZHt6kuJcXG4rAP6vnjkcqkg==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
@@ -4457,14 +4457,14 @@
     "@uniswap/lib" "1.1.1"
     "@uniswap/v2-core" "1.0.0"
 
-"@uniswap/v2-sdk@^3.0.0-alpha.0":
-  version "3.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/v2-sdk/-/v2-sdk-3.0.0-alpha.0.tgz#5bbd3133f832bf8b36bacf9213b06de520313e28"
-  integrity sha512-KHgdCldJ0JY6NC7KImJuU00G5E7X3LNq5yyVy5tGqf2S9fzBf/az91tlVSZzkEyALmH+8RiSvtqKjSNMXTXTfw==
+"@uniswap/v2-sdk@^3.0.0-alpha.1":
+  version "3.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@uniswap/v2-sdk/-/v2-sdk-3.0.0-alpha.1.tgz#dd5469299badc0b1d51e7a13e1d24240d3fd7fac"
+  integrity sha512-AdoRY51MY7nAAKC00oNTXBZi/5f1bWEoXWy7Np5Q6zk/nnH3ImSRPUg2BOwfOKH1SHffk9yZhFKARmS8+hhGBQ==
   dependencies:
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
-    "@uniswap/sdk-core" "^3.0.0-alpha.1"
+    "@uniswap/sdk-core" "^3.0.0-alpha.2"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
 
@@ -4484,14 +4484,14 @@
     "@uniswap/v3-core" "1.0.0"
     base64-sol "1.0.1"
 
-"@uniswap/v3-sdk@^3.0.0-alpha.6":
-  version "3.0.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.0.0-alpha.6.tgz#8050c2970757446e38c024e1ed8f6771ad7aae98"
-  integrity sha512-FsOB2SAeLbZ9lANeaKnc12A+NSfZ2qTeKbRx7JJE9cJrhzR2fg1lSjI9foRcO3uz6aLE87cobELR815sZmPnTw==
+"@uniswap/v3-sdk@^3.0.0-alpha.7":
+  version "3.0.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.0.0-alpha.7.tgz#77175c1f0bb277a7d24a6741d2bfa7e6d6bec997"
+  integrity sha512-Z2APVF56aOjN9UvHXKV+d1Bccq40Fz6BexlwiwK1HEDeHyQ6v52O23usO7xfNEnenEPVscMu9bQV12W6tFMPdg==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
-    "@uniswap/sdk-core" "^3.0.0-alpha.1"
+    "@uniswap/sdk-core" "^3.0.0-alpha.2"
     "@uniswap/v3-periphery" "1.0.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"

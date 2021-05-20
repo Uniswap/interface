@@ -5,7 +5,7 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { unwrappedToken, wrappedCurrencyAmount } from 'utils/wrappedCurrency'
+import { unwrappedToken } from 'utils/unwrappedToken'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
@@ -24,17 +24,7 @@ import { currencyId } from 'utils/currencyId'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  Token,
-  Currency,
-  CurrencyAmount,
-  Percent,
-  Fraction,
-  Price,
-  Ether,
-  currencyEquals,
-  ETHER,
-} from '@uniswap/sdk-core'
+import { Token, Currency, CurrencyAmount, Percent, Fraction, Price } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -423,19 +413,19 @@ export function PositionPage({
   const price0 = useUSDCPrice(token0 ?? undefined)
   const price1 = useUSDCPrice(token1 ?? undefined)
 
-  const fiatValueOfFees: CurrencyAmount<Token | Ether> | null = useMemo(() => {
+  const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) return null
 
     // we wrap because it doesn't matter, the quote returns a USDC amount
-    const feeValue0Wrapped = wrappedCurrencyAmount(feeValue0, chainId)
-    const feeValue1Wrapped = wrappedCurrencyAmount(feeValue1, chainId)
+    const feeValue0Wrapped = feeValue0?.wrapped
+    const feeValue1Wrapped = feeValue1?.wrapped
 
     if (!feeValue0Wrapped || !feeValue1Wrapped) return null
 
     const amount0 = price0.quote(feeValue0Wrapped)
     const amount1 = price1.quote(feeValue1Wrapped)
     return amount0.add(amount1)
-  }, [price0, price1, feeValue0, feeValue1, chainId])
+  }, [price0, price1, feeValue0, feeValue1])
 
   const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
     if (!price0 || !price1 || !position) return null
@@ -707,7 +697,7 @@ export function PositionPage({
                 (feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0)) &&
                 currency0 &&
                 currency1 &&
-                (currencyEquals(currency0, ETHER) || currencyEquals(currency1, ETHER)) &&
+                (currency0.isNative || currency1.isNative) &&
                 !collectMigrationHash ? (
                   <AutoColumn gap="md">
                     <RowBetween>
