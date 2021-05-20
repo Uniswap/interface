@@ -3,7 +3,7 @@ import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 're
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { WrappedTokenInfo, useSelectedSwapTokenList, useSelectedBridgeTokenList } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance, useCurrencyBalances } from '../../state/wallet/hooks'
@@ -17,6 +17,7 @@ import { FadedSpan, MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isTokenOnList, getCurrencySymbol, isArrayEmpty } from '../../utils'
 import { filterZeroBalance } from './filtering'
+import { BNB } from '../../data/Currency'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -182,6 +183,7 @@ export default function CurrencyList({
   listType: CurrencyListType
 }) {
   const { account } = useActiveWeb3React()
+  const { isBsc } = useChain()
   const currencyBalances = useCurrencyBalances(account ?? undefined, currencies)
 
   const filteredCurrencies = useMemo(
@@ -192,10 +194,10 @@ export default function CurrencyList({
     [currencies, currencyBalances]
   )
 
-  const itemData = useMemo(() => (showETH ? [Currency.ETHER, ...filteredCurrencies] : filteredCurrencies), [
-    filteredCurrencies,
-    showETH
-  ])
+  const itemData = useMemo(
+    () => (showETH ? [isBsc ? BNB : Currency.ETHER, ...filteredCurrencies] : filteredCurrencies),
+    [isBsc, filteredCurrencies, showETH]
+  )
 
   const Row = useCallback(
     ({ data, index, style }) => {

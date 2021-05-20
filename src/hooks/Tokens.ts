@@ -8,6 +8,7 @@ import { isAddress } from '../utils'
 
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { BNB } from '../data/Currency'
 
 export function useAllSwapTokens(): { [address: string]: Token } {
   const { chainId } = useActiveWeb3React()
@@ -130,6 +131,7 @@ export function useCurrency(
   listType: CurrencyListType = 'Swap'
 ): Currency | null | undefined {
   const isETH = currencyId?.toUpperCase() === 'FUSE'
+  const isBNB = currencyId?.toUpperCase() === 'BNB'
   const token = useToken(isETH ? undefined : currencyId, listType)
-  return isETH ? ETHER : token
+  return isETH ? ETHER : isBNB ? BNB : token
 }

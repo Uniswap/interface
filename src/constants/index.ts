@@ -43,6 +43,12 @@ export const BSC_NATIVE_TO_ERC677_BRIDGE_FOREIGN_ADDRESS = unwrapOrThrow('BSC_NA
 export const BSC_FUSE_TOKEN_ADDRESS = unwrapOrThrow('BSC_FUSE_TOKEN_ADDRESS')
 export const PEG_SWAP_ADDRESS = unwrapOrThrow('PEG_SWAP_ADDRESS')
 
+export const BSC_BNB_NATIVE_TO_ERC20_BRIDGE_HOME_ADDRESS = unwrapOrThrow('BSC_BNB_NATIVE_TO_ERC20_BRIDGE_HOME_ADDRESS')
+export const BSC_BNB_NATIVE_TO_ERC20_BRIDGE_FOREIGN_ADDRESS = unwrapOrThrow(
+  'BSC_BNB_NATIVE_TO_ERC20_BRIDGE_FOREIGN_ADDRESS'
+)
+export const BNB_FOREIGN_TOKEN_ADDRESS = unwrapOrThrow('BNB_FOREIGN_TOKEN_ADDRESS')
+
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
@@ -97,6 +103,8 @@ export const FUSE_FUSD = new Token(
   'fUSD',
   'Fuse Dollar'
 )
+
+export const FUSE_BNB = new Token(ChainId.FUSE, BNB_FOREIGN_TOKEN_ADDRESS, 18, 'BNB', 'BNB on Fuse')
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],

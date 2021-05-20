@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { useAllSwapTokens, useToken, useAllBridgeTokens } from '../../hooks/Tokens'
 import { useSelectedSwapListInfo, useSelectedBridgeListInfo, WrappedTokenInfo } from '../../state/lists/hooks'
 import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
@@ -23,6 +23,7 @@ import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { useBridgeState, BridgeDirection } from '../../state/bridge/hooks'
+import { FUSE_BNB } from '../../constants'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -57,6 +58,7 @@ export function CurrencySearch({
   const useAllTokens = listType === 'Swap' ? useAllSwapTokens : useAllBridgeTokens
   const { bridgeDirection } = useBridgeState()
   const allTokens = useAllTokens()
+  const { isHome } = useChain()
 
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
@@ -75,11 +77,18 @@ export function CurrencySearch({
   const tokenComparator = useTokenComparator(invertSearchOrder, listType)
   const showMultiBridgeTokens = listType !== 'Swap' && bridgeDirection === BridgeDirection.FUSE_TO_BSC
 
-  const filteredBridgeTokens: Token[] = useMemo(() => {
+  const filterBscToken: Token[] = useMemo(() => {
     const tokens = Object.values(allTokens)
+    return isHome && bridgeDirection !== BridgeDirection.FUSE_TO_BSC
+      ? tokens.filter(token => token.address !== FUSE_BNB.address)
+      : tokens
+  }, [allTokens, bridgeDirection, isHome])
 
-    return showMultiBridgeTokens ? tokens.filter(token => (token as WrappedTokenInfo).tokenInfo?.isMultiBridge) : tokens
-  }, [allTokens, showMultiBridgeTokens])
+  const filteredBridgeTokens: Token[] = useMemo(() => {
+    return showMultiBridgeTokens
+      ? filterBscToken.filter(token => (token as WrappedTokenInfo).tokenInfo?.isMultiBridge)
+      : filterBscToken
+  }, [filterBscToken, showMultiBridgeTokens])
 
   const filteredTokens: Token[] = useMemo(() => {
     if (isAddressSearch) return searchToken ? [searchToken] : []

@@ -125,7 +125,7 @@ export default function Bridge() {
 
   const toggleWalletModal = useWalletModalToggle()
 
-  const { isHome, isEtheruem } = useChain()
+  const { isHome, isEtheruem, isBsc } = useChain()
 
   const approvalAddress = getApprovalAddress(inputCurrencyId, bridgeDirection)
 
@@ -277,7 +277,7 @@ export default function Bridge() {
               currency={currencies[Field.INPUT]}
               showMaxButton={!atMaxAmounts[Field.INPUT]}
               id="bridge-input-token"
-              showETH={isHome}
+              showETH={isHome || isBsc}
               listType="Bridge"
             />
           </AutoColumn>

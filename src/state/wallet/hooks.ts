@@ -6,6 +6,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress, getTokenContract } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
+import { BNB } from '../../data/Currency'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -117,7 +118,10 @@ export function useCurrencyBalances(
   ])
 
   const tokenBalances = useTokenBalances(account, tokens)
-  const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === ETHER) ?? false, [currencies])
+  const containsETH: boolean = useMemo(
+    () => currencies?.some(currency => currency === ETHER || currency === BNB) ?? false,
+    [currencies]
+  )
   const ethBalance = useETHBalances(containsETH ? [account] : [])
 
   return useMemo(
@@ -125,7 +129,7 @@ export function useCurrencyBalances(
       currencies?.map(currency => {
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === ETHER) return ethBalance[account]
+        if (currency === ETHER || currency === BNB) return ethBalance[account]
         return undefined
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances]
