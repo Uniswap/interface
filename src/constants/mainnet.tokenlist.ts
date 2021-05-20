@@ -104,7 +104,7 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'MFG',
       name: 'Smart MFG',
       decimals: 18,
-      logoURI: 'https://svgshare.com/i/XRH.svg'
+      logoURI: 'https://i.imgur.com/oReNLqf.png'
     }
   ],
   version: {
