@@ -6,6 +6,7 @@
   "devDependencies": {
     "@emotion/core": "^11.0.0",
     "@ethersproject/experimental": "^5.0.1",
+    "@metamask/jazzicon": "^2.0.0",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -73,7 +74,6 @@
     "i18next-browser-languagedetector": "^3.0.1",
     "i18next-xhr-backend": "^2.0.1",
     "inter-ui": "^3.13.1",
-    "jazzicon": "^1.5.0",
     "lightweight-charts": "^3.3.0",
     "lodash.flatmap": "^4.5.0",
     "luxon": "^1.25.0",
