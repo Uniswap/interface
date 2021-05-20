@@ -1,10 +1,15 @@
 // a list of tokens by chain
-import { ChainId, Token, WETH9 } from '@uniswap/sdk-core'
+import { Currency, Ether, Token, WETH9 } from '@uniswap/sdk-core'
 import { AMPL, DAI, FEI, FRAX, FXS, MIR, renBTC, TRIBE, UMA, UNI, USDC, USDT, UST, WBTC } from './tokens'
 
 type ChainTokenList = {
-  readonly [chainId in ChainId]: Token[]
+  readonly [chainId: number]: Token[]
 }
+
+type ChainCurrencyList = {
+  readonly [chainId: number]: Currency[]
+}
+
 // List of all mirror's assets addresses.
 // Last pulled from : https://whitelist.mirror.finance/eth/tokenlists.json
 // TODO: Generate this programmatically ?
@@ -26,22 +31,22 @@ const mAssetsAdditionalBases: { [tokenAddress: string]: Token[] } = {
   '0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86': [MIR, UST], // mVIXY
 }
 const WETH_ONLY: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH9[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [WETH9[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [WETH9[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH9[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH9[ChainId.KOVAN]],
+  [1]: [WETH9[1]],
+  [3]: [WETH9[3]],
+  [4]: [WETH9[4]],
+  [5]: [WETH9[5]],
+  [42]: [WETH9[42]],
 }
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [1]: [...WETH_ONLY[1], DAI, USDC, USDT, WBTC],
 }
-export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.MAINNET]: {
+export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
+  [1]: {
     ...mAssetsAdditionalBases,
-    '0xA948E86885e12Fb09AfEF8C52142EBDbDf73cD18': [UNI[ChainId.MAINNET]],
-    '0x561a4717537ff4AF5c687328c0f7E90a319705C0': [UNI[ChainId.MAINNET]],
+    '0xA948E86885e12Fb09AfEF8C52142EBDbDf73cD18': [UNI[1]],
+    '0x561a4717537ff4AF5c687328c0f7E90a319705C0': [UNI[1]],
     '0xa6e3454fec677772dd771788a079355e43910638': [UMA],
     [FEI.address]: [TRIBE],
     [TRIBE.address]: [FEI],
@@ -55,25 +60,25 @@ export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]
  * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
  * tokens.
  */
-export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WETH9[ChainId.MAINNET]],
+export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
+  [1]: {
+    [AMPL.address]: [DAI, WETH9[1]],
   },
 }
 // used for display in the default list when adding liquidity
-export const SUGGESTED_BASES: Partial<ChainTokenList> = {
-  [ChainId.MAINNET]: [DAI, USDC, USDT, WBTC],
+export const SUGGESTED_BASES: ChainCurrencyList = {
+  [1]: [Ether.onChain(1), DAI, USDC, USDT, WBTC],
 }
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [1]: [...WETH_ONLY[1], DAI, USDC, USDT, WBTC],
 }
-export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
-  [ChainId.MAINNET]: [
+export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
+  [1]: [
     [
-      new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
-      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin'),
+      new Token(1, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
+      new Token(1, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin'),
     ],
     [USDC, USDT],
     [DAI, USDT],

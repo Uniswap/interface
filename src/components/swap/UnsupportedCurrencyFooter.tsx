@@ -9,7 +9,6 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useActiveWeb3React } from 'hooks/web3'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 
@@ -51,7 +50,7 @@ export default function UnsupportedCurrencyFooter({
   const tokens =
     chainId && currencies
       ? currencies.map((currency) => {
-          return wrappedCurrency(currency, chainId)
+          return currency?.wrapped
         })
       : []
 

@@ -1,4 +1,4 @@
-import { ChainId, Percent, Token } from '@uniswap/sdk-core'
+import { Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import flatMap from 'lodash.flatmap'
@@ -190,7 +190,7 @@ export function useUserAddedTokens(): Token[] {
 
   return useMemo(() => {
     if (!chainId) return []
-    return Object.values(serializedTokensMap?.[chainId as ChainId] ?? {}).map(deserializeToken)
+    return Object.values(serializedTokensMap?.[chainId] ?? {}).map(deserializeToken)
   }, [serializedTokensMap, chainId])
 }
 

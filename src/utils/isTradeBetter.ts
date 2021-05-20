@@ -1,5 +1,5 @@
 import { ZERO_PERCENT, ONE_HUNDRED_PERCENT } from '../constants/misc'
-import { Percent, currencyEquals, Currency, TradeType } from '@uniswap/sdk-core'
+import { Percent, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 
@@ -15,8 +15,8 @@ export function isTradeBetter(
 
   if (
     tradeA.tradeType !== tradeB.tradeType ||
-    !currencyEquals(tradeA.inputAmount.currency, tradeB.inputAmount.currency) ||
-    !currencyEquals(tradeB.outputAmount.currency, tradeB.outputAmount.currency)
+    !tradeA.inputAmount.currency.equals(tradeB.inputAmount.currency) ||
+    !tradeB.outputAmount.currency.equals(tradeB.outputAmount.currency)
   ) {
     throw new Error('Comparing incomparable trades')
   }

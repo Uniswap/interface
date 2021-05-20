@@ -354,7 +354,7 @@ export default function AccountDetails({
                           <AddressLink
                             hasENS={!!ENSName}
                             isENS={true}
-                            href={chainId && getExplorerLink(chainId, ENSName, ExplorerDataType.ADDRESS)}
+                            href={getExplorerLink(chainId, ENSName, ExplorerDataType.ADDRESS)}
                           >
                             <LinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>View on Etherscan</span>

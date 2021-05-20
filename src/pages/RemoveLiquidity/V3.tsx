@@ -22,7 +22,7 @@ import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks/web3'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { Percent, currencyEquals, Token, ETHER } from '@uniswap/sdk-core'
+import { Percent, WETH9 } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
 import { Wrapper, SmallMaxButton, ResponsiveHeaderText } from './styled'
 import Loader from 'components/Loader'
@@ -33,7 +33,6 @@ import useTheme from 'hooks/useTheme'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import RangeBadge from 'components/Badge/RangeBadge'
 import Toggle from 'components/Toggle'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 
 export const UINT128MAX = BigNumber.from(2).pow(128).sub(1)
 
@@ -372,10 +371,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
               {liquidityValue0?.currency &&
               liquidityValue1?.currency &&
-              (liquidityValue0.currency.isEther ||
-                liquidityValue1.currency.isEther ||
-                currencyEquals(unwrappedToken(liquidityValue0.currency as Token), ETHER) ||
-                currencyEquals(unwrappedToken(liquidityValue1.currency as Token), ETHER)) ? (
+              (liquidityValue0.currency.isNative ||
+                liquidityValue1.currency.isNative ||
+                liquidityValue0.currency.wrapped.equals(WETH9[liquidityValue0.currency.chainId]) ||
+                liquidityValue1.currency.wrapped.equals(WETH9[liquidityValue1.currency.chainId])) ? (
                 <RowBetween>
                   <TYPE.main>Collect as WETH</TYPE.main>
                   <Toggle

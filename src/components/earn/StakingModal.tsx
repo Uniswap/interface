@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react'
-import { V2_ROUTER_ADDRESS } from '../../constants/addresses'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
@@ -14,10 +13,9 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { usePairContract, useStakingContract } from '../../hooks/useContract'
+import { usePairContract, useStakingContract, useV2RouterContract } from '../../hooks/useContract'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
-import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
@@ -44,7 +42,7 @@ interface StakingModalProps {
 }
 
 export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiquidityUnstaked }: StakingModalProps) {
-  const { chainId, library } = useActiveWeb3React()
+  const { library } = useActiveWeb3React()
 
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
@@ -53,7 +51,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     stakingInfo.stakedAmount.currency,
     userLiquidityUnstaked
   )
-  const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
+  const parsedAmountWrapped = parsedAmount?.wrapped
 
   let hypotheticalRewardRate: CurrencyAmount<Token> = CurrencyAmount.fromRawAmount(stakingInfo.rewardRate.currency, '0')
   if (parsedAmountWrapped?.greaterThan('0')) {
@@ -83,10 +81,8 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
   // approval data for stake
   const deadline = useTransactionDeadline()
-  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(
-    parsedAmountWrapped,
-    chainId && V2_ROUTER_ADDRESS[chainId]
-  )
+  const router = useV2RouterContract()
+  const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(parsedAmountWrapped, router?.address)
   const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
 
   const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
