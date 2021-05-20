@@ -158,16 +158,10 @@ export function useDerivedMintInfo(
     const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
     const [tokenAmountA, tokenAmountB] = [currencyAAmount?.wrapped, currencyBAmount?.wrapped]
     if (pair && totalSupply && tokenAmountA && tokenAmountB) {
-      try {
-        return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
-      } catch (error) {
-        if (error.isInsufficientInputAmountError) {
-          return CurrencyAmount.fromRawAmount(pair.liquidityToken, ZERO)
-        }
-        return undefined
-      }
+      return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
+    } else {
+      return undefined
     }
-    return undefined
   }, [parsedAmounts, pair, totalSupply])
 
   const poolTokenPercentage = useMemo(() => {
@@ -199,10 +193,6 @@ export function useDerivedMintInfo(
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
     error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
-  }
-
-  if (!liquidityMinted?.greaterThan(ZERO)) {
-    error = `Insufficient input amount`
   }
 
   return {
