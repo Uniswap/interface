@@ -225,32 +225,34 @@ export default function AddLiquidity({
 
       setAttemptingTxn(true)
 
-      library
-        .getSigner()
-        .estimateGas(txn)
-        .then((estimate) => {
-          const newTxn = {
-            ...txn,
-            gasLimit: calculateGasMargin(estimate),
-          }
+      let estimate: BigNumber | undefined
+      try {
+        estimate = await library.getSigner().estimateGas(txn)
+      } catch (error) {
+        console.error(error)
+      }
 
-          return library
-            .getSigner()
-            .sendTransaction(newTxn)
-            .then((response: TransactionResponse) => {
-              setAttemptingTxn(false)
-              addTransaction(response, {
-                summary: noLiquidity
-                  ? `Create pool and add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`
-                  : `Add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
-              })
-              setTxHash(response.hash)
-              ReactGA.event({
-                category: 'Liquidity',
-                action: 'Add',
-                label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
-              })
-            })
+      const newTxn = {
+        ...txn,
+        gasLimit: estimate ? calculateGasMargin(estimate) : BigNumber.from(100000),
+      }
+
+      return library
+        .getSigner()
+        .sendTransaction(newTxn)
+        .then((response: TransactionResponse) => {
+          setAttemptingTxn(false)
+          addTransaction(response, {
+            summary: noLiquidity
+              ? `Create pool and add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`
+              : `Add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
+          })
+          setTxHash(response.hash)
+          ReactGA.event({
+            category: 'Liquidity',
+            action: 'Add',
+            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+          })
         })
         .catch((error) => {
           setAttemptingTxn(false)
