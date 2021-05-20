@@ -1,37 +1,36 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { GOVERNANCE_ADDRESS, TIMELOCK_ADDRESS, UNI_ADDRESS } from './addresses'
 
-export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]?: { [address: string]: string } } = {
-  [ChainId.MAINNET]: {
-    [UNI_ADDRESS[ChainId.MAINNET]]: 'UNI',
-    [GOVERNANCE_ADDRESS[ChainId.MAINNET]]: 'Governance',
-    [TIMELOCK_ADDRESS[ChainId.MAINNET]]: 'Timelock',
+export const COMMON_CONTRACT_NAMES: { [chainId: number]: { [address: string]: string } } = {
+  [1]: {
+    [UNI_ADDRESS[1]]: 'UNI',
+    [GOVERNANCE_ADDRESS[1]]: 'Governance',
+    [TIMELOCK_ADDRESS[1]]: 'Timelock',
   },
-  [ChainId.RINKEBY]: {
-    [UNI_ADDRESS[ChainId.RINKEBY]]: 'Rinkeby UNI',
-    [GOVERNANCE_ADDRESS[ChainId.RINKEBY]]: 'Rinkeby Governance',
-    [TIMELOCK_ADDRESS[ChainId.RINKEBY]]: 'Rinkeby Timelock',
+  [4]: {
+    [UNI_ADDRESS[4]]: 'Rinkeby UNI',
+    [GOVERNANCE_ADDRESS[4]]: 'Rinkeby Governance',
+    [TIMELOCK_ADDRESS[4]]: 'Rinkeby Timelock',
   },
-  [ChainId.ROPSTEN]: {
-    [UNI_ADDRESS[ChainId.ROPSTEN]]: 'Ropsten UNI',
-    [GOVERNANCE_ADDRESS[ChainId.ROPSTEN]]: 'Ropsten Governance',
-    [TIMELOCK_ADDRESS[ChainId.ROPSTEN]]: 'Ropsten Timelock',
+  [3]: {
+    [UNI_ADDRESS[3]]: 'Ropsten UNI',
+    [GOVERNANCE_ADDRESS[3]]: 'Ropsten Governance',
+    [TIMELOCK_ADDRESS[3]]: 'Ropsten Timelock',
   },
-  [ChainId.KOVAN]: {
-    [UNI_ADDRESS[ChainId.KOVAN]]: 'Kovan UNI',
-    [GOVERNANCE_ADDRESS[ChainId.KOVAN]]: 'Kovan Governance',
-    [TIMELOCK_ADDRESS[ChainId.KOVAN]]: 'Kovan Timelock',
+  [42]: {
+    [UNI_ADDRESS[42]]: 'Kovan UNI',
+    [GOVERNANCE_ADDRESS[42]]: 'Kovan Governance',
+    [TIMELOCK_ADDRESS[42]]: 'Kovan Timelock',
   },
-  [ChainId.GÖRLI]: {
-    [UNI_ADDRESS[ChainId.GÖRLI]]: 'Goerli UNI',
-    [GOVERNANCE_ADDRESS[ChainId.GÖRLI]]: 'Goerli Governance',
-    [TIMELOCK_ADDRESS[ChainId.GÖRLI]]: 'Goerli Timelock',
+  [5]: {
+    [UNI_ADDRESS[5]]: 'Goerli UNI',
+    [GOVERNANCE_ADDRESS[5]]: 'Goerli Governance',
+    [TIMELOCK_ADDRESS[5]]: 'Goerli Timelock',
   },
 }
 
 export const DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS = 13
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
-export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId in ChainId]?: number } = {
-  [ChainId.MAINNET]: DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
+export const AVERAGE_BLOCK_TIME_IN_SECS: { [chainId: number]: number } = {
+  [1]: DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 }

@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { Web3Provider } from '@ethersproject/providers'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -20,20 +19,20 @@ if (typeof INFURA_KEY === 'undefined') {
 }
 
 const NETWORK_URLS: {
-  [chainId in ChainId]: string
+  [chainId: number]: string
 } = {
-  [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [1]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+  [4]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
+  [3]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
+  [5]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
+  [42]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
 }
 
-const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ROPSTEN, ChainId.KOVAN, ChainId.GÖRLI]
+const SUPPORTED_CHAIN_IDS = [1, 4, 3, 42, 5]
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
-  defaultChainId: ChainId.MAINNET,
+  defaultChainId: 1,
 })
 
 let networkLibrary: Web3Provider | undefined
@@ -67,7 +66,7 @@ export const portis = new PortisConnector({
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
-  url: NETWORK_URLS[ChainId.MAINNET],
+  url: NETWORK_URLS[1],
   appName: 'Uniswap',
   appLogoUrl: UNISWAP_LOGO_URL,
 })

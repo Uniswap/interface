@@ -2,8 +2,6 @@ import React from 'react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
-import { useActiveWeb3React } from 'hooks/web3'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 
 // currencyA is the base token
 export default function RangeSelector({
@@ -31,9 +29,8 @@ export default function RangeSelector({
   currencyB?: Currency | null
   feeAmount?: number
 }) {
-  const { chainId } = useActiveWeb3React()
-  const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
-  const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
+  const tokenA = (currencyA ?? undefined)?.wrapped
+  const tokenB = (currencyB ?? undefined)?.wrapped
   const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
 
   const leftPrice = isSorted ? priceLower : priceUpper?.invert()

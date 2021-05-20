@@ -1,5 +1,4 @@
 import { nanoid } from '@reduxjs/toolkit'
-import { ChainId } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
@@ -16,10 +15,10 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
 
   const ensResolver = useCallback(
     async (ensName: string) => {
-      if (!library || chainId !== ChainId.MAINNET) {
+      if (!library || chainId !== 1) {
         const networkLibrary = getNetworkLibrary()
         const network = await networkLibrary.getNetwork()
-        if (networkLibrary && network.chainId === ChainId.MAINNET) {
+        if (networkLibrary && network.chainId === 1) {
           return resolveENSContentHash(ensName, networkLibrary)
         }
         throw new Error('Could not construct mainnet ENS resolver')

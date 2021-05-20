@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, currencyEquals, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { WETH9 } from '@uniswap/sdk-core'
 import { AlertTriangle, AlertCircle } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -91,11 +91,7 @@ export default function AddLiquidity({
   const baseCurrency = currencyA
   const quoteCurrency = useMemo(
     () =>
-      currencyA && currencyB && baseCurrency
-        ? currencyEquals(baseCurrency, currencyA)
-          ? currencyB
-          : currencyA
-        : undefined,
+      currencyA && currencyB && baseCurrency ? (baseCurrency.equals(currencyA) ? currencyB : currencyA) : undefined,
     [currencyA, currencyB, baseCurrency]
   )
 
@@ -207,13 +203,13 @@ export default function AddLiquidity({
               tokenId,
               slippageTolerance: allowedSlippage,
               deadline: deadline.toString(),
-              useEther: currencyA.isEther || currencyB.isEther,
+              useEther: currencyA.isNative || currencyB.isNative,
             })
           : NonfungiblePositionManager.addCallParameters(position, {
               slippageTolerance: allowedSlippage,
               recipient: account,
               deadline: deadline.toString(),
-              useEther: currencyA.isEther || currencyB.isEther,
+              useEther: currencyA.isNative || currencyB.isNative,
               createPool: noLiquidity,
             })
 
