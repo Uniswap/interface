@@ -121,7 +121,7 @@ export default function InputGroup({
                   hideBalance={true}
                 />
 
-                <ButtonPrimary padding="12px" margin="10px 0" onClick={handleClickStake}>
+                <ButtonPrimary disabled={pendingTx} padding="12px" margin="14px 0" onClick={handleClickStake}>
                   Stake
                 </ButtonPrimary>
               </>
@@ -145,15 +145,15 @@ export default function InputGroup({
                   hideBalance={true}
                 />
 
-                <ButtonPrimary padding="12px" margin="10px 0" onClick={handleWithdraw}>
-                  Withdraw
+                <ButtonPrimary disabled={pendingTx} padding="12px" margin="14px 0" onClick={handleWithdraw}>
+                  Unstake
                 </ButtonPrimary>
               </>
             )}
           </div>
           <div grid-area="harvest">
             <ButtonPrimary padding="12px" onClick={handleClickHarvest}>
-              Harvest
+              Claim
             </ButtonPrimary>
           </div>
         </>

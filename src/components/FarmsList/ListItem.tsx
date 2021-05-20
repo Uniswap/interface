@@ -8,22 +8,25 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from 'libs/sdk/src'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { Farm } from 'state/farms/types'
-import { formattedNum, shortenAddress } from 'utils'
-import { useFarmClaimModalToggle, useFarmStakeModalToggle } from 'state/application/hooks'
+import { formattedNum, isAddressString, shortenAddress } from 'utils'
+import { useBlockNumber, useFarmClaimModalToggle, useFarmStakeModalToggle } from 'state/application/hooks'
 import { ButtonPrimary } from 'components/Button'
 import InputGroup from './InputGroup'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
-import { useCurrency, useToken } from 'hooks/Tokens'
+import { useToken } from 'hooks/Tokens'
+import useTokenBalance from 'hooks/useTokenBalance'
+import { getFullDisplayBalance } from 'utils/formatBalance'
+import Loader from 'components/Loader'
 
-const ON_GOING = 'On Going'
+const FARM_ENDED = 'Ended'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 2fr 1fr 1fr 0.5fr 1fr 1fr 1fr 1fr;
-  grid-template-areas: 'pools liq apy amp end_in earnings balance available_balance';
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 2fr 2fr;
+  grid-template-areas: 'pools liq apy end_in reward staked_balance stakeable_balance';
   padding: 15px 36px 13px 26px;
-  font-size: 12px;
+  font-size: 14px;
   align-items: center;
   height: fit-content;
   position: relative;
@@ -45,7 +48,7 @@ const ExpandedSection = styled.div`
 const ExpandedContent = styled.div`
   border-radius: 10px;
   background-color: ${({ theme }) => theme.bg6};
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
   padding: 16px 24px;
 `
@@ -53,9 +56,9 @@ const ExpandedContent = styled.div`
 const StakeGroup = styled.div`
   display: grid;
   grid-gap: 1.5rem;
-  grid-template-columns: 2fr 2fr 1fr;
+  grid-template-columns: 3fr 3fr 2fr;
   grid-template-areas: 'stake unstake harvest';
-  margin-bottom: 32px;
+  margin-bottom: 20px;
 `
 
 const GreyText = styled.div`
@@ -69,7 +72,7 @@ const LPInfoContainer = styled.div`
 `
 
 const LPInfo = styled.div`
-  margin-right: 40px;
+  margin-right: 24px;
 `
 
 const StyledItemCard = styled.div`
@@ -80,7 +83,6 @@ const StyledItemCard = styled.div`
   margin-bottom: 0;
   padding: 8px 20px 4px 20px;
   background-color: ${({ theme }) => theme.bg6};
-  font-size: 12px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-bottom: 20px;
@@ -112,17 +114,19 @@ const ListItem = ({ farm }: ListItemProps) => {
   const toggleFarmStakeModal = useFarmStakeModalToggle()
 
   const currency0 = useToken(farm.token0?.id) as Token
-  const currency1 = useCurrency(farm.token1?.id) as Token
+  const currency1 = useToken(farm.token1?.id) as Token
 
-  const liquidity = BigNumber.from(farm.totalStake).toString()
-  const endTimestamp = useTimestampFromBlock(farm.endBlock) || ON_GOING
+  const blockNumber = useBlockNumber()
+  const isFarmEnded = blockNumber && farm.endBlock < blockNumber
+  const endIn = farm.endBlock
 
-  const userTokenBalance = farm.userData?.tokenBalance ? BigNumber.from(farm.userData?.tokenBalance) : BigNumber.from(0)
+  const poolAddressChecksum = isAddressString(farm.id)
+  const { value: userTokenBalance, decimals: lpTokenDecimals } = useTokenBalance(poolAddressChecksum)
   const userStakedBalance = farm.userData?.stakedBalance
     ? BigNumber.from(farm.userData?.stakedBalance)
     : BigNumber.from(0)
-  const availableBalance = userTokenBalance.sub(userStakedBalance)
-  const userEarning = farm.userData?.earnings ? BigNumber.from(farm.userData?.earnings).toString() : BigNumber.from(0)
+  const userEarning = farm.userData?.earnings ? BigNumber.from(farm.userData?.earnings) : BigNumber.from(0)
+  const liquidity = BigNumber.from(farm.totalStake)
 
   const amp = farm.amp / 10000
 
@@ -143,7 +147,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               <>
                 <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
                 <span>
-                  {farm.token0?.symbol} - {farm.token1?.symbol}
+                  {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
                 </span>
               </>
             ) : (
@@ -151,19 +155,18 @@ const ListItem = ({ farm }: ListItemProps) => {
             )}
           </div>
         </DataText>
-        <DataText grid-area="liq">{liquidity}</DataText>
+        <DataText grid-area="liq">{getFullDisplayBalance(liquidity)}</DataText>
         <DataText grid-area="apy" style={{ color: 'rgba(137, 255, 120, 0.67)' }}>
           24.5%
         </DataText>
-        <DataText grid-area="amp">{amp}</DataText>
-        <DataText grid-area="end_in">{`${farm.endBlock} (${endTimestamp})`}</DataText>
-        <DataText grid-area="earnings">{`${userEarning.toString()} KNC`}</DataText>
-        <DataText grid-area="balance">{`${userStakedBalance.toString()} ${farm.token0?.symbol}-${
-          farm.token1?.symbol
-        } LP`}</DataText>
-        <DataText grid-area="available_balance">{`${availableBalance.toString()} ${farm.token0?.symbol}-${
-          farm.token1?.symbol
-        } LP`}</DataText>
+        <DataText grid-area="end_in">{!blockNumber ? <Loader /> : isFarmEnded ? `${FARM_ENDED}` : endIn}</DataText>
+        <DataText grid-area="reward">{`${getFullDisplayBalance(userEarning)} KNC`}</DataText>
+        <DataText grid-area="staked_balance">{`${getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} ${
+          farm.token0?.symbol
+        }-${farm.token1?.symbol} LP`}</DataText>
+        <DataText grid-area="stakeable_balance">{`${getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} ${
+          farm.token0?.symbol
+        }-${farm.token1?.symbol} LP`}</DataText>
       </TableRow>
 
       {expand && (
@@ -172,23 +175,25 @@ const ListItem = ({ farm }: ListItemProps) => {
             <StakeGroup style={{ marginBottom: '14px' }}>
               <div grid-area="stake">
                 <GreyText>
-                  Balance: {availableBalance.toString()} {farm.token0?.symbol}-{farm.token1?.symbol} LP
+                  Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                  {farm.token1?.symbol} LP
                 </GreyText>
               </div>
               <div grid-area="unstake">
                 <GreyText>
-                  Deposit: {userStakedBalance.toString()} {farm.token0?.symbol}-{farm.token1?.symbol} LP
+                  Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
+                  {farm.token1?.symbol} LP
                 </GreyText>
               </div>
               <div grid-area="harvest">
                 <GreyText>KNC Reward</GreyText>
-                <div>{`${userEarning.toString()} KNC`}</div>
+                <div>{`${getFullDisplayBalance(userEarning)} KNC`}</div>
                 <div>$940</div>
               </div>
             </StakeGroup>
             <StakeGroup>
               <InputGroup
-                pid={0}
+                pid={farm.pid}
                 pairAddress={farm.id}
                 pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}
                 token0Address={farm.token0.id}
@@ -212,11 +217,10 @@ const ListItem = ({ farm }: ListItemProps) => {
             </StakeGroup>
             <LPInfoContainer>
               <LPInfo>
-                <div>ADDRESS</div>
                 <div>{shortenAddress(farm.id)}</div>
               </LPInfo>
               <div>
-                <Link to={`/add/${farm.token0?.address}/${farm.token1?.address}/${farm.id}`}>
+                <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`}>
                   Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
                 </Link>
               </div>
