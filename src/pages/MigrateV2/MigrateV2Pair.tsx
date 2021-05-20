@@ -9,6 +9,7 @@ import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
+import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useToken } from '../../hooks/Tokens'
@@ -258,8 +259,10 @@ function V2PairMigration({
   const [approval, approveManually] = useApproveCallback(pairBalance, migrator?.address)
   const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(pairBalance, migrator?.address)
 
+  const isArgentWallet = useIsArgentWallet()
+
   const approve = useCallback(async () => {
-    if (isNotUniswap) {
+    if (isNotUniswap || isArgentWallet) {
       // sushi has to be manually approved
       await approveManually()
     } else if (gatherPermitSignature) {
@@ -274,7 +277,7 @@ function V2PairMigration({
     } else {
       await approveManually()
     }
-  }, [isNotUniswap, gatherPermitSignature, approveManually])
+  }, [isNotUniswap, isArgentWallet, gatherPermitSignature, approveManually])
 
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)
