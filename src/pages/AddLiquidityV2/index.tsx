@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, currencyEquals, Percent, WETH9 } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, WETH9 } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -35,7 +35,6 @@ import { TYPE } from '../../theme'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { calculateSlippageAmount } from '../../utils/calculateSlippageAmount'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { Dots, Wrapper } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
@@ -58,9 +57,7 @@ export default function AddLiquidity({
   const currencyB = useCurrency(currencyIdB)
 
   const oneCurrencyIsWETH = Boolean(
-    chainId &&
-      ((currencyA && currencyEquals(currencyA, WETH9[chainId])) ||
-        (currencyB && currencyEquals(currencyB, WETH9[chainId])))
+    chainId && ((currencyA && currencyA.equals(WETH9[chainId])) || (currencyB && currencyB.equals(WETH9[chainId])))
   )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
@@ -148,12 +145,12 @@ export default function AddLiquidity({
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number>,
       value: BigNumber | null
-    if (currencyA.isEther || currencyB.isEther) {
-      const tokenBIsETH = currencyB.isEther
+    if (currencyA.isNative || currencyB.isNative) {
+      const tokenBIsETH = currencyB.isNative
       estimate = router.estimateGas.addLiquidityETH
       method = router.addLiquidityETH
       args = [
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+        (tokenBIsETH ? currencyA : currencyB)?.wrapped?.address ?? '', // token
         (tokenBIsETH ? parsedAmountA : parsedAmountB).quotient.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
@@ -165,8 +162,8 @@ export default function AddLiquidity({
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
       args = [
-        wrappedCurrency(currencyA, chainId)?.address ?? '',
-        wrappedCurrency(currencyB, chainId)?.address ?? '',
+        currencyA?.wrapped?.address ?? '',
+        currencyB?.wrapped?.address ?? '',
         parsedAmountA.quotient.toString(),
         parsedAmountB.quotient.toString(),
         amountsMin[Field.CURRENCY_A].toString(),

@@ -11,7 +11,7 @@ import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
 import { currencyId } from '../../utils/currencyId'
 import { Break, CardNoise, CardBGImage } from './styled'
-import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { unwrappedToken } from '../../utils/unwrappedToken'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
@@ -79,8 +79,8 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
   // get the color of the token
-  const token = currency0.isEther ? token1 : token0
-  const WETH = currency0.isEther ? token0 : token1
+  const token = currency0.isNative ? token1 : token0
+  const WETH = currency0.isNative ? token0 : token1
   const backgroundColor = useColor(token)
 
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.currency)

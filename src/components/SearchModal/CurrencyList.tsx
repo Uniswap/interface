@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -17,7 +17,6 @@ import { MenuItem } from './styleds'
 import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
 import ImportRow from './ImportRow'
-import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { LightGreyCard } from 'components/Card'
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from 'components/QuestionHelper'
@@ -133,7 +132,7 @@ function CurrencyRow({
           {currency.symbol}
         </Text>
         <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
-          {currency.name} {!currency.isEther && !isOnSelectedList && customAdded && '• Added by user'}
+          {currency.name} {!currency.isNative && !isOnSelectedList && customAdded && '• Added by user'}
         </TYPE.darkGray>
       </Column>
       <TokenTags currency={currency} />
@@ -197,8 +196,6 @@ export default function CurrencyList({
     return currencies
   }, [currencies, otherListTokens])
 
-  const { chainId } = useActiveWeb3React()
-
   const Row = useCallback(
     function TokenRow({ data, index, style }) {
       const row: Currency | BreakLine = data[index]
@@ -209,11 +206,11 @@ export default function CurrencyList({
 
       const currency = row
 
-      const isSelected = Boolean(currency && selectedCurrency && currencyEquals(selectedCurrency, currency))
-      const otherSelected = Boolean(currency && otherCurrency && currencyEquals(otherCurrency, currency))
+      const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
+      const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
       const handleSelect = () => currency && onCurrencySelect(currency)
 
-      const token = wrappedCurrency(currency, chainId)
+      const token = currency?.wrapped
 
       const showImport = index > currencies.length
 
@@ -235,7 +232,7 @@ export default function CurrencyList({
         return null
       }
     },
-    [chainId, currencies.length, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
+    [currencies.length, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
   )
 
   const itemKey = useCallback((index: number, data: typeof itemData) => {

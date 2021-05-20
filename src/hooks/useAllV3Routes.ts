@@ -1,8 +1,7 @@
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { Pool, Route } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { useUserSingleHopOnly } from '../state/user/hooks'
-import { wrappedCurrency } from '../utils/wrappedCurrency'
 import { useActiveWeb3React } from './web3'
 import { useV3SwapPools } from './useV3SwapPools'
 
@@ -10,14 +9,14 @@ function computeAllRoutes(
   currencyIn: Currency,
   currencyOut: Currency,
   pools: Pool[],
-  chainId: ChainId,
+  chainId: number,
   currentPath: Pool[] = [],
   allPaths: Route<Currency, Currency>[] = [],
   startCurrencyIn: Currency = currencyIn,
   maxHops = 2
 ): Route<Currency, Currency>[] {
-  const tokenIn = wrappedCurrency(currencyIn, chainId)
-  const tokenOut = wrappedCurrency(currencyOut, chainId)
+  const tokenIn = currencyIn?.wrapped
+  const tokenOut = currencyOut?.wrapped
   if (!tokenIn || !tokenOut) throw new Error('Missing tokenIn/tokenOut')
 
   for (const pool of pools) {

@@ -1,4 +1,3 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { ExplorerDataType, getExplorerLink } from './getExplorerLink'
 
 describe('#getExplorerLink', () => {
@@ -18,8 +17,6 @@ describe('#getExplorerLink', () => {
     expect(getExplorerLink(3, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://ropsten.etherscan.io/address/abc')
   })
   it('enum', () => {
-    expect(getExplorerLink(ChainId.RINKEBY, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://rinkeby.etherscan.io/address/abc'
-    )
+    expect(getExplorerLink(4, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://rinkeby.etherscan.io/address/abc')
   })
 })

@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { Pair } from '@uniswap/v2-sdk'
-import { Token, ChainId } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
@@ -58,7 +58,7 @@ export default function MigrateV2() {
     () =>
       trackedTokenPairs.map((tokens) => {
         // sushi liquidity token or null
-        const sushiLiquidityToken = chainId === ChainId.MAINNET ? toSushiLiquidityToken(tokens) : null
+        const sushiLiquidityToken = chainId === 1 ? toSushiLiquidityToken(tokens) : null
         return {
           v2liquidityToken: toV2LiquidityToken(tokens),
           sushiLiquidityToken,
