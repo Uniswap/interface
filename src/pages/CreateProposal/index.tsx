@@ -12,7 +12,6 @@ import AddressInputPanel from 'components/AddressInputPanel'
 import ProposalActionSelectorModal, { ProposalAction } from './ProposalActionSelectorModal'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { Currency } from '@uniswap/sdk-core'
-import { currencyId } from 'utils/currencyId'
 import { useCurrency } from 'hooks/Tokens'
 
 const ProposalWrapper = styled.div`
@@ -48,6 +47,7 @@ const _ProposalActionSelector = ({
 }) => {
   const ActionSelectorHeader = styled.div`
     font-size: 14px;
+    font-weight: 500;
     color: ${({ theme }) => theme.text2};
   `
 
@@ -55,6 +55,7 @@ const _ProposalActionSelector = ({
     padding: 0px;
     margin-top: 10px;
     background-color: transparent;
+    color: ${({ theme }) => theme.text1}
     font-size: 24px;
 
     :hover,
@@ -89,14 +90,9 @@ const _ProposalActionDetail = ({
   proposalAction: ProposalAction
 }) => {
   // Transfer token
-  const [tokenAddressValue, setTokenAddressValue] = useState('')
   const [toAddressValue, setToAddressValue] = useState('')
   const [amountValue, setAmountValue] = useState('')
   const [currencyValue, setCurrencyValue] = useState(useCurrency('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'))
-
-  const onTokenAddressUserInput = useCallback((tokenAddressValue: string) => {
-    setTokenAddressValue(tokenAddressValue)
-  }, [])
 
   const onToAddressUserInput = useCallback((toAddressValue: string) => {
     setToAddressValue(toAddressValue)
@@ -162,6 +158,7 @@ const ProposalActionDetail = styled(_ProposalActionDetail)`
 
 const ProposalEditorHeader = styled.div`
   font-size: 14px;
+  font-weight: 500;
   color: ${({ theme }) => theme.text2};
 `
 
