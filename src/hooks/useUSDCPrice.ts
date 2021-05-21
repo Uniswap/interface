@@ -37,6 +37,11 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
       )
     }
 
+    // handle usdc
+    if (currency?.wrapped.equals(USDC)) {
+      return new Price(USDC, USDC, '1', '1')
+    }
+
     // use v2 price if available, v3 as fallback
     if (v2USDCTrade) {
       const { numerator, denominator } = v2USDCTrade.route.midPrice
