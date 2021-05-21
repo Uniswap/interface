@@ -112,6 +112,7 @@ export default function Pool() {
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
+
   const sortedPositions = positions?.sort((a, b) => (a.liquidity?.sub(b.liquidity ?? 0).isNegative() ? 1 : -1)) ?? []
   const filteredPositions = userHideClosedPositions
     ? sortedPositions.filter((p) => !p.liquidity?.isZero())
@@ -191,7 +192,7 @@ export default function Pool() {
 
             <CTACards />
 
-            {positions && positions.some((p) => p.liquidity?.isZero()) ? (
+            {positions?.some((p) => p.liquidity?.isZero()) ? (
               <ShowInactiveToggle>
                 <TYPE.darkGray>{t('Hide closed positions')}</TYPE.darkGray>
                 <Toggle
