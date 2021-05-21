@@ -14,6 +14,8 @@ import { useWalletModalToggle } from 'state/application/hooks'
 import styled, { ThemeContext } from 'styled-components'
 import { HideSmall, TYPE } from 'theme'
 import { LoadingRows } from './styleds'
+import Toggle from 'components/Toggle'
+import { useUserHideClosedPositions } from 'state/user/hooks'
 
 import CTACards from './CTACards'
 
@@ -92,13 +94,28 @@ const MainContentWrapper = styled.main`
   flex-direction: column;
 `
 
+const ShowInactiveToggle = styled.div`
+  display: grid;
+  align-items: center;
+  justify-items: end;
+
+  grid-template-columns: 1fr auto;
+  grid-column-gap: 8px;
+  padding: 0 8px;
+`
+
 export default function Pool() {
   const { account } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
+  const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
+  const sortedPositions = positions?.sort((a, b) => (a.liquidity?.sub(b.liquidity ?? 0).isNegative() ? 1 : -1)) ?? []
+  const filteredPositions = userHideClosedPositions
+    ? sortedPositions.filter((p) => !p.liquidity?.isZero())
+    : sortedPositions
 
   const menuItems = [
     {
@@ -174,6 +191,16 @@ export default function Pool() {
 
             <CTACards />
 
+            {positions && positions.some((p) => p.liquidity?.isZero()) ? (
+              <ShowInactiveToggle>
+                <TYPE.darkGray>{t('Hide closed positions')}</TYPE.darkGray>
+                <Toggle
+                  isActive={userHideClosedPositions}
+                  toggle={() => setUserHideClosedPositions(!userHideClosedPositions)}
+                />
+              </ShowInactiveToggle>
+            ) : null}
+
             <MainContentWrapper>
               {positionsLoading ? (
                 <LoadingRows>
@@ -190,8 +217,8 @@ export default function Pool() {
                   <div />
                   <div />
                 </LoadingRows>
-              ) : positions && positions.length > 0 ? (
-                <PositionList positions={positions} />
+              ) : filteredPositions && filteredPositions.length > 0 ? (
+                <PositionList positions={filteredPositions} />
               ) : (
                 <NoLiquidity>
                   <TYPE.mediumHeader color={theme.text3} textAlign="center">
