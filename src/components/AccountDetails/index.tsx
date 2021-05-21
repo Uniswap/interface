@@ -8,7 +8,7 @@ import { useValoraAccount } from 'state/user/hooks'
 import styled, { ThemeContext } from 'styled-components'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { injected } from '../../connectors'
+import { celoExtensionWallet, injected } from '../../connectors'
 import { SUPPORTED_WALLETS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
@@ -274,15 +274,17 @@ export default function AccountDetails({
               <AccountGroupingRow>
                 {formatConnectorName()}
                 <div>
-                  <WalletAction
-                    style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
-                    onClick={() => {
-                      ;(connector as any).close?.()
-                      clearValoraAccount()
-                    }}
-                  >
-                    Disconnect
-                  </WalletAction>
+                  {connector !== injected && connector !== celoExtensionWallet && (
+                    <WalletAction
+                      style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+                      onClick={() => {
+                        ;(connector as any).close?.()
+                        clearValoraAccount()
+                      }}
+                    >
+                      Disconnect
+                    </WalletAction>
+                  )}
                   <WalletAction
                     style={{ fontSize: '.825rem', fontWeight: 400 }}
                     onClick={() => {
