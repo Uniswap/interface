@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
@@ -17,10 +17,12 @@ import { RowFixed } from 'components/Row'
 import HoverInlineText from 'components/HoverInlineText'
 import { DAI, USDC, USDT, WBTC } from '../../constants/tokens'
 
-const Row = styled(Link)`
+const LinkRow = styled(Link)`
   align-items: center;
   border-radius: 20px;
   display: flex;
+  cursor: pointer;
+  user-select: none;
   justify-content: space-between;
   color: ${({ theme }) => theme.text1};
   margin: 8px 0;
@@ -50,6 +52,7 @@ const Row = styled(Link)`
     row-gap: 24px;
   `};
 `
+
 const BadgeText = styled.div`
   font-weight: 500;
   font-size: 14px;
@@ -65,7 +68,6 @@ const DataLineItem = styled.div`
 const RangeLineItem = styled(DataLineItem)`
   display: flex;
   flex-direction: row;
-  cursor: pointer;
   align-items: center;
   justify-self: flex-end;
 
@@ -199,25 +201,20 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
   }, [liquidity, pool, tickLower, tickUpper])
 
   // prices
-  let { priceLower, priceUpper, base, quote } = getPriceOrderingFromPositionForUI(position)
-  const inverted = token1 ? base?.equals(token1) : undefined
-  const currencyQuote = inverted ? currency1 : currency0
-  const currencyBase = inverted ? currency0 : currency1
+  const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
+
+  const currencyQuote = quote && unwrappedToken(quote)
+  const currencyBase = base && unwrappedToken(base)
 
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
   const positionSummaryLink = '/pool/' + positionDetails.tokenId
 
-  const [manuallyInverted, setManuallyInverted] = useState(true)
-  if (manuallyInverted) {
-    ;[priceLower, priceUpper, base, quote] = [priceUpper?.invert(), priceLower?.invert(), quote, base]
-  }
-
   const removed = liquidity?.eq(0)
 
   return (
-    <Row to={positionSummaryLink}>
+    <LinkRow to={positionSummaryLink}>
       <RowFixed>
         <PrimaryPositionIdData>
           <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
@@ -233,42 +230,27 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
       </RowFixed>
 
       {priceLower && priceUpper ? (
-        <>
-          <RangeLineItem
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              setManuallyInverted(!manuallyInverted)
-            }}
-          >
-            <RangeText>
-              <ExtentsText>Min: </ExtentsText>
-              {formatPrice(priceLower, 5)}{' '}
-              <HoverInlineText text={manuallyInverted ? currencyQuote?.symbol ?? '' : currencyBase?.symbol ?? ''} />{' '}
-              {' per '}{' '}
-              <HoverInlineText text={manuallyInverted ? currencyBase?.symbol ?? '' : currencyQuote?.symbol ?? ''} />
-            </RangeText>{' '}
-            <HideSmall>
-              <DoubleArrow>⟷</DoubleArrow>{' '}
-            </HideSmall>
-            <SmallOnly>
-              <DoubleArrow>↕</DoubleArrow>{' '}
-            </SmallOnly>
-            <RangeText>
-              <ExtentsText>Max:</ExtentsText>
-              {formatPrice(priceUpper, 5)}{' '}
-              <HoverInlineText text={manuallyInverted ? currencyQuote?.symbol ?? '' : currencyBase?.symbol ?? ''} />{' '}
-              {' per '}{' '}
-              <HoverInlineText
-                maxCharacters={10}
-                text={manuallyInverted ? currencyBase?.symbol ?? '' : currencyQuote?.symbol ?? ''}
-              />
-            </RangeText>{' '}
-          </RangeLineItem>
-        </>
+        <RangeLineItem>
+          <RangeText>
+            <ExtentsText>Min: </ExtentsText>
+            {formatPrice(priceLower, 5)} <HoverInlineText text={currencyQuote?.symbol} /> {' per '}{' '}
+            <HoverInlineText text={currencyBase?.symbol ?? ''} />
+          </RangeText>{' '}
+          <HideSmall>
+            <DoubleArrow>⟷</DoubleArrow>{' '}
+          </HideSmall>
+          <SmallOnly>
+            <DoubleArrow>↕</DoubleArrow>{' '}
+          </SmallOnly>
+          <RangeText>
+            <ExtentsText>Max:</ExtentsText>
+            {formatPrice(priceUpper, 5)} <HoverInlineText text={currencyQuote?.symbol} /> {' per '}{' '}
+            <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
+          </RangeText>
+        </RangeLineItem>
       ) : (
         <Loader />
       )}
-    </Row>
+    </LinkRow>
   )
 }
