@@ -1,4 +1,4 @@
-import { currencyEquals, Trade } from 'libs/sdk/src'
+import { currencyEquals, Trade, Currency } from 'libs/sdk/src'
 import React, { useCallback, useMemo } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -33,7 +33,8 @@ export default function ConfirmSwapModal({
   swapErrorMessage,
   isOpen,
   attemptingTxn,
-  txHash
+  txHash,
+  tokenAddtoMetaMask,
 }: {
   isOpen: boolean
   trade: Trade | undefined
@@ -42,6 +43,7 @@ export default function ConfirmSwapModal({
   txHash: string | undefined
   recipient: string | null
   allowedSlippage: number
+  tokenAddtoMetaMask: Currency | undefined
   onAcceptChanges: () => void
   onConfirm: () => void
   swapErrorMessage: string | undefined
@@ -104,6 +106,7 @@ export default function ConfirmSwapModal({
       hash={txHash}
       content={confirmationContent}
       pendingText={pendingText}
+      tokenAddtoMetaMask={tokenAddtoMetaMask}
     />
   )
 }

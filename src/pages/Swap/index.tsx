@@ -250,6 +250,7 @@ export default function Swap() {
             onConfirm={handleSwap}
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
+            tokenAddtoMetaMask={currencies[Field.OUTPUT]}
           />
 
           <AutoColumn gap={'7px'}>
