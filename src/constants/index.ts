@@ -91,7 +91,7 @@ export const FUSE_WBTC = new Token(
 )
 export const FUSE_WETH = new Token(
   ChainId.FUSE,
-  '0xd8Bf72f3e163B9CF0C73dFdCC316417A5ac20670',
+  '0xa722c13135930332eb3d749b2f0906559d2c5b99',
   18,
   'WETH',
   'Wrapped Ether on Fuse'
