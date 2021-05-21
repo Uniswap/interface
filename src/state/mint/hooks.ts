@@ -18,9 +18,7 @@ export function useMintState(): AppState['mint'] {
   return useSelector<AppState, AppState['mint']>((state) => state.mint)
 }
 
-export function useMintActionHandlers(
-  noLiquidity: boolean | undefined
-): {
+export function useMintActionHandlers(noLiquidity: boolean | undefined): {
   onFieldAInput: (typedValue: string) => void
   onFieldBInput: (typedValue: string) => void
 } {
@@ -161,13 +159,12 @@ export function useDerivedMintInfo(
       try {
         return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
       } catch (error) {
-        if (error.InsufficientInputAmountError) {
-          return CurrencyAmount.fromRawAmount(pair.liquidityToken, ZERO)
-        }
+        console.error(error)
         return undefined
       }
+    } else {
+      return undefined
     }
-    return undefined
   }, [parsedAmounts, pair, totalSupply])
 
   const poolTokenPercentage = useMemo(() => {
@@ -199,10 +196,6 @@ export function useDerivedMintInfo(
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
     error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
-  }
-
-  if (!liquidityMinted?.greaterThan(ZERO)) {
-    error = `Insufficient input amount`
   }
 
   return {
