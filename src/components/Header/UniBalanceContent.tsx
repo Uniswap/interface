@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -54,9 +54,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
   const unclaimedUni = useTokenBalance(useMerkleDistributorContract()?.address, uni)
   const circulation: CurrencyAmount<Token> | undefined = useMemo(
     () =>
-      blockTimestamp && uni && chainId === ChainId.MAINNET
-        ? computeUniCirculation(uni, blockTimestamp, unclaimedUni)
-        : totalSupply,
+      blockTimestamp && uni && chainId === 1 ? computeUniCirculation(uni, blockTimestamp, unclaimedUni) : totalSupply,
     [blockTimestamp, chainId, totalSupply, unclaimedUni, uni]
   )
 
@@ -116,7 +114,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
               <TYPE.white color="white">Total Supply</TYPE.white>
               <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
             </RowBetween>
-            {uni && uni.chainId === ChainId.MAINNET ? (
+            {uni && uni.chainId === 1 ? (
               <ExternalLink href={`https://info.uniswap.org/token/${uni.address}`}>View UNI Analytics</ExternalLink>
             ) : null}
           </AutoColumn>

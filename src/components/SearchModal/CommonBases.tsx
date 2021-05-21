@@ -1,9 +1,10 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, Token, ETHER } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
 import { SUGGESTED_BASES } from '../../constants/routing'
+import { currencyId } from '../../utils/currencyId'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
@@ -30,7 +31,7 @@ export default function CommonBases({
   onSelect,
   selectedCurrency,
 }: {
-  chainId?: ChainId
+  chainId?: number
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
@@ -43,26 +44,17 @@ export default function CommonBases({
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
-        <BaseWrapper
-          onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-              onSelect(ETHER)
-            }
-          }}
-          disable={selectedCurrency?.isEther}
-        >
-          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
-          <Text fontWeight={500} fontSize={16}>
-            ETH
-          </Text>
-        </BaseWrapper>
-        {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((token: Token) => {
-          const selected = selectedCurrency?.isToken && selectedCurrency.address === token.address
+        {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((currency: Currency) => {
+          const isSelected = selectedCurrency?.equals(currency)
           return (
-            <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
-              <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
+            <BaseWrapper
+              onClick={() => !isSelected && onSelect(currency)}
+              disable={isSelected}
+              key={currencyId(currency)}
+            >
+              <CurrencyLogo currency={currency} style={{ marginRight: 8 }} />
               <Text fontWeight={500} fontSize={16}>
-                {token.symbol}
+                {currency.symbol}
               </Text>
             </BaseWrapper>
           )

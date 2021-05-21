@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { CurrencyAmount, ChainId, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useEffect, useState } from 'react'
 import { UNI } from '../../constants/tokens'
@@ -24,7 +24,7 @@ interface UserClaimData {
 const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData | null> } = {}
 
 // returns the claim for the given address, or null if not valid
-function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | null> {
+function fetchClaim(account: string, chainId: number): Promise<UserClaimData | null> {
   const formatted = isAddress(account)
   if (!formatted) return Promise.reject(new Error('Invalid address'))
   const key = `${chainId}:${account}`
@@ -88,9 +88,7 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(userClaimData.amount))
 }
 
-export function useClaimCallback(
-  account: string | null | undefined
-): {
+export function useClaimCallback(account: string | null | undefined): {
   claimCallback: () => Promise<string>
 } {
   // get claim data for this account

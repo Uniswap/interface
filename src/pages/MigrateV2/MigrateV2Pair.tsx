@@ -9,6 +9,7 @@ import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
+import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useToken } from '../../hooks/Tokens'
@@ -42,7 +43,7 @@ import { Contract } from '@ethersproject/contracts'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { formatTokenAmount } from 'utils/formatTokenAmount'
 import useTheme from 'hooks/useTheme'
-import { unwrappedToken } from 'utils/wrappedCurrency'
+import { unwrappedToken } from 'utils/unwrappedToken'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { useDispatch } from 'react-redux'
@@ -158,12 +159,10 @@ function V2PairMigration({
   const noLiquidity = poolState === PoolState.NOT_EXISTS
 
   // get spot prices + price difference
-  const v2SpotPrice = useMemo(() => new Price(token0, token1, reserve0.quotient, reserve1.quotient), [
-    token0,
-    token1,
-    reserve0,
-    reserve1,
-  ])
+  const v2SpotPrice = useMemo(
+    () => new Price(token0, token1, reserve0.quotient, reserve1.quotient),
+    [token0, token1, reserve0, reserve1]
+  )
   const v3SpotPrice = poolState === PoolState.EXISTS ? pool?.token0Price : undefined
 
   let priceDifferenceFraction: Fraction | undefined =
@@ -258,8 +257,10 @@ function V2PairMigration({
   const [approval, approveManually] = useApproveCallback(pairBalance, migrator?.address)
   const { signatureData, gatherPermitSignature } = useV2LiquidityTokenPermit(pairBalance, migrator?.address)
 
+  const isArgentWallet = useIsArgentWallet()
+
   const approve = useCallback(async () => {
-    if (isNotUniswap) {
+    if (isNotUniswap || isArgentWallet) {
       // sushi has to be manually approved
       await approveManually()
     } else if (gatherPermitSignature) {
@@ -274,7 +275,7 @@ function V2PairMigration({
     } else {
       await approveManually()
     }
-  }, [isNotUniswap, gatherPermitSignature, approveManually])
+  }, [isNotUniswap, isArgentWallet, gatherPermitSignature, approveManually])
 
   const addTransaction = useTransactionAdder()
   const isMigrationPending = useIsTransactionPending(pendingMigrationHash ?? undefined)

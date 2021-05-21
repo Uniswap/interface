@@ -22,7 +22,7 @@ import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { ZERO_ADDRESS } from '../../constants/misc'
-import { Token, CurrencyAmount, ChainId } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { shortenAddress } from '../../utils'
 import Loader from '../../components/Loader'
@@ -206,7 +206,7 @@ export default function Vote() {
                 </TYPE.body>
                 <AddressButton>
                   <StyledExternalLink
-                    href={getExplorerLink(ChainId.MAINNET, userDelegatee, ExplorerDataType.ADDRESS)}
+                    href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
                     style={{ margin: '0 4px' }}
                   >
                     {userDelegatee === account ? 'Self' : shortenAddress(userDelegatee)}

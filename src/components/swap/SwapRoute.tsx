@@ -6,7 +6,7 @@ import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
-import { unwrappedToken } from 'utils/wrappedCurrency'
+import { unwrappedToken } from 'utils/unwrappedToken'
 
 function LabeledArrow({}: { fee: FeeAmount }) {
   const theme = useContext(ThemeContext)
