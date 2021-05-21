@@ -122,7 +122,6 @@ export default function Swap({ history }: RouteComponentProps) {
     inputError: wrapInputError,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-  console.log(showWrap)
   const { address: recipientAddress } = useENSAddress(recipient)
 
   const parsedAmounts = useMemo(
