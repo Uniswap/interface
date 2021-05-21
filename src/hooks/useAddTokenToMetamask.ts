@@ -5,7 +5,10 @@ import { useActiveWeb3React } from 'hooks/web3'
 
 export default function useAddTokenToMetamask(
   currencyToAdd: Currency | undefined
-): { addToken: () => void; success: boolean | undefined } {
+): {
+  addToken: () => void
+  success: boolean | undefined
+} {
   const { library } = useActiveWeb3React()
 
   const token: Token | undefined = currencyToAdd?.wrapped
