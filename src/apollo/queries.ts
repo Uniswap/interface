@@ -179,13 +179,20 @@ export const FARM_DATA = gql`
         id
         symbol
         name
+        decimals
       }
       token1 {
         id
         symbol
         name
+        decimals
       }
       amp
+      reserve0
+      token0Price
+      reserve1
+      token1Price
+      totalSupply
     }
   }
 `

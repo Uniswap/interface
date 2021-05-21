@@ -153,7 +153,7 @@ export default function InputGroup({
           </div>
           <div grid-area="harvest">
             <ButtonPrimary padding="12px" onClick={handleClickHarvest}>
-              Claim
+              Harvest
             </ButtonPrimary>
           </div>
         </>

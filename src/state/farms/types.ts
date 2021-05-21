@@ -1,9 +1,11 @@
+import { BigNumber } from '@ethersproject/bignumber'
+
 export interface Farm {
   pid: number
   id: string
-  rewardPerBlock: string
-  accRewardPerShare: string
-  totalStake: string
+  rewardPerBlock: BigNumber
+  accRewardPerShare: BigNumber
+  totalStake: BigNumber
   stakeToken: string
   startBlock: number
   endBlock: number
@@ -11,6 +13,11 @@ export interface Farm {
   token0?: any
   token1?: any
   amp: number
+  reserve0: string
+  token0Price: string
+  reserve1: string
+  token1Price: string
+  totalSupply: string
   userData?: {
     allowance?: string
     tokenBalance?: string

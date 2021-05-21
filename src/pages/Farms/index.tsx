@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
-import { ButtonEmpty } from 'components/Button'
+import { ButtonPrimary } from 'components/Button'
 import LocalLoader from 'components/LocalLoader'
 import Panel from 'components/Panel'
 import FarmsList from 'components/FarmsList'
@@ -10,58 +9,35 @@ import FarmClaimModal from 'components/FarmClaimModal'
 import FarmStakeModal from 'components/FarmStakeModal'
 import { useFarmsPublicData, useFarmsUserData } from 'state/farms/hooks'
 import { useActiveWeb3React } from 'hooks'
+import { BigNumber } from '@ethersproject/bignumber'
+import { ExternalLink } from 'theme'
+import { useBlockNumber } from 'state/application/hooks'
+import { AVERAGE_BLOCK_TIME_IN_SECS } from '../../constants'
+import { getFormattedTimeFromSecond } from 'utils/formatTime'
+import Loader from 'components/Loader'
+import {
+  PageWrapper,
+  TabContainer,
+  Tab,
+  HeadingContainer,
+  LearnMoreContainer,
+  LearnMoreInstruction,
+  LearnMoreLinkContainer,
+  HarvestAllContainer,
+  TotalRewardsContainer,
+  TotalRewardsTitle,
+  RewardNumber,
+  RemainingTimeContainer,
+  EndInTitle,
+  ConnectWalletFarm
+} from './styleds'
 
-const PageWrapper = styled.div`
-  padding: 0 17em;
-  width: 100%;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 0 12rem;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 0 4em;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0;
-  `};
-`
-
-const TabContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 1.5rem;
-`
-
-const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
-  width: fit-content;
-  margin-right: 2rem;
-  padding: 0 0 0 8px;
-  color: ${({ theme }) => theme.text1};
-  border-radius: 0;
-  border-left: ${({ theme, isActive }) => (isActive ? `2px solid ${theme.primary1}` : 'none')};
-
-  &:hover {
-    text-decoration: none;
-  }
-
-  &:focus {
-    text-decoration: none;
-  }
-`
-
-const ConnectWalletFarm = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-`
+const FARM_ENDED = 'Ended'
 
 const Farms = () => {
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
+  const blockNumber = useBlockNumber()
   const { loading: publicDataLoading, error: publicDataError, data: allFarms } = useFarmsPublicData()
   const { loading: userFarmsLoading, data: farmsUserData } = useFarmsUserData(account, allFarms)
   const [activeTab, setActiveTab] = useState(0)
@@ -91,7 +67,20 @@ const Farms = () => {
     return { ...allFarms[index], userData: farmUserData }
   })
 
-  console.log('farms', farms)
+  const totalRewards = farms.reduce((total, farm) => {
+    if (farm.userData.earnings) {
+      return total.add(BigNumber.from(farm.userData.earnings))
+    }
+
+    return total
+  }, BigNumber.from(0))
+
+  const farm = farms[3]
+  const isFarmEnded = blockNumber && farm.endBlock < blockNumber
+  const remainingBlocks = blockNumber && farm.endBlock - blockNumber
+  const estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECS
+  const formattedEstimatedRemainingTime =
+    estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
 
   return (
     <>
@@ -105,7 +94,53 @@ const Farms = () => {
           </Tab>
         </TabContainer>
 
-        <Panel>{activeTab === 0 ? <FarmsList farms={farms} /> : <div>Vesting</div>}</Panel>
+        {activeTab === 0 ? (
+          <>
+            <HeadingContainer>
+              <LearnMoreContainer>
+                <LearnMoreInstruction>
+                  Stake your DMM Liquidity Provider tokens to earn KNC token rewards.
+                </LearnMoreInstruction>
+                <LearnMoreLinkContainer>
+                  <ExternalLink href="https://docs.dmm.exchange">Learn More →</ExternalLink>
+                </LearnMoreLinkContainer>
+              </LearnMoreContainer>
+              <HarvestAllContainer>
+                <TotalRewardsContainer>
+                  <TotalRewardsTitle>My Total Rewards</TotalRewardsTitle>
+                  <RewardNumber>{totalRewards.toString()} KNC</RewardNumber>
+                </TotalRewardsContainer>
+                <div>
+                  <ButtonPrimary disabled={totalRewards.lte(BigNumber.from(0))} padding="10px 36px">
+                    Harvest All
+                  </ButtonPrimary>
+                </div>
+              </HarvestAllContainer>
+            </HeadingContainer>
+
+            <RemainingTimeContainer>
+              <EndInTitle>END IN:</EndInTitle>
+              <div>
+                {!blockNumber ? (
+                  <Loader />
+                ) : isFarmEnded ? (
+                  `${FARM_ENDED}`
+                ) : (
+                  <span>
+                    <span style={{ marginRight: '4px' }}>{remainingBlocks} blocks</span>
+                    <span>(~ {formattedEstimatedRemainingTime})</span>
+                  </span>
+                )}
+              </div>
+            </RemainingTimeContainer>
+
+            <Panel>
+              <FarmsList farms={farms} />
+            </Panel>
+          </>
+        ) : (
+          <div>Vesting</div>
+        )}
       </PageWrapper>
       <FarmClaimModal />
       <FarmStakeModal />
