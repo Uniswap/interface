@@ -166,7 +166,7 @@ function CurrentPriceCard({
       <AutoColumn gap="8px" justify="center">
         <ExtentsText>{t('Current price')}</ExtentsText>
         <TYPE.mediumHeader textAlign="center">
-          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(5)}{' '}
+          {(inverted ? pool.token1Price : pool.token0Price).toSignificant(6)}{' '}
         </TYPE.mediumHeader>
         <ExtentsText>{currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
       </AutoColumn>
