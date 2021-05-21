@@ -6,6 +6,7 @@ import { AlertTriangle, AlertCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { ZERO_PERCENT } from '../../constants/misc'
 import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '../../constants/addresses'
+import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -18,6 +19,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
+import approveAmountCalldata from '../../utils/approveAmountCalldata'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import Review from './Review'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -170,13 +172,15 @@ export default function AddLiquidity({
     {}
   )
 
+  const argentWalletContract = useArgentWalletContract()
+
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(
-    parsedAmounts[Field.CURRENCY_A],
+    argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_A],
     chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
   )
   const [approvalB, approveBCallback] = useApproveCallback(
-    parsedAmounts[Field.CURRENCY_B],
+    argentWalletContract ? undefined : parsedAmounts[Field.CURRENCY_B],
     chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
   )
 
@@ -208,10 +212,34 @@ export default function AddLiquidity({
               createPool: noLiquidity,
             })
 
-      const txn = {
+      let txn: { to: string; data: string; value: string } = {
         to: NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId],
         data: calldata,
         value,
+      }
+
+      if (argentWalletContract) {
+        const amountA = parsedAmounts[Field.CURRENCY_A]
+        const amountB = parsedAmounts[Field.CURRENCY_B]
+        const batch = [
+          ...(amountA && amountA.currency.isToken
+            ? [approveAmountCalldata(amountA, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId])]
+            : []),
+          ...(amountB && amountB.currency.isToken
+            ? [approveAmountCalldata(amountB, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId])]
+            : []),
+          {
+            to: txn.to,
+            data: txn.data,
+            value: txn.value,
+          },
+        ]
+        const data = argentWalletContract.interface.encodeFunctionData('wc_multiCall', [batch])
+        txn = {
+          to: argentWalletContract.address,
+          data,
+          value: '0x0',
+        }
       }
 
       setAttemptingTxn(true)
@@ -244,6 +272,7 @@ export default function AddLiquidity({
             })
         })
         .catch((error) => {
+          console.error('Failed to send transaction', error)
           setAttemptingTxn(false)
           // we only care if the error is something _other_ than the user rejected the tx
           if (error?.code !== 4001) {
@@ -351,8 +380,10 @@ export default function AddLiquidity({
   )
 
   // we need an existence check on parsed amounts for single-asset deposits
-  const showApprovalA = approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
-  const showApprovalB = approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
+  const showApprovalA =
+    !argentWalletContract && approvalA !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_A]
+  const showApprovalB =
+    !argentWalletContract && approvalB !== ApprovalState.APPROVED && !!parsedAmounts[Field.CURRENCY_B]
 
   return (
     <ScrollablePage>
@@ -418,7 +449,7 @@ export default function AddLiquidity({
                       id="add-liquidity-input-tokena"
                       showCommonBases
                     />
-                    <div style={{ width: '12px' }}></div>
+                    <div style={{ width: '12px' }} />
 
                     <CurrencyDropdown
                       value={formattedAmounts[Field.CURRENCY_B]}
@@ -571,7 +602,7 @@ export default function AddLiquidity({
                         <TYPE.body fontWeight={500} textAlign="center" fontSize={20}>
                           <HoverInlineText
                             maxCharacters={20}
-                            text={invertPrice ? price.invert().toSignificant(5) : price.toSignificant(5)}
+                            text={invertPrice ? price.invert().toSignificant(6) : price.toSignificant(6)}
                           />{' '}
                         </TYPE.body>
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
@@ -697,8 +728,8 @@ export default function AddLiquidity({
                     }}
                     disabled={
                       !isValid ||
-                      (approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
-                      (approvalB !== ApprovalState.APPROVED && !depositBDisabled)
+                      (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
+                      (!argentWalletContract && approvalB !== ApprovalState.APPROVED && !depositBDisabled)
                     }
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
