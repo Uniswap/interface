@@ -16,6 +16,7 @@ import {
   USDT,
   UST,
   WBTC,
+  ETH2X_FLI,
   WETH9_EXTENDED,
 } from './tokens'
 
@@ -63,6 +64,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [1]: {
     ...mAssetsAdditionalBases,
+    '0xF16E4d813f4DcfDe4c5b44f305c908742De84eF0': [ETH2X_FLI],
     '0xA948E86885e12Fb09AfEF8C52142EBDbDf73cD18': [UNI[1]],
     '0x561a4717537ff4AF5c687328c0f7E90a319705C0': [UNI[1]],
     '0xa6e3454fec677772dd771788a079355e43910638': [UMA],

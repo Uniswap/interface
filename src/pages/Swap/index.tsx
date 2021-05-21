@@ -33,6 +33,7 @@ import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useAppro
 import { V3TradeState } from '../../hooks/useBestV3Trade'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
+import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
@@ -302,9 +303,12 @@ export default function Swap({ history }: RouteComponentProps) {
     )
   }, [priceImpact, trade])
 
+  const isArgentWallet = useIsArgentWallet()
+
   // show approve flow when: no error on inputs, not approved or pending, or approved in current session
   // never show if price impact is above threshold in non expert mode
   const showApproveFlow =
+    !isArgentWallet &&
     !swapInputError &&
     (approvalState === ApprovalState.NOT_APPROVED ||
       approvalState === ApprovalState.PENDING ||

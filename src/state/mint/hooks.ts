@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { unwrappedToken } from '../../utils/unwrappedToken'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
 import { Pair } from '@uniswap/v2-sdk'
