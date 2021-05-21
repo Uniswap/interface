@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
+import IUniswapV2PairABI from '@ubeswap/core/build/abi/IUniswapV2Pair.json'
 import { Pair, Token, TokenAmount } from '@ubeswap/sdk'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { useMemo } from 'react'
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
