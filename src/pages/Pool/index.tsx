@@ -114,21 +114,15 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  // move zero liquidity (closed) positions to the end
-  const sortedPositions =
-    positions
-      ?.reduce<[PositionDetails[], PositionDetails[]]>(
-        (acc, p) => {
-          acc[p.liquidity?.isZero() ? 1 : 0].push(p)
-          return acc
-        },
-        [[], []]
-      )
-      .flat() ?? []
+  const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
+    (acc, p) => {
+      acc[p.liquidity?.isZero() ? 1 : 0].push(p)
+      return acc
+    },
+    [[], []]
+  ) ?? [[], []]
 
-  const filteredPositions = userHideClosedPositions
-    ? sortedPositions.filter((p) => !p.liquidity?.isZero())
-    : sortedPositions
+  const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
 
   const menuItems = [
     {
@@ -204,7 +198,7 @@ export default function Pool() {
 
             <CTACards />
 
-            {positions?.some((p) => p.liquidity?.isZero()) ? (
+            {closedPositions.length > 0 ? (
               <ShowInactiveToggle>
                 <TYPE.darkGray>{t('Hide closed positions')}</TYPE.darkGray>
                 <Toggle
