@@ -132,3 +132,17 @@ export function AddRemoveTabs({
     </Tabs>
   )
 }
+
+export function CreateProposalTabs() {
+  return (
+    <Tabs>
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+        <HistoryLink to="/vote">
+          <StyledArrowLeft />
+        </HistoryLink>
+        <ActiveText>Create Proposal</ActiveText>
+        <div></div>
+      </RowBetween>
+    </Tabs>
+  )
+}

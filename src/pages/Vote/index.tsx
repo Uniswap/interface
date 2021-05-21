@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { UNI } from '../../constants/tokens'
 import { ExternalLink, TYPE } from '../../theme'
-import { RowBetween, RowFixed } from '../../components/Row'
+import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { Link } from 'react-router-dom'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
@@ -135,6 +135,10 @@ export default function Vote() {
     uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
+  const showCreateProposal = Boolean(
+    availableVotes && JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(10000000))
+  )
+
   return (
     <>
       <PageWrapper gap="lg" justify="center">
@@ -190,23 +194,80 @@ export default function Vote() {
                 borderRadius="8px"
                 onClick={toggleDelegateModal}
               >
-                <Trans>Unlock Voting</Trans>
+                <TYPE.white fontSize={14}>Read more about Uniswap governance</TYPE.white>
+              </ExternalLink>
+            </AutoColumn>
+          </CardSection>
+          <CardBGImage />
+          <CardNoise />
+        </VoteCard>
+      </TopSection>
+      <TopSection gap="2px">
+        <WrapSmall>
+          <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>Proposals</TYPE.mediumHeader>
+          {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
+          <AutoRow gap="6px" justify="flex-end">
+            {showUnlockVoting ? (
+              <ButtonPrimary
+                style={{ width: 'fit-content' }}
+                padding="8px"
+                borderRadius="8px"
+                onClick={toggleDelegateModal}
+              >
+                Unlock Voting
               </ButtonPrimary>
             ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
               <TYPE.body fontWeight={500} mr="6px">
-                <Trans>
-                  <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
-                </Trans>
+                <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
               </TYPE.body>
             ) : uniBalance &&
               userDelegatee &&
               userDelegatee !== ZERO_ADDRESS &&
               JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
               <TYPE.body fontWeight={500} mr="6px">
-                <Trans>
-                  <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
-                </Trans>
+                <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
               </TYPE.body>
+            ) : (
+              ''
+            )}
+            {
+              // TODO: Remove ! after testing
+              !showCreateProposal ? (
+                <ButtonPrimary
+                  as={Link}
+                  to="/proposal"
+                  style={{ width: 'fit-content' }}
+                  padding="8px"
+                  borderRadius="8px"
+                >
+                  Create Proposal
+                </ButtonPrimary>
+              ) : (
+                ''
+              )
+            }
+          </AutoRow>
+        </WrapSmall>
+        {!showUnlockVoting && (
+          <RowBetween>
+            <div />
+            {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
+              <RowFixed>
+                <TYPE.body fontWeight={500} mr="4px">
+                  Delegated to:
+                </TYPE.body>
+                <AddressButton>
+                  <StyledExternalLink
+                    href={getExplorerLink(ChainId.MAINNET, userDelegatee, ExplorerDataType.ADDRESS)}
+                    style={{ margin: '0 4px' }}
+                  >
+                    {userDelegatee === account ? 'Self' : shortenAddress(userDelegatee)}
+                  </StyledExternalLink>
+                  <TextButton onClick={toggleDelegateModal} style={{ marginLeft: '4px' }}>
+                    (edit)
+                  </TextButton>
+                </AddressButton>
+              </RowFixed>
             ) : (
               ''
             )}
