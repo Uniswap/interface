@@ -14,7 +14,10 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 - Reddit: [/r/Uniswap](https://www.reddit.com/r/Uniswap/)
 - Email: [contact@uniswap.org](mailto:contact@uniswap.org)
 - Discord: [Uniswap](https://discord.gg/FCfyBSbCU5)
-- Whitepaper: [Link](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
+- Whitepapers:
+  - [V1](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)
+  - [V2](https://uniswap.org/whitepaper.pdf)
+  - [V3](https://uniswap.org/whitepaper-v3.pdf)
 
 ## Accessing the Uniswap Interface
 
