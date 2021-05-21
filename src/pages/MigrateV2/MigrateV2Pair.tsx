@@ -1,6 +1,6 @@
 import JSBI from 'jsbi'
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
-import { Fraction, Percent, Price, Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { Fraction, Percent, Price, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
@@ -8,6 +8,7 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { WETH9_EXTENDED } from '../../constants/tokens'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -568,9 +569,10 @@ function V2PairMigration({
                 <LiquidityInfo token0Amount={position.amount0} token1Amount={position.amount1} />
                 {chainId && refund0 && refund1 ? (
                   <TYPE.black fontSize={12}>
-                    At least {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and{' '}
-                    {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be
-                    refunded to your wallet due to selected price range.
+                    At least {formatTokenAmount(refund0, 4)}{' '}
+                    {token0.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : token0.symbol} and {formatTokenAmount(refund1, 4)}{' '}
+                    {token1.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : token1.symbol} will be refunded to your wallet due
+                    to selected price range.
                   </TYPE.black>
                 ) : null}
               </AutoColumn>

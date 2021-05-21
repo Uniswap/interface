@@ -1,5 +1,6 @@
-import { Currency, WETH9 } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { WETH9_EXTENDED } from '../constants/tokens'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
@@ -37,7 +38,7 @@ export default function useWrapCallback(
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency.isNative && outputCurrency.equals(WETH9[chainId])) {
+    if (inputCurrency.isNative && outputCurrency.equals(WETH9_EXTENDED[chainId])) {
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -53,7 +54,7 @@ export default function useWrapCallback(
             : undefined,
         inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient ETH balance' : 'Enter ETH amount',
       }
-    } else if (WETH9[chainId].equals(inputCurrency) && outputCurrency.isNative) {
+    } else if (WETH9_EXTENDED[chainId].equals(inputCurrency) && outputCurrency.isNative) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:

@@ -26,9 +26,10 @@ const NETWORK_URLS: {
   [3]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
   [5]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
   [42]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [144545313136048]: `https://kovan5.arbitrum.io/rpc`,
 }
 
-const SUPPORTED_CHAIN_IDS = [1, 4, 3, 42, 5]
+const SUPPORTED_CHAIN_IDS = [1, 3, 4, 5, 42, 144545313136048]
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,

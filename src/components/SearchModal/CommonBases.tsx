@@ -35,7 +35,9 @@ export default function CommonBases({
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
-  return (
+  const commonBases = typeof chainId !== 'undefined' ? SUGGESTED_BASES[chainId] ?? [] : []
+
+  return commonBases.length > 0 ? (
     <AutoColumn gap="md">
       <AutoRow>
         <Text fontWeight={500} fontSize={14}>
@@ -44,7 +46,7 @@ export default function CommonBases({
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
-        {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((currency: Currency) => {
+        {commonBases.map((currency: Currency) => {
           const isSelected = selectedCurrency?.equals(currency)
           return (
             <BaseWrapper
@@ -61,5 +63,5 @@ export default function CommonBases({
         })}
       </AutoRow>
     </AutoColumn>
-  )
+  ) : null
 }

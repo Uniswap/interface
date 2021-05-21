@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { WETH9, Token, Ether } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
 
 export const AMPL = new Token(1, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
@@ -21,4 +21,25 @@ export const UNI: { [chainId: number]: Token } = {
   [3]: new Token(3, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
   [5]: new Token(5, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
   [42]: new Token(42, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
+}
+export const WETH9_EXTENDED: { [chainId: number]: Token } = {
+  ...WETH9,
+  [144545313136048]: new Token(
+    144545313136048,
+    '0x4A5e4A42dC430f669086b417AADf2B128beFEfac',
+    18,
+    'WETH9',
+    'Wrapped Ether'
+  ),
+}
+
+export class ExtendedEther extends Ether {
+  public get wrapped(): Token {
+    if (this.chainId in WETH9_EXTENDED) return WETH9_EXTENDED[this.chainId]
+    throw new Error('Unsupported chain ID')
+  }
+
+  public static onChain(chainId: number): ExtendedEther {
+    return new ExtendedEther(chainId)
+  }
 }
