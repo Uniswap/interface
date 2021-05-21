@@ -3,7 +3,7 @@ import { Text } from 'rebass'
 import { Currency } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
-import { SUGGESTED_BASES } from '../../constants/routing'
+import { COMMON_BASES } from '../../constants/routing'
 import { currencyId } from '../../utils/currencyId'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
@@ -35,7 +35,9 @@ export default function CommonBases({
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
-  return (
+  const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
+
+  return bases.length > 0 ? (
     <AutoColumn gap="md">
       <AutoRow>
         <Text fontWeight={500} fontSize={14}>
@@ -44,7 +46,7 @@ export default function CommonBases({
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
       <AutoRow gap="4px">
-        {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((currency: Currency) => {
+        {bases.map((currency: Currency) => {
           const isSelected = selectedCurrency?.equals(currency)
           return (
             <BaseWrapper
@@ -61,5 +63,5 @@ export default function CommonBases({
         })}
       </AutoRow>
     </AutoColumn>
-  )
+  ) : null
 }
