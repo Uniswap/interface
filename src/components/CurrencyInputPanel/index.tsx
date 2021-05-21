@@ -273,14 +273,14 @@ export default function CurrencyInputPanel({
                         formatTokenAmount(selectedCurrencyBalance, 4) +
                         ' ' +
                         currency.symbol
-                      : '-'}
+                      : ''}
                   </TYPE.body>
                   {showMaxButton && selectedCurrencyBalance ? (
                     <StyledBalanceMax onClick={onMax}>(Max)</StyledBalanceMax>
                   ) : null}
                 </RowFixed>
               ) : (
-                '-'
+                <span></span>
               )}
               <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
             </RowBetween>
