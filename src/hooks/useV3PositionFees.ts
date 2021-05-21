@@ -51,12 +51,8 @@ export function useV3PositionFees(
 
   if (pool && amounts) {
     return [
-      !asWETH && unwrappedToken(pool.token0).isNative
-        ? CurrencyAmount.ether(pool.chainId, amounts[0].toString())
-        : CurrencyAmount.fromRawAmount(pool.token0, amounts[0].toString()),
-      !asWETH && unwrappedToken(pool.token1).isNative
-        ? CurrencyAmount.ether(pool.chainId, amounts[1].toString())
-        : CurrencyAmount.fromRawAmount(pool.token1, amounts[1].toString()),
+      CurrencyAmount.fromRawAmount(!asWETH ? unwrappedToken(pool.token0) : pool.token0, amounts[0].toString()),
+      CurrencyAmount.fromRawAmount(!asWETH ? unwrappedToken(pool.token1) : pool.token1, amounts[1].toString()),
     ]
   } else {
     return [undefined, undefined]

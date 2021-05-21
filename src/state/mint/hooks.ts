@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { unwrappedToken } from '../../utils/unwrappedToken'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
 import { Pair } from '@uniswap/v2-sdk'
@@ -121,7 +122,7 @@ export function useDerivedMintInfo(
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
             : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
         return dependentCurrency?.isNative
-          ? CurrencyAmount.ether(dependentCurrency.chainId, dependentTokenAmount.quotient)
+          ? CurrencyAmount.fromRawAmount(unwrappedToken(dependentCurrency), dependentTokenAmount.quotient)
           : dependentTokenAmount
       }
       return undefined

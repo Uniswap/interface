@@ -10,9 +10,9 @@ export function maxAmountSpend(currencyAmount?: CurrencyAmount<Currency>): Curre
   if (!currencyAmount) return undefined
   if (currencyAmount.currency.isNative) {
     if (JSBI.greaterThan(currencyAmount.quotient, MIN_ETH)) {
-      return CurrencyAmount.ether(currencyAmount.currency.chainId, JSBI.subtract(currencyAmount.quotient, MIN_ETH))
+      return CurrencyAmount.fromRawAmount(currencyAmount.currency, JSBI.subtract(currencyAmount.quotient, MIN_ETH))
     } else {
-      return CurrencyAmount.ether(currencyAmount.currency.chainId, JSBI.BigInt(0))
+      return CurrencyAmount.fromRawAmount(currencyAmount.currency, JSBI.BigInt(0))
     }
   }
   return currencyAmount
