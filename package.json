@@ -13,7 +13,7 @@
     "@types/ledgerhq__hw-transport-webusb": "^4.70.1",
     "@types/lodash": "^4.14.170",
     "@types/lodash.flatmap": "^4.5.6",
-    "@types/multicodec": "^1.0.0",
+    "@types/multicodec": "^2.1.0",
     "@types/node": "^14.14.37",
     "@types/qs": "^6.9.6",
     "@types/react": "^17.0.6",
