@@ -18,6 +18,7 @@ import { useModalOpen, useWalletModalToggle } from '../../state/application/hook
 import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
 import Modal from '../Modal'
+import { CeloConnector } from './CeloConnector'
 import { LedgerWalletSelector } from './LedgerWalletSelector'
 import Option from './Option'
 import PendingView from './PendingView'
@@ -347,7 +348,11 @@ export default function WalletModal({
           </HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Celo network.</h5>
+              <div>
+                <h5>Please connect to the appropriate Celo network.</h5>
+                <br />
+                <CeloConnector />
+              </div>
             ) : (
               'Error connecting. Try refreshing the page.'
             )}
