@@ -28,7 +28,7 @@ const Icon = styled.img.attrs({
 
 function SwitchNetwork() {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
-  const { error, addChain } = useAddChain()
+  const { error, addChain, isSupported } = useAddChain()
 
   return (
     <>
@@ -40,9 +40,15 @@ function SwitchNetwork() {
         </RowCenter>
         <RowCenter>
           <TYPE.body fontSize={18} fontWeight={500}>
-            <Link id="fuse-connect-open" onClick={() => addChain(FUSE_CHAIN)}>
-              Switch to Fuse Network
-            </Link>
+            {isSupported ? (
+              <Link id="fuse-connect-open" onClick={() => addChain(FUSE_CHAIN)}>
+                Switch to Fuse Network
+              </Link>
+            ) : (
+              <Link id="fuse-connect-open" onClick={() => setModalOpen(true)}>
+                Switch to Fuse Network. Click to learn how
+              </Link>
+            )}
           </TYPE.body>
         </RowCenter>
         {error && (

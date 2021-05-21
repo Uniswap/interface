@@ -7,7 +7,7 @@ import { CHAIN_MAP } from '../../constants/chains'
 
 export default function AutoSwitchNetwork({ chainId }: { chainId: number }) {
   const { chainId: activeChainId } = useActiveWeb3React()
-  const { addChain } = useAddChain()
+  const { addChain, isSupported } = useAddChain()
   const [isOpen, setIsOpen] = useState(false)
 
   // use modal for mainnet and switch automatically for chains in chain map
@@ -17,7 +17,7 @@ export default function AutoSwitchNetwork({ chainId }: { chainId: number }) {
         setIsOpen(true)
       } else {
         const chain = CHAIN_MAP[chainId]
-        if (chain) addChain(chain)
+        if (chain && isSupported) addChain(chain)
       }
     } else {
       // user mannully switched network, close modal

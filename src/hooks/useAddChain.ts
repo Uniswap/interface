@@ -39,5 +39,5 @@ export default function useAddChain() {
     [provider]
   )
 
-  return { error, addChain }
+  return { error, addChain, isSupported: provider?.isMetaMask, isUnlocked: provider?._state?.isUnlocked }
 }

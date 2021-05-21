@@ -61,7 +61,11 @@ export const injected = new InjectedConnector({
 
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
-  rpc: { [ETHEREUM_CHAIN_ID]: ETHEREUM_NETWORK_URL },
+  rpc: {
+    [ETHEREUM_CHAIN_ID]: ETHEREUM_NETWORK_URL,
+    [NETWORK_CHAIN_ID]: NETWORK_URL,
+    [BINANCE_CHAIN_ID]: BINANCE_NETWORK_URL
+  },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   pollingInterval: 15000

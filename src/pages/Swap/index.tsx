@@ -29,7 +29,7 @@ import {
   ROUTER_ADDRESS
 } from '../../constants'
 import { getTradeVersion, isTradeBetter } from '../../data/V1'
-import { useActiveWeb3React, useChain, useInjectedProvider } from '../../hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency, useAllSwapTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
@@ -64,8 +64,7 @@ import { FUSE_CHAIN } from '../../constants/chains'
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const tokens = useAllSwapTokens()
-  const injectedProvider = useInjectedProvider()
-  const { addChain } = useAddChain()
+  const { addChain, isSupported, isUnlocked } = useAddChain()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -499,7 +498,7 @@ export default function Swap() {
           </AutoColumn>
           <BottomGrouping>
             {!account ? (
-              injectedProvider?.isMetaMask && injectedProvider?._state?.isUnlocked ? (
+              isSupported && isUnlocked ? (
                 <ButtonLight onClick={() => addChain(FUSE_CHAIN)}>Switch to Fuse</ButtonLight>
               ) : (
                 <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>

@@ -20,7 +20,7 @@ import Row, { RowBetween, RowFlat } from '../../components/Row'
 
 import { ROUTER_ADDRESS, GAS_PRICE } from '../../constants'
 import { PairState } from '../../data/Reserves'
-import { useActiveWeb3React, useChain, useInjectedProvider } from '../../hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -52,8 +52,7 @@ export default function AddLiquidity({
   const { account, chainId, library } = useActiveWeb3React()
   const { isHome } = useChain()
   const theme = useContext(ThemeContext)
-  const injectedProvider = useInjectedProvider()
-  const { addChain } = useAddChain()
+  const { addChain, isSupported, isUnlocked } = useAddChain()
 
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -430,7 +429,7 @@ export default function AddLiquidity({
             )}
 
             {!account ? (
-              injectedProvider?.isMetaMask && injectedProvider?._state?.isUnlocked ? (
+              isSupported && isUnlocked ? (
                 <ButtonLight onClick={() => addChain(FUSE_CHAIN)}>Switch to Fuse</ButtonLight>
               ) : (
                 <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
