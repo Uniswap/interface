@@ -1,5 +1,6 @@
 // a list of tokens by chain
 import { Currency, Token } from '@uniswap/sdk-core'
+import { SupportedChainId } from './misc'
 import {
   AMPL,
   DAI,
@@ -49,12 +50,12 @@ const mAssetsAdditionalBases: { [tokenAddress: string]: Token[] } = {
   '0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86': [MIR, UST], // mVIXY
 }
 const WETH_ONLY: ChainTokenList = {
-  [1]: [WETH9_EXTENDED[1]],
-  [3]: [WETH9_EXTENDED[3]],
-  [4]: [WETH9_EXTENDED[4]],
-  [5]: [WETH9_EXTENDED[5]],
-  [42]: [WETH9_EXTENDED[42]],
-  [144545313136048]: [WETH9_EXTENDED[144545313136048]],
+  [SupportedChainId.MAINNET]: [WETH9_EXTENDED[SupportedChainId.MAINNET]],
+  [SupportedChainId.ROPSTEN]: [WETH9_EXTENDED[SupportedChainId.ROPSTEN]],
+  [SupportedChainId.RINKEBY]: [WETH9_EXTENDED[SupportedChainId.RINKEBY]],
+  [SupportedChainId.GOERLI]: [WETH9_EXTENDED[SupportedChainId.GOERLI]],
+  [SupportedChainId.KOVAN]: [WETH9_EXTENDED[SupportedChainId.KOVAN]],
+  [SupportedChainId.ARBITRUM_KOVAN]: [WETH9_EXTENDED[SupportedChainId.ARBITRUM_KOVAN]],
 }
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
@@ -95,6 +96,10 @@ export const COMMON_BASES: ChainCurrencyList = {
   [4]: [ExtendedEther.onChain(4), WETH9_EXTENDED[4]],
   [5]: [ExtendedEther.onChain(5), WETH9_EXTENDED[5]],
   [42]: [ExtendedEther.onChain(42), WETH9_EXTENDED[42]],
+  [SupportedChainId.ARBITRUM_KOVAN]: [
+    ExtendedEther.onChain(SupportedChainId.ARBITRUM_KOVAN),
+    WETH9_EXTENDED[SupportedChainId.ARBITRUM_KOVAN],
+  ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

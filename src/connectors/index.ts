@@ -3,6 +3,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
+import { SupportedChainId } from '../constants/misc'
 import getLibrary from '../utils/getLibrary'
 
 import { FortmaticConnector } from './Fortmatic'
@@ -21,15 +22,22 @@ if (typeof INFURA_KEY === 'undefined') {
 const NETWORK_URLS: {
   [chainId: number]: string
 } = {
-  [1]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [4]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-  [3]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [5]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
-  [42]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
-  [144545313136048]: `https://kovan5.arbitrum.io/rpc`,
+  [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.ARBITRUM_KOVAN]: `https://kovan5.arbitrum.io/rpc`,
 }
 
-const SUPPORTED_CHAIN_IDS = [1, 3, 4, 5, 42, 144545313136048]
+const SUPPORTED_CHAIN_IDS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.KOVAN,
+  SupportedChainId.GOERLI,
+  SupportedChainId.RINKEBY,
+  SupportedChainId.ROPSTEN,
+  SupportedChainId.ARBITRUM_KOVAN,
+]
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
