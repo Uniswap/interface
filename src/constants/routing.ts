@@ -85,10 +85,18 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
     [AMPL.address]: [DAI, WETH9_EXTENDED[1]],
   },
 }
-// used for display in the default list when adding liquidity
-export const SUGGESTED_BASES: ChainCurrencyList = {
-  [1]: [ExtendedEther.onChain(1), DAI, USDC, USDT, WBTC],
+
+/**
+ * Shows up in the currency select for swap and add liquidity
+ */
+export const COMMON_BASES: ChainCurrencyList = {
+  [1]: [ExtendedEther.onChain(1), DAI, USDC, USDT, WBTC, WETH9_EXTENDED[1]],
+  [3]: [ExtendedEther.onChain(3), WETH9_EXTENDED[3]],
+  [4]: [ExtendedEther.onChain(4), WETH9_EXTENDED[4]],
+  [5]: [ExtendedEther.onChain(5), WETH9_EXTENDED[5]],
+  [42]: [ExtendedEther.onChain(42), WETH9_EXTENDED[42]],
 }
+
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
