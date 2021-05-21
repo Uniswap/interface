@@ -1,4 +1,4 @@
-import { SupportedChainId } from '../constants/misc'
+import { SupportedChainId } from '../constants/chains'
 
 const ETHERSCAN_PREFIXES: { [chainId: number]: string } = {
   [SupportedChainId.MAINNET]: '',
@@ -26,19 +26,19 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     const prefix = `https://${ETHERSCAN_PREFIXES[chainId] ?? ''}etherscan.io`
 
     switch (type) {
-      case ExplorerDataType.TRANSACTION: {
+      case ExplorerDataType.TRANSACTION:
         return `${prefix}/tx/${data}`
-      }
-      case ExplorerDataType.TOKEN: {
+
+      case ExplorerDataType.TOKEN:
         return `${prefix}/token/${data}`
-      }
-      case ExplorerDataType.BLOCK: {
+
+      case ExplorerDataType.BLOCK:
         return `${prefix}/block/${data}`
-      }
+
       case ExplorerDataType.ADDRESS:
-      default: {
         return `${prefix}/address/${data}`
-      }
+      default:
+        return `${prefix}`
     }
   } else {
     switch (type) {
@@ -46,6 +46,8 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
         return `https://explorer5.arbitrum.io/#/tx/${data}`
       case ExplorerDataType.ADDRESS:
         return `https://explorer5.arbitrum.io/#/address/${data}`
+      case ExplorerDataType.BLOCK:
+        return `https://explorer5.arbitrum.io/#/block/${data}`
       default:
         return `https://explorer5.arbitrum.io`
     }

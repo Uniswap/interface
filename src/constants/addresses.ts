@@ -1,6 +1,6 @@
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
-import { SupportedChainId } from './misc'
+import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 

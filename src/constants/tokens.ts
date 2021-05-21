@@ -1,6 +1,6 @@
 import { WETH9, Token, Ether } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
-import { SupportedChainId } from './misc'
+import { SupportedChainId } from './chains'
 
 export const AMPL = new Token(1, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
