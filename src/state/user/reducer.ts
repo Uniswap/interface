@@ -15,6 +15,7 @@ import {
   updateUserDeadline,
   toggleURLWarning,
   updateUserSingleHopOnly,
+  updateHideClosedPositions,
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -29,6 +30,9 @@ export interface UserState {
   userExpertMode: boolean
 
   userSingleHopOnly: boolean // only allow swaps on direct pairs
+
+  // hides closed (inactive) positions across the app
+  userHideClosedPositions: boolean
 
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number | 'auto'
@@ -63,6 +67,7 @@ export const initialState: UserState = {
   matchesDarkMode: false,
   userExpertMode: false,
   userSingleHopOnly: false,
+  userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
@@ -129,6 +134,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserSingleHopOnly, (state, action) => {
       state.userSingleHopOnly = action.payload.userSingleHopOnly
+    })
+    .addCase(updateHideClosedPositions, (state, action) => {
+      state.userHideClosedPositions = action.payload.userHideClosedPositions
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
       if (!state.tokens) {
