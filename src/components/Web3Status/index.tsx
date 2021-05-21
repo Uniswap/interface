@@ -1,14 +1,15 @@
+import * as Sentry from '@sentry/react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { ValoraConnector } from 'connectors/valora/ValoraConnector'
 import useAccountSummary from 'hooks/useAccountSummary'
 import { darken, lighten } from 'polished'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 
-import { injected } from '../../connectors'
+import { injected, NETWORK_CHAIN_NAME } from '../../connectors'
 import { NetworkContextName } from '../../constants'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
@@ -168,7 +169,7 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const { active, account } = useWeb3React()
+  const { active, account, connector } = useWeb3React()
   const contextNetwork = useWeb3React(NetworkContextName)
   const allTransactions = useAllTransactions()
 
@@ -180,6 +181,12 @@ export default function Web3Status() {
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
   const { summary } = useAccountSummary(account ?? undefined)
+
+  useEffect(() => {
+    Sentry.setUser({ id: account ?? undefined })
+    Sentry.setTag('connector', connector?.constructor.name ?? 'disconnected')
+    Sentry.setTag('network', NETWORK_CHAIN_NAME)
+  }, [connector, account])
 
   if (!contextNetwork.active && !active) {
     return null

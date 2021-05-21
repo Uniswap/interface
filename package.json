@@ -121,8 +121,8 @@
     "@celo/wallet-ledger": "^1.2.0",
     "@craco/craco": "^6.1.2",
     "@ledgerhq/hw-transport-webusb": "^5.51.1",
-    "@sentry/react": "^6.3.5",
-    "@sentry/tracing": "^6.3.5",
+    "@sentry/react": "^6.4.1",
+    "@sentry/tracing": "^6.4.1",
     "@ubeswap/default-token-list": "^2.1.0",
     "@ubeswap/moola": "^0.2.0",
     "@ubeswap/sdk": "^2.1.0",
@@ -138,6 +138,6 @@
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix",
-    "*.{html,md,graphql,json}": "prettier --write"
+    "*.{html,md,graphql,json,yaml,yml}": "prettier --write"
   }
 }

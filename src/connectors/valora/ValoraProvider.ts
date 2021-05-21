@@ -27,7 +27,7 @@ export class ValoraProvider extends MiniRpcProvider {
         })
         return '0x' + gasEstimate.toString(16)
       } catch (e) {
-        console.error('Failed to estimate gas', { method, params }, e)
+        console.error('Failed to estimate gas', JSON.stringify({ method, params }), e)
         throw e
       }
     } else if (method === 'eth_sendTransaction' && params) {

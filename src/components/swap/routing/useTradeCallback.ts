@@ -1,7 +1,7 @@
 import { ChainId, Trade } from '@ubeswap/sdk'
 import { useActiveWeb3React } from 'hooks'
 import { SwapCallbackState, useSwapCallback } from 'hooks/useSwapCallback'
-import { useCallback } from 'react'
+import { useMemo } from 'react'
 
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../../constants'
 import { useDoTransaction } from '.'
@@ -29,25 +29,31 @@ export const useTradeCallback = (
     error,
   } = useSwapCallback(trade, allowedSlippage, recipientAddressOrName)
 
-  const tradeCallback = useCallback(async () => {
+  return useMemo(() => {
+    if (error) {
+      return { state: swapState, callback: null, error }
+    }
+
     if (!library || !trade || !account) {
-      throw new Error('not loaded')
+      return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
 
     if (chainId === ChainId.BAKLAVA) {
-      throw new Error('Baklava is not supported')
+      return { state: SwapCallbackState.INVALID, callback: null, error: 'Baklava is not supported' }
     }
 
     const signer = library.getSigner(account)
     const env = { signer, chainId, doTransaction }
     if (trade instanceof MoolaDirectTrade) {
-      return (await executeMoolaDirectTrade({ ...env, trade })).hash
+      return {
+        state: SwapCallbackState.VALID,
+        callback: async () => (await executeMoolaDirectTrade({ ...env, trade })).hash,
+        error: null,
+      }
     } else if (swapCallback) {
-      return await swapCallback()
+      return { state: SwapCallbackState.VALID, callback: swapCallback, error: null }
     } else {
-      throw new Error('not loaded')
+      return { state: SwapCallbackState.INVALID, callback: null, error: 'Unknown trade type' }
     }
-  }, [swapCallback, library, chainId, doTransaction, trade, account])
-
-  return { state: swapState, callback: tradeCallback, error }
+  }, [swapCallback, library, chainId, doTransaction, trade, account, error, swapState])
 }
