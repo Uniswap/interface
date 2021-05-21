@@ -159,12 +159,10 @@ function V2PairMigration({
   const noLiquidity = poolState === PoolState.NOT_EXISTS
 
   // get spot prices + price difference
-  const v2SpotPrice = useMemo(() => new Price(token0, token1, reserve0.quotient, reserve1.quotient), [
-    token0,
-    token1,
-    reserve0,
-    reserve1,
-  ])
+  const v2SpotPrice = useMemo(
+    () => new Price(token0, token1, reserve0.quotient, reserve1.quotient),
+    [token0, token1, reserve0, reserve1]
+  )
   const v3SpotPrice = poolState === PoolState.EXISTS ? pool?.token0Price : undefined
 
   let priceDifferenceFraction: Fraction | undefined =

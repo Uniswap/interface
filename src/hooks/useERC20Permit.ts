@@ -276,10 +276,10 @@ export function useERC20PermitFromTrade(
 ) {
   const { chainId } = useActiveWeb3React()
   const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-  const amountToApprove = useMemo(() => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined), [
-    trade,
-    allowedSlippage,
-  ])
+  const amountToApprove = useMemo(
+    () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
+    [trade, allowedSlippage]
+  )
 
   return useERC20Permit(
     amountToApprove,
