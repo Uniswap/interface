@@ -18,6 +18,7 @@ import Toggle from 'components/Toggle'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 
 import CTACards from './CTACards'
+import { PositionDetails } from 'types/position'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
@@ -113,7 +114,18 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  const sortedPositions = positions?.sort((a, b) => (a.liquidity?.sub(b.liquidity ?? 0).isNegative() ? 1 : -1)) ?? []
+  // move zero liquidity (closed) positions to the end
+  const sortedPositions =
+    positions
+      ?.reduce<[PositionDetails[], PositionDetails[]]>(
+        (acc, p) => {
+          acc[p.liquidity?.isZero() ? 1 : 0].push(p)
+          return acc
+        },
+        [[], []]
+      )
+      .flat() ?? []
+
   const filteredPositions = userHideClosedPositions
     ? sortedPositions.filter((p) => !p.liquidity?.isZero())
     : sortedPositions
