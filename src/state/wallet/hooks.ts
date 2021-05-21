@@ -17,7 +17,9 @@ import { Erc20Interface } from 'abis/types/Erc20'
  */
 export function useETHBalances(
   uncheckedAddresses?: (string | undefined)[]
-): { [address: string]: CurrencyAmount<Currency> | undefined } {
+): {
+  [address: string]: CurrencyAmount<Currency> | undefined
+} {
   const { chainId } = useActiveWeb3React()
   const multicallContract = useMulticall2Contract()
 
