@@ -33,11 +33,13 @@ export default function useWrapCallback(
 
   return useMemo(() => {
     if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
+    const weth = WETH9[chainId]
+    if (!weth) return NOT_APPLICABLE
 
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (inputCurrency.isNative && outputCurrency.equals(WETH9[chainId])) {
+    if (inputCurrency.isNative && weth.equals(outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
         execute:
@@ -53,7 +55,7 @@ export default function useWrapCallback(
             : undefined,
         inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient ETH balance' : 'Enter ETH amount',
       }
-    } else if (WETH9[chainId].equals(inputCurrency) && outputCurrency.isNative) {
+    } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {
         wrapType: WrapType.UNWRAP,
         execute:
