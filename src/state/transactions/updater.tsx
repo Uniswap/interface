@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { updateBlockNumber } from '../application/actions'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
@@ -79,6 +80,11 @@ export default function Updater(): null {
                 },
                 hash
               )
+
+              // the receipt was fetched before the block, fast forward to that block to trigger balance updates
+              if (receipt.blockNumber > lastBlockNumber) {
+                dispatch(updateBlockNumber({ chainId, blockNumber: receipt.blockNumber }))
+              }
             } else {
               dispatch(checkedTransaction({ chainId, hash, blockNumber: lastBlockNumber }))
             }
