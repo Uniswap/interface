@@ -6,6 +6,9 @@
   "devDependencies": {
     "@emotion/core": "^11.0.0",
     "@ethersproject/experimental": "^5.2.0",
+    "@lingui/cli": "^3.9.0",
+    "@lingui/macro": "^3.9.0",
+    "@lingui/react": "^3.9.0",
     "@metamask/jazzicon": "^2.0.0",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
@@ -70,9 +73,6 @@
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.0.0",
     "ethers": "^5.2.0",
-    "i18next": "^15.0.9",
-    "i18next-browser-languagedetector": "^3.0.1",
-    "i18next-xhr-backend": "^2.0.1",
     "inter-ui": "^3.13.1",
     "lightweight-charts": "^3.3.0",
     "lodash.flatmap": "^4.5.0",
@@ -89,7 +89,6 @@
     "react-dom": "^17.0.1",
     "react-feather": "^2.0.8",
     "react-ga": "^2.5.7",
-    "react-i18next": "^10.7.0",
     "react-markdown": "^4.3.1",
     "react-popper": "^2.2.3",
     "react-redux": "^7.2.2",
@@ -128,7 +127,9 @@
     "postinstall": "yarn compile-contract-types",
     "start": "yarn compile-contract-types && react-scripts start",
     "storybook": "start-storybook -p 6006",
-    "test": "react-scripts test --env=jsdom"
+    "test": "react-scripts test --env=jsdom",
+    "extract": "lingui extract",
+    "compile": "lingui compile"
   },
   "eslintConfig": {
     "extends": "react-app",
