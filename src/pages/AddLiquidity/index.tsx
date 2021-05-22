@@ -196,19 +196,20 @@ export default function AddLiquidity({
     }
 
     if (position && account && deadline) {
+      const useNative = currencyA.isNative ? currencyA : currencyB.isNative ? currencyB : undefined
       const { calldata, value } =
         hasExistingPosition && tokenId
           ? NonfungiblePositionManager.addCallParameters(position, {
               tokenId,
               slippageTolerance: allowedSlippage,
               deadline: deadline.toString(),
-              useEther: currencyA.isNative || currencyB.isNative,
+              useNative,
             })
           : NonfungiblePositionManager.addCallParameters(position, {
               slippageTolerance: allowedSlippage,
               recipient: account,
               deadline: deadline.toString(),
-              useEther: currencyA.isNative || currencyB.isNative,
+              useNative,
               createPool: noLiquidity,
             })
 
