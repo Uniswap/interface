@@ -1,17 +1,18 @@
-import { ChainId } from 'libs/sdk/src'
+import { ChainId, Currency, Token } from 'libs/sdk/src'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
-import { RowBetween } from '../Row'
+import { RowBetween, RowFixed } from '../Row'
 import { AlertTriangle, ArrowUpCircle } from 'react-feather'
-import { ButtonPrimary } from '../Button'
+import { ButtonLight, ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
+import MetaMaskLogo from '../../assets/images/metamask.png'
 
-import { getEtherscanLink } from '../../utils'
+import { getEtherscanLink, getRopstenTokenLogoURL, getTokenLogoURL } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 
 const Wrapper = styled.div`
@@ -29,6 +30,12 @@ const BottomSection = styled(Section)`
 
 const ConfirmedIcon = styled(ColumnCenter)`
   padding: 60px 0;
+`
+
+const StyledLogo = styled.img`
+  height: 16px;
+  width: 16px;
+  margin-left: 6px;
 `
 
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
@@ -60,14 +67,58 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
   )
 }
 
+function AddTokenToMetaMask({ token, chainId }: { token: Token, chainId: ChainId }) {
+  async function addToMetaMask() {
+    const tokenAddress = token.address;
+    const tokenSymbol = token.symbol;
+    const tokenDecimals = token.decimals;
+    let tokenImage = getTokenLogoURL(token.address);
+
+    if (chainId === ChainId.ROPSTEN) {
+      tokenImage = getRopstenTokenLogoURL(token.address);
+    }
+
+    try {
+      const { ethereum } = window
+      const isMetaMask = !!(ethereum && ethereum.isMetaMask)
+      if (isMetaMask) {
+        await (window.ethereum as any).request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: tokenAddress,
+              symbol: tokenSymbol,
+              decimals: tokenDecimals,
+              image: tokenImage,
+            },
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return (
+    <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToMetaMask}>
+      <RowFixed>
+        Add {token.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+      </RowFixed>
+    </ButtonLight>
+  )
+}
+
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
-  hash
+  hash,
+  tokenAddtoMetaMask,
 }: {
   onDismiss: () => void
   hash: string | undefined
   chainId: ChainId
+  tokenAddtoMetaMask: Currency | undefined
 }) {
   const theme = useContext(ThemeContext)
 
@@ -92,6 +143,7 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
+          {tokenAddtoMetaMask && <AddTokenToMetaMask token={tokenAddtoMetaMask as Token} chainId={chainId} />}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
               Close
@@ -112,7 +164,7 @@ export function ConfirmationModalContent({
   title,
   bottomContent,
   onDismiss,
-  topContent
+  topContent,
 }: {
   title: string
   onDismiss: () => void
@@ -169,6 +221,7 @@ interface ConfirmationModalProps {
   content: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
+  tokenAddtoMetaMask: Currency | undefined
 }
 
 export default function TransactionConfirmationModal({
@@ -177,7 +230,8 @@ export default function TransactionConfirmationModal({
   attemptingTxn,
   hash,
   pendingText,
-  content
+  content,
+  tokenAddtoMetaMask
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -189,7 +243,7 @@ export default function TransactionConfirmationModal({
       {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
-        <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} />
+        <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} tokenAddtoMetaMask={tokenAddtoMetaMask} />
       ) : (
         content()
       )}
