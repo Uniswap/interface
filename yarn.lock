@@ -2312,6 +2312,17 @@
     make-plural "^6.2.2"
     messageformat-parser "^4.1.3"
 
+"@lingui/loader@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@lingui/loader/-/loader-3.9.0.tgz#e508e00bafa40fce301cdc48b50faa8c1a0160b1"
+  integrity sha512-IczFzbIE4Y4++QcXLUorIduhlJpezsx9f5A+g2UGa9/NJykVuG8YUb0xZuxsMm05wWXLHYXvg1FZWu+uUi7hUg==
+  dependencies:
+    "@babel/runtime" "^7.11.2"
+    "@lingui/cli" "^3.9.0"
+    "@lingui/conf" "^3.9.0"
+    loader-utils "^2.0.0"
+    ramda "^0.27.1"
+
 "@lingui/macro@^3.9.0":
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/@lingui/macro/-/macro-3.9.0.tgz#881a634c82e399abc782ce8652d0f02c482c282d"
@@ -3768,6 +3779,27 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/lingui__core@*", "@types/lingui__core@^2.7.1":
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/@types/lingui__core/-/lingui__core-2.7.1.tgz#b79473705882e569cc07caa87f8395449d77d620"
+  integrity sha512-zfJoKAfgYyk00s1xuMqyIbQdxw4OI0G5hFsc1ARU+zv+2WCPjlPh+CfPEu3iOm1GSdOjj3vpu7E+JTGjMW+fzA==
+
+"@types/lingui__macro@^2.7.4":
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/@types/lingui__macro/-/lingui__macro-2.7.4.tgz#498f25afa1830a4c480a5295cdf2103adaddbb2a"
+  integrity sha512-psHhx3EFHbZ9NPA/Su2dI4jcnEHcU+wnDi8lU5g0QOMmZiCyY5Q1ntYXulh8/v0dHh2J9Us5T241voRSKAmZfA==
+  dependencies:
+    "@types/lingui__core" "*"
+    "@types/react" "*"
+
+"@types/lingui__react@^2.8.3":
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/@types/lingui__react/-/lingui__react-2.8.3.tgz#0dbb380f502480b9fe1e2c4a0a9bf860364a10cf"
+  integrity sha512-MXkYBg0KrFqEBam5kthNVaVa56YhWwtFlpZIS3Xr/9CE1jGlFo8isMBzgX/2m6QzTr/x4rLQ2PdUgUMjNzdG5A==
+  dependencies:
+    "@types/lingui__core" "*"
+    "@types/react" "*"
 
 "@types/lodash.flatmap@^4.5.6":
   version "4.5.6"
