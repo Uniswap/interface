@@ -55,6 +55,7 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
+import { Trans } from '@lingui/macro'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -612,11 +613,15 @@ export default function Swap({ history }: RouteComponentProps) {
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {swapInputError
-                      ? swapInputError
-                      : priceImpactTooHigh
-                      ? `Price Impact Too High`
-                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                    {swapInputError ? (
+                      swapInputError
+                    ) : priceImpactTooHigh ? (
+                      <Trans id="swap.buttons.priceImpactTooHigh">Price Impact Too High</Trans>
+                    ) : priceImpactSeverity > 2 ? (
+                      <Trans id="swap.buttons.swap">Swap</Trans>
+                    ) : (
+                      <Trans id="swap.buttons.swapAnyway">Swap Anyway</Trans>
+                    )}
                   </Text>
                 </ButtonError>
               )}

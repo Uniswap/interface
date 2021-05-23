@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/macro'
 import { TYPE } from 'theme'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 import { ExternalLink } from '../../theme'
 import { AutoColumn } from 'components/Column'
 import Squiggle from '../../assets/images/squiggle.png'
@@ -118,29 +118,31 @@ const StyledImage = styled.img`
 `
 
 export default function CTACards() {
-  const { t } = useTranslation()
-
   return (
     <CTASection>
       <CTA1 href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide'}>
         <ResponsiveColumn>
-          <HeaderText>{t('Uniswap V3 is here!')}</HeaderText>
+          <HeaderText>
+            <Trans id="cta.v3.launchAnnouncement">Uniswap V3 is here!</Trans>
+          </HeaderText>
           <TYPE.body fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
-            {t('Check out our v3 LP walkthrough and migration guides.')}
+            <Trans id="cta.v3.walkthroughAndMigration">Check out our v3 LP walkthrough and migration guides.</Trans>
           </TYPE.body>
           <RowBetween align="flex-end">
-            <HeaderText>{t('↗')}</HeaderText>
+            <HeaderText>↗</HeaderText>
             <StyledImage src={Squiggle} />
           </RowBetween>
         </ResponsiveColumn>
       </CTA1>
       <CTA2 href={'https://info.uniswap.org/#/pools'}>
         <ResponsiveColumn>
-          <HeaderText style={{ alignSelf: 'flex-start' }}>{t('Top pools')}</HeaderText>
+          <HeaderText style={{ alignSelf: 'flex-start' }}>
+            <Trans id="cta.topPools">Top pools</Trans>
+          </HeaderText>
           <TYPE.body fontWeight={300} style={{ alignSelf: 'flex-start' }}>
-            {t('Explore popular pools on Uniswap Analytics.')}
+            <Trans id="cta.v3.explore">Explore popular pools on Uniswap Analytics.</Trans>
           </TYPE.body>
-          <HeaderText style={{ alignSelf: 'flex-end' }}>{t('↗')}</HeaderText>
+          <HeaderText style={{ alignSelf: 'flex-end' }}>↗</HeaderText>
         </ResponsiveColumn>
       </CTA2>
     </CTASection>

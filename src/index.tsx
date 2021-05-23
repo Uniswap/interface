@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants/misc'
-import './i18n'
+import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import store from './state'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
@@ -63,17 +63,19 @@ ReactDOM.render(
     <FixedGlobalStyle />
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
-        <Blocklist>
-          <Provider store={store}>
-            <Updaters />
-            <ThemeProvider>
-              <ThemedGlobalStyle />
-              <HashRouter>
-                <App />
-              </HashRouter>
-            </ThemeProvider>
-          </Provider>
-        </Blocklist>
+        <LanguageProvider>
+          <Blocklist>
+            <Provider store={store}>
+              <Updaters />
+              <ThemeProvider>
+                <ThemedGlobalStyle />
+                <HashRouter>
+                  <App />
+                </HashRouter>
+              </ThemeProvider>
+            </Provider>
+          </Blocklist>
+        </LanguageProvider>
       </Web3ProviderNetwork>
     </Web3ReactProvider>
   </StrictMode>,
