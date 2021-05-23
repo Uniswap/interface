@@ -1,7 +1,7 @@
 import { Currency, Ether, Token } from '@uniswap/sdk-core'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
-import { useTranslation } from 'react-i18next'
+import { t, Trans } from '@lingui/macro'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -63,7 +63,6 @@ export function CurrencySearch({
   showImportView,
   setImportToken,
 }: CurrencySearchProps) {
-  const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 
@@ -172,7 +171,7 @@ export function CurrencySearch({
       <PaddedColumn gap="16px">
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
-            Select a token
+            <Trans id="currencies.search.selectToken">Select a token</Trans>
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -180,7 +179,7 @@ export function CurrencySearch({
           <SearchInput
             type="text"
             id="token-search-input"
-            placeholder={t('tokenSearchPlaceholder')}
+            placeholder={t({ id: 'currencies.search.placeholder', message: 'Search name or paste address' })}
             autoComplete="off"
             value={searchQuery}
             ref={inputRef as RefObject<HTMLInputElement>}
@@ -218,7 +217,7 @@ export function CurrencySearch({
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
           <TYPE.main color={theme.text3} textAlign="center" mb="20px">
-            No results found.
+            <Trans id="currencies.search.noResults">No results found.</Trans>
           </TYPE.main>
         </Column>
       )}
@@ -229,7 +228,9 @@ export function CurrencySearch({
               <IconWrapper size="16px" marginRight="6px">
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.blue1}>Manage Token Lists</TYPE.main>
+              <TYPE.main color={theme.blue1}>
+                <Trans id="tokenLists.manage">Manage Token Lists</Trans>
+              </TYPE.main>
             </RowFixed>
           </ButtonText>
         </Row>
