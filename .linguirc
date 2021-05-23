@@ -1,9 +1,17 @@
 {
-   "locales": ["en", "cs", "fr"],
-   "sourceLocale": "en",
-   "catalogs": [{
-      "path": "src/locales/{locale}/messages",
-      "include": ["src"]
+   catalogs: [{
+      path: "<rootDir>/src/locales/{locale}/messages",
+      include: ["<rootDir>"],
+      exclude: ["**/node_modules/**", "**/build/**"],
    }],
-   "format": "po"
+   compileNamespace: 'cjs',
+   extractBabelOptions: {},
+   fallbackLocales: {},
+   format: po,
+   locales: ["en", "it"],
+   orderBy: 'messageId',
+   pseudoLocale: '',
+   rootDir: '.',
+   runtimeConfigModule: ['@lingui/core', 'i18n'],
+   sourceLocale: "en",
 }
