@@ -105,8 +105,7 @@ export function colors(darkMode: boolean): Colors {
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     blue1: '#08a1e7',
-    warning: '#eeab2e',
-    custom_bg1: darkMode ? '#303e46' : '#FFFFFF'
+    warning: '#eeab2e'
   }
 }
 
