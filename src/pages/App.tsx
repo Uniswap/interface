@@ -21,7 +21,6 @@ import Pool from './Pool'
 import Migration from './Pool/lp'
 import Pools from './Pools'
 import Farms from './Farms'
-import FarmDetail from './Farms/farm_detail'
 import PoolFinder from './PoolFinder'
 import PoolFinderExternal from './PoolFinder/PoolFinderExternal'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -72,7 +71,7 @@ const Marginer = styled.div`
 
 export default function App() {
   const { account } = useActiveWeb3React()
-  let aboutPage = useRouteMatch('/about')
+  const aboutPage = useRouteMatch('/about')
 
   return (
     <>
