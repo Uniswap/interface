@@ -203,7 +203,7 @@ export default function Pool() {
             {closedPositions.length > 0 ? (
               <ShowInactiveToggle>
                 <TYPE.darkGray>
-                  {<Trans id="pools.toggle.hideClosedPositions">Hide closed positions</Trans>}
+                  <Trans id="pools.toggle.hideClosedPositions">Hide closed positions</Trans>
                 </TYPE.darkGray>
                 <Toggle
                   isActive={userHideClosedPositions}
