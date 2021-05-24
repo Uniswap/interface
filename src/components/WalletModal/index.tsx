@@ -140,7 +140,7 @@ export default function WalletModal({
 
   const previousAccount = usePrevious(account)
 
-  const { addChain } = useAddChain()
+  const { addChain, isSupported } = useAddChain()
 
   // close on connection, when logged out before
   useEffect(() => {
@@ -301,17 +301,26 @@ export default function WalletModal({
           <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Switch Network' : 'Error connecting'}</HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
-              <h5>
-                Switch to{' '}
-                <StyledLink
-                  onClick={e => {
-                    e.preventDefault()
-                    addChain(FUSE_CHAIN)
-                  }}
-                >
-                  Fuse network
-                </StyledLink>
-              </h5>
+              isSupported ? (
+                <h5>
+                  Switch to{' '}
+                  <StyledLink
+                    onClick={e => {
+                      e.preventDefault()
+                      addChain(FUSE_CHAIN)
+                    }}
+                  >
+                    Fuse network
+                  </StyledLink>
+                </h5>
+              ) : (
+                <h5>
+                  Please connect to the{' '}
+                  <ExternalLink href="https://docs.fuse.io/the-fuse-studio/getting-started/how-to-add-fuse-to-your-metamask">
+                    Fuse network
+                  </ExternalLink>
+                </h5>
+              )
             ) : (
               'Error connecting. Try refreshing the page.'
             )}

@@ -26,7 +26,6 @@ import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 import useAddChain from '../../hooks/useAddChain'
 import { FUSE_CHAIN } from '../../constants/chains'
-import { useInjectedProvider } from '../../hooks'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -167,8 +166,7 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 function Web3StatusInner() {
   const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
-  const { addChain } = useAddChain()
-  const injectedProvider = useInjectedProvider()
+  const { addChain, isSupported, isUnlocked } = useAddChain()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -202,7 +200,7 @@ function Web3StatusInner() {
       </Web3StatusConnected>
     )
   } else if (error) {
-    return error instanceof UnsupportedChainIdError ? (
+    return error instanceof UnsupportedChainIdError && isSupported ? (
       <Web3StatusConnect onClick={() => addChain(FUSE_CHAIN)}>
         <Text>Switch to Fuse</Text>
       </Web3StatusConnect>
@@ -213,7 +211,7 @@ function Web3StatusInner() {
       </Web3StatusError>
     )
   } else {
-    if (injectedProvider?.isMetaMask && injectedProvider?._state?.isUnlocked) {
+    if (isSupported && isUnlocked) {
       return (
         <Web3StatusConnect onClick={() => addChain(FUSE_CHAIN)}>
           <Text>Switch to Fuse</Text>

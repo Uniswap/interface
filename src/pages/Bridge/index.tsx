@@ -40,7 +40,7 @@ import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallbac
 import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
 import { Text } from 'rebass'
-import { useActiveWeb3React, useChain, useInjectedProvider } from '../../hooks'
+import { useActiveWeb3React, useChain } from '../../hooks'
 import { UNSUPPORTED_BRIDGE_TOKENS } from '../../constants'
 import { TYPE } from '../../theme'
 import UnsupportedBridgeTokenModal from '../../components/UnsupportedBridgeTokenModal'
@@ -64,8 +64,7 @@ export default function Bridge() {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
-  const injectedProvider = useInjectedProvider()
-  const { addChain } = useAddChain()
+  const { addChain, isSupported, isUnlocked } = useAddChain()
 
   const {
     inputCurrencyId: defaultInputCurrencyId,
@@ -306,7 +305,7 @@ export default function Bridge() {
           )}
           <BottomGrouping>
             {!account ? (
-              injectedProvider?.isMetaMask && injectedProvider?._state?.isUnlocked ? (
+              isSupported && isUnlocked ? (
                 <ButtonLight onClick={() => addChain(FUSE_CHAIN)}>Switch to Fuse</ButtonLight>
               ) : (
                 <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
