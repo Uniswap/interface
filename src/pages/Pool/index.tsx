@@ -144,13 +144,8 @@ export default function Pool() {
     [key: string]: UserLiquidityPosition
   } = {}
 
-  userLiquidityPositions?.liquidityPositionSnapshots.forEach((position: UserLiquidityPosition) => {
-    if (
-      !transformedUserLiquidityPositions[position.pool.id] ||
-      position.timestamp > transformedUserLiquidityPositions[position.pool.id].timestamp
-    ) {
-      transformedUserLiquidityPositions[position.pool.id] = position
-    }
+  userLiquidityPositions?.liquidityPositions.forEach((position: UserLiquidityPosition) => {
+    transformedUserLiquidityPositions[position.pool.id] = position
   })
 
   return (

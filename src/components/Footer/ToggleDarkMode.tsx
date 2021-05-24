@@ -37,8 +37,8 @@ export default function ToggleDarkMode() {
 
   return (
     <StyledToggleDarkMode onClick={toggleDarkMode}>
-      <StyledLightModeIcon>{darkMode ? <LightModeIconActive /> : <LightModeIconInactive />}</StyledLightModeIcon>
-      <StyledDarkModeIcon>{darkMode ? <DarkModeIconInactive /> : <DarkModeIconActive />}</StyledDarkModeIcon>
+      <StyledLightModeIcon>{darkMode ? <LightModeIconInactive /> : <LightModeIconActive />}</StyledLightModeIcon>
+      <StyledDarkModeIcon>{darkMode ? <DarkModeIconActive /> : <DarkModeIconInactive />}</StyledDarkModeIcon>
     </StyledToggleDarkMode>
   )
 }

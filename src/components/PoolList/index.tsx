@@ -16,7 +16,7 @@ import PoolDetailModal from './PoolDetailModal'
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: repeat(8, 1fr) 1fr;
+  grid-template-columns: 1.5fr repeat(7, 1fr) 1fr 1.5fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -76,7 +76,7 @@ const SORT_FIELD = {
 
 const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxItems = 10 }: PoolListProps) => {
   const { t } = useTranslation()
-  const above1200 = useMedia('(min-width: 1200px)') // Extra large screen
+  const above1400 = useMedia('(min-width: 1400px)') // Extra large screen
 
   const transformedSubgraphPoolsData: {
     [key: string]: SubgraphPoolData
@@ -91,12 +91,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   })
 
   userLiquidityPositions.forEach(position => {
-    if (
-      !transformedUserLiquidityPositions[position.pool.id] ||
-      position.timestamp > transformedUserLiquidityPositions[position.pool.id].timestamp
-    ) {
-      transformedUserLiquidityPositions[position.pool.id] = position
-    }
+    transformedUserLiquidityPositions[position.pool.id] = position
   })
 
   // pagination
@@ -184,7 +179,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
   }
 
   const renderHeader = () => {
-    return above1200 ? (
+    return above1400 ? (
       <TableHeader>
         <Flex alignItems="center" justifyContent="flexStart">
           <ClickableText>Pool</ClickableText>
@@ -323,7 +318,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
       {renderHeader()}
       {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
         if (pool && transformedSubgraphPoolsData[pool.address.toLowerCase()]) {
-          return above1200 ? (
+          return above1400 ? (
             <ListItem
               key={pool.address}
               pool={pool}

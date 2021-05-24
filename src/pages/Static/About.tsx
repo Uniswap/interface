@@ -1,17 +1,20 @@
 import React from 'react'
 import style from './about.module.scss'
 
-import { Box, Image, Text } from 'rebass'
+import { Box, Flex, Image, Text } from 'rebass'
 import { Link } from 'react-router-dom'
 
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import LocalLoader from 'components/LocalLoader'
-import { colors, ExternalLink } from 'theme'
+import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
 import { formattedNum } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
 import { KNC } from '../../constants'
+import AccessLiquidity from '../../assets/svg/access-liquidity.svg'
+import Straightforward from '../../assets/svg/straightforward.svg'
+import NoRisk from '../../assets/svg/no-risk.svg'
 
 export default function About() {
   const { chainId } = useActiveWeb3React()
@@ -31,8 +34,8 @@ export default function About() {
       <div className={style.image2}></div>
       <div className={style.image3} style={{ bottom: `0` }}></div>
       <Text fontSize={[24, 58]} mt={[35, 150]}>
-        <Text fontWeight={300}>World's First</Text>
-        <div>
+        <Text fontWeight={300}>DeFi's First</Text>
+        <Text fontWeight={700}>
           <Text color={'#1183b7'} display={'inline-block'}>
             Dynamic&nbsp;
           </Text>
@@ -45,10 +48,10 @@ export default function About() {
           <Text color={'#c9d2d7'} display={'inline-block'} fontWeight={300}>
             Protocol&nbsp;
           </Text>
-        </div>
+        </Text>
       </Text>
       <Text px={4} mt={10} fontSize={[16, 21]} color={'#c9d2d7'}>
-        Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
+        Providing frictionless crypto liquidity with high capital efficiency and dynamic fees
       </Text>
 
       <div style={{ padding: '24px' }}>
@@ -195,6 +198,26 @@ export default function About() {
         Access DMM Liquidity for your Blockchain Platform
       </Text>
       <Text fontSize={[16, 20]} maxWidth="700px" mx="auto">
+        <Flex justifyContent="space-between">
+          <div>
+            <img src={AccessLiquidity} alt="icon" />
+            <Text fontSize={[14, 18]} mt={[34]} mb={45} textAlign="center">
+              Open Access to <br /> Liquidity
+            </Text>
+          </div>
+          <div>
+            <img src={Straightforward} alt="icon" />
+            <Text fontSize={[14, 18]} mt={[34]} mb={45} textAlign="center">
+              Fully On-chain; <br /> Straightforward Integration
+            </Text>
+          </div>
+          <div>
+            <img src={NoRisk} alt="icon" />
+            <Text fontSize={[14, 18]} mt={[34]} mb={45} textAlign="center">
+              No external and <br /> centralized oracle risk
+            </Text>
+          </div>
+        </Flex>
         All the documentation and tools necessary for developers to connect their Dapps to frictionless liquidity to
         perform DeFi functions such token swaps, flash loans, on-chain liquidation, and portfolio rebalancing.
       </Text>
@@ -226,7 +249,7 @@ export default function About() {
         <ButtonOutlined
           padding="12px 28px"
           as={ExternalLink}
-          href={`https://docs.dmm.exchange`}
+          href={`https://discord.com/invite/HdXWUb2pQM`}
           style={{ width: 'auto', fontSize: '16px' }}
         >
           Developer Support
@@ -241,7 +264,9 @@ export default function About() {
           <Text fontSize={[12, 18]} fontWeight={500}>
             Code Audited
           </Text>
-          <img src={require('../../assets/svg/about_icon_insurance.svg')} />
+          <ExternalLink href="https://chainsecurity.com/wp-content/uploads/2021/04/ChainSecurity_KyberNetwork_DMM_Dynamic-Market-Making_Final.pdf">
+            <img src={require('../../assets/svg/chainsecurity.svg')} />
+          </ExternalLink>
         </div>
         <div>
           <Text fontSize={[12, 18]} fontWeight={500}>
@@ -297,15 +322,15 @@ export default function About() {
             </Text>
           </div>
           <div className={style.right}>
-            <a>
+            <ExternalLink href={`https://twitter.com/KyberNetwork/`}>
               <Image src={require('../../assets/svg/about_icon_twitter.svg')} />
-            </a>
-            <a>
+            </ExternalLink>
+            <ExternalLink href={`https://discord.gg/HdXWUb2pQM`}>
               <Image src={require('../../assets/svg/about_icon_discord.svg')} />
-            </a>
-            <a>
+            </ExternalLink>
+            <ExternalLink href={`https://blog.kyber.network`}>
               <Image src={require('../../assets/svg/about_icon_medium.svg')} />
-            </a>
+            </ExternalLink>
             <Text fontSize={12} ml={['auto', 0]}>
               (c) dmm.exchange
             </Text>

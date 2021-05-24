@@ -82,7 +82,7 @@ const Pools = ({
   const { account } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
-  const above1200 = useMedia('(min-width: 1200px)')
+  const above1400 = useMedia('(min-width: 1400px)')
 
   // Pool selection
   const { onCurrencySelection } = usePairActionHandlers()
@@ -153,11 +153,12 @@ const Pools = ({
   // const { loading: loadingUserLiquidityPositions, data: userLiquidityPositions } = useUserLiquidityPositions(account)
   const temp = useUserLiquidityPositions(account)
   const loadingUserLiquidityPositions = !account ? false : temp.loading
-  const userLiquidityPositions = !account ? { liquidityPositionSnapshots: [] } : temp.data
+  const userLiquidityPositions = !account ? { liquidityPositions: [] } : temp.data
+
   return (
     <>
       <PageWrapper>
-        {above1200 ? (
+        {above1400 ? (
           <>
             <div style={{ marginBottom: '16px' }}>{t('selectPair')}</div>
             <ToolbarWrapper>
@@ -230,11 +231,11 @@ const Pools = ({
         <Panel>
           {loadingUserLiquidityPositions || loadingPoolsData ? (
             <LocalLoader />
-          ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositionSnapshots ? (
+          ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositions ? (
             <PoolList
               poolsList={poolsList}
               subgraphPoolsData={poolsData}
-              userLiquidityPositions={userLiquidityPositions.liquidityPositionSnapshots}
+              userLiquidityPositions={userLiquidityPositions.liquidityPositions}
               maxItems={3}
             />
           ) : (

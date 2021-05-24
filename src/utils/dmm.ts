@@ -93,13 +93,13 @@ export const feeRangeCalc = (amp: number): string => {
 const DEFAULT_MY_LIQUIDITY = '-'
 
 export const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 => {
-  if (!liquidityPosition || parseFloat(liquidityPosition.liquidityTokenTotalSupply) === 0) {
+  if (!liquidityPosition || parseFloat(liquidityPosition.pool.totalSupply) === 0) {
     return DEFAULT_MY_LIQUIDITY
   }
 
   const myLiquidity =
-    (parseFloat(liquidityPosition.liquidityTokenBalance) * parseFloat(liquidityPosition.reserveUSD)) /
-    parseFloat(liquidityPosition.liquidityTokenTotalSupply)
+    (parseFloat(liquidityPosition.liquidityTokenBalance) * parseFloat(liquidityPosition.pool.reserveUSD)) /
+    parseFloat(liquidityPosition.pool.totalSupply)
 
   if (myLiquidity === 0) {
     return DEFAULT_MY_LIQUIDITY

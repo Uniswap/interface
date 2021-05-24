@@ -7,79 +7,16 @@ export const MAINNET_TOKEN_LIST = {
       chainId: 1,
       address: '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202',
       symbol: 'KNC',
-      name: 'Kyber Network Crystal v2',
+      name: 'Kyber Network Crystal',
       decimals: 18
     },
     {
       chainId: 1,
       address: '0xdd974D5C2e2928deA5F71b9825b8b646686BD200',
       symbol: 'KNCL',
-      name: 'Kyber Network Crystal v1',
+      name: 'Kyber Network Crystal Legacy',
       decimals: 18,
       logoURI: 'https://i.imgur.com/1cDH5dy.png'
-    },
-    {
-      chainId: 1,
-      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-      symbol: 'USDC',
-      name: 'USDC',
-      decimals: 6
-    },
-    {
-      chainId: 1,
-      address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-      symbol: 'USDT',
-      name: 'USDT',
-      decimals: 6
-    },
-    {
-      chainId: 1,
-      address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-      symbol: 'DAI',
-      name: 'DAI',
-      decimals: 18
-    },
-    {
-      chainId: 1,
-      address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-      symbol: 'WBTC',
-      name: 'WBTC',
-      decimals: 8
-    },
-    {
-      chainId: 1,
-      address: '0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D',
-      symbol: 'renBTC',
-      name: 'renBTC',
-      decimals: 8
-    },
-    {
-      chainId: 1,
-      address: '0x514910771AF9Ca656af840dff83E8264EcF986CA',
-      symbol: 'LINK',
-      name: 'LINK',
-      decimals: 18
-    },
-    {
-      chainId: 1,
-      address: '0x0D8775F648430679A709E98d2b0Cb6250d2887EF',
-      symbol: 'BAT',
-      name: 'BAT',
-      decimals: 18
-    },
-    {
-      chainId: 1,
-      address: '0xc00e94Cb662C3520282E6f5717214004A7f26888',
-      symbol: 'COMP',
-      name: 'COMP',
-      decimals: 18
-    },
-    {
-      chainId: 1,
-      address: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9',
-      symbol: 'AAVE',
-      name: 'AAVE',
-      decimals: 18
     },
     {
       chainId: 1,
@@ -131,6 +68,43 @@ export const MAINNET_TOKEN_LIST = {
       symbol: 'ORBS',
       name: 'ORBS',
       decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0xbE9375C6a420D2eEB258962efB95551A5b722803',
+      symbol: 'STMX',
+      name: 'StormX',
+      decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0xEBd9D99A3982d547C5Bb4DB7E3b1F9F14b67Eb83',
+      symbol: 'ID',
+      name: 'Everest ID',
+      decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0xC57d533c50bC22247d49a368880fb49a1caA39F7',
+      symbol: 'PTF',
+      name: 'PowerTrade Fuel Token',
+      decimals: 18
+    },
+    {
+      chainId: 1,
+      address: '0x0bfEc35a1A3550Deed3F6fC76Dde7FC412729a91',
+      symbol: 'XKNCA',
+      name: 'xKNCa',
+      decimals: 18,
+      logoURI: 'https://assets.coingecko.com/coins/images/13995/thumb/Token-4.png?1613545763'
+    },
+    {
+      chainId: 1,
+      address: '0x6710c63432A2De02954fc0f851db07146a6c0312',
+      symbol: 'MFG',
+      name: 'Smart MFG',
+      decimals: 18,
+      logoURI: 'https://i.imgur.com/oReNLqf.png'
     }
   ],
   version: {

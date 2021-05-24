@@ -280,7 +280,7 @@ export default function Header() {
               (pathname.startsWith('/find') && pathname.endsWith('find'))
             }
           >
-            {t('dashboard')}
+            {t('My Dashboard')}
           </StyledNavLink>
           <StyledNavExternalLink href={String(process.env.REACT_APP_DMM_ANALYTICS_URL)}>
             {t('analytics')}
