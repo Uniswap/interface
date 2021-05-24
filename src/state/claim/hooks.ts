@@ -21,49 +21,104 @@ interface UserClaimData {
   }
 }
 
-const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData | null> } = {}
+type LastAddress = string
+type ClaimAddressMapping = { [firstAddress: string]: LastAddress }
+let FETCH_CLAIM_MAPPING_PROMISE: Promise<ClaimAddressMapping> | null = null
+function fetchClaimMapping(): Promise<ClaimAddressMapping> {
+  return (
+    FETCH_CLAIM_MAPPING_PROMISE ??
+    (FETCH_CLAIM_MAPPING_PROMISE = fetch(
+      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`
+    )
+      .then((res) => res.json())
+      .catch((error) => {
+        console.error('Failed to get claims mapping', error)
+        FETCH_CLAIM_MAPPING_PROMISE = null
+      }))
+  )
+}
 
+const FETCH_CLAIM_FILE_PROMISES: { [startingAddress: string]: Promise<{ [address: string]: UserClaimData }> } = {}
+function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData }> {
+  return (
+    FETCH_CLAIM_FILE_PROMISES[key] ??
+    (FETCH_CLAIM_FILE_PROMISES[key] = fetch(
+      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`
+    )
+      .then((res) => res.json())
+      .catch((error) => {
+        console.error(`Failed to get claim file mapping for starting address ${key}`, error)
+        delete FETCH_CLAIM_FILE_PROMISES[key]
+      }))
+  )
+}
+
+const FETCH_CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
 // returns the claim for the given address, or null if not valid
-function fetchClaim(account: string, chainId: number): Promise<UserClaimData | null> {
+function fetchClaim(account: string): Promise<UserClaimData> {
   const formatted = isAddress(account)
   if (!formatted) return Promise.reject(new Error('Invalid address'))
-  const key = `${chainId}:${account}`
 
-  return (CLAIM_PROMISES[key] =
-    CLAIM_PROMISES[key] ??
-    fetch('https://merkle-drop-1.uniswap.workers.dev/', {
-      body: JSON.stringify({ chainId, address: formatted }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Referrer-Policy': 'no-referrer',
-      },
-      method: 'POST',
-    })
-      .then((res) => (res.ok ? res.json() : console.log(`No claim for account ${formatted} on chain ID ${chainId}`)))
-      .catch((error) => console.error('Failed to get claim data', error)))
+  return (
+    FETCH_CLAIM_PROMISES[account] ??
+    (FETCH_CLAIM_PROMISES[account] = fetchClaimMapping()
+      .then((mapping) => {
+        const sorted = Object.keys(mapping).sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1))
+
+        for (const startingAddress of sorted) {
+          const lastAddress = mapping[startingAddress]
+          if (startingAddress.toLowerCase() <= formatted.toLowerCase()) {
+            if (formatted.toLowerCase() <= lastAddress.toLowerCase()) {
+              return startingAddress
+            }
+          } else {
+            throw new Error(`Claim for ${formatted} was not found in partial search`)
+          }
+        }
+        throw new Error(`Claim for ${formatted} was not found after searching all mappings`)
+      })
+      .then(fetchClaimFile)
+      .then((result) => {
+        if (result[formatted]) return result[formatted]
+        throw new Error(`Claim for ${formatted} was not found in claim file!`)
+      })
+      .catch((error) => {
+        console.debug('Claim fetch failed', error)
+        throw error
+      }))
+  )
 }
 
 // parse distributorContract blob and detect if user has claim data
 // null means we know it does not
-export function useUserClaimData(account: string | null | undefined): UserClaimData | null | undefined {
+export function useUserClaimData(account: string | null | undefined): UserClaimData | null {
   const { chainId } = useActiveWeb3React()
 
-  const key = `${chainId}:${account}`
-  const [claimInfo, setClaimInfo] = useState<{ [key: string]: UserClaimData | null }>({})
+  const [claimInfo, setClaimInfo] = useState<{ [account: string]: UserClaimData | null }>({})
 
   useEffect(() => {
-    if (!account || !chainId) return
-    fetchClaim(account, chainId).then((accountClaimInfo) =>
-      setClaimInfo((claimInfo) => {
-        return {
-          ...claimInfo,
-          [key]: accountClaimInfo,
-        }
-      })
-    )
-  }, [account, chainId, key])
+    if (!account || chainId !== 1) return
 
-  return account && chainId ? claimInfo[key] : undefined
+    fetchClaim(account)
+      .then((accountClaimInfo) =>
+        setClaimInfo((claimInfo) => {
+          return {
+            ...claimInfo,
+            [account]: accountClaimInfo,
+          }
+        })
+      )
+      .catch(() => {
+        setClaimInfo((claimInfo) => {
+          return {
+            ...claimInfo,
+            [account]: null,
+          }
+        })
+      })
+  }, [account, chainId])
+
+  return account && chainId === 1 ? claimInfo[account] : null
 }
 
 // check if user is in blob and has not yet claimed UNI
