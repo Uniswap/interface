@@ -2312,6 +2312,11 @@
     make-plural "^6.2.2"
     messageformat-parser "^4.1.3"
 
+"@lingui/detect-locale@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@lingui/detect-locale/-/detect-locale-3.9.0.tgz#3f0769db4d5655cb6d36ba4877153a180b6466f8"
+  integrity sha512-PUn1LyW2WRIB1NSYBBx1Lf4rz27dPEgPs8EWHklCr1dPxYcW4pMFIHVzcBqLA4j7KtcYexFY7gCLZQDZkOm5VQ==
+
 "@lingui/loader@^3.9.0":
   version "3.9.0"
   resolved "https://registry.yarnpkg.com/@lingui/loader/-/loader-3.9.0.tgz#e508e00bafa40fce301cdc48b50faa8c1a0160b1"
