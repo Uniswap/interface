@@ -29,32 +29,39 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
     FETCH_CLAIM_MAPPING_PROMISE ??
     (FETCH_CLAIM_MAPPING_PROMISE = fetch(
       `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`
-    ).then((res) => res.json()))
+    )
+      .then((res) => res.json())
+      .catch((error) => {
+        console.error('Failed to get claims mapping', error)
+        FETCH_CLAIM_MAPPING_PROMISE = null
+      }))
   )
 }
 
 const FETCH_CLAIM_FILE_PROMISES: { [startingAddress: string]: Promise<{ [address: string]: UserClaimData }> } = {}
-
 function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData }> {
   return (
     FETCH_CLAIM_FILE_PROMISES[key] ??
     (FETCH_CLAIM_FILE_PROMISES[key] = fetch(
       `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`
-    ).then((res) => res.json()))
+    )
+      .then((res) => res.json())
+      .catch((error) => {
+        console.error(`Failed to get claim file mapping for starting address ${key}`, error)
+        delete FETCH_CLAIM_FILE_PROMISES[key]
+      }))
   )
 }
 
-const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
-
+const FETCH_CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
 // returns the claim for the given address, or null if not valid
-function fetchClaim(account: string, chainId: number): Promise<UserClaimData> {
+function fetchClaim(account: string): Promise<UserClaimData> {
   const formatted = isAddress(account)
   if (!formatted) return Promise.reject(new Error('Invalid address'))
-  if (chainId !== 1) return Promise.reject(new Error('Chain ID is not supported'))
 
   return (
-    CLAIM_PROMISES[account] ??
-    (CLAIM_PROMISES[account] = fetchClaimMapping()
+    FETCH_CLAIM_PROMISES[account] ??
+    (FETCH_CLAIM_PROMISES[account] = fetchClaimMapping()
       .then((mapping) => {
         const keys = Object.keys(mapping)
         for (const startingAddress of keys) {
@@ -68,7 +75,7 @@ function fetchClaim(account: string, chainId: number): Promise<UserClaimData> {
         }
         throw new Error(`Claim for ${formatted} was not found`)
       })
-      .then((startingAddress) => fetchClaimFile(startingAddress))
+      .then(fetchClaimFile)
       .then((result) => {
         if (result[formatted]) return result[formatted]
         throw new Error(`Claim for ${formatted} was not found`)
@@ -86,7 +93,7 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
   useEffect(() => {
     if (!account || chainId !== 1) return
 
-    fetchClaim(account, chainId)
+    fetchClaim(account)
       .then((accountClaimInfo) =>
         setClaimInfo((claimInfo) => {
           return {
