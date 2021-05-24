@@ -34,6 +34,7 @@ import {
 } from './styleds'
 import { formattedNum } from 'utils'
 import Vesting from './vesting'
+import { getFullDisplayBalance } from 'utils/formatBalance'
 
 const FARM_ENDED = 'Ended'
 
@@ -80,7 +81,9 @@ const Farms = () => {
   }, BigNumber.from(0))
 
   const totalRewardsUSD =
-    totalRewards && kncPrice && (parseFloat(totalRewards.toString()) * parseFloat(kncPrice)).toString()
+    totalRewards &&
+    kncPrice &&
+    (parseFloat(getFullDisplayBalance(totalRewards).toString()) * parseFloat(kncPrice)).toString()
 
   const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
   const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
@@ -115,7 +118,7 @@ const Farms = () => {
               <HarvestAllContainer>
                 <TotalRewardsContainer>
                   <TotalRewardsTitle>My Total Rewards</TotalRewardsTitle>
-                  <RewardNumber>{totalRewards.toString()} KNC</RewardNumber>
+                  <RewardNumber>{getFullDisplayBalance(totalRewards)} KNC</RewardNumber>
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD, true)}</RewardUSD>
                 </TotalRewardsContainer>
                 <div>

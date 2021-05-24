@@ -15,6 +15,7 @@ import InputGroup from './InputGroup'
 import { useToken } from 'hooks/Tokens'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
+import { getFarmApr } from 'utils/dmm'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
@@ -119,7 +120,8 @@ const ListItem = ({ farm }: ListItemProps) => {
     ? BigNumber.from(farm.userData?.stakedBalance)
     : BigNumber.from(0)
   const userEarning = farm.userData?.earnings ? BigNumber.from(farm.userData?.earnings) : BigNumber.from(0)
-  const rewardUSD = userEarning && kncPrice && (parseFloat(kncPrice) * parseFloat(userEarning.toString())).toString()
+  const rewardUSD =
+    userEarning && kncPrice && (parseFloat(kncPrice) * parseFloat(getFullDisplayBalance(userEarning))).toString()
 
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
@@ -146,6 +148,8 @@ const ListItem = ({ farm }: ListItemProps) => {
   const userStakedBalanceUSD = parseFloat(lpUserStakedTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
+
+  const apr = kncPrice && getFarmApr(kncPrice, liquidity.toString())
 
   const amp = farm.amp / 10000
 
@@ -176,7 +180,7 @@ const ListItem = ({ farm }: ListItemProps) => {
         </DataText>
         <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
         <DataText grid-area="apy" style={{ color: 'rgba(137, 255, 120, 0.67)' }}>
-          24.5%
+          {apr}%
         </DataText>
         <DataText grid-area="reward">{`${getFullDisplayBalance(userEarning)} KNC`}</DataText>
         <DataText grid-area="staked_balance">{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
