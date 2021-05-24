@@ -81,7 +81,7 @@ export default function PoolFinder() {
   const prerequisiteMessage = (
     <LightCard padding="45px 10px">
       <Text textAlign="center">
-        {!account ? 'Connect to a wallet to find pools' : 'Select a token to find your liquidity.'}
+        {!account ? 'Connect to a wallet to find pools' : 'Select a token to find your v2 liquidity.'}
       </Text>
     </LightCard>
   )
@@ -93,7 +93,7 @@ export default function PoolFinder() {
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'primaryText1'}>
-              <b>Tip:</b> Use this tool to find pairs that don&apos;t automatically appear in the interface.
+              <b>Tip:</b> Use this tool to find V2 pools that don&apos;t automatically appear in the interface.
             </TYPE.link>
           </AutoColumn>
         </BlueCard>
