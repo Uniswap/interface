@@ -1,0 +1,356 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-05-23 16:40-0700\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/Pool/CTACards.tsx:140
+msgid "cta.topPools"
+msgstr "Top pools"
+
+#: src/pages/Pool/CTACards.tsx:143
+msgid "cta.v3.explore"
+msgstr "Explore popular pools on Uniswap Analytics."
+
+#: src/pages/Pool/CTACards.tsx:126
+msgid "cta.v3.launchAnnouncement"
+msgstr "Uniswap V3 is here!"
+
+#: src/pages/Pool/CTACards.tsx:129
+msgid "cta.v3.walkthroughAndMigration"
+msgstr "Check out our v3 LP walkthrough and migration guides."
+
+#: src/components/CurrencyInputPanel/index.tsx:280
+msgid "currencies.input.max"
+msgstr "(Max)"
+
+#: src/components/CurrencyInputPanel/index.tsx:202
+msgid "currencies.input.priceOutsideWarning"
+msgstr "The market price is outside your specified price range. Single-asset deposit only."
+
+#: src/components/SearchModal/CurrencySearch.tsx:220
+msgid "currencies.search.noResults"
+msgstr "No results found."
+
+#: src/components/SearchModal/CurrencySearch.tsx:182
+msgid "currencies.search.placeholder"
+msgstr "Search name or paste address"
+
+#: src/components/SearchModal/CurrencySearch.tsx:174
+msgid "currencies.search.selectToken"
+msgstr "Select a token"
+
+#: src/components/CurrencyInputPanel/index.tsx:240
+msgid "currencyInput.selectToken"
+msgstr "Select token"
+
+#: src/pages/AddLiquidity/index.tsx:672
+msgid "depositAmounts"
+msgstr "Deposit Amounts"
+
+#: src/components/Web3Status/index.tsx:212
+msgid "error.generic"
+msgstr "Error"
+
+#: src/components/Web3Status/index.tsx:211
+msgid "error.wrongNetwork"
+msgstr "Wrong Network"
+
+#: src/components/Web3ReactManager/index.tsx:61
+msgid "errors.unknown"
+msgstr "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
+
+#: src/pages/AddLiquidity/index.tsx:642
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:549
+msgid "inactiveRangeWarning"
+msgstr "Your position will not earn fees or be used in trades until the market price moves into your range."
+
+#: src/pages/AddLiquidity/index.tsx:656
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:562
+msgid "invalidRangeWarning"
+msgstr "invalidRangeWarning"
+
+#: src/components/Header/index.tsx:362
+msgid "nav.charts"
+msgstr "Charts <0>↗</0>"
+
+#: src/components/NavigationTabs/index.tsx:83
+msgid "nav.importPools"
+msgstr "Import Pools"
+
+#: src/components/Header/index.tsx:356
+#: src/components/NavigationTabs/index.tsx:69
+msgid "nav.pool"
+msgstr "Pool"
+
+#: src/components/Header/index.tsx:343
+#: src/components/NavigationTabs/index.tsx:66
+msgid "nav.swap"
+msgstr "Swap"
+
+#: src/components/Header/index.tsx:359
+msgid "nav.vote"
+msgstr "Vote"
+
+#: src/components/PositionList/index.tsx:50
+msgid "pool.priceRange"
+msgstr "Price range"
+
+#: src/components/PositionList/index.tsx:46
+#: src/components/PositionList/index.tsx:54
+msgid "pool.yourPositions"
+msgstr "Your positions"
+
+#: src/components/NavigationTabs/index.tsx:125
+msgid "pools.addLiquidity"
+msgstr "Add Liquidity"
+
+#: src/pages/AddLiquidity/index.tsx:447
+msgid "pools.addLiquidity.clearAll"
+msgstr "Clear All"
+
+#: src/pages/AddLiquidity/index.tsx:576
+msgid "pools.addLiquidity.selectLiquidityRange"
+msgstr "Set Price Range"
+
+#: src/pages/AddLiquidity/index.tsx:443
+msgid "pools.addLiquidity.selectPair"
+msgstr "Select pair"
+
+#: src/pages/AddLiquidity/index.tsx:504
+msgid "pools.addLiquidity.selectStartingPrice"
+msgstr "Set Starting Price"
+
+#: src/pages/AddLiquidity/index.tsx:488
+msgid "pools.addLiquidity.selectedRange"
+msgstr "Selected Range"
+
+#: src/pages/Pool/PositionPage.tsx:532
+msgid "pools.buttons.increaseLiquidity"
+msgstr "Increase Liquidity"
+
+#: src/pages/Pool/index.tsx:291
+msgid "pools.buttons.migrateLiquidity"
+msgstr "Migrate Liquidity"
+
+#: src/pages/Pool/index.tsx:252
+msgid "pools.buttons.migrateV2Liquidity"
+msgstr "Migrate V2 liquidity"
+
+#: src/pages/Pool/index.tsx:196
+msgid "pools.buttons.newPosition"
+msgstr "New Position"
+
+#: src/pages/Pool/PositionPage.tsx:543
+msgid "pools.buttons.removeLiquidity"
+msgstr "Remove Liquidity"
+
+#: src/pages/Pool/index.tsx:274
+msgid "pools.buttons.viewV2Liquidity"
+msgstr "View V2 Liquidity"
+
+#: src/components/NavigationTabs/index.tsx:123
+msgid "pools.createPair"
+msgstr "Create a pair"
+
+#: src/components/PositionPreview/index.tsx:160
+#: src/pages/Pool/PositionPage.tsx:167
+msgid "pools.currentPrice"
+msgstr "Current price"
+
+#: src/components/PositionPreview/index.tsx:126
+#: src/components/PositionPreview/index.tsx:145
+#: src/components/PositionPreview/index.tsx:164
+msgid "pools.denominatedCurrency"
+msgstr "{0} per {1}"
+
+#: src/pages/Pool/index.tsx:238
+msgid "pools.emptyStateHint"
+msgstr "Your V3 liquidity positions will appear here."
+
+#: src/components/FeeSelector/index.tsx:67
+msgid "pools.feeSelector.highFee"
+msgstr "1% fee"
+
+#: src/components/FeeSelector/index.tsx:69
+msgid "pools.feeSelector.highFeeHint"
+msgstr "Best for exotic pairs."
+
+#: src/components/FeeSelector/index.tsx:43
+msgid "pools.feeSelector.lowFee"
+msgstr "0.05% fee"
+
+#: src/components/FeeSelector/index.tsx:45
+msgid "pools.feeSelector.lowFeeHint"
+msgstr "Best for stable pairs."
+
+#: src/components/FeeSelector/index.tsx:55
+msgid "pools.feeSelector.mediumFee"
+msgstr "0.03% fee"
+
+#: src/components/FeeSelector/index.tsx:57
+msgid "pools.feeSelector.mediumFeeHint"
+msgstr "Best for most pairs."
+
+#: src/components/FeeSelector/index.tsx:31
+msgid "pools.feeSelector.subtitle"
+msgstr "Select a pool type based on your preferred liquidity provider fee."
+
+#: src/components/FeeSelector/index.tsx:29
+msgid "pools.feeSelector.title"
+msgstr "Select Pool"
+
+#: src/components/PositionPreview/index.tsx:99
+msgid "pools.feeTierLabel"
+msgstr "Fee Tier"
+
+#: src/components/PositionPreview/index.tsx:102
+msgid "pools.feeTierValue"
+msgstr "{0}%"
+
+#: src/pages/Pool/index.tsx:179
+msgid "pools.heading.poolsOverview"
+msgstr "Pools Overview"
+
+#: src/components/Badge/RangeBadge.tsx:67
+msgid "pools.inRange"
+msgstr "In range"
+
+#: src/components/Badge/RangeBadge.tsx:59
+msgid "pools.inRangeTooltip"
+msgstr "The price of this pool is within your selected range. Your position is currently earning fees."
+
+#: src/components/Badge/RangeBadge.tsx:53
+msgid "pools.inactive"
+msgstr "Inactive"
+
+#: src/components/Badge/RangeBadge.tsx:47
+msgid "pools.inactiveTooltip"
+msgstr "Your position has 0 liquidity, and is not earning fees."
+
+#: src/components/PositionPreview/index.tsx:141
+msgid "pools.maxPrice"
+msgstr "Max Price"
+
+#: src/components/PositionPreview/index.tsx:150
+msgid "pools.maxPriceHint"
+msgstr "Your position will be 100% composed of {0} at this price"
+
+#: src/pages/Pool/index.tsx:132
+msgid "pools.menu.create"
+msgstr "Create a pool"
+
+#: src/pages/Pool/index.tsx:162
+msgid "pools.menu.learn"
+msgstr "Learn"
+
+#: src/pages/Pool/index.tsx:142
+msgid "pools.menu.migrate"
+msgstr "Migrate"
+
+#: src/pages/Pool/index.tsx:189
+msgid "pools.menu.more"
+msgstr "More"
+
+#: src/pages/Pool/index.tsx:152
+msgid "pools.menu.v2Liquidity"
+msgstr "V2 liquidity"
+
+#: src/components/PositionPreview/index.tsx:131
+msgid "pools.minPriceHint"
+msgstr "Your position will be 100% composed of {0} at this price"
+
+#: src/components/PositionPreview/index.tsx:122
+msgid "pools.minPriceLabel"
+msgstr "Min Price"
+
+#: src/components/Badge/RangeBadge.tsx:83
+msgid "pools.outOfRange"
+msgstr "Out of range"
+
+#: src/components/Badge/RangeBadge.tsx:73
+msgid "pools.outOfRangeTooltip"
+msgstr "The price of this pool is outside of your selected range. Your position is not currently earning fees."
+
+#: src/components/NavigationTabs/index.tsx:127
+msgid "pools.removeLiquidity"
+msgstr "Remove Liquidity"
+
+#: src/pages/Pool/index.tsx:206
+msgid "pools.toggle.hideClosedPositions"
+msgstr "Hide closed positions"
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:517
+msgid "selectLiquidityRange"
+msgstr "selectLiquidityRange"
+
+#: src/pages/Swap/index.tsx:619
+msgid "swap.buttons.priceImpactTooHigh"
+msgstr "Price Impact Too High"
+
+#: src/pages/Swap/index.tsx:621
+msgid "swap.buttons.swap"
+msgstr "Swap"
+
+#: src/pages/Swap/index.tsx:623
+msgid "swap.buttons.swapAnyway"
+msgstr "Swap Anyway"
+
+#: src/components/SearchModal/CurrencySearch.tsx:232
+msgid "tokenLists.manage"
+msgstr "Manage Token Lists"
+
+#: src/pages/AddLiquidity/index.tsx:266
+msgid "transactions.addLiquidity"
+msgstr "Add {0}/{1} V3 liquidity"
+
+#: src/pages/AddLiquidity/index.tsx:421
+msgid "transactions.confirmation.button"
+msgstr "Add"
+
+#: src/pages/AddLiquidity/index.tsx:293
+msgid "transactions.confirmation.pendingText"
+msgstr "Supplying {0} {1} {2} {3} {4}"
+
+#: src/pages/AddLiquidity/index.tsx:262
+msgid "transactions.createPoolAndAddLiquidity"
+msgstr "Create pool and add {0}/{1} V3 liquidity"
+
+#: src/components/Web3Status/index.tsx:192
+msgid "transactions.pending"
+msgstr "{0} Pending"
+
+#: src/components/Header/index.tsx:383
+msgid "uni.claim"
+msgstr "Claim UNI"
+
+#: src/components/Header/index.tsx:380
+msgid "uni.claiming"
+msgstr "Claiming UNI"
+
+#: src/pages/AddLiquidity/index.tsx:708
+msgid "unsupportedAsset"
+msgstr "Unsupported Asset"
+
+#: src/components/Web3Status/index.tsx:220
+#: src/pages/AddLiquidity/index.tsx:713
+#: src/pages/Pool/index.tsx:243
+msgid "wallet.connect"
+msgstr "Connect a wallet"
+
+#: src/components/Header/index.tsx:393
+msgid "wallet.ethBalance"
+msgstr "{0} ETH"
+
+#: src/components/Web3Status/index.tsx:129
+msgid "wallet.hasSocks"
+msgstr "has socks emoji"
