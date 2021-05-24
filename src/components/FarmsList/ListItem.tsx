@@ -19,7 +19,7 @@ import { getFullDisplayBalance } from 'utils/formatBalance'
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 2fr;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
   grid-template-areas: 'pools liq apy reward staked_balance';
   padding: 15px 36px 13px 26px;
   font-size: 14px;
@@ -130,35 +130,20 @@ const ListItem = ({ farm }: ListItemProps) => {
     )
   )
 
-  const token0Staked = new Fraction(
-    ethers.utils.parseUnits(farm.reserve0, lpTokenDecimals).toString(),
+  // Ratio in % of LP tokens that user staked, vs the total number in circulation
+  const lpUserStakedTokenRatio = new Fraction(
+    userStakedBalance.toString(),
     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
-  ).multiply(lpTokenRatio)
+  ).divide(
+    new Fraction(
+      ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
+    )
+  )
 
-  const token1Staked = new Fraction(
-    ethers.utils.parseUnits(farm.reserve1, lpTokenDecimals).toString(),
-    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
-  ).multiply(lpTokenRatio)
+  const userStakedBalanceUSD = parseFloat(lpUserStakedTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
-  console.log('token0Staked', token0Staked.toSignificant(6))
-  console.log('token1Staked', token1Staked.toSignificant(6))
-
-  // const liquidityToken0 = token0Staked.multiply(
-  //   new Fraction(
-  //     ethers.utils.parseUnits(farm.token0Price, lpTokenDecimals).toString(),
-  //     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
-  //   )
-  // )
-
-  // const liquidityToken1 = token1Staked.multiply(
-  //   new Fraction(
-  //     ethers.utils.parseUnits(farm.token1Price, lpTokenDecimals).toString(),
-  //     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
-  //   )
-  // )
-
-  // const liquidity = liquidityToken0.add(liquidityToken1)
-  const liquidity = 0
+  const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
   const amp = farm.amp / 10000
 
@@ -187,14 +172,12 @@ const ListItem = ({ farm }: ListItemProps) => {
             )}
           </div>
         </DataText>
-        <DataText grid-area="liq">{liquidity}</DataText>
+        <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
         <DataText grid-area="apy" style={{ color: 'rgba(137, 255, 120, 0.67)' }}>
           24.5%
         </DataText>
         <DataText grid-area="reward">{`${getFullDisplayBalance(userEarning)} KNC`}</DataText>
-        <DataText grid-area="staked_balance">{`${getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} ${
-          farm.token0?.symbol
-        }-${farm.token1?.symbol} LP`}</DataText>
+        <DataText grid-area="staked_balance">{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
       </TableRow>
 
       {expand && (

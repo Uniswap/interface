@@ -188,10 +188,7 @@ export const FARM_DATA = gql`
         decimals
       }
       amp
-      reserve0
-      token0Price
-      reserve1
-      token1Price
+      reserveUSD
       totalSupply
     }
   }

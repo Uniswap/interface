@@ -75,9 +75,9 @@ const Farms = () => {
     return total
   }, BigNumber.from(0))
 
-  const farm = farms[3]
-  const isFarmEnded = blockNumber && farm.endBlock < blockNumber
-  const remainingBlocks = blockNumber && farm.endBlock - blockNumber
+  const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
+  const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
+  const remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
   const estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECS
   const formattedEstimatedRemainingTime =
     estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)

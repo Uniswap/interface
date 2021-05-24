@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
-import { useMedia } from 'react-use'
 
-import ListItem, { ItemCard } from './ListItem'
+import ListItem from './ListItem'
 import { Farm } from 'state/farms/types'
 
 const FarmListWrapper = styled.div`
@@ -14,7 +13,7 @@ const FarmListWrapper = styled.div`
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 2fr;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
   grid-template-areas: 'pools liq apy reward staked_balance';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -44,10 +43,8 @@ interface FarmsListProps {
 }
 
 const FarmsList = ({ farms }: FarmsListProps) => {
-  const above1200 = useMedia('(min-width: 1200px)') // Extra large screen
-
   const renderHeader = () => {
-    return above1200 ? (
+    return (
       <TableHeader>
         <Flex grid-area="pools" alignItems="center" justifyContent="flexStart">
           <ClickableText>Pools | AMP</ClickableText>
@@ -66,10 +63,10 @@ const FarmsList = ({ farms }: FarmsListProps) => {
         </Flex>
 
         <Flex grid-area="staked_balance" alignItems="center" justifyContent="flexEnd">
-          <ClickableText>My Staked Balance</ClickableText>
+          <ClickableText>My Deposited</ClickableText>
         </Flex>
       </TableHeader>
-    ) : null
+    )
   }
 
   return (
@@ -77,11 +74,7 @@ const FarmsList = ({ farms }: FarmsListProps) => {
       {renderHeader()}
       {farms.map((farm, index) => {
         if (farm) {
-          return above1200 ? (
-            <ListItem key={farm.id} farm={farm} oddRow={(index + 1) % 2 !== 0} />
-          ) : (
-            <ItemCard key={farm.id} farm={farm} oddRow={(index + 1) % 2 !== 0} />
-          )
+          return <ListItem key={farm.id} farm={farm} oddRow={(index + 1) % 2 !== 0} />
         }
 
         return null
