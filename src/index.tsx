@@ -60,10 +60,10 @@ function Updaters() {
 
 ReactDOM.render(
   <StrictMode>
-    <FixedGlobalStyle />
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Web3ProviderNetwork getLibrary={getLibrary}>
-        <LanguageProvider>
+    <LanguageProvider>
+      <FixedGlobalStyle />
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <Web3ProviderNetwork getLibrary={getLibrary}>
           <Blocklist>
             <Provider store={store}>
               <Updaters />
@@ -75,9 +75,9 @@ ReactDOM.render(
               </ThemeProvider>
             </Provider>
           </Blocklist>
-        </LanguageProvider>
-      </Web3ProviderNetwork>
-    </Web3ReactProvider>
+        </Web3ProviderNetwork>
+      </Web3ReactProvider>
+    </LanguageProvider>
   </StrictMode>,
   document.getElementById('root')
 )
