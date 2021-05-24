@@ -4,7 +4,7 @@ import { I18nProvider } from '@lingui/react'
 import { detect, fromUrl } from '@lingui/detect-locale'
 import { ReactNode, useEffect } from 'react'
 
-export const locales = ['en', 'it']
+export const locales = ['en']
 export const defaultLocale = 'en'
 
 locales.map((locale) => i18n.loadLocaleData(locale, { plurals: () => null }))
