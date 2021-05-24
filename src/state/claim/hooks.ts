@@ -72,15 +72,15 @@ function fetchClaim(account: string): Promise<UserClaimData> {
               return startingAddress
             }
           } else {
-            throw new Error(`Claim for ${formatted} was not found`)
+            throw new Error(`Claim for ${formatted} was not found in partial search`)
           }
         }
-        throw new Error(`Claim for ${formatted} was not found`)
+        throw new Error(`Claim for ${formatted} was not found after searching all mappings`)
       })
       .then(fetchClaimFile)
       .then((result) => {
         if (result[formatted]) return result[formatted]
-        throw new Error(`Claim for ${formatted} was not found`)
+        throw new Error(`Claim for ${formatted} was not found in claim file!`)
       })
       .catch((error) => {
         console.debug('Claim fetch failed', error)
