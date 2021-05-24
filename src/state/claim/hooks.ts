@@ -63,10 +63,12 @@ function fetchClaim(account: string): Promise<UserClaimData> {
     FETCH_CLAIM_PROMISES[account] ??
     (FETCH_CLAIM_PROMISES[account] = fetchClaimMapping()
       .then((mapping) => {
-        const keys = Object.keys(mapping)
-        for (const startingAddress of keys) {
-          if (startingAddress.toLowerCase() < formatted.toLowerCase()) {
-            if (mapping[startingAddress].toLowerCase() >= formatted.toUpperCase()) {
+        const sorted = Object.keys(mapping).sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1))
+
+        for (const startingAddress of sorted) {
+          const lastAddress = mapping[startingAddress]
+          if (startingAddress.toLowerCase() <= formatted.toLowerCase()) {
+            if (formatted.toLowerCase() <= lastAddress.toLowerCase()) {
               return startingAddress
             }
           } else {
@@ -79,6 +81,10 @@ function fetchClaim(account: string): Promise<UserClaimData> {
       .then((result) => {
         if (result[formatted]) return result[formatted]
         throw new Error(`Claim for ${formatted} was not found`)
+      })
+      .catch((error) => {
+        console.debug('Claim fetch failed', error)
+        throw error
       }))
   )
 }
@@ -102,8 +108,7 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
           }
         })
       )
-      .catch((error) => {
-        console.debug(error)
+      .catch(() => {
         setClaimInfo((claimInfo) => {
           return {
             ...claimInfo,
