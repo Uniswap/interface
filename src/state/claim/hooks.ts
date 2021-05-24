@@ -44,10 +44,10 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
   )
 }
 
-const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData | null> } = {}
+const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
 
 // returns the claim for the given address, or null if not valid
-function fetchClaim(account: string, chainId: number): Promise<UserClaimData | null> {
+function fetchClaim(account: string, chainId: number): Promise<UserClaimData> {
   const formatted = isAddress(account)
   if (!formatted) return Promise.reject(new Error('Invalid address'))
   if (chainId !== 1) return Promise.reject(new Error('Chain ID is not supported'))
@@ -78,25 +78,35 @@ function fetchClaim(account: string, chainId: number): Promise<UserClaimData | n
 
 // parse distributorContract blob and detect if user has claim data
 // null means we know it does not
-export function useUserClaimData(account: string | null | undefined): UserClaimData | null | undefined {
+export function useUserClaimData(account: string | null | undefined): UserClaimData | null {
   const { chainId } = useActiveWeb3React()
 
-  const key = `${chainId}:${account}`
-  const [claimInfo, setClaimInfo] = useState<{ [key: string]: UserClaimData | null }>({})
+  const [claimInfo, setClaimInfo] = useState<{ [account: string]: UserClaimData | null }>({})
 
   useEffect(() => {
-    if (!account || !chainId) return
-    fetchClaim(account, chainId).then((accountClaimInfo) =>
-      setClaimInfo((claimInfo) => {
-        return {
-          ...claimInfo,
-          [key]: accountClaimInfo,
-        }
-      })
-    )
-  }, [account, chainId, key])
+    if (!account || chainId !== 1) return
 
-  return account && chainId ? claimInfo[key] : undefined
+    fetchClaim(account, chainId)
+      .then((accountClaimInfo) =>
+        setClaimInfo((claimInfo) => {
+          return {
+            ...claimInfo,
+            [account]: accountClaimInfo,
+          }
+        })
+      )
+      .catch((error) => {
+        console.debug(error)
+        setClaimInfo((claimInfo) => {
+          return {
+            ...claimInfo,
+            [account]: null,
+          }
+        })
+      })
+  }, [account, chainId])
+
+  return account && chainId === 1 ? claimInfo[account] : null
 }
 
 // check if user is in blob and has not yet claimed UNI
