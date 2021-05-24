@@ -195,7 +195,7 @@ function Web3StatusInner() {
           </RowBetween>
         ) : (
           <>
-            {hasSocks ? SOCK : null}
+            {!hasSocks ? SOCK : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
