@@ -67,15 +67,15 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
   )
 }
 
-function AddTokenToMetaMask({ token, chainId }: { token: Token, chainId: ChainId }) {
+function AddTokenToMetaMask({ token, chainId }: { token: Token; chainId: ChainId }) {
   async function addToMetaMask() {
-    const tokenAddress = token.address;
-    const tokenSymbol = token.symbol;
-    const tokenDecimals = token.decimals;
-    let tokenImage = getTokenLogoURL(token.address);
+    const tokenAddress = token.address
+    const tokenSymbol = token.symbol
+    const tokenDecimals = token.decimals
+    let tokenImage = getTokenLogoURL(token.address)
 
     if (chainId === ChainId.ROPSTEN) {
-      tokenImage = getRopstenTokenLogoURL(token.address);
+      tokenImage = getRopstenTokenLogoURL(token.address)
     }
 
     try {
@@ -90,13 +90,13 @@ function AddTokenToMetaMask({ token, chainId }: { token: Token, chainId: ChainId
               address: tokenAddress,
               symbol: tokenSymbol,
               decimals: tokenDecimals,
-              image: tokenImage,
-            },
-          },
-        });
+              image: tokenImage
+            }
+          }
+        })
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
@@ -113,7 +113,7 @@ function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
-  tokenAddtoMetaMask,
+  tokenAddtoMetaMask
 }: {
   onDismiss: () => void
   hash: string | undefined
@@ -164,7 +164,7 @@ export function ConfirmationModalContent({
   title,
   bottomContent,
   onDismiss,
-  topContent,
+  topContent
 }: {
   title: string
   onDismiss: () => void
@@ -221,7 +221,7 @@ interface ConfirmationModalProps {
   content: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
-  tokenAddtoMetaMask: Currency | undefined
+  tokenAddtoMetaMask?: Currency
 }
 
 export default function TransactionConfirmationModal({
@@ -243,7 +243,12 @@ export default function TransactionConfirmationModal({
       {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
-        <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} tokenAddtoMetaMask={tokenAddtoMetaMask} />
+        <TransactionSubmittedContent
+          chainId={chainId}
+          hash={hash}
+          onDismiss={onDismiss}
+          tokenAddtoMetaMask={tokenAddtoMetaMask}
+        />
       ) : (
         content()
       )}

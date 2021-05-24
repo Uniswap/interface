@@ -483,12 +483,12 @@ export default function AddLiquidity({
               <ColumnCenter>
                 <BlueCard>
                   <AutoColumn gap="10px">
-                    {isPoolExisted &&
+                    {isPoolExisted && (
                       <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
-                        Note: There are existing pools for this token pair. Please check {' '}
+                        Note: There are existing pools for this token pair. Please check{' '}
                         <Link to={`/pools/${currencyIdA}/${currencyIdB}`}>here</Link>
                       </TYPE.link>
-                    }
+                    )}
                     <TYPE.link fontSize="14px" lineHeight="22px" color={'primaryText1'}>
                       You are creating a new pool and will be the first liquidity provider. The ratio of tokens you
                       supply below will set the initial price of this pool. Once you are satisfied with the rate,
@@ -589,7 +589,7 @@ export default function AddLiquidity({
                 </AutoRow>
               </OutlineCard2>
             )}
-            
+
             {!account ? (
               <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
             ) : (
