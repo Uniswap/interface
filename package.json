@@ -127,14 +127,14 @@
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
     "compile-external-abi-types": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
     "compile-v3-contract-types": "typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
-    "build": "yarn compile-contract-types && react-scripts build",
+    "build": "yarn compile-contract-types yarn i18n:extract && yarn i18:compile && react-scripts build",
+    "i8n:extract": "lingui extract",
+    "i18n:compile": "lingui compile",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
     "postinstall": "yarn compile-contract-types",
-    "start": "yarn compile-contract-types && yarn extract && yarn compile && react-scripts start",
+    "start": "yarn compile-contract-types && yarn i18n:extract && yarn i18n:compile && react-scripts start",
     "storybook": "start-storybook -p 6006",
-    "test": "react-scripts test --env=jsdom",
-    "extract": "lingui extract",
-    "compile": "lingui compile"
+    "test": "react-scripts test --env=jsdom"
   },
   "eslintConfig": {
     "extends": "react-app",
