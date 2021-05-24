@@ -41,6 +41,10 @@ const HeaderFrame = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    flex-wrap: wrap;
+  `};
 `
 
 const HeaderElementWrap = styled.div`
@@ -172,6 +176,10 @@ const StyledBuyButton = styled.button`
   svg {
     margin-top: 2px;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    margin: 0 0 0.5rem 0;
+  `}
 `
 
 export const NETWORK_LABELS: any = {
@@ -206,7 +214,7 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
-            <StyledBuyButton onClick={openRampWidget}>Buy FUSD</StyledBuyButton>
+            <StyledBuyButton onClick={openRampWidget}>Buy Fuse Dollar</StyledBuyButton>
             <HeaderLink target="_blank" href="https://rewards.fuse.io">
               Farming <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
             </HeaderLink>
