@@ -70,8 +70,6 @@ export interface Colors {
   yellow2: Color
   blue1: Color
   warning: Color
-
-  custom_bg1: Color
 }
 
 export interface Grids {
