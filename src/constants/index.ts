@@ -119,7 +119,7 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR],
-  [ChainId.FUSE]: [...WETH_ONLY[ChainId.FUSE], FUSE_DAI, FUSE_USDC, FUSE_USDT, FUSE_WBTC, FUSE_WETH]
+  [ChainId.FUSE]: [...WETH_ONLY[ChainId.FUSE], FUSE_USDC, FUSE_USDT, FUSE_WBTC, FUSE_WETH, FUSE_FUSD]
 }
 
 /**
@@ -136,14 +136,14 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
-  [ChainId.FUSE]: [...WETH_ONLY[ChainId.FUSE], FUSE_DAI, FUSE_USDC, FUSE_USDT, FUSE_WBTC, FUSE_WETH]
+  [ChainId.FUSE]: [...WETH_ONLY[ChainId.FUSE], FUSE_USDC, FUSE_USDT, FUSE_WBTC, FUSE_WETH, FUSE_FUSD]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT],
-  [ChainId.FUSE]: [...WETH_ONLY[ChainId.FUSE], FUSE_DAI, FUSE_USDC, FUSE_USDT, FUSE_WBTC, FUSE_WETH]
+  [ChainId.FUSE]: [...WETH_ONLY[ChainId.FUSE], FUSE_DAI, FUSE_USDC, FUSE_USDT, FUSE_WBTC, FUSE_WETH, FUSE_FUSD]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
