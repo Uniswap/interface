@@ -10,11 +10,12 @@ import { Fraction, JSBI, Token } from 'libs/sdk/src'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { Farm } from 'state/farms/types'
 import { formattedNum, isAddressString, shortenAddress } from 'utils'
-import { useFarmClaimModalToggle, useFarmStakeModalToggle } from 'state/application/hooks'
+import { useFarmClaimModalToggle, useFarmStakeModalToggle, useKNCPrice } from 'state/application/hooks'
 import InputGroup from './InputGroup'
 import { useToken } from 'hooks/Tokens'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
+import { getFarmApr } from 'utils/dmm'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
@@ -105,6 +106,7 @@ export const ItemCard = ({ farm }: ListItemProps) => {
 
 const ListItem = ({ farm }: ListItemProps) => {
   const { t } = useTranslation()
+  const kncPrice = useKNCPrice()
   const [expand, setExpand] = useState<boolean>(false)
   const toggleFarmClaimModal = useFarmClaimModalToggle()
   const toggleFarmStakeModal = useFarmStakeModalToggle()
@@ -118,6 +120,8 @@ const ListItem = ({ farm }: ListItemProps) => {
     ? BigNumber.from(farm.userData?.stakedBalance)
     : BigNumber.from(0)
   const userEarning = farm.userData?.earnings ? BigNumber.from(farm.userData?.earnings) : BigNumber.from(0)
+  const rewardUSD =
+    userEarning && kncPrice && (parseFloat(kncPrice) * parseFloat(getFullDisplayBalance(userEarning))).toString()
 
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
@@ -144,6 +148,8 @@ const ListItem = ({ farm }: ListItemProps) => {
   const userStakedBalanceUSD = parseFloat(lpUserStakedTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
+
+  const apr = kncPrice && getFarmApr(kncPrice, liquidity.toString())
 
   const amp = farm.amp / 10000
 
@@ -174,7 +180,7 @@ const ListItem = ({ farm }: ListItemProps) => {
         </DataText>
         <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
         <DataText grid-area="apy" style={{ color: 'rgba(137, 255, 120, 0.67)' }}>
-          24.5%
+          {apr}%
         </DataText>
         <DataText grid-area="reward">{`${getFullDisplayBalance(userEarning)} KNC`}</DataText>
         <DataText grid-area="staked_balance">{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
@@ -199,7 +205,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               <div grid-area="harvest">
                 <GreyText>KNC Reward</GreyText>
                 <div>{`${getFullDisplayBalance(userEarning)} KNC`}</div>
-                <div>$940</div>
+                <div>{rewardUSD && formattedNum(rewardUSD, true)}</div>
               </div>
             </StakeGroup>
             <StakeGroup>

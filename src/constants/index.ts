@@ -34,6 +34,7 @@ export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 14
+export const BLOCKS_PER_YEAR = Math.floor((60 / AVERAGE_BLOCK_TIME_IN_SECS) * 60 * 24 * 365) // 2252571
 export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
 export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
 
@@ -54,7 +55,10 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
 }
 
-export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
+export const KNC_ADDRESS =
+  String(process.env.REACT_APP_CHAIN_ID) === '1'
+    ? '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
+    : '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b'
 export const KNC_ADDRESS_ROPSTEN = '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b'
 export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),

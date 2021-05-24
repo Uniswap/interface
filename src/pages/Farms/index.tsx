@@ -11,7 +11,7 @@ import { useFarmsPublicData, useFarmsUserData } from 'state/farms/hooks'
 import { useActiveWeb3React } from 'hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ExternalLink } from 'theme'
-import { useBlockNumber } from 'state/application/hooks'
+import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
 import { AVERAGE_BLOCK_TIME_IN_SECS } from '../../constants'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
@@ -27,11 +27,14 @@ import {
   TotalRewardsContainer,
   TotalRewardsTitle,
   RewardNumber,
+  RewardUSD,
   RemainingTimeContainer,
   EndInTitle,
   ConnectWalletFarm
 } from './styleds'
+import { formattedNum } from 'utils'
 import Vesting from './vesting'
+import { getFullDisplayBalance } from 'utils/formatBalance'
 
 const FARM_ENDED = 'Ended'
 
@@ -39,6 +42,7 @@ const Farms = () => {
   const { t } = useTranslation()
   const { account } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
+  const kncPrice = useKNCPrice()
   const { loading: publicDataLoading, error: publicDataError, data: allFarms } = useFarmsPublicData()
   const { loading: userFarmsLoading, data: farmsUserData } = useFarmsUserData(account, allFarms)
   const [activeTab, setActiveTab] = useState(0)
@@ -76,6 +80,11 @@ const Farms = () => {
     return total
   }, BigNumber.from(0))
 
+  const totalRewardsUSD =
+    totalRewards &&
+    kncPrice &&
+    (parseFloat(getFullDisplayBalance(totalRewards).toString()) * parseFloat(kncPrice)).toString()
+
   const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
   const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
   const remainingBlocks = farm && blockNumber && farm.endBlock - blockNumber
@@ -109,7 +118,8 @@ const Farms = () => {
               <HarvestAllContainer>
                 <TotalRewardsContainer>
                   <TotalRewardsTitle>My Total Rewards</TotalRewardsTitle>
-                  <RewardNumber>{totalRewards.toString()} KNC</RewardNumber>
+                  <RewardNumber>{getFullDisplayBalance(totalRewards)} KNC</RewardNumber>
+                  <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD, true)}</RewardUSD>
                 </TotalRewardsContainer>
                 <div>
                   <ButtonPrimary disabled={totalRewards.lte(BigNumber.from(0))} padding="10px 36px">

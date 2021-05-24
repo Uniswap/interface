@@ -3,10 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
 import { client } from 'apollo/client'
-import { ETH_PRICE } from 'apollo/queries'
+import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
+import { KNC_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
-import { addPopup, ApplicationModal, PopupContent, removePopup, setOpenModal, updateETHPrice } from './actions'
+import {
+  addPopup,
+  ApplicationModal,
+  PopupContent,
+  removePopup,
+  setOpenModal,
+  updateETHPrice,
+  updateKNCPrice
+} from './actions'
 import { getPercentChange, getBlockFromTimestamp } from 'utils'
 
 export function useBlockNumber(): number | undefined {
@@ -164,4 +173,46 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
   }, [ethPrice, dispatch])
 
   return ethPrice
+}
+
+/**
+ * Gets the current price of KNC by ETH
+ */
+const getKNCPriceByETH = async () => {
+  let kncPriceByETH = 0
+
+  try {
+    const result = await client.query({
+      query: TOKEN_DERIVED_ETH(KNC_ADDRESS),
+      fetchPolicy: 'no-cache'
+    })
+
+    const derivedETH = result?.data?.tokens[0]?.derivedETH
+
+    kncPriceByETH = parseFloat(derivedETH)
+  } catch (e) {
+    console.log(e)
+  }
+
+  return kncPriceByETH
+}
+
+export function useKNCPrice(): AppState['application']['kncPrice'] {
+  const dispatch = useDispatch()
+  const ethPrice = useETHPrice()
+
+  const kncPrice = useSelector((state: AppState) => state.application.kncPrice)
+
+  useEffect(() => {
+    async function checkForKNCPrice() {
+      if (!kncPrice) {
+        const kncPriceByETH = await getKNCPriceByETH()
+        const kncPrice = ethPrice.currentPrice && kncPriceByETH * parseFloat(ethPrice.currentPrice)
+        dispatch(updateKNCPrice(kncPrice?.toString()))
+      }
+    }
+    checkForKNCPrice()
+  }, [kncPrice, dispatch, ethPrice.currentPrice])
+
+  return kncPrice
 }

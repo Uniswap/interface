@@ -45,7 +45,7 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
 
 export const HeadingContainer = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 3fr;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.bg15};
   padding: 28px 32px;
@@ -83,8 +83,15 @@ export const TotalRewardsTitle = styled.div`
   margin-bottom: 4px;
 `
 
-export const RewardNumber = styled.div`
+export const RewardNumber = styled.span`
   font-size: 24px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text11};
+  margin-right: 12px;
+`
+
+export const RewardUSD = styled.span`
+  font-size: 18px;
   font-weight: 500;
   color: ${({ theme }) => theme.text11};
 `
