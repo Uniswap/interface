@@ -88,7 +88,7 @@ export default function PoolFinder() {
 
   return (
     <AppBody>
-      <FindPoolTabs origin={query.get('origin') ?? '/pool'} />
+      <FindPoolTabs origin={query.get('origin') ?? '/pool/v2'} />
       <AutoColumn style={{ padding: '1rem' }} gap="md">
         <BlueCard>
           <AutoColumn gap="10px">
@@ -148,7 +148,7 @@ export default function PoolFinder() {
             <Text textAlign="center" fontWeight={500}>
               Pool Found!
             </Text>
-            <StyledInternalLink to={`/pool`}>
+            <StyledInternalLink to={`/pool/v2`}>
               <Text textAlign="center">Manage this pool.</Text>
             </StyledInternalLink>
           </ColumnCenter>

@@ -168,6 +168,17 @@ export default function Pool() {
                   Create a pair
                 </ResponsiveButtonSecondary>
                 <ResponsiveButtonPrimary
+                  id="find-pool-button"
+                  as={Link}
+                  padding="6px 8px"
+                  borderRadius="12px"
+                  to="/pool/v2/find"
+                >
+                  <Text fontWeight={500} fontSize={16}>
+                    Import Pool
+                  </Text>
+                </ResponsiveButtonPrimary>
+                <ResponsiveButtonPrimary
                   id="join-pool-button"
                   as={Link}
                   padding="6px 8px"
