@@ -52,6 +52,7 @@ const useMasterChef = () => {
   // Withdraw
   const withdraw = useCallback(
     async (pid: number, amount: string, name: string, decimals = 18) => {
+      console.log('===withdrawwwwwwwww', pid, ethers.utils.parseUnits(amount, decimals))
       try {
         const tx = await masterChefContract?.withdraw(pid, ethers.utils.parseUnits(amount, decimals))
         return addTransaction(tx, { summary: `Withdraw ${name}` })
@@ -66,7 +67,7 @@ const useMasterChef = () => {
   const harvest = useCallback(
     async (pid: number, name: string) => {
       try {
-        const tx = await masterChefContract?.deposit(pid, '0')
+        const tx = await masterChefContract?.harvest(pid)
         return addTransaction(tx, { summary: `Harvest ${name}` })
       } catch (e) {
         console.error(e)

@@ -41,7 +41,7 @@ const ExpandedSection = styled.div`
   padding: 0 36px;
 `
 
-const ExpandedContent = styled.div`
+export const ExpandedContent = styled.div`
   border-radius: 10px;
   background-color: ${({ theme }) => theme.bg6};
   font-size: 14px;

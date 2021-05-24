@@ -31,6 +31,7 @@ import {
   EndInTitle,
   ConnectWalletFarm
 } from './styleds'
+import Vesting from './vesting'
 
 const FARM_ENDED = 'Ended'
 
@@ -139,7 +140,7 @@ const Farms = () => {
             </Panel>
           </>
         ) : (
-          <div>Vesting</div>
+          <Vesting />
         )}
       </PageWrapper>
       <FarmClaimModal />

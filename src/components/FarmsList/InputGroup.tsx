@@ -1,5 +1,5 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
 import { formattedNum, isAddressString } from 'utils'
@@ -17,6 +17,10 @@ import { AutoColumn } from 'components/Column'
 import useMasterChef from 'hooks/useMasterchef'
 import { useFarmClaimModalToggle, useFarmStakeModalToggle } from 'state/application/hooks'
 import useStakedBalance from 'hooks/useStakedBalance'
+import styled, { ThemeContext } from 'styled-components'
+import { AutoRow, RowFixed } from 'components/Row'
+import usePendingRewardBalance from 'hooks/usePendingRewardBalance'
+import { TYPE } from 'theme'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   return new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(6)
@@ -42,6 +46,7 @@ export default function InputGroup({
   assetDecimals?: number
 }): JSX.Element {
   const history = useHistory()
+  const theme = useContext(ThemeContext)
   const { account, chainId } = useActiveWeb3React()
   const [pendingTx, setPendingTx] = useState(false)
   const [depositValue, setDepositValue] = useState('')
@@ -51,7 +56,7 @@ export default function InputGroup({
 
   const staked = useStakedBalance(pid, assetDecimals) // kMP depends on decimals of asset, SLP is always 18
   // const pending = usePendingSushi(pid)
-
+  const pendingReward = usePendingRewardBalance(pid, assetDecimals)
   const [approvalState, approve] = useApproveCallback(
     new TokenAmount(
       new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
@@ -67,6 +72,11 @@ export default function InputGroup({
 
   const handleClickHarvest = async () => {
     // toggleFarmClaimModal()
+
+    console.log('===harvest', pid)
+    setPendingTx(true)
+    await harvest(pid, pairSymbol)
+    setPendingTx(false)
   }
 
   const handleClickStake = async () => {
@@ -82,7 +92,9 @@ export default function InputGroup({
     await withdraw(pid, withdrawValue, pairSymbol)
     setPendingTx(false)
   }
+
   // public constructor(chainId: ChainId, address: string, decimals: number, symbol?: string, name?: string) {
+
   return (
     <>
       {approvalState === ApprovalState.UNKNOWN && <Dots></Dots>}
@@ -95,15 +107,7 @@ export default function InputGroup({
       )}
       {approvalState === ApprovalState.APPROVED && (
         <>
-          <div grid-area="stake">
-            {/* <NumericalInput
-              className="token-amount-input"
-              style={{ width: '100px' }}
-              value={depositValue}
-              onUserInput={value => {
-                setDepositValue(value)
-              }}
-            /> */}
+          <AutoRow justify="space-between">
             {chainId && (
               <>
                 <CurrencyInputPanel
@@ -115,9 +119,10 @@ export default function InputGroup({
                     setDepositValue(fixedFormatting(balance.value, balance.decimals))
                   }}
                   showMaxButton={true}
-                  currency={new Token(chainId, pairAddress, balance.decimals, pairSymbol, pairSymbol)}
+                  currency={new Token(chainId, pairAddress, balance.decimals, 'LP', 'LP')}
                   id="add-liquidity-input-token"
                   disableCurrencySelect
+                  balancePosition="left"
                   hideBalance={true}
                 />
 
@@ -126,8 +131,8 @@ export default function InputGroup({
                 </ButtonPrimary>
               </>
             )}
-          </div>
-          <div grid-area="unstake">
+          </AutoRow>
+          <AutoRow justify="space-between">
             {chainId && (
               <>
                 <CurrencyInputPanel
@@ -139,9 +144,11 @@ export default function InputGroup({
                     setWithdrawValue(fixedFormatting(staked.value, staked.decimals))
                   }}
                   showMaxButton={true}
-                  currency={new Token(chainId, pairAddress, balance.decimals, pairSymbol, pairSymbol)}
+                  currency={new Token(chainId, pairAddress, balance.decimals, 'LP', 'LP')}
                   id="remove-liquidity-input-token"
                   disableCurrencySelect
+                  customBalanceText={`Deposited LP: ${fixedFormatting(staked.value, staked.decimals)}`}
+                  balancePosition="left"
                   hideBalance={true}
                 />
 
@@ -150,63 +157,23 @@ export default function InputGroup({
                 </ButtonPrimary>
               </>
             )}
-          </div>
-          <div grid-area="harvest">
-            <ButtonPrimary padding="12px" onClick={handleClickHarvest}>
+          </AutoRow>
+          <AutoRow justify="flex-end" style={{ flexDirection: 'column' }}>
+            {/* <div style={{ width: '100%' }}>
+              <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
+                KNC Reward
+              </TYPE.body>
+              <br></br>
+              <TYPE.body color={theme.text2} fontWeight={500} fontSize={18}>
+                {fixedFormatting(pendingReward.value, pendingReward.decimals)} KNC &nbsp;
+              </TYPE.body>
+              <br></br>
+            </div> */}
+            <ButtonPrimary padding="12px" margin="15px 0" onClick={handleClickHarvest}>
               Harvest
             </ButtonPrimary>
-          </div>
+          </AutoRow>
         </>
-        // <div className="">
-        //   {/* Deposit */}
-        //   <div className="text-center">
-        //     {account && (
-        //       <div className="text-sm text-secondary cursor-pointer text-right mb-2 pr-4">
-        //         Wallet Balance: {formattedNum(fixedFormatting(balance.value, balance.decimals))} {type}
-        //       </div>
-        //     )}
-        //     <AutoColumn gap="20px">
-        //       <div className="flex items-center relative w-full mb-4">
-        //         <NumericalInput
-        //           className="token-amount-input"
-        //           style={{ width: '100px' }}
-        //           value={depositValue}
-        //           onUserInput={value => {
-        //             setDepositValue(value)
-        //           }}
-        //         />
-        //         {account && (
-        //           <ButtonPrimary
-        //             variant="outlined"
-        //             color="blue"
-        //             onClick={() => {
-        //               setDepositValue(fixedFormatting(balance.value, balance.decimals))
-        //             }}
-        //             className="absolute right-4 focus:ring focus:ring-blue border-0"
-        //           >
-        //             MAX
-        //           </ButtonPrimary>
-        //         )}
-        //       </div>
-        //       <ButtonPrimary
-        //         color="blue"
-        //         disabled={
-        //           pendingTx ||
-        //           !balance ||
-        //           Number(depositValue) === 0 ||
-        //           Number(depositValue) > Number(fixedFormatting(balance.value, balance.decimals))
-        //         }
-        //         onClick={async () => {
-        //           setPendingTx(true)
-        //           await deposit(pid, depositValue, pairSymbol, balance.decimals)
-        //           setPendingTx(false)
-        //         }}
-        //       >
-        //         Deposit
-        //       </ButtonPrimary>
-        //     </AutoColumn>
-        //   </div>
-        // </div>
       )}
     </>
   )
