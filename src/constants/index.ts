@@ -287,3 +287,108 @@ export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: ''
 }
+
+export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.ROPSTEN]: '0x20df3fcF8B90C54c29fb0f4Ff83121381f5fDBE3',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
+
+// old: 0x72C482Bc54d6D58c548e5256EE569fb0c08ae2Df
+// new: 0x98A591C8f389059dddE151FebC3047Bc65CF2c96
+
+// // SPDX-License-Identifier: agpl-3.0
+// pragma solidity 0.7.6;
+// pragma abicoder v2;
+
+// import {IERC20Ext} from '@kyber.network/utils-sc/contracts/IERC20Ext.sol';
+
+// interface IKyberRewardLocker {
+//   struct VestingSchedule {
+//     uint64 startBlock;
+//     uint64 endBlock;
+//     uint128 quantity;
+//     uint128 vestedQuantity;
+//   }
+
+//   event VestingEntryCreated(
+//     IERC20Ext indexed token,
+//     address indexed beneficiary,
+//     uint256 startBlock,
+//     uint256 endBlock,
+//     uint256 quantity,
+//     uint256 index
+//   );
+
+//   event Vested(
+//     IERC20Ext indexed token,
+//     address indexed beneficiary,
+//     uint256 vestedQuantity,
+//     uint256 index
+//   );
+
+//   /**
+//    * @dev queue a vesting schedule starting from now
+//    */
+//   function lock(
+//     IERC20Ext token,
+//     address account,
+//     uint256 amount
+//   ) external;
+
+//   /**
+//    * @dev queue a vesting schedule
+//    */
+//   function lockWithStartBlock(
+//     IERC20Ext token,
+//     address account,
+//     uint256 quantity,
+//     uint256 startBlock
+//   ) external;
+
+//   /**
+//    * @dev for all completed schedule, claim token
+//    */
+//   function vestCompletedSchedules(IERC20Ext token) external returns (uint256);
+
+//   /**
+//    * @dev claim token for specific vesting schedule,
+//    * @dev if schedule has not ended yet, claiming amount is linear with vesting blocks
+//    */
+//   function vestScheduleAtIndex(IERC20Ext token, uint256[] calldata indexes)
+//     external
+//     returns (uint256);
+
+//   /**
+//    * @dev claim token for specific vesting schedule from startIndex to endIndex
+//    */
+//   function vestSchedulesInRange(
+//     IERC20Ext token,
+//     uint256 startIndex,
+//     uint256 endIndex
+//   ) external returns (uint256);
+
+//   /**
+//    * @dev length of vesting schedules array
+//    */
+//   function numVestingSchedules(address account, IERC20Ext token) external view returns (uint256);
+
+//   /**
+//    * @dev get detailed of each vesting schedule
+//    */
+//   function getVestingScheduleAtIndex(
+//     address account,
+//     IERC20Ext token,
+//     uint256 index
+//   ) external view returns (VestingSchedule memory);
+
+//   /**
+//    * @dev get vesting shedules array
+//    */
+//   function getVestingSchedules(address account, IERC20Ext token)
+//     external
+//     view
+//     returns (VestingSchedule[] memory schedules);
+// }
