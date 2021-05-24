@@ -6,7 +6,8 @@ import {
   updateBlockNumber,
   ApplicationModal,
   setOpenModal,
-  updateETHPrice
+  updateETHPrice,
+  updateKNCPrice
 } from './actions'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
@@ -22,13 +23,15 @@ export interface ApplicationState {
   readonly popupList: PopupList
   readonly openModal: ApplicationModal | null
   readonly ethPrice: ETHPrice
+  readonly kncPrice?: string
 }
 
 const initialState: ApplicationState = {
   blockNumber: {},
   popupList: [],
   openModal: null,
-  ethPrice: {}
+  ethPrice: {},
+  kncPrice: ''
 }
 
 export default createReducer(initialState, builder =>
@@ -65,5 +68,8 @@ export default createReducer(initialState, builder =>
       state.ethPrice.currentPrice = currentPrice
       state.ethPrice.oneDayBackPrice = oneDayBackPrice
       state.ethPrice.pricePercentChange = pricePercentChange
+    })
+    .addCase(updateKNCPrice, (state, { payload: kncPrice }) => {
+      state.kncPrice = kncPrice
     })
 )

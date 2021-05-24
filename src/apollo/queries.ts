@@ -22,6 +22,18 @@ export const ETH_PRICE = (block?: number) => {
   return gql(queryString)
 }
 
+export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
+  const queryString = `
+    query tokens {
+      tokens(where: { id: "${tokenAddress.toLowerCase()}"} ) {
+        derivedETH
+      }
+    }
+    `
+
+  return gql(queryString)
+}
+
 export const GLOBAL_DATA = (block?: number) => {
   const queryString = `query dmmFactories {
     dmmFactories(

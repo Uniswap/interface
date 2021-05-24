@@ -44,3 +44,5 @@ export const updateETHPrice = createAction<{
   oneDayBackPrice: string
   pricePercentChange: number
 }>('application/updateETHPrice')
+
+export const updateKNCPrice = createAction<string | undefined>('application/updateKNCPrice')
