@@ -21,26 +21,59 @@ interface UserClaimData {
   }
 }
 
+type LastAddress = string
+type ClaimAddressMapping = { [firstAddress: string]: LastAddress }
+let FETCH_CLAIM_MAPPING_PROMISE: Promise<ClaimAddressMapping> | null = null
+function fetchClaimMapping(): Promise<ClaimAddressMapping> {
+  return (
+    FETCH_CLAIM_MAPPING_PROMISE ??
+    (FETCH_CLAIM_MAPPING_PROMISE = fetch(
+      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`
+    ).then((res) => res.json()))
+  )
+}
+
+const FETCH_CLAIM_FILE_PROMISES: { [startingAddress: string]: Promise<{ [address: string]: UserClaimData }> } = {}
+
+function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData }> {
+  return (
+    FETCH_CLAIM_FILE_PROMISES[key] ??
+    (FETCH_CLAIM_FILE_PROMISES[key] = fetch(
+      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`
+    ).then((res) => res.json()))
+  )
+}
+
 const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData | null> } = {}
 
 // returns the claim for the given address, or null if not valid
 function fetchClaim(account: string, chainId: number): Promise<UserClaimData | null> {
   const formatted = isAddress(account)
   if (!formatted) return Promise.reject(new Error('Invalid address'))
-  const key = `${chainId}:${account}`
+  if (chainId !== 1) return Promise.reject(new Error('Chain ID is not supported'))
 
-  return (CLAIM_PROMISES[key] =
-    CLAIM_PROMISES[key] ??
-    fetch('https://merkle-drop-1.uniswap.workers.dev/', {
-      body: JSON.stringify({ chainId, address: formatted }),
-      headers: {
-        'Content-Type': 'application/json',
-        'Referrer-Policy': 'no-referrer',
-      },
-      method: 'POST',
-    })
-      .then((res) => (res.ok ? res.json() : console.log(`No claim for account ${formatted} on chain ID ${chainId}`)))
-      .catch((error) => console.error('Failed to get claim data', error)))
+  return (
+    CLAIM_PROMISES[account] ??
+    (CLAIM_PROMISES[account] = fetchClaimMapping()
+      .then((mapping) => {
+        const keys = Object.keys(mapping)
+        for (const startingAddress of keys) {
+          if (startingAddress.toLowerCase() < formatted.toLowerCase()) {
+            if (mapping[startingAddress].toLowerCase() >= formatted.toUpperCase()) {
+              return startingAddress
+            }
+          } else {
+            throw new Error(`Claim for ${formatted} was not found`)
+          }
+        }
+        throw new Error(`Claim for ${formatted} was not found`)
+      })
+      .then((startingAddress) => fetchClaimFile(startingAddress))
+      .then((result) => {
+        if (result[formatted]) return result[formatted]
+        throw new Error(`Claim for ${formatted} was not found`)
+      }))
+  )
 }
 
 // parse distributorContract blob and detect if user has claim data
