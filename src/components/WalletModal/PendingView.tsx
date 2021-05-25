@@ -6,6 +6,7 @@ import Option from './Option'
 import { injected } from '../../connectors'
 import { darken } from 'polished'
 import Loader from '../Loader'
+import { Trans } from '@lingui/macro'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -82,20 +83,22 @@ export default function PendingView({
         <LoadingWrapper>
           {error ? (
             <ErrorGroup>
-              <div>Error connecting.</div>
+              <div>
+                <Trans id="error.connecting">Error connecting</Trans>
+              </div>
               <ErrorButton
                 onClick={() => {
                   setPendingError(false)
                   connector && tryActivation(connector)
                 }}
               >
-                Try Again
+                <Trans id="error.tryAgain">Try Again</Trans>
               </ErrorButton>
             </ErrorGroup>
           ) : (
             <>
               <StyledLoader />
-              Initializing...
+              <Trans id="wallet.initializing">Initializing...</Trans>
             </>
           )}
         </LoadingWrapper>

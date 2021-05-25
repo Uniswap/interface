@@ -101,12 +101,14 @@ export default function ClaimModal() {
             <CardSection gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={500}>
-                  <Trans id="claim.claimUNI">Claim UNI</Trans>
+                  <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
                 </TYPE.white>
                 <CloseIcon onClick={toggleClaimModal} style={{ zIndex: 99 }} color="white" />
               </RowBetween>
               <TYPE.white fontWeight={700} fontSize={36}>
-                <Trans id="claim.tokenAmount">{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
+                <Trans id="claim.labels.tokenAmount">
+                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
+                </Trans>
               </TYPE.white>
             </CardSection>
             <Break />
@@ -115,7 +117,7 @@ export default function ClaimModal() {
                 <RowBetween>
                   <TYPE.subHeader color="white">SOCKS</TYPE.subHeader>
                   <TYPE.subHeader color="white">
-                    <Trans id="claim.tokenAmount">{SOCKS_AMOUNT} UNI</Trans>
+                    <Trans id="claim.labels.socksAmount">{SOCKS_AMOUNT} UNI</Trans>
                   </TYPE.subHeader>
                 </RowBetween>
               )}
@@ -127,7 +129,7 @@ export default function ClaimModal() {
                       <Trans id="common.liquidity">Liquidity</Trans>
                     </TYPE.subHeader>
                     <TYPE.subHeader color="white">
-                      <Trans id="claim.tokenAmount">
+                      <Trans id="claim.labels.tokenAmount">
                         {unclaimedAmount
                           .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
                           .toFixed(0, { groupSeparator: ',' })}{' '}
@@ -142,7 +144,7 @@ export default function ClaimModal() {
                     <Trans id="common.user">User</Trans>
                   </TYPE.subHeader>
                   <TYPE.subHeader color="white">
-                    <Trans id="claim.tokenAmount">{USER_AMOUNT} UNI</Trans>
+                    <Trans id="claim.userAmount">{USER_AMOUNT} UNI</Trans>
                   </TYPE.subHeader>
                 </RowBetween>
               )}
@@ -150,7 +152,7 @@ export default function ClaimModal() {
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <TYPE.subHeader fontWeight={500}>
-              <Trans id="claim.uniswapCommunityMemberHint">
+              <Trans id="claim.hints.uniswapCommunityMember">
                 As a member of the Uniswap community you may claim UNI to be used for voting and governance.
                 <br />
                 <br />
@@ -165,7 +167,7 @@ export default function ClaimModal() {
               mt="1rem"
               onClick={onClaim}
             >
-              <Trans id="claim.claimUNI">Claim UNI</Trans>
+              <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -192,8 +194,7 @@ export default function ClaimModal() {
               </TYPE.largeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-                  <Trans id="claim.tokenAmount">
+                  <Trans id="claim.labels.tokenAmount">
                     {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
                   </Trans>
                 </Text>
@@ -202,7 +203,7 @@ export default function ClaimModal() {
             {claimConfirmed && (
               <>
                 <TYPE.subHeader fontWeight={500} color="black">
-                  <Trans id="claim.welcome">
+                  <Trans id="claim.labels.welcome">
                     <span role="img" aria-label="party-hat">
                       🎉{' '}
                     </span>
@@ -216,7 +217,7 @@ export default function ClaimModal() {
             )}
             {attempting && !claimSubmitted && (
               <TYPE.subHeader color="black">
-                <Trans id="claim.confirmTransactionInWallet">Confirm this transaction in your wallet</Trans>
+                <Trans id="claim.labels.confirmTransactionInWallet">Confirm this transaction in your wallet</Trans>
               </TYPE.subHeader>
             )}
             {attempting && claimSubmitted && !claimConfirmed && chainId && claimTxn?.hash && (

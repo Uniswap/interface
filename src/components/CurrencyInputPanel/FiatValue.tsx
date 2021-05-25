@@ -26,7 +26,7 @@ export function FiatValue({
   return (
     <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
       {fiatValue ? (
-        <Trans id="currencies.fiatValueLabel">
+        <Trans id="currencies.labels.fiatValue">
           ~$ <HoverInlineText text={fiatValue?.toSignificant(6, { groupSeparator: ',' })} />
         </Trans>
       ) : (

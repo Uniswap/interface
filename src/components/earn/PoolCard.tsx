@@ -145,17 +145,17 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         </RowBetween>
         <RowBetween>
           <TYPE.white>
-            <Trans id="earn.pool.rate">Pool rate </Trans>
+            <Trans id="earn.pool.rate">Pool rate</Trans>
           </TYPE.white>
           <TYPE.white>
             {stakingInfo ? (
               stakingInfo.active ? (
                 <Trans id="earn.pool.rewardRate">
-                  ${stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
+                  {stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
                   UNI / week
                 </Trans>
               ) : (
-                <Trans id="earn.pool.rewardRate">0 UNI / week</Trans>
+                <Trans id="earn.pool.noRewardRate">0 UNI / week</Trans>
               )
             ) : (
               '-'
@@ -181,14 +181,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
               {stakingInfo ? (
                 stakingInfo.active ? (
                   <Trans id="earn.pool.rewardRate">
-                    $
                     {stakingInfo.rewardRate
                       ?.multiply(BIG_INT_SECONDS_IN_WEEK)
                       ?.toSignificant(4, { groupSeparator: ',' })}{' '}
                     UNI / week
                   </Trans>
                 ) : (
-                  <Trans id="earn.pool.rewardRate">0 UNI / week</Trans>
+                  <Trans id="earn.pool.noRewardRate">0 UNI / week</Trans>
                 )
               ) : (
                 '-'

@@ -377,10 +377,10 @@ export default function Header() {
                 <TYPE.white padding="0 2px">
                   {claimTxn && !claimTxn?.receipt ? (
                     <Dots>
-                      <Trans id="claim.claimingUNI">Claiming UNI</Trans>
+                      <Trans id="claim.buttons.claimingUNI">Claiming UNI</Trans>
                     </Dots>
                   ) : (
-                    <Trans id="claim.claimUNI">Claim UNI</Trans>
+                    <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
                   )}
                 </TYPE.white>
               </UNIAmount>

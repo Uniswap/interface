@@ -227,7 +227,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
               <Trans id="transactions.submitted">Transaction Submitted</Trans>
             </TYPE.largeHeader>
             <TYPE.body fontSize={20}>
-              <Trans id="common.depositedCurrencyUNIV2">Deposited {parsedAmount?.toSignificant(4)} UNI-V2</Trans>
+              <Trans id="currencies.depositedUNIV2">Deposited {parsedAmount?.toSignificant(4)} UNI-V2</Trans>
             </TYPE.body>
           </AutoColumn>
         </SubmittedView>

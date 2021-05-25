@@ -114,10 +114,12 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>
-              <Trans id="">Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UNI-V2</Trans>
+              <Trans id="earn.labels.withdrawingUNIV2">
+                Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UNI-V2
+              </Trans>
             </TYPE.body>
             <TYPE.body fontSize={20}>
-              <Trans id="">Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} UNI</Trans>
+              <Trans id="earn.labels.claimingUNI">Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} UNI</Trans>
             </TYPE.body>
           </AutoColumn>
         </LoadingView>
@@ -126,13 +128,13 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
-              <Trans id="">Transaction Submitted</Trans>
+              <Trans id="transaction.submitted">Transaction Submitted</Trans>
             </TYPE.largeHeader>
             <TYPE.body fontSize={20}>
-              <Trans id="">Withdrew UNI-V2!</Trans>
+              <Trans id="earn.labels.withdrewUNIV2">Withdrew UNI-V2!</Trans>
             </TYPE.body>
             <TYPE.body fontSize={20}>
-              <Trans id="">Claimed UNI!</Trans>
+              <Trans id="earn.labels.claimedUNI">Claimed UNI!</Trans>
             </TYPE.body>
           </AutoColumn>
         </SubmittedView>

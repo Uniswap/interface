@@ -168,12 +168,12 @@ export default function Menu() {
           <MenuItem href="https://info.uniswap.org/">
             <PieChart size={14} />
             <div>
-              <Trans id="Analytics">Analytics</Trans>
+              <Trans id="menu.analytics">Analytics</Trans>
             </div>
           </MenuItem>
           {account && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              <Trans id="claim.claimUNI">Claim UNI</Trans>
+              <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
             </UNIbutton>
           )}
         </MenuFlyout>

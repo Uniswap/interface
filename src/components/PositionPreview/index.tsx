@@ -96,10 +96,10 @@ export const PositionPreview = ({
           <Break />
           <RowBetween>
             <TYPE.label>
-              <Trans id="pools.feeTierLabel">Fee Tier</Trans>
+              <Trans id="pools.labels.feeTier">Fee Tier</Trans>
             </TYPE.label>
             <TYPE.label>
-              <Trans id="pools.feeTierValue">{position?.pool?.fee / 10000}%</Trans>
+              <Trans id="pools.labels.feeTierValue">{position?.pool?.fee / 10000}%</Trans>
             </TYPE.label>
           </RowBetween>
         </AutoColumn>
