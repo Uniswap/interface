@@ -199,7 +199,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
       </Section>
       <BottomSection gap="12px">
         <ButtonPrimary onClick={onDismiss}>
-          <Trans id="">Dismiss</Trans>
+          <Trans id="common.dismiss">Dismiss</Trans>
         </ButtonPrimary>
       </BottomSection>
     </Wrapper>

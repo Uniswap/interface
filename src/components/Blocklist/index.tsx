@@ -17,7 +17,7 @@ export default function Blocklist({ children }: { children: ReactNode }) {
   if (blocked) {
     return (
       <div>
-        <Trans id="blocklist.blockedAddress">Blocked address</Trans>
+        <Trans id="blocklist.labels.blockedAddress">Blocked address</Trans>
       </div>
     )
   }

@@ -236,7 +236,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
         <RangeLineItem>
           <RangeText>
             <ExtentsText>
-              <Trans id="labels.min">Min: </Trans>
+              <Trans id="pools.labels.min">Min: </Trans>
             </ExtentsText>
             <Trans id="currencies.denominatedWithValue">
               {formatPrice(priceLower, 5)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
@@ -251,7 +251,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           </SmallOnly>
           <RangeText>
             <ExtentsText>
-              <Trans id="labels.max">Max:</Trans>
+              <Trans id="pools.labels.max">Max:</Trans>
             </ExtentsText>
             <Trans id="currencies.denominatedWithValue">
               {formatPrice(priceUpper, 5)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}

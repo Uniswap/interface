@@ -96,7 +96,7 @@ export default function ListUpdatePopup({
                 ) : null}
                 {tokensRemoved.length > 0 ? (
                   <li>
-                    <Trans id="tokenLists.tokenAddedList">
+                    <Trans id="tokenLists.tokenRemovedList">
                       {tokensRemoved.map((token, i) => (
                         <React.Fragment key={`${token.chainId}-${token.address}`}>
                           <strong title={token.address}>{token.symbol}</strong>

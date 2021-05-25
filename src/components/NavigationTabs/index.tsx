@@ -120,11 +120,11 @@ export function AddRemoveTabs({
         </HistoryLink>
         <TYPE.mediumHeader fontWeight={500} fontSize={20}>
           {creating ? (
-            <Trans id="pools.createPair">Create a pair</Trans>
+            <Trans id="pools.buttons.createPair">Create a pair</Trans>
           ) : adding ? (
-            <Trans id="pools.addLiquidity">Add Liquidity</Trans>
+            <Trans id="pools.buttons.addLiquidity">Add Liquidity</Trans>
           ) : (
-            <Trans id="pools.removeLiquidity">Remove Liquidity</Trans>
+            <Trans id="pools.buttons.removeLiquidity">Remove Liquidity</Trans>
           )}
         </TYPE.mediumHeader>
         <SettingsTab placeholderSlippage={defaultSlippage} />

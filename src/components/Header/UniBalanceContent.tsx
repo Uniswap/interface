@@ -85,7 +85,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
               <AutoColumn gap="md">
                 <RowBetween>
                   <TYPE.white color="white">
-                    <Trans id="claim.balance">Balance:</Trans>
+                    <Trans id="claim.labels.balance">Balance:</Trans>
                   </TYPE.white>
                   <TYPE.white color="white">{uniBalance?.toFixed(2, { groupSeparator: ',' })}</TYPE.white>
                 </RowBetween>
@@ -97,7 +97,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
                     {uniToClaim?.toFixed(4, { groupSeparator: ',' })}{' '}
                     {uniToClaim && uniToClaim.greaterThan('0') && (
                       <StyledInternalLink onClick={() => setShowUniBalanceModal(false)} to="/uni">
-                        <Trans id="claim.claimLabel">(claim)</Trans>
+                        <Trans id="claim.labels.claim">(claim)</Trans>
                       </StyledInternalLink>
                     )}
                   </TYPE.white>

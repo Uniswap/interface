@@ -291,7 +291,7 @@ export default function AddLiquidity({
 
   //TODO: fix
   const pendingText = t({
-    id: 'transactions.confirmation.pendingText',
+    id: 'addLiquidty.confirmation.pending',
     message: `Supplying ${!depositADisabled ? parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) : ''} ${
       !depositADisabled ? currencies[Field.CURRENCY_A]?.symbol : ''
     } ${!outOfRange ? 'and' : ''} ${!depositBDisabled ? parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) : ''} ${
@@ -440,7 +440,7 @@ export default function AddLiquidity({
                 <AutoColumn gap="md">
                   <RowBetween paddingBottom="20px">
                     <TYPE.label>
-                      <Trans id="pools.addLiquidity.selectPair">Select pair</Trans>
+                      <Trans id="addLiquidity.labels.selectPair">Select pair</Trans>
                     </TYPE.label>
                     <ButtonText onClick={clearAll}>
                       <TYPE.blue fontSize="12px">
@@ -485,7 +485,7 @@ export default function AddLiquidity({
             {hasExistingPosition && existingPosition ? (
               <PositionPreview
                 position={existingPosition}
-                title={t({ id: 'pools.addLiquidity.selectedRange', message: 'Selected Range' })}
+                title={t({ id: 'addLiquidity.labels.selectedRange', message: 'Selected Range' })}
                 inRange={!outOfRange}
               />
             ) : (
@@ -501,7 +501,7 @@ export default function AddLiquidity({
                     <AutoColumn gap="md">
                       <RowBetween>
                         <TYPE.label>
-                          <Trans id="pools.addLiquidity.selectStartingPrice">Set Starting Price</Trans>
+                          <Trans id="addLiquidity.labels.selectStartingPrice">Set Starting Price</Trans>
                         </TYPE.label>
                         {baseCurrency && quoteCurrency ? (
                           <RateToggle
@@ -529,7 +529,7 @@ export default function AddLiquidity({
                       </OutlineCard>
                       <RowBetween style={{ backgroundColor: theme.bg1, padding: '12px', borderRadius: '12px' }}>
                         <TYPE.main>
-                          <Trans id="">Current {baseCurrency?.symbol} Price:</Trans>
+                          <Trans id="addLiquidity.labels.currentPrice">Current {baseCurrency?.symbol} Price:</Trans>
                         </TYPE.main>
                         <TYPE.main>
                           {price ? (
@@ -575,7 +575,7 @@ export default function AddLiquidity({
                 <DynamicSection gap="md" disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}>
                   <RowBetween>
                     <TYPE.label>
-                      <Trans id="pools.addLiquidity.selectLiquidityRange">Set Price Range</Trans>
+                      <Trans id="addLiquidity.labels.selectLiquidityRange">Set Price Range</Trans>
                     </TYPE.label>
 
                     {baseCurrency && quoteCurrency ? (
