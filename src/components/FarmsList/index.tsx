@@ -63,7 +63,7 @@ const FarmsList = ({ farms }: FarmsListProps) => {
         </Flex>
 
         <Flex grid-area="staked_balance" alignItems="center" justifyContent="flexEnd">
-          <ClickableText>My Deposited</ClickableText>
+          <ClickableText>My Deposit</ClickableText>
         </Flex>
       </TableHeader>
     )
