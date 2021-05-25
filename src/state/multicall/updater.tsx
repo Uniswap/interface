@@ -5,7 +5,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useMulticall2Contract } from '../../hooks/useContract'
 import useDebounce from '../../hooks/useDebounce'
 import chunkArray from '../../utils/chunkArray'
-import { CancelledError, retry, RetryableError } from '../../utils/retry'
+import { retry, RetryableError } from '../../utils/retry'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -217,7 +217,7 @@ export default function Updater(): null {
             }
           })
           .catch((error: any) => {
-            if (error instanceof CancelledError) {
+            if (error.isCancelledError) {
               console.debug('Cancelled fetch for blockNumber', latestBlockNumber)
               return
             }
