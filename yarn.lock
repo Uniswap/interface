@@ -1990,6 +1990,13 @@
     penpal "3.0.7"
     pocket-js-core "0.0.3"
 
+"@ramp-network/ramp-instant-sdk@^2.4.3":
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/@ramp-network/ramp-instant-sdk/-/ramp-instant-sdk-2.4.3.tgz#a200ccf1cd5df7645a4afdfa9a1178aaea446a44"
+  integrity sha512-CBFCnlMviq0aHGtbhsw1lHB7SU0rz61WpB3uq/Jn+mjXxTs62IkLsUjAhngqitguB2cNaFA/GMT6x9MM78WK2A==
+  dependencies:
+    body-scroll-lock "^2.6.4"
+
 "@reach/dialog@^0.10.3":
   version "0.10.5"
   resolved "https://registry.yarnpkg.com/@reach/dialog/-/dialog-0.10.5.tgz#70bd832616fc2b0f31ed65aff81ae9e218c4dbc4"
@@ -4349,6 +4356,11 @@ body-parser@1.19.0:
     qs "6.7.0"
     raw-body "2.4.0"
     type-is "~1.6.17"
+
+body-scroll-lock@^2.6.4:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/body-scroll-lock/-/body-scroll-lock-2.7.1.tgz#caf3f9c91773af1ffb684cd66ed9137b5b737014"
+  integrity sha512-hS53SQ8RhM0e4DsQ3PKz6Gr2O7Kpdh59TWU98GHjaQznL7y4dFycEPk7pFQAikqBaUSCArkc5E3pe7CWIt2fZA==
 
 bonjour@^3.5.0:
   version "3.5.0"

@@ -19,6 +19,8 @@ import Web3Status from '../Web3Status'
 import { getNativeCurrencySymbol } from '../../utils'
 import { TYPE, ExternalLink } from '../../theme'
 import { BINANCE_MAINNET_CHAINID, BINANCE_TESTNET_CHAINID } from '../../constants'
+import useRampWidget from '../../hooks/useRamp'
+import { darken } from 'polished'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -39,6 +41,10 @@ const HeaderFrame = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    flex-wrap: wrap;
+  `};
 `
 
 const HeaderElementWrap = styled.div`
@@ -143,6 +149,39 @@ const MobileBalanceText = styled(Text)`
   font-weight: 500;
 `
 
+const StyledBuyButton = styled.button`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  margin: 0 1rem 0 0;
+  padding: 0;
+  height: 35px;
+  background-color: ${({ theme }) => theme.primary5};
+  color: ${({ theme }) => theme.primaryText1};
+  font-size: 1rem;
+  font-weight: 500;
+
+  padding: 0.15rem 1rem;
+  border-radius: 12px;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => darken(0.03, theme.primary5)};
+  }
+
+  svg {
+    margin-top: 2px;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    margin: 0 0 0.5rem 0;
+  `}
+`
+
 export const NETWORK_LABELS: any = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
@@ -156,6 +195,7 @@ export const NETWORK_LABELS: any = {
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
+  const openRampWidget = useRampWidget()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
@@ -174,6 +214,7 @@ export default function Header() {
         </HeaderElement>
         <HeaderControls>
           <HeaderElement>
+            <StyledBuyButton onClick={openRampWidget}>Buy Fuse Dollar</StyledBuyButton>
             <HeaderLink target="_blank" href="https://rewards.fuse.io">
               Farming <ExternalLinkIcon style={{ marginLeft: 5 }} size={14} />
             </HeaderLink>
