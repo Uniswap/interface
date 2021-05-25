@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token, Fetcher, DXD } from 'dxswap-sdk'
+import { ChainId, Currency, Token, DXD } from 'dxswap-sdk'
 import React, { ReactNode, useMemo } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import styled from 'styled-components'
@@ -9,7 +9,7 @@ import XDAILogo from '../../assets/images/xdai-logo.png'
 import DXDLogo from '../../assets/svg/dxd.svg'
 import { useActiveWeb3React } from '../../hooks'
 import useHttpLocations from '../../hooks/useHttpLocations'
-import { WrappedTokenInfo } from '../../state/lists/hooks'
+import { WrappedTokenInfo } from '../../state/lists/wrapped-token-info'
 import Logo from '../Logo'
 
 const getTokenLogoURL = (address: string) =>
@@ -71,7 +71,7 @@ export default function CurrencyLogo({
     if (currency instanceof Token) {
       if (Token.isNativeWrapper(currency)) return [nativeCurrencyLogo]
       if (chainId && DXD[chainId] && DXD[chainId].address === currency.address) return [DXDLogo]
-      return [getTokenLogoURL(currency.address), Fetcher.getCachedTokenLogo(currency), ...uriLocations]
+      return [getTokenLogoURL(currency.address), ...uriLocations]
     }
     return []
   }, [chainId, currency, nativeCurrencyLogo, uriLocations])

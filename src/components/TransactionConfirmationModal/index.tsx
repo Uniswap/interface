@@ -1,7 +1,6 @@
 import { ChainId } from 'dxswap-sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { transparentize } from 'polished'
 import Modal from '../Modal'
 import { ExternalLink, TYPE } from '../../theme'
 import { Text } from 'rebass'
@@ -19,7 +18,7 @@ const Wrapper = styled.div`
   width: 100%;
 `
 const Section = styled(AutoColumn)`
-  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background-color: ${({ theme }) => theme.bg2};
   padding: 24px;
 `
 

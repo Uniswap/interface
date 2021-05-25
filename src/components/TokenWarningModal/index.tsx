@@ -1,5 +1,4 @@
 import { Token } from 'dxswap-sdk'
-import { transparentize } from 'polished'
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
@@ -18,7 +17,7 @@ const WarningContainer = styled.div`
 `
 
 const OuterContainer = styled.div`
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background: ${({ theme }) => theme.bg1And2};
 `
 
 const UpperSectionContainer = styled.div`

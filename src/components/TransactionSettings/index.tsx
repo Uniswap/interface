@@ -35,7 +35,7 @@ enum DeadlineError {
 }
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.bg2};
+  background: ${({ theme }) => theme.bg1And2};
   font-size: 15px;
   line-height: 18px;
   width: auto;

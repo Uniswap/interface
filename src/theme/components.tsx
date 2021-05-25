@@ -4,6 +4,7 @@ import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { ArrowLeft, X } from 'react-feather'
 import { Colors } from './styled'
+import { Button as Base } from 'rebass'
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1
@@ -164,4 +165,40 @@ export const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
+`
+
+// for wrapper react feather icons
+export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRight?: string; marginLeft?: string }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${({ size }) => size ?? '20px'};
+  height: ${({ size }) => size ?? '20px'};
+  margin-right: ${({ marginRight }) => marginRight ?? 0};
+  margin-left: ${({ marginLeft }) => marginLeft ?? 0};
+  & > * {
+    stroke: ${({ theme, stroke }) => stroke ?? theme.blue1};
+  }
+`
+
+export const ButtonText = styled(Base)`
+  padding: 0;
+  width: fit-content;
+  background: none;
+  text-decoration: none;
+  &:focus {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    text-decoration: underline;
+  }
+  &:hover {
+    // text-decoration: underline;
+    opacity: 0.9;
+  }
+  &:active {
+    text-decoration: underline;
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+  }
 `

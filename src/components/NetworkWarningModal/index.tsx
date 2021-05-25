@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import { TYPE } from '../../theme'
@@ -18,7 +17,7 @@ const WarningContainer = styled.div`
 `
 
 const OuterContainer = styled.div`
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background: ${({ theme }) => theme.bg1And2};
 `
 
 const UpperSectionContainer = styled.div`

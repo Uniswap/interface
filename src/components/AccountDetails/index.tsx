@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
@@ -28,7 +27,7 @@ const HeaderRow = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background-color: ${({ theme }) => theme.bg1And2};
 
   h5 {
     margin: 0;
@@ -93,7 +92,7 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => transparentize(0.25, theme.bg1)};
+  background-color: ${({ theme }) => theme.bg1};
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
 
@@ -320,7 +319,9 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
-            <TYPE.body color="text4">Recent Transactions</TYPE.body>
+            <TYPE.body fontSize="14px" color="text4">
+              Recent Transactions
+            </TYPE.body>
             <LinkStyledButton onClick={clearAllTransactionsCallback}>(clear all)</LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
@@ -328,7 +329,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body>Your transactions will appear here...</TYPE.body>
+          <TYPE.body fontSize="14px">Your transactions will appear here...</TYPE.body>
         </LowerSection>
       )}
     </>

@@ -55,7 +55,6 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, mobile, is
       `}
     display: flex;
     border-radius: 8px;
-    backdrop-filter: blur(16px);
     ${({ theme }) => theme.mediaWidth.upToMedium`
       width: 65vw;
       margin: 0;

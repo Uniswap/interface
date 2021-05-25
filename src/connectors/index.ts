@@ -3,6 +3,8 @@ import { AuthereumConnector } from '@web3-react/authereum-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { CustomNetworkConnector } from './CustomNetworkConnector'
 import { ChainId } from 'dxswap-sdk'
+import { providers } from 'ethers'
+import getLibrary from '../utils/getLibrary'
 
 export const INFURA_PROJECT_ID = '0ebf4dd05d6740f482938b8a80860d13'
 
@@ -30,3 +32,8 @@ export const walletConnect = new WalletConnectConnector({
 
 // mainnet only
 export const authereum = new AuthereumConnector({ chainId: 1 })
+
+let networkLibrary: providers.Web3Provider | undefined
+export function getNetworkLibrary(): providers.Web3Provider {
+  return (networkLibrary = networkLibrary ?? getLibrary(network.provider))
+}
