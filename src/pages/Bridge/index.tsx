@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import QuestionHelper from '../../components/QuestionHelper';
 import { RowBetween } from '../../components/Row';
 import AppBody from '../AppBody';
 import CurrencyInputPanel from '../../components/CurrencyInputPanel';
 import { ButtonPrimary } from '../../components/Button';
-import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter';
-import { Table, Th } from '../../components/Table';
-import { HideableAutoColumn } from '../../components/Column';
 import ArrowIcon from '../../assets/svg/arrow.svg';
-import TriangleIcon from '../../assets/svg/triangle.svg';
-import Radio from '../../components/Radio';
-import { TYPE } from '../../theme';
+import { AssetSelector } from './AssetsSelector';
+import { FooterBridgeSelector } from './FooterBridgeSelector';
+import { FooterPending } from './FooterPending';
+import { FooterReady } from './FooterReady';
+import { NetworkSwitcher } from './NetworkSwitcher';
+import { BridgeSuccesModal } from './BridgeSuccesModal';
 
 const Title = styled.p`
   margin: 0;
@@ -26,30 +26,52 @@ const ArrowImg = styled.img`
   margin: 0 16px;
 `;
 
+enum Step {
+  Initial,
+  Pending,
+  Ready,
+  Collect,
+  Success
+}
 
 export default function Bridge() {
+  const [step, setStep] = useState(Step.Initial);
+  
   const [amount, setAmount] = useState('');
+  const [isEthereumConnected, setIsEthereumConnected] = useState(false);  
+
+  const isButtonDisabled = !amount || step !== Step.Initial;
+  
+  useEffect(() => {
+    const timer = setTimeout(() => step === Step.Pending && setStep(Step.Ready), 2000);
+    return () => clearTimeout(timer);
+  }, [step]);
+
+  const resetBridge = () => {
+    setAmount('');
+    setStep(Step.Initial)
+  }
   
   return (
     <>
       <AppBody>
         <RowBetween mb="12px">
-          <Title>Swapr Bridge</Title>
-          <QuestionHelper
-            text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum"
-          />
+          <Title>{step === Step.Collect ? 'Collect' : 'Swapr Bridge'}</Title>
+          <QuestionHelper text="Lorem ipsum Lorem ipsum Lorem ipsumLorem ipsumLorem ipsum" />
         </RowBetween>
         <RowBetween mb="12px">
           <AssetSelector
             label="from"
             icon="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
             name="Arbitrum"
+            connected={!isEthereumConnected}
           />
           <ArrowImg src={ArrowIcon} alt="arrow" />
           <AssetSelector
             label="to"
             icon="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
             name="Ethereum"
+            connected={isEthereumConnected}
           />
         </RowBetween>
         <CurrencyInputPanel
@@ -59,123 +81,32 @@ export default function Bridge() {
           onUserInput={setAmount}
           onMax={() => {}}
           onCurrencySelect={() => {}}
+          disableCurrencySelect={step !== Step.Initial}
+          disabled={step !== Step.Initial}
           id="brdige-currency-input"
         />
-        <ButtonPrimary mt="12px">Connect to arbitrum</ButtonPrimary>
+        {step === Step.Collect ? (
+          <NetworkSwitcher
+            isEthereumConnected={isEthereumConnected}
+            onSwitchClick={() => setIsEthereumConnected(true)}
+            onCollectClick={() => setStep(Step.Success)}
+          />
+        ) : (
+          <ButtonPrimary onClick={() => setStep(Step.Pending)} mt="12px" disabled={isButtonDisabled}>
+            {!!amount ? 'Brigde to ethereum' : 'Enter Eth Amount'}
+          </ButtonPrimary>
+        )}
       </AppBody>
-      <HideableAutoColumn show={true}>
-        <AdvancedDetailsFooter fullWidth padding="16px">
-          <Table>
-            <thead>
-              <tr>
-                <Th>Exchange</Th>
-                <Th align="right">Fee</Th>
-                <Th align="right">Gas</Th>
-                <Th align="right">Time</Th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style={{ lineHeight: '22px' }}>
-                <td>
-                  <Radio
-                    checked={true}
-                    label="Swapr Fast Exit"
-                    value=""
-                    onChange={() => {}}
-                  />
-                </td>
-                <td align="right">
-                  <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
-                    0.05%
-                  </TYPE.main>
-                </td>
-                <td align="right">
-                  <TYPE.main color="text4" fontSize="10px" lineHeight="12px">
-                    13$
-                  </TYPE.main>
-                </td>
-                <td align="right">
-                  <TYPE.subHeader color="white" fontSize="12px" fontWeight="600">
-                    30 min
-                  </TYPE.subHeader>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-        </AdvancedDetailsFooter>
-      </HideableAutoColumn>
+      {step === Step.Initial && !!amount && <FooterBridgeSelector show onBridgeChange={() => {}} />}
+      {step === Step.Pending && <FooterPending amount={amount} show />}
+      {step === Step.Ready && <FooterReady amount={amount} show onCollectButtonClick={() => setStep(Step.Collect)} />}
+      <BridgeSuccesModal
+        isOpen={step === Step.Success}
+        onDismiss={resetBridge}
+        onTradeButtonClick={resetBridge}
+        onBackButtonClick={resetBridge}
+        amount={amount}
+      />
     </>
-  )
-}
-
-const Section = styled.button`
-  width: 100%;
-  padding: 12px 19px 15px;
-  background: ${({ theme }) => theme.bg1And2};
-  border-radius: 12px;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-`;
-
-const SmallLabel = styled.p`
-  margin: 0;
-  font-weight: 600;
-  font-size: 9px;
-  line-height: 11px;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.purple2};
-`
-
-const IconWrapper = styled.div`
-  min-height: 36px;
-  max-width: 36px;
-  margin-bottom: 12px;
-
-  img {
-    max-width: 100%;
-  }
-`;
-
-const AssetName = styled.p`
-  position: relative;
-  display: inline-block;
-  padding-right: 20px;
-  margin: 5px 0 0;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 20px;
-  color: ${({ theme }) => theme.text2};
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    width: 10px;
-    height: 10px;
-    background: url(${TriangleIcon}) center no-repeat;
-    background-size: contain;
-  }
-`;
-
-
-interface AssetSelectorProps {
-  label: string;
-  icon: string;
-  name: string;
-}
-
-const AssetSelector = ({label, icon, name}: AssetSelectorProps) => {
-  return (
-    <Section>
-      <IconWrapper>
-        <img src={icon} alt={name} />
-      </IconWrapper>
-      <SmallLabel>{label}</SmallLabel>
-      <AssetName>{name}</AssetName>
-    </Section>
   )
 }

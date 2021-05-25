@@ -22,7 +22,11 @@ export const AutoColumn = styled.div<{
 
 export default Column
 
-export const HideableAutoColumn = styled(AutoColumn)<{ show: boolean }>`
+export interface HideableAutoColumnProps {
+  show: boolean,
+}
+
+export const HideableAutoColumn = styled(AutoColumn)<HideableAutoColumnProps>`
   transform: ${({ show }) => (show ? 'translateY(8px)' : 'translateY(-100%)')};
   transition: transform 300ms ease;
   z-index: -1;

@@ -114,6 +114,7 @@ interface CurrencyInputPanelProps {
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
   disableCurrencySelect?: boolean
+  disabled?: boolean
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
@@ -133,6 +134,7 @@ export default function CurrencyInputPanel({
   onCurrencySelect,
   currency,
   disableCurrencySelect = false,
+  disabled,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -201,6 +203,7 @@ export default function CurrencyInputPanel({
                   onUserInput={val => {
                     onUserInput(val)
                   }}
+                  disabled={disabled}
                 />
                 {account && (currency || pair) && showMaxButton && label !== 'To' && (
                   <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
