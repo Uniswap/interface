@@ -15,6 +15,7 @@ import {
   TokenAmount as TokenAmountDMM,
   ChainId as ChainIdDMM
 } from 'libs/sdk/src'
+import { BLOCKS_PER_YEAR } from '../constants'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
@@ -137,4 +138,21 @@ export function tokenAmountDmmToSushi(amount: TokenAmountDMM): TokenAmountSUSHI 
     ),
     amount.raw
   )
+}
+
+/**
+ * Get farm APR value in %
+ * @param kncPriceUsd KNC price in USD
+ * @param poolLiquidityUsd Total pool liquidity in USD
+ * @returns
+ */
+export function getFarmApr(kncPriceUsd: string, poolLiquidityUsd: string): number {
+  if (parseFloat(poolLiquidityUsd) === 0) {
+    return 0
+  }
+
+  const yearlyKNCRewardAllocation = 0.02 * BLOCKS_PER_YEAR
+  const apr = ((yearlyKNCRewardAllocation * parseFloat(kncPriceUsd)) / parseFloat(poolLiquidityUsd)) * 100
+
+  return apr
 }

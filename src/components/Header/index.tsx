@@ -266,6 +266,9 @@ export default function Header() {
           <StyledNavLink id={`pools-nav-link`} to={poolsMenuLink} isActive={match => Boolean(match)}>
             {t('pools')}
           </StyledNavLink>
+          <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
+            {t('yield')}
+          </StyledNavLink>
           <StyledNavLink
             id={`my-pools-nav-link`}
             to={'/myPools'}

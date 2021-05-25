@@ -20,6 +20,7 @@ import {
 import Pool from './Pool'
 import Migration from './Pool/lp'
 import Pools from './Pools'
+import Farms from './Farms'
 import PoolFinder from './PoolFinder'
 import PoolFinderExternal from './PoolFinder/PoolFinderExternal'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -31,6 +32,7 @@ import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import About from './Static/About'
 import { BLACKLIST_WALLETS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
+import Vesting from './Farms/vesting'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -69,7 +71,7 @@ const Marginer = styled.div`
 
 export default function App() {
   const { account } = useActiveWeb3React()
-  let aboutPage = useRouteMatch("/about");
+  const aboutPage = useRouteMatch('/about')
 
   return (
     <>
@@ -95,6 +97,8 @@ export default function App() {
                     <Route exact strict path="/pools" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA" component={Pools} />
                     <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
+                    <Route exact strict path="/farms" component={Farms} />
+                    <Route exact strict path="/farms/:lp" component={Vesting} />
                     <Route exact strict path="/myPools" component={Pool} />
                     <Route exact strict path="/migration" component={Migration} />
                     <Route exact path="/add" component={AddLiquidity} />

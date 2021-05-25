@@ -22,6 +22,18 @@ export const ETH_PRICE = (block?: number) => {
   return gql(queryString)
 }
 
+export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
+  const queryString = `
+    query tokens {
+      tokens(where: { id: "${tokenAddress.toLowerCase()}"} ) {
+        derivedETH
+      }
+    }
+    `
+
+  return gql(queryString)
+}
+
 export const GLOBAL_DATA = (block?: number) => {
   const queryString = `query dmmFactories {
     dmmFactories(
@@ -212,3 +224,26 @@ export const POOLS_HISTORICAL_BULK = (block: number, pools: string[]) => {
 
   return gql(queryString)
 }
+
+export const FARM_DATA = gql`
+  query farmData($poolsList: [Bytes]!) {
+    pools(where: { id_in: $poolsList }) {
+      id
+      token0 {
+        id
+        symbol
+        name
+        decimals
+      }
+      token1 {
+        id
+        symbol
+        name
+        decimals
+      }
+      amp
+      reserveUSD
+      totalSupply
+    }
+  }
+`

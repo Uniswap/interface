@@ -34,6 +34,7 @@ export interface Colors {
   bg12: Color
   bg13: Color
   bg14: Color
+  bg15: Color
 
   modalBG: Color
   advancedBG: Color
@@ -47,6 +48,7 @@ export interface Colors {
   primary5: Color
 
   primaryText1: Color
+  primaryText2: Color
 
   // pinks
   secondary1: Color
@@ -69,8 +71,6 @@ export interface Colors {
   yellow2: Color
   blue1: Color
   warning: Color
-
-  custom_bg1: Color
 }
 
 export interface Grids {

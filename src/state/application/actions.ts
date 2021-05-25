@@ -28,7 +28,9 @@ export enum ApplicationModal {
   DELEGATE,
   VOTE,
   PRICE_RANGE,
-  POOL_DETAIL
+  POOL_DETAIL,
+  FARM_CLAIM,
+  FARM_STAKE
 }
 
 export const updateBlockNumber = createAction<{ chainId: number; blockNumber: number }>('application/updateBlockNumber')
@@ -42,3 +44,5 @@ export const updateETHPrice = createAction<{
   oneDayBackPrice: string
   pricePercentChange: number
 }>('application/updateETHPrice')
+
+export const updateKNCPrice = createAction<string | undefined>('application/updateKNCPrice')

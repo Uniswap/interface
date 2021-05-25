@@ -1,0 +1,310 @@
+[
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_admin", "type": "address" },
+      { "internalType": "contract IERC20Ext", "name": "_rewardToken", "type": "address" },
+      { "internalType": "contract IKyberRewardLocker", "name": "_rewardLocker", "type": "address" }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "stakeToken", "type": "address" },
+      { "indexed": true, "internalType": "uint32", "name": "startBlock", "type": "uint32" },
+      { "indexed": true, "internalType": "uint32", "name": "endBlock", "type": "uint32" },
+      { "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }
+    ],
+    "name": "AddNewPool",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "internalType": "address", "name": "newAdmin", "type": "address" },
+      { "indexed": false, "internalType": "address", "name": "previousAdmin", "type": "address" }
+    ],
+    "name": "AdminClaimed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "blockNumber", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "Deposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "blockNumber", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "EmergencyWithdraw",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "blockNumber", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "lockedAmount", "type": "uint256" }
+    ],
+    "name": "Harvest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
+      { "indexed": true, "internalType": "uint32", "name": "startBlock", "type": "uint32" },
+      { "indexed": true, "internalType": "uint32", "name": "endBlock", "type": "uint32" },
+      { "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }
+    ],
+    "name": "RenewPool",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{ "indexed": false, "internalType": "address", "name": "pendingAdmin", "type": "address" }],
+    "name": "TransferAdminPending",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
+      { "indexed": true, "internalType": "uint32", "name": "endBlock", "type": "uint32" },
+      { "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }
+    ],
+    "name": "UpdatePool",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
+      { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
+      { "indexed": true, "internalType": "uint256", "name": "blockNumber", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "Withdraw",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "BPS",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PRECISION",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_stakeToken", "type": "address" },
+      { "internalType": "uint32", "name": "_startBlock", "type": "uint32" },
+      { "internalType": "uint32", "name": "_endBlock", "type": "uint32" },
+      { "internalType": "uint128", "name": "_rewardPerBlock", "type": "uint128" }
+    ],
+    "name": "addPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "admin",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
+    "name": "adminWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  { "inputs": [], "name": "claimAdmin", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_pid", "type": "uint256" },
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" },
+      { "internalType": "bool", "name": "_shouldHarvest", "type": "bool" }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
+    "name": "emergencyWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
+    "name": "harvest",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256[]", "name": "_pids", "type": "uint256[]" }],
+    "name": "harvestMultiplePools",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pendingAdmin",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_pid", "type": "uint256" },
+      { "internalType": "address", "name": "_user", "type": "address" }
+    ],
+    "name": "pendingReward",
+    "outputs": [{ "internalType": "uint256", "name": "rewards", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "poolExists",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "poolInfo",
+    "outputs": [
+      { "internalType": "uint128", "name": "rewardPerBlock", "type": "uint128" },
+      { "internalType": "uint128", "name": "accRewardPerShare", "type": "uint128" },
+      { "internalType": "uint256", "name": "totalStake", "type": "uint256" },
+      { "internalType": "address", "name": "stakeToken", "type": "address" },
+      { "internalType": "uint32", "name": "startBlock", "type": "uint32" },
+      { "internalType": "uint32", "name": "endBlock", "type": "uint32" },
+      { "internalType": "uint32", "name": "lastRewardBlock", "type": "uint32" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "poolLength",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_pid", "type": "uint256" },
+      { "internalType": "uint32", "name": "_startBlock", "type": "uint32" },
+      { "internalType": "uint32", "name": "_endBlock", "type": "uint32" },
+      { "internalType": "uint128", "name": "_rewardPerBlock", "type": "uint128" }
+    ],
+    "name": "renewPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardLocker",
+    "outputs": [{ "internalType": "contract IKyberRewardLocker", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "rewardToken",
+    "outputs": [{ "internalType": "contract IERC20Ext", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newAdmin", "type": "address" }],
+    "name": "transferAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "newAdmin", "type": "address" }],
+    "name": "transferAdminQuickly",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_pid", "type": "uint256" },
+      { "internalType": "uint32", "name": "_endBlock", "type": "uint32" },
+      { "internalType": "uint128", "name": "_rewardPerBlock", "type": "uint128" }
+    ],
+    "name": "updatePool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
+    "name": "updatePoolRewards",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" },
+      { "internalType": "address", "name": "", "type": "address" }
+    ],
+    "name": "userInfo",
+    "outputs": [
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "uint128", "name": "unclaimedReward", "type": "uint128" },
+      { "internalType": "uint128", "name": "lastRewardPerShare", "type": "uint128" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_pid", "type": "uint256" },
+      { "internalType": "uint256", "name": "_amount", "type": "uint256" }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
+    "name": "withdrawAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

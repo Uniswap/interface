@@ -107,9 +107,9 @@ const StyledBalanceMax = styled.button`
   `};
 `
 
-const Card2 = styled(Card)`
-  padding: 0 .75rem .4rem .75rem;
-  text-align: right;
+const Card2 = styled(Card)<{ balancePosition: string }>`
+  padding: 0 0.75rem 0.4rem 0.75rem;
+  text-align: ${({ balancePosition }) => `${balancePosition}`};
 `
 
 interface CurrencyInputPanelProps {
@@ -128,6 +128,7 @@ interface CurrencyInputPanelProps {
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
+  balancePosition?: string
 }
 
 export default function CurrencyInputPanel({
@@ -145,7 +146,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText
+  customBalanceText,
+  balancePosition = 'right'
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -159,9 +161,9 @@ export default function CurrencyInputPanel({
   }, [setModalOpen])
 
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       {account && (
-        <Card2 padding={'.4rem .75rem 0 .75rem'} borderRadius={'20px'}>
+        <Card2 padding={'.4rem .75rem 0 .75rem'} borderRadius={'20px'} balancePosition={balancePosition}>
           <AutoColumn gap="4px">
             <TYPE.body
               onClick={onMax}
@@ -170,9 +172,8 @@ export default function CurrencyInputPanel({
               fontSize={14}
               style={{ display: 'inline', cursor: `${label !== 'To' ? 'pointer' : 'initial'}` }}
             >
-              {!hideBalance && !!currency && selectedCurrencyBalance
-                ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                : ' -'}
+              {(!hideBalance && !!currency && selectedCurrencyBalance && customBalanceText) ??
+                `Balance: ${selectedCurrencyBalance?.toSignificant(6)}`}
             </TYPE.body>
           </AutoColumn>
         </Card2>
