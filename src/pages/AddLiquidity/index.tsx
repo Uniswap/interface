@@ -260,11 +260,11 @@ export default function AddLiquidity({
               addTransaction(response, {
                 summary: noLiquidity
                   ? t({
-                      id: 'transactions.createPoolAndAddLiquidity',
+                      id: 'transactions.summary.createPoolAndAddLiquidity',
                       message: `Create pool and add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
                     })
                   : t({
-                      id: 'transactions.addLiquidity',
+                      id: 'transactions.summary.addLiquidity',
                       message: `Add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
                     }),
               })
@@ -444,7 +444,7 @@ export default function AddLiquidity({
                     </TYPE.label>
                     <ButtonText onClick={clearAll}>
                       <TYPE.blue fontSize="12px">
-                        <Trans id="pools.addLiquidity.clearAll">Clear All</Trans>
+                        <Trans id="common.clearAll">Clear All</Trans>
                       </TYPE.blue>
                     </ButtonText>
                   </RowBetween>
@@ -528,7 +528,9 @@ export default function AddLiquidity({
                         />
                       </OutlineCard>
                       <RowBetween style={{ backgroundColor: theme.bg1, padding: '12px', borderRadius: '12px' }}>
-                        <TYPE.main>Current {baseCurrency?.symbol} Price:</TYPE.main>
+                        <TYPE.main>
+                          <Trans id="">Current {baseCurrency?.symbol} Price:</Trans>
+                        </TYPE.main>
                         <TYPE.main>
                           {price ? (
                             <TYPE.main>
@@ -653,7 +655,7 @@ export default function AddLiquidity({
                       <RowBetween>
                         <AlertTriangle stroke={theme.yellow3} size="16px" />
                         <TYPE.yellow ml="12px" fontSize="12px">
-                          <Trans id="invalidRangeWarning">
+                          <Trans id="error.invalidRangeWarning">
                             Invalid range selected. The min price must be lower than the max price.
                           </Trans>
                         </TYPE.yellow>
@@ -669,7 +671,9 @@ export default function AddLiquidity({
             >
               <AutoColumn gap="md">
                 <TYPE.label>
-                  {hasExistingPosition ? 'Add more liquidity' : t({ id: 'depositAmounts', message: 'Deposit Amounts' })}
+                  {hasExistingPosition
+                    ? 'Add more liquidity'
+                    : t({ id: 'liquidity.depositAmounts', message: 'Deposit Amounts' })}
                 </TYPE.label>
 
                 <CurrencyInputPanel
@@ -705,7 +709,7 @@ export default function AddLiquidity({
               {addIsUnsupported ? (
                 <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
                   <TYPE.main mb="4px">
-                    <Trans id="unsupportedAsset">Unsupported Asset</Trans>
+                    <Trans id="error.unsupportedAsset">Unsupported Asset</Trans>
                   </TYPE.main>
                 </ButtonPrimary>
               ) : !account ? (

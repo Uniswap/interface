@@ -20,6 +20,7 @@ import { CardNoise, CardBGImage, CardBGImageSmaller } from '../earn/styled'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { shortenAddress } from '../../utils'
+import { Trans } from '@lingui/macro'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -103,23 +104,29 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={500}>Claim UNI Token</TYPE.white>
+                <TYPE.white fontWeight={500}>
+                  <Trans id="claim.claimUNIToken">Claim UNI Token</Trans>
+                </TYPE.white>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
               <TYPE.white fontWeight={700} fontSize={36}>
-                {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
+                <Trans id="claim.tokenAmount">{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
               </TYPE.white>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <TYPE.subHeader fontWeight={500}>
-              Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
-              submission.
+              <Trans id="claim.enterAddress">
+                Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
+                submission.
+              </Trans>
             </TYPE.subHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && (
-              <TYPE.error error={true}>Address has no available claim</TYPE.error>
+              <TYPE.error error={true}>
+                <Trans id="claim.noAvailableClaim">Address has no available claim</Trans>
+              </TYPE.error>
             )}
             <ButtonPrimary
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
@@ -129,7 +136,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               mt="1rem"
               onClick={onClaim}
             >
-              Claim UNI
+              <Trans id="claim.claimUNI">Claim UNI</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -146,44 +153,54 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             {!claimConfirmed ? (
               <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
             ) : (
-              <UniTokenAnimated width="72px" src={tokenLogo} />
+              <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI" />
             )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
               <TYPE.largeHeader fontWeight={600} color="black">
-                {claimConfirmed ? 'Claimed' : 'Claiming'}
+                {claimConfirmed ? (
+                  <Trans id="claim.statusClaimed">Claimed</Trans>
+                ) : (
+                  <Trans id="claim.statusClaiming">Claiming</Trans>
+                )}
               </TYPE.largeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
+                  <Trans id="claim.tokenAmount">
+                    {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
+                  </Trans>
                 </Text>
               )}
               {parsedAddress && (
                 <TYPE.largeHeader fontWeight={600} color="black">
-                  for {shortenAddress(parsedAddress)}
+                  <Trans id="claim.claimAddress">for {shortenAddress(parsedAddress)}</Trans>
                 </TYPE.largeHeader>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
                 <TYPE.subHeader fontWeight={500} color="black">
-                  <span role="img" aria-label="party-hat">
-                    🎉{' '}
-                  </span>
-                  Welcome to team Unicorn :){' '}
-                  <span role="img" aria-label="party-hat">
-                    🎉
-                  </span>
+                  <Trans id="claim.welcome">
+                    <span role="img" aria-label="party-hat">
+                      🎉{' '}
+                    </span>
+                    Welcome to team Unicorn :){' '}
+                    <span role="img" aria-label="party-hat">
+                      🎉
+                    </span>
+                  </Trans>
                 </TYPE.subHeader>
               </>
             )}
             {attempting && !hash && (
-              <TYPE.subHeader color="black">Confirm this transaction in your wallet</TYPE.subHeader>
+              <TYPE.subHeader color="black">
+                <Trans id="claim.confirmTransactionInWallet">Confirm this transaction in your wallet</Trans>
+              </TYPE.subHeader>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>
-                View transaction on Etherscan
+                <Trans id="transaction.viewOnEherscan">View transaction on Etherscan</Trans>
               </ExternalLink>
             )}
           </AutoColumn>

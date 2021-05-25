@@ -413,7 +413,7 @@ export default function AccountDetails({
               <Trans id="wallet.recentTransactions">Recent Transactions</Trans>
             </TYPE.body>
             <LinkStyledButton onClick={clearAllTransactionsCallback}>
-              <Trans d="wallet.clearAllTransactions">(clear all)</Trans>
+              <Trans id="wallet.clearAllTransactions">(clear all)</Trans>
             </LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}

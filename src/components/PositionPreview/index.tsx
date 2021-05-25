@@ -123,7 +123,7 @@ export const PositionPreview = ({
               </TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${priceLower.toSignificant(5)}`}</TYPE.mediumHeader>
               <TYPE.main textAlign="center" fontSize="12px">
-                <Trans id="pools.denominatedCurrency">
+                <Trans id="currencies.denominated">
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </TYPE.main>
@@ -142,7 +142,7 @@ export const PositionPreview = ({
               </TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${priceUpper.toSignificant(5)}`}</TYPE.mediumHeader>
               <TYPE.main textAlign="center" fontSize="12px">
-                <Trans id="pools.denominatedCurrency">
+                <Trans id="currencies.denominated">
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </TYPE.main>
@@ -161,7 +161,7 @@ export const PositionPreview = ({
             </TYPE.main>
             <TYPE.mediumHeader>{`${price.toSignificant(5)} `}</TYPE.mediumHeader>
             <TYPE.main textAlign="center" fontSize="12px">
-              <Trans id="pools.denominatedCurrency">
+              <Trans id="currencies.denominated">
                 {quoteCurrency.symbol} per {baseCurrency.symbol}
               </Trans>
             </TYPE.main>
