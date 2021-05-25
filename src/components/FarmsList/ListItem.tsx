@@ -55,7 +55,12 @@ const StakeGroup = styled.div`
   grid-gap: 1.5rem;
   grid-template-columns: 3fr 3fr 2fr;
   grid-template-areas: 'stake unstake harvest';
-  margin-bottom: 20px;
+  margin-bottom: 8px;
+`
+
+const BalanceInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
 `
 
 const GreyText = styled.div`
@@ -66,12 +71,20 @@ const GreyText = styled.div`
 const LPInfoContainer = styled.div`
   display: flex;
   justify-content: flex-start;
+  align-items: center;
 `
 
 const LPInfo = styled.div`
   margin-right: 24px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
+  color: #08a1e7;
+  line-height: 2;
+`
+
+const GetLP = styled.span`
+  font-size: 14px;
+  font-weight: 600;
 `
 
 const StyledItemCard = styled.div`
@@ -136,6 +149,17 @@ const ListItem = ({ farm }: ListItemProps) => {
     )
   )
 
+  // Ratio in % of user's LP tokens balance, vs the total number in circulation
+  const lpUserLPBalanceRatio = new Fraction(
+    userTokenBalance.toString(),
+    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
+  ).divide(
+    new Fraction(
+      ethers.utils.parseUnits(farm.totalSupply, lpTokenDecimals).toString(),
+      JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(lpTokenDecimals))
+    )
+  )
+
   // Ratio in % of LP tokens that user staked, vs the total number in circulation
   const lpUserStakedTokenRatio = new Fraction(
     userStakedBalance.toString(),
@@ -147,6 +171,7 @@ const ListItem = ({ farm }: ListItemProps) => {
     )
   )
 
+  const userLPBalanceUSD = parseFloat(lpUserLPBalanceRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
   const userStakedBalanceUSD = parseFloat(lpUserStakedTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
@@ -192,18 +217,20 @@ const ListItem = ({ farm }: ListItemProps) => {
         <ExpandedSection>
           <ExpandedContent>
             <StakeGroup style={{ marginBottom: '14px' }}>
-              <div grid-area="stake">
+              <BalanceInfo grid-area="stake">
                 <GreyText>
                   Balance: {getFullDisplayBalance(userTokenBalance, lpTokenDecimals)} {farm.token0?.symbol}-
                   {farm.token1?.symbol} LP
                 </GreyText>
-              </div>
-              <div grid-area="unstake">
+                <GreyText>{formattedNum(userLPBalanceUSD.toString(), true)}</GreyText>
+              </BalanceInfo>
+              <BalanceInfo grid-area="unstake">
                 <GreyText>
                   Deposit: {getFullDisplayBalance(userStakedBalance, lpTokenDecimals)} {farm.token0?.symbol}-
                   {farm.token1?.symbol} LP
                 </GreyText>
-              </div>
+                <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
+              </BalanceInfo>
               <div grid-area="harvest">
                 <GreyText>KNC Reward</GreyText>
                 <div>{`${getFullDisplayBalance(userEarning)} KNC`}</div>
@@ -236,11 +263,11 @@ const ListItem = ({ farm }: ListItemProps) => {
             </StakeGroup>
             <LPInfoContainer>
               <LPInfo>{shortenAddress(farm.id)}</LPInfo>
-              <div>
-                <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`}>
+              <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`} style={{ textDecoration: 'none' }}>
+                <GetLP>
                   Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
-                </Link>
-              </div>
+                </GetLP>
+              </Link>
             </LPInfoContainer>
           </ExpandedContent>
         </ExpandedSection>
