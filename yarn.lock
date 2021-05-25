@@ -5940,9 +5940,9 @@ duplexify@^3.4.2, duplexify@^3.6.0:
   dependencies:
     dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.3.1"
 
-"dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#v0.8.1":
-  version "0.8.1"
-  resolved "git://github.com/levelkdev/dxswap-sdk.git#978b1a4bb9edb90bb70f7f2bfa6a4a60fe708152"
+"dxswap-sdk@git://github.com/levelkdev/dxswap-sdk.git#v0.8.3":
+  version "0.8.3"
+  resolved "git://github.com/levelkdev/dxswap-sdk.git#a959bd76ffdad9225c20c38f6766544fad3fa128"
   dependencies:
     "@makerdao/multicall" "^0.11.0"
     big.js "^5.2.2"
@@ -5950,7 +5950,6 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     dxswap-core "git://github.com/levelkdev/dxswap-core.git#v0.3.7"
     dxswap-periphery "git://github.com/levelkdev/dxswap-periphery.git#v0.3.8"
     jsbi "^3.1.1"
-    node-fetch "^2.6.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
