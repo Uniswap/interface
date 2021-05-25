@@ -16,7 +16,7 @@ import PoolDetailModal from './PoolDetailModal'
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 1.5fr repeat(7, 1fr) 1fr 1.5fr;
+  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr 1.5fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -185,10 +185,10 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
           <ClickableText>Pool</ClickableText>
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Ratio</ClickableText>
+          <ClickableText>AMP</ClickableText>
           <InfoHelper
             text={
-              'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
+              'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
             }
           />
         </Flex>
@@ -211,6 +211,9 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
         </Flex>
+        <Flex alignItems="center" justifyContent="flexEnd">
+          <ClickableText>AMP Liquidity</ClickableText>
+        </Flex>
         <Flex alignItems="center">
           <ClickableText
             onClick={() => {
@@ -230,7 +233,6 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
         </Flex>
-
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText
             onClick={() => {
@@ -250,16 +252,14 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
         </Flex>
-
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>AMP</ClickableText>
+          <ClickableText>Ratio</ClickableText>
           <InfoHelper
             text={
-              'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
+              'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
             }
           />
         </Flex>
-
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText
             onClick={() => {
