@@ -17,6 +17,8 @@ import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
 import {
   PageWrapper,
+  KNCPriceContainer,
+  KNCPriceWrapper,
   TabContainer,
   Tab,
   HeadingContainer,
@@ -95,6 +97,20 @@ const Farms = () => {
   return (
     <>
       <PageWrapper>
+        <KNCPriceContainer>
+          {kncPrice ? (
+            <KNCPriceWrapper>
+              <img
+                src={`https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202/logo.png`}
+                alt="knc-logo"
+                width="20px"
+              />
+              {formattedNum(kncPrice, true)}
+            </KNCPriceWrapper>
+          ) : (
+            <Loader />
+          )}
+        </KNCPriceContainer>
         <TabContainer>
           <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
             <div>{t('allPools')}</div>

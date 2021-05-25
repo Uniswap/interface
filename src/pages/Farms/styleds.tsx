@@ -19,6 +19,22 @@ export const PageWrapper = styled.div`
   `};
 `
 
+export const KNCPriceContainer = styled.div`
+  position: absolute;
+  top: 14px;
+  left: 28px;
+  border-radius: 5px;
+  background-color: ${({ theme }) => theme.bg13};
+  padding: 4px 10px 4px 8px;
+  font-size: 14px;
+  font-weight: normal;
+`
+
+export const KNCPriceWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
 export const TabContainer = styled.div`
   display: flex;
   justify-content: flex-start;

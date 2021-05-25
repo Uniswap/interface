@@ -70,6 +70,8 @@ const LPInfoContainer = styled.div`
 
 const LPInfo = styled.div`
   margin-right: 24px;
+  font-size: 16px;
+  font-weight: 500;
 `
 
 const StyledItemCard = styled.div`
@@ -233,9 +235,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               </div> */}
             </StakeGroup>
             <LPInfoContainer>
-              <LPInfo>
-                <div>{shortenAddress(farm.id)}</div>
-              </LPInfo>
+              <LPInfo>{shortenAddress(farm.id)}</LPInfo>
               <div>
                 <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`}>
                   Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
