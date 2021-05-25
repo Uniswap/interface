@@ -12,6 +12,7 @@ import listVersionLabel from '../../utils/listVersionLabel'
 import { ButtonSecondary } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
+import { Trans } from '@lingui/macro'
 
 export const ChangesList = styled.ul`
   max-height: 400px;
@@ -64,48 +65,65 @@ export default function ListUpdatePopup({
       <AutoColumn style={{ flex: '1' }} gap="8px">
         {auto ? (
           <TYPE.body fontWeight={500}>
-            The token list &quot;{oldList.name}&quot; has been updated to{' '}
-            <strong>{listVersionLabel(newList.version)}</strong>.
+            <Trans id="tokenLists.updateConfirmation">
+              The token list &quot;{oldList.name}&quot; has been updated to{' '}
+              <strong>{listVersionLabel(newList.version)}</strong>.
+            </Trans>
           </TYPE.body>
         ) : (
           <>
             <div>
               <Text>
-                An update is available for the token list &quot;{oldList.name}&quot; (
-                {listVersionLabel(oldList.version)} to {listVersionLabel(newList.version)}).
+                <Trans id="tokenLists.updateAvailable">
+                  An update is available for the token list &quot;{oldList.name}&quot; (
+                  {listVersionLabel(oldList.version)} to {listVersionLabel(newList.version)}).
+                </Trans>
               </Text>
               <ChangesList>
                 {tokensAdded.length > 0 ? (
                   <li>
-                    {tokensAdded.map((token, i) => (
-                      <React.Fragment key={`${token.chainId}-${token.address}`}>
-                        <strong title={token.address}>{token.symbol}</strong>
-                        {i === tokensAdded.length - 1 ? null : ', '}
-                      </React.Fragment>
-                    ))}{' '}
-                    added
+                    {/* TODO(judo): can probably be improved*/}
+                    <Trans id="tokenLists.tokenAddedList">
+                      {tokensAdded.map((token, i) => (
+                        <React.Fragment key={`${token.chainId}-${token.address}`}>
+                          <strong title={token.address}>{token.symbol}</strong>
+                          {i === tokensAdded.length - 1 ? null : ', '}
+                        </React.Fragment>
+                      ))}{' '}
+                      added
+                    </Trans>
                   </li>
                 ) : null}
                 {tokensRemoved.length > 0 ? (
                   <li>
-                    {tokensRemoved.map((token, i) => (
-                      <React.Fragment key={`${token.chainId}-${token.address}`}>
-                        <strong title={token.address}>{token.symbol}</strong>
-                        {i === tokensRemoved.length - 1 ? null : ', '}
-                      </React.Fragment>
-                    ))}{' '}
-                    removed
+                    <Trans id="tokenLists.tokenAddedList">
+                      {tokensRemoved.map((token, i) => (
+                        <React.Fragment key={`${token.chainId}-${token.address}`}>
+                          <strong title={token.address}>{token.symbol}</strong>
+                          {i === tokensRemoved.length - 1 ? null : ', '}
+                        </React.Fragment>
+                      ))}{' '}
+                      removed
+                    </Trans>
                   </li>
                 ) : null}
-                {numTokensChanged > 0 ? <li>{numTokensChanged} tokens updated</li> : null}
+                {numTokensChanged > 0 ? (
+                  <li>
+                    <Trans id="tokensLists.numTokensUpdated">{numTokensChanged} tokens updated</Trans>
+                  </li>
+                ) : null}
               </ChangesList>
             </div>
             <AutoRow>
               <div style={{ flexGrow: 1, marginRight: 12 }}>
-                <ButtonSecondary onClick={handleAcceptUpdate}>Accept update</ButtonSecondary>
+                <ButtonSecondary onClick={handleAcceptUpdate}>
+                  <Trans id="tokenLists.acceptUpdate">Accept update</Trans>
+                </ButtonSecondary>
               </div>
               <div style={{ flexGrow: 1 }}>
-                <ButtonSecondary onClick={removeThisPopup}>Dismiss</ButtonSecondary>
+                <ButtonSecondary onClick={removeThisPopup}>
+                  <Trans id="buttons.dismiss">Dismiss</Trans>
+                </ButtonSecondary>
               </div>
             </AutoRow>
           </>

@@ -11,6 +11,7 @@ import { useActiveWeb3React } from 'hooks/web3'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { Trans } from '@lingui/macro'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
@@ -62,7 +63,9 @@ export default function UnsupportedCurrencyFooter({
         <Card padding="2rem">
           <AutoColumn gap="lg">
             <RowBetween>
-              <TYPE.mediumHeader>Unsupported Assets</TYPE.mediumHeader>
+              <TYPE.mediumHeader>
+                <Trans id="errors.unsuportedAssets">Unsupported Assets</Trans>
+              </TYPE.mediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
             {tokens.map((token) => {
@@ -88,15 +91,19 @@ export default function UnsupportedCurrencyFooter({
             })}
             <AutoColumn gap="lg">
               <TYPE.body fontWeight={500}>
-                Some assets are not available through this interface because they may not work well with the smart
-                contracts or we are unable to allow trading for legal reasons.
+                <Trans id="swap.unsupportedAssetsHint">
+                  Some assets are not available through this interface because they may not work well with the smart
+                  contracts or we are unable to allow trading for legal reasons.
+                </Trans>
               </TYPE.body>
             </AutoColumn>
           </AutoColumn>
         </Card>
       </Modal>
       <ButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
-        <TYPE.blue>Read more about unsupported assets</TYPE.blue>
+        <TYPE.blue>
+          <Trans id="swap.buttons.readMoreUnsupportedAssets">Read more about unsupported assets</Trans>
+        </TYPE.blue>
       </ButtonEmpty>
     </DetailsFooter>
   )
