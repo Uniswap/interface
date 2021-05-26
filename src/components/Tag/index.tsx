@@ -20,10 +20,13 @@ export const TagPrimary = styled(Tag)`
 `;
 
 export const TagSuccess = styled(Tag)`
-  position: relative;
-  padding-right: 20px;
   color: #118761;
   background: rgba(14, 159, 110, 0.15);
+`;
+
+export const TagSuccessArrow = styled(TagSuccess)`
+  position: relative;
+  padding-right: 20px;
 
   &::after {
     content: '';
@@ -36,7 +39,7 @@ export const TagSuccess = styled(Tag)`
     background: url(${arrowIcon}) center no-repeat;
     background-size: contain;
   }
-`;
+`
 
 const TagWarning = styled(Tag)`
   display: inline-flex;

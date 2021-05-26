@@ -3,7 +3,7 @@ import { AdvancedDetailsFooter } from '../../components/AdvancedDetailsFooter'
 import { ButtonPrimary } from '../../components/Button'
 import { HideableAutoColumn, HideableAutoColumnProps } from '../../components/Column'
 import { Table, Th } from '../../components/Table'
-import { TagSuccess } from '../../components/Tag'
+import { TagSuccessArrow } from '../../components/Tag'
 import { TYPE } from '../../theme'
 
 interface FooterReadyProps extends HideableAutoColumnProps{
@@ -42,9 +42,9 @@ export const FooterReady = ({show, onCollectButtonClick, amount}: FooterReadyPro
                 </TYPE.main>
               </td>
               <td align="right">
-                <TagSuccess>
+                <TagSuccessArrow>
                   Ready
-                </TagSuccess>
+                </TagSuccessArrow>
               </td>
             </tr>
           </tbody>

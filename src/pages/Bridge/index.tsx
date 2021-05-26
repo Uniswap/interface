@@ -50,7 +50,8 @@ export default function Bridge() {
 
   const resetBridge = () => {
     setAmount('');
-    setStep(Step.Initial)
+    setStep(Step.Initial);
+    setIsEthereumConnected(false);
   }
   
   return (
