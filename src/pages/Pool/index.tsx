@@ -8,7 +8,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { BookOpen, ChevronDown, Download, Inbox, PlusCircle, ChevronsRight, Layers } from 'react-feather'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import styled, { ThemeContext } from 'styled-components'
@@ -108,7 +108,7 @@ const ShowInactiveToggle = styled.div`
 export default function Pool() {
   const { account } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
-  const { t } = useTranslation()
+
   const theme = useContext(ThemeContext)
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
@@ -129,7 +129,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <PlusCircle size={16} style={{ marginRight: '12px' }} />
-          {t('Create a pool')}
+          <Trans id="pools.menu.create">Create a pool</Trans>
         </MenuItem>
       ),
       link: '/add/ETH',
@@ -139,7 +139,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <ChevronsRight size={16} style={{ marginRight: '12px' }} />
-          {t('Migrate')}
+          <Trans id="pools.menu.migrate">Migrate</Trans>
         </MenuItem>
       ),
       link: '/migrate/v2',
@@ -149,7 +149,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <Layers size={16} style={{ marginRight: '12px' }} />
-          {t('V2 liquidity')}
+          <Trans id="pools.menu.v2Liquidity">V2 liquidity</Trans>
         </MenuItem>
       ),
       link: '/pool/v2',
@@ -159,7 +159,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <BookOpen size={16} style={{ marginRight: '12px' }} />
-          {t('Learn')}
+          <Trans id="pools.menu.learn">Learn</Trans>
         </MenuItem>
       ),
       link: 'https://docs.uniswap.org/',
@@ -175,7 +175,9 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader>{t('Pools Overview')}</TYPE.mediumHeader>
+                <TYPE.mediumHeader>
+                  <Trans id="pools.heading.poolsOverview">Pools Overview</Trans>
+                </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
                 <Menu
@@ -184,14 +186,14 @@ export default function Pool() {
                   ToggleUI={(props: any) => (
                     <MoreOptionsButton {...props}>
                       <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
-                        {t('More')}
+                        <Trans id="pools.menu.more">More</Trans>
                         <ChevronDown size={15} />
                       </TYPE.body>
                     </MoreOptionsButton>
                   )}
                 />
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  + {t('New Position')}
+                  + <Trans id="pools.buttons.newPosition">New Position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
@@ -200,7 +202,9 @@ export default function Pool() {
 
             {closedPositions.length > 0 ? (
               <ShowInactiveToggle>
-                <TYPE.darkGray>{t('Hide closed positions')}</TYPE.darkGray>
+                <TYPE.darkGray>
+                  <Trans id="pools.toggle.hideClosedPositions">Hide closed positions</Trans>
+                </TYPE.darkGray>
                 <Toggle
                   isActive={userHideClosedPositions}
                   toggle={() => setUserHideClosedPositions(!userHideClosedPositions)}
@@ -230,11 +234,13 @@ export default function Pool() {
                 <NoLiquidity>
                   <TYPE.mediumHeader color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
-                    <div>{t('Your V3 liquidity positions will appear here.')}</div>
+                    <div>
+                      <Trans id="pools.emptyStateHint">Your V3 liquidity positions will appear here.</Trans>
+                    </div>
                   </TYPE.mediumHeader>
                   {!account ? (
                     <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
-                      {t('Connect a wallet')}
+                      <Trans id="wallet.connect">Connect a wallet</Trans>
                     </ButtonPrimary>
                   ) : (
                     <ButtonGray
@@ -243,7 +249,7 @@ export default function Pool() {
                       id="import-pool-link"
                       style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
                     >
-                      {t('Migrate V2 liquidity')}?&nbsp;&nbsp;
+                      <Trans id="pools.buttons.migrateV2Liquidity">Migrate V2 liquidity</Trans>?&nbsp;&nbsp;
                       <Download size={16} />
                     </ButtonGray>
                   )}
@@ -265,7 +271,7 @@ export default function Pool() {
               >
                 <Layers size={14} style={{ marginRight: '8px' }} />
 
-                {t('View V2 Liquidity')}
+                <Trans id="pools.buttons.viewV2Liquidity">View V2 Liquidity</Trans>
               </ButtonOutlined>
               {positions && positions.length > 0 && (
                 <ButtonOutlined
@@ -282,7 +288,7 @@ export default function Pool() {
                 >
                   <ChevronsRight size={16} style={{ marginRight: '8px' }} />
 
-                  {t('Migrate Liquidity')}
+                  <Trans id="pools.buttons.migrateLiquidity">Migrate Liquidity</Trans>
                 </ButtonOutlined>
               )}
             </RowFixed>
