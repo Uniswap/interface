@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-26 08:23-0700\n"
+"POT-Creation-Date: 2021-05-26 09:17-0700\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,29 +13,25 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/AddLiquidity/index.tsx:532
+#: src/pages/AddLiquidity/index.tsx:528
 msgid "addLiquidity.labels.currentPrice"
 msgstr "Current {0} Price:"
 
-#: src/pages/AddLiquidity/index.tsx:578
+#: src/pages/AddLiquidity/index.tsx:574
 msgid "addLiquidity.labels.selectLiquidityRange"
 msgstr "Set Price Range"
 
-#: src/pages/AddLiquidity/index.tsx:443
+#: src/pages/AddLiquidity/index.tsx:439
 msgid "addLiquidity.labels.selectPair"
 msgstr "Select pair"
 
-#: src/pages/AddLiquidity/index.tsx:504
+#: src/pages/AddLiquidity/index.tsx:500
 msgid "addLiquidity.labels.selectStartingPrice"
 msgstr "Set Starting Price"
 
-#: src/pages/AddLiquidity/index.tsx:488
+#: src/pages/AddLiquidity/index.tsx:484
 msgid "addLiquidity.labels.selectedRange"
 msgstr "Selected Range"
-
-#: src/pages/AddLiquidity/index.tsx:293
-msgid "addLiquidty.confirmation.pending"
-msgstr "Supplying {0} {1} {2} {3} {4}"
 
 #: src/pages/RemoveLiquidity/index.tsx:368
 msgid "buttons.confirm"
@@ -57,7 +53,7 @@ msgstr "Claiming UNI"
 msgid "common.IUnderstand"
 msgstr "I understand"
 
-#: src/pages/AddLiquidity/index.tsx:447
+#: src/pages/AddLiquidity/index.tsx:443
 msgid "common.clearAll"
 msgstr "Clear All"
 
@@ -67,7 +63,7 @@ msgstr "Detailed"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:758
 #: src/pages/PoolFinder/index.tsx:207
-#: src/pages/Swap/index.tsx:537
+#: src/pages/Swap/index.tsx:535
 msgid "common.loading"
 msgstr "Loading"
 
@@ -120,11 +116,6 @@ msgstr "Search name or paste address"
 msgid "currencies.search.selectToken"
 msgstr "Select a Token"
 
-#: src/pages/Vote/VotePage.tsx:161
-#: src/pages/Vote/VotePage.tsx:165
-msgid "currencies.valueWithPercent"
-msgstr "{0} %"
-
 #: src/components/CurrencyInputPanel/index.tsx:240
 msgid "currencyInput.selectToken"
 msgstr "Select token"
@@ -133,15 +124,15 @@ msgstr "Select token"
 msgid "error.generic"
 msgstr "Error"
 
-#: src/pages/AddLiquidity/index.tsx:658
+#: src/pages/AddLiquidity/index.tsx:654
 msgid "error.invalidRangeWarning"
 msgstr "Invalid range selected. The min price must be lower than the max price."
 
-#: src/pages/AddLiquidity/index.tsx:712
+#: src/pages/AddLiquidity/index.tsx:708
 msgid "error.unsupportedAsset"
 msgstr "Unsupported Asset"
 
-#: src/pages/Swap/index.tsx:516
+#: src/pages/Swap/index.tsx:514
 msgid "error.unsupportedAssets"
 msgstr "Unsupported Asset"
 
@@ -153,7 +144,7 @@ msgstr "Wrong Network"
 msgid "errors.unknown"
 msgstr "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 
-#: src/pages/AddLiquidity/index.tsx:644
+#: src/pages/AddLiquidity/index.tsx:640
 msgid "inactiveRangeWarning"
 msgstr "Your position will not earn fees or be used in trades until the market price moves into your range."
 
@@ -173,13 +164,9 @@ msgstr "Max"
 msgid "labels.remove"
 msgstr "Remove"
 
-#: src/pages/AddLiquidity/index.tsx:676
+#: src/pages/AddLiquidity/index.tsx:672
 msgid "liquidity.depositAmounts"
 msgstr "Deposit Amounts"
-
-#: src/pages/Pool/PositionPage.tsx:814
-msgid "maxPriceHint"
-msgstr "Your position will be 100% {0} at this price."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:659
 msgid "migrate.buttons.migrate"
@@ -250,6 +237,10 @@ msgstr "Set Price Range"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:529
 msgid "migrate.labels.v3Price"
 msgstr "V3 {0} Price:"
+
+#: src/pages/Pool/PositionPage.tsx:814
+msgid "minMaxPriceHint"
+msgstr "Your position will be 100% {0} at this price."
 
 #: src/components/Header/index.tsx:362
 msgid "nav.charts"
@@ -419,7 +410,7 @@ msgstr "Best for stable pairs."
 
 #: src/components/FeeSelector/index.tsx:55
 msgid "pools.feeSelector.mediumFee"
-msgstr "0.03% fee"
+msgstr "0.3% fee"
 
 #: src/components/FeeSelector/index.tsx:57
 msgid "pools.feeSelector.mediumFeeHint"
@@ -526,10 +517,6 @@ msgstr "Unclaimed fees"
 msgid "pools.maxPrice"
 msgstr "Max Price"
 
-#: src/components/PositionPreview/index.tsx:150
-#~ msgid "pools.maxPriceHint"
-#~ msgstr "Your position will be 100% composed of {0} at this price"
-
 #: src/pages/Pool/PositionPage.tsx:802
 msgid "pools.maxPriceLabel"
 msgstr "Max price"
@@ -556,11 +543,8 @@ msgstr "V2 liquidity"
 
 #: src/components/PositionPreview/index.tsx:131
 #: src/components/PositionPreview/index.tsx:150
-msgid "pools.minMaxPriceHint"
-msgstr "Your position will be 100% composed of {0} at this price"
-
 #: src/pages/Pool/PositionPage.tsx:790
-msgid "pools.minPriceHint"
+msgid "pools.minMaxPriceHint"
 msgstr "Your position will be 100% {0} at this price."
 
 #: src/components/PositionPreview/index.tsx:122
@@ -613,17 +597,17 @@ msgstr "You will receive"
 
 #: src/pages/RemoveLiquidity/index.tsx:352
 msgid "removeLiquidity.labels.modalPrice"
-msgstr "Price:"
+msgstr "Price"
 
 #: src/pages/RemoveLiquidity/index.tsx:606
 msgid "removeLiquidity.labels.price"
-msgstr "Price"
+msgstr "Price:"
 
 #: src/pages/RemoveLiquidity/V3.tsx:272
 msgid "removeLiquidity.labels.removeLiquidity"
 msgstr "Remove Liquidity"
 
-#: src/pages/Swap/index.tsx:577
+#: src/pages/Swap/index.tsx:575
 msgid "swap.buttons.allowUniswapToUseCurrency"
 msgstr "Allow the Uniswap Protocol to use your {0}"
 
@@ -631,41 +615,37 @@ msgstr "Allow the Uniswap Protocol to use your {0}"
 msgid "swap.buttons.backToV3"
 msgstr "<0>Back to</0>V3"
 
-#: src/pages/Swap/index.tsx:626
+#: src/pages/Swap/index.tsx:624
 msgid "swap.buttons.highPriceImpact"
 msgstr "High Price Impact"
 
-#: src/pages/Swap/index.tsx:659
+#: src/pages/Swap/index.tsx:657
 msgid "swap.buttons.priceImpactTooHigh"
 msgstr "Price Impact Too High"
 
-#: src/pages/Swap/index.tsx:630
-#: src/pages/Swap/index.tsx:663
+#: src/pages/Swap/index.tsx:628
+#: src/pages/Swap/index.tsx:661
 msgid "swap.buttons.swap"
 msgstr "Swap"
 
-#: src/pages/Swap/index.tsx:628
-#: src/pages/Swap/index.tsx:661
+#: src/pages/Swap/index.tsx:626
+#: src/pages/Swap/index.tsx:659
 msgid "swap.buttons.swapAnyway"
 msgstr "Swap Anyway"
 
-#: src/pages/Swap/index.tsx:573
+#: src/pages/Swap/index.tsx:571
 msgid "swap.buttons.tradeCurrency"
 msgstr "You can now trade {0}"
 
-#: src/pages/Swap/index.tsx:529
+#: src/pages/Swap/index.tsx:527
 msgid "swap.buttons.unwrap"
 msgstr "Unwrap"
 
-#: src/pages/Swap/index.tsx:490
-msgid "swap.buttons.v3"
-msgstr "V3"
-
-#: src/pages/Swap/index.tsx:527
+#: src/pages/Swap/index.tsx:525
 msgid "swap.buttons.wrap"
 msgstr "Wrap"
 
-#: src/pages/Swap/index.tsx:589
+#: src/pages/Swap/index.tsx:587
 msgid "swap.hints.permission"
 msgstr "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
 
@@ -677,11 +657,11 @@ msgstr "From"
 msgid "swap.labels.fromAtMost"
 msgstr "From (at most)"
 
-#: src/pages/Swap/index.tsx:540
+#: src/pages/Swap/index.tsx:538
 msgid "swap.labels.insufficientLiquidity"
 msgstr "Insufficient liquidity for this trade."
 
-#: src/pages/Swap/index.tsx:542
+#: src/pages/Swap/index.tsx:540
 msgid "swap.labels.insufficientLiquiditySingleHopOnly"
 msgstr "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 
@@ -746,7 +726,7 @@ msgstr "Approved"
 msgid "transactions.approving"
 msgstr "Approving"
 
-#: src/pages/AddLiquidity/index.tsx:421
+#: src/pages/AddLiquidity/index.tsx:417
 msgid "transactions.confirmation.button"
 msgstr "Add"
 
@@ -771,116 +751,11 @@ msgstr "Remove {0} {1} and {2} {3}"
 msgid "transactions.summary.removeLiquidityV3"
 msgstr "Remove {0}/{1} V3 liquidity"
 
-#: src/pages/Vote/index.tsx:236
-msgid "vote.buttons.edit"
-msgstr "(edit)"
-
-#: src/pages/Vote/index.tsx:195
-msgid "vote.buttons.unlockVoting"
-msgstr "Unlock Voting"
-
-#: src/pages/Vote/VotePage.tsx:278
-msgid "vote.buttons.voteAgainst"
-msgstr "Vote Against"
-
-#: src/pages/Vote/index.tsx:144
-msgid "vote.delegates.unlockVotes"
-msgstr "Unlock Votes"
-
-#: src/pages/Vote/index.tsx:145
-msgid "vote.delegates.update"
-msgstr "Update Delegation"
-
-#: src/pages/Vote/VotePage.tsx:248
-msgid "vote.hint.unlockVoting"
-msgstr "<0>Unlock voting</0> to prepare for the next proposal."
-
-#: src/pages/Vote/VotePage.tsx:242
-msgid "vote.hint.votingEligibility"
-msgstr "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-
-#: src/pages/Vote/index.tsx:252
-msgid "vote.hints.proposalSubmitted"
-msgstr "Proposals submitted by community members will appear here."
-
-#: src/pages/Vote/index.tsx:173
-msgid "vote.hints.readMoreUniswapGovernance"
-msgstr "Read more about Uniswap governance"
-
-#: src/pages/Vote/index.tsx:270
-msgid "vote.hints.submissionThreshold"
-msgstr "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-
-#: src/pages/Vote/index.tsx:161
-msgid "vote.hints.votingShares"
-msgstr "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-
-#: src/pages/Vote/VotePage.tsx:310
-msgid "vote.labels.against"
-msgstr "Against"
-
-#: src/pages/Vote/VotePage.tsx:214
-msgid "vote.labels.allProposals"
-msgstr "<0/> All Proposals"
-
-#: src/pages/Vote/index.tsx:199
-#: src/pages/Vote/index.tsx:208
-msgid "vote.labels.availableVotes"
-msgstr "<0/> Votes"
-
-#: src/pages/Vote/index.tsx:222
-msgid "vote.labels.delegatedTo"
-msgstr "Delegated to:"
-
-#: src/pages/Vote/VotePage.tsx:346
-msgid "vote.labels.description"
-msgstr "Description"
-
-#: src/pages/Vote/VotePage.tsx:325
-msgid "vote.labels.details"
-msgstr "Details"
-
-#: src/pages/Vote/VotePage.tsx:289
-msgid "vote.labels.for"
-msgstr "<0>For</0><1>{0}</1>"
-
-#: src/pages/Vote/index.tsx:248
-msgid "vote.labels.noProposalsFound"
-msgstr "No proposals found."
-
-#: src/pages/Vote/index.tsx:185
-msgid "vote.labels.proposals"
-msgstr "Proposals"
-
-#: src/pages/Vote/VotePage.tsx:354
-msgid "vote.labels.proposer"
-msgstr "Proposer"
-
-#: src/pages/Vote/index.tsx:230
-msgid "vote.labels.self"
-msgstr "Self"
-
-#: src/pages/Vote/index.tsx:156
-msgid "vote.labels.uniswapGovernance"
-msgstr "Uniswap Governance"
-
-#: src/pages/Vote/VotePage.tsx:209
-msgid "vote.labels.unlockVotes"
-msgstr "Unlock Votes"
-
-#: src/pages/Vote/VotePage.tsx:227
-msgid "vote.labels.votingEnded"
-msgstr "Voting ended {0}"
-
-#: src/pages/Vote/VotePage.tsx:231
-msgid "vote.labels.votingEndsApproximately"
-msgstr "Voting ends approximately {0}"
-
 #: src/components/Web3Status/index.tsx:216
-#: src/pages/AddLiquidity/index.tsx:717
+#: src/pages/AddLiquidity/index.tsx:713
 #: src/pages/Pool/index.tsx:243
 #: src/pages/RemoveLiquidity/index.tsx:622
-#: src/pages/Swap/index.tsx:521
+#: src/pages/Swap/index.tsx:519
 msgid "wallet.connect"
 msgstr "Connect Wallet"
 

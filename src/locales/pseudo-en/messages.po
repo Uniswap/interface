@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-26 08:23-0700\n"
+"POT-Creation-Date: 2021-05-26 09:17-0700\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,28 +13,24 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/AddLiquidity/index.tsx:532
+#: src/pages/AddLiquidity/index.tsx:528
 msgid "addLiquidity.labels.currentPrice"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:578
+#: src/pages/AddLiquidity/index.tsx:574
 msgid "addLiquidity.labels.selectLiquidityRange"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:443
+#: src/pages/AddLiquidity/index.tsx:439
 msgid "addLiquidity.labels.selectPair"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:504
+#: src/pages/AddLiquidity/index.tsx:500
 msgid "addLiquidity.labels.selectStartingPrice"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:488
+#: src/pages/AddLiquidity/index.tsx:484
 msgid "addLiquidity.labels.selectedRange"
-msgstr ""
-
-#: src/pages/AddLiquidity/index.tsx:293
-msgid "addLiquidty.confirmation.pending"
 msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx:368
@@ -57,7 +53,7 @@ msgstr ""
 msgid "common.IUnderstand"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:447
+#: src/pages/AddLiquidity/index.tsx:443
 msgid "common.clearAll"
 msgstr ""
 
@@ -67,7 +63,7 @@ msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:758
 #: src/pages/PoolFinder/index.tsx:207
-#: src/pages/Swap/index.tsx:537
+#: src/pages/Swap/index.tsx:535
 msgid "common.loading"
 msgstr ""
 
@@ -120,11 +116,6 @@ msgstr ""
 msgid "currencies.search.selectToken"
 msgstr ""
 
-#: src/pages/Vote/VotePage.tsx:161
-#: src/pages/Vote/VotePage.tsx:165
-msgid "currencies.valueWithPercent"
-msgstr ""
-
 #: src/components/CurrencyInputPanel/index.tsx:240
 msgid "currencyInput.selectToken"
 msgstr ""
@@ -133,15 +124,15 @@ msgstr ""
 msgid "error.generic"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:658
+#: src/pages/AddLiquidity/index.tsx:654
 msgid "error.invalidRangeWarning"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:712
+#: src/pages/AddLiquidity/index.tsx:708
 msgid "error.unsupportedAsset"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:516
+#: src/pages/Swap/index.tsx:514
 msgid "error.unsupportedAssets"
 msgstr ""
 
@@ -153,7 +144,7 @@ msgstr ""
 msgid "errors.unknown"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:644
+#: src/pages/AddLiquidity/index.tsx:640
 msgid "inactiveRangeWarning"
 msgstr ""
 
@@ -173,12 +164,8 @@ msgstr ""
 msgid "labels.remove"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:676
+#: src/pages/AddLiquidity/index.tsx:672
 msgid "liquidity.depositAmounts"
-msgstr ""
-
-#: src/pages/Pool/PositionPage.tsx:814
-msgid "maxPriceHint"
 msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:659
@@ -249,6 +236,10 @@ msgstr ""
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:498
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:529
 msgid "migrate.labels.v3Price"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:814
+msgid "minMaxPriceHint"
 msgstr ""
 
 #: src/components/Header/index.tsx:362
@@ -526,10 +517,6 @@ msgstr ""
 msgid "pools.maxPrice"
 msgstr ""
 
-#: src/components/PositionPreview/index.tsx:150
-#~ msgid "pools.maxPriceHint"
-#~ msgstr ""
-
 #: src/pages/Pool/PositionPage.tsx:802
 msgid "pools.maxPriceLabel"
 msgstr ""
@@ -556,11 +543,8 @@ msgstr ""
 
 #: src/components/PositionPreview/index.tsx:131
 #: src/components/PositionPreview/index.tsx:150
-msgid "pools.minMaxPriceHint"
-msgstr ""
-
 #: src/pages/Pool/PositionPage.tsx:790
-msgid "pools.minPriceHint"
+msgid "pools.minMaxPriceHint"
 msgstr ""
 
 #: src/components/PositionPreview/index.tsx:122
@@ -623,7 +607,7 @@ msgstr ""
 msgid "removeLiquidity.labels.removeLiquidity"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:577
+#: src/pages/Swap/index.tsx:575
 msgid "swap.buttons.allowUniswapToUseCurrency"
 msgstr ""
 
@@ -631,41 +615,37 @@ msgstr ""
 msgid "swap.buttons.backToV3"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:626
+#: src/pages/Swap/index.tsx:624
 msgid "swap.buttons.highPriceImpact"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:659
+#: src/pages/Swap/index.tsx:657
 msgid "swap.buttons.priceImpactTooHigh"
-msgstr ""
-
-#: src/pages/Swap/index.tsx:630
-#: src/pages/Swap/index.tsx:663
-msgid "swap.buttons.swap"
 msgstr ""
 
 #: src/pages/Swap/index.tsx:628
 #: src/pages/Swap/index.tsx:661
+msgid "swap.buttons.swap"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:626
+#: src/pages/Swap/index.tsx:659
 msgid "swap.buttons.swapAnyway"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:573
+#: src/pages/Swap/index.tsx:571
 msgid "swap.buttons.tradeCurrency"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:529
+#: src/pages/Swap/index.tsx:527
 msgid "swap.buttons.unwrap"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:490
-msgid "swap.buttons.v3"
-msgstr ""
-
-#: src/pages/Swap/index.tsx:527
+#: src/pages/Swap/index.tsx:525
 msgid "swap.buttons.wrap"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:589
+#: src/pages/Swap/index.tsx:587
 msgid "swap.hints.permission"
 msgstr ""
 
@@ -677,11 +657,11 @@ msgstr ""
 msgid "swap.labels.fromAtMost"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:540
+#: src/pages/Swap/index.tsx:538
 msgid "swap.labels.insufficientLiquidity"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:542
+#: src/pages/Swap/index.tsx:540
 msgid "swap.labels.insufficientLiquiditySingleHopOnly"
 msgstr ""
 
@@ -746,7 +726,7 @@ msgstr ""
 msgid "transactions.approving"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:421
+#: src/pages/AddLiquidity/index.tsx:417
 msgid "transactions.confirmation.button"
 msgstr ""
 
@@ -771,116 +751,11 @@ msgstr ""
 msgid "transactions.summary.removeLiquidityV3"
 msgstr ""
 
-#: src/pages/Vote/index.tsx:236
-msgid "vote.buttons.edit"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:195
-msgid "vote.buttons.unlockVoting"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:278
-msgid "vote.buttons.voteAgainst"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:144
-msgid "vote.delegates.unlockVotes"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:145
-msgid "vote.delegates.update"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:248
-msgid "vote.hint.unlockVoting"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:242
-msgid "vote.hint.votingEligibility"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:252
-msgid "vote.hints.proposalSubmitted"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:173
-msgid "vote.hints.readMoreUniswapGovernance"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:270
-msgid "vote.hints.submissionThreshold"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:161
-msgid "vote.hints.votingShares"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:310
-msgid "vote.labels.against"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:214
-msgid "vote.labels.allProposals"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:199
-#: src/pages/Vote/index.tsx:208
-msgid "vote.labels.availableVotes"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:222
-msgid "vote.labels.delegatedTo"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:346
-msgid "vote.labels.description"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:325
-msgid "vote.labels.details"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:289
-msgid "vote.labels.for"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:248
-msgid "vote.labels.noProposalsFound"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:185
-msgid "vote.labels.proposals"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:354
-msgid "vote.labels.proposer"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:230
-msgid "vote.labels.self"
-msgstr ""
-
-#: src/pages/Vote/index.tsx:156
-msgid "vote.labels.uniswapGovernance"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:209
-msgid "vote.labels.unlockVotes"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:227
-msgid "vote.labels.votingEnded"
-msgstr ""
-
-#: src/pages/Vote/VotePage.tsx:231
-msgid "vote.labels.votingEndsApproximately"
-msgstr ""
-
 #: src/components/Web3Status/index.tsx:216
-#: src/pages/AddLiquidity/index.tsx:717
+#: src/pages/AddLiquidity/index.tsx:713
 #: src/pages/Pool/index.tsx:243
 #: src/pages/RemoveLiquidity/index.tsx:622
-#: src/pages/Swap/index.tsx:521
+#: src/pages/Swap/index.tsx:519
 msgid "wallet.connect"
 msgstr ""
 
