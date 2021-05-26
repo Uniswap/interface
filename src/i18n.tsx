@@ -23,10 +23,6 @@ export async function dynamicActivate(locale: string) {
   const { messages } = await import(`@lingui/loader!./locales/${locale}/messages.po`)
   i18n.load(locale, messages)
   i18n.activate(locale)
-
-  setTimeout(() => {
-    dynamicActivate(locale === 'en' ? 'pseudo-en' : 'en')
-  }, 10000)
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
