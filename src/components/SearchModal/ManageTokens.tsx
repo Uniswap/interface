@@ -1,9 +1,8 @@
 import React, { useRef, RefObject, useCallback, useState, useMemo, useContext } from 'react'
-import Column from '../Column'
 import { getExplorerLink } from '../../utils'
 import { PaddedColumn, Separator, SearchInput } from './styleds'
 import Row, { RowBetween, RowFixed } from '../Row'
-import { TYPE, ButtonText, ExternalLink } from '../../theme'
+import { TYPE, ExternalLink } from '../../theme'
 import { useToken } from '../../hooks/Tokens'
 import styled, { ThemeContext } from 'styled-components'
 import { useUserAddedTokens, useRemoveUserAddedToken } from '../../state/user/hooks'
@@ -16,6 +15,8 @@ import ImportRow from './ImportRow'
 
 import { CurrencyModalView } from './CurrencySearchModal'
 import { Trash } from 'react-feather'
+import { Box, Flex } from 'rebass'
+import { ButtonOutlined } from '../Button'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -30,6 +31,12 @@ const Footer = styled.div`
   border-top: 1px solid ${({ theme }) => theme.bg3};
   padding: 20px;
   text-align: center;
+`
+
+const TrashIcon = styled(Trash)`
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
 `
 
 export default function ManageTokens({
@@ -82,7 +89,7 @@ export default function ManageTokens({
             </ExternalLink>
           </RowFixed>
           <RowFixed>
-            <Trash onClick={() => removeToken(chainId, token.address)} />
+            <TrashIcon onClick={() => removeToken(chainId, token.address)} />
             <ExternalLink href={getExplorerLink(chainId, token.address, 'address')} />
           </RowFixed>
         </RowBetween>
@@ -92,49 +99,57 @@ export default function ManageTokens({
 
   return (
     <Wrapper>
-      <Column style={{ width: '100%', height: '100%', flex: '1 1' }}>
-        <PaddedColumn gap="14px">
-          <Row>
-            <SearchInput
-              type="text"
-              id="token-search-input"
-              placeholder={'0x0000'}
-              value={searchQuery}
-              autoComplete="off"
-              ref={inputRef as RefObject<HTMLInputElement>}
-              onChange={handleInput}
-            />
-          </Row>
-          {searchQuery !== '' && !isAddressSearch && <TYPE.error error={true}>Enter valid token address</TYPE.error>}
-          {searchToken && (
-            <Card backgroundColor={theme.bg2} padding="10px 0">
-              <ImportRow
-                token={searchToken}
-                showImportView={() => setModalView(CurrencyModalView.IMPORT_TOKEN)}
-                setImportToken={setImportToken}
-                style={{ height: 'fit-content' }}
+      <Flex width="100%" height="100%" flexDirection="column">
+        <Box>
+          <PaddedColumn gap="14px">
+            <Row>
+              <SearchInput
+                type="text"
+                id="token-search-input"
+                placeholder={'0x0000'}
+                value={searchQuery}
+                autoComplete="off"
+                ref={inputRef as RefObject<HTMLInputElement>}
+                onChange={handleInput}
               />
-            </Card>
-          )}
-        </PaddedColumn>
-        <Separator />
-        <PaddedColumn gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
-          <RowBetween>
-            <TYPE.main fontWeight={600}>
-              {userAddedTokens?.length} Custom {userAddedTokens.length === 1 ? 'Token' : 'Tokens'}
-            </TYPE.main>
-            {userAddedTokens.length > 0 && (
-              <ButtonText onClick={handleRemoveAll}>
-                <TYPE.blue>Clear all</TYPE.blue>
-              </ButtonText>
+            </Row>
+            {searchQuery !== '' && !isAddressSearch && <TYPE.error error={true}>Enter valid token address</TYPE.error>}
+            {searchToken && (
+              <Card backgroundColor={theme.bg2} padding="10px 0">
+                <ImportRow
+                  token={searchToken}
+                  showImportView={() => setModalView(CurrencyModalView.IMPORT_TOKEN)}
+                  setImportToken={setImportToken}
+                  style={{ height: 'fit-content' }}
+                />
+              </Card>
             )}
-          </RowBetween>
-          {tokenList}
-        </PaddedColumn>
-        <Footer>
-          <TYPE.darkGray>Tip: Custom tokens are stored locally in your browser</TYPE.darkGray>
-        </Footer>
-      </Column>
+          </PaddedColumn>
+        </Box>
+        <Box>
+          <Separator />
+        </Box>
+        <Box flex="1">
+          <PaddedColumn gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
+            <RowBetween>
+              <TYPE.main fontSize="14px">
+                {userAddedTokens?.length} custom {userAddedTokens.length === 1 ? 'token' : 'tokens'}
+              </TYPE.main>
+              {userAddedTokens.length > 0 && (
+                <ButtonOutlined style={{ padding: 0, width: 'auto' }} onClick={handleRemoveAll}>
+                  Clear all
+                </ButtonOutlined>
+              )}
+            </RowBetween>
+            {tokenList}
+          </PaddedColumn>
+        </Box>
+        <Box>
+          <Footer>
+            <TYPE.darkGray fontSize="14px">Tip: custom tokens are stored locally in your browser</TYPE.darkGray>
+          </Footer>
+        </Box>
+      </Flex>
     </Wrapper>
   )
 }

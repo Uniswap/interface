@@ -22,7 +22,7 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1And2};
 `
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`

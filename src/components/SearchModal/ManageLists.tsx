@@ -148,7 +148,7 @@ function ListRow({ listUrl }: { listUrl: string }) {
           </StyledListUrlText>
           <StyledMenu ref={node as any}>
             <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
-              <Settings stroke={isActive ? theme.bg1 : theme.text1} size={12} />
+              <Settings stroke={theme.text1} size={12} />
             </ButtonEmpty>
             <PopoverContainer show={open} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
               <div>{list && `v${list.version.major}.${list.version.minor}.${list.version.patch}`}</div>
