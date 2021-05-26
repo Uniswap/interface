@@ -22,6 +22,7 @@ import {
   KNCPriceWrapper,
   TabContainer,
   Tab,
+  AdContainer,
   HeadingContainer,
   LearnMoreContainer,
   LearnMoreInstruction,
@@ -38,6 +39,7 @@ import {
 import { formattedNum } from 'utils'
 import Vesting from './vesting'
 import { getFullDisplayBalance } from 'utils/formatBalance'
+import RainMaker from '../../assets/images/rain-maker.webp'
 
 const FARM_ENDED = 'Ended'
 
@@ -136,6 +138,9 @@ const Farms = () => {
 
         {activeTab === 0 ? (
           <>
+            <AdContainer>
+              <img src={RainMaker} alt="RainMaker" width="100%" />
+            </AdContainer>
             <HeadingContainer>
               <LearnMoreContainer>
                 <LearnMoreInstruction>

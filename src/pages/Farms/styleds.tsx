@@ -59,13 +59,17 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   }
 `
 
+export const AdContainer = styled.div`
+  margin-bottom: 28px;
+`
+
 export const HeadingContainer = styled.div`
   display: grid;
   grid-template-columns: 2fr 3fr;
   border-radius: 8px;
   background-color: ${({ theme }) => theme.bg15};
   padding: 28px 32px;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 `
 
 export const LearnMoreContainer = styled.div`
@@ -115,7 +119,7 @@ export const RewardUSD = styled.span`
 export const RemainingTimeContainer = styled.div`
   display: flex;
   font-size: 16px;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 `
 
 export const EndInTitle = styled.div`
