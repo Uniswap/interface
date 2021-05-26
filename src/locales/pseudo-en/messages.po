@@ -1,14 +1,16 @@
 msgid ""
 msgstr ""
+"POT-Creation-Date: 2021-05-26 12:20-0700\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pseudo-en\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
-"Language: \n"
 "Language-Team: \n"
-"Content-Type: \n"
-"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
 #: src/pages/AddLiquidity/index.tsx:528
@@ -325,8 +327,11 @@ msgid "pools.button.backToPoolsOverview"
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx:125
-#: src/pages/PoolFinder/index.tsx:178
 msgid "pools.buttons.addLiquidity"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:178
+msgid "pools.buttons.addLiquidityPoolFinder"
 msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx:476
@@ -335,6 +340,10 @@ msgstr ""
 
 #: src/components/NavigationTabs/index.tsx:123
 msgid "pools.buttons.createPair"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:191
+msgid "pools.buttons.createPool"
 msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx:544
@@ -454,10 +463,6 @@ msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx:687
 msgid "pools.labels.collectingFees"
-msgstr ""
-
-#: src/pages/PoolFinder/index.tsx:191
-msgid "pools.labels.createPool"
 msgstr ""
 
 #: src/components/PositionPreview/index.tsx:99

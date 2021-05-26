@@ -80,7 +80,7 @@ export function FindPoolTabs({ origin }: { origin: string }) {
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>
-          <Trans id="nav.importPools">Import Pools</Trans>
+          <Trans id="nav.importPool">Import Pool</Trans>
         </ActiveText>
       </RowBetween>
     </Tabs>

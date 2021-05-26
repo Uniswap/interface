@@ -1,14 +1,16 @@
 msgid ""
 msgstr ""
+"POT-Creation-Date: 2021-05-26 12:20-0700\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
-"Language: \n"
 "Language-Team: \n"
-"Content-Type: \n"
-"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
 #: src/pages/AddLiquidity/index.tsx:528
@@ -243,8 +245,8 @@ msgid "nav.charts"
 msgstr "Charts <0>↗</0>"
 
 #: src/components/NavigationTabs/index.tsx:83
-msgid "nav.importPools"
-msgstr "Import Pools"
+msgid "nav.importPool"
+msgstr "Import Pool"
 
 #: src/components/Header/index.tsx:356
 #: src/components/NavigationTabs/index.tsx:69
@@ -325,8 +327,11 @@ msgid "pools.button.backToPoolsOverview"
 msgstr "← Back to Pools Overview"
 
 #: src/components/NavigationTabs/index.tsx:125
-#: src/pages/PoolFinder/index.tsx:178
 msgid "pools.buttons.addLiquidity"
+msgstr "Add Liquidity"
+
+#: src/pages/PoolFinder/index.tsx:178
+msgid "pools.buttons.addLiquidityPoolFinder"
 msgstr "Add liquidity."
 
 #: src/pages/Pool/PositionPage.tsx:476
@@ -336,6 +341,10 @@ msgstr "Collect"
 #: src/components/NavigationTabs/index.tsx:123
 msgid "pools.buttons.createPair"
 msgstr "Create a pair"
+
+#: src/pages/PoolFinder/index.tsx:191
+msgid "pools.buttons.createPool"
+msgstr "Create pool."
 
 #: src/pages/Pool/PositionPage.tsx:544
 msgid "pools.buttons.increaseLiquidity"
@@ -455,10 +464,6 @@ msgstr "Collected"
 #: src/pages/Pool/PositionPage.tsx:687
 msgid "pools.labels.collectingFees"
 msgstr "Collecting"
-
-#: src/pages/PoolFinder/index.tsx:191
-msgid "pools.labels.createPool"
-msgstr "Create pool."
 
 #: src/components/PositionPreview/index.tsx:99
 msgid "pools.labels.feeTier"

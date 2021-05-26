@@ -175,7 +175,7 @@ export default function PoolFinder() {
                   </Text>
                   <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
                     <Text textAlign="center">
-                      <Trans id="pools.buttons.addLiquidity">Add liquidity.</Trans>
+                      <Trans id="pools.buttons.addLiquidityPoolFinder">Add liquidity.</Trans>
                     </Text>
                   </StyledInternalLink>
                 </AutoColumn>
@@ -188,7 +188,7 @@ export default function PoolFinder() {
                   <Trans id="pools.error.noPoolFound">No pool found.</Trans>
                 </Text>
                 <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                  <Trans id="pools.labels.createPool">Create pool.</Trans>
+                  <Trans id="pools.buttons.createPool">Create pool.</Trans>
                 </StyledInternalLink>
               </AutoColumn>
             </LightCard>
