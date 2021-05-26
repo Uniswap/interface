@@ -9,7 +9,7 @@ import { useIsUserAddedToken } from '../../hooks/Tokens'
 import CurrencyLogo from '../CurrencyLogo'
 import Loader from '../Loader'
 import Badge from '../Badge'
-import { TokenListContainer, TokenPickerItem } from './styleds'
+import { TokenPickerItem } from './styleds'
 import { Plus, X } from 'react-feather'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import { FixedSizeList } from 'react-window'
@@ -45,6 +45,7 @@ const FixedContentRow = styled.div`
   grid-gap: 16px;
   align-items: center;
 `
+
 const TokenListLogoWrapper = styled.img`
   height: 20px;
 `
@@ -225,8 +226,8 @@ export default function CurrencyList({
   )
 
   return (
-    <TokenListContainer flexDirection="column" width="100%" overflowY="auto">
-      <AutoSizer>
+    <Flex overflowY="auto" flex="1">
+      <AutoSizer style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         {({ width, height }) => (
           <FixedSizeList
             ref={fixedListRef as any}
@@ -241,6 +242,6 @@ export default function CurrencyList({
           </FixedSizeList>
         )}
       </AutoSizer>
-    </TokenListContainer>
+    </Flex>
   )
 }

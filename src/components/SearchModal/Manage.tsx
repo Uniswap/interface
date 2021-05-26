@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { PaddedColumn, Separator } from './styleds'
+import React, { useCallback, useState } from 'react'
+import { Separator } from './styleds'
 import { RowBetween } from '../Row'
 import { ChevronLeft } from 'react-feather'
-import { Text } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import { Token } from 'dxswap-sdk'
 import { ManageLists } from './ManageLists'
@@ -10,35 +10,57 @@ import ManageTokens from './ManageTokens'
 import { TokenList } from '@uniswap/token-lists'
 import { CurrencyModalView } from './CurrencySearchModal'
 import { CloseIcon } from '../../theme'
+import { useMeasure } from 'react-use'
+import { animated, useSpring } from '@react-spring/web'
 
-const Wrapper = styled.div`
+const Wrapper = styled(Flex)`
   width: 100%;
-  position: relative;
-  padding-bottom: 80px;
   background-color: ${({ theme }) => theme.bg1And2};
+  flex-direction: column;
 `
 
 const ToggleWrapper = styled(RowBetween)`
+  position: relative;
   background-color: ${({ theme }) => theme.bg2};
   border-radius: 8px;
   padding: 6px;
 `
 
-const ToggleOption = styled.div<{ active?: boolean }>`
+const TabContainer = styled.div`
+  display: flex;
+  overflow: hidden;
+`
+
+const Slide = styled.div`
+  width: 100%;
+  flex-shrink: 0;
+`
+const AnimatedSlide = animated(Slide)
+
+const ToggleOption = styled.div<{ active: boolean }>`
   width: 48%;
   padding: 10px;
+  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 8px;
   font-weight: 600;
-  background-color: ${({ theme, active }) => (active ? theme.bg1And2 : theme.bg2)};
   color: ${({ theme, active }) => (active ? theme.text1 : theme.text2)};
   user-select: none;
   :hover {
     cursor: pointer;
   }
 `
+
+const ToggleIndicator = styled.div`
+  width: 48%;
+  height: calc(100% - 12px);
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.bg1And2};
+  position: absolute;
+`
+const AnimatedToggleIndicator = animated(ToggleIndicator)
 
 const GoBackIcon = styled(ChevronLeft)<{ onClick: () => void }>`
   color: ${({ theme }) => theme.purple3};
@@ -60,12 +82,27 @@ export default function Manage({
   setImportList: (list: TokenList) => void
   setListUrl: (url: string) => void
 }) {
-  // toggle between tokens and lists
   const [showLists, setShowLists] = useState(true)
 
+  const [ref, { width }] = useMeasure()
+  const [styles, api] = useSpring({ x: 0 }, [width])
+  const [tabIndicatorStyles, tabIndicatorApi] = useSpring(() => ({ x: '0%' }))
+
+  const handleListsClick = useCallback(() => {
+    setShowLists(true)
+    tabIndicatorApi.start({ x: '0%' })
+    api.start({ x: 0 })
+  }, [api, tabIndicatorApi])
+
+  const handleTokensClick = useCallback(() => {
+    setShowLists(false)
+    tabIndicatorApi.start({ x: '100%' })
+    api.start({ x: -width })
+  }, [api, width, tabIndicatorApi])
+
   return (
-    <Wrapper>
-      <PaddedColumn>
+    <Wrapper ref={ref}>
+      <Box p="20px" pb="12px">
         <RowBetween>
           <GoBackIcon onClick={() => setModalView(CurrencyModalView.SEARCH)} />
           <Text fontWeight={500} fontSize={16}>
@@ -73,23 +110,29 @@ export default function Manage({
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-      </PaddedColumn>
-      <Separator />
-      <PaddedColumn style={{ paddingBottom: 0 }}>
+      </Box>
+      <Box>
+        <Separator />
+      </Box>
+      <Box p="20px" pb="0px">
         <ToggleWrapper>
-          <ToggleOption onClick={() => setShowLists(true)} active={showLists}>
+          <AnimatedToggleIndicator style={tabIndicatorStyles} />
+          <ToggleOption onClick={handleListsClick} active={showLists}>
             Lists
           </ToggleOption>
-          <ToggleOption onClick={() => setShowLists(false)} active={!showLists}>
+          <ToggleOption onClick={handleTokensClick} active={!showLists}>
             Tokens
           </ToggleOption>
         </ToggleWrapper>
-      </PaddedColumn>
-      {showLists ? (
-        <ManageLists setModalView={setModalView} setImportList={setImportList} setListUrl={setListUrl} />
-      ) : (
-        <ManageTokens setModalView={setModalView} setImportToken={setImportToken} />
-      )}
+      </Box>
+      <TabContainer>
+        <AnimatedSlide style={styles}>
+          <ManageLists setModalView={setModalView} setImportList={setImportList} setListUrl={setListUrl} />
+        </AnimatedSlide>
+        <AnimatedSlide style={styles}>
+          <ManageTokens setModalView={setModalView} setImportToken={setImportToken} />
+        </AnimatedSlide>
+      </TabContainer>
     </Wrapper>
   )
 }

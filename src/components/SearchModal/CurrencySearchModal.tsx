@@ -64,7 +64,7 @@ export default function CurrencySearchModal({
   const [listURL, setListUrl] = useState<string | undefined>()
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={50}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={60} minHeight={60}>
       {modalView === CurrencyModalView.SEARCH ? (
         <CurrencySearch
           isOpen={isOpen}

@@ -19,14 +19,10 @@ import { Trash } from 'react-feather'
 
 const Wrapper = styled.div`
   width: 100%;
-  height: calc(100% - 60px);
-  position: relative;
-  padding-bottom: 80px;
+  height: 100%;
 `
 
 const Footer = styled.div`
-  position: absolute;
-  bottom: 0;
   width: 100%;
   border-radius: 20px;
   border-top-right-radius: 0;
@@ -135,10 +131,10 @@ export default function ManageTokens({
           </RowBetween>
           {tokenList}
         </PaddedColumn>
+        <Footer>
+          <TYPE.darkGray>Tip: Custom tokens are stored locally in your browser</TYPE.darkGray>
+        </Footer>
       </Column>
-      <Footer>
-        <TYPE.darkGray>Tip: Custom tokens are stored locally in your browser</TYPE.darkGray>
-      </Footer>
     </Wrapper>
   )
 }

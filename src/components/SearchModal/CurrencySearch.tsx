@@ -24,7 +24,8 @@ import { ButtonPrimary } from '../Button'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
-  flex: 1 1;
+  flex: 1;
+  overflow: hidden;
   position: relative;
   background-color: ${({ theme }) => theme.bg1And2};
 `
