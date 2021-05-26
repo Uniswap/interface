@@ -1,4 +1,6 @@
-import { Fraction, JSBI, Price, Pair } from 'libs/sdk/src'
+import { BigNumber } from '@ethersproject/bignumber'
+
+import { Fraction, JSBI, Price, Pair, Token } from 'libs/sdk/src'
 import { ZERO, ONE } from 'libs/sdk/src/constants'
 import { UserLiquidityPosition } from 'state/pools/hooks'
 import { formattedNum } from 'utils'
@@ -146,12 +148,19 @@ export function tokenAmountDmmToSushi(amount: TokenAmountDMM): TokenAmountSUSHI 
  * @param poolLiquidityUsd Total pool liquidity in USD
  * @returns
  */
-export function getFarmApr(kncPriceUsd: string, poolLiquidityUsd: string): number {
+export function getFarmApr(
+  rewardToken: Token,
+  rewardPerBlock: BigNumber,
+  kncPriceUsd: string,
+  poolLiquidityUsd: string
+): number {
   if (parseFloat(poolLiquidityUsd) === 0) {
     return 0
   }
 
-  const yearlyKNCRewardAllocation = 0.02 * BLOCKS_PER_YEAR
+  const rewardPerBlockAmount = new TokenAmountDMM(rewardToken, rewardPerBlock.toString())
+
+  const yearlyKNCRewardAllocation = parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR
   const apr = ((yearlyKNCRewardAllocation * parseFloat(kncPriceUsd)) / parseFloat(poolLiquidityUsd)) * 100
 
   return apr
