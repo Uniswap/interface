@@ -11,7 +11,7 @@ module.exports = {
     'pseudo-en': 'en',
   },
   format: 'po',
-  locales: ['en', 'pseudo-en'],
+  locales: ['en', 'pseudo-en', 'de', 'en', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW'],
   orderBy: 'messageId',
   pseudoLocale: 'pseudo-en',
   rootDir: '.',

@@ -1,11 +1,11 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-26 13:04-0700\n"
+"POT-Creation-Date: 2021-05-26 14:43-0700\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: pseudo-en\n"
+"Language: iw\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
@@ -116,7 +116,7 @@ msgstr ""
 #: src/pages/PoolFinder/index.tsx:122
 #: src/pages/PoolFinder/index.tsx:146
 msgid "currencies.search.selectToken"
-msgstr ""
+msgstr "בחרו את הטוקן להמרה"
 
 #: src/components/Web3Status/index.tsx:208
 msgid "error.generic"
@@ -251,12 +251,12 @@ msgstr ""
 #: src/components/Header/index.tsx:356
 #: src/components/NavigationTabs/index.tsx:69
 msgid "nav.pool"
-msgstr ""
+msgstr "להפקיד"
 
 #: src/components/Header/index.tsx:343
 #: src/components/NavigationTabs/index.tsx:66
 msgid "nav.swap"
-msgstr ""
+msgstr "המרה"
 
 #: src/components/Header/index.tsx:359
 msgid "nav.vote"
@@ -328,7 +328,7 @@ msgstr ""
 
 #: src/components/NavigationTabs/index.tsx:125
 msgid "pools.buttons.addLiquidity"
-msgstr ""
+msgstr "להוספת נזילות למאגר"
 
 #: src/pages/PoolFinder/index.tsx:178
 msgid "pools.buttons.addLiquidityPoolFinder"
@@ -373,7 +373,7 @@ msgstr ""
 #: src/components/NavigationTabs/index.tsx:127
 #: src/pages/Pool/PositionPage.tsx:555
 msgid "pools.buttons.removeLiquidity"
-msgstr ""
+msgstr "הוצאה של נזילות"
 
 #: src/pages/Pool/index.tsx:274
 msgid "pools.buttons.viewV2Liquidity"
