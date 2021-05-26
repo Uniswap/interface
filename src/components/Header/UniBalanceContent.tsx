@@ -16,6 +16,7 @@ import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
+import { Trans } from '@lingui/macro'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -65,7 +66,9 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
         <CardNoise />
         <CardSection gap="md">
           <RowBetween>
-            <TYPE.white color="white">Your UNI Breakdown</TYPE.white>
+            <TYPE.white color="white">
+              <Trans id="uni.yourUNIBreakdown">Your UNI Breakdown</Trans>
+            </TYPE.white>
             <StyledClose stroke="white" onClick={() => setShowUniBalanceModal(false)} />
           </RowBetween>
         </CardSection>
@@ -81,16 +84,20 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
               </AutoColumn>
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white color="white">Balance:</TYPE.white>
+                  <TYPE.white color="white">
+                    <Trans id="claim.labels.balance">Balance:</Trans>
+                  </TYPE.white>
                   <TYPE.white color="white">{uniBalance?.toFixed(2, { groupSeparator: ',' })}</TYPE.white>
                 </RowBetween>
                 <RowBetween>
-                  <TYPE.white color="white">Unclaimed:</TYPE.white>
+                  <TYPE.white color="white">
+                    <Trans id="claim.unclaimed">Unclaimed:</Trans>
+                  </TYPE.white>
                   <TYPE.white color="white">
                     {uniToClaim?.toFixed(4, { groupSeparator: ',' })}{' '}
                     {uniToClaim && uniToClaim.greaterThan('0') && (
                       <StyledInternalLink onClick={() => setShowUniBalanceModal(false)} to="/uni">
-                        (claim)
+                        <Trans id="claim.labels.claim">(claim)</Trans>
                       </StyledInternalLink>
                     )}
                   </TYPE.white>
@@ -103,19 +110,27 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
         <CardSection gap="sm">
           <AutoColumn gap="md">
             <RowBetween>
-              <TYPE.white color="white">UNI price:</TYPE.white>
+              <TYPE.white color="white">
+                <Trans id="uni.UNIPrice">UNI price:</Trans>
+              </TYPE.white>
               <TYPE.white color="white">${uniPrice?.toFixed(2) ?? '-'}</TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white color="white">UNI in circulation:</TYPE.white>
+              <TYPE.white color="white">
+                <Trans id="uni.inCirculation">UNI in circulation:</Trans>
+              </TYPE.white>
               <TYPE.white color="white">{circulation?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white color="white">Total Supply</TYPE.white>
+              <TYPE.white color="white">
+                <Trans id="uni.totalSupply">Total Supply</Trans>
+              </TYPE.white>
               <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
             </RowBetween>
             {uni && uni.chainId === 1 ? (
-              <ExternalLink href={`https://info.uniswap.org/token/${uni.address}`}>View UNI Analytics</ExternalLink>
+              <ExternalLink href={`https://info.uniswap.org/token/${uni.address}`}>
+                <Trans id="uni.viewAnalytics">View UNI Analytics</Trans>
+              </ExternalLink>
             ) : null}
           </AutoColumn>
         </CardSection>

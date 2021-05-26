@@ -28,6 +28,7 @@ import { useV2Pair } from '../../hooks/useV2Pairs'
 import usePrevious from '../../hooks/usePrevious'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { BIG_INT_ZERO, BIG_INT_SECONDS_IN_WEEK } from '../../constants/misc'
+import { Trans } from '@lingui/macro'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -156,7 +157,9 @@ export default function Manage({
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
         <TYPE.mediumHeader style={{ margin: 0 }}>
-          {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
+          <Trans id="earn.pool.liquidityMining">
+            {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
+          </Trans>
         </TYPE.mediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
@@ -164,7 +167,9 @@ export default function Manage({
       <DataRow style={{ gap: '24px' }}>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Total deposits</TYPE.body>
+            <TYPE.body style={{ margin: 0 }}>
+              <Trans id="earn.pool.totalDeposits">Total deposits</Trans>
+            </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {valueOfTotalStakedAmountInUSDC
                 ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
@@ -174,14 +179,18 @@ export default function Manage({
         </PoolData>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
+            <TYPE.body style={{ margin: 0 }}>
+              <Trans id="earn.pool.rate">Pool Rate</Trans>
+            </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {stakingInfo?.active
-                ? stakingInfo?.totalRewardRate
-                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                    ?.toFixed(0, { groupSeparator: ',' }) ?? '-'
-                : '0'}
-              {' UNI / week'}
+              {stakingInfo.active ? (
+                <Trans id="earn.pool.rewardRate">
+                  {stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
+                  UNI / week
+                </Trans>
+              ) : (
+                <Trans id="earn.pool.noRewardRate">0 UNI / week</Trans>
+              )}
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -194,11 +203,16 @@ export default function Manage({
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Step 1. Get UNI-V2 Liquidity tokens</TYPE.white>
+                <TYPE.white fontWeight={600}>
+                  <Trans id="earn.instructions1.title">Step 1. Get UNI-V2 Liquidity tokens</Trans>
+                </TYPE.white>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
-                  {`UNI-V2 LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                  <Trans id="earn.instructions1.hint">
+                    UNI-V2 LP tokens are required. Once you&apos;ve added liquidity to the {currencyA?.symbol}-
+                    {currencyB?.symbol} pool you can stake your liquidity tokens on this page.
+                  </Trans>
                 </TYPE.white>
               </RowBetween>
               <ButtonPrimary
@@ -208,7 +222,9 @@ export default function Manage({
                 as={Link}
                 to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
               >
-                {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
+                <Trans id="earn.pool.addLiquidity">
+                  Add {currencyA?.symbol}-{currencyB?.symbol} liquidity
+                </Trans>
               </ButtonPrimary>
             </AutoColumn>
           </CardSection>
@@ -246,14 +262,18 @@ export default function Manage({
               <CardNoise />
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white fontWeight={600}>Your liquidity deposits</TYPE.white>
+                  <TYPE.white fontWeight={600}>
+                    <Trans id="earn.pool.liquidityDeposited">Your liquidity deposits</Trans>
+                  </TYPE.white>
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline' }}>
                   <TYPE.white fontSize={36} fontWeight={600}>
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
                   </TYPE.white>
                   <TYPE.white>
-                    UNI-V2 {currencyA?.symbol}-{currencyB?.symbol}
+                    <Trans id="earn.claim.UNIV2">
+                      UNI-V2 {currencyA?.symbol}-{currencyB?.symbol}
+                    </Trans>
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
@@ -265,7 +285,9 @@ export default function Manage({
             <AutoColumn gap="sm">
               <RowBetween>
                 <div>
-                  <TYPE.black>Your unclaimed UNI</TYPE.black>
+                  <TYPE.black>
+                    <Trans id="earn.claim.unclaimedUNI">Your unclaimed UNI</Trans>
+                  </TYPE.black>
                 </div>
                 {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.quotient) && (
                   <ButtonEmpty
@@ -274,7 +296,7 @@ export default function Manage({
                     width="fit-content"
                     onClick={() => setShowClaimRewardModal(true)}
                   >
-                    Claim
+                    <Trans id="earn.claim.label">Claim</Trans>
                   </ButtonEmpty>
                 )}
               </RowBetween>
@@ -294,12 +316,15 @@ export default function Manage({
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                     ⚡
                   </span>
-                  {stakingInfo?.active
-                    ? stakingInfo?.rewardRate
-                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                        ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
-                    : '0'}
-                  {' UNI / week'}
+
+                  {stakingInfo.active ? (
+                    <Trans id="earn.pool.rewardRate">
+                      {stakingInfo.rewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
+                      UNI / week
+                    </Trans>
+                  ) : (
+                    <Trans id="earn.pool.noRewardRate">0 UNI / week</Trans>
+                  )}
                 </TYPE.black>
               </RowBetween>
             </AutoColumn>
@@ -309,14 +334,20 @@ export default function Manage({
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
-          When you withdraw, the contract will automagically claim UNI on your behalf!
+          <Trans id="earn.claim.withdrawingClaimsUNI">
+            When you withdraw, the contract will automagically claim UNI on your behalf!
+          </Trans>
         </TYPE.main>
 
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && stakingInfo.active && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit UNI-V2 LP Tokens'}
+                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? (
+                  <Trans id="common.deposit">Deposit</Trans>
+                ) : (
+                  <Trans id="earn.depositUNIVLP">Deposit UNI-V2 LP Tokens</Trans>
+                )}
               </ButtonPrimary>
             )}
 
@@ -328,14 +359,18 @@ export default function Manage({
                   width="160px"
                   onClick={() => setShowUnstakingModal(true)}
                 >
-                  Withdraw
+                  <Trans id="common.withdraw">Withdraw</Trans>
                 </ButtonPrimary>
               </>
             )}
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} UNI-V2 LP tokens available</TYPE.main>
+          <TYPE.main>
+            <Trans id="earn.claim.UNIV2LPAvailable">
+              {userLiquidityUnstaked.toSignificant(6)} UNI-V2 LP tokens available
+            </Trans>
+          </TYPE.main>
         )}
       </PositionInfo>
     </PageWrapper>

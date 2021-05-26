@@ -7,6 +7,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { RowBetween } from '../Row'
 import { TYPE, CloseIcon, CustomLightSpinner } from '../../theme'
 import { ArrowUpCircle } from 'react-feather'
+import { Trans } from '@lingui/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { ExternalLink } from '../../theme/components'
@@ -32,7 +33,9 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
       </ConfirmedIcon>
       <AutoColumn gap="100px" justify={'center'}>
         {children}
-        <TYPE.subHeader>Confirm this transaction in your wallet</TYPE.subHeader>
+        <TYPE.subHeader>
+          <Trans id="wallet.confirmTransaction">Confirm this transaction in your wallet</Trans>
+        </TYPE.subHeader>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>
   )
@@ -66,7 +69,9 @@ export function SubmittedView({
             href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
             style={{ marginLeft: '4px' }}
           >
-            <TYPE.subHeader>View transaction on Etherscan</TYPE.subHeader>
+            <TYPE.subHeader>
+              <Trans id="transaction.viewOnEherscan">View transaction on Etherscan</Trans>
+            </TYPE.subHeader>
           </ExternalLink>
         )}
       </AutoColumn>
