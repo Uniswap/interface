@@ -527,8 +527,8 @@ msgid "pools.maxPrice"
 msgstr ""
 
 #: src/components/PositionPreview/index.tsx:150
-msgid "pools.maxPriceHint"
-msgstr ""
+#~ msgid "pools.maxPriceHint"
+#~ msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx:802
 msgid "pools.maxPriceLabel"
@@ -555,6 +555,10 @@ msgid "pools.menu.v2Liquidity"
 msgstr ""
 
 #: src/components/PositionPreview/index.tsx:131
+#: src/components/PositionPreview/index.tsx:150
+msgid "pools.minMaxPriceHint"
+msgstr ""
+
 #: src/pages/Pool/PositionPage.tsx:790
 msgid "pools.minPriceHint"
 msgstr ""

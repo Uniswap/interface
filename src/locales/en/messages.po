@@ -527,8 +527,8 @@ msgid "pools.maxPrice"
 msgstr "Max Price"
 
 #: src/components/PositionPreview/index.tsx:150
-msgid "pools.maxPriceHint"
-msgstr "Your position will be 100% composed of {0} at this price"
+#~ msgid "pools.maxPriceHint"
+#~ msgstr "Your position will be 100% composed of {0} at this price"
 
 #: src/pages/Pool/PositionPage.tsx:802
 msgid "pools.maxPriceLabel"
@@ -555,6 +555,10 @@ msgid "pools.menu.v2Liquidity"
 msgstr "V2 liquidity"
 
 #: src/components/PositionPreview/index.tsx:131
+#: src/components/PositionPreview/index.tsx:150
+msgid "pools.minMaxPriceHint"
+msgstr "Your position will be 100% composed of {0} at this price"
+
 #: src/pages/Pool/PositionPage.tsx:790
 msgid "pools.minPriceHint"
 msgstr "Your position will be 100% {0} at this price."

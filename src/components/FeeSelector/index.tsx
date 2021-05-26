@@ -52,7 +52,7 @@ export default function FeeSelector({
             onClick={() => handleFeePoolSelect(FeeAmount.MEDIUM)}
           >
             <AutoColumn gap="sm" justify="flex-start">
-              <ResponsiveText>{t({ id: 'pools.feeSelector.mediumFee', message: `0.03% fee` })}</ResponsiveText>
+              <ResponsiveText>{t({ id: 'pools.feeSelector.mediumFee', message: `0.3% fee` })}</ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
                 {t({ id: 'pools.feeSelector.mediumFeeHint', message: 'Best for most pairs.' })}
               </TYPE.main>
