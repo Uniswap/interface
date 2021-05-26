@@ -119,11 +119,7 @@ export default function PoolFinder() {
             </Row>
           ) : (
             <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-<<<<<<< HEAD
-              <Trans id="currencies.search.selectToken">Select a Token</Trans>
-=======
               <Trans id="currencies.search.selectToken">Select a token</Trans>
->>>>>>> lingui
             </Text>
           )}
         </ButtonDropdownLight>
@@ -179,11 +175,7 @@ export default function PoolFinder() {
                   </Text>
                   <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
                     <Text textAlign="center">
-<<<<<<< HEAD
-                      <Trans id="pools.buttons.addLiquidity">Add liquidity.</Trans>
-=======
                       <Trans id="pools.buttons.addLiquidityPoolFinder">Add liquidity.</Trans>
->>>>>>> lingui
                     </Text>
                   </StyledInternalLink>
                 </AutoColumn>
@@ -196,11 +188,7 @@ export default function PoolFinder() {
                   <Trans id="pools.error.noPoolFound">No pool found.</Trans>
                 </Text>
                 <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-<<<<<<< HEAD
-                  <Trans id="pools.labels.createPool">Create pool.</Trans>
-=======
                   <Trans id="pools.buttons.createPool">Create pool.</Trans>
->>>>>>> lingui
                 </StyledInternalLink>
               </AutoColumn>
             </LightCard>

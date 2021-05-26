@@ -537,19 +537,11 @@ export default function Swap({ history }: RouteComponentProps) {
                         <Trans id="common.loading">Loading</Trans>
                       </Dots>
                     ) : singleHopOnly ? (
-<<<<<<< HEAD
-                      <Trans id="swap.labels.insufficientLiquidity">Insufficient liquidity for this trade.</Trans>
-                    ) : (
-                      <Trans id="swap.labels.insufficientLiquiditySingleHopOnly">
-                        Insufficient liquidity for this trade. Try enabling multi-hop trades.
-                      </Trans>
-=======
                       <Trans id="swap.labels.insufficientLiquiditySingleHopOnly">
                         Insufficient liquidity for this trade. Try enabling multi-hop trades.
                       </Trans>
                     ) : (
                       <Trans id="swap.labels.insufficientLiquidity">Insufficient liquidity for this trade.</Trans>
->>>>>>> lingui
                     )}
                   </TYPE.main>
                 </GreyCard>

@@ -787,11 +787,7 @@ export function PositionPage({
 
                   {inRange && (
                     <TYPE.small color={theme.text3}>
-<<<<<<< HEAD
-                      <Trans id="pools.minPriceHint">
-=======
                       <Trans id="pools.minMaxPriceHint">
->>>>>>> lingui
                         Your position will be 100% {currencyBase?.symbol} at this price.
                       </Trans>
                     </TYPE.small>
@@ -815,13 +811,9 @@ export function PositionPage({
 
                   {inRange && (
                     <TYPE.small color={theme.text3}>
-<<<<<<< HEAD
-                      <Trans id="maxPriceHint">Your position will be 100% {currencyQuote?.symbol} at this price.</Trans>
-=======
                       <Trans id="minMaxPriceHint">
                         Your position will be 100% {currencyQuote?.symbol} at this price.
                       </Trans>
->>>>>>> lingui
                     </TYPE.small>
                   )}
                 </AutoColumn>

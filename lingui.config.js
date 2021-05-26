@@ -18,7 +18,3 @@ module.exports = {
   runtimeConfigModule: ['@lingui/core', 'i18n'],
   sourceLocale: 'en',
 }
-<<<<<<< HEAD
-//locales: ['en', 'de', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW'],
-=======
->>>>>>> lingui

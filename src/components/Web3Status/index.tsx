@@ -213,11 +213,7 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
         <Text>
-<<<<<<< HEAD
-          <Trans id="wallet.connect">Connect to a wallet</Trans>
-=======
           <Trans id="wallet.connectLongForm">Connect to a wallet</Trans>
->>>>>>> lingui
         </Text>
       </Web3StatusConnect>
     )
