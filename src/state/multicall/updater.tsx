@@ -26,7 +26,7 @@ import {
 async function fetchChunk(
   multicall2Contract: Multicall2,
   chunk: Call[],
-  minBlockNumber: number | undefined
+  minBlockNumber: number
 ): Promise<{
   results: { success: boolean; returnData: string }[]
   blockNumber: number
@@ -45,9 +45,10 @@ async function fetchChunk(
     console.debug('Failed to fetch chunk', error)
     throw error
   }
-  if (typeof minBlockNumber !== 'undefined' && resultsBlockNumber < minBlockNumber) {
-    console.debug(`Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`)
-    throw new RetryableError('Fetched for old block number')
+  if (resultsBlockNumber < minBlockNumber) {
+    const retryMessage = `Fetched results for old block number: ${resultsBlockNumber.toString()} vs. ${minBlockNumber}`
+    console.debug(retryMessage)
+    throw new RetryableError(retryMessage)
   }
   return { results, blockNumber: resultsBlockNumber }
 }
@@ -164,25 +165,13 @@ export default function Updater(): null {
     cancellations.current = {
       blockNumber: latestBlockNumber,
       cancellations: chunkedCalls.map((chunk, index) => {
-        const { cancel, promise } = retry(
-          () =>
-            fetchChunk(
-              multicall2Contract,
-              chunk,
-              // TODO: temporary fix to the syncing issue. block.number returns the KOVAN block number on arbitrum testnet
-              chainId === SupportedChainId.ARBITRUM_KOVAN ? undefined : latestBlockNumber
-            ),
-          {
-            n: Infinity,
-            minWait: 1000,
-            maxWait: 2500,
-          }
-        )
+        const { cancel, promise } = retry(() => fetchChunk(multicall2Contract, chunk, latestBlockNumber), {
+          n: Infinity,
+          minWait: 1000,
+          maxWait: 2500,
+        })
         promise
           .then(({ results: returnData, blockNumber: fetchBlockNumber }) => {
-            // TODO: temporary fix to the syncing issue. block.number returns the KOVAN block number on arbitrum testnet
-            if (chainId === SupportedChainId.ARBITRUM_KOVAN) fetchBlockNumber = latestBlockNumber
-
             cancellations.current = { cancellations: [], blockNumber: latestBlockNumber }
 
             // accumulates the length of all previous indices
