@@ -16,7 +16,6 @@ import RangeBadge from 'components/Badge/RangeBadge'
 import { RowFixed } from 'components/Row'
 import HoverInlineText from 'components/HoverInlineText'
 import { DAI, USDC, USDT, WBTC } from '../../constants/tokens'
-import { Trans } from '@lingui/macro'
 
 const LinkRow = styled(Link)`
   align-items: center;
@@ -224,9 +223,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           </DataText>
           &nbsp;
           <Badge>
-            <BadgeText>
-              <Trans id="numbers.valueWithPercent">{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
-            </BadgeText>
+            <BadgeText>{new Percent(feeAmount, 1_000_000).toSignificant()}%</BadgeText>
           </Badge>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
@@ -235,13 +232,9 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
       {priceLower && priceUpper ? (
         <RangeLineItem>
           <RangeText>
-            <ExtentsText>
-              <Trans id="pools.labels.min">Min: </Trans>
-            </ExtentsText>
-            <Trans id="currencies.denominatedWithValue">
-              {formatPrice(priceLower, 5)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-              <HoverInlineText text={currencyBase?.symbol ?? ''} />
-            </Trans>
+            <ExtentsText>Min: </ExtentsText>
+            {formatPrice(priceLower, 5)} <HoverInlineText text={currencyQuote?.symbol} /> {' per '}{' '}
+            <HoverInlineText text={currencyBase?.symbol ?? ''} />
           </RangeText>{' '}
           <HideSmall>
             <DoubleArrow>⟷</DoubleArrow>{' '}
@@ -250,13 +243,9 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
             <DoubleArrow>↕</DoubleArrow>{' '}
           </SmallOnly>
           <RangeText>
-            <ExtentsText>
-              <Trans id="pools.labels.max">Max:</Trans>
-            </ExtentsText>
-            <Trans id="currencies.denominatedWithValue">
-              {formatPrice(priceUpper, 5)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
-              <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
-            </Trans>
+            <ExtentsText>Max:</ExtentsText>
+            {formatPrice(priceUpper, 5)} <HoverInlineText text={currencyQuote?.symbol} /> {' per '}{' '}
+            <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
           </RangeText>
         </RangeLineItem>
       ) : (

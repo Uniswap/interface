@@ -17,7 +17,6 @@ import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Confetti from '../Confetti'
 import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../earn/styled'
-import { Trans } from '@lingui/macro'
 
 import Modal from '../Modal'
 import { RowBetween } from '../Row'
@@ -100,15 +99,11 @@ export default function ClaimModal() {
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={500}>
-                  <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
-                </TYPE.white>
+                <TYPE.white fontWeight={500}>Claim UNI</TYPE.white>
                 <CloseIcon onClick={toggleClaimModal} style={{ zIndex: 99 }} color="white" />
               </RowBetween>
               <TYPE.white fontWeight={700} fontSize={36}>
-                <Trans id="claim.labels.tokenAmount">
-                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-                </Trans>
+                {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
               </TYPE.white>
             </CardSection>
             <Break />
@@ -116,48 +111,34 @@ export default function ClaimModal() {
               {userClaimData?.flags?.isSOCKS && (
                 <RowBetween>
                   <TYPE.subHeader color="white">SOCKS</TYPE.subHeader>
-                  <TYPE.subHeader color="white">
-                    <Trans id="claim.labels.socksAmount">{SOCKS_AMOUNT} UNI</Trans>
-                  </TYPE.subHeader>
+                  <TYPE.subHeader color="white">{SOCKS_AMOUNT} UNI</TYPE.subHeader>
                 </RowBetween>
               )}
               {userClaimData?.flags?.isLP &&
                 unclaimedAmount &&
                 JSBI.greaterThanOrEqual(unclaimedAmount.quotient, nonLPAmount) && (
                   <RowBetween>
+                    <TYPE.subHeader color="white">Liquidity</TYPE.subHeader>
                     <TYPE.subHeader color="white">
-                      <Trans id="common.liquidity">Liquidity</Trans>
-                    </TYPE.subHeader>
-                    <TYPE.subHeader color="white">
-                      <Trans id="claim.labels.tokenAmount">
-                        {unclaimedAmount
-                          .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
-                          .toFixed(0, { groupSeparator: ',' })}{' '}
-                        UNI
-                      </Trans>
+                      {unclaimedAmount
+                        .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
+                        .toFixed(0, { groupSeparator: ',' })}{' '}
+                      UNI
                     </TYPE.subHeader>
                   </RowBetween>
                 )}
               {userClaimData?.flags?.isUser && (
                 <RowBetween>
-                  <TYPE.subHeader color="white">
-                    <Trans id="common.user">User</Trans>
-                  </TYPE.subHeader>
-                  <TYPE.subHeader color="white">
-                    <Trans id="claim.userAmount">{USER_AMOUNT} UNI</Trans>
-                  </TYPE.subHeader>
+                  <TYPE.subHeader color="white">User</TYPE.subHeader>
+                  <TYPE.subHeader color="white">{USER_AMOUNT} UNI</TYPE.subHeader>
                 </RowBetween>
               )}
             </CardSection>
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <TYPE.subHeader fontWeight={500}>
-              <Trans id="claim.hints.uniswapCommunityMember">
-                As a member of the Uniswap community you may claim UNI to be used for voting and governance.
-                <br />
-                <br />
-                <ExternalLink href="https://uniswap.org/blog/uni">Read more about UNI</ExternalLink>
-              </Trans>
+              As a member of the Uniswap community you may claim UNI to be used for voting and governance. <br /> <br />
+              <ExternalLink href="https://uniswap.org/blog/uni">Read more about UNI</ExternalLink>
             </TYPE.subHeader>
             <ButtonPrimary
               disabled={!isAddress(account ?? '')}
@@ -167,7 +148,7 @@ export default function ClaimModal() {
               mt="1rem"
               onClick={onClaim}
             >
-              <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
+              Claim UNI
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -184,7 +165,7 @@ export default function ClaimModal() {
             {!claimConfirmed ? (
               <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
             ) : (
-              <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI" />
+              <UniTokenAnimated width="72px" src={tokenLogo} />
             )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
@@ -194,38 +175,32 @@ export default function ClaimModal() {
               </TYPE.largeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  <Trans id="claim.labels.tokenAmount">
-                    {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-                  </Trans>
+                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
                 </Text>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
                 <TYPE.subHeader fontWeight={500} color="black">
-                  <Trans id="claim.labels.welcome">
-                    <span role="img" aria-label="party-hat">
-                      🎉{' '}
-                    </span>
-                    Welcome to team Unicorn :){' '}
-                    <span role="img" aria-label="party-hat">
-                      🎉
-                    </span>
-                  </Trans>
+                  <span role="img" aria-label="party-hat">
+                    🎉{' '}
+                  </span>
+                  Welcome to team Unicorn :){' '}
+                  <span role="img" aria-label="party-hat">
+                    🎉
+                  </span>
                 </TYPE.subHeader>
               </>
             )}
             {attempting && !claimSubmitted && (
-              <TYPE.subHeader color="black">
-                <Trans id="claim.labels.confirmTransactionInWallet">Confirm this transaction in your wallet</Trans>
-              </TYPE.subHeader>
+              <TYPE.subHeader color="black">Confirm this transaction in your wallet</TYPE.subHeader>
             )}
             {attempting && claimSubmitted && !claimConfirmed && chainId && claimTxn?.hash && (
               <ExternalLink
                 href={getExplorerLink(chainId, claimTxn?.hash, ExplorerDataType.TRANSACTION)}
                 style={{ zIndex: 99 }}
               >
-                <Trans id="transaction.viewOnEherscan">View transaction on Etherscan</Trans>
+                View transaction on Etherscan
               </ExternalLink>
             )}
           </AutoColumn>

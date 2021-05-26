@@ -7,7 +7,6 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
-import { Trans } from '@lingui/macro'
 
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
@@ -143,37 +142,27 @@ export default function Menu() {
         <MenuFlyout>
           <MenuItem href="https://uniswap.org/">
             <Info size={14} />
-            <div>
-              <Trans id="menu.about">About</Trans>
-            </div>
+            <div>About</div>
           </MenuItem>
           <MenuItem href="https://docs.uniswap.org/">
             <BookOpen size={14} />
-            <div>
-              <Trans id="menu.docs">Docs</Trans>
-            </div>
+            <div>Docs</div>
           </MenuItem>
           <MenuItem href={CODE_LINK}>
             <Code size={14} />
-            <div>
-              <Trans id="menu.code">Code</Trans>
-            </div>
+            <div>Code</div>
           </MenuItem>
           <MenuItem href="https://discord.gg/FCfyBSbCU5">
             <MessageCircle size={14} />
-            <div>
-              <Trans id="menu.discord">Discord</Trans>
-            </div>
+            <div>Discord</div>
           </MenuItem>
           <MenuItem href="https://info.uniswap.org/">
             <PieChart size={14} />
-            <div>
-              <Trans id="menu.analytics">Analytics</Trans>
-            </div>
+            <div>Analytics</div>
           </MenuItem>
           {account && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
+              Claim UNI
             </UNIbutton>
           )}
         </MenuFlyout>
