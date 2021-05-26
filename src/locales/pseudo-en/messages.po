@@ -1,17 +1,11 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-26 12:20-0700\n"
+"POT-Creation-Date: 2021-05-26 13:04-0700\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: pseudo-en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
 
 #: src/pages/AddLiquidity/index.tsx:528
 msgid "addLiquidity.labels.currentPrice"
@@ -245,7 +239,7 @@ msgid "nav.charts"
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx:83
-msgid "nav.importPools"
+msgid "nav.importPool"
 msgstr ""
 
 #: src/components/Header/index.tsx:356
