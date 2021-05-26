@@ -173,7 +173,7 @@ export default function Pool() {
               </HideSmall>
               <ButtonRow>
                 <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
-                  <Trans id="pools.buttons.createPair">Your V2 liquidity</Trans>
+                  <Trans id="pools.buttons.createPair">Create a pair</Trans>
                 </ResponsiveButtonSecondary>
                 <ResponsiveButtonPrimary
                   id="join-pool-button"

@@ -340,7 +340,7 @@ export default function WalletModal({
         ) : (
           <HeaderRow>
             <HoverText>
-              <Trans id="wallet.connect">Connect to a wallet</Trans>
+              <Trans id="wallet.connectLongForm">Connect to a wallet</Trans>
             </HoverText>
           </HeaderRow>
         )}

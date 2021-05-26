@@ -82,7 +82,6 @@ export default function ListUpdatePopup({
               <ChangesList>
                 {tokensAdded.length > 0 ? (
                   <li>
-                    {/* TODO(judo): can probably be improved*/}
                     <Trans id="tokenLists.tokenAddedList">
                       {tokensAdded.map((token, i) => (
                         <React.Fragment key={`${token.chainId}-${token.address}`}>

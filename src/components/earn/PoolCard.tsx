@@ -134,7 +134,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           <TYPE.white>
             {valueOfTotalStakedAmountInUSDC ? (
               <Trans id="earn.pool.valueInUSDC">
-                $${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}
+                ${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}
               </Trans>
             ) : (
               <Trans id="earn.pool.valueInETH">

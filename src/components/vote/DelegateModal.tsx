@@ -103,8 +103,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             </TYPE.body>
             <TYPE.body>
               <Trans id="vote.delegate.hint2">
-                You can either vote on each proposal yourself or delegate your votes to a third party.arned UNI tokens
-                represent voting shares in Uniswap governance.
+                You can either vote on each proposal yourself or delegate your votes to a third party.
               </Trans>
             </TYPE.body>
             {usingDelegate && <AddressInputPanel value={typed} onChange={handleRecipientType} />}
@@ -120,7 +119,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
             <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
               <TYPE.blue>
                 {usingDelegate ? (
-                  <Trans id="common.remove">Remove</Trans>
+                  <Trans id="common.remove">Remove Delegate</Trans>
                 ) : (
                   <Trans id="common.add">Add Delegate +</Trans>
                 )}

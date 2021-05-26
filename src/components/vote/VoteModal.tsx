@@ -93,7 +93,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
                 {support ? (
                   <Trans id="vote.support.for">Vote for proposal {proposalId}</Trans>
                 ) : (
-                  <Trans id="vote.support.against">Vote against {proposalId}</Trans>
+                  <Trans id="vote.support.against">Vote against proposal {proposalId}</Trans>
                 )}
               </TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
@@ -106,7 +106,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
                 {support ? (
                   <Trans id="vote.support.for">Vote for proposal {proposalId}</Trans>
                 ) : (
-                  <Trans id="vote.support.against">Vote against {proposalId}</Trans>
+                  <Trans id="vote.support.against">Vote against proposal {proposalId}</Trans>
                 )}
               </TYPE.mediumHeader>
             </ButtonPrimary>

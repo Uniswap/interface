@@ -267,7 +267,6 @@ export default function AddLiquidity({
     )
   }
 
-  //TODO: fix
   const pendingText = t({
     id: 'addLiquidity.confirmation.pendingV2',
     message: `Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${

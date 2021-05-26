@@ -155,7 +155,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             {!claimConfirmed ? (
               <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
             ) : (
-              <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI" />
+              <UniTokenAnimated width="72px" src={tokenLogo} alt="UNI logo" />
             )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>

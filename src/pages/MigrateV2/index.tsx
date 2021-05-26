@@ -135,7 +135,7 @@ export default function MigrateV2() {
           <LightCard padding="40px">
             <TYPE.body color={theme.text3} textAlign="center">
               <Trans id="migrate.hint.connectWalltToViewV2Liquidity">
-                Connect to a wallet to view your V2 liquidity.{' '}
+                Connect to a wallet to view your V2 liquidity.
               </Trans>
             </TYPE.body>
           </LightCard>
