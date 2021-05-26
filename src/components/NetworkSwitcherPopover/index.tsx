@@ -24,6 +24,7 @@ import { X } from 'react-feather'
 import ethereumHintImage1x from '../../assets/images/ethereum-hint@1x.png'
 import ethereumHintImage2x from '../../assets/images/ethereum-hint@2x.png'
 import { isMobile } from 'react-device-detect'
+import { Placement } from '@popperjs/core'
 
 const StyledPopover = styled(Popover)`
   padding: 0;
@@ -66,12 +67,14 @@ const ChangeWalletButton = styled.button`
 `
 
 interface NetworkSwitcherPopoverProps {
-  children: ReactNode
+  children: ReactNode,
+  modal: ApplicationModal,
+  placement?: Placement,
 }
 
-export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopoverProps) {
+export default function NetworkSwitcherPopover({ children, modal, placement }: NetworkSwitcherPopoverProps) {
   const { connector, chainId, account } = useActiveWeb3React()
-  const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
+  const networkSwitcherPopoverOpen = useModalOpen(modal)
   const ethereumOptionPopoverOpen = useModalOpen(ApplicationModal.ETHEREUM_OPTION)
   const popoverRef = useRef(null)
   const closeModals = useCloseModals()
@@ -118,7 +121,7 @@ export default function NetworkSwitcherPopover({ children }: NetworkSwitcherPopo
     <div ref={popoverRef}>
       <EthereumOptionPopover show={ethereumOptionPopoverOpen}>
         <StyledPopover
-          placement="bottom-end"
+          placement={placement}
           content={
             <>
               <OptionGrid>

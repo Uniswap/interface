@@ -17,7 +17,7 @@ export const FooterBridgeSelector = ({show, onBridgeChange}: FooterBridgeSelecto
         <Table>
           <thead>
             <tr>
-              <Th>Exchange</Th>
+              <Th>Bridge</Th>
               <Th align="right">Fee</Th>
               <Th align="right">Gas</Th>
               <Th align="right">Time</Th>

@@ -1,8 +1,11 @@
 import React from 'react'
 import styled from 'styled-components';
 import TriangleIcon from '../../assets/svg/triangle.svg';
+import NetworkSwitcherPopover from '../../components/NetworkSwitcherPopover';
 import { RowBetween } from '../../components/Row';
 import { TagSuccess } from '../../components/Tag';
+import { ApplicationModal } from '../../state/application/actions';
+import { useToggleModal } from '../../state/application/hooks';
 
 const Section = styled.button`
   width: 100%;
@@ -65,12 +68,15 @@ interface AssetSelectorProps {
   label: string;
   icon: string;
   name: string;
-  connected?: boolean
+  modal: ApplicationModal;
+  connected?: boolean;
 }
 
-export const AssetSelector = ({label, icon, name, connected}: AssetSelectorProps) => {
+export const AssetSelector = ({label, icon, name, connected, modal}: AssetSelectorProps) => {
+  const toggleNetworkSwitcherPopover = useToggleModal(modal);
+  
   return (
-    <Section>
+    <Section onClick={toggleNetworkSwitcherPopover}>
       <Row>
         <IconWrapper>
           <img src={icon} alt={name} />
@@ -78,7 +84,9 @@ export const AssetSelector = ({label, icon, name, connected}: AssetSelectorProps
         {connected && <TagSuccess>Connected</TagSuccess>}
       </Row>
       <SmallLabel>{label}</SmallLabel>
-      <AssetName>{name}</AssetName>
+      <NetworkSwitcherPopover modal={modal} placement="bottom">
+        <AssetName>{name}</AssetName>
+      </NetworkSwitcherPopover>
     </Section>
   )
 }

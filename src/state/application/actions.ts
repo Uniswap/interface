@@ -28,7 +28,9 @@ export enum ApplicationModal {
   MOBILE,
   WALLET_SWITCHER,
   NETWORK_SWITCHER,
-  ETHEREUM_OPTION
+  ETHEREUM_OPTION,
+  NETWORK_SWITCHER_FROM,
+  NETWORK_SWITCHER_TO,
 }
 
 export enum MainnetGasPrice {

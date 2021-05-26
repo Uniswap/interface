@@ -12,6 +12,7 @@ import { FooterPending } from './FooterPending';
 import { FooterReady } from './FooterReady';
 import { NetworkSwitcher } from './NetworkSwitcher';
 import { BridgeSuccesModal } from './BridgeSuccesModal';
+import { ApplicationModal } from '../../state/application/actions';
 
 const Title = styled.p`
   margin: 0;
@@ -61,6 +62,7 @@ export default function Bridge() {
         </RowBetween>
         <RowBetween mb="12px">
           <AssetSelector
+            modal={ApplicationModal.NETWORK_SWITCHER_FROM}
             label="from"
             icon="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
             name="Arbitrum"
@@ -68,6 +70,7 @@ export default function Bridge() {
           />
           <ArrowImg src={ArrowIcon} alt="arrow" />
           <AssetSelector
+            modal={ApplicationModal.NETWORK_SWITCHER_TO}
             label="to"
             icon="https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png"
             name="Ethereum"
