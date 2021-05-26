@@ -492,7 +492,7 @@ msgstr "Error connecting"
 msgid "error.connectingTryRefreshing"
 msgstr "Error connecting. Try refreshing the page."
 
-#: src/components/Web3Status/index.tsx:212
+#: src/components/Web3Status/index.tsx:208
 msgid "error.generic"
 msgstr "Error"
 
@@ -514,7 +514,7 @@ msgid "error.unsupportedAssets"
 msgstr "Unsupported Asset"
 
 #: src/components/WalletModal/index.tsx:296
-#: src/components/Web3Status/index.tsx:211
+#: src/components/Web3Status/index.tsx:207
 msgid "error.wrongNetwork"
 msgstr "Wrong Network"
 
@@ -1000,22 +1000,6 @@ msgstr "Liquidity providers earn a 0.3% fee on all trades proportional to their 
 msgid "pools.hints.readAboutProvidingLiquidity"
 msgstr "Read more about providing liquidity"
 
-#: src/components/Badge/RangeBadge.tsx:67
-msgid "pools.inRange"
-msgstr "In range"
-
-#: src/components/Badge/RangeBadge.tsx:59
-msgid "pools.inRangeTooltip"
-msgstr "The price of this pool is within your selected range. Your position is currently earning fees."
-
-#: src/components/Badge/RangeBadge.tsx:53
-msgid "pools.inactive"
-msgstr "Inactive"
-
-#: src/components/Badge/RangeBadge.tsx:47
-msgid "pools.inactiveTooltip"
-msgstr "Your position has 0 liquidity, and is not earning fees."
-
 #: src/pages/PoolFinder/index.tsx:86
 msgid "pools.label.connectWalletToFindPools"
 msgstr "Connect to a wallet to find pools"
@@ -1053,6 +1037,22 @@ msgstr "Fee Tier"
 msgid "pools.labels.feeTierValue"
 msgstr "{0}%"
 
+#: src/components/Badge/RangeBadge.tsx:70
+msgid "pools.labels.inRange"
+msgstr "In range"
+
+#: src/components/Badge/RangeBadge.tsx:62
+msgid "pools.labels.inRangeTooltip"
+msgstr "The price of this pool is within your selected range. Your position is currently earning fees."
+
+#: src/components/Badge/RangeBadge.tsx:56
+msgid "pools.labels.inactive"
+msgstr "Inactive"
+
+#: src/components/Badge/RangeBadge.tsx:47
+msgid "pools.labels.inactiveTooltip"
+msgstr "Your position has 0 liquidity, and is not earning fees."
+
 #: src/pages/Pool/PositionPage.tsx:602
 msgid "pools.labels.liquidity"
 msgstr "Liquidity"
@@ -1072,6 +1072,14 @@ msgstr "Min:"
 #: src/pages/Pool/v2.tsx:252
 msgid "pools.labels.noLiquidityFound"
 msgstr "No liquidity found."
+
+#: src/components/Badge/RangeBadge.tsx:86
+msgid "pools.labels.outOfRange"
+msgstr "Out of range"
+
+#: src/components/Badge/RangeBadge.tsx:76
+msgid "pools.labels.outOfRangeTooltip"
+msgstr "The price of this pool is outside of your selected range. Your position is not currently earning fees."
 
 #: src/pages/PoolFinder/index.tsx:156
 msgid "pools.labels.poolFound"
@@ -1130,14 +1138,6 @@ msgstr "Your position will be 100% {0} at this price."
 #: src/pages/Pool/PositionPage.tsx:783
 msgid "pools.minPriceLabel"
 msgstr "Min price"
-
-#: src/components/Badge/RangeBadge.tsx:83
-msgid "pools.outOfRange"
-msgstr "Out of range"
-
-#: src/components/Badge/RangeBadge.tsx:73
-msgid "pools.outOfRangeTooltip"
-msgstr "The price of this pool is outside of your selected range. Your position is not currently earning fees."
 
 #: src/pages/Pool/index.tsx:206
 msgid "pools.toggle.hideClosedPositions"
@@ -1447,7 +1447,7 @@ msgstr "Confirm this transaction in your wallet"
 msgid "transactions.confirmation.button"
 msgstr "Add"
 
-#: src/components/Web3Status/index.tsx:192
+#: src/components/Web3Status/index.tsx:188
 msgid "transactions.pending"
 msgstr "{0} Pending"
 
@@ -1700,7 +1700,7 @@ msgid "wallet.confirmTransaction"
 msgstr "Confirm this transaction in your wallet"
 
 #: src/components/WalletModal/index.tsx:343
-#: src/components/Web3Status/index.tsx:220
+#: src/components/Web3Status/index.tsx:216
 #: src/components/earn/ClaimRewardModal.tsx:66
 #: src/components/earn/UnstakingModal.tsx:67
 #: src/pages/AddLiquidity/index.tsx:717
@@ -1741,8 +1741,8 @@ msgid "wallet.ethBalance"
 msgstr "{0} ETH"
 
 #: src/components/Web3Status/index.tsx:129
-msgid "wallet.hasSocks"
-msgstr "has socks emoji"
+#~ msgid "wallet.hasSocks"
+#~ msgstr "has socks emoji"
 
 #: src/components/WalletModal/PendingView.tsx:101
 msgid "wallet.initializing"

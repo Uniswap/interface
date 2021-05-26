@@ -492,7 +492,7 @@ msgstr ""
 msgid "error.connectingTryRefreshing"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:212
+#: src/components/Web3Status/index.tsx:208
 msgid "error.generic"
 msgstr ""
 
@@ -514,7 +514,7 @@ msgid "error.unsupportedAssets"
 msgstr ""
 
 #: src/components/WalletModal/index.tsx:296
-#: src/components/Web3Status/index.tsx:211
+#: src/components/Web3Status/index.tsx:207
 msgid "error.wrongNetwork"
 msgstr ""
 
@@ -1000,22 +1000,6 @@ msgstr ""
 msgid "pools.hints.readAboutProvidingLiquidity"
 msgstr ""
 
-#: src/components/Badge/RangeBadge.tsx:67
-msgid "pools.inRange"
-msgstr ""
-
-#: src/components/Badge/RangeBadge.tsx:59
-msgid "pools.inRangeTooltip"
-msgstr ""
-
-#: src/components/Badge/RangeBadge.tsx:53
-msgid "pools.inactive"
-msgstr ""
-
-#: src/components/Badge/RangeBadge.tsx:47
-msgid "pools.inactiveTooltip"
-msgstr ""
-
 #: src/pages/PoolFinder/index.tsx:86
 msgid "pools.label.connectWalletToFindPools"
 msgstr ""
@@ -1053,6 +1037,22 @@ msgstr ""
 msgid "pools.labels.feeTierValue"
 msgstr ""
 
+#: src/components/Badge/RangeBadge.tsx:70
+msgid "pools.labels.inRange"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:62
+msgid "pools.labels.inRangeTooltip"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:56
+msgid "pools.labels.inactive"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:47
+msgid "pools.labels.inactiveTooltip"
+msgstr ""
+
 #: src/pages/Pool/PositionPage.tsx:602
 msgid "pools.labels.liquidity"
 msgstr ""
@@ -1071,6 +1071,14 @@ msgstr ""
 
 #: src/pages/Pool/v2.tsx:252
 msgid "pools.labels.noLiquidityFound"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:86
+msgid "pools.labels.outOfRange"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:76
+msgid "pools.labels.outOfRangeTooltip"
 msgstr ""
 
 #: src/pages/PoolFinder/index.tsx:156
@@ -1129,14 +1137,6 @@ msgstr ""
 #: src/components/PositionPreview/index.tsx:122
 #: src/pages/Pool/PositionPage.tsx:783
 msgid "pools.minPriceLabel"
-msgstr ""
-
-#: src/components/Badge/RangeBadge.tsx:83
-msgid "pools.outOfRange"
-msgstr ""
-
-#: src/components/Badge/RangeBadge.tsx:73
-msgid "pools.outOfRangeTooltip"
 msgstr ""
 
 #: src/pages/Pool/index.tsx:206
@@ -1447,7 +1447,7 @@ msgstr ""
 msgid "transactions.confirmation.button"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:192
+#: src/components/Web3Status/index.tsx:188
 msgid "transactions.pending"
 msgstr ""
 
@@ -1700,7 +1700,7 @@ msgid "wallet.confirmTransaction"
 msgstr ""
 
 #: src/components/WalletModal/index.tsx:343
-#: src/components/Web3Status/index.tsx:220
+#: src/components/Web3Status/index.tsx:216
 #: src/components/earn/ClaimRewardModal.tsx:66
 #: src/components/earn/UnstakingModal.tsx:67
 #: src/pages/AddLiquidity/index.tsx:717
@@ -1741,8 +1741,8 @@ msgid "wallet.ethBalance"
 msgstr ""
 
 #: src/components/Web3Status/index.tsx:129
-msgid "wallet.hasSocks"
-msgstr ""
+#~ msgid "wallet.hasSocks"
+#~ msgstr ""
 
 #: src/components/WalletModal/PendingView.tsx:101
 msgid "wallet.initializing"
