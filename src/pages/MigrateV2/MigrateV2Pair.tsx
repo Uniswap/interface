@@ -1,13 +1,13 @@
 import JSBI from 'jsbi'
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { Fraction, Percent, Price, Token, CurrencyAmount } from '@uniswap/sdk-core'
-import { FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { WETH9_EXTENDED } from '../../constants/tokens'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
@@ -125,9 +125,10 @@ function V2PairMigration({
   const { t } = useTranslation()
   const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
+  const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
 
   const pairFactory = useSingleCallResult(pair, 'factory')
-  const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== FACTORY_ADDRESS
+  const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== v2FactoryAddress
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
