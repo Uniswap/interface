@@ -13,7 +13,7 @@ import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useTranslation } from 'react-i18next'
+import { Trans, t } from '@lingui/macro'
 import useTheme from '../../hooks/useTheme'
 import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
@@ -183,8 +183,6 @@ export default function CurrencyInputPanel({
   locked = false,
   ...rest
 }: CurrencyInputPanelProps) {
-  const { t } = useTranslation()
-
   const [modalOpen, setModalOpen] = useState(false)
   const { account } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
@@ -201,7 +199,9 @@ export default function CurrencyInputPanel({
           <AutoColumn gap="sm" justify="center">
             <Lock />
             <TYPE.label fontSize="12px" textAlign="center">
-              The market price is outside your specified price range. Single-asset deposit only.
+              <Trans id="currencies.input.priceOutsideWarning">
+                The market price is outside your specified price range. Single-asset deposit only.
+              </Trans>
             </TYPE.label>
           </AutoColumn>
         </FixedContainer>
@@ -237,7 +237,7 @@ export default function CurrencyInputPanel({
                       ? currency.symbol.slice(0, 4) +
                         '...' +
                         currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || t('selectToken')}
+                      : currency?.symbol) || t({ id: 'currencies.search.selectToken', message: 'Select a token' })}
                   </StyledTokenName>
                 )}
               </RowFixed>
@@ -276,7 +276,9 @@ export default function CurrencyInputPanel({
                       : ''}
                   </TYPE.body>
                   {showMaxButton && selectedCurrencyBalance ? (
-                    <StyledBalanceMax onClick={onMax}>(Max)</StyledBalanceMax>
+                    <StyledBalanceMax onClick={onMax}>
+                      <Trans id="currencies.input.max">(Max)</Trans>
+                    </StyledBalanceMax>
                   ) : null}
                 </RowFixed>
               ) : (

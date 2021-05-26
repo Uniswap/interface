@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 import { Moon, Sun } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -309,7 +309,6 @@ const NETWORK_LABELS: { [chainId: number]: string } = {
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
-  const { t } = useTranslation()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -341,7 +340,7 @@ export default function Header() {
       </HeaderRow>
       <HeaderLinks>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          {t('swap')}
+          <Trans id="nav.swap">Swap</Trans>
         </StyledNavLink>
         <StyledNavLink
           id={`pool-nav-link`}
@@ -354,13 +353,15 @@ export default function Header() {
             pathname.startsWith('/find')
           }
         >
-          {t('pool')}
+          <Trans id="nav.pool">Pool</Trans>
         </StyledNavLink>
         <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-          Vote
+          <Trans id="nav.vote">Vote</Trans>
         </StyledNavLink>
         <StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>
-          Charts <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
+          <Trans id="nav.charts">
+            Charts <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
+          </Trans>
         </StyledExternalLink>
       </HeaderLinks>
       <HeaderControls>
@@ -374,7 +375,13 @@ export default function Header() {
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
                 <TYPE.white padding="0 2px">
-                  {claimTxn && !claimTxn?.receipt ? <Dots>Claiming UNI</Dots> : 'Claim UNI'}
+                  {claimTxn && !claimTxn?.receipt ? (
+                    <Dots>
+                      <Trans id="claim.buttons.claimingUNI">Claiming UNI</Trans>
+                    </Dots>
+                  ) : (
+                    <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
+                  )}
                 </TYPE.white>
               </UNIAmount>
               <CardNoise />
@@ -383,7 +390,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
+                <Trans id="wallet.ethBalance">{userEthBalance?.toSignificant(4)} ETH</Trans>
               </BalanceText>
             ) : null}
             <Web3Status />
