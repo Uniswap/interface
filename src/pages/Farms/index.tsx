@@ -9,6 +9,7 @@ import FarmClaimModal from 'components/FarmClaimModal'
 import FarmStakeModal from 'components/FarmStakeModal'
 import { useFarmsPublicData, useFarmsUserData } from 'state/farms/hooks'
 import { useActiveWeb3React } from 'hooks'
+import useMasterChef from 'hooks/useMasterchef'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ExternalLink } from 'theme'
 import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
@@ -21,6 +22,7 @@ import {
   KNCPriceWrapper,
   TabContainer,
   Tab,
+  AdContainer,
   HeadingContainer,
   LearnMoreContainer,
   LearnMoreInstruction,
@@ -37,6 +39,7 @@ import {
 import { formattedNum } from 'utils'
 import Vesting from './vesting'
 import { getFullDisplayBalance } from 'utils/formatBalance'
+import RainMaker from '../../assets/images/rain-maker.webp'
 
 const FARM_ENDED = 'Ended'
 
@@ -48,6 +51,9 @@ const Farms = () => {
   const { loading: publicDataLoading, error: publicDataError, data: allFarms } = useFarmsPublicData()
   const { loading: userFarmsLoading, data: farmsUserData } = useFarmsUserData(account, allFarms)
   const [activeTab, setActiveTab] = useState(0)
+  const [pendingTx, setPendingTx] = useState(false)
+
+  const { harvestMultiplePools } = useMasterChef()
 
   if (!account) {
     return (
@@ -74,6 +80,10 @@ const Farms = () => {
     return { ...allFarms[index], userData: farmUserData }
   })
 
+  const poolsHaveReward = farms
+    .filter(farm => farm.userData.earnings && BigNumber.from(farm.userData.earnings).gt(0))
+    .map(farm => farm.pid)
+
   const totalRewards = farms.reduce((total, farm) => {
     if (farm.userData.earnings) {
       return total.add(BigNumber.from(farm.userData.earnings))
@@ -93,6 +103,12 @@ const Farms = () => {
   const estimatedRemainingSeconds = remainingBlocks && remainingBlocks * AVERAGE_BLOCK_TIME_IN_SECS
   const formattedEstimatedRemainingTime =
     estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
+
+  const handleClickHarvestAll = async () => {
+    setPendingTx(true)
+    await harvestMultiplePools(poolsHaveReward)
+    setPendingTx(false)
+  }
 
   return (
     <>
@@ -122,6 +138,9 @@ const Farms = () => {
 
         {activeTab === 0 ? (
           <>
+            <AdContainer>
+              <img src={RainMaker} alt="RainMaker" width="100%" />
+            </AdContainer>
             <HeadingContainer>
               <LearnMoreContainer>
                 <LearnMoreInstruction>
@@ -138,7 +157,11 @@ const Farms = () => {
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD, true)}</RewardUSD>
                 </TotalRewardsContainer>
                 <div>
-                  <ButtonPrimary disabled={totalRewards.lte(BigNumber.from(0))} padding="10px 36px">
+                  <ButtonPrimary
+                    disabled={totalRewards.lte(BigNumber.from(0)) || pendingTx}
+                    padding="10px 36px"
+                    onClick={handleClickHarvestAll}
+                  >
                     Harvest All
                   </ButtonPrimary>
                 </div>

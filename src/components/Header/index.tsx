@@ -236,6 +236,20 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
   `}
 `
 
+const YieldMenuWrapper = styled.div`
+  position: relative;
+  padding: 10px 16px 10px 0;
+`
+
+const NewText = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 10px;
+  font-weight: 500;
+  color: #ff537b;
+`
+
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
@@ -267,7 +281,10 @@ export default function Header() {
             {t('pools')}
           </StyledNavLink>
           <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
-            {t('yield')}
+            <YieldMenuWrapper>
+              {t('yield')}
+              <NewText>{t('new')}</NewText>
+            </YieldMenuWrapper>
           </StyledNavLink>
           <StyledNavLink
             id={`my-pools-nav-link`}
