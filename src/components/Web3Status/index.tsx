@@ -124,11 +124,7 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 }
 
 const SOCK = (
-  <span
-    role="img"
-    aria-label={t({ id: 'wallet.hasSocks', message: 'has socks emoji' })}
-    style={{ marginTop: -4, marginBottom: -4 }}
-  >
+  <span role="img" aria-label="has socks emoji" style={{ marginTop: -4, marginBottom: -4 }}>
     🧦
   </span>
 )
@@ -195,7 +191,7 @@ function Web3StatusInner() {
           </RowBetween>
         ) : (
           <>
-            {!hasSocks ? SOCK : null}
+            {hasSocks ? SOCK : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
