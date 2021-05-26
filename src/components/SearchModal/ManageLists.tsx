@@ -78,7 +78,7 @@ const StyledListUrlText = styled(TYPE.main)<{ active: boolean }>`
 `
 
 const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
-  background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.bg1And2)};
+  background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.bg2)};
   transition: background-color 0.2s ease;
   align-items: center;
   padding: 16px;

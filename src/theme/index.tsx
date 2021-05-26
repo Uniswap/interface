@@ -109,6 +109,8 @@ export function theme(darkMode: boolean): DefaultTheme {
   return {
     ...colors(darkMode),
 
+    darkMode,
+
     grids: {
       sm: 8,
       md: 12,
@@ -230,6 +232,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg1};
+  color-scheme: ${props => (props.theme.darkMode ? 'dark' : 'light')};
 }
 
 body {

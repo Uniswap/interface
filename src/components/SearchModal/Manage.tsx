@@ -22,7 +22,7 @@ const Wrapper = styled(Flex)`
 const ToggleWrapper = styled(RowBetween)`
   position: relative;
   background-color: ${({ theme }) => theme.bg2};
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 6px;
 `
 
@@ -44,7 +44,7 @@ const ToggleOption = styled.div<{ active: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 600;
   color: ${({ theme, active }) => (active ? theme.text1 : theme.text2)};
   user-select: none;
@@ -56,7 +56,7 @@ const ToggleOption = styled.div<{ active: boolean }>`
 const ToggleIndicator = styled.div`
   width: 48%;
   height: calc(100% - 12px);
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: ${({ theme }) => theme.bg1And2};
   position: absolute;
 `
