@@ -120,12 +120,8 @@ export function PairSearch({ selectedPair, onPairSelect, onDismiss, isOpen, filt
             <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
           </RowBetween>
         </PaddedColumn>
-
         <Separator />
-
-        <div style={{ flex: '1' }}>
-          <PairList pairs={filteredSortedPairs} onPairSelect={handlePairSelect} selectedPair={selectedPair} />
-        </div>
+        <PairList pairs={filteredSortedPairs} onPairSelect={handlePairSelect} selectedPair={selectedPair} />
       </Column>
     </Wrapper>
   )
