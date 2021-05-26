@@ -6,7 +6,7 @@ import DoubleCurrencyLogo from '../../../DoubleLogo'
 import { DarkCard } from '../../../Card'
 import styled from 'styled-components'
 import ApyBadge from '../../ApyBadge'
-import { ethers } from 'ethers'
+import { formatCurrencyAmount } from '../../../../utils'
 
 const SizedCard = styled(DarkCard)`
   width: 210px;
@@ -70,7 +70,7 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiq
         <Flex flexDirection="column">
           <Box>
             <TYPE.subHeader fontSize="9px" color="text4" lineHeight="14px" letterSpacing="2%" fontWeight="600">
-              ${ethers.utils.commify(usdLiquidity.toSignificant(2))} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
+              ${formatCurrencyAmount(usdLiquidity)} {usdLiquidityText?.toUpperCase() || 'LIQUIDITY'}
             </TYPE.subHeader>
           </Box>
           <Box>
