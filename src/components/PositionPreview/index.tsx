@@ -128,7 +128,11 @@ export const PositionPreview = ({
                 </Trans>
               </TYPE.main>
               <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
+<<<<<<< HEAD
                 <Trans id="pools.minPriceHint">
+=======
+                <Trans id="pools.minMaxPriceHint">
+>>>>>>> lingui
                   Your position will be 100% composed of {baseCurrency?.symbol} at this price
                 </Trans>
               </TYPE.small>
@@ -147,7 +151,11 @@ export const PositionPreview = ({
                 </Trans>
               </TYPE.main>
               <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
+<<<<<<< HEAD
                 <Trans id="pools.maxPriceHint">
+=======
+                <Trans id="pools.minMaxPriceHint">
+>>>>>>> lingui
                   Your position will be 100% composed of {quoteCurrency?.symbol} at this price
                 </Trans>
               </TYPE.small>

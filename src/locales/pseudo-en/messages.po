@@ -1,11 +1,16 @@
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 "POT-Creation-Date: 2021-05-25 15:48-0700\n"
+=======
+"POT-Creation-Date: 2021-05-26 13:04-0700\n"
+>>>>>>> lingui
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: pseudo-en\n"
+<<<<<<< HEAD
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
@@ -50,19 +55,46 @@ msgstr ""
 msgid "butons.remove"
 msgstr ""
 
+=======
+
+#: src/pages/AddLiquidity/index.tsx:528
+msgid "addLiquidity.labels.currentPrice"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:574
+msgid "addLiquidity.labels.selectLiquidityRange"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:439
+msgid "addLiquidity.labels.selectPair"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:500
+msgid "addLiquidity.labels.selectStartingPrice"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:484
+msgid "addLiquidity.labels.selectedRange"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/RemoveLiquidity/index.tsx:368
 msgid "buttons.confirm"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/Popups/ListUpdatePopup.tsx:125
 msgid "buttons.dismiss"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/RemoveLiquidity/V3.tsx:257
 msgid "buttons.remove"
 msgstr ""
 
 #: src/components/Header/index.tsx:383
+<<<<<<< HEAD
 #: src/components/Menu/index.tsx:176
 #: src/components/claim/AddressClaimModal.tsx:141
 #: src/components/claim/ClaimModal.tsx:104
@@ -74,10 +106,16 @@ msgstr ""
 msgid "claim.buttons.claimUNIToken"
 msgstr ""
 
+=======
+msgid "claim.buttons.claimUNI"
+msgstr ""
+
+>>>>>>> lingui
 #: src/components/Header/index.tsx:380
 msgid "claim.buttons.claimingUNI"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/claim/ClaimModal.tsx:155
 msgid "claim.hints.uniswapCommunityMember"
 msgstr ""
@@ -143,10 +181,13 @@ msgstr ""
 msgid "claim.userAmount"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/SearchModal/ImportList.tsx:146
 msgid "common.IUnderstand"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/swap/SwapModalHeader.tsx:146
 msgid "common.accept"
 msgstr ""
@@ -186,10 +227,17 @@ msgstr ""
 msgid "common.depositingLiquidity"
 msgstr ""
 
+=======
+#: src/pages/AddLiquidity/index.tsx:443
+msgid "common.clearAll"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/RemoveLiquidity/index.tsx:475
 msgid "common.detailed"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/TransactionConfirmationModal/index.tsx:202
 msgid "common.dismiss"
 msgstr ""
@@ -221,10 +269,19 @@ msgstr ""
 msgid "common.return"
 msgstr ""
 
+=======
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:758
+#: src/pages/PoolFinder/index.tsx:207
+#: src/pages/Swap/index.tsx:535
+msgid "common.loading"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/RemoveLiquidity/index.tsx:473
 msgid "common.simple"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/claim/ClaimModal.tsx:144
 msgid "common.user"
 msgstr ""
@@ -233,6 +290,8 @@ msgstr ""
 msgid "common.withdraw"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/Pool/CTACards.tsx:140
 msgid "cta.topPools"
 msgstr ""
@@ -249,11 +308,14 @@ msgstr ""
 msgid "cta.v3.walkthroughAndMigration"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/earn/StakingModal.tsx:218
 msgid "currencies.amountUNIV2"
 msgstr ""
 
 #: src/components/InputStepCounter/InputStepCounter.tsx:143
+=======
+>>>>>>> lingui
 #: src/components/PositionPreview/index.tsx:126
 #: src/components/PositionPreview/index.tsx:145
 #: src/components/PositionPreview/index.tsx:164
@@ -262,6 +324,7 @@ msgstr ""
 msgid "currencies.denominated"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/PositionListItem/index.tsx:241
 #: src/components/PositionListItem/index.tsx:256
 msgid "currencies.denominatedWithValue"
@@ -276,6 +339,8 @@ msgstr ""
 msgid "currencies.depositedUNIV2"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/CurrencyInputPanel/index.tsx:280
 msgid "currencies.input.max"
 msgstr ""
@@ -284,6 +349,7 @@ msgstr ""
 msgid "currencies.input.priceOutsideWarning"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/CurrencyInputPanel/FiatValue.tsx:29
 msgid "currencies.labels.fiatValue"
 msgstr ""
@@ -292,6 +358,8 @@ msgstr ""
 msgid "currencies.rates"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/SearchModal/CurrencySearch.tsx:220
 msgid "currencies.search.noResults"
 msgstr ""
@@ -300,6 +368,7 @@ msgstr ""
 msgid "currencies.search.placeholder"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/SearchModal/CurrencySearch.tsx:174
 #: src/pages/PoolFinder/index.tsx:122
 msgid "currencies.search.selectToken"
@@ -492,10 +561,20 @@ msgstr ""
 msgid "error.connectingTryRefreshing"
 msgstr ""
 
+=======
+#: src/components/CurrencyInputPanel/index.tsx:240
+#: src/components/SearchModal/CurrencySearch.tsx:174
+#: src/pages/PoolFinder/index.tsx:122
+#: src/pages/PoolFinder/index.tsx:146
+msgid "currencies.search.selectToken"
+msgstr ""
+
+>>>>>>> lingui
 #: src/components/Web3Status/index.tsx:208
 msgid "error.generic"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/AddLiquidity/index.tsx:658
 msgid "error.invalidRangeWarning"
 msgstr ""
@@ -514,6 +593,20 @@ msgid "error.unsupportedAssets"
 msgstr ""
 
 #: src/components/WalletModal/index.tsx:296
+=======
+#: src/pages/AddLiquidity/index.tsx:654
+msgid "error.invalidRangeWarning"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:708
+msgid "error.unsupportedAsset"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:514
+msgid "error.unsupportedAssets"
+msgstr ""
+
+>>>>>>> lingui
 #: src/components/Web3Status/index.tsx:207
 msgid "error.wrongNetwork"
 msgstr ""
@@ -522,6 +615,7 @@ msgstr ""
 msgid "errors.unknown"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/swap/UnsupportedCurrencyFooter.tsx:67
 msgid "errors.unsuportedAssets"
 msgstr ""
@@ -538,6 +632,12 @@ msgstr ""
 msgid "inputs.feeAmount.plus"
 msgstr ""
 
+=======
+#: src/pages/AddLiquidity/index.tsx:640
+msgid "inactiveRangeWarning"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/RemoveLiquidity/V3.tsx:307
 msgid "labels.amount"
 msgstr ""
@@ -554,6 +654,7 @@ msgstr ""
 msgid "labels.remove"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/PositionCard/index.tsx:314
 msgid "links.viewAccruedFees"
 msgstr ""
@@ -586,14 +687,23 @@ msgstr ""
 msgid "menu.docs"
 msgstr ""
 
+=======
+#: src/pages/AddLiquidity/index.tsx:672
+msgid "liquidity.depositAmounts"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:659
 msgid "migrate.buttons.migrate"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/MigrateV2/index.tsx:115
 msgid "migrate.buttons.migrateV2Liquidity"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:656
 msgid "migrate.buttons.migrating"
 msgstr ""
@@ -602,6 +712,7 @@ msgstr ""
 msgid "migrate.errors.invalidRangeWarning"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/MigrateV2/index.tsx:128
 msgid "migrate.hint.clickToRemoveV2"
 msgstr ""
@@ -610,6 +721,8 @@ msgstr ""
 msgid "migrate.hint.connectWalltToViewV2Liquidity"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:458
 msgid "migrate.hint.firstV3LPGasCost"
 msgstr ""
@@ -618,6 +731,7 @@ msgstr ""
 msgid "migrate.hint.firstV3LiquidityProvider"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/MigrateV2/index.tsx:175
 msgid "migrate.hint.importV2Position"
 msgstr ""
@@ -626,6 +740,8 @@ msgstr ""
 msgid "migrate.hint.migrateFromV2ToV3"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:404
 msgid "migrate.hint.migrationContract"
 msgstr ""
@@ -676,12 +792,23 @@ msgstr ""
 msgid "migrate.labels.v3Price"
 msgstr ""
 
+<<<<<<< HEAD
+=======
+#: src/pages/Pool/PositionPage.tsx:814
+msgid "minMaxPriceHint"
+msgstr ""
+
+>>>>>>> lingui
 #: src/components/Header/index.tsx:362
 msgid "nav.charts"
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx:83
+<<<<<<< HEAD
 msgid "nav.importPools"
+=======
+msgid "nav.importPool"
+>>>>>>> lingui
 msgstr ""
 
 #: src/components/Header/index.tsx:356
@@ -710,10 +837,13 @@ msgstr ""
 msgid "number.75Percent"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx:68
 msgid "number.valueWithPercent"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/Pool/PositionPage.tsx:666
 msgid "numbers.emptyFiatValue"
 msgstr ""
@@ -730,13 +860,17 @@ msgstr ""
 msgid "numbers.valueInFiat"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/CurrencyInputPanel/FiatValue.tsx:38
 #: src/components/PositionCard/index.tsx:300
 #: src/components/PositionListItem/index.tsx:228
+=======
+>>>>>>> lingui
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:514
 #: src/pages/Pool/PositionPage.tsx:528
 #: src/pages/Pool/PositionPage.tsx:627
 #: src/pages/Pool/PositionPage.tsx:642
+<<<<<<< HEAD
 #: src/pages/RemoveLiquidity/V3.tsx:311
 msgid "numbers.valueWithPercent"
 msgstr ""
@@ -777,6 +911,11 @@ msgstr ""
 msgid "pool.initialPriceHint"
 msgstr ""
 
+=======
+msgid "numbers.valueWithPercent"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/Pool/PositionPage.tsx:506
 msgid "pool.label.claimFees"
 msgstr ""
@@ -785,6 +924,7 @@ msgstr ""
 msgid "pool.label.collectingFees"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/PositionCard/index.tsx:158
 msgid "pool.noLiquidityHint"
 msgstr ""
@@ -798,6 +938,8 @@ msgstr ""
 #: src/components/PositionCard/V2.tsx:161
 #: src/components/PositionCard/index.tsx:261
 #: src/components/PositionCard/index.tsx:279
+=======
+>>>>>>> lingui
 #: src/pages/RemoveLiquidity/V3.tsx:205
 #: src/pages/RemoveLiquidity/V3.tsx:216
 #: src/pages/RemoveLiquidity/V3.tsx:335
@@ -810,6 +952,7 @@ msgstr ""
 msgid "pool.priceRange"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/AddLiquidityV2/index.tsx:414
 msgid "pool.prices.noLiquidity"
 msgstr ""
@@ -836,11 +979,14 @@ msgstr ""
 msgid "pool.yourPosition"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/PositionList/index.tsx:46
 #: src/components/PositionList/index.tsx:54
 msgid "pool.yourPositions"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/PositionCard/V2.tsx:124
 #: src/components/PositionCard/index.tsx:242
 msgid "pool.yourTotalPoolTokens"
@@ -850,10 +996,13 @@ msgstr ""
 msgid "pool.yourWillReceive"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/Pool/PositionPage.tsx:517
 msgid "pools.button.backToPoolsOverview"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/Pool/v2.tsx:210
 msgid "pools.buttons.accountAnalytics"
 msgstr ""
@@ -869,6 +1018,14 @@ msgstr ""
 
 #: src/pages/Pool/v2.tsx:186
 msgid "pools.buttons.addV2Liquidity"
+=======
+#: src/components/NavigationTabs/index.tsx:125
+msgid "pools.buttons.addLiquidity"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:178
+msgid "pools.buttons.addLiquidityPoolFinder"
+>>>>>>> lingui
 msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx:476
@@ -876,22 +1033,36 @@ msgid "pools.buttons.collect"
 msgstr ""
 
 #: src/components/NavigationTabs/index.tsx:123
+<<<<<<< HEAD
 #: src/pages/Pool/v2.tsx:176
 msgid "pools.buttons.createPair"
 msgstr ""
 
+=======
+msgid "pools.buttons.createPair"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:191
+msgid "pools.buttons.createPool"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/Pool/PositionPage.tsx:544
 msgid "pools.buttons.increaseLiquidity"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/PositionCard/V2.tsx:107
 #: src/components/PositionCard/V2.tsx:112
 #: src/components/PositionCard/index.tsx:225
 #: src/components/PositionCard/index.tsx:230
+=======
+>>>>>>> lingui
 #: src/pages/PoolFinder/index.tsx:160
 msgid "pools.buttons.manage"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/PositionCard/index.tsx:358
 msgid "pools.buttons.manageLiquidityInRewardsPool"
 msgstr ""
@@ -902,14 +1073,19 @@ msgstr ""
 msgid "pools.buttons.migrate"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/Pool/index.tsx:291
 msgid "pools.buttons.migrateLiquidity"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/Pool/v2.tsx:245
 msgid "pools.buttons.migrateLiquidityToV3"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/Pool/index.tsx:252
 msgid "pools.buttons.migrateV2Liquidity"
 msgstr ""
@@ -992,6 +1168,7 @@ msgstr ""
 msgid "pools.hint.toolHelperText"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/Pool/v2.tsx:145
 msgid "pools.hints.liquidityProviderRewards"
 msgstr ""
@@ -1000,6 +1177,8 @@ msgstr ""
 msgid "pools.hints.readAboutProvidingLiquidity"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/PoolFinder/index.tsx:86
 msgid "pools.label.connectWalletToFindPools"
 msgstr ""
@@ -1025,10 +1204,13 @@ msgstr ""
 msgid "pools.labels.collectingFees"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/PoolFinder/index.tsx:191
 msgid "pools.labels.createPool"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/PositionPreview/index.tsx:99
 msgid "pools.labels.feeTier"
 msgstr ""
@@ -1057,6 +1239,7 @@ msgstr ""
 msgid "pools.labels.liquidity"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/Pool/v2.tsx:140
 msgid "pools.labels.liquidityProviderRewards"
 msgstr ""
@@ -1073,6 +1256,8 @@ msgstr ""
 msgid "pools.labels.noLiquidityFound"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/Badge/RangeBadge.tsx:86
 msgid "pools.labels.outOfRange"
 msgstr ""
@@ -1093,18 +1278,24 @@ msgstr ""
 msgid "pools.labels.unclaimedFees"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/Pool/v2.tsx:171
 msgid "pools.labels.yourV2Liquidity"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/PositionPreview/index.tsx:141
 msgid "pools.maxPrice"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/PositionPreview/index.tsx:150
 msgid "pools.maxPriceHint"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/Pool/PositionPage.tsx:802
 msgid "pools.maxPriceLabel"
 msgstr ""
@@ -1130,8 +1321,14 @@ msgid "pools.menu.v2Liquidity"
 msgstr ""
 
 #: src/components/PositionPreview/index.tsx:131
+<<<<<<< HEAD
 #: src/pages/Pool/PositionPage.tsx:790
 msgid "pools.minPriceHint"
+=======
+#: src/components/PositionPreview/index.tsx:150
+#: src/pages/Pool/PositionPage.tsx:790
+msgid "pools.minMaxPriceHint"
+>>>>>>> lingui
 msgstr ""
 
 #: src/components/PositionPreview/index.tsx:122
@@ -1186,6 +1383,13 @@ msgstr ""
 msgid "removeLiquidity.labels.modalPrice"
 msgstr ""
 
+<<<<<<< HEAD
+=======
+#: src/pages/RemoveLiquidity/V3.tsx:311
+msgid "removeLiquidity.labels.percentForSlider"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/RemoveLiquidity/index.tsx:606
 msgid "removeLiquidity.labels.price"
 msgstr ""
@@ -1194,7 +1398,11 @@ msgstr ""
 msgid "removeLiquidity.labels.removeLiquidity"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/Swap/index.tsx:577
+=======
+#: src/pages/Swap/index.tsx:575
+>>>>>>> lingui
 msgid "swap.buttons.allowUniswapToUseCurrency"
 msgstr ""
 
@@ -1202,6 +1410,7 @@ msgstr ""
 msgid "swap.buttons.backToV3"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/Swap/index.tsx:626
 msgid "swap.buttons.highPriceImpact"
 msgstr ""
@@ -1252,6 +1461,42 @@ msgstr ""
 msgid "swap.inputEstimated.hint"
 msgstr ""
 
+=======
+#: src/pages/Swap/index.tsx:624
+msgid "swap.buttons.highPriceImpact"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:657
+msgid "swap.buttons.priceImpactTooHigh"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:628
+#: src/pages/Swap/index.tsx:661
+msgid "swap.buttons.swap"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:626
+#: src/pages/Swap/index.tsx:659
+msgid "swap.buttons.swapAnyway"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:571
+msgid "swap.buttons.tradeCurrency"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:527
+msgid "swap.buttons.unwrap"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:525
+msgid "swap.buttons.wrap"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:587
+msgid "swap.hints.permission"
+msgstr ""
+
+>>>>>>> lingui
 #: src/pages/Swap/index.tsx:383
 msgid "swap.labels.from"
 msgstr ""
@@ -1260,11 +1505,19 @@ msgstr ""
 msgid "swap.labels.fromAtMost"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/Swap/index.tsx:540
 msgid "swap.labels.insufficientLiquidity"
 msgstr ""
 
 #: src/pages/Swap/index.tsx:542
+=======
+#: src/pages/Swap/index.tsx:542
+msgid "swap.labels.insufficientLiquidity"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:538
+>>>>>>> lingui
 msgid "swap.labels.insufficientLiquiditySingleHopOnly"
 msgstr ""
 
@@ -1280,6 +1533,7 @@ msgstr ""
 msgid "swap.labels.toAtLeast"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/swap/SwapModalHeader.tsx:155
 #: src/pages/AddLiquidityV2/index.tsx:248
 msgid "swap.outputEstimatedHint"
@@ -1326,6 +1580,12 @@ msgstr ""
 msgid "tokenLists.errors.importingList"
 msgstr ""
 
+=======
+#: src/components/SearchModal/ImportList.tsx:158
+msgid "tokenLists.buttons.import"
+msgstr ""
+
+>>>>>>> lingui
 #: src/components/SearchModal/ImportList.tsx:126
 msgid "tokenLists.importHint1"
 msgstr ""
@@ -1342,6 +1602,7 @@ msgstr ""
 msgid "tokenLists.importWarning"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/SearchModal/ManageTokens.tsx:115
 msgid "tokenLists.input.enterValidAddress"
 msgstr ""
@@ -1354,10 +1615,13 @@ msgstr ""
 msgid "tokenLists.links.viewList"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/SearchModal/CurrencySearch.tsx:232
 msgid "tokenLists.manage"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/SearchModal/ManageTokens.tsx:149
 msgid "tokenLists.manageHint"
 msgstr ""
@@ -1394,10 +1658,13 @@ msgstr ""
 msgid "tokensLists.numTokensUpdated"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/components/SearchModal/ImportList.tsx:104
 msgid "tokensLists.numberOfTokens"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/AddLiquidityV2/index.tsx:463
 #: src/pages/AddLiquidityV2/index.tsx:482
 msgid "transaction.approveCurrency"
@@ -1413,6 +1680,8 @@ msgstr ""
 msgid "transaction.viewOnEherscan"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:633
 msgid "transactions.allowLPTokenMigration"
 msgstr ""
@@ -1434,6 +1703,7 @@ msgstr ""
 msgid "transactions.approving"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/AddLiquidityV2/index.tsx:458
 #: src/pages/AddLiquidityV2/index.tsx:477
 msgid "transactions.approvingCurrency"
@@ -1444,6 +1714,9 @@ msgid "transactions.confirmInWallet"
 msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx:421
+=======
+#: src/pages/AddLiquidity/index.tsx:417
+>>>>>>> lingui
 msgid "transactions.confirmation.button"
 msgstr ""
 
@@ -1451,6 +1724,7 @@ msgstr ""
 msgid "transactions.pending"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/TransactionConfirmationModal/index.tsx:114
 #: src/components/earn/ClaimRewardModal.tsx:115
 #: src/components/earn/StakingModal.tsx:227
@@ -1459,10 +1733,13 @@ msgstr ""
 msgid "transactions.submitted"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/AddLiquidity/index.tsx:266
 msgid "transactions.summary.addLiquidity"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/pages/AddLiquidityV2/index.tsx:188
 #: src/pages/AddLiquidityV2/index.tsx:188
 msgid "transactions.summary.addLiquidityWithValue"
@@ -1473,14 +1750,19 @@ msgstr ""
 msgid "transactions.summary.claimAccumulatedUNIRewards"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/AddLiquidity/index.tsx:262
 msgid "transactions.summary.createPoolAndAddLiquidity"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/earn/StakingModal.tsx:107
 msgid "transactions.summary.depositLiquidity"
 msgstr ""
 
+=======
+>>>>>>> lingui
 #: src/pages/RemoveLiquidity/index.tsx:269
 #: src/pages/RemoveLiquidity/index.tsx:269
 msgid "transactions.summary.removeLiquidity"
@@ -1490,6 +1772,7 @@ msgstr ""
 msgid "transactions.summary.removeLiquidityV3"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/earn/UnstakingModal.tsx:51
 #: src/components/earn/UnstakingModal.tsx:51
 msgid "transactions.summary.withdrawDepositedLiquidity"
@@ -1734,12 +2017,24 @@ msgstr ""
 
 #: src/components/AccountDetails/index.tsx:318
 msgid "wallet.disconnect"
+=======
+#: src/pages/AddLiquidity/index.tsx:713
+#: src/pages/Pool/index.tsx:243
+#: src/pages/RemoveLiquidity/index.tsx:622
+#: src/pages/Swap/index.tsx:519
+msgid "wallet.connect"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx:216
+msgid "wallet.connectLongForm"
+>>>>>>> lingui
 msgstr ""
 
 #: src/components/Header/index.tsx:393
 msgid "wallet.ethBalance"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/components/Web3Status/index.tsx:129
 #~ msgid "wallet.hasSocks"
 #~ msgstr ""
@@ -1774,3 +2069,8 @@ msgstr ""
 #: src/components/AccountDetails/index.tsx:425
 msgid "wallet.yourTransactionsWillAppearHere"
 msgstr ""
+=======
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:745
+msgid "wallet.mustConnectAccount"
+msgstr ""
+>>>>>>> lingui

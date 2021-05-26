@@ -1,5 +1,6 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
+import ReactGA from 'react-ga'
 import { X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 import tokenLogo from '../../assets/images/token-logo.png'
@@ -62,6 +63,13 @@ export default function ClaimPopup() {
   // toggle for showing this modal
   const showClaimModal = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleSelfClaimModal = useToggleSelfClaimModal()
+  const handleToggleSelfClaimModal = useCallback(() => {
+    ReactGA.event({
+      category: 'MerkleDrop',
+      action: 'Toggle self claim modal',
+    })
+    toggleSelfClaimModal()
+  }, [toggleSelfClaimModal])
 
   // const userHasAvailableclaim = useUserHasAvailableClaim()
   const userHasAvailableclaim: boolean = useUserHasAvailableClaim(account)
@@ -70,6 +78,10 @@ export default function ClaimPopup() {
   // listen for available claim and show popup if needed
   useEffect(() => {
     if (userHasAvailableclaim) {
+      ReactGA.event({
+        category: 'MerkleDrop',
+        action: 'Show claim popup',
+      })
       toggleShowClaimPopup()
     }
     // the toggleShowClaimPopup function changes every time the popup changes, so this will cause an infinite loop.
@@ -102,7 +114,7 @@ export default function ClaimPopup() {
             </TYPE.subHeader>
           </AutoColumn>
           <AutoColumn style={{ zIndex: 10 }} justify="center">
-            <ButtonPrimary padding="8px" borderRadius="8px" width={'fit-content'} onClick={toggleSelfClaimModal}>
+            <ButtonPrimary padding="8px" borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>
               Claim your UNI tokens
             </ButtonPrimary>
           </AutoColumn>

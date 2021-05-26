@@ -237,7 +237,11 @@ export default function CurrencyInputPanel({
                       ? currency.symbol.slice(0, 4) +
                         '...' +
                         currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+<<<<<<< HEAD
                       : currency?.symbol) || t({ id: 'currencyInput.selectToken', message: 'Select token' })}
+=======
+                      : currency?.symbol) || t({ id: 'currencies.search.selectToken', message: 'Select a token' })}
+>>>>>>> lingui
                   </StyledTokenName>
                 )}
               </RowFixed>

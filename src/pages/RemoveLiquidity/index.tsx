@@ -349,7 +349,11 @@ export default function RemoveLiquidity({
           <>
             <RowBetween>
               <Text color={theme.text2} fontWeight={500} fontSize={16}>
+<<<<<<< HEAD
                 <Trans id="removeLiquidity.labels.modalPrice">Price:</Trans>
+=======
+                <Trans id="removeLiquidity.labels.modalPrice">Price</Trans>
+>>>>>>> lingui
               </Text>
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
@@ -603,7 +607,11 @@ export default function RemoveLiquidity({
             {pair && (
               <div style={{ padding: '10px 20px' }}>
                 <RowBetween>
+<<<<<<< HEAD
                   <Trans id="removeLiquidity.labels.price">Price</Trans>
+=======
+                  <Trans id="removeLiquidity.labels.price">Price:</Trans>
+>>>>>>> lingui
                   <div>
                     1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
                   </div>
