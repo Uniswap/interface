@@ -77,7 +77,20 @@ const useMasterChef = () => {
     [addTransaction, masterChefContract]
   )
 
-  return { masterChefContract, getPoolLength, getPoolInfo, deposit, withdraw, harvest }
+  const harvestMultiplePools = useCallback(
+    async (pids: number[]) => {
+      try {
+        const tx = await masterChefContract?.harvestMultiplePools(pids)
+        return addTransaction(tx, { summary: `Harvest multiple pools: ${pids.join(',')}` })
+      } catch (e) {
+        console.error(e)
+        return e
+      }
+    },
+    [addTransaction, masterChefContract]
+  )
+
+  return { masterChefContract, getPoolLength, getPoolInfo, deposit, withdraw, harvest, harvestMultiplePools }
 }
 
 export default useMasterChef
