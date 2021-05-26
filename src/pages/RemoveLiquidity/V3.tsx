@@ -308,7 +308,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   </TYPE.main>
                   <RowBetween>
                     <ResponsiveHeaderText>
-                      <Trans id="numbers.valueWithPercent">{percentForSlider}%</Trans>
+                      <Trans id="removeLiquidity.labels.percentForSlider">{percentForSlider}%</Trans>
                     </ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">

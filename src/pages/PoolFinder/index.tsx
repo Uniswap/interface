@@ -119,7 +119,7 @@ export default function PoolFinder() {
             </Row>
           ) : (
             <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-              <Trans id="currencies.search.selectToken">Select a Token</Trans>
+              <Trans id="currencies.search.selectToken">Select a token</Trans>
             </Text>
           )}
         </ButtonDropdownLight>
@@ -143,7 +143,7 @@ export default function PoolFinder() {
             </Row>
           ) : (
             <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-              Select a Token
+              <Trans id="currencies.search.selectToken">Select a token</Trans>
             </Text>
           )}
         </ButtonDropdownLight>
