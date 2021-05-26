@@ -10,6 +10,7 @@ function waitRandom(min: number, max: number): Promise<void> {
  * This error is thrown if the function is cancelled before completing
  */
 export class CancelledError extends Error {
+  public isCancelledError: true = true
   constructor() {
     super('Cancelled')
   }
@@ -18,7 +19,9 @@ export class CancelledError extends Error {
 /**
  * Throw this error if the function should retry
  */
-export class RetryableError extends Error {}
+export class RetryableError extends Error {
+  public isRetryableError: true = true
+}
 
 /**
  * Retries the function that returns the promise until the promise successfully resolves up to n retries
@@ -48,7 +51,7 @@ export function retry<T>(
         if (completed) {
           break
         }
-        if (n <= 0 || !(error instanceof RetryableError)) {
+        if (n <= 0 || !error.isRetryableError) {
           reject(error)
           completed = true
           break
