@@ -18,6 +18,7 @@ import { useToken } from 'hooks/Tokens'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { getFarmApr } from 'utils/dmm'
+import { ExternalLink } from 'theme'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
@@ -265,7 +266,9 @@ const ListItem = ({ farm }: ListItemProps) => {
               </div> */}
             </StakeGroup>
             <LPInfoContainer>
-              <LPInfo>{shortenAddress(farm.id)}</LPInfo>
+              <ExternalLink href={`${String(process.env.REACT_APP_DMM_ANALYTICS_URL)}/pool/${farm.id}`}>
+                <LPInfo>{shortenAddress(farm.id)}</LPInfo>
+              </ExternalLink>
               <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`} style={{ textDecoration: 'none' }}>
                 <GetLP>
                   Get {farm.token0?.symbol}-{farm.token1?.symbol} LP ↗
