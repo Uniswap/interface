@@ -75,12 +75,12 @@ export function useLocale(): string {
   return useSelector<AppState, AppState['user']['userLocale']>((state) => state.user.userLocale)
 }
 
-export function useLocaleManager(): [string, (newLocale: string, source?: string) => void] {
+export function useLocaleManager(): [string, (newLocale: string, source: 'user' | 'qs' | 'navigator') => void] {
   const dispatch = useDispatch<AppDispatch>()
   const locale = useLocale()
 
   const setLocale = useCallback(
-    (newLocale: string, source?: string) => {
+    (newLocale: string, source: 'user' | 'qs' | 'navigator') => {
       dispatch(updateUserLocale({ userLocale: newLocale, source }))
     },
     [dispatch]

@@ -22,9 +22,11 @@ export enum Locales {
 }
 export const defaultLocale = 'en'
 
+export const isSupportedLocale = (locale: string): boolean => locale in Locales
+
 export const getNavigatorLocale = (): string | undefined => {
   const detected = detect(fromNavigator())
-  return detected && detected in Locales ? detected : undefined
+  return detected && isSupportedLocale(detected) ? detected : undefined
 }
 
 export async function dynamicActivate(locale: string) {
@@ -38,7 +40,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const locale = useLocale()
 
   useEffect(() => {
-    if (!(locale in Locales)) {
+    if (!isSupportedLocale(locale)) {
       return
     }
 
