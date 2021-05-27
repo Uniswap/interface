@@ -2,8 +2,7 @@ module.exports = {
   catalogs: [
     {
       path: '<rootDir>/src/locales/{locale}/messages',
-      include: ['<rootDir>'],
-      exclude: ['**/node_modules/**', '**/build/**'],
+      include: ['<rootDir>/src'],
     },
   ],
   compileNamespace: 'cjs',
@@ -11,7 +10,10 @@ module.exports = {
     default: 'en',
   },
   format: 'po',
-  locales: ['en', 'pseudo-en', 'de', 'en', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW'],
+  formatOptions: {
+    lineNumbers: false,
+  },
+  locales: ['en', 'pseudo-en', 'de', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW'],
   orderBy: 'messageId',
   pseudoLocale: 'pseudo-en',
   rootDir: '.',
