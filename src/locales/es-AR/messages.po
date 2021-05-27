@@ -118,7 +118,7 @@ msgstr ""
 msgid "currencies.search.selectToken"
 msgstr "Seleccioná un token"
 
-#: src/components/Web3Status/index.tsx:208
+#: src/components/Web3Status/index.tsx:214
 msgid "error.generic"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgstr ""
 msgid "error.unsupportedAssets"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:207
+#: src/components/Web3Status/index.tsx:213
 msgid "error.wrongNetwork"
 msgstr ""
 
@@ -734,7 +734,7 @@ msgstr ""
 msgid "transactions.confirmation.button"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:188
+#: src/components/Web3Status/index.tsx:194
 msgid "transactions.pending"
 msgstr ""
 
@@ -762,12 +762,16 @@ msgstr ""
 msgid "wallet.connect"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:216
+#: src/components/Web3Status/index.tsx:222
 msgid "wallet.connectLongForm"
 msgstr ""
 
 #: src/components/Header/index.tsx:393
 msgid "wallet.ethBalance"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx:130
+msgid "wallet.hasSocks"
 msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:745
