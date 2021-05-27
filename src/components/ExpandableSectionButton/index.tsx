@@ -19,11 +19,11 @@ const ExpandableSectionButton = ({ onClick, expanded }: ExpandableSectionButtonP
     <ButtonEmpty padding="0" width="100%" onClick={() => typeof onClick === 'function' && onClick()}>
       {expanded ? (
         <StyledIcon>
-          <ChevronUp />
+          <ChevronUp size={16} />
         </StyledIcon>
       ) : (
         <StyledIcon>
-          <ChevronDown />
+          <ChevronDown size={16} />
         </StyledIcon>
       )}
     </ButtonEmpty>

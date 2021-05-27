@@ -23,6 +23,7 @@
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.2",
     "@types/rebass": "^4.0.5",
+    "@types/rebass__forms": "^4.0.4",
     "@types/styled-components": "^5.1.0",
     "@types/wcag-contrast": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
@@ -124,6 +125,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@apollo/client": "^3.3.11",
+    "@rebass/forms": "^4.0.6",
     "@sushiswap/core": "^1.4.2",
     "@sushiswap/sdk": "^5.0.0-canary.6",
     "@types/big.js": "^6.0.0",

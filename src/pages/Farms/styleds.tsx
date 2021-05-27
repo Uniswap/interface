@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Switch } from '@rebass/forms'
 
 import { ButtonEmpty } from 'components/Button'
 
@@ -57,6 +58,23 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   &:focus {
     text-decoration: none;
   }
+`
+
+export const StakedOnlyToggleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+export const StakedOnlyToggle = styled(Switch)`
+  transform: scale(0.7);
+  color: ${({ theme }) => theme.bg14};
+`
+
+export const StakedOnlyToggleText = styled.div`
+  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text7};
 `
 
 export const AdContainer = styled.div`
@@ -126,11 +144,4 @@ export const EndInTitle = styled.div`
   margin-right: 12px;
   font-size: 16px;
   font-weight: 500;
-`
-
-export const ConnectWalletFarm = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
 `

@@ -1,6 +1,7 @@
-import { ethers } from 'ethers'
-import { useMasterChefContract } from 'hooks/useContract'
 import { useCallback } from 'react'
+import { BigNumber } from 'ethers'
+
+import { useMasterChefContract } from 'hooks/useContract'
 import { useTransactionAdder } from '../state/transactions/hooks'
 
 const useMasterChef = () => {
@@ -35,11 +36,8 @@ const useMasterChef = () => {
   // Deposit
   const deposit = useCallback(
     async (pid: number, amount: string, name: string, shouldHaverst = false) => {
-      // KMP decimals depend on asset, SLP is always 18
-      // console.log('depositing...', pid, amount)
-
       try {
-        const tx = await masterChefContract?.deposit(pid, ethers.utils.parseUnits(amount, 18), shouldHaverst)
+        const tx = await masterChefContract?.deposit(pid, BigNumber.from(amount), shouldHaverst)
         return addTransaction(tx, { summary: `Deposit ${name}` })
       } catch (e) {
         console.error(e)
@@ -51,10 +49,9 @@ const useMasterChef = () => {
 
   // Withdraw
   const withdraw = useCallback(
-    async (pid: number, amount: string, name: string, decimals = 18) => {
-      console.log('===withdrawwwwwwwww', pid, ethers.utils.parseUnits(amount, decimals))
+    async (pid: number, amount: string, name: string) => {
       try {
-        const tx = await masterChefContract?.withdraw(pid, ethers.utils.parseUnits(amount, decimals))
+        const tx = await masterChefContract?.withdraw(pid, BigNumber.from(amount))
         return addTransaction(tx, { summary: `Withdraw ${name}` })
       } catch (e) {
         console.error(e)
