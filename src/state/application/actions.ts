@@ -32,7 +32,3 @@ export const updateMainnetGasPrices = createAction<{ [variant in MainnetGasPrice
   'application/updateMainnetGasPrices'
 )
 export const setOpenModal = createAction<ApplicationModal | null>('application/setOpenModal')
-export const addPopup = createAction<{ key?: string; removeAfterMs?: number | null; content: PopupContent }>(
-  'application/addPopup'
-)
-export const removePopup = createAction<{ key: string }>('application/removePopup')

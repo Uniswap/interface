@@ -17,8 +17,9 @@ import { useActiveWeb3React } from '../../hooks'
 const Wrapper = styled.div`
   width: 100%;
 `
+
 const Section = styled(AutoColumn)`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1And2};
   padding: 24px;
 `
 

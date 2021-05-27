@@ -362,4 +362,43 @@ body {
   color: ${props => props.theme.bg3};
 }
 
+.custom-toast-root {
+    margin-top: 70px;
+}
+
+.custom-toast-container {
+    box-shadow: 0px 16px 12px ${({ theme }) => transparentize(0.55, theme.boxShadow)};
+    border-radius: 12px !important;
+}
+
+.custom-toast-body {
+    font-family: "Montserrat";
+    padding: 4px 8px;
+}
+
+.Toastify__toast {
+    min-height: auto !important;
+    padding: 16px;
+}
+
+.Toastify__toast-body {
+    margin: 0 !important;
+}
+
+.Toastify__toast--info {
+    background: ${props => props.theme.bg1} !important;
+}
+
+@media only screen and (max-width: 600px) {
+	.Toastify__toast-container--top-right {
+	    top: auto !important;
+	    bottom: 70px !important;
+	    left: 12px !important;
+	    right: 12px !important;
+	}
+	
+  .Toastify__toast-container {
+	    width: auto !important;
+	}
+}
 `

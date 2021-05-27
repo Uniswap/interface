@@ -5,7 +5,6 @@ import { Route, Switch } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
 import { defaultSubgraphClient, subgraphClients } from '../apollo/client'
 import Header from '../components/Header'
-import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
@@ -22,6 +21,8 @@ import { SkeletonTheme } from 'react-loading-skeleton'
 import MyPairs from './Pools/Mine'
 import LiquidityMiningCampaign from './Pools/LiquidityMiningCampaign'
 import NetworkWarningModal from '../components/NetworkWarningModal'
+import { Slide, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -76,7 +77,14 @@ export default function App() {
               <Header />
             </HeaderWrapper>
             <BodyWrapper>
-              <Popups />
+              <ToastContainer
+                className="custom-toast-root"
+                toastClassName="custom-toast-container"
+                bodyClassName="custom-toast-body"
+                position="top-right"
+                closeButton={false}
+                transition={Slide}
+              />
               <Web3ReactManager>
                 <Switch>
                   <Route exact strict path="/swap" component={Swap} />
