@@ -4,7 +4,21 @@ import { I18nProvider } from '@lingui/react'
 import { detect, fromUrl } from '@lingui/detect-locale'
 import { ReactNode, useEffect } from 'react'
 
-export const locales = ['en', 'pseudo-en']
+export const locales = [
+  'en',
+  'pseudo-en',
+  'de',
+  'en',
+  'es-AR',
+  'es-US',
+  'it-IT',
+  'iw',
+  'ro',
+  'ru',
+  'vi',
+  'zh-CN',
+  'zh-TW',
+]
 export const defaultLocale = 'en'
 
 // load locale data for each supported language
