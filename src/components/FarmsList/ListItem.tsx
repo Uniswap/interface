@@ -9,6 +9,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Fraction, JSBI, Token } from 'libs/sdk/src'
 import { KNC } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
+import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Farm } from 'state/farms/types'
 import { formattedNum, isAddressString, shortenAddress } from 'utils'
 import { useFarmClaimModalToggle, useFarmStakeModalToggle, useKNCPrice } from 'state/application/hooks'
@@ -22,9 +23,9 @@ import { ExternalLink } from 'theme'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
-  grid-gap: 1em;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
-  grid-template-areas: 'pools liq apy reward staked_balance';
+  grid-gap: 3rem;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 0.25fr;
+  grid-template-areas: 'pools liq apy reward staked_balance expand';
   padding: 15px 36px 13px 26px;
   font-size: 14px;
   align-items: center;
@@ -34,6 +35,18 @@ const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   background-color: ${({ theme }) => theme.bg15};
   border: 1px solid transparent;
   border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? 'transparent' : theme.advancedBorder)};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-gap: 1rem;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-gap: 1.5rem;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    grid-gap: 1.5rem;
+  `};
 
   &:hover {
     cursor: pointer;
@@ -104,9 +117,10 @@ const StyledItemCard = styled.div`
   `}
 `
 
-const DataText = styled(Flex)`
+const DataText = styled(Flex)<{ align?: string }>`
   color: ${({ theme }) => theme.text7};
   flex-direction: column;
+  align-items: ${({ align }) => (align === 'right' ? 'flex-end' : 'flex-start')};
 `
 
 interface ListItemProps {
@@ -209,12 +223,17 @@ const ListItem = ({ farm }: ListItemProps) => {
             )}
           </div>
         </DataText>
-        <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
+        <DataText grid-area="liq" align="right">
+          {formattedNum(liquidity.toString(), true)}
+        </DataText>
         <DataText grid-area="apy" style={{ color: 'rgba(137, 255, 120, 0.67)' }}>
           {apr.toFixed(2)}%
         </DataText>
-        <DataText grid-area="reward">{`${getFullDisplayBalance(userEarning)} KNC`}</DataText>
-        <DataText grid-area="staked_balance">{formattedNum(userStakedBalanceUSD.toString(), true)}</DataText>
+        <DataText grid-area="reward" align="right">{`${getFullDisplayBalance(userEarning)} KNC`}</DataText>
+        <DataText grid-area="staked_balance" align="right">
+          {formattedNum(userStakedBalanceUSD.toString(), true)}
+        </DataText>
+        <ExpandableSectionButton expanded={expand} />
       </TableRow>
 
       {expand && (

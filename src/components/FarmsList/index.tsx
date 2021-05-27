@@ -12,9 +12,9 @@ const FarmListWrapper = styled.div`
 
 const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
-  grid-gap: 1em;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr;
-  grid-template-areas: 'pools liq apy reward staked_balance';
+  grid-gap: 3rem;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 0.25fr;
+  grid-template-areas: 'pools liq apy reward staked_balance expand';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
   align-items: center;
@@ -24,6 +24,18 @@ const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   background-color: ${({ theme }) => theme.evenRow};
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-gap: 1rem;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-gap: 1.5rem;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    grid-gap: 1.5rem;
+  `};
 `
 
 const ClickableText = styled(Text)`
@@ -46,23 +58,23 @@ const FarmsList = ({ farms }: FarmsListProps) => {
   const renderHeader = () => {
     return (
       <TableHeader>
-        <Flex grid-area="pools" alignItems="center" justifyContent="flexStart">
+        <Flex grid-area="pools" alignItems="center" justifyContent="flex-start">
           <ClickableText>Pools | AMP</ClickableText>
         </Flex>
 
-        <Flex grid-area="liq" alignItems="center" justifyContent="flexEnd">
+        <Flex grid-area="liq" alignItems="center" justifyContent="flex-end">
           <ClickableText>Liquidity</ClickableText>
         </Flex>
 
-        <Flex grid-area="apy" alignItems="center" justifyContent="flexEnd">
+        <Flex grid-area="apy" alignItems="center" justifyContent="flex-start">
           <ClickableText>APY</ClickableText>
         </Flex>
 
-        <Flex grid-area="reward" alignItems="center" justifyContent="flexEnd">
+        <Flex grid-area="reward" alignItems="center" justifyContent="flex-end">
           <ClickableText>My Rewards</ClickableText>
         </Flex>
 
-        <Flex grid-area="staked_balance" alignItems="center" justifyContent="flexEnd">
+        <Flex grid-area="staked_balance" alignItems="center" justifyContent="flex-end">
           <ClickableText>My Deposit</ClickableText>
         </Flex>
       </TableHeader>
