@@ -1,0 +1,779 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2021-05-26 14:43-0700\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: zh-TW\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/AddLiquidity/index.tsx:528
+msgid "addLiquidity.labels.currentPrice"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:574
+msgid "addLiquidity.labels.selectLiquidityRange"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:439
+msgid "addLiquidity.labels.selectPair"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:500
+msgid "addLiquidity.labels.selectStartingPrice"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:484
+msgid "addLiquidity.labels.selectedRange"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:368
+msgid "buttons.confirm"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:257
+msgid "buttons.remove"
+msgstr ""
+
+#: src/components/Header/index.tsx:383
+msgid "claim.buttons.claimUNI"
+msgstr ""
+
+#: src/components/Header/index.tsx:380
+msgid "claim.buttons.claimingUNI"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx:146
+msgid "common.IUnderstand"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:443
+msgid "common.clearAll"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:475
+msgid "common.detailed"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:758
+#: src/pages/PoolFinder/index.tsx:207
+#: src/pages/Swap/index.tsx:535
+msgid "common.loading"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:473
+msgid "common.simple"
+msgstr ""
+
+#: src/pages/Pool/CTACards.tsx:140
+msgid "cta.topPools"
+msgstr ""
+
+#: src/pages/Pool/CTACards.tsx:143
+msgid "cta.v3.explore"
+msgstr ""
+
+#: src/pages/Pool/CTACards.tsx:126
+msgid "cta.v3.launchAnnouncement"
+msgstr ""
+
+#: src/pages/Pool/CTACards.tsx:129
+msgid "cta.v3.walkthroughAndMigration"
+msgstr ""
+
+#: src/components/PositionPreview/index.tsx:126
+#: src/components/PositionPreview/index.tsx:145
+#: src/components/PositionPreview/index.tsx:164
+#: src/pages/Pool/PositionPage.tsx:173
+#: src/pages/Pool/PositionPage.tsx:807
+msgid "currencies.denominated"
+msgstr ""
+
+#: src/components/CurrencyInputPanel/index.tsx:280
+msgid "currencies.input.max"
+msgstr ""
+
+#: src/components/CurrencyInputPanel/index.tsx:202
+msgid "currencies.input.priceOutsideWarning"
+msgstr ""
+
+#: src/components/SearchModal/CurrencySearch.tsx:220
+msgid "currencies.search.noResults"
+msgstr ""
+
+#: src/components/SearchModal/CurrencySearch.tsx:182
+msgid "currencies.search.placeholder"
+msgstr ""
+
+#: src/components/CurrencyInputPanel/index.tsx:240
+#: src/components/SearchModal/CurrencySearch.tsx:174
+#: src/pages/PoolFinder/index.tsx:122
+#: src/pages/PoolFinder/index.tsx:146
+msgid "currencies.search.selectToken"
+msgstr "選擇代幣"
+
+#: src/components/Web3Status/index.tsx:214
+msgid "error.generic"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:654
+msgid "error.invalidRangeWarning"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:708
+msgid "error.unsupportedAsset"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:514
+msgid "error.unsupportedAssets"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx:213
+msgid "error.wrongNetwork"
+msgstr ""
+
+#: src/components/Web3ReactManager/index.tsx:61
+msgid "errors.unknown"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:640
+msgid "inactiveRangeWarning"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:307
+msgid "labels.amount"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:413
+msgid "labels.inactive"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:324
+msgid "labels.max"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:415
+msgid "labels.remove"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:672
+msgid "liquidity.depositAmounts"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:659
+msgid "migrate.buttons.migrate"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:656
+msgid "migrate.buttons.migrating"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:586
+msgid "migrate.errors.invalidRangeWarning"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:458
+msgid "migrate.hint.firstV3LPGasCost"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:451
+msgid "migrate.hint.firstV3LiquidityProvider"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:404
+msgid "migrate.hint.migrationContract"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:519
+msgid "migrate.hint.priceHint"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:397
+msgid "migrate.hint.toolInformation"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:573
+msgid "migrate.hints.inactiveRangeWarning"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:600
+msgid "migrate.hints.priceRangeRefund"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:438
+msgid "migrate.label.lpNFTToken"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:417
+msgid "migrate.label.lpToken"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:738
+msgid "migrate.labels.migrateV2Liquidity"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:467
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:485
+msgid "migrate.labels.price"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:511
+msgid "migrate.labels.priceDifference"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:541
+msgid "migrate.labels.selectLiquidityRange"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:498
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:529
+msgid "migrate.labels.v3Price"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:814
+msgid "minMaxPriceHint"
+msgstr ""
+
+#: src/components/Header/index.tsx:362
+msgid "nav.charts"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx:83
+msgid "nav.importPool"
+msgstr ""
+
+#: src/components/Header/index.tsx:356
+#: src/components/NavigationTabs/index.tsx:69
+msgid "nav.pool"
+msgstr "资金池"
+
+#: src/components/Header/index.tsx:343
+#: src/components/NavigationTabs/index.tsx:66
+msgid "nav.swap"
+msgstr "兑换"
+
+#: src/components/Header/index.tsx:359
+msgid "nav.vote"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:315
+msgid "number.25Percent"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:318
+msgid "number.50Percent"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:321
+msgid "number.75Percent"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:666
+msgid "numbers.emptyFiatValue"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:612
+msgid "numbers.emptyValueInFiat"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:662
+msgid "numbers.fiatValue"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:606
+msgid "numbers.valueInFiat"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:514
+#: src/pages/Pool/PositionPage.tsx:528
+#: src/pages/Pool/PositionPage.tsx:627
+#: src/pages/Pool/PositionPage.tsx:642
+msgid "numbers.valueWithPercent"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:506
+msgid "pool.label.claimFees"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:511
+msgid "pool.label.collectingFees"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:205
+#: src/pages/RemoveLiquidity/V3.tsx:216
+#: src/pages/RemoveLiquidity/V3.tsx:335
+#: src/pages/RemoveLiquidity/V3.tsx:346
+msgid "pool.pooledCurrency"
+msgstr ""
+
+#: src/components/PositionList/index.tsx:50
+#: src/pages/Pool/PositionPage.tsx:759
+msgid "pool.priceRange"
+msgstr ""
+
+#: src/components/PositionList/index.tsx:46
+#: src/components/PositionList/index.tsx:54
+msgid "pool.yourPositions"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:517
+msgid "pools.button.backToPoolsOverview"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx:125
+msgid "pools.buttons.addLiquidity"
+msgstr "增加流動性資金"
+
+#: src/pages/PoolFinder/index.tsx:178
+msgid "pools.buttons.addLiquidityPoolFinder"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:476
+msgid "pools.buttons.collect"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx:123
+msgid "pools.buttons.createPair"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:191
+msgid "pools.buttons.createPool"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:544
+msgid "pools.buttons.increaseLiquidity"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:160
+msgid "pools.buttons.manage"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:291
+msgid "pools.buttons.migrateLiquidity"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:252
+msgid "pools.buttons.migrateV2Liquidity"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:196
+msgid "pools.buttons.newPosition"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:581
+msgid "pools.buttons.owner"
+msgstr ""
+
+#: src/components/NavigationTabs/index.tsx:127
+#: src/pages/Pool/PositionPage.tsx:555
+msgid "pools.buttons.removeLiquidity"
+msgstr "領出流動性資金"
+
+#: src/pages/Pool/index.tsx:274
+msgid "pools.buttons.viewV2Liquidity"
+msgstr ""
+
+#: src/components/PositionPreview/index.tsx:160
+#: src/pages/Pool/PositionPage.tsx:167
+msgid "pools.currentPrice"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:238
+msgid "pools.emptyStateHint"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:188
+msgid "pools.error.noPoolFound"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:199
+msgid "pools.errors.invalidPair"
+msgstr ""
+
+#: src/components/FeeSelector/index.tsx:67
+msgid "pools.feeSelector.highFee"
+msgstr ""
+
+#: src/components/FeeSelector/index.tsx:69
+msgid "pools.feeSelector.highFeeHint"
+msgstr ""
+
+#: src/components/FeeSelector/index.tsx:43
+msgid "pools.feeSelector.lowFee"
+msgstr ""
+
+#: src/components/FeeSelector/index.tsx:45
+msgid "pools.feeSelector.lowFeeHint"
+msgstr ""
+
+#: src/components/FeeSelector/index.tsx:55
+msgid "pools.feeSelector.mediumFee"
+msgstr ""
+
+#: src/components/FeeSelector/index.tsx:57
+msgid "pools.feeSelector.mediumFeeHint"
+msgstr ""
+
+#: src/components/FeeSelector/index.tsx:31
+msgid "pools.feeSelector.subtitle"
+msgstr ""
+
+#: src/components/FeeSelector/index.tsx:29
+msgid "pools.feeSelector.title"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:179
+msgid "pools.heading.poolsOverview"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:473
+msgid "pools.hint.collectingFees"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:101
+msgid "pools.hint.toolHelperText"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:86
+msgid "pools.label.connectWalletToFindPools"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:174
+msgid "pools.label.noLiquidityInPoolYet"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:693
+msgid "pools.labels.collectFees"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:740
+#: src/pages/RemoveLiquidity/V3.tsx:395
+msgid "pools.labels.collectFeesAsWETH"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:681
+msgid "pools.labels.collectedFees"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:687
+msgid "pools.labels.collectingFees"
+msgstr ""
+
+#: src/components/PositionPreview/index.tsx:99
+msgid "pools.labels.feeTier"
+msgstr ""
+
+#: src/components/PositionPreview/index.tsx:102
+msgid "pools.labels.feeTierValue"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:70
+msgid "pools.labels.inRange"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:62
+msgid "pools.labels.inRangeTooltip"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:56
+msgid "pools.labels.inactive"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:47
+msgid "pools.labels.inactiveTooltip"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:602
+msgid "pools.labels.liquidity"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:86
+msgid "pools.labels.outOfRange"
+msgstr ""
+
+#: src/components/Badge/RangeBadge.tsx:76
+msgid "pools.labels.outOfRangeTooltip"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:156
+msgid "pools.labels.poolFound"
+msgstr ""
+
+#: src/pages/PoolFinder/index.tsx:88
+msgid "pools.labels.selectTokenToFindLiquidity"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:658
+msgid "pools.labels.unclaimedFees"
+msgstr ""
+
+#: src/components/PositionPreview/index.tsx:141
+msgid "pools.maxPrice"
+msgstr ""
+
+#: src/pages/Pool/PositionPage.tsx:802
+msgid "pools.maxPriceLabel"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:132
+msgid "pools.menu.create"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:162
+msgid "pools.menu.learn"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:142
+msgid "pools.menu.migrate"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:189
+msgid "pools.menu.more"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:152
+msgid "pools.menu.v2Liquidity"
+msgstr ""
+
+#: src/components/PositionPreview/index.tsx:131
+#: src/components/PositionPreview/index.tsx:150
+#: src/pages/Pool/PositionPage.tsx:790
+msgid "pools.minMaxPriceHint"
+msgstr ""
+
+#: src/components/PositionPreview/index.tsx:122
+#: src/pages/Pool/PositionPage.tsx:783
+msgid "pools.minPriceLabel"
+msgstr ""
+
+#: src/pages/Pool/index.tsx:206
+msgid "pools.toggle.hideClosedPositions"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:464
+msgid "removeLiquidity.buttons.RemoveAmount"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:652
+msgid "removeLiquidity.buttons.remove"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:193
+#: src/pages/RemoveLiquidity/index.tsx:375
+msgid "removeLiquidity.confirming.pending"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:323
+msgid "removeLiquidity.hint.outputEstimated"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:228
+msgid "removeLiquidity.hints.collectFeesEarn"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:453
+msgid "removeLiquidity.hints.removingPoolTokensConvertsPosition"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:234
+#: src/pages/RemoveLiquidity/V3.tsx:245
+#: src/pages/RemoveLiquidity/V3.tsx:360
+msgid "removeLiquidity.label.feesEarned"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:337
+msgid "removeLiquidity.labels.UNIBurned"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:441
+msgid "removeLiquidity.labels.confirmationTitle"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:352
+msgid "removeLiquidity.labels.modalPrice"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:311
+msgid "removeLiquidity.labels.percentForSlider"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:606
+msgid "removeLiquidity.labels.price"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:272
+msgid "removeLiquidity.labels.removeLiquidity"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:575
+msgid "swap.buttons.allowUniswapToUseCurrency"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:467
+msgid "swap.buttons.backToV3"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:624
+msgid "swap.buttons.highPriceImpact"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:657
+msgid "swap.buttons.priceImpactTooHigh"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:628
+#: src/pages/Swap/index.tsx:661
+msgid "swap.buttons.swap"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:626
+#: src/pages/Swap/index.tsx:659
+msgid "swap.buttons.swapAnyway"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:571
+msgid "swap.buttons.tradeCurrency"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:527
+msgid "swap.buttons.unwrap"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:525
+msgid "swap.buttons.wrap"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:587
+msgid "swap.hints.permission"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:383
+msgid "swap.labels.from"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:382
+msgid "swap.labels.fromAtMost"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:542
+msgid "swap.labels.insufficientLiquidity"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:538
+msgid "swap.labels.insufficientLiquiditySingleHopOnly"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:433
+msgid "swap.labels.removeSend"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:412
+msgid "swap.labels.to"
+msgstr ""
+
+#: src/pages/Swap/index.tsx:411
+msgid "swap.labels.toAtLeast"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx:158
+msgid "tokenLists.buttons.import"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx:126
+msgid "tokenLists.importHint1"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx:133
+msgid "tokenLists.importHint2"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx:85
+msgid "tokenLists.importList"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx:120
+msgid "tokenLists.importWarning"
+msgstr ""
+
+#: src/components/SearchModal/CurrencySearch.tsx:232
+msgid "tokenLists.manage"
+msgstr ""
+
+#: src/components/SearchModal/ImportList.tsx:104
+msgid "tokensLists.numberOfTokens"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:633
+msgid "transactions.allowLPTokenMigration"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:631
+msgid "transactions.allower"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:641
+msgid "transactions.approve"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:639
+msgid "transactions.approved"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:628
+#: src/pages/RemoveLiquidity/index.tsx:636
+msgid "transactions.approving"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:417
+msgid "transactions.confirmation.button"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx:194
+msgid "transactions.pending"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:266
+msgid "transactions.summary.addLiquidity"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:262
+msgid "transactions.summary.createPoolAndAddLiquidity"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/index.tsx:269
+#: src/pages/RemoveLiquidity/index.tsx:269
+msgid "transactions.summary.removeLiquidity"
+msgstr ""
+
+#: src/pages/RemoveLiquidity/V3.tsx:155
+msgid "transactions.summary.removeLiquidityV3"
+msgstr ""
+
+#: src/pages/AddLiquidity/index.tsx:713
+#: src/pages/Pool/index.tsx:243
+#: src/pages/RemoveLiquidity/index.tsx:622
+#: src/pages/Swap/index.tsx:519
+msgid "wallet.connect"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx:222
+msgid "wallet.connectLongForm"
+msgstr ""
+
+#: src/components/Header/index.tsx:393
+msgid "wallet.ethBalance"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx:130
+msgid "wallet.hasSocks"
+msgstr ""
+
+#: src/pages/MigrateV2/MigrateV2Pair.tsx:745
+msgid "wallet.mustConnectAccount"
+msgstr ""
