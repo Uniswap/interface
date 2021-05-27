@@ -118,11 +118,7 @@ msgstr "Search name or paste address"
 msgid "currencies.search.selectToken"
 msgstr "Select a token"
 
-<<<<<<< HEAD:src/locales/en/messages.po
-#: src/components/Web3Status/index.tsx:214
-=======
 #: src/components/Web3Status/index.tsx
->>>>>>> main:src/locales/en.po
 msgid "error.generic"
 msgstr "Error"
 
@@ -138,11 +134,7 @@ msgstr "Unsupported Asset"
 msgid "error.unsupportedAssets"
 msgstr "Unsupported Asset"
 
-<<<<<<< HEAD:src/locales/en/messages.po
-#: src/components/Web3Status/index.tsx:213
-=======
 #: src/components/Web3Status/index.tsx
->>>>>>> main:src/locales/en.po
 msgid "error.wrongNetwork"
 msgstr "Wrong Network"
 
@@ -742,11 +734,7 @@ msgstr "Approving"
 msgid "transactions.confirmation.button"
 msgstr "Add"
 
-<<<<<<< HEAD:src/locales/en/messages.po
-#: src/components/Web3Status/index.tsx:194
-=======
 #: src/components/Web3Status/index.tsx
->>>>>>> main:src/locales/en.po
 msgid "transactions.pending"
 msgstr "{0} Pending"
 
@@ -774,11 +762,7 @@ msgstr "Remove {0}/{1} V3 liquidity"
 msgid "wallet.connect"
 msgstr "Connect Wallet"
 
-<<<<<<< HEAD:src/locales/en/messages.po
-#: src/components/Web3Status/index.tsx:222
-=======
 #: src/components/Web3Status/index.tsx
->>>>>>> main:src/locales/en.po
 msgid "wallet.connectLongForm"
 msgstr "Connect to a wallet"
 
@@ -786,14 +770,10 @@ msgstr "Connect to a wallet"
 msgid "wallet.ethBalance"
 msgstr "{0} ETH"
 
-<<<<<<< HEAD:src/locales/en/messages.po
-#: src/components/Web3Status/index.tsx:130
+#: src/components/Web3Status/index.tsx
 msgid "wallet.hasSocks"
 msgstr "has socks emoji"
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:745
-=======
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
->>>>>>> main:src/locales/en.po
 msgid "wallet.mustConnectAccount"
 msgstr "You must connect an account."
