@@ -7,9 +7,6 @@ import { ReactNode, useEffect } from 'react'
 export const locales = ['en', 'pseudo-en', 'de', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW']
 export const defaultLocale = 'en'
 
-// load locale data for each supported language
-locales.forEach((locale) => i18n.loadLocaleData(locale, { plurals: () => null }))
-
 const getDetectedLocale = () => {
   const detected =
     detect(
@@ -21,6 +18,7 @@ const getDetectedLocale = () => {
 
 export async function dynamicActivate(locale: string) {
   const { messages } = await import(`@lingui/loader!./locales/${locale}.po`)
+  i18n.loadLocaleData(locale, { plurals: () => null })
   i18n.load(locale, messages)
   i18n.activate(locale)
 }
