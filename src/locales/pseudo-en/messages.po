@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: pseudo-en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/pages/AddLiquidity/index.tsx:528
 msgid "addLiquidity.labels.currentPrice"
@@ -112,7 +118,7 @@ msgstr ""
 msgid "currencies.search.selectToken"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:208
+#: src/components/Web3Status/index.tsx:214
 msgid "error.generic"
 msgstr ""
 
@@ -128,7 +134,7 @@ msgstr ""
 msgid "error.unsupportedAssets"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:207
+#: src/components/Web3Status/index.tsx:213
 msgid "error.wrongNetwork"
 msgstr ""
 
@@ -728,7 +734,7 @@ msgstr ""
 msgid "transactions.confirmation.button"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:188
+#: src/components/Web3Status/index.tsx:194
 msgid "transactions.pending"
 msgstr ""
 
@@ -756,12 +762,16 @@ msgstr ""
 msgid "wallet.connect"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:216
+#: src/components/Web3Status/index.tsx:222
 msgid "wallet.connectLongForm"
 msgstr ""
 
 #: src/components/Header/index.tsx:393
 msgid "wallet.ethBalance"
+msgstr ""
+
+#: src/components/Web3Status/index.tsx:130
+msgid "wallet.hasSocks"
 msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx:745

@@ -7,9 +7,6 @@ import { ReactNode, useEffect } from 'react'
 export const locales = ['en', 'pseudo-en']
 export const defaultLocale = 'en'
 
-// load locale data for each supported language
-locales.forEach((locale) => i18n.loadLocaleData(locale, { plurals: () => null }))
-
 const getDetectedLocale = () => {
   const detected =
     detect(
