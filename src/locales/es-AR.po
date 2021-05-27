@@ -770,6 +770,10 @@ msgstr ""
 msgid "wallet.ethBalance"
 msgstr ""
 
+#: src/components/Web3Status/index.tsx
+msgid "wallet.hasSocks"
+msgstr ""
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "wallet.mustConnectAccount"
 msgstr ""
