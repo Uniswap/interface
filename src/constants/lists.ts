@@ -16,6 +16,10 @@ const CMC_STABLECOIN = 'stablecoin.cmc.eth'
 const KLEROS_LIST = 't2crtokens.eth'
 const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
 const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
+const HONEYSWAP_LIST = 'https://tokens.honeyswap.org'
+const LEVINSWAP_LIST =
+  'https://ipfs.io/ipfs/QmUWxthidUYXUJ2kiZLLPxkMKYDAinnpA591R3SRN6wufs?filename=levinswap-default.tokenlist.json'
+const BAOSWAP_LIST = 'https://raw.githubusercontent.com/baofinance/tokenlists/main/xdai.json'
 
 export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 
@@ -23,6 +27,9 @@ export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST]
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   DEFAULT_TOKEN_LIST,
   COMPOUND_LIST,
+  HONEYSWAP_LIST,
+  LEVINSWAP_LIST,
+  BAOSWAP_LIST,
   AAVE_LIST,
   SYNTHETIX_LIST,
   UMA_LIST,
