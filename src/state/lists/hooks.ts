@@ -7,6 +7,7 @@ import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { WrappedTokenInfo } from './wrapped-token-info'
 import { ChainId } from 'dxswap-sdk'
+import { useActiveWeb3React } from '../../hooks'
 
 export type TokenAddressMap = Readonly<{
   [chainId: number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }>
@@ -95,6 +96,15 @@ export function useInactiveListUrls(): string[] {
 export function useCombinedActiveList(): TokenAddressMap {
   const activeListUrls = useActiveListUrls()
   return useCombinedTokenMapFromUrls(activeListUrls)
+}
+
+export function useAllTokensFromActiveListsOnCurrentChain(): Readonly<{
+  [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList }
+}> {
+  const { chainId } = useActiveWeb3React()
+  const activeListUrls = useActiveListUrls()
+  const combinedList = useCombinedTokenMapFromUrls(activeListUrls)
+  return useMemo(() => combinedList[chainId || ChainId.MAINNET], [chainId, combinedList])
 }
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds
