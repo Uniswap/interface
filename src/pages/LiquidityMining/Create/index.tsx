@@ -72,7 +72,7 @@ export default function CreateLiquidityMining() {
 
   const handleEndTimeChange = useCallback(
     (newEndTime: Date) => {
-      if (startTime ? startTime.getTime() > newEndTime.getTime() : Date.now() > newEndTime.getTime()) return // date in the past, invalid
+      if (startTime ? startTime.getTime() >= newEndTime.getTime() : Date.now() > newEndTime.getTime()) return // date in the past, invalid
       setEndTime(newEndTime)
     },
     [startTime]
