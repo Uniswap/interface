@@ -20,7 +20,7 @@ Uniswap interface uses [LinguiJS](https://lingui.js.org/) to manage locales and 
 - Add locale to locales array in [lingui.config.js](https://github.com/Uniswap/uniswap-interface/blob/main/lingui.config.js#L14)
 - Add locale to locales array in [i18n.tsx](https://github.com/Uniswap/uniswap-interface/blob/main/src/i18n.tsx#L7)
 - Run `yarn i18n:extract` to generate messages.po inside [src/locales/{locale}](https://github.com/Uniswap/uniswap-interface/tree/main/src/locales)
-- Continue to Editing Translations below
+- Continue to [Existing Translation](#existing-translation) below
 
 ## Existing Translation
 
