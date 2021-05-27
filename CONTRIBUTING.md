@@ -4,7 +4,7 @@ Thank you for your interest in contributing to the Uniswap interface! 🦄
 
 See [README.md](https://github.com/Uniswap/uniswap-interface/blob/main/README.md) for instructions on running the app locally.
 
-Start with issues with label [good first issue](https://github.com/Uniswap/uniswap-interface/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+Start with issues with label [good first issue](https://github.com/Uniswap/uniswap-interface/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
 
 # Translations
 
@@ -12,7 +12,7 @@ Help Uniswap cover more languages!
 
 Uniswap interface uses PO file to manage translations. See [Working with PO Files](https://www.gnu.org/software/trans-coord/manual/gnun/html_node/PO-Files.html#PO-Files)
 
-## New Translation
+## Starting a New Translation
 
 Uniswap interface uses [LinguiJS](https://lingui.js.org/) to manage locales and translations.
 
