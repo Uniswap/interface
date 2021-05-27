@@ -13,7 +13,7 @@ export default function useRampWidget() {
       hostLogoUrl: 'https://fuse-brand-assets.s3.eu-central-1.amazonaws.com/fuse.png',
       swapAsset: 'FUSD',
       userAddress: account,
-      hostApiKey: process.env.HOST_API_KEY
+      hostApiKey: process.env.RAMP_HOST_API_KEY
     })
 
     widget.show()
