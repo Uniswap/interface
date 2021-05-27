@@ -600,9 +600,10 @@ function V2PairMigration({
                 {chainId && refund0 && refund1 ? (
                   <TYPE.black fontSize={12}>
                     <Trans id="migrate.hints.priceRangeRefund">
-                      At least {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol}{' '}
-                      and {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will
-                      be refunded to your wallet due to selected price range.
+                      At least {formatTokenAmount(refund0, 4)}{' '}
+                      {token0.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : token0.symbol} and{' '}
+                      {formatTokenAmount(refund1, 4)} {token1.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : token1.symbol}{' '}
+                      will be refunded to your wallet due to selected price range.
                     </Trans>
                   </TYPE.black>
                 ) : null}
