@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { HashRouter } from 'react-router-dom'
 import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants/misc'
-import './i18n'
+import { LanguageProvider } from './i18n'
 import App from './pages/App'
 import store from './state'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
@@ -60,22 +60,24 @@ function Updaters() {
 
 ReactDOM.render(
   <StrictMode>
-    <FixedGlobalStyle />
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Web3ProviderNetwork getLibrary={getLibrary}>
-        <Blocklist>
-          <Provider store={store}>
-            <Updaters />
-            <ThemeProvider>
-              <ThemedGlobalStyle />
-              <HashRouter>
-                <App />
-              </HashRouter>
-            </ThemeProvider>
-          </Provider>
-        </Blocklist>
-      </Web3ProviderNetwork>
-    </Web3ReactProvider>
+    <LanguageProvider>
+      <FixedGlobalStyle />
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <Web3ProviderNetwork getLibrary={getLibrary}>
+          <Blocklist>
+            <Provider store={store}>
+              <Updaters />
+              <ThemeProvider>
+                <ThemedGlobalStyle />
+                <HashRouter>
+                  <App />
+                </HashRouter>
+              </ThemeProvider>
+            </Provider>
+          </Blocklist>
+        </Web3ProviderNetwork>
+      </Web3ReactProvider>
+    </LanguageProvider>
   </StrictMode>,
   document.getElementById('root')
 )
