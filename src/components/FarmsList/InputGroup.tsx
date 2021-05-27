@@ -1,26 +1,20 @@
+import React, { useState } from 'react'
 import { MaxUint256 } from '@ethersproject/constants'
-import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { ethers } from 'ethers'
+import { BigNumber } from '@ethersproject/bignumber'
+
 import { useActiveWeb3React } from 'hooks'
-import { formattedNum, isAddressString } from 'utils'
+import { isAddressString } from 'utils'
 import useTokenBalance from 'hooks/useTokenBalance'
-import { Currency, Fraction, JSBI, Token, TokenAmount } from 'libs/sdk/src'
+import { Fraction, JSBI, Token, TokenAmount } from 'libs/sdk/src'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import { MASTERCHEF_ADDRESS, ROUTER_ADDRESS } from 'constants/index'
+import { MASTERCHEF_ADDRESS } from 'constants/index'
 import { Dots } from '../swap/styleds'
 import { ButtonPrimary } from 'components/Button'
-import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { BigintIsh } from 'libs/sdk/src/constants'
-import NumericalInput from 'components/NumericalInput'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { AutoColumn } from 'components/Column'
 import useMasterChef from 'hooks/useMasterchef'
-import { useFarmClaimModalToggle, useFarmStakeModalToggle } from 'state/application/hooks'
 import useStakedBalance from 'hooks/useStakedBalance'
-import styled, { ThemeContext } from 'styled-components'
-import { AutoRow, RowFixed } from 'components/Row'
-import usePendingRewardBalance from 'hooks/usePendingRewardBalance'
-import { TYPE } from 'theme'
+import { AutoRow } from 'components/Row'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   return new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(6)
@@ -45,18 +39,14 @@ export default function InputGroup({
   assetSymbol?: string
   assetDecimals?: number
 }): JSX.Element {
-  const history = useHistory()
-  const theme = useContext(ThemeContext)
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const [pendingTx, setPendingTx] = useState(false)
   const [depositValue, setDepositValue] = useState('')
   const [withdrawValue, setWithdrawValue] = useState('')
   const pairAddressChecksum = isAddressString(pairAddress)
   const balance = useTokenBalance(pairAddressChecksum)
+  const staked = useStakedBalance(pid, assetDecimals)
 
-  const staked = useStakedBalance(pid, assetDecimals) // kMP depends on decimals of asset, SLP is always 18
-  // const pending = usePendingSushi(pid)
-  const pendingReward = usePendingRewardBalance(pid, assetDecimals)
   const [approvalState, approve] = useApproveCallback(
     new TokenAmount(
       new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
@@ -67,33 +57,23 @@ export default function InputGroup({
 
   const { deposit, withdraw, harvest } = useMasterChef()
 
-  const toggleFarmClaimModal = useFarmClaimModalToggle()
-  const toggleFarmStakeModal = useFarmStakeModalToggle()
-
-  const handleClickHarvest = async () => {
-    // toggleFarmClaimModal()
-
-    console.log('===harvest', pid)
-    setPendingTx(true)
-    await harvest(pid, pairSymbol)
-    setPendingTx(false)
-  }
-
   const handleClickStake = async () => {
     setPendingTx(true)
     await deposit(pid, depositValue, pairSymbol, false)
     setPendingTx(false)
-    // toggleFarmStakeModal()
   }
 
   const handleWithdraw = async () => {
-    console.log('===withdraw', pid, withdrawValue, pairSymbol)
     setPendingTx(true)
     await withdraw(pid, withdrawValue, pairSymbol)
     setPendingTx(false)
   }
 
-  // public constructor(chainId: ChainId, address: string, decimals: number, symbol?: string, name?: string) {
+  const handleClickHarvest = async () => {
+    setPendingTx(true)
+    await harvest(pid, pairSymbol)
+    setPendingTx(false)
+  }
 
   return (
     <>
@@ -111,16 +91,16 @@ export default function InputGroup({
             {chainId && (
               <>
                 <CurrencyInputPanel
-                  value={depositValue}
+                  value={depositValue ? fixedFormatting(BigNumber.from(depositValue), balance.decimals) : ''}
                   onUserInput={value => {
-                    setDepositValue(value)
+                    setDepositValue(ethers.utils.parseUnits(value, balance.decimals).toString())
                   }}
                   onMax={() => {
-                    setDepositValue(fixedFormatting(balance.value, balance.decimals))
+                    setDepositValue(balance.value.toString())
                   }}
                   showMaxButton={true}
                   currency={new Token(chainId, pairAddress, balance.decimals, 'LP', 'LP')}
-                  id="add-liquidity-input-token"
+                  id="stake-lp-input"
                   disableCurrencySelect
                   balancePosition="left"
                   hideBalance={true}
@@ -136,16 +116,16 @@ export default function InputGroup({
             {chainId && (
               <>
                 <CurrencyInputPanel
-                  value={withdrawValue}
+                  value={withdrawValue ? fixedFormatting(BigNumber.from(withdrawValue), staked.decimals) : ''}
                   onUserInput={value => {
-                    setWithdrawValue(value)
+                    setWithdrawValue(ethers.utils.parseUnits(value, staked.decimals).toString())
                   }}
                   onMax={() => {
-                    setWithdrawValue(fixedFormatting(staked.value, staked.decimals))
+                    setWithdrawValue(staked.value.toString())
                   }}
                   showMaxButton={true}
                   currency={new Token(chainId, pairAddress, balance.decimals, 'LP', 'LP')}
-                  id="remove-liquidity-input-token"
+                  id="unstake-lp-input"
                   disableCurrencySelect
                   customBalanceText={`Deposited LP: ${fixedFormatting(staked.value, staked.decimals)}`}
                   balancePosition="left"
