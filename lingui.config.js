@@ -7,9 +7,6 @@ module.exports = {
     },
   ],
   compileNamespace: 'cjs',
-  fallbackLocales: {
-    'pseudo-en': 'en',
-  },
   format: 'po',
   locales: ['en', 'pseudo-en', 'de', 'en', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW'],
   orderBy: 'messageId',
