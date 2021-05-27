@@ -18,6 +18,7 @@ const getDetectedLocale = () => {
 
 export async function dynamicActivate(locale: string) {
   const { messages } = await import(`@lingui/loader!./locales/${locale}.po`)
+  i18n.loadLocaleData(locale, { plurals: () => null })
   i18n.load(locale, messages)
   i18n.activate(locale)
 }
