@@ -123,7 +123,7 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-function SOCK() {
+function Sock() {
   return (
     <span
       role="img"
@@ -197,7 +197,7 @@ function Web3StatusInner() {
           </RowBetween>
         ) : (
           <>
-            {hasSocks ? <SOCK /> : null}
+            {hasSocks ? <Sock /> : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
