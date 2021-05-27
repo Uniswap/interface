@@ -13,763 +13,763 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/AddLiquidity/index.tsx:528
+#: src/pages/AddLiquidity/index.tsx
 msgid "addLiquidity.labels.currentPrice"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:574
+#: src/pages/AddLiquidity/index.tsx
 msgid "addLiquidity.labels.selectLiquidityRange"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:439
+#: src/pages/AddLiquidity/index.tsx
 msgid "addLiquidity.labels.selectPair"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:500
+#: src/pages/AddLiquidity/index.tsx
 msgid "addLiquidity.labels.selectStartingPrice"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:484
+#: src/pages/AddLiquidity/index.tsx
 msgid "addLiquidity.labels.selectedRange"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:368
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "buttons.confirm"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:257
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "buttons.remove"
 msgstr ""
 
-#: src/components/Header/index.tsx:383
+#: src/components/Header/index.tsx
 msgid "claim.buttons.claimUNI"
 msgstr ""
 
-#: src/components/Header/index.tsx:380
+#: src/components/Header/index.tsx
 msgid "claim.buttons.claimingUNI"
 msgstr ""
 
-#: src/components/SearchModal/ImportList.tsx:146
+#: src/components/SearchModal/ImportList.tsx
 msgid "common.IUnderstand"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:443
+#: src/pages/AddLiquidity/index.tsx
 msgid "common.clearAll"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:475
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "common.detailed"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:758
-#: src/pages/PoolFinder/index.tsx:207
-#: src/pages/Swap/index.tsx:535
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "common.loading"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:473
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "common.simple"
 msgstr ""
 
-#: src/pages/Pool/CTACards.tsx:140
+#: src/pages/Pool/CTACards.tsx
 msgid "cta.topPools"
 msgstr ""
 
-#: src/pages/Pool/CTACards.tsx:143
+#: src/pages/Pool/CTACards.tsx
 msgid "cta.v3.explore"
 msgstr ""
 
-#: src/pages/Pool/CTACards.tsx:126
+#: src/pages/Pool/CTACards.tsx
 msgid "cta.v3.launchAnnouncement"
 msgstr ""
 
-#: src/pages/Pool/CTACards.tsx:129
+#: src/pages/Pool/CTACards.tsx
 msgid "cta.v3.walkthroughAndMigration"
 msgstr ""
 
-#: src/components/PositionPreview/index.tsx:126
-#: src/components/PositionPreview/index.tsx:145
-#: src/components/PositionPreview/index.tsx:164
-#: src/pages/Pool/PositionPage.tsx:173
-#: src/pages/Pool/PositionPage.tsx:807
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
 msgid "currencies.denominated"
 msgstr ""
 
-#: src/components/CurrencyInputPanel/index.tsx:280
+#: src/components/CurrencyInputPanel/index.tsx
 msgid "currencies.input.max"
 msgstr ""
 
-#: src/components/CurrencyInputPanel/index.tsx:202
+#: src/components/CurrencyInputPanel/index.tsx
 msgid "currencies.input.priceOutsideWarning"
 msgstr ""
 
-#: src/components/SearchModal/CurrencySearch.tsx:220
+#: src/components/SearchModal/CurrencySearch.tsx
 msgid "currencies.search.noResults"
 msgstr ""
 
-#: src/components/SearchModal/CurrencySearch.tsx:182
+#: src/components/SearchModal/CurrencySearch.tsx
 msgid "currencies.search.placeholder"
 msgstr ""
 
-#: src/components/CurrencyInputPanel/index.tsx:240
-#: src/components/SearchModal/CurrencySearch.tsx:174
-#: src/pages/PoolFinder/index.tsx:122
-#: src/pages/PoolFinder/index.tsx:146
+#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/SearchModal/CurrencySearch.tsx
+#: src/pages/PoolFinder/index.tsx
+#: src/pages/PoolFinder/index.tsx
 msgid "currencies.search.selectToken"
 msgstr "Seleziona un token"
 
-#: src/components/Web3Status/index.tsx:208
+#: src/components/Web3Status/index.tsx
 msgid "error.generic"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:654
+#: src/pages/AddLiquidity/index.tsx
 msgid "error.invalidRangeWarning"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:708
+#: src/pages/AddLiquidity/index.tsx
 msgid "error.unsupportedAsset"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:514
+#: src/pages/Swap/index.tsx
 msgid "error.unsupportedAssets"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:207
+#: src/components/Web3Status/index.tsx
 msgid "error.wrongNetwork"
 msgstr ""
 
-#: src/components/Web3ReactManager/index.tsx:61
+#: src/components/Web3ReactManager/index.tsx
 msgid "errors.unknown"
 msgstr "Oops! Si è verificato un Errore imprevisto. Aggiorna la pagina o visita da un altro browser o dispositivo."
 
-#: src/pages/AddLiquidity/index.tsx:640
+#: src/pages/AddLiquidity/index.tsx
 msgid "inactiveRangeWarning"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:307
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "labels.amount"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:413
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "labels.inactive"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:324
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "labels.max"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:415
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "labels.remove"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:672
+#: src/pages/AddLiquidity/index.tsx
 msgid "liquidity.depositAmounts"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:659
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.buttons.migrate"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:656
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.buttons.migrating"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:586
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.errors.invalidRangeWarning"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:458
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.hint.firstV3LPGasCost"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:451
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.hint.firstV3LiquidityProvider"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:404
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.hint.migrationContract"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:519
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.hint.priceHint"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:397
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.hint.toolInformation"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:573
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.hints.inactiveRangeWarning"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:600
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.hints.priceRangeRefund"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:438
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.label.lpNFTToken"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:417
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.label.lpToken"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:738
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.labels.migrateV2Liquidity"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:467
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:485
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.labels.price"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:511
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.labels.priceDifference"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:541
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.labels.selectLiquidityRange"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:498
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:529
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "migrate.labels.v3Price"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:814
+#: src/pages/Pool/PositionPage.tsx
 msgid "minMaxPriceHint"
 msgstr ""
 
-#: src/components/Header/index.tsx:362
+#: src/components/Header/index.tsx
 msgid "nav.charts"
 msgstr ""
 
-#: src/components/NavigationTabs/index.tsx:83
+#: src/components/NavigationTabs/index.tsx
 msgid "nav.importPool"
 msgstr ""
 
-#: src/components/Header/index.tsx:356
-#: src/components/NavigationTabs/index.tsx:69
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
 msgid "nav.pool"
 msgstr "Riserva"
 
-#: src/components/Header/index.tsx:343
-#: src/components/NavigationTabs/index.tsx:66
+#: src/components/Header/index.tsx
+#: src/components/NavigationTabs/index.tsx
 msgid "nav.swap"
 msgstr "Scambia"
 
-#: src/components/Header/index.tsx:359
+#: src/components/Header/index.tsx
 msgid "nav.vote"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:315
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "number.25Percent"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:318
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "number.50Percent"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:321
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "number.75Percent"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:666
+#: src/pages/Pool/PositionPage.tsx
 msgid "numbers.emptyFiatValue"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:612
+#: src/pages/Pool/PositionPage.tsx
 msgid "numbers.emptyValueInFiat"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:662
+#: src/pages/Pool/PositionPage.tsx
 msgid "numbers.fiatValue"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:606
+#: src/pages/Pool/PositionPage.tsx
 msgid "numbers.valueInFiat"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:514
-#: src/pages/Pool/PositionPage.tsx:528
-#: src/pages/Pool/PositionPage.tsx:627
-#: src/pages/Pool/PositionPage.tsx:642
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/Pool/PositionPage.tsx
 msgid "numbers.valueWithPercent"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:506
+#: src/pages/Pool/PositionPage.tsx
 msgid "pool.label.claimFees"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:511
+#: src/pages/Pool/PositionPage.tsx
 msgid "pool.label.collectingFees"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:205
-#: src/pages/RemoveLiquidity/V3.tsx:216
-#: src/pages/RemoveLiquidity/V3.tsx:335
-#: src/pages/RemoveLiquidity/V3.tsx:346
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "pool.pooledCurrency"
 msgstr ""
 
-#: src/components/PositionList/index.tsx:50
-#: src/pages/Pool/PositionPage.tsx:759
+#: src/components/PositionList/index.tsx
+#: src/pages/Pool/PositionPage.tsx
 msgid "pool.priceRange"
 msgstr ""
 
-#: src/components/PositionList/index.tsx:46
-#: src/components/PositionList/index.tsx:54
+#: src/components/PositionList/index.tsx
+#: src/components/PositionList/index.tsx
 msgid "pool.yourPositions"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:517
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.button.backToPoolsOverview"
 msgstr ""
 
-#: src/components/NavigationTabs/index.tsx:125
+#: src/components/NavigationTabs/index.tsx
 msgid "pools.buttons.addLiquidity"
 msgstr "Aggiungi liquidità"
 
-#: src/pages/PoolFinder/index.tsx:178
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.buttons.addLiquidityPoolFinder"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:476
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.buttons.collect"
 msgstr ""
 
-#: src/components/NavigationTabs/index.tsx:123
+#: src/components/NavigationTabs/index.tsx
 msgid "pools.buttons.createPair"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:191
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.buttons.createPool"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:544
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.buttons.increaseLiquidity"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:160
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.buttons.manage"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:291
+#: src/pages/Pool/index.tsx
 msgid "pools.buttons.migrateLiquidity"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:252
+#: src/pages/Pool/index.tsx
 msgid "pools.buttons.migrateV2Liquidity"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:196
+#: src/pages/Pool/index.tsx
 msgid "pools.buttons.newPosition"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:581
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.buttons.owner"
 msgstr ""
 
-#: src/components/NavigationTabs/index.tsx:127
-#: src/pages/Pool/PositionPage.tsx:555
+#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.buttons.removeLiquidity"
 msgstr "Rimuovi Liquidità"
 
-#: src/pages/Pool/index.tsx:274
+#: src/pages/Pool/index.tsx
 msgid "pools.buttons.viewV2Liquidity"
 msgstr ""
 
-#: src/components/PositionPreview/index.tsx:160
-#: src/pages/Pool/PositionPage.tsx:167
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.currentPrice"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:238
+#: src/pages/Pool/index.tsx
 msgid "pools.emptyStateHint"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:188
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.error.noPoolFound"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:199
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.errors.invalidPair"
 msgstr ""
 
-#: src/components/FeeSelector/index.tsx:67
+#: src/components/FeeSelector/index.tsx
 msgid "pools.feeSelector.highFee"
 msgstr ""
 
-#: src/components/FeeSelector/index.tsx:69
+#: src/components/FeeSelector/index.tsx
 msgid "pools.feeSelector.highFeeHint"
 msgstr ""
 
-#: src/components/FeeSelector/index.tsx:43
+#: src/components/FeeSelector/index.tsx
 msgid "pools.feeSelector.lowFee"
 msgstr ""
 
-#: src/components/FeeSelector/index.tsx:45
+#: src/components/FeeSelector/index.tsx
 msgid "pools.feeSelector.lowFeeHint"
 msgstr ""
 
-#: src/components/FeeSelector/index.tsx:55
+#: src/components/FeeSelector/index.tsx
 msgid "pools.feeSelector.mediumFee"
 msgstr ""
 
-#: src/components/FeeSelector/index.tsx:57
+#: src/components/FeeSelector/index.tsx
 msgid "pools.feeSelector.mediumFeeHint"
 msgstr ""
 
-#: src/components/FeeSelector/index.tsx:31
+#: src/components/FeeSelector/index.tsx
 msgid "pools.feeSelector.subtitle"
 msgstr ""
 
-#: src/components/FeeSelector/index.tsx:29
+#: src/components/FeeSelector/index.tsx
 msgid "pools.feeSelector.title"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:179
+#: src/pages/Pool/index.tsx
 msgid "pools.heading.poolsOverview"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:473
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.hint.collectingFees"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:101
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.hint.toolHelperText"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:86
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.label.connectWalletToFindPools"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:174
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.label.noLiquidityInPoolYet"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:693
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.labels.collectFees"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:740
-#: src/pages/RemoveLiquidity/V3.tsx:395
+#: src/pages/Pool/PositionPage.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "pools.labels.collectFeesAsWETH"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:681
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.labels.collectedFees"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:687
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.labels.collectingFees"
 msgstr ""
 
-#: src/components/PositionPreview/index.tsx:99
+#: src/components/PositionPreview/index.tsx
 msgid "pools.labels.feeTier"
 msgstr ""
 
-#: src/components/PositionPreview/index.tsx:102
+#: src/components/PositionPreview/index.tsx
 msgid "pools.labels.feeTierValue"
 msgstr ""
 
-#: src/components/Badge/RangeBadge.tsx:70
+#: src/components/Badge/RangeBadge.tsx
 msgid "pools.labels.inRange"
 msgstr ""
 
-#: src/components/Badge/RangeBadge.tsx:62
+#: src/components/Badge/RangeBadge.tsx
 msgid "pools.labels.inRangeTooltip"
 msgstr ""
 
-#: src/components/Badge/RangeBadge.tsx:56
+#: src/components/Badge/RangeBadge.tsx
 msgid "pools.labels.inactive"
 msgstr ""
 
-#: src/components/Badge/RangeBadge.tsx:47
+#: src/components/Badge/RangeBadge.tsx
 msgid "pools.labels.inactiveTooltip"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:602
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.labels.liquidity"
 msgstr ""
 
-#: src/components/Badge/RangeBadge.tsx:86
+#: src/components/Badge/RangeBadge.tsx
 msgid "pools.labels.outOfRange"
 msgstr ""
 
-#: src/components/Badge/RangeBadge.tsx:76
+#: src/components/Badge/RangeBadge.tsx
 msgid "pools.labels.outOfRangeTooltip"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:156
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.labels.poolFound"
 msgstr ""
 
-#: src/pages/PoolFinder/index.tsx:88
+#: src/pages/PoolFinder/index.tsx
 msgid "pools.labels.selectTokenToFindLiquidity"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:658
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.labels.unclaimedFees"
 msgstr ""
 
-#: src/components/PositionPreview/index.tsx:141
+#: src/components/PositionPreview/index.tsx
 msgid "pools.maxPrice"
 msgstr ""
 
-#: src/pages/Pool/PositionPage.tsx:802
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.maxPriceLabel"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:132
+#: src/pages/Pool/index.tsx
 msgid "pools.menu.create"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:162
+#: src/pages/Pool/index.tsx
 msgid "pools.menu.learn"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:142
+#: src/pages/Pool/index.tsx
 msgid "pools.menu.migrate"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:189
+#: src/pages/Pool/index.tsx
 msgid "pools.menu.more"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:152
+#: src/pages/Pool/index.tsx
 msgid "pools.menu.v2Liquidity"
 msgstr ""
 
-#: src/components/PositionPreview/index.tsx:131
-#: src/components/PositionPreview/index.tsx:150
-#: src/pages/Pool/PositionPage.tsx:790
+#: src/components/PositionPreview/index.tsx
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.minMaxPriceHint"
 msgstr ""
 
-#: src/components/PositionPreview/index.tsx:122
-#: src/pages/Pool/PositionPage.tsx:783
+#: src/components/PositionPreview/index.tsx
+#: src/pages/Pool/PositionPage.tsx
 msgid "pools.minPriceLabel"
 msgstr ""
 
-#: src/pages/Pool/index.tsx:206
+#: src/pages/Pool/index.tsx
 msgid "pools.toggle.hideClosedPositions"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:464
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.buttons.RemoveAmount"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:652
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.buttons.remove"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:193
-#: src/pages/RemoveLiquidity/index.tsx:375
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.confirming.pending"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:323
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.hint.outputEstimated"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:228
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "removeLiquidity.hints.collectFeesEarn"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:453
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.hints.removingPoolTokensConvertsPosition"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:234
-#: src/pages/RemoveLiquidity/V3.tsx:245
-#: src/pages/RemoveLiquidity/V3.tsx:360
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "removeLiquidity.label.feesEarned"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:337
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.labels.UNIBurned"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:441
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.labels.confirmationTitle"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:352
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.labels.modalPrice"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:311
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "removeLiquidity.labels.percentForSlider"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:606
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "removeLiquidity.labels.price"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:272
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "removeLiquidity.labels.removeLiquidity"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:575
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.allowUniswapToUseCurrency"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:467
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.backToV3"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:624
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.highPriceImpact"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:657
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.priceImpactTooHigh"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:628
-#: src/pages/Swap/index.tsx:661
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.swap"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:626
-#: src/pages/Swap/index.tsx:659
+#: src/pages/Swap/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.swapAnyway"
 msgstr "Scambia comunque"
 
-#: src/pages/Swap/index.tsx:571
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.tradeCurrency"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:527
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.unwrap"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:525
+#: src/pages/Swap/index.tsx
 msgid "swap.buttons.wrap"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:587
+#: src/pages/Swap/index.tsx
 msgid "swap.hints.permission"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:383
+#: src/pages/Swap/index.tsx
 msgid "swap.labels.from"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:382
+#: src/pages/Swap/index.tsx
 msgid "swap.labels.fromAtMost"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:542
+#: src/pages/Swap/index.tsx
 msgid "swap.labels.insufficientLiquidity"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:538
+#: src/pages/Swap/index.tsx
 msgid "swap.labels.insufficientLiquiditySingleHopOnly"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:433
+#: src/pages/Swap/index.tsx
 msgid "swap.labels.removeSend"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:412
+#: src/pages/Swap/index.tsx
 msgid "swap.labels.to"
 msgstr ""
 
-#: src/pages/Swap/index.tsx:411
+#: src/pages/Swap/index.tsx
 msgid "swap.labels.toAtLeast"
 msgstr ""
 
-#: src/components/SearchModal/ImportList.tsx:158
+#: src/components/SearchModal/ImportList.tsx
 msgid "tokenLists.buttons.import"
 msgstr ""
 
-#: src/components/SearchModal/ImportList.tsx:126
+#: src/components/SearchModal/ImportList.tsx
 msgid "tokenLists.importHint1"
 msgstr ""
 
-#: src/components/SearchModal/ImportList.tsx:133
+#: src/components/SearchModal/ImportList.tsx
 msgid "tokenLists.importHint2"
 msgstr ""
 
-#: src/components/SearchModal/ImportList.tsx:85
+#: src/components/SearchModal/ImportList.tsx
 msgid "tokenLists.importList"
 msgstr ""
 
-#: src/components/SearchModal/ImportList.tsx:120
+#: src/components/SearchModal/ImportList.tsx
 msgid "tokenLists.importWarning"
 msgstr ""
 
-#: src/components/SearchModal/CurrencySearch.tsx:232
+#: src/components/SearchModal/CurrencySearch.tsx
 msgid "tokenLists.manage"
 msgstr ""
 
-#: src/components/SearchModal/ImportList.tsx:104
+#: src/components/SearchModal/ImportList.tsx
 msgid "tokensLists.numberOfTokens"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:633
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "transactions.allowLPTokenMigration"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:631
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "transactions.allower"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:641
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "transactions.approve"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:639
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "transactions.approved"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:628
-#: src/pages/RemoveLiquidity/index.tsx:636
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "transactions.approving"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:417
+#: src/pages/AddLiquidity/index.tsx
 msgid "transactions.confirmation.button"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:188
+#: src/components/Web3Status/index.tsx
 msgid "transactions.pending"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:266
+#: src/pages/AddLiquidity/index.tsx
 msgid "transactions.summary.addLiquidity"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:262
+#: src/pages/AddLiquidity/index.tsx
 msgid "transactions.summary.createPoolAndAddLiquidity"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/index.tsx:269
-#: src/pages/RemoveLiquidity/index.tsx:269
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
 msgid "transactions.summary.removeLiquidity"
 msgstr ""
 
-#: src/pages/RemoveLiquidity/V3.tsx:155
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "transactions.summary.removeLiquidityV3"
 msgstr ""
 
-#: src/pages/AddLiquidity/index.tsx:713
-#: src/pages/Pool/index.tsx:243
-#: src/pages/RemoveLiquidity/index.tsx:622
-#: src/pages/Swap/index.tsx:519
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/Pool/index.tsx
+#: src/pages/RemoveLiquidity/index.tsx
+#: src/pages/Swap/index.tsx
 msgid "wallet.connect"
 msgstr ""
 
-#: src/components/Web3Status/index.tsx:216
+#: src/components/Web3Status/index.tsx
 msgid "wallet.connectLongForm"
 msgstr ""
 
-#: src/components/Header/index.tsx:393
+#: src/components/Header/index.tsx
 msgid "wallet.ethBalance"
 msgstr ""
 
-#: src/pages/MigrateV2/MigrateV2Pair.tsx:745
+#: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "wallet.mustConnectAccount"
 msgstr ""
