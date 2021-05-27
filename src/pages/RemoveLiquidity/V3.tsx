@@ -202,7 +202,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       <AutoColumn gap={'sm'} style={{ padding: '16px' }}>
         <RowBetween align="flex-end">
           <Text fontSize={16} fontWeight={500}>
-            <Trans id="pool.pooledCurrency">Pooled {liquidityValue0?.currency?.symbol}:</Trans>
+            <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
           </Text>
           <RowFixed>
             <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -213,7 +213,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         </RowBetween>
         <RowBetween align="flex-end">
           <Text fontSize={16} fontWeight={500}>
-            <Trans id="pool.pooledCurrency">Pooled {liquidityValue1?.currency?.symbol}:</Trans>
+            <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
           </Text>
           <RowFixed>
             <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -225,13 +225,11 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
           <>
             <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'8px 0 0 0'}>
-              <Trans id="removeLiquidity.hints.collectFeesEarn">
-                You will also collect fees earned from this position.
-              </Trans>
+              <Trans>You will also collect fees earned from this position.</Trans>
             </TYPE.italic>
             <RowBetween>
               <Text fontSize={16} fontWeight={500}>
-                <Trans id="removeLiquidity.label.feesEarned">{feeValue0?.currency?.symbol} Fees Earned:</Trans>
+                <Trans>{feeValue0?.currency?.symbol} Fees Earned:</Trans>
               </Text>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -242,7 +240,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             </RowBetween>
             <RowBetween>
               <Text fontSize={16} fontWeight={500}>
-                <Trans id="removeLiquidity.label.feesEarned">{feeValue1?.currency?.symbol} Fees Earned:</Trans>
+                <Trans>{feeValue1?.currency?.symbol} Fees Earned:</Trans>
               </Text>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -254,7 +252,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           </>
         ) : null}
         <ButtonPrimary mt="16px" onClick={burn}>
-          <Trans id="buttons.remove">Remove</Trans>
+          <Trans>Remove</Trans>
         </ButtonPrimary>
       </AutoColumn>
     )
@@ -304,24 +302,24 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               <LightCard>
                 <AutoColumn gap="md">
                   <TYPE.main fontWeight={400}>
-                    <Trans id="labels.amount">Amount</Trans>
+                    <Trans>Amount</Trans>
                   </TYPE.main>
                   <RowBetween>
                     <ResponsiveHeaderText>
-                      <Trans id="removeLiquidity.labels.percentForSlider">{percentForSlider}%</Trans>
+                      <Trans>{percentForSlider}%</Trans>
                     </ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
-                        <Trans id="number.25Percent">25%</Trans>
+                        <Trans>25%</Trans>
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(50)} width="20%">
-                        <Trans id="number.50Percent">50%</Trans>
+                        <Trans>50%</Trans>
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(75)} width="20%">
-                        <Trans id="number.75Percent">75%</Trans>
+                        <Trans>75%</Trans>
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(100)} width="20%">
-                        <Trans id="labels.max">Max</Trans>
+                        <Trans>Max</Trans>
                       </SmallMaxButton>
                     </AutoRow>
                   </RowBetween>
@@ -332,7 +330,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 <AutoColumn gap="md">
                   <RowBetween>
                     <Text fontSize={16} fontWeight={500}>
-                      <Trans id="pool.pooledCurrency">Pooled {liquidityValue0?.currency?.symbol}:</Trans>
+                      <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -343,7 +341,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   </RowBetween>
                   <RowBetween>
                     <Text fontSize={16} fontWeight={500}>
-                      <Trans id="pool.pooledCurrency">Pooled {liquidityValue1?.currency?.symbol}:</Trans>
+                      <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -357,9 +355,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       <Break />
                       <RowBetween>
                         <Text fontSize={16} fontWeight={500}>
-                          <Trans id="removeLiquidity.label.feesEarned">
-                            {feeValue0?.currency?.symbol} Fees Earned:
-                          </Trans>
+                          <Trans>{feeValue0?.currency?.symbol} Fees Earned:</Trans>
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight={500} marginLeft={'6px'}>
@@ -392,7 +388,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 liquidityValue1.currency.wrapped.equals(WETH9[liquidityValue1.currency.chainId])) ? (
                 <RowBetween>
                   <TYPE.main>
-                    <Trans id="pools.labels.collectFeesAsWETH">Collect as WETH</Trans>
+                    <Trans>Collect as WETH</Trans>
                   </TYPE.main>
                   <Toggle
                     id="receive-as-weth"
@@ -409,11 +405,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     disabled={removed || percent === 0 || !liquidityValue0}
                     onClick={() => setShowConfirm(true)}
                   >
-                    {removed ? (
-                      <Trans id="labels.inactive">Inactive</Trans>
-                    ) : (
-                      error ?? <Trans id="labels.remove">Remove</Trans>
-                    )}
+                    {removed ? <Trans>Inactive</Trans> : error ?? <Trans>Remove</Trans>}
                   </ButtonConfirmed>
                 </AutoColumn>
               </div>

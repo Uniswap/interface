@@ -199,9 +199,7 @@ export default function CurrencyInputPanel({
           <AutoColumn gap="sm" justify="center">
             <Lock />
             <TYPE.label fontSize="12px" textAlign="center">
-              <Trans id="currencies.input.priceOutsideWarning">
-                The market price is outside your specified price range. Single-asset deposit only.
-              </Trans>
+              <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
             </TYPE.label>
           </AutoColumn>
         </FixedContainer>
@@ -277,7 +275,7 @@ export default function CurrencyInputPanel({
                   </TYPE.body>
                   {showMaxButton && selectedCurrencyBalance ? (
                     <StyledBalanceMax onClick={onMax}>
-                      <Trans id="currencies.input.max">(Max)</Trans>
+                      <Trans>(Max)</Trans>
                     </StyledBalanceMax>
                   ) : null}
                 </RowFixed>

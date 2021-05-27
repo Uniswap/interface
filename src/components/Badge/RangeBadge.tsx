@@ -53,7 +53,7 @@ export default function RangeBadge({
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
-              <Trans id="pools.labels.inactive">Inactive</Trans>
+              <Trans>Inactive</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>
@@ -67,7 +67,7 @@ export default function RangeBadge({
           <Badge variant={BadgeVariant.DEFAULT}>
             <ActiveDot /> &nbsp;
             <BadgeText>
-              <Trans id="pools.labels.inRange">In range</Trans>
+              <Trans>In range</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>
@@ -83,7 +83,7 @@ export default function RangeBadge({
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
-              <Trans id="pools.labels.outOfRange">Out of range</Trans>
+              <Trans>Out of range</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>

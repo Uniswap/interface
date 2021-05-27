@@ -185,7 +185,7 @@ function Web3StatusInner() {
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
-              <Trans id="transactions.pending">{pending?.length} Pending</Trans>
+              <Trans>{pending?.length} Pending</Trans>
             </Text>{' '}
             <Loader stroke="white" />
           </RowBetween>
@@ -213,7 +213,7 @@ function Web3StatusInner() {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
         <Text>
-          <Trans id="wallet.connectLongForm">Connect to a wallet</Trans>
+          <Trans>Connect to a wallet</Trans>
         </Text>
       </Web3StatusConnect>
     )
