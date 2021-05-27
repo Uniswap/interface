@@ -1,20 +1,30 @@
 import React from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { detect, fromNavigator, fromUrl } from '@lingui/detect-locale'
+import { detect, fromNavigator } from '@lingui/detect-locale'
 import { ReactNode, useEffect } from 'react'
 import { useLocale } from 'state/user/hooks'
 
-export const locales = ['en', 'pseudo-en', 'de', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW']
+//www.codetwo.com/admins-blog/list-of-office-365-language-id/
+export enum Locales {
+  'en' = 'English',
+  'de' = 'Deutsch',
+  'es-AR' = 'español (Argentina)',
+  'es-US' = 'español (Estados Unidos)',
+  'it-IT' = 'italiano',
+  'iw' = 'Hebrew',
+  'ro' = 'română',
+  'ru' = 'русский',
+  'vi' = 'Tiếng Việt',
+  'zh-CN' = '中文 ( 中国 )',
+  'zh-TW' = '中文 ( 台灣 )',
+  'pseudo-en' = '',
+}
 export const defaultLocale = 'en'
 
-// Attemps to detect a locale from the URL or navigator.
-export const getDetectedLocale = (): string | undefined => {
-  const detected = detect(
-    fromUrl('lang'), // helps local development
-    fromNavigator()
-  )
-  return detected && locales.includes(detected) ? detected : undefined
+export const getNavigatorLocale = (): string | undefined => {
+  const detected = detect(fromNavigator())
+  return detected && detected in Locales ? detected : undefined
 }
 
 export async function dynamicActivate(locale: string) {
@@ -25,9 +35,13 @@ export async function dynamicActivate(locale: string) {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale] = useLocale()
+  const locale = useLocale()
 
   useEffect(() => {
+    if (!(locale in Locales)) {
+      return
+    }
+
     dynamicActivate(locale).catch((error) => {
       console.error(`Failed to load locale data for ${locale}`, error)
     })

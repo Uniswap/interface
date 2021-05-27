@@ -11,7 +11,7 @@ import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useDarkModeManager, useLocale } from '../../state/user/hooks'
+import { useDarkModeManager, useLocaleManager } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { CardNoise } from '../earn/styled'
 import { TYPE, ExternalLink } from '../../theme'
@@ -314,7 +314,7 @@ export default function Header() {
   // const [isDark] = useDarkModeManager()
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
-  const [locale, setLocale] = useLocale()
+  const [locale, setLocale] = useLocaleManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 

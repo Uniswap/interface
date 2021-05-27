@@ -1,4 +1,4 @@
-import { getDetectedLocale } from 'i18n'
+import { getNavigatorLocale } from 'i18n'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../index'
@@ -33,9 +33,9 @@ export default function Updater(): null {
 
   // keep locale in sync with the system if a locale is detected.
   useEffect(() => {
-    const detectedLocale = getDetectedLocale()
+    const detectedLocale = getNavigatorLocale()
     if (detectedLocale) {
-      dispatch(updateUserLocale({ userLocale: detectedLocale }))
+      dispatch(updateUserLocale({ userLocale: detectedLocale, source: 'navigator' }))
     }
   }, [dispatch])
 

@@ -71,13 +71,17 @@ export function useDarkModeManager(): [boolean, () => void] {
   return [darkMode, toggleSetDarkMode]
 }
 
-export function useLocale(): [string, (newLocale: string) => void] {
+export function useLocale(): string {
+  return useSelector<AppState, AppState['user']['userLocale']>((state) => state.user.userLocale)
+}
+
+export function useLocaleManager(): [string, (newLocale: string, source?: string) => void] {
   const dispatch = useDispatch<AppDispatch>()
-  const locale = useSelector<AppState, AppState['user']['userLocale']>((state) => state.user.userLocale)
+  const locale = useLocale()
 
   const setLocale = useCallback(
-    (newLocale: string) => {
-      dispatch(updateUserLocale({ userLocale: newLocale }))
+    (newLocale: string, source?: string) => {
+      dispatch(updateUserLocale({ userLocale: newLocale, source }))
     },
     [dispatch]
   )
