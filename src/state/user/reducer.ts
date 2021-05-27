@@ -28,7 +28,7 @@ export interface UserState {
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
 
-  userLocale: string
+  userLocale: string | null
 
   userExpertMode: boolean
 
@@ -69,7 +69,7 @@ export const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
-  userLocale: 'en',
+  userLocale: null,
   userSingleHopOnly: false,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
@@ -129,11 +129,8 @@ export default createReducer(initialState, (builder) =>
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserLocale, (state, action) => {
-      const { userLocale, source } = action.payload
-      if (source !== 'navigator' || state.userLocale === initialState.userLocale) {
-        state.userLocale = userLocale
-        state.timestamp = currentTimestamp()
-      }
+      state.userLocale = action.payload.userLocale
+      state.timestamp = currentTimestamp()
     })
     .addCase(updateUserSlippageTolerance, (state, action) => {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
