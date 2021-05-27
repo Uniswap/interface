@@ -11,7 +11,7 @@ import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useDarkModeManager } from '../../state/user/hooks'
+import { useDarkModeManager, useLocale } from '../../state/user/hooks'
 import { useETHBalances } from '../../state/wallet/hooks'
 import { CardNoise } from '../earn/styled'
 import { TYPE, ExternalLink } from '../../theme'
@@ -314,6 +314,8 @@ export default function Header() {
   // const [isDark] = useDarkModeManager()
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
+  const [locale, setLocale] = useLocale()
+
   const toggleClaimModal = useToggleSelfClaimModal()
 
   const availableClaim: boolean = useUserHasAvailableClaim(account)
@@ -400,6 +402,7 @@ export default function Header() {
           <StyledMenuButton onClick={() => toggleDarkMode()}>
             {darkMode ? <Moon size={20} /> : <Sun size={20} />}
           </StyledMenuButton>
+          <StyledMenuButton onClick={() => setLocale(locale === 'en' ? 'pseudo-en' : 'en')}>{locale}</StyledMenuButton>
           <Menu />
         </HeaderElementWrap>
       </HeaderControls>

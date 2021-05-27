@@ -1,7 +1,8 @@
+import { getDetectedLocale } from 'i18n'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../index'
-import { updateMatchesDarkMode } from './actions'
+import { updateMatchesDarkMode, updateUserLocale } from './actions'
 
 export default function Updater(): null {
   const dispatch = useDispatch<AppDispatch>()
@@ -27,6 +28,14 @@ export default function Updater(): null {
       } else if (match?.removeEventListener) {
         match?.removeEventListener('change', darkHandler)
       }
+    }
+  }, [dispatch])
+
+  // keep locale in sync with the system if a locale is detected.
+  useEffect(() => {
+    const detectedLocale = getDetectedLocale()
+    if (detectedLocale) {
+      dispatch(updateUserLocale({ userLocale: detectedLocale }))
     }
   }, [dispatch])
 

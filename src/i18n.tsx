@@ -1,8 +1,9 @@
 import React from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { detect, fromUrl } from '@lingui/detect-locale'
+import { detect, fromNavigator, fromUrl } from '@lingui/detect-locale'
 import { ReactNode, useEffect } from 'react'
+import { useLocale } from 'state/user/hooks'
 
 export const locales = [
   'en',
@@ -21,13 +22,13 @@ export const locales = [
 ]
 export const defaultLocale = 'en'
 
-const getDetectedLocale = () => {
-  const detected =
-    detect(
-      fromUrl('lang'), // helps local development
-      defaultLocale
-    ) ?? defaultLocale
-  return locales.includes(detected) ? detected : defaultLocale
+// Attemps to detect a locale from the URL or navigator.
+export const getDetectedLocale = (): string | undefined => {
+  const detected = detect(
+    fromUrl('lang'), // helps local development
+    fromNavigator()
+  )
+  return detected && locales.includes(detected) ? detected : undefined
 }
 
 export async function dynamicActivate(locale: string) {
@@ -38,9 +39,11 @@ export async function dynamicActivate(locale: string) {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [locale] = useLocale()
+
   useEffect(() => {
-    dynamicActivate(getDetectedLocale())
-  }, [])
+    dynamicActivate(locale)
+  }, [locale])
 
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>
 }

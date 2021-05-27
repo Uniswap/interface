@@ -22,6 +22,7 @@ import {
   updateUserExpertMode,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
+  updateUserLocale,
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -68,6 +69,20 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useLocale(): [string, (newLocale: string) => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const locale = useSelector<AppState, AppState['user']['userLocale']>((state) => state.user.userLocale)
+
+  const setLocale = useCallback(
+    (newLocale: string) => {
+      dispatch(updateUserLocale({ userLocale: newLocale }))
+    },
+    [dispatch]
+  )
+
+  return [locale, setLocale]
 }
 
 export function useIsExpertMode(): boolean {
