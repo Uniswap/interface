@@ -2409,6 +2409,13 @@
     tslib "^2.0.0"
     warning "^4.0.3"
 
+"@rebass/forms@^4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@rebass/forms/-/forms-4.0.6.tgz#19a3af64f855baa65dec65aecadda5cd95a09dd7"
+  integrity sha512-20dHAlb5V0Na2HxCr73Jjoc4hD1ElimmlBpQtclXMoXUsjJ7ORdCNL1S9R54MX5f7iU2VrLGHU42eL7+nONNPQ==
+  dependencies:
+    reflexbox "^4.0.6"
+
 "@reduxjs/toolkit@^1.3.5":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.4.0.tgz#ee2e2384cc3d1d76780d844b9c2da3580d32710d"
@@ -2928,6 +2935,16 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/rebass@*":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@types/rebass/-/rebass-4.0.8.tgz#06d7f1ae0078aa6fb08168fe2336b9383c7bea68"
+  integrity sha512-IxYGm8KlZ1c7VHlybGFRpkF+CPVaBZXtkHlZ/4qGjk89cZ82MK7gV26Dolmd1i1kY05Yy5ebh5YUET4ko588Nw==
+  dependencies:
+    "@types/react" "*"
+    "@types/styled-components" "*"
+    "@types/styled-system" "*"
+    "@types/styled-system__css" "*"
+
 "@types/rebass@^4.0.5":
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/@types/rebass/-/rebass-4.0.6.tgz#c33d133baca8a440b22ca4b3038014d0b0e8ce59"
@@ -2937,6 +2954,15 @@
     "@types/styled-components" "*"
     "@types/styled-system" "*"
     "@types/styled-system__css" "*"
+
+"@types/rebass__forms@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@types/rebass__forms/-/rebass__forms-4.0.4.tgz#d3f65acaa2deaca1dd1d0b88890a333d1ec40850"
+  integrity sha512-G6PeyEne2JNSVQ9nEc8rXdw+FexQYERLT2Ga3UTqW620aPjZQ8njqakXiFMeEHwuklbONq6p1ZOU33/3x5uNUQ==
+  dependencies:
+    "@types/react" "*"
+    "@types/rebass" "*"
+    "@types/styled-system" "*"
 
 "@types/secp256k1@^4.0.1":
   version "4.0.1"

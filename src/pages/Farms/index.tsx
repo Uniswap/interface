@@ -22,6 +22,9 @@ import {
   KNCPriceWrapper,
   TabContainer,
   Tab,
+  StakedOnlyToggleWrapper,
+  StakedOnlyToggle,
+  StakedOnlyToggleText,
   AdContainer,
   HeadingContainer,
   LearnMoreContainer,
@@ -33,8 +36,7 @@ import {
   RewardNumber,
   RewardUSD,
   RemainingTimeContainer,
-  EndInTitle,
-  ConnectWalletFarm
+  EndInTitle
 } from './styleds'
 import { formattedNum } from 'utils'
 import Vesting from './vesting'
@@ -52,41 +54,27 @@ const Farms = () => {
   const { loading: userFarmsLoading, data: farmsUserData } = useFarmsUserData(account, allFarms)
   const [activeTab, setActiveTab] = useState(0)
   const [pendingTx, setPendingTx] = useState(false)
+  const [stakedOnly, setStakedOnly] = useState(false)
 
   const { harvestMultiplePools } = useMasterChef()
-
-  if (!account) {
-    return (
-      <PageWrapper>
-        <Panel>
-          <ConnectWalletFarm>{t('connectWalletFarm')}</ConnectWalletFarm>
-        </Panel>
-      </PageWrapper>
-    )
-  }
 
   if (publicDataLoading || userFarmsLoading) {
     return <LocalLoader />
   }
 
-  if (publicDataError) {
-    return <div>Error</div>
-  }
+  const farms = allFarms.map(farm => {
+    const { pid } = farm
+    const index = farmsUserData.findIndex(farmUserData => farmUserData.pid === pid)
 
-  const farms = farmsUserData.map(farmUserData => {
-    const { pid } = farmUserData
-    const index = allFarms.findIndex(farm => farm.pid === pid)
-
-    return { ...allFarms[index], userData: farmUserData }
+    return {
+      ...farm,
+      userData: farmsUserData[index]
+    }
   })
 
-  const poolsHaveReward = farms
-    .filter(farm => farm.userData.earnings && BigNumber.from(farm.userData.earnings).gt(0))
-    .map(farm => farm.pid)
-
   const totalRewards = farms.reduce((total, farm) => {
-    if (farm.userData.earnings) {
-      return total.add(BigNumber.from(farm.userData.earnings))
+    if (farm.userData?.earnings) {
+      return total.add(BigNumber.from(farm.userData?.earnings))
     }
 
     return total
@@ -104,9 +92,16 @@ const Farms = () => {
   const formattedEstimatedRemainingTime =
     estimatedRemainingSeconds && getFormattedTimeFromSecond(estimatedRemainingSeconds)
 
+  const stakedOnlyFarms = farms.filter(
+    farm => farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0)
+  )
+
   const handleClickHarvestAll = async () => {
     setPendingTx(true)
-    await harvestMultiplePools(poolsHaveReward)
+
+    const poolsHaveReward = farms.filter(farm => farm.userData.earnings && BigNumber.from(farm.userData.earnings).gt(0))
+    await harvestMultiplePools(poolsHaveReward.map(farm => farm.pid))
+
     setPendingTx(false)
   }
 
@@ -134,6 +129,14 @@ const Farms = () => {
           <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
             <div>{t('vesting')}</div>
           </Tab>
+          <StakedOnlyToggleWrapper>
+            <StakedOnlyToggle
+              className="staked-only-switch"
+              checked={stakedOnly}
+              onClick={() => setStakedOnly(!stakedOnly)}
+            />
+            <StakedOnlyToggleText>Staked Only</StakedOnlyToggleText>
+          </StakedOnlyToggleWrapper>
         </TabContainer>
 
         {activeTab === 0 ? (
@@ -185,7 +188,7 @@ const Farms = () => {
             </RemainingTimeContainer>
 
             <Panel>
-              <FarmsList farms={farms} />
+              <FarmsList farms={stakedOnly ? stakedOnlyFarms : farms} />
             </Panel>
           </>
         ) : (

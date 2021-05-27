@@ -248,4 +248,16 @@ body {
   min-height: 100vh;
   background: ${({ theme }) => theme.bg12};
 }
+
+.staked-only-switch[aria-checked="false"] {
+  background: ${({ theme }) => theme.bg14} !important;
+}
+
+.staked-only-switch[aria-checked="false"] div {
+  background: ${({ theme }) => theme.bg12} !important;
+}
+
+.staked-only-switch div {
+  background:  ${({ theme }) => theme.primary1};
+}
 `
