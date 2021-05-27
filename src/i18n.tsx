@@ -27,9 +27,7 @@ export const getDetectedLocale = (): string => {
   return detected && isSupportedLocale(detected) ? detected : defaultFallback()
 }
 
-export async function dynamicActivate(locale: string | undefined) {
-  if (!locale) return
-
+export async function dynamicActivate(locale: string) {
   try {
     const { messages } = await import(`@lingui/loader!./locales/${locale}.po`)
     i18n.loadLocaleData(locale, { plurals: () => null })
