@@ -58,7 +58,7 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
     return (
       <MessageWrapper>
         <Message>
-          <Trans id="errors.unknown">
+          <Trans>
             Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device.
           </Trans>
         </Message>

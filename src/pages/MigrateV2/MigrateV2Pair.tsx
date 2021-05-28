@@ -394,14 +394,14 @@ function V2PairMigration({
   return (
     <AutoColumn gap="20px">
       <TYPE.body my={9} style={{ fontWeight: 400 }}>
-        <Trans id="migrate.hint.toolInformation">
+        <Trans>
           This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
           completely trustless thanks to the{' '}
         </Trans>
         {chainId && migrator && (
           <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
             <TYPE.blue display="inline">
-              <Trans id="migrate.hint.migrationContract">Uniswap migration contract↗</Trans>
+              <Trans>Uniswap migration contract↗</Trans>
             </TYPE.blue>
           </ExternalLink>
         )}
@@ -414,7 +414,7 @@ function V2PairMigration({
             <RowFixed style={{ marginLeft: '8px' }}>
               <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
               <TYPE.mediumHeader style={{ marginLeft: '8px' }}>
-                <Trans id="migrate.label.lpToken">
+                <Trans>
                   {currency0.symbol}/{currency1.symbol} LP Tokens
                 </Trans>
               </TYPE.mediumHeader>
@@ -435,7 +435,7 @@ function V2PairMigration({
             <RowFixed style={{ marginLeft: '8px' }}>
               <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
               <TYPE.mediumHeader style={{ marginLeft: '8px' }}>
-                <Trans id="migrate.label.lpNFTToken">
+                <Trans>
                   {currency0.symbol}/{currency1.symbol} LP NFT
                 </Trans>
               </TYPE.mediumHeader>
@@ -448,23 +448,21 @@ function V2PairMigration({
             <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <AlertCircle color={theme.text1} style={{ marginBottom: '12px', opacity: 0.8 }} />
               <TYPE.body fontSize={14} style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }} textAlign="center">
-                <Trans id="migrate.hint.firstV3LiquidityProvider">
+                <Trans>
                   You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the
                   current {isNotUniswap ? 'SushiSwap' : 'V2'} price.
                 </Trans>
               </TYPE.body>
 
               <TYPE.body fontWeight={500} textAlign="center" fontSize={14} style={{ marginTop: '8px', opacity: 0.8 }}>
-                <Trans id="migrate.hint.firstV3LPGasCost">
-                  Your transaction cost will be much higher as it includes the gas to create the pool.
-                </Trans>
+                <Trans>Your transaction cost will be much higher as it includes the gas to create the pool.</Trans>
               </TYPE.body>
 
               {v2SpotPrice && (
                 <AutoColumn gap="8px" style={{ marginTop: '12px' }}>
                   <RowBetween>
                     <TYPE.body fontWeight={500} fontSize={14}>
-                      <Trans id="migrate.labels.price">
+                      <Trans>
                         {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
                       </Trans>{' '}
                       {invertPrice
@@ -482,7 +480,7 @@ function V2PairMigration({
               <AutoColumn gap="8px">
                 <RowBetween>
                   <TYPE.body fontSize={14}>
-                    <Trans id="migrate.labels.price">
+                    <Trans>
                       {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
                     </Trans>
                   </TYPE.body>
@@ -495,9 +493,7 @@ function V2PairMigration({
 
                 <RowBetween>
                   <TYPE.body fontSize={14}>
-                    <Trans id="migrate.labels.v3Price">
-                      V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:
-                    </Trans>
+                    <Trans>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</Trans>
                   </TYPE.body>
                   <TYPE.black fontSize={14}>
                     {invertPrice
@@ -508,15 +504,15 @@ function V2PairMigration({
 
                 <RowBetween>
                   <TYPE.body fontSize={14} color="inherit">
-                    <Trans id="migrate.labels.priceDifference">Price Difference:</Trans>
+                    <Trans>Price Difference:</Trans>
                   </TYPE.body>
                   <TYPE.black fontSize={14} color="inherit">
-                    <Trans id="numbers.valueWithPercent">{priceDifferenceFraction?.toSignificant(4)}%</Trans>
+                    <Trans>{priceDifferenceFraction?.toSignificant(4)}%</Trans>
                   </TYPE.black>
                 </RowBetween>
               </AutoColumn>
               <TYPE.body fontSize={14} style={{ marginTop: 8, fontWeight: 400 }}>
-                <Trans id="migrate.hint.priceHint">
+                <Trans>
                   You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <br />
                   If the price seems incorrect, you can either make a swap to move the price or wait for someone else to
                   do so.
@@ -526,7 +522,7 @@ function V2PairMigration({
           ) : !noLiquidity && v3SpotPrice ? (
             <RowBetween>
               <TYPE.body fontSize={14}>
-                <Trans id="migrate.labels.v3Price">V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</Trans>
+                <Trans>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</Trans>
               </TYPE.body>
               <TYPE.black fontSize={14}>
                 {invertPrice
@@ -538,7 +534,7 @@ function V2PairMigration({
 
           <RowBetween>
             <TYPE.label>
-              <Trans id="migrate.labels.selectLiquidityRange">Set Price Range</Trans>
+              <Trans>Set Price Range</Trans>
             </TYPE.label>
             <RateToggle
               currencyA={invertPrice ? currency1 : currency0}
@@ -570,7 +566,7 @@ function V2PairMigration({
               <RowBetween>
                 <AlertTriangle stroke={theme.yellow3} size="16px" />
                 <TYPE.yellow ml="12px" fontSize="12px">
-                  <Trans id="migrate.hints.inactiveRangeWarning">
+                  <Trans>
                     Your position will not earn fees or be used in trades until the market price moves into your range.
                   </Trans>
                 </TYPE.yellow>
@@ -583,9 +579,7 @@ function V2PairMigration({
               <RowBetween>
                 <AlertTriangle stroke={theme.yellow3} size="16px" />
                 <TYPE.yellow ml="12px" fontSize="12px">
-                  <Trans id="migrate.errors.invalidRangeWarning">
-                    Invalid range selected. The min price must be lower than the max price.
-                  </Trans>
+                  <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
                 </TYPE.yellow>
               </RowBetween>
             </YellowCard>
@@ -597,7 +591,7 @@ function V2PairMigration({
                 <LiquidityInfo token0Amount={position.amount0} token1Amount={position.amount1} />
                 {chainId && refund0 && refund1 ? (
                   <TYPE.black fontSize={12}>
-                    <Trans id="migrate.hints.priceRangeRefund">
+                    <Trans>
                       At least {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol}{' '}
                       and {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will
                       be refunded to your wallet due to selected price range.
@@ -625,12 +619,12 @@ function V2PairMigration({
                 >
                   {approval === ApprovalState.PENDING ? (
                     <Dots>
-                      <Trans id="transactions.approving">Approving</Trans>
+                      <Trans>Approving</Trans>
                     </Dots>
                   ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                    <Trans id="transactions.allower">Allowed</Trans>
+                    <Trans>Allowed</Trans>
                   ) : (
-                    <Trans id="transactions.allowLPTokenMigration">Allow LP token migration</Trans>
+                    <Trans>Allow LP token migration</Trans>
                   )}
                 </ButtonConfirmed>
               </AutoColumn>
@@ -653,10 +647,10 @@ function V2PairMigration({
                   'Success!'
                 ) : isMigrationPending ? (
                   <Dots>
-                    <Trans id="migrate.buttons.migrating">Migrating</Trans>
+                    <Trans>Migrating</Trans>
                   </Dots>
                 ) : (
-                  <Trans id="migrate.buttons.migrate">Migrate</Trans>
+                  <Trans>Migrate</Trans>
                 )}
               </ButtonConfirmed>
             </AutoColumn>
@@ -735,14 +729,14 @@ export default function MigrateV2Pair({
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
           <TYPE.mediumHeader>
-            <Trans id="migrate.labels.migrateV2Liquidity">Migrate V2 Liquidity</Trans>
+            <Trans>Migrate V2 Liquidity</Trans>
           </TYPE.mediumHeader>
           <SettingsTab placeholderSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
         </AutoRow>
 
         {!account ? (
           <TYPE.largeHeader>
-            <Trans id="wallet.mustConnectAccount">You must connect an account.</Trans>
+            <Trans>You must connect an account.</Trans>
           </TYPE.largeHeader>
         ) : pairBalance && totalSupply && reserve0 && reserve1 && token0 && token1 ? (
           <V2PairMigration
@@ -755,7 +749,7 @@ export default function MigrateV2Pair({
             token1={token1}
           />
         ) : (
-          <EmptyState message={t({ id: 'common.loading', message: 'Loading' })} />
+          <EmptyState message={t`Loading`} />
         )}
       </AutoColumn>
     </BodyWrapper>

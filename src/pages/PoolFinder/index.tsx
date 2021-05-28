@@ -83,9 +83,9 @@ export default function PoolFinder() {
     <LightCard padding="45px 10px">
       <Text textAlign="center">
         {!account ? (
-          <Trans id="pools.label.connectWalletToFindPools">Connect to a wallet to find pools</Trans>
+          <Trans>Connect to a wallet to find pools</Trans>
         ) : (
-          <Trans id="pools.labels.selectTokenToFindLiquidity">Select a token to find your liquidity.</Trans>
+          <Trans>Select a token to find your liquidity.</Trans>
         )}
       </Text>
     </LightCard>
@@ -98,7 +98,7 @@ export default function PoolFinder() {
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'primaryText1'}>
-              <Trans id="pools.hint.toolHelperText">
+              <Trans>
                 <b>Tip:</b> Use this tool to find pairs that don&apos;t automatically appear in the interface.
               </Trans>
             </TYPE.link>
@@ -119,7 +119,7 @@ export default function PoolFinder() {
             </Row>
           ) : (
             <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-              <Trans id="currencies.search.selectToken">Select a token</Trans>
+              <Trans>Select a token</Trans>
             </Text>
           )}
         </ButtonDropdownLight>
@@ -143,7 +143,7 @@ export default function PoolFinder() {
             </Row>
           ) : (
             <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-              <Trans id="currencies.search.selectToken">Select a token</Trans>
+              <Trans>Select a token</Trans>
             </Text>
           )}
         </ButtonDropdownLight>
@@ -153,11 +153,11 @@ export default function PoolFinder() {
             style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
           >
             <Text textAlign="center" fontWeight={500}>
-              <Trans id="pools.labels.poolFound">Pool Found!</Trans>
+              <Trans>Pool Found!</Trans>
             </Text>
             <StyledInternalLink to={`/pool`}>
               <Text textAlign="center">
-                <Trans id="pools.buttons.manage">Manage this pool.</Trans>
+                <Trans>Manage this pool.</Trans>
               </Text>
             </StyledInternalLink>
           </ColumnCenter>
@@ -171,11 +171,11 @@ export default function PoolFinder() {
               <LightCard padding="45px 10px">
                 <AutoColumn gap="sm" justify="center">
                   <Text textAlign="center">
-                    <Trans id="pools.label.noLiquidityInPoolYet">You don’t have liquidity in this pool yet.</Trans>
+                    <Trans>You don’t have liquidity in this pool yet.</Trans>
                   </Text>
                   <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
                     <Text textAlign="center">
-                      <Trans id="pools.buttons.addLiquidityPoolFinder">Add liquidity.</Trans>
+                      <Trans>Add liquidity.</Trans>
                     </Text>
                   </StyledInternalLink>
                 </AutoColumn>
@@ -185,10 +185,10 @@ export default function PoolFinder() {
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center">
-                  <Trans id="pools.error.noPoolFound">No pool found.</Trans>
+                  <Trans>No pool found.</Trans>
                 </Text>
                 <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                  <Trans id="pools.buttons.createPool">Create pool.</Trans>
+                  <Trans>Create pool.</Trans>
                 </StyledInternalLink>
               </AutoColumn>
             </LightCard>
@@ -196,7 +196,7 @@ export default function PoolFinder() {
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center" fontWeight={500}>
-                  <Trans id="pools.errors.invalidPair">Invalid pair.</Trans>
+                  <Trans>Invalid pair.</Trans>
                 </Text>
               </AutoColumn>
             </LightCard>
@@ -204,7 +204,7 @@ export default function PoolFinder() {
             <LightCard padding="45px 10px">
               <AutoColumn gap="sm" justify="center">
                 <Text textAlign="center">
-                  <Trans id="common.loading">Loading</Trans>
+                  <Trans>Loading</Trans>
                   <Dots />
                 </Text>
               </AutoColumn>

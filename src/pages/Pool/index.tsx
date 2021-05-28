@@ -129,7 +129,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <PlusCircle size={16} style={{ marginRight: '12px' }} />
-          <Trans id="pools.menu.create">Create a pool</Trans>
+          <Trans>Create a pool</Trans>
         </MenuItem>
       ),
       link: '/add/ETH',
@@ -139,7 +139,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <ChevronsRight size={16} style={{ marginRight: '12px' }} />
-          <Trans id="pools.menu.migrate">Migrate</Trans>
+          <Trans>Migrate</Trans>
         </MenuItem>
       ),
       link: '/migrate/v2',
@@ -149,7 +149,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <Layers size={16} style={{ marginRight: '12px' }} />
-          <Trans id="pools.menu.v2Liquidity">V2 liquidity</Trans>
+          <Trans>V2 liquidity</Trans>
         </MenuItem>
       ),
       link: '/pool/v2',
@@ -159,7 +159,7 @@ export default function Pool() {
       content: (
         <MenuItem>
           <BookOpen size={16} style={{ marginRight: '12px' }} />
-          <Trans id="pools.menu.learn">Learn</Trans>
+          <Trans>Learn</Trans>
         </MenuItem>
       ),
       link: 'https://docs.uniswap.org/',
@@ -176,7 +176,7 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader>
-                  <Trans id="pools.heading.poolsOverview">Pools Overview</Trans>
+                  <Trans>Pools Overview</Trans>
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
@@ -186,14 +186,14 @@ export default function Pool() {
                   ToggleUI={(props: any) => (
                     <MoreOptionsButton {...props}>
                       <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
-                        <Trans id="pools.menu.more">More</Trans>
+                        <Trans>More</Trans>
                         <ChevronDown size={15} />
                       </TYPE.body>
                     </MoreOptionsButton>
                   )}
                 />
                 <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
-                  + <Trans id="pools.buttons.newPosition">New Position</Trans>
+                  + <Trans>New Position</Trans>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
             </TitleRow>
@@ -203,7 +203,7 @@ export default function Pool() {
             {closedPositions.length > 0 ? (
               <ShowInactiveToggle>
                 <TYPE.darkGray>
-                  <Trans id="pools.toggle.hideClosedPositions">Hide closed positions</Trans>
+                  <Trans>Hide closed positions</Trans>
                 </TYPE.darkGray>
                 <Toggle
                   isActive={userHideClosedPositions}
@@ -235,12 +235,12 @@ export default function Pool() {
                   <TYPE.mediumHeader color={theme.text3} textAlign="center">
                     <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
                     <div>
-                      <Trans id="pools.emptyStateHint">Your V3 liquidity positions will appear here.</Trans>
+                      <Trans>Your V3 liquidity positions will appear here.</Trans>
                     </div>
                   </TYPE.mediumHeader>
                   {!account ? (
                     <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
-                      <Trans id="wallet.connect">Connect a wallet</Trans>
+                      <Trans>Connect a wallet</Trans>
                     </ButtonPrimary>
                   ) : (
                     <ButtonGray
@@ -249,7 +249,7 @@ export default function Pool() {
                       id="import-pool-link"
                       style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
                     >
-                      <Trans id="pools.buttons.migrateV2Liquidity">Migrate V2 liquidity</Trans>?&nbsp;&nbsp;
+                      <Trans>Migrate V2 liquidity</Trans>?&nbsp;&nbsp;
                       <Download size={16} />
                     </ButtonGray>
                   )}
@@ -271,7 +271,7 @@ export default function Pool() {
               >
                 <Layers size={14} style={{ marginRight: '8px' }} />
 
-                <Trans id="pools.buttons.viewV2Liquidity">View V2 Liquidity</Trans>
+                <Trans>View V2 Liquidity</Trans>
               </ButtonOutlined>
               {positions && positions.length > 0 && (
                 <ButtonOutlined
@@ -288,7 +288,7 @@ export default function Pool() {
                 >
                   <ChevronsRight size={16} style={{ marginRight: '8px' }} />
 
-                  <Trans id="pools.buttons.migrateLiquidity">Migrate Liquidity</Trans>
+                  <Trans>Migrate Liquidity</Trans>
                 </ButtonOutlined>
               )}
             </RowFixed>
