@@ -1,5 +1,5 @@
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { darken, transparentize } from 'polished'
+import { darken } from 'polished'
 import React, { useMemo } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -44,10 +44,12 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
+
   & > img,
   span {
     height: ${({ size }) => (size ? size + 'px' : '30px')};
   }
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: center;
   `};
@@ -71,58 +73,66 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   color: ${({ theme }) => theme.white};
   font-weight: 500;
   transition: background-color 0.3s ease;
+
   :hover,
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.red1)};
   }
 `
 
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => transparentize(0.25, theme.bg1)};
-  color: ${({ theme }) => theme.text4};
+const ConnectButton = styled.button`
+  padding: 10.5px 14px;
+  background-color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.text1};
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0.08em;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  cursor: pointer;
+`
+
+const AccountStatus = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: ${({ theme }) => theme.dark1};
+  border: solid 2px transparent;
+  color: ${({ theme }) => theme.purple2};
+  border-radius: 12px;
+  white-space: nowrap;
+`;
+
+
+const Web3StatusConnected = styled.button<{ pending?: boolean }>`
+  height: 29px;
+  padding: 0 0 0 8px;
+  background: none;
+  border: none;
+  color: ${({ pending, theme }) => (pending ? theme.white : theme.text4)};
+  font-weight: 700;
   font-size: 11px;
   line-height: 13px;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: background-color 0.3s ease;
-  padding: 9px 0px 9px 14px;
-  outline: none;
-
-  :hover,
-  :focus {
-    outline: none;
-    border: none;
-    box-shadow: none;
-    background-color: ${({ theme }) => transparentize(0.1, theme.bg1)};
-  }
+  cursor: pointer;
 `
 
-const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.dark2)};
-  border: none;
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text4)};
-  border-radius: 8px;
-  font-weight: 700;
+const Web3StatusNetwork = styled.button<{ pending?: boolean }>`
+  display: flex;
+  align-items: center;
+  height: 29px;
+  padding: 7px 8px;
+  margin-left: 10px;
   font-size: 12px;
   line-height: 15px;
+  text-align: center;
   letter-spacing: 0.08em;
-  transition: background-color 0.3s ease;
-  padding: 9px 14px;
-
-  :hover,
-  :focus {
-    border: none;
-    background-color: ${({ pending, theme }) => (pending ? theme.primary1 : transparentize(0.1, theme.purple3))};
-  }
-`
-
-const Web3StatusNetwork = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ theme }) => theme.dark1};
-  padding: 0px 18px 0px 14px;
-  border: 1px solid ${({ theme }) => theme.dark1};
+  text-transform: uppercase;
+  color: #FFFFFF;
+  border-radius: 12px;
+  background-color: ${({ theme }) => theme.dark2};
+  border: none;
 `
 
 const Text = styled.p<{ fontSize?: number }>`
@@ -172,32 +182,35 @@ function Web3StatusInner() {
   if (networkConnectorChainId) {
     return (
       <>
-        {!!account ? (
-          <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
-            {hasPendingTransactions ? (
-              <RowBetween>
-                <Text fontSize={13}>{pending?.length} Pending</Text> <Loader />
-              </RowBetween>
-            ) : (
-              ENSName || shortenAddress(account)
-            )}
-          </Web3StatusConnected>
-        ) : (
-          <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-            {t('No wallet connected')}
-          </Web3StatusConnect>
+        {!account && (
+          <ConnectButton id="connect-wallet" onClick={toggleWalletModal}>
+          {t('Connect wallet')}
+          </ConnectButton>
         )}
-        <NetworkSwitcherPopover>
-          <Web3StatusNetwork onClick={!!!account ? toggleNetworkSwitcherPopover : () => {}}>
-            <IconWrapper size={20}>
-              <img src={ChainLogo[networkConnectorChainId]} alt={''} />
-            </IconWrapper>
-            <TYPE.white ml="8px" mr={!!!account ? '4px' : '0px'} fontWeight={700} fontSize="12px">
-              {ChainLabel[networkConnectorChainId]}
-            </TYPE.white>
-            {!!!account && <ChevronDown size={16} />}
-          </Web3StatusNetwork>
-        </NetworkSwitcherPopover>
+        {!!account && (
+          <AccountStatus>
+            <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+              {hasPendingTransactions ? (
+                <RowBetween>
+                  <Text fontSize={13}>{pending?.length} Pending</Text> <Loader />
+                </RowBetween>
+              ) : (
+                ENSName || shortenAddress(account)
+              )}
+            </Web3StatusConnected>
+            <NetworkSwitcherPopover>
+              <Web3StatusNetwork onClick={!!!account ? toggleNetworkSwitcherPopover : () => {}}>
+                <IconWrapper size={20}>
+                  <img src={ChainLogo[networkConnectorChainId]} alt={''} />
+                </IconWrapper>
+                <TYPE.white ml="8px" mr={!!!account ? '4px' : '0px'} fontWeight={700} fontSize="12px">
+                  {ChainLabel[networkConnectorChainId]}
+                </TYPE.white>
+                {!!!account && <ChevronDown size={16} />}
+              </Web3StatusNetwork>
+            </NetworkSwitcherPopover>
+          </AccountStatus>
+        )}
       </>
     )
   }

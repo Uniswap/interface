@@ -10,11 +10,11 @@ import { useNativeCurrencyBalances } from '../../state/wallet/hooks'
 
 import Settings from '../Settings'
 
-import Row, { RowFixed } from '../Row'
+import Row, { RowFixed, RowFlat } from '../Row'
 import Web3Status from '../Web3Status'
 import { useTranslation } from 'react-i18next'
 import { transparentize } from 'polished'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink } from '../../theme'
 import MobileOptions from './MobileOptions'
 import Badge from '../Badge'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
@@ -22,15 +22,11 @@ import SwaprVersionLogo from '../SwaprVersionLogo'
 import { isMobile } from 'react-device-detect'
 
 const HeaderFrame = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 120px;
-  align-items: center;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
-  width: 100%;
-  top: 0;
   position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
   padding: 1rem;
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -46,15 +42,7 @@ const HeaderFrame = styled.div`
 `
 
 const HeaderControls = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-self: flex-end;
-
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row;
-    justify-content: space-between;
-    justify-self: center;
     width: 100%;
     max-width: 960px;
     padding: 1rem;
@@ -72,6 +60,7 @@ const HeaderControls = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-end;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
    flex-direction: row-reverse;
@@ -99,23 +88,6 @@ const HeaderLinks = styled(Row)`
   `};
 `
 
-const AccountElement = styled.div<{ active: boolean }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: ${({ theme }) => theme.dark1};
-  border: solid 2px transparent;
-  box-sizing: border-box;
-  color: ${({ theme }) => theme.purple2};
-  border-radius: 8px;
-  white-space: nowrap;
-  width: 100%;
-  cursor: pointer;
-
-  :focus {
-    border: solid 2px transparent;
-  }
-`
 
 const Title = styled.a`
   display: flex;
@@ -198,6 +170,30 @@ const StyledExternalLink = styled(ExternalLink)`
   `};
 `
 
+const HeaderSubRow = styled(RowFlat)`
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10px;
+`;
+
+const Amount = styled.p`
+  padding: 8px 12px;
+  margin: 0;
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 12px;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text4};
+  background: ${({ theme }) => theme.bg1};
+  border-radius: 12px;
+
+  & + & {
+    margin-left: 7px;
+  }
+`;
+
 function Header({ history }: { history: any }) {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
@@ -255,24 +251,19 @@ function Header({ history }: { history: any }) {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userNativeCurrencyBalance ? (
-              <TYPE.white
-                style={{ flexShrink: 0 }}
-                ml="18px"
-                mr="12px"
-                fontWeight={700}
-                fontSize="12px"
-                lineHeight="15px"
-                letterSpacing="0.08em"
-              >
-                {userNativeCurrencyBalance?.toSignificant(4)} {nativeCurrency.symbol}
-              </TYPE.white>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
+          <Web3Status />
         </HeaderElement>
-        {!isMobile && <Settings />}
+        <HeaderSubRow>
+          {account && userNativeCurrencyBalance ? (
+            <>
+              <Amount>1600 SWPR</Amount>
+              <Amount>
+                {userNativeCurrencyBalance?.toSignificant(4)} {nativeCurrency.symbol}
+              </Amount>
+            </>
+          ) : null}
+          {!isMobile && <Settings />}
+        </HeaderSubRow>
       </HeaderControls>
     </HeaderFrame>
   )
