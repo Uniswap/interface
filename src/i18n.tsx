@@ -20,9 +20,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const locale = useActiveLocale()
 
   useEffect(() => {
-    if (locale) {
-      dynamicActivate(locale)
-    }
+    dynamicActivate(locale)
   }, [locale])
 
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>
