@@ -4,10 +4,10 @@ import { I18nProvider } from '@lingui/react'
 import { ReactNode } from 'react'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useLocale } from 'state/user/hooks'
-import { SupportedLocale, supportedLocales, defaultLocale } from './constants/locales'
+import { SupportedLocale, SUPPORTED_LOCALES, defaultLocale } from './constants/locales'
 
 function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined {
-  return supportedLocales.find((locale) => locale === maybeSupportedLocale)
+  return SUPPORTED_LOCALES.find((locale) => locale === maybeSupportedLocale)
 }
 
 function navigatorLocale(): SupportedLocale | undefined {

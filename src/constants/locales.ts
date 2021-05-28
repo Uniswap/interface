@@ -1,4 +1,4 @@
-export const supportedLocales = [
+export const SUPPORTED_LOCALES = [
   'en',
   'pseudo-en',
   'de',
@@ -12,6 +12,6 @@ export const supportedLocales = [
   'zh-CN',
   'zh-TW',
 ] as const
-export type SupportedLocale = typeof supportedLocales[number]
+export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
 export const defaultLocale: SupportedLocale = 'en'
