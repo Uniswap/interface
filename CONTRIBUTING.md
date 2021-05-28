@@ -19,9 +19,9 @@ Uniswap interface uses PO file to manage translations. See [Working with PO File
 
 Uniswap interface uses [LinguiJS](https://lingui.js.org/) to manage locales and translations.
 
-- Follow instructions in [README.md](https://github.com/Uniswap/uniswap-interface/blob/main/README.md) for instructions on running the app locally to clone Uniswap interface locally
-- Add locale to locales array in [lingui.config.js](https://github.com/Uniswap/uniswap-interface/blob/main/lingui.config.js#L14)
-- Add locale to locales array in [i18n.tsx](https://github.com/Uniswap/uniswap-interface/blob/main/src/i18n.tsx#L7)
+- Follow instructions in [README.md](https://github.com/Uniswap/uniswap-interface/blob/main/README.md) for instructions on running the app locally
+- Add `locale` to locales array in [lingui.config.js](https://github.com/Uniswap/uniswap-interface/blob/main/lingui.config.js#L14)
+- Add `locale` to locales array in [i18n.tsx](https://github.com/Uniswap/uniswap-interface/blob/main/src/i18n.tsx#L7)
 - Run `yarn i18n:extract` to generate [src/locales/{locale}.po](https://github.com/Uniswap/uniswap-interface/tree/main/src/locales)
 - Continue to [Existing Translation](#existing-translation) below
 
@@ -29,5 +29,5 @@ Uniswap interface uses [LinguiJS](https://lingui.js.org/) to manage locales and 
 
 - Edit [src/locales](https://github.com/Uniswap/uniswap-interface/tree/main/src/locales)/{locale}.po either manually or with a PO editor (see [Editing PO Files](https://www.gnu.org/software/trans-coord/manual/web-trans/html_node/PO-Editors.html)).
 - Run `yarn i18n:compile` to generate src/locales/{locale}.js
-- Run `yarn start` to start a server locally to verify changes, `?lng={locale}`
+- Run `yarn start` to start a server locally to verify changes (append `?lng={locale}` query param)
 - Submit PR against main
