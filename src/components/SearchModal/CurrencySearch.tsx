@@ -171,7 +171,7 @@ export function CurrencySearch({
       <PaddedColumn gap="16px">
         <RowBetween>
           <Text fontWeight={500} fontSize={16}>
-            <Trans id="currencies.search.selectToken">Select a token</Trans>
+            <Trans>Select a token</Trans>
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -179,7 +179,7 @@ export function CurrencySearch({
           <SearchInput
             type="text"
             id="token-search-input"
-            placeholder={t({ id: 'currencies.search.placeholder', message: 'Search name or paste address' })}
+            placeholder={t`Search name or paste address`}
             autoComplete="off"
             value={searchQuery}
             ref={inputRef as RefObject<HTMLInputElement>}
@@ -217,7 +217,7 @@ export function CurrencySearch({
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
           <TYPE.main color={theme.text3} textAlign="center" mb="20px">
-            <Trans id="currencies.search.noResults">No results found.</Trans>
+            <Trans>No results found.</Trans>
           </TYPE.main>
         </Column>
       )}
@@ -229,7 +229,7 @@ export function CurrencySearch({
                 <Edit />
               </IconWrapper>
               <TYPE.main color={theme.blue1}>
-                <Trans id="tokenLists.manage">Manage Token Lists</Trans>
+                <Trans>Manage Token Lists</Trans>
               </TYPE.main>
             </RowFixed>
           </ButtonText>
