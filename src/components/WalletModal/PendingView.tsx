@@ -84,7 +84,7 @@ export default function PendingView({
           {error ? (
             <ErrorGroup>
               <div>
-                <Trans id="error.connecting">Error connecting</Trans>
+                <Trans>Error connecting</Trans>
               </div>
               <ErrorButton
                 onClick={() => {
@@ -92,13 +92,13 @@ export default function PendingView({
                   connector && tryActivation(connector)
                 }}
               >
-                <Trans id="error.tryAgain">Try Again</Trans>
+                <Trans>Try Again</Trans>
               </ErrorButton>
             </ErrorGroup>
           ) : (
             <>
               <StyledLoader />
-              <Trans id="wallet.initializing">Initializing...</Trans>
+              <Trans>Initializing...</Trans>
             </>
           )}
         </LoadingWrapper>

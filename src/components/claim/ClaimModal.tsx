@@ -101,14 +101,12 @@ export default function ClaimModal() {
             <CardSection gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={500}>
-                  <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
+                  <Trans>Claim UNI</Trans>
                 </TYPE.white>
                 <CloseIcon onClick={toggleClaimModal} style={{ zIndex: 99 }} color="white" />
               </RowBetween>
               <TYPE.white fontWeight={700} fontSize={36}>
-                <Trans id="claim.labels.tokenAmount">
-                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-                </Trans>
+                <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
               </TYPE.white>
             </CardSection>
             <Break />
@@ -117,7 +115,7 @@ export default function ClaimModal() {
                 <RowBetween>
                   <TYPE.subHeader color="white">SOCKS</TYPE.subHeader>
                   <TYPE.subHeader color="white">
-                    <Trans id="claim.labels.socksAmount">{SOCKS_AMOUNT} UNI</Trans>
+                    <Trans>{SOCKS_AMOUNT} UNI</Trans>
                   </TYPE.subHeader>
                 </RowBetween>
               )}
@@ -126,10 +124,10 @@ export default function ClaimModal() {
                 JSBI.greaterThanOrEqual(unclaimedAmount.quotient, nonLPAmount) && (
                   <RowBetween>
                     <TYPE.subHeader color="white">
-                      <Trans id="common.liquidity">Liquidity</Trans>
+                      <Trans>Liquidity</Trans>
                     </TYPE.subHeader>
                     <TYPE.subHeader color="white">
-                      <Trans id="claim.labels.tokenAmount">
+                      <Trans>
                         {unclaimedAmount
                           .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
                           .toFixed(0, { groupSeparator: ',' })}{' '}
@@ -141,10 +139,10 @@ export default function ClaimModal() {
               {userClaimData?.flags?.isUser && (
                 <RowBetween>
                   <TYPE.subHeader color="white">
-                    <Trans id="common.user">User</Trans>
+                    <Trans>User</Trans>
                   </TYPE.subHeader>
                   <TYPE.subHeader color="white">
-                    <Trans id="claim.userAmount">{USER_AMOUNT} UNI</Trans>
+                    <Trans>{USER_AMOUNT} UNI</Trans>
                   </TYPE.subHeader>
                 </RowBetween>
               )}
@@ -152,7 +150,7 @@ export default function ClaimModal() {
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <TYPE.subHeader fontWeight={500}>
-              <Trans id="claim.hints.uniswapCommunityMember">
+              <Trans>
                 As a member of the Uniswap community you may claim UNI to be used for voting and governance.
                 <br />
                 <br />
@@ -167,7 +165,7 @@ export default function ClaimModal() {
               mt="1rem"
               onClick={onClaim}
             >
-              <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
+              <Trans>Claim UNI</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -194,16 +192,14 @@ export default function ClaimModal() {
               </TYPE.largeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  <Trans id="claim.labels.tokenAmount">
-                    {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-                  </Trans>
+                  <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
                 <TYPE.subHeader fontWeight={500} color="black">
-                  <Trans id="claim.labels.welcome">
+                  <Trans>
                     <span role="img" aria-label="party-hat">
                       🎉{' '}
                     </span>
@@ -217,7 +213,7 @@ export default function ClaimModal() {
             )}
             {attempting && !claimSubmitted && (
               <TYPE.subHeader color="black">
-                <Trans id="claim.labels.confirmTransactionInWallet">Confirm this transaction in your wallet</Trans>
+                <Trans>Confirm this transaction in your wallet</Trans>
               </TYPE.subHeader>
             )}
             {attempting && claimSubmitted && !claimConfirmed && chainId && claimTxn?.hash && (
@@ -225,7 +221,7 @@ export default function ClaimModal() {
                 href={getExplorerLink(chainId, claimTxn?.hash, ExplorerDataType.TRANSACTION)}
                 style={{ zIndex: 99 }}
               >
-                <Trans id="transaction.viewOnEherscan">View transaction on Etherscan</Trans>
+                <Trans>View transaction on Etherscan</Trans>
               </ExternalLink>
             )}
           </AutoColumn>

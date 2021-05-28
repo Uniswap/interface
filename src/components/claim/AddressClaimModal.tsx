@@ -105,21 +105,19 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardSection gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={500}>
-                  <Trans id="claim.buttons.claimUNIToken">Claim UNI Token</Trans>
+                  <Trans>Claim UNI Token</Trans>
                 </TYPE.white>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
               <TYPE.white fontWeight={700} fontSize={36}>
-                <Trans id="claim.labels.tokenAmount">
-                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-                </Trans>
+                <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
               </TYPE.white>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <TYPE.subHeader fontWeight={500}>
-              <Trans id="claim.labels.enterAddress">
+              <Trans>
                 Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
                 submission.
               </Trans>
@@ -127,7 +125,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && (
               <TYPE.error error={true}>
-                <Trans id="claim.noAvailableClaim">Address has no available claim</Trans>
+                <Trans>Address has no available claim</Trans>
               </TYPE.error>
             )}
             <ButtonPrimary
@@ -138,7 +136,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               mt="1rem"
               onClick={onClaim}
             >
-              <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
+              <Trans>Claim UNI</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -161,22 +159,16 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
               <TYPE.largeHeader fontWeight={600} color="black">
-                {claimConfirmed ? (
-                  <Trans id="claim.label.statusClaimed">Claimed</Trans>
-                ) : (
-                  <Trans id="claim.label.statusClaiming">Claiming</Trans>
-                )}
+                {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
               </TYPE.largeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  <Trans id="claim.labels.tokenAmount">
-                    {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-                  </Trans>
+                  <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}
               {parsedAddress && (
                 <TYPE.largeHeader fontWeight={600} color="black">
-                  <Trans id="claim.labels.address">for {shortenAddress(parsedAddress)}</Trans>
+                  <Trans>for {shortenAddress(parsedAddress)}</Trans>
                 </TYPE.largeHeader>
               )}
             </AutoColumn>
@@ -186,7 +178,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>
-                  <Trans id="claim.labels.welcome">Welcome to team Unicorn :) </Trans>
+                  <Trans>Welcome to team Unicorn :) </Trans>
                   <span role="img" aria-label="party-hat">
                     🎉
                   </span>
@@ -195,12 +187,12 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             )}
             {attempting && !hash && (
               <TYPE.subHeader color="black">
-                <Trans id="wallet.confirmTransaction">Confirm this transaction in your wallet</Trans>
+                <Trans>Confirm this transaction in your wallet</Trans>
               </TYPE.subHeader>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>
-                <Trans id="transaction.viewOnEherscan">View transaction on Etherscan</Trans>
+                <Trans>View transaction on Etherscan</Trans>
               </ExternalLink>
             )}
           </AutoColumn>

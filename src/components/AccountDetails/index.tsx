@@ -240,7 +240,7 @@ export default function AccountDetails({
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
     return (
       <WalletName>
-        <Trans id="wallet.connectedWith">Connected with {name}</Trans>
+        <Trans>Connected with {name}</Trans>
       </WalletName>
     )
   }
@@ -280,7 +280,7 @@ export default function AccountDetails({
                 portis.portis.showPortis()
               }}
             >
-              <Trans id="wallet.showPortis">Show Portis</Trans>
+              <Trans>Show Portis</Trans>
             </MainWalletAction>
           </IconWrapper>
         </>
@@ -300,7 +300,7 @@ export default function AccountDetails({
           <CloseColor />
         </CloseIcon>
         <HeaderRow>
-          <Trans id="wallet.account">Account</Trans>
+          <Trans>Account</Trans>
         </HeaderRow>
         <AccountSection>
           <YourAccount>
@@ -315,7 +315,7 @@ export default function AccountDetails({
                         ;(connector as any).close()
                       }}
                     >
-                      <Trans id="wallet.disconnect">Disconnect</Trans>
+                      <Trans>Disconnect</Trans>
                     </WalletAction>
                   )}
                   <WalletAction
@@ -324,7 +324,7 @@ export default function AccountDetails({
                       openOptions()
                     }}
                   >
-                    <Trans id="wallet.change">Change</Trans>
+                    <Trans>Change</Trans>
                   </WalletAction>
                 </div>
               </AccountGroupingRow>
@@ -355,7 +355,7 @@ export default function AccountDetails({
                         {account && (
                           <Copy toCopy={account}>
                             <span style={{ marginLeft: '4px' }}>
-                              <Trans id="wallet.copyAddress">Copy Address</Trans>
+                              <Trans>Copy Address</Trans>
                             </span>
                           </Copy>
                         )}
@@ -367,7 +367,7 @@ export default function AccountDetails({
                           >
                             <LinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>
-                              <Trans id="wallet.viewOnEtherscan">View on Etherscan</Trans>
+                              <Trans>View on Etherscan</Trans>
                             </span>
                           </AddressLink>
                         )}
@@ -381,7 +381,7 @@ export default function AccountDetails({
                         {account && (
                           <Copy toCopy={account}>
                             <span style={{ marginLeft: '4px' }}>
-                              <Trans id="wallet.copyAddress">Copy Address</Trans>
+                              <Trans>Copy Address</Trans>
                             </span>
                           </Copy>
                         )}
@@ -393,7 +393,7 @@ export default function AccountDetails({
                           >
                             <LinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>
-                              <Trans id="wallet.viewOnEtherscan">View on Etherscan</Trans>
+                              <Trans>View on Etherscan</Trans>
                             </span>
                           </AddressLink>
                         )}
@@ -410,10 +410,10 @@ export default function AccountDetails({
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
             <TYPE.body>
-              <Trans id="wallet.recentTransactions">Recent Transactions</Trans>
+              <Trans>Recent Transactions</Trans>
             </TYPE.body>
             <LinkStyledButton onClick={clearAllTransactionsCallback}>
-              <Trans id="wallet.clearAllTransactions">(clear all)</Trans>
+              <Trans>(clear all)</Trans>
             </LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
@@ -422,7 +422,7 @@ export default function AccountDetails({
       ) : (
         <LowerSection>
           <TYPE.body color={theme.text1}>
-            <Trans id="wallet.yourTransactionsWillAppearHere">Your transactions will appear here...</Trans>
+            <Trans>Your transactions will appear here...</Trans>
           </TYPE.body>
         </LowerSection>
       )}

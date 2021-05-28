@@ -112,20 +112,15 @@ export default function MigrateV2() {
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/pool" />
           <TYPE.mediumHeader>
-            <Trans id="migrate.buttons.migrateV2Liquidity">Migrate V2 Liquidity</Trans>
+            <Trans>Migrate V2 Liquidity</Trans>
           </TYPE.mediumHeader>
           <div>
-            <QuestionHelper
-              text={t({
-                id: 'migrate.hint.migrateFromV2ToV3',
-                message: 'Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.',
-              })}
-            />
+            <QuestionHelper text={t`Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.`} />
           </div>
         </AutoRow>
 
         <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-          <Trans id="migrate.hint.clickToRemoveV2">
+          <Trans>
             For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
             Uniswap V3.
           </Trans>
@@ -134,16 +129,14 @@ export default function MigrateV2() {
         {!account ? (
           <LightCard padding="40px">
             <TYPE.body color={theme.text3} textAlign="center">
-              <Trans id="migrate.hint.connectWalltToViewV2Liquidity">
-                Connect to a wallet to view your V2 liquidity.
-              </Trans>
+              <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
             </TYPE.body>
           </LightCard>
         ) : v2IsLoading ? (
           <LightCard padding="40px">
             <TYPE.body color={theme.text3} textAlign="center">
               <Dots>
-                <Trans id="common.loading">Loading</Trans>
+                <Trans>Loading</Trans>
               </Dots>
             </TYPE.body>
           </LightCard>
@@ -172,7 +165,7 @@ export default function MigrateV2() {
 
         <AutoColumn justify={'center'} gap="md">
           <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-            <Trans id="migrate.hint.importV2Position">
+            <Trans>
               Don’t see one of your v2 positions?{' '}
               <StyledInternalLink id="import-pool-link" to={'/find?origin=/migrate/v2'}>
                 Import it.

@@ -240,7 +240,7 @@ export default function WalletModal({
                 id={`connect-${key}`}
                 key={key}
                 color={'#E8831D'}
-                header={t({ id: 'wallet.installMetamask', message: 'Install Metamask' })}
+                header={t`Install Metamask`}
                 subheader={null}
                 link={'https://metamask.io/'}
                 icon={MetamaskIcon}
@@ -292,19 +292,15 @@ export default function WalletModal({
             <CloseColor />
           </CloseIcon>
           <HeaderRow>
-            {error instanceof UnsupportedChainIdError ? (
-              <Trans id="error.wrongNetwork">Wrong Network</Trans>
-            ) : (
-              <Trans id="error.connecting">Error connecting</Trans>
-            )}
+            {error instanceof UnsupportedChainIdError ? <Trans>Wrong Network</Trans> : <Trans>Error connecting</Trans>}
           </HeaderRow>
           <ContentWrapper>
             {error instanceof UnsupportedChainIdError ? (
               <h5>
-                <Trans id="wallet.connectToNetwork">Please connect to the appropriate Ethereum network.</Trans>
+                <Trans>Please connect to the appropriate Ethereum network.</Trans>
               </h5>
             ) : (
-              <Trans id="error.connectingTryRefreshing">Error connecting. Try refreshing the page.</Trans>
+              <Trans>Error connecting. Try refreshing the page.</Trans>
             )}
           </ContentWrapper>
         </UpperSection>
@@ -334,13 +330,13 @@ export default function WalletModal({
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
-              <Trans id="common.back">Back</Trans>
+              <Trans>Back</Trans>
             </HoverText>
           </HeaderRow>
         ) : (
           <HeaderRow>
             <HoverText>
-              <Trans id="wallet.connectLongForm">Connect to a wallet</Trans>
+              <Trans>Connect to a wallet</Trans>
             </HoverText>
           </HeaderRow>
         )}
@@ -349,7 +345,7 @@ export default function WalletModal({
           <LightCard style={{ marginBottom: '16px' }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
               <TYPE.main fontSize={14}>
-                <Trans id="wallet.connectAcknowledgement">
+                <Trans>
                   By connecting a wallet, you agree to Uniswap Labs’{' '}
                   <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
                   acknowledge that you have read and understand the{' '}

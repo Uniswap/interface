@@ -46,12 +46,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       await stakingContract
         .getReward({ gasLimit: 350000 })
         .then((response: TransactionResponse) => {
-          addTransaction(response, {
-            summary: t({
-              id: 'transactions.summary.claimAccumulatedUNIRewards',
-              message: 'Claim accumulated UNI rewards',
-            }),
-          })
+          addTransaction(response, { summary: t`Claim accumulated UNI rewards` })
           setHash(response.hash)
         })
         .catch((error: any) => {
@@ -63,10 +58,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
 
   let error: string | undefined
   if (!account) {
-    error = t({ id: 'wallet.connect' })
+    error = t`Connect wallet`
   }
   if (!stakingInfo?.stakedAmount) {
-    error = error ?? t({ id: 'earn.enterAmountError', message: 'Enter an amount' })
+    error = error ?? t`Enter an amount`
   }
 
   return (
@@ -75,7 +70,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <ContentWrapper gap="lg">
           <RowBetween>
             <TYPE.mediumHeader>
-              <Trans id="earn.claim.label">Claim</Trans>
+              <Trans>Claim</Trans>
             </TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
@@ -85,17 +80,15 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
                 {stakingInfo?.earnedAmount?.toSignificant(6)}
               </TYPE.body>
               <TYPE.body>
-                <Trans id="earn.claim.unclaimedUNI">Unclaimed UNI</Trans>
+                <Trans>Unclaimed UNI</Trans>
               </TYPE.body>
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>
-            <Trans id="earn.claim.withoutWithdrawingHint">
-              When you claim without withdrawing your liquidity remains in the mining pool.
-            </Trans>
+            <Trans>When you claim without withdrawing your liquidity remains in the mining pool.</Trans>
           </TYPE.subHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
-            {error ?? <Trans id="earn.claim.label">Claim</Trans>}
+            {error ?? <Trans>Claim</Trans>}
           </ButtonError>
         </ContentWrapper>
       )}
@@ -103,7 +96,7 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.body fontSize={20}>
-              <Trans id="claim.labels.claimingAmount">Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
+              <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
             </TYPE.body>
           </AutoColumn>
         </LoadingView>
@@ -112,10 +105,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
-              <Trans id="transactions.submitted">Transaction Submitted</Trans>
+              <Trans>Transaction Submitted</Trans>
             </TYPE.largeHeader>
             <TYPE.body fontSize={20}>
-              <Trans id="earn.claim.claimedUNI">Claimed UNI!</Trans>
+              <Trans>Claimed UNI!</Trans>
             </TYPE.body>
           </AutoColumn>
         </SubmittedView>
