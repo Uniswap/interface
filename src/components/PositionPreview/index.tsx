@@ -96,10 +96,10 @@ export const PositionPreview = ({
           <Break />
           <RowBetween>
             <TYPE.label>
-              <Trans id="pools.labels.feeTier">Fee Tier</Trans>
+              <Trans>Fee Tier</Trans>
             </TYPE.label>
             <TYPE.label>
-              <Trans id="pools.labels.feeTierValue">{position?.pool?.fee / 10000}%</Trans>
+              <Trans>{position?.pool?.fee / 10000}%</Trans>
             </TYPE.label>
           </RowBetween>
         </AutoColumn>
@@ -119,18 +119,16 @@ export const PositionPreview = ({
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
               <TYPE.main fontSize="12px">
-                <Trans id="pools.minPriceLabel">Min Price</Trans>
+                <Trans>Min Price</Trans>
               </TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${priceLower.toSignificant(5)}`}</TYPE.mediumHeader>
               <TYPE.main textAlign="center" fontSize="12px">
-                <Trans id="currencies.denominated">
+                <Trans>
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </TYPE.main>
               <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
-                <Trans id="pools.minMaxPriceHint">
-                  Your position will be 100% composed of {baseCurrency?.symbol} at this price
-                </Trans>
+                <Trans>Your position will be 100% composed of {baseCurrency?.symbol} at this price</Trans>
               </TYPE.small>
             </AutoColumn>
           </LightCard>
@@ -138,18 +136,16 @@ export const PositionPreview = ({
           <LightCard width="48%" padding="8px">
             <AutoColumn gap="4px" justify="center">
               <TYPE.main fontSize="12px">
-                <Trans id="pools.maxPrice">Max Price</Trans>
+                <Trans>Max Price</Trans>
               </TYPE.main>
               <TYPE.mediumHeader textAlign="center">{`${priceUpper.toSignificant(5)}`}</TYPE.mediumHeader>
               <TYPE.main textAlign="center" fontSize="12px">
-                <Trans id="currencies.denominated">
+                <Trans>
                   {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </TYPE.main>
               <TYPE.small textAlign="center" color={theme.text3} style={{ marginTop: '4px' }}>
-                <Trans id="pools.minMaxPriceHint">
-                  Your position will be 100% composed of {quoteCurrency?.symbol} at this price
-                </Trans>
+                <Trans>Your position will be 100% composed of {quoteCurrency?.symbol} at this price</Trans>
               </TYPE.small>
             </AutoColumn>
           </LightCard>
@@ -157,11 +153,11 @@ export const PositionPreview = ({
         <LightCard padding="12px ">
           <AutoColumn gap="4px" justify="center">
             <TYPE.main fontSize="12px">
-              <Trans id="pools.currentPrice">Current price</Trans>
+              <Trans>Current price</Trans>
             </TYPE.main>
             <TYPE.mediumHeader>{`${price.toSignificant(5)} `}</TYPE.mediumHeader>
             <TYPE.main textAlign="center" fontSize="12px">
-              <Trans id="currencies.denominated">
+              <Trans>
                 {quoteCurrency.symbol} per {baseCurrency.symbol}
               </Trans>
             </TYPE.main>
