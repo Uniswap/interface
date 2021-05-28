@@ -41,8 +41,7 @@ yarn start
 
 ## Contributions
 
-**Please open all pull requests against the `main` branch.**
-CI checks will run against all PRs.
+See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Accessing Uniswap V2
 
