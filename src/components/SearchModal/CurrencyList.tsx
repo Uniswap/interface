@@ -11,7 +11,6 @@ import Loader from '../Loader'
 import Badge from '../Badge'
 import { TokenPickerItem } from './styleds'
 import { Plus, X } from 'react-feather'
-import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { TokenAddressMap, useCombinedActiveList } from '../../state/lists/hooks'
@@ -140,7 +139,7 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
           <RowFixed>
             <TokenListLogoWrapper src={TokenListLogo} />
             <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
-              Expanded results from inactive Token Lists
+              Expanded results from inactive token lists
             </TYPE.main>
           </RowFixed>
           <QuestionHelper text="Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists." />
@@ -155,7 +154,6 @@ export default function CurrencyList({
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
-  showNativeCurrency,
   otherListTokens,
   fixedListRef,
   showImportView,
@@ -165,21 +163,20 @@ export default function CurrencyList({
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
   otherCurrency?: Currency | null
-  showNativeCurrency: boolean
-  otherListTokens: WrappedTokenInfo[]
+  otherListTokens: Token[]
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showImportView: () => void
   setImportToken: (token: Token) => void
 }) {
-  const nativeCurrency = useNativeCurrency()
   const selectedTokenList = useCombinedActiveList()
   const itemData = useMemo(() => {
-    const localCurrencies = showNativeCurrency ? [nativeCurrency, ...currencies] : currencies
     if (otherListTokens && otherListTokens?.length > 0) {
-      return [...localCurrencies, BREAK_LINE, ...otherListTokens]
+      // the first case is a token found by address but that is not in any active or inactive token list
+      if (otherListTokens.length === 1 && !(otherListTokens[0] instanceof WrappedTokenInfo)) return [...otherListTokens]
+      return [BREAK_LINE, ...otherListTokens]
     }
     return currencies
-  }, [currencies, nativeCurrency, otherListTokens, showNativeCurrency])
+  }, [currencies, otherListTokens])
 
   const Row = useCallback(
     ({ data, index, style }) => {
@@ -187,7 +184,7 @@ export default function CurrencyList({
       if (isBreakLine(currency)) return <BreakLineComponent style={style} />
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
-      const showImport = index > currencies.length
+      const showImport = index >= currencies.length
       const handleSelect = () => onCurrencySelect(currency)
       if (showImport && currency && currency instanceof Token) {
         return (
@@ -210,9 +207,8 @@ export default function CurrencyList({
             style={style}
           />
         )
-      } else {
-        return null
       }
+      return null
     },
     [
       currencies.length,

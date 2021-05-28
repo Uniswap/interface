@@ -87,11 +87,7 @@ export function useSearchInactiveTokenLists(search: string | undefined, minResul
 
 export function useIsTokenActive(token: Token | undefined | null): boolean {
   const activeTokens = useAllTokens()
-
-  if (!activeTokens || !token) {
-    return false
-  }
-
+  if (!activeTokens || !token) return false
   return !!activeTokens[token.address]
 }
 

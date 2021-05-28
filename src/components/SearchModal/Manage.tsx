@@ -1,7 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Separator } from './styleds'
 import { RowBetween } from '../Row'
-import { ChevronLeft } from 'react-feather'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 import { Token } from 'dxswap-sdk'
@@ -12,6 +10,7 @@ import { CurrencyModalView } from './CurrencySearchModal'
 import { CloseIcon } from '../../theme'
 import { useMeasure } from 'react-use'
 import { animated, useSpring } from '@react-spring/web'
+import { GoBackIcon } from './styleds'
 
 const Wrapper = styled(Flex)`
   width: 100%;
@@ -62,13 +61,6 @@ const ToggleIndicator = styled.div`
 `
 const AnimatedToggleIndicator = animated(ToggleIndicator)
 
-const GoBackIcon = styled(ChevronLeft)<{ onClick: () => void }>`
-  color: ${({ theme }) => theme.purple3};
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-`
-
 export default function Manage({
   onDismiss,
   setModalView,
@@ -102,7 +94,7 @@ export default function Manage({
 
   return (
     <Wrapper ref={ref}>
-      <Box p="20px" pb="12px">
+      <Box p="20px">
         <RowBetween>
           <GoBackIcon onClick={() => setModalView(CurrencyModalView.SEARCH)} />
           <Text fontWeight={500} fontSize={16}>
@@ -111,10 +103,7 @@ export default function Manage({
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </Box>
-      <Box>
-        <Separator />
-      </Box>
-      <Box p="20px" pb="0px">
+      <Box px="20px">
         <ToggleWrapper>
           <AnimatedToggleIndicator style={tabIndicatorStyles} />
           <ToggleOption onClick={handleListsClick} active={showLists}>

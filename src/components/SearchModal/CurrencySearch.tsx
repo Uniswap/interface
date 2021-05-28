@@ -3,7 +3,7 @@ import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, us
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import { useAllTokens, useToken, useIsUserAddedToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
+import { useAllTokens, useToken, useSearchInactiveTokenLists } from '../../hooks/Tokens'
 import { CloseIcon, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
@@ -16,7 +16,6 @@ import { PaddedColumn, SearchInput, Separator } from './styleds'
 import styled, { ThemeContext } from 'styled-components/macro'
 import useToggle from '../../hooks/useToggle'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import ImportRow from './ImportRow'
 import useDebounce from '../../hooks/useDebounce'
 import { useActiveWeb3React } from '../../hooks'
 import { useNativeCurrency } from '../../hooks/useNativeCurrency'
@@ -86,8 +85,6 @@ export function CurrencySearch({
 
   const searchToken = useToken(debouncedQuery)
 
-  const searchTokenIsAdded = useIsUserAddedToken(searchToken)
-
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
@@ -100,19 +97,14 @@ export function CurrencySearch({
 
   const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 
-  const nativeCurrencyShown: boolean = useMemo(() => {
-    if (!showNativeCurrency) return false
-    const s = searchQuery.toLowerCase().trim()
-    return !!nativeCurrency.symbol?.toLowerCase().startsWith(s)
-  }, [nativeCurrency, searchQuery, showNativeCurrency])
-
   const filteredSortedTokensWithNativeCurrency: Currency[] = useMemo(() => {
+    if (!showNativeCurrency) return filteredSortedTokens
     const s = debouncedQuery.toLowerCase().trim()
-    if (s === '' || s === 'e' || s === 'et' || s === 'eth') {
+    if (nativeCurrency.symbol && nativeCurrency.symbol.toLowerCase().startsWith(s)) {
       return nativeCurrency ? [nativeCurrency, ...filteredSortedTokens] : filteredSortedTokens
     }
     return filteredSortedTokens
-  }, [debouncedQuery, nativeCurrency, filteredSortedTokens])
+  }, [showNativeCurrency, filteredSortedTokens, debouncedQuery, nativeCurrency])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -164,6 +156,12 @@ export function CurrencySearch({
   const filteredInactiveTokens = useSearchInactiveTokenLists(
     filteredTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch) ? debouncedQuery : undefined
   )
+  const filteredInactiveTokensWithFallback = useMemo(() => {
+    if (filteredTokens.length > 0) return []
+    if (filteredInactiveTokens.length > 0) return filteredInactiveTokens
+    if (searchToken) return [searchToken]
+    return []
+  }, [filteredInactiveTokens, filteredTokens.length, searchToken])
 
   return (
     <ContentWrapper>
@@ -191,21 +189,16 @@ export function CurrencySearch({
         )}
       </PaddedColumn>
       <Separator />
-      {searchToken && !searchTokenIsAdded ? (
-        <Column style={{ padding: '20px 0', height: '100%' }}>
-          <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
-        </Column>
-      ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
+      {filteredSortedTokens?.length > 0 || filteredInactiveTokensWithFallback.length > 0 ? (
         <CurrencyList
           currencies={filteredSortedTokensWithNativeCurrency}
-          otherListTokens={filteredInactiveTokens}
+          otherListTokens={filteredInactiveTokensWithFallback}
           onCurrencySelect={handleCurrencySelect}
           otherCurrency={otherSelectedCurrency}
           selectedCurrency={selectedCurrency}
           fixedListRef={fixedList}
           showImportView={showImportView}
           setImportToken={setImportToken}
-          showNativeCurrency={nativeCurrencyShown}
         />
       ) : (
         <Column style={{ padding: '20px', height: '100%' }}>
