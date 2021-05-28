@@ -26,5 +26,5 @@ Uniswap interface uses [LinguiJS](https://lingui.js.org/) to manage locales and 
 
 - Edit [src/locales](https://github.com/Uniswap/uniswap-interface/tree/main/src/locales)/{locale}.po either manually or with a PO editor (see [Editing PO Files](https://www.gnu.org/software/trans-coord/manual/web-trans/html_node/PO-Editors.html)).
 - Run `yarn i18n:compile` to generate src/locales/{locale}.js
-- Run `yarn start` to start a server locally to verify changes
+- Run `yarn start` to start a server locally to verify changes, `?lng={locale}`
 - Submit PR against main
