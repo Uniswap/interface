@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
-import { SupportedLocale } from 'i18n'
+import { SupportedLocale } from 'constants/locales'
 
 export interface SerializedToken {
   chainId: number

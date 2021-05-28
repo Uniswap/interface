@@ -24,7 +24,7 @@ import {
   updateUserSlippageTolerance,
   updateUserLocale,
 } from './actions'
-import { SupportedLocale } from 'i18n'
+import { SupportedLocale } from 'constants/locales'
 
 function serializeToken(token: Token): SerializedToken {
   return {

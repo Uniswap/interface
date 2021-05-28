@@ -2,50 +2,22 @@ import React from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ReactNode } from 'react'
-import { useDispatch } from 'react-redux'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useEffect } from '@storybook/addons'
-import { AppDispatch } from 'state'
 import { useLocale } from 'state/user/hooks'
-
-type IE11NavigatorLanguage = {
-  userLanguage?: string
-}
-
-const supportedLocales = [
-  'en',
-  'pseudo-en',
-  'de',
-  'es-AR',
-  'es-US',
-  'it-IT',
-  'iw',
-  'ro',
-  'ru',
-  'vi',
-  'zh-CN',
-  'zh-TW',
-] as const
-export type SupportedLocale = typeof supportedLocales[number]
-
-const defaultFallback = () => 'en' as SupportedLocale
+import { SupportedLocale, supportedLocales, defaultFallback } from './constants/locales'
 
 function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined {
   return supportedLocales.find((locale) => locale === maybeSupportedLocale)
 }
 
-function getDetectedLocale(
-  navigator: Partial<Navigator & IE11NavigatorLanguage> = window.navigator
-): SupportedLocale | undefined {
-  const language = navigator.language ?? navigator.language
+function navigatorLocale(): SupportedLocale | undefined {
+  if (!navigator.language) return undefined
 
-  if (!language) return undefined
-
-  return parseLocale(language) ?? parseLocale(language.split('-')[0])
-}
-
-function getActiveLocale(cached: SupportedLocale | undefined, qs: SupportedLocale | undefined): SupportedLocale {
-  return qs ?? cached ?? getDetectedLocale() ?? defaultFallback()
+  const [language, region] = navigator.language
+    .split('-')
+    .map((split, index) => (index === 0 ? split.toLocaleLowerCase() : split.toLocaleUpperCase()))
+  return parseLocale(`${language}-${region}`) ?? parseLocale(language)
 }
 
 export async function dynamicActivate(locale: SupportedLocale) {
@@ -60,18 +32,14 @@ export async function dynamicActivate(locale: SupportedLocale) {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const dispatch = useDispatch<AppDispatch>()
   const parsed = useParsedQueryString()
   const userLocale = useLocale()
 
   useEffect(() => {
     const parsedLocale = (typeof parsed.lng === 'string' && parseLocale(parsed.lng)) || undefined
 
-    const activeLocale = getActiveLocale(userLocale ?? undefined, parsedLocale)
-    if (activeLocale) {
-      dynamicActivate(activeLocale)
-    }
-  }, [dispatch, userLocale, parsed])
+    dynamicActivate(parsedLocale ?? userLocale ?? navigatorLocale() ?? defaultFallback)
+  }, [userLocale, parsed])
 
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>
 }

@@ -18,7 +18,7 @@ import {
   updateHideClosedPositions,
   updateUserLocale,
 } from './actions'
-import { SupportedLocale } from 'i18n'
+import { SupportedLocale } from 'constants/locales'
 
 const currentTimestamp = () => new Date().getTime()
 
