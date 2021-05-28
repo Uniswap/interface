@@ -1,20 +1,21 @@
 module.exports = {
   catalogs: [
     {
-      path: '<rootDir>/src/locales/{locale}/messages',
-      include: ['<rootDir>'],
-      exclude: ['**/node_modules/**', '**/build/**'],
+      path: '<rootDir>/src/locales/{locale}',
+      include: ['<rootDir>/src'],
     },
   ],
   compileNamespace: 'cjs',
   fallbackLocales: {
-    'pseudo-en': 'en',
+    default: 'en',
   },
   format: 'po',
-  locales: ['en', 'pseudo-en'],
+  formatOptions: {
+    lineNumbers: false,
+  },
+  locales: ['en', 'pseudo-en', 'de', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW'],
   orderBy: 'messageId',
   pseudoLocale: 'pseudo-en',
   rootDir: '.',
   runtimeConfigModule: ['@lingui/core', 'i18n'],
-  sourceLocale: 'en',
 }

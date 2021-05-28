@@ -60,24 +60,24 @@ function Updaters() {
 
 ReactDOM.render(
   <StrictMode>
-    <LanguageProvider>
-      <FixedGlobalStyle />
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3ProviderNetwork getLibrary={getLibrary}>
-          <Blocklist>
-            <Provider store={store}>
-              <Updaters />
-              <ThemeProvider>
-                <ThemedGlobalStyle />
-                <HashRouter>
+    <Provider store={store}>
+      <HashRouter>
+        <LanguageProvider>
+          <FixedGlobalStyle />
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <Web3ProviderNetwork getLibrary={getLibrary}>
+              <Blocklist>
+                <Updaters />
+                <ThemeProvider>
+                  <ThemedGlobalStyle />
                   <App />
-                </HashRouter>
-              </ThemeProvider>
-            </Provider>
-          </Blocklist>
-        </Web3ProviderNetwork>
-      </Web3ReactProvider>
-    </LanguageProvider>
+                </ThemeProvider>
+              </Blocklist>
+            </Web3ProviderNetwork>
+          </Web3ReactProvider>
+        </LanguageProvider>
+      </HashRouter>
+    </Provider>
   </StrictMode>,
   document.getElementById('root')
 )
