@@ -131,7 +131,7 @@ const Pools = ({
         .filter(pair => pair !== null)
         .filter(pair => {
           if (searchValue) {
-            return pair?.address.includes(searchValue)
+            return pair?.address.toLowerCase().includes(searchValue.toLowerCase())
           }
 
           return true
