@@ -62,12 +62,12 @@ ReactDOM.render(
   <StrictMode>
     <Provider store={store}>
       <HashRouter>
-        <Updaters />
         <LanguageProvider>
           <FixedGlobalStyle />
           <Web3ReactProvider getLibrary={getLibrary}>
             <Web3ProviderNetwork getLibrary={getLibrary}>
               <Blocklist>
+                <Updaters />
                 <ThemeProvider>
                   <ThemedGlobalStyle />
                   <App />
