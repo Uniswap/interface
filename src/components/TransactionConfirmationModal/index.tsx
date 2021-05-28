@@ -14,6 +14,7 @@ import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
 import { useActiveWeb3React } from '../../hooks/web3'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
+import { Trans } from '@lingui/macro'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -61,7 +62,7 @@ export function ConfirmationPendingContent({
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20} textAlign="center">
-            Waiting For Confirmation
+            <Trans id="transactions.waitingForConfirmation">Waiting For Confirmation</Trans>
           </Text>
           <AutoColumn gap="12px" justify={'center'}>
             <Text fontWeight={600} fontSize={14} color="" textAlign="center">
@@ -69,7 +70,7 @@ export function ConfirmationPendingContent({
             </Text>
           </AutoColumn>
           <Text fontSize={12} color="#565A69" textAlign="center" marginBottom={12}>
-            Confirm this transaction in your wallet
+            <Trans id="transactions.confirmInWallet">Confirm this transaction in your wallet</Trans>
           </Text>
         </AutoColumn>
       </AutoColumn>
@@ -110,12 +111,12 @@ export function TransactionSubmittedContent({
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
           <Text fontWeight={500} fontSize={20} textAlign="center">
-            Transaction Submitted
+            <Trans id="transactions.submitted">Transaction Submitted</Trans>
           </Text>
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                View on Etherscan
+                <Trans id="wallet.viewOnEtherscan">View on Etherscan</Trans>
               </Text>
             </ExternalLink>
           )}
@@ -123,11 +124,13 @@ export function TransactionSubmittedContent({
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+                  <Trans id="wallet.addTokenToMetamask">
+                    Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
+                  </Trans>
                 </RowFixed>
               ) : (
                 <RowFixed>
-                  Added {currencyToAdd.symbol}{' '}
+                  <Trans id="wallet.addedTokenToMetamask">Added {currencyToAdd.symbol} </Trans>
                   <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
@@ -135,7 +138,7 @@ export function TransactionSubmittedContent({
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
-              {inline ? 'Return' : 'Close'}
+              {inline ? <Trans id="common.return">Return</Trans> : <Trans id="common.close">Close</Trans>}
             </Text>
           </ButtonPrimary>
         </AutoColumn>
@@ -195,7 +198,9 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
-        <ButtonPrimary onClick={onDismiss}>Dismiss</ButtonPrimary>
+        <ButtonPrimary onClick={onDismiss}>
+          <Trans id="common.dismiss">Dismiss</Trans>
+        </ButtonPrimary>
       </BottomSection>
     </Wrapper>
   )

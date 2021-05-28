@@ -16,6 +16,7 @@ import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useV2Pair } from '../../hooks/useV2Pairs'
 import useUSDCPrice from '../../hooks/useUSDCPrice'
 import { BIG_INT_SECONDS_IN_WEEK } from '../../constants/misc'
+import { Trans } from '@lingui/macro'
 
 const StatContainer = styled.div`
   display: flex;
@@ -120,30 +121,45 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
 
         <StyledInternalLink to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
           <ButtonPrimary padding="8px" borderRadius="8px">
-            {isStaking ? 'Manage' : 'Deposit'}
+            {isStaking ? <Trans id="earn.pool.manage">Manage</Trans> : <Trans id="earn.pool.deposit">Deposit</Trans>}
           </ButtonPrimary>
         </StyledInternalLink>
       </TopSection>
 
       <StatContainer>
         <RowBetween>
-          <TYPE.white> Total deposited</TYPE.white>
           <TYPE.white>
-            {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-              : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
+            <Trans id="earn.pool.totalDeposited">Total deposited</Trans>
+          </TYPE.white>
+          <TYPE.white>
+            {valueOfTotalStakedAmountInUSDC ? (
+              <Trans id="earn.pool.valueInUSDC">
+                ${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}
+              </Trans>
+            ) : (
+              <Trans id="earn.pool.valueInETH">
+                ${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH
+              </Trans>
+            )}
           </TYPE.white>
         </RowBetween>
         <RowBetween>
-          <TYPE.white> Pool rate </TYPE.white>
           <TYPE.white>
-            {stakingInfo
-              ? stakingInfo.active
-                ? `${stakingInfo.totalRewardRate
-                    ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                    ?.toFixed(0, { groupSeparator: ',' })} UNI / week`
-                : '0 UNI / week'
-              : '-'}
+            <Trans id="earn.pool.rate">Pool rate</Trans>
+          </TYPE.white>
+          <TYPE.white>
+            {stakingInfo ? (
+              stakingInfo.active ? (
+                <Trans id="earn.pool.rewardRate">
+                  {stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
+                  UNI / week
+                </Trans>
+              ) : (
+                <Trans id="earn.pool.noRewardRate">0 UNI / week</Trans>
+              )
+            ) : (
+              '-'
+            )}
           </TYPE.white>
         </RowBetween>
       </StatContainer>
@@ -153,20 +169,29 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           <Break />
           <BottomSection showBackground={true}>
             <TYPE.black color={'white'} fontWeight={500}>
-              <span>Your rate</span>
+              <span>
+                <Trans id="earn.pool.yourRate">Your rate</Trans>
+              </span>
             </TYPE.black>
 
             <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
               </span>
-              {stakingInfo
-                ? stakingInfo.active
-                  ? `${stakingInfo.rewardRate
+              {stakingInfo ? (
+                stakingInfo.active ? (
+                  <Trans id="earn.pool.rewardRate">
+                    {stakingInfo.rewardRate
                       ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                      ?.toSignificant(4, { groupSeparator: ',' })} UNI / week`
-                  : '0 UNI / week'
-                : '-'}
+                      ?.toSignificant(4, { groupSeparator: ',' })}{' '}
+                    UNI / week
+                  </Trans>
+                ) : (
+                  <Trans id="earn.pool.noRewardRate">0 UNI / week</Trans>
+                )
+              ) : (
+                '-'
+              )}
             </TYPE.black>
           </BottomSection>
         </>

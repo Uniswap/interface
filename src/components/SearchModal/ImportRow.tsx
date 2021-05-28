@@ -11,6 +11,7 @@ import styled from 'styled-components/macro'
 import { useIsUserAddedToken, useIsTokenActive } from 'hooks/Tokens'
 import { CheckCircle } from 'react-feather'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
+import { Trans } from '@lingui/macro'
 
 const TokenSection = styled.div<{ dim?: boolean }>`
   padding: 4px 20px;
@@ -73,7 +74,7 @@ export default function ImportRow({
         {list && list.logoURI && (
           <RowFixed>
             <TYPE.small mr="4px" color={theme.text3}>
-              via {list.name}
+              <Trans id="tokenLists.via">via {list.name} </Trans>
             </TYPE.small>
             <ListLogo logoURI={list.logoURI} size="12px" />
           </RowFixed>
@@ -90,12 +91,14 @@ export default function ImportRow({
             showImportView()
           }}
         >
-          Import
+          <Trans id="tokensLists.buttons.import">Import</Trans>
         </ButtonPrimary>
       ) : (
         <RowFixed style={{ minWidth: 'fit-content' }}>
           <CheckIcon />
-          <TYPE.main color={theme.green1}>Active</TYPE.main>
+          <TYPE.main color={theme.green1}>
+            <Trans id="tokenLists.labels.active">Active</Trans>
+          </TYPE.main>
         </RowFixed>
       )}
     </TokenSection>
