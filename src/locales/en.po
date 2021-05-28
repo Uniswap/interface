@@ -770,6 +770,10 @@ msgstr "Connect to a wallet"
 msgid "wallet.ethBalance"
 msgstr "{0} ETH"
 
+#: src/components/Web3Status/index.tsx
+msgid "wallet.hasSocks"
+msgstr "has socks emoji"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "wallet.mustConnectAccount"
 msgstr "You must connect an account."
