@@ -1,4 +1,4 @@
-import React, { HTMLProps, useCallback } from 'react'
+import React, { HTMLProps } from 'react'
 import ReactGA from 'react-ga'
 import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
@@ -222,25 +222,23 @@ function anonymizeLink(href: string): string {
   }
 }
 
-function useHandleClickLinkCallback() {
-  return useCallback((event: React.MouseEvent<HTMLAnchorElement>) => {
-    const { target, href } = event.currentTarget
+function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
+  const { target, href } = event.currentTarget
 
-    const anonymizedHref = anonymizeLink(href)
+  const anonymizedHref = anonymizeLink(href)
 
-    // don't prevent default, don't redirect if it's a new tab
-    if (target === '_blank' || event.ctrlKey || event.metaKey) {
-      ReactGA.outboundLink({ label: anonymizedHref }, () => {
-        console.debug('Fired outbound link event', anonymizedHref)
-      })
-    } else {
-      event.preventDefault()
-      // send a ReactGA event and then trigger a location change
-      ReactGA.outboundLink({ label: anonymizedHref }, () => {
-        window.location.href = anonymizedHref
-      })
-    }
-  }, [])
+  // don't prevent default, don't redirect if it's a new tab
+  if (target === '_blank' || event.ctrlKey || event.metaKey) {
+    ReactGA.outboundLink({ label: anonymizedHref }, () => {
+      console.debug('Fired outbound link event', anonymizedHref)
+    })
+  } else {
+    event.preventDefault()
+    // send a ReactGA event and then trigger a location change
+    ReactGA.outboundLink({ label: anonymizedHref }, () => {
+      window.location.href = anonymizedHref
+    })
+  }
 }
 
 /**
@@ -252,7 +250,7 @@ export function ExternalLink({
   rel = 'noopener noreferrer',
   ...rest
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
-  return <StyledLink target={target} rel={rel} href={href} onClick={useHandleClickLinkCallback()} {...rest} />
+  return <StyledLink target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest} />
 }
 
 export function ExternalLinkIcon({
@@ -262,7 +260,7 @@ export function ExternalLinkIcon({
   ...rest
 }: Omit<HTMLProps<HTMLAnchorElement>, 'as' | 'ref' | 'onClick'> & { href: string }) {
   return (
-    <LinkIconWrapper target={target} rel={rel} href={href} onClick={useHandleClickLinkCallback()} {...rest}>
+    <LinkIconWrapper target={target} rel={rel} href={href} onClick={handleClickExternalLink} {...rest}>
       <LinkIcon />
     </LinkIconWrapper>
   )
