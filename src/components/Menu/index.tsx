@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react'
-import { BookOpen, ChevronLeft, ChevronRight, Code, Globe, Info, MessageCircle, PieChart } from 'react-feather'
+import { BookOpen, Check, ChevronLeft, ChevronRight, Code, Globe, Info, MessageCircle, PieChart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -11,6 +11,9 @@ import { Transition } from 'react-transition-group'
 
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
+import { useUserLocaleManager } from 'state/user/hooks'
+import { useActiveLocale } from 'hooks/useActiveLocale'
+import { LOCALE_LABEL, SUPPORTED_LOCALES } from 'constants/locales'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -65,7 +68,7 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 10.125rem;
+  min-width: 12.125rem;
   background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -92,7 +95,7 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   transition: height 500ms ease;
 `
 
-const MenuItem = styled(ExternalLink)`
+const LinkMenuItem = styled(ExternalLink)`
   display: flex;
   flex: 1;
   flex-direction: row;
@@ -123,11 +126,10 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
-const DropdownItem = styled.div`
+const MenuItem = styled.div`
   display: grid;
-  grid-template-columns: auto 1fr 1fr;
+  grid-template-columns: 16px auto 16px;
   grid-gap: 8px;
-  justify-items: end;
   align-items: center;
   padding: 0.5rem 0.5rem;
   font-weight: 500;
@@ -164,6 +166,9 @@ export default function Menu() {
   const [activeMenu, setActiveMenu] = useState<'main' | 'lang'>('main')
   const [menuHeight, setMenuHeight] = useState<number | undefined>(undefined)
 
+  const [, setUserLocale] = useUserLocaleManager()
+  const activeLocale = useActiveLocale()
+
   const node = useRef<HTMLDivElement>()
   const menuFlyout = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
@@ -176,9 +181,8 @@ export default function Menu() {
   }, [])
 
   function calcHeight(el: HTMLElement) {
-    debugger
-    const height = el.offsetHeight
-    setMenuHeight(height)
+    // programatically sets height to animate menu transitions
+    setMenuHeight(el.offsetHeight)
   }
 
   function MenuSwitcher({
@@ -193,11 +197,11 @@ export default function Menu() {
     goToMenu: 'main' | 'lang'
   }) {
     return (
-      <DropdownItem onClick={() => goToMenu && setActiveMenu(goToMenu)}>
+      <MenuItem onClick={() => goToMenu && setActiveMenu(goToMenu)}>
         {leftIcon}
         {children}
         {rightIcon}
-      </DropdownItem>
+      </MenuItem>
     )
   }
 
@@ -213,30 +217,30 @@ export default function Menu() {
           <Transition in={activeMenu === 'main'} timeout={500} unmountOnExit onEnter={calcHeight}>
             {(state) => (
               <MainMenu state={state}>
-                <MenuSwitcher goToMenu="lang" leftIcon={<Globe size={14} />} rightIcon={<ChevronRight />}>
+                <MenuSwitcher goToMenu="lang" leftIcon={<Globe size={14} />} rightIcon={<ChevronRight size={18} />}>
                   Language
                 </MenuSwitcher>
                 <Separator />
-                <MenuItem href="https://uniswap.org/">
+                <LinkMenuItem href="https://uniswap.org/">
                   <Info size={14} />
                   <div>About</div>
-                </MenuItem>
-                <MenuItem href="https://docs.uniswap.org/">
+                </LinkMenuItem>
+                <LinkMenuItem href="https://docs.uniswap.org/">
                   <BookOpen size={14} />
                   <div>Docs</div>
-                </MenuItem>
-                <MenuItem href={CODE_LINK}>
+                </LinkMenuItem>
+                <LinkMenuItem href={CODE_LINK}>
                   <Code size={14} />
                   <div>Code</div>
-                </MenuItem>
-                <MenuItem href="https://discord.gg/FCfyBSbCU5">
+                </LinkMenuItem>
+                <LinkMenuItem href="https://discord.gg/FCfyBSbCU5">
                   <MessageCircle size={14} />
                   <div>Discord</div>
-                </MenuItem>
-                <MenuItem href="https://info.uniswap.org/">
+                </LinkMenuItem>
+                <LinkMenuItem href="https://info.uniswap.org/">
                   <PieChart size={14} />
                   <div>Analytics</div>
-                </MenuItem>
+                </LinkMenuItem>
                 {account && (
                   <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
                     Claim UNI
@@ -249,11 +253,17 @@ export default function Menu() {
           <Transition in={activeMenu === 'lang'} timeout={500} unmountOnExit onEnter={calcHeight}>
             {(state) => (
               <LangMenu state={state}>
-                <MenuSwitcher goToMenu="main" leftIcon={<ChevronLeft />} />
-                <DropdownItem>English</DropdownItem>
-                <DropdownItem>German</DropdownItem>
-                <DropdownItem>Chinese</DropdownItem>
-                <DropdownItem>Romanian</DropdownItem>
+                <MenuSwitcher goToMenu="main" leftIcon={<ChevronLeft size={18} />} />
+                {SUPPORTED_LOCALES.map((locale) => {
+                  if (!LOCALE_LABEL[locale]) return null
+                  return (
+                    <MenuItem key={locale} onClick={() => setUserLocale(locale)}>
+                      <div></div>
+                      <div>{LOCALE_LABEL[locale]}</div>
+                      {activeLocale === locale ? <Check size={16} /> : null}
+                    </MenuItem>
+                  )
+                })}
               </LangMenu>
             )}
           </Transition>
@@ -281,7 +291,7 @@ const NewMenuItem = styled(InternalMenuItem)`
   text-decoration: none;
 `
 
-const ExternalMenuItem = styled(MenuItem)`
+const ExternalMenuItem = styled(LinkMenuItem)`
   width: max-content;
   text-decoration: none;
 `
