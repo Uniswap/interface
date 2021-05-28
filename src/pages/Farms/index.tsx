@@ -12,10 +12,12 @@ import { useActiveWeb3React } from 'hooks'
 import useMasterChef from 'hooks/useMasterchef'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ExternalLink } from 'theme'
-import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
+import { useBlockNumber, useFarmHistoryModalToggle, useKNCPrice } from 'state/application/hooks'
 import { AVERAGE_BLOCK_TIME_IN_SECS } from '../../constants'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
+import HistoryImg from 'assets/svg/history.svg'
+
 import {
   PageWrapper,
   KNCPriceContainer,
@@ -36,12 +38,14 @@ import {
   RewardNumber,
   RewardUSD,
   RemainingTimeContainer,
-  EndInTitle
+  EndInTitle,
+  HistoryButton,
 } from './styleds'
 import { formattedNum } from 'utils'
 import Vesting from './vesting'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import RainMaker from '../../assets/images/rain-maker.webp'
+import FarmHistoryModal from 'components/FarmHistoryModal'
 
 const FARM_ENDED = 'Ended'
 
@@ -55,6 +59,7 @@ const Farms = () => {
   const [activeTab, setActiveTab] = useState(0)
   const [pendingTx, setPendingTx] = useState(false)
   const [stakedOnly, setStakedOnly] = useState(false)
+  const toggleFarmHistoryModal = useFarmHistoryModalToggle()
 
   const { harvestMultiplePools } = useMasterChef()
 
@@ -62,13 +67,13 @@ const Farms = () => {
     return <LocalLoader />
   }
 
-  const farms = allFarms.map(farm => {
+  const farms = allFarms.map((farm) => {
     const { pid } = farm
-    const index = farmsUserData.findIndex(farmUserData => farmUserData.pid === pid)
+    const index = farmsUserData.findIndex((farmUserData) => farmUserData.pid === pid)
 
     return {
       ...farm,
-      userData: farmsUserData[index]
+      userData: farmsUserData[index],
     }
   })
 
@@ -139,6 +144,10 @@ const Farms = () => {
               <StakedOnlyToggleText>Staked Only</StakedOnlyToggleText>
             </StakedOnlyToggleWrapper>
           )}
+          <HistoryButton onClick={toggleFarmHistoryModal}>
+            <img src={HistoryImg} alt="HistoryImg" />
+            History
+          </HistoryButton>
         </TabContainer>
 
         {activeTab === 0 ? (
@@ -199,6 +208,7 @@ const Farms = () => {
       </PageWrapper>
       <FarmClaimModal />
       <FarmStakeModal />
+      <FarmHistoryModal farms={farms} />
     </>
   )
 }
