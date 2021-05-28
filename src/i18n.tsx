@@ -16,7 +16,7 @@ function navigatorLocale(): SupportedLocale | undefined {
   const [language, region] = navigator.language.split('-')
 
   if (region) {
-    return parseLocale(`${language}-${region}`) ?? parseLocale(language)
+    return parseLocale(`${language}-${region.toUpperCase()}`) ?? parseLocale(language)
   }
 
   return parseLocale(language)
