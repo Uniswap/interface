@@ -2,6 +2,9 @@ Thank you for your interest in contributing to the Uniswap interface! 🦄
 
 # Coding
 
+**Please open all pull requests against the `main` branch.**
+CI checks will run against all PRs.
+
 See [README.md](https://github.com/Uniswap/uniswap-interface/blob/main/README.md) for instructions on running the app locally.
 
 Start with issues with label [good first issue](https://github.com/Uniswap/uniswap-interface/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
