@@ -18,6 +18,7 @@ import {
   updateHideClosedPositions,
   updateUserLocale,
 } from './actions'
+import { SupportedLocale } from 'i18n'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -28,7 +29,7 @@ export interface UserState {
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
 
-  userLocale: string | null
+  userLocale: SupportedLocale | null
 
   userExpertMode: boolean
 

@@ -24,6 +24,7 @@ import {
   updateUserSlippageTolerance,
   updateUserLocale,
 } from './actions'
+import { SupportedLocale } from 'i18n'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -71,16 +72,16 @@ export function useDarkModeManager(): [boolean, () => void] {
   return [darkMode, toggleSetDarkMode]
 }
 
-export function useLocale(): string | null {
+export function useLocale(): SupportedLocale | null {
   return useSelector<AppState, AppState['user']['userLocale']>((state) => state.user.userLocale)
 }
 
-export function useLocaleManager(): [string | null, (newLocale: string) => void] {
+export function useLocaleManager(): [SupportedLocale | null, (newLocale: SupportedLocale) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const locale = useLocale()
 
   const setLocale = useCallback(
-    (newLocale: string) => {
+    (newLocale: SupportedLocale) => {
       dispatch(updateUserLocale({ userLocale: newLocale }))
     },
     [dispatch]

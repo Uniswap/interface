@@ -1,19 +1,18 @@
 import React from 'react'
-import { useLocale } from './hooks'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
-import { detect, fromNavigator } from '@lingui/detect-locale'
 import { ReactNode } from 'react'
 import { useDispatch } from 'react-redux'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useEffect } from '@storybook/addons'
 import { AppDispatch } from 'state'
+import { useLocale } from 'state/user/hooks'
 
 type IE11NavigatorLanguage = {
   userLanguage?: string
 }
 
-export const supportedLocales = [
+const supportedLocales = [
   'en',
   'pseudo-en',
   'de',
@@ -26,31 +25,30 @@ export const supportedLocales = [
   'vi',
   'zh-CN',
   'zh-TW',
-]
-export const defaultFallback = () => 'en'
+] as const
+export type SupportedLocale = typeof supportedLocales[number]
 
-const isSupportedLocale = (locale: string): boolean => supportedLocales.includes(locale)
+const defaultFallback = () => 'en' as SupportedLocale
 
-const getDetectedLocale = (
-  navigator: Partial<Navigator & IE11NavigatorLanguage> = window.navigator
-): string | undefined => {
-  const language = navigator.language ?? navigator.language
-  if (!language) return undefined
-
-  if (isSupportedLocale(language)) return navigator.language
-
-  // fallack to generic dialect, if supported
-  const [subtag] = language.split('-')
-  if (isSupportedLocale(subtag)) return subtag
-
-  return undefined
+function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined {
+  return supportedLocales.find((locale) => locale === maybeSupportedLocale)
 }
 
-const getActiveLocale = (cached: string | undefined, qs: string | undefined): string => {
+function getDetectedLocale(
+  navigator: Partial<Navigator & IE11NavigatorLanguage> = window.navigator
+): SupportedLocale | undefined {
+  const language = navigator.language ?? navigator.language
+
+  if (!language) return undefined
+
+  return parseLocale(language) ?? parseLocale(language.split('-')[0])
+}
+
+function getActiveLocale(cached: SupportedLocale | undefined, qs: SupportedLocale | undefined): SupportedLocale {
   return qs ?? cached ?? getDetectedLocale() ?? defaultFallback()
 }
 
-export async function dynamicActivate(locale: string) {
+export async function dynamicActivate(locale: SupportedLocale) {
   try {
     const { messages } = await import(`@lingui/loader!./locales/${locale}.po`)
     i18n.loadLocaleData(locale, { plurals: () => null })
@@ -67,9 +65,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const userLocale = useLocale()
 
   useEffect(() => {
-    const parsedLocale = typeof parsed.lng === 'string' && isSupportedLocale(parsed.lng) ? parsed.lng : undefined
+    const parsedLocale = (typeof parsed.lng === 'string' && parseLocale(parsed.lng)) || undefined
 
-    const activeLocale = getActiveLocale(userLocale, parsedLocale)
+    const activeLocale = getActiveLocale(userLocale ?? undefined, parsedLocale)
     if (activeLocale) {
       dynamicActivate(activeLocale)
     }
