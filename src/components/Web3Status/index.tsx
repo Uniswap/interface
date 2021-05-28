@@ -125,11 +125,7 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 
 function Sock() {
   return (
-    <span
-      role="img"
-      aria-label={t({ id: 'wallet.hasSocks', message: 'has socks emoji' })}
-      style={{ marginTop: -4, marginBottom: -4 }}
-    >
+    <span role="img" aria-label={t`has socks emoji`} style={{ marginTop: -4, marginBottom: -4 }}>
       🧦
     </span>
   )
@@ -191,7 +187,7 @@ function Web3StatusInner() {
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
-              <Trans id="transactions.pending">{pending?.length} Pending</Trans>
+              <Trans>{pending?.length} Pending</Trans>
             </Text>{' '}
             <Loader stroke="white" />
           </RowBetween>
@@ -208,18 +204,14 @@ function Web3StatusInner() {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
         <NetworkIcon />
-        <Text>
-          {error instanceof UnsupportedChainIdError
-            ? t({ id: 'error.wrongNetwork', message: 'Wrong Network' })
-            : t({ id: 'error.generic', message: 'Error' })}
-        </Text>
+        <Text>{error instanceof UnsupportedChainIdError ? t`Wrong Network` : t`Error`}</Text>
       </Web3StatusError>
     )
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
         <Text>
-          <Trans id="wallet.connectLongForm">Connect to a wallet</Trans>
+          <Trans>Connect to a wallet</Trans>
         </Text>
       </Web3StatusConnect>
     )

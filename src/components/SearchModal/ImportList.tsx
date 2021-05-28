@@ -82,7 +82,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
         <RowBetween>
           <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.manage)} />
           <TYPE.mediumHeader>
-            <Trans id="tokenLists.importList">Import List</Trans>
+            <Trans>Import List</Trans>
           </TYPE.mediumHeader>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -101,7 +101,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                     </TYPE.body>
                     <TextDot />
                     <TYPE.main fontSize={'16px'} ml="6px">
-                      <Trans id="tokensLists.numberOfTokens">{list.tokens.length} tokens</Trans>
+                      <Trans>{list.tokens.length} tokens</Trans>
                     </TYPE.main>
                   </RowFixed>
                   <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
@@ -117,22 +117,20 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
             <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <AlertTriangle stroke={theme.red1} size={32} />
               <TYPE.body fontWeight={500} fontSize={20} color={theme.red1}>
-                <Trans id="tokenLists.importWarning">Import at your own risk</Trans>
+                <Trans>Import at your own risk</Trans>
               </TYPE.body>
             </AutoColumn>
 
             <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
               <TYPE.body fontWeight={500} color={theme.red1}>
-                <Trans id="tokenLists.importHint1">
+                <Trans>
                   By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
                   including creating fake versions of existing lists and lists that claim to represent projects that do
                   not have one.
                 </Trans>
               </TYPE.body>
               <TYPE.body fontWeight={600} color={theme.red1}>
-                <Trans id="tokenLists.importHint2">
-                  If you purchase a token from this list, you may not be able to sell it back.
-                </Trans>
+                <Trans>If you purchase a token from this list, you may not be able to sell it back.</Trans>
               </TYPE.body>
             </AutoColumn>
             <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
@@ -143,7 +141,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 onChange={() => setConfirmed(!confirmed)}
               />
               <TYPE.body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
-                <Trans id="common.IUnderstand">I understand</Trans>
+                <Trans>I understand</Trans>
               </TYPE.body>
             </AutoRow>
           </Card>
@@ -155,7 +153,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
             padding="10px 1rem"
             onClick={handleAddList}
           >
-            <Trans id="tokenLists.buttons.import">Import</Trans>
+            <Trans>Import</Trans>
           </ButtonPrimary>
           {addError ? (
             <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>

@@ -43,47 +43,35 @@ export default function RangeBadge({
   return (
     <BadgeWrapper>
       {removed ? (
-        <MouseoverTooltip
-          text={t({
-            id: 'pools.labels.inactiveTooltip',
-            message: 'Your position has 0 liquidity, and is not earning fees.',
-          })}
-        >
+        <MouseoverTooltip text={t`Your position has 0 liquidity, and is not earning fees.`}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
-              <Trans id="pools.labels.inactive">Inactive</Trans>
+              <Trans>Inactive</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>
       ) : inRange ? (
         <MouseoverTooltip
-          text={t({
-            id: 'pools.labels.inRangeTooltip',
-            message: 'The price of this pool is within your selected range. Your position is currently earning fees.',
-          })}
+          text={t`The price of this pool is within your selected range. Your position is currently earning fees.`}
         >
           <Badge variant={BadgeVariant.DEFAULT}>
             <ActiveDot /> &nbsp;
             <BadgeText>
-              <Trans id="pools.labels.inRange">In range</Trans>
+              <Trans>In range</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>
       ) : (
         <MouseoverTooltip
-          text={t({
-            id: 'pools.labels.outOfRangeTooltip',
-            message:
-              'The price of this pool is outside of your selected range. Your position is not currently earning fees.',
-          })}
+          text={t`The price of this pool is outside of your selected range. Your position is not currently earning fees.`}
         >
           <Badge variant={BadgeVariant.WARNING}>
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
-              <Trans id="pools.labels.outOfRange">Out of range</Trans>
+              <Trans>Out of range</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>
