@@ -68,7 +68,9 @@ export default function CurrencySearchModal({
       isOpen={isOpen}
       onDismiss={onDismiss}
       maxHeight={60}
-      minHeight={modalView === CurrencyModalView.IMPORT_TOKEN ? undefined : 60}
+      minHeight={
+        modalView === CurrencyModalView.IMPORT_TOKEN || modalView === CurrencyModalView.IMPORT_LIST ? undefined : 60
+      }
     >
       {modalView === CurrencyModalView.SEARCH ? (
         <CurrencySearch
@@ -94,7 +96,15 @@ export default function CurrencySearchModal({
           handleCurrencySelect={handleCurrencySelect}
         />
       ) : modalView === CurrencyModalView.IMPORT_LIST && importList && listURL ? (
-        <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
+        <ImportList
+          list={importList}
+          listURI={listURL}
+          onDismiss={onDismiss}
+          setModalView={setModalView}
+          onBack={() =>
+            setModalView(prevView && prevView !== CurrencyModalView.IMPORT_LIST ? prevView : CurrencyModalView.MANAGE)
+          }
+        />
       ) : modalView === CurrencyModalView.MANAGE ? (
         <Manage
           onDismiss={onDismiss}

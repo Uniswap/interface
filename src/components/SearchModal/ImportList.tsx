@@ -1,150 +1,123 @@
-import React, { useState, useCallback, useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components/macro'
-import { TYPE, CloseIcon } from '../../theme'
-import Card from '../Card'
+import { TokenList } from '@uniswap/token-lists/dist/types'
+import React, { useCallback, useState } from 'react'
+import styled from 'styled-components/macro'
+import { TYPE, CloseIcon, ExternalLink } from '../../theme'
 import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed, AutoRow } from '../Row'
-import { ArrowLeft, AlertTriangle } from 'react-feather'
-import { transparentize } from 'polished'
-import { ButtonPrimary } from '../Button'
-import { SectionBreak } from '../swap/styleds'
-import { ExternalLink } from '../../theme/components'
-import ListLogo from '../ListLogo'
-import { PaddedColumn, Checkbox, TextDot } from './styleds'
-import { TokenList } from '@uniswap/token-lists'
+import { RowBetween, RowFixed } from '../Row'
+import { ButtonError } from '../Button'
+import { GoBackIcon, PaddedColumn } from './styleds'
+import { Text } from 'rebass'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../state'
-import { useFetchListCallback } from '../../hooks/useFetchListCallback'
-import { removeList, enableList } from '../../state/lists/actions'
-import { CurrencyModalView } from './CurrencySearchModal'
 import { useAllLists } from '../../state/lists/hooks'
+import { useFetchListCallback } from '../../hooks/useFetchListCallback'
+import { CurrencyModalView } from './CurrencySearchModal'
+import { enableList, removeList } from '../../state/lists/actions'
+import ListLogo from '../ListLogo'
+import { useActiveWeb3React } from '../../hooks'
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
   overflow: auto;
+  background-color: ${({ theme }) => theme.bg1And2};
+`
+
+const BottomSectionContainer = styled.div`
+  background-color: ${({ theme }) => theme.bg1};
+  padding: 20px;
 `
 
 interface ImportProps {
-  listURL: string
-  list: TokenList
+  listURI: string
+  list?: TokenList
+  onBack: () => void
   onDismiss: () => void
   setModalView: (view: CurrencyModalView) => void
 }
 
-export function ImportList({ listURL, list, setModalView, onDismiss }: ImportProps) {
-  const theme = useContext(ThemeContext)
+export function ImportList({ listURI, list, onBack, onDismiss, setModalView }: ImportProps) {
+  const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
-
-  // user must accept
-  const [confirmed, setConfirmed] = useState(false)
 
   const lists = useAllLists()
   const fetchList = useFetchListCallback()
 
   // monitor is list is loading
-  const adding = Boolean(lists[listURL]?.loadingRequestId)
-  const [addError, setAddError] = useState<string | null>(null)
+  const adding = Boolean(lists[listURI]?.loadingRequestId)
+  const [addError, setAddError] = useState<string>('')
 
   const handleAddList = useCallback(() => {
     if (adding) return
-    setAddError(null)
-    fetchList(listURL)
+    setAddError('')
+    fetchList(listURI)
       .then(() => {
-        // turn list on
-        dispatch(enableList(listURL))
-        // go back to lists
+        dispatch(enableList(listURI))
         setModalView(CurrencyModalView.MANAGE)
       })
       .catch(error => {
         setAddError(error.message)
-        dispatch(removeList(listURL))
+        dispatch(removeList(listURI))
       })
-  }, [adding, dispatch, fetchList, listURL, setModalView])
+  }, [adding, dispatch, fetchList, listURI, setModalView])
 
   return (
     <Wrapper>
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
-          <ArrowLeft style={{ cursor: 'pointer' }} onClick={() => setModalView(CurrencyModalView.MANAGE)} />
-          <TYPE.mediumHeader>Import List</TYPE.mediumHeader>
+          <GoBackIcon onClick={onBack} />
+          <Text fontWeight={500} fontSize={16}>
+            Import unknown list
+          </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
       </PaddedColumn>
-      <SectionBreak />
-      <PaddedColumn gap="md">
-        <AutoColumn gap="md">
-          <Card backgroundColor={theme.bg1And2} padding="12px 20px">
-            <RowBetween>
-              <RowFixed>
-                {list.logoURI && <ListLogo logoURI={list.logoURI} defaultText={list.name} size="40px" />}
-                <AutoColumn gap="sm" style={{ marginLeft: '20px' }}>
-                  <RowFixed>
-                    <TYPE.body fontWeight={600} mr="6px">
-                      {list.name}
-                    </TYPE.body>
-                    <TextDot />
-                    <TYPE.main fontSize={'16px'} ml="6px">
-                      {list.tokens.length} tokens
-                    </TYPE.main>
-                  </RowFixed>
-                  <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
-                    <TYPE.main fontSize={'12px'} color={theme.blue1}>
-                      {listURL}
-                    </TYPE.main>
-                  </ExternalLink>
-                </AutoColumn>
-              </RowFixed>
-            </RowBetween>
-          </Card>
-          <Card style={{ backgroundColor: transparentize(0.8, theme.red1) }}>
-            <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
-              <AlertTriangle stroke={theme.red1} size={32} />
-              <TYPE.body fontWeight={500} fontSize={20} color={theme.red1}>
-                Import at your own risk{' '}
-              </TYPE.body>
-            </AutoColumn>
-
-            <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
-              <TYPE.body fontWeight={500} color={theme.red1}>
-                By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
-                including creating fake versions of existing lists and lists that claim to represent projects that do
-                not have one.
-              </TYPE.body>
-              <TYPE.body fontWeight={600} color={theme.red1}>
-                If you purchase a token from this list, you may not be able to sell it back.
-              </TYPE.body>
-            </AutoColumn>
-            <AutoRow justify="center" style={{ cursor: 'pointer' }} onClick={() => setConfirmed(!confirmed)}>
-              <Checkbox
-                name="confirmed"
-                type="checkbox"
-                checked={confirmed}
-                onChange={() => setConfirmed(!confirmed)}
-              />
-              <TYPE.body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
-                I understand
-              </TYPE.body>
-            </AutoRow>
-          </Card>
-
-          <ButtonPrimary
-            disabled={!confirmed}
-            altDisabledStyle={true}
-            borderRadius="20px"
-            padding="10px 1rem"
-            onClick={handleAddList}
-          >
-            Import
-          </ButtonPrimary>
-          {addError ? (
-            <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
-              {addError}
-            </TYPE.error>
-          ) : null}
+      <AutoColumn>
+        <AutoColumn gap="16px" style={{ padding: '20px', paddingTop: '12px' }}>
+          <TYPE.body fontSize="14px" fontWeight="400" lineHeight="22px" letterSpacing="-0.02em" color="text4">
+            Anyone can create an ERC20 token list on Ethereum, including creating fake versions of existing tokens lists
+            and lists that claim to represent projects that do not have an actual list.
+          </TYPE.body>
+          <TYPE.body fontSize="14px" fontWeight="400" lineHeight="22px" letterSpacing="-0.02em" color="text4">
+            This interface can load arbitrary lists by URL. Please take extra caution and do your research when
+            interacting with arbitrary token lists.
+          </TYPE.body>
+          <TYPE.body fontSize="14px" fontWeight="400" lineHeight="22px" letterSpacing="-0.02em" color="text4">
+            If you purchase a token from this list, <strong>you may be unable to sell it back.</strong>
+          </TYPE.body>
         </AutoColumn>
-        {/* </Card> */}
-      </PaddedColumn>
+        <BottomSectionContainer>
+          <AutoColumn gap="16px">
+            <AutoColumn gap="6px" justify="flex-start">
+              <RowFixed>
+                {list?.logoURI && <ListLogo defaultText="List" logoURI={list.logoURI} size={'16px'} />}
+                <TYPE.main fontSize="16px" lineHeight="20px" ml="8px">
+                  {list?.name}
+                </TYPE.main>
+              </RowFixed>
+              {chainId && (
+                <ExternalLink
+                  color="purple4"
+                  style={{ fontWeight: 400 }}
+                  href={`https://tokenlists.org/token-list?url=${listURI}`}
+                >
+                  <TYPE.main color="purple4" fontSize="14px" lineHeight="17px">
+                    View on token lists explorer
+                  </TYPE.main>
+                </ExternalLink>
+              )}
+            </AutoColumn>
+            <ButtonError error onClick={handleAddList} className=".token-dismiss-button">
+              Import
+            </ButtonError>
+            {addError && (
+              <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
+                {addError}
+              </TYPE.error>
+            )}
+          </AutoColumn>
+        </BottomSectionContainer>
+      </AutoColumn>
     </Wrapper>
   )
 }
