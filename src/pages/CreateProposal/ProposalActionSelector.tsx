@@ -6,12 +6,7 @@ import { Text } from 'rebass'
 import { CloseIcon } from 'theme'
 import Column from 'components/Column'
 import styled from 'styled-components'
-
-interface ProposalActionSelectorModalProps {
-  isOpen: boolean
-  onDismiss: () => void
-  onProposalActionSelect: (proposalAction: ProposalAction) => void
-}
+import { ButtonDropdown } from 'components/Button'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -24,7 +19,59 @@ export enum ProposalAction {
   APPROVE_TOKEN = 'Approve Token',
 }
 
-export default function ActionSelectorModal({
+const _ProposalActionSelector = ({
+  className,
+  onClick,
+  proposalAction,
+}: {
+  className?: string
+  onClick: () => void
+  proposalAction: ProposalAction
+}) => {
+  const ActionSelectorHeader = styled.div`
+    font-size: 14px;
+    font-weight: 500;
+    color: ${({ theme }) => theme.text2};
+  `
+
+  const ActionDropdown = styled(ButtonDropdown)`
+      padding: 0px;
+      margin-top: 10px;
+      background-color: transparent;
+      color: ${({ theme }) => theme.text1}
+      font-size: 24px;
+  
+      :hover,
+      :active,
+      :focus {
+        outline: 0px;
+        box-shadow: none;
+        background-color: transparent;
+      }
+    `
+
+  return (
+    <div className={className}>
+      <ActionSelectorHeader>Proposed Action</ActionSelectorHeader>
+      <ActionDropdown onClick={onClick}>{proposalAction}</ActionDropdown>
+    </div>
+  )
+}
+
+export const ProposalActionSelector = styled(_ProposalActionSelector)`
+  padding: 0.75rem 0.5rem 0.75rem 1rem;
+  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
+`
+
+interface ProposalActionSelectorModalProps {
+  isOpen: boolean
+  onDismiss: () => void
+  onProposalActionSelect: (proposalAction: ProposalAction) => void
+}
+
+export function ProposalActionSelectorModal({
   isOpen,
   onDismiss,
   onProposalActionSelect,

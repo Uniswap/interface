@@ -31,6 +31,14 @@ export interface ProposalData {
   details: ProposalDetail[]
 }
 
+export interface CreateProposalData {
+  targets: string[]
+  values: string[]
+  signatures: string[]
+  calldatas: string[]
+  description: string
+}
+
 export enum ProposalState {
   Undetermined = -1,
   Pending,
@@ -240,4 +248,50 @@ export function useVoteCallback(): {
     [account, addTransaction, govContract]
   )
   return { voteCallback }
+}
+
+export function useCreateProposalCallback(): (
+  createProposalData: CreateProposalData | undefined
+) => undefined | Promise<string> {
+  const { account } = useActiveWeb3React()
+
+  const govContract = useGovernanceContract()
+  const addTransaction = useTransactionAdder()
+
+  const createProposalCallback = useCallback(
+    (createProposalData: CreateProposalData | undefined) => {
+      if (!account || !govContract || !createProposalData) return undefined
+
+      const args = [
+        createProposalData.targets,
+        createProposalData.values,
+        createProposalData.signatures,
+        createProposalData.calldatas,
+        createProposalData.description,
+      ]
+
+      return govContract.estimateGas.propose(...args, {}).then((estimatedGasLimit) => {
+        return govContract
+          .propose(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              summary: `Submitted new proposal`,
+            })
+            return response.hash
+          })
+      })
+    },
+    [account, addTransaction, govContract]
+  )
+
+  return createProposalCallback
+}
+
+export function useLatestProposalId(address: string): string | undefined {
+  const gov = useGovernanceContract()
+  const res = useSingleCallResult(gov, 'latestProposalIds', [address])
+  if (res.result && !res.loading) {
+    return res.result[0]
+  }
+  return undefined
 }

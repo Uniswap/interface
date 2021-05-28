@@ -1,18 +1,29 @@
-import React, { useCallback, useState } from 'react'
-import AppBody from '../AppBody'
-import { CreateProposalTabs } from '../../components/NavigationTabs'
-import { Wrapper } from 'pages/Pool/styleds'
+import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { ButtonDropdown } from 'components/Button'
-import { TextArea, TextInput } from 'components/TextInput'
+import JSBI from 'jsbi'
+import { utils } from 'ethers'
+import { Button, TYPE } from 'theme'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import AppBody from '../AppBody'
+import { generateBytesByType } from 'utils/generateBytesByType'
+import { CreateProposalTabs } from '../../components/NavigationTabs'
+import { ButtonError } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { BlueCard } from 'components/Card'
-import { Button, TYPE } from 'theme'
-import AddressInputPanel from 'components/AddressInputPanel'
-import ProposalActionSelectorModal, { ProposalAction } from './ProposalActionSelectorModal'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { Currency } from '@uniswap/sdk-core'
-import { useCurrency } from 'hooks/Tokens'
+import { Wrapper } from 'pages/Pool/styleds'
+import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } from './ProposalActionSelector'
+import { ProposalEditor } from './ProposalEditor'
+import { ProposalActionDetail } from './ProposalActionDetail'
+import { ProposalSubmissionModal } from './ProposalSubmissionModal'
+import { useActiveWeb3React } from 'hooks/web3'
+import {
+  CreateProposalData,
+  ProposalState,
+  useCreateProposalCallback,
+  useLatestProposalId,
+  useProposalData,
+  useUserVotes,
+} from 'state/governance/hooks'
 
 const ProposalWrapper = styled.div`
   display: flex;
@@ -21,252 +32,175 @@ const ProposalWrapper = styled.div`
   margin-top: 10px;
 `
 
-const _ProposalActionPane = ({ className, children }: { className?: string; children?: React.ReactNode }) => {
-  return <div className={className}>{children}</div>
-}
-
-const _ProposalEditorPane = ({ className, children }: { className?: string; children?: React.ReactNode }) => {
-  return <div className={className}>{children}</div>
-}
-
-const ProposalActionPane = styled(_ProposalActionPane)`
-  flex: 1 400px;
-`
-const ProposalEditorPane = styled(_ProposalEditorPane)`
-  flex: 1 400px;
-`
-
-const _ProposalActionSelector = ({
-  className,
-  onClick,
-  proposalAction,
+const CreateProposalButton = ({
+  hasActiveOrPendingProposal,
+  hasEnoughVote,
+  disabledCreateProposalButton,
+  handleCreateProposal,
 }: {
-  className?: string
-  onClick: () => void
-  proposalAction: ProposalAction
+  hasActiveOrPendingProposal: boolean
+  hasEnoughVote: boolean
+  disabledCreateProposalButton: boolean
+  handleCreateProposal: () => void
 }) => {
-  const ActionSelectorHeader = styled.div`
-    font-size: 14px;
-    font-weight: 500;
-    color: ${({ theme }) => theme.text2};
-  `
-
-  const ActionDropdown = styled(ButtonDropdown)`
-    padding: 0px;
-    margin-top: 10px;
-    background-color: transparent;
-    color: ${({ theme }) => theme.text1}
-    font-size: 24px;
-
-    :hover,
-    :active,
-    :focus {
-      outline: 0px;
-      box-shadow: none;
-      background-color: transparent;
-    }
-  `
-
-  return (
-    <div className={className}>
-      <ActionSelectorHeader>Proposed Action</ActionSelectorHeader>
-      <ActionDropdown onClick={onClick}>{proposalAction}</ActionDropdown>
-    </div>
+  return hasActiveOrPendingProposal ? (
+    <ButtonError marginTop="18px">You already have an active or pending proposal</ButtonError>
+  ) : hasEnoughVote ? (
+    <Button style={{ marginTop: '18px' }} disabled={disabledCreateProposalButton} onClick={handleCreateProposal}>
+      Create Proposal
+    </Button>
+  ) : (
+    <ButtonError marginTop="18px">You don&apos;t have enough vote to create a proposal</ButtonError>
   )
-}
-
-const ProposalActionSelector = styled(_ProposalActionSelector)`
-  padding: 0.75rem 0.5rem 0.75rem 1rem;
-  border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg1};
-`
-
-const _ProposalActionDetail = ({
-  className,
-  proposalAction,
-}: {
-  className?: string
-  proposalAction: ProposalAction
-}) => {
-  // Transfer token
-  const [toAddressValue, setToAddressValue] = useState('')
-  const [amountValue, setAmountValue] = useState('')
-  const [currencyValue, setCurrencyValue] = useState(useCurrency('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'))
-
-  const onToAddressUserInput = useCallback((toAddressValue: string) => {
-    setToAddressValue(toAddressValue)
-  }, [])
-
-  const onAmountInput = useCallback((amountValue: string) => [setAmountValue(amountValue)], [])
-
-  const onCurrencySelect = useCallback((currency: Currency) => {
-    setCurrencyValue(currency)
-  }, [])
-
-  return (
-    <div className={className}>
-      {proposalAction === ProposalAction.TRANSFER_TOKEN ? (
-        <>
-          <AddressInputPanel
-            className="to-address-input"
-            label="To"
-            value={toAddressValue}
-            onChange={onToAddressUserInput}
-          />
-          <CurrencyInputPanel
-            value={amountValue}
-            currency={currencyValue}
-            onUserInput={(value: string) => onAmountInput(value)}
-            onCurrencySelect={(currency: Currency) => onCurrencySelect(currency)}
-            showMaxButton={false}
-            showCommonBases={false}
-            hideBalance={true}
-            id="token-transfer-amount"
-          />
-        </>
-      ) : (
-        <>
-          <AddressInputPanel
-            className="to-address-input"
-            label="To"
-            value={toAddressValue}
-            onChange={onToAddressUserInput}
-          />
-          <CurrencyInputPanel
-            value={amountValue}
-            currency={currencyValue}
-            onUserInput={(value: string) => onAmountInput(value)}
-            onCurrencySelect={(currency: Currency) => onCurrencySelect(currency)}
-            showMaxButton={false}
-            showCommonBases={false}
-            hideBalance={true}
-            id="token-transfer-amount"
-          />
-        </>
-      )}
-    </div>
-  )
-}
-
-const ProposalActionDetail = styled(_ProposalActionDetail)`
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-gap: 10px;
-`
-
-const ProposalEditorHeader = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text2};
-`
-
-const ProposalTitle = styled(TextInput)`
-  margin-top: 7.5px;
-  margin-bottom: 7.5px;
-`
-
-const ProposalBody = styled(TextArea)`
-  margin-top: 15px;
-  margin-bottom: 7.5px;
-`
-
-const _ProposalEditor = ({ className }: { className?: string }) => {
-  const [titleValue, setTitleValue] = useState('')
-  const [bodyValue, setBodyValue] = useState('')
-
-  const onTitleUserInput = useCallback((titleValue: string) => {
-    setTitleValue(titleValue)
-  }, [])
-
-  const onBodyUserInput = useCallback((bodyValue: string) => {
-    setBodyValue(bodyValue)
-  }, [])
-
-  const bodyPlaceholder = `# Heading 1
-
-Lorem ipsum dolor sit amet
-
-## Heading 2
-
-Lorem ipsum dolor sit amet
-
-`
-
-  return (
-    <div className={className}>
-      <ProposalEditorHeader>Proposal</ProposalEditorHeader>
-      <ProposalTitle value={titleValue} onUserInput={onTitleUserInput} placeholder="Proposal Title" fontSize="1.5rem" />
-      <hr />
-      <ProposalBody value={bodyValue} onUserInput={onBodyUserInput} placeholder={bodyPlaceholder} fontSize="1rem" />
-    </div>
-  )
-}
-
-const ProposalEditor = styled(_ProposalEditor)`
-  padding: 0.75rem 0.5rem 0.75rem 1rem;
-  border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg1};
-`
-
-const CreateProposalButton = styled(Button)`
-  margin-top: 18px;
-`
-
-type AppBodyProps = {
-  maxWidth: string
 }
 
 export default function CreateProposal() {
-  const appBodyProps: AppBodyProps = { maxWidth: '1200px' }
+  const { account, chainId } = useActiveWeb3React()
+
+  const latestProposalId =
+    useLatestProposalId(account ?? '0x0000000000000000000000000000000000000000')?.toString() ?? '0'
+  const latestProposalData = useProposalData(latestProposalId)
+  const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
+
   const [modalOpen, setModalOpen] = useState(false)
+  const [hash, setHash] = useState<string | undefined>()
+  const [attempting, setAttempting] = useState(false)
   const [proposalAction, setProposalAction] = useState(ProposalAction.TRANSFER_TOKEN)
+  const [toAddressValue, setToAddressValue] = useState('')
+  const [currencyValue, setCurrencyValue] = useState<Currency>()
+  const [amountValue, setAmountValue] = useState('')
+  const [titleValue, setTitleValue] = useState('')
+  const [bodyValue, setBodyValue] = useState('')
 
-  const handleDismissActionSelector = useCallback(() => {
-    setModalOpen(false)
-  }, [setModalOpen])
+  const handleActionSelectorClick = useCallback(() => [setModalOpen(true)], [setModalOpen])
+  const handleActionChange = useCallback((proposalAction: ProposalAction) => [setProposalAction(proposalAction)], [
+    setProposalAction,
+  ])
+  const handleDismissActionSelector = useCallback(() => [setModalOpen(false)], [setModalOpen])
+  const handleDismissSubmissionModal = useCallback(() => [setHash(undefined), setAttempting(false)], [
+    setHash,
+    setAttempting,
+  ])
+  const handleToAddressInput = useCallback((toAddress: string) => [setToAddressValue(toAddress)], [setToAddressValue])
+  const handleCurrencySelect = useCallback((currency: Currency) => [setCurrencyValue(currency)], [setCurrencyValue])
+  const handleAmountInput = useCallback((amount: string) => [setAmountValue(amount)], [setAmountValue])
+  const handleTitleInput = useCallback((title: string) => [setTitleValue(title)], [setTitleValue])
+  const handleBodyInput = useCallback((body: string) => [setBodyValue(body)], [setBodyValue])
 
-  const handleActionSelectorClick = useCallback(() => {
-    setModalOpen(true)
-  }, [setModalOpen])
-
-  const handleActionChange = useCallback(
-    (proposalAction: ProposalAction) => {
-      setProposalAction(proposalAction)
-    },
-    [setProposalAction]
+  const disabledCreateProposalButton = useMemo(
+    () =>
+      Boolean(
+        !proposalAction ||
+          !utils.isAddress(toAddressValue) ||
+          !currencyValue?.isToken ||
+          amountValue === '' ||
+          titleValue === '' ||
+          bodyValue === '' ||
+          latestProposalData?.status === ProposalState.Active ||
+          latestProposalData?.status === ProposalState.Pending
+      ),
+    [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue, latestProposalData]
   )
+  const createProposalCallback = useCreateProposalCallback()
+
+  const handleCreateProposal = async () => {
+    setAttempting(true)
+
+    if (!createProposalCallback) return
+
+    const createProposalData: CreateProposalData = {} as CreateProposalData
+    let calldataValues: string[] = []
+
+    createProposalData.targets = currencyValue?.isToken ? [currencyValue.address] : []
+    createProposalData.values = ['0']
+
+    switch (proposalAction) {
+      case ProposalAction.TRANSFER_TOKEN:
+        createProposalData.signatures = ['transfer(address,uint256)']
+        calldataValues = [toAddressValue, amountValue]
+        break
+      case ProposalAction.APPROVE_TOKEN:
+        createProposalData.signatures = ['approve(address,uint256)']
+        calldataValues = [toAddressValue, amountValue]
+        break
+      default:
+        createProposalData.signatures = []
+    }
+
+    const typesArray = createProposalData.signatures[0].split('(').pop()?.split(')')[0]?.split(',')
+    const bytes = typesArray?.map((type, i) => generateBytesByType(type, calldataValues[i]))
+
+    createProposalData.calldatas = bytes !== undefined ? ['0x'.concat(...bytes)] : []
+    createProposalData.description = `# ${titleValue}
+
+${bodyValue}
+`
+
+    const hash = await createProposalCallback(createProposalData ?? undefined)?.catch((error) => {
+      setAttempting(false)
+      console.log(error)
+    })
+
+    if (hash) setHash(hash)
+  }
 
   return (
-    <AppBody {...appBodyProps}>
+    <AppBody {...{ maxWidth: '1200px' }}>
       <CreateProposalTabs />
       <Wrapper>
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'primaryText1'}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
+              <strong>Tip:</strong> Enter the proposed action and a description to help the community understand your
+              proposal. You will not be able to modify a proposal once submitted, so please check that all information
+              is correct. The voting period will begin immediately and last for 7 days.
             </TYPE.link>
           </AutoColumn>
         </BlueCard>
+
         <ProposalWrapper>
-          <ProposalActionPane>
+          <div style={{ flex: '1 400px' }}>
             <ProposalActionSelector onClick={handleActionSelectorClick} proposalAction={proposalAction} />
-            <ProposalActionDetail proposalAction={proposalAction} />
-          </ProposalActionPane>
-          <ProposalEditorPane>
-            <ProposalEditor />
-          </ProposalEditorPane>
+            <ProposalActionDetail
+              proposalAction={proposalAction}
+              currency={currencyValue}
+              amount={amountValue}
+              toAddress={toAddressValue}
+              onCurrencySelect={handleCurrencySelect}
+              onAmountInput={handleAmountInput}
+              onToAddressInput={handleToAddressInput}
+            />
+          </div>
+          <div style={{ flex: '1 400px' }}>
+            <ProposalEditor
+              title={titleValue}
+              body={bodyValue}
+              onTitleInput={handleTitleInput}
+              onBodyInput={handleBodyInput}
+            />
+          </div>
         </ProposalWrapper>
-        <CreateProposalButton>Create Proposal</CreateProposalButton>
+        <CreateProposalButton
+          hasActiveOrPendingProposal={
+            latestProposalData?.status === ProposalState.Active || latestProposalData?.status === ProposalState.Pending
+          }
+          hasEnoughVote={
+            availableVotes ? JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(10000000)) : false
+          }
+          disabledCreateProposalButton={disabledCreateProposalButton}
+          handleCreateProposal={handleCreateProposal}
+        />
       </Wrapper>
       <ProposalActionSelectorModal
         isOpen={modalOpen}
         onDismiss={handleDismissActionSelector}
         onProposalActionSelect={(proposalAction: ProposalAction) => handleActionChange(proposalAction)}
+      />
+      <ProposalSubmissionModal
+        isOpen={attempting}
+        hash={hash}
+        chainId={chainId}
+        onDismiss={handleDismissSubmissionModal}
       />
     </AppBody>
   )
