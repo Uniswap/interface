@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import { BookOpen, ChevronLeft, ChevronRight, Code, Globe, Info, MessageCircle, PieChart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
@@ -7,6 +7,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
+import { Transition } from 'react-transition-group'
 
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
@@ -64,12 +65,11 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 8.125rem;
+  min-width: 10.125rem;
   background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
-  padding: 0.5rem;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
@@ -87,6 +87,9 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     top: -17.25rem;
   `};
+
+  overflow: hidden;
+  transition: height 500ms ease;
 `
 
 const MenuItem = styled(ExternalLink)`
@@ -120,16 +123,83 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
+const DropdownItem = styled.div`
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  grid-gap: 8px;
+  justify-items: end;
+  align-items: center;
+  padding: 0.5rem 0.5rem;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  cursor: pointer;
+`
+
+const MainMenu = styled.div<{ state: string }>`
+  position: ${({ state }) => (['entering', 'exiting'].includes(state) ? 'absolute' : 'initial')};
+  transition: all 500ms ease;
+  transform: translateX(${({ state }) => (['entering', 'entered'].includes(state) ? 0 : -110)}%);
+`
+
+const LangMenu = styled.div<{ state: string }>`
+  transition: all 500ms ease;
+  transform: translateX(${({ state }) => (['entering', 'entered'].includes(state) ? 0 : 110)}%);
+`
+
+const Separator = styled.hr`
+  border-top: 1px solid ${({ theme }) => theme.text4};
+  margin: 0 0.5rem;
+`
+
 const CODE_LINK = 'https://github.com/Uniswap/uniswap-interface'
 
 export default function Menu() {
   const { account } = useActiveWeb3React()
 
+  const [activeMenu, setActiveMenu] = useState<'main' | 'lang'>('main')
+  const [menuHeight, setMenuHeight] = useState<number | undefined>(undefined)
+
   const node = useRef<HTMLDivElement>()
+  const menuFlyout = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+
+  useEffect(() => {
+    setMenuHeight((menuFlyout.current?.firstChild as HTMLElement | undefined)?.offsetHeight)
+  }, [])
+
+  function calcHeight(el: HTMLElement) {
+    debugger
+    const height = el.offsetHeight
+    setMenuHeight(height)
+  }
+
+  function MenuSwitcher({
+    children,
+    leftIcon,
+    rightIcon,
+    goToMenu,
+  }: {
+    children?: ReactNode
+    leftIcon?: ReactNode
+    rightIcon?: ReactNode
+    goToMenu: 'main' | 'lang'
+  }) {
+    return (
+      <DropdownItem onClick={() => goToMenu && setActiveMenu(goToMenu)}>
+        {leftIcon}
+        {children}
+        {rightIcon}
+      </DropdownItem>
+    )
+  }
 
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
@@ -139,32 +209,54 @@ export default function Menu() {
       </StyledMenuButton>
 
       {open && (
-        <MenuFlyout>
-          <MenuItem href="https://uniswap.org/">
-            <Info size={14} />
-            <div>About</div>
-          </MenuItem>
-          <MenuItem href="https://docs.uniswap.org/">
-            <BookOpen size={14} />
-            <div>Docs</div>
-          </MenuItem>
-          <MenuItem href={CODE_LINK}>
-            <Code size={14} />
-            <div>Code</div>
-          </MenuItem>
-          <MenuItem href="https://discord.gg/FCfyBSbCU5">
-            <MessageCircle size={14} />
-            <div>Discord</div>
-          </MenuItem>
-          <MenuItem href="https://info.uniswap.org/">
-            <PieChart size={14} />
-            <div>Analytics</div>
-          </MenuItem>
-          {account && (
-            <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              Claim UNI
-            </UNIbutton>
-          )}
+        <MenuFlyout ref={menuFlyout as any} style={{ height: menuHeight }}>
+          <Transition in={activeMenu === 'main'} timeout={500} unmountOnExit onEnter={calcHeight}>
+            {(state) => (
+              <MainMenu state={state}>
+                <MenuSwitcher goToMenu="lang" leftIcon={<Globe size={14} />} rightIcon={<ChevronRight />}>
+                  Language
+                </MenuSwitcher>
+                <Separator />
+                <MenuItem href="https://uniswap.org/">
+                  <Info size={14} />
+                  <div>About</div>
+                </MenuItem>
+                <MenuItem href="https://docs.uniswap.org/">
+                  <BookOpen size={14} />
+                  <div>Docs</div>
+                </MenuItem>
+                <MenuItem href={CODE_LINK}>
+                  <Code size={14} />
+                  <div>Code</div>
+                </MenuItem>
+                <MenuItem href="https://discord.gg/FCfyBSbCU5">
+                  <MessageCircle size={14} />
+                  <div>Discord</div>
+                </MenuItem>
+                <MenuItem href="https://info.uniswap.org/">
+                  <PieChart size={14} />
+                  <div>Analytics</div>
+                </MenuItem>
+                {account && (
+                  <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
+                    Claim UNI
+                  </UNIbutton>
+                )}
+              </MainMenu>
+            )}
+          </Transition>
+
+          <Transition in={activeMenu === 'lang'} timeout={500} unmountOnExit onEnter={calcHeight}>
+            {(state) => (
+              <LangMenu state={state}>
+                <MenuSwitcher goToMenu="main" leftIcon={<ChevronLeft />} />
+                <DropdownItem>English</DropdownItem>
+                <DropdownItem>German</DropdownItem>
+                <DropdownItem>Chinese</DropdownItem>
+                <DropdownItem>Romanian</DropdownItem>
+              </LangMenu>
+            )}
+          </Transition>
         </MenuFlyout>
       )}
     </StyledMenu>
