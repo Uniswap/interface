@@ -3,6 +3,7 @@ import { Token } from '@uniswap/sdk-core'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
+import { Trans } from '@lingui/macro'
 
 import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonEmpty } from '../Button'
@@ -48,7 +49,13 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
           <AutoRow gap="8px">
             <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
             <Text fontWeight={500} fontSize={20}>
-              {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+              {!currency0 || !currency1 ? (
+                <Dots>
+                  <Trans id="common.loading">Loading</Trans>
+                </Dots>
+              ) : (
+                `${currency0.symbol}/${currency1.symbol}`
+              )}
             </Text>
 
             <Badge variant={BadgeVariant.WARNING}>Sushi</Badge>
@@ -61,7 +68,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
               as={Link}
               to={`/migrate/v2/${liquidityToken.address}`}
             >
-              Migrate
+              <Trans id="pools.buttons.migrate">Migrate</Trans>
             </ButtonEmpty>
           </RowFixed>
         </FixedHeightRow>

@@ -22,6 +22,7 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { Pair } from '@uniswap/v2-sdk'
+import { Trans } from '@lingui/macro'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -135,11 +136,16 @@ export default function Pool() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Liquidity provider rewards</TYPE.white>
+                <TYPE.white fontWeight={600}>
+                  <Trans id="pools.labels.liquidityProviderRewards">Liquidity provider rewards</Trans>
+                </TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  {`Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.`}
+                  <Trans id="pools.hints.liquidityProviderRewards">
+                    Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are
+                    added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+                  </Trans>
                 </TYPE.white>
               </RowBetween>
               <ExternalLink
@@ -147,7 +153,9 @@ export default function Pool() {
                 target="_blank"
                 href="https://uniswap.org/docs/v2/core-concepts/pools/"
               >
-                <TYPE.white fontSize={14}>Read more about providing liquidity</TYPE.white>
+                <TYPE.white fontSize={14}>
+                  <Trans id="pools.hints.readAboutProvidingLiquidity">Read more about providing liquidity</Trans>
+                </TYPE.white>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -160,12 +168,12 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your V2 liquidity
+                  <Trans id="pools.labels.yourV2Liquidity">Your V2 liquidity</Trans>
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
                 <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
-                  Create a pair
+                  <Trans id="pools.buttons.createPair">Create a pair</Trans>
                 </ResponsiveButtonSecondary>
                 <ResponsiveButtonPrimary
                   id="join-pool-button"
@@ -175,7 +183,7 @@ export default function Pool() {
                   to="/add/v2/ETH"
                 >
                   <Text fontWeight={500} fontSize={16}>
-                    Add V2 Liquidity
+                    <Trans id="pools.buttons.addV2Liquidity">Add V2 Liquidity</Trans>
                   </Text>
                 </ResponsiveButtonPrimary>
               </ButtonRow>
@@ -184,23 +192,27 @@ export default function Pool() {
             {!account ? (
               <Card padding="40px">
                 <TYPE.body color={theme.text3} textAlign="center">
-                  Connect to a wallet to view your liquidity.
+                  <Trans id="wallet.connectWalletToViewLiquidity">Connect to a wallet to view your liquidity.</Trans>
                 </TYPE.body>
               </Card>
             ) : v2IsLoading ? (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                  <Dots>Loading</Dots>
+                  <Dots>
+                    <Trans id="common.loading">Loading</Trans>
+                  </Dots>
                 </TYPE.body>
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
                 <ButtonSecondary>
                   <RowBetween>
-                    <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
-                      Account analytics and accrued fees
-                    </ExternalLink>
-                    <span> ↗</span>
+                    <Trans id="pools.buttons.accountAnalytics">
+                      <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
+                        Account analytics and accrued fees
+                      </ExternalLink>
+                      <span> ↗ </span>
+                    </Trans>
                   </RowBetween>
                 </ButtonSecondary>
                 {v2PairsWithoutStakedAmount.map((v2Pair) => (
@@ -230,14 +242,14 @@ export default function Pool() {
                     }}
                   >
                     <ChevronsRight size={16} style={{ marginRight: '8px' }} />
-                    Migrate Liquidity to V3
+                    <Trans id="pools.buttons.migrateLiquidityToV3">Migrate Liquidity to V3</Trans>
                   </ButtonOutlined>
                 </RowFixed>
               </>
             ) : (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
+                  <Trans id="pools.labels.noLiquidityFound">No liquidity found.</Trans>
                 </TYPE.body>
               </EmptyProposals>
             )}

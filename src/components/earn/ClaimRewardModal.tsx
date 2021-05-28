@@ -11,6 +11,7 @@ import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { t, Trans } from '@lingui/macro'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -46,7 +47,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
         .getReward({ gasLimit: 350000 })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Claim accumulated UNI rewards`,
+            summary: t({
+              id: 'transactions.summary.claimAccumulatedUNIRewards',
+              message: 'Claim accumulated UNI rewards',
+            }),
           })
           setHash(response.hash)
         })
@@ -59,10 +63,10 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = t({ id: 'wallet.connect' })
   }
   if (!stakingInfo?.stakedAmount) {
-    error = error ?? 'Enter an amount'
+    error = error ?? t({ id: 'earn.enterAmountError', message: 'Enter an amount' })
   }
 
   return (
@@ -70,7 +74,9 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>Claim</TYPE.mediumHeader>
+            <TYPE.mediumHeader>
+              <Trans id="earn.claim.label">Claim</Trans>
+            </TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           {stakingInfo?.earnedAmount && (
@@ -78,29 +84,39 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
               <TYPE.body fontWeight={600} fontSize={36}>
                 {stakingInfo?.earnedAmount?.toSignificant(6)}
               </TYPE.body>
-              <TYPE.body>Unclaimed UNI</TYPE.body>
+              <TYPE.body>
+                <Trans id="earn.claim.unclaimedUNI">Unclaimed UNI</Trans>
+              </TYPE.body>
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>
-            When you claim without withdrawing your liquidity remains in the mining pool.
+            <Trans id="earn.claim.withoutWithdrawingHint">
+              When you claim without withdrawing your liquidity remains in the mining pool.
+            </Trans>
           </TYPE.subHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
-            {error ?? 'Claim'}
+            {error ?? <Trans id="earn.claim.label">Claim</Trans>}
           </ButtonError>
         </ContentWrapper>
       )}
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</TYPE.body>
+            <TYPE.body fontSize={20}>
+              <Trans id="claim.labels.claimingAmount">Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Claimed UNI!</TYPE.body>
+            <TYPE.largeHeader>
+              <Trans id="transactions.submitted">Transaction Submitted</Trans>
+            </TYPE.largeHeader>
+            <TYPE.body fontSize={20}>
+              <Trans id="earn.claim.claimedUNI">Claimed UNI!</Trans>
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}
