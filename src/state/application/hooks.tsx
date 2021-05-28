@@ -65,8 +65,8 @@ export function useNetworkSwitcherPopoverToggle(): () => void {
   return useToggleModal(ApplicationModal.NETWORK_SWITCHER)
 }
 
-export function useAddPopup(): (content: PopupContent, key?: string) => void {
-  return useCallback((content: PopupContent, key?: string) => {
-    toast.info(<PopupItem key={key} content={content} />)
+export function useAddPopup(): (content: PopupContent, autoClose?: number | false) => void {
+  return useCallback((content: PopupContent, autoClose: number | false = 15000) => {
+    toast.info(<PopupItem content={content} />, { autoClose })
   }, [])
 }

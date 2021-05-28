@@ -78,11 +78,11 @@ export default function App() {
             </HeaderWrapper>
             <BodyWrapper>
               <ToastContainer
+                draggable={false}
                 className="custom-toast-root"
                 toastClassName="custom-toast-container"
                 bodyClassName="custom-toast-body"
                 position="top-right"
-                closeButton={false}
                 transition={Slide}
               />
               <Web3ReactManager>

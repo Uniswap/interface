@@ -385,6 +385,12 @@ body {
     margin: 0 !important;
 }
 
+.Toastify__close-button {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+
 .Toastify__toast--info {
     background: ${props => props.theme.bg1} !important;
 }

@@ -10,6 +10,7 @@ import { AutoRow } from '../Row'
 
 const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
+  margin-right: 16px;
 `
 
 export default function TransactionPopup({

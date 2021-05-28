@@ -5,9 +5,12 @@ import NewNetworkPopup from './NewNetworkPopup'
 
 export default function PopupItem({ content }: { content: PopupContent }) {
   let popupContent
-  const { txn, newNetworkChainId } = content
-  if (txn) popupContent = <TransactionPopup hash={txn.hash} success={txn.success} summary={txn.summary} />
-  else if (newNetworkChainId) popupContent = <NewNetworkPopup chainId={newNetworkChainId} />
+  if ('txn' in content) {
+    popupContent = <TransactionPopup {...content.txn} />
+  } else if ('newNetworkChainId' in content) {
+    const { newNetworkChainId } = content
+    popupContent = <NewNetworkPopup chainId={newNetworkChainId} />
+  }
 
   return <>{popupContent}</>
 }
