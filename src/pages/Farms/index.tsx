@@ -129,14 +129,16 @@ const Farms = () => {
           <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
             <div>{t('vesting')}</div>
           </Tab>
-          <StakedOnlyToggleWrapper>
-            <StakedOnlyToggle
-              className="staked-only-switch"
-              checked={stakedOnly}
-              onClick={() => setStakedOnly(!stakedOnly)}
-            />
-            <StakedOnlyToggleText>Staked Only</StakedOnlyToggleText>
-          </StakedOnlyToggleWrapper>
+          {activeTab === 0 && (
+            <StakedOnlyToggleWrapper>
+              <StakedOnlyToggle
+                className="staked-only-switch"
+                checked={stakedOnly}
+                onClick={() => setStakedOnly(!stakedOnly)}
+              />
+              <StakedOnlyToggleText>Staked Only</StakedOnlyToggleText>
+            </StakedOnlyToggleWrapper>
+          )}
         </TabContainer>
 
         {activeTab === 0 ? (
