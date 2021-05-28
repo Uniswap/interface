@@ -6,7 +6,7 @@ import ListItem from './ListItem'
 import { Farm } from 'state/farms/types'
 
 const FarmListWrapper = styled.div`
-  padding-bottom: 80px;
+  padding-bottom: 50px;
   background-color: ${({ theme }) => theme.bg15};
 `
 

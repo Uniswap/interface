@@ -13,7 +13,7 @@ const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
 const PORTIS_ID = process.env.REACT_APP_PORTIS_ID
 
 // export const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
-export const NETWORK_CHAIN_ID: number = 1
+export const NETWORK_CHAIN_ID = 1
 export const NETWORK_CHAIN_NAME: string = process.env.REACT_APP_CHAIN_NAME ?? 'mainnet'
 
 if (typeof NETWORK_URL === 'undefined') {

@@ -2,9 +2,10 @@ import { useCallback, useMemo, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
-import { client } from 'apollo/client'
+import { exchangeCient } from 'apollo/client'
 import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
-import { KNC_ADDRESS } from '../../constants'
+import { ChainId } from 'libs/sdk/src'
+import { KNC } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -121,7 +122,7 @@ export function useActivePopups(): AppState['application']['popupList'] {
 /**
  * Gets the current price  of ETH, 24 hour price, and % change between them
  */
-const getEthPrice = async () => {
+const getEthPrice = async (chainId?: ChainId) => {
   const utcCurrentTime = dayjs()
   const utcOneDayBack = utcCurrentTime
     .subtract(1, 'day')
@@ -133,12 +134,12 @@ const getEthPrice = async () => {
   let priceChangeETH = 0
 
   try {
-    const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
-    const result = await client.query({
+    const oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId)
+    const result = await exchangeCient[chainId as ChainId].query({
       query: ETH_PRICE(),
       fetchPolicy: 'cache-first'
     })
-    const resultOneDay = await client.query({
+    const resultOneDay = await exchangeCient[chainId as ChainId].query({
       query: ETH_PRICE(oneDayBlock),
       fetchPolicy: 'cache-first'
     })
@@ -157,24 +158,23 @@ const getEthPrice = async () => {
 
 export function useETHPrice(): AppState['application']['ethPrice'] {
   const dispatch = useDispatch()
+  const { chainId } = useActiveWeb3React()
 
   const ethPrice = useSelector((state: AppState) => state.application.ethPrice)
 
   useEffect(() => {
     async function checkForEthPrice() {
-      if (!ethPrice.currentPrice) {
-        const [newPrice, oneDayBackPrice, pricePercentChange] = await getEthPrice()
-        dispatch(
-          updateETHPrice({
-            currentPrice: (newPrice ? newPrice : 0).toString(),
-            oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
-            pricePercentChange
-          })
-        )
-      }
+      const [newPrice, oneDayBackPrice, pricePercentChange] = await getEthPrice(chainId as ChainId)
+      dispatch(
+        updateETHPrice({
+          currentPrice: (newPrice ? newPrice : 0).toString(),
+          oneDayBackPrice: (oneDayBackPrice ? oneDayBackPrice : 0).toString(),
+          pricePercentChange
+        })
+      )
     }
     checkForEthPrice()
-  }, [ethPrice, dispatch])
+  }, [ethPrice, dispatch, chainId])
 
   return ethPrice
 }
@@ -182,12 +182,12 @@ export function useETHPrice(): AppState['application']['ethPrice'] {
 /**
  * Gets the current price of KNC by ETH
  */
-const getKNCPriceByETH = async () => {
+const getKNCPriceByETH = async (chainId?: ChainId) => {
   let kncPriceByETH = 0
 
   try {
-    const result = await client.query({
-      query: TOKEN_DERIVED_ETH(KNC_ADDRESS),
+    const result = await exchangeCient[chainId as ChainId].query({
+      query: TOKEN_DERIVED_ETH(KNC[chainId as ChainId].address),
       fetchPolicy: 'no-cache'
     })
 
@@ -204,19 +204,18 @@ const getKNCPriceByETH = async () => {
 export function useKNCPrice(): AppState['application']['kncPrice'] {
   const dispatch = useDispatch()
   const ethPrice = useETHPrice()
+  const { chainId } = useActiveWeb3React()
 
   const kncPrice = useSelector((state: AppState) => state.application.kncPrice)
 
   useEffect(() => {
     async function checkForKNCPrice() {
-      if (!kncPrice) {
-        const kncPriceByETH = await getKNCPriceByETH()
-        const kncPrice = ethPrice.currentPrice && kncPriceByETH * parseFloat(ethPrice.currentPrice)
-        dispatch(updateKNCPrice(kncPrice?.toString()))
-      }
+      const kncPriceByETH = await getKNCPriceByETH(chainId)
+      const kncPrice = ethPrice.currentPrice && kncPriceByETH * parseFloat(ethPrice.currentPrice)
+      dispatch(updateKNCPrice(kncPrice?.toString()))
     }
     checkForKNCPrice()
-  }, [kncPrice, dispatch, ethPrice.currentPrice])
+  }, [kncPrice, dispatch, ethPrice.currentPrice, chainId])
 
   return kncPrice
 }

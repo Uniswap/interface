@@ -97,6 +97,7 @@ export function useSocksController(): Contract | null {
 
 export function useFactoryContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
+
   return useContract(chainId && FACTORY_ADDRESSES[chainId], FACTORY_ABI)
 }
 

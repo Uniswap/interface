@@ -2,8 +2,9 @@ import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { BigNumber } from '@ethersproject/bignumber'
 
-import { client } from 'apollo/client'
+import { exchangeCient } from 'apollo/client'
 import { FARM_DATA } from 'apollo/queries'
+import { ChainId } from 'libs/sdk/src'
 import { AppState, useAppDispatch } from 'state'
 import { Farm, FarmUserData } from 'state/farms/types'
 import { setFarmsPublicData, setLoading, setError } from './actions'
@@ -15,14 +16,15 @@ import {
   useFarmUserStakedBalances,
   useFarmUserTokenBalances
 } from './fetchFarmUser'
+import { useActiveWeb3React } from 'hooks'
 
 export const useFarms = (): Farm[] => {
   const farms = useSelector((state: AppState) => state.farms.data)
   return farms
 }
 
-export const fetchFarms = async (poolsList: string[]) => {
-  const result = await client.query({
+export const fetchFarms = async (poolsList: string[], chainId?: ChainId) => {
+  const result = await exchangeCient[chainId as ChainId].query({
     query: FARM_DATA,
     variables: {
       poolsList
@@ -35,6 +37,7 @@ export const fetchFarms = async (poolsList: string[]) => {
 
 export const useFarmsPublicData = () => {
   const dispatch = useAppDispatch()
+  const { chainId } = useActiveWeb3React()
   const { getPoolLength, getPoolInfo } = useMasterChef()
   const ethPrice = useETHPrice()
 
@@ -69,7 +72,7 @@ export const useFarmsPublicData = () => {
 
         const poolAddresses = poolInfos.map(poolInfo => poolInfo.stakeToken.toLowerCase())
 
-        const farmsData = await fetchFarms(poolAddresses)
+        const farmsData = await fetchFarms(poolAddresses, chainId)
 
         const farms = poolInfos.map(poolInfo => ({
           ...farmsData.find(
@@ -80,6 +83,7 @@ export const useFarmsPublicData = () => {
 
         dispatch(setFarmsPublicData({ farms }))
       } catch (error) {
+        dispatch(setFarmsPublicData({ farms: [] }))
         dispatch(setError(error))
       }
 
@@ -87,7 +91,7 @@ export const useFarmsPublicData = () => {
     }
 
     checkForFarms()
-  }, [dispatch, ethPrice.currentPrice, handleGetPoolLength, getPoolInfo])
+  }, [dispatch, ethPrice.currentPrice, handleGetPoolLength, getPoolInfo, chainId])
 
   return { loading, error, data: farmsData }
 }
