@@ -16,7 +16,9 @@ import {
   toggleURLWarning,
   updateUserSingleHopOnly,
   updateHideClosedPositions,
+  updateUserLocale,
 } from './actions'
+import { SupportedLocale } from 'constants/locales'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -26,6 +28,8 @@ export interface UserState {
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
   matchesDarkMode: boolean // whether the dark mode media query matches
+
+  userLocale: SupportedLocale | null
 
   userExpertMode: boolean
 
@@ -66,6 +70,7 @@ export const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
+  userLocale: null,
   userSingleHopOnly: false,
   userHideClosedPositions: false,
   userSlippageTolerance: 'auto',
@@ -122,6 +127,10 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserLocale, (state, action) => {
+      state.userLocale = action.payload.userLocale
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserSlippageTolerance, (state, action) => {
