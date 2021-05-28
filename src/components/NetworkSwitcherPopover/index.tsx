@@ -53,7 +53,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   )
 
   return (
-    <div ref={popoverRef} style={{ height: 22 }}>
+    <div ref={popoverRef}>
       <Popover
         content={
           <OptionGrid>
