@@ -5,16 +5,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: es_US\n"
+"Language: vi\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2021-05-29 03:16\n"
 "Last-Translator: \n"
-"Language-Team: Spanish, United States\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language-Team: Vietnamese\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
-"X-Crowdin-Language: es-US\n"
+"X-Crowdin-Language: vi\n"
 "X-Crowdin-File: en.po\n"
 "X-Crowdin-File-ID: 2\n"
 
@@ -362,15 +362,15 @@ msgstr ""
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
-msgstr "Quitar todas"
+msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
-msgstr "Quitar todas"
+msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "Cerrar"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -378,12 +378,12 @@ msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "Recoger"
+msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Recoger como WETH"
+msgstr ""
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -407,7 +407,7 @@ msgstr ""
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
-msgstr "Confirmar"
+msgstr ""
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -425,7 +425,7 @@ msgstr ""
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Connect Wallet"
-msgstr "Conectar billet"
+msgstr ""
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
@@ -566,7 +566,7 @@ msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
-msgstr "Despedir"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Docs"
