@@ -28,4 +28,4 @@ jobs:
           source: 'src/locales/en.po'
           translation: 'src/locales/%locale%.po'
         env:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
