@@ -3,10 +3,25 @@ import { useMemo } from 'react'
 import { useUserLocale } from 'state/user/hooks'
 import useParsedQueryString from './useParsedQueryString'
 
+/**
+ * Mapping from locales without region (e.g. es) to the default region specific locale (e.g. es-US)
+ */
+const MAPPED_DEFAULT_LOCALES: { [localeWithoutRegion: string]: SupportedLocale } = {}
+
+/**
+ * Given a locale string (e.g. from user agent), return the best match for corresponding SupportedLocale
+ * @param maybeSupportedLocale the fuzzy locale identifier
+ */
 function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined {
-  return SUPPORTED_LOCALES.find((locale) => locale === maybeSupportedLocale)
+  return (
+    MAPPED_DEFAULT_LOCALES[maybeSupportedLocale.toLowerCase()] ??
+    SUPPORTED_LOCALES.find((locale) => locale === maybeSupportedLocale)
+  )
 }
 
+/**
+ * Returns the supported locale read from the user agent (navigator)
+ */
 function navigatorLocale(): SupportedLocale | undefined {
   if (!navigator.language) return undefined
 
@@ -19,6 +34,9 @@ function navigatorLocale(): SupportedLocale | undefined {
   return parseLocale(language)
 }
 
+/**
+ * Returns the currently active locale, from a combination of user agent, query string, and user settings stored in redux
+ */
 export function useActiveLocale(): SupportedLocale {
   const parsed = useParsedQueryString()
   const userLocale = useUserLocale()

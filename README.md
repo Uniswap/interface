@@ -25,23 +25,9 @@ To access the Uniswap Interface, use an IPFS gateway link from the
 [latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
 or visit [app.uniswap.org](https://app.uniswap.org).
 
-## Development
-
-### Install Dependencies
-
-```bash
-yarn install
-```
-
-### Run
-
-```bash
-yarn start
-```
-
 ## Contributions
 
-See [CONTRIBUTING](CONTRIBUTING.md).
+See [CONTRIBUTING](./CONTRIBUTING.md).
 
 ## Accessing Uniswap V2
 
