@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
@@ -173,27 +174,27 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 
   let inputError: string | undefined
   if (!account) {
-    inputError = 'Connect Wallet'
+    inputError = t`Connect Wallet`
   }
 
   if (!parsedAmount) {
-    inputError = inputError ?? 'Enter an amount'
+    inputError = inputError ?? t`Enter an amount`
   }
 
   if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
-    inputError = inputError ?? 'Select a token'
+    inputError = inputError ?? t`Select a token`
   }
 
   const formattedTo = isAddress(to)
   if (!to || !formattedTo) {
-    inputError = inputError ?? 'Enter a recipient'
+    inputError = inputError ?? t`Enter a recipient`
   } else {
     if (
       BAD_RECIPIENT_ADDRESSES[formattedTo] ||
       (bestV2TradeExactIn && involvesAddress(bestV2TradeExactIn, formattedTo)) ||
       (bestV2TradeExactOut && involvesAddress(bestV2TradeExactOut, formattedTo))
     ) {
-      inputError = inputError ?? 'Invalid recipient'
+      inputError = inputError ?? t`Invalid recipient`
     }
   }
 
@@ -204,7 +205,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   const [balanceIn, amountIn] = [currencyBalances[Field.INPUT], v2Trade?.maximumAmountIn(allowedSlippage)]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
+    inputError = t`Insufficient ${amountIn.currency.symbol} balance`
   }
 
   return {
