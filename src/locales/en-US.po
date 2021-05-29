@@ -405,6 +405,10 @@ msgstr ""
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr ""
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr ""
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr ""
@@ -1158,6 +1162,10 @@ msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
+msgstr ""
+
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
 msgstr ""
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
