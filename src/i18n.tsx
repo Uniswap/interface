@@ -2,25 +2,8 @@ import React, { useEffect } from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ReactNode } from 'react'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useLocale } from 'state/user/hooks'
-import { SupportedLocale, SUPPORTED_LOCALES, defaultLocale } from './constants/locales'
-
-function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined {
-  return SUPPORTED_LOCALES.find((locale) => locale === maybeSupportedLocale)
-}
-
-function navigatorLocale(): SupportedLocale | undefined {
-  if (!navigator.language) return undefined
-
-  const [language, region] = navigator.language.split('-')
-
-  if (region) {
-    return parseLocale(`${language}-${region.toUpperCase()}`) ?? parseLocale(language)
-  }
-
-  return parseLocale(language)
-}
+import { useActiveLocale } from 'hooks/useActiveLocale'
+import { SupportedLocale } from 'constants/locales'
 
 export async function dynamicActivate(locale: SupportedLocale) {
   try {
@@ -34,14 +17,11 @@ export async function dynamicActivate(locale: SupportedLocale) {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const parsed = useParsedQueryString()
-  const userLocale = useLocale()
+  const locale = useActiveLocale()
 
   useEffect(() => {
-    const urlLocale = () => (typeof parsed.lng === 'string' && parseLocale(parsed.lng)) || undefined
-
-    dynamicActivate(userLocale ?? urlLocale() ?? navigatorLocale() ?? defaultLocale)
-  }, [userLocale, parsed])
+    dynamicActivate(locale)
+  }, [locale])
 
   return <I18nProvider i18n={i18n}>{children}</I18nProvider>
 }
