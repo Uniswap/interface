@@ -1,0 +1,31 @@
+name: Crowdin Download
+
+# hourly we sync translations from Crowdin
+on:
+  schedule:
+    - cron: '0 * * * *' # every hour we download translations and update the pr from crowdin
+
+  # manual trigger
+  workflow_dispatch:
+
+jobs:
+  download-translations:
+    name: Download translations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Synchronize
+        uses: crowdin/github-action@1.1.0
+        with:
+          upload_sources: false
+          download_translations: true
+          project_id: 458284
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
+          translation: 'src/locales/%locale%.po'
+          pull_request_title: "chore(i18n): synchronize translations from crowdin"
+          commit_message: "chore(i18n): synchronize translations from crowdin"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
