@@ -1,16 +1,14 @@
-name: Crowdin
+name: Crowdin Upload
 
+# on any push to main, we upload the translations to be translated
 on:
   push:
     branches:
       - main
 
-  # manual trigger
-  workflow_dispatch:
-
 jobs:
   synchronize-with-crowdin:
-    name: Synchronize with Crowdin
+    name: Upload sources to Crowdin
     runs-on: ubuntu-latest
 
     steps:
@@ -33,12 +31,9 @@ jobs:
         uses: crowdin/github-action@1.1.0
         with:
           upload_sources: true
-          download_translations: true
+          download_translations: false
           project_id: 458284
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
           source: 'src/locales/en-US.po'
-          translation: 'src/locales/%locale%.po'
-          pull_request_title: "chore(i18n): synchronize translations from crowdin"
-          commit_message: "chore(i18n): synchronize translations from crowdin"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
