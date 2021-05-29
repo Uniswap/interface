@@ -39,7 +39,7 @@ See [Working with PO Files](https://www.gnu.org/software/trans-coord/manual/gnun
 
 **WIP INSTRUCTIONS**
 
-Uniswap Interface uses [LinguiJS](https://lingui.js.org/) and [Crowdin](https://crowdin.com/project/uniswap-interface) 
+Uniswap Interface uses [LinguiJS](https://lingui.js.org/) and [Crowdin](https://crowdin.com/project/uniswap-interface) ([Crowdin Introduction for Translators](https://support.crowdin.com/crowdin-intro/))
 to manage locales and translations.
 
 ## Existing Translation
