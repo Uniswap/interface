@@ -732,6 +732,10 @@ msgstr ""
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr ""
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr ""
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr ""
@@ -755,6 +759,7 @@ msgstr ""
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr ""
@@ -1170,6 +1175,10 @@ msgstr ""
 
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
+msgstr ""
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
 msgstr ""
 
 #: src/pages/Pool/CTACards.tsx
