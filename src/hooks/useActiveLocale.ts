@@ -6,7 +6,9 @@ import useParsedQueryString from './useParsedQueryString'
 /**
  * Mapping from locales without region (e.g. es) to the default region specific locale (e.g. es-US)
  */
-const MAPPED_DEFAULT_LOCALES: { [localeWithoutRegion: string]: SupportedLocale } = {}
+const MAPPED_DEFAULT_LOCALES: { [localeWithoutRegion: string]: SupportedLocale } = {
+  en: 'en-US',
+}
 
 /**
  * Given a locale string (e.g. from user agent), return the best match for corresponding SupportedLocale

@@ -1666,4 +1666,3 @@ msgstr ""
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
 msgstr ""
-
