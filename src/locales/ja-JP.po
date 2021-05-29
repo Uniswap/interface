@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -191,6 +191,10 @@ msgstr "{0}-{1} の流動性を追加"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "{0}/{1} V3流動性を追加"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "ユーザーが追加しました"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "{0} を追加しました"
@@ -206,6 +210,10 @@ msgstr "<unk>"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LPトークンの移行を許可する"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "高い価格のインパクト取引を許可し、確認画面をスキップします。自己責任で使用してください。"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "承認中"
 msgid "Approving {0}"
 msgstr "承認中 {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "よろしいですか？"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Uniswapコミュニティのメンバーとして、投票とガバナンスのためにUNIを使用することを主張することができます。<0/><1/><2>UNIについてもっと読む</2>"
@@ -258,6 +270,10 @@ msgstr "Uniswapコミュニティのメンバーとして、投票とガバナ�
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "少なくとも {0} の {1} と {2} の {3} は選択された価格範囲のため、ウォレットに返金されます。"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "自動"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "詳細情報"
 msgid "Details"
 msgstr "詳細"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "マルチホップを無効にする"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "接続を解除"
@@ -583,6 +603,10 @@ msgstr "あなたのv2ポジションのいずれかが表示されませんか?
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "獲得されたUNIトークンは、Uniswapガバナンスの投票株式を表します。"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "有効なスリップページのパーセンテージを入力してください"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "接続中にエラーが発生しました。ページを更新してく
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "リストのインポートエラー"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "非アクティブなトークンリストから展開された結果"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "エキスパートモードは確認トランザクションプロンプトをオフにし、多くの場合、不良率や資金を失う可能性が高いスリップページ取引を可能にします。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "この取引には流動性が不足しています。"
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "この取引には流動性が不足しています。マルチホップ取引を有効にしてください。"
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "インターフェイスの設定"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "提案が見つかりません。"
 msgid "No results found."
 msgstr "結果が見つかりませんでした。"
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "あなたが何をしているか分かっている場合にのみ、このモードを使用してください。"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "あなたがレビューするためにレート供給をクリックして満足している一度。"
@@ -910,6 +950,10 @@ msgstr "参加するプール"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "適切なEthereumネットワークに接続してください。"
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "エキスパートモードを有効にするには、単語\"{confirmWord}\"を入力してください。"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "{0}/{1} V3流動性を削除"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} と {2} {3} を削除しています"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "スワップをダイレクトペアのみに制限します。"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Return"
@@ -1116,6 +1164,10 @@ msgstr "Show Portis"
 msgid "Simple"
 msgstr "単純な"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "スリップページの許容差"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "一部の資産は、スマートコントラクトでうまく動作しないか、法的な理由で取引を許可できないため、このインターフェイスを介して利用できないものがあります。"
@@ -1138,6 +1190,7 @@ msgstr "{0} {1} と {2} {3} を供給しています"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "終了日"
 msgid "To (at least)"
 msgstr "宛先（少なくとも）"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "エキスパートモードの切り替え"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "トークン"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "非アクティブなリストからのトークン。以下の特定のトークンをインポートするか、「管理」をクリックして他のリストを有効にしてください。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "合計入金額"
 msgid "Total deposits"
 msgstr "合計<unk>"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "トランザクション設定"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "合計<unk>"
 msgid "Transaction Submitted"
 msgstr "取引が送信されました"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "取引の期限"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "もう一度試す"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "エキスパートモードをオンにする"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "あなたのプールトークンの合計："
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "プールを作るガスが含まれているため、取引コストははるかに高くなります。"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "あなたの取引はフロントランかもしれません"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "取引が失敗する可能性があります"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "この期間以上保留中の場合、取引は元に戻されます。"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "価格がこのパーセンテージよりも不利に変更された場合、取引は元に戻ります。"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "取引がここに表示されます..."
@@ -1549,6 +1638,10 @@ msgstr "取引がここに表示されます..."
 msgid "Your unclaimed UNI"
 msgstr "あなたの未請求のUNI（UNI）"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "確認する"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "{0} 用"
@@ -1556,6 +1649,10 @@ msgstr "{0} 用"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "ソックスの絵文字があります"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "分"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

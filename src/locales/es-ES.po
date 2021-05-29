@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -191,6 +191,10 @@ msgstr "Sumar {0}-{1} liquidez"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Sumar liquidez {0}/{1} V3"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Agregado por el usuario"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Añadido {0}"
@@ -206,6 +210,10 @@ msgstr "Contra"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Permitir migración de token LP"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Permitir operaciones de alto impacto de precio y omitir la pantalla de confirmación. Úselo bajo tu propio riesgo."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Aprobando"
 msgid "Approving {0}"
 msgstr "Aprobando {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "¿Estás seguro?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Como miembro de la comunidad de Uniswap, puedes reclamar que UNI sea utilizado para votar y gobernanza.<0/><1/><2>Lee más sobre UNI</2>"
@@ -258,6 +270,10 @@ msgstr "Como miembro de la comunidad de Uniswap, puedes reclamar que UNI sea uti
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Al menos {0} {1} y {2} {3} serán reembolsados a su cartera debido al rango de precios seleccionado."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Auto"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Detallado"
 msgid "Details"
 msgstr "Detalles"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "Desactivar Multisaltos"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Desconectar"
@@ -583,6 +603,10 @@ msgstr "¿No ves una de tus posiciones v2? <0>Importarlo.</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Las fichas ganadas de UNI representan acciones de voto en la gobernancia de Uniswap."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Introduzca un porcentaje de deslizamiento válido"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Error de conexión. Intenta actualizar la página."
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Error importando lista"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Resultados ampliados de listas de token inactivas"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "El modo experto desactiva el indicador de transacción de confirmación y permite operaciones de deslizamiento elevadas que a menudo resultan en malas tasas y fondos perdidos."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Falta liquidez suficiente para este comercio."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Falta liquidez suficiente para esta operación. Intenta habilitar las operaciones de varios saltos."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Ajustes de la interfaz"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "No se encontraron propuestas."
 msgid "No results found."
 msgstr "No se han encontrado resultados."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "SÓLO UTILIZA ESTE MÓDIGO SI CONDICIONES QUE SON DOING."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Una vez que esté satisfecho con la tarifa haga clic en el suministro para revisar."
@@ -910,6 +950,10 @@ msgstr "Grupos participantes"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Por favor, conéctese a la red Ethereum apropiada."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Por favor, escribe la palabra \"{confirmWord}\" para activar el modo experto."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Eliminar {0}/{1} liquidez V3"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Eliminando {0} {1} y {2} {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "Restringe los swaps a los pares directos solamente."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Retorno"
@@ -1116,6 +1164,10 @@ msgstr "Show Portis"
 msgid "Simple"
 msgstr "Simple"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Tolerancia de deslizamiento"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Algunos activos no están disponibles a través de esta interfaz porque puede que no funcionen bien con los contratos inteligentes o que no podemos permitir el comercio por razones legales."
@@ -1138,6 +1190,7 @@ msgstr "Suministrando {0} {1} y {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "A"
 msgid "To (at least)"
 msgstr "A (al menos)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Cambiar modo experto"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokens"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Tokens de listas inactivas. Importe fichas específicas abajo o haga clic en 'Administrar' para activar más listas."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Total depositado"
 msgid "Total deposits"
 msgstr "Total de depósitos"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Ajustes de la transacción"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Total de depósitos"
 msgid "Transaction Submitted"
 msgstr "Transacción enviada"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Fecha límite de la transacción"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Inténtalo de nuevo"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Activar el modo experto"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Tus fichas totales de albergue:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Su costo de transacción será mucho más alto ya que incluye el gas para crear la piscina."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Su transacción puede ser frontrun"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Tu transacción puede fallar"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Su transacción se revertirá si está pendiente por más de este periodo de tiempo."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Tu transacción se revertirá si el precio cambia desfavorablemente más de este porcentaje."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Tus transacciones aparecerán aquí..."
@@ -1549,6 +1638,10 @@ msgstr "Tus transacciones aparecerán aquí..."
 msgid "Your unclaimed UNI"
 msgstr "Tu UNI no reclamada"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "confirmar"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "para {0}"
@@ -1556,6 +1649,10 @@ msgstr "para {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "tiene socks emoji"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "minutos"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
