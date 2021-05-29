@@ -26,6 +26,7 @@ jobs:
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
           source: 'src/locales/en-US.po'
           translation: 'src/locales/%locale%.po'
-          pull_request_title: "chore(i18n): synchronize translations from Crowdin"
+          pull_request_title: "chore(i18n): synchronize translations from crowdin"
+          commit_message: "chore(i18n): synchronize translations from crowdin"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
