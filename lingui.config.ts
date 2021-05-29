@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   catalogs: [
     {
       path: '<rootDir>/src/locales/{locale}',
@@ -13,9 +13,8 @@ module.exports = {
   formatOptions: {
     lineNumbers: false,
   },
-  locales: ['en', 'pseudo-en', 'de', 'es-AR', 'es-US', 'it-IT', 'iw', 'ro', 'ru', 'vi', 'zh-CN', 'zh-TW'],
+  locales: ['en'],
   orderBy: 'messageId',
-  pseudoLocale: 'pseudo-en',
   rootDir: '.',
   runtimeConfigModule: ['@lingui/core', 'i18n'],
   sourceLocale: 'en',
