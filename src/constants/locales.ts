@@ -1,32 +1,40 @@
 export const SUPPORTED_LOCALES = [
-  'en',
-  'pseudo-en',
-  'de',
-  'es-AR',
-  'es-US',
+  'af-ZA',
+  'ar-SA',
+  'ca-ES',
+  'cs-CZ',
+  'da-DK',
+  'de-DE',
+  'el-GR',
+  'en-US',
+  'es-ES',
+  'fi-FI',
+  'fr-FR',
+  'he-IL',
+  'hu-HU',
   'it-IT',
-  'iw',
-  'ro',
-  'ru',
-  'vi',
+  'ja-JP',
+  'ko-KR',
+  'nl-NL',
+  'no-NO',
+  'pl-PL',
+  'pt-BR',
+  'pt-PT',
+  'ro-RO',
+  'ru-RU',
+  'sr-SP',
+  'sv-SE',
+  'tr-TR',
+  'uk-UA',
+  'vi-VN',
   'zh-CN',
   'zh-TW',
 ] as const
 export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
-export const DEFAULT_LOCALE: SupportedLocale = 'en'
+export const DEFAULT_LOCALE: SupportedLocale = 'en-US'
 
-export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
-  en: 'English',
-  de: 'Deutsch',
-  'es-AR': 'español (Argentina)',
-  'es-US': 'español (Estados Unidos)',
-  'it-IT': 'italiano',
-  iw: 'Hebrew',
-  ro: 'română',
-  ru: 'русский',
-  vi: 'Tiếng Việt',
-  'zh-CN': '中文 ( 中国 )',
-  'zh-TW': '中文 ( 台灣 )',
-  'pseudo-en': '',
+// todo: fill this back out
+export const LOCALE_LABEL: { [locale in SupportedLocale]?: string } = {
+  'en-US': 'English',
 }

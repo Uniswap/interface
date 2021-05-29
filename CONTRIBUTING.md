@@ -1,33 +1,47 @@
+# Development
+
+## Install Dependencies
+
+```bash
+yarn install
+```
+
+## Run the interface
+
+```bash
+yarn start
+```
+
+# Contributing
+
 Thank you for your interest in contributing to the Uniswap interface! 🦄
 
-# Coding
+## Finding a first issue
+
+Start with issues with the label
+[`good first issue`](https://github.com/Uniswap/uniswap-interface/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
+
+## Pull requests
 
 **Please open all pull requests against the `main` branch.**
 CI checks will run against all PRs.
-
-See [README.md](https://github.com/Uniswap/uniswap-interface/blob/main/README.md) for instructions on running the app locally.
-
-Start with issues with label [good first issue](https://github.com/Uniswap/uniswap-interface/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
 
 # Translations
 
 Help Uniswap cover more languages!
 
-Uniswap interface uses PO file to manage translations. See [Working with PO Files](https://www.gnu.org/software/trans-coord/manual/gnun/html_node/PO-Files.html#PO-Files)
+## Translation file format
 
-## Starting a New Translation
+We use the PO file to manage translations. 
+See [Working with PO Files](https://www.gnu.org/software/trans-coord/manual/gnun/html_node/PO-Files.html#PO-Files)
 
-Uniswap interface uses [LinguiJS](https://lingui.js.org/) to manage locales and translations.
+## Translating the Interface to a new language
 
-- Follow instructions in [README.md](https://github.com/Uniswap/uniswap-interface/blob/main/README.md) for instructions on running the app locally
-- Add `locale` to locales array in [lingui.config.js](https://github.com/Uniswap/uniswap-interface/blob/main/lingui.config.js#L14)
-- Add `locale` to locales array in [i18n.tsx](https://github.com/Uniswap/uniswap-interface/blob/main/src/i18n.tsx#L7)
-- Run `yarn i18n:extract` to generate [src/locales/{locale}.po](https://github.com/Uniswap/uniswap-interface/tree/main/src/locales)
-- Continue to [Existing Translation](#existing-translation) below
+**WIP INSTRUCTIONS**
+
+Uniswap Interface uses [LinguiJS](https://lingui.js.org/) and [Crowdin](https://crowdin.com/project/uniswap-interface) 
+to manage locales and translations.
 
 ## Existing Translation
 
-- Edit [src/locales](https://github.com/Uniswap/uniswap-interface/tree/main/src/locales)/{locale}.po either manually or with a PO editor (see [Editing PO Files](https://www.gnu.org/software/trans-coord/manual/web-trans/html_node/PO-Editors.html)).
-- Run `yarn i18n:compile` to generate src/locales/{locale}.js
-- Run `yarn start` to start a server locally to verify changes (append `?lng={locale}` query param)
-- Submit PR against main
+**WIP INSTRUCTIONS**
