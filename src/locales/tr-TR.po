@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 04:26\n"
+"PO-Revision-Date: 2021-05-29 05:00\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -405,6 +405,10 @@ msgstr "Tahsilat ücretleri"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Toplama ücretleri, sizin için şu anda mevcut olan ücretleri geri çekecektir."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "Ortak üsler"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Onaylamak"
@@ -732,6 +736,10 @@ msgstr "Likidite sağlayıcı ödülleri"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Likidite sağlayıcıları, havuzdaki paylarıyla orantılı olarak tüm işlemlerde% 0,3 ücret alırlar. Ücretler havuza eklenir, gerçek zamanlı olarak tahakkuk eder ve likiditenizi çekerek talep edilebilir."
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Listeler"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "Yüklendi"
@@ -755,6 +763,7 @@ msgstr "URL'nin <0> app.uniswap.org olduğundan emin olun</0>"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Yönetin"
@@ -1155,6 +1164,10 @@ msgstr "Bu havuzun fiyatı seçtiğiniz aralık dahilinde. Pozisyonunuz şu anda
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Eklediğiniz jeton oranı, bu havuzun fiyatını belirleyecektir."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "Bu jetonlar genellikle diğer jetonlarla eşleştirilir."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "{0} likiditenizi güvenli bir şekilde V3'e taşıyacaktır. İşlem, sayesinde tamamen güvensizdir."
@@ -1171,6 +1184,10 @@ msgstr "İçin"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "En azından)"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Jetonlar"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"

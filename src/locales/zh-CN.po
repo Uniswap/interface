@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 04:26\n"
+"PO-Revision-Date: 2021-05-29 05:00\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -405,6 +405,10 @@ msgstr "收取费用"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "收取费用将为您提取当前可用的费用。"
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "共同基础"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "确认"
@@ -732,6 +736,10 @@ msgstr "流动性提供者奖励"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "流动资金提供者在所有交易中按其在集合中的份额获得0.3%的费用。 费用按实时累计方式添加到集合中，可以通过提取您的流动资金索偿。"
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "列表"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "已加载"
@@ -755,6 +763,7 @@ msgstr "请确认 URL 是<0>app.uniswap.org</0>"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "管理"
@@ -1155,6 +1164,10 @@ msgstr "此池的价格在您选择的范围内。您的位置目前正在赚取
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "您添加的代币比率将设置此池的价格。"
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "这些代币通常与其他代币配对。"
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "这个工具将安全地将您的 {0} 流动资金迁移到V3。由于这个过程是完全可信的"
@@ -1171,6 +1184,10 @@ msgstr "收件人"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "(至少)"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "令牌"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"

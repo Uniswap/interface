@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 04:26\n"
+"PO-Revision-Date: 2021-05-29 05:00\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -405,6 +405,10 @@ msgstr "Hämtar avgifter"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Insamlingsavgiften kommer att dras tillbaka för närvarande tillgängliga avgifter för dig."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "Vanliga baser"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Bekräfta"
@@ -732,6 +736,10 @@ msgstr "Likviditetsleverantör belöningar"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Likviditetsleverantörer tjänar en avgift på 0,3 % på alla affärer i proportion till sin andel av poolen. Avgifter läggs till poolen, samlas in i realtid och kan hävdas genom att dra tillbaka din likviditet."
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Listor"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "Laddad"
@@ -755,6 +763,7 @@ msgstr "Kontrollera att URL:en är<0>app.uniswap.org</0>"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Hantera"
@@ -1155,6 +1164,10 @@ msgstr "Priset för denna pool ligger inom ditt valda intervall. Din position tj
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Förhållandet mellan polletter du lägger till kommer att ställa in priset för denna pool."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "Dessa tokens är vanligtvis paras ihop med andra tokens."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Detta verktyg migrerar säkert din {0} likviditet till V3. Processen är helt pålitlig tack vare"
@@ -1171,6 +1184,10 @@ msgstr "Till"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Till (minst)"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Tokens"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"

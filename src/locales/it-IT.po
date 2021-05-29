@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 04:26\n"
+"PO-Revision-Date: 2021-05-29 05:00\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -405,6 +405,10 @@ msgstr "Raccolta delle commissioni"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "La riscossione delle commissioni preleverà le commissioni attualmente disponibili per te."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "Basi comuni"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Conferma"
@@ -732,6 +736,10 @@ msgstr "Ricompense fornitore di liquidità"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "I fornitori di liquidità guadagnano una commissione dello 0,3% su tutte le operazioni proporzionale alla loro quota del pool. Le tasse vengono aggiunte alla piscina, maturano in tempo reale e possono essere rivendicate ritirando la vostra liquidità."
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Liste"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "Caricato"
@@ -755,6 +763,7 @@ msgstr "Assicurati che l'URL sia <0>app.uniswap.org</0>"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Gestisci"
@@ -1155,6 +1164,10 @@ msgstr "Il prezzo di questo pool è entro l'intervallo selezionato. La tua posiz
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Il rapporto tra i gettoni che aggiungi imposterà il prezzo di questa piscina."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "Questi gettoni sono comunemente accoppiati con altri gettoni."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Questo strumento migrerà in modo sicuro la tua liquidità {0} a V3. Il processo è completamente affidabile grazie alla"
@@ -1171,6 +1184,10 @@ msgstr "A"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "A (almeno)"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Token"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"

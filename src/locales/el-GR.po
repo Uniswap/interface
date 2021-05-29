@@ -8,7 +8,7 @@ msgstr ""
 "Language: el\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 04:26\n"
+"PO-Revision-Date: 2021-05-29 05:00\n"
 "Last-Translator: \n"
 "Language-Team: Greek\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -405,6 +405,10 @@ msgstr "Έξοδα συλλογής"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Τα τέλη είσπραξης θα αποσύρουν τις τρέχουσες διαθέσιμες χρεώσεις για εσάς."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "Κοινές βάσεις"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Επιβεβαίωση"
@@ -732,6 +736,10 @@ msgstr "Ανταμοιβές παρόχου ρευστότητας"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Οι πάροχοι ρευστότητας κερδίζουν ένα τέλος 0,3% σε όλες τις συναλλαγές ανάλογα με το μερίδιο τους από την πισίνα. Τα τέλη προστίθενται στην πισίνα, συσσωρεύονται σε πραγματικό χρόνο και μπορεί να ζητηθεί από την ανάληψη ρευστότητας σας."
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Λίστες"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "Φορτώθηκε"
@@ -755,6 +763,7 @@ msgstr "Βεβαιωθείτε ότι το URL είναι<0>app.uniswap.org</0>"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Διαχείριση"
@@ -1155,6 +1164,10 @@ msgstr "Η τιμή αυτής της πισίνας είναι εντός το�
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Η αναλογία των νομισμάτων που προσθέτετε θα ορίσει την τιμή αυτής της πισίνας."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "Αυτά τα νομίσματα είναι συνήθως σε συνδυασμό με άλλα νομίσματα."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Αυτό το εργαλείο θα μεταφέρει με ασφάλεια τη ρευστότητα {0} σας στο V3. Η διαδικασία είναι απολύτως αξιόπιστη χάρη στο"
@@ -1171,6 +1184,10 @@ msgstr "Προς"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Έως (τουλάχιστον)"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Ενδείξεις"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
