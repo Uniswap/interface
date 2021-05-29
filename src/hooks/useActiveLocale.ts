@@ -4,20 +4,13 @@ import { useUserLocale } from 'state/user/hooks'
 import useParsedQueryString from './useParsedQueryString'
 
 /**
- * Mapping from locales without region (e.g. es) to the default region specific locale (e.g. es-US)
- */
-const MAPPED_DEFAULT_LOCALES: { [localeWithoutRegion: string]: SupportedLocale } = {
-  en: 'en-US',
-}
-
-/**
  * Given a locale string (e.g. from user agent), return the best match for corresponding SupportedLocale
  * @param maybeSupportedLocale the fuzzy locale identifier
  */
 function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined {
-  return (
-    MAPPED_DEFAULT_LOCALES[maybeSupportedLocale.toLowerCase()] ??
-    SUPPORTED_LOCALES.find((locale) => locale === maybeSupportedLocale)
+  const lowerMaybeSupportedLocale = maybeSupportedLocale.toLowerCase()
+  return SUPPORTED_LOCALES.find(
+    (locale) => locale === lowerMaybeSupportedLocale || locale.slice(0, 2) === lowerMaybeSupportedLocale
   )
 }
 
