@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -191,6 +191,10 @@ msgstr "추가 {0}-{1} 유동성"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "추가 {0}/{1} V3 유동성"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "사용자가 추가"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "추가됨 {0}"
@@ -206,6 +210,10 @@ msgstr "에 맞서"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP 토큰 마이그레이션 허용"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁니다. 자신의 책임하에 사용하십시오."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "승인"
 msgid "Approving {0}"
 msgstr "{0}승인"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "확실합니까?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Uniswap 커뮤니티의 회원으로서 UNI가 투표 및 거버넌스에 사용된다고 주장 할 수 있습니다. <0 /> <1 /> <2> UN에 대해 자세히 알아보기</2>"
@@ -258,6 +270,10 @@ msgstr "Uniswap 커뮤니티의 회원으로서 UNI가 투표 및 거버넌스�
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "선택한 가격대로 인해 최소 {0} {1} 및 {2} {3} 이 지갑으로 환불됩니다."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "자동"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "상세한"
 msgid "Details"
 msgstr "세부"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "멀티 홉 비활성화"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "연결 해제"
@@ -583,6 +603,10 @@ msgstr "v2 위치 중 하나가 보이지 않습니까? <0> 가져 오기.</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "획득 한 UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅니다."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "유효한 미끄러짐 비율을 입력하세요."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "연결 오류. 페이지를 새로 고침 해보세요."
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "목록을 가져 오는 중에 오류가 발생했습니다."
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "비활성 토큰 목록의 확장 된 결과"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "전문가 모드는 거래 확인 프롬프트를 끄고 종종 나쁜 금리와 자금 손실을 초래하는 높은 미끄러짐 거래를 허용합니다."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "이 거래에 대한 유동성이 충분하지 않습니다."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "이 거래에 대한 유동성이 충분하지 않습니다. 멀티 홉 거래를 활성화하십시오."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "인터페이스 설정"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "제안이 없습니다."
 msgid "No results found."
 msgstr "검색 결과가 없습니다."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "수행중인 작업을 알고있는 경우에만이 모드를 사용하십시오."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "요율에 만족하면 공급을 클릭하여 검토하십시오."
@@ -910,6 +950,10 @@ msgstr "참여 풀"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "적절한 이더 리움 네트워크에 연결하십시오."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "전문가 모드를 사용하려면{confirmWord}\"이라는 단어를 입력하십시오."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "제거 {0}/{1} V3 유동성"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} 및 {2} {3}제거"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "스왑을 직접 쌍으로 만 제한합니다."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "반환"
@@ -1116,6 +1164,10 @@ msgstr "Portis 표시"
 msgid "Simple"
 msgstr "단순한"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "미끄러짐 허용 오차"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "일부 자산은 스마트 계약과 잘 작동하지 않거나 법적 이유로 거래를 허용 할 수 없기 때문에이 인터페이스를 통해 사용할 수 없습니다."
@@ -1138,6 +1190,7 @@ msgstr "{0} {1} 및 {2} {3}공급"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "에"
 msgid "To (at least)"
 msgstr "(적어도)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "전문가 모드 전환"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "토큰"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "비활성 목록의 토큰. 아래에서 특정 토큰을 가져 오거나 '관리'를 클릭하여 더 많은 목록을 활성화하십시오."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "총 입금"
 msgid "Total deposits"
 msgstr "총 예금"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "거래 설정"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "총 예금"
 msgid "Transaction Submitted"
 msgstr "제출 된 거래"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "거래 마감"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "다시 시도하십시오"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "전문가 모드 켜기"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "총 풀 토큰 :"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "풀을 만드는 데 필요한 가스가 포함되어 있으므로 거래 비용이 훨씬 더 높을 것입니다."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "귀하의 거래는 프론트 런일 수 있습니다"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "거래가 실패 할 수 있습니다"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "이 기간 이상 보류중인 거래는 되돌려집니다."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "가격이이 비율 이상으로 불리하게 변경되면 거래가 취소됩니다."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "거래 내역이 여기에 표시됩니다 ..."
@@ -1549,6 +1638,10 @@ msgstr "거래 내역이 여기에 표시됩니다 ..."
 msgid "Your unclaimed UNI"
 msgstr "귀하의 미 청구 UNI"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "확인"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "{0}"
@@ -1556,6 +1649,10 @@ msgstr "{0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "양말 이모티콘 있음"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "의사록"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

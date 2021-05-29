@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -191,6 +191,10 @@ msgstr "Adaugă {0}-{1} lichiditate"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Adaugă lichiditate {0}/{1} V3"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Adăugat de utilizator"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Adăugat {0}"
@@ -206,6 +210,10 @@ msgstr "Împotriva"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Permite migrarea token-ului LP"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Permiteți tranzacțiile cu impact asupra prețurilor mari și săriți peste ecranul de confirmare. Utilizați pe propriul risc."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Aprobare"
 msgid "Approving {0}"
 msgstr "Aprobare {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Ești sigur?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Ca membru al comunității Uniswap puteți pretinde UNI că este folosită pentru vot și guvernanță.<0/><1/><2>Citește mai multe despre UNI</2>"
@@ -258,6 +270,10 @@ msgstr "Ca membru al comunității Uniswap puteți pretinde UNI că este folosit
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Cel puțin {0} {1} și {2} {3} vor fi rambursați în portofelul dvs. datorită intervalului de preț selectat."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Automat"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Detaliat"
 msgid "Details"
 msgstr "Detalii"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "Dezactivează Multihops"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Deconectare"
@@ -583,6 +603,10 @@ msgstr "Nu vezi una dintre pozițiile tale v2? <0>Importă-l.</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Tokeni UNI câștigați reprezintă acțiunile cu drept de vot în guvernanța Uniswap."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Introduceți un procentaj valid de slippage"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Eroare la conectare. Încercați să reîncărcați pagina."
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Eroare la importarea listei"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Rezultate extinse din liste de token inactive"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Modul Expert dezactivează prompt tranzacția de confirmare și permite tranzacțiile cu derapaje mari, care duc adesea la rate nefavorabile și la pierderi de fonduri."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Lichiditate insuficientă pentru acest comerţ."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Lichiditate insuficientă pentru această tranzacție. Încercați să permiteți tranzacțiile multi-hop."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Setări interfață"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "Nicio propunere găsită."
 msgid "No results found."
 msgstr "Nici un rezultat găsit."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "UTILIZAȚI NUMAI ACEASTĂ MOD DUPĂ CUM ÎNAINTE SĂ ȘTIȚI."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Odată ce sunteți mulțumit de rata de schimb faceți clic pe ofertă pentru a o examina."
@@ -910,6 +950,10 @@ msgstr "Grupuri participante"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Vă rugăm să vă conectați la rețeaua Ethereum adecvată."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Te rugăm să introduci cuvântul \"{confirmWord}\" pentru a activa modul expert."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Șterge {0}/{1} V3 lichidități"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Se elimină {0} {1} și {2} {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "Restricționează swap-urile doar la perechi directe."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Întoarcere"
@@ -1116,6 +1164,10 @@ msgstr "Show Portis"
 msgid "Simple"
 msgstr "Simplu"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Toleranță derapaj"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Unele active nu sunt disponibile prin intermediul acestei interfețe deoarece este posibil să nu funcționeze bine cu contractele inteligente sau nu putem permite tranzacționarea din motive legale."
@@ -1138,6 +1190,7 @@ msgstr "Furnizare {0} {1} și {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "La"
 msgid "To (at least)"
 msgstr "La (cel puțin)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Activează/dezactivează modul expert"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Token-uri"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists. (Automatic Copy)"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Total depozitat"
 msgid "Total deposits"
 msgstr "Depozite totale"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Setările tranzacției"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Depozite totale"
 msgid "Transaction Submitted"
 msgstr "Tranzacție trimisă"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Termenul tranzacției"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Încearcă din nou"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Activează Modul Expert"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Totalul token-ului tău:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Costul tranzacției va fi mult mai mare deoarece include gazul necesar pentru a crea gruparea."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Tranzacția poate fi frontrun"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Tranzacția dvs. poate eșua"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Tranzacția dvs. va reveni dacă este în așteptare pentru mai mult de această perioadă de timp."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Tranzacția dvs. va reveni în cazul în care prețul se modifică nefavorabil cu mai mult de acest procent."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Tranzacțiile vor apărea aici..."
@@ -1549,6 +1638,10 @@ msgstr "Tranzacțiile vor apărea aici..."
 msgid "Your unclaimed UNI"
 msgstr "UNI nerevendicate"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "confirmă"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "pentru {0}"
@@ -1556,6 +1649,10 @@ msgstr "pentru {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "are șosete emoji"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "minute"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

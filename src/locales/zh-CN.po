@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -191,6 +191,10 @@ msgstr "添加 {0}-{1} 流动资金"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "添加 {0}/{1} V3 流动资金"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "由用户添加"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "已添加 {0}"
@@ -206,6 +210,10 @@ msgstr "反对的"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "允许 LP 令牌迁移"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "允许高价格影响交易并跳过确认屏幕。请自行承担风险。"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "审批中"
 msgid "Approving {0}"
 msgstr "正在批准 {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "您确定吗？"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "作为Uniswap社区的成员，你可以声称UNI被用于投票和管理。<0/><1/><2>阅读更多关于UNI</2>"
@@ -258,6 +270,10 @@ msgstr "作为Uniswap社区的成员，你可以声称UNI被用于投票和管�
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "由于选定的价格范围，至少 {0} {1} 和 {2} {3} 将退还给你的钱包。"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "自动操作"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "详细信息"
 msgid "Details"
 msgstr "详细信息"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "禁用 Multihops"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "断开连接"
@@ -583,6 +603,10 @@ msgstr "看不到您的 v2 位置之一吗？<0>导入它。</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "已赚取的UNI代币代表Uniswap治理中的投票股份。"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "输入有效的幻灯片百分比"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "连接出错。请尝试刷新页面。"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "导入列表出错"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "非活动令牌列表的扩展结果"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "专家模式关闭确认交易提示符，允许高滑块交易，这种交易常常导致利率差和资金损失。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "这种交易的流动资金不足。"
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "此交易没有足够的流动资金。请尝试启用多节点交易。"
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "接口设置"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "未找到提案。"
 msgid "No results found."
 msgstr "未找到任何结果。"
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "如果您知道您正在做什么，只能使用这个模板。"
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "一旦您对费率感到满意，请点击供货商查看。"
@@ -910,6 +950,10 @@ msgstr "参与池数"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "请连接到相应的Ethereum 网络。"
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "请输入单词 \"{confirmWord}\" 以启用专家模式。"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "移除 {0}/{1} V3 流动资金"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "正在删除 {0} {1} 和 {2} {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "限制互换仅直接对。"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "返回"
@@ -1116,6 +1164,10 @@ msgstr "Show Portis"
 msgid "Simple"
 msgstr "简单的"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "翻转范围"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "有些资产无法通过这个接口获得，因为它们可能无法很好地使用智能合同，或者我们由于法律原因无法允许交易。"
@@ -1138,6 +1190,7 @@ msgstr "提供 {0} {1} 和 {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "收件人"
 msgid "To (at least)"
 msgstr "(至少)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "切换专家模式"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "令牌"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "来自非活动列表的令牌。在下方导入特定令牌或点击“管理”来激活更多列表。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "存入总数"
 msgid "Total deposits"
 msgstr "存款总额"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "交易设置"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "存款总额"
 msgid "Transaction Submitted"
 msgstr "交易已提交"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "交易截止日期"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "再试一次"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "打开专家模式"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "您的池代币总额："
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "您的交易成本将高得多，因为它包含了创建池的气体。"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "您的交易可能是正面的"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "您的交易可能失败"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "如果您的交易超过这段时间，您的交易将会恢复。"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "如果价格变动超过此百分比，您的交易将恢复。"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "您的交易将出现在这里..."
@@ -1549,6 +1638,10 @@ msgstr "您的交易将出现在这里..."
 msgid "Your unclaimed UNI"
 msgstr "您未被认领的UNI"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "确认"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "{0}"
@@ -1556,6 +1649,10 @@ msgstr "{0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "有socks emoji"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "分钟"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

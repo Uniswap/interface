@@ -8,7 +8,7 @@ msgstr ""
 "Language: vi\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -191,6 +191,10 @@ msgstr "Thêm {0}-{1} thanh khoản"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Thêm {0}/{1} thanh khoản V3"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Do người dùng thêm vào"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Đã thêm {0}"
@@ -206,6 +210,10 @@ msgstr "Chống lại"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Cho phép di chuyển mã thông báo LP"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Cho phép các giao dịch tác động đến giá cao và bỏ qua màn hình xác nhận. Sử dụng có nguy cơ của riêng bạn."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Phê duyệt"
 msgid "Approving {0}"
 msgstr "Phê duyệt {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Bạn có chắc không?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Là một thành viên của cộng đồng Uniswap, bạn có thể yêu cầu UNI được sử dụng để bỏ phiếu và quản trị. <0 /> <1 /> <2> Đọc thêm về UNI</2>"
@@ -258,6 +270,10 @@ msgstr "Là một thành viên của cộng đồng Uniswap, bạn có thể yê
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Ít nhất {0} {1} và {2} {3} sẽ được hoàn lại vào ví của bạn do phạm vi giá đã chọn."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Tự động"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Chi tiết"
 msgid "Details"
 msgstr "Chi tiết"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "Vô hiệu hóa nhiều giám mục"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Ngắt kết nối"
@@ -583,6 +603,10 @@ msgstr "Bạn không thấy một trong các vị trí v2 của mình? <0> Nhậ
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Token UNI kiếm được đại diện cho cổ phần có quyền biểu quyết trong quản trị Uniswap."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Nhập phần trăm trượt giá hợp lệ"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Lỗi khi kết nối. Hãy thử làm mới trang."
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Lỗi khi nhập danh sách"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Kết quả mở rộng từ Danh sách mã thông báo không hoạt động"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Chế độ chuyên gia tắt nhắc nhở xác nhận giao dịch và cho phép các giao dịch trượt giá cao thường dẫn đến tỷ giá xấu và mất tiền."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Không đủ thanh khoản cho giao dịch này."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Không đủ thanh khoản cho giao dịch này. Hãy thử kích hoạt các giao dịch nhiều bước."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Cài đặt giao diện"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "Không tìm thấy đề xuất nào."
 msgid "No results found."
 msgstr "Không có kết quả nào được tìm thấy."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "CHỈ SỬ DỤNG CHẾ ĐỘ NÀY NẾU BẠN BIẾT BẠN ĐANG LÀM GÌ."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Một khi bạn hài lòng với tỷ lệ nhấp cung cấp để xem xét."
@@ -910,6 +950,10 @@ msgstr "Nhóm tham gia"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Vui lòng kết nối với mạng Ethereum thích hợp."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Vui lòng nhập từ \"{confirmWord}\" để bật chế độ chuyên gia."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Di {0}/{1} thanh khoản V3"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Loại bỏ {0} {1} và {2} {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "Chỉ hạn chế hoán đổi đối với các cặp trực tiếp."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Trở về"
@@ -1116,6 +1164,10 @@ msgstr "Hiển thị Portis"
 msgid "Simple"
 msgstr "Đơn giản"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Khả năng chịu trượt"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Một số tài sản không khả dụng thông qua giao diện này vì chúng có thể không hoạt động tốt với các hợp đồng thông minh hoặc chúng tôi không thể cho phép giao dịch vì lý do pháp lý."
@@ -1138,6 +1190,7 @@ msgstr "Cung cấp {0} {1} và {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "Đến"
 msgid "To (at least)"
 msgstr "Ít nhất)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Chuyển đổi Chế độ chuyên gia"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Mã thông báo"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Mã thông báo từ danh sách không hoạt động. Nhập mã thông báo cụ thể bên dưới hoặc nhấp vào 'Quản lý' để kích hoạt thêm danh sách."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Tổng số tiền gửi"
 msgid "Total deposits"
 msgstr "Tổng số tiền gửi"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Cài đặt giao dịch"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Tổng số tiền gửi"
 msgid "Transaction Submitted"
 msgstr "Giao dịch đã được gửi"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Thời hạn giao dịch"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Thử lại"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Bật Chế độ chuyên gia"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Tổng số mã thông báo chung của bạn:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Chi phí giao dịch của bạn sẽ cao hơn nhiều vì nó đã bao gồm khí để tạo hồ bơi."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Giao dịch của bạn có thể chạy trước"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Giao dịch của bạn có thể thất bại"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Giao dịch của bạn sẽ hoàn nguyên nếu nó đang chờ xử lý trong hơn khoảng thời gian này."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Giao dịch của bạn sẽ hoàn nguyên nếu giá thay đổi bất lợi hơn tỷ lệ phần trăm này."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây ..."
@@ -1549,6 +1638,10 @@ msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây ..."
 msgid "Your unclaimed UNI"
 msgstr "UNI chưa được xác nhận của bạn"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "xác nhận"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "cho {0}"
@@ -1556,6 +1649,10 @@ msgstr "cho {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "có biểu tượng cảm xúc vớ"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "phút"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
