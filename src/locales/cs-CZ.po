@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -191,6 +191,10 @@ msgstr "Přidat {0}-{1} likviditu"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Přidat {0}/{1} V3 likviditu"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Přidáno uživatelem"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Přidáno {0}"
@@ -206,6 +210,10 @@ msgstr "Proti"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Povolit migraci tokenů LP"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Povolit obchody s vysokým dopadem ceny a přeskočit obrazovku s potvrzením. Použijte na vlastní nebezpečí."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Schvalování"
 msgid "Approving {0}"
 msgstr "Schvalování {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Jste si jisti?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Jako člen komunity Uniswap můžete tvrdit, že UNI bude použita pro hlasování a správu věcí veřejných.<0/><1/><2>Přečtěte si více o UNI</2>"
@@ -258,6 +270,10 @@ msgstr "Jako člen komunity Uniswap můžete tvrdit, že UNI bude použita pro h
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Alespoň {0} {1} a {2} {3} budou vráceny do vaší peněženky kvůli zvolenému cenovému rozpětí."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Automaticky"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Detaily"
 msgid "Details"
 msgstr "Detaily"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "Zakázat Multihops"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Odpojit"
@@ -583,6 +603,10 @@ msgstr "Nevidíte jednu z vašich v2 pozic? <0>Importujte je.</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Získané tokeny UNI představují hlasovací podíly ve správě Uniswap."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Zadejte platné procento skluzu"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Chyba připojení. Zkuste stránku obnovit."
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Chyba importu seznamu"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Rozšířené výsledky z neaktivních tokenů"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Expert režim vypne výzvu k potvrzení transakce a umožní velké skluzové obchody, které často vedou ke špatným sazbám a ztrátě finančních prostředků."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Nedostatek likvidity pro tento obchod."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Nedostatečná likvidita pro tento obchod. Zkuste povolit obchodování s více obchody."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Nastavení rozhraní"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "Nebyly nalezeny žádné návrhy."
 msgid "No results found."
 msgstr "Nebyly nalezeny žádné výsledky."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "POUZE POUŽÍT TÉTO MODY, POKUD NEJSTE JSOU JAKO JAK."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Jakmile jste spokojeni s sazbou, klikněte na nabídku pro kontrolu."
@@ -910,6 +950,10 @@ msgstr "Zúčastněné skupiny"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Připojte se prosím k příslušné síti Ethereum."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Pro povolení expertního režimu zadejte slovo \"{confirmWord}\"."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Odstranit {0}/{1} V3 likviditu"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Odstranění {0} {1} a {2} {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "Omezuje swapy pouze na směrování párů."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Vrátit se"
@@ -1116,6 +1164,10 @@ msgstr "Show Portis"
 msgid "Simple"
 msgstr "Jednoduchý"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Tolerance boční stránky"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Některá aktiva nejsou dostupná prostřednictvím tohoto rozhraní, protože nemusí dobře fungovat s chytrými smlouvami nebo z právních důvodů nejsme schopni povolit obchodování."
@@ -1138,6 +1190,7 @@ msgstr "Dodávání {0} {1} a {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "Komu"
 msgid "To (at least)"
 msgstr "Do (alespoň)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Přepnout režim Expert"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokeny"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Tokeny z neaktivních seznamů. Importujte konkrétní tokeny níže nebo klikněte na 'Správa' pro aktivaci více seznamů."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Celkem uloženo"
 msgid "Total deposits"
 msgstr "Vklady celkem"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Nastavení transakce"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Vklady celkem"
 msgid "Transaction Submitted"
 msgstr "Transakce odeslána"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Termín transakce"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Zkuste to znovu"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Zapnout Expert režim"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Váš celkový tokens:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Vaše transakční náklady budou mnohem vyšší, protože budou zahrnovat plyn pro vytvoření bazálu."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Vaše transakce může být frontrun"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Vaše transakce může selhat"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Vaše transakce se vrátí, pokud čeká déle než toto období."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Vaše transakce se vrátí, pokud se cena změní nepříznivě o více než toto procento."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Vaše transakce se objeví zde..."
@@ -1549,6 +1638,10 @@ msgstr "Vaše transakce se objeví zde..."
 msgid "Your unclaimed UNI"
 msgstr "Vaše nevyužitá UNI"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "potvrdit"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "pro {0}"
@@ -1556,6 +1649,10 @@ msgstr "pro {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "má socký emoji"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "minuty"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

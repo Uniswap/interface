@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -191,6 +191,10 @@ msgstr "Lisää {0}-{1} likviditeetti"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Lisää {0}/{1} V3 likviditeetti"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Käyttäjän lisäämä"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Lisätty {0}"
@@ -206,6 +210,10 @@ msgstr "Vastaan"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Salli LP-tokenin migraatio"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Salli korkean hinnan vaikutus kauppojen ja ohita vahvistusnäyttö. Käytä omalla vastuulla."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Hyväksytään"
 msgid "Approving {0}"
 msgstr "Hyväksytään {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Oletko varma?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Uniswap-yhteisön jäsenenä voit vaatia UNI:n käyttöä äänestämiseen ja hallintoon.<0/><1/><2>Lue lisää UNI</2>"
@@ -258,6 +270,10 @@ msgstr "Uniswap-yhteisön jäsenenä voit vaatia UNI:n käyttöä äänestämise
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Vähintään {0} {1} ja {2} {3} palautetaan lompakkoosi valitun hintaalueen vuoksi."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Automaattinen"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Yksityiskohtainen"
 msgid "Details"
 msgstr "Yksityiskohdat"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "Poista Multihops Käytöstä"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Katkaise"
@@ -583,6 +603,10 @@ msgstr "Etkö näe yhtä v2-kohdastasi? <0>Tuo se.</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "UNI:n ansaitut rahakkeet edustavat Uniswapin hallinnon äänioikeutettuja osakkeita."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Syötä kelvollinen lipsumisprosentti"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Virhe yhdistettäessä. Yritä päivittää sivua."
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Virhe tuotaessa listaa"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Laajennetut tulokset passiivisista Tokent-listoista"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Asiantuntijatila sammuttaa vahvistavan tapahtuman kehotuksen ja mahdollistaa korkean lipsumisen kaupat, jotka johtavat usein huonoihin hintoihin ja menetti varoja."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Tähän kauppaan ei ole riittävästi likviditeettiä."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Riittämätön likviditeetti tähän kauppaan. Yritä mahdollistaa monen hop kaupat."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Käyttöliittymän Asetukset"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "Ehdotuksia ei löytynyt."
 msgid "No results found."
 msgstr "Tuloksia ei löytynyt."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "KÄYTÄ TÄMÄ TIETÄ, MITEN SINÄ SINÄ OLET DOING."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Kun olet tyytyväinen korko klikkaa tarjonta tarkistaa."
@@ -910,6 +950,10 @@ msgstr "Osallistuvat poolit"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Ole hyvä ja yhdistä asianmukaiseen Ethereum verkkoon."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Ole hyvä ja kirjoita sana \"{confirmWord}\" ottaaksesi asiantuntijatilan käyttöön."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Poista {0}/{1} V3 likviditeetti"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Poistetaan {0} {1} ja {2} {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "Rajoitetaan vaihtoja vain suoriin pareihin."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Palautus"
@@ -1116,6 +1164,10 @@ msgstr "Show Portis"
 msgid "Simple"
 msgstr "Yksinkertainen"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Liu'utuksen toleranssi"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Jotkut varat eivät ole käytettävissä tämän käyttöliittymän kautta, koska ne eivät ehkä toimi hyvin älykkäiden sopimusten kanssa tai emme voi sallia kaupankäyntiä oikeudellisista syistä."
@@ -1138,6 +1190,7 @@ msgstr "Toimitetaan {0} {1} ja {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "Vastaanottaja"
 msgid "To (at least)"
 msgstr "Mihin (ainakin)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Vaihda Asiantuntijatilaa"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokenit"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Tokenit passiivisista listoista. Tuo tietyt tokenit alla tai napsauta 'Manage' aktivoidaksesi lisää listoja."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Tallennetut yhteensä"
 msgid "Total deposits"
 msgstr "Talletukset yhteensä"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Tapahtuman Asetukset"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Talletukset yhteensä"
 msgid "Transaction Submitted"
 msgstr "Tapahtuma Lähetetty"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Tapahtuman määräaika"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Yritä Uudelleen"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Ota Asiantuntijatila Käyttöön"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Kaikki uima-altaasi tunnisteet:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Tapahtuman hinta on paljon korkeampi, koska se sisältää kaasun luoda pooli."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Tapahtumasi voi olla etusivu"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Tapahtumasi voi epäonnistua"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Tapahtumasi palautuu, jos se on odottamassa enemmän kuin tämä ajanjakso."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Tapahtumasi palautuu, jos hinta muuttuu epäsuotuisasti enemmän kuin tämä prosenttiosuus."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Tapahtumasi näkyvät täällä..."
@@ -1549,6 +1638,10 @@ msgstr "Tapahtumasi näkyvät täällä..."
 msgid "Your unclaimed UNI"
 msgstr "Lunastamaton YKI"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "vahvista"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "hintaan {0}"
@@ -1556,6 +1649,10 @@ msgstr "hintaan {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "on sukat emoji"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "minuuttia"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -191,6 +191,10 @@ msgstr "Ekle {0}-{1} likiditeyi"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Ekle {0}/{1} V3 likiditesini"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Kullanıcı tarafından eklendi"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "{0}eklendi"
@@ -206,6 +210,10 @@ msgstr "Karşısında"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "LP jeton geçişine izin ver"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Yüksek fiyat etkili işlemlere izin verin ve onay ekranını atlayın. Kendi sorumluluğunuzdadır kullanın."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Onaylanıyor"
 msgid "Approving {0}"
 msgstr "Onaylanıyor {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Emin misiniz?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Uniswap topluluğunun bir üyesi olarak, UNI'nin oylama ve yönetim için kullanılmasını talep edebilirsiniz. <0 /> <1 /> <2> UNI hakkında daha fazla bilgi edinin</2>"
@@ -258,6 +270,10 @@ msgstr "Uniswap topluluğunun bir üyesi olarak, UNI'nin oylama ve yönetim içi
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Seçilen fiyat aralığına göre en az {0} {1} ve {2} {3}"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Oto"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Detaylı"
 msgid "Details"
 msgstr "Detaylar"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "Çoklu Durakları Devre Dışı Bırak"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Bağlantıyı kes"
@@ -583,6 +603,10 @@ msgstr "V2 konumlarınızdan birini görmüyor musunuz? <0> İçe aktarın.</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Kazanılan UNI tokenları, Uniswap yönetişiminde oy hakkına sahip hisseleri temsil eder."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Geçerli bir kayma yüzdesi girin"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Bağlanırken hata oluştu. Sayfayı yenilemeyi deneyin."
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Liste içe aktarılırken hata oluştu"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Etkin olmayan Jeton Listelerinden genişletilmiş sonuçlar"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Uzman modu, işlem onayı istemini kapatır ve genellikle düşük oranlara ve kayıp fonlara neden olan yüksek kayma işlemlerine izin verir."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Bu ticaret için yetersiz likidite."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Bu ticaret için yetersiz likidite. Çoklu atlamalı alım satımları etkinleştirmeyi deneyin."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Arayüz Ayarları"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "Teklif bulunamadı."
 msgid "No results found."
 msgstr "Sonuç bulunamadı."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "BU MODU YALNIZCA NE YAPTIĞINIZI BİLİYORSANIZ KULLANIN."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Fiyattan memnun olduğunuzda, incelemek için kaynağa tıklayın."
@@ -910,6 +950,10 @@ msgstr "Katılımcı havuzlar"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Lütfen uygun Ethereum ağına bağlanın."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Uzman modunu etkinleştirmek için lütfen \"{confirmWord}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Kaldır {0}/{1} V3 likiditesini"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} ve {2} {3}kaldırılıyor"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "Swapları yalnızca doğrudan çiftlerle sınırlar."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Dönüş"
@@ -1116,6 +1164,10 @@ msgstr "Portis'i göster"
 msgid "Simple"
 msgstr "Basit"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Kayma toleransı"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Bazı varlıklar bu arayüz aracılığıyla kullanılamaz çünkü akıllı sözleşmelerle iyi çalışmayabilirler veya yasal nedenlerle ticarete izin veremiyoruz."
@@ -1138,6 +1190,7 @@ msgstr "{0} {1} ve {2} {3}temini"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "İçin"
 msgid "To (at least)"
 msgstr "En azından)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Uzman Modunu Değiştir"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Jetonlar"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Etkin olmayan listelerden gelen belirteçler. Aşağıdan belirli jetonları içe aktarın veya daha fazla listeyi etkinleştirmek için 'Yönet'i tıklayın."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Toplam yatırılan"
 msgid "Total deposits"
 msgstr "Toplam mevduat"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "İşlem Ayarları"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Toplam mevduat"
 msgid "Transaction Submitted"
 msgstr "İşlem Gönderildi"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "İşlem son tarihi"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Tekrar deneyin"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Uzman Modunu Açın"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Toplam havuz jetonlarınız:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Havuzu oluşturacak gazı içerdiği için işlem maliyetiniz çok daha yüksek olacaktır."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "İşleminiz frontrun olabilir"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "İşleminiz başarısız olabilir"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "İşleminiz bu süreden daha uzun süredir beklemedeyse geri alınacaktır."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Fiyatın bu yüzden daha fazla olumsuz bir şekilde değişmesi durumunda işleminiz geri alınacaktır."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "İşlemleriniz burada görünecek ..."
@@ -1549,6 +1638,10 @@ msgstr "İşlemleriniz burada görünecek ..."
 msgid "Your unclaimed UNI"
 msgstr "Sahipsiz UNI'niz"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "onaylamak"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "{0}"
@@ -1556,6 +1649,10 @@ msgstr "{0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "çorap emojisi var"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "dakika"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

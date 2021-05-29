@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -191,6 +191,10 @@ msgstr "Adjon hozzá {0}-{1} likviditást"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Hozzá {0}/{1} V3 likviditási"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Felhasználó hozzáadta"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Hozzáadva {0}"
@@ -206,6 +210,10 @@ msgstr "Ellen"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Engedélyezze az LP tokenek áttelepítését"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Engedje meg a magas árfolyamú kereskedéseket, és hagyja ki a megerősítő képernyőt. Használat csak saját felelősségre."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Jóváhagyó"
 msgid "Approving {0}"
 msgstr "{0}jóváhagyása"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "biztos vagy ebben?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Az Uniswap közösség tagjaként állíthatja, hogy az UNI-t használják szavazásra és kormányzásra. <0 /> <1 /> <2> További információ az UNI-ról</2>"
@@ -258,6 +270,10 @@ msgstr "Az Uniswap közösség tagjaként állíthatja, hogy az UNI-t használj�
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Legalább {0} {1} és {2} {3} visszatérül a pénztárcájába a kiválasztott ártartomány miatt."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Auto"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Részletes"
 msgid "Details"
 msgstr "Részletek"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "A Multihopok letiltása"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Kapcsolat bontása"
@@ -583,6 +603,10 @@ msgstr "Nem látja az egyik v2 pozícióját? <0> Importálja.</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "A megszerzett UNI-tokenek a szavazati részesedéseket jelentik az Uniswap irányításában."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Adjon meg érvényes csúszási százalékot"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Hiba történt a csatlakozáskor. Próbálja frissíteni az oldalt."
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Hiba történt a lista importálásakor"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Kibővített eredmények az inaktív tokenlistákból"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "A szakértői mód kikapcsolja a tranzakció megerősítését, és lehetővé teszi a nagy csúszásmentes kereskedéseket, amelyek gyakran rossz arányokat és elvesztett forrásokat eredményeznek."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Elégtelen likviditás ehhez a kereskedelemhez."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Elégtelen likviditás ehhez a kereskedelemhez. Próbálja meg engedélyezni a multi-hop kereskedéseket."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Interfész beállításai"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "Nem található javaslat."
 msgid "No results found."
 msgstr "Nincs találat."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "CSAK HASZNÁLJA EZT A MÓDOT, HOGY TUDJA, MIT CSINÁL."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Ha elégedett az árfolyamra, kattintson az áttekintésre."
@@ -910,6 +950,10 @@ msgstr "Részt vevő medencék"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Kérjük, csatlakozzon a megfelelő Ethereum hálózathoz."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Írja be a \"{confirmWord}\" szót a szakértői mód engedélyezéséhez."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Távolítsuk el {0}/{1} V3 likviditási"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} és {2} eltávolítása {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "A swapokat csak közvetlen párokra korlátozza."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Visszatérés"
@@ -1116,6 +1164,10 @@ msgstr "Portis megjelenítése"
 msgid "Simple"
 msgstr "Egyszerű"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Csúszási tolerancia"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Bizonyos eszközök nem érhetők el ezen a felületen keresztül, mert lehet, hogy nem működnek jól az intelligens szerződésekkel, vagy jogi okokból nem tudjuk engedélyezni a kereskedést."
@@ -1138,6 +1190,7 @@ msgstr "{0} {1} és {2} {3}megadása"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "Nak nek"
 msgid "To (at least)"
 msgstr "(Legalább)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Kapcsolja be a Szakértői módot"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokenek"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Tokenek inaktív listákról. Importáljon alább adott tokent, vagy kattintson a \"Kezelés\" gombra további listák aktiválásához."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Betét összesen"
 msgid "Total deposits"
 msgstr "Betétek összesen"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Tranzakció beállításai"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Betétek összesen"
 msgid "Transaction Submitted"
 msgstr "Tranzakció benyújtva"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Tranzakciós határidő"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Próbáld újra"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Kapcsolja be a Szakértő módot"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Az összes pool tokenje:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Tranzakciós költsége sokkal magasabb lesz, mivel magában foglalja a készlet létrehozásához szükséges gázt."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Előfordulhat, hogy a tranzakciója előljáró"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "A tranzakció sikertelen lehet"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Tranzakciója visszaáll, ha az ennél hosszabb ideig függőben van."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Tranzakciója visszaáll, ha az ár ennél a százaléknál kedvezőtlenebben változik."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "A tranzakcióid itt jelennek meg ..."
@@ -1549,6 +1638,10 @@ msgstr "A tranzakcióid itt jelennek meg ..."
 msgid "Your unclaimed UNI"
 msgstr "Nem igényelt UNI"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "megerősít"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "{0}"
@@ -1556,6 +1649,10 @@ msgstr "{0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "zokni emoji van"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "percek"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

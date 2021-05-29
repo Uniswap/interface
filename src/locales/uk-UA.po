@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -191,6 +191,10 @@ msgstr "Додати {0}-{1} ліквідність"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Додати {0}/{1} V3 ліквідність"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Доданий користувачем"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Додано {0}"
@@ -206,6 +210,10 @@ msgstr "Проти"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Дозволити перенесення токенів LP"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Дозвольте високі ціни угоди і пропустити екран підтвердження. Використовуйте на свій страх і ризик."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Затвердження"
 msgid "Approving {0}"
 msgstr "Затвердження {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Ви впевнені?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Як учасник спільноти Uniswap ви можете стверджувати, що UNI слід використовувати для голосування та управління. <0><2>Прочитайте більше про UNI</2>"
@@ -258,6 +270,10 @@ msgstr "Як учасник спільноти Uniswap ви можете ств�
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Щонайменше {0} {1} і {2} {3} повертаються до вашого гаманця через вибраний період ціни."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Авто"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Докладно"
 msgid "Details"
 msgstr "Подробиці"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "Вимкнути мульти-хопи"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Від'єднатись"
@@ -583,6 +603,10 @@ msgstr "Не бачите одну з ваших позицій v2? <0>Імпо�
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Отримані маркери UNI представляють акції голосування в управлінні Uniswap (Unischang)."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Введіть дійсний відсоток диспуту"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Помилка підключення. Спробуйте оновити
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Помилка імпорту списку"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Розширені результати від неактивних токенних списків"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Експертний режим вимикає підтвердження запиту транзакцій і дає змогу торгувати з високими відхиленнями, які часто призводять до поганих ставок та втрачених коштів."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Недостатньо ліквідності для цієї торгі
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Недостатньо ліквідності для цієї торгівлі. Спробуйте включити багатохостингові угоди."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Налаштування інтерфейсу"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "Пропозиції не знайдено."
 msgid "No results found."
 msgstr "Результатів не знайдено."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "ТІЛЬКИ ВИКОРИСТОВУЙТЕ ЦЕЙ РЕЖИМ ЯКЩО ВИ ЗНАЄТЕ ЯКТИ."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Як тільки ви будете задоволені швидким натисканням на пропозицію, щоб переглянути."
@@ -910,6 +950,10 @@ msgstr "Брати участь у басейнах"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Будь ласка, під'єднайтеся до відповідної мережі Ethereum."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Будь ласка, введіть слово \"{confirmWord}\", щоб увімкнути режим експерта."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Видалити {0}/{1} V3 ліквідність"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Видалення {0} {1} і {2} {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "Обмежує зміни лише до прямих пар пар."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Повернення товару"
@@ -1116,6 +1164,10 @@ msgstr "Show Portis"
 msgid "Simple"
 msgstr "Просте"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Насиченість слизу"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Деякі активи не доступні через цей інтерфейс, оскільки вони можуть не добре працювати з розумними контрактами або ми не можемо дозволити торгувати з юридичних причин."
@@ -1138,6 +1190,7 @@ msgstr "Постачання {0} {1} та {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "На"
 msgid "To (at least)"
 msgstr "До (не менше)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Ввімкнути/вимкнути експериментальний режим"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Токени"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Токени з неактивних списків. Імпортуються вказані нижче токени або натисніть кнопку 'Налаштувати', щоб активувати більше списків."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Всього нараховано"
 msgid "Total deposits"
 msgstr "Всього депозитів"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Параметри транзакції"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Всього депозитів"
 msgid "Transaction Submitted"
 msgstr "Угода підтверджена"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Кінцевий термін транзакцій"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Спробуйте ще раз"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Увімкнути Експертний режим"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Ваш токени басейну:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Вартість вашої транзакції буде набагато більшою, оскільки газ має для створення басейну."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Ваша транзакція може бути фронтально"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Ваші операції можуть не виконуватися"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Ваші операції будуть відмінені, якщо це відбувається в очікуванні більш ніж на цей період часу."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Вашу транзакцію буде повернуто, якщо ця ціна зміниться більш ніж на цей відсоток."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Ваші транзакції будуть відображені тут..."
@@ -1549,6 +1638,10 @@ msgstr "Ваші транзакції будуть відображені тут
 msgid "Your unclaimed UNI"
 msgstr "Ваша неотримана UNI"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "підтвердити"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "на {0}"
@@ -1556,6 +1649,10 @@ msgstr "на {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "має емодзі"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "хвилин"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"

@@ -8,7 +8,7 @@ msgstr ""
 "Language: sr\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 05:00\n"
+"PO-Revision-Date: 2021-05-29 05:20\n"
 "Last-Translator: \n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -191,6 +191,10 @@ msgstr "Додајте {0}-{1} ликвидност"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Додај {0}/{1} В3 ликвидност"
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr "Додао корисник"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Додато {0}"
@@ -206,6 +210,10 @@ msgstr "Против"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
 msgstr "Дозволи миграцију ЛП токена"
+
+#: src/components/Settings/index.tsx
+msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
+msgstr "Омогућите трговање са утицајем високе цене и прескочите екран за потврду. Користите на властиту одговорност."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -251,6 +259,10 @@ msgstr "Одобравање"
 msgid "Approving {0}"
 msgstr "Одобравање {0}"
 
+#: src/components/Settings/index.tsx
+msgid "Are you sure?"
+msgstr "Јеси ли сигуран?"
+
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
 msgstr "Као члан заједнице Унисвап можете затражити да се УНИ користи за гласање и управљање. <0 /> <1 /> <2> Прочитајте више о УНИ</2>"
@@ -258,6 +270,10 @@ msgstr "Као члан заједнице Унисвап можете затр�
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
 msgstr "Барем {0} {1} и {2} {3} ће бити враћени у ваш новчаник због изабраног распона цена."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Auto"
+msgstr "Ауто"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit:"
@@ -560,6 +576,10 @@ msgstr "Детаљно"
 msgid "Details"
 msgstr "Детаљи"
 
+#: src/components/Settings/index.tsx
+msgid "Disable Multihops"
+msgstr "Онемогући Мултихопс"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
 msgstr "Прекини везу"
@@ -583,6 +603,10 @@ msgstr "Не видите ниједну од својих в2 позиција?
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Зарађени УНИ токени представљају акције са правом гласа у управљању Унисвап-ом."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Enter a valid slippage percentage"
+msgstr "Унесите важећи проценат клизања"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -617,6 +641,14 @@ msgstr "Грешка при повезивању. Покушајте да осв
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
 msgstr "Грешка при увозу листе"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
+msgstr "Проширени резултати са неактивних листа токена"
+
+#: src/components/Settings/index.tsx
+msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
+msgstr "Експертни режим искључује упит за потврду трансакције и омогућава велике клизне трансакције које често резултирају лошим стопама и изгубљеним новчаним средствима."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -709,6 +741,10 @@ msgstr "Недовољна ликвидност за ову трговину."
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Недовољна ликвидност за ову трговину. Покушајте да омогућите мулти-хоп трговине."
+
+#: src/components/Settings/index.tsx
+msgid "Interface Settings"
+msgstr "Подешавања интерфејса"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
@@ -870,6 +906,10 @@ msgstr "Није пронађен ниједан предлог."
 msgid "No results found."
 msgstr "Нема резултата."
 
+#: src/components/Settings/index.tsx
+msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
+msgstr "ОВАЈ НАЧИН КОРИСТИТЕ САМО АКО ЗНАТЕ ШТА РАДИТЕ."
+
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
 msgstr "Једном када сте задовољни понудом за курс, прегледајте је."
@@ -910,6 +950,10 @@ msgstr "Базени који учествују"
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
 msgstr "Повежите се са одговарајућом мрежом Етхереум."
+
+#: src/components/Settings/index.tsx
+msgid "Please type the word \"{confirmWord}\" to enable expert mode."
+msgstr "Унесите реч „{confirmWord}“ да бисте омогућили експертни режим."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1052,6 +1096,10 @@ msgstr "Уклоните {0}/{1} В3 ликвидност"
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Уклањање {0} {1} и {2} {3}"
 
+#: src/components/Settings/index.tsx
+msgid "Restricts swaps to direct pairs only."
+msgstr "Ограничава замене само на директне парове."
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
 msgstr "Повратак"
@@ -1116,6 +1164,10 @@ msgstr "Покажи Портис"
 msgid "Simple"
 msgstr "Једноставно"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Slippage tolerance"
+msgstr "Толеранција клизања"
+
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Нека средства нису доступна путем овог интерфејса, јер можда неће добро функционисати са паметним уговорима или из правних разлога не можемо да дозволимо трговање."
@@ -1138,6 +1190,7 @@ msgstr "Снабдевање {0} {1} и {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
+#: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
@@ -1185,9 +1238,17 @@ msgstr "До"
 msgid "To (at least)"
 msgstr "До (најмање)"
 
+#: src/components/Settings/index.tsx
+msgid "Toggle Expert Mode"
+msgstr "Укључивање експертног режима"
+
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Жетони"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
+msgstr "Жетони са неактивних листа. Увезите одређене токене у наставку или кликните на „Управљање“ да бисте активирали још листа."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1205,6 +1266,10 @@ msgstr "Укупно депоновано"
 msgid "Total deposits"
 msgstr "Укупни депозити"
 
+#: src/components/Settings/index.tsx
+msgid "Transaction Settings"
+msgstr "Трансацтион Сеттингс"
+
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/StakingModal.tsx
@@ -1214,9 +1279,17 @@ msgstr "Укупни депозити"
 msgid "Transaction Submitted"
 msgstr "Трансакција је предата"
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Transaction deadline"
+msgstr "Крајњи рок за трансакцију"
+
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Покушајте поново"
+
+#: src/components/Settings/index.tsx
+msgid "Turn On Expert Mode"
+msgstr "Укључите експертни режим"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1541,6 +1614,22 @@ msgstr "Укупни токени базена:"
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
 msgstr "Трошкови трансакције биће вам много већи јер укључују гас за стварање базена."
 
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may be frontrun"
+msgstr "Ваша трансакција може бити извршена"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction may fail"
+msgstr "Ваша трансакција може пропасти"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if it is pending for more than this period of time."
+msgstr "Ваша трансакција ће се вратити ако је на чекању дуже од овог временског периода."
+
+#: src/components/TransactionSettings/index.tsx
+msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
+msgstr "Ваша трансакција ће се вратити ако се цена неповољно промени за више од овог процента."
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Ваше трансакције ће се појавити овде ..."
@@ -1549,6 +1638,10 @@ msgstr "Ваше трансакције ће се појавити овде ..."
 msgid "Your unclaimed UNI"
 msgstr "Ваш непотраживани УНИ"
 
+#: src/components/Settings/index.tsx
+msgid "confirm"
+msgstr "Потврди"
+
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
 msgstr "за {0}"
@@ -1556,6 +1649,10 @@ msgstr "за {0}"
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
 msgstr "има чарапе емоји"
+
+#: src/components/TransactionSettings/index.tsx
+msgid "minutes"
+msgstr "минута"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
