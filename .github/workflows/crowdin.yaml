@@ -1,0 +1,32 @@
+name: Crowdin
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+  # manual trigger
+  workflow_dispatch:
+
+jobs:
+  synchronize-with-crowdin:
+    name: Synchronize with Crowdin
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Synchronize
+        uses: crowdin/github-action@1.1.0
+        with:
+          upload_translations: true
+          download_translations: true
+          project_id: 458284
+          personal_token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
+        env:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
