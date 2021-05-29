@@ -24,6 +24,7 @@ jobs:
           download_translations: true
           project_id: 458284
           token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
+          source: 'src/locales/en-US.po'
           translation: 'src/locales/%locale%.po'
           pull_request_title: "chore(i18n): synchronize translations from crowdin"
           commit_message: "chore(i18n): synchronize translations from crowdin"
