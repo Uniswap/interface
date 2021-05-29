@@ -27,6 +27,8 @@ jobs:
           upload_translations: true
           download_translations: true
           project_id: 458284
-          personal_token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
+          token: ${{ secrets.CROWDIN_PERSONAL_TOKEN_SECRET }}
+          source: "/src/locales/*.po"
+          translation: "/src/locales/%original_file_name%"
         env:
           github_token: ${{ secrets.GITHUB_TOKEN }}
