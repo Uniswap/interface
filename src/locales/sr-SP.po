@@ -8,7 +8,7 @@ msgstr ""
 "Language: sr\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 04:26\n"
+"PO-Revision-Date: 2021-05-29 05:00\n"
 "Last-Translator: \n"
 "Language-Team: Serbian (Cyrillic)\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -405,6 +405,10 @@ msgstr "Наплата накнада"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Накнаде за прикупљање повући ће тренутно доступне накнаде за вас."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "Заједничке основе"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Потврди"
@@ -732,6 +736,10 @@ msgstr "Награде добављача ликвидности"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Даваоци ликвидности зарађују провизију од 0,3% на свим пословима пропорционално њиховом уделу у фонду. Накнаде се додају у фонд, прикупљају се у реалном времену и могу се захтевати повлачењем ваше ликвидности."
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Листе"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "Лоадед"
@@ -755,6 +763,7 @@ msgstr "Уверите се да је УРЛ <0> апп.унисвап.орг</0
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Управљати"
@@ -1155,6 +1164,10 @@ msgstr "Цена овог базена је у вашем одабраном о�
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Однос жетона које додате ће одредити цену овог базена."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "Ови токени су обично упарени са другим токенима."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Овај алат ће безбедно пребацити вашу {0} ликвидност на В3. Процес је потпуно неповерљив захваљујући"
@@ -1171,6 +1184,10 @@ msgstr "До"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "До (најмање)"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Жетони"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"

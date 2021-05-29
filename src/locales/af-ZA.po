@@ -8,7 +8,7 @@ msgstr ""
 "Language: af\n"
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-05-29 04:26\n"
+"PO-Revision-Date: 2021-05-29 05:00\n"
 "Last-Translator: \n"
 "Language-Team: Afrikaans\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -405,6 +405,10 @@ msgstr "Vordering van fooie"
 msgid "Collecting fees will withdraw currently available fees for you."
 msgstr "Die invorderingskoste sal tans beskikbare fooie vir u opneem."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "Common bases"
+msgstr "Algemene basisse"
+
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
 msgstr "Bevestig"
@@ -732,6 +736,10 @@ msgstr "Belonings vir likiditeitsverskaffer"
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
 msgstr "Likiditeitsverskaffers verdien 'n fooi van 0,3% op alle transaksies wat eweredig is aan hul deel van die swembad. Fooie word by die swembad gevoeg, intyds toegeval en kan geëis word deur u likiditeit te onttrek."
 
+#: src/components/SearchModal/Manage.tsx
+msgid "Lists"
+msgstr "Lyste"
+
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
 msgstr "Gelaai"
@@ -755,6 +763,7 @@ msgstr "Maak seker dat die URL <0> app.uniswap.org is</0>"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
+#: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
 msgstr "Bestuur"
@@ -1155,6 +1164,10 @@ msgstr "Die prys van hierdie swembad is binne u gekose reeks. U pos verdien tans
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Die verhouding tokens wat u byvoeg, bepaal die prys van hierdie swembad."
 
+#: src/components/SearchModal/CommonBases.tsx
+msgid "These tokens are commonly paired with other tokens."
+msgstr "Hierdie tokens word gewoonlik gekoppel aan ander tokens."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Hierdie instrument sal u {0} likiditeit veilig na V3 migreer. Die proses is heeltemal vertroulik danksy die"
@@ -1171,6 +1184,10 @@ msgstr "Aan"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Aan (ten minste)"
+
+#: src/components/SearchModal/Manage.tsx
+msgid "Tokens"
+msgstr "Tokens"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
