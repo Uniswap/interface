@@ -139,11 +139,7 @@ export default function Vote() {
       <DelegateModal
         isOpen={showDelegateModal}
         onDismiss={toggleDelegateModal}
-        title={
-          showUnlockVoting
-            ? t({ id: 'vote.delegates.unlockVotes', message: 'Unlock Votes' })
-            : t({ id: 'vote.delegates.update', message: 'Update Delegation' })
-        }
+        title={showUnlockVoting ? t`Unlock Votes` : t`Update Delegation`}
       />
       <TopSection gap="md">
         <VoteCard>
@@ -153,12 +149,12 @@ export default function Vote() {
             <AutoColumn gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={600}>
-                  <Trans id="vote.labels.uniswapGovernance">Uniswap Governance</Trans>
+                  <Trans>Uniswap Governance</Trans>
                 </TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  <Trans id="vote.hints.votingShares">
+                  <Trans>
                     UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or
                     delegate your votes to a third party.
                   </Trans>
@@ -170,7 +166,7 @@ export default function Vote() {
                 target="_blank"
               >
                 <TYPE.white fontSize={14}>
-                  <Trans id="vote.hints.readMoreUniswapGovernance">Read more about Uniswap governance</Trans>
+                  <Trans>Read more about Uniswap governance</Trans>
                 </TYPE.white>
               </ExternalLink>
             </AutoColumn>
@@ -182,7 +178,7 @@ export default function Vote() {
       <TopSection gap="2px">
         <WrapSmall>
           <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
-            <Trans id="vote.labels.proposals">Proposals</Trans>
+            <Trans>Proposals</Trans>
           </TYPE.mediumHeader>
           {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
           {showUnlockVoting ? (
@@ -192,11 +188,11 @@ export default function Vote() {
               borderRadius="8px"
               onClick={toggleDelegateModal}
             >
-              <Trans id="vote.buttons.unlockVoting">Unlock Voting</Trans>
+              <Trans>Unlock Voting</Trans>
             </ButtonPrimary>
           ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
             <TYPE.body fontWeight={500} mr="6px">
-              <Trans id="vote.labels.availableVotes">
+              <Trans>
                 <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
               </Trans>
             </TYPE.body>
@@ -205,7 +201,7 @@ export default function Vote() {
             userDelegatee !== ZERO_ADDRESS &&
             JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
             <TYPE.body fontWeight={500} mr="6px">
-              <Trans id="vote.labels.availableVotes">
+              <Trans>
                 <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
               </Trans>
             </TYPE.body>
@@ -219,21 +215,17 @@ export default function Vote() {
             {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
               <RowFixed>
                 <TYPE.body fontWeight={500} mr="4px">
-                  <Trans id="vote.labels.delegatedTo">Delegated to:</Trans>
+                  <Trans>Delegated to:</Trans>
                 </TYPE.body>
                 <AddressButton>
                   <StyledExternalLink
                     href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
                     style={{ margin: '0 4px' }}
                   >
-                    {userDelegatee === account ? (
-                      <Trans id="vote.labels.self">Self</Trans>
-                    ) : (
-                      shortenAddress(userDelegatee)
-                    )}
+                    {userDelegatee === account ? <Trans>Self</Trans> : shortenAddress(userDelegatee)}
                   </StyledExternalLink>
                   <TextButton onClick={toggleDelegateModal} style={{ marginLeft: '4px' }}>
-                    <Trans id="vote.buttons.edit">(edit)</Trans>
+                    <Trans>(edit)</Trans>
                   </TextButton>
                 </AddressButton>
               </RowFixed>
@@ -245,13 +237,11 @@ export default function Vote() {
         {allProposals?.length === 0 && (
           <EmptyProposals>
             <TYPE.body style={{ marginBottom: '8px' }}>
-              <Trans id="vote.labels.noProposalsFound">No proposals found.</Trans>
+              <Trans>No proposals found.</Trans>
             </TYPE.body>
             <TYPE.subHeader>
               <i>
-                <Trans id="vote.hints.proposalSubmitted">
-                  Proposals submitted by community members will appear here.
-                </Trans>
+                <Trans>Proposals submitted by community members will appear here.</Trans>
               </i>
             </TYPE.subHeader>
           </EmptyProposals>
@@ -267,9 +257,7 @@ export default function Vote() {
         })}
       </TopSection>
       <TYPE.subHeader color="text3">
-        <Trans id="vote.hints.submissionThreshold">
-          A minimum threshold of 1% of the total UNI supply is required to submit proposals
-        </Trans>
+        <Trans>A minimum threshold of 1% of the total UNI supply is required to submit proposals</Trans>
       </TYPE.subHeader>
     </PageWrapper>
   )

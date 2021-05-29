@@ -74,7 +74,7 @@ export default function ImportRow({
         {list && list.logoURI && (
           <RowFixed>
             <TYPE.small mr="4px" color={theme.text3}>
-              <Trans id="tokenLists.via">via {list.name} </Trans>
+              <Trans>via {list.name} </Trans>
             </TYPE.small>
             <ListLogo logoURI={list.logoURI} size="12px" />
           </RowFixed>
@@ -91,13 +91,13 @@ export default function ImportRow({
             showImportView()
           }}
         >
-          <Trans id="tokensLists.buttons.import">Import</Trans>
+          <Trans>Import</Trans>
         </ButtonPrimary>
       ) : (
         <RowFixed style={{ minWidth: 'fit-content' }}>
           <CheckIcon />
           <TYPE.main color={theme.green1}>
-            <Trans id="tokenLists.labels.active">Active</Trans>
+            <Trans>Active</Trans>
           </TYPE.main>
         </RowFixed>
       )}

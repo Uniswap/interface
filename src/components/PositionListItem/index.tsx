@@ -225,7 +225,7 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           &nbsp;
           <Badge>
             <BadgeText>
-              <Trans id="numbers.valueWithPercent">{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
+              <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
             </BadgeText>
           </Badge>
         </PrimaryPositionIdData>
@@ -236,9 +236,9 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
         <RangeLineItem>
           <RangeText>
             <ExtentsText>
-              <Trans id="pools.labels.min">Min: </Trans>
+              <Trans>Min: </Trans>
             </ExtentsText>
-            <Trans id="currencies.denominatedWithValue">
+            <Trans>
               {formatPrice(priceLower, 5)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
               <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
@@ -251,9 +251,9 @@ export default function PositionListItem({ positionDetails }: PositionListItemPr
           </SmallOnly>
           <RangeText>
             <ExtentsText>
-              <Trans id="pools.labels.max">Max:</Trans>
+              <Trans>Max:</Trans>
             </ExtentsText>
-            <Trans id="currencies.denominatedWithValue">
+            <Trans>
               {formatPrice(priceUpper, 5)} <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
               <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>

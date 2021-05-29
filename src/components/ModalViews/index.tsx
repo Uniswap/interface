@@ -34,7 +34,7 @@ export function LoadingView({ children, onDismiss }: { children: any; onDismiss:
       <AutoColumn gap="100px" justify={'center'}>
         {children}
         <TYPE.subHeader>
-          <Trans id="wallet.confirmTransaction">Confirm this transaction in your wallet</Trans>
+          <Trans>Confirm this transaction in your wallet</Trans>
         </TYPE.subHeader>
       </AutoColumn>
     </ConfirmOrLoadingWrapper>
@@ -70,7 +70,7 @@ export function SubmittedView({
             style={{ marginLeft: '4px' }}
           >
             <TYPE.subHeader>
-              <Trans id="transaction.viewOnEherscan">View transaction on Etherscan</Trans>
+              <Trans>View transaction on Etherscan</Trans>
             </TYPE.subHeader>
           </ExternalLink>
         )}

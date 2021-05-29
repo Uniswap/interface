@@ -185,12 +185,9 @@ export default function AddLiquidity({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: t({
-              id: 'transactions.summary.addLiquidityWithValue',
-              message: `Add ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(3)} ${
-                currencies[Field.CURRENCY_A]?.symbol
-              } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(3)} ${currencies[Field.CURRENCY_B]?.symbol}`,
-            }),
+            summary: t`Add ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(3)} ${
+              currencies[Field.CURRENCY_A]?.symbol
+            } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(3)} ${currencies[Field.CURRENCY_B]?.symbol}`,
           })
 
           setTxHash(response.hash)
@@ -245,7 +242,7 @@ export default function AddLiquidity({
           </Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          <Trans id="swap.outputEstimatedHint">
+          <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
@@ -267,12 +264,9 @@ export default function AddLiquidity({
     )
   }
 
-  const pendingText = t({
-    id: 'addLiquidity.confirmation.pendingV2',
-    message: `Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
-      currencies[Field.CURRENCY_A]?.symbol
-    } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}`,
-  })
+  const pendingText = t`Supplying ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
+    currencies[Field.CURRENCY_A]?.symbol
+  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencies[Field.CURRENCY_B]?.symbol}`
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
@@ -326,11 +320,7 @@ export default function AddLiquidity({
             hash={txHash}
             content={() => (
               <ConfirmationModalContent
-                title={
-                  noLiquidity
-                    ? t({ id: 'pool.creatingPool', message: 'You are creating a pool' })
-                    : t({ id: 'pool.yourWillReceive', message: 'You will receive' })
-                }
+                title={noLiquidity ? t`You are creating a pool` : t`You will receive`}
                 onDismiss={handleDismissConfirmation}
                 topContent={modalHeader}
                 bottomContent={modalBottom}
@@ -346,15 +336,13 @@ export default function AddLiquidity({
                   <BlueCard>
                     <AutoColumn gap="10px">
                       <TYPE.link fontWeight={600} color={'primaryText1'}>
-                        <Trans id="pool.firstLiquidityProvider">You are the first liquidity provider.</Trans>
+                        <Trans>You are the first liquidity provider.</Trans>
                       </TYPE.link>
                       <TYPE.link fontWeight={400} color={'primaryText1'}>
-                        <Trans id="pool.initialPriceHint">
-                          The ratio of tokens you add will set the price of this pool.
-                        </Trans>
+                        <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
                       </TYPE.link>
                       <TYPE.link fontWeight={400} color={'primaryText1'}>
-                        <Trans id="pool.reviewHint">Once you are happy with the rate click supply to review.</Trans>
+                        <Trans>Once you are happy with the rate click supply to review.</Trans>
                       </TYPE.link>
                     </AutoColumn>
                   </BlueCard>
@@ -364,9 +352,9 @@ export default function AddLiquidity({
                   <BlueCard>
                     <AutoColumn gap="10px">
                       <TYPE.link fontWeight={400} color={'primaryText1'}>
-                        <Trans id="pool.addLiquidityLPHint">
+                        <Trans>
                           <b>
-                            <Trans id="">Tip:</Trans>
+                            <Trans>Tip:</Trans>
                           </b>{' '}
                           When you add liquidity, you will receive pool tokens representing your position. These tokens
                           automatically earn fees proportional to your share of the pool, and can be redeemed at any
@@ -410,9 +398,9 @@ export default function AddLiquidity({
                   <RowBetween padding="1rem">
                     <TYPE.subHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? (
-                        <Trans id="pool.prices.noLiquidity">Initial prices and pool share</Trans>
+                        <Trans>Initial prices and pool share</Trans>
                       ) : (
-                        <Trans id="pool.prices.withLiquidity">Prices and pool share</Trans>
+                        <Trans>Prices and pool share</Trans>
                       )}
                     </TYPE.subHeader>
                   </RowBetween>{' '}
@@ -431,12 +419,12 @@ export default function AddLiquidity({
             {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
                 <TYPE.main mb="4px">
-                  <Trans id="error.unsupportedAsset">Unsupported Asset</Trans>
+                  <Trans>Unsupported Asset</Trans>
                 </TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
               <ButtonLight onClick={toggleWalletModal}>
-                <Trans id="wallet.connect">Connect Wallet</Trans>
+                <Trans>Connect Wallet</Trans>
               </ButtonLight>
             ) : (
               <AutoColumn gap={'md'}>
@@ -454,14 +442,10 @@ export default function AddLiquidity({
                         >
                           {approvalA === ApprovalState.PENDING ? (
                             <Dots>
-                              <Trans id="transactions.approvingCurrency">
-                                Approving {currencies[Field.CURRENCY_A]?.symbol}
-                              </Trans>
+                              <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
                             </Dots>
                           ) : (
-                            <Trans id="transaction.approveCurrency">
-                              Approve {currencies[Field.CURRENCY_A]?.symbol}
-                            </Trans>
+                            <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
                           )}
                         </ButtonPrimary>
                       )}
@@ -473,14 +457,10 @@ export default function AddLiquidity({
                         >
                           {approvalB === ApprovalState.PENDING ? (
                             <Dots>
-                              <Trans id="transactions.approvingCurrency">
-                                Approving {currencies[Field.CURRENCY_B]?.symbol}
-                              </Trans>
+                              <Trans>Approving {currencies[Field.CURRENCY_B]?.symbol}</Trans>
                             </Dots>
                           ) : (
-                            <Trans id="transaction.approveCurrency">
-                              Approve {currencies[Field.CURRENCY_B]?.symbol}
-                            </Trans>
+                            <Trans>Approve {currencies[Field.CURRENCY_B]?.symbol}</Trans>
                           )}
                         </ButtonPrimary>
                       )}
@@ -494,7 +474,7 @@ export default function AddLiquidity({
                   error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {error ?? <Trans id="pool.buttons.supply">Supply</Trans>}
+                    {error ?? <Trans>Supply</Trans>}
                   </Text>
                 </ButtonError>
               </AutoColumn>

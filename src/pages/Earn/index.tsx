@@ -64,12 +64,12 @@ export default function Earn() {
             <AutoColumn gap="md">
               <RowBetween>
                 <TYPE.white fontWeight={600}>
-                  <Trans id="earn.liquidityMining">Uniswap liquidity mining</Trans>
+                  <Trans>Uniswap liquidity mining</Trans>
                 </TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  <Trans id="earn.depositLPHint">
+                  <Trans>
                     Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
                   </Trans>
                 </TYPE.white>
@@ -80,7 +80,7 @@ export default function Earn() {
                 target="_blank"
               >
                 <TYPE.white fontSize={14}>
-                  <Trans id="uni.readMore">Read more about UNI</Trans>
+                  <Trans>Read more about UNI</Trans>
                 </TYPE.white>
               </ExternalLink>
             </AutoColumn>
@@ -93,7 +93,7 @@ export default function Earn() {
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>
-            <Trans id="earn.participatingPools">Participating pools</Trans>
+            <Trans>Participating pools</Trans>
           </TYPE.mediumHeader>
           <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
         </DataRow>
@@ -103,11 +103,11 @@ export default function Earn() {
             <Loader style={{ margin: 'auto' }} />
           ) : !stakingRewardsExist ? (
             <OutlineCard>
-              <Trans id="earn.noActivePools">No active pools</Trans>
+              <Trans>No active pools</Trans>
             </OutlineCard>
           ) : stakingInfos?.length !== 0 && stakingInfosWithBalance.length === 0 ? (
             <OutlineCard>
-              <Trans id="earn.noActivePools">No active pools</Trans>
+              <Trans>No active pools</Trans>
             </OutlineCard>
           ) : (
             stakingInfosWithBalance?.map((stakingInfo) => {

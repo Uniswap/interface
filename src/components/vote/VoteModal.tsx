@@ -91,22 +91,22 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
             <RowBetween>
               <TYPE.mediumHeader fontWeight={500}>
                 {support ? (
-                  <Trans id="vote.support.for">Vote for proposal {proposalId}</Trans>
+                  <Trans>Vote for proposal {proposalId}</Trans>
                 ) : (
-                  <Trans id="vote.support.against">Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote against proposal {proposalId}</Trans>
                 )}
               </TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
             <TYPE.largeHeader>
-              <Trans id="vote.numVotes">{formatTokenAmount(availableVotes, 4)} Votes</Trans>
+              <Trans>{formatTokenAmount(availableVotes, 4)} Votes</Trans>
             </TYPE.largeHeader>
             <ButtonPrimary onClick={onVote}>
               <TYPE.mediumHeader color="white">
                 {support ? (
-                  <Trans id="vote.support.for">Vote for proposal {proposalId}</Trans>
+                  <Trans>Vote for proposal {proposalId}</Trans>
                 ) : (
-                  <Trans id="vote.support.against">Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote against proposal {proposalId}</Trans>
                 )}
               </TYPE.mediumHeader>
             </ButtonPrimary>
@@ -125,11 +125,11 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
               <TYPE.largeHeader>
-                <Trans id="vote.submitting">Submitting Vote</Trans>
+                <Trans>Submitting Vote</Trans>
               </TYPE.largeHeader>
             </AutoColumn>
             <TYPE.subHeader>
-              <Trans id="vote.confirmInWallet">Confirm this transaction in your wallet</Trans>
+              <Trans>Confirm this transaction in your wallet</Trans>
             </TYPE.subHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
@@ -146,7 +146,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
               <TYPE.largeHeader>
-                <Trans id="transactions.submitted">Transaction Submitted</Trans>
+                <Trans>Transaction Submitted</Trans>
               </TYPE.largeHeader>
             </AutoColumn>
             {chainId && (
@@ -155,7 +155,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
                 style={{ marginLeft: '4px' }}
               >
                 <TYPE.subHeader>
-                  <Trans id="wallet.viewOnEtherscan">View transaction on Etherscan</Trans>
+                  <Trans>View transaction on Etherscan</Trans>
                 </TYPE.subHeader>
               </ExternalLink>
             )}

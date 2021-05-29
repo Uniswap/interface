@@ -67,7 +67,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
         <CardSection gap="md">
           <RowBetween>
             <TYPE.white color="white">
-              <Trans id="uni.yourUNIBreakdown">Your UNI Breakdown</Trans>
+              <Trans>Your UNI Breakdown</Trans>
             </TYPE.white>
             <StyledClose stroke="white" onClick={() => setShowUniBalanceModal(false)} />
           </RowBetween>
@@ -85,19 +85,19 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
               <AutoColumn gap="md">
                 <RowBetween>
                   <TYPE.white color="white">
-                    <Trans id="claim.labels.balance">Balance:</Trans>
+                    <Trans>Balance:</Trans>
                   </TYPE.white>
                   <TYPE.white color="white">{uniBalance?.toFixed(2, { groupSeparator: ',' })}</TYPE.white>
                 </RowBetween>
                 <RowBetween>
                   <TYPE.white color="white">
-                    <Trans id="claim.unclaimed">Unclaimed:</Trans>
+                    <Trans>Unclaimed:</Trans>
                   </TYPE.white>
                   <TYPE.white color="white">
                     {uniToClaim?.toFixed(4, { groupSeparator: ',' })}{' '}
                     {uniToClaim && uniToClaim.greaterThan('0') && (
                       <StyledInternalLink onClick={() => setShowUniBalanceModal(false)} to="/uni">
-                        <Trans id="claim.labels.claim">(claim)</Trans>
+                        <Trans>(claim)</Trans>
                       </StyledInternalLink>
                     )}
                   </TYPE.white>
@@ -111,25 +111,25 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
           <AutoColumn gap="md">
             <RowBetween>
               <TYPE.white color="white">
-                <Trans id="uni.UNIPrice">UNI price:</Trans>
+                <Trans>UNI price:</Trans>
               </TYPE.white>
               <TYPE.white color="white">${uniPrice?.toFixed(2) ?? '-'}</TYPE.white>
             </RowBetween>
             <RowBetween>
               <TYPE.white color="white">
-                <Trans id="uni.inCirculation">UNI in circulation:</Trans>
+                <Trans>UNI in circulation:</Trans>
               </TYPE.white>
               <TYPE.white color="white">{circulation?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
             </RowBetween>
             <RowBetween>
               <TYPE.white color="white">
-                <Trans id="uni.totalSupply">Total Supply</Trans>
+                <Trans>Total Supply</Trans>
               </TYPE.white>
               <TYPE.white color="white">{totalSupply?.toFixed(0, { groupSeparator: ',' })}</TYPE.white>
             </RowBetween>
             {uni && uni.chainId === 1 ? (
               <ExternalLink href={`https://info.uniswap.org/token/${uni.address}`}>
-                <Trans id="uni.viewAnalytics">View UNI Analytics</Trans>
+                <Trans>View UNI Analytics</Trans>
               </ExternalLink>
             ) : null}
           </AutoColumn>

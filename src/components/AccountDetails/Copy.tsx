@@ -35,7 +35,7 @@ export default function CopyHelper(props: { toCopy: string; children?: React.Rea
         <TransactionStatusText>
           <CheckCircle size={'16'} />
           <TransactionStatusText>
-            <Trans id="common.copied">Copied</Trans>
+            <Trans>Copied</Trans>
           </TransactionStatusText>
         </TransactionStatusText>
       ) : (
