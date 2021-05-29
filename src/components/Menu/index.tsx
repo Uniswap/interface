@@ -144,36 +144,36 @@ export default function Menu() {
           <MenuItem href="https://uniswap.org/">
             <Info size={14} />
             <div>
-              <Trans id="menu.about">About</Trans>
+              <Trans>About</Trans>
             </div>
           </MenuItem>
           <MenuItem href="https://docs.uniswap.org/">
             <BookOpen size={14} />
             <div>
-              <Trans id="menu.docs">Docs</Trans>
+              <Trans>Docs</Trans>
             </div>
           </MenuItem>
           <MenuItem href={CODE_LINK}>
             <Code size={14} />
             <div>
-              <Trans id="menu.code">Code</Trans>
+              <Trans>Code</Trans>
             </div>
           </MenuItem>
           <MenuItem href="https://discord.gg/FCfyBSbCU5">
             <MessageCircle size={14} />
             <div>
-              <Trans id="menu.discord">Discord</Trans>
+              <Trans>Discord</Trans>
             </div>
           </MenuItem>
           <MenuItem href="https://info.uniswap.org/">
             <PieChart size={14} />
             <div>
-              <Trans id="menu.analytics">Analytics</Trans>
+              <Trans>Analytics</Trans>
             </div>
           </MenuItem>
           {account && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              <Trans id="claim.buttons.claimUNI">Claim UNI</Trans>
+              <Trans>Claim UNI</Trans>
             </UNIbutton>
           )}
         </MenuFlyout>

@@ -158,14 +158,12 @@ export default function VotePage({
 
   // get total votes and format percentages for UI
   const totalVotes: number | undefined = proposalData ? proposalData.forCount + proposalData.againstCount : undefined
-  const forPercentage: string = t({
-    id: 'currencies.valueWithPercent',
-    message: `${proposalData && totalVotes ? ((proposalData.forCount * 100) / totalVotes).toFixed(0) : '0'} %`,
-  })
-  const againstPercentage: string = t({
-    id: 'currencies.valueWithPercent',
-    message: `${proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) : '0'} %`,
-  })
+  const forPercentage: string = t`${
+    proposalData && totalVotes ? ((proposalData.forCount * 100) / totalVotes).toFixed(0) : '0'
+  } %`
+  const againstPercentage: string = t`${
+    proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) : '0'
+  } %`
 
   // only count available votes as of the proposal start block
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
@@ -203,15 +201,11 @@ export default function VotePage({
   return (
     <PageWrapper gap="lg" justify="center">
       <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
-      <DelegateModal
-        isOpen={showDelegateModal}
-        onDismiss={toggleDelegateModal}
-        title={t({ id: 'vote.labels.unlockVotes', message: 'Unlock Votes' })}
-      />
+      <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={t`Unlock Votes`} />
       <ProposalInfo gap="lg" justify="start">
         <RowBetween style={{ width: '100%' }}>
           <ArrowWrapper to="/vote">
-            <Trans id="vote.labels.allProposals">
+            <Trans>
               <ArrowLeft size={20} /> All Proposals
             </Trans>
           </ArrowWrapper>
@@ -224,13 +218,9 @@ export default function VotePage({
           <RowBetween>
             <TYPE.main>
               {endDate && endDate < now ? (
-                <Trans id="vote.labels.votingEnded">
-                  Voting ended {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}
-                </Trans>
+                <Trans>Voting ended {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
               ) : proposalData ? (
-                <Trans id="vote.labels.votingEndsApproximately">
-                  Voting ends approximately {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}
-                </Trans>
+                <Trans>Voting ends approximately {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
               ) : (
                 ''
               )}
@@ -239,13 +229,13 @@ export default function VotePage({
           {proposalData && proposalData.status === ProposalState.Active && !showVotingButtons && (
             <GreyCard>
               <TYPE.black>
-                <Trans id="vote.hint.votingEligibility">
+                <Trans>
                   Only UNI votes that were self delegated or delegated to another address before block{' '}
                   {proposalData.startBlock} are eligible for voting.{' '}
                 </Trans>
                 {showLinkForUnlock && (
                   <span>
-                    <Trans id="vote.hint.unlockVoting">
+                    <Trans>
                       <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink> to prepare for the next
                       proposal.
                     </Trans>
@@ -275,7 +265,7 @@ export default function VotePage({
                 toggleVoteModal()
               }}
             >
-              <Trans id="vote.buttons.voteAgainst">Vote Against</Trans>
+              <Trans>Vote Against</Trans>
             </ButtonPrimary>
           </RowFixed>
         ) : (
@@ -286,9 +276,9 @@ export default function VotePage({
             <CardSection>
               <AutoColumn gap="md">
                 <WrapSmall>
-                  <Trans id="vote.labels.for">
+                  <Trans>
                     <TYPE.black fontWeight={600}>
-                      <Trans id="">For</Trans>
+                      <Trans>For</Trans>
                     </TYPE.black>
                     <TYPE.black fontWeight={600}>
                       {' '}
@@ -307,7 +297,7 @@ export default function VotePage({
               <AutoColumn gap="md">
                 <WrapSmall>
                   <TYPE.black fontWeight={600}>
-                    <Trans id="vote.labels.against">Against</Trans>
+                    <Trans>Against</Trans>
                   </TYPE.black>
                   <TYPE.black fontWeight={600}>
                     {proposalData?.againstCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
@@ -322,7 +312,7 @@ export default function VotePage({
         </CardWrapper>
         <AutoColumn gap="md">
           <TYPE.mediumHeader fontWeight={600}>
-            <Trans id="vote.labels.details">Details</Trans>
+            <Trans>Details</Trans>
           </TYPE.mediumHeader>
           {proposalData?.details?.map((d, i) => {
             return (
@@ -343,7 +333,7 @@ export default function VotePage({
         </AutoColumn>
         <AutoColumn gap="md">
           <TYPE.mediumHeader fontWeight={600}>
-            <Trans id="vote.labels.description">Description</Trans>
+            <Trans>Description</Trans>
           </TYPE.mediumHeader>
           <MarkDownWrapper>
             <ReactMarkdown source={proposalData?.description} />
@@ -351,7 +341,7 @@ export default function VotePage({
         </AutoColumn>
         <AutoColumn gap="md">
           <TYPE.mediumHeader fontWeight={600}>
-            <Trans id="vote.labels.proposer">Proposer</Trans>
+            <Trans>Proposer</Trans>
           </TYPE.mediumHeader>
           <ProposerAddressLink
             href={

@@ -174,7 +174,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
         </Row>
         <RowFixed mt="4px">
           <StyledListUrlText active={isActive} mr="6px">
-            <Trans id="tokenLists.numberOfTokens">{list.tokens.length} tokens</Trans>
+            <Trans>{list.tokens.length} tokens</Trans>
           </StyledListUrlText>
           <StyledMenu ref={node as any}>
             <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
@@ -185,14 +185,14 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
                 <div>{list && listVersionLabel(list.version)}</div>
                 <SeparatorDark />
                 <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
-                  <Trans id="tokenLists.links.viewList">View list</Trans>
+                  <Trans>View list</Trans>
                 </ExternalLink>
                 <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
-                  <Trans id="tokenLists.buttons.removeList">Remove list</Trans>
+                  <Trans>Remove list</Trans>
                 </UnpaddedLinkStyledButton>
                 {pending && (
                   <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
-                    <Trans id="tokenLists.buttons.updateLists">Update list</Trans>
+                    <Trans>Update list</Trans>
                   </UnpaddedLinkStyledButton>
                 )}
               </PopoverContainer>
@@ -292,15 +292,14 @@ export function ManageLists({
     async function fetchTempList() {
       fetchList(listUrlInput, false)
         .then((list) => setTempList(list))
-        .catch(() => setAddError(t({ id: 'tokenLists.errors.importingList', message: 'Error importing list' })))
+        .catch(() => setAddError(t`Error importing list`))
     }
     // if valid url, fetch details for card
     if (validUrl) {
       fetchTempList()
     } else {
       setTempList(undefined)
-      listUrlInput !== '' &&
-        setAddError(t({ id: 'tokenList.errors.invalidLocation', message: 'Enter valid list location' }))
+      listUrlInput !== '' && setAddError(t`Enter valid list location`)
     }
 
     // reset error
@@ -355,7 +354,7 @@ export function ManageLists({
                     <CheckCircle />
                   </IconWrapper>
                   <TYPE.body color={theme.text2}>
-                    <Trans id="common.loaded">Loaded</Trans>
+                    <Trans>Loaded</Trans>
                   </TYPE.body>
                 </RowFixed>
               ) : (
@@ -365,7 +364,7 @@ export function ManageLists({
                   width="fit-content"
                   onClick={handleImport}
                 >
-                  <Trans id="tokenLists.buttons.import">Import</Trans>
+                  <Trans>Import</Trans>
                 </ButtonPrimary>
               )}
             </RowBetween>

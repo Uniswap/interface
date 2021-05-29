@@ -140,7 +140,7 @@ const StepCounter = ({
           }}
         />
         <InputTitle fontSize={12} textAlign="center">
-          <Trans id="currencies.denominated">
+          <Trans>
             {tokenB} per {tokenA}
           </Trans>
         </InputTitle>
@@ -149,12 +149,12 @@ const StepCounter = ({
         <RowBetween>
           <SmallButton onClick={handleDecrement}>
             <TYPE.white fontSize="12px">
-              <Trans id="inputs.feeAmount.minus">-{feeAmountFormatted}%</Trans>
+              <Trans>-{feeAmountFormatted}%</Trans>
             </TYPE.white>
           </SmallButton>
           <SmallButton onClick={handleIncrement}>
             <TYPE.white fontSize="12px">
-              <Trans id="inputs.feeAmount.plus">+{feeAmountFormatted}%</Trans>
+              <Trans>+{feeAmountFormatted}%</Trans>
             </TYPE.white>
           </SmallButton>
         </RowBetween>

@@ -88,7 +88,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             <Text fontWeight={500} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
-                  <Trans id="common.loading">Loading</Trans>
+                  <Trans>Loading</Trans>
                 </Dots>
               ) : (
                 `${currency0.symbol}/${currency1.symbol}`
@@ -104,12 +104,12 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             >
               {showMore ? (
                 <>
-                  <Trans id="pools.buttons.manage">Manage</Trans>
+                  <Trans>Manage</Trans>
                   <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                 </>
               ) : (
                 <>
-                  <Trans id="pools.buttons.manage">Manage</Trans>
+                  <Trans>Manage</Trans>
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                 </>
               )}
@@ -121,7 +121,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
           <AutoColumn gap="8px">
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                <Trans id="pool.yourTotalPoolTokens">Your total pool tokens:</Trans>
+                <Trans>Your total pool tokens:</Trans>
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
@@ -130,7 +130,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             {stakedBalance && (
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={500}>
-                  <Trans id="pool.poolTokensInRewardsPool">Pool tokens in rewards pool:</Trans>
+                  <Trans>Pool tokens in rewards pool:</Trans>
                 </Text>
                 <Text fontSize={16} fontWeight={500}>
                   {stakedBalance.toSignificant(4)}
@@ -140,7 +140,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  <Trans id="pool.pooledCurrency">Pooled {currency0.symbol}:</Trans>
+                  <Trans>Pooled {currency0.symbol}:</Trans>
                 </Text>
               </RowFixed>
               {token0Deposited ? (
@@ -158,7 +158,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
-                  <Trans id="pool.pooledCurrency"></Trans>Pooled {currency1.symbol}:
+                  <Trans>Pooled {currency1.symbol}:</Trans>
                 </Text>
               </RowFixed>
               {token1Deposited ? (
@@ -175,7 +175,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
 
             <FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
-                <Trans id="pool.yourPoolShare">Your pool share:</Trans>
+                <Trans>Your pool share:</Trans>
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {poolTokenPercentage
@@ -193,7 +193,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   to={`/migrate/v2/${pair.liquidityToken.address}`}
                   width="64%"
                 >
-                  <Trans id="pools.buttons.migrate">Migrate</Trans>
+                  <Trans>Migrate</Trans>
                 </ButtonPrimary>
                 <ButtonSecondary
                   padding="8px"
@@ -202,7 +202,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   width="32%"
                   to={`/remove/v2/${currencyId(currency0)}/${currencyId(currency1)}`}
                 >
-                  <Trans id="butons.remove">Remove</Trans>
+                  <Trans>Remove</Trans>
                 </ButtonSecondary>
               </RowBetween>
             )}

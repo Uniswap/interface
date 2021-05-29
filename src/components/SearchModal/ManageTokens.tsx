@@ -112,7 +112,7 @@ export default function ManageTokens({
           </Row>
           {searchQuery !== '' && !isAddressSearch && (
             <TYPE.error error={true}>
-              <Trans id="tokenLists.input.enterValidAddress">Enter valid token address</Trans>
+              <Trans>Enter valid token address</Trans>
             </TYPE.error>
           )}
           {searchToken && (
@@ -136,7 +136,7 @@ export default function ManageTokens({
             {userAddedTokens.length > 0 && (
               <ButtonText onClick={handleRemoveAll}>
                 <TYPE.blue>
-                  <Trans id="common.clearAll">Clear all</Trans>
+                  <Trans>Clear all</Trans>
                 </TYPE.blue>
               </ButtonText>
             )}
@@ -146,7 +146,7 @@ export default function ManageTokens({
       </Column>
       <Footer>
         <TYPE.darkGray>
-          <Trans id="tokenLists.manageHint">Tip: Custom tokens are stored locally in your browser</Trans>
+          <Trans>Tip: Custom tokens are stored locally in your browser</Trans>
         </TYPE.darkGray>
       </Footer>
     </Wrapper>

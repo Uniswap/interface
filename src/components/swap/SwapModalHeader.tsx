@@ -65,7 +65,7 @@ export default function SwapModalHeader({
         <AutoColumn gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-              <Trans id="swap.fromCurrency">From</Trans>
+              <Trans>From</Trans>
             </TYPE.body>
             <FiatValue fiatValue={fiatValueInput} />
           </RowBetween>
@@ -95,7 +95,7 @@ export default function SwapModalHeader({
         <AutoColumn gap={'8px'}>
           <RowBetween>
             <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
-              <Trans id="swap.toCurrency">To</Trans>
+              <Trans>To</Trans>
             </TYPE.body>
             <TYPE.body fontSize={14} color={theme.text3}>
               <FiatValue
@@ -136,14 +136,14 @@ export default function SwapModalHeader({
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
               <TYPE.main color={theme.primary1}>
-                <Trans id="swap.priceUpdated">Price Updated</Trans>
+                <Trans>Price Updated</Trans>
               </TYPE.main>
             </RowFixed>
             <ButtonPrimary
               style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
               onClick={onAcceptChanges}
             >
-              <Trans id="common.accept">Accept</Trans>
+              <Trans>Accept</Trans>
             </ButtonPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
@@ -152,7 +152,7 @@ export default function SwapModalHeader({
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
           <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
-            <Trans id="swap.outputEstimatedHint">
+            <Trans>
               Output is estimated. You will receive at least{' '}
               <b>
                 {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
@@ -162,7 +162,7 @@ export default function SwapModalHeader({
           </TYPE.italic>
         ) : (
           <TYPE.italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
-            <Trans id="swap.inputEstimated.hint">
+            <Trans>
               Input is estimated. You will sell at most{' '}
               <b>
                 {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol}
@@ -175,7 +175,7 @@ export default function SwapModalHeader({
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
           <TYPE.main>
-            <Trans id="swap.outputRecipient">
+            <Trans>
               Output will be sent to{' '}
               <b title={recipient}>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
             </Trans>

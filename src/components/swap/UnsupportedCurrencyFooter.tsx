@@ -64,7 +64,7 @@ export default function UnsupportedCurrencyFooter({
           <AutoColumn gap="lg">
             <RowBetween>
               <TYPE.mediumHeader>
-                <Trans id="errors.unsuportedAssets">Unsupported Assets</Trans>
+                <Trans>Unsupported Assets</Trans>
               </TYPE.mediumHeader>
               <CloseIcon onClick={() => setShowDetails(false)} />
             </RowBetween>
@@ -91,7 +91,7 @@ export default function UnsupportedCurrencyFooter({
             })}
             <AutoColumn gap="lg">
               <TYPE.body fontWeight={500}>
-                <Trans id="swap.unsupportedAssetsHint">
+                <Trans>
                   Some assets are not available through this interface because they may not work well with the smart
                   contracts or we are unable to allow trading for legal reasons.
                 </Trans>
@@ -102,7 +102,7 @@ export default function UnsupportedCurrencyFooter({
       </Modal>
       <ButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
         <TYPE.blue>
-          <Trans id="swap.buttons.readMoreUnsupportedAssets">Read more about unsupported assets</Trans>
+          <Trans>Read more about unsupported assets</Trans>
         </TYPE.blue>
       </ButtonEmpty>
     </DetailsFooter>

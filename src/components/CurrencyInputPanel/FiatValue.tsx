@@ -26,7 +26,7 @@ export function FiatValue({
   return (
     <TYPE.body fontSize={14} color={fiatValue ? theme.text2 : theme.text4}>
       {fiatValue ? (
-        <Trans id="currencies.labels.fiatValue">
+        <Trans>
           ~$ <HoverInlineText text={fiatValue?.toSignificant(6, { groupSeparator: ',' })} />
         </Trans>
       ) : (
@@ -35,7 +35,7 @@ export function FiatValue({
       {priceImpact ? (
         <span style={{ color: priceImpactColor }}>
           {' '}
-          (<Trans id="numbers.valueWithPercent">{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
+          (<Trans>{priceImpact.multiply(-1).toSignificant(3)}%</Trans>)
         </span>
       ) : null}
     </TYPE.body>

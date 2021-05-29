@@ -104,7 +104,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
           )
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: t({ id: 'transactions.summary.depositLiquidity', message: 'Deposit liquidity' }),
+              summary: t`Deposit liquidity`,
             })
             setHash(response.hash)
           })
@@ -155,7 +155,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <ContentWrapper gap="lg">
           <RowBetween>
             <TYPE.mediumHeader>
-              <Trans id="common.deposit">Deposit</Trans>
+              <Trans>Deposit</Trans>
             </TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
@@ -167,19 +167,19 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             currency={stakingInfo.stakedAmount.currency}
             pair={dummyPair}
             label={''}
-            customBalanceText={t({ id: 'earn.customBalanceText', message: 'Available to deposit: ' })}
+            customBalanceText={t`Available to deposit:`}
             id="stake-liquidity-token"
           />
 
           <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
             <div>
               <TYPE.black fontWeight={600}>
-                <Trans id="earn.weeklyRewardsHeading">Weekly Rewards</Trans>
+                <Trans>Weekly Rewards</Trans>
               </TYPE.black>
             </div>
 
             <TYPE.black>
-              <Trans id="earn.pool.rewardRate">
+              <Trans>
                 {hypotheticalRewardRate
                   .multiply((60 * 60 * 24 * 7).toString())
                   .toSignificant(4, { groupSeparator: ',' })}{' '}
@@ -195,14 +195,14 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
               confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
               disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
             >
-              <Trans id="common.approve">Approve</Trans>
+              <Trans>Approve</Trans>
             </ButtonConfirmed>
             <ButtonError
               disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
               error={!!error && !!parsedAmount}
               onClick={onStake}
             >
-              {error ?? <Trans id="common.deposit">Deposit</Trans>}
+              {error ?? <Trans>Deposit</Trans>}
             </ButtonError>
           </RowBetween>
           <ProgressCircles steps={[approval === ApprovalState.APPROVED || signatureData !== null]} disabled={true} />
@@ -212,10 +212,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
-              <Trans id="common.depositingLiquidity">Depositing Liquidity</Trans>
+              <Trans>Depositing Liquidity</Trans>
             </TYPE.largeHeader>
             <TYPE.body fontSize={20}>
-              <Trans id="currencies.amountUNIV2">{parsedAmount?.toSignificant(4)} UNI-V2</Trans>
+              <Trans>{parsedAmount?.toSignificant(4)} UNI-V2</Trans>
             </TYPE.body>
           </AutoColumn>
         </LoadingView>
@@ -224,10 +224,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
-              <Trans id="transactions.submitted">Transaction Submitted</Trans>
+              <Trans>Transaction Submitted</Trans>
             </TYPE.largeHeader>
             <TYPE.body fontSize={20}>
-              <Trans id="currencies.depositedUNIV2">Deposited {parsedAmount?.toSignificant(4)} UNI-V2</Trans>
+              <Trans>Deposited {parsedAmount?.toSignificant(4)} UNI-V2</Trans>
             </TYPE.body>
           </AutoColumn>
         </SubmittedView>

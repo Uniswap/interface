@@ -479,7 +479,7 @@ export default function Swap({ history }: RouteComponentProps) {
                       }}
                     >
                       <TYPE.black fontSize={12}>
-                        <Trans id="swap.buttons.v3">V3</Trans>
+                        <Trans>V3</Trans>
                       </TYPE.black>
                     </ButtonGray>
                   )}

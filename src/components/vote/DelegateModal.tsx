@@ -99,31 +99,19 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
             <TYPE.body>
-              <Trans id="vote.delegate.hint1">Earned UNI tokens represent voting shares in Uniswap governance.</Trans>
+              <Trans>Earned UNI tokens represent voting shares in Uniswap governance.</Trans>
             </TYPE.body>
             <TYPE.body>
-              <Trans id="vote.delegate.hint2">
-                You can either vote on each proposal yourself or delegate your votes to a third party.
-              </Trans>
+              <Trans>You can either vote on each proposal yourself or delegate your votes to a third party.</Trans>
             </TYPE.body>
             {usingDelegate && <AddressInputPanel value={typed} onChange={handleRecipientType} />}
             <ButtonPrimary disabled={!isAddress(parsedAddress ?? '')} onClick={onDelegate}>
               <TYPE.mediumHeader color="white">
-                {usingDelegate ? (
-                  <Trans id="vote.delegate.delegateVotes">Delegate Votes</Trans>
-                ) : (
-                  <Trans id="vote.delegate.selfDelegate">Self Delegate</Trans>
-                )}
+                {usingDelegate ? <Trans>Delegate Votes</Trans> : <Trans>Self Delegate</Trans>}
               </TYPE.mediumHeader>
             </ButtonPrimary>
             <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-              <TYPE.blue>
-                {usingDelegate ? (
-                  <Trans id="common.remove">Remove Delegate</Trans>
-                ) : (
-                  <Trans id="common.add">Add Delegate +</Trans>
-                )}
-              </TYPE.blue>
+              <TYPE.blue>{usingDelegate ? <Trans>Remove Delegate</Trans> : <Trans>Add Delegate +</Trans>}</TYPE.blue>
             </TextButton>
           </AutoColumn>
         </ContentWrapper>
@@ -132,11 +120,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
-              {usingDelegate ? (
-                <Trans id="vote.delegate.delegatingVotes">Delegating votes</Trans>
-              ) : (
-                <Trans id="vote.delegates.unlockingVotes">Unlocking Votes</Trans>
-              )}
+              {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
             </TYPE.largeHeader>
             <TYPE.main fontSize={36}> {formatTokenAmount(uniBalance, 4)}</TYPE.main>
           </AutoColumn>
@@ -146,7 +130,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
-              <Trans id="transactions.submitted">Transaction Submitted</Trans>
+              <Trans>Transaction Submitted</Trans>
             </TYPE.largeHeader>
             <TYPE.main fontSize={36}>{formatTokenAmount(uniBalance, 4)}</TYPE.main>
           </AutoColumn>
