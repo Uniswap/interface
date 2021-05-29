@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro'
 import React, { useState, useContext } from 'react'
 import { Percent } from '@uniswap/sdk-core'
 import styled, { ThemeContext } from 'styled-components'
@@ -155,9 +156,11 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
       <AutoColumn gap="sm">
         <RowFixed>
           <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-            Slippage tolerance
+            <Trans>Slippage tolerance</Trans>
           </TYPE.black>
-          <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
+          <QuestionHelper
+            text={t`Your transaction will revert if the price changes unfavorably by more than this percentage.`}
+          />
         </RowFixed>
         <RowBetween>
           <Option
@@ -166,7 +169,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             }}
             active={userSlippageTolerance === 'auto'}
           >
-            Auto
+            <Trans>Auto</Trans>
           </Option>
           <OptionCustom active={userSlippageTolerance !== 'auto'} warning={!!slippageError} tabIndex={-1}>
             <RowBetween>
@@ -206,10 +209,10 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             }}
           >
             {slippageError
-              ? 'Enter a valid slippage percentage'
+              ? t`Enter a valid slippage percentage`
               : tooLow
-              ? 'Your transaction may fail'
-              : 'Your transaction may be frontrun'}
+              ? t`Your transaction may fail`
+              : t`Your transaction may be frontrun`}
           </RowBetween>
         ) : null}
       </AutoColumn>
@@ -217,9 +220,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
       <AutoColumn gap="sm">
         <RowFixed>
           <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-            Transaction deadline
+            <Trans>Transaction deadline</Trans>
           </TYPE.black>
-          <QuestionHelper text="Your transaction will revert if it is pending for more than this period of time." />
+          <QuestionHelper text={t`Your transaction will revert if it is pending for more than this period of time.`} />
         </RowFixed>
         <RowFixed>
           <OptionCustom style={{ width: '80px' }} warning={!!deadlineError} tabIndex={-1}>
@@ -241,7 +244,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             />
           </OptionCustom>
           <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
-            minutes
+            <Trans>minutes</Trans>
           </TYPE.body>
         </RowFixed>
       </AutoColumn>
