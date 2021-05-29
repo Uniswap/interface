@@ -259,14 +259,8 @@ export default function AddLiquidity({
               setAttemptingTxn(false)
               addTransaction(response, {
                 summary: noLiquidity
-                  ? t({
-                      id: 'transactions.summary.createPoolAndAddLiquidity',
-                      message: `Create pool and add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
-                    })
-                  : t({
-                      id: 'transactions.summary.addLiquidity',
-                      message: `Add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
-                    }),
+                  ? t`Create pool and add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`
+                  : t`Add ${currencyA?.symbol}/${currencyB?.symbol} V3 liquidity`,
               })
               setTxHash(response.hash)
               ReactGA.event({
@@ -414,7 +408,7 @@ export default function AddLiquidity({
             bottomContent={() => (
               <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
                 <Text fontWeight={500} fontSize={20}>
-                  <Trans id="transactions.confirmation.button">Add</Trans>
+                  <Trans>Add</Trans>
                 </Text>
               </ButtonPrimary>
             )}
@@ -436,11 +430,11 @@ export default function AddLiquidity({
                 <AutoColumn gap="md">
                   <RowBetween paddingBottom="20px">
                     <TYPE.label>
-                      <Trans id="addLiquidity.labels.selectPair">Select pair</Trans>
+                      <Trans>Select pair</Trans>
                     </TYPE.label>
                     <ButtonText onClick={clearAll}>
                       <TYPE.blue fontSize="12px">
-                        <Trans id="common.clearAll">Clear All</Trans>
+                        <Trans>Clear All</Trans>
                       </TYPE.blue>
                     </ButtonText>
                   </RowBetween>
@@ -479,11 +473,7 @@ export default function AddLiquidity({
             )}
 
             {hasExistingPosition && existingPosition ? (
-              <PositionPreview
-                position={existingPosition}
-                title={t({ id: 'addLiquidity.labels.selectedRange', message: 'Selected Range' })}
-                inRange={!outOfRange}
-              />
+              <PositionPreview position={existingPosition} title={t`Selected Range`} inRange={!outOfRange} />
             ) : (
               <>
                 <FeeSelector
@@ -497,7 +487,7 @@ export default function AddLiquidity({
                     <AutoColumn gap="md">
                       <RowBetween>
                         <TYPE.label>
-                          <Trans id="addLiquidity.labels.selectStartingPrice">Set Starting Price</Trans>
+                          <Trans>Set Starting Price</Trans>
                         </TYPE.label>
                         {baseCurrency && quoteCurrency ? (
                           <RateToggle
@@ -525,7 +515,7 @@ export default function AddLiquidity({
                       </OutlineCard>
                       <RowBetween style={{ backgroundColor: theme.bg1, padding: '12px', borderRadius: '12px' }}>
                         <TYPE.main>
-                          <Trans id="addLiquidity.labels.currentPrice">Current {baseCurrency?.symbol} Price:</Trans>
+                          <Trans>Current {baseCurrency?.symbol} Price:</Trans>
                         </TYPE.main>
                         <TYPE.main>
                           {price ? (
@@ -571,7 +561,7 @@ export default function AddLiquidity({
                 <DynamicSection gap="md" disabled={!feeAmount || invalidPool || (noLiquidity && !startPriceTypedValue)}>
                   <RowBetween>
                     <TYPE.label>
-                      <Trans id="addLiquidity.labels.selectLiquidityRange">Set Price Range</Trans>
+                      <Trans>Set Price Range</Trans>
                     </TYPE.label>
 
                     {baseCurrency && quoteCurrency ? (
@@ -637,7 +627,7 @@ export default function AddLiquidity({
                       <RowBetween>
                         <AlertTriangle stroke={theme.yellow3} size="16px" />
                         <TYPE.yellow ml="12px" fontSize="12px">
-                          <Trans id="inactiveRangeWarning">
+                          <Trans>
                             Your position will not earn fees or be used in trades until the market price moves into your
                             range.
                           </Trans>
@@ -651,9 +641,7 @@ export default function AddLiquidity({
                       <RowBetween>
                         <AlertTriangle stroke={theme.yellow3} size="16px" />
                         <TYPE.yellow ml="12px" fontSize="12px">
-                          <Trans id="error.invalidRangeWarning">
-                            Invalid range selected. The min price must be lower than the max price.
-                          </Trans>
+                          <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
                         </TYPE.yellow>
                       </RowBetween>
                     </YellowCard>
@@ -666,11 +654,7 @@ export default function AddLiquidity({
               disabled={tickLower === undefined || tickUpper === undefined || invalidPool || invalidRange}
             >
               <AutoColumn gap="md">
-                <TYPE.label>
-                  {hasExistingPosition
-                    ? 'Add more liquidity'
-                    : t({ id: 'liquidity.depositAmounts', message: 'Deposit Amounts' })}
-                </TYPE.label>
+                <TYPE.label>{hasExistingPosition ? 'Add more liquidity' : t`Deposit Amounts`}</TYPE.label>
 
                 <CurrencyInputPanel
                   value={formattedAmounts[Field.CURRENCY_A]}
@@ -705,12 +689,12 @@ export default function AddLiquidity({
               {addIsUnsupported ? (
                 <ButtonPrimary disabled={true} borderRadius="12px" padding={'12px'}>
                   <TYPE.main mb="4px">
-                    <Trans id="error.unsupportedAsset">Unsupported Asset</Trans>
+                    <Trans>Unsupported Asset</Trans>
                   </TYPE.main>
                 </ButtonPrimary>
               ) : !account ? (
                 <ButtonLight onClick={toggleWalletModal} borderRadius="12px" padding={'12px'}>
-                  <Trans id="wallet.connect">Connect wallet</Trans>
+                  <Trans>Connect wallet</Trans>
                 </ButtonLight>
               ) : (
                 <AutoColumn gap={'md'}>

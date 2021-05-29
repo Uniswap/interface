@@ -19,6 +19,7 @@ import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { getCreate2Address } from '@ethersproject/address'
 import { pack, keccak256 } from '@ethersproject/solidity'
+import { t, Trans } from '@lingui/macro'
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -113,27 +114,33 @@ export default function MigrateV2() {
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/pool" />
-          <TYPE.mediumHeader>Migrate V2 Liquidity</TYPE.mediumHeader>
+          <TYPE.mediumHeader>
+            <Trans>Migrate V2 Liquidity</Trans>
+          </TYPE.mediumHeader>
           <div>
-            <QuestionHelper text="Migrate your liquidity tokens from Uniswap V2 to Uniswap V3." />
+            <QuestionHelper text={t`Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.`} />
           </div>
         </AutoRow>
 
         <TYPE.body style={{ marginBottom: 8, fontWeight: 400 }}>
-          For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap
-          V3.
+          <Trans>
+            For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into
+            Uniswap V3.
+          </Trans>
         </TYPE.body>
 
         {!account ? (
           <LightCard padding="40px">
             <TYPE.body color={theme.text3} textAlign="center">
-              Connect to a wallet to view your V2 liquidity.
+              <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
             </TYPE.body>
           </LightCard>
         ) : v2IsLoading ? (
           <LightCard padding="40px">
             <TYPE.body color={theme.text3} textAlign="center">
-              <Dots>Loading</Dots>
+              <Dots>
+                <Trans>Loading</Trans>
+              </Dots>
             </TYPE.body>
           </LightCard>
         ) : v2Pairs.filter(([, pair]) => !!pair).length > 0 ? (
@@ -161,10 +168,12 @@ export default function MigrateV2() {
 
         <AutoColumn justify={'center'} gap="md">
           <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-            {'Don’t see one of your v2 positions?'}{' '}
-            <StyledInternalLink id="import-pool-link" to={'/find?origin=/migrate/v2'}>
-              {'Import it.'}
-            </StyledInternalLink>
+            <Trans>
+              Don’t see one of your v2 positions?{' '}
+              <StyledInternalLink id="import-pool-link" to={'/find?origin=/migrate/v2'}>
+                Import it.
+              </StyledInternalLink>
+            </Trans>
           </Text>
         </AutoColumn>
       </AutoColumn>

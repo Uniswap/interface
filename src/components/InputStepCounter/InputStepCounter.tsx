@@ -8,6 +8,7 @@ import { AutoColumn } from 'components/Column'
 import { ButtonPrimary } from 'components/Button'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { formattedFeeAmount } from 'utils'
+import { Trans } from '@lingui/macro'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -139,16 +140,22 @@ const StepCounter = ({
           }}
         />
         <InputTitle fontSize={12} textAlign="center">
-          {tokenB + ' per ' + tokenA}
+          <Trans>
+            {tokenB} per {tokenA}
+          </Trans>
         </InputTitle>
       </AutoColumn>
       {!locked ? (
         <RowBetween>
           <SmallButton onClick={handleDecrement}>
-            <TYPE.white fontSize="12px">-{feeAmountFormatted}%</TYPE.white>
+            <TYPE.white fontSize="12px">
+              <Trans>-{feeAmountFormatted}%</Trans>
+            </TYPE.white>
           </SmallButton>
           <SmallButton onClick={handleIncrement}>
-            <TYPE.white fontSize="12px">+{feeAmountFormatted}%</TYPE.white>
+            <TYPE.white fontSize="12px">
+              <Trans>+{feeAmountFormatted}%</Trans>
+            </TYPE.white>
           </SmallButton>
         </RowBetween>
       ) : null}

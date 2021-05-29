@@ -21,6 +21,7 @@ import Identicon from '../Identicon'
 import { ButtonSecondary } from '../Button'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { Trans } from '@lingui/macro'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -237,7 +238,11 @@ export default function AccountDetails({
           SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
-    return <WalletName>Connected with {name}</WalletName>
+    return (
+      <WalletName>
+        <Trans>Connected with {name}</Trans>
+      </WalletName>
+    )
   }
 
   function getStatusIcon() {
@@ -250,32 +255,32 @@ export default function AccountDetails({
     } else if (connector === walletconnect) {
       return (
         <IconWrapper size={16}>
-          <img src={WalletConnectIcon} alt={'wallet connect logo'} />
+          <img src={WalletConnectIcon} alt={'WalletConnect logo'} />
         </IconWrapper>
       )
     } else if (connector === walletlink) {
       return (
         <IconWrapper size={16}>
-          <img src={CoinbaseWalletIcon} alt={'coinbase wallet logo'} />
+          <img src={CoinbaseWalletIcon} alt={'Coinbase Wallet logo'} />
         </IconWrapper>
       )
     } else if (connector === fortmatic) {
       return (
         <IconWrapper size={16}>
-          <img src={FortmaticIcon} alt={'fortmatic logo'} />
+          <img src={FortmaticIcon} alt={'Fortmatic logo'} />
         </IconWrapper>
       )
     } else if (connector === portis) {
       return (
         <>
           <IconWrapper size={16}>
-            <img src={PortisIcon} alt={'portis logo'} />
+            <img src={PortisIcon} alt={'Portis logo'} />
             <MainWalletAction
               onClick={() => {
                 portis.portis.showPortis()
               }}
             >
-              Show Portis
+              <Trans>Show Portis</Trans>
             </MainWalletAction>
           </IconWrapper>
         </>
@@ -294,7 +299,9 @@ export default function AccountDetails({
         <CloseIcon onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
-        <HeaderRow>Account</HeaderRow>
+        <HeaderRow>
+          <Trans>Account</Trans>
+        </HeaderRow>
         <AccountSection>
           <YourAccount>
             <InfoCard>
@@ -308,7 +315,7 @@ export default function AccountDetails({
                         ;(connector as any).close()
                       }}
                     >
-                      Disconnect
+                      <Trans>Disconnect</Trans>
                     </WalletAction>
                   )}
                   <WalletAction
@@ -317,7 +324,7 @@ export default function AccountDetails({
                       openOptions()
                     }}
                   >
-                    Change
+                    <Trans>Change</Trans>
                   </WalletAction>
                 </div>
               </AccountGroupingRow>
@@ -347,7 +354,9 @@ export default function AccountDetails({
                       <div>
                         {account && (
                           <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                            <span style={{ marginLeft: '4px' }}>
+                              <Trans>Copy Address</Trans>
+                            </span>
                           </Copy>
                         )}
                         {chainId && account && (
@@ -357,7 +366,9 @@ export default function AccountDetails({
                             href={getExplorerLink(chainId, ENSName, ExplorerDataType.ADDRESS)}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Explorer</span>
+                            <span style={{ marginLeft: '4px' }}>
+                              <Trans>View on Explorer</Trans>
+                            </span>
                           </AddressLink>
                         )}
                       </div>
@@ -369,7 +380,9 @@ export default function AccountDetails({
                       <div>
                         {account && (
                           <Copy toCopy={account}>
-                            <span style={{ marginLeft: '4px' }}>Copy Address</span>
+                            <span style={{ marginLeft: '4px' }}>
+                              <Trans>Copy Address</Trans>
+                            </span>
                           </Copy>
                         )}
                         {chainId && account && (
@@ -379,7 +392,9 @@ export default function AccountDetails({
                             href={getExplorerLink(chainId, account, ExplorerDataType.ADDRESS)}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Explorer</span>
+                            <span style={{ marginLeft: '4px' }}>
+                              <Trans>View on Explorer</Trans>
+                            </span>
                           </AddressLink>
                         )}
                       </div>
@@ -394,15 +409,21 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
-            <TYPE.body>Recent Transactions</TYPE.body>
-            <LinkStyledButton onClick={clearAllTransactionsCallback}>(clear all)</LinkStyledButton>
+            <TYPE.body>
+              <Trans>Recent Transactions</Trans>
+            </TYPE.body>
+            <LinkStyledButton onClick={clearAllTransactionsCallback}>
+              <Trans>(clear all)</Trans>
+            </LinkStyledButton>
           </AutoRow>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
+          <TYPE.body color={theme.text1}>
+            <Trans>Your transactions will appear here...</Trans>
+          </TYPE.body>
         </LowerSection>
       )}
     </>

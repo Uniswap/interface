@@ -267,12 +267,9 @@ export default function RemoveLiquidity({
           setAttemptingTxn(false)
 
           addTransaction(response, {
-            summary: t({
-              id: 'transactions.summary.removeLiquidity',
-              message: `Remove ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(3)} ${
-                currencyA?.symbol
-              } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(3)} ${currencyB?.symbol}`,
-            }),
+            summary: t`Remove ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(3)} ${
+              currencyA?.symbol
+            } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(3)} ${currencyB?.symbol}`,
           })
 
           setTxHash(response.hash)
@@ -321,7 +318,7 @@ export default function RemoveLiquidity({
         </RowBetween>
 
         <TYPE.italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
-          <Trans id="removeLiquidity.hint.outputEstimated">
+          <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
@@ -335,7 +332,7 @@ export default function RemoveLiquidity({
       <>
         <RowBetween>
           <Text color={theme.text2} fontWeight={500} fontSize={16}>
-            <Trans id="removeLiquidity.labels.UNIBurned">
+            <Trans>
               UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
             </Trans>
           </Text>
@@ -350,7 +347,7 @@ export default function RemoveLiquidity({
           <>
             <RowBetween>
               <Text color={theme.text2} fontWeight={500} fontSize={16}>
-                <Trans id="removeLiquidity.labels.modalPrice">Price</Trans>
+                <Trans>Price</Trans>
               </Text>
               <Text fontWeight={500} fontSize={16} color={theme.text1}>
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
@@ -366,19 +363,16 @@ export default function RemoveLiquidity({
         )}
         <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
           <Text fontWeight={500} fontSize={20}>
-            <Trans id="buttons.confirm">Confirm</Trans>
+            <Trans>Confirm</Trans>
           </Text>
         </ButtonPrimary>
       </>
     )
   }
 
-  const pendingText = t({
-    id: 'removeLiquidity.confirming.pending',
-    message: `Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${currencyA?.symbol} and ${parsedAmounts[
-      Field.CURRENCY_B
-    ]?.toSignificant(6)} ${currencyB?.symbol}`,
-  })
+  const pendingText = t`Removing ${parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} ${
+    currencyA?.symbol
+  } and ${parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} ${currencyB?.symbol}`
 
   const liquidityPercentChangeCallback = useCallback(
     (value: number) => {
@@ -441,7 +435,7 @@ export default function RemoveLiquidity({
             hash={txHash ? txHash : ''}
             content={() => (
               <ConfirmationModalContent
-                title={t({ id: 'removeLiquidity.labels.confirmationTitle', message: 'You will receive' })}
+                title={t`You will receive`}
                 onDismiss={handleDismissConfirmation}
                 topContent={modalHeader}
                 bottomContent={modalBottom}
@@ -453,7 +447,7 @@ export default function RemoveLiquidity({
             <BlueCard>
               <AutoColumn gap="10px">
                 <TYPE.link fontWeight={400} color={'primaryText1'}>
-                  <Trans id="removeLiquidity.hints.removingPoolTokensConvertsPosition">
+                  <Trans>
                     <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
                     rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
                   </Trans>
@@ -464,7 +458,7 @@ export default function RemoveLiquidity({
               <AutoColumn gap="20px">
                 <RowBetween>
                   <Text fontWeight={500}>
-                    <Trans id="removeLiquidity.buttons.RemoveAmount">Remove Amount</Trans>
+                    <Trans>Remove Amount</Trans>
                   </Text>
                   <ClickableText
                     fontWeight={500}
@@ -472,11 +466,7 @@ export default function RemoveLiquidity({
                       setShowDetailed(!showDetailed)
                     }}
                   >
-                    {showDetailed ? (
-                      <Trans id="common.simple">Simple</Trans>
-                    ) : (
-                      <Trans id="common.detailed">Detailed</Trans>
-                    )}
+                    {showDetailed ? <Trans>Simple</Trans> : <Trans>Detailed</Trans>}
                   </ClickableText>
                 </RowBetween>
                 <Row style={{ alignItems: 'flex-end' }}>
@@ -606,7 +596,7 @@ export default function RemoveLiquidity({
             {pair && (
               <div style={{ padding: '10px 20px' }}>
                 <RowBetween>
-                  <Trans id="removeLiquidity.labels.price">Price:</Trans>
+                  <Trans>Price:</Trans>
                   <div>
                     1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
                   </div>
@@ -622,7 +612,7 @@ export default function RemoveLiquidity({
             <div style={{ position: 'relative' }}>
               {!account ? (
                 <ButtonLight onClick={toggleWalletModal}>
-                  <Trans id="wallet.connect">Connect Wallet</Trans>
+                  <Trans>Connect Wallet</Trans>
                 </ButtonLight>
               ) : (
                 <RowBetween>
@@ -636,12 +626,12 @@ export default function RemoveLiquidity({
                   >
                     {approval === ApprovalState.PENDING ? (
                       <Dots>
-                        <Trans id="transactions.approving">Approving</Trans>
+                        <Trans>Approving</Trans>
                       </Dots>
                     ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                      <Trans id="transactions.approved">Approved</Trans>
+                      <Trans>Approved</Trans>
                     ) : (
-                      <Trans id="transactions.approve">Approve</Trans>
+                      <Trans>Approve</Trans>
                     )}
                   </ButtonConfirmed>
                   <ButtonError
@@ -652,7 +642,7 @@ export default function RemoveLiquidity({
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
                     <Text fontSize={16} fontWeight={500}>
-                      {error || <Trans id="removeLiquidity.buttons.remove">Remove</Trans>}
+                      {error || <Trans>Remove</Trans>}
                     </Text>
                   </ButtonError>
                 </RowBetween>

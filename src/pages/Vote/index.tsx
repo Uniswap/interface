@@ -29,6 +29,7 @@ import Loader from '../../components/Loader'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { useModalOpen, useToggleDelegateModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/actions'
+import { t, Trans } from '@lingui/macro'
 
 const PageWrapper = styled(AutoColumn)``
 
@@ -138,7 +139,7 @@ export default function Vote() {
       <DelegateModal
         isOpen={showDelegateModal}
         onDismiss={toggleDelegateModal}
-        title={showUnlockVoting ? 'Unlock Votes' : 'Update Delegation'}
+        title={showUnlockVoting ? t`Unlock Votes` : t`Update Delegation`}
       />
       <TopSection gap="md">
         <VoteCard>
@@ -147,12 +148,16 @@ export default function Vote() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Uniswap Governance</TYPE.white>
+                <TYPE.white fontWeight={600}>
+                  <Trans>Uniswap Governance</Trans>
+                </TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or
-                  delegate your votes to a third party.
+                  <Trans>
+                    UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or
+                    delegate your votes to a third party.
+                  </Trans>
                 </TYPE.white>
               </RowBetween>
               <ExternalLink
@@ -160,7 +165,9 @@ export default function Vote() {
                 href="https://uniswap.org/blog/uni"
                 target="_blank"
               >
-                <TYPE.white fontSize={14}>Read more about Uniswap governance</TYPE.white>
+                <TYPE.white fontSize={14}>
+                  <Trans>Read more about Uniswap governance</Trans>
+                </TYPE.white>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -170,7 +177,9 @@ export default function Vote() {
       </TopSection>
       <TopSection gap="2px">
         <WrapSmall>
-          <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>Proposals</TYPE.mediumHeader>
+          <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
+            <Trans>Proposals</Trans>
+          </TYPE.mediumHeader>
           {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
           {showUnlockVoting ? (
             <ButtonPrimary
@@ -179,18 +188,22 @@ export default function Vote() {
               borderRadius="8px"
               onClick={toggleDelegateModal}
             >
-              Unlock Voting
+              <Trans>Unlock Voting</Trans>
             </ButtonPrimary>
           ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
             <TYPE.body fontWeight={500} mr="6px">
-              <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
+              <Trans>
+                <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
+              </Trans>
             </TYPE.body>
           ) : uniBalance &&
             userDelegatee &&
             userDelegatee !== ZERO_ADDRESS &&
             JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
             <TYPE.body fontWeight={500} mr="6px">
-              <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
+              <Trans>
+                <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
+              </Trans>
             </TYPE.body>
           ) : (
             ''
@@ -202,17 +215,17 @@ export default function Vote() {
             {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
               <RowFixed>
                 <TYPE.body fontWeight={500} mr="4px">
-                  Delegated to:
+                  <Trans>Delegated to:</Trans>
                 </TYPE.body>
                 <AddressButton>
                   <StyledExternalLink
                     href={getExplorerLink(1, userDelegatee, ExplorerDataType.ADDRESS)}
                     style={{ margin: '0 4px' }}
                   >
-                    {userDelegatee === account ? 'Self' : shortenAddress(userDelegatee)}
+                    {userDelegatee === account ? <Trans>Self</Trans> : shortenAddress(userDelegatee)}
                   </StyledExternalLink>
                   <TextButton onClick={toggleDelegateModal} style={{ marginLeft: '4px' }}>
-                    (edit)
+                    <Trans>(edit)</Trans>
                   </TextButton>
                 </AddressButton>
               </RowFixed>
@@ -223,9 +236,13 @@ export default function Vote() {
         )}
         {allProposals?.length === 0 && (
           <EmptyProposals>
-            <TYPE.body style={{ marginBottom: '8px' }}>No proposals found.</TYPE.body>
+            <TYPE.body style={{ marginBottom: '8px' }}>
+              <Trans>No proposals found.</Trans>
+            </TYPE.body>
             <TYPE.subHeader>
-              <i>Proposals submitted by community members will appear here.</i>
+              <i>
+                <Trans>Proposals submitted by community members will appear here.</Trans>
+              </i>
             </TYPE.subHeader>
           </EmptyProposals>
         )}
@@ -240,7 +257,7 @@ export default function Vote() {
         })}
       </TopSection>
       <TYPE.subHeader color="text3">
-        A minimum threshold of 1% of the total UNI supply is required to submit proposals
+        <Trans>A minimum threshold of 1% of the total UNI supply is required to submit proposals</Trans>
       </TYPE.subHeader>
     </PageWrapper>
   )

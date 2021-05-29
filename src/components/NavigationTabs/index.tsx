@@ -63,10 +63,10 @@ export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
   return (
     <Tabs style={{ marginBottom: '20px', display: 'none', padding: '1rem 1rem 0 1rem' }}>
       <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
-        <Trans id="nav.swap">Swap</Trans>
+        <Trans>Swap</Trans>
       </StyledNavLink>
       <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-        <Trans id="nav.pool">Pool</Trans>
+        <Trans>Pool</Trans>
       </StyledNavLink>
     </Tabs>
   )
@@ -80,7 +80,7 @@ export function FindPoolTabs({ origin }: { origin: string }) {
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>
-          <Trans id="nav.importPool">Import Pool</Trans>
+          <Trans>Import Pool</Trans>
         </ActiveText>
       </RowBetween>
     </Tabs>
@@ -120,11 +120,11 @@ export function AddRemoveTabs({
         </HistoryLink>
         <TYPE.mediumHeader fontWeight={500} fontSize={20}>
           {creating ? (
-            <Trans id="pools.buttons.createPair">Create a pair</Trans>
+            <Trans>Create a pair</Trans>
           ) : adding ? (
-            <Trans id="pools.buttons.addLiquidity">Add Liquidity</Trans>
+            <Trans>Add Liquidity</Trans>
           ) : (
-            <Trans id="pools.buttons.removeLiquidity">Remove Liquidity</Trans>
+            <Trans>Remove Liquidity</Trans>
           )}
         </TYPE.mediumHeader>
         <SettingsTab placeholderSlippage={defaultSlippage} />

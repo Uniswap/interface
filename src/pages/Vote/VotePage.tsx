@@ -38,6 +38,7 @@ import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
+import { t, Trans } from '@lingui/macro'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -157,10 +158,12 @@ export default function VotePage({
 
   // get total votes and format percentages for UI
   const totalVotes: number | undefined = proposalData ? proposalData.forCount + proposalData.againstCount : undefined
-  const forPercentage: string =
-    proposalData && totalVotes ? ((proposalData.forCount * 100) / totalVotes).toFixed(0) + '%' : '0%'
-  const againstPercentage: string =
-    proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) + '%' : '0%'
+  const forPercentage: string = t`${
+    proposalData && totalVotes ? ((proposalData.forCount * 100) / totalVotes).toFixed(0) : '0'
+  } %`
+  const againstPercentage: string = t`${
+    proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) : '0'
+  } %`
 
   // only count available votes as of the proposal start block
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
@@ -198,11 +201,13 @@ export default function VotePage({
   return (
     <PageWrapper gap="lg" justify="center">
       <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
-      <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title="Unlock Votes" />
+      <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={t`Unlock Votes`} />
       <ProposalInfo gap="lg" justify="start">
         <RowBetween style={{ width: '100%' }}>
           <ArrowWrapper to="/vote">
-            <ArrowLeft size={20} /> All Proposals
+            <Trans>
+              <ArrowLeft size={20} /> All Proposals
+            </Trans>
           </ArrowWrapper>
           {proposalData && (
             <ProposalStatus status={proposalData.status}>{ProposalState[proposalData.status]}</ProposalStatus>
@@ -212,21 +217,28 @@ export default function VotePage({
           <TYPE.largeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</TYPE.largeHeader>
           <RowBetween>
             <TYPE.main>
-              {endDate && endDate < now
-                ? 'Voting ended ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
-                : proposalData
-                ? 'Voting ends approximately ' + (endDate && endDate.toLocaleString(DateTime.DATETIME_FULL))
-                : ''}
+              {endDate && endDate < now ? (
+                <Trans>Voting ended {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
+              ) : proposalData ? (
+                <Trans>Voting ends approximately {endDate && endDate.toLocaleString(DateTime.DATETIME_FULL)}</Trans>
+              ) : (
+                ''
+              )}
             </TYPE.main>
           </RowBetween>
           {proposalData && proposalData.status === ProposalState.Active && !showVotingButtons && (
             <GreyCard>
               <TYPE.black>
-                Only UNI votes that were self delegated or delegated to another address before block{' '}
-                {proposalData.startBlock} are eligible for voting.{' '}
+                <Trans>
+                  Only UNI votes that were self delegated or delegated to another address before block{' '}
+                  {proposalData.startBlock} are eligible for voting.{' '}
+                </Trans>
                 {showLinkForUnlock && (
                   <span>
-                    <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink> to prepare for the next proposal.
+                    <Trans>
+                      <StyledInternalLink to="/vote">Unlock voting</StyledInternalLink> to prepare for the next
+                      proposal.
+                    </Trans>
                   </span>
                 )}
               </TYPE.black>
@@ -253,7 +265,7 @@ export default function VotePage({
                 toggleVoteModal()
               }}
             >
-              Vote Against
+              <Trans>Vote Against</Trans>
             </ButtonPrimary>
           </RowFixed>
         ) : (
@@ -264,11 +276,15 @@ export default function VotePage({
             <CardSection>
               <AutoColumn gap="md">
                 <WrapSmall>
-                  <TYPE.black fontWeight={600}>For</TYPE.black>
-                  <TYPE.black fontWeight={600}>
-                    {' '}
-                    {proposalData?.forCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                  </TYPE.black>
+                  <Trans>
+                    <TYPE.black fontWeight={600}>
+                      <Trans>For</Trans>
+                    </TYPE.black>
+                    <TYPE.black fontWeight={600}>
+                      {' '}
+                      {proposalData?.forCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </TYPE.black>
+                  </Trans>
                 </WrapSmall>
               </AutoColumn>
               <ProgressWrapper>
@@ -280,7 +296,9 @@ export default function VotePage({
             <CardSection>
               <AutoColumn gap="md">
                 <WrapSmall>
-                  <TYPE.black fontWeight={600}>Against</TYPE.black>
+                  <TYPE.black fontWeight={600}>
+                    <Trans>Against</Trans>
+                  </TYPE.black>
                   <TYPE.black fontWeight={600}>
                     {proposalData?.againstCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                   </TYPE.black>
@@ -293,7 +311,9 @@ export default function VotePage({
           </StyledDataCard>
         </CardWrapper>
         <AutoColumn gap="md">
-          <TYPE.mediumHeader fontWeight={600}>Details</TYPE.mediumHeader>
+          <TYPE.mediumHeader fontWeight={600}>
+            <Trans>Details</Trans>
+          </TYPE.mediumHeader>
           {proposalData?.details?.map((d, i) => {
             return (
               <DetailText key={i}>
@@ -312,13 +332,17 @@ export default function VotePage({
           })}
         </AutoColumn>
         <AutoColumn gap="md">
-          <TYPE.mediumHeader fontWeight={600}>Description</TYPE.mediumHeader>
+          <TYPE.mediumHeader fontWeight={600}>
+            <Trans>Description</Trans>
+          </TYPE.mediumHeader>
           <MarkDownWrapper>
             <ReactMarkdown source={proposalData?.description} />
           </MarkDownWrapper>
         </AutoColumn>
         <AutoColumn gap="md">
-          <TYPE.mediumHeader fontWeight={600}>Proposer</TYPE.mediumHeader>
+          <TYPE.mediumHeader fontWeight={600}>
+            <Trans>Proposer</Trans>
+          </TYPE.mediumHeader>
           <ProposerAddressLink
             href={
               proposalData?.proposer && chainId
