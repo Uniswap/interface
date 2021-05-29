@@ -7,15 +7,15 @@ export default {
   ],
   compileNamespace: 'cjs',
   fallbackLocales: {
-    default: 'en',
+    default: 'en-US',
   },
   format: 'po',
   formatOptions: {
     lineNumbers: false,
   },
-  locales: ['en'],
+  locales: ['en-US'],
   orderBy: 'messageId',
   rootDir: '.',
   runtimeConfigModule: ['@lingui/core', 'i18n'],
-  sourceLocale: 'en',
+  sourceLocale: 'en-US',
 }
