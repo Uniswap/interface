@@ -191,6 +191,10 @@ msgstr ""
 msgid "Add {0}/{1} V3 liquidity"
 msgstr ""
 
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Added by user"
+msgstr ""
+
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr ""
@@ -616,6 +620,10 @@ msgstr ""
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
+msgstr ""
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Expanded results from inactive Token Lists"
 msgstr ""
 
 #: src/pages/Pool/CTACards.tsx
@@ -1187,6 +1195,10 @@ msgstr ""
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
+msgstr ""
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
 msgstr ""
 
 #: src/pages/Pool/CTACards.tsx
