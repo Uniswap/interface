@@ -10,7 +10,7 @@ import useParsedQueryString from './useParsedQueryString'
 function parseLocale(maybeSupportedLocale: string): SupportedLocale | undefined {
   const lowerMaybeSupportedLocale = maybeSupportedLocale.toLowerCase()
   return SUPPORTED_LOCALES.find(
-    (locale) => locale === lowerMaybeSupportedLocale || locale.slice(0, 2) === lowerMaybeSupportedLocale
+    (locale) => locale.toLowerCase() === lowerMaybeSupportedLocale || locale.slice(0, 2) === lowerMaybeSupportedLocale
   )
 }
 
