@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { getTickToPrice } from 'utils/getTickToPrice'
 import JSBI from 'jsbi'
@@ -378,32 +379,32 @@ export function useV3DerivedMintInfo(
 
   let errorMessage: string | undefined
   if (!account) {
-    errorMessage = 'Connect Wallet'
+    errorMessage = t`Connect Wallet`
   }
 
   if (poolState === PoolState.INVALID) {
-    errorMessage = errorMessage ?? 'Invalid pair'
+    errorMessage = errorMessage ?? t`Invalid pair`
   }
 
   if (invalidPrice) {
-    errorMessage = errorMessage ?? 'Invalid price input'
+    errorMessage = errorMessage ?? t`Invalid price input`
   }
 
   if (
     (!parsedAmounts[Field.CURRENCY_A] && !depositADisabled) ||
     (!parsedAmounts[Field.CURRENCY_B] && !depositBDisabled)
   ) {
-    errorMessage = errorMessage ?? 'Enter an amount'
+    errorMessage = errorMessage ?? t`Enter an amount`
   }
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    errorMessage = 'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
+    errorMessage = t`Insufficient ${currencies[Field.CURRENCY_A]?.symbol} balance`
   }
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    errorMessage = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
+    errorMessage = t`Insufficient ${currencies[Field.CURRENCY_B]?.symbol} balance`
   }
 
   const invalidPool = poolState === PoolState.INVALID
