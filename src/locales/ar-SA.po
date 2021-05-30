@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 01:42+0000\n"
+"POT-Creation-Date: 2021-05-30 19:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Arabic\n"
-"PO-Revision-Date: 2021-05-30 01:46\n"
+"PO-Revision-Date: 2021-05-30 19:39\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -188,10 +188,6 @@ msgstr "إضافة {0}-{1} سيولة"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "إضافة سيولة {0}/{1} V3"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Added by user"
-msgstr "أضيف من قبل المستخدم"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -967,9 +963,25 @@ msgstr "لا توجد مقترحات."
 msgid "No results found."
 msgstr "لا توجد نتائج."
 
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "إيقاف"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "على"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "فقط استخدم هذا الخيار مع ما تعلمونه من أمور."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "عن"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "على"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1341,8 +1353,8 @@ msgid "Tokens"
 msgstr "الرموز"
 
 #: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
-msgstr "الرموز المميزة من القوائم غير النشطة. استيراد رموز رمزية محددة أدناه أو انقر فوق 'إدارة' لتفعيل المزيد من القوائم."
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "الرموز من القوائم غير النشطة. قم باستيراد الرموز المميزة المحددة أدناه أو انقر فوق \"إدارة\" لتنشيط المزيد من القوائم."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1752,6 +1764,10 @@ msgstr "ل {0}"
 msgid "has socks emoji"
 msgstr "لديه رمز تعبيري جوارب"
 
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https: // أو ipfs: // أو اسم ENS"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
 msgstr "دقائق"
@@ -1770,6 +1786,10 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> في <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} رموز مخصصة"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1829,6 +1849,7 @@ msgstr "{0} لكل {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
+#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} رموز"
 
@@ -1836,6 +1857,10 @@ msgstr "{0} رموز"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} السعر:"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • أضيفت من قبل المستخدم"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx

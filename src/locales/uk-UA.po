@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 01:42+0000\n"
+"POT-Creation-Date: 2021-05-30 19:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-05-30 01:46\n"
+"PO-Revision-Date: 2021-05-30 19:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -188,10 +188,6 @@ msgstr "Додати {0}-{1} ліквідність"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Додати {0}/{1} V3 ліквідність"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Added by user"
-msgstr "Доданий користувачем"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -967,9 +963,25 @@ msgstr "Пропозиції не знайдено."
 msgid "No results found."
 msgstr "Результатів не знайдено."
 
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "ВИМК"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "УВІМК"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ТІЛЬКИ ВИКОРИСТОВУЙТЕ ЦЕЙ РЕЖИМ ЯКЩО ВИ ЗНАЄТЕ ЯКТИ."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "Вимкнено"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "Увімкнено"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1341,8 +1353,8 @@ msgid "Tokens"
 msgstr "Токени"
 
 #: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
-msgstr "Токени з неактивних списків. Імпортуються вказані нижче токени або натисніть кнопку 'Налаштувати', щоб активувати більше списків."
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "Токени з неактивних списків. Імпортуйте конкретні маркери нижче або натисніть Керувати, щоб активувати більше списків."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1752,6 +1764,10 @@ msgstr "на {0}"
 msgid "has socks emoji"
 msgstr "має емодзі"
 
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https: // або ipfs: // або ім’я ENS"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
 msgstr "хвилин"
@@ -1770,6 +1786,10 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> на <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} Спеціальні жетони"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1829,6 +1849,7 @@ msgstr "{0} в {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
+#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} токени"
 
@@ -1836,6 +1857,10 @@ msgstr "{0} токени"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Ціна:"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • Додано користувачем"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx

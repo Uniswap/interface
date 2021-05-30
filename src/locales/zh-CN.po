@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 01:42+0000\n"
+"POT-Creation-Date: 2021-05-30 19:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-05-30 01:46\n"
+"PO-Revision-Date: 2021-05-30 19:39\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,7 +37,7 @@ msgstr "(最大)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(claim)"
+msgstr "(领取)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -68,15 +68,15 @@ msgstr "0 UNI / 周"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "0.05%费用"
+msgstr "0.05% 手续费"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0.3% 费用"
+msgstr "0.3% 手续费"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1%费用"
+msgstr "1% 手续费"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -101,7 +101,7 @@ msgstr "<0/> 投票"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>账户分析和累积费用</0><1> ↗ </1>"
+msgstr "<0>账户分析和已累积的手续费</0><1> ↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to</0>V3"
@@ -113,11 +113,11 @@ msgstr "<0>For</0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>提示：</0> 删除池令牌，按照当前速率将您的位置转换为基础令牌，与您在池中的份额成比例。 应计费用包括在您收到的数额中。"
+msgstr "<0>提示：</0>退出资金池，按照当前汇率将您的资金池份额转换回原本代币。您收到的代币数额中将包含已累计的手续费。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0>提示：</0> 使用此工具来查找不会自动出现在接口中的对。"
+msgstr "<0>提示：</0>使用此工具来查找界面中未自动出现的币对。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -188,10 +188,6 @@ msgstr "添加 {0}-{1} 流动资金"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "添加 {0}/{1} V3 流动资金"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Added by user"
-msgstr "由用户添加"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -967,9 +963,25 @@ msgstr "未找到提案。"
 msgid "No results found."
 msgstr "未找到任何结果。"
 
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "离开"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "上"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "如果您知道您正在做什么，只能使用这个模板。"
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "离开"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "上"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1341,8 +1353,8 @@ msgid "Tokens"
 msgstr "令牌"
 
 #: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
-msgstr "来自非活动列表的令牌。在下方导入特定令牌或点击“管理”来激活更多列表。"
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "非活动列表中的令牌。在下面导入特定令牌或单击“管理”以激活更多列表。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1752,6 +1764,10 @@ msgstr "{0}"
 msgid "has socks emoji"
 msgstr "有socks emoji"
 
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https：//或ipfs：//或ENS名称"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
 msgstr "分钟"
@@ -1770,6 +1786,10 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> per <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} 自定义令牌"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1829,6 +1849,7 @@ msgstr "{0} / {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
+#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} 代币"
 
@@ -1836,6 +1857,10 @@ msgstr "{0} 代币"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} 价格："
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} •由用户添加"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx
