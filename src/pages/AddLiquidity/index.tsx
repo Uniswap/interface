@@ -579,13 +579,15 @@ export default function AddLiquidity({
                     ) : null}
                   </RowBetween>
                   <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
-                    Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
-                    <ExternalLink
-                      href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'}
-                      style={{ fontSize: '14px' }}
-                    >
-                      Need help picking a range?
-                    </ExternalLink>
+                    <Trans>
+                      Your liquidity will only earn fees when the market price of the pair is within your range.{' '}
+                      <ExternalLink
+                        href={'https://docs.uniswap.org/concepts/introduction/liquidity-user-guide#4-set-price-range'}
+                        style={{ fontSize: '14px' }}
+                      >
+                        Need help picking a range?
+                      </ExternalLink>
+                    </Trans>
                   </TYPE.main>
 
                   <RangeSelector
@@ -606,7 +608,7 @@ export default function AddLiquidity({
                     <LightCard style={{ padding: '12px' }}>
                       <AutoColumn gap="4px">
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
-                          Current Price
+                          <Trans>Current Price</Trans>
                         </TYPE.main>
                         <TYPE.body fontWeight={500} textAlign="center" fontSize={20}>
                           <HoverInlineText

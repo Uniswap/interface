@@ -12,7 +12,7 @@ import { ButtonPrimary } from '../Button'
 import Circle from '../../assets/images/blue-loader.svg'
 import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
 import { ExternalLink } from '../../theme/components'
-import { formatTokenAmount } from 'utils/formatTokenAmount'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
 
@@ -99,7 +99,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
               <StyledClosed stroke="black" onClick={wrappedOndismiss} />
             </RowBetween>
             <TYPE.largeHeader>
-              <Trans>{formatTokenAmount(availableVotes, 4)} Votes</Trans>
+              <Trans>{formatCurrencyAmount(availableVotes, 4)} Votes</Trans>
             </TYPE.largeHeader>
             <ButtonPrimary onClick={onVote}>
               <TYPE.mediumHeader color="white">
