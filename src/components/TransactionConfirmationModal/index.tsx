@@ -174,14 +174,14 @@ export function ConfirmationModalContent({
   )
 }
 
-export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
   const theme = useContext(ThemeContext)
   return (
     <Wrapper>
       <Section>
         <RowBetween>
           <Text fontWeight={500} fontSize={20}>
-            Error
+            <Trans>Error</Trans>
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -210,9 +210,9 @@ interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
   hash: string | undefined
-  content: () => React.ReactNode
+  content: () => ReactNode
   attemptingTxn: boolean
-  pendingText: React.ReactNode
+  pendingText: ReactNode
   currencyToAdd?: Currency | undefined
 }
 
