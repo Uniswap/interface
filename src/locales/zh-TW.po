@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 01:42+0000\n"
+"POT-Creation-Date: 2021-05-30 19:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-05-30 01:46\n"
+"PO-Revision-Date: 2021-05-30 19:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -188,10 +188,6 @@ msgstr "添加 {0}-{1} 流動性"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "添加 {0}/{1} V3流動性"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Added by user"
-msgstr "由用戶添加"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -967,9 +963,25 @@ msgstr "找不到提案。"
 msgid "No results found."
 msgstr "未找到結果。"
 
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "離開"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "上"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "如果您知道自己在做什麼，請僅使用此模式。"
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "離開"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "上"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1341,8 +1353,8 @@ msgid "Tokens"
 msgstr "代幣"
 
 #: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
-msgstr "非活動列表中的令牌。在下面導入特定令牌，或單擊“管理”以激活更多列表。"
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "非活動列表中的令牌。在下面導入特定令牌或單擊“管理”以激活更多列表。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1752,6 +1764,10 @@ msgstr "為 {0}"
 msgid "has socks emoji"
 msgstr "有襪子表情符號"
 
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https：//或ipfs：//或ENS名稱"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
 msgstr "分鐘"
@@ -1770,6 +1786,10 @@ msgstr "{0} ％"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "每個<1 /> {0}"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} 自定義令牌"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1829,6 +1849,7 @@ msgstr "每 {1}{0}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
+#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} 代幣"
 
@@ -1836,6 +1857,10 @@ msgstr "{0} 代幣"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} 價格："
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} •由用戶添加"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx
