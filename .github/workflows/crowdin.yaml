@@ -34,11 +34,10 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
       - name: Extract translations
-        run: "yarn lingui extract --locale en-US"
+        run: "yarn i18n:extract"
 
       - name: Synchronize
         uses: crowdin/github-action@1.1.0

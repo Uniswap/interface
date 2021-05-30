@@ -473,7 +473,11 @@ export default function AddLiquidity({
             )}
 
             {hasExistingPosition && existingPosition ? (
-              <PositionPreview position={existingPosition} title={t`Selected Range`} inRange={!outOfRange} />
+              <PositionPreview
+                position={existingPosition}
+                title={<Trans>Selected Range</Trans>}
+                inRange={!outOfRange}
+              />
             ) : (
               <>
                 <FeeSelector

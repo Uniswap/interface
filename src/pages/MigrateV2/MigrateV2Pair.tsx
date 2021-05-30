@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import React, { useCallback, useMemo, useState, useEffect } from 'react'
+import React, { useCallback, useMemo, useState, useEffect, ReactNode } from 'react'
 import { Fraction, Percent, Price, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
@@ -35,7 +35,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { useV3DerivedMintInfo, useRangeHopCallbacks, useV3MintActionHandlers } from 'state/mint/v3/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
@@ -55,7 +55,7 @@ const ZERO = JSBI.BigInt(0)
 
 const DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE = new Percent(75, 10_000)
 
-function EmptyState({ message }: { message: string }) {
+function EmptyState({ message }: { message: ReactNode }) {
   return (
     <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
       <TYPE.body>{message}</TYPE.body>
@@ -753,7 +753,7 @@ export default function MigrateV2Pair({
             token1={token1}
           />
         ) : (
-          <EmptyState message={t`Loading`} />
+          <EmptyState message={<Trans>Loading</Trans>} />
         )}
       </AutoColumn>
     </BodyWrapper>

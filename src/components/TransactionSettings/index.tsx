@@ -159,7 +159,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             <Trans>Slippage tolerance</Trans>
           </TYPE.black>
           <QuestionHelper
-            text={t`Your transaction will revert if the price changes unfavorably by more than this percentage.`}
+            text={
+              <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
+            }
           />
         </RowFixed>
         <RowBetween>
@@ -208,11 +210,13 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
               color: slippageError ? 'red' : '#F3841E',
             }}
           >
-            {slippageError
-              ? t`Enter a valid slippage percentage`
-              : tooLow
-              ? t`Your transaction may fail`
-              : t`Your transaction may be frontrun`}
+            {slippageError ? (
+              <Trans>Enter a valid slippage percentage</Trans>
+            ) : tooLow ? (
+              <Trans>Your transaction may fail</Trans>
+            ) : (
+              <Trans>Your transaction may be frontrun</Trans>
+            )}
           </RowBetween>
         ) : null}
       </AutoColumn>

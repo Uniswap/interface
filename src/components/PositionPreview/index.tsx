@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from 'react'
+import React, { useState, useCallback, useContext, ReactNode } from 'react'
 import { Position } from '@uniswap/v3-sdk'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -22,7 +22,7 @@ export const PositionPreview = ({
   baseCurrencyDefault,
 }: {
   position: Position
-  title?: string
+  title?: ReactNode
   inRange: boolean
   baseCurrencyDefault?: Currency | undefined
 }) => {

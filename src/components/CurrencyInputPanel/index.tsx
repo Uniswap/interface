@@ -149,7 +149,7 @@ interface CurrencyInputPanelProps {
   onUserInput: (value: string) => void
   onMax?: () => void
   showMaxButton: boolean
-  label?: string
+  label?: ReactNode
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
   hideBalance?: boolean
@@ -283,7 +283,7 @@ export default function CurrencyInputPanel({
                   ) : null}
                 </RowFixed>
               ) : (
-                <span></span>
+                <span />
               )}
               <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
             </RowBetween>
