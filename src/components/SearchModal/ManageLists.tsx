@@ -326,7 +326,7 @@ export function ManageLists({
           <SearchInput
             type="text"
             id="list-add-input"
-            placeholder="https:// or ipfs:// or ENS name"
+            placeholder={t`https:// or ipfs:// or ENS name`}
             value={listUrlInput}
             onChange={handleInput}
           />
@@ -345,7 +345,9 @@ export function ManageLists({
                 {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
                 <AutoColumn gap="4px" style={{ marginLeft: '20px' }}>
                   <TYPE.body fontWeight={600}>{tempList.name}</TYPE.body>
-                  <TYPE.main fontSize={'12px'}>{tempList.tokens.length} tokens</TYPE.main>
+                  <TYPE.main fontSize={'12px'}>
+                    <Trans>{tempList.tokens.length} tokens</Trans>
+                  </TYPE.main>
                 </AutoColumn>
               </RowFixed>
               {isImported ? (
