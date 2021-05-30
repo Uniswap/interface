@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Percent, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -32,7 +33,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            Liquidity Provider Fee
+            <Trans>Liquidity Provider Fee</Trans>
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
@@ -43,7 +44,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            Route
+            <Trans>Route</Trans>
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
@@ -54,7 +55,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            Price Impact
+            <Trans>Price Impact</Trans>
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
@@ -65,7 +66,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            {trade.tradeType === TradeType.EXACT_INPUT ? 'Minimum received' : 'Maximum sent'}
+            {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
@@ -78,7 +79,7 @@ export function AdvancedSwapDetails({ trade, allowedSlippage }: AdvancedSwapDeta
       <RowBetween>
         <RowFixed>
           <TYPE.black fontSize={12} fontWeight={400} color={theme.text2}>
-            Slippage tolerance
+            <Trans>Slippage tolerance</Trans>
           </TYPE.black>
         </RowFixed>
         <TYPE.black textAlign="right" fontSize={12} color={theme.text1}>
