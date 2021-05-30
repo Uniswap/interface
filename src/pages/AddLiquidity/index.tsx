@@ -617,8 +617,9 @@ export default function AddLiquidity({
                           />{' '}
                         </TYPE.body>
                         <TYPE.main fontWeight={500} textAlign="center" fontSize={12}>
-                          {quoteCurrency?.symbol} {' per '}
-                          {baseCurrency.symbol}
+                          <Trans>
+                            {quoteCurrency?.symbol} per {baseCurrency.symbol}
+                          </Trans>
                         </TYPE.main>
                       </AutoColumn>
                     </LightCard>
