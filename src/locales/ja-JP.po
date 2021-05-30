@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "自動"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "入金可能:"
+msgid "Available to deposit: {0}"
+msgstr "入金可能： {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "戻る"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "残高:"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "バランス： {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "ウォレット内でこの取引を確認する"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "ウォレットに接続"
@@ -514,6 +523,10 @@ msgstr "プールを作成し、 {0}/{1} V3流動性を追加"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "プールを作成"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "現在の価格"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "UNIクレームを発生させるアドレスを入力します。アド
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "金額を入力"
@@ -758,6 +776,10 @@ msgstr "この取引には流動性が不足しています。"
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "この取引には流動性が不足しています。マルチホップ取引を有効にしてください。"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "不十分な {0} バランス"
@@ -766,9 +788,18 @@ msgstr "不十分な {0} バランス"
 msgid "Interface Settings"
 msgstr "インターフェイスの設定"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "無効なペア"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "無効なペアです。"
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "無効な価格入力"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "最大値"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "最大価格"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "移行中"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "最小価格"
 
@@ -1632,6 +1665,10 @@ msgstr "V3流動性ポジションがここに表示されます。"
 msgid "Your liquidity deposits"
 msgstr "あなたの流動性預金"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "あなたの流動性は、ペアの市場価格があなたの範囲内にある場合にのみ手数料を獲得します。 <0>範囲の選択についてサポートが必要ですか？</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} 件の投票"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"

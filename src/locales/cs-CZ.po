@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "Automaticky"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "K dispozici pro vklad:"
+msgid "Available to deposit: {0}"
+msgstr "K dispozici k vkladu: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "Zpět"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "Zůstatek:"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "Zůstatek: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "Potvrďte tuto transakci ve Vaší peněžence"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Připojit peněženku"
@@ -514,6 +523,10 @@ msgstr "Vytvořit bazén a přidat {0}/{1} V3 likviditu"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Vytvořit bazén."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "Aktuální cena"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "Zadejte adresu pro spuštění nároku UNI. Pokud má adresa nějakou n�
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Zadejte částku"
@@ -758,6 +776,10 @@ msgstr "Nedostatek likvidity pro tento obchod."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Nedostatečná likvidita pro tento obchod. Zkuste povolit obchodování s více obchody."
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "Nedostatečný zůstatek {0}"
@@ -766,9 +788,18 @@ msgstr "Nedostatečný zůstatek {0}"
 msgid "Interface Settings"
 msgstr "Nastavení rozhraní"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "Neplatný pár"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "Neplatný pár."
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "Neplatné zadání ceny"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "Max."
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "Maximální cena"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "Migrace"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "Minimální cena"
 
@@ -1632,6 +1665,10 @@ msgstr "Zde se objeví vaše V3 likviditní pozice."
 msgid "Your liquidity deposits"
 msgstr "Vaše vklady likvidity"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "Vaše likvidita bude získávat poplatky, pouze pokud je tržní cena páru ve vašem rozmezí. <0> Potřebujete pomoc s výběrem rozsahu?</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} hlasů"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"

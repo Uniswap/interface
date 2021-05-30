@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "Auto"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "Zur Einzahlung verfügbar:"
+msgid "Available to deposit: {0}"
+msgstr "Verfügbar für die Einzahlung: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "Zurück"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "Kontostand:"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "Balance: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "Diese Transaktion in Ihrer Brieftasche bestätigen"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Wallet verbinden"
@@ -514,6 +523,10 @@ msgstr "Pool erstellen und {0}/{1} V3 Liquidität hinzufügen"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Pool erstellen."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "Derzeitiger Preis"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "Geben Sie eine Adresse ein, um einen UNI-Anspruch auszulösen. Wenn die 
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Betrag eingeben"
@@ -758,6 +776,10 @@ msgstr "Unzureichende Liquidität für diesen Handel."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Unzureichende Liquidität für diesen Handel. Aktivieren Sie Multi-Hop-Handel."
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "Unzureichendes {0} Gleichgewicht"
@@ -766,9 +788,18 @@ msgstr "Unzureichendes {0} Gleichgewicht"
 msgid "Interface Settings"
 msgstr "Schnittstellen-Einstellungen"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "Ungültiges Paar"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "Ungültiges Paar."
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "Ungültige Preisangabe"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "Max."
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "Maximaler Preis"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "Migrieren"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "Min. Preis"
 
@@ -1632,6 +1665,10 @@ msgstr "Ihre V3 Liquiditätspositionen werden hier erscheinen."
 msgid "Your liquidity deposits"
 msgstr "Ihre Liquiditätseinlagen"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "Ihre Liquidität wird nur dann Gebühren verdienen, wenn der Marktpreis des Paares in Ihrem Bereich liegt. <0> Benötigen Sie Hilfe bei der Auswahl eines Bereichs?</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} Stimmen"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
