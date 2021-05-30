@@ -29,7 +29,7 @@ import Loader from '../../components/Loader'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { useModalOpen, useToggleDelegateModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/actions'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
 const PageWrapper = styled(AutoColumn)``
 
@@ -139,7 +139,7 @@ export default function Vote() {
       <DelegateModal
         isOpen={showDelegateModal}
         onDismiss={toggleDelegateModal}
-        title={showUnlockVoting ? t`Unlock Votes` : t`Update Delegation`}
+        title={showUnlockVoting ? <Trans>Unlock Votes</Trans> : <Trans>Update Delegation</Trans>}
       />
       <TopSection gap="md">
         <VoteCard>

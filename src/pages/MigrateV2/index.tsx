@@ -18,7 +18,7 @@ import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { getCreate2Address } from '@ethersproject/address'
 import { pack, keccak256 } from '@ethersproject/solidity'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
@@ -115,7 +115,7 @@ export default function MigrateV2() {
             <Trans>Migrate V2 Liquidity</Trans>
           </TYPE.mediumHeader>
           <div>
-            <QuestionHelper text={t`Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.`} />
+            <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
           </div>
         </AutoRow>
 

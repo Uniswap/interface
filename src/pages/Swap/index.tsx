@@ -55,7 +55,7 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -377,7 +377,9 @@ export default function Swap({ history }: RouteComponentProps) {
           <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
-                label={independentField === Field.OUTPUT && !showWrap ? t`From (at most)` : t`From`}
+                label={
+                  independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
+                }
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={showMaxButton}
                 currency={currencies[Field.INPUT]}
@@ -402,7 +404,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <CurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
                 onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? t`To (at least)` : t`To`}
+                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
@@ -572,9 +574,12 @@ export default function Swap({ history }: RouteComponentProps) {
                           <CheckCircle size="20" color={theme.green1} />
                         ) : (
                           <MouseoverTooltip
-                            text={t`You must give the Uniswap smart contracts permission to use your ${
-                              currencies[Field.INPUT]?.symbol
-                            }. You only have to do this once per token.`}
+                            text={
+                              <Trans>
+                                You must give the Uniswap smart contracts permission to use your{' '}
+                                {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                              </Trans>
+                            }
                           >
                             <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
                           </MouseoverTooltip>

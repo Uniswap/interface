@@ -201,7 +201,7 @@ export default function VotePage({
   return (
     <PageWrapper gap="lg" justify="center">
       <VoteModal isOpen={showVoteModal} onDismiss={toggleVoteModal} proposalId={proposalData?.id} support={support} />
-      <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={t`Unlock Votes`} />
+      <DelegateModal isOpen={showDelegateModal} onDismiss={toggleDelegateModal} title={<Trans>Unlock Votes</Trans>} />
       <ProposalInfo gap="lg" justify="start">
         <RowBetween style={{ width: '100%' }}>
           <ArrowWrapper to="/vote">

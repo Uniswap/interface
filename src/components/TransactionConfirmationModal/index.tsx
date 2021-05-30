@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useContext } from 'react'
+import React, { ReactNode, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import Modal from '../Modal'
@@ -45,7 +45,7 @@ export function ConfirmationPendingContent({
   inline,
 }: {
   onDismiss: () => void
-  pendingText: string
+  pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
   return (
@@ -153,10 +153,10 @@ export function ConfirmationModalContent({
   onDismiss,
   topContent,
 }: {
-  title: string
+  title: ReactNode
   onDismiss: () => void
-  topContent: () => React.ReactNode
-  bottomContent?: () => React.ReactNode | undefined
+  topContent: () => ReactNode
+  bottomContent?: () => ReactNode | undefined
 }) {
   return (
     <Wrapper>
@@ -212,7 +212,7 @@ interface ConfirmationModalProps {
   hash: string | undefined
   content: () => React.ReactNode
   attemptingTxn: boolean
-  pendingText: string
+  pendingText: React.ReactNode
   currencyToAdd?: Currency | undefined
 }
 
