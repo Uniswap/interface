@@ -33,7 +33,7 @@
     "ajv": "^6.12.3",
     "cids": "^1.1.6",
     "copy-to-clipboard": "^3.2.0",
-    "eslint": "^7.26.0",
+    "eslint": "^7.27.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-prettier": "^3.4.0",
