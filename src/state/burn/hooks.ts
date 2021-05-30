@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { Token, Currency, Percent, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -123,11 +124,11 @@ export function useDerivedBurnInfo(
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = t`Connect Wallet`
   }
 
   if (!parsedAmounts[Field.LIQUIDITY] || !parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {
-    error = error ?? 'Enter an amount'
+    error = error ?? t`Enter an amount`
   }
 
   return { pair, parsedAmounts, error }

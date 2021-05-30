@@ -16,7 +16,7 @@ import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import AccountDetails from '../AccountDetails'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
 import Modal from '../Modal'
 import Option from './Option'
@@ -240,7 +240,7 @@ export default function WalletModal({
                 id={`connect-${key}`}
                 key={key}
                 color={'#E8831D'}
-                header={t`Install Metamask`}
+                header={<Trans>Install Metamask</Trans>}
                 subheader={null}
                 link={'https://metamask.io/'}
                 icon={MetamaskIcon}

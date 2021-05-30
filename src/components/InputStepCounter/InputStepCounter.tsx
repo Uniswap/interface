@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, ReactNode } from 'react'
 import { LightCard } from 'components/Card'
 import { RowBetween } from 'components/Row'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -60,7 +60,7 @@ interface StepCounterProps {
   label?: string
   width?: string
   locked?: boolean // disable input
-  title: string
+  title: ReactNode
   tokenA: string | undefined
   tokenB: string | undefined
 }

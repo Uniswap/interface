@@ -1,6 +1,6 @@
 import React from 'react'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { AutoColumn } from 'components/Column'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { TYPE } from 'theme'
@@ -26,9 +26,11 @@ export default function FeeSelector({
   return (
     <AutoColumn gap="16px">
       <DynamicSection gap="md" disabled={disabled}>
-        <TYPE.label>{t`Select Pool`}</TYPE.label>
+        <TYPE.label>
+          <Trans>Select Pool</Trans>
+        </TYPE.label>
         <TYPE.main fontSize={14} fontWeight={400} style={{ marginBottom: '.5rem', lineHeight: '125%' }}>
-          {t`Select a pool type based on your preferred liquidity provider fee.`}
+          <Trans>Select a pool type based on your preferred liquidity provider fee.</Trans>
         </TYPE.main>
         <RowBetween>
           <ButtonRadioChecked
@@ -37,9 +39,11 @@ export default function FeeSelector({
             onClick={() => handleFeePoolSelect(FeeAmount.LOW)}
           >
             <AutoColumn gap="sm" justify="flex-start">
-              <ResponsiveText>{t`0.05% fee`}</ResponsiveText>
+              <ResponsiveText>
+                <Trans>0.05% fee</Trans>
+              </ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                {t`Best for stable pairs.`}
+                <Trans>Best for stable pairs.</Trans>
               </TYPE.main>
             </AutoColumn>
           </ButtonRadioChecked>
@@ -49,9 +53,11 @@ export default function FeeSelector({
             onClick={() => handleFeePoolSelect(FeeAmount.MEDIUM)}
           >
             <AutoColumn gap="sm" justify="flex-start">
-              <ResponsiveText>{t`0.3% fee`}</ResponsiveText>
+              <ResponsiveText>
+                <Trans>0.3% fee</Trans>
+              </ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                {t`Best for most pairs.`}
+                <Trans>Best for most pairs.</Trans>
               </TYPE.main>
             </AutoColumn>
           </ButtonRadioChecked>
@@ -61,9 +67,11 @@ export default function FeeSelector({
             onClick={() => handleFeePoolSelect(FeeAmount.HIGH)}
           >
             <AutoColumn gap="sm" justify="flex-start">
-              <ResponsiveText>{t`1% fee`}</ResponsiveText>
+              <ResponsiveText>
+                <Trans>1% fee</Trans>
+              </ResponsiveText>
               <TYPE.main fontWeight={400} fontSize="12px" textAlign="left">
-                {t`Best for exotic pairs.`}
+                <Trans>Best for exotic pairs.</Trans>
               </TYPE.main>
             </AutoColumn>
           </ButtonRadioChecked>

@@ -1,33 +1,41 @@
+# Development
+
+## Install Dependencies
+
+```bash
+yarn install
+```
+
+## Run the interface
+
+```bash
+yarn start
+```
+
+# Contributing
+
 Thank you for your interest in contributing to the Uniswap interface! 🦄
 
-# Coding
+## Finding a first issue
+
+Start with issues with the label
+[`good first issue`](https://github.com/Uniswap/uniswap-interface/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
+
+## Pull requests
 
 **Please open all pull requests against the `main` branch.**
 CI checks will run against all PRs.
 
-See [README.md](https://github.com/Uniswap/uniswap-interface/blob/main/README.md) for instructions on running the app locally.
-
-Start with issues with label [good first issue](https://github.com/Uniswap/uniswap-interface/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
-
 # Translations
 
-Help Uniswap cover more languages!
+Help Uniswap reach a global audience! 
 
-Uniswap interface uses PO file to manage translations. See [Working with PO Files](https://www.gnu.org/software/trans-coord/manual/gnun/html_node/PO-Files.html#PO-Files)
+Uniswap uses [Crowdin](https://crowdin.com/project/uniswap-interface) 
+for managing translations. Whenever a new string is added to the project,
+it gets uploaded to Crowdin for translation by [this workflow](./.github/workflows/crowdin.yaml).
 
-## Starting a New Translation
+Every hour, translations are synced from Crowdin in [this other workflow](./.github/workflows/crowdin-sync.yaml).
 
-Uniswap interface uses [LinguiJS](https://lingui.js.org/) to manage locales and translations.
+You can contribute by joining Crowdin to proofread existing translations [here](https://crowdin.com/project/uniswap-interface/invite?d=93i5n413q403t4g473p443o4c3t2g3s21343u2c3n403l4b3v2735353i4g4k4l4g453j4g4o4j4e4k4b323l4a3h463s4g453q443m4e3t2b303s2a35353l403o443v293e303k4g4n4r4g483i4g4r4j4e4o473i5n4a3t463t4o4)
 
-- Follow instructions in [README.md](https://github.com/Uniswap/uniswap-interface/blob/main/README.md) for instructions on running the app locally
-- Add `locale` to locales array in [lingui.config.js](https://github.com/Uniswap/uniswap-interface/blob/main/lingui.config.js#L14)
-- Add `locale` to locales array in [i18n.tsx](https://github.com/Uniswap/uniswap-interface/blob/main/src/i18n.tsx#L7)
-- Run `yarn i18n:extract` to generate [src/locales/{locale}.po](https://github.com/Uniswap/uniswap-interface/tree/main/src/locales)
-- Continue to [Existing Translation](#existing-translation) below
-
-## Existing Translation
-
-- Edit [src/locales](https://github.com/Uniswap/uniswap-interface/tree/main/src/locales)/{locale}.po either manually or with a PO editor (see [Editing PO Files](https://www.gnu.org/software/trans-coord/manual/web-trans/html_node/PO-Editors.html)).
-- Run `yarn i18n:compile` to generate src/locales/{locale}.js
-- Run `yarn start` to start a server locally to verify changes (append `?lng={locale}` query param)
-- Submit PR against main
+Or, ask to join us as a translator in the Discord!
