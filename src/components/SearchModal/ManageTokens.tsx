@@ -130,8 +130,7 @@ export default function ManageTokens({
         <PaddedColumn gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
           <RowBetween>
             <TYPE.main fontWeight={600}>
-              {/* TODO(judo): handle plural */}
-              {userAddedTokens?.length} Custom {userAddedTokens.length === 1 ? 'Token' : 'Tokens'}
+              <Trans>{userAddedTokens?.length} Custom Tokens</Trans>
             </TYPE.main>
             {userAddedTokens.length > 0 && (
               <ButtonText onClick={handleRemoveAll}>
