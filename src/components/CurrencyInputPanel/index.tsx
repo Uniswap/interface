@@ -283,7 +283,7 @@ export default function CurrencyInputPanel({
                   ) : null}
                 </RowFixed>
               ) : (
-                <span></span>
+                <span />
               )}
               <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
             </RowBetween>
