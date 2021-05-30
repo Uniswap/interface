@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-05-30 19:39\n"
+"PO-Revision-Date: 2021-05-30 23:15\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -287,7 +287,7 @@ msgstr "Saldo:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0} {1}"
-msgstr "Equilibrio: {0} {1}"
+msgstr "Saldo: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -1766,7 +1766,7 @@ msgstr "tiene socks emoji"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https: // o ipfs: // o nombre ENS"
+msgstr "https:// o ipfs:// o nombre ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
