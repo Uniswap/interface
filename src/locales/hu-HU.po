@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 20:34+0000\n"
+"POT-Creation-Date: 2021-05-29 21:04+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-05-29 20:34\n"
+"PO-Revision-Date: 2021-05-29 21:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -229,6 +229,10 @@ msgstr "Mindig ellenőrizze, hogy az URL <0> app.uniswap.org</0> - könyvjelzőv
 msgid "Amount"
 msgstr "Összeg"
 
+#: src/hooks/useSwapCallback.ts
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Hiba történt a csere végrehajtása során. Lehet, hogy növelnie kell a csúszási toleranciát. Ha ez nem működik, akkor összeférhetetlenség állhat fenn az Ön által forgalmazott tokennel. Az átviteli és újrabázis-tokenek díja nem kompatibilis az Uniswap V3 verzióval."
+
 #: src/components/Menu/index.tsx
 msgid "Analytics"
 msgstr "Analitika"
@@ -442,6 +446,7 @@ msgstr "Erősítse meg ezt a tranzakciót a pénztárcájában"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Csatlakoztassa a Pénztárcát"
 
@@ -497,6 +502,10 @@ msgstr "Hozzon létre egy párot"
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
 msgstr "Hozzon létre egy medencét"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Create an issue on GitHub"
+msgstr "Hozzon létre egy problémát a GitHubon"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -602,6 +611,10 @@ msgstr "Nem látja az egyik v2 pozícióját? <0> Importálja.</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "A megszerzett UNI-tokenek a szavazati részesedéseket jelentik az Uniswap irányításában."
 
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "Írja be a címzettet"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "Adjon meg érvényes csúszási százalékot"
@@ -612,6 +625,7 @@ msgstr "Adjon meg egy címet az UNI igénylés kiváltásához. Ha a címnek van
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Adjon meg egy összeget"
 
@@ -668,6 +682,10 @@ msgstr "Tól től"
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
 msgstr "Feladó (legfeljebb)"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support on Discord"
+msgstr "Kérjen támogatást a Discord szolgáltatásról"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
@@ -740,6 +758,10 @@ msgstr "Elégtelen likviditás ehhez a kereskedelemhez."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Elégtelen likviditás ehhez a kereskedelemhez. Próbálja meg engedélyezni a multi-hop kereskedéseket."
 
+#: src/state/swap/hooks.ts
+msgid "Insufficient {0} balance"
+msgstr "Elégtelen {0} egyenleg"
+
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "Interfész beállításai"
@@ -752,6 +774,10 @@ msgstr "Érvénytelen pár."
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Érvénytelen tartomány van kiválasztva. A min árnak alacsonyabbnak kell lennie, mint a maximális ár."
+
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "érvénytelen címzett"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -882,6 +908,10 @@ msgstr "Több"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Új pozíció"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "No V2 Liquidity found."
+msgstr "Nem található V2 likviditás."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
@@ -1118,6 +1148,7 @@ msgstr "Válassza ki a pool típusát a preferált likviditási szolgáltatói d
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/state/swap/hooks.ts
 msgid "Select a token"
 msgstr "Jelöljön ki egy tokent"
 
@@ -1170,6 +1201,10 @@ msgstr "Csúszási tolerancia"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Bizonyos eszközök nem érhetők el ezen a felületen keresztül, mert lehet, hogy nem működnek jól az intelligens szerződésekkel, vagy jogi okokból nem tudjuk engedélyezni a kereskedést."
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Something went wrong"
+msgstr "Valami elromlott"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "1. lépés: Szerezzen be UNI-V2 likviditási tokeneket"
@@ -1199,9 +1234,25 @@ msgstr "Csere"
 msgid "Swap Anyway"
 msgstr "Csere mindenképp"
 
+#: src/hooks/useSwapCallback.ts
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Az x * y = k Uniswap invariánsát a csere nem elégítette ki. Ez általában azt jelenti, hogy az egyik felcserélt token az átvitelkor egyéni viselkedést tartalmaz."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The input token cannot be transferred. There may be an issue with the input token."
+msgstr "A bemeneti token nem vihető át. Probléma lehet a beviteli tokennel."
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "A piaci ár kívül esik a megadott ártartományban. Csak egyszeri eszközbetét."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The output token cannot be transferred. There may be an issue with the output token."
+msgstr "A kimeneti token nem vihető át. Probléma lehet a kimeneti tokennel."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "A kimeneti token nem vihető át. Probléma lehet a kimeneti tokennel. Az átviteli és újrabázis-tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1215,6 +1266,10 @@ msgstr "A medence ára a kiválasztott tartományon belül van. A pozíciója je
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "A hozzáadott tokenek aránya meghatározza ennek a készletnek az árát."
 
+#: src/hooks/useSwapCallback.ts
+msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "A tranzakciót nem sikerült elküldeni, mert a határidő lejárt. Kérjük, ellenőrizze, hogy a tranzakció határideje nem túl alacsony-e."
+
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Ezeket a tokeneket általában más tokenekkel párosítják."
@@ -1222,6 +1277,14 @@ msgstr "Ezeket a tokeneket általában más tokenekkel párosítják."
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Ez az eszköz biztonságosan migrálja a {0} likviditását a V3-ba. A folyamat teljesen megbízhatatlan a"
+
+#: src/hooks/useSwapCallback.ts
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Ez a tranzakció az ármozgás miatt nem fog sikerülni. Próbáld meg növelni a csúszástűrést. Az átviteli és újrabázis-tokenek díja nem kompatibilis az Uniswap V3 verzióval."
+
+#: src/hooks/useSwapCallback.ts
+msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
+msgstr "Ez a tranzakció sem az ármozgás, sem az átutalási díj miatt nem lesz sikeres. Próbáld meg növelni a csúszástűrést."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1341,6 +1404,10 @@ msgstr "A likviditásbányászat feloldása"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Migrációs szerződés feloldása↗"
+
+#: src/hooks/useSwapCallback.ts
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Ismeretlen hiba{0}. Próbáld meg növelni a csúszástűrést. Az átviteli és újrabázis-tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
