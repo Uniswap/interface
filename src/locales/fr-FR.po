@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 01:42+0000\n"
+"POT-Creation-Date: 2021-05-30 19:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2021-05-30 01:46\n"
+"PO-Revision-Date: 2021-05-30 19:39\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,7 +37,7 @@ msgstr "(Max)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(claim)"
+msgstr "(Réclamer)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -53,7 +53,7 @@ msgstr "+{feeAmountFormatted}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
-msgstr "- Supprimer l'envoi"
+msgstr "- Supprimer le destinataire"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "-{feeAmountFormatted}%"
@@ -72,7 +72,7 @@ msgstr "Frais de 0,05 %"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0,3 % de frais"
+msgstr "Frais de 0,3 %"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
@@ -101,11 +101,11 @@ msgstr "<0/> Votes"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>Analyses du compte client et frais accumulés</0><1> ↗ </1>"
+msgstr "<0>Analyses du compte et des frais accumulés</0><1> ↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to</0>V3"
-msgstr "<0>Retour à</0>V3"
+msgstr "<0>Retour à la</0>V3"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>For</0><1>{0}</1>"
@@ -113,7 +113,7 @@ msgstr "<0>Pour </0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Conseil:</0> La suppression des jetons de pool convertit votre position en jetons sous-jacents au taux actuel, proportionnel à votre part du pool. Les frais exigibles sont inclus dans les montants que vous recevez."
+msgstr "<0>Conseil:</0> Le retrait des jetons dans la pool convertit votre position en jetons sous-jacents au taux actuel, proportionnel à votre part de la pool. Vos bénéfices (frais) sont inclus dans les montants que vous recevrez."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
@@ -137,7 +137,7 @@ msgstr "Un seuil minimum de 1% de l'offre totale de l'UNI est requis pour soumet
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "À propos de"
+msgstr "À propos"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
@@ -158,7 +158,7 @@ msgstr "Ajouter"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "Ajouter délégué +"
+msgstr "Ajouter un délégué +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
@@ -166,7 +166,7 @@ msgstr "Ajouter de la liquidité"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "Ajouter la liquidité V2"
+msgstr "Ajouter de la liquidité V2"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
@@ -174,7 +174,7 @@ msgstr "Ajouter de la liquidité."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "Ajouter {0} à la Metamask <0/>"
+msgstr "Ajouter {0} à Metamask <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -183,15 +183,11 @@ msgstr "Ajouter {0} {1} et {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "Ajouter des liquidités {0}-{1}"
+msgstr "Ajouter des liquidités {0}/{1}"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Ajouter {0}/{1} liquidité V3"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Added by user"
-msgstr "Ajouté par l'utilisateur"
+msgstr "Ajouter des liquidités V3 {0}/{1}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -207,15 +203,15 @@ msgstr "Contre"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
-msgstr "Autoriser la migration de jetons LP"
+msgstr "Autoriser la migration des jetons LP"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Autoriser les transactions à impact élevé et sauter l'écran de confirmation. À utiliser à vos propres risques."
+msgstr "Autoriser les transactions à impact élevé et enlève l'écran de confirmation. À utiliser à vos propres risques."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Autoriser le protocole Uniswap à utiliser votre {0}"
+msgstr "Autoriser le protocole Uniswap à utiliser vos {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -223,7 +219,7 @@ msgstr "Autorisé"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Assurez-vous toujours que l'URL est<0>app.uniswap.org</0> - signez-la pour être sûr."
+msgstr "Assurez-vous toujours que l'URL est <0> app.uniswap.org</0> - marquez-la pour être sûr."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -967,9 +963,25 @@ msgstr "Aucune proposition trouvée."
 msgid "No results found."
 msgstr "Aucun résultat trouvé."
 
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "DÉSACTIVÉ"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "AU"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "UTILISEZ SEULEMENT CE MODE SI VOUS SAVEZ CE QUI VOUS FAIT."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "Désactivé"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "Au"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1341,8 +1353,8 @@ msgid "Tokens"
 msgstr "Jetons"
 
 #: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
-msgstr "Jetons de listes inactives. Importez des jetons spécifiques ci-dessous ou cliquez sur 'Gérer' pour activer plus de listes."
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "Jetons de listes inactives. Importez des jetons spécifiques ci-dessous ou cliquez sur Gérer pour activer plus de listes."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1752,6 +1764,10 @@ msgstr "pour {0}"
 msgid "has socks emoji"
 msgstr "a des chaussettes d'émoji"
 
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https: // ou ipfs: // ou nom ENS"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
 msgstr "minutes"
@@ -1770,6 +1786,10 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> par <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} jetons personnalisés"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1829,6 +1849,7 @@ msgstr "{0} par {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
+#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} jetons"
 
@@ -1836,6 +1857,10 @@ msgstr "{0} jetons"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "Prix {0} {1}:"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • Ajouté par l'utilisateur"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx

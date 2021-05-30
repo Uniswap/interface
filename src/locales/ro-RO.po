@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 01:42+0000\n"
+"POT-Creation-Date: 2021-05-30 19:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-05-30 01:46\n"
+"PO-Revision-Date: 2021-05-30 19:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -188,10 +188,6 @@ msgstr "Adaugă {0}-{1} lichiditate"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Adaugă lichiditate {0}/{1} V3"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Added by user"
-msgstr "Adăugat de utilizator"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -967,9 +963,25 @@ msgstr "Nicio propunere găsită."
 msgid "No results found."
 msgstr "Nici un rezultat găsit."
 
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "OPRIT"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "PE"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "UTILIZAȚI NUMAI ACEASTĂ MOD DUPĂ CUM ÎNAINTE SĂ ȘTIȚI."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "Dezactivat"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "Pe"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1341,8 +1353,8 @@ msgid "Tokens"
 msgstr "Token-uri"
 
 #: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
-msgstr "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists. (Automatic Copy)"
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "Jetoane din liste inactive. Importați jetoane specifice de mai jos sau faceți clic pe Gestionare pentru a activa mai multe liste."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1752,6 +1764,10 @@ msgstr "pentru {0}"
 msgid "has socks emoji"
 msgstr "are șosete emoji"
 
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https: // sau ipfs: // sau numele ENS"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
 msgstr "minute"
@@ -1770,6 +1786,10 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> pe <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} jetoane personalizate"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1829,6 +1849,7 @@ msgstr "{0} pe {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
+#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} jetoane"
 
@@ -1836,6 +1857,10 @@ msgstr "{0} jetoane"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Preț:"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • Adăugat de utilizator"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 01:42+0000\n"
+"POT-Creation-Date: 2021-05-30 19:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-05-30 01:46\n"
+"PO-Revision-Date: 2021-05-30 19:39\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -188,10 +188,6 @@ msgstr "Προσθήκη {0}-{1} ρευστότητας"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Προσθήκη {0}/{1} V3 ρευστότητας"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Added by user"
-msgstr "Προστέθηκε από το χρήστη"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -967,9 +963,25 @@ msgstr "Δεν βρέθηκαν προτάσεις."
 msgid "No results found."
 msgstr "Δεν βρέθηκαν αποτελέσματα."
 
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "ΜΑΚΡΙΑ ΑΠΟ"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "ΕΠΙ"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ΜΟΝΟ ΧΡΗΣΙΜΟΠΟΙΗΣΕΤΕ ΝΑ ΞΕΙ ΝΑ ΓΝΩΡΙΖΕΤΕ ΤΙ ΕΙΔΟΠΟΙΗΣΕΤΕ."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "Μακριά από"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "Επί"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1341,8 +1353,8 @@ msgid "Tokens"
 msgstr "Ενδείξεις"
 
 #: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
-msgstr "Εισάγετε συγκεκριμένα tokens παρακάτω ή κάντε κλικ στο 'Διαχείριση' για να ενεργοποιήσετε περισσότερες λίστες."
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "Διακριτικά από ανενεργές λίστες. Εισαγάγετε συγκεκριμένα διακριτικά παρακάτω ή κάντε κλικ στην επιλογή Διαχείριση για να ενεργοποιήσετε περισσότερες λίστες."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1752,6 +1764,10 @@ msgstr "για {0}"
 msgid "has socks emoji"
 msgstr "έχει κάλτσες emoji"
 
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https: // ή ipfs: // ή όνομα ENS"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
 msgstr "λεπτά"
@@ -1770,6 +1786,10 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> ανά <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} προσαρμοσμένα κουπόνια"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1829,6 +1849,7 @@ msgstr "{0} ανά {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
+#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} μάρκες"
 
@@ -1836,6 +1857,10 @@ msgstr "{0} μάρκες"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Τιμή:"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • Προστέθηκε από τον χρήστη"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx

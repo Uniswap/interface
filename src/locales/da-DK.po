@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 01:42+0000\n"
+"POT-Creation-Date: 2021-05-30 19:17+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Danish\n"
-"PO-Revision-Date: 2021-05-30 01:46\n"
+"PO-Revision-Date: 2021-05-30 19:39\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -188,10 +188,6 @@ msgstr "Tilføj {0}-{1} likviditet"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Tilføj {0}/{1} V3 likviditet"
-
-#: src/components/SearchModal/CurrencyList.tsx
-msgid "Added by user"
-msgstr "Tilføjet af bruger"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -967,9 +963,25 @@ msgstr "Ingen forslag fundet."
 msgid "No results found."
 msgstr "Ingen resultater fundet."
 
+#: src/components/Toggle/ListToggle.tsx
+msgid "OFF"
+msgstr "AF"
+
+#: src/components/Toggle/ListToggle.tsx
+msgid "ON"
+msgstr "PÅ"
+
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "KUN BRUG DETTE MODE, HVIS DU VIDE, HVAD DU ER DOSER."
+
+#: src/components/Toggle/index.tsx
+msgid "Off"
+msgstr "Af"
+
+#: src/components/Toggle/index.tsx
+msgid "On"
+msgstr "På"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1341,8 +1353,8 @@ msgid "Tokens"
 msgstr "Tokens"
 
 #: src/components/SearchModal/CurrencyList.tsx
-msgid "Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists."
-msgstr "Tokens fra inaktive lister. Importer specifikke tokens nedenfor eller klik på 'Håndter' for at aktivere flere lister."
+msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
+msgstr "Tokens fra inaktive lister. Importer specifikke tokens nedenfor, eller klik på Administrer for at aktivere flere lister."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1752,6 +1764,10 @@ msgstr "for {0}"
 msgid "has socks emoji"
 msgstr "har sokker emoji"
 
+#: src/components/SearchModal/ManageLists.tsx
+msgid "https:// or ipfs:// or ENS name"
+msgstr "https: // eller ipfs: // eller ENS-navn"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
 msgstr "minutter"
@@ -1770,6 +1786,10 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
 msgstr "{0} <0/> per <1/>"
+
+#: src/components/SearchModal/ManageTokens.tsx
+msgid "{0} Custom Tokens"
+msgstr "{0} Brugerdefinerede poletter"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1829,6 +1849,7 @@ msgstr "{0} pr. {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
+#: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
 msgstr "{0} tokens"
 
@@ -1836,6 +1857,10 @@ msgstr "{0} tokens"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
 msgstr "{0} {1} Pris:"
+
+#: src/components/SearchModal/CurrencyList.tsx
+msgid "{0} • Added by user"
+msgstr "{0} • Tilføjet af bruger"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx
