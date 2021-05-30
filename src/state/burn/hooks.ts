@@ -10,7 +10,7 @@ import { useActiveWeb3React } from '../../hooks/web3'
 import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useTokenBalances } from '../wallet/hooks'
-import { Field, typeInput } from './actions'
+import { Field, typeInput } from './slice'
 
 export function useBurnState(): AppState['burn'] {
   return useSelector<AppState, AppState['burn']>((state) => state.burn)
@@ -140,7 +140,7 @@ export function useBurnActionHandlers(): {
 
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
-      dispatch(typeInput({ field, typedValue }))
+      dispatch(typeInput({ independentField: field, typedValue }))
     },
     [dispatch]
   )
