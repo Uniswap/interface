@@ -21,7 +21,7 @@ import { DarkCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { t, Trans } from '@lingui/macro'
 import { currencyId } from 'utils/currencyId'
-import { formatTokenAmount } from 'utils/formatTokenAmount'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Token, Currency, CurrencyAmount, Percent, Fraction, Price } from '@uniswap/sdk-core'
@@ -456,14 +456,14 @@ export function PositionPage({
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo currency={feeValueUpper?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                <TYPE.main>{feeValueUpper ? formatTokenAmount(feeValueUpper, 4) : '-'}</TYPE.main>
+                <TYPE.main>{feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}</TYPE.main>
               </RowFixed>
               <TYPE.main>{feeValueUpper?.currency?.symbol}</TYPE.main>
             </RowBetween>
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo currency={feeValueLower?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                <TYPE.main>{feeValueLower ? formatTokenAmount(feeValueLower, 4) : '-'}</TYPE.main>
+                <TYPE.main>{feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}</TYPE.main>
               </RowFixed>
               <TYPE.main>{feeValueLower?.currency?.symbol}</TYPE.main>
             </RowBetween>
@@ -708,7 +708,7 @@ export function PositionPage({
                         <TYPE.main>{feeValueUpper?.currency?.symbol}</TYPE.main>
                       </RowFixed>
                       <RowFixed>
-                        <TYPE.main>{feeValueUpper ? formatTokenAmount(feeValueUpper, 4) : '-'}</TYPE.main>
+                        <TYPE.main>{feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}</TYPE.main>
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
@@ -721,7 +721,7 @@ export function PositionPage({
                         <TYPE.main>{feeValueLower?.currency?.symbol}</TYPE.main>
                       </RowFixed>
                       <RowFixed>
-                        <TYPE.main>{feeValueLower ? formatTokenAmount(feeValueLower, 4) : '-'}</TYPE.main>
+                        <TYPE.main>{feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}</TYPE.main>
                       </RowFixed>
                     </RowBetween>
                   </AutoColumn>
