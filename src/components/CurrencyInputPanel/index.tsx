@@ -198,7 +198,7 @@ export default function CurrencyInputPanel({
         <FixedContainer>
           <AutoColumn gap="sm" justify="center">
             <Lock />
-            <TYPE.label fontSize="12px" textAlign="center">
+            <TYPE.label fontSize="12px" textAlign="center" padding="0 12px">
               <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
             </TYPE.label>
           </AutoColumn>
