@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { i18n } from '@lingui/core'
 import { I18nProvider } from '@lingui/react'
 import { ReactNode } from 'react'
-import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useActiveLocale, useSetLocaleFromUrl } from 'hooks/useActiveLocale'
 import { SupportedLocale } from 'constants/locales'
 
 export async function dynamicActivate(locale: SupportedLocale) {
@@ -13,6 +13,7 @@ export async function dynamicActivate(locale: SupportedLocale) {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
+  useSetLocaleFromUrl()
   const locale = useActiveLocale()
 
   useEffect(() => {
