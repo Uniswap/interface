@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components/macro'
@@ -167,7 +168,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             currency={stakingInfo.stakedAmount.currency}
             pair={dummyPair}
             label={''}
-            customBalanceText={t`Available to deposit:`}
+            renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
             id="stake-liquidity-token"
           />
 

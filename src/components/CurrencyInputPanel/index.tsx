@@ -1,6 +1,6 @@
 import { Pair } from '@uniswap/v2-sdk'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, ReactNode } from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -18,7 +18,7 @@ import useTheme from '../../hooks/useTheme'
 import { Lock } from 'react-feather'
 import { AutoColumn } from 'components/Column'
 import { FiatValue } from './FiatValue'
-import { formatTokenAmount } from 'utils/formatTokenAmount'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -160,7 +160,7 @@ interface CurrencyInputPanelProps {
   priceImpact?: Percent
   id: string
   showCommonBases?: boolean
-  customBalanceText?: string
+  renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
 }
 
@@ -174,7 +174,7 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText,
+  renderBalance,
   fiatValue,
   priceImpact,
   hideBalance = false,
@@ -266,12 +266,15 @@ export default function CurrencyInputPanel({
                     fontSize={14}
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
-                    {!hideBalance && !!currency && selectedCurrencyBalance
-                      ? (customBalanceText ?? 'Balance: ') +
-                        formatTokenAmount(selectedCurrencyBalance, 4) +
-                        ' ' +
-                        currency.symbol
-                      : ''}
+                    {!hideBalance && currency && selectedCurrencyBalance ? (
+                      renderBalance ? (
+                        renderBalance(selectedCurrencyBalance)
+                      ) : (
+                        <Trans>
+                          Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)} {currency.symbol}
+                        </Trans>
+                      )
+                    ) : null}
                   </TYPE.body>
                   {showMaxButton && selectedCurrencyBalance ? (
                     <StyledBalanceMax onClick={onMax}>

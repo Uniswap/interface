@@ -41,7 +41,7 @@ import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
 import { Contract } from '@ethersproject/contracts'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import { formatTokenAmount } from 'utils/formatTokenAmount'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import useTheme from 'hooks/useTheme'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
@@ -592,9 +592,10 @@ function V2PairMigration({
                 {chainId && refund0 && refund1 ? (
                   <TYPE.black fontSize={12}>
                     <Trans>
-                      At least {formatTokenAmount(refund0, 4)} {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol}{' '}
-                      and {formatTokenAmount(refund1, 4)} {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will
-                      be refunded to your wallet due to selected price range.
+                      At least {formatCurrencyAmount(refund0, 4)}{' '}
+                      {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and {formatCurrencyAmount(refund1, 4)}{' '}
+                      {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be refunded to your wallet due to
+                      selected price range.
                     </Trans>
                   </TYPE.black>
                 ) : null}
