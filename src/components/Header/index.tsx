@@ -264,6 +264,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
+    text-decoration: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -359,9 +360,8 @@ export default function Header() {
           <Trans>Vote</Trans>
         </StyledNavLink>
         <StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>
-          <Trans>
-            Charts <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
-          </Trans>
+          <Trans>Charts</Trans>
+          <sup>↗</sup>
         </StyledExternalLink>
       </HeaderLinks>
       <HeaderControls>
