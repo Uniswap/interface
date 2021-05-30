@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "Auto"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "Befizethető:"
+msgid "Available to deposit: {0}"
+msgstr "Betétként befizethető: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "Vissza"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "Egyensúly:"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "Egyenleg: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "Erősítse meg ezt a tranzakciót a pénztárcájában"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Csatlakoztassa a Pénztárcát"
@@ -514,6 +523,10 @@ msgstr "Készítsen medence és adjunk hozzá {0}/{1} V3 likviditási"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Készítsen poolot."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "Jelenlegi ár"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "Adjon meg egy címet az UNI igénylés kiváltásához. Ha a címnek van
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Adjon meg egy összeget"
@@ -758,6 +776,10 @@ msgstr "Elégtelen likviditás ehhez a kereskedelemhez."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Elégtelen likviditás ehhez a kereskedelemhez. Próbálja meg engedélyezni a multi-hop kereskedéseket."
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "Elégtelen {0} egyenleg"
@@ -766,9 +788,18 @@ msgstr "Elégtelen {0} egyenleg"
 msgid "Interface Settings"
 msgstr "Interfész beállításai"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "Érvénytelen pár"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "Érvénytelen pár."
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "Érvénytelen árbevitel"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "Max"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "Max Price"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "Migrálás"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "Min. Ár"
 
@@ -1632,6 +1665,10 @@ msgstr "Itt jelennek meg a V3 likviditási pozíciói."
 msgid "Your liquidity deposits"
 msgstr "Likviditási betétei"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "Likviditása csak akkor fog díjat keresni, ha a pár piaci ára az Ön tartományában van. <0> Segítségre van szüksége egy tartomány kiválasztásában?</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} szavazat"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
