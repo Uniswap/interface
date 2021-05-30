@@ -589,3 +589,9 @@ export async function calculateBnbNativeAMBBridgeFee(
   const fee = await contract.calculateFee(amount.raw.toString())
   return formatEther(fee)
 }
+
+export function supportRecipientTransfer(currencyId?: string, bridgeDirection?: BridgeDirection): boolean {
+  if (!currencyId || !bridgeDirection) return false
+  const bridgeType = getBridgeType(currencyId, bridgeDirection)
+  return bridgeType === BridgeType.ETH_FUSE_ERC20_TO_ERC677 || bridgeType === BridgeType.BSC_FUSE_BNB_NATIVE
+}

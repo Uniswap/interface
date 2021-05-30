@@ -45,7 +45,8 @@ export default class BscBnbNativeToErc20Bridge extends TokenBridge {
     this.dispatch(tokenTransferPending())
 
     const contract = this.homeBridgeContract
-    const args = [this.account]
+    const address = this.receiverAddress ? this.receiverAddress : this.account
+    const args = [address]
     const value = this.amount.raw.toString()
 
     const estimatedGas = await contract.estimateGas.relayTokens(...args, { value })
@@ -80,7 +81,8 @@ export default class BscBnbNativeToErc20Bridge extends TokenBridge {
       this.foreignNetworkLibrary,
       async (eventArgs: any[]) => {
         const [recipient] = eventArgs
-        return recipient === this.account
+        const receiver = this.receiverAddress ? this.receiverAddress : this.account
+        return recipient === receiver
       }
     )
 
