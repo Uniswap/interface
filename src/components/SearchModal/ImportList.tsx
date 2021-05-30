@@ -14,8 +14,8 @@ import { ExternalLink } from '../../theme/components'
 import ListLogo from 'components/ListLogo'
 import { PaddedColumn, Checkbox, TextDot } from './styleds'
 import { TokenList } from '@uniswap/token-lists'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from 'state'
+
+import { useAppDispatch } from 'state/hooks'
 import { useFetchListCallback } from 'hooks/useFetchListCallback'
 import { removeList, enableList } from 'state/lists/actions'
 import { CurrencyModalView } from './CurrencySearchModal'
@@ -37,7 +37,7 @@ interface ImportProps {
 
 export function ImportList({ listURL, list, setModalView, onDismiss }: ImportProps) {
   const theme = useTheme()
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
 
   // user must accept
   const [confirmed, setConfirmed] = useState(false)

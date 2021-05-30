@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useMemo, useRef, useState, useEffect } from 'react'
 import { Settings, CheckCircle } from 'react-feather'
 import ReactGA from 'react-ga'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { usePopper } from 'react-popper'
-import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components/macro'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -10,7 +10,6 @@ import { TokenList } from '@uniswap/token-lists'
 import { t, Trans } from '@lingui/macro'
 
 import useToggle from '../../hooks/useToggle'
-import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
 import { useIsListActive, useAllLists, useActiveListUrls } from '../../state/lists/hooks'
 import { ExternalLink, LinkStyledButton, TYPE, IconWrapper } from '../../theme'
@@ -94,8 +93,8 @@ function listUrlRowHTMLId(listUrl: string) {
 }
 
 const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
-  const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
-  const dispatch = useDispatch<AppDispatch>()
+  const listsByUrl = useAppSelector((state) => state.lists.byUrl)
+  const dispatch = useAppDispatch()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
   const theme = useTheme()
