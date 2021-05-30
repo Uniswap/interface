@@ -8,8 +8,8 @@ import { Percent } from '@uniswap/sdk-core'
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from 'state'
+
+import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import { TYPE } from 'theme'
@@ -101,7 +101,7 @@ export function AddRemoveTabs({
   const theme = useTheme()
 
   // reset states on back
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
 
   return (
     <Tabs>

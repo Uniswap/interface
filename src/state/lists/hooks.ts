@@ -1,7 +1,7 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useAppSelector } from 'state/hooks'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
 import { AppState } from '../index'
@@ -43,7 +43,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
 const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
 
 export function useAllLists(): AppState['lists']['byUrl'] {
-  return useSelector<AppState, AppState['lists']['byUrl']>((state) => state.lists.byUrl)
+  return useAppSelector((state) => state.lists.byUrl)
 }
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
@@ -82,9 +82,7 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMa
 
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
-  return useSelector<AppState, AppState['lists']['activeListUrls']>((state) => state.lists.activeListUrls)?.filter(
-    (url) => !UNSUPPORTED_LIST_URLS.includes(url)
-  )
+  return useAppSelector((state) => state.lists.activeListUrls)?.filter((url) => !UNSUPPORTED_LIST_URLS.includes(url))
 }
 
 export function useInactiveListUrls(): string[] {
