@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 20:34+0000\n"
+"POT-Creation-Date: 2021-05-29 21:04+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-05-29 20:34\n"
+"PO-Revision-Date: 2021-05-29 21:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -229,6 +229,10 @@ msgstr "始終確保URL為<0> app.uniswap.org</0> -將其添加為書籤以確�
 msgid "Amount"
 msgstr "數量"
 
+#: src/hooks/useSwapCallback.ts
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "嘗試執行此交換時發生錯誤。您可能需要增加滑移公差。如果這不起作用，則可能與您正在交易的代幣不兼容。轉移令牌和變基令牌的註釋費與Uniswap V3不兼容。"
+
 #: src/components/Menu/index.tsx
 msgid "Analytics"
 msgstr "分析工具"
@@ -442,6 +446,7 @@ msgstr "在您的錢包中確認此交易"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "連接錢包"
 
@@ -497,6 +502,10 @@ msgstr "創建一對"
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
 msgstr "建立一個游泳池"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Create an issue on GitHub"
+msgstr "在GitHub上創建問題"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -602,6 +611,10 @@ msgstr "沒有看到您的v2職位之一？ <0>導入。</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "獲得的UNI令牌代表Uniswap治理中的有表決權的份額。"
 
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "輸入收件人"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "輸入有效的滑點百分比"
@@ -612,6 +625,7 @@ msgstr "輸入一個地址以觸發UNI索賠。如果地址中有可索取的UNI
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "輸入金額"
 
@@ -668,6 +682,10 @@ msgstr "從"
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
 msgstr "來自（至多）"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support on Discord"
+msgstr "獲得Discord的支持"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
@@ -740,6 +758,10 @@ msgstr "該交易的流動性不足。"
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "該交易的流動性不足。嘗試啟用多跳交易。"
 
+#: src/state/swap/hooks.ts
+msgid "Insufficient {0} balance"
+msgstr "餘額不足 {0}"
+
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "介面設定"
@@ -752,6 +774,10 @@ msgstr "無效的貨幣對。"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "選擇的範圍無效。最低價格必須低於最高價格。"
+
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "無效的收件者"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -882,6 +908,10 @@ msgstr "更多的"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "新的位置"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "No V2 Liquidity found."
+msgstr "找不到V2流動性。"
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
@@ -1118,6 +1148,7 @@ msgstr "根據您的首選流動性提供商費用選擇一種池類型。"
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/state/swap/hooks.ts
 msgid "Select a token"
 msgstr "選擇一個令牌"
 
@@ -1170,6 +1201,10 @@ msgstr "滑移公差"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "有些資產無法通過此界面使用，因為它們可能無法與智能合約配合使用，或者由於法律原因我們不允許交易。"
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Something went wrong"
+msgstr "出問題了"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "步驟1.獲取UNI-V2流動性代幣"
@@ -1199,9 +1234,25 @@ msgstr "交換"
 msgid "Swap Anyway"
 msgstr "仍要交換"
 
+#: src/hooks/useSwapCallback.ts
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "交換不滿足Uniswap不變量x * y = k的要求。這通常意味著您要交換的令牌之一在傳輸時合併了自定義行為。"
+
+#: src/hooks/useSwapCallback.ts
+msgid "The input token cannot be transferred. There may be an issue with the input token."
+msgstr "輸入令牌無法轉讓。輸入令牌可能有問題。"
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "市場價格超出了您指定的價格範圍。僅單資產存款。"
+
+#: src/hooks/useSwapCallback.ts
+msgid "The output token cannot be transferred. There may be an issue with the output token."
+msgstr "輸出令牌無法轉讓。輸出令牌可能有問題。"
+
+#: src/hooks/useSwapCallback.ts
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "輸出令牌無法轉讓。輸出令牌可能有問題。轉移令牌和變基令牌的註釋費與Uniswap V3不兼容。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1215,6 +1266,10 @@ msgstr "該池的價格在您選擇的範圍內。您的職位目前正在賺取
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "您添加的代幣比率將設置該池的價格。"
 
+#: src/hooks/useSwapCallback.ts
+msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "由於期限已過，因此無法發送交易。請檢查您的交易截止日期是否太短。"
+
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "這些令牌通常與其他令牌配對。"
@@ -1222,6 +1277,14 @@ msgstr "這些令牌通常與其他令牌配對。"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "此工具會將您的 {0} 流動資金安全地遷移到V3。這個過程是完全不信任的，這要歸功於"
+
+#: src/hooks/useSwapCallback.ts
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "由於價格變動，該交易將不會成功。嘗試增加滑動容差。轉移令牌和變基令牌的註釋費與Uniswap V3不兼容。"
+
+#: src/hooks/useSwapCallback.ts
+msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
+msgstr "由於價格變動或轉移費用，該交易將不會成功。嘗試增加滑動容差。"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1341,6 +1404,10 @@ msgstr "Uniswap流動資金開採"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap遷移合同↗"
+
+#: src/hooks/useSwapCallback.ts
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "未知錯誤{0}。嘗試增加滑動容差。轉移令牌和變基令牌的註釋費與Uniswap V3不兼容。"
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
