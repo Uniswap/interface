@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "Oto"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "Para yatırmak için mevcut:"
+msgid "Available to deposit: {0}"
+msgstr "Para yatırmaya uygun: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "Geri"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "Denge:"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "Denge: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "Cüzdanınızda bu işlemi onaylayın"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Cüzdanı Bağlayın"
@@ -514,6 +523,10 @@ msgstr "Havuz oluşturma ve ekleme {0}/{1} V3 likiditesini"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Havuz oluşturun."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "Mevcut fiyat"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "Bir UNI talebini tetiklemek için bir adres girin. Adreste herhangi bir 
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Bir miktar girin"
@@ -758,6 +776,10 @@ msgstr "Bu ticaret için yetersiz likidite."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Bu ticaret için yetersiz likidite. Çoklu atlamalı alım satımları etkinleştirmeyi deneyin."
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "Yetersiz {0} bakiye"
@@ -766,9 +788,18 @@ msgstr "Yetersiz {0} bakiye"
 msgid "Interface Settings"
 msgstr "Arayüz Ayarları"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "Geçersiz çift"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "Geçersiz çift."
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "Geçersiz fiyat girişi"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "Max"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "Maksimum Fiyat"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "Göçmen"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "Min Fiyat"
 
@@ -1632,6 +1665,10 @@ msgstr "V3 likidite pozisyonlarınız burada görünecektir."
 msgid "Your liquidity deposits"
 msgstr "Likidite mevduatlarınız"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "Likiditeniz, yalnızca paritenin piyasa fiyatı aralığınız dahilinde olduğunda ücret kazanacaktır. <0> Bir aralık seçmek için yardıma mı ihtiyacınız var?</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} Oylar"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "Automat"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "Disponibil pentru depunere:"
+msgid "Available to deposit: {0}"
+msgstr "Disponibil pentru depunere: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "Înapoi"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "Balanță:"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "Sold: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "Confirmați această tranzacție în portofel"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Conectează Portofel"
@@ -514,6 +523,10 @@ msgstr "Creați pool și adăugați {0}/{1} V3 lichiditate"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Creare grupare."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "Pretul curent"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "Introduceți o adresă pentru a declanșa o cerere UNI. Dacă adresa are
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Introduceți o sumă"
@@ -758,6 +776,10 @@ msgstr "Lichiditate insuficientă pentru acest comerţ."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Lichiditate insuficientă pentru această tranzacție. Încercați să permiteți tranzacțiile multi-hop."
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "Sold {0} insuficient"
@@ -766,9 +788,18 @@ msgstr "Sold {0} insuficient"
 msgid "Interface Settings"
 msgstr "Setări interfață"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "Pereche nevalidă"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "Asociere invalidă."
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "Introducere de preț nevalidă"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "Maxim"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "Preț maxim"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "Migrare"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "Preț minim"
 
@@ -1632,6 +1665,10 @@ msgstr "Pozițiile tale de lichiditate V3 vor apărea aici."
 msgid "Your liquidity deposits"
 msgstr "Depozitele tale de lichiditate"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "Lichiditatea dvs. va câștiga comisioane numai atunci când prețul de piață al perechii se află în raza dvs. de acțiune. <0> Aveți nevoie de ajutor pentru a alege o gamă?</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} voturi"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Italian\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "Automatico"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "Disponibile al deposito:"
+msgid "Available to deposit: {0}"
+msgstr "Disponibile per il deposito: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "Indietro"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "Saldo:"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "Bilanciamento: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "Conferma questa transazione nel tuo portafoglio"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Connetti Portafoglio"
@@ -514,6 +523,10 @@ msgstr "Crea pool e aggiungi liquidità {0}/{1} V3"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Crea piscina."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "Prezzo attuale"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "Inserisci un indirizzo per attivare un reclamo UNI. Se l'indirizzo ha un
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Inserisci un importo"
@@ -758,6 +776,10 @@ msgstr "Liquidità insufficiente per questa operazione."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Liquidità insufficiente per questo scambio. Prova ad abilitare le operazioni multi-hop."
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "Equilibrio {0} insufficiente"
@@ -766,9 +788,18 @@ msgstr "Equilibrio {0} insufficiente"
 msgid "Interface Settings"
 msgstr "Impostazioni Interfaccia"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "Coppia non valida"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "Coppia non valida."
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "Input di prezzo non valido"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "Max"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "Prezzo Massimo"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "Migrazione"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "Prezzo Minimo"
 
@@ -1632,6 +1665,10 @@ msgstr "Le tue posizioni di liquidità V3 appariranno qui."
 msgid "Your liquidity deposits"
 msgstr "I tuoi depositi di liquidità"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "La tua liquidità guadagnerà commissioni solo quando il prezzo di mercato della coppia rientra nel tuo intervallo. <0> Hai bisogno di aiuto per scegliere un intervallo?</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} Voti"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"

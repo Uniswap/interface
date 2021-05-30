@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "自动操作"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "可用存款："
+msgid "Available to deposit: {0}"
+msgstr "可用存款： {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "后退"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "余额："
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "余额： {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "在你的钱包中确认这笔交易"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "连接钱包"
@@ -514,6 +523,10 @@ msgstr "创建池并添加 {0}/{1} V3 流动资金"
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "创建池。"
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "目前的价格"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "输入一个地址来触发一个UNI声明。如果地址有任何可索
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "输入金额"
@@ -758,6 +776,10 @@ msgstr "这种交易的流动资金不足。"
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "此交易没有足够的流动资金。请尝试启用多节点交易。"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "余额不足 {0}"
@@ -766,9 +788,18 @@ msgstr "余额不足 {0}"
 msgid "Interface Settings"
 msgstr "接口设置"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "无效的货币对"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "无效配对。"
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "无效的价格输入"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "最大值"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "最高价格"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "迁移"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "最低价格"
 
@@ -1632,6 +1665,10 @@ msgstr "您的 V3 流动资金头寸将显示在这里。"
 msgid "Your liquidity deposits"
 msgstr "您的流动资金存款"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "只有当货币对的市场价格在您的范围内时，您的流动性才会赚取费用。 <0>需要帮助选择范围吗？</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} 票"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"

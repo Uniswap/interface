@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 21:04+0000\n"
+"POT-Creation-Date: 2021-05-30 01:42+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-05-29 21:13\n"
+"PO-Revision-Date: 2021-05-30 01:46\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -278,8 +278,8 @@ msgid "Auto"
 msgstr "Αυτόματο"
 
 #: src/components/earn/StakingModal.tsx
-msgid "Available to deposit:"
-msgstr "Διαθέσιμο για κατάθεση:"
+msgid "Available to deposit: {0}"
+msgstr "Διαθέσιμο για κατάθεση: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -288,6 +288,10 @@ msgstr "Πίσω"
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
 msgstr "Υπόλοιπο:"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Balance: {0} {1}"
+msgstr "Υπόλοιπο: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -446,6 +450,11 @@ msgstr "Επιβεβαιώστε αυτή τη συναλλαγή στο πορ�
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Σύνδεση Πορτοφολιού"
@@ -514,6 +523,10 @@ msgstr "Δημιουργήστε πισίνα και προσθέστε {0}/{1} 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
 msgstr "Δημιουργία πισίνας."
+
+#: src/pages/AddLiquidity/index.tsx
+msgid "Current Price"
+msgstr "Τρέχουσα τιμή"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -625,6 +638,11 @@ msgstr "Εισάγετε μια διεύθυνση για να προκαλέσ�
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/burn/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/stake/hooks.ts
+#: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Εισάγετε ένα ποσό"
@@ -758,6 +776,10 @@ msgstr "Ανεπαρκής ρευστότητα για αυτό το εμπόρ�
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Ανεπαρκής ρευστότητα για αυτήν τη συναλλαγή. Δοκιμάστε να ενεργοποιήσετε τις συναλλαγές πολλαπλών λυκίσκων."
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+#: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
 msgstr "Ανεπαρκές υπόλοιπο {0}"
@@ -766,9 +788,18 @@ msgstr "Ανεπαρκές υπόλοιπο {0}"
 msgid "Interface Settings"
 msgstr "Ρυθμίσεις Διεπαφής"
 
+#: src/state/mint/hooks.ts
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid pair"
+msgstr "Μη έγκυρο ζεύγος"
+
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
 msgstr "Μη έγκυρο ζευγάρι."
+
+#: src/state/mint/v3/hooks.ts
+msgid "Invalid price input"
+msgstr "Μη έγκυρη εισαγωγή τιμής"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -845,6 +876,7 @@ msgid "Max"
 msgstr "Μέγιστο"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Max Price"
 msgstr "Μέγιστη Τιμή"
 
@@ -890,6 +922,7 @@ msgid "Migrating"
 msgstr "Μετεγκατάσταση"
 
 #: src/components/PositionPreview/index.tsx
+#: src/components/RangeSelector/index.tsx
 msgid "Min Price"
 msgstr "Ελάχιστη Τιμή"
 
@@ -1632,6 +1665,10 @@ msgstr "Οι θέσεις ρευστότητας V3 σας θα εμφανιστ
 msgid "Your liquidity deposits"
 msgstr "Οι καταθέσεις ρευστότητας σας"
 
+#: src/pages/AddLiquidity/index.tsx
+msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
+msgstr "Η ρευστότητά σας θα κερδίσει τέλη μόνο όταν η αγοραία τιμή του ζεύγους είναι εντός του εύρους σας. <0> Χρειάζεστε βοήθεια για την επιλογή ενός εύρους;</0>"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
@@ -1784,6 +1821,7 @@ msgstr "{0} Ψηφοφορίες"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
