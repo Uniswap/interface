@@ -19,7 +19,7 @@ import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonPrimary, ButtonGray } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
@@ -503,12 +503,12 @@ export function PositionPage({
         hash={collectMigrationHash ?? ''}
         content={() => (
           <ConfirmationModalContent
-            title={t`Claim fees`}
+            title={<Trans>Claim fees</Trans>}
             onDismiss={() => setShowConfirm(false)}
             topContent={modalHeader}
           />
         )}
-        pendingText={t`Collecting fees`}
+        pendingText={<Trans>Collecting fees</Trans>}
       />
       <AutoColumn gap="md">
         <AutoColumn gap="sm">

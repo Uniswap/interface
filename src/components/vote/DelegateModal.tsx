@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { UNI } from '../../constants/tokens'
 
 import Modal from '../Modal'
@@ -38,7 +38,7 @@ const TextButton = styled.div`
 interface VoteModalProps {
   isOpen: boolean
   onDismiss: () => void
-  title: string
+  title: ReactNode
 }
 
 export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalProps) {

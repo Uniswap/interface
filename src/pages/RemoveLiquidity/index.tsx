@@ -432,7 +432,7 @@ export default function RemoveLiquidity({
             hash={txHash ? txHash : ''}
             content={() => (
               <ConfirmationModalContent
-                title={t`You will receive`}
+                title={<Trans>You will receive</Trans>}
                 onDismiss={handleDismissConfirmation}
                 topContent={modalHeader}
                 bottomContent={modalBottom}

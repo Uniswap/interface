@@ -199,7 +199,9 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                   <Trans>Toggle Expert Mode</Trans>
                 </TYPE.black>
                 <QuestionHelper
-                  text={t`Allow high price impact trades and skip the confirm screen. Use at your own risk.`}
+                  text={
+                    <Trans>Allow high price impact trades and skip the confirm screen. Use at your own risk.</Trans>
+                  }
                 />
               </RowFixed>
               <Toggle
@@ -223,7 +225,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   <Trans>Disable Multihops</Trans>
                 </TYPE.black>
-                <QuestionHelper text={t`Restricts swaps to direct pairs only.`} />
+                <QuestionHelper text={<Trans>Restricts swaps to direct pairs only.</Trans>} />
               </RowFixed>
               <Toggle
                 id="toggle-disable-multihop-button"

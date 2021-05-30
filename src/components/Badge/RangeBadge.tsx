@@ -4,7 +4,7 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import styled from 'styled-components/macro'
 
 import { MouseoverTooltip } from '../../components/Tooltip'
-import { Trans, t } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { AlertCircle } from 'react-feather'
 
 const BadgeWrapper = styled.div`
@@ -43,7 +43,7 @@ export default function RangeBadge({
   return (
     <BadgeWrapper>
       {removed ? (
-        <MouseoverTooltip text={t`Your position has 0 liquidity, and is not earning fees.`}>
+        <MouseoverTooltip text={<Trans>Your position has 0 liquidity, and is not earning fees.</Trans>}>
           <Badge variant={BadgeVariant.DEFAULT}>
             <AlertCircle width={14} height={14} />
             &nbsp;
@@ -54,7 +54,11 @@ export default function RangeBadge({
         </MouseoverTooltip>
       ) : inRange ? (
         <MouseoverTooltip
-          text={t`The price of this pool is within your selected range. Your position is currently earning fees.`}
+          text={
+            <Trans>
+              The price of this pool is within your selected range. Your position is currently earning fees.
+            </Trans>
+          }
         >
           <Badge variant={BadgeVariant.DEFAULT}>
             <ActiveDot /> &nbsp;
@@ -65,7 +69,11 @@ export default function RangeBadge({
         </MouseoverTooltip>
       ) : (
         <MouseoverTooltip
-          text={t`The price of this pool is outside of your selected range. Your position is not currently earning fees.`}
+          text={
+            <Trans>
+              The price of this pool is outside of your selected range. Your position is not currently earning fees.
+            </Trans>
+          }
         >
           <Badge variant={BadgeVariant.WARNING}>
             <AlertCircle width={14} height={14} />
