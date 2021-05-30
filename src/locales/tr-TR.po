@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 20:34+0000\n"
+"POT-Creation-Date: 2021-05-29 21:04+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-05-29 20:34\n"
+"PO-Revision-Date: 2021-05-29 21:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -229,6 +229,10 @@ msgstr "Her zaman URL'nin <0> app.uniswap.org olduğundan emin olun</0> - güven
 msgid "Amount"
 msgstr "Miktar"
 
+#: src/hooks/useSwapCallback.ts
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Bu değişimi gerçekleştirmeye çalışırken bir hata oluştu. Kayma toleransınızı artırmanız gerekebilir. Bu işe yaramazsa, işlem yaptığınız jetonla uyumsuzluk olabilir. Transfer ve yeniden ödeme jetonları üzerindeki not ücreti, Uniswap V3 ile uyumlu değildir."
+
 #: src/components/Menu/index.tsx
 msgid "Analytics"
 msgstr "Analitik"
@@ -442,6 +446,7 @@ msgstr "Cüzdanınızda bu işlemi onaylayın"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Cüzdanı Bağlayın"
 
@@ -497,6 +502,10 @@ msgstr "Bir çift oluştur"
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
 msgstr "Bir havuz oluştur"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Create an issue on GitHub"
+msgstr "GitHub'da bir sorun oluşturun"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -602,6 +611,10 @@ msgstr "V2 konumlarınızdan birini görmüyor musunuz? <0> İçe aktarın.</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Kazanılan UNI tokenları, Uniswap yönetişiminde oy hakkına sahip hisseleri temsil eder."
 
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "Bir alıcı girin"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "Geçerli bir kayma yüzdesi girin"
@@ -612,6 +625,7 @@ msgstr "Bir UNI talebini tetiklemek için bir adres girin. Adreste herhangi bir 
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Bir miktar girin"
 
@@ -668,6 +682,10 @@ msgstr "Nereden"
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
 msgstr "Gönderen (en fazla)"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support on Discord"
+msgstr "Discord ile ilgili destek alın"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
@@ -740,6 +758,10 @@ msgstr "Bu ticaret için yetersiz likidite."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Bu ticaret için yetersiz likidite. Çoklu atlamalı alım satımları etkinleştirmeyi deneyin."
 
+#: src/state/swap/hooks.ts
+msgid "Insufficient {0} balance"
+msgstr "Yetersiz {0} bakiye"
+
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "Arayüz Ayarları"
@@ -752,6 +774,10 @@ msgstr "Geçersiz çift."
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Geçersiz aralık seçildi. Minimum fiyat, maksimum fiyattan düşük olmalıdır."
+
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "Geçersiz alıcı"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -882,6 +908,10 @@ msgstr "Daha"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Yeni pozisyon"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "No V2 Liquidity found."
+msgstr "V2 Likiditesi bulunamadı."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
@@ -1118,6 +1148,7 @@ msgstr "Tercih ettiğiniz likidite sağlayıcı ücretine göre bir havuz türü
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/state/swap/hooks.ts
 msgid "Select a token"
 msgstr "Bir jeton seçin"
 
@@ -1170,6 +1201,10 @@ msgstr "Kayma toleransı"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Bazı varlıklar bu arayüz aracılığıyla kullanılamaz çünkü akıllı sözleşmelerle iyi çalışmayabilirler veya yasal nedenlerle ticarete izin veremiyoruz."
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Something went wrong"
+msgstr "Bir şeyler yanlış gitti"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Adım 1. UNI-V2 Liquidity tokenları alın"
@@ -1199,9 +1234,25 @@ msgstr "Takas"
 msgid "Swap Anyway"
 msgstr "Yine de Değiştir"
 
+#: src/hooks/useSwapCallback.ts
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Uniswap değişmez x * y = k, takas tarafından karşılanmadı. Bu genellikle, takas ettiğiniz jetonlardan birinin aktarım sırasında özel davranış içerdiği anlamına gelir."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The input token cannot be transferred. There may be an issue with the input token."
+msgstr "Giriş jetonu aktarılamaz. Giriş jetonuyla ilgili bir sorun olabilir."
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Piyasa fiyatı, belirttiğiniz fiyat aralığının dışında. Yalnızca tek varlıklı para yatırma."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The output token cannot be transferred. There may be an issue with the output token."
+msgstr "Çıkış belirteci aktarılamaz. Çıkış belirteciyle ilgili bir sorun olabilir."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Çıkış belirteci aktarılamaz. Çıkış belirteciyle ilgili bir sorun olabilir. Transfer ve yeniden ödeme jetonları üzerindeki not ücreti, Uniswap V3 ile uyumlu değildir."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1215,6 +1266,10 @@ msgstr "Bu havuzun fiyatı seçtiğiniz aralık dahilinde. Pozisyonunuz şu anda
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "Eklediğiniz jeton oranı, bu havuzun fiyatını belirleyecektir."
 
+#: src/hooks/useSwapCallback.ts
+msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "Son tarih geçtiği için işlem gönderilemedi. Lütfen işlem sürenizin çok kısa olmadığını kontrol edin."
+
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Bu jetonlar genellikle diğer jetonlarla eşleştirilir."
@@ -1222,6 +1277,14 @@ msgstr "Bu jetonlar genellikle diğer jetonlarla eşleştirilir."
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "{0} likiditenizi güvenli bir şekilde V3'e taşıyacaktır. İşlem, sayesinde tamamen güvensizdir."
+
+#: src/hooks/useSwapCallback.ts
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Fiyat hareketi nedeniyle bu işlem başarılı olmayacak. Kayma toleransınızı artırmayı deneyin. Transfer ve yeniden ödeme jetonları üzerindeki not ücreti, Uniswap V3 ile uyumlu değildir."
+
+#: src/hooks/useSwapCallback.ts
+msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
+msgstr "Bu işlem, ne fiyat hareketinden dolayı ne de transfer ücretinden dolayı başarılı olmayacaktır. Kayma toleransınızı artırmayı deneyin."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1341,6 +1404,10 @@ msgstr "Uniswap likidite madenciliği"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap geçiş sözleşmesi↗"
+
+#: src/hooks/useSwapCallback.ts
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Bilinmeyen hata{0}. Kayma toleransınızı artırmayı deneyin. Transfer ve yeniden ödeme jetonları üzerindeki not ücreti, Uniswap V3 ile uyumlu değildir."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx

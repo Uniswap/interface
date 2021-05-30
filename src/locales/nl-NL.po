@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-29 20:34+0000\n"
+"POT-Creation-Date: 2021-05-29 21:04+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Dutch\n"
-"PO-Revision-Date: 2021-05-29 20:34\n"
+"PO-Revision-Date: 2021-05-29 21:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -229,6 +229,10 @@ msgstr "Zorg er altijd voor dat de URL is<0>app.uniswap.org</0> - bladwijzer om 
 msgid "Amount"
 msgstr "Hoeveelheid"
 
+#: src/hooks/useSwapCallback.ts
+msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Er is een fout opgetreden bij het uitvoeren van deze wissel. Mogelijk moet u uw sliptolerantie vergroten. Als dat niet werkt, is er mogelijk een incompatibiliteit met het token dat u verhandelt. Let op: kosten voor transfer- en rebase-tokens zijn niet compatibel met Uniswap V3."
+
 #: src/components/Menu/index.tsx
 msgid "Analytics"
 msgstr "Analyses"
@@ -442,6 +446,7 @@ msgstr "Bevestig deze transactie in uw portemonnee"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
+#: src/state/swap/hooks.ts
 msgid "Connect Wallet"
 msgstr "Verbind Portemonnee"
 
@@ -497,6 +502,10 @@ msgstr "Maak een paar"
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
 msgstr "Creëer een zwembad"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Create an issue on GitHub"
+msgstr "Maak een probleem op GitHub"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -602,6 +611,10 @@ msgstr "Zie je niet één van je v2 posities? <0>Importeer het.</0>"
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Verdiende UNI-tokens vertegenwoordigen stemaandelen in governance van Uniswap."
 
+#: src/state/swap/hooks.ts
+msgid "Enter a recipient"
+msgstr "Voer een ontvanger in"
+
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "Voer een geldig slippage percentage in"
@@ -612,6 +625,7 @@ msgstr "Voer een adres in om UNI claim. Als het adres claibel UNI heeft, wordt h
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
+#: src/state/swap/hooks.ts
 msgid "Enter an amount"
 msgstr "Voer een bedrag in"
 
@@ -668,6 +682,10 @@ msgstr "van"
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
 msgstr "Van (hoogst)"
+
+#: src/components/ErrorBoundary/index.tsx
+msgid "Get support on Discord"
+msgstr "Krijg ondersteuning bij Discord"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
@@ -740,6 +758,10 @@ msgstr "Onvoldoende liquiditeit voor deze handel."
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
 msgstr "Onvoldoende liquiditeit voor deze transactie. Probeer multi-hop trades in te schakelen."
 
+#: src/state/swap/hooks.ts
+msgid "Insufficient {0} balance"
+msgstr "Onvoldoende saldo {0}"
+
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
 msgstr "Interface Instellingen"
@@ -752,6 +774,10 @@ msgstr "Ongeldig paar."
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
 msgstr "Ongeldig bereik geselecteerd. De minimale prijs moet lager zijn dan de maximale prijs."
+
+#: src/state/swap/hooks.ts
+msgid "Invalid recipient"
+msgstr "ongeldige ontvanger"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -882,6 +908,10 @@ msgstr "Meer"
 #: src/pages/Pool/index.tsx
 msgid "New Position"
 msgstr "Nieuwe positie"
+
+#: src/pages/MigrateV2/index.tsx
+msgid "No V2 Liquidity found."
+msgstr "Geen V2-liquiditeit gevonden."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
@@ -1118,6 +1148,7 @@ msgstr "Selecteer een pool type op basis van uw voorkeur liquiditeit provider."
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
+#: src/state/swap/hooks.ts
 msgid "Select a token"
 msgstr "Selecteer een token"
 
@@ -1170,6 +1201,10 @@ msgstr "Slippage tolerantie"
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
 msgstr "Sommige activa zijn niet beschikbaar via deze interface omdat ze mogelijk niet goed werken met de smart contracts of omdat we om juridische redenen geen handel kunnen toestaan."
 
+#: src/components/ErrorBoundary/index.tsx
+msgid "Something went wrong"
+msgstr "Er is iets fout gegaan"
+
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
 msgstr "Stap 1. Verkrijg UNI-V2 Liquidity-tokens"
@@ -1199,9 +1234,25 @@ msgstr "Wisselen"
 msgid "Swap Anyway"
 msgstr "Toch wisselen"
 
+#: src/hooks/useSwapCallback.ts
+msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
+msgstr "Aan de Uniswap-invariant x * y = k werd niet voldaan door de swap. Dit betekent meestal dat een van de tokens die u ruilt, aangepast gedrag bij overdracht bevat."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The input token cannot be transferred. There may be an issue with the input token."
+msgstr "Het invoertoken kan niet worden overgedragen. Er is mogelijk een probleem met het invoertoken."
+
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "De marktprijs ligt buiten uw opgegeven prijsbereik. Alleen single-activa storten."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The output token cannot be transferred. There may be an issue with the output token."
+msgstr "Het uitvoertoken kan niet worden overgedragen. Er is mogelijk een probleem met het uitvoertoken."
+
+#: src/hooks/useSwapCallback.ts
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Het uitvoertoken kan niet worden overgedragen. Er is mogelijk een probleem met het uitvoertoken. Let op: kosten voor transfer- en rebase-tokens zijn niet compatibel met Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1215,6 +1266,10 @@ msgstr "De prijs van deze pool valt binnen je geselecteerde bereik. Je positie v
 msgid "The ratio of tokens you add will set the price of this pool."
 msgstr "De verhouding van tokens die je toevoegt zal de prijs van deze pool instellen."
 
+#: src/hooks/useSwapCallback.ts
+msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
+msgstr "De transactie kan niet worden verzonden omdat de deadline is verstreken. Controleer of uw transactiedeadline niet te laag is."
+
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Deze tokens zijn meestal gekoppeld aan andere tokens."
@@ -1222,6 +1277,14 @@ msgstr "Deze tokens zijn meestal gekoppeld aan andere tokens."
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Deze tool zal uw {0} liquiditeit veilig migreren naar V3. Het proces is volledig betrouwbaar dankzij de"
+
+#: src/hooks/useSwapCallback.ts
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Deze transactie zal niet slagen vanwege prijsbewegingen. Probeer uw sliptolerantie te vergroten. Let op: kosten voor transfer- en rebase-tokens zijn niet compatibel met Uniswap V3."
+
+#: src/hooks/useSwapCallback.ts
+msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
+msgstr "Deze transactie zal niet slagen vanwege prijsbewegingen of kosten bij overdracht. Probeer uw sliptolerantie te vergroten."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1341,6 +1404,10 @@ msgstr "Oplopende liquiditeit minen"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap migratie contract↗"
+
+#: src/hooks/useSwapCallback.ts
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Onbekende fout{0}. Probeer uw sliptolerantie te vergroten. Let op: kosten voor transfer- en rebase-tokens zijn niet compatibel met Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
