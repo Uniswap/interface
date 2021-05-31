@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 19:17+0000\n"
+"POT-Creation-Date: 2021-05-30 23:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-05-30 23:15\n"
+"PO-Revision-Date: 2021-05-31 00:22\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -322,8 +322,8 @@ msgid "Change"
 msgstr "Промена"
 
 #: src/components/Header/index.tsx
-msgid "Charts <0>↗</0>"
-msgstr "Графикони <0> ↗</0>"
+msgid "Charts"
+msgstr "Графикони"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -434,6 +434,11 @@ msgstr "Потврди"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Потврдите понуду"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr "Потврдите размену"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -651,6 +656,7 @@ msgstr "Унесите важећу локацију листе"
 msgid "Enter valid token address"
 msgstr "Унесите важећу адресу токена"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Грешка"
@@ -815,6 +821,10 @@ msgstr "Научи"
 msgid "Liquidity"
 msgstr "Ликвидност"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Liquidity Provider Fee"
+msgstr "Накнада за добављача ликвидности"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Награде добављача ликвидности"
@@ -884,6 +894,10 @@ msgstr "Мак цена"
 msgid "Max:"
 msgstr "Мак:"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum sent"
+msgstr "Максимално послато"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -929,6 +943,10 @@ msgstr "Мин. Цена"
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
 msgstr "Мин:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum received"
+msgstr "Минимално примљено"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1065,6 +1083,7 @@ msgstr "Скупљено {0}:"
 msgid "Pools Overview"
 msgstr "Преглед базена"
 
+#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Цена"
@@ -1072,6 +1091,10 @@ msgstr "Цена"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
 msgstr "Разлика у цени:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Price Impact"
+msgstr "Утицај на цену"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
@@ -1177,6 +1200,10 @@ msgstr "Ограничава замене само на директне пар�
 msgid "Return"
 msgstr "Повратак"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Route"
+msgstr "Рута"
+
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Претражите име или налепите адресу"
@@ -1239,6 +1266,7 @@ msgid "Simple"
 msgstr "Једноставно"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
 msgstr "Толеранција клизања"
 
@@ -1278,6 +1306,10 @@ msgstr "Замените"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Замените свеједно"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Swapping {0} {1} for {2} {3}"
+msgstr "Замјена {0} {1} за {2} {3}"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."

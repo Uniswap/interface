@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 19:17+0000\n"
+"POT-Creation-Date: 2021-05-30 23:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-05-30 23:15\n"
+"PO-Revision-Date: 2021-05-31 00:22\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -322,8 +322,8 @@ msgid "Change"
 msgstr "Cambiar"
 
 #: src/components/Header/index.tsx
-msgid "Charts <0>↗</0>"
-msgstr "Gráficos <0>↗</0>"
+msgid "Charts"
+msgstr "Gráficos"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -434,6 +434,11 @@ msgstr "Confirmar"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Confirmar suministro"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr "Confirmar intercambio"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -651,6 +656,7 @@ msgstr "Introduzca una ubicación de lista válida"
 msgid "Enter valid token address"
 msgstr "Introduzca una dirección de token válida"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Error"
@@ -815,6 +821,10 @@ msgstr "Aprender"
 msgid "Liquidity"
 msgstr "Liquidez"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Liquidity Provider Fee"
+msgstr "Tarifa de proveedor de liquidez"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Premios del proveedor de liquidez"
@@ -884,6 +894,10 @@ msgstr "Precio máximo"
 msgid "Max:"
 msgstr "Máx:"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum sent"
+msgstr "Máximo enviado"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -929,6 +943,10 @@ msgstr "Precio mínimo"
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
 msgstr "Mín:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum received"
+msgstr "Mínimo recibido"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1065,6 +1083,7 @@ msgstr "Conjunto {0}:"
 msgid "Pools Overview"
 msgstr "Vista general de piscinas"
 
+#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Precio"
@@ -1072,6 +1091,10 @@ msgstr "Precio"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
 msgstr "Diferencia de precios:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Price Impact"
+msgstr "Impacto en el precio"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
@@ -1177,6 +1200,10 @@ msgstr "Restringe los swaps a los pares directos solamente."
 msgid "Return"
 msgstr "Retorno"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Route"
+msgstr "Ruta"
+
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Buscar nombre o pegar dirección"
@@ -1239,6 +1266,7 @@ msgid "Simple"
 msgstr "Simple"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
 msgstr "Tolerancia de deslizamiento"
 
@@ -1278,6 +1306,10 @@ msgstr "Intercambiar"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Intercambiar de todos modos"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Swapping {0} {1} for {2} {3}"
+msgstr "Intercambiando {0} {1} por {2} {3}"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."

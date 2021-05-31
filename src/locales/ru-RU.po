@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 19:17+0000\n"
+"POT-Creation-Date: 2021-05-30 23:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-05-30 23:15\n"
+"PO-Revision-Date: 2021-05-31 00:22\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -322,8 +322,8 @@ msgid "Change"
 msgstr "Изменить"
 
 #: src/components/Header/index.tsx
-msgid "Charts <0>↗</0>"
-msgstr "Диаграммы <0>↗</0>"
+msgid "Charts"
+msgstr "Диаграммы"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -434,6 +434,11 @@ msgstr "Подтвердить"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "Подтвердить поставку"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr "Подтвердить обмен"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -651,6 +656,7 @@ msgstr "Введите правильное расположение списк�
 msgid "Enter valid token address"
 msgstr "Введите правильный адрес токена"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "Ошибка"
@@ -815,6 +821,10 @@ msgstr "Учить"
 msgid "Liquidity"
 msgstr "Ликвидность"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Liquidity Provider Fee"
+msgstr "Комиссия поставщика ликвидности"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "Награды провайдера ликвидности"
@@ -884,6 +894,10 @@ msgstr "Максимальная цена"
 msgid "Max:"
 msgstr "Макс:"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum sent"
+msgstr "Максимум отправлено"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -929,6 +943,10 @@ msgstr "Мин. цена"
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
 msgstr "Мин:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum received"
+msgstr "Минимум получен"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1065,6 +1083,7 @@ msgstr "Пул {0}:"
 msgid "Pools Overview"
 msgstr "Обзор пулов"
 
+#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "Цена"
@@ -1072,6 +1091,10 @@ msgstr "Цена"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
 msgstr "Разница в цене:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Price Impact"
+msgstr "Влияние на цену"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
@@ -1177,6 +1200,10 @@ msgstr "Ограничение переключается только на пр
 msgid "Return"
 msgstr "Назад"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Route"
+msgstr "Маршрут"
+
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "Искать имя или вставить адрес"
@@ -1239,6 +1266,7 @@ msgid "Simple"
 msgstr "Простой"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
 msgstr "Допустимость проскальзывания"
 
@@ -1278,6 +1306,10 @@ msgstr "Поменять"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "Поменять местами"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Swapping {0} {1} for {2} {3}"
+msgstr "Замена {0} {1} на {2} {3}"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
