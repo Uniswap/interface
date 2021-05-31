@@ -325,6 +325,14 @@ export const FARM_CLAIM_TOPIC: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: ''
 }
 
+export const FARM_WITHDRAW_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.ROPSTEN]: '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
+
 export const FARM_TRANSFER_TOKEN_TOPIC: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
   [ChainId.ROPSTEN]: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
