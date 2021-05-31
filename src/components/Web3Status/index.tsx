@@ -2,7 +2,6 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken } from 'polished'
 import React, { useMemo } from 'react'
 import { ChevronDown } from 'react-feather'
-import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
@@ -23,6 +22,7 @@ import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
 import { ChainId } from 'dxswap-sdk'
 import { useActiveWeb3React } from '../../hooks'
+import { ConnectWallet } from './ConnectWallet'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -78,20 +78,6 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.red1)};
   }
-`
-
-const ConnectButton = styled.button`
-  padding: 10.5px 14px;
-  background-color: ${({ theme }) => theme.primary1};
-  color: ${({ theme }) => theme.text1};
-  border-radius: 12px;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 12px;
-  letter-spacing: 0.08em;
-  border: none;
-  cursor: pointer;
 `
 
 const AccountStatus = styled.div`
@@ -153,7 +139,6 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 }
 
 function Web3StatusInner() {
-  const { t } = useTranslation()
   const { account, error } = useWeb3React()
   const { chainId: networkConnectorChainId } = useActiveWeb3React()
 
@@ -182,11 +167,7 @@ function Web3StatusInner() {
   if (networkConnectorChainId) {
     return (
       <>
-        {!account && (
-          <ConnectButton id="connect-wallet" onClick={toggleWalletModal}>
-          {t('Connect wallet')}
-          </ConnectButton>
-        )}
+        {!account && <ConnectWallet onClick={() => {}}/>}
         {!!account && (
           <AccountStatus>
             <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
@@ -240,7 +221,11 @@ export default function Web3Status() {
   return (
     <>
       <Web3StatusInner />
-      <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
+      <WalletModal
+        ENSName={ENSName ?? undefined}
+        pendingTransactions={pending}
+        confirmedTransactions={confirmed}
+      />
     </>
   )
 }
