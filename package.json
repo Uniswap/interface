@@ -4,7 +4,6 @@
   "homepage": ".",
   "private": true,
   "devDependencies": {
-    "@emotion/core": "^11.0.0",
     "@ethersproject/experimental": "^5.2.0",
     "@lingui/cli": "^3.9.0",
     "@lingui/loader": "^3.9.0",
