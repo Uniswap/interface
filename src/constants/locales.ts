@@ -12,6 +12,7 @@ export const SUPPORTED_LOCALES = [
   'fr-FR',
   'he-IL',
   'hu-HU',
+  'id-ID',
   'it-IT',
   'ja-JP',
   'ko-KR',
