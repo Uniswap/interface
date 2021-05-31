@@ -1,6 +1,6 @@
 import { useFactoryContract } from 'hooks/useContract'
 import { ChainId, Pair, Token } from 'libs/sdk/src'
-import { Pair as PairUNI, Token as TokenUNI } from '@uniswap/sdk'
+import { Pair as PairUNI, Token as TokenUNI, ChainId as ChainIdUNI } from '@uniswap/sdk'
 import { Pair as PairSUSHI, Token as TokenSUSHI } from '@sushiswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
@@ -22,6 +22,7 @@ import {
   updateUserSlippageTolerance,
   toggleURLWarning
 } from './actions'
+import { convertChainIdFromDmmToSushi } from 'utils/dmm'
 
 function serializeToken(token: Token | TokenUNI | TokenSUSHI): SerializedToken {
   return {
@@ -207,15 +208,36 @@ export function useURLWarningToggle(): () => void {
  */
 
 export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(tokenA.chainId, PairUNI.getAddress(tokenA, tokenB), 18, 'UNI-LP', 'UNI LP')
+  return new Token(
+    tokenA.chainId,
+    PairUNI.getAddress(
+      new TokenUNI(tokenA.chainId as ChainIdUNI, tokenA.address, tokenA.decimals, tokenA.symbol, tokenA.name),
+      new TokenUNI(tokenB.chainId as ChainIdUNI, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name)
+    ),
+    18,
+    'UNI-LP',
+    'UNI LP'
+  )
 }
 
 export function toV2LiquidityTokenSushi([tokenA, tokenB]: [Token, Token]): Token {
   return new Token(
     tokenA.chainId,
     PairSUSHI.getAddress(
-      new TokenSUSHI(tokenA.chainId, tokenA.address, tokenA.decimals, tokenA.symbol, tokenA.name),
-      new TokenSUSHI(tokenB.chainId, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name)
+      new TokenSUSHI(
+        convertChainIdFromDmmToSushi(tokenA.chainId),
+        tokenA.address,
+        tokenA.decimals,
+        tokenA.symbol,
+        tokenA.name
+      ),
+      new TokenSUSHI(
+        convertChainIdFromDmmToSushi(tokenB.chainId),
+        tokenB.address,
+        tokenB.decimals,
+        tokenB.symbol,
+        tokenB.name
+      )
     ),
     18,
     'SUSHI-LP',

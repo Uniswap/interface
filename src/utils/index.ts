@@ -40,7 +40,7 @@ export function isAddressString(value: any): string {
   }
 }
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
+const ETHERSCAN_PREFIXES: { [chainId in ChainId]?: string } = {
   1: '',
   3: 'ropsten.',
   4: 'rinkeby.',

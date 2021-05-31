@@ -1,5 +1,5 @@
-import { Token as TokenSUSHI, TokenAmount, Pair } from '@sushiswap/sdk'
-import { Currency } from 'libs/sdk/src'
+import { Token as TokenSUSHI, TokenAmount, Pair, ChainId as ChainIdSuShi } from '@sushiswap/sdk'
+import { Currency, ChainId } from 'libs/sdk/src'
 import { useMemo } from 'react'
 // import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2PairABI from '@sushiswap/core/build/abi/IUniswapV2Pair.json'
@@ -8,8 +8,19 @@ import { useActiveWeb3React } from '../hooks'
 
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
+import { convertChainIdFromDmmToSushi } from 'utils/dmm'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
+
+// enum ChainIdSuShi {
+//   MAINNET = ChainId.MAINNET,
+//   ROPSTEN = ChainId.ROPSTEN,
+//   RINKEBY = ChainId.RINKEBY,
+//   GÖRLI = ChainId.GÖRLI,
+//   KOVAN = ChainId.KOVAN,
+//   MATIC = ChainId.MATIC,
+//   MATIC_TESTNET = ChainId.MUMBAI
+// }
 
 export enum PairState {
   LOADING,
@@ -35,8 +46,20 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       tokens.map(([tokenA, tokenB]) => {
         return tokenA && tokenB && !tokenA.equals(tokenB)
           ? Pair.getAddress(
-              new TokenSUSHI(tokenA.chainId, tokenA.address, tokenA.decimals, tokenA.symbol, tokenA.name),
-              new TokenSUSHI(tokenB.chainId, tokenB.address, tokenB.decimals, tokenB.symbol, tokenB.name)
+              new TokenSUSHI(
+                convertChainIdFromDmmToSushi(tokenA.chainId),
+                tokenA.address,
+                tokenA.decimals,
+                tokenA.symbol,
+                tokenA.name
+              ),
+              new TokenSUSHI(
+                convertChainIdFromDmmToSushi(tokenB.chainId),
+                tokenB.address,
+                tokenB.decimals,
+                tokenB.symbol,
+                tokenB.name
+              )
             )
           : undefined
       }),
@@ -60,11 +83,23 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         PairState.EXISTS,
         new Pair(
           new TokenAmount(
-            new TokenSUSHI(token0.chainId, token0.address, token0.decimals, token0.symbol, token0.name),
+            new TokenSUSHI(
+              convertChainIdFromDmmToSushi(token0.chainId),
+              token0.address,
+              token0.decimals,
+              token0.symbol,
+              token0.name
+            ),
             reserve0.toString()
           ),
           new TokenAmount(
-            new TokenSUSHI(token1.chainId, token1.address, token1.decimals, token1.symbol, token1.name),
+            new TokenSUSHI(
+              convertChainIdFromDmmToSushi(token1.chainId),
+              token1.address,
+              token1.decimals,
+              token1.symbol,
+              token1.name
+            ),
             reserve1.toString()
           )
         )

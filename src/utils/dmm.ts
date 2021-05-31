@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-
 import { Fraction, JSBI, Price, Pair, Token } from 'libs/sdk/src'
-import { ZERO, ONE } from 'libs/sdk/src/constants'
+import { ZERO, ONE, ChainId } from 'libs/sdk/src/constants'
 import { UserLiquidityPosition } from 'state/pools/hooks'
 import { formattedNum } from 'utils'
 
@@ -11,6 +10,14 @@ import {
   Token as TokenSUSHI,
   ChainId as ChainIdSUSHI
 } from '@sushiswap/sdk'
+
+import {
+  Currency as CurrencyUNI,
+  TokenAmount as TokenAmountUNI,
+  Token as TokenUNI,
+  ChainId as ChainIdUNI
+} from '@uniswap/sdk'
+
 import {
   Currency as CurrencyDMM,
   Token as TokenDMM,
@@ -110,18 +117,87 @@ export const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): strin
   return formattedNum(myLiquidity.toString(), true)
 }
 
-export function tokenSushiToDmm(tokenSushi: TokenSUSHI): TokenDMM {
-  return new TokenDMM(
-    tokenSushi.chainId as ChainIdDMM,
-    tokenSushi.address,
-    tokenSushi.decimals,
-    tokenSushi.symbol,
-    tokenSushi.name
-  )
+export function convertChainIdFromDmmToSushi(chainId: ChainIdDMM) {
+  switch (chainId) {
+    case ChainIdDMM.MAINNET:
+      return ChainIdSUSHI.MAINNET
+    case ChainIdDMM.ROPSTEN:
+      return ChainIdSUSHI.ROPSTEN
+    case ChainIdDMM.RINKEBY:
+      return ChainIdSUSHI.RINKEBY
+    case ChainIdDMM.GÖRLI:
+      return ChainIdSUSHI.GÖRLI
+    case ChainIdDMM.KOVAN:
+      return ChainIdSUSHI.KOVAN
+    case ChainIdDMM.MATIC:
+      return ChainIdSUSHI.MATIC
+    case ChainIdDMM.MUMBAI:
+      return ChainIdSUSHI.MATIC_TESTNET
+  }
+}
+
+export function convertChainIdFromUniToDMM(chainId: ChainIdUNI) {
+  switch (chainId) {
+    case ChainIdUNI.MAINNET:
+      return ChainIdDMM.MAINNET
+    case ChainIdUNI.ROPSTEN:
+      return ChainIdDMM.ROPSTEN
+    case ChainIdUNI.RINKEBY:
+      return ChainIdDMM.RINKEBY
+    case ChainIdUNI.GÖRLI:
+      return ChainIdDMM.GÖRLI
+    case ChainIdUNI.KOVAN:
+      return ChainIdDMM.KOVAN
+  }
+}
+
+export function convertChainIdFromDmmToUni(chainId: ChainIdDMM) {
+  switch (chainId) {
+    case ChainIdDMM.MAINNET:
+      return ChainIdUNI.MAINNET
+    case ChainIdDMM.ROPSTEN:
+      return ChainIdUNI.ROPSTEN
+    case ChainIdDMM.RINKEBY:
+      return ChainIdUNI.RINKEBY
+    case ChainIdDMM.GÖRLI:
+      return ChainIdUNI.GÖRLI
+    case ChainIdDMM.KOVAN:
+      return ChainIdUNI.KOVAN
+    default:
+      return undefined
+  }
+}
+
+export function convertChainIdFromSushiToDMM(chainId: ChainIdSUSHI) {
+  switch (chainId) {
+    case ChainIdSUSHI.MAINNET:
+      return ChainIdDMM.MAINNET
+    case ChainIdSUSHI.ROPSTEN:
+      return ChainIdDMM.ROPSTEN
+    case ChainIdSUSHI.RINKEBY:
+      return ChainIdDMM.RINKEBY
+    case ChainIdSUSHI.GÖRLI:
+      return ChainIdDMM.GÖRLI
+    case ChainIdSUSHI.KOVAN:
+      return ChainIdDMM.KOVAN
+    case ChainIdSUSHI.MATIC:
+      return ChainIdDMM.MATIC
+    case ChainIdSUSHI.MATIC_TESTNET:
+      return ChainIdDMM.MUMBAI
+    default:
+      return undefined
+  }
+}
+
+export function tokenSushiToDmm(tokenSushi: TokenSUSHI): TokenDMM | undefined {
+  const chainIdDMM = convertChainIdFromSushiToDMM(tokenSushi.chainId)
+  return !!chainIdDMM
+    ? new TokenDMM(chainIdDMM, tokenSushi.address, tokenSushi.decimals, tokenSushi.symbol, tokenSushi.name)
+    : undefined
 }
 export function tokenDmmToSushi(tokenDmm: TokenDMM): TokenSUSHI {
   return new TokenSUSHI(
-    tokenDmm.chainId as ChainIdSUSHI,
+    convertChainIdFromDmmToSushi(tokenDmm.chainId),
     tokenDmm.address,
     tokenDmm.decimals,
     tokenDmm.symbol,
@@ -129,10 +205,21 @@ export function tokenDmmToSushi(tokenDmm: TokenDMM): TokenSUSHI {
   )
 }
 
+export function tokenUniToDmm(tokenUni: TokenUNI): TokenDMM | undefined {
+  return new TokenDMM(tokenUni.chainId as ChainId, tokenUni.address, tokenUni.decimals, tokenUni.symbol, tokenUni.name)
+}
+
+export function tokenDmmToUni(tokenDmm: TokenDMM): TokenUNI | undefined {
+  const chainIdUNI = convertChainIdFromDmmToUni(tokenDmm.chainId)
+  return !!chainIdUNI
+    ? new TokenUNI(chainIdUNI, tokenDmm.address, tokenDmm.decimals, tokenDmm.symbol, tokenDmm.name)
+    : undefined
+}
+
 export function tokenAmountDmmToSushi(amount: TokenAmountDMM): TokenAmountSUSHI {
   return new TokenAmountSUSHI(
     new TokenSUSHI(
-      amount.token.chainId as ChainIdSUSHI,
+      convertChainIdFromDmmToSushi(amount.token.chainId),
       amount.token.address,
       amount.token.decimals,
       amount.token.symbol,
@@ -140,6 +227,16 @@ export function tokenAmountDmmToSushi(amount: TokenAmountDMM): TokenAmountSUSHI 
     ),
     amount.raw
   )
+}
+
+export function tokenAmountDmmToUni(amount: TokenAmountDMM): TokenAmountUNI | undefined {
+  const chainIdUNI = convertChainIdFromDmmToUni(amount.token.chainId)
+  return !!chainIdUNI
+    ? new TokenAmountUNI(
+        new TokenUNI(chainIdUNI, amount.token.address, amount.token.decimals, amount.token.symbol, amount.token.name),
+        amount.raw
+      )
+    : undefined
 }
 
 /**

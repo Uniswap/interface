@@ -39,7 +39,7 @@ export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
 export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
-export const UNI: { [chainId in ChainId]: Token } = {
+export const UNI: { [chainId in ChainId]?: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
@@ -52,7 +52,9 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
+  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
+  [ChainId.MATIC]: [WETH[ChainId.MATIC]],
+  [ChainId.MUMBAI]: [WETH[ChainId.MUMBAI]]
 }
 
 export const KNC_ADDRESS =
@@ -86,6 +88,20 @@ export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.KOVAN]: new Token(
     ChainId.KOVAN,
     '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.MATIC]: new Token(
+    ChainId.MATIC,
+    KNC_ADDRESS, //TODO need to update
+    18,
+    'KNC',
+    'Kyber Network Crystal'
+  ),
+  [ChainId.MUMBAI]: new Token(
+    ChainId.MUMBAI,
+    KNC_ADDRESS, //TODO need to update
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -290,7 +306,9 @@ export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ROPSTEN]: '0x98A591C8f389059dddE151FebC3047Bc65CF2c96',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: ''
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '',
+  [ChainId.MUMBAI]: ''
 }
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
@@ -298,7 +316,9 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.ROPSTEN]: '0x20df3fcF8B90C54c29fb0f4Ff83121381f5fDBE3',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: ''
+  [ChainId.KOVAN]: '',
+  [ChainId.MATIC]: '',
+  [ChainId.MUMBAI]: ''
 }
 
 export const FARM_DEPOSIT_TOPIC: { [chainId in ChainId]: string } = {
