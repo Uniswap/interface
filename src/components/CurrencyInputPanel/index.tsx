@@ -78,9 +78,9 @@ const Container = styled.div<{ hideInput: boolean }>`
   background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.bg1)};
 `
 
-const StyledTokenName = styled.span<{ active?: boolean }>`
+const StyledTokenName = styled.span<{ active?: boolean; fontSize?: string }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active }) => (active ? '20px' : '16px')};
+  font-size:  ${({ active, fontSize }) => (fontSize ? fontSize : active ? '20px' : '16px')};
 `
 
 const StyledBalanceMax = styled.button`
@@ -129,6 +129,8 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   customBalanceText?: string
   balancePosition?: string
+  hideLogo?: boolean
+  fontSize?: string
 }
 
 export default function CurrencyInputPanel({
@@ -147,7 +149,9 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
-  balancePosition = 'right'
+  balancePosition = 'right',
+  hideLogo = false,
+  fontSize
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -205,7 +209,7 @@ export default function CurrencyInputPanel({
               }}
             >
               <Aligner>
-                {pair ? (
+                {hideLogo ? null : pair ? (
                   <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                 ) : currency ? (
                   <CurrencyLogo currency={currency} size={'24px'} />
@@ -215,7 +219,11 @@ export default function CurrencyInputPanel({
                     {pair?.token0.symbol}:{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
-                  <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                  <StyledTokenName
+                    className="token-symbol-container"
+                    active={Boolean(currency && currency.symbol)}
+                    fontSize={fontSize}
+                  >
                     {(currency && currency.symbol && currency.symbol.length > 20
                       ? currency.symbol.slice(0, 4) +
                         '...' +

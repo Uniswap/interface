@@ -121,6 +121,11 @@ const DataText = styled(Flex)<{ align?: string }>`
   color: ${({ theme }) => theme.text7};
   flex-direction: column;
   align-items: ${({ align }) => (align === 'right' ? 'flex-end' : 'flex-start')};
+  font-weight: 500;
+`
+
+const APY = styled(DataText)`
+  color: ${({ theme }) => theme.text12};
 `
 
 interface ListItemProps {
@@ -153,8 +158,6 @@ const ListItem = ({ farm }: ListItemProps) => {
     ? BigNumber.from(farm.userData?.stakedBalance)
     : BigNumber.from(0)
   const userEarning = farm.userData?.earnings ? BigNumber.from(farm.userData?.earnings) : BigNumber.from(0)
-  const rewardUSD =
-    userEarning && kncPrice && (parseFloat(kncPrice) * parseFloat(getFullDisplayBalance(userEarning))).toString()
 
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
@@ -198,14 +201,6 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const amp = farm.amp / 10000
 
-  const handleClickHarvest = () => {
-    toggleFarmClaimModal()
-  }
-
-  const handleClickStake = () => {
-    toggleFarmStakeModal()
-  }
-
   return (
     <>
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
@@ -226,9 +221,7 @@ const ListItem = ({ farm }: ListItemProps) => {
         <DataText grid-area="liq" align="right">
           {formattedNum(liquidity.toString(), true)}
         </DataText>
-        <DataText grid-area="apy" style={{ color: 'rgba(137, 255, 120, 0.67)' }}>
-          {apr.toFixed(2)}%
-        </DataText>
+        <APY grid-area="apy">{apr.toFixed(2)}%</APY>
         <DataText grid-area="reward" align="right">{`${getFullDisplayBalance(userEarning)} KNC`}</DataText>
         <DataText grid-area="staked_balance" align="right">
           {formattedNum(userStakedBalanceUSD.toString(), true)}
@@ -256,8 +249,6 @@ const ListItem = ({ farm }: ListItemProps) => {
               </BalanceInfo>
               <div grid-area="harvest">
                 <GreyText>KNC Reward</GreyText>
-                <div>{`${getFullDisplayBalance(userEarning)} KNC`}</div>
-                <div>{rewardUSD && formattedNum(rewardUSD, true)}</div>
               </div>
             </StakeGroup>
             <StakeGroup>
@@ -267,22 +258,8 @@ const ListItem = ({ farm }: ListItemProps) => {
                 pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}
                 token0Address={farm.token0.id}
                 token1Address={farm.token1.id}
+                kncPrice={kncPrice}
               />
-              {/* <div grid-area="stake">
-                <ButtonPrimary padding="12px" onClick={handleClickStake}>
-                  Stake
-                </ButtonPrimary>
-              </div>
-              <div grid-area="unstake">
-                <ButtonPrimary padding="12px" onClick={handleClickStake}>
-                  Unstake
-                </ButtonPrimary>
-              </div>
-              <div grid-area="harvest">
-                <ButtonPrimary padding="12px" onClick={handleClickHarvest}>
-                  Harvest
-                </ButtonPrimary>
-              </div> */}
             </StakeGroup>
             <LPInfoContainer>
               <ExternalLink href={`${String(process.env.REACT_APP_DMM_ANALYTICS_URL)}/pool/${farm.id}`}>

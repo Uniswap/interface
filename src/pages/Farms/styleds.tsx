@@ -85,7 +85,7 @@ export const HeadingContainer = styled.div`
   display: grid;
   grid-template-columns: 2fr 3fr;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.bg15};
+  background-color: ${({ theme }) => theme.bg16};
   padding: 28px 32px;
   margin-bottom: 20px;
 `
