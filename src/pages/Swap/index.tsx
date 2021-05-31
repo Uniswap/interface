@@ -459,7 +459,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           <ArrowLeft color={theme.text3} size={12} /> &nbsp;
                           <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
                             <Trans>
-                              <HideSmall>Back to</HideSmall>
+                              <HideSmall>Back to </HideSmall>
                               V3
                             </Trans>
                           </TYPE.main>
