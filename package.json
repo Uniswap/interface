@@ -114,7 +114,7 @@
     "prettier": "^2.3.0"
   },
   "dependencies": {
-    "@celo-tools/use-contractkit": "^1.0.0-beta.10",
+    "@celo-tools/use-contractkit": "^1.0.0-beta.11",
     "@celo/connect": "^1.2.0",
     "@celo/contractkit": "^1.2.0",
     "@celo/utils": "^1.2.1",
