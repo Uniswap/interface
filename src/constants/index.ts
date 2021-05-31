@@ -301,99 +301,52 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: ''
 }
 
-// old: 0x72C482Bc54d6D58c548e5256EE569fb0c08ae2Df
-// new: 0x98A591C8f389059dddE151FebC3047Bc65CF2c96
+export const FARM_DEPOSIT_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.ROPSTEN]: '0x36af321ec8d3c75236829c5317affd40ddb308863a1236d2d277a4025cccee1e',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
 
-// // SPDX-License-Identifier: agpl-3.0
-// pragma solidity 0.7.6;
-// pragma abicoder v2;
+export const FARM_HARVEST_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.ROPSTEN]: '0x4534f107610758c3931de9ad1e176476fcfb8c74adf920167e1d54ee84fcfe76',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
 
-// import {IERC20Ext} from '@kyber.network/utils-sc/contracts/IERC20Ext.sol';
+export const FARM_CLAIM_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.ROPSTEN]: '0x6d06f0a463d80b43fe6cd0b79c61bb2790cfe898790e69828f25e6e12886e178',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
 
-// interface IKyberRewardLocker {
-//   struct VestingSchedule {
-//     uint64 startBlock;
-//     uint64 endBlock;
-//     uint128 quantity;
-//     uint128 vestedQuantity;
-//   }
+export const FARM_WITHDRAW_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.ROPSTEN]: '0x02f25270a4d87bea75db541cdfe559334a275b4a233520ed6c0a2429667cca94',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
 
-//   event VestingEntryCreated(
-//     IERC20Ext indexed token,
-//     address indexed beneficiary,
-//     uint256 startBlock,
-//     uint256 endBlock,
-//     uint256 quantity,
-//     uint256 index
-//   );
+export const FARM_TRANSFER_TOKEN_TOPIC: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.ROPSTEN]: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
 
-//   event Vested(
-//     IERC20Ext indexed token,
-//     address indexed beneficiary,
-//     uint256 vestedQuantity,
-//     uint256 index
-//   );
+export const ETHERSCAN_API: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: 'https://api.etherscan.io',
+  [ChainId.ROPSTEN]: 'https://api-ropsten.etherscan.io',
+  [ChainId.RINKEBY]: '',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
 
-//   /**
-//    * @dev queue a vesting schedule starting from now
-//    */
-//   function lock(
-//     IERC20Ext token,
-//     address account,
-//     uint256 amount
-//   ) external;
-
-//   /**
-//    * @dev queue a vesting schedule
-//    */
-//   function lockWithStartBlock(
-//     IERC20Ext token,
-//     address account,
-//     uint256 quantity,
-//     uint256 startBlock
-//   ) external;
-
-//   /**
-//    * @dev for all completed schedule, claim token
-//    */
-//   function vestCompletedSchedules(IERC20Ext token) external returns (uint256);
-
-//   /**
-//    * @dev claim token for specific vesting schedule,
-//    * @dev if schedule has not ended yet, claiming amount is linear with vesting blocks
-//    */
-//   function vestScheduleAtIndex(IERC20Ext token, uint256[] calldata indexes)
-//     external
-//     returns (uint256);
-
-//   /**
-//    * @dev claim token for specific vesting schedule from startIndex to endIndex
-//    */
-//   function vestSchedulesInRange(
-//     IERC20Ext token,
-//     uint256 startIndex,
-//     uint256 endIndex
-//   ) external returns (uint256);
-
-//   /**
-//    * @dev length of vesting schedules array
-//    */
-//   function numVestingSchedules(address account, IERC20Ext token) external view returns (uint256);
-
-//   /**
-//    * @dev get detailed of each vesting schedule
-//    */
-//   function getVestingScheduleAtIndex(
-//     address account,
-//     IERC20Ext token,
-//     uint256 index
-//   ) external view returns (VestingSchedule memory);
-
-//   /**
-//    * @dev get vesting shedules array
-//    */
-//   function getVestingSchedules(address account, IERC20Ext token)
-//     external
-//     view
-//     returns (VestingSchedule[] memory schedules);
-// }
+export const ETHERSCAN_API_KEY = 'ESP4NCWFSIBGYAXMRXGKS6HC29P62S6VSE'

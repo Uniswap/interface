@@ -2,7 +2,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Modal from 'components/Modal'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useFarmClaimModalToggle } from 'state/application/hooks'
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
