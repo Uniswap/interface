@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 19:17+0000\n"
+"POT-Creation-Date: 2021-05-30 23:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-05-30 23:15\n"
+"PO-Revision-Date: 2021-05-31 00:22\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -322,8 +322,8 @@ msgid "Change"
 msgstr "שינוי"
 
 #: src/components/Header/index.tsx
-msgid "Charts <0>↗</0>"
-msgstr "תרשימים <0> ↗</0>"
+msgid "Charts"
+msgstr "תרשימים"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -434,6 +434,11 @@ msgstr "לְאַשֵׁר"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
 msgstr "אשר אספקה"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+#: src/components/swap/SwapModalFooter.tsx
+msgid "Confirm Swap"
+msgstr "אשר החלפה"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -651,6 +656,7 @@ msgstr "הזן מיקום רשימה חוקי"
 msgid "Enter valid token address"
 msgstr "הזן כתובת אסימון חוקית"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
 msgstr "שְׁגִיאָה"
@@ -815,6 +821,10 @@ msgstr "לִלמוֹד"
 msgid "Liquidity"
 msgstr "נְזִילוּת"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Liquidity Provider Fee"
+msgstr "עמלת ספק נזילות"
+
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
 msgstr "תגמולים של ספק נזילות"
@@ -884,6 +894,10 @@ msgstr "מחיר מקסימלי"
 msgid "Max:"
 msgstr "מקסימום:"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Maximum sent"
+msgstr "מקסימום נשלח"
+
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -929,6 +943,10 @@ msgstr "מחיר מינימלי"
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
 msgstr "דקה:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Minimum received"
+msgstr "מינימום שהתקבל"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1065,6 +1083,7 @@ msgstr "מאוגד {0}:"
 msgid "Pools Overview"
 msgstr "סקירת בריכות"
 
+#: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
 msgstr "מחיר"
@@ -1072,6 +1091,10 @@ msgstr "מחיר"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
 msgstr "הבדל במחיר:"
+
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Price Impact"
+msgstr "השפעת מחיר"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
@@ -1177,6 +1200,10 @@ msgstr "מגבלות מחליפות לזוגות ישירים בלבד."
 msgid "Return"
 msgstr "לַחֲזוֹר"
 
+#: src/components/swap/AdvancedSwapDetails.tsx
+msgid "Route"
+msgstr "מַסלוּל"
+
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
 msgstr "חפש שם או הדבק כתובת"
@@ -1239,6 +1266,7 @@ msgid "Simple"
 msgstr "פָּשׁוּט"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
 msgstr "סובלנות להחלקה"
 
@@ -1278,6 +1306,10 @@ msgstr "לְהַחלִיף"
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
 msgstr "החלף בכל מקרה"
+
+#: src/components/swap/ConfirmSwapModal.tsx
+msgid "Swapping {0} {1} for {2} {3}"
+msgstr "החלפת {0} {1} ל {2} {3}"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
