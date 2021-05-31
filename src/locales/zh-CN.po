@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-05-31 00:22\n"
+"PO-Revision-Date: 2021-05-31 17:33\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,7 +109,7 @@ msgstr "<0>返回</0>V3"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>For</0><1>{0}</1>"
-msgstr "<0>For</0><1>{0}</1>"
+msgstr "<0>赞成</0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -121,7 +121,7 @@ msgstr "<0>提示：</0>使用此工具来查找界面中未自动出现的币�
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>提示：</0> 当您添加流动资金时，您将收到代表您位置的池代币。 这些代币自动获得与您在池中所占份额相称的费用，并且可以随时兑换。"
+msgstr "<0>提示：</0>当您注入流动资金时，您将收到代表您份额的流动池代币。这些代币将根据您在池中所占份额，自动赚取和累计相称的手续费，并且可以随时赎回流动池币对。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -129,11 +129,11 @@ msgstr "<0>解锁投票</0>，以准备下一个提案。"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0>:party_poper: </0>欢迎加入团队Unicorn:) <1>🎉</1>"
+msgstr "<0>🎉 </0>欢迎加入Unicorn（独角兽）团队 :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "提交建议书必须达到联合国国际研究所供应总量的1%的最低阈值"
+msgstr "提交提案的最低门槛为 UNI 代币总供应量的1％。"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -149,7 +149,7 @@ msgstr "账户"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "已启用"
+msgstr "已激活"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -162,15 +162,15 @@ msgstr "添加代表 +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "添加流动资金"
+msgstr "注入流动资金"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "添加 V2 流动资金"
+msgstr "注入 V2 流动资金"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "添加流动性。"
+msgstr "注入流动资金。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -179,15 +179,15 @@ msgstr "将 {0} 添加到Metamask <0/>"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Add {0} {1} and {2} {3}"
-msgstr "添加 {0} {1} 和 {2} {3}"
+msgstr "注入 {0} {1} 和 {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "添加 {0}-{1} 流动资金"
+msgstr "注入 {0}-{1} 流动资金"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "添加 {0}/{1} V3 流动资金"
+msgstr "注入 {0}/{1} V3 流动资金"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -195,43 +195,43 @@ msgstr "已添加 {0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "地址没有可用的索偿要求"
+msgstr "地址没有可赎的代币"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
-msgstr "反对的"
+msgstr "反对"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
-msgstr "允许 LP 令牌迁移"
+msgstr "允许资金池代币迁移"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "允许高价格影响交易并跳过确认屏幕。请自行承担风险。"
+msgstr "允许高度影响价格的交易，并跳过确认屏。须自行承担使用风险。"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "允许Uniswap 协议使用您的 {0}"
+msgstr "允许 Uniswap 调用您的 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
-msgstr "允许的"
+msgstr "已允许"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "始终确保URL<0>app.uniswap.org</0> - 书签安全。"
+msgstr "务必确保网址为<0>app.uniswap.org</0> - 将其加入书签，以确保安全。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
-msgstr "金额"
+msgstr "数额"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "尝试执行此交换时发生错误。您可能需要增加滑移公差。如果这不起作用，则可能与您正在交易的代币不兼容。转移令牌和变基令牌的注释费与Uniswap V3不兼容。"
+msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与 Uniswap 不兼容。注：转账时带扣除费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "分析"
+msgstr "数据分析"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -250,7 +250,7 @@ msgstr "已批准"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
-msgstr "审批中"
+msgstr "批准中"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -263,23 +263,23 @@ msgstr "您确定吗？"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "作为Uniswap社区的成员，你可以声称UNI被用于投票和管理。<0/><1/><2>阅读更多关于UNI</2>"
+msgstr "作为Uniswap社区的成员，您可以认领 UNI 代币，用于投票和管理。<0/><1/><2>阅读更多关于 UNI 代币信息</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "由于选定的价格范围，至少 {0} {1} 和 {2} {3} 将退还给你的钱包。"
+msgstr "根据选定的价格范围，至少会有 {0} {1} 和 {2} {3} 将退还到您的钱包。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
-msgstr "自动操作"
+msgstr "自动"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "可用存款： {0}"
+msgstr "可调用的数额：{0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
-msgstr "后退"
+msgstr "返回"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -287,35 +287,35 @@ msgstr "余额："
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0} {1}"
-msgstr "余额： {0} {1}"
+msgstr "余额：{0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "最适合外来对应。"
+msgstr "较适合特异币对。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "最适合大部分配对。"
+msgstr "较适合大部分币对。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "最适合稳定的对等物。"
+msgstr "较适合稳定代币币对。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
-msgstr "阻止地址"
+msgstr "已屏蔽地址"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "通过增加流动性，您将按您在池中所占份额的比例获得所有交易的0.3%。 费用按实时累计方式添加到集合中，可以通过提取您的流动资金索偿。"
+msgstr "通过注入流动资金，您将按您在流动池中所占份额赚取对应交易量的0.3%手续费。手续费将实时累计，添加到流动池中，您可以通过赎回您的流动资金将手续费也赎回。"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "添加此列表就会隐含地相信数据是正确的。 任何人都可以创建一个列表，包括创建现有列表的假版本和声称代表没有此项目的列表的列表。"
+msgstr "添加此代币列表代表您信任其数据是正确的。任何人都可以创建代币列表，包括创建假冒实际列表的造假版本，以及自我声称代表了某项目的代币列表。"
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "通过连接钱包，您同意Uniswap实验室<0>服务条款</0>，并确认您已阅读和理解<1>Uniswap协议免责声明</1>。"
+msgstr "通过连接钱包，您同意接受 Uniswap 实验室的<0>服务条款</0>，并确认您已阅读和理解<1>Uniswap协议免责声明</1>。"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -327,13 +327,13 @@ msgstr "图表"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "查看我们的 v3 LP 步行和迁移指南。"
+msgstr "查看我们的 v3 流动池介绍和迁移指南。"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "Claim"
+msgstr "领取"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -341,42 +341,42 @@ msgstr "Claim"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Claim UNI"
+msgstr "领取 UNI 代币"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgstr "领取 UNI 代币"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "领取累积的联合国奖励"
+msgstr "领取累积的 UNI 代币奖励"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "B. 索赔费"
+msgstr "领取已累计的手续费"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "已索赔的"
+msgstr "已领取"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "已认领的UNI！"
+msgstr "已认领 UNI 代币！"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "索取中"
+msgstr "领取中"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "索偿UNI"
+msgstr "正在领取 UNI 代币"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "正在认领 {0} UNI"
+msgstr "正在领取 {0} UNI 代币"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -396,32 +396,32 @@ msgstr "代码"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "收集"
+msgstr "收取"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "以WETH方式收集"
+msgstr "以 WETH 方式收取"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "收取费用"
+msgstr "收取手续费"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "已收藏"
+msgstr "已收取"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "收集中"
+msgstr "收取中"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "收取费用"
+msgstr "收取手续费"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "收取费用将为您提取当前可用的费用。"
+msgstr "“收取手续费”将为您提取您当前已累计的手续费。"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -438,7 +438,7 @@ msgstr "确认供应"
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
-msgstr "确认掉期"
+msgstr "确认兑换"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
