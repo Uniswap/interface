@@ -5,21 +5,21 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: ja\n"
+"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
-"X-Crowdin-Language: ja\n"
+"X-Crowdin-Language: id\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
-"Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-05-31 06:36\n"
+"Language-Team: Indonesian\n"
+"PO-Revision-Date: 2021-05-31 05:36\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
-msgstr "$-"
+msgstr "$ -"
 
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -33,19 +33,19 @@ msgstr "${0} ETH"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
-msgstr "(最大)"
+msgstr "(Max)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(請求)"
+msgstr "(klaim)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(すべてクリア)"
+msgstr "(Bersihkan semua)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(編集)"
+msgstr "(edit)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -53,7 +53,7 @@ msgstr "+{feeAmountFormatted}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
-msgstr "- 送信を削除"
+msgstr "- Hapus pengiriman"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "-{feeAmountFormatted}%"
@@ -64,19 +64,19 @@ msgstr "-{feeAmountFormatted}%"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
-msgstr "0 UNI/週"
+msgstr "0 UNI / minggu"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "0.05%の手数料"
+msgstr "0,05% biaya"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0.3%の手数料"
+msgstr "Biaya 0,3%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1% の手数料"
+msgstr "Biaya 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -92,248 +92,248 @@ msgstr "75%"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr "<0/>すべての提案"
+msgstr "<0 /> Semua Proposal"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/>投票"
+msgstr "<0 /> Suara"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>アカウント分析と発生した手数料</0><1>↗ </1>"
+msgstr "<0> Analisis akun dan biaya yang dikenakan</0> <1> ↗</1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to</0>V3"
-msgstr "<0>V3に戻る</0>"
+msgstr "<0> Kembali ke</0> V3"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>For</0><1>{0}</1>"
-msgstr "<0></0><1>{0}</1>"
+msgstr "<0> Untuk</0> <1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>ヒント:</0>プールトークンを削除すると、あなたのポジションは、プールのシェアに比例して、現在のレートで元のトークンに戻ります。受け取った手数料は、あなたが受け取るトークンに含まれます。"
+msgstr "<0> Tip:</0> Menghapus token kumpulan akan mengubah posisi Anda kembali menjadi token yang mendasari pada tarif saat ini, sebanding dengan bagian Anda dari kumpulan. Biaya yang masih harus dibayar termasuk dalam jumlah yang Anda terima."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0>ヒント:</0>このツールを使用して、インターフェイスに自動的に表示されないペアを見つけます。"
+msgstr "<0> Tip:</0> Gunakan alat ini untuk menemukan pasangan yang tidak otomatis muncul di antarmuka."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>ヒント:</0>流動性を追加すると、あなたのポジションを表すプールトークンを受け取ります。 プールトークンは自動的にプールのシェアに比例して手数料を獲得し、いつでも償還することができます。"
+msgstr "<0> Tip:</0> Saat Anda menambahkan likuiditas, Anda akan menerima token kumpulan yang mewakili posisi Anda. Token ini secara otomatis mendapatkan biaya yang sebanding dengan bagian Anda dari kumpulan, dan dapat ditebus kapan saja."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0>投票のロックを解除</0>次の提案に備えてください。"
+msgstr "<0> Buka pemungutan suara</0> untuk mempersiapkan proposal berikutnya."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0>🎉 </0>チームユニコーンにようこそ <1>🎉</1>"
+msgstr "<0> 🎉</0> Selamat datang di tim Unicorn :) <1> 🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "提案を提出するには、UNI総供給量の1%以上の閾値が必要です"
+msgstr "Batas minimum 1% dari total pasokan UNI diperlukan untuk mengajukan proposal"
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "概要"
+msgstr "Tentang"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
-msgstr "同意する"
+msgstr "Menerima"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
-msgstr "アカウント"
+msgstr "Akun"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "アクティブ"
+msgstr "Aktif"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
-msgstr "追加"
+msgstr "Menambahkan"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "代理を追加 +"
+msgstr "Tambahkan Delegasi +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "流動性を追加"
+msgstr "Tambahkan Likuiditas"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "V2の流動性を追加"
+msgstr "Tambahkan Likuiditas V2"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "流動性を追加"
+msgstr "Tambahkan likuiditas."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "{0} をメタマスクに追加 <0/>"
+msgstr "Tambahkan {0} ke Metamask <0 />"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Add {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} の追加"
+msgstr "Tambahkan {0} {1} dan {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "{0}-{1} の流動性を追加"
+msgstr "Tambahkan {0}-{1} likuiditas"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "{0}/{1} V3流動性を追加"
+msgstr "Tambahkan {0}/{1} likuiditas V3"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
-msgstr "{0} を追加"
+msgstr "Ditambahkan {0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "請求可能なアドレスではありません"
+msgstr "Alamat tidak memiliki klaim yang tersedia"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
-msgstr "<unk>"
+msgstr "Melawan"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
-msgstr "LPトークンの移行を許可する"
+msgstr "Izinkan migrasi token LP"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "価格への大きな影響がある取引を許可し、確認画面をスキップします。自己責任で使用してください。"
+msgstr "Izinkan perdagangan berdampak harga tinggi dan lewati layar konfirmasi. Gunakan dengan resiko Anda sendiri."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "{0} の使用をユニスワッププロトコルに許可する"
+msgstr "Izinkan Protokol Uniswap menggunakan {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
-msgstr "許可"
+msgstr "Diizinkan"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "URLが<0> app.uniswap.org</0>であることを常に確認してください。安全のためにこのURLをブックマークしてください。"
+msgstr "Selalu pastikan URL-nya adalah <0> app.uniswap.org</0> - tandai agar aman."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
-msgstr "金額"
+msgstr "Jumlah"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "このスワップを実行しようとしたときにエラーが発生しました。スリッページの許容範囲を増やす必要があるかもしれません。それでも上手くいかない場合は、取引しているトークンとの互換性がない可能性があります。転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がないことにご注意ください。"
+msgstr "Terjadi kesalahan saat mencoba menjalankan swap ini. Anda mungkin perlu meningkatkan toleransi selip Anda. Jika itu tidak berhasil, mungkin ada ketidakcocokan dengan token yang Anda perdagangkan. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "分析"
+msgstr "Analytics"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
-msgstr "承認"
+msgstr "Menyetujui"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
-msgstr "承認 {0}"
+msgstr "Setujui {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
-msgstr "承認済み"
+msgstr "Disetujui"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
-msgstr "承認中"
+msgstr "Menyetujui"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
-msgstr "承認中 {0}"
+msgstr "Menyetujui {0}"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
-msgstr "よろしいですか？"
+msgstr "Apakah kamu yakin"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Uniswapコミュニティのメンバーとして、投票とガバナンスのためにUNIを使用することを主張することができます。<0/><1/><2>UNIについてもっと読む</2>"
+msgstr "Sebagai anggota komunitas Uniswap, Anda dapat mengklaim UNI digunakan untuk pemungutan suara dan pemerintahan. <0 /> <1 /> <2> Baca selengkapnya tentang UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "少なくとも {0} の {1} と {2} の {3} は選択された価格範囲のため、ウォレットに返金されます。"
+msgstr "Setidaknya {0} {1} dan {2} {3} akan dikembalikan ke dompet Anda karena kisaran harga yang dipilih."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
-msgstr "自動"
+msgstr "Mobil"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "入金可能： {0}"
+msgstr "Tersedia untuk deposit: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
-msgstr "戻る"
+msgstr "Kembali"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
-msgstr "残高:"
+msgstr "Keseimbangan:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0} {1}"
-msgstr "バランス： {0} {1}"
+msgstr "Saldo: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "エキゾチックなペアに最適です。"
+msgstr "Terbaik untuk pasangan eksotis."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "ほとんどのペアに最適です。"
+msgstr "Terbaik untuk sebagian besar pasangan."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "安定ペアに最適です。"
+msgstr "Terbaik untuk pasangan stabil."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
-msgstr "ブロックされたアドレス"
+msgstr "Alamat diblokir"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性を追加することにより、あなたはプールのあなたのシェアに比例して、このペアのすべての取引の0.3%を得ることができます。 手数料はプールに追加され、リアルタイムで補償され、あなたの流動性を引き出すことによって請求することができます。"
+msgstr "Dengan menambahkan likuiditas, Anda akan mendapatkan 0,3% dari semua perdagangan pada pasangan ini sebanding dengan bagian pool Anda. Biaya ditambahkan ke kumpulan, bertambah secara real time dan dapat diklaim dengan menarik likuiditas Anda."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "このリストを追加することで、データが正しいことを暗黙的に信頼することになります。 既存のリストの偽のバージョンや、プロジェクトを持たないプロジェクトを表すと主張するリストを作成するなど、誰でもリストを作成できます。"
+msgstr "Dengan menambahkan daftar ini Anda secara implisit mempercayai bahwa datanya benar. Siapa pun dapat membuat daftar, termasuk membuat versi palsu dari daftar yang sudah ada dan daftar yang mengklaim mewakili proyek yang tidak memilikinya."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "ウォレットを接続することにより、Uniswap Labs' <0>サービス利用規約</0>に同意し、<1>Uniswapプロトコル免責事項</1>を読み、理解したことに同意します。"
+msgstr "Dengan menghubungkan dompet, Anda menyetujui Persyaratan Layanan <0> Uniswap Labs</0> dan mengakui bahwa Anda telah membaca dan memahami <1> penafian protokol Uniswap</1> ."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
-msgstr "変更"
+msgstr "Perubahan"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
-msgstr "チャート"
+msgstr "Grafik"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "私たちのv3 LPウォークスルーと移行ガイドをご覧ください。"
+msgstr "Lihat panduan migrasi dan panduan v3 LP kami."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "Claim"
+msgstr "Klaim"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -341,104 +341,104 @@ msgstr "Claim"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Claim UNI"
+msgstr "Klaim UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgstr "Klaim Token UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "UNI報酬を受け取ることができます。"
+msgstr "Klaim akumulasi hadiah UNI"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "手数料を請求する"
+msgstr "Biaya klaim"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "請求済み"
+msgstr "Diklaim"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "UNIを主張しました！"
+msgstr "Mengklaim UNI!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "請求中"
+msgstr "Mengklaim"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "UNIを請求中"
+msgstr "Mengklaim UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "UNIを {0} 個要求中"
+msgstr "Mengklaim {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
-msgstr "すべてクリア"
+msgstr "Bersihkan semua"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
-msgstr "すべてクリア"
+msgstr "Bersihkan semua"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "閉じる"
+msgstr "Menutup"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
-msgstr "コード"
+msgstr "Kode"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "回収する"
+msgstr "Mengumpulkan"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "ウェットとして収集"
+msgstr "Kumpulkan sebagai BASAH"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "手数料を徴収する"
+msgstr "Kumpulkan biaya"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "集められた"
+msgstr "Dikumpulkan"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "回収中"
+msgstr "Mengumpulkan"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "手数料の収集"
+msgstr "Memungut biaya"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "徴収手数料は現在利用可能な手数料を引き出します。"
+msgstr "Biaya pengumpulan akan menarik biaya yang tersedia saat ini untuk Anda."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "共通のベース"
+msgstr "Basis umum"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
-msgstr "確認する"
+msgstr "Konfirmasi"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
-msgstr "供給を確認"
+msgstr "Konfirmasikan Pasokan"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
-msgstr "スワップの確認"
+msgstr "Konfirmasi Swap"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -446,7 +446,7 @@ msgstr "スワップの確認"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "ウォレット内でこの取引を確認する"
+msgstr "Konfirmasikan transaksi ini di dompet Anda"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -458,184 +458,184 @@ msgstr "ウォレット内でこの取引を確認する"
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
-msgstr "ウォレットに接続"
+msgstr "Hubungkan Dompet"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "ウォレットに接続"
+msgstr "Hubungkan dompet"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
-msgstr "ウォレットに接続"
+msgstr "Hubungkan ke dompet"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "プールを見つけるにはウォレットに接続してください"
+msgstr "Hubungkan ke dompet untuk menemukan kolam"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "ウォレットに接続してV2流動性を確認します。"
+msgstr "Hubungkan ke dompet untuk melihat likuiditas V2 Anda."
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
-msgstr "ウォレットに接続して流動性を確認します。"
+msgstr "Hubungkan ke dompet untuk melihat likuiditas Anda."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Connect wallet"
-msgstr "ウォレットに接続"
+msgstr "Hubungkan dompet"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
-msgstr "{name} と接続しました"
+msgstr "Terhubung dengan {name}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
-msgstr "コピーしました"
+msgstr "Disalin"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
-msgstr "アドレスをコピー"
+msgstr "Salin Alamat"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "プールと供給を作成"
+msgstr "Buat Pool & Supply"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
-msgstr "ペアを作成"
+msgstr "Buat pasangan"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "プールを作成"
+msgstr "Buat kolam"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "GitHubで問題を作成する"
+msgstr "Buat masalah di GitHub"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "プールを作成し、 {0}/{1} V3流動性を追加"
+msgstr "Buat kolam renang dan tambahkan {0}/{1} likuiditas V3"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
-msgstr "プールを作成"
+msgstr "Buat pangkalan."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
-msgstr "現在の価格"
+msgstr "Harga sekarang"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
-msgstr "現在の価格"
+msgstr "Harga sekarang"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "現在の {0} 価格:"
+msgstr "Harga {0} saat ini:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
-msgstr "投票を委任する"
+msgstr "Delegasikan Suara"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
-msgstr "委任先:"
+msgstr "Didelegasikan ke:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
-msgstr "投票を委任中"
+msgstr "Mendelegasikan suara"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "Deposit（預金）"
+msgstr "Menyetorkan"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "預金金額"
+msgstr "Jumlah Setoran"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "デポジットUNI-V2 LP トークン"
+msgstr "Setor Token LP UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "預金流動性format@@0"
+msgstr "Likuiditas deposito"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "流動性プロバイダトークンをデポジットして、UNI、Uniswapプロトコルガバナンストークンを受け取ります。"
+msgstr "Setor token Penyedia Likuiditas Anda untuk menerima UNI, token tata kelola protokol Uniswap."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
-msgstr "預金流動性:"
+msgstr "Likuiditas yang disimpan:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "{0} UNI-V2"
+msgstr "Disetor {0} UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "デポジットの流動性"
+msgstr "Menyimpan Likuiditas"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
-msgstr "説明"
+msgstr "Deskripsi"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
-msgstr "詳細情報"
+msgstr "Terperinci"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
-msgstr "詳細"
+msgstr "Detail"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "マルチホップを無効にする"
+msgstr "Nonaktifkan Multihops"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
-msgstr "接続を解除"
+msgstr "Memutuskan"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Discord"
+msgstr "Perselisihan"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
-msgstr "却下する"
+msgstr "Memberhentikan"
 
 #: src/components/Menu/index.tsx
 msgid "Docs"
-msgstr "ドキュメント"
+msgstr "Docs"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "あなたのv2ポジションのいずれかが表示されませんか? <0>インポートしてください</0>"
+msgstr "Tidak melihat salah satu posisi v2 Anda? <0> Impor.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "獲得されたUNIトークンは、Uniswapガバナンスの投票株式を表します。"
+msgstr "Token UNI yang diperoleh mewakili hak suara dalam tata kelola Uniswap."
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
-msgstr "受信者を入力してください"
+msgstr "Masukkan penerima"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "有効なスリップページのパーセンテージを入力してください"
+msgstr "Masukkan persentase selip yang valid"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "UNIクレームを発生させるアドレスを入力します。アドレスに請求可能なUNIがある場合は、送信時に送信されます。"
+msgstr "Masukkan alamat untuk memicu klaim UNI. Jika alamat tersebut memiliki UNI yang dapat diklaim, alamat tersebut akan dikirimkan kepada mereka saat diserahkan."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -646,137 +646,137 @@ msgstr "UNIクレームを発生させるアドレスを入力します。アド
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
-msgstr "金額を入力"
+msgstr "Masukkan jumlah"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Enter valid list location"
-msgstr "有効なリストの場所を入力してください"
+msgstr "Masukkan lokasi daftar yang valid"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
-msgstr "有効なトークンアドレスを入力してください"
+msgstr "Masukkan alamat token yang valid"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
-msgstr "エラー"
+msgstr "Kesalahan"
 
 #: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting"
-msgstr "接続エラー"
+msgstr "Terjadi kesalahan saat menyambungkan"
 
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
-msgstr "接続中にエラーが発生しました。ページを更新してください。"
+msgstr "Terjadi kesalahan saat menyambungkan. Coba segarkan halaman."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
-msgstr "リストのインポートエラー"
+msgstr "Terjadi kesalahan saat mengimpor daftar"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
-msgstr "非アクティブなトークンリストから展開された結果"
+msgstr "Hasil yang diperluas dari Daftar Token yang tidak aktif"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "エキスパートモードは確認トランザクションプロンプトをオフにし、多くの場合、不良率や資金を失う可能性が高いスリップページ取引を可能にします。"
+msgstr "Mode ahli mematikan permintaan konfirmasi transaksi dan memungkinkan perdagangan selip tinggi yang sering kali mengakibatkan suku bunga buruk dan dana hilang."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap Analyticsで人気のプールを探索します。"
+msgstr "Jelajahi kumpulan populer di Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "手数料段階"
+msgstr "Tingkat Biaya"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "以下に示す各プールについては、format@@0をクリックしてUniswap V2から流動性を削除し、Uniswap V3に入金します。"
+msgstr "Untuk setiap kumpulan yang ditunjukkan di bawah ini, klik bermigrasi untuk menghapus likuiditas Anda dari Uniswap V2 dan menyimpannya ke Uniswap V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
-msgstr "差出人:"
+msgstr "Dari"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
-msgstr "（最大）から"
+msgstr "Dari (paling banyak)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
-msgstr "Discordのサポートを受ける"
+msgstr "Dapatkan dukungan untuk Discord"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
-msgstr "閉じた位置を隠す"
+msgstr "Sembunyikan posisi tertutup"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
-msgstr "価格への影響"
+msgstr "Dampak Harga Tinggi"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "了解しました"
+msgstr "saya mengerti"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "このリストからトークンを購入すると、トークンを販売できなくなる可能性があります。"
+msgstr "Jika Anda membeli token dari daftar ini, Anda mungkin tidak dapat menjualnya kembali."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
-msgstr "インポート"
+msgstr "Impor"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import List"
-msgstr "リストをインポート"
+msgstr "Daftar Impor"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import Pool"
-msgstr "プールをインポート"
+msgstr "Impor Pool"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
-msgstr "自己責任でインポート"
+msgstr "Impor dengan risiko Anda sendiri"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
-msgstr "範囲内"
+msgstr "Dalam lingkup"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Inactive"
-msgstr "非アクティブ"
+msgstr "Tidak aktif"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
-msgstr "流動性を上げる"
+msgstr "Meningkatkan Likuiditas"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr "初期価格とプールシェア"
+msgstr "Harga awal dan pembagian kumpulan"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
-msgstr "初期化中..."
+msgstr "Memulai ..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "入力が推定されています。最大 <0>{0} {1}</0> で販売するか、トランザクションは元に戻ります。"
+msgstr "Masukan diperkirakan. Anda akan menjual paling banyak <0>{0} {1}</0> atau transaksi akan dikembalikan."
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
-msgstr "メタマスクのインストール"
+msgstr "Instal Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "この取引には流動性が不足しています。"
+msgstr "Likuiditas tidak mencukupi untuk perdagangan ini."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "この取引には流動性が不足しています。マルチホップ取引を有効にしてください。"
+msgstr "Likuiditas tidak mencukupi untuk perdagangan ini. Coba aktifkan perdagangan multi-hop."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -784,62 +784,62 @@ msgstr "この取引には流動性が不足しています。マルチホップ
 #: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
-msgstr "不十分な {0} バランス"
+msgstr "Saldo {0} tidak mencukupi"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
-msgstr "インターフェイスの設定"
+msgstr "Pengaturan Antarmuka"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid pair"
-msgstr "無効なペア"
+msgstr "Pasangan tidak valid"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
-msgstr "無効なペアです。"
+msgstr "Pasangan tidak valid."
 
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid price input"
-msgstr "無効な価格入力"
+msgstr "Masukan harga tidak valid"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "不正な範囲が選択されています。最小価格は最大価格よりも低くなければなりません。"
+msgstr "Rentang yang tidak valid dipilih. Harga min harus lebih rendah dari harga maks."
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "無効な受信者"
+msgstr "Penerima tidak valid"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
-msgstr "詳細情報"
+msgstr "Belajar"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
-msgstr "<unk>"
+msgstr "Likuiditas"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "流動性プロバイダー手数料"
+msgstr "Biaya Penyedia Likuiditas"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "流動性プロバイダ報酬"
+msgstr "Imbalan penyedia likuiditas"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性プロバイダは、プールのシェアに比例したすべての取引で0.3%の手数料を得ます。 手数料はプールに追加され、リアルタイムで補償され、あなたの流動性を引き出すことによって請求することができます。"
+msgstr "Penyedia likuiditas mendapatkan biaya 0,3% pada semua perdagangan yang sebanding dengan bagian pool mereka. Biaya ditambahkan ke kumpulan, bertambah secara real time dan dapat diklaim dengan menarik likuiditas Anda."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
-msgstr "リスト"
+msgstr "Daftar"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
-msgstr "読み込まれました"
+msgstr "Sarat"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -850,11 +850,11 @@ msgstr "読み込まれました"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Loading"
-msgstr "読み込み中"
+msgstr "Memuat"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "URLが<0>app.uniswap.org</0>であることを確認してください"
+msgstr "Pastikan URL-nya adalah <0> app.uniswap.org</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -863,40 +863,40 @@ msgstr "URLが<0>app.uniswap.org</0>であることを確認してください"
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "管理"
+msgstr "Mengelola"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "リワードプールで流動性を管理"
+msgstr "Kelola Likuiditas di Pool Hadiah"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
-msgstr "トークンリストの管理"
+msgstr "Kelola Daftar Token"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "このプールを管理します"
+msgstr "Kelola pangkalan ini."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
-msgstr "最大値"
+msgstr "Max"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Max Price"
-msgstr "最大価格"
+msgstr "Harga Maks"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
-msgstr "最大価格"
+msgstr "Harga maks"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
-msgstr "最大："
+msgstr "Max:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "最大送信数"
+msgstr "Pengiriman maksimum"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -904,169 +904,169 @@ msgstr "最大送信数"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
-msgstr "移行"
+msgstr "Migrasi"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate Liquidity"
-msgstr "流動性の移行"
+msgstr "Migrasi Likuiditas"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "流動性をV3に移行"
+msgstr "Migrasi Likuiditas ke V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate V2 Liquidity"
-msgstr "V2の流動性を移行"
+msgstr "Migrasikan Likuiditas V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
-msgstr "V2流動性の移行"
+msgstr "Migrasikan likuiditas V2"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Uniswap V2からUniswap V3に流動性トークンを移行します。"
+msgstr "Migrasikan token likuiditas Anda dari Uniswap V2 ke Uniswap V3."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
-msgstr "移行中"
+msgstr "Bermigrasi"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Min Price"
-msgstr "最小価格"
+msgstr "Harga Min"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Min price"
-msgstr "最小価格"
+msgstr "Harga min"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
-msgstr "最小:"
+msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
-msgstr "受け取った最小値"
+msgstr "Minimum diterima"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
-msgstr "もっと見る"
+msgstr "Lebih"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
-msgstr "新しいポジション"
+msgstr "Posisi baru"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
-msgstr "V2流動性が見つかりません。"
+msgstr "Tidak ditemukan Likuiditas V2."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr "アクティブなプールがありません"
+msgstr "Tidak ada pangkalan aktif"
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
-msgstr "流動性が見つかりません。"
+msgstr "Likuiditas tidak ditemukan."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "プールが見つかりません。"
+msgstr "Tidak ada kolam yang ditemukan."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
-msgstr "提案が見つかりません。"
+msgstr "Tidak ada proposal yang ditemukan."
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
-msgstr "結果が見つかりませんでした。"
+msgstr "Tidak ada hasil yang ditemukan."
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
-msgstr "オフ"
+msgstr "MATI"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "オン"
+msgstr "DI"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "あなたが何をしているか分かっている場合にのみ、このモードを使用してください。"
+msgstr "GUNAKAN MODE INI HANYA JIKA ANDA TAHU APA YANG ANDA LAKUKAN."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
-msgstr "オフ"
+msgstr "Mati"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "オン"
+msgstr "Di"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "あなたがレビューするためにレート供給をクリックして満足している一度。"
+msgstr "Setelah Anda puas dengan penawaran harga klik untuk meninjau."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "ブロック {0} が投票の対象となる前に自己委任または他のアドレスに委任されたUNI投票のみ。"
+msgstr "Hanya suara UNI yang didelegasikan sendiri atau didelegasikan ke alamat lain sebelum blok {0} yang memenuhi syarat untuk pemungutan suara."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "おっと！不明なエラーが発生しました。ページを更新するか、別のブラウザまたはデバイスからアクセスしてください。"
+msgstr "Ups! Terjadi kesalahan yang tidak diketahui. Harap segarkan halaman, atau kunjungi dari browser atau perangkat lain."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
-msgstr "範囲外です"
+msgstr "Diluar jangkauan"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "出力が推定されます。価格が {0}%以上変更された場合、取引は元に戻ります。"
+msgstr "Output diperkirakan. Jika harga berubah lebih dari {0}%, transaksi Anda akan dikembalikan."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "出力が推定されています。少なくとも <0>{0} {1}</0> を受け取るか、トランザクションは元に戻ります。"
+msgstr "Output diperkirakan. Anda akan menerima setidaknya <0>{0} {1}</0> atau transaksi akan dikembalikan."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "出力は <0>{0}</0> に送信されます"
+msgstr "Output akan dikirim ke <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
-msgstr "所有者"
+msgstr "Pemilik"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr "参加するプール"
+msgstr "Kolam yang berpartisipasi"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
-msgstr "適切なEthereumネットワークに接続してください。"
+msgstr "Harap hubungkan ke jaringan Ethereum yang sesuai."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-msgstr "エキスパートモードを有効にするには、単語\"{confirmWord}\"を入力してください。"
+msgstr "Ketik kata \"{confirmWord}\" untuk mengaktifkan mode ahli."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "プール"
+msgstr "Kolam"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "プールが見つかりました！"
+msgstr "Pool Ditemukan!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "プールレート"
+msgstr "Tarif Pool"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "プールレート"
+msgstr "Tarif kolam"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "報酬プール内のプールトークン:"
+msgstr "Token kumpulan di kumpulan hadiah:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1077,81 +1077,81 @@ msgstr "報酬プール内のプールトークン:"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "プールされた {0}:"
+msgstr "Dikumpulkan {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "プールの概要"
+msgstr "Ikhtisar Pangkalan"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
-msgstr "価格"
+msgstr "Harga"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
-msgstr "価格差:"
+msgstr "Perbedaan harga:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr "価格への影響"
+msgstr "Dampak Harga"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "価格の影響が高すぎます"
+msgstr "Dampak Harga Terlalu Tinggi"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "価格更新"
+msgstr "Harga Diperbarui"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "価格範囲"
+msgstr "Kisaran harga"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
-msgstr "価格:"
+msgstr "Harga:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "価格とプールのシェア"
+msgstr "Harga dan pool share"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
-msgstr "提案"
+msgstr "Proposal"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
-msgstr "コミュニティメンバーが提出した提案はここに表示されます。"
+msgstr "Proposal yang diajukan oleh anggota komunitas akan muncul di sini."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
-msgstr "提案"
+msgstr "Pengusul"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
-msgstr "レート"
+msgstr "Tarif"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
-msgstr "UNIについてもっと読む"
+msgstr "Baca lebih lanjut tentang UNI"
 
 #: src/pages/Vote/index.tsx
 msgid "Read more about Uniswap governance"
-msgstr "Uniswapガバナンスについてもっと読む"
+msgstr "Baca lebih lanjut tentang tata kelola Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
-msgstr "流動性の提供についてもっと読む"
+msgstr "Baca lebih lanjut tentang menyediakan likuiditas"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
-msgstr "サポートされていないアセットの詳細を読む"
+msgstr "Baca lebih lanjut tentang aset yang tidak didukung"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
-msgstr "最近の取引"
+msgstr "transaksi terkini"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1159,62 +1159,62 @@ msgstr "最近の取引"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
-msgstr "削除"
+msgstr "Menghapus"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "金額を削除"
+msgstr "Hapus Jumlah"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "委任を削除"
+msgstr "Hapus Delegasi"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "流動性を削除"
+msgstr "Hapus Likuiditas"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
-msgstr "リストを削除"
+msgstr "Hapus daftar"
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} を削除"
+msgstr "Hapus {0} {1} dan {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "{0}/{1} V3流動性を削除"
+msgstr "Hapus {0}/{1} likuiditas V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} を削除しています"
+msgstr "Menghapus {0} {1} dan {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "スワップをダイレクトペアのみに制限します。"
+msgstr "Membatasi swap hanya untuk pasangan langsung."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
-msgstr "Return"
+msgstr "Kembali"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Route"
-msgstr "ルート"
+msgstr "Rute"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "名前またはアドレスを貼り付けてください"
+msgstr "Cari nama atau tempel alamat"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "プールを選択"
+msgstr "Pilih Pool"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "ご希望の流動性プロバイダ手数料に基づいてプールタイプを選択してください。"
+msgstr "Pilih jenis kumpulan berdasarkan biaya penyedia likuiditas pilihan Anda."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1222,77 +1222,77 @@ msgstr "ご希望の流動性プロバイダ手数料に基づいてプールタ
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "トークンを選択"
+msgstr "Pilih token"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your liquidity."
-msgstr "トークンを選択して流動性を見つけます。"
+msgstr "Pilih token untuk menemukan likuiditas Anda."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
-msgstr "ペアを選択"
+msgstr "Pilih pasangan"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
-msgstr "選択した範囲"
+msgstr "Rentang yang Dipilih"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
-msgstr "自己|自分format@@0"
+msgstr "Diri"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
-msgstr "自己委任する"
+msgstr "Delegasi Sendiri"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "価格範囲を設定"
+msgstr "Tetapkan Kisaran Harga"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
-msgstr "開始価格を設定"
+msgstr "Tetapkan Harga Awal"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "プールの共有:"
+msgstr "Pangsa Pool:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
-msgstr "Show Portis"
+msgstr "Tunjukkan Portis"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
-msgstr "単純な"
+msgstr "Sederhana"
 
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "スリップページの許容差"
+msgstr "Toleransi slip"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
-msgstr "一部の資産は、スマートコントラクトでうまく動作しないか、法的な理由で取引を許可できないため、このインターフェイスを介して利用できないものがあります。"
+msgstr "Beberapa aset tidak tersedia melalui antarmuka ini karena mereka mungkin tidak bekerja dengan baik dengan kontrak pintar atau kami tidak dapat mengizinkan perdagangan karena alasan hukum."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
-msgstr "何かがうまくいかなかった"
+msgstr "Ada yang salah"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "ステップ1. UNI-V2流動性トークンを入手"
+msgstr "Langkah 1. Dapatkan token Likuiditas UNI-V2"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
-msgstr "投票を送信中"
+msgstr "Mengirim Suara"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
-msgstr "Suprimentos"
+msgstr "Pasokan"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} を供給しています"
+msgstr "Memasok {0} {1} dan {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1300,113 +1300,113 @@ msgstr "{0} {1} と {2} {3} を供給しています"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
-msgstr "入れ替え"
+msgstr "Menukar"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr "とにかく入れ替え"
+msgstr "Tukar Saja"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
-msgstr "スワップ {0} {1} 用の {2} {3}"
+msgstr "Menukar {0} {1} untuk {2} {3}"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Uniswap不変量x * y = kは、スワップによって満たされませんでした。これは通常、交換するトークンの1つに転送時のカスタム動作が組み込まれていることを意味します。"
+msgstr "Invarian Uniswap x * y = k tidak dipenuhi oleh swap. Ini biasanya berarti salah satu token yang Anda tukar menggabungkan perilaku khusus saat transfer."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
-msgstr "入力トークンは転送できません。入力トークンに問題がある可能性があります。"
+msgstr "Token masukan tidak dapat ditransfer. Mungkin ada masalah dengan token masukan."
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "市場価格は指定した価格範囲外です。単一資産預金のみ。"
+msgstr "Harga pasar di luar kisaran harga yang Anda tentukan. Hanya setoran aset tunggal."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "出力トークンは転送できません。出力トークンに問題がある可能性があります。"
+msgstr "Token keluaran tidak dapat ditransfer. Mungkin ada masalah dengan token keluaran."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "出力トークンは転送できません。出力トークンに問題がある可能性があります。転送およびリベーストークンの料金は、UniswapV3と互換性がないことに注意してください。"
+msgstr "Token keluaran tidak dapat ditransfer. Mungkin ada masalah dengan token keluaran. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "このプールの価格は選択した範囲外です。あなたのポジションは現在手数料を獲得していません。"
+msgstr "Harga kolam ini di luar kisaran yang Anda pilih. Posisi Anda saat ini tidak menghasilkan biaya."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "このプールの価格は選択した範囲内です。あなたのポジションは現在手数料を獲得しています。"
+msgstr "Harga kolam ini berada dalam kisaran yang Anda pilih. Posisi Anda saat ini mendapatkan bayaran."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "追加したトークンの割合は、このプールの価格を設定します。"
+msgstr "Rasio token yang Anda tambahkan akan menetapkan harga kumpulan ini."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "期限が過ぎたため、取引を送信できませんでした。取引期限が短すぎないことを確認してください。"
+msgstr "Transaksi tidak dapat dikirim karena tenggat waktu telah berlalu. Harap periksa bahwa tenggat waktu transaksi Anda tidak terlalu rendah."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
-msgstr "これらのトークンは一般的に他のトークンとペアになっています。"
+msgstr "Token ini biasanya dipasangkan dengan token lain."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "このツールはあなたの {0} 流動性をV3に安全に移行します。このプロセスは、"
+msgstr "Alat ini akan memindahkan {0} likuiditas Anda ke V3 dengan aman. Prosesnya benar-benar tidak dapat dipercaya berkat"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "価格変動により、この取引は成功しません。スリッページの許容範囲を広げてみてください。転送およびリベーストークンの料金は、UniswapV3と互換性がないことに注意してください。"
+msgstr "Transaksi ini tidak akan berhasil karena pergerakan harga. Coba tingkatkan toleransi selip Anda. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
-msgstr "この取引は、価格変動または振込手数料のいずれかにより成功しません。スリッページの許容範囲を広げてみてください。"
+msgstr "Transaksi ini tidak akan berhasil baik karena pergerakan harga atau biaya transfer. Coba tingkatkan toleransi selip Anda."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
-msgstr "ヒント：カスタムトークンはブラウザにローカルに保存されます"
+msgstr "Tip: Token khusus disimpan secara lokal di browser Anda"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
-msgstr "終了日"
+msgstr "Untuk"
 
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
-msgstr "宛先（少なくとも）"
+msgstr "Untuk (setidaknya)"
 
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
-msgstr "エキスパートモードの切り替え"
+msgstr "Alihkan Mode Pakar"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
-msgstr "トークン"
+msgstr "Token"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "非アクティブなリストからのトークン。以下の特定のトークンをインポートするか、[管理]をクリックしてさらにリストをアクティブにします。"
+msgstr "Token dari daftar tidak aktif. Impor token tertentu di bawah atau klik Kelola untuk mengaktifkan lebih banyak daftar."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
-msgstr "トッププール"
+msgstr "Kolam atas"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
-msgstr "総供給量"
+msgstr "Total Pasokan"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
-msgstr "合計入金額"
+msgstr "Total deposit"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
-msgstr "合計<unk>"
+msgstr "Jumlah simpanan"
 
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
-msgstr "トランザクション設定"
+msgstr "Pengaturan Transaksi"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1415,39 +1415,39 @@ msgstr "トランザクション設定"
 #: src/components/vote/DelegateModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
-msgstr "取引が送信されました"
+msgstr "Transaksi Dikirim"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
-msgstr "取引の期限"
+msgstr "Batas waktu transaksi"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
-msgstr "もう一度試す"
+msgstr "Coba lagi"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
-msgstr "エキスパートモードをオンにする"
+msgstr "Nyalakan Mode Pakar"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
-msgstr "流通しているUNI:"
+msgstr "UNI yang beredar:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI price:"
-msgstr "UNI価格:"
+msgstr "Harga UNI:"
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNIトークンはUniswapガバナンスにおける投票シェアを表します。各提案に自分で投票するか、もしくは投票を第三者に委任することができます。"
+msgstr "Token UNI mewakili hak suara dalam tata kelola Uniswap. Anda dapat memberikan suara pada setiap proposal sendiri atau mendelegasikan suara Anda ke pihak ketiga."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
-msgstr "UNI {0}/{1} が消費されました"
+msgstr "UNI {0}/{1} Terbakar"
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "UNI-V2 LP トークンが必要です。 {0}-{1} プールに流動性を追加したら、このページに流動性トークンを投資できます。"
+msgstr "Token UNI-V2 LP diperlukan. Setelah Anda menambahkan likuiditas ke {0}-{1} pool, Anda dapat mempertaruhkan token likuiditas Anda di halaman ini."
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 {0}-{1}"
@@ -1456,357 +1456,357 @@ msgstr "UNI-V2 {0}-{1}"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
-msgstr "UNI未請求"
+msgstr "UNI tidak diklaim"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
-msgstr "未請求手数料"
+msgstr "Biaya yang tidak diklaim"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
-msgstr "未請求："
+msgstr "Tidak diklaim:"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
-msgstr "ガバナンスを一元化"
+msgstr "Tata Kelola Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
-msgstr "ユニスワップV3はここにあります!"
+msgstr "Uniswap V3 ada di sini!"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr "流動性マイニングを<unk>"
+msgstr "Penambangan likuiditas Uniswap"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr "移行コントラクト↗"
+msgstr "Kontrak migrasi Uniswap↗"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "不明なエラー{0}。スリッページの許容範囲を広げてみてください。転送およびリベーストークンの料金は、UniswapV3と互換性がないことに注意してください。"
+msgstr "Kesalahan tidak diketahui{0}. Coba tingkatkan toleransi selip Anda. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
-msgstr "投票のロックを解除"
+msgstr "Buka Suara"
 
 #: src/pages/Vote/index.tsx
 msgid "Unlock Voting"
-msgstr "投票をアンロック"
+msgstr "Buka Kunci Voting"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
-msgstr "投票のロックを解除"
+msgstr "Membuka Suara"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr "サポートされていないアセット"
+msgstr "Aset Tidak Didukung"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
-msgstr "サポートされていないアセット"
+msgstr "Aset Tidak Didukung"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "Unwrap"
+msgstr "Membuka"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
-msgstr "委任を更新"
+msgstr "Perbarui Delegasi"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
-msgstr "リストを更新"
+msgstr "Perbarui daftar"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
-msgstr "ユーザー"
+msgstr "Pengguna"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
-msgstr "V2 流動性情報"
+msgstr "Likuiditas V2"
 
 #: src/pages/Swap/index.tsx
 msgid "V3"
-msgstr "v3"
+msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
-msgstr "v3 {0} 価格:"
+msgstr "V3 {0} Harga:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
-msgstr "UNIX アナリティクスを表示"
+msgstr "Lihat UNI Analytics"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
-msgstr "V2 の流動性を表示"
+msgstr "Lihat Likuiditas V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "発生した手数料と分析を表示<0>↗</0>"
+msgstr "Lihat biaya yang masih harus dibayar dan analitik <0> ↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
-msgstr "リストを表示"
+msgstr "Lihat daftar"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Etherscan"
-msgstr "Etherscan で表示"
+msgstr "Lihat di Etherscan"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Etherscan"
-msgstr "Etherscan で取引を表示"
+msgstr "Lihat transaksi di Etherscan"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
-msgstr "投票"
+msgstr "Pilih"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
-msgstr "反対投票"
+msgstr "Beri Suara Menentang"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr "提案 {proposalId} に投票する"
+msgstr "Memberi suara menentang proposal {proposalId}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
-msgstr "提案 {proposalId} に投票"
+msgstr "Beri suara untuk proposal {proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
-msgstr "投票が終了しました {0}"
+msgstr "Voting berakhir {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
-msgstr "投票は約 {0} で終了します"
+msgstr "Voting berakhir kira-kira {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
-msgstr "確認待ち"
+msgstr "Menunggu konfirmasi"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
-msgstr "週間ボーナス"
+msgstr "Imbalan Mingguan"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
-msgstr "チームユニコーンへようこそ :)"
+msgstr "Selamat datang di tim Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "あなたの流動性を撤回せずに請求すると、マイニングプールに残ります。"
+msgstr "Ketika Anda mengklaim tanpa menarik, likuiditas Anda tetap berada di kolam penambangan."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "撤回すると、契約は自動的にあなたの代わりにUNIを主張します!"
+msgstr "Saat Anda menarik diri, kontrak akan secara otomatis mengklaim UNI atas nama Anda!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "撤退すると、UNIが請求され、あなたの流動性はマイニングプールから削除されます。"
+msgstr "Saat Anda menarik, UNI Anda diklaim dan likuiditas Anda dihapus dari kumpulan penambangan."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Withdraw"
-msgstr "出金する"
+msgstr "Menarik"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw & Claim"
-msgstr "引き出しと請求"
+msgstr "Tarik & Klaim"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "入金された流動性を引き出します"
+msgstr "Menarik likuiditas yang disimpan"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
-msgstr "UNI-V2を {0} 回引き出しています"
+msgstr "Penarikan {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "UNI-V2を撤回しました！"
+msgstr "Menarik UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "折り返す"
+msgstr "Membungkus"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
-msgstr "ネットワークが間違っています"
+msgstr "Jaringan Salah"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr "プールを作成しています"
+msgstr "Anda sedang membuat pangkalan"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "あなたはこのユニスワップV3プールの最初の流動性プロバイダーです。あなたの流動性は現在の {0} 価格で移行されます。"
+msgstr "Anda adalah penyedia likuiditas pertama untuk kumpulan Uniswap V3 ini. Likuiditas Anda akan bermigrasi pada harga {0} saat ini."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
-msgstr "あなたは最初の流動性プロバイダーです。"
+msgstr "Anda adalah penyedia likuiditas pertama."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr "各提案に自分自身で投票するか、またはあなたの投票を第三者に委任することができます。"
+msgstr "Anda dapat memilih sendiri setiap proposal atau mendelegasikan suara Anda ke pihak ketiga."
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
-msgstr "{0}を取引できるようになりました"
+msgstr "Anda sekarang dapat berdagang {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "このプールにはまだ流動性がありません。"
+msgstr "Anda belum memiliki likuiditas di kumpulan ini."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
-msgstr "アカウントに接続してください。"
+msgstr "Anda harus menghubungkan akun."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "{0}を使用するには、ユニスワップスマートコントラクトの権限を与える必要があります。トークンごとに1回だけ行う必要があります。"
+msgstr "Anda harus memberikan izin kontrak pintar Uniswap untuk menggunakan {0}Anda. Anda hanya perlu melakukan ini sekali per token."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "あなたが正しいと信じる価格でUniswap V3にのみ流動性を入金する必要があります。 <0/>価格が正しくないと思われる場合は、スワップを作成して価格を移動するか、他の誰かがそうするのを待つことができます。"
+msgstr "Anda hanya boleh menyetorkan likuiditas ke Uniswap V3 dengan harga yang Anda yakini benar. <0 /> Jika harga tampak salah, Anda dapat melakukan pertukaran untuk memindahkan harga atau menunggu orang lain melakukannya."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
-msgstr "また、このポジションから獲得した料金も徴収されます。"
+msgstr "Anda juga akan memungut biaya yang diperoleh dari posisi ini."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
-msgstr "受け取ります。"
+msgstr "Anda akan menerima"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "あなたのUNIの破壊"
+msgstr "Rincian UNI Anda"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
-msgstr "V2流動性format@@0"
+msgstr "Likuiditas V2 Anda"
 
 #: src/pages/Pool/index.tsx
 msgid "Your V3 liquidity positions will appear here."
-msgstr "V3流動性ポジションがここに表示されます。"
+msgstr "Posisi likuiditas V3 Anda akan muncul di sini."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
-msgstr "あなたの流動性預金"
+msgstr "Deposit likuiditas Anda"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "あなたの流動性は、ペアの市場価格があなたの範囲内にある場合にのみ手数料を獲得します。 <0>範囲の選択についてサポートが必要ですか？</0>"
+msgstr "Likuiditas Anda hanya akan mendapatkan biaya ketika harga pasar dari pasangan tersebut berada dalam jangkauan Anda. <0> Butuh bantuan memilih kisaran?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "あなたのプールシェア:"
+msgstr "Bagian kolam Anda:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
-msgstr "自分の位置"
+msgstr "Posisi kamu"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "あなたのポジションには0の流動性があり、手数料を稼ぐことはできません。"
+msgstr "Posisi Anda memiliki 0 likuiditas, dan tidak menghasilkan biaya."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "あなたのポジションはこの価格で {0} で構成されている 100% になります"
+msgstr "Posisi Anda akan 100% terdiri dari {0} pada harga ini"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "あなたのポジションはこの価格で100% {0} になります。"
+msgstr "Posisi Anda akan 100% {0} pada harga ini."
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "市場価格が範囲に移るまで、あなたのポジションは手数料を獲得したり、取引で使用されることはありません。"
+msgstr "Posisi Anda tidak akan menghasilkan biaya atau digunakan dalam perdagangan sampai harga pasar bergerak ke kisaran Anda."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
-msgstr "あなたの位置"
+msgstr "Posisi Anda"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
-msgstr "あなたのレート"
+msgstr "Tarif Anda"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "あなたのプールトークンの合計："
+msgstr "Token total pool Anda:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "プールを作るガスが含まれているため、取引コストははるかに高くなります。"
+msgstr "Biaya transaksi Anda akan jauh lebih tinggi karena sudah termasuk gas untuk membuat kolam."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "あなたの取引はフロントランニングかもしれません"
+msgstr "Transaksi Anda mungkin di depan"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
-msgstr "取引が失敗する可能性があります"
+msgstr "Transaksi Anda mungkin gagal"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "この期間以上保留中の場合、取引は元に戻されます。"
+msgstr "Transaksi Anda akan dikembalikan jika tertunda selama lebih dari jangka waktu ini."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "価格がこのパーセンテージよりも不利に変更された場合、取引は元に戻ります。"
+msgstr "Transaksi Anda akan dikembalikan jika harga berubah lebih dari persentase ini."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
-msgstr "取引がここに表示されます..."
+msgstr "Transaksi Anda akan muncul di sini ..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "あなたの未請求のUNI（UNI）"
+msgstr "UNI Anda yang belum diklaim"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
-msgstr "確認する"
+msgstr "Konfirmasi"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
-msgstr "{0} 用"
+msgstr "untuk {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "ソックスの絵文字があります"
+msgstr "memiliki emoji kaus kaki"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https：//またはipfs：//またはENS名"
+msgstr "https: // atau ipfs: // atau nama ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
-msgstr "分"
+msgstr "menit"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
-msgstr "{0} 経由で"
+msgstr "melalui {0}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1817,16 +1817,16 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0/> / <1/>"
+msgstr "{0} <0 /> per <1 />"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
-msgstr "{0} カスタムトークン"
+msgstr "{0} Token Kustom"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} 預金済み"
+msgstr "{0} Disetor"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
@@ -1836,11 +1836,11 @@ msgstr "{0} ETH"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
-msgstr "{0} の手数料を獲得："
+msgstr "{0} Biaya yang Diperoleh:"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
-msgstr "{0} 保留中"
+msgstr "{0} Menunggu keputusan"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -1856,7 +1856,7 @@ msgstr "{0} UNI"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI / week"
-msgstr "{0} UNI/週"
+msgstr "{0} UNI / minggu"
 
 #: src/components/earn/StakingModal.tsx
 msgid "{0} UNI-V2"
@@ -1864,11 +1864,11 @@ msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} UNI-V2 LP tokens available"
+msgstr "{0} token UNI-V2 LP tersedia"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
-msgstr "{0} 件の投票"
+msgstr "{0} Suara"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -1877,22 +1877,22 @@ msgstr "{0} 件の投票"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
-msgstr "{0} あたり {1}"
+msgstr "{0} per {1}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
-msgstr "{0} トークン"
+msgstr "{0} token"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
-msgstr "{0} {1} 価格:"
+msgstr "{0} {1} Harga:"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
-msgstr "{0} •ユーザーが追加"
+msgstr "{0} • Ditambahkan oleh pengguna"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx
@@ -1907,7 +1907,7 @@ msgstr "{0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} の流動性"
+msgstr "{0}-{1} Penambangan Likuiditas"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
@@ -1915,7 +1915,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LPトークン"
+msgstr "{0}/{1} LP Token"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -1931,13 +1931,13 @@ msgstr "{percentForSlider}%"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
-msgstr "{tokenB} あたり {tokenA}"
+msgstr "{tokenB} per {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~$ <0/>"
+msgstr "~ $ <0 />"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "荷物の概要に戻る"
+msgstr "← Kembali ke Ikhtisar Pangkalan"
 
