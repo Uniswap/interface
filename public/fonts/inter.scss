@@ -1,0 +1,23 @@
+@use "inter-ui/default" with (
+  $inter-font-display: swap,
+  $inter-font-path: '.',
+  $inter-font-path-suffix: ''
+);
+@use "inter-ui/variable" with (
+  $inter-font-display: swap,
+  $inter-font-path: '.',
+  $inter-font-path-suffix: ''
+);
+@include default.all;
+@include variable.all;
+
+html, input, textarea, button {
+  font-family: 'Inter', sans-serif;
+  font-display: fallback;
+}
+
+@supports (font-variation-settings: normal) {
+  html, input, textarea, button {
+    font-family: 'Inter var', sans-serif;
+  }
+}

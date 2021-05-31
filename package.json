@@ -104,6 +104,7 @@
     "react-window": "^1.8.5",
     "rebass": "^4.0.7",
     "redux-localstorage-simple": "^2.3.1",
+    "sass": "^1.34.0",
     "serve": "^11.3.2",
     "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
@@ -126,12 +127,13 @@
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-contract-types",
     "compile-external-abi-types": "typechain --target ethers-v5 --out-dir src/abis/types './src/abis/**/*.json'",
     "compile-v3-contract-types": "typechain --target ethers-v5 --out-dir src/types/v3 './node_modules/@uniswap/?(v3-core|v3-periphery)/artifacts/contracts/**/*.json'",
-    "build": "yarn compile-contract-types && yarn i18n:extract && yarn i18n:compile && react-scripts build",
+    "compile-fonts": "cp -r './node_modules/inter-ui/Inter (web)/' public/fonts/ && sass public/fonts/inter.scss:public/fonts/inter.css -I node_modules",
+    "build": "yarn compile-contract-types && yarn compile-fonts && yarn i18n:extract && yarn i18n:compile && react-scripts build",
     "i18n:extract": "lingui extract --locale en-US",
     "i18n:compile": "lingui compile",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
     "postinstall": "yarn compile-contract-types",
-    "start": "yarn compile-contract-types && react-scripts start",
+    "start": "yarn compile-contract-types && yarn compile-fonts && react-scripts start",
     "storybook": "start-storybook -p 6006",
     "test": "react-scripts test --env=jsdom"
   },
@@ -154,5 +156,4 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
 }
