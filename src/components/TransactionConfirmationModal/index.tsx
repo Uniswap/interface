@@ -118,10 +118,9 @@ function TransactionSubmittedContent({
   onDismiss: () => void
   hash: string | undefined
   chainId: ChainId
-  tokenAddtoMetaMask: Currency | undefined
+  tokenAddtoMetaMask?: Token
 }) {
   const theme = useContext(ThemeContext)
-
   return (
     <Wrapper>
       <Section>
@@ -143,7 +142,7 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {tokenAddtoMetaMask && <AddTokenToMetaMask token={tokenAddtoMetaMask as Token} chainId={chainId} />}
+          {tokenAddtoMetaMask?.address && <AddTokenToMetaMask token={tokenAddtoMetaMask} chainId={chainId} />}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
               Close
@@ -247,7 +246,7 @@ export default function TransactionConfirmationModal({
           chainId={chainId}
           hash={hash}
           onDismiss={onDismiss}
-          tokenAddtoMetaMask={tokenAddtoMetaMask}
+          tokenAddtoMetaMask={tokenAddtoMetaMask as Token}
         />
       ) : (
         content()

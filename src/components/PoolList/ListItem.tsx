@@ -22,7 +22,7 @@ import { setSelectedPool } from 'state/pools/actions'
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1em;
-  grid-template-columns: 1.5fr repeat(7, 1fr) 1fr 1.5fr;
+  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr 1.5fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
   font-size: 12px;
@@ -122,8 +122,8 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
   const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
 
-  const percentToken0 = realPercentToken0.toSignificant(5)
-  const percentToken1 = realPercentToken1.toSignificant(5)
+  const percentToken0 = realPercentToken0.toSignificant(3)
+  const percentToken1 = realPercentToken1.toSignificant(3)
 
   const isWarning = realPercentToken0.lessThan(JSBI.BigInt(10)) || realPercentToken1.lessThan(JSBI.BigInt(10))
 
@@ -258,8 +258,8 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
   const realPercentToken1 = new Fraction(JSBI.BigInt(100), JSBI.BigInt(1)).subtract(realPercentToken0 as Fraction)
 
-  const percentToken0 = realPercentToken0.toSignificant(5)
-  const percentToken1 = realPercentToken1.toSignificant(5)
+  const percentToken0 = realPercentToken0.toSignificant(3)
+  const percentToken1 = realPercentToken1.toSignificant(3)
 
   const isWarning = realPercentToken0.lessThan(JSBI.BigInt(10)) || realPercentToken1.lessThan(JSBI.BigInt(10))
 
@@ -275,6 +275,8 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
   const fee = subgraphPoolData.oneDayFeeUSD ? subgraphPoolData.oneDayFeeUSD : subgraphPoolData.oneDayFeeUntracked
 
   const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, fee).toFixed(2)
+  
+  const ampLiquidity = formattedNum(`${parseFloat(amp.toSignificant(5)) * parseFloat(subgraphPoolData.reserveUSD)}`, true)
 
   const handleShowMore = () => {
     dispatch(
@@ -302,14 +304,15 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
           <CopyHelper toCopy={pool.address} />
         </PoolAddressContainer>
       </DataText>
+      <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
+      <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
+      <DataText grid-area="amp-liq">{ampLiquidity}</DataText>
+      <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
+      <DataText>{formattedNum(fee, true)}</DataText>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
       </DataText>
-      <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
-      <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
-      <DataText>{formattedNum(fee, true)}</DataText>
-      <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
       <DataText>{`${oneYearFL}%`}</DataText>
       <DataText>{getMyLiquidity(myLiquidity)}</DataText>
       <ButtonWrapper>
