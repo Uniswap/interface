@@ -92,6 +92,14 @@ export const ROPSTEN_TOKEN_LIST = {
       name: 'AAVE',
       decimals: 18,
       logoURI: getTokenLogoURL('0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9')
+    },
+    {
+      chainId: 80001,
+      address: '0x5973774202E8b0ad563A69D502bb0e670e7d00Dd',
+      symbol: 'MATICTESTTOKEN',
+      name: 'MATICTESTTOKEN',
+      decimals: 18,
+      logoURI: getTokenLogoURL('0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9')
     }
   ],
   version: {

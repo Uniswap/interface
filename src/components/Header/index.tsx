@@ -1,4 +1,4 @@
-import { ChainId } from 'libs/sdk/src'
+import { ChainId, Token } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
@@ -10,7 +10,7 @@ import LogoDark from '../../assets/svg/logo_white.svg'
 import { KNC } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
+import { useCurrencyBalance, useETHBalances } from '../../state/wallet/hooks'
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
 import Menu from '../Menu'
@@ -250,10 +250,13 @@ const NewText = styled.div`
 `
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
+  [ChainId.KOVAN]: 'Kovan',
+  [ChainId.MATIC]: 'Matic',
+  [ChainId.MUMBAI]: 'Mumbai'
 }
 
 export default function Header() {
@@ -329,7 +332,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
+                {chainId && [1, 3, 4, 5, 42].includes(chainId) && `${userEthBalance?.toSignificant(4)} ETH`}
               </BalanceText>
             ) : null}
             <Web3Status />

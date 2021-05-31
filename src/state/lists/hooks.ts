@@ -44,7 +44,9 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.RINKEBY]: {},
   [ChainId.ROPSTEN]: {},
   [ChainId.GÖRLI]: {},
-  [ChainId.MAINNET]: {}
+  [ChainId.MAINNET]: {},
+  [ChainId.MATIC]: {},
+  [ChainId.MUMBAI]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -81,6 +83,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
     },
     { ...EMPTY_LIST }
   )
+
   listCache?.set(list, map)
   return map
 }
@@ -111,13 +114,16 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     [ChainId.RINKEBY]: { ...map1[ChainId.RINKEBY], ...map2[ChainId.RINKEBY] },
     [ChainId.ROPSTEN]: { ...map1[ChainId.ROPSTEN], ...map2[ChainId.ROPSTEN] },
     [ChainId.KOVAN]: { ...map1[ChainId.KOVAN], ...map2[ChainId.KOVAN] },
-    [ChainId.GÖRLI]: { ...map1[ChainId.GÖRLI], ...map2[ChainId.GÖRLI] }
+    [ChainId.GÖRLI]: { ...map1[ChainId.GÖRLI], ...map2[ChainId.GÖRLI] },
+    [ChainId.MUMBAI]: { ...map1[ChainId.MUMBAI], ...map2[ChainId.MUMBAI] },
+    [ChainId.MATIC]: { ...map1[ChainId.MATIC], ...map2[ChainId.MATIC] }
   }
 }
 
 // merge tokens contained within lists from urls
 function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
+
   return useMemo(() => {
     if (!urls) return EMPTY_LIST
     return (
@@ -172,7 +178,6 @@ export function useCombinedActiveList(): TokenAddressMap {
 // all tokens from inactive lists
 export function useCombinedInactiveList(): TokenAddressMap {
   const allInactiveListUrls: string[] = useInactiveListUrls()
-
   return useCombinedTokenMapFromUrls(allInactiveListUrls)
 }
 
