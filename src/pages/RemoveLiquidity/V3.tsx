@@ -399,7 +399,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     disabled={removed || percent === 0 || !liquidityValue0}
                     onClick={() => setShowConfirm(true)}
                   >
-                    {removed ? <Trans>Inactive</Trans> : error ?? <Trans>Remove</Trans>}
+                    {removed ? <Trans>Closed</Trans> : error ?? <Trans>Remove</Trans>}
                   </ButtonConfirmed>
                 </AutoColumn>
               </div>
