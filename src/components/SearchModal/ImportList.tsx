@@ -107,7 +107,7 @@ export function ImportList({ listURI, list, onBack, onDismiss, setModalView }: I
                 </ExternalLink>
               )}
             </AutoColumn>
-            <ButtonError error onClick={handleAddList} className=".token-dismiss-button">
+            <ButtonError error onClick={handleAddList}>
               Import
             </ButtonError>
             {addError && (
