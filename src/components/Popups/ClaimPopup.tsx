@@ -91,7 +91,7 @@ export default function ClaimPopup() {
 
   return (
     <>
-      {true && (
+      {showClaimPopup && !showClaimModal && (
         <StyledClaimPopup gap="md">
           <CardBGImage />
           <CardNoise />
