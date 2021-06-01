@@ -35,6 +35,19 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
     }
   }
 
+  if (chainId === SupportedChainId.ARBITRUM_ONE) {
+    switch (type) {
+      case ExplorerDataType.TRANSACTION:
+        return `https://explorer.arbitrum.io/#/tx/${data}`
+      case ExplorerDataType.ADDRESS:
+        return `https://explorer.arbitrum.io/#/address/${data}`
+      case ExplorerDataType.BLOCK:
+        return `https://explorer.arbitrum.io/#/block/${data}`
+      default:
+        return `https://explorer.arbitrum.io`
+    }
+  }
+
   const prefix = `https://${ETHERSCAN_PREFIXES[chainId] ?? ''}etherscan.io`
 
   switch (type) {
