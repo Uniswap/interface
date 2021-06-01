@@ -46,8 +46,8 @@ import useTheme from 'hooks/useTheme'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import Badge, { BadgeVariant } from 'components/Badge'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from 'state'
+
+import { useAppDispatch } from 'state/hooks'
 import SettingsTab from 'components/Settings'
 
 const ZERO = JSBI.BigInt(0)
@@ -668,7 +668,7 @@ export default function MigrateV2Pair({
   },
 }: RouteComponentProps<{ address: string }>) {
   // reset mint state on component mount, and as a cleanup (on unmount)
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   useEffect(() => {
     dispatch(resetMintState())
     return () => {
