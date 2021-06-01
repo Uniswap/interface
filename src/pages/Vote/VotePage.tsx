@@ -257,7 +257,7 @@ export default function VotePage({
                   toggleVoteModal()
                 }}
               >
-                Vote For
+                <Trans>Vote For</Trans>
               </ButtonPrimary>
               <ButtonPrimary
                 padding="8px"
