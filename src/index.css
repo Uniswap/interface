@@ -45,6 +45,10 @@ html {
     z-index: -1;
 }
 
+html {
+    min-height: 100%;
+}
+
 @media (prefers-color-scheme: dark) {
     html {
         background-color: #212429;
