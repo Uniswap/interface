@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import React, { useCallback, useEffect } from 'react'
 import ReactGA from 'react-ga'
-import { X } from 'react-feather'
+import { Heart, X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 import tokenLogo from '../../assets/images/token-logo.png'
 import { ButtonPrimary } from '../../components/Button'
@@ -91,7 +91,7 @@ export default function ClaimPopup() {
 
   return (
     <>
-      {showClaimPopup && !showClaimModal && (
+      {true && (
         <StyledClaimPopup gap="md">
           <CardBGImage />
           <CardNoise />
@@ -111,7 +111,9 @@ export default function ClaimPopup() {
               </span>
             </TYPE.white>
             <TYPE.subHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
-              <Trans>Thanks for being part of the Uniswap community &lt;3</Trans>
+              <Trans>
+                Thanks for being part of the Uniswap community <Heart size={12} />
+              </Trans>
             </TYPE.subHeader>
           </AutoColumn>
           <AutoColumn style={{ zIndex: 10 }} justify="center">
