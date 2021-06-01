@@ -15,17 +15,17 @@ import {
 } from '@uniswap/v3-sdk/dist/'
 import { Currency, Token, CurrencyAmount, Price, Rounding } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../../hooks/web3'
-import { AppDispatch, AppState } from '../../index'
+import { AppState } from '../../index'
 import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'
 import { Field, Bound, typeInput, typeStartPriceInput, typeLeftRangeInput, typeRightRangeInput } from './actions'
 import { tryParseTick } from './utils'
 import { usePool } from 'hooks/usePools'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 export function useV3MintState(): AppState['mintV3'] {
-  return useSelector<AppState, AppState['mintV3']>((state) => state.mintV3)
+  return useAppSelector((state) => state.mintV3)
 }
 
 export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
@@ -35,7 +35,7 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
   onRightRangeInput: (typedValue: string) => void
   onStartPriceInput: (typedValue: string) => void
 } {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
 
   const onFieldAInput = useCallback(
     (typedValue: string) => {

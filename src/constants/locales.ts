@@ -35,7 +35,36 @@ export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
 export const DEFAULT_LOCALE: SupportedLocale = 'en-US'
 
-// todo: fill this back out
-export const LOCALE_LABEL: { [locale in SupportedLocale]?: string } = {
+export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
+  'af-ZA': 'Afrikaans',
+  'ar-SA': 'العربية',
+  'ca-ES': 'Català',
+  'cs-CZ': 'čeština',
+  'da-DK': 'dansk',
+  'de-DE': 'Deutsche',
+  'el-GR': 'ελληνικά',
   'en-US': 'English',
+  'es-ES': 'Español',
+  'fi-FI': 'Suomalainen',
+  'fr-FR': 'français',
+  'he-IL': 'עִברִית',
+  'hu-HU': 'Magyar',
+  'id-ID': 'bahasa Indonesia',
+  'it-IT': 'Italiano',
+  'ja-JP': '日本語',
+  'ko-KR': '한국어',
+  'nl-NL': 'Nederlands',
+  'no-NO': 'norsk',
+  'pl-PL': 'Polskie',
+  'pt-BR': 'português',
+  'pt-PT': 'português',
+  'ro-RO': 'Română',
+  'ru-RU': 'русский',
+  'sr-SP': 'Српски',
+  'sv-SE': 'svenska',
+  'tr-TR': 'Türkçe',
+  'uk-UA': 'Український',
+  'vi-VN': 'Tiếng Việt',
+  'zh-CN': '中文 ( 中国 )',
+  'zh-TW': '中文 ( 台灣 )',
 }

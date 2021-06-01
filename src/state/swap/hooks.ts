@@ -8,7 +8,6 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useCurrency } from '../../hooks/Tokens'
 import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
@@ -16,14 +15,15 @@ import { Version } from '../../hooks/useToggledVersion'
 import { useV2TradeExactIn, useV2TradeExactOut } from '../../hooks/useV2Trade'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
-import { AppDispatch, AppState } from '../index'
+import { AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
 import { useUserSingleHopOnly } from 'state/user/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 export function useSwapState(): AppState['swap'] {
-  return useSelector<AppState, AppState['swap']>((state) => state.swap)
+  return useAppSelector((state) => state.swap)
 }
 
 export function useSwapActionHandlers(): {
@@ -32,7 +32,7 @@ export function useSwapActionHandlers(): {
   onUserInput: (field: Field, typedValue: string) => void
   onChangeRecipient: (recipient: string | null) => void
 } {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
       dispatch(
@@ -279,7 +279,7 @@ export function useDefaultsFromURLSearch():
   | { inputCurrencyId: string | undefined; outputCurrencyId: string | undefined }
   | undefined {
   const { chainId } = useActiveWeb3React()
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
   const parsedQs = useParsedQueryString()
   const [result, setResult] =
     useState<{ inputCurrencyId: string | undefined; outputCurrencyId: string | undefined } | undefined>()

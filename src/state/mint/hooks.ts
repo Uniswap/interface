@@ -1,7 +1,6 @@
 import { t } from '@lingui/macro'
 import { useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, AppState } from '../index'
+import { AppState } from '../index'
 import { Field, typeInput } from './actions'
 import { Pair } from '@uniswap/v2-sdk'
 import { Currency, Token, Percent, Price, CurrencyAmount } from '@uniswap/sdk-core'
@@ -12,18 +11,19 @@ import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { tryParseAmount } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 const ZERO = JSBI.BigInt(0)
 
 export function useMintState(): AppState['mint'] {
-  return useSelector<AppState, AppState['mint']>((state) => state.mint)
+  return useAppSelector((state) => state.mint)
 }
 
 export function useMintActionHandlers(noLiquidity: boolean | undefined): {
   onFieldAInput: (typedValue: string) => void
   onFieldBInput: (typedValue: string) => void
 } {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
 
   const onFieldAInput = useCallback(
     (typedValue: string) => {
