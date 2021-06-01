@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 14:56+0000\n"
+"POT-Creation-Date: 2021-06-01 15:24+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-01 15:03\n"
+"PO-Revision-Date: 2021-06-01 16:24\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -394,6 +394,11 @@ msgstr "모두 지우기"
 msgid "Close"
 msgstr "닫기"
 
+#: src/components/Badge/RangeBadge.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Closed"
+msgstr "닫은"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "암호"
@@ -748,11 +753,6 @@ msgstr "자신의 책임하에 수입"
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
 msgstr "범위 내"
-
-#: src/components/Badge/RangeBadge.tsx
-#: src/pages/RemoveLiquidity/V3.tsx
-msgid "Inactive"
-msgstr "비활성"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
