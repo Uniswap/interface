@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Text, TextProps } from 'rebass'
+import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
   createGlobalStyle,
   css,
@@ -10,6 +10,8 @@ import { useIsDarkMode } from '../state/user/hooks'
 import { Colors } from './styled'
 
 export * from './components'
+
+type TextProps = Omit<TextPropsOriginal, 'css'>
 
 export const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
@@ -208,7 +210,6 @@ export const ThemedBackground = styled.div<{ backgroundColor?: string | undefine
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
   font-family: 'Inter', sans-serif;
-  font-display: fallback;
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
