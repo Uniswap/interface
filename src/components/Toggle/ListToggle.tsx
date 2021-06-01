@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { TYPE } from '../../theme'
 
-const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const Wrapper = styled.button`
   border-radius: 20px;
   border: none;
   background: ${({ theme }) => theme.bg1};
@@ -39,7 +39,7 @@ export interface ToggleProps {
 
 export default function ListToggle({ id, isActive, bgColor, toggle }: ToggleProps) {
   return (
-    <Wrapper id={id} isActive={isActive} onClick={toggle}>
+    <Wrapper id={id} onClick={toggle}>
       {isActive && (
         <StatusText fontWeight="600" margin="0 6px" isActive={true}>
           ON
