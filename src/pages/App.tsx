@@ -28,7 +28,6 @@ import VotePage from './Vote/VotePage'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import { PositionPage } from './Pool/PositionPage'
 import AddLiquidity from './AddLiquidity'
-import { ThemedBackground } from '../theme'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 
 const AppWrapper = styled.div`
@@ -83,7 +82,6 @@ export default function App() {
             <Header />
           </HeaderWrapper>
           <BodyWrapper>
-            <ThemedBackground />
             <Popups />
             <Polling />
             <TopLevelModals />
