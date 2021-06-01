@@ -1,9 +1,10 @@
-html, input, textarea, button {
+* {
     font-family: 'Inter', sans-serif;
+    box-sizing: border-box;
 }
 
 @supports (font-variation-settings: normal) {
-    html, input, textarea, button {
+    * {
         font-family: 'Inter var', sans-serif;
     }
 }
@@ -12,11 +13,6 @@ html,
 body {
     margin: 0;
     padding: 0;
-}
-
-
-* {
-    box-sizing: border-box;
 }
 
 button {
