@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -6,7 +7,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle, Info, ArrowLeft } from 'react-feather'
+import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -26,8 +27,8 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
@@ -39,6 +40,7 @@ import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
@@ -55,7 +57,6 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { Trans } from '@lingui/macro'
 
 const StyledInfo = styled(Info)`
   opacity: 0.4;
@@ -658,6 +659,7 @@ export default function Swap({ history }: RouteComponentProps) {
           </AutoColumn>
         </Wrapper>
       </AppBody>
+      <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}

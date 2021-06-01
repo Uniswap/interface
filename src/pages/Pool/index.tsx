@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 import { useWalletModalToggle } from 'state/application/hooks'
 import styled, { ThemeContext } from 'styled-components'
 import { HideSmall, TYPE } from 'theme'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { LoadingRows } from './styleds'
 import Toggle from 'components/Toggle'
 import { useUserHideClosedPositions } from 'state/user/hooks'
@@ -295,6 +296,7 @@ export default function Pool() {
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
+      <SwitchLocaleLink />
     </>
   )
 }
