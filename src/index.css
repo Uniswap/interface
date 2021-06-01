@@ -44,3 +44,15 @@ html {
     transform: translate(-50vw, -100vh);
     z-index: -1;
 }
+
+@media (prefers-color-scheme: dark) {
+    html {
+        background-color: #212429;
+    }
+}
+@media (prefers-color-scheme: light) {
+    html {
+        background-color: #F7F8FA;
+    }
+}
+
