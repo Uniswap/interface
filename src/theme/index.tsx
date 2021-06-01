@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
-import './index.css'
 import styled, {
   createGlobalStyle,
   css,
