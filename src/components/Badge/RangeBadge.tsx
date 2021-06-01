@@ -48,7 +48,7 @@ export default function RangeBadge({
             <AlertCircle width={14} height={14} />
             &nbsp;
             <BadgeText>
-              <Trans>Inactive</Trans>
+              <Trans>Closed</Trans>
             </BadgeText>
           </Badge>
         </MouseoverTooltip>
