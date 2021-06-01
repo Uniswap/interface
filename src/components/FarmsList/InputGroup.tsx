@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { MaxUint256 } from '@ethersproject/constants'
 import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
+import styled from 'styled-components'
 
 import { useActiveWeb3React } from 'hooks'
-import { isAddressString } from 'utils'
+import { formattedNum, isAddressString } from 'utils'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { Fraction, JSBI, Token, TokenAmount } from 'libs/sdk/src'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -15,10 +16,23 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import useMasterChef from 'hooks/useMasterchef'
 import useStakedBalance from 'hooks/useStakedBalance'
 import { AutoRow } from 'components/Row'
+import usePendingRewardBalance from 'hooks/usePendingRewardBalance'
+import { getFullDisplayBalance } from 'utils/formatBalance'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   return new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(6)
 }
+
+const RewardBalanceWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+`
+
+const RewardUSD = styled.div`
+  color: ${({ theme }) => theme.primaryText2};
+`
 
 export default function InputGroup({
   pairAddress,
@@ -28,7 +42,8 @@ export default function InputGroup({
   token1Address,
   type,
   assetSymbol,
-  assetDecimals = 18
+  assetDecimals = 18,
+  kncPrice
 }: {
   pairAddress: string
   pid: number
@@ -38,6 +53,7 @@ export default function InputGroup({
   type?: string
   assetSymbol?: string
   assetDecimals?: number
+  kncPrice?: string
 }): JSX.Element {
   const { chainId } = useActiveWeb3React()
   const [pendingTx, setPendingTx] = useState(false)
@@ -46,6 +62,11 @@ export default function InputGroup({
   const pairAddressChecksum = isAddressString(pairAddress)
   const balance = useTokenBalance(pairAddressChecksum)
   const staked = useStakedBalance(pid, assetDecimals)
+  const userEarning = usePendingRewardBalance(pid, assetDecimals)
+  const rewardUSD =
+    userEarning &&
+    kncPrice &&
+    (parseFloat(kncPrice) * parseFloat(getFullDisplayBalance(userEarning.value, userEarning.decimals))).toString()
 
   const [approvalState, approve] = useApproveCallback(
     new TokenAmount(
@@ -99,11 +120,13 @@ export default function InputGroup({
                     setDepositValue(balance.value.toString())
                   }}
                   showMaxButton={true}
-                  currency={new Token(chainId, pairAddress, balance.decimals, 'LP', 'LP')}
+                  currency={new Token(chainId, pairAddress, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
                   id="stake-lp-input"
                   disableCurrencySelect
                   balancePosition="left"
                   hideBalance={true}
+                  hideLogo={true}
+                  fontSize="14px"
                 />
 
                 <ButtonPrimary disabled={pendingTx} padding="12px" margin="14px 0" onClick={handleClickStake}>
@@ -124,12 +147,14 @@ export default function InputGroup({
                     setWithdrawValue(staked.value.toString())
                   }}
                   showMaxButton={true}
-                  currency={new Token(chainId, pairAddress, balance.decimals, 'LP', 'LP')}
+                  currency={new Token(chainId, pairAddress, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
                   id="unstake-lp-input"
                   disableCurrencySelect
                   customBalanceText={`Deposited LP: ${fixedFormatting(staked.value, staked.decimals)}`}
                   balancePosition="left"
                   hideBalance={true}
+                  hideLogo={true}
+                  fontSize="14px"
                 />
 
                 <ButtonPrimary disabled={pendingTx} padding="12px" margin="14px 0" onClick={handleWithdraw}>
@@ -138,17 +163,11 @@ export default function InputGroup({
               </>
             )}
           </AutoRow>
-          <AutoRow justify="flex-end" style={{ flexDirection: 'column' }}>
-            {/* <div style={{ width: '100%' }}>
-              <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
-                KNC Reward
-              </TYPE.body>
-              <br></br>
-              <TYPE.body color={theme.text2} fontWeight={500} fontSize={18}>
-                {fixedFormatting(pendingReward.value, pendingReward.decimals)} KNC &nbsp;
-              </TYPE.body>
-              <br></br>
-            </div> */}
+          <AutoRow justify="space-between" align="flex-start" style={{ flexDirection: 'column' }}>
+            <RewardBalanceWrapper>
+              <div>{`${getFullDisplayBalance(userEarning.value, userEarning.decimals)} KNC`}</div>
+              <RewardUSD>{rewardUSD && formattedNum(rewardUSD, true)}</RewardUSD>
+            </RewardBalanceWrapper>
             <ButtonPrimary padding="12px" margin="15px 0" onClick={handleClickHarvest}>
               Harvest
             </ButtonPrimary>
