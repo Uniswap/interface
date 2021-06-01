@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 14:31\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -291,7 +291,7 @@ msgstr "バランス： {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "エキゾチックなペアに最適です。"
+msgstr "マイナーなペアに最適です。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -299,7 +299,7 @@ msgstr "ほとんどのペアに最適です。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "安定ペアに最適です。"
+msgstr "ステーブルコインなどのペアに最適です。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -307,7 +307,7 @@ msgstr "ブロックされたアドレス"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性を追加することにより、あなたはプールのあなたのシェアに比例して、このペアのすべての取引の0.3%を得ることができます。 手数料はプールに追加され、リアルタイムで補償され、あなたの流動性を引き出すことによって請求することができます。"
+msgstr "流動性を追加することにより、あなたはプールのシェアに比例して、このペアのすべての取引の0.3%を手数料として得られます。 手数料はプールに追加され、リアルタイムで反映され、あなたの流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
