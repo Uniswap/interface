@@ -186,11 +186,9 @@ export const ButtonText = styled(Base)`
   background: none;
   text-decoration: none;
   &:focus {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     text-decoration: underline;
   }
   &:hover {
-    // text-decoration: underline;
     opacity: 0.9;
   }
   &:active {
