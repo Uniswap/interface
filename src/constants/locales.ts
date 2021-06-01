@@ -35,7 +35,6 @@ export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
 export const DEFAULT_LOCALE: SupportedLocale = 'en-US'
 
-// TODO: language names should be localized
 export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
   'af-ZA': 'Afrikaans',
   'ar-SA': 'العربية',
