@@ -36,8 +36,11 @@ const Slide = styled.div`
 `
 const AnimatedSlide = animated(Slide)
 
-const ToggleOption = styled.div<{ active: boolean }>`
+const ToggleOption = styled.button<{ active: boolean }>`
   width: 48%;
+  background-color: transparent;
+  border: none;
+  outline: none;
   padding: 10px;
   z-index: 1;
   display: flex;
