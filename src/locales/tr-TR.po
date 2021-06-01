@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-05-30 23:45+0000\n"
+"POT-Creation-Date: 2021-06-01 00:37+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-05-31 00:22\n"
+"PO-Revision-Date: 2021-06-01 01:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -104,8 +104,8 @@ msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
 msgstr "<0> Hesap analizi ve tahakkuk eden ücretler</0> <1> ↗</1>"
 
 #: src/pages/Swap/index.tsx
-msgid "<0>Back to</0>V3"
-msgstr "<0> Geri dön</0> V3"
+msgid "<0>Back to </0>V3"
+msgstr "<0>Geri dön</0> V3"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>For</0><1>{0}</1>"
