@@ -68,7 +68,6 @@ export function CurrencySearch({
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
-  // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
 
   const nativeCurrency = useNativeCurrency()
