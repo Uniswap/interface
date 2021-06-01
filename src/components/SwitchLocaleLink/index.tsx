@@ -8,7 +8,7 @@ import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { StyledInternalLink, TYPE } from '../../theme'
 import { stringify } from 'qs'
 
-const Container = styled(TYPE.subHeader)`
+const Container = styled(TYPE.small)`
   opacity: 0.6;
   :hover {
     opacity: 1;
