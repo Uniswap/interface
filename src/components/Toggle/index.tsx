@@ -11,7 +11,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   font-weight: 400;
 
   padding: 0.25rem 0.6rem;
-  border-radius: 12px;
+  border-radius: 4.5px;
   background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.primary1 : theme.bg6) : 'none')};
   color: ${({ theme, isActive }) => (isActive ? theme.white : theme.text2)};
   font-size: 1rem;
@@ -25,7 +25,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
 `
 
 const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
-  border-radius: 12px;
+  border-radius: 6px;
   border: 2px solid;
   border-color: ${({ theme, isActive }) => (isActive ? theme.primary1 : theme.bg3)};
   background: ${({ theme }) => theme.bg1};
