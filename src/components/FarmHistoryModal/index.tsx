@@ -172,7 +172,7 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
         }
         if (topic === FARM_HARVEST_TOPIC[chainId]) {
           method = 'HARVEST'
-          harvestAmount = BigNumber.from(log.data)
+          harvestAmount = harvestAmount.add(BigNumber.from(log.data))
         }
         if (topic === FARM_WITHDRAW_TOPIC[chainId]) {
           method = 'WITHDRAW'
@@ -186,6 +186,8 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
           amount = BigNumber.from(log.data.slice(0, 66)) // first 8 bytes for first param
         } else if (method === 'WITHDRAW') {
           amount = withdrawAmount
+        } else if (method === 'HARVEST'){
+          amount = harvestAmount
         } else {
           amount = BigNumber.from(log.data)
         }
