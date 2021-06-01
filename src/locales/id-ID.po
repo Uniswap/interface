@@ -5,15 +5,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: ca\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: id\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Crowdin-Project: uniswap-interface\n"
 "X-Crowdin-Project-ID: 458284\n"
-"X-Crowdin-Language: ca\n"
+"X-Crowdin-Language: id\n"
 "X-Crowdin-File: en-US.po\n"
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
-"Language-Team: Catalan\n"
+"Language-Team: Indonesian\n"
 "PO-Revision-Date: 2021-06-01 01:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
@@ -33,19 +33,19 @@ msgstr "${0} ETH"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
-msgstr "(Màxim)"
+msgstr "(Max)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(reclamació)"
+msgstr "(klaim)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(esborra-ho tot)"
+msgstr "(Bersihkan semua)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(edita)"
+msgstr "(edit)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -53,7 +53,7 @@ msgstr "+{feeAmountFormatted}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
-msgstr "- Elimina l'enviament"
+msgstr "- Hapus pengiriman"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "-{feeAmountFormatted}%"
@@ -64,19 +64,19 @@ msgstr "-{feeAmountFormatted}%"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
-msgstr "0 UNI / setmana"
+msgstr "0 UNI / minggu"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "Comissió del 0,05%"
+msgstr "0,05% biaya"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "Comissió del 0,3%"
+msgstr "Biaya 0,3%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1% de quota"
+msgstr "Biaya 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -92,198 +92,198 @@ msgstr "75%"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr "<0 /> Totes les propostes"
+msgstr "<0 /> Semua Proposal"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0 /> Vots"
+msgstr "<0 /> Suara"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0> Anàlisi del compte i comissions acumulades</0> <1> ↗</1>"
+msgstr "<0> Analisis akun dan biaya yang dikenakan</0> <1> ↗</1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0> Torna a</0> V3"
+msgstr "<0> Kembali ke</0> V3"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>For</0><1>{0}</1>"
-msgstr "<0> Per a</0> <1>{0}</1>"
+msgstr "<0> Untuk</0> <1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0> Consell:</0> L’eliminació de les fitxes de grup converteix la vostra posició en fitxes subjacents al ritme actual, proporcional a la vostra quota de fons. Les comissions acumulades estan incloses en els imports que rebeu."
+msgstr "<0> Tip:</0> Menghapus token kumpulan akan mengubah posisi Anda kembali menjadi token yang mendasari pada tarif saat ini, sebanding dengan bagian Anda dari kumpulan. Biaya yang masih harus dibayar termasuk dalam jumlah yang Anda terima."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0> Consell:</0> Utilitzeu aquesta eina per trobar parells que no apareixen automàticament a la interfície."
+msgstr "<0> Tip:</0> Gunakan alat ini untuk menemukan pasangan yang tidak otomatis muncul di antarmuka."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0> Consell:</0> Quan afegiu liquiditat, rebreu fitxes de pool que representin la vostra posició. Aquests tokens guanyen automàticament quotes proporcionals a la vostra quota de fons i es poden bescanviar en qualsevol moment."
+msgstr "<0> Tip:</0> Saat Anda menambahkan likuiditas, Anda akan menerima token kumpulan yang mewakili posisi Anda. Token ini secara otomatis mendapatkan biaya yang sebanding dengan bagian Anda dari kumpulan, dan dapat ditebus kapan saja."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0> Desbloqueja la votació</0> per preparar la propera proposta."
+msgstr "<0> Buka pemungutan suara</0> untuk mempersiapkan proposal berikutnya."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0> 🎉</0> Benvingut a l'equip Unicorn :) <1> 🎉</1>"
+msgstr "<0> 🎉</0> Selamat datang di tim Unicorn :) <1> 🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "Per presentar les propostes, cal un llindar mínim de l’1% del subministrament total d’UNI"
+msgstr "Batas minimum 1% dari total pasokan UNI diperlukan untuk mengajukan proposal"
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "Sobre"
+msgstr "Tentang"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
-msgstr "Accepta"
+msgstr "Menerima"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
-msgstr "Compte"
+msgstr "Akun"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "Actiu"
+msgstr "Aktif"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
-msgstr "Afegeix"
+msgstr "Menambahkan"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "Afegeix delegat +"
+msgstr "Tambahkan Delegasi +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "Afegiu liquiditat"
+msgstr "Tambahkan Likuiditas"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "Afegiu liquiditat V2"
+msgstr "Tambahkan Likuiditas V2"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "Afegiu liquiditat."
+msgstr "Tambahkan likuiditas."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "Afegiu {0} a Metamask <0 />"
+msgstr "Tambahkan {0} ke Metamask <0 />"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Add {0} {1} and {2} {3}"
-msgstr "Afegiu {0} {1} i {2} {3}"
+msgstr "Tambahkan {0} {1} dan {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "Afegir {0}-{1} liquiditat"
+msgstr "Tambahkan {0}-{1} likuiditas"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Afegir {0}/{1} liquiditat V3"
+msgstr "Tambahkan {0}/{1} likuiditas V3"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
-msgstr "Afegit {0}"
+msgstr "Ditambahkan {0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "L'adreça no té cap reclamació disponible"
+msgstr "Alamat tidak memiliki klaim yang tersedia"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
-msgstr "En contra"
+msgstr "Melawan"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
-msgstr "Permet la migració de token LP"
+msgstr "Izinkan migrasi token LP"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Permetre operacions amb alt impacte en els preus i ometre la pantalla de confirmació. Utilitzeu al vostre propi risc."
+msgstr "Izinkan perdagangan berdampak harga tinggi dan lewati layar konfirmasi. Gunakan dengan resiko Anda sendiri."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Permetre que el protocol Uniswap utilitzi el vostre {0}"
+msgstr "Izinkan Protokol Uniswap menggunakan {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
-msgstr "Es permet"
+msgstr "Diizinkan"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Assegureu-vos sempre que l'URL sigui <0> app.uniswap.org</0> - Afegiu-lo a un marcador perquè sigui segur."
+msgstr "Selalu pastikan URL-nya adalah <0> app.uniswap.org</0> - tandai agar aman."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
-msgstr "Import"
+msgstr "Jumlah"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "S'ha produït un error en intentar executar aquest intercanvi. És possible que hàgiu d'augmentar la tolerància a la relliscada. Si això no funciona, és possible que hi hagi una incompatibilitat amb el testimoni que esteu negociant. La tarifa de nota en els tokens de transferència i rebase no és compatible amb Uniswap V3."
+msgstr "Terjadi kesalahan saat mencoba menjalankan swap ini. Anda mungkin perlu meningkatkan toleransi selip Anda. Jika itu tidak berhasil, mungkin ada ketidakcocokan dengan token yang Anda perdagangkan. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "Analítica"
+msgstr "Analytics"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
-msgstr "Aprovar"
+msgstr "Menyetujui"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
-msgstr "Aprova {0}"
+msgstr "Setujui {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
-msgstr "Aprovat"
+msgstr "Disetujui"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
-msgstr "Aprovant"
+msgstr "Menyetujui"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
-msgstr "S’aprova {0}"
+msgstr "Menyetujui {0}"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
-msgstr "Estàs segur?"
+msgstr "Apakah kamu yakin"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Com a membre de la comunitat Uniswap, podeu reclamar que UNI s'utilitzi per votar i governar. <0 /> <1 /> <2> Llegiu més sobre UNI</2>"
+msgstr "Sebagai anggota komunitas Uniswap, Anda dapat mengklaim UNI digunakan untuk pemungutan suara dan pemerintahan. <0 /> <1 /> <2> Baca selengkapnya tentang UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "Es {0} {1} i {2} {3} a la cartera a causa de l'interval de preus seleccionat."
+msgstr "Setidaknya {0} {1} dan {2} {3} akan dikembalikan ke dompet Anda karena kisaran harga yang dipilih."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
-msgstr "Automàtic"
+msgstr "Mobil"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "Disponible per ingressar: {0}"
+msgstr "Tersedia untuk deposit: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
-msgstr "esquena"
+msgstr "Kembali"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
-msgstr "Saldo:"
+msgstr "Keseimbangan:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0} {1}"
@@ -291,49 +291,49 @@ msgstr "Saldo: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "El millor per a parelles exòtiques."
+msgstr "Terbaik untuk pasangan eksotis."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "El millor per a la majoria de parelles."
+msgstr "Terbaik untuk sebagian besar pasangan."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "El millor per a parelles estables."
+msgstr "Terbaik untuk pasangan stabil."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
-msgstr "Adreça bloquejada"
+msgstr "Alamat diblokir"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Si afegiu liquiditat, guanyareu el 0,3% de totes les operacions d’aquest parell proporcional a la vostra quota de fons. Les comissions s’afegeixen al fons, s’acumulen en temps real i es poden reclamar retirant la vostra liquiditat."
+msgstr "Dengan menambahkan likuiditas, Anda akan mendapatkan 0,3% dari semua perdagangan pada pasangan ini sebanding dengan bagian pool Anda. Biaya ditambahkan ke kumpulan, bertambah secara real time dan dapat diklaim dengan menarik likuiditas Anda."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "En afegir aquesta llista, confieu implícitament que les dades són correctes. Qualsevol persona pot crear una llista, inclosa la creació de versions falses de llistes existents i llistes que afirmen representar projectes que no en tenen cap."
+msgstr "Dengan menambahkan daftar ini Anda secara implisit mempercayai bahwa datanya benar. Siapa pun dapat membuat daftar, termasuk membuat versi palsu dari daftar yang sudah ada dan daftar yang mengklaim mewakili proyek yang tidak memilikinya."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "En connectar una cartera, accepteu les Condicions del servei <0> d'Uniswap Labs</0> i reconegueu que heu llegit i entès la renúncia de responsabilitat del protocol <U> Uniswap</1> ."
+msgstr "Dengan menghubungkan dompet, Anda menyetujui Persyaratan Layanan <0> Uniswap Labs</0> dan mengakui bahwa Anda telah membaca dan memahami <1> penafian protokol Uniswap</1> ."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
-msgstr "Canvi"
+msgstr "Perubahan"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
-msgstr "Gràfics"
+msgstr "Grafik"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Consulteu les nostres guies de migració i tutorial v3 LP."
+msgstr "Lihat panduan migrasi dan panduan v3 LP kami."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "Reclamació"
+msgstr "Klaim"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -341,104 +341,104 @@ msgstr "Reclamació"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Reclamació UNI"
+msgstr "Klaim UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Reclama el testimoni UNI"
+msgstr "Klaim Token UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Reclamació de recompenses UNI acumulades"
+msgstr "Klaim akumulasi hadiah UNI"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Taxes de reclamació"
+msgstr "Biaya klaim"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "Reclamat"
+msgstr "Diklaim"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "Reclamat UNI!"
+msgstr "Mengklaim UNI!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "Reclamació"
+msgstr "Mengklaim"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Reclamació d’UNI"
+msgstr "Mengklaim UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "Reclamació {0} UNI"
+msgstr "Mengklaim {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
-msgstr "Esborra-ho tot"
+msgstr "Bersihkan semua"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
-msgstr "Esborra-ho tot"
+msgstr "Bersihkan semua"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "Tanca"
+msgstr "Menutup"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
-msgstr "Codi"
+msgstr "Kode"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "Recollir"
+msgstr "Mengumpulkan"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Recollir com a WETH"
+msgstr "Kumpulkan sebagai BASAH"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "Cobra les taxes"
+msgstr "Kumpulkan biaya"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "Recollit"
+msgstr "Dikumpulkan"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "Col·leccionisme"
+msgstr "Mengumpulkan"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Cobrament de taxes"
+msgstr "Memungut biaya"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "Les taxes de cobrament us retiraran les taxes disponibles actualment."
+msgstr "Biaya pengumpulan akan menarik biaya yang tersedia saat ini untuk Anda."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "Bases comunes"
+msgstr "Basis umum"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
-msgstr "Confirmeu"
+msgstr "Konfirmasi"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
-msgstr "Confirmeu el subministrament"
+msgstr "Konfirmasikan Pasokan"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
-msgstr "Confirmeu l'intercanvi"
+msgstr "Konfirmasi Swap"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -446,7 +446,7 @@ msgstr "Confirmeu l'intercanvi"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "Confirmeu aquesta transacció a la vostra cartera"
+msgstr "Konfirmasikan transaksi ini di dompet Anda"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -458,184 +458,184 @@ msgstr "Confirmeu aquesta transacció a la vostra cartera"
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
-msgstr "Connect Wallet"
+msgstr "Hubungkan Dompet"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "Connecteu una cartera"
+msgstr "Hubungkan dompet"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
-msgstr "Connecteu-vos a una cartera"
+msgstr "Hubungkan ke dompet"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "Connecteu-vos a una cartera per trobar piscines"
+msgstr "Hubungkan ke dompet untuk menemukan kolam"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "Connecteu-vos a una cartera per veure la vostra liquiditat V2."
+msgstr "Hubungkan ke dompet untuk melihat likuiditas V2 Anda."
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
-msgstr "Connecteu-vos a una cartera per veure la vostra liquiditat."
+msgstr "Hubungkan ke dompet untuk melihat likuiditas Anda."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Connect wallet"
-msgstr "Connecteu la cartera"
+msgstr "Hubungkan dompet"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
-msgstr "Connectat amb {name}"
+msgstr "Terhubung dengan {name}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
-msgstr "Copiat"
+msgstr "Disalin"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
-msgstr "Copia l'adreça"
+msgstr "Salin Alamat"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Creeu piscina i subministrament"
+msgstr "Buat Pool & Supply"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
-msgstr "Crea un parell"
+msgstr "Buat pasangan"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "Crea una piscina"
+msgstr "Buat kolam"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "Creeu un problema a GitHub"
+msgstr "Buat masalah di GitHub"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "Crear piscina i afegiu {0}/{1} liquiditat V3"
+msgstr "Buat kolam renang dan tambahkan {0}/{1} likuiditas V3"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
-msgstr "Crea una piscina."
+msgstr "Buat pangkalan."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
-msgstr "Preu actual"
+msgstr "Harga sekarang"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
-msgstr "Preu actual"
+msgstr "Harga sekarang"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "Preu actual {0}"
+msgstr "Harga {0} saat ini:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
-msgstr "Vots delegats"
+msgstr "Delegasikan Suara"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
-msgstr "Delegat a:"
+msgstr "Didelegasikan ke:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
-msgstr "Delegar vots"
+msgstr "Mendelegasikan suara"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "Dipòsit"
+msgstr "Menyetorkan"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Quantitats de dipòsit"
+msgstr "Jumlah Setoran"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Dipositeu fitxes LP UNI-V2"
+msgstr "Setor Token LP UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "Dipòsit de liquiditat"
+msgstr "Likuiditas deposito"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Dipositeu les vostres fitxes de proveïdor de liquiditat per rebre UNI, el testimoni de governança del protocol Uniswap."
+msgstr "Setor token Penyedia Likuiditas Anda untuk menerima UNI, token tata kelola protokol Uniswap."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
-msgstr "Liquiditat dipositada:"
+msgstr "Likuiditas yang disimpan:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "Dipòsit {0} UNI-V2"
+msgstr "Disetor {0} UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "Dipòsit de liquiditat"
+msgstr "Menyimpan Likuiditas"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
-msgstr "Descripció"
+msgstr "Deskripsi"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
-msgstr "Detallat"
+msgstr "Terperinci"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
-msgstr "Detalls"
+msgstr "Detail"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "Desactiva els Multihops"
+msgstr "Nonaktifkan Multihops"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
-msgstr "Desconnecta"
+msgstr "Memutuskan"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Discòrdia"
+msgstr "Perselisihan"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
-msgstr "Destitueix"
+msgstr "Memberhentikan"
 
 #: src/components/Menu/index.tsx
 msgid "Docs"
-msgstr "Documents"
+msgstr "Docs"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "No veieu cap de les vostres posicions v2? <0> Importeu-lo.</0>"
+msgstr "Tidak melihat salah satu posisi v2 Anda? <0> Impor.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Els tokens UNI obtinguts representen accions de vot en la governança Uniswap."
+msgstr "Token UNI yang diperoleh mewakili hak suara dalam tata kelola Uniswap."
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
-msgstr "Introduïu un destinatari"
+msgstr "Masukkan penerima"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "Introduïu un percentatge de lliscament vàlid"
+msgstr "Masukkan persentase selip yang valid"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Introduïu una adreça per activar una reclamació UNI. Si l'adreça té alguna UNI que es pugui reclamar, se'ls enviarà en enviar-la."
+msgstr "Masukkan alamat untuk memicu klaim UNI. Jika alamat tersebut memiliki UNI yang dapat diklaim, alamat tersebut akan dikirimkan kepada mereka saat diserahkan."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -646,137 +646,137 @@ msgstr "Introduïu una adreça per activar una reclamació UNI. Si l'adreça té
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
-msgstr "Introduïu un import"
+msgstr "Masukkan jumlah"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Enter valid list location"
-msgstr "Introduïu la ubicació vàlida de la llista"
+msgstr "Masukkan lokasi daftar yang valid"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
-msgstr "Introduïu una adreça de testimoni vàlida"
+msgstr "Masukkan alamat token yang valid"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
-msgstr "Error"
+msgstr "Kesalahan"
 
 #: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting"
-msgstr "Error de connexió"
+msgstr "Terjadi kesalahan saat menyambungkan"
 
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
-msgstr "Error de connexió. Proveu d'actualitzar la pàgina."
+msgstr "Terjadi kesalahan saat menyambungkan. Coba segarkan halaman."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
-msgstr "Error en importar la llista"
+msgstr "Terjadi kesalahan saat mengimpor daftar"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
-msgstr "Resultats ampliats de llistes de tokens inactius"
+msgstr "Hasil yang diperluas dari Daftar Token yang tidak aktif"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "El mode expert desactiva la sol·licitud de confirmació de la transacció i permet operacions amb altes relliscades que sovint resulten en males taxes i en la pèrdua de fons."
+msgstr "Mode ahli mematikan permintaan konfirmasi transaksi dan memungkinkan perdagangan selip tinggi yang sering kali mengakibatkan suku bunga buruk dan dana hilang."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Exploreu grups populars a Uniswap Analytics."
+msgstr "Jelajahi kumpulan populer di Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "Nivell de tarifa"
+msgstr "Tingkat Biaya"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Per a cada grup que es mostra a continuació, feu clic a Migra per eliminar la liquiditat d'Uniswap V2 i dipositar-la a Uniswap V3."
+msgstr "Untuk setiap kumpulan yang ditunjukkan di bawah ini, klik bermigrasi untuk menghapus likuiditas Anda dari Uniswap V2 dan menyimpannya ke Uniswap V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
-msgstr "Des de"
+msgstr "Dari"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
-msgstr "De (com a màxim)"
+msgstr "Dari (paling banyak)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
-msgstr "Obteniu assistència a Discord"
+msgstr "Dapatkan dukungan untuk Discord"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
-msgstr "Amaga les posicions tancades"
+msgstr "Sembunyikan posisi tertutup"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
-msgstr "Alt impacte en els preus"
+msgstr "Dampak Harga Tinggi"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "entenc"
+msgstr "saya mengerti"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "Si adquiriu un testimoni d’aquesta llista, és possible que no el pugueu tornar a vendre."
+msgstr "Jika Anda membeli token dari daftar ini, Anda mungkin tidak dapat menjualnya kembali."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
-msgstr "Importació"
+msgstr "Impor"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import List"
-msgstr "Importa la llista"
+msgstr "Daftar Impor"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import Pool"
-msgstr "Importa el grup"
+msgstr "Impor Pool"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
-msgstr "Importeu al vostre propi risc"
+msgstr "Impor dengan risiko Anda sendiri"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
-msgstr "A l'abast"
+msgstr "Dalam lingkup"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Inactive"
-msgstr "Inactiu"
+msgstr "Tidak aktif"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
-msgstr "Augmenta la liquiditat"
+msgstr "Meningkatkan Likuiditas"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr "Preus inicials i quota de pool"
+msgstr "Harga awal dan pembagian kumpulan"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
-msgstr "S'està inicialitzant ..."
+msgstr "Memulai ..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "S’estima l’entrada. Vindràs com a màxim <0>{0} {1}</0> o la transacció es revertirà."
+msgstr "Masukan diperkirakan. Anda akan menjual paling banyak <0>{0} {1}</0> atau transaksi akan dikembalikan."
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
-msgstr "Instal·leu Metamask"
+msgstr "Instal Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "Liquiditat insuficient per a aquest comerç."
+msgstr "Likuiditas tidak mencukupi untuk perdagangan ini."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Liquiditat insuficient per a aquest comerç. Proveu d’habilitar operacions multitop."
+msgstr "Likuiditas tidak mencukupi untuk perdagangan ini. Coba aktifkan perdagangan multi-hop."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -784,62 +784,62 @@ msgstr "Liquiditat insuficient per a aquest comerç. Proveu d’habilitar operac
 #: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
-msgstr "{0} saldo insuficient"
+msgstr "Saldo {0} tidak mencukupi"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
-msgstr "Configuració de la interfície"
+msgstr "Pengaturan Antarmuka"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid pair"
-msgstr "Parell no vàlid"
+msgstr "Pasangan tidak valid"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
-msgstr "Parell no vàlid."
+msgstr "Pasangan tidak valid."
 
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid price input"
-msgstr "Entrada de preu no vàlida"
+msgstr "Masukan harga tidak valid"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "L'interval no és vàlid. El preu mínim ha de ser inferior al preu màxim."
+msgstr "Rentang yang tidak valid dipilih. Harga min harus lebih rendah dari harga maks."
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "Destinatari no vàlid"
+msgstr "Penerima tidak valid"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
-msgstr "Aprendre"
+msgstr "Belajar"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
-msgstr "Liquiditat"
+msgstr "Likuiditas"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "Comissió del proveïdor de liquiditat"
+msgstr "Biaya Penyedia Likuiditas"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "Recompenses del proveïdor de liquiditat"
+msgstr "Imbalan penyedia likuiditas"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Els proveïdors de liquiditat guanyen una comissió del 0,3% en tots els negocis proporcional a la seva quota de fons. Les comissions s’afegeixen al fons, s’acumulen en temps real i es poden reclamar retirant la vostra liquiditat."
+msgstr "Penyedia likuiditas mendapatkan biaya 0,3% pada semua perdagangan yang sebanding dengan bagian pool mereka. Biaya ditambahkan ke kumpulan, bertambah secara real time dan dapat diklaim dengan menarik likuiditas Anda."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
-msgstr "Llistes"
+msgstr "Daftar"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
-msgstr "Carregat"
+msgstr "Sarat"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -850,11 +850,11 @@ msgstr "Carregat"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Loading"
-msgstr "S'està carregant"
+msgstr "Memuat"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Assegureu-vos que l'URL sigui <0> app.uniswap.org</0>"
+msgstr "Pastikan URL-nya adalah <0> app.uniswap.org</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -863,40 +863,40 @@ msgstr "Assegureu-vos que l'URL sigui <0> app.uniswap.org</0>"
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "Gestiona"
+msgstr "Mengelola"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "Gestioneu la liquiditat a l'agrupació de recompenses"
+msgstr "Kelola Likuiditas di Pool Hadiah"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
-msgstr "Gestiona les llistes de tokens"
+msgstr "Kelola Daftar Token"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "Gestioneu aquest grup."
+msgstr "Kelola pangkalan ini."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
-msgstr "Màx"
+msgstr "Max"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Max Price"
-msgstr "Preu màxim"
+msgstr "Harga Maks"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
-msgstr "Preu màxim"
+msgstr "Harga maks"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
-msgstr "Màx.:"
+msgstr "Max:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "Màxim enviat"
+msgstr "Pengiriman maksimum"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -904,41 +904,41 @@ msgstr "Màxim enviat"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
-msgstr "Migrar"
+msgstr "Migrasi"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate Liquidity"
-msgstr "Migrar la liquiditat"
+msgstr "Migrasi Likuiditas"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "Migreu la liquiditat a la V3"
+msgstr "Migrasi Likuiditas ke V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate V2 Liquidity"
-msgstr "Migrar la liquiditat V2"
+msgstr "Migrasikan Likuiditas V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
-msgstr "Migrar liquiditat V2"
+msgstr "Migrasikan likuiditas V2"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Migreu els vostres tokens de liquiditat des d'Uniswap V2 a Uniswap V3."
+msgstr "Migrasikan token likuiditas Anda dari Uniswap V2 ke Uniswap V3."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
-msgstr "Migrant"
+msgstr "Bermigrasi"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Min Price"
-msgstr "Preu mínim"
+msgstr "Harga Min"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Min price"
-msgstr "Preu mínim"
+msgstr "Harga min"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
@@ -946,127 +946,127 @@ msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
-msgstr "Mínim rebut"
+msgstr "Minimum diterima"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
-msgstr "Més"
+msgstr "Lebih"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
-msgstr "Nova posició"
+msgstr "Posisi baru"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
-msgstr "No s'ha trobat cap liquiditat V2."
+msgstr "Tidak ditemukan Likuiditas V2."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr "No hi ha cap grup actiu"
+msgstr "Tidak ada pangkalan aktif"
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
-msgstr "No s'ha trobat cap liquiditat."
+msgstr "Likuiditas tidak ditemukan."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "No s'ha trobat cap piscina."
+msgstr "Tidak ada kolam yang ditemukan."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
-msgstr "No s'ha trobat cap proposta."
+msgstr "Tidak ada proposal yang ditemukan."
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
-msgstr "Sense resultats."
+msgstr "Tidak ada hasil yang ditemukan."
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
-msgstr "DESACTIVAT"
+msgstr "MATI"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "ACTIVAT"
+msgstr "DI"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "ÚS AQUEST MODE NOMÉS SI SABEU EL QUE FEREU."
+msgstr "GUNAKAN MODE INI HANYA JIKA ANDA TAHU APA YANG ANDA LAKUKAN."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
-msgstr "Desactivat"
+msgstr "Mati"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "Encès"
+msgstr "Di"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Quan estigueu satisfet amb la tarifa, feu clic a Subministrament per revisar-la."
+msgstr "Setelah Anda puas dengan penawaran harga klik untuk meninjau."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Només es poden votar els vots UNI que s’autodelegaven o delegaven a una altra direcció abans del bloc {0}."
+msgstr "Hanya suara UNI yang didelegasikan sendiri atau didelegasikan ke alamat lain sebelum blok {0} yang memenuhi syarat untuk pemungutan suara."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Vaja! S'ha produït un error desconegut. Actualitzeu la pàgina o visiteu-la des d’un altre navegador o dispositiu."
+msgstr "Ups! Terjadi kesalahan yang tidak diketahui. Harap segarkan halaman, atau kunjungi dari browser atau perangkat lain."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
-msgstr "Fora de rang"
+msgstr "Diluar jangkauan"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "S’estima la producció. Si el preu canvia més del {0}%, la vostra transacció es revertirà."
+msgstr "Output diperkirakan. Jika harga berubah lebih dari {0}%, transaksi Anda akan dikembalikan."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "S’estima la producció. Rebrà com a mínim <0>{0} {1}</0> o la transacció es revertirà."
+msgstr "Output diperkirakan. Anda akan menerima setidaknya <0>{0} {1}</0> atau transaksi akan dikembalikan."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "La sortida s’enviarà a <0>{0}</0>"
+msgstr "Output akan dikirim ke <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
-msgstr "Propietari"
+msgstr "Pemilik"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr "Piscines participants"
+msgstr "Kolam yang berpartisipasi"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
-msgstr "Connecteu-vos a la xarxa Ethereum adequada."
+msgstr "Harap hubungkan ke jaringan Ethereum yang sesuai."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-msgstr "Escriviu la paraula \"{confirmWord}\" per habilitar el mode expert."
+msgstr "Ketik kata \"{confirmWord}\" untuk mengaktifkan mode ahli."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Piscina"
+msgstr "Kolam"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "Piscina trobada"
+msgstr "Pool Ditemukan!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Tarifa de piscina"
+msgstr "Tarif Pool"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Tarifa de la piscina"
+msgstr "Tarif kolam"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Fitxes de pool a la piscina de recompenses:"
+msgstr "Token kumpulan di kumpulan hadiah:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1077,81 +1077,81 @@ msgstr "Fitxes de pool a la piscina de recompenses:"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "Agrupat {0}:"
+msgstr "Dikumpulkan {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "Visió general de les piscines"
+msgstr "Ikhtisar Pangkalan"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
-msgstr "Preu"
+msgstr "Harga"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
-msgstr "Diferència de preu:"
+msgstr "Perbedaan harga:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr "Impacte en els preus"
+msgstr "Dampak Harga"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "L’impacte en el preu és massa alt"
+msgstr "Dampak Harga Terlalu Tinggi"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "Preu actualitzat"
+msgstr "Harga Diperbarui"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "Gamma de preus"
+msgstr "Kisaran harga"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
-msgstr "Preu:"
+msgstr "Harga:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Preus i quota de piscina"
+msgstr "Harga dan pool share"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
-msgstr "Propostes"
+msgstr "Proposal"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
-msgstr "Les propostes enviades pels membres de la comunitat apareixeran aquí."
+msgstr "Proposal yang diajukan oleh anggota komunitas akan muncul di sini."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
-msgstr "Proponent"
+msgstr "Pengusul"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
-msgstr "Tarifes"
+msgstr "Tarif"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
-msgstr "Llegiu més sobre UNI"
+msgstr "Baca lebih lanjut tentang UNI"
 
 #: src/pages/Vote/index.tsx
 msgid "Read more about Uniswap governance"
-msgstr "Llegiu més sobre la governança Uniswap"
+msgstr "Baca lebih lanjut tentang tata kelola Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
-msgstr "Obteniu més informació sobre com proporcionar liquiditat"
+msgstr "Baca lebih lanjut tentang menyediakan likuiditas"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
-msgstr "Obteniu més informació sobre els recursos no compatibles"
+msgstr "Baca lebih lanjut tentang aset yang tidak didukung"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
-msgstr "Transaccions recents"
+msgstr "transaksi terkini"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1159,62 +1159,62 @@ msgstr "Transaccions recents"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
-msgstr "Elimina"
+msgstr "Menghapus"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "Elimina la quantitat"
+msgstr "Hapus Jumlah"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "Elimina delegat"
+msgstr "Hapus Delegasi"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "Elimineu la liquiditat"
+msgstr "Hapus Likuiditas"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
-msgstr "Elimina la llista"
+msgstr "Hapus daftar"
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove {0} {1} and {2} {3}"
-msgstr "Traieu {0} {1} i {2} {3}"
+msgstr "Hapus {0} {1} dan {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Traieu {0}/{1} liquiditat V3"
+msgstr "Hapus {0}/{1} likuiditas V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "Eliminació de {0} {1} i {2} {3}"
+msgstr "Menghapus {0} {1} dan {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "Restringeix els permutes només a parells directes."
+msgstr "Membatasi swap hanya untuk pasangan langsung."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
-msgstr "Torna"
+msgstr "Kembali"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Route"
-msgstr "Ruta"
+msgstr "Rute"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "Cerqueu el nom o enganxeu l'adreça"
+msgstr "Cari nama atau tempel alamat"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "Seleccioneu Piscina"
+msgstr "Pilih Pool"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Seleccioneu un tipus de grup basat en la comissió del vostre proveïdor de liquiditat preferit."
+msgstr "Pilih jenis kumpulan berdasarkan biaya penyedia likuiditas pilihan Anda."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1222,77 +1222,77 @@ msgstr "Seleccioneu un tipus de grup basat en la comissió del vostre proveïdor
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "Seleccioneu un testimoni"
+msgstr "Pilih token"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your liquidity."
-msgstr "Seleccioneu un testimoni per trobar la vostra liquiditat."
+msgstr "Pilih token untuk menemukan likuiditas Anda."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
-msgstr "Selecciona un parell"
+msgstr "Pilih pasangan"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
-msgstr "Interval seleccionat"
+msgstr "Rentang yang Dipilih"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
-msgstr "Jo"
+msgstr "Diri"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
-msgstr "Autodelegat"
+msgstr "Delegasi Sendiri"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "Estableix l'interval de preus"
+msgstr "Tetapkan Kisaran Harga"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
-msgstr "Estableix el preu inicial"
+msgstr "Tetapkan Harga Awal"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "Quota de Pool:"
+msgstr "Pangsa Pool:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
-msgstr "Mostra Portis"
+msgstr "Tunjukkan Portis"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
-msgstr "Senzill"
+msgstr "Sederhana"
 
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "Tolerància al lliscament"
+msgstr "Toleransi slip"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
-msgstr "Alguns recursos no estan disponibles a través d’aquesta interfície perquè és possible que no funcionin bé amb els contractes intel·ligents o no podem permetre la negociació per motius legals."
+msgstr "Beberapa aset tidak tersedia melalui antarmuka ini karena mereka mungkin tidak bekerja dengan baik dengan kontrak pintar atau kami tidak dapat mengizinkan perdagangan karena alasan hukum."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
-msgstr "Alguna cosa ha anat malament"
+msgstr "Ada yang salah"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Pas 1. Obteniu fitxes de liquiditat UNI-V2"
+msgstr "Langkah 1. Dapatkan token Likuiditas UNI-V2"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
-msgstr "Enviament de vot"
+msgstr "Mengirim Suara"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
-msgstr "Subministrament"
+msgstr "Pasokan"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying {0} {1} and {2} {3}"
-msgstr "Subministrant {0} {1} i {2} {3}"
+msgstr "Memasok {0} {1} dan {2} {3}"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1300,113 +1300,113 @@ msgstr "Subministrant {0} {1} i {2} {3}"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
-msgstr "Intercanvi"
+msgstr "Menukar"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr "Canviar de totes maneres"
+msgstr "Tukar Saja"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
-msgstr "Intercanvi de {0} {1} per {2} {3}"
+msgstr "Menukar {0} {1} untuk {2} {3}"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "L'invariant Uniswap x * y = k no va quedar satisfet per l'intercanvi. Normalment, això significa que un dels tokens que canvieu incorpora un comportament personalitzat en la transferència."
+msgstr "Invarian Uniswap x * y = k tidak dipenuhi oleh swap. Ini biasanya berarti salah satu token yang Anda tukar menggabungkan perilaku khusus saat transfer."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
-msgstr "El testimoni d’entrada no es pot transferir. Pot haver-hi un problema amb el testimoni d’entrada."
+msgstr "Token masukan tidak dapat ditransfer. Mungkin ada masalah dengan token masukan."
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "El preu de mercat està fora de l’interval de preus especificat. Només dipòsit d'un actiu únic."
+msgstr "Harga pasar di luar kisaran harga yang Anda tentukan. Hanya setoran aset tunggal."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "El testimoni de sortida no es pot transferir. Pot haver-hi un problema amb el testimoni de sortida."
+msgstr "Token keluaran tidak dapat ditransfer. Mungkin ada masalah dengan token keluaran."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "El testimoni de sortida no es pot transferir. Pot haver-hi un problema amb el testimoni de sortida. La tarifa de nota en els tokens de transferència i rebase no és compatible amb Uniswap V3."
+msgstr "Token keluaran tidak dapat ditransfer. Mungkin ada masalah dengan token keluaran. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "El preu d'aquesta piscina està fora de l'interval seleccionat. Actualment, la vostra posició no cobra comissions."
+msgstr "Harga kolam ini di luar kisaran yang Anda pilih. Posisi Anda saat ini tidak menghasilkan biaya."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "El preu d'aquesta piscina està dins de l'interval seleccionat. Actualment, la vostra posició està cobrant honoraris."
+msgstr "Harga kolam ini berada dalam kisaran yang Anda pilih. Posisi Anda saat ini mendapatkan bayaran."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "La proporció de fitxes que afegiu fixarà el preu d’aquest grup."
+msgstr "Rasio token yang Anda tambahkan akan menetapkan harga kumpulan ini."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "No s'ha pogut enviar la transacció perquè s'ha acabat el termini. Comproveu que el termini de transacció no sigui massa baix."
+msgstr "Transaksi tidak dapat dikirim karena tenggat waktu telah berlalu. Harap periksa bahwa tenggat waktu transaksi Anda tidak terlalu rendah."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
-msgstr "Aquestes fitxes solen aparellar-se amb altres fitxes."
+msgstr "Token ini biasanya dipasangkan dengan token lain."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "Aquesta eina migrarà de manera segura la vostra {0} a V3. El procés és completament desconfiat gràcies a"
+msgstr "Alat ini akan memindahkan {0} likuiditas Anda ke V3 dengan aman. Prosesnya benar-benar tidak dapat dipercaya berkat"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Aquesta transacció no tindrà èxit a causa del moviment dels preus. Proveu d'augmentar la tolerància al lliscament. La tarifa de nota en els tokens de transferència i rebase no és compatible amb Uniswap V3."
+msgstr "Transaksi ini tidak akan berhasil karena pergerakan harga. Coba tingkatkan toleransi selip Anda. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
-msgstr "Aquesta transacció no tindrà èxit a causa del moviment de preus o de la comissió de transferència. Proveu d'augmentar la tolerància al lliscament."
+msgstr "Transaksi ini tidak akan berhasil baik karena pergerakan harga atau biaya transfer. Coba tingkatkan toleransi selip Anda."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
-msgstr "Consell: els tokens personalitzats s’emmagatzemen localment al navegador"
+msgstr "Tip: Token khusus disimpan secara lokal di browser Anda"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
-msgstr "Per a"
+msgstr "Untuk"
 
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
-msgstr "A (com a mínim)"
+msgstr "Untuk (setidaknya)"
 
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
-msgstr "Commuta el mode expert"
+msgstr "Alihkan Mode Pakar"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
-msgstr "Fitxes"
+msgstr "Token"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "Fitxes de llistes inactives. Importeu fitxes específiques a continuació o feu clic a Gestiona per activar més llistes."
+msgstr "Token dari daftar tidak aktif. Impor token tertentu di bawah atau klik Kelola untuk mengaktifkan lebih banyak daftar."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
-msgstr "Piscines superiors"
+msgstr "Kolam atas"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
-msgstr "Subministrament total"
+msgstr "Total Pasokan"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
-msgstr "Total dipositat"
+msgstr "Total deposit"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
-msgstr "Dipòsits totals"
+msgstr "Jumlah simpanan"
 
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
-msgstr "Configuració de transaccions"
+msgstr "Pengaturan Transaksi"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1415,39 +1415,39 @@ msgstr "Configuració de transaccions"
 #: src/components/vote/DelegateModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
-msgstr "Transacció enviada"
+msgstr "Transaksi Dikirim"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
-msgstr "Termini de transacció"
+msgstr "Batas waktu transaksi"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
-msgstr "Torna-ho a provar"
+msgstr "Coba lagi"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
-msgstr "Activeu el mode expert"
+msgstr "Nyalakan Mode Pakar"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
-msgstr "UNI en circulació:"
+msgstr "UNI yang beredar:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI price:"
-msgstr "Preu UNI:"
+msgstr "Harga UNI:"
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Els tokens UNI representen accions de vot en el govern Uniswap. Podeu votar vosaltres cada proposta o delegar els vostres vots a un tercer."
+msgstr "Token UNI mewakili hak suara dalam tata kelola Uniswap. Anda dapat memberikan suara pada setiap proposal sendiri atau mendelegasikan suara Anda ke pihak ketiga."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
-msgstr "UNI {0}/{1} Cremat"
+msgstr "UNI {0}/{1} Terbakar"
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "Calen tokens LP UNI-V2. Un cop hàgiu afegit liquiditat a l' {0}-{1} , podeu apostar per les vostres fitxes de liquiditat en aquesta pàgina."
+msgstr "Token UNI-V2 LP diperlukan. Setelah Anda menambahkan likuiditas ke {0}-{1} pool, Anda dapat mempertaruhkan token likuiditas Anda di halaman ini."
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 {0}-{1}"
@@ -1456,78 +1456,78 @@ msgstr "UNI-V2 {0}-{1}"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
-msgstr "UNI no reclamada"
+msgstr "UNI tidak diklaim"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
-msgstr "Tarifes no reclamades"
+msgstr "Biaya yang tidak diklaim"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
-msgstr "No reclamat:"
+msgstr "Tidak diklaim:"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
-msgstr "Governança Uniswap"
+msgstr "Tata Kelola Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 ja és aquí!"
+msgstr "Uniswap V3 ada di sini!"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr "Mineria de liquiditat Uniswap"
+msgstr "Penambangan likuiditas Uniswap"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr "Contracte de migració Uniswap↗"
+msgstr "Kontrak migrasi Uniswap↗"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Error desconegut{0}. Proveu d'augmentar la tolerància al lliscament. La tarifa de nota en els tokens de transferència i rebase no és compatible amb Uniswap V3."
+msgstr "Kesalahan tidak diketahui{0}. Coba tingkatkan toleransi selip Anda. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
-msgstr "Desbloqueja vots"
+msgstr "Buka Suara"
 
 #: src/pages/Vote/index.tsx
 msgid "Unlock Voting"
-msgstr "Desbloqueja les votacions"
+msgstr "Buka Kunci Voting"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
-msgstr "Desbloqueig de vots"
+msgstr "Membuka Suara"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr "Recurs no admès"
+msgstr "Aset Tidak Didukung"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
-msgstr "Actius no admesos"
+msgstr "Aset Tidak Didukung"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "Desembolicar"
+msgstr "Membuka"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
-msgstr "Actualitza la delegació"
+msgstr "Perbarui Delegasi"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
-msgstr "Llista d'actualitzacions"
+msgstr "Perbarui daftar"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
-msgstr "Usuari"
+msgstr "Pengguna"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
-msgstr "Liquiditat V2"
+msgstr "Likuiditas V2"
 
 #: src/pages/Swap/index.tsx
 msgid "V3"
@@ -1536,290 +1536,277 @@ msgstr "V3"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
-msgstr "V3 {0} Preu:"
+msgstr "V3 {0} Harga:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
-msgstr "Veure UNI Analytics"
+msgstr "Lihat UNI Analytics"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
-msgstr "Veure liquiditat V2"
+msgstr "Lihat Likuiditas V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "Consulteu els honoraris i les taxes acumulades <0> ↗</0>"
+msgstr "Lihat biaya yang masih harus dibayar dan analitik <0> ↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
-msgstr "Veure llista"
-
-#: 
-#: 
-#: 
-#~ msgid "View on Etherscan"
-#~ msgstr "Veure a Etherscan"
+msgstr "Lihat daftar"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on Explorer"
-msgstr ""
-
-#: 
-#: 
-#: 
-#: 
-#~ msgid "View transaction on Etherscan"
-#~ msgstr "Veure transacció a Etherscan"
+msgid "View on Etherscan"
+msgstr "Lihat di Etherscan"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
-msgid "View transaction on Explorer"
-msgstr ""
+msgid "View transaction on Etherscan"
+msgstr "Lihat transaksi di Etherscan"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
-msgstr "Vota"
+msgstr "Pilih"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
-msgstr "Vota en contra"
+msgstr "Beri Suara Menentang"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr "Vota contra la proposta {proposalId}"
+msgstr "Memberi suara menentang proposal {proposalId}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
-msgstr "Vota la proposta {proposalId}"
+msgstr "Beri suara untuk proposal {proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
-msgstr "La votació ha finalitzat {0}"
+msgstr "Voting berakhir {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
-msgstr "La votació finalitza aproximadament {0}"
+msgstr "Voting berakhir kira-kira {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
-msgstr "Esperant la confirmació"
+msgstr "Menunggu konfirmasi"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
-msgstr "Recompenses setmanals"
+msgstr "Imbalan Mingguan"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
-msgstr "Benvingut a l'equip Unicorn :)"
+msgstr "Selamat datang di tim Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Quan reclami sense retirar la seva liquiditat, es manté a la piscina minera."
+msgstr "Ketika Anda mengklaim tanpa menarik, likuiditas Anda tetap berada di kolam penambangan."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Quan es retiri, el contracte reclamarà automàticament UNI en nom vostre."
+msgstr "Saat Anda menarik diri, kontrak akan secara otomatis mengklaim UNI atas nama Anda!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Quan es retira, es reclama la seva UNI i s’elimina la seva liquiditat del fons miner."
+msgstr "Saat Anda menarik, UNI Anda diklaim dan likuiditas Anda dihapus dari kumpulan penambangan."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Withdraw"
-msgstr "Retirar-se"
+msgstr "Menarik"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw & Claim"
-msgstr "Retirar i reclamar"
+msgstr "Tarik & Klaim"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "Retirar la liquiditat dipositada"
+msgstr "Menarik likuiditas yang disimpan"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
-msgstr "Retirant {0} UNI-V2"
+msgstr "Penarikan {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "Va retirar UNI-V2!"
+msgstr "Menarik UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Embolcall"
+msgstr "Membungkus"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
-msgstr "Xarxa incorrecta"
+msgstr "Jaringan Salah"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr "Esteu creant un grup"
+msgstr "Anda sedang membuat pangkalan"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Sou el primer proveïdor de liquiditat d’aquest grup Uniswap V3. La vostra liquiditat migrarà al preu {0}"
+msgstr "Anda adalah penyedia likuiditas pertama untuk kumpulan Uniswap V3 ini. Likuiditas Anda akan bermigrasi pada harga {0} saat ini."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
-msgstr "Sou el primer proveïdor de liquiditat."
+msgstr "Anda adalah penyedia likuiditas pertama."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Podeu votar vosaltres cada proposta o delegar els vostres vots a un tercer."
+msgstr "Anda dapat memilih sendiri setiap proposal atau mendelegasikan suara Anda ke pihak ketiga."
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
-msgstr "Ara podeu canviar {0}"
+msgstr "Anda sekarang dapat berdagang {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "Encara no teniu liquiditat en aquest grup."
+msgstr "Anda belum memiliki likuiditas di kumpulan ini."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
-msgstr "Heu de connectar un compte."
+msgstr "Anda harus menghubungkan akun."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Heu de donar permís als contractes intel·ligents Uniswap per utilitzar el vostre {0}. Només heu de fer-ho una vegada per fitxa."
+msgstr "Anda harus memberikan izin kontrak pintar Uniswap untuk menggunakan {0}Anda. Anda hanya perlu melakukan ini sekali per token."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Només heu de dipositar liquiditat a Uniswap V3 a un preu que creieu correcte. <0 /> Si el preu sembla incorrecte, podeu canviar el preu o esperar que algú ho faci."
+msgstr "Anda hanya boleh menyetorkan likuiditas ke Uniswap V3 dengan harga yang Anda yakini benar. <0 /> Jika harga tampak salah, Anda dapat melakukan pertukaran untuk memindahkan harga atau menunggu orang lain melakukannya."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
-msgstr "També cobrarà els honoraris obtinguts per aquesta posició."
+msgstr "Anda juga akan memungut biaya yang diperoleh dari posisi ini."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
-msgstr "Rebràs"
+msgstr "Anda akan menerima"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "El vostre desglossament UNI"
+msgstr "Rincian UNI Anda"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
-msgstr "La vostra liquiditat V2"
+msgstr "Likuiditas V2 Anda"
 
 #: src/pages/Pool/index.tsx
 msgid "Your V3 liquidity positions will appear here."
-msgstr "Les vostres posicions de liquiditat V3 apareixeran aquí."
+msgstr "Posisi likuiditas V3 Anda akan muncul di sini."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
-msgstr "Els vostres dipòsits de liquiditat"
+msgstr "Deposit likuiditas Anda"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "La vostra liquiditat només obtindrà comissions quan el preu de mercat del parell estigui dins del vostre abast. <0> Necessiteu ajuda per escollir un interval?</0>"
+msgstr "Likuiditas Anda hanya akan mendapatkan biaya ketika harga pasar dari pasangan tersebut berada dalam jangkauan Anda. <0> Butuh bantuan memilih kisaran?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "La vostra quota compartida:"
+msgstr "Bagian kolam Anda:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
-msgstr "La teva posició"
+msgstr "Posisi kamu"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "La vostra posició té 0 liquiditat i no cobra comissions."
+msgstr "Posisi Anda memiliki 0 likuiditas, dan tidak menghasilkan biaya."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "La vostra posició serà 100% composta per {0} a aquest preu"
+msgstr "Posisi Anda akan 100% terdiri dari {0} pada harga ini"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "La vostra posició serà del 100% {0} a aquest preu."
+msgstr "Posisi Anda akan 100% {0} pada harga ini."
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "La vostra posició no guanyarà comissions ni s’utilitzarà en operacions fins que el preu de mercat no passi al vostre rang."
+msgstr "Posisi Anda tidak akan menghasilkan biaya atau digunakan dalam perdagangan sampai harga pasar bergerak ke kisaran Anda."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
-msgstr "Les vostres posicions"
+msgstr "Posisi Anda"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
-msgstr "La seva tarifa"
+msgstr "Tarif Anda"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "El vostre total de fitxes de grup:"
+msgstr "Token total pool Anda:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "El cost de la vostra transacció serà molt més elevat, ja que inclou el gas per crear la piscina."
+msgstr "Biaya transaksi Anda akan jauh lebih tinggi karena sudah termasuk gas untuk membuat kolam."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "La vostra transacció pot ser inicial"
+msgstr "Transaksi Anda mungkin di depan"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
-msgstr "La vostra transacció pot fallar"
+msgstr "Transaksi Anda mungkin gagal"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "La vostra transacció es revertirà si està pendent durant més d’aquest període de temps."
+msgstr "Transaksi Anda akan dikembalikan jika tertunda selama lebih dari jangka waktu ini."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "La vostra transacció es revertirà si el preu canvia desfavorablement en més d’aquest percentatge."
+msgstr "Transaksi Anda akan dikembalikan jika harga berubah lebih dari persentase ini."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
-msgstr "Les vostres transaccions apareixeran aquí ..."
+msgstr "Transaksi Anda akan muncul di sini ..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "La vostra UNI no reclamada"
+msgstr "UNI Anda yang belum diklaim"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
-msgstr "confirmar"
+msgstr "Konfirmasi"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
-msgstr "per a {0}"
+msgstr "untuk {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "té emoji de mitjons"
+msgstr "memiliki emoji kaus kaki"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https: // o ipfs: // o nom ENS"
+msgstr "https: // atau ipfs: // atau nama ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
-msgstr "minuts"
+msgstr "menit"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
-msgstr "mitjançant {0}"
+msgstr "melalui {0}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1834,12 +1821,12 @@ msgstr "{0} <0 /> per <1 />"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
-msgstr "{0} fitxes personalitzades"
+msgstr "{0} Token Kustom"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} Dipòsit"
+msgstr "{0} Disetor"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
@@ -1849,11 +1836,11 @@ msgstr "{0} ETH"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
-msgstr "{0} Comissions guanyades:"
+msgstr "{0} Biaya yang Diperoleh:"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
-msgstr "{0} Pendent"
+msgstr "{0} Menunggu keputusan"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -1869,7 +1856,7 @@ msgstr "{0} UNI"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI / week"
-msgstr "{0} UNI / setmana"
+msgstr "{0} UNI / minggu"
 
 #: src/components/earn/StakingModal.tsx
 msgid "{0} UNI-V2"
@@ -1877,11 +1864,11 @@ msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} fitxes UNI-V2 LP disponibles"
+msgstr "{0} token UNI-V2 LP tersedia"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
-msgstr "{0} vots"
+msgstr "{0} Suara"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -1896,16 +1883,16 @@ msgstr "{0} per {1}"
 #: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
-msgstr "{0} fitxes"
+msgstr "{0} token"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
-msgstr "{0} {1} Preu:"
+msgstr "{0} {1} Harga:"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
-msgstr "{0} • Afegit per l'usuari"
+msgstr "{0} • Ditambahkan oleh pengguna"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx
@@ -1920,7 +1907,7 @@ msgstr "{0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} Mineria de liquiditat"
+msgstr "{0}-{1} Penambangan Likuiditas"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
@@ -1928,7 +1915,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LP Tokens"
+msgstr "{0}/{1} LP Token"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -1952,4 +1939,5 @@ msgstr "~ $ <0 />"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← Torna a la descripció general de les piscines"
+msgstr "← Kembali ke Ikhtisar Pangkalan"
+

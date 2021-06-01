@@ -1427,11 +1427,6 @@
     "@emotion/sheet" "0.9.4"
     "@emotion/utils" "0.11.3"
 
-"@emotion/core@^11.0.0":
-  version "11.0.0"
-  resolved "https://registry.npmjs.org/@emotion/core/-/core-11.0.0.tgz"
-  integrity sha512-w4sE3AmHmyG6RDKf6mIbtHpgJUSJ2uGvPQb8VXFL7hFjMPibE8IiehG8cMX3Ztm4svfCQV6KqusQbeIOkurBcA==
-
 "@emotion/css@^10.0.27":
   version "10.0.27"
   resolved "https://registry.npmjs.org/@emotion/css/-/css-10.0.27.tgz"

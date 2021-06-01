@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import React, { ErrorInfo } from 'react'
 import store, { AppState } from '../../state'
-import { ExternalLink, ThemedBackground, TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components/macro'
 import ReactGA from 'react-ga'
@@ -70,7 +70,6 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
       const encodedBody = encodeURIComponent(issueBody(error))
       return (
         <FallbackWrapper>
-          <ThemedBackground />
           <BodyWrapper>
             <AutoColumn gap={'md'}>
               <SomethingWentWrongWrapper>
