@@ -73,68 +73,61 @@ function TopLevelModals() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <Suspense fallback={null}>
-        <Route component={GoogleAnalyticsReporter} />
-        <Route component={DarkModeQueryParamReader} />
-        <Route component={ApeModeQueryParamReader} />
-        <AppWrapper>
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
-          <BodyWrapper>
-            <Popups />
-            <Polling />
-            <TopLevelModals />
-            <Web3ReactManager>
-              <Switch>
-                <Route exact strict path="/vote" component={Vote} />
-                <Route exact strict path="/vote/:id" component={VotePage} />
-                <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
-                <Route exact strict path="/uni" component={Earn} />
-                <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
+      <Route component={GoogleAnalyticsReporter} />
+      <Route component={DarkModeQueryParamReader} />
+      <Route component={ApeModeQueryParamReader} />
+      <AppWrapper>
+        <HeaderWrapper>
+          <Header />
+        </HeaderWrapper>
+        <BodyWrapper>
+          <Popups />
+          <Polling />
+          <TopLevelModals />
+          <Web3ReactManager>
+            <Switch>
+              <Route exact strict path="/vote" component={Vote} />
+              <Route exact strict path="/vote/:id" component={VotePage} />
+              <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
+              <Route exact strict path="/uni" component={Earn} />
+              <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
 
-                <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-                <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                <Route exact strict path="/swap" component={Swap} />
+              <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
+              <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+              <Route exact strict path="/swap" component={Swap} />
 
-                <Route exact strict path="/find" component={PoolFinder} />
-                <Route exact strict path="/pool/v2" component={PoolV2} />
-                <Route exact strict path="/pool" component={Pool} />
-                <Route exact strict path="/pool/:tokenId" component={PositionPage} />
+              <Route exact strict path="/find" component={PoolFinder} />
+              <Route exact strict path="/pool/v2" component={PoolV2} />
+              <Route exact strict path="/pool" component={Pool} />
+              <Route exact strict path="/pool/:tokenId" component={PositionPage} />
 
-                <Route
-                  exact
-                  strict
-                  path="/add/v2/:currencyIdA?/:currencyIdB?"
-                  component={RedirectDuplicateTokenIdsV2}
-                />
-                <Route
-                  exact
-                  strict
-                  path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                  component={RedirectDuplicateTokenIds}
-                />
+              <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?" component={RedirectDuplicateTokenIdsV2} />
+              <Route
+                exact
+                strict
+                path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                component={RedirectDuplicateTokenIds}
+              />
 
-                <Route
-                  exact
-                  strict
-                  path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
-                  component={AddLiquidity}
-                />
+              <Route
+                exact
+                strict
+                path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
+                component={AddLiquidity}
+              />
 
-                <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
+              <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+              <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
 
-                <Route exact strict path="/migrate/v2" component={MigrateV2} />
-                <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
+              <Route exact strict path="/migrate/v2" component={MigrateV2} />
+              <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
 
-                <Route component={RedirectPathToSwapOnly} />
-              </Switch>
-            </Web3ReactManager>
-            <Marginer />
-          </BodyWrapper>
-        </AppWrapper>
-      </Suspense>
+              <Route component={RedirectPathToSwapOnly} />
+            </Switch>
+          </Web3ReactManager>
+          <Marginer />
+        </BodyWrapper>
+      </AppWrapper>
     </ErrorBoundary>
   )
 }
