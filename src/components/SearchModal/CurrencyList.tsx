@@ -171,8 +171,9 @@ export default function CurrencyList({
   const selectedTokenList = useCombinedActiveList()
   const itemData = useMemo(() => {
     if (otherListTokens && otherListTokens?.length > 0) {
-      // the first case is a token found by address but that is not in any active or inactive token list
-      if (otherListTokens.length === 1 && !(otherListTokens[0] instanceof WrappedTokenInfo)) return [...otherListTokens]
+      const foundByAddressAndNotInAnyList =
+        otherListTokens.length === 1 && !(otherListTokens[0] instanceof WrappedTokenInfo)
+      if (foundByAddressAndNotInAnyList) return [...otherListTokens]
       return [BREAK_LINE, ...otherListTokens]
     }
     return currencies
