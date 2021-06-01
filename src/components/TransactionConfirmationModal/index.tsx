@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useContext } from 'react'
+import React, { ReactNode, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import Modal from '../Modal'
@@ -45,7 +45,7 @@ export function ConfirmationPendingContent({
   inline,
 }: {
   onDismiss: () => void
-  pendingText: string
+  pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
   return (
@@ -153,10 +153,10 @@ export function ConfirmationModalContent({
   onDismiss,
   topContent,
 }: {
-  title: string
+  title: ReactNode
   onDismiss: () => void
-  topContent: () => React.ReactNode
-  bottomContent?: () => React.ReactNode | undefined
+  topContent: () => ReactNode
+  bottomContent?: () => ReactNode | undefined
 }) {
   return (
     <Wrapper>
@@ -174,14 +174,14 @@ export function ConfirmationModalContent({
   )
 }
 
-export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
   const theme = useContext(ThemeContext)
   return (
     <Wrapper>
       <Section>
         <RowBetween>
           <Text fontWeight={500} fontSize={20}>
-            Error
+            <Trans>Error</Trans>
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -210,9 +210,9 @@ interface ConfirmationModalProps {
   isOpen: boolean
   onDismiss: () => void
   hash: string | undefined
-  content: () => React.ReactNode
+  content: () => ReactNode
   attemptingTxn: boolean
-  pendingText: string
+  pendingText: ReactNode
   currencyToAdd?: Currency | undefined
 }
 

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { Multicall2 } from '../../abis/types'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useMulticall2Contract } from '../../hooks/useContract'
@@ -7,7 +6,7 @@ import useDebounce from '../../hooks/useDebounce'
 import chunkArray from '../../utils/chunkArray'
 import { retry, RetryableError } from '../../utils/retry'
 import { useBlockNumber } from '../application/hooks'
-import { AppDispatch, AppState } from '../index'
+import { AppState } from '../index'
 import {
   Call,
   errorFetchingMulticallResults,
@@ -15,6 +14,7 @@ import {
   parseCallKey,
   updateMulticallResults,
 } from './actions'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 /**
  * Fetches a chunk of calls, enforcing a minimum block number constraint
@@ -117,8 +117,8 @@ export function outdatedListeningKeys(
 }
 
 export default function Updater(): null {
-  const dispatch = useDispatch<AppDispatch>()
-  const state = useSelector<AppState, AppState['multicall']>((state) => state.multicall)
+  const dispatch = useAppDispatch()
+  const state = useAppSelector((state) => state.multicall)
   // wait for listeners to settle before triggering updates
   const debouncedListeners = useDebounce(state.callListeners, 100)
   const latestBlockNumber = useBlockNumber()

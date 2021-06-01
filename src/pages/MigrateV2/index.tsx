@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { ReactNode, useContext, useMemo } from 'react'
 import { Pair } from '@uniswap/v2-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { ThemeContext } from 'styled-components'
@@ -18,9 +18,9 @@ import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { getCreate2Address } from '@ethersproject/address'
 import { pack, keccak256 } from '@ethersproject/solidity'
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
-function EmptyState({ message }: { message: string }) {
+function EmptyState({ message }: { message: ReactNode }) {
   return (
     <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
       <TYPE.body>{message}</TYPE.body>
@@ -115,7 +115,7 @@ export default function MigrateV2() {
             <Trans>Migrate V2 Liquidity</Trans>
           </TYPE.mediumHeader>
           <div>
-            <QuestionHelper text={t`Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.`} />
+            <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
           </div>
         </AutoRow>
 
@@ -160,7 +160,7 @@ export default function MigrateV2() {
             })}
           </>
         ) : (
-          <EmptyState message="No V2 Liquidity found." />
+          <EmptyState message={<Trans>No V2 Liquidity found.</Trans>} />
         )}
 
         <AutoColumn justify={'center'} gap="md">

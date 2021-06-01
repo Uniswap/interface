@@ -52,8 +52,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding:  1rem;
-    grid-template-columns: 120px 1fr;
-
+    grid-template-columns: auto 1fr;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -226,6 +225,7 @@ const StyledNavLink = styled(NavLink).attrs({
   width: fit-content;
   font-weight: 500;
   padding: 8px 12px;
+  word-break: break-word;
 
   &.${activeClassName} {
     border-radius: 12px;
@@ -264,6 +264,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   :hover,
   :focus {
     color: ${({ theme }) => darken(0.1, theme.text1)};
+    text-decoration: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
@@ -359,9 +360,8 @@ export default function Header() {
           <Trans>Vote</Trans>
         </StyledNavLink>
         <StyledExternalLink id={`stake-nav-link`} href={'https://info.uniswap.org'}>
-          <Trans>
-            Charts <span style={{ fontSize: '11px', textDecoration: 'none !important' }}>↗</span>
-          </Trans>
+          <Trans>Charts</Trans>
+          <sup>↗</sup>
         </StyledExternalLink>
       </HeaderLinks>
       <HeaderControls>
