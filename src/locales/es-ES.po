@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 05:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -575,7 +575,7 @@ msgstr "Deposite su ficha de Proveedor de Liquidez para recibir UNI, el token de
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
-msgstr "liquidez depositada:"
+msgstr "Liquidez depositada:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
@@ -810,7 +810,7 @@ msgstr "Rango seleccionado no válido. El precio mínimo debe ser inferior al pr
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "recipiente inválido"
+msgstr "Recipiente inválido"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1480,7 +1480,7 @@ msgstr "Minería de liquidez Uniswap"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr "Contrato de migración Uniswap:arriba_derecha_flecha:"
+msgstr "Contrato de migración Uniswap"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1527,7 +1527,7 @@ msgstr "Usuario"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
-msgstr "liquidez V2"
+msgstr "Liquidez V2"
 
 #: src/pages/Swap/index.tsx
 msgid "V3"
