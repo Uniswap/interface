@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 14:56+0000\n"
+"POT-Creation-Date: 2021-06-01 15:24+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-01 15:03\n"
+"PO-Revision-Date: 2021-06-01 16:24\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -394,6 +394,11 @@ msgstr "すべてクリア"
 msgid "Close"
 msgstr "閉じる"
 
+#: src/components/Badge/RangeBadge.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
+msgid "Closed"
+msgstr "閉まっている"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "コード"
@@ -748,11 +753,6 @@ msgstr "自己責任でインポート"
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
 msgstr "範囲内"
-
-#: src/components/Badge/RangeBadge.tsx
-#: src/pages/RemoveLiquidity/V3.tsx
-msgid "Inactive"
-msgstr "非アクティブ"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
