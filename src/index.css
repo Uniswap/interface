@@ -12,16 +12,6 @@
     }
 }
 
-@font-face {
-    font-family: 'Inter';
-    font-display: block !important;
-}
-
-@font-face {
-    font-family: 'Inter var';
-    font-display: block !important;
-}
-
 html,
 body {
     margin: 0;
