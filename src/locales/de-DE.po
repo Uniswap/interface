@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-01 16:24\n"
+"PO-Revision-Date: 2021-06-01 20:00\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,7 +37,7 @@ msgstr "(Max)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(claim)"
+msgstr "(anfordern)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -45,7 +45,7 @@ msgstr "(alles löschen)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(Bearbeiten)"
+msgstr "(bearbeiten)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -53,7 +53,7 @@ msgstr "+{feeAmountFormatted}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
-msgstr "- Entfernen Sie senden"
+msgstr "- Senden entfernen"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "-{feeAmountFormatted}%"
@@ -101,15 +101,15 @@ msgstr "<0/> Abstimmungen"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>Kontoanalyse und anfallende Gebühren</0><1> :up-right_Pfeile: </1>"
+msgstr "<0>Kontoanalyse und eingenommene Gebühren</0><1> ↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0>Zurück zu</0> V3"
+msgstr "<0>Zurück zu </0>V3"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>For</0><1>{0}</1>"
-msgstr "<0>For</0><1>{0}</1>"
+msgstr "<0>Dafür</0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -133,7 +133,7 @@ msgstr "<0>🎉 </0>Willkommen im Team Unicorn :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "Eine Mindestschwelle von 1 % des gesamten UNI-Angebots ist erforderlich, um Vorschläge einzureichen"
+msgstr "Mindestens 1% des gesamten UNI-Angebots ist erforderlich, um Vorschläge einzureichen"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -154,11 +154,11 @@ msgstr "Aktiv"
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
-msgstr "Neu"
+msgstr "Hinzufügen"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "Delegierung + hinzufügen"
+msgstr "Delegierung hinzufügen +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
@@ -219,7 +219,7 @@ msgstr "Zulässig"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Stellen Sie immer sicher, dass die URL <0>app.uniswap.org</0> - Lesezeichen markieren, um sicher zu sein."
+msgstr "Stellen Sie immer sicher, dass die URL <0>app.uniswap.org</0> ist - Lesezeichen setzen, um sicher zu sein."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
