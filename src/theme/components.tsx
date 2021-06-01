@@ -167,7 +167,6 @@ export const HideSmall = styled.span`
   `};
 `
 
-// for wrapper react feather icons
 export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRight?: string; marginLeft?: string }>`
   display: flex;
   align-items: center;
