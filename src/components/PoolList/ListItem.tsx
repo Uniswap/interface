@@ -309,11 +309,11 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
       <DataText grid-area="amp-liq">{ampLiquidity}</DataText>
       <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
       <DataText>{formattedNum(fee, true)}</DataText>
+      <DataText>{`${oneYearFL}%`}</DataText>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
       </DataText>
-      <DataText>{`${oneYearFL}%`}</DataText>
       <DataText>{getMyLiquidity(myLiquidity)}</DataText>
       <ButtonWrapper>
         <ButtonEmpty

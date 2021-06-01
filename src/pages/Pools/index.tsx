@@ -47,6 +47,7 @@ const ToolbarWrapper = styled.div`
 const CurrencyWrapper = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 15px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-bottom: 8px;

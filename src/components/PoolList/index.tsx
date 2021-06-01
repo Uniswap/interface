@@ -213,6 +213,11 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText>AMP Liquidity</ClickableText>
+          <InfoHelper
+            text={
+              'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'
+            }
+          />
         </Flex>
         <Flex alignItems="center">
           <ClickableText
@@ -253,14 +258,6 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
           </ClickableText>
         </Flex>
         <Flex alignItems="center" justifyContent="flexEnd">
-          <ClickableText>Ratio</ClickableText>
-          <InfoHelper
-            text={
-              'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
-            }
-          />
-        </Flex>
-        <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText
             onClick={() => {
               setSortedColumn(SORT_FIELD.ONE_YEAR_FL)
@@ -279,6 +276,14 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
             )}
           </ClickableText>
           <InfoHelper text={'1Yr Fees Collected/Liquidity based on 24H volume annualized'} />
+        </Flex>
+        <Flex alignItems="center" justifyContent="flexEnd">
+          <ClickableText>Ratio</ClickableText>
+          <InfoHelper
+            text={
+              'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
+            }
+          />
         </Flex>
 
         <Flex alignItems="center" justifyContent="flexEnd">

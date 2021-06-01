@@ -50,12 +50,11 @@ const HeaderControls = styled.div`
   align-items: center;
   justify-self: flex-end;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
     width: 100%;
-    max-width: 960px;
     padding: 1rem;
     position: fixed;
     bottom: 0px;

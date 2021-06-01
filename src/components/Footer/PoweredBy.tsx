@@ -18,7 +18,7 @@ const StyledPoweredBy = styled.div<{ isAboutpage?: boolean }>`
     opacity: 1;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     top: auto;
     bottom: 4.5rem;
   `}

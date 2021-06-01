@@ -18,7 +18,7 @@ const StyledUtilities = styled.div<{ isAboutpage?: boolean }>`
     opacity: 1;
   }
 
-  ${({ theme, isAboutpage }) => theme.mediaWidth.upToMedium`
+  ${({ theme, isAboutpage }) => theme.mediaWidth.upToLarge`
     ${isAboutpage ? `display: none;` : ``}
     position: fixed;
     top: auto;
