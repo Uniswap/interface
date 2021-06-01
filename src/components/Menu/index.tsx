@@ -1,3 +1,4 @@
+/*This is the Menu*/
 import React, { useRef } from 'react'
 import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -162,7 +163,7 @@ export default function Menu() {
           <MenuItem href="https://discord.gg/FCfyBSbCU5">
             <MessageCircle size={14} />
             <div>
-              <Trans>Discord</Trans>
+              <Trans>Telegram</Trans>
             </div>
           </MenuItem>
           <MenuItem href="https://info.uniswap.org/">
