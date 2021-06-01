@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 00:37+0000\n"
+"POT-Creation-Date: 2021-06-01 14:56+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 15:03\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -355,6 +355,10 @@ msgstr "領取累積的UNI獎勵"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "索賠費用"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "領取您的 UNI 代幣"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1311,6 +1315,10 @@ msgstr "仍要交換"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "將 {0} {1} 交換為 {2} {3}"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "感謝您加入 Uniswap 社區 <0/>"
+
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "交換不滿足Uniswap不變量x * y = k的要求。這通常意味著您要交換的令牌之一在傳輸時合併了自定義行為。"
@@ -1429,6 +1437,10 @@ msgstr "再試一次"
 msgid "Turn On Expert Mode"
 msgstr "開啟專家模式"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI到了"
+
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
 msgstr "流通中的UNI："
@@ -1473,6 +1485,10 @@ msgstr "Uniswap治理"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "Uniswap V3在這裡！"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap 適用於：<0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1574,6 +1590,10 @@ msgstr "投票"
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
 msgstr "反對"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "投票給"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

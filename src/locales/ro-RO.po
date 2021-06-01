@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 00:37+0000\n"
+"POT-Creation-Date: 2021-06-01 14:56+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 15:03\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -355,6 +355,10 @@ msgstr "Revendică recompense UNI acumulate"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "Revendică taxe"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "Revendicați jetoanele UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1311,6 +1315,10 @@ msgstr "Schimbă oricum"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Schimbarea {0} {1} cu {2} {3}"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "Vă mulțumim că faceți parte din comunitatea Uniswap <0 />"
+
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Invariantul Uniswap x * y = k nu a fost satisfăcut de swap. Acest lucru înseamnă, de obicei, că unul dintre jetoanele pe care le schimbați încorporează un comportament personalizat la transfer."
@@ -1429,6 +1437,10 @@ msgstr "Încearcă din nou"
 msgid "Turn On Expert Mode"
 msgstr "Activează Modul Expert"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI a sosit"
+
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
 msgstr "UNI în circulație:"
@@ -1473,6 +1485,10 @@ msgstr "Guvernanță Uniswap"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "Uniswap V3 este aici!"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap disponibil în: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1574,6 +1590,10 @@ msgstr "Votează"
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
 msgstr "Votează Împotriva"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "Vot pentru"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

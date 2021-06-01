@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 00:37+0000\n"
+"POT-Creation-Date: 2021-06-01 14:56+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 15:03\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -355,6 +355,10 @@ msgstr "התביעה צברה תגמולים של UNI"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "דמי תביעה"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "תבע את אסימוני ה- UNI שלך"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1311,6 +1315,10 @@ msgstr "החלף בכל מקרה"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "החלפת {0} {1} ל {2} {3}"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "תודה שהיית חלק מקהילת Uniswap <0 />"
+
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "המשתנה של Uniswap x * y = k לא הסתפק בהחלפה. זה בדרך כלל אומר שאחד מהאסימונים שאתה מחליף משלב התנהגות מותאמת אישית בהעברה."
@@ -1429,6 +1437,10 @@ msgstr "נסה שוב"
 msgid "Turn On Expert Mode"
 msgstr "הפעל את מצב המומחה"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI הגיע"
+
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
 msgstr "UNI במחזור:"
@@ -1473,6 +1485,10 @@ msgstr "ממשל לא מוחלף"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "Un3wap V3 כבר כאן!"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap זמין ב: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1574,6 +1590,10 @@ msgstr "הַצבָּעָה"
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
 msgstr "הצביעו נגד"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "להצביע ל"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
