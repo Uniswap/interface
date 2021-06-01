@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
