@@ -7,13 +7,12 @@ import { useV2Pair } from '../../hooks/useV2Pairs'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
 
 import { useActiveWeb3React } from '../../hooks/web3'
-import { AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
 import { useTokenBalances } from '../wallet/hooks'
 import { Field, typeInput } from './slice'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 
-export function useBurnState(): AppState['burn'] {
+export function useBurnState() {
   return useAppSelector((state) => state.burn)
 }
 
