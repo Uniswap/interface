@@ -6,7 +6,7 @@ import { Provider as StoreProvider } from 'react-redux'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
 import { NetworkContextName } from '../src/constants/misc'
 import store from '../src/state'
-import {  theme, ThemedGlobalStyle } from '../src/theme'
+import { theme, ThemedGlobalStyle } from '../src/theme'
 import getLibrary from '../src/utils/getLibrary'
 import * as storybookThemes from './theme'
 
