@@ -35,7 +35,37 @@ export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
 
 export const DEFAULT_LOCALE: SupportedLocale = 'en-US'
 
-// todo: fill this back out
-export const LOCALE_LABEL: { [locale in SupportedLocale]?: string } = {
+// TODO: language names should be localized
+export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
+  'af-ZA': 'Afrikaans',
+  'ar-SA': 'Arabic',
+  'ca-ES': 'Catalan',
+  'cs-CZ': 'Czech',
+  'da-DK': 'Danish',
+  'de-DE': 'German',
+  'el-GR': 'Greek',
   'en-US': 'English',
+  'es-ES': 'Spanish',
+  'fi-FI': 'Finnish',
+  'fr-FR': 'French',
+  'he-IL': 'Hebrew',
+  'hu-HU': 'Hungarian',
+  'id-ID': 'Indonesian',
+  'it-IT': 'Italian',
+  'ja-JP': 'Japanese',
+  'ko-KR': 'Korean',
+  'nl-NL': 'Dutch',
+  'no-NO': 'Norwegian',
+  'pl-PL': 'Polish',
+  'pt-BR': 'Portuguese',
+  'pt-PT': 'Portuguese',
+  'ro-RO': 'Romanian',
+  'ru-RU': 'Russian',
+  'sr-SP': 'Serbian',
+  'sv-SE': 'Swedish',
+  'tr-TR': 'Turkish',
+  'uk-UA': 'Ukrainian',
+  'vi-VN': 'Vietnamese',
+  'zh-CN': 'Chinese (Simplified)',
+  'zh-TW': 'Chinese (Traditional)',
 }
