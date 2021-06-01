@@ -1,0 +1,18 @@
+@use "~inter-ui/default" with (
+  $inter-font-display: block,
+);
+@use "~inter-ui/variable" with (
+  $inter-font-display: block,
+);
+@include default.all;
+@include variable.all;
+
+html, input, textarea, button {
+  font-family: 'Inter', sans-serif;
+}
+
+@supports (font-variation-settings: normal) {
+  html, input, textarea, button {
+    font-family: 'Inter var', sans-serif;
+  }
+}

@@ -7,6 +7,7 @@ import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
 } from 'styled-components'
 import { useIsDarkMode } from '../state/user/hooks'
+import './inter.scss'
 import { Colors } from './styled'
 
 export * from './components'
@@ -206,25 +207,15 @@ export const ThemedBackground = styled.div<{ backgroundColor?: string | undefine
 `
 
 export const FixedGlobalStyle = createGlobalStyle`
-html, input, textarea, button {
-  font-family: 'Inter', sans-serif;
-  font-display: fallback;
-}
-@supports (font-variation-settings: normal) {
-  html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
-  }
-}
-
 html,
 body {
   margin: 0;
   padding: 0;
 }
 
- a {
-   color: ${colors(false).blue1}; 
- }
+a {
+  color: ${colors(false).blue1}; 
+}
 
 * {
   box-sizing: border-box;
@@ -241,7 +232,6 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-feature-settings: 'ss01' on, 'ss02' on,  'cv01' on, 'cv03' on;
-  
 }
 `
 
