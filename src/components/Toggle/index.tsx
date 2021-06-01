@@ -44,14 +44,20 @@ export interface ToggleProps {
   unchecked?: ReactNode
 }
 
-export default function Toggle({ id, isActive, toggle, checked = 'On', unchecked = 'Off' }: ToggleProps) {
+export default function Toggle({
+  id,
+  isActive,
+  toggle,
+  checked = <Trans>On</Trans>,
+  unchecked = <Trans>Off</Trans>,
+}: ToggleProps) {
   return (
     <StyledToggle id={id} isActive={isActive} onClick={toggle}>
       <ToggleElement isActive={isActive} isOnSwitch={true}>
-        <Trans>{checked}</Trans>
+        {checked}
       </ToggleElement>
       <ToggleElement isActive={!isActive} isOnSwitch={false}>
-        <Trans>{unchecked}</Trans>
+        {unchecked}
       </ToggleElement>
     </StyledToggle>
   )
