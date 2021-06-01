@@ -1,4 +1,3 @@
-import 'inter-ui'
 import './index.css'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import React, { StrictMode } from 'react'

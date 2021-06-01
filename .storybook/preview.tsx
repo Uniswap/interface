@@ -1,4 +1,4 @@
-import 'inter-ui'
+import '../src/index.css'
 import { Story } from '@storybook/react/types-6-0'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import React from 'react'

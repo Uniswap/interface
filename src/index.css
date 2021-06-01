@@ -1,3 +1,6 @@
+@import '~inter-ui';
+@import '~@reach/dialog/styles.css';
+
 * {
     font-family: 'Inter', sans-serif;
     box-sizing: border-box;
