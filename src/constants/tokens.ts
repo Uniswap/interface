@@ -39,6 +39,13 @@ export const WETH9_EXTENDED: { [chainId: number]: Token } = {
     'WETH9',
     'Wrapped Ether'
   ),
+  [SupportedChainId.ARBITRUM_ONE]: new Token(
+    SupportedChainId.ARBITRUM_ONE,
+    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
 }
 
 export class ExtendedEther extends Ether {
