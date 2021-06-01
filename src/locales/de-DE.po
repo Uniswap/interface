@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 00:37+0000\n"
+"POT-Creation-Date: 2021-06-01 14:56+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 15:03\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -355,6 +355,10 @@ msgstr "Angesammelte UNI-Belohnungen beanspruchen"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "Gebühren beantragen"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "Fordern Sie Ihre UNI-Token an"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1311,6 +1315,10 @@ msgstr "Trotzdem tauschen"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} gegen {2} tauschen {3}"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "Danke, dass du Teil der Uniswap-Community bist <0/>"
+
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Die Uniswap-Invariante x * y = k wurde durch den Swap nicht erfüllt. Dies bedeutet normalerweise, dass eines der Token, die Sie austauschen, ein benutzerdefiniertes Verhalten bei der Übertragung enthält."
@@ -1429,6 +1437,10 @@ msgstr "Erneut versuchen"
 msgid "Turn On Expert Mode"
 msgstr "Experten-Modus aktivieren"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI ist angekommen"
+
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
 msgstr "UNI im Umlauf:"
@@ -1473,6 +1485,10 @@ msgstr "Uniswap Governance"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "Uniswap V3 ist da!"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap verfügbar in: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1574,6 +1590,10 @@ msgstr "Abstimmungen"
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
 msgstr "Gegenstimmen"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "Stimme für"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

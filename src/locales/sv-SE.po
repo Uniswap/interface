@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 00:37+0000\n"
+"POT-Creation-Date: 2021-06-01 14:56+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Swedish\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 15:03\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -355,6 +355,10 @@ msgstr "Hämta ackumulerade UNI-belöningar"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "Hämta avgifter"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "Gör anspråk på dina UNI-tokens"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1311,6 +1315,10 @@ msgstr "Byt ändå"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Byta {0} {1} mot {2} {3}"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "Tack för att du deltar i Uniswap-communityn <0 />"
+
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap-invarianten x * y = k var inte nöjd med bytet. Detta innebär vanligtvis att ett av de tokens du byter innehåller anpassat beteende vid överföringen."
@@ -1429,6 +1437,10 @@ msgstr "Försök igen"
 msgid "Turn On Expert Mode"
 msgstr "Slå på expertläge"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI har anlänt"
+
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
 msgstr "UNI i omlopp:"
@@ -1473,6 +1485,10 @@ msgstr "Uniswap styrning"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "Uniswap V3 är här!"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap tillgänglig på: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1574,6 +1590,10 @@ msgstr "Rösta"
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
 msgstr "Rösta mot"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "Rösta på"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

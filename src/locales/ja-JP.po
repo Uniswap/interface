@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 00:37+0000\n"
+"POT-Creation-Date: 2021-06-01 14:56+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 15:03\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -291,7 +291,7 @@ msgstr "バランス： {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "エキゾチックなペアに最適です。"
+msgstr "マイナーなペアに最適です。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -299,7 +299,7 @@ msgstr "ほとんどのペアに最適です。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "安定ペアに最適です。"
+msgstr "ステーブルコインなどのペアに最適です。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -307,7 +307,7 @@ msgstr "ブロックされたアドレス"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性を追加することにより、あなたはプールのあなたのシェアに比例して、このペアのすべての取引の0.3%を得ることができます。 手数料はプールに追加され、リアルタイムで補償され、あなたの流動性を引き出すことによって請求することができます。"
+msgstr "流動性を追加することにより、あなたはプールのシェアに比例して、このペアのすべての取引の0.3%を手数料として得られます。 手数料はプールに追加され、リアルタイムで反映され、あなたの流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -355,6 +355,10 @@ msgstr "UNI報酬を受け取ることができます。"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "手数料を請求する"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "UNIトークンを請求する"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1311,6 +1315,10 @@ msgstr "とにかく入れ替え"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "スワップ {0} {1} 用の {2} {3}"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "Uniswap コミュニティにご参加いただきありがとうございます <0/>"
+
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Uniswap不変量x * y = kは、スワップによって満たされませんでした。これは通常、交換するトークンの1つに転送時のカスタム動作が組み込まれていることを意味します。"
@@ -1429,6 +1437,10 @@ msgstr "もう一度試す"
 msgid "Turn On Expert Mode"
 msgstr "エキスパートモードをオンにする"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "ユニがやってきた"
+
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
 msgstr "流通しているUNI:"
@@ -1473,6 +1485,10 @@ msgstr "ガバナンスを一元化"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "ユニスワップV3はここにあります!"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "ユニスワップが利用可能: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1574,6 +1590,10 @@ msgstr "投票"
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
 msgstr "反対投票"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "に投票"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 00:37+0000\n"
+"POT-Creation-Date: 2021-06-01 14:56+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 15:03\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -355,6 +355,10 @@ msgstr "Потраживања сакупила УНИ награде"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "Накнаде за потраживање"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "Затражите своје УНИ токене"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1311,6 +1315,10 @@ msgstr "Замените свеједно"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Замјена {0} {1} за {2} {3}"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "Хвала вам што сте део заједнице Унисвап <0 />"
+
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "Замјена непроменљива к * и = к није била задовољена. То обично значи да један од токена које замењујете укључује прилагођено понашање приликом преноса."
@@ -1429,6 +1437,10 @@ msgstr "Покушајте поново"
 msgid "Turn On Expert Mode"
 msgstr "Укључите експертни режим"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "УНИ је стигао"
+
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
 msgstr "УНИ у оптицају:"
@@ -1473,6 +1485,10 @@ msgstr "Унисвап Говернанце"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "Унисвап В3 је стигао!"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Унисвап доступан у: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1574,6 +1590,10 @@ msgstr "Гласајте"
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
 msgstr "Гласајте против"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "Гласај за"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

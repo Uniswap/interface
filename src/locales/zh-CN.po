@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 00:37+0000\n"
+"POT-Creation-Date: 2021-06-01 14:56+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-01 01:34\n"
+"PO-Revision-Date: 2021-06-01 15:03\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -355,6 +355,10 @@ msgstr "领取累积的 UNI 代币奖励"
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
 msgstr "领取已累计的手续费"
+
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Claim your UNI tokens"
+msgstr "领取您的 UNI 代币"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1311,6 +1315,10 @@ msgstr "仍然切换"
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "将 {0} {1} 交换为 {2} {3}"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "Thanks for being part of the Uniswap community <0/>"
+msgstr "感谢您加入 Uniswap 社区 <0/>"
+
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
 msgstr "交换不满足Uniswap不变量x * y = k的要求。这通常意味着您要交换的令牌之一在传输时合并了自定义行为。"
@@ -1429,6 +1437,10 @@ msgstr "再试一次"
 msgid "Turn On Expert Mode"
 msgstr "打开专家模式"
 
+#: src/components/Popups/ClaimPopup.tsx
+msgid "UNI has arrived"
+msgstr "UNI到了"
+
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
 msgstr "联合国新闻中心正在分发："
@@ -1473,6 +1485,10 @@ msgstr "Uniswap 治理"
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
 msgstr "Uniswap V3 在这里！"
+
+#: src/components/SwitchLocaleLink/index.tsx
+msgid "Uniswap available in: <0>{0}</0>"
+msgstr "Uniswap 适用于：<0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1574,6 +1590,10 @@ msgstr "投票"
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
 msgstr "反对投票"
+
+#: src/pages/Vote/VotePage.tsx
+msgid "Vote For"
+msgstr "投票给"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
