@@ -136,7 +136,7 @@ export default function Vote() {
   )
 
   const showCreateProposal = Boolean(
-    availableVotes && JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(10000000))
+    availableVotes && JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(10000000000000000000000000))
   )
 
   return (

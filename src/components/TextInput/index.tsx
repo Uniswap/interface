@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { memo, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 
 const Input = styled.input<{ error?: boolean; fontSize?: string }>`
@@ -48,6 +48,7 @@ const TextAreaInput = styled.textarea<{ error?: boolean; fontSize?: string }>`
   text-overflow: ellipsis;
   font-weight: 500;
   width: 100%;
+  line-height: 1.2;
   ::placeholder {
     color: ${({ theme }) => theme.text4};
   }
@@ -105,39 +106,47 @@ export const TextInput = ({
   )
 }
 
-export const TextArea = ({
-  className,
-  value,
-  onUserInput,
-  placeholder,
-  fontSize,
-}: {
-  className?: string
-  value: string
-  onUserInput: (value: string) => void
-  placeholder: string
-  fontSize: string
-}) => {
-  const handleInput = useCallback(
-    (event) => {
-      onUserInput(event.target.value)
-    },
-    [onUserInput]
-  )
+export const ResizingTextArea = memo(
+  ({
+    className,
+    value,
+    onUserInput,
+    placeholder,
+    fontSize,
+  }: {
+    className?: string
+    value: string
+    onUserInput: (value: string) => void
+    placeholder: string
+    fontSize: string
+  }) => {
+    const inputRef = useRef<HTMLTextAreaElement>(document.createElement('textarea'))
 
-  return (
-    <div className={className}>
+    const handleInput = useCallback(
+      (event) => {
+        inputRef.current.style.height = 'auto'
+        inputRef.current.style.height = inputRef.current.scrollHeight + 'px'
+        onUserInput(event.target.value)
+      },
+      [onUserInput]
+    )
+
+    return (
       <TextAreaInput
+        style={{ height: 'auto', minHeight: '500px' }}
+        className={className}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
-        rows={25}
         placeholder={placeholder || ''}
         onChange={handleInput}
         value={value}
         fontSize={fontSize}
+        ref={inputRef}
       />
-    </div>
-  )
-}
+    )
+  }
+)
+
+ResizingTextArea.displayName = 'ResizingTextArea'

@@ -35,22 +35,24 @@ const ProposalWrapper = styled.div`
 const CreateProposalButton = ({
   hasActiveOrPendingProposal,
   hasEnoughVote,
-  disabledCreateProposalButton,
+  isFormValid,
   handleCreateProposal,
 }: {
   hasActiveOrPendingProposal: boolean
   hasEnoughVote: boolean
-  disabledCreateProposalButton: boolean
+  isFormValid: boolean
   handleCreateProposal: () => void
 }) => {
   return hasActiveOrPendingProposal ? (
     <ButtonError marginTop="18px">You already have an active or pending proposal</ButtonError>
-  ) : hasEnoughVote ? (
-    <Button style={{ marginTop: '18px' }} disabled={disabledCreateProposalButton} onClick={handleCreateProposal}>
+  ) : !hasEnoughVote ? (
+    <ButtonError marginTop="18px">You don&apos;t have enough vote to create a proposal</ButtonError>
+  ) : !isFormValid ? (
+    <ButtonError marginTop="18px">Some proposal data is missing</ButtonError>
+  ) : (
+    <Button style={{ marginTop: '18px' }} onClick={handleCreateProposal}>
       Create Proposal
     </Button>
-  ) : (
-    <ButtonError marginTop="18px">You don&apos;t have enough vote to create a proposal</ButtonError>
   )
 }
 
@@ -67,7 +69,9 @@ export default function CreateProposal() {
   const [attempting, setAttempting] = useState(false)
   const [proposalAction, setProposalAction] = useState(ProposalAction.TRANSFER_TOKEN)
   const [toAddressValue, setToAddressValue] = useState('')
-  const [currencyValue, setCurrencyValue] = useState<Currency>()
+  const [currencyValue, setCurrencyValue] = useState<Currency>(
+    new Token(chainId ?? 1, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap')
+  )
   const [amountValue, setAmountValue] = useState('')
   const [titleValue, setTitleValue] = useState('')
   const [bodyValue, setBodyValue] = useState('')
@@ -87,7 +91,7 @@ export default function CreateProposal() {
   const handleTitleInput = useCallback((title: string) => [setTitleValue(title)], [setTitleValue])
   const handleBodyInput = useCallback((body: string) => [setBodyValue(body)], [setBodyValue])
 
-  const disabledCreateProposalButton = useMemo(
+  const isFormValid = useMemo(
     () =>
       Boolean(
         !proposalAction ||
@@ -144,6 +148,8 @@ ${bodyValue}
     if (hash) setHash(hash)
   }
 
+  console.log(availableVotes?.quotient.toString())
+
   return (
     <AppBody {...{ maxWidth: '1200px' }}>
       <CreateProposalTabs />
@@ -185,9 +191,11 @@ ${bodyValue}
             latestProposalData?.status === ProposalState.Active || latestProposalData?.status === ProposalState.Pending
           }
           hasEnoughVote={
-            availableVotes ? JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(10000000)) : false
+            availableVotes
+              ? JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(10000000000000000000000000))
+              : false
           }
-          disabledCreateProposalButton={disabledCreateProposalButton}
+          isFormValid={isFormValid}
           handleCreateProposal={handleCreateProposal}
         />
       </Wrapper>
