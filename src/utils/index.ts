@@ -149,6 +149,10 @@ export function shortenAddress(address: string, chars = 4): string {
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
+export function stringEquals(stringA: string, stringB: string): boolean {
+  return stringA.toLowerCase() === stringB.toLowerCase()
+}
+
 // add 10%
 export function calculateGasMargin(value: BigNumber): BigNumber {
   return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000))
@@ -329,7 +333,10 @@ export function isBnb(tokenAddress: string) {
 }
 
 export function isGoodDollar(tokenAddress: string) {
-  return stringEquals(tokenAddress, GOODDOLLAR_HOME_TOKEN_ADDRESS) || stringEquals(tokenAddress, GOODDOLLAR_FOREIGN_TOKEN_ADDRESS)
+  return (
+    stringEquals(tokenAddress, GOODDOLLAR_HOME_TOKEN_ADDRESS) ||
+    stringEquals(tokenAddress, GOODDOLLAR_FOREIGN_TOKEN_ADDRESS)
+  )
 }
 
 export function getEthFuseBridge(tokenAddress: string) {
@@ -599,8 +606,4 @@ export function supportRecipientTransfer(currencyId?: string, bridgeDirection?: 
     bridgeType === BridgeType.BSC_FUSE_NATIVE ||
     bridgeType === BridgeType.BSC_FUSE_ERC20_TO_ERC677
   )
-}
-
-export function stringEquals(stringA: string, stringB: string): boolean {
-  return stringA.toLowerCase() === stringB.toLowerCase()
 }
