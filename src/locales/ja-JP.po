@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-02 15:21\n"
+"PO-Revision-Date: 2021-06-02 16:27\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -199,7 +199,7 @@ msgstr "請求可能なアドレスではありません"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
-msgstr "<unk>"
+msgstr "反対"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
@@ -1410,7 +1410,7 @@ msgstr "合計入金額"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
-msgstr "合計<unk>"
+msgstr "合計入金額"
 
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -1492,7 +1492,7 @@ msgstr "言語: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr "流動性マイニングを<unk>"
+msgstr "流動性マイニングする"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
