@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-02 17:34\n"
+"PO-Revision-Date: 2021-06-02 19:58\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -971,7 +971,7 @@ msgstr "找不到V2流动资金。"
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr "没有活动的资源库"
+msgstr "无运行中的流动池"
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
@@ -979,7 +979,7 @@ msgstr "未找到流动资金。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "未找到池。"
+msgstr "未找到流动池。"
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
@@ -991,35 +991,35 @@ msgstr "未找到任何结果。"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
-msgstr "离开"
+msgstr "关闭"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "上"
+msgstr "开启"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "如果您知道您正在做什么，只能使用这个模板。"
+msgstr "务必在详细了解此模式应用后才使用此模式操作。"
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
-msgstr "离开"
+msgstr "关闭"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "上"
+msgstr "开启"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "一旦您对费率感到满意，请点击供货商查看。"
+msgstr "对费率感到满意的话，请点击“供应”键，到审查步骤。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "{0} 之前自行委托或委托给另一个地址的UNI投票才有资格投票。"
+msgstr "只有在 {0} 区块编号之前已自行委托或委托给另一个区块链地址的 UNI 代币才有资格投票。"
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "哎呀！发生未知错误。请刷新页面或访问另一个浏览器或设备。"
+msgstr "糟糕！出现未知错误。请刷新页面，或从其他浏览器或设备访问。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1028,27 +1028,27 @@ msgstr "超出范围"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "估计输出。如果价格变化超过 {0}%，您的交易将会恢复。"
+msgstr "输出数额仅为估值。如果兑换率变化超过 {0}%，您的交易将会还原。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "估计输出。您将收到至少 <0>{0} {1}</0> 或交易将恢复。"
+msgstr "输出数额仅为估值。您将收到至少 <0>{0} {1}</0> 代币，否则将还原交易。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "输出将发送至 <0>{0}</0>"
+msgstr "输出代币将发送至 <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
-msgstr "所有者"
+msgstr "拥有者"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr "参与池数"
+msgstr "参与的流动池"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
-msgstr "请连接到相应的Ethereum 网络。"
+msgstr "请连接到适当的以太坊网络。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1057,24 +1057,24 @@ msgstr "请输入单词 \"{confirmWord}\" 以启用专家模式。"
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "池子"
+msgstr "流动池"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "已找到池！"
+msgstr "已找到流动池！"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "池率"
+msgstr "流动池率"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "池率"
+msgstr "流动池率"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "奖励池中的池代币："
+msgstr "奖励池中的流动池代币："
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1085,69 +1085,69 @@ msgstr "奖励池中的池代币："
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "地址池 {0}:"
+msgstr "流动池汇集 {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "池概览"
+msgstr "流动池概览"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
-msgstr "价格"
+msgstr "兑换率"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
-msgstr "价格差异："
+msgstr "兑换率差异："
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr "价格影响"
+msgstr "兑换率影响"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "价格影响太高"
+msgstr "兑换率影响过多"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "价格已更新"
+msgstr "兑换率已更新"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "价格范围"
+msgstr "兑换率范围"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
-msgstr "价格："
+msgstr "兑换率："
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "价格和公库共享"
+msgstr "兑换率和流动池份额"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
-msgstr "建议"
+msgstr "提案"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
-msgstr "社区成员提出的建议将在这里出现。"
+msgstr "社区成员提交的提案将在此显示。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
-msgstr "投标人"
+msgstr "提案者"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
-msgstr "比率"
+msgstr "费率"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
-msgstr "阅读更多关于联合国I"
+msgstr "阅读更多关于 UNI 代币的信息"
 
 #: src/pages/Vote/index.tsx
 msgid "Read more about Uniswap governance"
-msgstr "阅读更多关于Uniswap管理的信息"
+msgstr "阅读有关 Uniswap 治理的更多信息"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1155,7 +1155,7 @@ msgstr "阅读更多关于提供流动资金的信息"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
-msgstr "阅读更多关于不支持的素材"
+msgstr "阅读有关不受支持的代币的更多信息"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
@@ -1167,42 +1167,42 @@ msgstr "最近的交易"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
-msgstr "删除"
+msgstr "去除"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "删除金额"
+msgstr "去除数额"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "移除代表"
+msgstr "去除投票权代表"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "移除流动资金"
+msgstr "去除流动资金"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
-msgstr "删除列表"
+msgstr "去除代币列表"
 
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove {0} {1} and {2} {3}"
-msgstr "删除 {0} {1} 和 {2} {3}"
+msgstr "去除 {0} {1} 和 {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "移除 {0}/{1} V3 流动资金"
+msgstr "去除 {0}/{1} V3 流动资金"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "正在删除 {0} {1} 和 {2} {3}"
+msgstr "正在去除 {0} {1} 和 {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "限制互换仅直接对。"
+msgstr "将交易仅限于直接币对。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
@@ -1210,19 +1210,19 @@ msgstr "返回"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Route"
-msgstr "路线"
+msgstr "途径"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "搜索名称或粘贴地址"
+msgstr "搜索代币名称或粘贴代币合约地址"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "选择库"
+msgstr "选择流动池"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "根据您首选的流动资金提供者费用选择池类型。"
+msgstr "根据您首选的手续费率来选择流动池类型。"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1230,15 +1230,15 @@ msgstr "根据您首选的流动资金提供者费用选择池类型。"
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "选择一个令牌"
+msgstr "选择代币"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
-msgstr "选择一个代币以查找您的 v2 流动性。"
+msgstr "选择代币以查找您的 v2 流动资金。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
-msgstr "选择配对"
+msgstr "选择币对"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1246,7 +1246,7 @@ msgstr "选定范围"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
-msgstr "自己的"
+msgstr "自身"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1255,32 +1255,32 @@ msgstr "自我代表"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "设置价格范围"
+msgstr "设置兑换率范围"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
-msgstr "设置起始价格"
+msgstr "设置起始兑换率"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "池的份额："
+msgstr "流动池份额："
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
-msgstr "Show Portis"
+msgstr "显示 Portis"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
-msgstr "简单的"
+msgstr "简单型"
 
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "翻转范围"
+msgstr "滑点容忍度"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
-msgstr "有些资产无法通过这个接口获得，因为它们可能无法很好地使用智能合同，或者我们由于法律原因无法允许交易。"
+msgstr "有些代币无法通过此界面使用，因为它们可能无法很好地调用智能合约，或者由于法律原因无法允许交易。"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
@@ -1288,7 +1288,7 @@ msgstr "出问题了"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "第 1 步：获取 UNI-V2 变量代币"
+msgstr "第 1 步：获取 UNI-V2 流动池代币"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1308,16 +1308,16 @@ msgstr "提供 {0} {1} 和 {2} {3}"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
-msgstr "切换"
+msgstr "兑换"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr "仍然切换"
+msgstr "仍确认兑换"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
-msgstr "将 {0} {1} 交换为 {2} {3}"
+msgstr "将 {0} {1} 兑换为 {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1325,23 +1325,23 @@ msgstr "感谢您加入 Uniswap 社区 <0/>"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "交换不满足Uniswap不变量x * y = k的要求。这通常意味着您要交换的令牌之一在传输时合并了自定义行为。"
+msgstr "兑换交易不满足 Uniswap 不变量 X × Y = K 的要求。这通常意味着您要兑换的代币之一在代币转账过程中带有一些自定义特性。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
-msgstr "输入令牌无法转让。输入令牌可能有问题。"
+msgstr "输入代币无法进行转账。输入代币可能有些问题。"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "市场价格超出您指定的价格范围。只有单资产存款。"
+msgstr "市场兑换率超出您指定的范围。将只注入单项代币。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "输出令牌无法转让。输出令牌可能有问题。"
+msgstr "输出代币无法进行转账。输出代币可能有些问题。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "输出令牌无法转让。输出令牌可能有问题。转移令牌和变基令牌的注释费与Uniswap V3不兼容。"
+msgstr "输出代币无法进行转账。输出代币可能有些问题。注：转账时带扣除费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
