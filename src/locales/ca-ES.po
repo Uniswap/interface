@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-02 20:16+0000\n"
+"POT-Creation-Date: 2021-06-02 23:02+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Catalan\n"
-"PO-Revision-Date: 2021-06-02 20:50\n"
+"PO-Revision-Date: 2021-06-02 23:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -106,10 +106,6 @@ msgstr "<0> Anàlisi del compte i comissions acumulades</0> <1> ↗</1>"
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
 msgstr "<0> Torna a</0> V3"
-
-#: src/pages/Vote/VotePage.tsx
-msgid "<0>For</0><1>{0}</1>"
-msgstr "<0> Per a</0> <1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -699,6 +695,10 @@ msgstr "Exploreu grups populars a Uniswap Analytics."
 msgid "Fee Tier"
 msgstr "Nivell de tarifa"
 
+#: src/pages/Vote/VotePage.tsx
+msgid "For"
+msgstr "Per a"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Per a cada grup que es mostra a continuació, feu clic a Migra per eliminar la liquiditat d'Uniswap V2 i dipositar-la a Uniswap V3."
@@ -734,6 +734,7 @@ msgstr "Si adquiriu un testimoni d’aquesta llista, és possible que no el pugu
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
 msgstr "Importació"
@@ -1363,6 +1364,10 @@ msgstr "No s'ha pogut enviar la transacció perquè s'ha acabat el termini. Comp
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Aquestes fitxes solen aparellar-se amb altres fitxes."
 
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr "Aquest testimoni no apareix a la llista de fitxes actives. Assegureu-vos que aquest sigui el testimoni que voleu canviar."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Aquesta eina migrarà de manera segura la vostra {0} a V3. El procés és completament desconfiat gràcies a"
@@ -1501,6 +1506,10 @@ msgstr "Mineria de liquiditat Uniswap"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Contracte de migració Uniswap↗"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Unknown Source"
+msgstr "Font desconeguda"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1831,6 +1840,14 @@ msgstr "minuts"
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "mitjançant {0}"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "via {0} token list"
+msgstr "mitjançant la llista de tokens {0}"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "{0, plural, one {Import token} other {Import tokens}}"
+msgstr "{0, plural, one {Importa el testimoni.} other {Importeu fitxes.}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx

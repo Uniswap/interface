@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-02 20:16+0000\n"
+"POT-Creation-Date: 2021-06-02 23:02+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Danish\n"
-"PO-Revision-Date: 2021-06-02 20:50\n"
+"PO-Revision-Date: 2021-06-02 23:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -106,10 +106,6 @@ msgstr "<0>Konto analyser og påløbne gebyrer</0><1> :up-ϊ: </1>"
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
 msgstr "<0> Tilbage til</0> V3"
-
-#: src/pages/Vote/VotePage.tsx
-msgid "<0>For</0><1>{0}</1>"
-msgstr "<0>For</0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -699,6 +695,10 @@ msgstr "Udforsk populære pools på Uniswap Analytics."
 msgid "Fee Tier"
 msgstr "Gebyr Niveau"
 
+#: src/pages/Vote/VotePage.tsx
+msgid "For"
+msgstr "Til"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "For hver pulje vist nedenfor, skal du klikke migrere for at fjerne din likviditet fra Uniswap V2 og indsætte den i Uniswap V3."
@@ -734,6 +734,7 @@ msgstr "Hvis du køber et tegn fra denne liste, kan du muligvis ikke sælge det 
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
 msgstr "Importér"
@@ -1363,6 +1364,10 @@ msgstr "Transaktionen kunne ikke sendes, fordi fristen er udløbet. Kontroller, 
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Disse tokens er almindeligt parret med andre tokens."
 
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr "Dette token vises ikke på den / de aktive tokenlister. Sørg for, at dette er det token, du vil handle."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Dette værktøj vil sikkert overføre din {0} likviditet til V3. Processen er helt troværdig takket være"
@@ -1501,6 +1506,10 @@ msgstr "Uiswap likviditet minedrift"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Uniswap migration kontrakt:up-opdatering:"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Unknown Source"
+msgstr "Ukendt kilde"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1831,6 +1840,14 @@ msgstr "minutter"
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "via {0}"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "via {0} token list"
+msgstr "via {0} token-liste"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "{0, plural, one {Import token} other {Import tokens}}"
+msgstr "{0, plural, one {Importer token} other {Importer tokens}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx

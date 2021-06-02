@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-02 20:16+0000\n"
+"POT-Creation-Date: 2021-06-02 23:02+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-06-02 20:50\n"
+"PO-Revision-Date: 2021-06-02 23:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -106,10 +106,6 @@ msgstr "<0>Tilin analytiikka ja kertynyt maksu</0><1> ↗ </1>"
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
 msgstr "<0> Takaisin kohtaan</0> V3"
-
-#: src/pages/Vote/VotePage.tsx
-msgid "<0>For</0><1>{0}</1>"
-msgstr "<0>For</0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -699,6 +695,10 @@ msgstr "Tutki suosittuja pooleja Uniswap Analyticsissä."
 msgid "Fee Tier"
 msgstr "Maksun Taso"
 
+#: src/pages/Vote/VotePage.tsx
+msgid "For"
+msgstr "Sillä"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Valitse alla olevan altaan kohdalla siirry poistaaksesi likviditeettisi Uniswap V2:sta ja tallenna se Uniswap V3:een."
@@ -734,6 +734,7 @@ msgstr "Jos ostat tunnuksen tästä luettelosta, et ehkä pysty myymään sitä 
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
 msgstr "Tuo"
@@ -1363,6 +1364,10 @@ msgstr "Tapahtumaa ei voitu lähettää, koska määräaika on ohi. Tarkista, et
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Nämä kuponkia ovat yleensä pariksi muiden kuponkien."
 
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr "Tätä tunnusta ei näy aktiivisissa tunnuslistoissa. Varmista, että tämä on merkki, jonka haluat vaihtaa."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Tämä työkalu siirtää {0} likviditeettiäsi turvallisesti V3:lle. Prosessi on täysin luotettava kiitos"
@@ -1501,6 +1506,10 @@ msgstr "Irrota likviditeetin louhinta"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Irrota siirtosopimus ↗"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Unknown Source"
+msgstr "Tuntematon lähde"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1831,6 +1840,14 @@ msgstr "minuuttia"
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "kohteen {0} kautta"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "via {0} token list"
+msgstr "{0} tunnuslistan kautta"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "{0, plural, one {Import token} other {Import tokens}}"
+msgstr "{0, plural, one {Tuo tunnus} other {Tuo tunnuksia}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
