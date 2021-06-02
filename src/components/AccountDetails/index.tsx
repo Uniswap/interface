@@ -243,13 +243,7 @@ export default function AccountDetails({
                       Disconnect
                     </WalletAction>
                   )}
-                  <WalletAction
-                    onClick={() => {
-                      openOptions()
-                    }}
-                  >
-                    CHANGE WALLET
-                  </WalletAction>
+                  <WalletAction onClick={openOptions}>CHANGE WALLET</WalletAction>
                 </div>
               </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">
