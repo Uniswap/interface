@@ -183,7 +183,7 @@ export default function Pool() {
                   to="/pool/v2/find"
                 >
                   <Text fontWeight={500} fontSize={16}>
-                    Import Pool
+                    <Trans>Import Pool</Trans>
                   </Text>
                 </ResponsiveButtonPrimary>
                 <ResponsiveButtonPrimary
