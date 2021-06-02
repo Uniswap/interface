@@ -2,6 +2,7 @@ import { Currency, ETHER, JSBI, Pair, TokenAmount } from 'libs/sdk/src'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
@@ -98,6 +99,8 @@ export default function PoolFinder() {
     </LightCard>
   )
 
+  const native0 = useCurrencyConvertedToNative(currency0 || undefined)
+  const native1 = useCurrencyConvertedToNative(currency1 || undefined)
   return (
     <AppBody>
       <FindPoolTabs />
@@ -108,11 +111,11 @@ export default function PoolFinder() {
             setActiveField(Fields.TOKEN0)
           }}
         >
-          {currency0 ? (
+          {native0 ? (
             <Row>
-              <CurrencyLogo currency={currency0} />
+              <CurrencyLogo currency={native0} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                {currency0.symbol}
+                {native0?.symbol}
               </Text>
             </Row>
           ) : (
@@ -132,11 +135,11 @@ export default function PoolFinder() {
             setActiveField(Fields.TOKEN1)
           }}
         >
-          {currency1 ? (
+          {native1 ? (
             <Row>
-              <CurrencyLogo currency={currency1} />
+              <CurrencyLogo currency={native1} />
               <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                {currency1.symbol}
+                {native1?.symbol}
               </Text>
             </Row>
           ) : (

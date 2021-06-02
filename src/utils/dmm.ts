@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Fraction, JSBI, Price, Pair, Token } from 'libs/sdk/src'
+import { Fraction, JSBI, Price, Pair, Token, Currency, WETH } from 'libs/sdk/src'
 import { ZERO, ONE, ChainId } from 'libs/sdk/src/constants'
 import { UserLiquidityPosition } from 'state/pools/hooks'
 import { formattedNum } from 'utils'
@@ -25,6 +25,7 @@ import {
   ChainId as ChainIdDMM
 } from 'libs/sdk/src'
 import { BLOCKS_PER_YEAR } from '../constants'
+import { useActiveWeb3React } from 'hooks'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
@@ -261,4 +262,21 @@ export function getFarmApr(
   const apr = ((yearlyKNCRewardAllocation * parseFloat(kncPriceUsd)) / parseFloat(poolLiquidityUsd)) * 100
 
   return apr
+}
+
+export function convertToNativeTokenFromETH(currency: Currency, chainId: ChainIdDMM): Currency {
+  if (chainId && [137, 80001].includes(chainId) && currency === Currency.ETHER) {
+    return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
+  } else if (chainId && [137, 80001].includes(chainId) && currency.symbol === `WETH`) {
+    return new TokenDMM(chainId, WETH[chainId].address, 18, 'WMATIC', 'WMATIC')
+  }
+  return currency
+}
+
+export function useCurrencyConvertedToNative(currency?: Currency): Currency | undefined {
+  const { chainId } = useActiveWeb3React()
+  if (!!currency && !!chainId) {
+    return convertToNativeTokenFromETH(currency, chainId)
+  }
+  return undefined
 }

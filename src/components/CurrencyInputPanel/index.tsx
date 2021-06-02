@@ -13,6 +13,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 import { AutoColumn } from '../Column'
 import Card from '../Card'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -80,7 +81,7 @@ const Container = styled.div<{ hideInput: boolean }>`
 
 const StyledTokenName = styled.span<{ active?: boolean; fontSize?: string }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size:  ${({ active, fontSize }) => (fontSize ? fontSize : active ? '20px' : '16px')};
+  font-size: ${({ active, fontSize }) => (fontSize ? fontSize : active ? '20px' : '16px')};
 `
 
 const StyledBalanceMax = styled.button`
@@ -156,13 +157,15 @@ export default function CurrencyInputPanel({
   const { t } = useTranslation()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
+
+  const nativeCurrency = useCurrencyConvertedToNative(currency || undefined)
 
   return (
     <div style={{ width: '100%' }}>
@@ -212,7 +215,7 @@ export default function CurrencyInputPanel({
                 {hideLogo ? null : pair ? (
                   <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                 ) : currency ? (
-                  <CurrencyLogo currency={currency} size={'24px'} />
+                  <CurrencyLogo currency={nativeCurrency || undefined} size={'24px'} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
@@ -224,11 +227,11 @@ export default function CurrencyInputPanel({
                     active={Boolean(currency && currency.symbol)}
                     fontSize={fontSize}
                   >
-                    {(currency && currency.symbol && currency.symbol.length > 20
-                      ? currency.symbol.slice(0, 4) +
+                    {(nativeCurrency && nativeCurrency.symbol && nativeCurrency.symbol.length > 20
+                      ? nativeCurrency.symbol.slice(0, 4) +
                         '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                      : currency?.symbol) || t('selectToken')}
+                        nativeCurrency.symbol.slice(nativeCurrency.symbol.length - 5, nativeCurrency.symbol.length)
+                      : nativeCurrency?.symbol) || t('selectToken')}
                   </StyledTokenName>
                 )}
                 {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}

@@ -3,7 +3,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from 'libs/sdk/src'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Token, WETH } from 'libs/sdk/src'
 import { useActiveWeb3React } from '../../hooks'
 import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -22,6 +22,7 @@ import { LightGreyCard } from 'components/Card'
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -111,13 +112,15 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
 }) {
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const key = currencyKey(currency)
   const selectedTokenList = useCombinedActiveList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
 
+  // const showCurrency = currency === ETHER && !!chainId && [137, 800001].includes(chainId) ? WETH[chainId] : currency
+  const nativeCurrency = useCurrencyConvertedToNative(currency || undefined)
   // only show add or remove buttons if not on selected list
   return (
     <MenuItem
@@ -127,13 +130,13 @@ function CurrencyRow({
       disabled={isSelected}
       selected={otherSelected}
     >
-      <CurrencyLogo currency={currency} size={'24px'} />
+      <CurrencyLogo currency={nativeCurrency} size={'24px'} />
       <Column>
         <Text title={currency.name} fontWeight={500}>
-          {currency.symbol}
+          {nativeCurrency?.symbol}
         </Text>
         <TYPE.darkGray ml="0px" fontSize={'12px'} fontWeight={300}>
-          {currency.name} {!isOnSelectedList && customAdded && '• Added by user'}
+          {nativeCurrency?.name} {!isOnSelectedList && customAdded && '• Added by user'}
         </TYPE.darkGray>
       </Column>
       <TokenTags currency={currency} />
@@ -174,7 +177,6 @@ export default function CurrencyList({
     }
     return formatted
   }, [breakIndex, currencies, showETH])
-
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
 

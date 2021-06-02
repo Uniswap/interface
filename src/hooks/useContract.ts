@@ -15,7 +15,7 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
-import { FACTORY_ADDRESS, MASTERCHEF_ADDRESS, REWARD_LOCKER_ADDRESS } from '../constants'
+import { FACTORY_ADDRESSES, MASTERCHEF_ADDRESS, REWARD_LOCKER_ADDRESS } from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import MASTERCHEF_ABI from '../constants/abis/masterchef.json'
 import REWARD_LOCKER_ABI from '../constants/abis/reward-locker.json'
@@ -96,7 +96,8 @@ export function useSocksController(): Contract | null {
 }
 
 export function useFactoryContract(): Contract | null {
-  return useContract(FACTORY_ADDRESS, FACTORY_ABI)
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId && FACTORY_ADDRESSES[chainId], FACTORY_ABI)
 }
 
 export function useMasterChefContract(withSignerIfPossible?: boolean): Contract | null {

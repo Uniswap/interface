@@ -332,7 +332,7 @@ export default function Header() {
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {chainId && [1, 3, 4, 5, 42].includes(chainId) && `${userEthBalance?.toSignificant(4)} ETH`}
+                {userEthBalance?.toSignificant(4)} {chainId && [1, 3, 4, 5, 42].includes(chainId) ? `ETH` : `MATIC`}
               </BalanceText>
             ) : null}
             <Web3Status />
