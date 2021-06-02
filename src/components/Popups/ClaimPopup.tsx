@@ -1,7 +1,8 @@
+import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import React, { useCallback, useEffect } from 'react'
 import ReactGA from 'react-ga'
-import { X } from 'react-feather'
+import { Heart, X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 import tokenLogo from '../../assets/images/token-logo.png'
 import { ButtonPrimary } from '../../components/Button'
@@ -104,18 +105,20 @@ export default function ClaimPopup() {
               <span role="img" aria-label="party">
                 🎉
               </span>{' '}
-              UNI has arrived{' '}
+              <Trans>UNI has arrived</Trans>{' '}
               <span role="img" aria-label="party">
                 🎉
               </span>
             </TYPE.white>
             <TYPE.subHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
-              {`Thanks for being part of the Uniswap community <3`}
+              <Trans>
+                Thanks for being part of the Uniswap community <Heart size={12} />
+              </Trans>
             </TYPE.subHeader>
           </AutoColumn>
           <AutoColumn style={{ zIndex: 10 }} justify="center">
             <ButtonPrimary padding="8px" borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>
-              Claim your UNI tokens
+              <Trans>Claim your UNI tokens</Trans>
             </ButtonPrimary>
           </AutoColumn>
         </StyledClaimPopup>

@@ -4,15 +4,19 @@ import { darken } from 'polished'
 
 import { RowBetween } from '../Row'
 import { ChevronDown, Check } from 'react-feather'
-import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
 import useTheme from 'hooks/useTheme'
 
-const Base = styled(RebassButton)<{
-  padding?: string
-  width?: string
-  borderRadius?: string
-  altDisabledStyle?: boolean
-}>`
+type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
+
+const Base = styled(RebassButton)<
+  {
+    padding?: string
+    width?: string
+    borderRadius?: string
+    altDisabledStyle?: boolean
+  } & ButtonProps
+>`
   padding: ${({ padding }) => (padding ? padding : '16px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;

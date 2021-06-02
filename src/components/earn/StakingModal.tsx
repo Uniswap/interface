@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { formatCurrencyAmount } from '../../utils/formatCurrencyAmount'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components/macro'
@@ -19,6 +20,7 @@ import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
+import { t, Trans } from '@lingui/macro'
 
 const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -103,7 +105,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
           )
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: `Deposit liquidity`,
+              summary: t`Deposit liquidity`,
             })
             setHash(response.hash)
           })
@@ -153,7 +155,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>Deposit</TYPE.mediumHeader>
+            <TYPE.mediumHeader>
+              <Trans>Deposit</Trans>
+            </TYPE.mediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           <CurrencyInputPanel
@@ -164,18 +168,24 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             currency={stakingInfo.stakedAmount.currency}
             pair={dummyPair}
             label={''}
-            customBalanceText={'Available to deposit: '}
+            renderBalance={(amount) => <Trans>Available to deposit: {formatCurrencyAmount(amount, 4)}</Trans>}
             id="stake-liquidity-token"
           />
 
           <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
             <div>
-              <TYPE.black fontWeight={600}>Weekly Rewards</TYPE.black>
+              <TYPE.black fontWeight={600}>
+                <Trans>Weekly Rewards</Trans>
+              </TYPE.black>
             </div>
 
             <TYPE.black>
-              {hypotheticalRewardRate.multiply((60 * 60 * 24 * 7).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
-              UNI / week
+              <Trans>
+                {hypotheticalRewardRate
+                  .multiply((60 * 60 * 24 * 7).toString())
+                  .toSignificant(4, { groupSeparator: ',' })}{' '}
+                UNI / week
+              </Trans>
             </TYPE.black>
           </HypotheticalRewardRate>
 
@@ -186,14 +196,14 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
               confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
               disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
             >
-              Approve
+              <Trans>Approve</Trans>
             </ButtonConfirmed>
             <ButtonError
               disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
               error={!!error && !!parsedAmount}
               onClick={onStake}
             >
-              {error ?? 'Deposit'}
+              {error ?? <Trans>Deposit</Trans>}
             </ButtonError>
           </RowBetween>
           <ProgressCircles steps={[approval === ApprovalState.APPROVED || signatureData !== null]} disabled={true} />
@@ -202,16 +212,24 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} UNI-V2</TYPE.body>
+            <TYPE.largeHeader>
+              <Trans>Depositing Liquidity</Trans>
+            </TYPE.largeHeader>
+            <TYPE.body fontSize={20}>
+              <Trans>{parsedAmount?.toSignificant(4)} UNI-V2</Trans>
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
       {attempting && hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} UNI-V2</TYPE.body>
+            <TYPE.largeHeader>
+              <Trans>Transaction Submitted</Trans>
+            </TYPE.largeHeader>
+            <TYPE.body fontSize={20}>
+              <Trans>Deposited {parsedAmount?.toSignificant(4)} UNI-V2</Trans>
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

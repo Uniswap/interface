@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { BIG_INT_ZERO } from '../../../constants/misc'
 import { getTickToPrice } from 'utils/getTickToPrice'
 import JSBI from 'jsbi'
@@ -14,17 +15,17 @@ import {
 } from '@uniswap/v3-sdk/dist/'
 import { Currency, Token, CurrencyAmount, Price, Rounding } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../../hooks/web3'
-import { AppDispatch, AppState } from '../../index'
+import { AppState } from '../../index'
 import { tryParseAmount } from '../../swap/hooks'
 import { useCurrencyBalances } from '../../wallet/hooks'
 import { Field, Bound, typeInput, typeStartPriceInput, typeLeftRangeInput, typeRightRangeInput } from './actions'
 import { tryParseTick } from './utils'
 import { usePool } from 'hooks/usePools'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 export function useV3MintState(): AppState['mintV3'] {
-  return useSelector<AppState, AppState['mintV3']>((state) => state.mintV3)
+  return useAppSelector((state) => state.mintV3)
 }
 
 export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
@@ -34,7 +35,7 @@ export function useV3MintActionHandlers(noLiquidity: boolean | undefined): {
   onRightRangeInput: (typedValue: string) => void
   onStartPriceInput: (typedValue: string) => void
 } {
-  const dispatch = useDispatch<AppDispatch>()
+  const dispatch = useAppDispatch()
 
   const onFieldAInput = useCallback(
     (typedValue: string) => {
@@ -378,32 +379,32 @@ export function useV3DerivedMintInfo(
 
   let errorMessage: string | undefined
   if (!account) {
-    errorMessage = 'Connect Wallet'
+    errorMessage = t`Connect Wallet`
   }
 
   if (poolState === PoolState.INVALID) {
-    errorMessage = errorMessage ?? 'Invalid pair'
+    errorMessage = errorMessage ?? t`Invalid pair`
   }
 
   if (invalidPrice) {
-    errorMessage = errorMessage ?? 'Invalid price input'
+    errorMessage = errorMessage ?? t`Invalid price input`
   }
 
   if (
     (!parsedAmounts[Field.CURRENCY_A] && !depositADisabled) ||
     (!parsedAmounts[Field.CURRENCY_B] && !depositBDisabled)
   ) {
-    errorMessage = errorMessage ?? 'Enter an amount'
+    errorMessage = errorMessage ?? t`Enter an amount`
   }
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    errorMessage = 'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
+    errorMessage = t`Insufficient ${currencies[Field.CURRENCY_A]?.symbol} balance`
   }
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    errorMessage = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
+    errorMessage = t`Insufficient ${currencies[Field.CURRENCY_B]?.symbol} balance`
   }
 
   const invalidPool = poolState === PoolState.INVALID

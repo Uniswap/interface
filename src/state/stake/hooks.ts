@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
@@ -261,10 +262,10 @@ export function useDerivedStakeInfo(
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = t`Connect Wallet`
   }
   if (!parsedAmount) {
-    error = error ?? 'Enter an amount'
+    error = error ?? t`Enter an amount`
   }
 
   return {
@@ -290,10 +291,10 @@ export function useDerivedUnstakeInfo(
 
   let error: string | undefined
   if (!account) {
-    error = 'Connect Wallet'
+    error = t`Connect Wallet`
   }
   if (!parsedAmount) {
-    error = error ?? 'Enter an amount'
+    error = error ?? t`Enter an amount`
   }
 
   return {

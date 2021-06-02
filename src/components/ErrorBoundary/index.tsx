@@ -1,6 +1,7 @@
+import { Trans } from '@lingui/macro'
 import React, { ErrorInfo } from 'react'
 import store, { AppState } from '../../state'
-import { ExternalLink, ThemedBackground, TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components/macro'
 import ReactGA from 'react-ga'
@@ -69,12 +70,11 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
       const encodedBody = encodeURIComponent(issueBody(error))
       return (
         <FallbackWrapper>
-          <ThemedBackground />
           <BodyWrapper>
             <AutoColumn gap={'md'}>
               <SomethingWentWrongWrapper>
                 <TYPE.label fontSize={24} fontWeight={600}>
-                  Something went wrong
+                  <Trans>Something went wrong</Trans>
                 </TYPE.label>
               </SomethingWentWrongWrapper>
               <CodeBlockWrapper>
@@ -92,7 +92,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                     target="_blank"
                   >
                     <TYPE.link fontSize={16}>
-                      Create an issue on GitHub
+                      <Trans>Create an issue on GitHub</Trans>
                       <span>↗</span>
                     </TYPE.link>
                   </ExternalLink>
@@ -100,7 +100,7 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
                 <LinkWrapper>
                   <ExternalLink id="get-support-on-discord" href="https://discord.gg/FCfyBSbCU5" target="_blank">
                     <TYPE.link fontSize={16}>
-                      Get support on Discord
+                      <Trans>Get support on Discord</Trans>
                       <span>↗</span>
                     </TYPE.link>
                   </ExternalLink>

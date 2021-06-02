@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, ReactNode } from 'react'
 import { LightCard } from 'components/Card'
 import { RowBetween } from 'components/Row'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -8,6 +8,7 @@ import { AutoColumn } from 'components/Column'
 import { ButtonPrimary } from 'components/Button'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { formattedFeeAmount } from 'utils'
+import { Trans } from '@lingui/macro'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -59,7 +60,7 @@ interface StepCounterProps {
   label?: string
   width?: string
   locked?: boolean // disable input
-  title: string
+  title: ReactNode
   tokenA: string | undefined
   tokenB: string | undefined
 }
@@ -139,16 +140,22 @@ const StepCounter = ({
           }}
         />
         <InputTitle fontSize={12} textAlign="center">
-          {tokenB + ' per ' + tokenA}
+          <Trans>
+            {tokenB} per {tokenA}
+          </Trans>
         </InputTitle>
       </AutoColumn>
       {!locked ? (
         <RowBetween>
           <SmallButton onClick={handleDecrement}>
-            <TYPE.white fontSize="12px">-{feeAmountFormatted}%</TYPE.white>
+            <TYPE.white fontSize="12px">
+              <Trans>-{feeAmountFormatted}%</Trans>
+            </TYPE.white>
           </SmallButton>
           <SmallButton onClick={handleIncrement}>
-            <TYPE.white fontSize="12px">+{feeAmountFormatted}%</TYPE.white>
+            <TYPE.white fontSize="12px">
+              <Trans>+{feeAmountFormatted}%</Trans>
+            </TYPE.white>
           </SmallButton>
         </RowBetween>
       ) : null}

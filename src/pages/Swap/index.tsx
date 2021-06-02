@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -6,7 +7,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle, Info, ArrowLeft } from 'react-feather'
+import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -26,8 +27,8 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
-import { useActiveWeb3React } from '../../hooks/web3'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
@@ -39,6 +40,7 @@ import { useSwapCallback } from '../../hooks/useSwapCallback'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
+import { useActiveWeb3React } from '../../hooks/web3'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
@@ -376,7 +378,9 @@ export default function Swap({ history }: RouteComponentProps) {
           <AutoColumn gap={'md'}>
             <div style={{ display: 'relative' }}>
               <CurrencyInputPanel
-                label={independentField === Field.OUTPUT && !showWrap ? 'From (at most)' : 'From'}
+                label={
+                  independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
+                }
                 value={formattedAmounts[Field.INPUT]}
                 showMaxButton={showMaxButton}
                 currency={currencies[Field.INPUT]}
@@ -401,7 +405,7 @@ export default function Swap({ history }: RouteComponentProps) {
               <CurrencyInputPanel
                 value={formattedAmounts[Field.OUTPUT]}
                 onUserInput={handleTypeOutput}
-                label={independentField === Field.INPUT && !showWrap ? 'To (at least)' : 'To'}
+                label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
                 showMaxButton={false}
                 hideBalance={false}
                 fiatValue={fiatValueOutput ?? undefined}
@@ -421,7 +425,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     <ArrowDown size="16" color={theme.text2} />
                   </ArrowWrapper>
                   <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                    - Remove send
+                    <Trans>- Remove send</Trans>
                   </LinkStyledButton>
                 </AutoRow>
                 <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
@@ -455,7 +459,10 @@ export default function Swap({ history }: RouteComponentProps) {
                         >
                           <ArrowLeft color={theme.text3} size={12} /> &nbsp;
                           <TYPE.main style={{ lineHeight: '120%' }} fontSize={12}>
-                            <HideSmall>Back to </HideSmall>V3
+                            <Trans>
+                              <HideSmall>Back to </HideSmall>
+                              V3
+                            </Trans>
                           </TYPE.main>
                         </ButtonGray>
                       )
@@ -474,7 +481,9 @@ export default function Swap({ history }: RouteComponentProps) {
                         marginLeft: '0.25rem',
                       }}
                     >
-                      <TYPE.black fontSize={12}>V3</TYPE.black>
+                      <TYPE.black fontSize={12}>
+                        <Trans>V3</Trans>
+                      </TYPE.black>
                     </ButtonGray>
                   )}
                 </RowFixed>
@@ -498,22 +507,34 @@ export default function Swap({ history }: RouteComponentProps) {
             <BottomGrouping>
               {swapIsUnsupported ? (
                 <ButtonPrimary disabled={true}>
-                  <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
+                  <TYPE.main mb="4px">
+                    <Trans>Unsupported Asset</Trans>
+                  </TYPE.main>
                 </ButtonPrimary>
               ) : !account ? (
-                <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                <ButtonLight onClick={toggleWalletModal}>
+                  <Trans>Connect Wallet</Trans>
+                </ButtonLight>
               ) : showWrap ? (
                 <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                   {wrapInputError ??
-                    (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                    (wrapType === WrapType.WRAP ? (
+                      <Trans>Wrap</Trans>
+                    ) : wrapType === WrapType.UNWRAP ? (
+                      <Trans>Unwrap</Trans>
+                    ) : null)}
                 </ButtonPrimary>
               ) : routeNotFound && userHasSpecifiedInputOutput ? (
                 <GreyCard style={{ textAlign: 'center' }}>
                   <TYPE.main mb="4px">
                     {isLoadingRoute ? (
-                      <Dots>Loading</Dots>
+                      <Dots>
+                        <Trans>Loading</Trans>
+                      </Dots>
+                    ) : singleHopOnly ? (
+                      <Trans>Insufficient liquidity for this trade. Try enabling multi-hop trades.</Trans>
                     ) : (
-                      `Insufficient liquidity for this trade.${singleHopOnly ? ' Try enabling multi-hop trades.' : ''}`
+                      <Trans>Insufficient liquidity for this trade.</Trans>
                     )}
                   </TYPE.main>
                 </GreyCard>
@@ -541,9 +562,11 @@ export default function Swap({ history }: RouteComponentProps) {
                             style={{ marginRight: '8px', flexShrink: 0 }}
                           />
                           {/* we need to shorten this string on mobile */}
-                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                            ? 'You can now trade ' + currencies[Field.INPUT]?.symbol
-                            : 'Allow the Uniswap Protocol to use your ' + currencies[Field.INPUT]?.symbol}
+                          {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
+                            <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
+                          ) : (
+                            <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                          )}
                         </span>
                         {approvalState === ApprovalState.PENDING ? (
                           <Loader stroke="white" />
@@ -553,9 +576,10 @@ export default function Swap({ history }: RouteComponentProps) {
                         ) : (
                           <MouseoverTooltip
                             text={
-                              'You must give the Uniswap smart contracts permission to use your ' +
-                              currencies[Field.INPUT]?.symbol +
-                              '. You only have to do this once per token.'
+                              <Trans>
+                                You must give the Uniswap smart contracts permission to use your{' '}
+                                {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                              </Trans>
                             }
                           >
                             <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
@@ -587,7 +611,13 @@ export default function Swap({ history }: RouteComponentProps) {
                       error={isValid && priceImpactSeverity > 2}
                     >
                       <Text fontSize={16} fontWeight={500}>
-                        {priceImpactTooHigh ? `High Price Impact` : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                        {priceImpactTooHigh ? (
+                          <Trans>High Price Impact</Trans>
+                        ) : priceImpactSeverity > 2 ? (
+                          <Trans>Swap Anyway</Trans>
+                        ) : (
+                          <Trans>Swap</Trans>
+                        )}
                       </Text>
                     </ButtonError>
                   </AutoColumn>
@@ -612,11 +642,15 @@ export default function Swap({ history }: RouteComponentProps) {
                   error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                 >
                   <Text fontSize={20} fontWeight={500}>
-                    {swapInputError
-                      ? swapInputError
-                      : priceImpactTooHigh
-                      ? `Price Impact Too High`
-                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                    {swapInputError ? (
+                      swapInputError
+                    ) : priceImpactTooHigh ? (
+                      <Trans>Price Impact Too High</Trans>
+                    ) : priceImpactSeverity > 2 ? (
+                      <Trans>Swap Anyway</Trans>
+                    ) : (
+                      <Trans>Swap</Trans>
+                    )}
                   </Text>
                 </ButtonError>
               )}
@@ -625,6 +659,7 @@ export default function Swap({ history }: RouteComponentProps) {
           </AutoColumn>
         </Wrapper>
       </AppBody>
+      <SwitchLocaleLink />
       {!swapIsUnsupported ? null : (
         <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
       )}

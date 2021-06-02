@@ -3,7 +3,7 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import React, { useMemo } from 'react'
 import { Activity } from 'react-feather'
-import { useTranslation } from 'react-i18next'
+import { t, Trans } from '@lingui/macro'
 import styled, { css } from 'styled-components'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
@@ -123,11 +123,13 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
 }
 
-const SOCK = (
-  <span role="img" aria-label="has socks emoji" style={{ marginTop: -4, marginBottom: -4 }}>
-    🧦
-  </span>
-)
+function Sock() {
+  return (
+    <span role="img" aria-label={t`has socks emoji`} style={{ marginTop: -4, marginBottom: -4 }}>
+      🧦
+    </span>
+  )
+}
 
 // eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
@@ -136,25 +138,25 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
   } else if (connector === walletconnect) {
     return (
       <IconWrapper size={16}>
-        <img src={WalletConnectIcon} alt={''} />
+        <img src={WalletConnectIcon} alt={'WalletConnect'} />
       </IconWrapper>
     )
   } else if (connector === walletlink) {
     return (
       <IconWrapper size={16}>
-        <img src={CoinbaseWalletIcon} alt={''} />
+        <img src={CoinbaseWalletIcon} alt={'CoinbaseWallet'} />
       </IconWrapper>
     )
   } else if (connector === fortmatic) {
     return (
       <IconWrapper size={16}>
-        <img src={FortmaticIcon} alt={''} />
+        <img src={FortmaticIcon} alt={'Fortmatic'} />
       </IconWrapper>
     )
   } else if (connector === portis) {
     return (
       <IconWrapper size={16}>
-        <img src={PortisIcon} alt={''} />
+        <img src={PortisIcon} alt={'Portis'} />
       </IconWrapper>
     )
   }
@@ -162,7 +164,6 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
 }
 
 function Web3StatusInner() {
-  const { t } = useTranslation()
   const { account, connector, error } = useWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
@@ -185,11 +186,14 @@ function Web3StatusInner() {
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
-            <Text>{pending?.length} Pending</Text> <Loader stroke="white" />
+            <Text>
+              <Trans>{pending?.length} Pending</Trans>
+            </Text>{' '}
+            <Loader stroke="white" />
           </RowBetween>
         ) : (
           <>
-            {hasSocks ? SOCK : null}
+            {hasSocks ? <Sock /> : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
@@ -200,13 +204,15 @@ function Web3StatusInner() {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
         <NetworkIcon />
-        <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
+        <Text>{error instanceof UnsupportedChainIdError ? <Trans>Wrong Network</Trans> : <Trans>Error</Trans>}</Text>
       </Web3StatusError>
     )
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect to a wallet')}</Text>
+        <Text>
+          <Trans>Connect to a wallet</Trans>
+        </Text>
       </Web3StatusConnect>
     )
   }
