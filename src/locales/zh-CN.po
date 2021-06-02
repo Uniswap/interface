@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-02 20:50\n"
+"PO-Revision-Date: 2021-06-02 21:32\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1782,11 +1782,11 @@ msgstr "您的流动池代币总额："
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "您的交易成本将高得多，因为它包含了创建池的气体。"
+msgstr "由于需包含创建流动池的 gas 费用，您的此交易成本将高出许多。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "您的交易可能是正面的"
+msgstr "您的交易可能会被别人“抢先”（赚取差价）"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
