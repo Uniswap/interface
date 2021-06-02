@@ -347,6 +347,7 @@ export default function AddLiquidity({
             onDismiss={handleDismissConfirmation}
             attemptingTxn={attemptingTxn}
             hash={txHash}
+            currency={currencyB ?? undefined}
             content={() => (
               <ConfirmationModalContent
                 title={noLiquidity ? 'You are creating a pool' : 'You will receive'}

@@ -1,4 +1,4 @@
-import { ChainId, Currency, Token, Trade } from '@fuseio/fuse-swap-sdk'
+import { ChainId, Currency } from '@fuseio/fuse-swap-sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
@@ -10,11 +10,10 @@ import { AlertTriangle, ArrowUpCircle } from 'react-feather'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/yellow-loader.svg'
-import metamaskIcon from '../../assets/images/metamask.png'
 
-import { addTokenToWallet, getExplorerLink, getExplorerLinkText } from '../../utils'
+import { getExplorerLink, getExplorerLinkText } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
-import { darken } from 'polished'
+import AddTokenToMetamaskButton from '../AddTokenToMetamaskButton'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -36,48 +35,6 @@ const ConfirmedIcon = styled(ColumnCenter)`
 const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
-`
-
-const MetamaskIcon = styled.img.attrs({
-  src: metamaskIcon
-})`
-  width: 18px;
-  margin-left: 8px;
-`
-
-const StyledAddButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  height: 100%;
-  border: none;
-  background-color: transparent;
-  padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => `${theme.primary1}36`};
-  color: white;
-  font-size: 1rem;
-  font-weight: 500;
-  margin-top: 1rem;
-
-  padding: 0.15rem 1rem;
-  border-radius: 12px;
-
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => darken(0.03, `${theme.primary1}36`)};
-  }
-
-  svg {
-    margin-top: 2px;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  margin: 0 0 0.5rem 0;
-`}
 `
 
 function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () => void; pendingText: string }) {
@@ -113,14 +70,13 @@ function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
-  outputCurrency
+  currency
 }: {
   onDismiss: () => void
   hash: string | undefined
   chainId: ChainId
-  outputCurrency?: Currency
+  currency?: Currency
 }) {
-  const { library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   return (
@@ -146,11 +102,7 @@ function TransactionSubmittedContent({
             </ExternalLink>
           )}
 
-          {outputCurrency instanceof Token && library && (
-            <StyledAddButton onClick={() => addTokenToWallet(outputCurrency, library)}>
-              Add {outputCurrency.symbol} to Metamask <MetamaskIcon />
-            </StyledAddButton>
-          )}
+          <AddTokenToMetamaskButton currency={currency} />
 
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
@@ -222,7 +174,7 @@ interface ConfirmationModalProps {
   content: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
-  trade?: Trade
+  currency?: Currency
 }
 
 export default function TransactionConfirmationModal({
@@ -232,7 +184,7 @@ export default function TransactionConfirmationModal({
   hash,
   pendingText,
   content,
-  trade
+  currency
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -244,12 +196,7 @@ export default function TransactionConfirmationModal({
       {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
-        <TransactionSubmittedContent
-          chainId={chainId}
-          hash={hash}
-          onDismiss={onDismiss}
-          outputCurrency={trade?.outputAmount.currency}
-        />
+        <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} currency={currency} />
       ) : (
         content()
       )}
