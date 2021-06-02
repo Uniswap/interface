@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { useWeb3React } from '@web3-react/core';
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next'
 import { SUPPORTED_WALLETS } from '../../constants';
 import { Dropdown } from '../Dropdown';
 import { injected } from '../../connectors'
 import MetamaskIcon from '../../assets/images/metamask.png';
+import { DropdownView, ModalView } from '.';
 
 const Button = styled.button`
   padding: 10.5px 14px;
@@ -66,46 +66,18 @@ const ListIconWrapper = styled.div`
   }
 `;
 
-
 interface ConnectWalletProps {
-  onClick: () => void;
+  setModal: (modal: ModalView | null) => void;
+  dropdown: DropdownView | null
+  setDropdown: (dropdown: DropdownView | null) => void;
+  tryActivation: (connector: AbstractConnector | undefined) => void
 }
 
-export const ConnectWallet = ({onClick}: ConnectWalletProps) => {
-  const { connector, activate } = useWeb3React()
+export const ConnectWallet = ({setModal, tryActivation, dropdown, setDropdown}: ConnectWalletProps) => {
+  const { connector } = useWeb3React()
   const { t } = useTranslation();
   
-  // const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
-  
-  const [isVisible, setIsVisible] = useState(false);
-  
-  const onConnectButtonClick = () => {
-    onClick()
-    setIsVisible(!isVisible)
-  }
-
-  // const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
-  
-  const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
-  
-  const tryActivation = async (connector: AbstractConnector | undefined) => {
-    setPendingWallet(connector) // set wallet for pending view
-    // setWalletView(WALLET_VIEWS.PENDING)
-
-    // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-    if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
-      connector.walletConnectProvider = undefined
-    }
-
-    connector &&
-      activate(connector, undefined, true).catch(error => {
-        if (error instanceof UnsupportedChainIdError) {
-          activate(connector)
-        } else {
-          // setPendingError(true)
-        }
-      })
-  }
+  const toggleDropdown = () => dropdown !== null ? setDropdown(null) : setDropdown(DropdownView.NetworkOptions);
   
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
@@ -169,7 +141,7 @@ export const ConnectWallet = ({onClick}: ConnectWalletProps) => {
             key={key}
             id={`connect-${key}`}
             onClick={() => {option.connector === connector
-              ? console.log(pendingWallet) // ? setWalletView(WALLET_VIEWS.ACCOUNT)
+              ? setModal(ModalView.Account)
               : !option.href && tryActivation(option.connector)
             }}
             name={option.name}
@@ -179,12 +151,12 @@ export const ConnectWallet = ({onClick}: ConnectWalletProps) => {
       )
     })
   }
-  
+    
   return (
     <Dropdown
-      isVisible={isVisible}
+      isVisible={dropdown === DropdownView.NetworkOptions}
       dropdownButton={
-        <Button id="connect-wallet" onClick={onConnectButtonClick}>
+        <Button id="connect-wallet" onClick={toggleDropdown}>
           {t('Connect wallet')}
         </Button>
       }
@@ -216,8 +188,8 @@ export const Item = ({id, onClick, name, icon, link}: ItemProps) => {
   return (
     <ListItem id={id}>
       {!!link 
-        ? <ListButton onClick={onClick}>{getContent()}</ListButton>
-        : <ListButton as="a" href={link} target="_blank" rel="noopener noreferrer">{getContent()}</ListButton>
+        ? <ListButton as="a" href={link} target="_blank" rel="noopener noreferrer">{getContent()}</ListButton>
+        : <ListButton onClick={onClick}>{getContent()}</ListButton>
       }
     </ListItem>
   )
