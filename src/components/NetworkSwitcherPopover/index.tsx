@@ -47,7 +47,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
         NETWORK_DETAIL[optionChainId] &&
         NETWORK_DETAIL[optionChainId].metamaskAddable
       ) {
-        addPopup({ newNetworkChainId: optionChainId })
+        addPopup({ newNetworkChainId: optionChainId }, false)
       }
       closeModals()
     },

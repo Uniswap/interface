@@ -13,7 +13,6 @@ import {
   Currency,
   RoutablePlatform
 } from 'dxswap-sdk'
-import { tokens } from './tokens'
 import { authereum, injected, walletConnect } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
@@ -218,7 +217,7 @@ export const BLOCKED_PRICE_IMPACT_NON_EXPERT: Percent = new Percent(JSBI.BigInt(
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const DEFAULT_TOKEN_LIST = tokens
+export const DEFAULT_TOKEN_LIST = 'https://bafybeifwizjbhnji66f3pac7lclzmmzmyubnrhflo33p4jusm32ry7zpka.ipfs.dweb.link'
 
 export const ZERO_USD = CurrencyAmount.usd('0')
 

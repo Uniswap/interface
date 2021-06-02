@@ -28,11 +28,11 @@ const AdvancedDetailsFooter = styled.div<{
   padding: string
   height?: string
 }>`
-  width: ${props => (props.fullWidth ? '400px' : 'auto')};
+  width: ${props => (props.fullWidth ? '418px' : 'auto')};
   ${props => props.theme.mediaWidth.upToExtraSmall`
     width: calc(100% - 8px);
     `}
-  max-width: 400px;
+  max-width: 418px;
   height: ${props => (props.height ? props.height : 'auto')};
   padding: ${props => props.padding};
   color: ${({ theme }) => theme.purple3};
@@ -45,11 +45,10 @@ const AdvancedDetailsFooter = styled.div<{
 `
 
 const SettingsFlex = styled(Flex)`
-  width: 400px;
+  width: 418px;
   ${props => props.theme.mediaWidth.upToExtraSmall`
     width: calc(100% - 8px);
   `}
-  max-width: 400px;
 `
 
 export const MultihopSwitch = styled.div<{ active: boolean }>`

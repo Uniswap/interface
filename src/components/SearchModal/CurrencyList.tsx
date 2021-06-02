@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, currencyEquals, Token } from 'dxswap-sdk'
-import React, { CSSProperties, useCallback, useMemo } from 'react'
+import React, { CSSProperties, MutableRefObject, useCallback, useContext, useMemo } from 'react'
 import { Box, Flex, Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -9,15 +9,20 @@ import { useIsUserAddedToken } from '../../hooks/Tokens'
 import CurrencyLogo from '../CurrencyLogo'
 import Loader from '../Loader'
 import Badge from '../Badge'
-import { TokenListContainer, TokenPickerItem } from './styleds'
+import { TokenPickerItem } from './styleds'
 import { Plus, X } from 'react-feather'
-import { useNativeCurrency } from '../../hooks/useNativeCurrency'
 import { FixedSizeList } from 'react-window'
 import AutoSizer from 'react-virtualized-auto-sizer'
-import { TokenAddressMap, useTokenList } from '../../state/lists/hooks'
+import { TokenAddressMap, useCombinedActiveList } from '../../state/lists/hooks'
 import { isTokenOnList } from '../../utils'
 import { AutoColumn } from '../Column'
 import { TYPE } from '../../theme'
+import { WrappedTokenInfo } from '../../state/lists/wrapped-token-info'
+import ImportRow from './ImportRow'
+import { DarkCard } from '../Card'
+import { RowBetween, RowFixed } from '../Row'
+import TokenListLogo from '../../assets/svg/tokenlist.svg'
+import QuestionHelper from '../QuestionHelper'
 
 function currencyKey(index: number, data: any): string {
   const currency = data[index]
@@ -30,6 +35,18 @@ const StyledBalanceText = styled(Text)`
   overflow: hidden;
   max-width: 5rem;
   text-overflow: ellipsis;
+`
+
+const FixedContentRow = styled.div`
+  padding: 4px 20px;
+  height: 56px;
+  display: grid;
+  grid-gap: 16px;
+  align-items: center;
+`
+
+const TokenListLogoWrapper = styled.img`
+  height: 20px;
 `
 
 function Balance({ balance }: { balance: CurrencyAmount }) {
@@ -107,52 +124,110 @@ function CurrencyRow({
   )
 }
 
+const BREAK_LINE = 'BREAK'
+type BreakLine = typeof BREAK_LINE
+function isBreakLine(x: unknown): x is BreakLine {
+  return x === BREAK_LINE
+}
+
+function BreakLineComponent({ style }: { style: CSSProperties }) {
+  const theme = useContext(ThemeContext)
+  return (
+    <FixedContentRow style={style}>
+      <DarkCard padding="8px 12px" borderRadius="8px">
+        <RowBetween>
+          <RowFixed>
+            <TokenListLogoWrapper src={TokenListLogo} />
+            <TYPE.main ml="6px" fontSize="12px" color={theme.text1}>
+              Expanded results from inactive token lists
+            </TYPE.main>
+          </RowFixed>
+          <QuestionHelper text="Tokens from inactive lists. Import specific tokens below or click 'Manage' to activate more lists." />
+        </RowBetween>
+      </DarkCard>
+    </FixedContentRow>
+  )
+}
+
 export default function CurrencyList({
   currencies,
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
-  showNativeCurrency
+  otherListTokens,
+  fixedListRef,
+  showImportView,
+  setImportToken
 }: {
   currencies: Currency[]
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
   otherCurrency?: Currency | null
-  showNativeCurrency: boolean
+  otherListTokens: Token[]
+  fixedListRef?: MutableRefObject<FixedSizeList | undefined>
+  showImportView: () => void
+  setImportToken: (token: Token) => void
 }) {
-  const nativeCurrency = useNativeCurrency()
-  const selectedTokenList = useTokenList()
-  const itemData = useMemo(() => (showNativeCurrency ? [nativeCurrency, ...currencies] : currencies), [
-    currencies,
-    nativeCurrency,
-    showNativeCurrency
-  ])
+  const selectedTokenList = useCombinedActiveList()
+  const itemData = useMemo(() => {
+    if (otherListTokens && otherListTokens?.length > 0) {
+      const foundByAddressAndNotInAnyList =
+        otherListTokens.length === 1 && !(otherListTokens[0] instanceof WrappedTokenInfo)
+      if (foundByAddressAndNotInAnyList) return [...otherListTokens]
+      return [BREAK_LINE, ...otherListTokens]
+    }
+    return currencies
+  }, [currencies, otherListTokens])
 
   const Row = useCallback(
     ({ data, index, style }) => {
       const currency: Currency = data[index]
+      if (isBreakLine(currency)) return <BreakLineComponent style={style} />
       const isSelected = Boolean(selectedCurrency && currencyEquals(selectedCurrency, currency))
       const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
+      const showImport = index >= currencies.length
       const handleSelect = () => onCurrencySelect(currency)
-      return (
-        <CurrencyRow
-          selectedTokenList={selectedTokenList}
-          currency={currency}
-          isSelected={isSelected}
-          onSelect={handleSelect}
-          otherSelected={otherSelected}
-          style={style}
-        />
-      )
+      if (showImport && currency && currency instanceof Token) {
+        return (
+          <ImportRow
+            style={style}
+            token={currency}
+            showImportView={showImportView}
+            setImportToken={setImportToken}
+            dim
+          />
+        )
+      } else if (currency) {
+        return (
+          <CurrencyRow
+            selectedTokenList={selectedTokenList}
+            currency={currency}
+            isSelected={isSelected}
+            onSelect={handleSelect}
+            otherSelected={otherSelected}
+            style={style}
+          />
+        )
+      }
+      return null
     },
-    [onCurrencySelect, otherCurrency, selectedCurrency, selectedTokenList]
+    [
+      currencies.length,
+      onCurrencySelect,
+      otherCurrency,
+      selectedCurrency,
+      selectedTokenList,
+      setImportToken,
+      showImportView
+    ]
   )
 
   return (
-    <TokenListContainer flexDirection="column" width="100%" overflowY="auto">
-      <AutoSizer>
+    <Flex overflowY="auto" flex="1">
+      <AutoSizer style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
         {({ width, height }) => (
           <FixedSizeList
+            ref={fixedListRef as any}
             width={width}
             height={height}
             itemData={itemData}
@@ -164,6 +239,6 @@ export default function CurrencyList({
           </FixedSizeList>
         )}
       </AutoSizer>
-    </TokenListContainer>
+    </Flex>
   )
 }

@@ -27,7 +27,7 @@ export default function PairSearchModal({
   )
 
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={60} minHeight={60}>
       <PairSearch
         isOpen={isOpen}
         onDismiss={onDismiss}

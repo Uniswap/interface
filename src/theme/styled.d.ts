@@ -1,4 +1,4 @@
-import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components'
+import { DefaultTheme, FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components'
 
 export type Color = string
 export interface Colors {
@@ -71,6 +71,8 @@ export interface Grids {
 
 declare module 'styled-components' {
   export interface DefaultTheme extends Colors {
+    darkMode: boolean
+
     grids: Grids
 
     // shadows

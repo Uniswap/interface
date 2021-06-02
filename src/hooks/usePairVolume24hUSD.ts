@@ -30,7 +30,7 @@ export function usePair24hVolumeUSD(pair?: Pair | null): { loading: boolean; vol
 
   return useMemo(() => {
     if (loading) return { loading: true, volume24hUSD: ZERO_USD }
-    if (!data || !data.pairDayDatas || data.pairDayDatas.length === 0 || data.pairDayDatas[0] || error)
+    if (!data || !data.pairDayDatas || data.pairDayDatas.length === 0 || !data.pairDayDatas[0] || error)
       return { loading: false, volume24hUSD: ZERO_USD }
     return {
       loading,

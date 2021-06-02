@@ -37,7 +37,7 @@ export default function Updater(): null {
       else updateSwitchingToCorrectChain(false)
     }
 
-    if (requiredChainId !== stringChainId) {
+    if (requiredChainId !== stringChainId && !switchingToCorrectChain) {
       searchParams.set('chainId', stringChainId)
       history.replace({ search: searchParams.toString() })
     }

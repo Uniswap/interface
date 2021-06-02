@@ -83,6 +83,9 @@ const ModalContentWrapper = styled(DarkCard)`
   align-items: center;
   justify-content: center;
   padding: 26px 0;
+  ::before {
+    background-color: ${props => props.theme.bg1And2};
+  }
 `
 
 const MenuModalContentWrapper = styled(ModalContentWrapper)`
