@@ -10,8 +10,8 @@ import { blockClient } from 'apollo/client'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import {
-  ROUTER_ADDRESS,
-  FACTORY_ADDRESS,
+  ROUTER_ADDRESSES,
+  FACTORY_ADDRESSES,
   ROPSTEN_TOKEN_LOGOS_MAPPING,
   MIGRATE_ADDRESS,
   KNCL_ADDRESS,
@@ -40,7 +40,7 @@ export function isAddressString(value: any): string {
   }
 }
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
+const ETHERSCAN_PREFIXES: { [chainId in ChainId]?: string } = {
   1: '',
   3: 'ropsten.',
   4: 'rinkeby.',
@@ -53,7 +53,9 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+  const prefix = [1, 3, 4, 5, 42].includes(chainId)
+    ? `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+    : `https://explorer-mumbai.maticvigil.com`
 
   switch (type) {
     case 'transaction': {
@@ -121,16 +123,16 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS, ROUTER_ABI, library, account)
+export function getRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(ROUTER_ADDRESSES[chainId], ROUTER_ABI, library, account)
 }
 
 export function getMigratorContract(_: number, library: Web3Provider, account?: string): Contract {
   return getContract(MIGRATE_ADDRESS, MIGRATOR_ABI, library, account)
 }
 
-export function getFactoryContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(FACTORY_ADDRESS, FACTORY_ABI, library, account)
+export function getFactoryContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(FACTORY_ADDRESSES[chainId], FACTORY_ABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {
@@ -262,8 +264,8 @@ export async function splitQuery(query: any, localClient: any, vars: any, list: 
  * @dev Query speed is optimized by limiting to a 600-second period
  * @param {Int} timestamp in seconds
  */
-export async function getBlockFromTimestamp(timestamp: number) {
-  const result = await blockClient.query({
+export async function getBlockFromTimestamp(timestamp: number, chainId?: ChainId) {
+  const result = await blockClient[chainId as ChainId].query({
     query: GET_BLOCK,
     variables: {
       timestampFrom: timestamp,
@@ -282,12 +284,12 @@ export async function getBlockFromTimestamp(timestamp: number) {
  * @dev timestamps are returns as they were provided; not the block time.
  * @param {Array} timestamps
  */
-export async function getBlocksFromTimestamps(timestamps: number[], skipCount = 500) {
+export async function getBlocksFromTimestamps(timestamps: number[], chainId?: ChainId, skipCount = 500) {
   if (timestamps?.length === 0) {
     return []
   }
 
-  const fetchedData = await splitQuery(GET_BLOCKS, blockClient, [], timestamps, skipCount)
+  const fetchedData = await splitQuery(GET_BLOCKS, blockClient[chainId as ChainId], [], timestamps, skipCount)
 
   const blocks = []
   if (fetchedData) {

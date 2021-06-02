@@ -3,7 +3,7 @@ import { Route, Switch, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloProvider } from '@apollo/client'
 
-import { client } from 'apollo/client'
+import { defaultExchangeClient, exchangeCient } from 'apollo/client'
 import Header from '../components/Header'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
@@ -33,6 +33,7 @@ import About from './Static/About'
 import { BLACKLIST_WALLETS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
 import Vesting from './Farms/vesting'
+import { ChainId } from 'libs/sdk/src'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -70,13 +71,14 @@ const Marginer = styled.div`
 `
 
 export default function App() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const aboutPage = useRouteMatch('/about')
+  const apolloClient = exchangeCient[chainId as ChainId]
 
   return (
     <>
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
-        <ApolloProvider client={client}>
+        <ApolloProvider client={apolloClient || defaultExchangeClient}>
           <Suspense fallback={null}>
             <Route component={DarkModeQueryParamReader} />
             <AppWrapper>

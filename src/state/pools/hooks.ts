@@ -3,12 +3,13 @@ import { useQuery } from '@apollo/client'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDeepCompareEffect } from 'react-use'
 
-import { client } from 'apollo/client'
+import { exchangeCient } from 'apollo/client'
 import { POOL_DATA, POOLS_BULK, POOLS_HISTORICAL_BULK, USER_POSITIONS } from 'apollo/queries'
-import { Currency } from 'libs/sdk/src'
+import { ChainId, Currency } from 'libs/sdk/src'
 import { AppState } from '../index'
 import { updatePools, setLoading, setError } from './actions'
 import { getPercentChange, getTimestampsForChanges, getBlocksFromTimestamps, get2DayPercentChange } from 'utils'
+import { useActiveWeb3React } from 'hooks'
 
 export interface SubgraphPoolData {
   id: string
@@ -116,12 +117,12 @@ function parseData(
   return data
 }
 
-export async function getBulkPoolData(poolList: string[], ethPrice?: string): Promise<any> {
+export async function getBulkPoolData(poolList: string[], ethPrice?: string, chainId?: ChainId): Promise<any> {
   const [t1, t2, tWeek] = getTimestampsForChanges()
-  const [{ number: b1 }, { number: b2 }, { number: bWeek }] = await getBlocksFromTimestamps([t1, t2, tWeek])
+  const [{ number: b1 }, { number: b2 }, { number: bWeek }] = await getBlocksFromTimestamps([t1, t2, tWeek], chainId)
 
   try {
-    const current = await client.query({
+    const current = await exchangeCient[chainId as ChainId].query({
       query: POOLS_BULK,
       variables: {
         allPools: poolList
@@ -131,7 +132,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
 
     const [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
       [b1, b2, bWeek].map(async block => {
-        const result = client.query({
+        const result = exchangeCient[chainId as ChainId].query({
           query: POOLS_HISTORICAL_BULK(block, poolList),
           fetchPolicy: 'network-only'
         })
@@ -157,7 +158,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
           let data = { ...pool }
           let oneDayHistory = oneDayData?.[pool.id]
           if (!oneDayHistory) {
-            const newData = await client.query({
+            const newData = await exchangeCient[chainId as ChainId].query({
               query: POOL_DATA(pool.id, b1),
               fetchPolicy: 'network-only'
             })
@@ -165,7 +166,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
           }
           let twoDayHistory = twoDayData?.[pool.id]
           if (!twoDayHistory) {
-            const newData = await client.query({
+            const newData = await exchangeCient[chainId as ChainId].query({
               query: POOL_DATA(pool.id, b2),
               fetchPolicy: 'network-only'
             })
@@ -173,7 +174,7 @@ export async function getBulkPoolData(poolList: string[], ethPrice?: string): Pr
           }
           let oneWeekHistory = oneWeekData?.[pool.id]
           if (!oneWeekHistory) {
-            const newData = await client.query({
+            const newData = await exchangeCient[chainId as ChainId].query({
               query: POOL_DATA(pool.id, bWeek),
               fetchPolicy: 'network-only'
             })
@@ -201,6 +202,7 @@ export function useBulkPoolData(
   data: AppState['pools']['pools']
 } {
   const dispatch = useDispatch()
+  const { chainId } = useActiveWeb3React()
 
   const poolsData = useSelector((state: AppState) => state.pools.pools)
   const loading = useSelector((state: AppState) => state.pools.loading)
@@ -211,7 +213,7 @@ export function useBulkPoolData(
       try {
         if (poolList.length > 0 && !error && poolsData.length === 0) {
           dispatch(setLoading(true))
-          const pools = await getBulkPoolData(poolList as string[], ethPrice)
+          const pools = await getBulkPoolData(poolList as string[], ethPrice, chainId)
           dispatch(updatePools({ pools }))
         }
       } catch (error) {
