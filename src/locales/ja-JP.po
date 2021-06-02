@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-02 07:35\n"
+"PO-Revision-Date: 2021-06-02 09:35\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1011,11 +1011,11 @@ msgstr "価格に問題がなければ、「供給」をクリックして確認
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "ブロック {0} が投票の対象となる前に自己委任または他のアドレスに委任されたUNI投票のみ。"
+msgstr "ブロック{0} 以前に自己委任、または他のアドレスに委任されたUNIのみが投票の対象となります。"
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "おっと！不明なエラーが発生しました。ページを更新するか、別のブラウザまたはデバイスからアクセスしてください。"
+msgstr "不明なエラーが発生しました。ページを更新するか、別のブラウザまたはデバイスからアクセスしてください。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1024,15 +1024,15 @@ msgstr "範囲外です"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "出力が推定されます。価格が {0}%以上変更された場合、取引は元に戻ります。"
+msgstr "予想される取引結果です。価格が {0}%以上変化した場合、取引は差し戻されます。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "出力が推定されています。少なくとも <0>{0} {1}</0> を受け取るか、トランザクションは元に戻ります。"
+msgstr "予想される取引結果です。 <0>{0} {1}</0> 以上を受け取るか、トランザクションは差し戻されます。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "出力は <0>{0}</0> に送信されます"
+msgstr "結果は <0>{0}</0> に送信されます"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
@@ -1040,7 +1040,7 @@ msgstr "所有者"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr "参加するプール"
+msgstr "参加中のプール"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1102,11 +1102,11 @@ msgstr "価格への影響"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "価格の影響が高すぎます"
+msgstr "価格の影響が大きすぎます"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "価格更新"
+msgstr "価格が更新されています"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1131,7 +1131,7 @@ msgstr "コミュニティメンバーが提出した提案はここに表示さ
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
-msgstr "提案"
+msgstr "提案者"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1139,19 +1139,19 @@ msgstr "レート"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
-msgstr "UNIについてもっと読む"
+msgstr "UNIについてもっと見る"
 
 #: src/pages/Vote/index.tsx
 msgid "Read more about Uniswap governance"
-msgstr "Uniswapガバナンスについてもっと読む"
+msgstr "Uniswapガバナンスについてもっと見る"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
-msgstr "流動性の提供についてもっと読む"
+msgstr "流動性の提供についてもっと見る"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
-msgstr "サポートされていないアセットの詳細を読む"
+msgstr "サポートされていないアセットの詳細を見る"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
@@ -1167,7 +1167,7 @@ msgstr "削除"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "金額を削除"
+msgstr "数量を削除"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
@@ -1202,11 +1202,11 @@ msgstr "スワップをダイレクトペアのみに制限します。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
-msgstr "Return"
+msgstr "戻る"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Route"
-msgstr "ルート"
+msgstr "取引ルート"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
@@ -1218,7 +1218,7 @@ msgstr "プールを選択"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "ご希望の流動性プロバイダ手数料に基づいてプールタイプを選択してください。"
+msgstr "ご希望の流動性提供者の手数料報酬に基づいてプールタイプをお選びください。"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1242,7 +1242,7 @@ msgstr "選択した範囲"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
-msgstr "自己|自分format@@0"
+msgstr "自分"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1259,7 +1259,7 @@ msgstr "開始価格を設定"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "プールの共有:"
+msgstr "プールのシェア:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
@@ -1272,7 +1272,7 @@ msgstr "単純な"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "スリップページの許容差"
+msgstr "スリップページの許容度"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
