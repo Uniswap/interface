@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-01 16:24\n"
+"PO-Revision-Date: 2021-06-02 16:27\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -33,11 +33,11 @@ msgstr "${0} ETH"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
-msgstr "（最大限度）"
+msgstr "(最大)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "（宣稱）"
+msgstr "(申領)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -68,7 +68,7 @@ msgstr "0 UNI /週"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "收取0.05％的費用"
+msgstr "手續費0.05％"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
@@ -76,7 +76,7 @@ msgstr "手續費0.3％"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1％的費用"
+msgstr "手續費1％"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -113,15 +113,15 @@ msgstr "<0>為</0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>提示：</0>刪除池代幣會按照您在池中所佔比例成比例的當前匯率將您的頭寸轉換回基礎代幣。應計費用已包含在您收到的金額中。"
+msgstr "<0>提示：</0>移除流動性池代幣後，會按照您在池中所佔比例，以當前匯率將您的倉位轉換回投入的代幣。應計費用已包含在您收到的金額中。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0>提示：</0>使用此工具查找不會自動出現在界面中的對。"
+msgstr "<0>提示：</0>使用此工具搜尋未自動出現在界面中的交易對。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>提示：</0>當您增加流動性時，您將收到代表您頭寸的集合代幣。這些令牌會自動賺取與您在池中所佔份額成正比的費用，並且可以隨時兌換。"
+msgstr "<0>提示：</0>當您添加流動性時，您將收到代表您倉位的流動性池代幣。這些代幣按照您在池中所佔份額自動賺取手續費，並且可以隨時贖回。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -149,7 +149,7 @@ msgstr "帳戶"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "積極的"
+msgstr "有效"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -191,11 +191,11 @@ msgstr "添加 {0}/{1} V3流動性"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
-msgstr "新增 {0}"
+msgstr "已添加 {0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "地址沒有可用的聲明"
+msgstr "此地址無可用的申領"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
@@ -203,11 +203,11 @@ msgstr "反對"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
-msgstr "允許LP令牌遷移"
+msgstr "允許LP代幣遷移"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "允許高價格影響交易，並跳過確認屏幕。使用風險自負。"
+msgstr "允許高價格影響交易，並跳過確認畫面。使用風險自負。"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -215,7 +215,7 @@ msgstr "允許Uniswap協議使用您的 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
-msgstr "允許的"
+msgstr "已允許"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
