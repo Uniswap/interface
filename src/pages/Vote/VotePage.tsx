@@ -278,15 +278,12 @@ export default function VotePage({
               <CardSection>
                 <AutoColumn gap="md">
                   <WrapSmall>
-                    <Trans>
-                      <TYPE.black fontWeight={600}>
-                        <Trans>For</Trans>
-                      </TYPE.black>
-                      <TYPE.black fontWeight={600}>
-                        {' '}
-                        {proposalData?.forCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </TYPE.black>
-                    </Trans>
+                    <TYPE.black fontWeight={600}>
+                      <Trans>For</Trans>
+                    </TYPE.black>
+                    <TYPE.black fontWeight={600}>
+                      {proposalData?.forCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </TYPE.black>
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
@@ -302,7 +299,7 @@ export default function VotePage({
                       <Trans>Against</Trans>
                     </TYPE.black>
                     <TYPE.black fontWeight={600}>
-                      {proposalData?.againstCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                      {proposalData?.againstCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </TYPE.black>
                   </WrapSmall>
                 </AutoColumn>
