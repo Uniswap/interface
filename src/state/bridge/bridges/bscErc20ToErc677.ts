@@ -157,6 +157,7 @@ export default class BinanceBridge extends TokenBridge {
         await this.watchHomeBridge()
       }
       this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
+      return response
     } catch (error) {
       this.dispatch(transferError())
 
@@ -172,6 +173,8 @@ export default class BinanceBridge extends TokenBridge {
 
         console.log(error)
       }
+
+      return
     }
   }
 }

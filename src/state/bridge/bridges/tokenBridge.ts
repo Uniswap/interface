@@ -61,7 +61,7 @@ abstract class TokenBridge {
     throw new Error('Unimplemented method')
   }
 
-  executeTransaction(): Promise<void> {
+  executeTransaction() {
     throw new Error('Unimplemented method')
   }
 

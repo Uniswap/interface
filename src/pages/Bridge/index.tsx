@@ -59,6 +59,7 @@ import AutoSwitchNetwork from '../../components/AutoSwitchNetwork'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { FUSE_CHAIN } from '../../constants/chains'
 import useAddChain from '../../hooks/useAddChain'
+import AddTokenToMetamaskModal from '../../components/AddTokenToMetamaskModal'
 
 export default function Bridge() {
   const { account, chainId, library } = useActiveWeb3React()
@@ -103,6 +104,8 @@ export default function Bridge() {
   const [feeModalOpen, setFeeModalOpen] = useState(false)
 
   const [migrateModalOpen, setMigrateModalOpen] = useState(false)
+
+  const [addTokenModalOpen, setAddTokenModalOpen] = useState(false)
 
   const formattedAmounts = {
     [independentField]: typedValue
@@ -159,15 +162,18 @@ export default function Bridge() {
         recipient
       )
 
-      await bridge?.executeTransaction()
+      const response = await bridge?.executeTransaction()
+      if (response) {
+        if (isEtheruem || isBsc) {
+          await fuseApi.fund(account)
+        }
 
-      if (isEtheruem) {
-        await fuseApi.fund(account)
+        onSetRecipient('')
+        updateCompletedBridgeTransfer()
+        setAddTokenModalOpen(true)
       }
 
       onFieldInput('')
-      onSetRecipient('')
-      updateCompletedBridgeTransfer()
     } catch (error) {
       if (error?.code !== 4001) {
         Sentry.captureException(error, {
@@ -238,6 +244,11 @@ export default function Bridge() {
             isOpen={migrateModalOpen}
             onDismiss={() => setMigrateModalOpen(false)}
             listType="Bridge"
+          />
+          <AddTokenToMetamaskModal
+            isOpen={addTokenModalOpen}
+            setIsOpen={setAddTokenModalOpen}
+            currency={inputCurrency}
           />
           {isHome && (
             <AutoColumn gap="md">
