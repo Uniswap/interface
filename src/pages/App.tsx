@@ -96,7 +96,7 @@ export default function App() {
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/swap" component={Swap} />
 
-              <Route exact strict path="/find" component={PoolFinder} />
+              <Route exact strict path="/pool/v2/find" component={PoolFinder} />
               <Route exact strict path="/pool/v2" component={PoolV2} />
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/pool/:tokenId" component={PositionPage} />
