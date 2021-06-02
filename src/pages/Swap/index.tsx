@@ -1,8 +1,10 @@
-import { CurrencyAmount, Fraction, JSBI, Token, Trade } from 'libs/sdk/src'
+import { CurrencyAmount, JSBI, Token, Trade } from 'libs/sdk/src'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowDownCircle } from 'react-feather'
+import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
+import { RouteComponentProps } from 'react-router-dom'
+
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed } from '../../components/Button'
 import Card, { GreyCard } from '../../components/Card'
@@ -38,8 +40,9 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import SwapIcon from '../../assets/svg/swap.svg'
 
-export default function Swap() {
+export default function Swap({ history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -55,6 +58,14 @@ export default function Swap() {
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
+
+  // dismiss warning if all imported tokens are in active lists
+  const defaultTokens = useAllTokens()
+  const importTokensNotInDefault =
+    urlLoadedTokens &&
+    urlLoadedTokens.filter((token: Token) => {
+      return !Boolean(token.address in defaultTokens)
+    })
 
   const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -107,6 +118,12 @@ export default function Swap() {
     },
     [onUserInput]
   )
+
+  // reset if they close warning without tokens in params
+  const handleDismissTokenWarning = useCallback(() => {
+    setDismissTokenWarning(true)
+    history.push('/swap/')
+  }, [history])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -222,18 +239,14 @@ export default function Swap() {
   const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
     onCurrencySelection
   ])
-  const allTokens = useAllTokens()
 
-  // (approval === ApprovalState.NOT_APPROVED ||
-  //   approval === ApprovalState.PENDING ||
-  //   (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
-  // !(priceImpactSeverity > 3 && !isExpertMode)
   return (
     <>
       <TokenWarningModal
-        isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
-        tokens={urlLoadedTokens}
+        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        tokens={importTokensNotInDefault}
         onConfirm={handleConfirmTokenWarning}
+        onDismiss={handleDismissTokenWarning}
       />
       <AppBody>
         <SwapPoolTabs active={'swap'} />
@@ -268,13 +281,13 @@ export default function Swap() {
             <AutoColumn justify="space-between">
               <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
                 <ArrowWrapper clickable>
-                  <ArrowDownCircle
-                    size="22"
+                  <img
+                    src={SwapIcon}
+                    width="22"
                     onClick={() => {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
                       onSwitchTokens()
                     }}
-                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
                   />
                 </ArrowWrapper>
                 {recipient === null && !showWrap && isExpertMode ? (
