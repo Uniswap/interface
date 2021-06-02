@@ -2,10 +2,11 @@ import { transparentize } from 'polished'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import { Flex } from 'rebass'
+import { ButtonProps, Flex } from 'rebass'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
 import React, { useContext } from 'react'
 import { ChevronLeft, Search } from 'react-feather'
+import { ButtonInvisbile } from '../Button'
 
 export const ModalInfo = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -163,9 +164,16 @@ export const SeparatorDark = styled.div`
   background-color: ${({ theme }) => theme.bg3};
 `
 
-export const GoBackIcon = styled(ChevronLeft)<{ onClick: () => void }>`
+const StyledGoBackIcon = styled(ChevronLeft)`
   color: ${({ theme }) => theme.purple3};
   width: 16px;
   height: 16px;
   cursor: pointer;
 `
+export const GoBackIcon = (props: ButtonProps) => {
+  return (
+    <ButtonInvisbile {...props}>
+      <StyledGoBackIcon />
+    </ButtonInvisbile>
+  )
+}

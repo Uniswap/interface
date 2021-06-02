@@ -14,6 +14,8 @@ import { getExplorerLink } from '../../utils'
 import { injected } from '../../connectors'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { ButtonProps } from 'rebass'
+import { ButtonInvisbile } from '../Button'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -140,7 +142,7 @@ const CustomLinkIcon = styled(LinkIcon)`
   color: ${({ theme }) => theme.text5};
 `
 
-const CloseIcon = styled.div`
+const StyledCloseIcon = styled.div`
   position: absolute;
   right: 1rem;
   top: 14px;
@@ -149,6 +151,13 @@ const CloseIcon = styled.div`
     opacity: 0.6;
   }
 `
+export const CloseIcon = (props: ButtonProps) => {
+  return (
+    <ButtonInvisbile {...props}>
+      <StyledCloseIcon />
+    </ButtonInvisbile>
+  )
+}
 
 const CloseColor = styled(Close)`
   width: 16px;

@@ -102,6 +102,12 @@ export const ButtonGrey = styled(Base)`
   }
 `
 
+export const ButtonInvisbile = styled.button`
+  border: none;
+  outline: none;
+  background: transparent;
+`
+
 export const ButtonDark = styled(Base)`
   border: 1px solid #252237;
   background-color: #171621;

@@ -4,7 +4,8 @@ import styled, { keyframes } from 'styled-components'
 import { darken } from 'polished'
 import { ArrowLeft, X } from 'react-feather'
 import { Colors } from './styled'
-import { Button as Base } from 'rebass'
+import { Button as Base, ButtonProps } from 'rebass'
+import { ButtonInvisbile } from '../components/Button'
 
 export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColor: string }>(({ warning, theme }) => ({
   backgroundColor: warning ? theme.red1 : theme.primary1
@@ -36,12 +37,19 @@ export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColo
   }
 `
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
+const StyledCloseIcon = styled(X)`
   color: ${({ theme }) => theme.purple3};
   width: 16px;
   height: 16px;
   cursor: pointer;
 `
+export const CloseIcon = (props: ButtonProps) => {
+  return (
+    <ButtonInvisbile {...props}>
+      <StyledCloseIcon />
+    </ButtonInvisbile>
+  )
+}
 
 // A button that triggers some onClick result, but looks like a link.
 export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
