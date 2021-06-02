@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-02 18:58\n"
+"PO-Revision-Date: 2021-06-02 19:58\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -568,31 +568,31 @@ msgstr "Depot"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Betrag einzahlen"
+msgstr "Betrag deponieren"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "UNI-V2 LP Token einzahlen"
+msgstr "UNI-V2 LP Token deponieren"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "Liquidität einzahlen"
+msgstr "Liquidität deponieren"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Hinterlegen Sie Ihre Token des Liquiditätsanbieters, um UNI zu erhalten, das Uniswap-Protokoll-Governance-Token zu erhalten."
+msgstr "Deponieren Sie Ihre Liquiditäts-Provider Tokens um UNI zu erhalten, den Uniswap-Protokoll-Governance-Token."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
-msgstr "Angestellte Liquidität:"
+msgstr "Deponierte Liquidität:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "{0} UNI-V2 eingelöst"
+msgstr "{0} UNI-V2 deponiert"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "Liquidität einzahlen"
+msgstr "Deponiere Liquidität"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -612,7 +612,7 @@ msgstr "Multihops deaktivieren"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
-msgstr "Verbindung trennen"
+msgstr "Ausloggen"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
@@ -624,19 +624,19 @@ msgstr "Verwerfen"
 
 #: src/components/Menu/index.tsx
 msgid "Docs"
-msgstr "Texte"
+msgstr "Dokumentation"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "Sie sehen keine Ihrer v2-Positionen? <0>Importieren Sie.</0>"
+msgstr "Sie sehen eine Ihrer v2-Positionen nicht? <0>Importiere sie.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Erhaltene UNI-Token stellen Stimmbeteiligungen an der Uniswap-Governance dar."
+msgstr "Verdiente UNI-Token repräsentieren Stimmanteile an der Uniswap-Governance."
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
-msgstr "Geben Sie einen Empfänger ein"
+msgstr "Empfänger eingeben"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
@@ -644,7 +644,7 @@ msgstr "Geben Sie einen gültigen Slippage Prozentsatz ein"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Geben Sie eine Adresse ein, um einen UNI-Anspruch auszulösen. Wenn die Adresse eine annehmbare UNI hat, wird sie bei der Einreichung an sie gesendet."
+msgstr "Geben Sie eine Adresse ein, um UNI einzufordern. Wenn die Adresse Anspruch auf UNI hat, wird es bei der Ausführung an sie gesendet."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -659,7 +659,7 @@ msgstr "Betrag eingeben"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Enter valid list location"
-msgstr "Gültiger Listenort eingeben"
+msgstr "Gültigen Listenort eingeben"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -689,7 +689,7 @@ msgstr "Erweiterte Ergebnisse von inaktiven Token Listen"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "Der Experten-Modus schaltet die Bestätigungs-Transaktionsabfrage aus und ermöglicht hohe Slippage-Transaktionen, die oft zu schlechten Zinsen und verlorenem Geld führen."
+msgstr "Der Expertenmodus schaltet die Transaktions-Bestätigung aus und ermöglicht Transaktionen mit viel Slippage, was zu schlechten Kursen und verlorenem Geld führen kann."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -701,7 +701,7 @@ msgstr "Gebührenstufe"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Klicken Sie für jeden unten angezeigten Pool auf migrieren, um Ihre Liquidität aus Uniswap V2 zu entfernen und in Uniswap V3 einzuzahlen."
+msgstr "Klicken Sie für jeden unten angezeigten Pool auf migrieren, um Ihre Liquidität aus Uniswap V2 zu entfernen und in Uniswap V3 zu deponieren."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -710,11 +710,11 @@ msgstr "Von"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
-msgstr "Von (höchsten)"
+msgstr "Von (höchstens)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
-msgstr "Holen Sie sich Unterstützung bei Discord"
+msgstr "Erhalte Unterstützung auf Discord"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
@@ -722,15 +722,15 @@ msgstr "Geschlossene Positionen ausblenden"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
-msgstr "Hohe Preisbelastung"
+msgstr "Hoher Preiseinfluss"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "Ich verstehe"
+msgstr "Einverstanden"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "Wenn Sie ein Token aus dieser Liste kaufen, können Sie es möglicherweise nicht zurückverkaufen."
+msgstr "Wenn Sie Token aus dieser Liste kaufen, können Sie sie möglicherweise nicht zurückverkaufen."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -740,7 +740,7 @@ msgstr "Importieren"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import List"
-msgstr "Importliste"
+msgstr "Liste importieren"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
