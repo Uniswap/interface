@@ -32,10 +32,10 @@ export function shouldCheck(lastBlockNumber: number, tx: TxInterface): boolean {
 }
 
 const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
-  [SupportedChainId.ARBITRUM_ONE]: { n: 5, minWait: 500, maxWait: 1000 },
-  [SupportedChainId.ARBITRUM_KOVAN]: { n: 5, minWait: 500, maxWait: 1000 },
+  [SupportedChainId.ARBITRUM_ONE]: { n: 10, minWait: 250, maxWait: 1000 },
+  [SupportedChainId.ARBITRUM_KOVAN]: { n: 10, minWait: 250, maxWait: 1000 },
 }
-const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 1000, maxWait: 3000 }
+const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 3, minWait: 1000, maxWait: 3000 }
 
 export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React()
@@ -56,8 +56,12 @@ export default function Updater(): null {
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
-          library.getTransactionReceipt(hash).catch((error) => {
-            throw new RetryableError(error.message)
+          library.getTransactionReceipt(hash).then((receipt) => {
+            if (receipt === null) {
+              console.debug('Retrying for hash', hash)
+              throw new RetryableError()
+            }
+            return receipt
           }),
         retryOptions
       )
