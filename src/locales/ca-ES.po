@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 15:24+0000\n"
+"POT-Creation-Date: 2021-06-02 17:09+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Catalan\n"
-"PO-Revision-Date: 2021-06-01 16:24\n"
+"PO-Revision-Date: 2021-06-02 17:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -116,8 +116,8 @@ msgid "<0>Tip:</0> Removing pool tokens converts your position back into underly
 msgstr "<0> Consell:</0> L’eliminació de les fitxes de grup converteix la vostra posició en fitxes subjacents al ritme actual, proporcional a la vostra quota de fons. Les comissions acumulades estan incloses en els imports que rebeu."
 
 #: src/pages/PoolFinder/index.tsx
-msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0> Consell:</0> Utilitzeu aquesta eina per trobar parells que no apareixen automàticament a la interfície."
+msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
+msgstr "<0> Consell:</0> Utilitzeu aquesta eina per trobar grups de v2 que no apareixen automàticament a la interfície."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -742,9 +742,13 @@ msgstr "Importació"
 msgid "Import List"
 msgstr "Importa la llista"
 
-#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/v2.tsx
 msgid "Import Pool"
 msgstr "Importa el grup"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import V2 Pool"
+msgstr "Importa l'agrupació V2"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -1229,8 +1233,8 @@ msgid "Select a token"
 msgstr "Seleccioneu un testimoni"
 
 #: src/pages/PoolFinder/index.tsx
-msgid "Select a token to find your liquidity."
-msgstr "Seleccioneu un testimoni per trobar la vostra liquiditat."
+msgid "Select a token to find your v2 liquidity."
+msgstr "Seleccioneu un testimoni per trobar la vostra liquiditat v2."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"

@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 15:24+0000\n"
+"POT-Creation-Date: 2021-06-02 17:09+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Vietnamese\n"
-"PO-Revision-Date: 2021-06-01 16:24\n"
+"PO-Revision-Date: 2021-06-02 17:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -116,8 +116,8 @@ msgid "<0>Tip:</0> Removing pool tokens converts your position back into underly
 msgstr "<0> Mẹo:</0> Loại bỏ mã thông báo chung sẽ chuyển đổi vị trí của bạn trở lại thành các mã thông báo cơ bản với tỷ lệ hiện tại, tỷ lệ thuận với thị phần của bạn trong nhóm. Phí tích lũy được bao gồm trong số tiền bạn nhận được."
 
 #: src/pages/PoolFinder/index.tsx
-msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0> Mẹo:</0> Sử dụng công cụ này để tìm các cặp không tự động xuất hiện trong giao diện."
+msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
+msgstr "<0> Mẹo:</0> Sử dụng công cụ này để tìm các nhóm v2 không tự động xuất hiện trong giao diện."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -742,9 +742,13 @@ msgstr "Nhập khẩu"
 msgid "Import List"
 msgstr "Nhập danh sách"
 
-#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/v2.tsx
 msgid "Import Pool"
 msgstr "Nhập nhóm"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import V2 Pool"
+msgstr "Nhập nhóm V2"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -1229,8 +1233,8 @@ msgid "Select a token"
 msgstr "Chọn một mã thông báo"
 
 #: src/pages/PoolFinder/index.tsx
-msgid "Select a token to find your liquidity."
-msgstr "Chọn một mã thông báo để tìm thanh khoản của bạn."
+msgid "Select a token to find your v2 liquidity."
+msgstr "Chọn một mã thông báo để tìm thanh khoản v2 của bạn."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"

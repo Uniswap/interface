@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 15:24+0000\n"
+"POT-Creation-Date: 2021-06-02 17:09+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-01 16:24\n"
+"PO-Revision-Date: 2021-06-02 17:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -116,8 +116,8 @@ msgid "<0>Tip:</0> Removing pool tokens converts your position back into underly
 msgstr "<0> 팁 :</0> 풀 토큰을 제거하면 풀 점유율에 비례하여 현재 비율로 포지션을 기본 토큰으로 다시 전환합니다. 미지급 수수료는 귀하가받는 금액에 포함됩니다."
 
 #: src/pages/PoolFinder/index.tsx
-msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0> 팁 :</0> 이 도구를 사용하여 인터페이스에 자동으로 나타나지 않는 쌍을 찾으십시오."
+msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
+msgstr "<0> 팁 :</0> 이 도구를 사용하여 인터페이스에 자동으로 표시되지 않는 v2 풀을 찾습니다."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -742,9 +742,13 @@ msgstr "수입"
 msgid "Import List"
 msgstr "가져 오기 목록"
 
-#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/v2.tsx
 msgid "Import Pool"
 msgstr "풀 가져 오기"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import V2 Pool"
+msgstr "V2 풀 가져 오기"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -1229,8 +1233,8 @@ msgid "Select a token"
 msgstr "토큰 선택"
 
 #: src/pages/PoolFinder/index.tsx
-msgid "Select a token to find your liquidity."
-msgstr "유동성을 찾으려면 토큰을 선택하십시오."
+msgid "Select a token to find your v2 liquidity."
+msgstr "v2 유동성을 찾으려면 토큰을 선택하십시오."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"

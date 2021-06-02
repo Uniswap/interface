@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-01 15:24+0000\n"
+"POT-Creation-Date: 2021-06-02 17:09+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-06-01 16:24\n"
+"PO-Revision-Date: 2021-06-02 17:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -116,8 +116,8 @@ msgid "<0>Tip:</0> Removing pool tokens converts your position back into underly
 msgstr "<0>Sfat: </0> Eliminarea tokenurilor de rezervă convertește poziția dvs. înapoi în tokeni de bază, la rata curentă, proporțional cu cota dvs. din grup. Taxele acumulate sunt incluse în sumele pe care le primiți."
 
 #: src/pages/PoolFinder/index.tsx
-msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0>Sfat: </0> Folosește această unealtă pentru a găsi perechi care nu apar automat în interfață."
+msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
+msgstr "<0> Sfat:</0> Utilizați acest instrument pentru a găsi pool-uri v2 care nu apar automat în interfață."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -742,9 +742,13 @@ msgstr "Importă"
 msgid "Import List"
 msgstr "Listă de import"
 
-#: src/components/NavigationTabs/index.tsx
+#: src/pages/Pool/v2.tsx
 msgid "Import Pool"
 msgstr "Importă grupa"
+
+#: src/components/NavigationTabs/index.tsx
+msgid "Import V2 Pool"
+msgstr "Import V2 Pool"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -1229,8 +1233,8 @@ msgid "Select a token"
 msgstr "Selectează un simbol"
 
 #: src/pages/PoolFinder/index.tsx
-msgid "Select a token to find your liquidity."
-msgstr "Selectează un simbol pentru a-ți găsi lichiditatea."
+msgid "Select a token to find your v2 liquidity."
+msgstr "Selectați un simbol pentru a vă găsi lichiditatea v2."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
