@@ -172,11 +172,11 @@ export default function Menu() {
               <Trans>Analytics</Trans>
             </div>
           </MenuItem>
-          {account && (
+          {/*{account && (
             <UNIbutton onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
               <Trans>Claim UNI</Trans>
             </UNIbutton>
-          )}
+          )}*/}
         </MenuFlyout>
       )}
     </StyledMenu>
