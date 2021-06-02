@@ -123,7 +123,7 @@ export default function Vote() {
   // get data to list all proposals
   const allProposals: ProposalData[] = useAllProposalData()
 
-  // governance constants
+  // governance constant
   const proposalThreshold: number | undefined = useProposalThreshold()
 
   // user data
@@ -139,6 +139,7 @@ export default function Vote() {
     uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
+  // show create proposal button if they pass the proposal threshold
   const showCreateProposal = Boolean(
     availableVotes &&
       proposalThreshold &&
@@ -192,86 +193,48 @@ export default function Vote() {
             <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>
               <Trans>Proposals</Trans>
             </TYPE.mediumHeader>
-            {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
-            {showUnlockVoting ? (
-              <ButtonPrimary
-                style={{ width: 'fit-content' }}
-                padding="8px"
-                borderRadius="8px"
-                onClick={toggleDelegateModal}
-              >
-                <TYPE.white fontSize={14}>Read more about Uniswap governance</TYPE.white>
-              </ExternalLink>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </VoteCard>
-      </TopSection>
-      <TopSection gap="2px">
-        <WrapSmall>
-          <TYPE.mediumHeader style={{ margin: '0.5rem 0.5rem 0.5rem 0', flexShrink: 0 }}>Proposals</TYPE.mediumHeader>
-          {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
-          <AutoRow gap="6px" justify="flex-end">
-            {showUnlockVoting ? (
-              <ButtonPrimary
-                style={{ width: 'fit-content', borderRadius: '8px' }}
-                padding="8px"
-                onClick={toggleDelegateModal}
-              >
-                Unlock Voting
-              </ButtonPrimary>
-            ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
-              <TYPE.body fontWeight={500} mr="6px">
-                <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
-              </TYPE.body>
-            ) : uniBalance &&
-              userDelegatee &&
-              userDelegatee !== ZERO_ADDRESS &&
-              JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
-              <TYPE.body fontWeight={500} mr="6px">
-                <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
-              </TYPE.body>
-            ) : (
-              ''
-            )}
-            {showCreateProposal ? (
-              <ButtonPrimary
-                as={Link}
-                to="/proposal"
-                style={{ width: 'fit-content', borderRadius: '8px' }}
-                padding="8px"
-              >
-                Create Proposal
-              </ButtonPrimary>
-            ) : (
-              ''
-            )}
-          </AutoRow>
-        </WrapSmall>
-        {!showUnlockVoting && (
-          <RowBetween>
-            <div />
-            {userDelegatee && userDelegatee !== ZERO_ADDRESS ? (
-              <RowFixed>
-                <TYPE.body fontWeight={500} mr="4px">
-                  Delegated to:
+            <AutoRow gap="6px" justify="flex-end">
+              {(!allProposals || allProposals.length === 0) && !availableVotes && <Loader />}
+              {showUnlockVoting ? (
+                <ButtonPrimary
+                  style={{ width: 'fit-content' }}
+                  padding="8px"
+                  borderRadius="8px"
+                  onClick={toggleDelegateModal}
+                >
+                  <Trans>Unlock Voting</Trans>
+                </ButtonPrimary>
+              ) : availableVotes && JSBI.notEqual(JSBI.BigInt(0), availableVotes?.quotient) ? (
+                <TYPE.body fontWeight={500} mr="6px">
+                  <Trans>
+                    <FormattedCurrencyAmount currencyAmount={availableVotes} /> Votes
+                  </Trans>
                 </TYPE.body>
-                <AddressButton>
-                  <StyledExternalLink
-                    href={getExplorerLink(ChainId.MAINNET, userDelegatee, ExplorerDataType.ADDRESS)}
-                    style={{ margin: '0 4px' }}
-                  >
-                    {userDelegatee === account ? 'Self' : shortenAddress(userDelegatee)}
-                  </StyledExternalLink>
-                  <TextButton onClick={toggleDelegateModal} style={{ marginLeft: '4px' }}>
-                    (edit)
-                  </TextButton>
-                </AddressButton>
-              </RowFixed>
-            ) : (
-              ''
-            )}
+              ) : uniBalance &&
+                userDelegatee &&
+                userDelegatee !== ZERO_ADDRESS &&
+                JSBI.notEqual(JSBI.BigInt(0), uniBalance?.quotient) ? (
+                <TYPE.body fontWeight={500} mr="6px">
+                  <Trans>
+                    <FormattedCurrencyAmount currencyAmount={uniBalance} /> Votes
+                  </Trans>
+                </TYPE.body>
+              ) : (
+                ''
+              )}
+              {showCreateProposal ? (
+                <ButtonPrimary
+                  as={Link}
+                  to="/proposal"
+                  style={{ width: 'fit-content', borderRadius: '8px' }}
+                  padding="8px"
+                >
+                  Create Proposal
+                </ButtonPrimary>
+              ) : (
+                ''
+              )}
+            </AutoRow>
           </WrapSmall>
           {!showUnlockVoting && (
             <RowBetween>

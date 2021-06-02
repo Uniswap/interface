@@ -251,7 +251,6 @@ export default function CurrencyList({
       }
     },
     [
-      chainId,
       currencies.length,
       onCurrencySelect,
       otherCurrency,

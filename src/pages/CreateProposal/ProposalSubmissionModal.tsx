@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
-import { ChainId } from '@uniswap/sdk-core'
 import { Text } from 'rebass'
 import { ExternalLink, TYPE } from 'theme'
 import { ButtonPrimary } from 'components/Button'
@@ -8,16 +7,15 @@ import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { Link } from 'react-router-dom'
 
 export const ProposalSubmissionModal = ({
   isOpen,
   hash,
-  chainId,
   onDismiss,
 }: {
   isOpen: boolean
   hash: string | undefined
-  chainId: ChainId | undefined
   onDismiss: () => void
 }) => {
   const theme = useContext(ThemeContext)
@@ -36,14 +34,14 @@ export const ProposalSubmissionModal = ({
             <Text fontWeight={500} fontSize={20} textAlign="center">
               Proposal Submitted
             </Text>
-            {chainId && hash && (
-              <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
+            {hash && (
+              <ExternalLink href={getExplorerLink(1, hash, ExplorerDataType.TRANSACTION)}>
                 <Text fontWeight={500} fontSize={14} color={theme.primary1}>
                   View on Etherscan
                 </Text>
               </ExternalLink>
             )}
-            <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
+            <ButtonPrimary as={Link} to="/vote" onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
               <Text fontWeight={500} fontSize={20}>
                 Return
               </Text>

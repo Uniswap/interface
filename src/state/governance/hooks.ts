@@ -147,10 +147,12 @@ export function useAllProposalData() {
           description: description || 'No description.',
           proposer: allProposals[i]?.result?.proposer,
           status: allProposalStates[i]?.result?.[0] ?? ProposalState.Undetermined,
-          forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString(), 18)),
-          againstCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.againstVotes.toString(), 18)),
-          startBlock: parseInt(allProposals[i]?.result?.startBlock?.toString()),
-          endBlock: parseInt(allProposals[i]?.result?.endBlock?.toString()),
+          forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString() ?? '0', 18)),
+          againstCount: parseFloat(
+            ethers.utils.formatUnits(allProposals[i]?.result?.againstVotes.toString() ?? '0', 18)
+          ),
+          startBlock: parseInt(allProposals[i]?.result?.startBlock?.toString() ?? '0'),
+          endBlock: parseInt(allProposals[i]?.result?.endBlock?.toString() ?? '0'),
           details: formattedEvents[i].details,
         }
         return formattedProposal

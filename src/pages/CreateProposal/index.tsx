@@ -37,19 +37,19 @@ const ProposalWrapper = styled.div`
 const CreateProposalButton = ({
   hasActiveOrPendingProposal,
   hasEnoughVote,
-  isFormValid,
+  isFormInvalid,
   handleCreateProposal,
 }: {
   hasActiveOrPendingProposal: boolean
   hasEnoughVote: boolean
-  isFormValid: boolean
+  isFormInvalid: boolean
   handleCreateProposal: () => void
 }) => {
   return hasActiveOrPendingProposal ? (
     <ButtonError marginTop="18px">You already have an active or pending proposal</ButtonError>
   ) : !hasEnoughVote ? (
     <ButtonError marginTop="18px">You don&apos;t have enough vote to create a proposal</ButtonError>
-  ) : !isFormValid ? (
+  ) : isFormInvalid ? (
     <ButtonError marginTop="18px">Some proposal data is missing</ButtonError>
   ) : (
     <Button style={{ marginTop: '18px' }} onClick={handleCreateProposal}>
@@ -78,21 +78,22 @@ export default function CreateProposal() {
   const [bodyValue, setBodyValue] = useState('')
 
   const handleActionSelectorClick = useCallback(() => [setModalOpen(true)], [setModalOpen])
-  const handleActionChange = useCallback((proposalAction: ProposalAction) => [setProposalAction(proposalAction)], [
-    setProposalAction,
-  ])
+  const handleActionChange = useCallback(
+    (proposalAction: ProposalAction) => [setProposalAction(proposalAction)],
+    [setProposalAction]
+  )
   const handleDismissActionSelector = useCallback(() => [setModalOpen(false)], [setModalOpen])
-  const handleDismissSubmissionModal = useCallback(() => [setHash(undefined), setAttempting(false)], [
-    setHash,
-    setAttempting,
-  ])
+  const handleDismissSubmissionModal = useCallback(
+    () => [setHash(undefined), setAttempting(false)],
+    [setHash, setAttempting]
+  )
   const handleToAddressInput = useCallback((toAddress: string) => [setToAddressValue(toAddress)], [setToAddressValue])
   const handleCurrencySelect = useCallback((currency: Currency) => [setCurrencyValue(currency)], [setCurrencyValue])
   const handleAmountInput = useCallback((amount: string) => [setAmountValue(amount)], [setAmountValue])
   const handleTitleInput = useCallback((title: string) => [setTitleValue(title)], [setTitleValue])
   const handleBodyInput = useCallback((body: string) => [setBodyValue(body)], [setBodyValue])
 
-  const isFormValid = useMemo(
+  const isFormInvalid = useMemo(
     () =>
       Boolean(
         !proposalAction ||
@@ -100,12 +101,11 @@ export default function CreateProposal() {
           !currencyValue?.isToken ||
           amountValue === '' ||
           titleValue === '' ||
-          bodyValue === '' ||
-          latestProposalData?.status === ProposalState.Active ||
-          latestProposalData?.status === ProposalState.Pending
+          bodyValue === ''
       ),
-    [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue, latestProposalData]
+    [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue]
   )
+
   const createProposalCallback = useCreateProposalCallback()
 
   const handleCreateProposal = async () => {
@@ -148,8 +148,6 @@ ${bodyValue}
 
     if (hash) setHash(hash)
   }
-
-  console.log(availableVotes?.quotient.toString())
 
   return (
     <AppBody {...{ maxWidth: '1200px' }}>
@@ -196,7 +194,7 @@ ${bodyValue}
               proposalThreshold &&
               JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(proposalThreshold))
           )}
-          isFormValid={isFormValid}
+          isFormInvalid={isFormInvalid}
           handleCreateProposal={handleCreateProposal}
         />
       </Wrapper>
@@ -205,12 +203,7 @@ ${bodyValue}
         onDismiss={handleDismissActionSelector}
         onProposalActionSelect={(proposalAction: ProposalAction) => handleActionChange(proposalAction)}
       />
-      <ProposalSubmissionModal
-        isOpen={attempting}
-        hash={hash}
-        chainId={chainId}
-        onDismiss={handleDismissSubmissionModal}
-      />
+      <ProposalSubmissionModal isOpen={attempting} hash={hash} onDismiss={handleDismissSubmissionModal} />
     </AppBody>
   )
 }
