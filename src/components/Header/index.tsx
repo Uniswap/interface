@@ -9,6 +9,7 @@ import styled from 'styled-components/macro'
 
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
+import { SupportedChainId } from '../../constants/chains'
 
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useDarkModeManager } from '../../state/user/hooks'
@@ -301,11 +302,14 @@ export const StyledMenuButton = styled.button`
   }
 `
 
-const NETWORK_LABELS: { [chainId: number]: string } = {
-  [4]: 'Rinkeby',
-  [3]: 'Ropsten',
-  [5]: 'Görli',
-  [42]: 'Kovan',
+const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } = {
+  [SupportedChainId.MAINNET]: 'Mainnet',
+  [SupportedChainId.RINKEBY]: 'Rinkeby',
+  [SupportedChainId.ROPSTEN]: 'Ropsten',
+  [SupportedChainId.GOERLI]: 'Görli',
+  [SupportedChainId.KOVAN]: 'Kovan',
+  [SupportedChainId.ARBITRUM_KOVAN]: 'kArbitrum',
+  [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum One',
 }
 
 export default function Header() {
@@ -367,7 +371,7 @@ export default function Header() {
       <HeaderControls>
         <HeaderElement>
           <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
+            {chainId && chainId !== SupportedChainId.MAINNET && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
           </HideSmall>

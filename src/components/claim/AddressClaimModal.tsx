@@ -192,7 +192,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>
-                <Trans>View transaction on Etherscan</Trans>
+                <Trans>View transaction on Explorer</Trans>
               </ExternalLink>
             )}
           </AutoColumn>

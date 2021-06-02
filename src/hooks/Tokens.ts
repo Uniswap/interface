@@ -1,8 +1,9 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, Ether, Token } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
+import { ExtendedEther, WETH9_EXTENDED } from '../constants/tokens'
 import { useAllLists, useCombinedActiveList, useInactiveListUrls } from '../state/lists/hooks'
 import { WrappedTokenInfo } from '../state/lists/wrappedTokenInfo'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
@@ -22,10 +23,13 @@ function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean):
     if (!chainId) return {}
 
     // reduce to just tokens
-    const mapWithoutUrls = Object.keys(tokenMap[chainId]).reduce<{ [address: string]: Token }>((newMap, address) => {
-      newMap[address] = tokenMap[chainId][address].token
-      return newMap
-    }, {})
+    const mapWithoutUrls = Object.keys(tokenMap[chainId] ?? {}).reduce<{ [address: string]: Token }>(
+      (newMap, address) => {
+        newMap[address] = tokenMap[chainId][address].token
+        return newMap
+      },
+      {}
+    )
 
     if (includeUserAdded) {
       return (
@@ -175,5 +179,7 @@ export function useCurrency(currencyId: string | undefined): Currency | null | u
   const { chainId } = useActiveWeb3React()
   const isETH = currencyId?.toUpperCase() === 'ETH'
   const token = useToken(isETH ? undefined : currencyId)
-  return isETH ? (chainId ? Ether.onChain(chainId) : undefined) : token
+  const weth = chainId ? WETH9_EXTENDED[chainId] : undefined
+  if (weth?.address?.toLowerCase() === currencyId?.toLowerCase()) return weth
+  return isETH ? (chainId ? ExtendedEther.onChain(chainId) : undefined) : token
 }

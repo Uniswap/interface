@@ -3,6 +3,7 @@ import { isAddress } from 'ethers/lib/utils'
 import { PROPOSAL_DESCRIPTION_TEXT } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
+import usePrevious from '../../hooks/usePrevious'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -59,47 +60,62 @@ export function useProposalCount(): number | undefined {
  */
 const eventParser = new ethers.utils.Interface(GOV_ABI)
 export function useDataFromEventLogs() {
-  const { library } = useActiveWeb3React()
-  const [formattedEvents, setFormattedEvents] = useState<any>()
+  const { library, chainId } = useActiveWeb3React()
+  const [formattedEvents, setFormattedEvents] =
+    useState<{ description: string; details: { target: string; functionSig: string; callData: string }[] }[]>()
   const govContract = useGovernanceContract()
 
   // create filter for these specific events
   const filter = useMemo(
-    () => ({ ...govContract?.filters?.['ProposalCreated'](), fromBlock: 0, toBlock: 'latest' }),
+    () => (govContract ? { ...govContract.filters.ProposalCreated(), fromBlock: 0, toBlock: 'latest' } : undefined),
     [govContract]
   )
 
+  const previousChainId = usePrevious(chainId)
+
   useEffect(() => {
-    async function fetchData() {
-      const pastEvents = await library?.getLogs(filter)
-      // reverse events to get them from newest to odlest
-      const formattedEventData = pastEvents
-        ?.map((event) => {
-          const eventParsed = eventParser.parseLog(event).args
-          return {
-            description: eventParsed.description,
-            details: eventParsed.targets.map((target: string, i: number) => {
-              const signature = eventParsed.signatures[i]
-              const [name, types] = signature.substr(0, signature.length - 1).split('(')
+    if (!filter || !library || chainId === previousChainId) return
+    let stale = false
 
-              const calldata = eventParsed.calldatas[i]
-              const decoded = utils.defaultAbiCoder.decode(types.split(','), calldata)
-
-              return {
-                target,
-                functionSig: name,
-                callData: decoded.join(', '),
-              }
-            }),
-          }
-        })
-        .reverse()
-      setFormattedEvents(formattedEventData)
-    }
     if (!formattedEvents) {
-      fetchData()
+      library
+        .getLogs(filter)
+        .then((proposalEvents) => {
+          if (stale) return
+          // reverse events to get them from newest to odlest
+          const formattedEventData = proposalEvents
+            ?.map((event) => {
+              const eventParsed = eventParser.parseLog(event).args
+              return {
+                description: eventParsed.description,
+                details: eventParsed.targets.map((target: string, i: number) => {
+                  const signature = eventParsed.signatures[i]
+                  const [name, types] = signature.substr(0, signature.length - 1).split('(')
+
+                  const calldata = eventParsed.calldatas[i]
+                  const decoded = utils.defaultAbiCoder.decode(types.split(','), calldata)
+
+                  return {
+                    target,
+                    functionSig: name,
+                    callData: decoded.join(', '),
+                  }
+                }),
+              }
+            })
+            .reverse()
+          setFormattedEvents(formattedEventData)
+        })
+        .catch((error) => {
+          console.error('Failed to fetch proposals', error)
+        })
+      return () => {
+        stale = true
+      }
     }
-  }, [filter, library, formattedEvents])
+
+    return
+  }, [filter, library, formattedEvents, chainId, previousChainId])
 
   return formattedEvents
 }

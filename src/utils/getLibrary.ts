@@ -9,6 +9,7 @@ export default function getLibrary(provider: any): Web3Provider {
       ? parseInt(provider.chainId)
       : 'any'
   )
-  library.pollingInterval = 15000
+  // TODO: this should depend on the network block time
+  library.pollingInterval = 1000
   return library
 }

@@ -5,6 +5,7 @@ import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { Text } from 'rebass'
+import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { BackArrow, StyledInternalLink, TYPE } from '../../theme'
@@ -51,6 +52,8 @@ export default function MigrateV2() {
   const theme = useContext(ThemeContext)
   const { account, chainId } = useActiveWeb3React()
 
+  const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
+
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
 
@@ -61,12 +64,12 @@ export default function MigrateV2() {
         // sushi liquidity token or null
         const sushiLiquidityToken = chainId === 1 ? toSushiLiquidityToken(tokens) : null
         return {
-          v2liquidityToken: toV2LiquidityToken(tokens),
+          v2liquidityToken: v2FactoryAddress ? toV2LiquidityToken(tokens) : undefined,
           sushiLiquidityToken,
           tokens,
         }
       }),
-    [trackedTokenPairs, chainId]
+    [trackedTokenPairs, chainId, v2FactoryAddress]
   )
 
   //  get pair liquidity token addresses for balance-fetching purposes
@@ -90,7 +93,7 @@ export default function MigrateV2() {
     if (fetchingPairBalances) return []
 
     return tokenPairsWithLiquidityTokens
-      .filter(({ v2liquidityToken }) => pairBalances[v2liquidityToken.address]?.greaterThan(0))
+      .filter(({ v2liquidityToken }) => v2liquidityToken && pairBalances[v2liquidityToken.address]?.greaterThan(0))
       .map((tokenPairsWithLiquidityTokens) => tokenPairsWithLiquidityTokens.tokens)
   }, [fetchingPairBalances, tokenPairsWithLiquidityTokens, pairBalances])
 
