@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-02 20:16+0000\n"
+"POT-Creation-Date: 2021-06-02 23:02+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-02 20:50\n"
+"PO-Revision-Date: 2021-06-02 23:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -106,10 +106,6 @@ msgstr "<0>Αναλυτικά λογαριασμού και δεδουλευμέ
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
 msgstr "<0> Επιστροφή στο</0> V3"
-
-#: src/pages/Vote/VotePage.tsx
-msgid "<0>For</0><1>{0}</1>"
-msgstr "<0>For</0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -699,6 +695,10 @@ msgstr "Εξερευνήστε δημοφιλείς πισίνες στην Unis
 msgid "Fee Tier"
 msgstr "Βαθμίδα Αμοιβής"
 
+#: src/pages/Vote/VotePage.tsx
+msgid "For"
+msgstr "Για"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
 msgstr "Για κάθε πισίνα που φαίνεται παρακάτω, κάντε κλικ στην επιλογή μετεγκατάσταση για να αφαιρέσετε τη ρευστότητά σας από Uniswap V2 και να την καταθέσετε στο Uniswap V3."
@@ -734,6 +734,7 @@ msgstr "Αν αγοράσετε ένα διακριτικό από αυτή τη
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
+#: src/components/SearchModal/ImportToken.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
 msgstr "Εισαγωγή"
@@ -1363,6 +1364,10 @@ msgstr "Δεν ήταν δυνατή η αποστολή της συναλλαγ
 msgid "These tokens are commonly paired with other tokens."
 msgstr "Αυτά τα νομίσματα είναι συνήθως σε συνδυασμό με άλλα νομίσματα."
 
+#: src/components/SearchModal/ImportToken.tsx
+msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
+msgstr "Αυτό το διακριτικό δεν εμφανίζεται στις ενεργές λίστες. Βεβαιωθείτε ότι αυτό είναι το διακριτικό που θέλετε να ανταλλάξετε."
+
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
 msgstr "Αυτό το εργαλείο θα μεταφέρει με ασφάλεια τη ρευστότητα {0} σας στο V3. Η διαδικασία είναι απολύτως αξιόπιστη χάρη στο"
@@ -1501,6 +1506,10 @@ msgstr "Εξόρυξη ρευστότητας"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
 msgstr "Αναίρεση ανταλλαγής σύμβασης μετανάστευσης↗"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "Unknown Source"
+msgstr "Αγνωστη πηγή"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1831,6 +1840,14 @@ msgstr "λεπτά"
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "μέσω {0}"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "via {0} token list"
+msgstr "μέσω {0} λίστας διακριτικών"
+
+#: src/components/SearchModal/ImportToken.tsx
+msgid "{0, plural, one {Import token} other {Import tokens}}"
+msgstr "{0, plural, one {Εισαγωγή διακριτικού} other {Εισαγωγή διακριτικών}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
