@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-02 03:03\n"
+"PO-Revision-Date: 2021-06-02 05:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -68,15 +68,15 @@ msgstr "0 UNI/週"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "0.05%の手数料"
+msgstr "0.05% 手数料"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0.3%の手数料"
+msgstr "0.3% 手数料"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1% の手数料"
+msgstr "1% 手数料"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -113,27 +113,27 @@ msgstr "<0></0><1>{0}</1>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>ヒント:</0>プールトークンを削除すると、あなたのポジションは、プールのシェアに比例して、現在のレートで元のトークンに戻ります。受け取った手数料は、あなたが受け取るトークンに含まれます。"
+msgstr "<0>ヒント:</0>プールトークンを削除すると、あなたのポジションは、プールのシェアに比例して、現在の価格で元のトークンに戻ります。受け取った手数料は、あなたが受け取るトークンに含まれます。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find pairs that don't automatically appear in the interface."
-msgstr "<0>ヒント:</0>このツールを使用して、インターフェイスに自動的に表示されないペアを見つけます。"
+msgstr "<0>ヒント:</0>このツールを使用して、サイトに自動的に表示されないペアを見つけます。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>ヒント:</0>流動性を追加すると、あなたのポジションを表すプールトークンを受け取ります。 プールトークンは自動的にプールのシェアに比例して手数料を獲得し、いつでも償還することができます。"
+msgstr "<0>ヒント:</0> 流動性を追加すると、その流動性を表すプールトークンを受け取ります。 プールトークンは自動的にプールのシェアに比例して手数料を獲得します。また、いつでも償還できます。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0>投票のロックを解除</0>次の提案に備えてください。"
+msgstr "次の提案に備えるため <0>投票のロックを解除</0>"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0>🎉 </0>チームユニコーンにようこそ <1>🎉</1>"
+msgstr "<0>🎉 </0>チーム ユニコーンにようこそ <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "提案を提出するには、UNI総供給量の1%以上の閾値が必要です"
+msgstr "提案を提出するには、総供給量の1%以上のUNIが必要です。"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -187,7 +187,7 @@ msgstr "{0}-{1} の流動性を追加"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "{0}/{1} V3流動性を追加"
+msgstr "{0}/{1} V3の流動性を追加"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -227,7 +227,7 @@ msgstr "金額"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "このスワップを実行しようとしたときにエラーが発生しました。スリッページの許容範囲を増やす必要があるかもしれません。それでも上手くいかない場合は、取引しているトークンとの互換性がない可能性があります。転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がないことにご注意ください。"
+msgstr "スワップを実行しようとした際、エラーが発生しました。スリッページの許容範囲を増やす必要があるかもしれません。それでも上手くいかない場合は、取引しているトークンとの互換性がない可能性があります。転送時に手数料が発生するトークンおよびリベーストークンは、UniswapV3と互換性がないことにご注意ください。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -241,7 +241,7 @@ msgstr "承認"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
-msgstr "承認 {0}"
+msgstr "{0} を承認する"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -255,15 +255,15 @@ msgstr "承認中"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
-msgstr "承認中 {0}"
+msgstr "{0} を承認中"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
-msgstr "よろしいですか？"
+msgstr "本当によろしいですか？"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Uniswapコミュニティのメンバーとして、投票とガバナンスのためにUNIを使用することができます。<0/><1/><2>UNIについてもっと見る</2>"
+msgstr "Uniswapコミュニティのメンバーとして、投票とガバナンスのためにUNIを使用できます。<0/><1/><2>UNIについてもっと見る</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -307,15 +307,15 @@ msgstr "ブロックされたアドレス"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性を追加することにより、あなたはプールのシェアに比例して、このペアのすべての取引の0.3%を手数料として獲得します。 手数料はプールに追加され、リアルタイムで反映され、あなたの流動性を引き出すことで請求できます。"
+msgstr "流動性を追加することにより、あなたはプールのシェアに比例して、このペアのすべての取引の0.3%を手数料報酬として獲得します。 手数料報酬はプールに追加され、リアルタイムで反映され、あなたの流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "このリストを追加することで、データが正しいことを暗黙的に信頼することになります。 既存リストの偽のバージョンや、実体のないプロジェクトを掲載するリストが作成するなど、誰でもリストを作成することができます。"
+msgstr "このリストを追加することで、データが正しいことを暗黙的に信頼することになります。 誰でもリストを作成することができます。そのため、既存リストの偽のバージョンや、実体のないプロジェクトを掲載するリストが作成されている可能性があります。"
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "ウォレットを接続することにより、Uniswap Labs' <0>サービス利用規約</0>に同意し、<1>Uniswapプロトコル免責事項</1>を読み、理解したことに同意します。"
+msgstr "ウォレットを接続することにより、Uniswap Labsの <0>サービス利用規約</0>に同意し、<1>Uniswapプロトコル免責事項</1>を読み、理解したことに同意します。"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -350,7 +350,7 @@ msgstr "UNIトークンを請求する"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "UNI報酬を受け取る"
+msgstr "UNI報酬を請求する"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -367,7 +367,7 @@ msgstr "請求済み"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "UNIを主張しました！"
+msgstr "請求済みのUNI！"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
@@ -380,7 +380,7 @@ msgstr "UNIを請求中"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "UNIを {0} 個要求中"
+msgstr "{0} UNIを請求中"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -481,11 +481,11 @@ msgstr "ウォレットに接続"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "プールを見つけるにはウォレットに接続してください"
+msgstr "プールを見つけるにはウォレットを接続してください"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "ウォレットに接続してV2流動性を確認します。"
+msgstr "ウォレットに接続してV2の流動性を確認します。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
