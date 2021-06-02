@@ -8,6 +8,7 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { Link } from 'react-router-dom'
+import { Trans } from '@lingui/macro'
 
 export const ProposalSubmissionModal = ({
   isOpen,
@@ -25,25 +26,27 @@ export const ProposalSubmissionModal = ({
       {!hash ? (
         <LoadingView onDismiss={onDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Submitting Proposal</TYPE.largeHeader>
+            <TYPE.largeHeader>
+              <Trans>Submitting Proposal</Trans>
+            </TYPE.largeHeader>
           </AutoColumn>
         </LoadingView>
       ) : (
         <SubmittedView onDismiss={onDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <Text fontWeight={500} fontSize={20} textAlign="center">
-              Proposal Submitted
+              <Trans>Proposal Submitted</Trans>
             </Text>
             {hash && (
               <ExternalLink href={getExplorerLink(1, hash, ExplorerDataType.TRANSACTION)}>
                 <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                  View on Etherscan
+                  <Trans>View on Etherscan</Trans>
                 </Text>
               </ExternalLink>
             )}
             <ButtonPrimary as={Link} to="/vote" onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
               <Text fontWeight={500} fontSize={20}>
-                Return
+                <Trans>Return</Trans>
               </Text>
             </ButtonPrimary>
           </AutoColumn>

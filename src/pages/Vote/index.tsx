@@ -229,7 +229,7 @@ export default function Vote() {
                   style={{ width: 'fit-content', borderRadius: '8px' }}
                   padding="8px"
                 >
-                  Create Proposal
+                  <Trans>Create Proposal</Trans>
                 </ButtonPrimary>
               ) : (
                 ''

@@ -26,6 +26,7 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
+import { Trans } from '@lingui/macro'
 
 const ProposalWrapper = styled.div`
   display: flex;
@@ -46,14 +47,20 @@ const CreateProposalButton = ({
   handleCreateProposal: () => void
 }) => {
   return hasActiveOrPendingProposal ? (
-    <ButtonError marginTop="18px">You already have an active or pending proposal</ButtonError>
+    <ButtonError marginTop="18px">
+      <Trans>You already have an active or pending proposal</Trans>
+    </ButtonError>
   ) : !hasEnoughVote ? (
-    <ButtonError marginTop="18px">You don&apos;t have enough vote to create a proposal</ButtonError>
+    <ButtonError marginTop="18px">
+      <Trans>You don&apos;t have enough vote to create a proposal</Trans>
+    </ButtonError>
   ) : isFormInvalid ? (
-    <ButtonError marginTop="18px">Some proposal data is missing</ButtonError>
+    <ButtonError marginTop="18px">
+      <Trans>Some proposal data is missing</Trans>
+    </ButtonError>
   ) : (
     <Button style={{ marginTop: '18px' }} onClick={handleCreateProposal}>
-      Create Proposal
+      <Trans>Create Proposal</Trans>
     </Button>
   )
 }
@@ -141,9 +148,8 @@ export default function CreateProposal() {
 ${bodyValue}
 `
 
-    const hash = await createProposalCallback(createProposalData ?? undefined)?.catch((error) => {
+    const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
       setAttempting(false)
-      console.log(error)
     })
 
     if (hash) setHash(hash)
@@ -156,9 +162,11 @@ ${bodyValue}
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'primaryText1'}>
-              <strong>Tip:</strong> Enter the proposed action and a description to help the community understand your
-              proposal. You will not be able to modify a proposal once submitted, so please check that all information
-              is correct. The voting period will begin immediately and last for 7 days.
+              <Trans>
+                <strong>Tip:</strong> Enter the proposed action and a description to help the community understand your
+                proposal. You will not be able to modify a proposal once submitted, so please check that all information
+                is correct. The voting period will begin immediately and last for 7 days.
+              </Trans>
             </TYPE.link>
           </AutoColumn>
         </BlueCard>

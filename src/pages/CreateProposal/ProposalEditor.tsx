@@ -1,6 +1,7 @@
 import React, { memo } from 'react'
 import styled from 'styled-components'
 import { ResizingTextArea, TextInput } from 'components/TextInput'
+import { Trans } from '@lingui/macro'
 
 const ProposalEditorHeader = styled.div`
   font-size: 14px;
@@ -42,7 +43,9 @@ Lorem ipsum dolor sit amet
 
   return (
     <div className={className}>
-      <ProposalEditorHeader>Proposal</ProposalEditorHeader>
+      <ProposalEditorHeader>
+        <Trans>Proposal</Trans>
+      </ProposalEditorHeader>
       <ProposalTitle value={title} onUserInput={onTitleInput} placeholder="Proposal Title" fontSize="1.5rem" />
       <hr />
       <ResizingTextArea value={body} onUserInput={onBodyInput} placeholder={bodyPlaceholder} fontSize="1rem" />

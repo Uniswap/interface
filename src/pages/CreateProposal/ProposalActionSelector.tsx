@@ -7,6 +7,7 @@ import { CloseIcon } from 'theme'
 import Column from 'components/Column'
 import styled from 'styled-components'
 import { ButtonDropdown } from 'components/Button'
+import { Trans } from '@lingui/macro'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -52,7 +53,9 @@ const _ProposalActionSelector = ({
 
   return (
     <div className={className}>
-      <ActionSelectorHeader>Proposed Action</ActionSelectorHeader>
+      <ActionSelectorHeader>
+        <Trans>Proposed Action</Trans>
+      </ActionSelectorHeader>
       <ActionDropdown onClick={onClick}>{proposalAction}</ActionDropdown>
     </div>
   )
@@ -90,7 +93,7 @@ export function ProposalActionSelectorModal({
         <PaddedColumn gap="16px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
-              Select an action
+              <Trans>Select an action</Trans>
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
@@ -99,14 +102,14 @@ export function ProposalActionSelectorModal({
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.TRANSFER_TOKEN)}>
           <Column>
             <Text title="Test" fontWeight={500}>
-              Transfer Token
+              <Trans>Transfer Token</Trans>
             </Text>
           </Column>
         </MenuItem>
         <MenuItem onClick={() => handleProposalActionSelect(ProposalAction.APPROVE_TOKEN)}>
           <Column>
             <Text title="Test" fontWeight={500}>
-              Approve Token
+              <Trans>Approve Token</Trans>
             </Text>
           </Column>
         </MenuItem>
