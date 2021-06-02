@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-02 17:09+0000\n"
+"POT-Creation-Date: 2021-06-02 20:16+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-02 19:58\n"
+"PO-Revision-Date: 2021-06-02 20:50\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -764,11 +764,11 @@ msgstr "Liquidität erhöhen"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr "Erste Preise und Pool-Anteil"
+msgstr "Anfangspreis und Poolanteil"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
-msgstr "Initialisieren..."
+msgstr "Wird initialisiert ..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
@@ -780,11 +780,11 @@ msgstr "Metamask installieren"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "Unzureichende Liquidität für diesen Handel."
+msgstr "Unzureichende Liquidität für diesen Tausch."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Unzureichende Liquidität für diesen Handel. Aktivieren Sie Multi-Hop-Handel."
+msgstr "Unzureichende Liquidität für diesen Tausch. Versuchen Sie es erneut mit aktiviertem Multihop."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -792,11 +792,11 @@ msgstr "Unzureichende Liquidität für diesen Handel. Aktivieren Sie Multi-Hop-H
 #: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
-msgstr "Unzureichendes {0} Gleichgewicht"
+msgstr "Unzureichendes {0} Guthaben"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
-msgstr "Schnittstellen-Einstellungen"
+msgstr "Einstellungen zur Benutzeroberfläche"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
@@ -839,7 +839,7 @@ msgstr "Liquiditätsanbieter Belohnungen"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Liquiditätsanbieter verdienen eine 0,3%ige Gebühr für alle Geschäfte im Verhältnis zu ihrem Anteil am Pool. Die Gebühren werden dem Pool zugerechnet, in Echtzeit anfallen und können durch Abzug der Liquidität in Anspruch genommen werden."
+msgstr "Liquiditätsanbieter verdienen eine 0,3%ige Gebühr für alle Geschäfte im Verhältnis zu ihrem Anteil am Pool. Die Gebühren werden dem Pool zugerechnet, fallen in Echtzeit an und können durch Entfernen der Liquidität in Anspruch genommen werden."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -1574,31 +1574,18 @@ msgstr "Angenommene Gebühren und Analysen anzeigen<0>:up-right_pfeil anzeigen:<
 msgid "View list"
 msgstr "Liste anzeigen"
 
-#: 
-#: 
-#: 
-#~ msgid "View on Etherscan"
-#~ msgstr "Auf Etherscan anzeigen"
-
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
-msgstr ""
-
-#: 
-#: 
-#: 
-#: 
-#~ msgid "View transaction on Etherscan"
-#~ msgstr "Transaktion auf Etherscan anzeigen"
+msgstr "Auf Explorer anzeigen"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
-msgstr ""
+msgstr "Transaktion im Explorer anzeigen"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1916,6 +1903,10 @@ msgstr "{0} Stimmen"
 msgid "{0} per {1}"
 msgstr "{0} pro {1}"
 
+#: src/components/RateToggle/index.tsx
+msgid "{0} price"
+msgstr "{0} Preis"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
@@ -1977,3 +1968,4 @@ msgstr "~$ <0/>"
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
 msgstr "← Zurück zu Pools Übersicht"
+
