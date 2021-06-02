@@ -16,6 +16,7 @@ import {
   ProposalData,
   ProposalState,
   useAllProposalData,
+  useProposalThreshold,
   useUserDelegatee,
   useUserVotes,
 } from '../../state/governance/hooks'
@@ -122,6 +123,9 @@ export default function Vote() {
   // get data to list all proposals
   const allProposals: ProposalData[] = useAllProposalData()
 
+  // governance constants
+  const proposalThreshold: number | undefined = useProposalThreshold()
+
   // user data
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
@@ -136,7 +140,9 @@ export default function Vote() {
   )
 
   const showCreateProposal = Boolean(
-    availableVotes && JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(10000000000000000000000000))
+    availableVotes &&
+      proposalThreshold &&
+      JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(proposalThreshold))
   )
 
   return (

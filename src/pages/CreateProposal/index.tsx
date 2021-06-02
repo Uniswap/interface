@@ -4,6 +4,7 @@ import JSBI from 'jsbi'
 import { utils } from 'ethers'
 import { Button, TYPE } from 'theme'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
 import { generateBytesByType } from 'utils/generateBytesByType'
 import { CreateProposalTabs } from '../../components/NavigationTabs'
@@ -22,6 +23,7 @@ import {
   useCreateProposalCallback,
   useLatestProposalId,
   useProposalData,
+  useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
 
@@ -63,15 +65,14 @@ export default function CreateProposal() {
     useLatestProposalId(account ?? '0x0000000000000000000000000000000000000000')?.toString() ?? '0'
   const latestProposalData = useProposalData(latestProposalId)
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
+  const proposalThreshold: number | undefined = useProposalThreshold()
 
   const [modalOpen, setModalOpen] = useState(false)
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
   const [proposalAction, setProposalAction] = useState(ProposalAction.TRANSFER_TOKEN)
   const [toAddressValue, setToAddressValue] = useState('')
-  const [currencyValue, setCurrencyValue] = useState<Currency>(
-    new Token(chainId ?? 1, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uniswap')
-  )
+  const [currencyValue, setCurrencyValue] = useState<Currency>(UNI[chainId ?? 1])
   const [amountValue, setAmountValue] = useState('')
   const [titleValue, setTitleValue] = useState('')
   const [bodyValue, setBodyValue] = useState('')
@@ -190,11 +191,11 @@ ${bodyValue}
           hasActiveOrPendingProposal={
             latestProposalData?.status === ProposalState.Active || latestProposalData?.status === ProposalState.Pending
           }
-          hasEnoughVote={
-            availableVotes
-              ? JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(10000000000000000000000000))
-              : false
-          }
+          hasEnoughVote={Boolean(
+            availableVotes &&
+              proposalThreshold &&
+              JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(proposalThreshold))
+          )}
           isFormValid={isFormValid}
           handleCreateProposal={handleCreateProposal}
         />

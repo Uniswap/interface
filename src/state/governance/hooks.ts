@@ -295,3 +295,12 @@ export function useLatestProposalId(address: string): string | undefined {
   }
   return undefined
 }
+
+export function useProposalThreshold(): number | undefined {
+  const { chainId } = useActiveWeb3React()
+  const gov = useGovernanceContract()
+
+  const uni = chainId ? UNI[chainId] : undefined
+  const proposalThreshold = useSingleCallResult(gov, 'proposalThreshold')?.result?.[0]
+  return proposalThreshold && uni ? proposalThreshold : undefined
+}

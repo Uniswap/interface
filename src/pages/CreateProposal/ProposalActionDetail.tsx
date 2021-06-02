@@ -64,6 +64,8 @@ const _ProposalActionDetail = ({
             onCurrencySelect={(currency: Currency) => onCurrencySelect(currency)}
             showMaxButton={false}
             showCommonBases={false}
+            showCurrencyAmount={false}
+            disableNonToken={true}
             hideBalance={true}
             id="currency-input"
           />
