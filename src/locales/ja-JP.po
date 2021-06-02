@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-02 05:07\n"
+"PO-Revision-Date: 2021-06-02 06:49\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -327,7 +327,7 @@ msgstr "チャート"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "私たちのv3 LPウォークスルーと移行ガイドをご覧ください。"
+msgstr "v3のLPウォークスルーと移行ガイドをご覧ください。"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -524,11 +524,11 @@ msgstr "プールを作成"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "GitHubで問題を作成する"
+msgstr "GitHubでissueを作成する"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "プールを作成し、 {0}/{1} V3流動性を追加"
+msgstr "プールを作成し、 {0}/{1} のV3流動性を追加"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
@@ -536,16 +536,16 @@ msgstr "プールを作成"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
-msgstr "現在の価格"
+msgstr "現在価格"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
-msgstr "現在の価格"
+msgstr "現在価格"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "現在の {0} 価格:"
+msgstr "{0} の現在価格:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -564,35 +564,35 @@ msgstr "投票を委任中"
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "Deposit（預金）"
+msgstr "入金"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "預金金額"
+msgstr "入金額"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "デポジットUNI-V2 LP トークン"
+msgstr "UNI-V2 LP トークンを入金"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "預金流動性format@@0"
+msgstr "流動性を預ける"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "流動性プロバイダトークンをデポジットして、UNI、Uniswapプロトコルガバナンストークンを受け取ります。"
+msgstr "LPトークンを預けて、UniswapプロトコルのガバナンストークンであるUNIを受け取ります。"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
-msgstr "預金流動性:"
+msgstr "預け入れる流動性:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "{0} UNI-V2"
+msgstr "預け入れた {0} UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "デポジットの流動性"
+msgstr "流動性を預け入れ中"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -628,15 +628,15 @@ msgstr "ドキュメント"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "あなたのv2ポジションのいずれかが表示されませんか? <0>インポートしてください</0>"
+msgstr "V2のポジションが表示されない場合 <0>インポートしてください</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "獲得されたUNIトークンは、Uniswapガバナンスの投票株式を表します。"
+msgstr "獲得したUNIトークンは、Uniswapのガバナンスにおける投票権を表します。"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
-msgstr "受信者を入力してください"
+msgstr "受取人を入力ください"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
@@ -644,7 +644,7 @@ msgstr "有効なスリップページのパーセンテージを入力してく
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "UNIクレームを発生させるアドレスを入力します。アドレスに請求可能なUNIがある場合は、送信時に送信されます。"
+msgstr "UNIの請求を行うためのアドレスを入力してください。そのアドレスに請求可能なUNIがあれば、送信時にそのアドレスに送信されます。"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -655,11 +655,11 @@ msgstr "UNIクレームを発生させるアドレスを入力します。アド
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
-msgstr "金額を入力"
+msgstr "数量を入力してください"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Enter valid list location"
-msgstr "有効なリストの場所を入力してください"
+msgstr "有効なリストの位置を入力ください"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -685,40 +685,40 @@ msgstr "リストのインポートエラー"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
-msgstr "非アクティブなトークンリストから展開された結果"
+msgstr "非アクティブなトークンリストからの検索結果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "エキスパートモードは確認トランザクションプロンプトをオフにし、多くの場合、不良率や資金を失う可能性が高いスリップページ取引を可能にします。"
+msgstr "エキスパートモードは取引確認プロンプトをオフにし、多くの場合、不利な価格や資金を失う可能性が高いスリップページ取引を可能にします。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap Analyticsで人気のプールを探索します。"
+msgstr "Uniswap Analyticsで人気のあるプールを探しましょう。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "手数料段階"
+msgstr "手数料レベル"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "以下に示す各プールについては、format@@0をクリックしてUniswap V2から流動性を削除し、Uniswap V3に入金します。"
+msgstr "以下の各プールで「移行」をクリックすると、Uniswap V2 から流動性を取り出し、Uniswap V3 に預けます。"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
-msgstr "差出人:"
+msgstr "売るトークン:"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
-msgstr "（最大）から"
+msgstr "（最大）売るトークン"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
-msgstr "Discordのサポートを受ける"
+msgstr "Discordでサポートを受ける"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
-msgstr "閉じた位置を隠す"
+msgstr "決済したポジションを隠す"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -730,7 +730,7 @@ msgstr "了解しました"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "このリストからトークンを購入すると、トークンを販売できなくなる可能性があります。"
+msgstr "このリストからトークンを購入すると、トークンを売却できなくなる可能性があります。"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -756,7 +756,7 @@ msgstr "範囲内"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
-msgstr "流動性を上げる"
+msgstr "流動性を増やす"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
@@ -768,7 +768,7 @@ msgstr "初期化中..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "入力が推定されています。最大 <0>{0} {1}</0> で販売するか、トランザクションは元に戻ります。"
+msgstr "入力は推定です。最大で<0>{0} {1}</0>を売らないと、取引が元に戻ってしまいます。"
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
@@ -788,7 +788,7 @@ msgstr "この取引には流動性が不足しています。マルチホップ
 #: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
-msgstr "不十分な {0} バランス"
+msgstr "{0} が残高不足です"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -805,16 +805,16 @@ msgstr "無効なペアです。"
 
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid price input"
-msgstr "無効な価格入力"
+msgstr "無効な価格"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "不正な範囲が選択されています。最小価格は最大価格よりも低くなければなりません。"
+msgstr "無効な範囲が選択されています。最小価格は最大価格よりも低くしてください。"
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "無効な受信者"
+msgstr "受け取りアドレスが無効です"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -823,19 +823,19 @@ msgstr "詳細情報"
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
-msgstr "<unk>"
+msgstr "流動性"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "流動性プロバイダー手数料"
+msgstr "流動性提供者への手数料"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "流動性プロバイダ報酬"
+msgstr "流動性提供者の報酬"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性プロバイダは、プールのシェアに比例したすべての取引で0.3%の手数料を得ます。 手数料はプールに追加され、リアルタイムで補償され、あなたの流動性を引き出すことによって請求することができます。"
+msgstr "流動性提供者は、プールのシェアに比例したすべての取引で0.3%の手数料報酬を獲得します。 手数料報酬はプールに追加され、リアルタイムで反映されます。また、流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
