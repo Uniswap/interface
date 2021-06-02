@@ -104,6 +104,7 @@ export default function ConfirmSwapModal({
       hash={txHash}
       content={confirmationContent}
       pendingText={pendingText}
+      trade={trade}
     />
   )
 }
