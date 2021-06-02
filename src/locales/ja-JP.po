@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-02 09:35\n"
+"PO-Revision-Date: 2021-06-02 14:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -706,7 +706,7 @@ msgstr "以下の各プールで「移行」をクリックすると、Uniswap V
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
-msgstr "売るトークン:"
+msgstr "売るトークン"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
@@ -1378,7 +1378,7 @@ msgstr "ヒント：カスタムトークンはブラウザにローカルに保
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
-msgstr "終了日"
+msgstr "買うトークン"
 
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
