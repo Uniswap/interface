@@ -16,7 +16,6 @@ import {
   ProposalData,
   ProposalState,
   useAllProposalData,
-  useProposalThreshold,
   useUserDelegatee,
   useUserVotes,
 } from '../../state/governance/hooks'
@@ -123,9 +122,6 @@ export default function Vote() {
   // get data to list all proposals
   const allProposals: ProposalData[] = useAllProposalData()
 
-  // governance constant
-  const proposalThreshold: number | undefined = useProposalThreshold()
-
   // user data
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
   const uniBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
@@ -137,13 +133,6 @@ export default function Vote() {
   // show delegation option if they have have a balance, but have not delegated
   const showUnlockVoting = Boolean(
     uniBalance && JSBI.notEqual(uniBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
-  )
-
-  // show create proposal button if they pass the proposal threshold
-  const showCreateProposal = Boolean(
-    availableVotes &&
-      proposalThreshold &&
-      JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(proposalThreshold))
   )
 
   return (
@@ -222,18 +211,14 @@ export default function Vote() {
               ) : (
                 ''
               )}
-              {showCreateProposal ? (
-                <ButtonPrimary
-                  as={Link}
-                  to="/proposal"
-                  style={{ width: 'fit-content', borderRadius: '8px' }}
-                  padding="8px"
-                >
-                  <Trans>Create Proposal</Trans>
-                </ButtonPrimary>
-              ) : (
-                ''
-              )}
+              <ButtonPrimary
+                as={Link}
+                to="/proposal"
+                style={{ width: 'fit-content', borderRadius: '8px' }}
+                padding="8px"
+              >
+                <Trans>Create Proposal</Trans>
+              </ButtonPrimary>
             </AutoRow>
           </WrapSmall>
           {!showUnlockVoting && (
