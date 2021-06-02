@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-02 17:09+0000\n"
+"POT-Creation-Date: 2021-06-02 20:16+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Dutch\n"
-"PO-Revision-Date: 2021-06-02 17:34\n"
+"PO-Revision-Date: 2021-06-02 20:50\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1574,31 +1574,18 @@ msgstr "Opgebouwde kosten en analytics weergeven<0>↗</0>"
 msgid "View list"
 msgstr "Lijst bekijken"
 
-#: 
-#: 
-#: 
-#~ msgid "View on Etherscan"
-#~ msgstr "Bekijk op Etherscan"
-
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
-msgstr ""
-
-#: 
-#: 
-#: 
-#: 
-#~ msgid "View transaction on Etherscan"
-#~ msgstr "Bekijk transactie op Etherscan"
+msgstr "Weergeven op Verkenner"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
-msgstr ""
+msgstr "Bekijk transactie op Explorer"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1916,6 +1903,10 @@ msgstr "{0} Stemmen"
 msgid "{0} per {1}"
 msgstr "{0} per {1}"
 
+#: src/components/RateToggle/index.tsx
+msgid "{0} price"
+msgstr "{0} prijs"
+
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
@@ -1977,3 +1968,4 @@ msgstr "~$ <0/>"
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
 msgstr "← Terug naar Pools overzicht"
+
