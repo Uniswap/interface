@@ -6,6 +6,12 @@
 yarn install
 ```
 
+## Generate locale files
+
+```
+yarn i18n:extract
+```
+
 ## Run the interface
 
 ```bash
