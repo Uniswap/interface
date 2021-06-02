@@ -319,17 +319,17 @@ export function isProduction(): boolean {
 export function isFuse(tokenAddress: string) {
   return (
     tokenAddress === FUSE.symbol ||
-    tokenAddress === FUSE_FOREIGN_TOKEN_ADDRESS ||
-    tokenAddress === BSC_FUSE_TOKEN_ADDRESS
+    stringEquals(tokenAddress, FUSE_FOREIGN_TOKEN_ADDRESS) ||
+    stringEquals(tokenAddress, BSC_FUSE_TOKEN_ADDRESS)
   )
 }
 
 export function isBnb(tokenAddress: string) {
-  return tokenAddress === BNB.symbol || tokenAddress === BNB_FOREIGN_TOKEN_ADDRESS
+  return tokenAddress === BNB.symbol || stringEquals(tokenAddress, BNB_FOREIGN_TOKEN_ADDRESS)
 }
 
 export function isGoodDollar(tokenAddress: string) {
-  return tokenAddress === GOODDOLLAR_HOME_TOKEN_ADDRESS || tokenAddress === GOODDOLLAR_FOREIGN_TOKEN_ADDRESS
+  return stringEquals(tokenAddress, GOODDOLLAR_HOME_TOKEN_ADDRESS) || stringEquals(tokenAddress, GOODDOLLAR_FOREIGN_TOKEN_ADDRESS)
 }
 
 export function getEthFuseBridge(tokenAddress: string) {
@@ -599,4 +599,8 @@ export function supportRecipientTransfer(currencyId?: string, bridgeDirection?: 
     bridgeType === BridgeType.BSC_FUSE_NATIVE ||
     bridgeType === BridgeType.BSC_FUSE_ERC20_TO_ERC677
   )
+}
+
+export function stringEquals(stringA: string, stringB: string): boolean {
+  return stringA.toLowerCase() === stringB.toLowerCase()
 }

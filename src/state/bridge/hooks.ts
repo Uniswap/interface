@@ -11,7 +11,7 @@ import {
   selectCurrency,
   setRecipient
 } from './actions'
-import { Currency, CurrencyAmount, ChainId } from '@fuseio/fuse-swap-sdk'
+import { Currency, CurrencyAmount, ChainId, Token } from '@fuseio/fuse-swap-sdk'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { useActiveWeb3React, useChain } from '../../hooks'
 import { tryParseAmount } from '../swap/hooks'
@@ -82,6 +82,11 @@ export function useDerivedBridgeInfo(
   } = useBridgeState()
 
   const inputCurrency = useCurrency(inputCurrencyId, 'Bridge')
+
+  // we fetch currencyId from Token for consistency
+  const currencyId = useMemo(() => {
+    return inputCurrency instanceof Token ? inputCurrency.address : inputCurrency?.symbol
+  }, [inputCurrency])
 
   const currencies: { [field in Field]?: Currency } = useMemo(
     () => ({
@@ -156,7 +161,7 @@ export function useDerivedBridgeInfo(
     inputError,
     bridgeTransactionStatus,
     confirmations,
-    inputCurrencyId
+    inputCurrencyId: currencyId
   }
 }
 
