@@ -1,13 +1,14 @@
 import JSBI from 'jsbi'
 import React, { useCallback, useMemo, useState, useEffect, ReactNode } from 'react'
-import { Fraction, Percent, Price, Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
-import { FACTORY_ADDRESS } from '@uniswap/v2-sdk'
+import { Fraction, Percent, Price, Token, CurrencyAmount } from '@uniswap/sdk-core'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
+import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
+import { WETH9_EXTENDED } from '../../constants/tokens'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -123,9 +124,10 @@ function V2PairMigration({
 }) {
   const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
+  const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined
 
   const pairFactory = useSingleCallResult(pair, 'factory')
-  const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== FACTORY_ADDRESS
+  const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== v2FactoryAddress
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()
@@ -593,9 +595,10 @@ function V2PairMigration({
                   <TYPE.black fontSize={12}>
                     <Trans>
                       At least {formatCurrencyAmount(refund0, 4)}{' '}
-                      {token0.equals(WETH9[chainId]) ? 'ETH' : token0.symbol} and {formatCurrencyAmount(refund1, 4)}{' '}
-                      {token1.equals(WETH9[chainId]) ? 'ETH' : token1.symbol} will be refunded to your wallet due to
-                      selected price range.
+                      {token0.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : token0.symbol} and{' '}
+                      {formatCurrencyAmount(refund1, 4)}{' '}
+                      {token1.equals(WETH9_EXTENDED[chainId]) ? 'ETH' : token1.symbol} will be refunded to your wallet
+                      due to selected price range.
                     </Trans>
                   </TYPE.black>
                 ) : null}

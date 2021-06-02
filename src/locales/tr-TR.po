@@ -1574,18 +1574,31 @@ msgstr "Tahakkuk eden ücretleri ve analizleri görüntüleyin <0> ↗</0>"
 msgid "View list"
 msgstr "Listeyi görüntüle"
 
+#: 
+#: 
+#: 
+#~ msgid "View on Etherscan"
+#~ msgstr "Etherscan üzerinde görüntüle"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on Etherscan"
-msgstr "Etherscan üzerinde görüntüle"
+msgid "View on Explorer"
+msgstr ""
+
+#: 
+#: 
+#: 
+#: 
+#~ msgid "View transaction on Etherscan"
+#~ msgstr "Etherscan'da işlemi görüntüle"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
-msgid "View transaction on Etherscan"
-msgstr "Etherscan'da işlemi görüntüle"
+msgid "View transaction on Explorer"
+msgstr ""
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1964,4 +1977,3 @@ msgstr "~ $ <0 />"
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
 msgstr "← Havuzlara Genel Bakış'e geri dön"
-

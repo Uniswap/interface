@@ -1574,18 +1574,31 @@ msgstr "Voir les frais et les analyses accumulés<0>↗</0>"
 msgid "View list"
 msgstr "Voir la liste"
 
+#: 
+#: 
+#: 
+#~ msgid "View on Etherscan"
+#~ msgstr "Voir sur Etherscan"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on Etherscan"
-msgstr "Voir sur Etherscan"
+msgid "View on Explorer"
+msgstr ""
+
+#: 
+#: 
+#: 
+#: 
+#~ msgid "View transaction on Etherscan"
+#~ msgstr "Voir la transaction sur Etherscan"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
-msgid "View transaction on Etherscan"
-msgstr "Voir la transaction sur Etherscan"
+msgid "View transaction on Explorer"
+msgstr ""
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1964,4 +1977,3 @@ msgstr "~$ <0/>"
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
 msgstr "Aperçu du retour aux pools"
-

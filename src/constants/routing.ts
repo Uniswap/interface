@@ -1,6 +1,25 @@
 // a list of tokens by chain
-import { Currency, Ether, Token, WETH9 } from '@uniswap/sdk-core'
-import { AMPL, DAI, ETH2X_FLI, FEI, FRAX, FXS, MIR, renBTC, TRIBE, UMA, UNI, USDC, USDT, UST, WBTC } from './tokens'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { SupportedChainId } from './chains'
+import {
+  AMPL,
+  DAI,
+  ExtendedEther,
+  FEI,
+  FRAX,
+  FXS,
+  MIR,
+  renBTC,
+  TRIBE,
+  UMA,
+  UNI,
+  USDC,
+  USDT,
+  UST,
+  WBTC,
+  ETH2X_FLI,
+  WETH9_EXTENDED,
+} from './tokens'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -31,11 +50,13 @@ const mAssetsAdditionalBases: { [tokenAddress: string]: Token[] } = {
   '0xf72FCd9DCF0190923Fadd44811E240Ef4533fc86': [MIR, UST], // mVIXY
 }
 const WETH_ONLY: ChainTokenList = {
-  [1]: [WETH9[1]],
-  [3]: [WETH9[3]],
-  [4]: [WETH9[4]],
-  [5]: [WETH9[5]],
-  [42]: [WETH9[42]],
+  [SupportedChainId.MAINNET]: [WETH9_EXTENDED[SupportedChainId.MAINNET]],
+  [SupportedChainId.ROPSTEN]: [WETH9_EXTENDED[SupportedChainId.ROPSTEN]],
+  [SupportedChainId.RINKEBY]: [WETH9_EXTENDED[SupportedChainId.RINKEBY]],
+  [SupportedChainId.GOERLI]: [WETH9_EXTENDED[SupportedChainId.GOERLI]],
+  [SupportedChainId.KOVAN]: [WETH9_EXTENDED[SupportedChainId.KOVAN]],
+  [SupportedChainId.ARBITRUM_KOVAN]: [WETH9_EXTENDED[SupportedChainId.ARBITRUM_KOVAN]],
+  [SupportedChainId.ARBITRUM_ONE]: [WETH9_EXTENDED[SupportedChainId.ARBITRUM_ONE]],
 }
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
@@ -65,7 +86,7 @@ export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: To
  */
 export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[] } } = {
   [1]: {
-    [AMPL.address]: [DAI, WETH9[1]],
+    [AMPL.address]: [DAI, WETH9_EXTENDED[1]],
   },
 }
 
@@ -73,11 +94,19 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
-  [1]: [Ether.onChain(1), DAI, USDC, USDT, WBTC, WETH9[1]],
-  [3]: [Ether.onChain(3), WETH9[3]],
-  [4]: [Ether.onChain(4), WETH9[4]],
-  [5]: [Ether.onChain(5), WETH9[5]],
-  [42]: [Ether.onChain(42), WETH9[42]],
+  [1]: [ExtendedEther.onChain(1), DAI, USDC, USDT, WBTC, WETH9_EXTENDED[1]],
+  [3]: [ExtendedEther.onChain(3), WETH9_EXTENDED[3]],
+  [4]: [ExtendedEther.onChain(4), WETH9_EXTENDED[4]],
+  [5]: [ExtendedEther.onChain(5), WETH9_EXTENDED[5]],
+  [42]: [ExtendedEther.onChain(42), WETH9_EXTENDED[42]],
+  [SupportedChainId.ARBITRUM_KOVAN]: [
+    ExtendedEther.onChain(SupportedChainId.ARBITRUM_KOVAN),
+    WETH9_EXTENDED[SupportedChainId.ARBITRUM_KOVAN],
+  ],
+  [SupportedChainId.ARBITRUM_ONE]: [
+    ExtendedEther.onChain(SupportedChainId.ARBITRUM_ONE),
+    WETH9_EXTENDED[SupportedChainId.ARBITRUM_ONE],
+  ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend

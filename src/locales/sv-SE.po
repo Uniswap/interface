@@ -1574,18 +1574,31 @@ msgstr "Visa upplupna avgifter och analytiker<0>↗</0>"
 msgid "View list"
 msgstr "Visa lista"
 
+#: 
+#: 
+#: 
+#~ msgid "View on Etherscan"
+#~ msgstr "Visa på Etherscan"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on Etherscan"
-msgstr "Visa på Etherscan"
+msgid "View on Explorer"
+msgstr ""
+
+#: 
+#: 
+#: 
+#: 
+#~ msgid "View transaction on Etherscan"
+#~ msgstr "Visa transaktionen på Etherscan"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
-msgid "View transaction on Etherscan"
-msgstr "Visa transaktionen på Etherscan"
+msgid "View transaction on Explorer"
+msgstr ""
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1964,4 +1977,3 @@ msgstr "~$ <0/>"
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
 msgstr "← Tillbaka till Poolernas översikt"
-

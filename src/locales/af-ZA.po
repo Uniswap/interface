@@ -1574,18 +1574,31 @@ msgstr "Kyk na opgelope fooie en analise <0> ↗</0>"
 msgid "View list"
 msgstr "Kyk na lys"
 
+#: 
+#: 
+#: 
+#~ msgid "View on Etherscan"
+#~ msgstr "Uitsig op Etherscan"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on Etherscan"
-msgstr "Uitsig op Etherscan"
+msgid "View on Explorer"
+msgstr ""
+
+#: 
+#: 
+#: 
+#: 
+#~ msgid "View transaction on Etherscan"
+#~ msgstr "Besigtig transaksie op Etherscan"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
-msgid "View transaction on Etherscan"
-msgstr "Besigtig transaksie op Etherscan"
+msgid "View transaction on Explorer"
+msgstr ""
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1964,4 +1977,3 @@ msgstr "~ $ <0 />"
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
 msgstr "← Terug na swembaddens"
-

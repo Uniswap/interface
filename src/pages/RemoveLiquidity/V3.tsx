@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { WETH9_EXTENDED } from '../../constants/tokens'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import AppBody from '../AppBody'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -22,7 +23,7 @@ import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks/web3'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { Percent, WETH9 } from '@uniswap/sdk-core'
+import { Percent } from '@uniswap/sdk-core'
 import { TYPE } from 'theme'
 import { Wrapper, SmallMaxButton, ResponsiveHeaderText } from './styled'
 import Loader from 'components/Loader'
@@ -378,8 +379,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               liquidityValue1?.currency &&
               (liquidityValue0.currency.isNative ||
                 liquidityValue1.currency.isNative ||
-                liquidityValue0.currency.wrapped.equals(WETH9[liquidityValue0.currency.chainId]) ||
-                liquidityValue1.currency.wrapped.equals(WETH9[liquidityValue1.currency.chainId])) ? (
+                liquidityValue0.currency.wrapped.equals(WETH9_EXTENDED[liquidityValue0.currency.chainId]) ||
+                liquidityValue1.currency.wrapped.equals(WETH9_EXTENDED[liquidityValue1.currency.chainId])) ? (
                 <RowBetween>
                   <TYPE.main>
                     <Trans>Collect as WETH</Trans>

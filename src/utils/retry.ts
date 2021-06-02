@@ -23,6 +23,12 @@ export class RetryableError extends Error {
   public isRetryableError: true = true
 }
 
+export interface RetryOptions {
+  n: number
+  minWait: number
+  maxWait: number
+}
+
 /**
  * Retries the function that returns the promise until the promise successfully resolves up to n retries
  * @param fn function to retry
@@ -32,7 +38,7 @@ export class RetryableError extends Error {
  */
 export function retry<T>(
   fn: () => Promise<T>,
-  { n, minWait, maxWait }: { n: number; minWait: number; maxWait: number }
+  { n, minWait, maxWait }: RetryOptions
 ): { promise: Promise<T>; cancel: () => void } {
   let completed = false
   let rejectCancelled: (error: Error) => void

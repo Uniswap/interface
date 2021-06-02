@@ -1574,18 +1574,31 @@ msgstr "عرض الرسوم المتراكمة والتحليلات <0>↗</0>"
 msgid "View list"
 msgstr "عرض القائمة"
 
+#:
+#:
+#:
+#~ msgid "View on Etherscan"
+#~ msgstr "عرض على المسح الضوئي"
+
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "View on Etherscan"
-msgstr "عرض على المسح الضوئي"
+msgid "View on Explorer"
+msgstr ""
+
+#:
+#:
+#:
+#:
+#~ msgid "View transaction on Etherscan"
+#~ msgstr "عرض المعاملة على المسح الضوئي"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
-msgid "View transaction on Etherscan"
-msgstr "عرض المعاملة على المسح الضوئي"
+msgid "View transaction on Explorer"
+msgstr ""
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1964,4 +1977,3 @@ msgstr "~$ <0/>"
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
 msgstr "← العودة إلى نظرة عامة للمتجمعات"
-

@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import { Currency } from '@uniswap/sdk-core'
 import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
@@ -19,13 +20,13 @@ export default function RateToggle({
   const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
 
   return tokenA && tokenB ? (
-    <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }}>
+    <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }} onClick={handleRateToggle}>
       <ToggleWrapper width="fit-content">
-        <ToggleElement isActive={isSorted} fontSize="12px" onClick={handleRateToggle}>
-          {isSorted ? currencyA.symbol + ' price ' : currencyB.symbol + ' price '}
+        <ToggleElement isActive={isSorted} fontSize="12px">
+          <Trans>{isSorted ? currencyA.symbol : currencyB.symbol} price</Trans>
         </ToggleElement>
-        <ToggleElement isActive={!isSorted} fontSize="12px" onClick={handleRateToggle}>
-          {isSorted ? currencyB.symbol + ' price ' : currencyA.symbol + ' price '}
+        <ToggleElement isActive={!isSorted} fontSize="12px">
+          {isSorted ? currencyB.symbol : currencyA.symbol} price
         </ToggleElement>
       </ToggleWrapper>
     </div>

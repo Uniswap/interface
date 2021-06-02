@@ -8,14 +8,14 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
 import { PositionDetails } from 'types/position'
-import { WETH9, Price, Token, Percent } from '@uniswap/sdk-core'
+import { Price, Token, Percent } from '@uniswap/sdk-core'
 import { formatPrice } from 'utils/formatCurrencyAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { RowFixed } from 'components/Row'
 import HoverInlineText from 'components/HoverInlineText'
-import { DAI, USDC, USDT, WBTC } from '../../constants/tokens'
+import { DAI, USDC, USDT, WBTC, WETH9_EXTENDED } from '../../constants/tokens'
 import { Trans } from '@lingui/macro'
 
 const LinkRow = styled(Link)`
@@ -146,7 +146,7 @@ export function getPriceOrderingFromPositionForUI(position?: Position): {
   }
 
   // if token1 is an ETH-/BTC-stable asset, set it as the base token
-  const bases = [...Object.values(WETH9), WBTC]
+  const bases = [...Object.values(WETH9_EXTENDED), WBTC]
   if (bases.some((base) => base.equals(token1))) {
     return {
       priceLower: position.token0PriceUpper.invert(),

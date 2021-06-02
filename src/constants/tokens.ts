@@ -1,5 +1,6 @@
-import { Token } from '@uniswap/sdk-core'
+import { WETH9, Token, Ether } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
+import { SupportedChainId } from './chains'
 
 export const AMPL = new Token(1, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const DAI = new Token(1, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
@@ -23,9 +24,37 @@ export const ETH2X_FLI = new Token(
 export const UST = new Token(1, '0xa47c8bf37f92abed4a126bda807a7b7498661acd', 18, 'UST', 'Wrapped UST')
 export const MIR = new Token(1, '0x09a3ecafa817268f77be1283176b946c4ff2e608', 18, 'MIR', 'Wrapped MIR')
 export const UNI: { [chainId: number]: Token } = {
-  [1]: new Token(1, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
-  [4]: new Token(4, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
-  [3]: new Token(3, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
-  [5]: new Token(5, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
-  [42]: new Token(42, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.ROPSTEN]: new Token(SupportedChainId.ROPSTEN, UNI_ADDRESS[3], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.GOERLI]: new Token(SupportedChainId.GOERLI, UNI_ADDRESS[5], 18, 'UNI', 'Uniswap'),
+  [SupportedChainId.KOVAN]: new Token(SupportedChainId.KOVAN, UNI_ADDRESS[42], 18, 'UNI', 'Uniswap'),
+}
+export const WETH9_EXTENDED: { [chainId: number]: Token } = {
+  ...WETH9,
+  [SupportedChainId.ARBITRUM_KOVAN]: new Token(
+    SupportedChainId.ARBITRUM_KOVAN,
+    '0x4A5e4A42dC430f669086b417AADf2B128beFEfac',
+    18,
+    'WETH9',
+    'Wrapped Ether'
+  ),
+  [SupportedChainId.ARBITRUM_ONE]: new Token(
+    SupportedChainId.ARBITRUM_ONE,
+    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
+}
+
+export class ExtendedEther extends Ether {
+  public get wrapped(): Token {
+    if (this.chainId in WETH9_EXTENDED) return WETH9_EXTENDED[this.chainId]
+    throw new Error('Unsupported chain ID')
+  }
+
+  public static onChain(chainId: number): ExtendedEther {
+    return new ExtendedEther(chainId)
+  }
 }
