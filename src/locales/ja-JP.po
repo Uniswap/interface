@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-02 06:49\n"
+"PO-Revision-Date: 2021-06-02 07:35\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -827,15 +827,15 @@ msgstr "流動性"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "流動性提供者への手数料"
+msgstr "流動性供給者への手数料"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "流動性提供者の報酬"
+msgstr "流動性供給者の報酬"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性提供者は、プールのシェアに比例したすべての取引で0.3%の手数料報酬を獲得します。 手数料報酬はプールに追加され、リアルタイムで反映されます。また、流動性を引き出すことで請求できます。"
+msgstr "流動性供給者は、プールのシェアに比例したすべての取引で0.3%の手数料報酬を獲得します。 手数料報酬はプールに追加され、リアルタイムで反映されます。また、流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -871,15 +871,15 @@ msgstr "管理"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "リワードプールで流動性を管理"
+msgstr "報酬プールで流動性を管理"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
-msgstr "トークンリストの管理"
+msgstr "トークンリストを管理"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "このプールを管理します"
+msgstr "このプールを管理"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -925,7 +925,7 @@ msgstr "V2の流動性を移行"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
-msgstr "V2流動性の移行"
+msgstr "V2の流動性を移行"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
@@ -962,7 +962,7 @@ msgstr "新しいポジション"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
-msgstr "V2流動性が見つかりません。"
+msgstr "V2の流動性が見つかりません。"
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
@@ -987,15 +987,15 @@ msgstr "結果が見つかりませんでした。"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
-msgstr "オフ"
+msgstr "OFF"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "オン"
+msgstr "ON"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "あなたが何をしているか分かっている場合にのみ、このモードを使用してください。"
+msgstr "このモードは、自分が何をしているか分かっている場合にのみ使用してください。"
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1007,7 +1007,7 @@ msgstr "オン"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "あなたがレビューするためにレート供給をクリックして満足している一度。"
+msgstr "価格に問題がなければ、「供給」をクリックして確認します。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
