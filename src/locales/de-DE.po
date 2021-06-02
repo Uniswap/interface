@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-02 17:34\n"
+"PO-Revision-Date: 2021-06-02 18:58\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -447,7 +447,7 @@ msgstr "Angebot bestätigen"
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
-msgstr "Swap bestätigen"
+msgstr "Tausch bestätigen"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -455,7 +455,7 @@ msgstr "Swap bestätigen"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "Diese Transaktion in Ihrer Brieftasche bestätigen"
+msgstr "Diese Transaktion in Ihrer Wallet bestätigen"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -472,29 +472,29 @@ msgstr "Wallet verbinden"
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "Brieftasche verbinden"
+msgstr "Eine Wallet verbinden"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
-msgstr "Mit einer Brieftasche verbinden"
+msgstr "Mit einer Wallet verbinden"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "Mit einer Brieftasche verbinden, um Pools zu finden"
+msgstr "Mit einer Wallet verbinden, um Pools zu finden"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "Verbinden Sie sich mit einer Brieftasche, um Ihre V2-Liquidität anzuzeigen."
+msgstr "Verbinden Sie sich mit einer Wallet, um Ihre V2-Liquidität anzuzeigen."
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
-msgstr "Verbinden Sie sich mit einer Brieftasche, um Ihre Liquidität anzuzeigen."
+msgstr "Verbinden Sie sich mit einer Wallet, um Ihre Liquidität anzuzeigen."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Connect wallet"
-msgstr "Brieftasche verbinden"
+msgstr "Wallet verbinden"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -511,7 +511,7 @@ msgstr "Adresse kopieren"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Pool & Versorgung erstellen"
+msgstr "Pool & Angebot erstellen"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -524,7 +524,7 @@ msgstr "Pool erstellen"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "Erstellen Sie ein Problem auf GitHub"
+msgstr "Ein Ticket auf GitHub eröffnen"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
@@ -536,7 +536,7 @@ msgstr "Pool erstellen."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
-msgstr "Derzeitiger Preis"
+msgstr "Aktueller Preis"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -545,11 +545,11 @@ msgstr "Aktueller Preis"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "Aktueller {0} -Preis:"
+msgstr "Aktueller {0}-Preis:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
-msgstr "Abstimmungen delegieren"
+msgstr "Stimmrecht delegieren"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
@@ -557,14 +557,14 @@ msgstr "Delegiert an:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
-msgstr "Delegierte Stimmen"
+msgstr "Delegiere Stimmrecht"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "Einzahlung"
+msgstr "Depot"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
@@ -1308,7 +1308,7 @@ msgstr "Liefert {0} {1} und {2} {3}"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap"
-msgstr "Tausch"
+msgstr "Tauschen"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
