@@ -1959,5 +1959,5 @@ msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "<unk> Назад к пулам"
+msgstr "← Назад к пулам"
 
