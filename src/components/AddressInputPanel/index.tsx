@@ -67,8 +67,8 @@ const Input = styled.input<{ error?: boolean }>`
 
 export default function AddressInputPanel({
   id,
-  className,
-  label,
+  className = 'recipient-address-input',
+  label = 'Recipient',
   placeholder,
   value,
   onChange,
@@ -105,7 +105,7 @@ export default function AddressInputPanel({
           <AutoColumn gap="md">
             <RowBetween>
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
-                {label ?? 'Recipient'}
+                {label}
               </TYPE.black>
               {address && chainId && (
                 <ExternalLink
@@ -117,7 +117,7 @@ export default function AddressInputPanel({
               )}
             </RowBetween>
             <Input
-              className={className ?? 'recipient-address-input'}
+              className={className}
               type="text"
               autoComplete="off"
               autoCorrect="off"
