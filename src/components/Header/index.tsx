@@ -1,5 +1,5 @@
 import useScrollPosition from '@react-hook/window-scroll'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'

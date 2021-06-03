@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { ReactNode, useContext } from 'react'
+import { ReactNode, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'
 import Modal from '../Modal'

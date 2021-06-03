@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks/web3'
 
