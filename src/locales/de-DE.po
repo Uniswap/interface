@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-02 23:21\n"
+"PO-Revision-Date: 2021-06-03 20:33\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -897,11 +897,11 @@ msgstr "Maximaler Preis"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
-msgstr "Maximaler Preis"
+msgstr "Max. Preis"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
-msgstr "Max:"
+msgstr "Max.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
@@ -921,7 +921,7 @@ msgstr "Liquidität migrieren"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "Liquidität auf V3 migrieren"
+msgstr "Liquidität zu V3 migrieren"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
@@ -938,7 +938,7 @@ msgstr "Migrieren Sie Ihre Liquiditäts-Token von Uniswap V2 nach Uniswap V3."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
-msgstr "Migrieren"
+msgstr "Migriere"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -951,7 +951,7 @@ msgstr "Min. Preis"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
-msgstr "Min. :"
+msgstr "Min.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
@@ -980,7 +980,7 @@ msgstr "Keine Liquidität gefunden."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "Kein Pool gefunden."
+msgstr "Keinen Pool gefunden."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
@@ -996,19 +996,19 @@ msgstr "AUS"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "AUF"
+msgstr "EIN"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "NUR NUR NUTZUNG DIESER MODUS WENN SIE WENN SIE WENN SIE ERHALTEN."
+msgstr "VERWENDEN SIE DIESEN MODUS NUR, WENN SIE WISSEN, WAS SIE TUN."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
-msgstr "aus"
+msgstr "Aus"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "Auf"
+msgstr "Ein"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1016,15 +1016,15 @@ msgstr "Sobald Sie mit dem Preis zufrieden sind, klicken Sie auf die Schaltfläc
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Nur UNI-Stimmen, die vor Block {0} an eine andere Adresse delegiert oder an eine andere Adresse delegiert wurden, sind zur Abstimmung berechtigt."
+msgstr "Nur UNI-Stimmen, die vor Block {0} an die eigene oder eine fremde Adresse delegiert wurden, sind zur Abstimmung berechtigt."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Hoppla! Ein unbekannter Fehler ist aufgetreten. Bitte aktualisieren Sie die Seite oder besuchen Sie einen anderen Browser oder Gerät."
+msgstr "Hoppla! Ein unbekannter Fehler ist aufgetreten. Bitte aktualisieren Sie die Seite oder besuchen Sie uns von einem anderen Browser oder Gerät."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
-msgstr "Außerhalb des Bereichs"
+msgstr "Nicht im Bereich"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1231,7 +1231,7 @@ msgstr "Wählen Sie einen Pool-Typ basierend auf Ihrer bevorzugten Liquiditätsa
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "Wählen Sie ein Token"
+msgstr "Token auswählen"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1362,7 +1362,7 @@ msgstr "Die Transaktion konnte nicht gesendet werden, da die Frist abgelaufen is
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
-msgstr "Diese Token werden normalerweise mit anderen Token gekoppelt."
+msgstr "Diese Token werden üblicherweise mit anderen Token gepaart."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1858,7 +1858,7 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0/> pro <1/>"
+msgstr "{0} <0/>/<1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
