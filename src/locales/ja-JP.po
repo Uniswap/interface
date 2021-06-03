@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-03 06:36\n"
+"PO-Revision-Date: 2021-06-03 07:33\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -97,7 +97,7 @@ msgstr "<0/>すべての提案"
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/>投票"
+msgstr "<0/> 投票権"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -129,7 +129,7 @@ msgstr "<0>🎉 </0>チーム ユニコーンにようこそ <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "提案を提出するには、総供給量の1%以上のUNIが必要です。"
+msgstr "提案の提出には、総供給量の1%以上のUNIが必要です。"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -549,7 +549,7 @@ msgstr "投票を委任する"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
-msgstr "委任先:"
+msgstr "投票の委任先:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -685,7 +685,7 @@ msgstr "非アクティブなトークンリストからの検索結果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "エキスパートモードは取引確認画面をオフになり、多くの場合、不利な価格や資金を失う可能性がある高スリップページ取引を許可します。"
+msgstr "エキスパートモードは取引確認画面をオフし、不利な価格や資金を失う可能性のある高スリップページ取引を許可します。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -693,7 +693,7 @@ msgstr "Uniswap Analyticsで人気のあるプールを探しましょう。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "手数料レベル"
+msgstr "設定手数料"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -773,7 +773,7 @@ msgstr "初期化中..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "最大で<0>{0} {1}</0>を売らないと、取引が差し戻されます見込みです。"
+msgstr "上記は概算です。最大で<0>{0} {1}</0>を売れなければ、取引は差し戻されます。"
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
@@ -793,7 +793,7 @@ msgstr "この取引には流動性が不足しています。マルチホップ
 #: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
-msgstr "{0} の残高不足です"
+msgstr "{0} の残高が足りません"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -884,7 +884,7 @@ msgstr "トークンリストを管理"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "このプールを管理"
+msgstr "プールを管理"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1033,7 +1033,7 @@ msgstr "価格が {0}%以上変化した場合、取引は差し戻される見�
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "<0>{0} {1}</0> 以上を受け取るか、取引は差し戻される見込みです。"
+msgstr "取引結果は概算です。<0>{0} {1}</0> 以上を買えない場合は、取引は差し戻されます。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1334,7 +1334,7 @@ msgstr "入力トークンは転送できません。入力トークンに問題
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "市場価格が指定した価格帯を外れています。単一トークンの預け入れのみ。"
+msgstr "市場価格が指定した価格帯を外れています。単一トークンのみ預け入れできます。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1346,15 +1346,15 @@ msgstr "買うトークンは転送できません。買うトークンに問題
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "このプールの価格は指定した価格帯を外れています。あなたのポジションは現在報酬を獲得していません。"
+msgstr "現在の価格は指定した価格帯から外れています。そのため、現時点であなたのポジションは報酬を獲得しません。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "このプールの価格は指定した価格帯に入っています。あなたのポジションは現在手数料を獲得しています。"
+msgstr "現在の価格は指定した価格帯に入っています。そのため、現時点であなたのポジションは報酬を獲得できます。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "追加するトークンの比率によって、このプールの価格が決まります。"
+msgstr "追加するトークンの比率によって、プールの価格が決まります。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
@@ -1415,7 +1415,7 @@ msgstr "総供給量"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
-msgstr "合計預入額"
+msgstr "合計預入数量"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
@@ -1703,7 +1703,7 @@ msgstr "{0}を取引できるようになりました"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "このプールにはまだ流動性がありません。"
+msgstr "プールにはまだ流動性がありません。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -1744,7 +1744,7 @@ msgstr "預け入れた流動性"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "流動性は、ペアの価格が指定した価格帯に入っている場合のみ報酬を獲得します。 <0>価格帯を決めるのにサポートが必要ですか？</0>"
+msgstr "流動性はペアの価格が指定した価格帯に入っている場合のみ報酬を獲得します。 価格帯を指定するガイドは<0>こちら</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1918,7 +1918,7 @@ msgstr "{0} 件の投票"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
-msgstr "{0} あたり {1}"
+msgstr "{0} / {1}"
 
 #: src/components/RateToggle/index.tsx
 msgid "{0} price"
@@ -1976,7 +1976,7 @@ msgstr "{percentForSlider}%"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
-msgstr "{tokenB} あたり {tokenA}"
+msgstr "{tokenB} / {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
