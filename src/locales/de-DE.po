@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-03 20:33\n"
+"PO-Revision-Date: 2021-06-03 21:28\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1029,11 +1029,11 @@ msgstr "Nicht im Bereich"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "Die Ausgabe wird geschätzt. Wenn sich die Preisänderung um mehr als {0}% ändert, wird Ihre Transaktion rückgängig gemacht."
+msgstr "Ausgabemenge geschätzt. Wenn sich der Preis um mehr als {0}% ändert, wird Ihre Transaktion rückgängig gemacht."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "Die Ausgabe wird geschätzt. Sie erhalten mindestens <0>{0} {1}</0> oder die Transaktion wird rückgängig gemacht."
+msgstr "Ausgabemenge geschätzt. Sie erhalten mindestens <0>{0} {1}</0> oder die Transaktion wird rückgängig gemacht."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1041,7 +1041,7 @@ msgstr "Ausgabe wird an <0>{0}</0> gesendet"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
-msgstr "Besitzer"
+msgstr "Eigentümer"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
@@ -1066,16 +1066,16 @@ msgstr "Pool gefunden!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Pool-Rate"
+msgstr "Pool Rate"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Poolrate"
+msgstr "Pool Rate"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Pool-Token in Belohnungspool:"
+msgstr "Pool-Tokens im Belohnungspool:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1086,11 +1086,11 @@ msgstr "Pool-Token in Belohnungspool:"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "{0} gepackt:"
+msgstr "{0} gepoolt:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "Pool-Übersicht"
+msgstr "Pool Übersicht"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1560,7 +1560,7 @@ msgstr "V2-Liquidität"
 
 #: src/pages/Swap/index.tsx
 msgid "V3"
-msgstr "P3"
+msgstr "V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
