@@ -54,12 +54,8 @@ const CreateProposalButton = ({
     <ButtonError marginTop="18px" error={true}>
       <Trans>You don&apos;t have enough vote to create a proposal</Trans>
     </ButtonError>
-  ) : isFormInvalid ? (
-    <ButtonError marginTop="18px" error={true}>
-      <Trans>Some proposal data is missing</Trans>
-    </ButtonError>
   ) : (
-    <Button style={{ marginTop: '18px' }} onClick={handleCreateProposal}>
+    <Button style={{ marginTop: '18px' }} disabled={isFormInvalid} onClick={handleCreateProposal}>
       <Trans>Create Proposal</Trans>
     </Button>
   )
