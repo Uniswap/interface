@@ -10,7 +10,7 @@ const ProposalEditorHeader = styled.div`
 `
 
 const ProposalTitle = memo(styled(TextInput)`
-  margin-top: 7.5px;
+  margin-top: 10.5px;
   margin-bottom: 7.5px;
 `)
 

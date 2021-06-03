@@ -47,15 +47,15 @@ const CreateProposalButton = ({
   handleCreateProposal: () => void
 }) => {
   return hasActiveOrPendingProposal ? (
-    <ButtonError marginTop="18px">
+    <ButtonError marginTop="18px" error={true}>
       <Trans>You already have an active or pending proposal</Trans>
     </ButtonError>
   ) : !hasEnoughVote ? (
-    <ButtonError marginTop="18px">
+    <ButtonError marginTop="18px" error={true}>
       <Trans>You don&apos;t have enough vote to create a proposal</Trans>
     </ButtonError>
   ) : isFormInvalid ? (
-    <ButtonError marginTop="18px">
+    <ButtonError marginTop="18px" error={true}>
       <Trans>Some proposal data is missing</Trans>
     </ButtonError>
   ) : (
