@@ -1,6 +1,6 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import usePrevious from '../../hooks/usePrevious'
@@ -123,7 +123,8 @@ export default function WalletModal({
 }: WalletModalProps) {
   const { active, account, connector, error } = useWeb3React()
 
-  const closeModal = () => setModal(null)
+  const closeModal = useCallback(() => setModal(null), [setModal]);  
+  
   const isModalVisible = modal !== null
 
   const previousAccount = usePrevious(account)
@@ -135,16 +136,14 @@ export default function WalletModal({
     }
   }, [account, previousAccount, closeModal, isModalVisible])
 
-
-  const closeOnConnect = () => {
-    if (!!modal && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
-      setModal(null)
-    }
-  }
   
   const activePrevious = usePrevious(active)
   const connectorPrevious = usePrevious(connector)
-  useEffect(() => closeOnConnect(), [setModal, ModalView, error, connector, modal, activePrevious, connectorPrevious])
+  useEffect(() => {
+    if (!!modal && ((active && !activePrevious) || (connector && connector !== connectorPrevious && !error))) {
+      setModal(null)
+    }
+  }, [setModal, active, error, connector, modal, activePrevious, connectorPrevious])
 
   function getModalContent() {
     if (error) {

@@ -1,6 +1,5 @@
 import { ChainId } from 'dxswap-sdk';
 import React from 'react'
-import { ChevronDown } from 'react-feather';
 import { Text } from 'rebass';
 import styled from 'styled-components';
 import { useNetworkSwitcherPopoverToggle } from '../../state/application/hooks';
@@ -12,6 +11,7 @@ import { RowBetween } from '../Row';
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
+import triangleIcon from '../../assets/svg/triangle.svg'
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -67,6 +67,10 @@ const Web3StatusNetwork = styled.button<{ pendingTransactions?: boolean }>`
   border-radius: 12px;
   background-color: ${({ theme }) => theme.dark2};
   border: none;
+
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const IconWrapper = styled.div<{ size?: number | null }>`
@@ -83,6 +87,11 @@ const IconWrapper = styled.div<{ size?: number | null }>`
     align-items: center;
   `};
 `
+
+const TriangleIcon = styled.img`
+  margin-left: 6px;
+`;
+
 
 interface AccountStatusProps {
   pendingTransactions: string[];
@@ -108,14 +117,14 @@ export function AccountStatus({pendingTransactions, ENSName, account, networkCon
         )}
       </Web3StatusConnected>
       <NetworkSwitcherPopover>
-        <Web3StatusNetwork onClick={!!!account ? toggleNetworkSwitcherPopover : () => {}}>
+        <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover}>
           <IconWrapper size={20}>
-            <img src={ChainLogo[networkConnectorChainId]} alt={''} />
+            <img src={ChainLogo[networkConnectorChainId]} alt="chain logo" />
           </IconWrapper>
-          <TYPE.white ml="8px" mr={!!!account ? '4px' : '0px'} fontWeight={700} fontSize="12px">
+          <TYPE.white ml="8px" fontWeight={700} fontSize="12px">
             {ChainLabel[networkConnectorChainId]}
           </TYPE.white>
-          {!!!account && <ChevronDown size={16} />}
+          <TriangleIcon src={triangleIcon} alt="triangle" />
         </Web3StatusNetwork>
       </NetworkSwitcherPopover>
     </View>

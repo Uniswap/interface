@@ -29,6 +29,11 @@ const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   transition: border 0.3s ease;
   color: white;
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+
+  &:disabled {
+    filter: grayscale(90%);
+    opacity: 0.6;
+  }
 `
 
 const HeaderText = styled.div`

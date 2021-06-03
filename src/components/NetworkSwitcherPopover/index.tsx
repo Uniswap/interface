@@ -14,14 +14,38 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { NETWORK_DETAIL } from '../../constants'
 import { CustomNetworkConnector } from '../../connectors/CustomNetworkConnector'
 
+const StyledPopover = styled(Popover)`
+  padding: 0;
+  background-color: ${({ theme }) => theme.bg1};
+  border-color: ${({ theme }) => theme.dark2};
+  border-style: solid;
+  border-width: 1.2px;
+  border-radius: 12px;
+  border-image: none;
+  overflow: hidden;
+`;
+
 const OptionGrid = styled.div`
   display: grid;
   grid-gap: 10px;
+  padding: 22px 22px 15px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
     grid-gap: 10px;
-  `};
+    `};
 `
+
+const PopoverFooter = styled.div`
+  padding: 20px 18px;
+  font-weight: bold;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg1And2};
+`;
 
 export default function NetworkSwitcherPopover({ children }: { children: ReactNode }) {
   const { connector } = useActiveWeb3React()
@@ -54,38 +78,41 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
 
   return (
     <div ref={popoverRef}>
-      <Popover
+      <StyledPopover
         content={
-          <OptionGrid>
-            <Option
-              onClick={() => {
-                selectNetwork(ChainId.MAINNET)
-              }}
-              header={'Ethereum'}
-              logoSrc={EthereumLogo}
-            />
-            <Option
-              onClick={() => {
-                selectNetwork(ChainId.XDAI)
-              }}
-              header={'xDai'}
-              logoSrc={XDAILogo}
-            />
-            <Option
-              onClick={() => {
-                selectNetwork(ChainId.ARBITRUM_TESTNET_V3)
-              }}
-              header={'Arbitrum'}
-              logoSrc={ArbitrumLogo}
-              disabled={true}
-              clickable={false}
-            />
-          </OptionGrid>
+          <>
+            <OptionGrid>
+              <Option
+                onClick={() => {
+                  selectNetwork(ChainId.MAINNET)
+                }}
+                header={'Ethereum'}
+                logoSrc={EthereumLogo}
+              />
+              <Option
+                onClick={() => {
+                  selectNetwork(ChainId.XDAI)
+                }}
+                header={'xDai'}
+                logoSrc={XDAILogo}
+              />
+              <Option
+                onClick={() => {
+                  selectNetwork(ChainId.ARBITRUM_TESTNET_V3)
+                }}
+                header={'Arbitrum'}
+                logoSrc={ArbitrumLogo}
+                disabled={true}
+                clickable={false}
+              />
+            </OptionGrid>
+            <PopoverFooter>change wallet</PopoverFooter>
+          </>
         }
         show={networkSwitcherPopoverOpen}
       >
         {children}
-      </Popover>
+      </StyledPopover>
     </div>
   )
 }
