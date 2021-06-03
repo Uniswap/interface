@@ -5,8 +5,9 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
-import { ROPSTEN_TOKEN_LIST } from '../../constants/ropsten.tokenlist'
-import { MAINNET_TOKEN_LIST } from '../../constants/mainnet.tokenlist'
+import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
+import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
+import { MUMBAI_TOKEN_LIST } from '../../constants/tokenLists/mumbai.tokenlist'
 import { useActiveWeb3React } from 'hooks'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
@@ -93,7 +94,16 @@ const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
 export function useDMMTokenList(): TokenAddressMap {
   const { chainId } = useActiveWeb3React()
 
-  return listToTokenMap(chainId == 1 ? MAINNET_TOKEN_LIST : ROPSTEN_TOKEN_LIST)
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return listToTokenMap(MAINNET_TOKEN_LIST)
+    case ChainId.ROPSTEN:
+      return listToTokenMap(ROPSTEN_TOKEN_LIST)
+    case ChainId.MUMBAI:
+      return listToTokenMap(MUMBAI_TOKEN_LIST)
+    default:
+      return listToTokenMap(MAINNET_TOKEN_LIST)
+  }
 }
 
 // returns all downloaded current lists

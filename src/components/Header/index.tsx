@@ -304,17 +304,21 @@ export default function Header() {
           <StyledNavExternalLink href={String(process.env.REACT_APP_DMM_ANALYTICS_URL)}>
             {t('analytics')}
           </StyledNavExternalLink>
-          <HideSmall>
-            <StyledNavLink
-              id={`migrations-nav-link`}
-              to={'/migration'}
-              isActive={(match, { pathname }) =>
-                Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
-              }
-            >
-              Migrate Liquidity
-            </StyledNavLink>
-          </HideSmall>
+
+          {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
+            <HideSmall>
+              <StyledNavLink
+                id={`migrations-nav-link`}
+                to={'/migration'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) || pathname.startsWith('/migrate') || pathname.startsWith('/findUNI')
+                }
+              >
+                Migrate Liquidity
+              </StyledNavLink>
+            </HideSmall>
+          )}
+
           <HideSmall>
             <StyledNavLink id={`about`} to={'/about'} isActive={match => Boolean(match)}>
               {t('About')}
