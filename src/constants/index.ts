@@ -4,7 +4,7 @@ import { injected, ledger, walletconnect, walletlink, trezor } from '../connecto
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
+  [ChainId.MAINNET]: '0x1c87257F5e8609940Bc751a07BB085Bb7f8cDBE6',
   [ChainId.ROPSTEN]: '0x12807818B584a3Fa65D38B6C25B13983fE888D6E',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
@@ -14,7 +14,7 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
+  [ChainId.MAINNET]: '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
   [ChainId.ROPSTEN]: '0x0639542a5cd99bd5f4e85f58cb1f61d8fbe32de9',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
