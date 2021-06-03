@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-03 00:24\n"
+"PO-Revision-Date: 2021-06-03 03:01\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -295,7 +295,7 @@ msgstr "ほとんどのペアに最適"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "ステーブルコインなどのペアに最適"
+msgstr "ステーブルなペアに最適"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -793,7 +793,7 @@ msgstr "この取引には流動性が不足しています。マルチホップ
 #: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
-msgstr "{0} が残高不足です"
+msgstr "{0} の残高不足です"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -832,7 +832,7 @@ msgstr "流動性"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "流動性供給者への手数料"
+msgstr "手数料"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -840,7 +840,7 @@ msgstr "流動性供給者の報酬"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性供給者は、プールのシェアに比例したすべての取引で0.3%の手数料報酬を獲得します。 手数料報酬はプールに追加され、リアルタイムで反映されます。また、流動性を引き出すことで請求できます。"
+msgstr "流動性提供者はすべての取引で発生する0.3%の手数料のうち、プールのシェアに応じた報酬を獲得します。 報酬はリアルタイムにプールに追加され、反映されます。報酬は流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -955,7 +955,7 @@ msgstr "最小:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
-msgstr "受け取った最小値"
+msgstr "最小購入数量"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
@@ -1029,11 +1029,11 @@ msgstr "範囲外です"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "予想される取引結果です。価格が {0}%以上変化した場合、取引は差し戻されます。"
+msgstr "価格が {0}%以上変化した場合、取引は差し戻される見込みです。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "予想される取引結果です。 <0>{0} {1}</0> 以上を受け取るか、トランザクションは差し戻されます。"
+msgstr "<0>{0} {1}</0> 以上を受け取るか、取引は差し戻される見込みです。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1215,7 +1215,7 @@ msgstr "取引ルート"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "名前またはアドレスを貼り付けてください"
+msgstr "トークン名またはアドレス"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
@@ -1277,7 +1277,7 @@ msgstr "単純な"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "スリップページの許容度"
+msgstr "スリップページ許容度"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1687,7 +1687,7 @@ msgstr "プールを作成しています"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "あなたはこのUniswap V3プールの最初の流動性提供者です。あなたの流動性は {0} の現在価格で移行されます。"
+msgstr "あなたはUniswap V3プールの最初の流動性提供者です。流動性は現在の {0} での価格で移行されます。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
