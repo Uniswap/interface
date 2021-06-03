@@ -452,7 +452,6 @@ export default function Swap({ history }: RouteComponentProps) {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             height: '24px',
-                            opacity: 0.8,
                             lineHeight: '120%',
                             marginLeft: '0.75rem',
                           }}

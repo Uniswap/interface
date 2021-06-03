@@ -62,34 +62,33 @@ export function colors(darkMode: boolean): Colors {
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
+    primary1: darkMode ? '#2172E5' : '#E8006F',
     primary2: darkMode ? '#3680E7' : '#FF8CC3',
     primary3: darkMode ? '#4D8FEA' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     primary5: darkMode ? '#153d6f70' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#6DA8FF' : '#FF007A',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
+    secondary1: darkMode ? '#2172E5' : '#FF007A',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
     // other
-    red1: '#FD4040',
+    red1: darkMode ? '#FF4343' : '#DA2D2B',
     red2: '#F82D3A',
     red3: '#D60000',
     green1: '#27AE60',
-    yellow1: '#e3a507',
-    yellow2: '#ff8f00',
+    yellow1: '#E3A507',
+    yellow2: '#FF8F00',
     yellow3: '#F3B71E',
-    blue1: '#2172E5',
+    blue1: darkMode ? '#2172E5' : '#0068FC',
     blue2: '#5199FF',
-
     error: '#FD4040',
     success: '#27AE60',
-    warning: '#ff8f00',
+    warning: '#FF8F00',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
