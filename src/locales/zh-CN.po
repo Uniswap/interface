@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-02 23:21\n"
+"PO-Revision-Date: 2021-06-03 04:58\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1277,7 +1277,7 @@ msgstr "简单型"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "滑点容忍度"
+msgstr "滑点范围"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1314,7 +1314,7 @@ msgstr "兑换"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr "仍确认兑换"
+msgstr "仍要兑换"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1395,7 +1395,7 @@ msgstr "兑换到(至少数额)"
 
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
-msgstr "切换专家模式"
+msgstr "启用专家模式"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1436,7 +1436,7 @@ msgstr "已提交交易"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
-msgstr "交易期限"
+msgstr "交易过期时间"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"

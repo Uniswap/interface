@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-02 23:21\n"
+"PO-Revision-Date: 2021-06-03 04:58\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -113,7 +113,7 @@ msgstr "<0>提示：</0>移除流動性池代幣後，會按照您在池中所�
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0>提示：</0>使用此工具可查找未自動出現在界面中的 v2 池。"
+msgstr "<0>提示：</0>使用此工具可查看未自動出現在界面中的 v2 流動性池。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -749,7 +749,7 @@ msgstr "進口池"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
-msgstr "導入 V2 池"
+msgstr "導入 V2 流動性池"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -1235,7 +1235,7 @@ msgstr "選擇一個令牌"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
-msgstr "選擇一個代幣以查找您的 v2 流動性。"
+msgstr "選擇一個代幣以查看您的 v2 流動性。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
