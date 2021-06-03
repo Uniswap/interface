@@ -149,6 +149,10 @@ export function shortenAddress(address: string, chars = 4): string {
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
+export function stringEquals(stringA: string, stringB: string): boolean {
+  return stringA.toLowerCase() === stringB.toLowerCase()
+}
+
 // add 10%
 export function calculateGasMargin(value: BigNumber): BigNumber {
   return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000))
@@ -319,17 +323,20 @@ export function isProduction(): boolean {
 export function isFuse(tokenAddress: string) {
   return (
     tokenAddress === FUSE.symbol ||
-    tokenAddress === FUSE_FOREIGN_TOKEN_ADDRESS ||
-    tokenAddress === BSC_FUSE_TOKEN_ADDRESS
+    stringEquals(tokenAddress, FUSE_FOREIGN_TOKEN_ADDRESS) ||
+    stringEquals(tokenAddress, BSC_FUSE_TOKEN_ADDRESS)
   )
 }
 
 export function isBnb(tokenAddress: string) {
-  return tokenAddress === BNB.symbol || tokenAddress === BNB_FOREIGN_TOKEN_ADDRESS
+  return tokenAddress === BNB.symbol || stringEquals(tokenAddress, BNB_FOREIGN_TOKEN_ADDRESS)
 }
 
 export function isGoodDollar(tokenAddress: string) {
-  return tokenAddress === GOODDOLLAR_HOME_TOKEN_ADDRESS || tokenAddress === GOODDOLLAR_FOREIGN_TOKEN_ADDRESS
+  return (
+    stringEquals(tokenAddress, GOODDOLLAR_HOME_TOKEN_ADDRESS) ||
+    stringEquals(tokenAddress, GOODDOLLAR_FOREIGN_TOKEN_ADDRESS)
+  )
 }
 
 export function getEthFuseBridge(tokenAddress: string) {
@@ -588,4 +595,15 @@ export async function calculateBnbNativeAMBBridgeFee(
   const contract = getFeeManagerAMBNativeToErc20Contract(address, library, account)
   const fee = await contract.calculateFee(amount.raw.toString())
   return formatEther(fee)
+}
+
+export function supportRecipientTransfer(currencyId?: string, bridgeDirection?: BridgeDirection): boolean {
+  if (!currencyId || !bridgeDirection) return false
+  const bridgeType = getBridgeType(currencyId, bridgeDirection)
+  return (
+    bridgeType === BridgeType.ETH_FUSE_ERC20_TO_ERC677 ||
+    bridgeType === BridgeType.BSC_FUSE_BNB_NATIVE ||
+    bridgeType === BridgeType.BSC_FUSE_NATIVE ||
+    bridgeType === BridgeType.BSC_FUSE_ERC20_TO_ERC677
+  )
 }

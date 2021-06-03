@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState, useEffect } from 'react'
+import React, { useCallback, useContext, useState, useEffect, useMemo } from 'react'
 import * as Sentry from '@sentry/react'
 import AppBody from '../AppBody'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
@@ -50,7 +50,7 @@ import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../state'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import BridgeDetails from '../../components/bridge/BridgeDetails'
-import { getBridge, getApprovalAddress } from '../../utils'
+import { getBridge, getApprovalAddress, supportRecipientTransfer } from '../../utils'
 import DestinationButton from '../../components/bridge/DestinationButton'
 import FeeModal from '../../components/FeeModal'
 import TokenMigrationModal from '../../components/TokenMigration'
@@ -131,6 +131,10 @@ export default function Bridge() {
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.INPUT], approvalAddress)
 
   const addTransaction = useTransactionAdder()
+
+  const supportRecipient = useMemo(() => {
+    return supportRecipientTransfer(inputCurrencyId, bridgeDirection) && !isHome
+  }, [bridgeDirection, inputCurrencyId, isHome])
 
   async function onTransfer() {
     if (!chainId || !library || !account || !inputCurrency?.symbol || !bridgeDirection) return
@@ -222,8 +226,8 @@ export default function Bridge() {
   }, [amount, onFieldInput])
 
   useEffect(() => {
-    if (defaultRecipient) onSetRecipient(defaultRecipient)
-  }, [defaultRecipient, onSetRecipient])
+    if (defaultRecipient && supportRecipient) onSetRecipient(defaultRecipient)
+  }, [defaultRecipient, onSetRecipient, supportRecipient])
 
   return (
     <>
@@ -280,7 +284,7 @@ export default function Bridge() {
               listType="Bridge"
             />
           </AutoColumn>
-          {recipient && (
+          {recipient && supportRecipient && (
             <AutoColumn gap="md" style={{ marginTop: '1rem' }}>
               <AddressInputPanel
                 id="recipient"
