@@ -22,7 +22,7 @@ export const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new Apol
 })
 
 export const mumbaiExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm-mumbai',
+  uri: 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-mumbai',
   cache: new InMemoryCache()
 })
 
@@ -52,7 +52,7 @@ export const maticBlockClient = new ApolloClient({
 })
 
 export const mumbaiBlockClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
+  uri: 'https://api.thegraph.com/subgraphs/name/piavgh/mumbai-blocks',
   cache: new InMemoryCache()
 })
 
