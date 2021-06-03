@@ -109,8 +109,10 @@ export const bestTradeExactIn = (
   return (
     [directTrade, inDualTrades[0], outDualTrades[0], inAndOutDualTrades[0]]
       .filter((x) => !!x)
-      .reduce((best: UbeswapTrade | null, trade) =>
-        best === null || isDualTradeBetter(best, trade, options?.minimumDelta) ? trade : best
+      .reduce(
+        (best: UbeswapTrade | null, trade) =>
+          best === null || isDualTradeBetter(best, trade, options?.minimumDelta) ? trade : best,
+        null
       ) ?? null
   )
 }

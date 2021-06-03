@@ -67,7 +67,10 @@ export const useStakingPoolValue = (stakingInfo?: StakingInfo): IStakingPoolValu
   }
 
   const userAmountTokenA =
-    stakingTokenPair && stakingInfo?.stakedAmount && totalSupplyOfStakingToken
+    stakingTokenPair &&
+    stakingInfo?.stakedAmount &&
+    totalSupplyOfStakingToken &&
+    !totalSupplyOfStakingToken.equalTo('0')
       ? new TokenAmount(
           stakingTokenPair.reserve0.token,
           JSBI.divide(
@@ -78,7 +81,10 @@ export const useStakingPoolValue = (stakingInfo?: StakingInfo): IStakingPoolValu
       : undefined
 
   const userAmountTokenB =
-    stakingTokenPair && stakingInfo?.stakedAmount && totalSupplyOfStakingToken
+    stakingTokenPair &&
+    stakingInfo?.stakedAmount &&
+    totalSupplyOfStakingToken &&
+    !totalSupplyOfStakingToken.equalTo('0')
       ? new TokenAmount(
           stakingTokenPair.reserve1.token,
           JSBI.divide(

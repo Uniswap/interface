@@ -1355,7 +1355,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@celo-tools/use-contractkit@1.0.0-beta.10":
+"@celo-tools/use-contractkit@=1.0.0-beta.10":
   version "1.0.0-beta.10"
   resolved "https://registry.yarnpkg.com/@celo-tools/use-contractkit/-/use-contractkit-1.0.0-beta.10.tgz#49b7f0955660d126afa650a84f8e0982202c3348"
   integrity sha512-Fw4exfah6+FWKfOjKBR/E8mStDly3AvGbYSPnTdC+ikFTMSbG94Vy2yu1qCn3L59brZgCjh/qiY48aakGyoZsg==
@@ -3585,10 +3585,10 @@
   resolved "https://registry.yarnpkg.com/@ubeswap/core/-/core-1.0.2.tgz#506919c723d7f130c7b1a33d9e68f10207a86792"
   integrity sha512-NjVhCrIej5p+0G2AdPGzWZZW96XjY12s+Qq9dkqxziqcPpJy3EMTMfuLINPxP3uzRyjsPp6mUIFwWJGlTX0qog==
 
-"@ubeswap/default-token-list@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-2.1.0.tgz#6393c62e7dc0f9338a0d7e3b0f420449ce8e493c"
-  integrity sha512-b82XfUf9u8daWkpm7JOk17eozIETQNqoFaYR+nBjQ+BzreM/OwgW2v8+GSjXauTC3NZvhuot5gMJ8X05ZJc0/Q==
+"@ubeswap/default-token-list@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-3.0.0.tgz#d3bf76ee75d2f14f65a71da1cb1f664c26f85329"
+  integrity sha512-RYL0e+M4Uh+K0hdO4PSMOBZX3QOlYQhiyN/kE635WIFKmyfaudPOgSAtmf/oY06r/qmIwn117DVAUHGVDJz+xg==
 
 "@ubeswap/injected-connector@^6.1.0":
   version "6.1.0"
