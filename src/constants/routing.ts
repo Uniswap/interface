@@ -67,6 +67,7 @@ export const ADDITIONAL_BASES: { [chainId: number]: { [tokenAddress: string]: To
   [1]: {
     ...mAssetsAdditionalBases,
     '0xF16E4d813f4DcfDe4c5b44f305c908742De84eF0': [ETH2X_FLI],
+    '0x882b454e9152d1c35c77f9d79399d7dbf07e1b1d': [ETH2X_FLI],
     '0xA948E86885e12Fb09AfEF8C52142EBDbDf73cD18': [UNI[1]],
     '0x561a4717537ff4AF5c687328c0f7E90a319705C0': [UNI[1]],
     '0xE0360A9e2cdd7d03B9408c7D3001E017BAc2EcD5': [UNI[1]],
