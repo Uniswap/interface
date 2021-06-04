@@ -18,6 +18,7 @@ import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc } from 'utils/dmm'
 import { setSelectedPool } from 'state/pools/actions'
+import Loader from 'components/Loader'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -99,8 +100,10 @@ const PoolAddressContainer = styled(Flex)`
   align-items: center;
 `
 
-const getOneYearFL = (liquidity: string, feeOneDay?: string): number => {
-  return !feeOneDay || parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
+const getOneYearFL = (liquidity?: string, feeOneDay?: string): number => {
+  return !feeOneDay || !liquidity || parseFloat(liquidity) === 0
+    ? 0
+    : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
 }
 
 interface ListItemProps {
@@ -132,13 +135,13 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
   const currency0 = unwrappedToken(pool.token0)
   const currency1 = unwrappedToken(pool.token1)
 
-  const volume = subgraphPoolData.oneDayVolumeUSD
-    ? subgraphPoolData.oneDayVolumeUSD
-    : subgraphPoolData.oneDayVolumeUntracked
+  const volume = subgraphPoolData?.oneDayVolumeUSD
+    ? subgraphPoolData?.oneDayVolumeUSD
+    : subgraphPoolData?.oneDayVolumeUntracked
 
-  const fee = subgraphPoolData.oneDayFeeUSD ? subgraphPoolData.oneDayFeeUSD : subgraphPoolData.oneDayFeeUntracked
+  const fee = subgraphPoolData?.oneDayFeeUSD ? subgraphPoolData?.oneDayFeeUSD : subgraphPoolData?.oneDayFeeUntracked
 
-  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, fee).toFixed(2)
+  const oneYearFL = getOneYearFL(subgraphPoolData?.reserveUSD, fee).toFixed(2)
 
   return (
     <div>
@@ -183,11 +186,13 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
         <GridItem>
           <DataTitle>Liquidity</DataTitle>
-          <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
+          <DataText grid-area="liq">
+            {!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData.reserveUSD, true)}
+          </DataText>
         </GridItem>
         <GridItem>
           <DataTitle>Volume (24h)</DataTitle>
-          <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
+          <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
         </GridItem>
         <GridItem>
           <DataTitle>Ratio</DataTitle>
@@ -199,7 +204,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
         <GridItem>
           <DataTitle>Fee (24h)</DataTitle>
-          <DataText>{formattedNum(fee, true)}</DataText>
+          <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
         </GridItem>
         <GridItem>
           <DataTitle>AMP</DataTitle>
@@ -207,7 +212,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         </GridItem>
         <GridItem>
           <DataTitle>1y F/L</DataTitle>
-          <DataText>{`${oneYearFL}%`}</DataText>
+          <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
         </GridItem>
 
         <GridItem noBorder style={{ gridColumn: '1 / span 2' }}>
@@ -268,15 +273,18 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
   const currency0 = unwrappedToken(pool.token0)
   const currency1 = unwrappedToken(pool.token1)
 
-  const volume = subgraphPoolData.oneDayVolumeUSD
-    ? subgraphPoolData.oneDayVolumeUSD
-    : subgraphPoolData.oneDayVolumeUntracked
+  const volume = subgraphPoolData?.oneDayVolumeUSD
+    ? subgraphPoolData?.oneDayVolumeUSD
+    : subgraphPoolData?.oneDayVolumeUntracked
 
-  const fee = subgraphPoolData.oneDayFeeUSD ? subgraphPoolData.oneDayFeeUSD : subgraphPoolData.oneDayFeeUntracked
+  const fee = subgraphPoolData?.oneDayFeeUSD ? subgraphPoolData?.oneDayFeeUSD : subgraphPoolData?.oneDayFeeUntracked
 
-  const oneYearFL = getOneYearFL(subgraphPoolData.reserveUSD, fee).toFixed(2)
-  
-  const ampLiquidity = formattedNum(`${parseFloat(amp.toSignificant(5)) * parseFloat(subgraphPoolData.reserveUSD)}`, true)
+  const oneYearFL = getOneYearFL(subgraphPoolData?.reserveUSD, fee).toFixed(2)
+
+  const ampLiquidity = formattedNum(
+    `${parseFloat(amp.toSignificant(5)) * parseFloat(subgraphPoolData?.reserveUSD)}`,
+    true
+  )
 
   const handleShowMore = () => {
     dispatch(
@@ -305,11 +313,13 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         </PoolAddressContainer>
       </DataText>
       <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
-      <DataText grid-area="liq">{formattedNum(subgraphPoolData.reserveUSD, true)}</DataText>
-      <DataText grid-area="amp-liq">{ampLiquidity}</DataText>
-      <DataText grid-area="vol">{formattedNum(volume, true)}</DataText>
-      <DataText>{formattedNum(fee, true)}</DataText>
-      <DataText>{`${oneYearFL}%`}</DataText>
+      <DataText grid-area="liq">
+        {!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData?.reserveUSD, true)}
+      </DataText>
+      <DataText grid-area="amp-liq">{!subgraphPoolData ? <Loader /> : ampLiquidity}</DataText>
+      <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
+      <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
+      <DataText>{!subgraphPoolData ? <Loader /> : `${oneYearFL}%`}</DataText>
       <DataText grid-area="ratio">
         <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
         <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
