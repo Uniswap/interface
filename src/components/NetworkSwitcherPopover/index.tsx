@@ -77,7 +77,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
     },
     [account, addPopup, chainId, closeModals, connector]
   )
-
+  
   return (
     <div ref={popoverRef}>
       <StyledPopover
@@ -90,6 +90,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
                 }}
                 header={'Ethereum'}
                 logoSrc={EthereumLogo}
+                disabled={chainId === ChainId.MAINNET}
               />
               <Option
                 onClick={() => {
@@ -97,6 +98,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
                 }}
                 header={'xDai'}
                 logoSrc={XDAILogo}
+                disabled={chainId === ChainId.XDAI}
               />
               <Option
                 onClick={() => {
@@ -104,8 +106,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
                 }}
                 header={'Arbitrum'}
                 logoSrc={ArbitrumLogo}
-                disabled={true}
-                clickable={false}
+                comingSoon
               />
             </OptionGrid>
             <PopoverFooter>change wallet</PopoverFooter>
