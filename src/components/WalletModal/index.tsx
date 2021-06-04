@@ -12,6 +12,7 @@ import DxDao from '../../assets/svg/dxdao.svg'
 import { AutoRow } from '../Row'
 import { AlertTriangle } from 'react-feather'
 import { ModalView } from '../Web3Status'
+import { useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -145,6 +146,13 @@ export default function WalletModal({
     }
   }, [setModal, active, error, connector, modal, activePrevious, connectorPrevious])
 
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  const onBackButtonClick = () => {
+    setPendingError(false)
+    setModal(null)
+    toggleWalletSwitcherPopover()
+  }
+  
   function getModalContent() {
     if (error) {
       return (
@@ -190,12 +198,7 @@ export default function WalletModal({
         </CloseIcon>
         {modal !== ModalView.Account ? (
           <HeaderRow color="blue">
-            <HoverText
-              onClick={() => {
-                setPendingError(false)
-                setModal(ModalView.Account)
-              }}
-            >
+            <HoverText onClick={onBackButtonClick}>
               <TYPE.body color="text4" fontWeight={500} fontSize="20px" lineHeight="24px" letterSpacing="-0.01em">
                 Back
               </TYPE.body>

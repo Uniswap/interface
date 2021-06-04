@@ -62,12 +62,6 @@ export enum ModalView {
   Account
 }
 
-export enum DropdownView {
-  NetworkOptions,
-  WalletOptions,
-  Arbitrum,
-}
-
 export default function Web3Status() {
   const { active, activate, account, error } = useWeb3React()
   const { chainId: networkConnectorChainId } = useActiveWeb3React()
@@ -90,13 +84,10 @@ export default function Web3Status() {
 
   const [pendingError, setPendingError] = useState<boolean>()
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
-  
-  const [dropdown, setDropdown] = useState<DropdownView | null>(null);
-  
+    
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     setPendingWallet(connector)
     setModal(ModalView.Pending)
-    setDropdown(null)
 
     // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
     if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
@@ -128,8 +119,6 @@ export default function Web3Status() {
         <ConnectWallet
           setModal={setModal}
           tryActivation={tryActivation}
-          dropdown={dropdown}
-          setDropdown={setDropdown}
         />
       )}
       {(networkConnectorChainId && !!account) && (
