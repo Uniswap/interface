@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-04 01:34\n"
+"PO-Revision-Date: 2021-06-04 02:49\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -105,7 +105,7 @@ msgstr "<0>アカウント分析と発生した手数料</0><1>↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0>戻る</0>V3"
+msgstr "V3に<0>戻る</0>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -430,7 +430,7 @@ msgstr "徴収手数料は現在利用可能な手数料を引き出します。
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "共通のベース"
+msgstr "よく使われるトークン"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
@@ -564,7 +564,7 @@ msgstr "入金"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "預け入れ数量"
+msgstr "トークンの数量"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
@@ -685,7 +685,7 @@ msgstr "非アクティブなトークンリストからの検索結果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "エキスパートモードは取引確認画面をオフし、不利な価格や資金を失う可能性のある高スリップページ取引を許可します。"
+msgstr "エキスパートモードは取引確認画面をスキップし、不利な価格や資金を失う可能性のある高スリップページ取引を許可します。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -840,7 +840,7 @@ msgstr "流動性供給者の報酬"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性提供者はすべての取引で発生する0.3%の手数料のうち、プールのシェアに応じた報酬を獲得します。 報酬はリアルタイムにプールに追加され、反映されます。報酬は流動性を引き出すことで請求できます。"
+msgstr "流動性提供者はすべての取引で発生する0.3%の手数料のうち、プールのシェアに応じて報酬を獲得します。 報酬はリアルタイムにプールに追加され、反映されます。報酬は流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -1219,7 +1219,7 @@ msgstr "トークン名またはアドレス"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "プールを選択"
+msgstr "プール"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
@@ -1239,7 +1239,7 @@ msgstr "トークンを選択して、V2の流動性を見つけます。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
-msgstr "ペアを選択"
+msgstr "ペア"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1256,7 +1256,7 @@ msgstr "自分で投票する"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "価格帯を設定"
+msgstr "価格帯"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
@@ -1419,7 +1419,7 @@ msgstr "合計預入数量"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
-msgstr "合計入金額"
+msgstr "合計預入額"
 
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
@@ -1501,7 +1501,7 @@ msgstr "言語切替: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr "流動性マイニングする"
+msgstr "Uniswap流動性マイニング"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
@@ -1744,7 +1744,7 @@ msgstr "預け入れた流動性"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "流動性は、指定した価格帯にペアの価格が入っている場合のみ報酬を獲得します。 価格帯を指定するガイドは<0>こちら</0>"
+msgstr "流動性は、指定した価格帯にペアの価格が入っている場合のみ報酬を獲得します。 価格帯の指定に関するガイドは<0>こちら</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1807,7 +1807,7 @@ msgstr "取引がこの期間を超えても保留されている場合、取引
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "価格がこのパーセンテージよりも不利に変動した場合、取引は差し戻されます。"
+msgstr "価格が設定したパーセンテージよりも不利な価格に変動した場合、取引は差し戻されます。"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
