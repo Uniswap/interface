@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-04 02:49\n"
+"PO-Revision-Date: 2021-06-04 05:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -628,7 +628,7 @@ msgstr "V2のポジションが表示されない場合 <0>インポートして
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "獲得したUNIトークンは、Uniswapのガバナンスにおける投票権を表します。"
+msgstr "保有するUNIトークンは、Uniswapのガバナンスにおける投票権を表します。"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
@@ -761,7 +761,7 @@ msgstr "範囲内"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
-msgstr "流動性を増やす"
+msgstr "流動性を追加"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
@@ -836,7 +836,7 @@ msgstr "手数料"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "流動性供給者の報酬"
+msgstr "流動性提供者の報酬"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -1297,11 +1297,11 @@ msgstr "投票を送信中"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
-msgstr "提供"
+msgstr "追加"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} を提供中"
+msgstr "{0} {1} と {2} {3} を追加中"
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
@@ -1436,7 +1436,7 @@ msgstr "取引が送信されました"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
-msgstr "取引の期限"
+msgstr "取引期限"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
