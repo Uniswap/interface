@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-04 13:29\n"
+"PO-Revision-Date: 2021-06-04 14:32\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -129,7 +129,7 @@ msgstr "<0>🎉 </0>チーム ユニコーンにようこそ <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "提案の提出には、総供給量の1%以上のUNIが必要です。"
+msgstr "提案の提出には総供給量の1%以上のUNIが必要です。"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -434,11 +434,11 @@ msgstr "よく使われるトークン"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
-msgstr "確認する"
+msgstr "確認"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
-msgstr "供給を確認"
+msgstr "追加の確認"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -507,7 +507,7 @@ msgstr "アドレスをコピー"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "プールと供給を作成"
+msgstr "プール作成と流動性の追加"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -640,7 +640,7 @@ msgstr "有効なスリップページのパーセンテージを入力してく
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "UNIの請求を行うためのアドレスを入力してください。そのアドレスに請求可能なUNIがあれば、送信時にそのアドレスに送信されます。"
+msgstr "UNIの請求を行うためのアドレスを入力してください。そのアドレスに請求可能なUNIがあれば、請求時にそのアドレスに送信されます。"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -905,7 +905,7 @@ msgstr "最大："
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "最大送信数"
+msgstr "最大売却数量"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1012,7 +1012,7 @@ msgstr "オン"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "価格に問題がなければ、「提供」をクリックして確認します。"
+msgstr "価格に問題がなければ、「追加」をクリックして確認します。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
@@ -1140,7 +1140,7 @@ msgstr "提案者"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
-msgstr "レート"
+msgstr "価格"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
@@ -1152,7 +1152,7 @@ msgstr "Uniswapガバナンスについてもっと見る"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
-msgstr "流動性の提供についてもっと見る"
+msgstr "流動性提供についてもっと見る"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
@@ -1358,7 +1358,7 @@ msgstr "追加するトークンの比率によって、プールの価格が決
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "期限が過ぎたため、取引を送信できませんでした。期限が短くなっていないかご確認ください。"
+msgstr "期限が過ぎたため、取引を送信できませんでした。期限が短くないかご確認ください。"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
@@ -1464,7 +1464,7 @@ msgstr "UNIトークンはUniswapガバナンスにおける投票権を表し�
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
-msgstr "UNI {0}/{1} がバーンされました"
+msgstr "削除される UNI {0}/{1}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
@@ -1724,7 +1724,7 @@ msgstr "また、このポジションから得られた報酬も受け取りま
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
-msgstr "受け取ります。"
+msgstr "受け取る数量"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
@@ -1867,7 +1867,7 @@ msgstr "{0} カスタムトークン"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} 預け入れ済み"
+msgstr "預け入れる {0}"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
