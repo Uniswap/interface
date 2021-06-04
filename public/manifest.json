@@ -1,4 +1,7 @@
 {
+  "background_color": "#fff",
+  "display": "standalone",
+  "homepage_url": "https://app.uniswap.org",
   "short_name": "Pooliswap",
   "name": "Pooliswap",
   "icons": [
@@ -16,7 +19,8 @@
     }
   ],
   "orientation": "portrait",
-  "display": "standalone",
-  "theme_color": "#ff007a",
-  "background_color": "#fff"
+  "name": "Uniswap",
+  "short_name": "Uniswap",
+  "start_url": ".",
+  "theme_color": "#ff007a"
 }

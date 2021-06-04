@@ -1,135 +1,302 @@
-import React, { useContext, useMemo } from 'react'
-import { ThemeContext } from 'styled-components'
-import { Pair } from '@uniswap/sdk'
+import React, { useContext } from 'react'
+import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import { FlyoutAlignment, NewMenu } from 'components/Menu'
+import { SwapPoolTabs } from 'components/NavigationTabs'
+import PositionList from 'components/PositionList'
+import { RowBetween, RowFixed } from 'components/Row'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useV3Positions } from 'hooks/useV3Positions'
+import { BookOpen, ChevronDown, Download, Inbox, PlusCircle, ChevronsRight, Layers } from 'react-feather'
+import { Trans } from '@lingui/macro'
 import { Link } from 'react-router-dom'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
+import { useWalletModalToggle } from 'state/application/hooks'
+import styled, { ThemeContext } from 'styled-components'
+import { HideSmall, TYPE } from 'theme'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import { LoadingRows } from './styleds'
+import Toggle from 'components/Toggle'
+import { useUserHideClosedPositions } from 'state/user/hooks'
 
-import Question from '../../components/QuestionHelper'
-import FullPositionCard from '../../components/PositionCard'
-// import { useUserHasLiquidityInAllTokens } from '../../data/V1'
-import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { StyledInternalLink, TYPE } from '../../theme'
-import { Text } from 'rebass'
-import { LightCard } from '../../components/Card'
-import { RowBetween } from '../../components/Row'
-import { ButtonPrimary/*, ButtonSecondary*/ } from '../../components/Button'
-import { AutoColumn } from '../../components/Column'
-import AddressInputPanel from '../../components/AddressInputPanel'
+import CTACards from './CTACards'
+import { PositionDetails } from 'types/position'
 
-import { useActiveWeb3React } from '../../hooks'
-import { usePairs } from '../../data/Reserves'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
-import useENSAddress from '../../hooks/useENSAddress'
-import AppBody from '../AppBody'
-import { Dots } from '../../components/swap/styleds'
+const PageWrapper = styled(AutoColumn)`
+  max-width: 870px;
+  width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    max-width: 800px;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    max-width: 500px;
+  `};
+`
+const TitleRow = styled(RowBetween)`
+  color: ${({ theme }) => theme.text2};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    flex-direction: column-reverse;
+  `};
+`
+const ButtonRow = styled(RowFixed)`
+  & > *:not(:last-child) {
+    margin-right: 8px;
+  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  `};
+`
+const Menu = styled(NewMenu)`
+  margin-left: 0;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex: 1 1 auto;
+    width: 49%;
+  `};
+`
+const MenuItem = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+`
+const MoreOptionsButton = styled(ButtonGray)`
+  border-radius: 12px;
+  flex: 1 1 auto;
+  padding: 6px 8px;
+`
+const NoLiquidity = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  max-width: 300px;
+  min-height: 25vh;
+`
+const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+  border-radius: 12px;
+  padding: 6px 8px;
+  width: fit-content;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex: 1 1 auto;
+    width: 49%;
+  `};
+`
+
+const MainContentWrapper = styled.main`
+  background-color: ${({ theme }) => theme.bg0};
+  padding: 8px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+`
+
+const ShowInactiveToggle = styled.div`
+  display: grid;
+  align-items: center;
+  justify-items: end;
+
+  grid-template-columns: 1fr auto;
+  grid-column-gap: 8px;
+  padding: 0 8px;
+`
 
 export default function Pool() {
-  const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
+  const toggleWalletModal = useWalletModalToggle()
 
-  // fetch the user's balances of all tracked V2 LP tokens
-  const trackedTokenPairs = useTrackedTokenPairs()
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
-  )
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
-    tokenPairsWithLiquidityTokens
-  ])
-  // define recipient
-  const { onChangeRecipient } = useSwapActionHandlers()
-  const { recipient } = useSwapState()
-  const { address: recipientAddress } = useENSAddress(recipient)
-  // TODO: fix following condition to load when recipient === undefined
-  //const liquidityAccount = recipientAddress != null ? recipientAddress: account
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
-    recipientAddress ?? undefined,
-    liquidityTokens
-  )
+  const theme = useContext(ThemeContext)
+  const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
-  // fetch the reserves for all V2 pools in which the user has a balance
-  const liquidityTokensWithBalances = useMemo(
-    () =>
-      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+  const { positions, loading: positionsLoading } = useV3Positions(account)
+
+  const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
+    (acc, p) => {
+      acc[p.liquidity?.isZero() ? 1 : 0].push(p)
+      return acc
+    },
+    [[], []]
+  ) ?? [[], []]
+
+  const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
+
+  const menuItems = [
+    {
+      content: (
+        <MenuItem>
+          <PlusCircle size={16} style={{ marginRight: '12px' }} />
+          <Trans>Create a pool</Trans>
+        </MenuItem>
       ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
-  )
-
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-  const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
-
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-
-  const hasV1Liquidity = false
-  // const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+      link: '/add/ETH',
+      external: false,
+    },
+    {
+      content: (
+        <MenuItem>
+          <ChevronsRight size={16} style={{ marginRight: '12px' }} />
+          <Trans>Migrate</Trans>
+        </MenuItem>
+      ),
+      link: '/migrate/v2',
+      external: false,
+    },
+    {
+      content: (
+        <MenuItem>
+          <Layers size={16} style={{ marginRight: '12px' }} />
+          <Trans>V2 liquidity</Trans>
+        </MenuItem>
+      ),
+      link: '/pool/v2',
+      external: false,
+    },
+    {
+      content: (
+        <MenuItem>
+          <BookOpen size={16} style={{ marginRight: '12px' }} />
+          <Trans>Learn</Trans>
+        </MenuItem>
+      ),
+      link: 'https://docs.uniswap.org/',
+      external: true,
+    },
+  ]
 
   return (
     <>
-      <AppBody>
+      <PageWrapper>
         <SwapPoolTabs active={'pool'} />
         <AutoColumn gap="lg" justify="center">
-          <ButtonPrimary id="join-pool-button" as={Link} style={{ padding: 16 }} to="/add/ETH">
-            <Text fontWeight={500} fontSize={20}>
-              Add Liquidity
-            </Text>
-          </ButtonPrimary>
+          <AutoColumn gap="lg" style={{ width: '100%' }}>
+            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <HideSmall>
+                <TYPE.mediumHeader>
+                  <Trans>Pools Overview</Trans>
+                </TYPE.mediumHeader>
+              </HideSmall>
+              <ButtonRow>
+                <Menu
+                  menuItems={menuItems}
+                  flyoutAlignment={FlyoutAlignment.LEFT}
+                  ToggleUI={(props: any) => (
+                    <MoreOptionsButton {...props}>
+                      <TYPE.body style={{ alignItems: 'center', display: 'flex' }}>
+                        <Trans>More</Trans>
+                        <ChevronDown size={15} />
+                      </TYPE.body>
+                    </MoreOptionsButton>
+                  )}
+                />
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
+                  + <Trans>New Position</Trans>
+                </ResponsiveButtonPrimary>
+              </ButtonRow>
+            </TitleRow>
 
-          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-          <AutoColumn gap="12px" style={{ width: '100%' }}>
-            <RowBetween padding={'0 8px'}>
-              <Text color={theme.text1} fontWeight={500}>
-                Your Liquidity
-              </Text>
-              <Question text="When you add liquidity, you are given pool tokens that represent your share. If you don’t see a pool you joined in this list, try importing a pool below." />
-            </RowBetween>
+            <CTACards />
 
-            {!account ? (
-              <LightCard padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
-                  Connect to a wallet to view your liquidity.
-                </TYPE.body>
-              </LightCard>
-            ) : v2IsLoading ? (
-              <LightCard padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
-                  <Dots>Loading</Dots>
-                </TYPE.body>
-              </LightCard>
-            ) : allV2PairsWithLiquidity?.length > 0 ? (
-              <>
-                {allV2PairsWithLiquidity.map(v2Pair => (
-                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
-                ))}
-              </>
-            ) : (
-              <LightCard padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
-                </TYPE.body>
-              </LightCard>
-            )}
+            {closedPositions.length > 0 ? (
+              <ShowInactiveToggle>
+                <TYPE.darkGray>
+                  <Trans>Hide closed positions</Trans>
+                </TYPE.darkGray>
+                <Toggle
+                  isActive={userHideClosedPositions}
+                  toggle={() => setUserHideClosedPositions(!userHideClosedPositions)}
+                />
+              </ShowInactiveToggle>
+            ) : null}
 
-            <div>
-              <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
-                <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
-                  {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
-                </StyledInternalLink>
-              </Text>
-            </div>
+            <MainContentWrapper>
+              {positionsLoading ? (
+                <LoadingRows>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRows>
+              ) : filteredPositions && filteredPositions.length > 0 ? (
+                <PositionList positions={filteredPositions} />
+              ) : (
+                <NoLiquidity>
+                  <TYPE.mediumHeader color={theme.text3} textAlign="center">
+                    <Inbox size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
+                    <div>
+                      <Trans>Your V3 liquidity positions will appear here.</Trans>
+                    </div>
+                  </TYPE.mediumHeader>
+                  {!account ? (
+                    <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                      <Trans>Connect a wallet</Trans>
+                    </ButtonPrimary>
+                  ) : (
+                    <ButtonGray
+                      as={Link}
+                      to="/migrate/v2"
+                      id="import-pool-link"
+                      style={{ marginTop: '2em', padding: '8px 16px', borderRadius: '12px', width: 'fit-content' }}
+                    >
+                      <Trans>Migrate V2 liquidity</Trans>?&nbsp;&nbsp;
+                      <Download size={16} />
+                    </ButtonGray>
+                  )}
+                </NoLiquidity>
+              )}
+            </MainContentWrapper>
+            <RowFixed justify="center" style={{ width: '100%' }}>
+              <ButtonOutlined
+                as={Link}
+                to="/pool/v2"
+                id="import-pool-link"
+                style={{
+                  padding: '8px 16px',
+                  margin: '0 4px',
+                  borderRadius: '12px',
+                  width: 'fit-content',
+                  fontSize: '14px',
+                }}
+              >
+                <Layers size={14} style={{ marginRight: '8px' }} />
+
+                <Trans>View V2 Liquidity</Trans>
+              </ButtonOutlined>
+              {positions && positions.length > 0 && (
+                <ButtonOutlined
+                  as={Link}
+                  to="/migrate/v2"
+                  id="import-pool-link"
+                  style={{
+                    padding: '8px 16px',
+                    margin: '0 4px',
+                    borderRadius: '12px',
+                    width: 'fit-content',
+                    fontSize: '14px',
+                  }}
+                >
+                  <ChevronsRight size={16} style={{ marginRight: '8px' }} />
+
+                  <Trans>Migrate Liquidity</Trans>
+                </ButtonOutlined>
+              )}
+            </RowFixed>
           </AutoColumn>
         </AutoColumn>
-      </AppBody>
-
-      {/*}<div style={{ display: 'flex', alignItems: 'center', marginTop: '1.5rem' }}>
-        <ButtonSecondary as={Link} style={{ width: 'initial' }} to="/migrate/v1">
-          Migrate V1 Liquidity
-        </ButtonSecondary>
-      </div>
-      */}
+      </PageWrapper>
+      <SwitchLocaleLink />
     </>
   )
 }
