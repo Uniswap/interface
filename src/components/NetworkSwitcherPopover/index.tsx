@@ -3,7 +3,7 @@ import { ChainId } from 'dxswap-sdk'
 import styled from 'styled-components'
 import Option from './Option'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useCloseModals, useAddPopup } from '../../state/application/hooks'
+import { useModalOpen, useCloseModals } from '../../state/application/hooks'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
@@ -51,7 +51,6 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   const { connector } = useActiveWeb3React()
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
   const popoverRef = useRef(null)
-  const addPopup = useAddPopup()
   const closeModals = useCloseModals()
   useOnClickOutside(popoverRef, () => {
     if (networkSwitcherPopoverOpen) closeModals()
@@ -65,15 +64,22 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
       if (!!!account && connector instanceof CustomNetworkConnector) connector.changeChainId(optionChainId)
       if (
         window.ethereum &&
+        window.ethereum.request &&
         window.ethereum.isMetaMask &&
         NETWORK_DETAIL[optionChainId] &&
         NETWORK_DETAIL[optionChainId].metamaskAddable
       ) {
-        addPopup({ newNetworkChainId: optionChainId }, false)
+        window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{ ...NETWORK_DETAIL[optionChainId], metamaskAddable: undefined }]
+        })
+        .catch(error => {
+          console.error(`error adding network to metamask`, error)
+        })
       }
       closeModals()
     },
-    [account, addPopup, chainId, closeModals, connector]
+    [account, chainId, closeModals, connector]
   )
   
   return (
