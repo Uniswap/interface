@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-04 05:34\n"
+"PO-Revision-Date: 2021-06-04 12:26\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -604,7 +604,7 @@ msgstr "詳細"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "マルチホップの無効化"
+msgstr "マルチホップの無効"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
@@ -1231,7 +1231,7 @@ msgstr "希望する手数料のプールをお選びください。"
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "トークンを選択"
+msgstr "トークン選択"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
