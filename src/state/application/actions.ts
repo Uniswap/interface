@@ -30,6 +30,7 @@ export enum ApplicationModal {
   CLAIM_POPUP,
   MENU,
   MOBILE,
+  WALLET_SWITCHER,
   NETWORK_SWITCHER,
   ADD_ARBITRUM
 }

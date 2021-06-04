@@ -65,6 +65,10 @@ export function useNetworkSwitcherPopoverToggle(): () => void {
   return useToggleModal(ApplicationModal.NETWORK_SWITCHER)
 }
 
+export function useWalletSwitcherPopoverToggle(): () => void {
+  return useToggleModal(ApplicationModal.WALLET_SWITCHER)
+}
+
 export function useAddArbitrumPopoverToggle(): () => void {
   return useToggleModal(ApplicationModal.ADD_ARBITRUM)
 }

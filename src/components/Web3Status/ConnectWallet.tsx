@@ -1,14 +1,17 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core';
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next'
 import { SUPPORTED_WALLETS } from '../../constants';
-import { Dropdown } from '../Dropdown';
 import { injected } from '../../connectors'
 import MetamaskIcon from '../../assets/images/metamask.png';
-import { DropdownView, ModalView } from '.';
+import { ModalView } from '.';
+import Popover from '../Popover';
+import { useCloseModals, useModalOpen, useWalletSwitcherPopoverToggle } from '../../state/application/hooks';
+import { ApplicationModal } from '../../state/application/actions';
+import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 
 const Button = styled.button`
   padding: 10.5px 14px;
@@ -25,7 +28,7 @@ const Button = styled.button`
 `
 
 const List = styled.ul`
-  padding: 22px;
+  padding: 0;
   margin: 0;
   list-style: none;
 `;
@@ -66,19 +69,26 @@ const ListIconWrapper = styled.div`
   }
 `;
 
+const StyledPopover = styled(Popover)`
+  max-width: 290px;
+  padding: 22px;
+  background-color: ${({ theme }) => theme.bg1};
+  border-color: ${({ theme }) => theme.dark2};
+  border-style: solid;
+  border-width: 1.2px;
+  border-radius: 12px;
+  border-image: none;
+`;
+
 interface ConnectWalletProps {
   setModal: (modal: ModalView | null) => void;
-  dropdown: DropdownView | null
-  setDropdown: (dropdown: DropdownView | null) => void;
   tryActivation: (connector: AbstractConnector | undefined) => void
 }
 
-export const ConnectWallet = ({setModal, tryActivation, dropdown, setDropdown}: ConnectWalletProps) => {
+export const ConnectWallet = ({setModal, tryActivation}: ConnectWalletProps) => {
   const { connector } = useWeb3React()
   const { t } = useTranslation();
-  
-  const toggleDropdown = () => dropdown !== null ? setDropdown(null) : setDropdown(DropdownView.NetworkOptions);
-  
+
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
@@ -151,18 +161,26 @@ export const ConnectWallet = ({setModal, tryActivation, dropdown, setDropdown}: 
       )
     })
   }
+
+  const popoverRef = useRef(null)
+  const walletSwitcherPopoverOpen = useModalOpen(ApplicationModal.WALLET_SWITCHER)
+  const closeModals = useCloseModals()
+  useOnClickOutside(popoverRef, () => {
+    if (walletSwitcherPopoverOpen) closeModals()
+  })
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
     
   return (
-    <Dropdown
-      isVisible={dropdown === DropdownView.NetworkOptions}
-      dropdownButton={
-        <Button id="connect-wallet" onClick={toggleDropdown}>
+    <div ref={popoverRef}>
+      <StyledPopover
+        content={<List>{getOptions()}</List>}
+        show={walletSwitcherPopoverOpen}
+      >
+        <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
           {t('Connect wallet')}
         </Button>
-      }
-    >
-      <List>{getOptions()}</List>
-    </Dropdown>
+      </StyledPopover>
+    </div>
   )
 }
 
