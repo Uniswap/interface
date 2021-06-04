@@ -214,9 +214,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
         <Flex alignItems="center" justifyContent="flexEnd">
           <ClickableText>AMP Liquidity</ClickableText>
           <InfoHelper
-            text={
-              'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'
-            }
+            text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
           />
         </Flex>
         <Flex alignItems="center">
@@ -322,7 +320,7 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     <div>
       {renderHeader()}
       {pools.slice(0, page * ITEMS_PER_PAGE).map((pool, index) => {
-        if (pool && transformedSubgraphPoolsData[pool.address.toLowerCase()]) {
+        if (pool) {
           return above1400 ? (
             <ListItem
               key={pool.address}

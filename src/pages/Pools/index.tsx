@@ -232,7 +232,7 @@ const Pools = ({
         <Panel>
           {loadingUserLiquidityPositions || loadingPoolsData ? (
             <LocalLoader />
-          ) : poolsList.length > 0 && poolsData.length > 0 && userLiquidityPositions?.liquidityPositions ? (
+          ) : poolsList.length > 0 ? (
             <PoolList
               poolsList={poolsList}
               subgraphPoolsData={poolsData}
@@ -246,8 +246,6 @@ const Pools = ({
             </SelectPairInstructionWrapper>
           )}
         </Panel>
-
-        {errorPoolsData ? <ErrorMessage>{t('somethingWentWrong')}</ErrorMessage> : null}
       </PageWrapper>
     </>
   )
