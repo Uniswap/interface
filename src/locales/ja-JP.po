@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-03 07:33\n"
+"PO-Revision-Date: 2021-06-04 01:34\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -45,7 +45,7 @@ msgstr "(すべてクリア)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(編集)"
+msgstr "(変更)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -97,7 +97,7 @@ msgstr "<0/>すべての提案"
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/> 投票権"
+msgstr "<0/> の投票権を保有"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -154,7 +154,7 @@ msgstr "追加"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "代理を追加 +"
+msgstr "第三者に投票を委任する"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
@@ -311,7 +311,7 @@ msgstr "このリストを追加することで、データが正しいことを
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "ウォレットを接続することにより、Uniswap Labsの <0>サービス利用規約</0>に同意し、<1>Uniswapプロトコル免責事項</1>を読み、理解したことに同意します。"
+msgstr "ウォレットを接続することにより、Uniswap Labsの <0>サービス利用規約</0>に同意し、Uniswapプロトコルの<1>免責事項</1>を読み、理解したことに同意します。"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -689,7 +689,7 @@ msgstr "エキスパートモードは取引確認画面をオフし、不利な
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswap Analyticsで人気のあるプールを探しましょう。"
+msgstr "Uniswapアナリシスで人気のあるプールを探しましょう。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -815,7 +815,7 @@ msgstr "無効な価格"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "無効な範囲が選択されています。最小価格は最大価格よりも低くしてください。"
+msgstr "指定した価格帯が間違っています。最小価格は最大価格より低くしてください。"
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
@@ -963,7 +963,7 @@ msgstr "もっと見る"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
-msgstr "新しいポジション"
+msgstr "流動性を追加"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1086,7 +1086,7 @@ msgstr "報酬プール内のプールトークン:"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "プールされた {0}:"
+msgstr "プールしている {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
@@ -1176,7 +1176,7 @@ msgstr "数量を削除"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "委任を削除"
+msgstr "自分で投票する"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1251,7 +1251,7 @@ msgstr "自分"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
-msgstr "自己委任する"
+msgstr "自分で投票する"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1334,7 +1334,7 @@ msgstr "入力トークンは転送できません。入力トークンに問題
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "市場価格が指定した価格帯を外れています。単一トークンのみ預け入れできます。"
+msgstr "市場価格が指定した価格帯から外れています。単一トークンのみ預け入れできます。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1460,7 +1460,7 @@ msgstr "UNIの価格:"
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "UNIトークンはUniswapガバナンスにおける投票権を表します。各提案に対して自分で投票するか、もしくは投票を第三者に委任することができます。"
+msgstr "UNIトークンはUniswapガバナンスにおける投票権を表します。各提案に対して自分で投票するか、もしくは第三者に投票を委任することができます。"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1544,7 +1544,7 @@ msgstr "アンラップ"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
-msgstr "委任を更新"
+msgstr "投票の委任先を変更"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1695,7 +1695,7 @@ msgstr "あなたは最初の流動性提供者です。"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr "各提案に自分で投票するか、または第三者に投票を委任することができます。"
+msgstr "各提案に対して自分で投票するか、または第三者に投票を委任することができます。"
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
@@ -1744,13 +1744,13 @@ msgstr "預け入れた流動性"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "流動性はペアの価格が指定した価格帯に入っている場合のみ報酬を獲得します。 価格帯を指定するガイドは<0>こちら</0>"
+msgstr "流動性は、指定した価格帯にペアの価格が入っている場合のみ報酬を獲得します。 価格帯を指定するガイドは<0>こちら</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "あなたのプールシェア:"
+msgstr "プールシェア:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
@@ -1787,7 +1787,7 @@ msgstr "あなたの価格"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "あなたのプールトークンの合計："
+msgstr "流動性トークン："
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
