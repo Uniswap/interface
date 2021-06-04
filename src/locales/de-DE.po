@@ -564,31 +564,31 @@ msgstr "Depot"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Betrag deponieren"
+msgstr "Betrag einzahlen"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "UNI-V2 LP Token deponieren"
+msgstr "UNI-V2 LP Token einzahlen"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "Liquidität deponieren"
+msgstr "Liquidität einzahlen"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Deponieren Sie Ihre Liquiditäts-Provider Tokens um UNI zu erhalten, den Uniswap-Protokoll-Governance-Token."
+msgstr "Zahlen Sie Ihre Liquiditäts-Provider Tokens ein um UNI zu erhalten, den Uniswap-Protokoll-Governance-Token."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
-msgstr "Deponierte Liquidität:"
+msgstr "Hinzugefügte Liquidität:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "{0} UNI-V2 deponiert"
+msgstr "{0} UNI-V2 hinzugefügt"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "Deponiere Liquidität"
+msgstr "Liquidität wird hinzugefügt"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
