@@ -1,6 +1,6 @@
 {
-  "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "name": "@pooliswap/interface",
+  "description": "Pooliswap Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {
