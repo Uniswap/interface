@@ -1,19 +1,19 @@
 ---
 name: Bug Report
-about: Create a report to help us improve
+about: Describe an issue in the Uniswap Interface
 title: ''
 labels: bug
 assignees: ''
-
 ---
 
 **Bug Description**
-A clear and concise description of what the bug is.
+A clear and concise description of the bug.
 
 **Steps to Reproduce**
+
 1. Go to ...
 2. Click on ...
-...
+   ...
 
 **Expected Behavior**
 A clear and concise description of what you expected to happen.

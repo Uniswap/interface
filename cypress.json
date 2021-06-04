@@ -3,5 +3,6 @@
   "pluginsFile": false,
   "fixturesFolder": false,
   "supportFile": "cypress/support/index.js",
-  "video": false
+  "video": false,
+  "defaultCommandTimeout": 10000
 }

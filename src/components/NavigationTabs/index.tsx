@@ -1,12 +1,19 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
+import { Trans } from '@lingui/macro'
 import { NavLink, Link as HistoryLink } from 'react-router-dom'
+import { Percent } from '@uniswap/sdk-core'
 
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
-import QuestionHelper from '../QuestionHelper'
+import SettingsTab from '../Settings'
+
+import { useAppDispatch } from 'state/hooks'
+import { resetMintState } from 'state/mint/actions'
+import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
+import { TYPE } from 'theme'
+import useTheme from 'hooks/useTheme'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -18,7 +25,7 @@ const Tabs = styled.div`
 const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
+  activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
@@ -53,48 +60,74 @@ const StyledArrowLeft = styled(ArrowLeft)`
 `
 
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
-  const { t } = useTranslation()
   return (
-    <Tabs style={{ marginBottom: '20px' }}>
+    <Tabs style={{ marginBottom: '20px', display: 'none', padding: '1rem 1rem 0 1rem' }}>
       <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
-        {t('swap')}
+        <Trans>Swap</Trans>
       </StyledNavLink>
       <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-        {t('pool')}
+        <Trans>Pool</Trans>
       </StyledNavLink>
     </Tabs>
   )
 }
 
-export function FindPoolTabs() {
+export function FindPoolTabs({ origin }: { origin: string }) {
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+        <HistoryLink to={origin}>
           <StyledArrowLeft />
         </HistoryLink>
-        <ActiveText>Import Pool</ActiveText>
-        <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} />
+        <ActiveText>
+          <Trans>Import V2 Pool</Trans>
+        </ActiveText>
       </RowBetween>
     </Tabs>
   )
 }
 
-export function AddRemoveTabs({ adding }: { adding: boolean }) {
+export function AddRemoveTabs({
+  adding,
+  creating,
+  positionID,
+  defaultSlippage,
+}: {
+  adding: boolean
+  creating: boolean
+  positionID?: string | undefined
+  defaultSlippage: Percent
+}) {
+  const theme = useTheme()
+
+  // reset states on back
+  const dispatch = useAppDispatch()
+
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
-          <StyledArrowLeft />
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+        <HistoryLink
+          to={'/pool' + (!!positionID ? `/${positionID.toString()}` : '')}
+          onClick={() => {
+            if (adding) {
+              // not 100% sure both of these are needed
+              dispatch(resetMintState())
+              dispatch(resetMintV3State())
+            }
+          }}
+        >
+          <StyledArrowLeft stroke={theme.text2} />
         </HistoryLink>
-        <ActiveText>{adding ? 'Add' : 'Remove'} Liquidity</ActiveText>
-        <QuestionHelper
-          text={
-            adding
-              ? 'When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
-              : 'Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.'
-          }
-        />
+        <TYPE.mediumHeader fontWeight={500} fontSize={20}>
+          {creating ? (
+            <Trans>Create a pair</Trans>
+          ) : adding ? (
+            <Trans>Add Liquidity</Trans>
+          ) : (
+            <Trans>Remove Liquidity</Trans>
+          )}
+        </TYPE.mediumHeader>
+        <SettingsTab placeholderSlippage={defaultSlippage} />
       </RowBetween>
     </Tabs>
   )

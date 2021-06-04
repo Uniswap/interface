@@ -1,24 +1,24 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useActiveWeb3React } from '../../hooks'
+import { useActiveWeb3React } from '../../hooks/web3'
 import useDebounce from '../../hooks/useDebounce'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { updateBlockNumber } from './actions'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'state/hooks'
 
-export default function Updater() {
+export default function Updater(): null {
   const { library, chainId } = useActiveWeb3React()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const windowVisible = useIsWindowVisible()
 
   const [state, setState] = useState<{ chainId: number | undefined; blockNumber: number | null }>({
     chainId,
-    blockNumber: null
+    blockNumber: null,
   })
 
   const blockNumberCallback = useCallback(
     (blockNumber: number) => {
-      setState(state => {
+      setState((state) => {
         if (chainId === state.chainId) {
           if (typeof state.blockNumber !== 'number') return { chainId, blockNumber }
           return { chainId, blockNumber: Math.max(blockNumber, state.blockNumber) }
@@ -31,14 +31,14 @@ export default function Updater() {
 
   // attach/detach listeners
   useEffect(() => {
-    if (!library || !chainId || !windowVisible) return
+    if (!library || !chainId || !windowVisible) return undefined
 
     setState({ chainId, blockNumber: null })
 
     library
       .getBlockNumber()
       .then(blockNumberCallback)
-      .catch(error => console.error(`Failed to get block number for chainId: ${chainId}`, error))
+      .catch((error) => console.error(`Failed to get block number for chainId: ${chainId}`, error))
 
     library.on('block', blockNumberCallback)
     return () => {
