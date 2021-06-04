@@ -1,4 +1,4 @@
-import { Currency, Trade, TradeType } from 'libs/sdk/src'
+import { ChainId, Currency, Trade, TradeType } from 'libs/sdk/src'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
@@ -11,7 +11,7 @@ import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
-import { DMM_INFO_URL } from '../../constants'
+import { DMM_ANALYTICS_URL } from '../../constants'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
@@ -86,6 +86,7 @@ export interface AdvancedSwapDetailsProps {
 }
 
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
+  const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   const [allowedSlippage] = useUserSlippageTolerance()
@@ -112,7 +113,10 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
             </>
           )}
           <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={`${DMM_INFO_URL}/pool/${trade?.route.pairs[0].liquidityToken.address}`} target="_blank">
+            <InfoLink
+              href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${trade?.route.pairs[0].liquidityToken.address}`}
+              target="_blank"
+            >
               Token pool analytics →
             </InfoLink>
           </AutoColumn>

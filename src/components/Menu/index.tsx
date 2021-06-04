@@ -3,11 +3,13 @@ import { Info, PieChart, Menu as MenuIcon, Zap, BookOpen } from 'react-feather'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 
+import { ChainId } from 'libs/sdk/src'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
-import { DMM_INFO_URL } from '../../constants'
+import { DMM_ANALYTICS_URL } from '../../constants'
+import { useActiveWeb3React } from 'hooks'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -100,6 +102,7 @@ const MenuItem = styled(ExternalLink)`
 `
 
 export default function Menu() {
+  const { chainId } = useActiveWeb3React()
   const node = useRef<HTMLDivElement>()
   const open = useModalOpen(ApplicationModal.MENU)
   const toggle = useToggleModal(ApplicationModal.MENU)
@@ -121,7 +124,7 @@ export default function Menu() {
             <Zap size={14} />
             Migrate &nbsp;&nbsp;&nbsp;&nbsp;Liquidity
           </NavMenuItem>
-          <MenuItem id="link" href={DMM_INFO_URL}>
+          <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
             <PieChart size={14} />
             Analytics
           </MenuItem>

@@ -7,7 +7,7 @@ import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { ChainId, Fraction, JSBI, Token } from 'libs/sdk/src'
-import { KNC } from '../../constants'
+import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Farm } from 'state/farms/types'
@@ -262,7 +262,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               />
             </StakeGroup>
             <LPInfoContainer>
-              <ExternalLink href={`${String(process.env.REACT_APP_DMM_ANALYTICS_URL)}/pool/${farm.id}`}>
+              <ExternalLink href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/pool/${farm.id}`}>
                 <LPInfo>{shortenAddress(farm.id)}</LPInfo>
               </ExternalLink>
               <Link to={`/add/${farm.token0?.id}/${farm.token1?.id}/${farm.id}`} style={{ textDecoration: 'none' }}>
