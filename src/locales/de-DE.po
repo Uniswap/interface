@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-03 21:28\n"
+"PO-Revision-Date: 2021-06-04 18:40\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -287,7 +287,7 @@ msgstr "Guthaben: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "Am besten für exotische Paare."
+msgstr "Ideal für exotische Paare."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -388,7 +388,7 @@ msgstr "Alles löschen"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "Schließen"
+msgstr "Schliessen"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1099,7 +1099,7 @@ msgstr "Preis"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
-msgstr "Preisdifferenz:"
+msgstr "Preisunterschied:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
