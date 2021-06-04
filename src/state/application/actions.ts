@@ -30,7 +30,8 @@ export enum ApplicationModal {
   CLAIM_POPUP,
   MENU,
   MOBILE,
-  NETWORK_SWITCHER
+  NETWORK_SWITCHER,
+  ADD_ARBITRUM
 }
 
 export enum MainnetGasPrice {
