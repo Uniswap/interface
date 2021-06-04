@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-04 12:26\n"
+"PO-Revision-Date: 2021-06-04 13:29\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -101,7 +101,7 @@ msgstr "<0/> の投票権を保有"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>アカウント分析と発生した手数料</0><1>↗ </1>"
+msgstr "<0>発生した報酬と分析</0><1>↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
@@ -109,7 +109,7 @@ msgstr "V3に<0>戻る</0>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>ヒント:</0>プールトークンを削除すると、あなたのポジションは、プールのシェアに比例して、現在の価格で元のトークンに戻ります。受け取った手数料は、あなたが受け取るトークンに含まれます。"
+msgstr "<0>ヒント:</0>流動性トークンを削除すると、プールののシェアに比例して現在の価格で元のトークンに戻ります。受け取った報酬は受け取るトークンに含まれます。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -117,7 +117,7 @@ msgstr "<0>ヒント:</0>このツールを使用して、インターフェー�
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>ヒント:</0> 流動性を追加すると、その流動性を表すプールトークンを受け取ります。 プールトークンは自動的にプールのシェアに比例して手数料を獲得します。また、いつでも償還できます。"
+msgstr "<0>ヒント:</0> 流動性を追加するとそれを表す流動性トークンを受け取ります。 流動性トークンはプールのシェアに応じて自動的に報酬を獲得します。また、流動性トークンはいつでも償還できます。"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -207,7 +207,7 @@ msgstr "価格への大きな影響がある取引を許可し、確認画面を
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "{0} の使用をUniswapプロトコルに許可する"
+msgstr "{0} の使用をUniswapに許可する"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -303,7 +303,7 @@ msgstr "ブロックされたアドレス"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性を追加することにより、あなたはプールのシェアに比例して、このペアのすべての取引の0.3%を手数料報酬として獲得します。 手数料報酬はプールに追加され、リアルタイムで反映され、あなたの流動性を引き出すことで請求できます。"
+msgstr "流動性を追加することで、すべての取引で発生する0.3%の手数料のうち、プールのシェアに応じて報酬を獲得します。報酬はリアルタイムにプールに追加され、反映されます。報酬は流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -576,7 +576,7 @@ msgstr "流動性を預ける"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "LPトークンを預けて、UniswapプロトコルのガバナンストークンであるUNIを受け取ります。"
+msgstr "流動性トークンを預けて、UniswapプロトコルのガバナンストークンであるUNIを受け取ります。"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -596,7 +596,7 @@ msgstr "説明"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
-msgstr "詳細情報"
+msgstr "詳細"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
@@ -624,7 +624,7 @@ msgstr "ドキュメント"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "V2のポジションが表示されない場合 <0>インポートしてください</0>"
+msgstr "V2での流動性が表示されない場合 <0>インポートしてください</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -872,7 +872,7 @@ msgstr "URLが<0>app.uniswap.org</0>であることを確認してください"
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "管理"
+msgstr "詳細"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
@@ -1124,7 +1124,7 @@ msgstr "価格:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "価格とプールのシェア"
+msgstr "価格とプールシェア"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1172,7 +1172,7 @@ msgstr "削除"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "数量を削除"
+msgstr "削除する数量"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
@@ -1272,7 +1272,7 @@ msgstr "Portisを表示"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
-msgstr "単純な"
+msgstr "シンプル"
 
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
@@ -1370,7 +1370,7 @@ msgstr "このトークンが有効なトークンリストに表示されてい
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "このツールは {0} の流動性をV3に安全に移行します。この移行コントラクトは"
+msgstr "本ツールで {0} の流動性をV3に安全に移行します。移行コントラクトは"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
