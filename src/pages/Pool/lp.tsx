@@ -24,7 +24,7 @@ import {
 import { Dots } from '../../components/swap/styleds'
 import { DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
-import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
+import { BIG_INT_ZERO } from '../../constants'
 import { useTranslation } from 'react-i18next'
 import { usePairs } from 'data/ReservesUNI'
 import { usePairs as usePairsSUSHI } from 'data/ReservesSUSHI'

@@ -1,4 +1,4 @@
-import { Fraction, JSBI, Pair, Percent, TokenAmount } from 'libs/sdk/src'
+import { ChainId, Fraction, JSBI, Pair, Percent, TokenAmount } from 'libs/sdk/src'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -21,7 +21,7 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 import WarningRightIcon from 'components/Icons/WarningRightIcon'
 import QuestionHelper from 'components/QuestionHelper'
 import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO, DMM_INFO_URL } from '../../constants'
+import { BIG_INT_ZERO, DMM_ANALYTICS_URL } from '../../constants'
 import { priceRangeCalcByPair, getMyLiquidity, useCurrencyConvertedToNative } from 'utils/dmm'
 import { UserLiquidityPosition } from 'state/pools/hooks'
 
@@ -399,7 +399,10 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               </Text>
             </RowBetween>
             <ButtonSecondary2 padding="8px" borderRadius="8px">
-              <ExternalLink style={{ width: '100%', textAlign: 'center' }} href={`${DMM_INFO_URL}/account/${account}`}>
+              <ExternalLink
+                style={{ width: '100%', textAlign: 'center' }}
+                href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}
+              >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
             </ButtonSecondary2>

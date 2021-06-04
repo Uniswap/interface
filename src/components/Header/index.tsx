@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
-import { KNC } from '../../constants'
+import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useCurrencyBalance, useETHBalances } from '../../state/wallet/hooks'
@@ -301,9 +301,7 @@ export default function Header() {
           >
             {t('My Dashboard')}
           </StyledNavLink>
-          <StyledNavExternalLink href={String(process.env.REACT_APP_DMM_ANALYTICS_URL)}>
-            {t('analytics')}
-          </StyledNavExternalLink>
+          <StyledNavExternalLink href={DMM_ANALYTICS_URL[chainId as ChainId]}>{t('analytics')}</StyledNavExternalLink>
 
           {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
             <HideSmall>

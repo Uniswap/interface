@@ -46,8 +46,15 @@ export const BAD_RECIPIENT_ADDRESSES: string[] = [FACTORY_ADDRESSES[ChainId.MAIN
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const DMM_INFO_URL: string =
-  String(process.env.REACT_APP_DMM_ANALYTICS_URL) || 'https://dev-dmm-info.knstats.com'
+export const DMM_ANALYTICS_URL: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: 'https://info.dmm.exchange',
+  [ChainId.ROPSTEN]: 'https://dev-dmm-info.knstats.com',
+  [ChainId.RINKEBY]: 'https://info.dmm.exchange',
+  [ChainId.GÖRLI]: 'https://info.dmm.exchange',
+  [ChainId.KOVAN]: 'https://info.dmm.exchange',
+  [ChainId.MATIC]: 'https://info.dmm.exchange',
+  [ChainId.MUMBAI]: 'https://mumbai-dmm-info.knstats.com'
+}
 
 // a list of tokens by chain
 type ChainTokenList = {

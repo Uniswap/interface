@@ -1,5 +1,5 @@
 import { JSBI, Pair, Percent, TokenAmount } from '@uniswap/sdk'
-import { Currency, ETHER, WETH } from 'libs/sdk/src'
+import { ChainId, Currency, ETHER, WETH } from 'libs/sdk/src'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -25,7 +25,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO, DMM_ANALYTICS_URL } from '../../constants'
 import { tokenAmountDmmToUni, tokenUniToDmm } from 'utils/dmm'
 
 export const FixedHeightRow = styled(RowBetween)`
@@ -189,7 +189,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const token0Dmm = tokenUniToDmm(pair.token0)
   const token1Dmm = tokenUniToDmm(pair.token1)
@@ -227,8 +227,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
       : [undefined, undefined]
 
   const backgroundColor = useColor(pair?.token0)
-
-  const { chainId } = useActiveWeb3React()
 
   function toWETH(currencyA: Currency) {
     if (!chainId) return undefined
@@ -333,7 +331,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <ButtonSecondary2 padding="8px" borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`${process.env.REACT_APP_DMM_ANALYTICS_URL}/account/${account}`}
+                href={`${DMM_ANALYTICS_URL[chainId as ChainId]}/account/${account}`}
               >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>

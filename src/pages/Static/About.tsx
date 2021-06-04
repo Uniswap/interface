@@ -11,7 +11,7 @@ import { useGlobalData } from 'state/about/hooks'
 import { formattedNum } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
-import { KNC } from '../../constants'
+import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import AccessLiquidity from '../../assets/svg/access-liquidity.svg'
 import Straightforward from '../../assets/svg/straightforward.svg'
 import NoRisk from '../../assets/svg/no-risk.svg'
@@ -225,7 +225,7 @@ export default function About() {
         <ButtonOutlined
           padding="12px 28px"
           as={ExternalLink}
-          href={process.env.REACT_APP_DMM_ANALYTICS_URL || `https://dev-dmm-info.knstats.com/`}
+          href={DMM_ANALYTICS_URL[chainId as ChainId]}
           style={{ width: 'auto', fontSize: '16px' }}
         >
           Analytics
