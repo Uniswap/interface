@@ -6,7 +6,7 @@ import { NavLink, Link as HistoryLink } from 'react-router-dom'
 import { Percent } from '@uniswap/sdk-core'
 
 import { ArrowLeft } from 'react-feather'
-import { RowBetween } from '../Row'
+import Row, { RowBetween } from '../Row'
 import SettingsTab from '../Settings'
 
 import { useAppDispatch } from 'state/hooks'
@@ -136,13 +136,12 @@ export function AddRemoveTabs({
 export function CreateProposalTabs() {
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+      <Row style={{ padding: '1rem 1rem 0 1rem' }}>
         <HistoryLink to="/vote">
           <StyledArrowLeft />
         </HistoryLink>
-        <ActiveText>Create Proposal</ActiveText>
-        <div></div>
-      </RowBetween>
+        <ActiveText style={{ marginLeft: 'auto', marginRight: 'auto' }}>Create Proposal</ActiveText>
+      </Row>
     </Tabs>
   )
 }

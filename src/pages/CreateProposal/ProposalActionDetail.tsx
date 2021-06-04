@@ -10,7 +10,14 @@ enum ProposalActionDetailField {
   CURRENCY,
 }
 
-const _ProposalActionDetail = ({
+const ProposalActionDetailContainer = styled.div`
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 10px;
+`
+
+export const ProposalActionDetail = ({
   className,
   proposalAction,
   currency,
@@ -51,7 +58,7 @@ const _ProposalActionDetail = ({
   }
 
   return (
-    <div className={className}>
+    <ProposalActionDetailContainer className={className}>
       {proposalActionsData[proposalAction].map((field, i) =>
         field.type === ProposalActionDetailField.ADDRESS ? (
           <AddressInputPanel key={i} label={field.label} value={toAddress} onChange={onToAddressInput} />
@@ -69,17 +76,8 @@ const _ProposalActionDetail = ({
             hideBalance={true}
             id="currency-input"
           />
-        ) : (
-          <></>
-        )
+        ) : null
       )}
-    </div>
+    </ProposalActionDetailContainer>
   )
 }
-
-export const ProposalActionDetail = styled(_ProposalActionDetail)`
-  margin-top: 10px;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  grid-gap: 10px;
-`

@@ -1,9 +1,10 @@
 import React, { memo } from 'react'
 import styled from 'styled-components'
+import { Text } from 'rebass'
 import { ResizingTextArea, TextInput } from 'components/TextInput'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 
-const ProposalEditorHeader = styled.div`
+const ProposalEditorHeader = styled(Text)`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.text2};
@@ -14,7 +15,14 @@ const ProposalTitle = memo(styled(TextInput)`
   margin-bottom: 7.5px;
 `)
 
-const _ProposalEditor = ({
+const ProposalEditorContainer = styled.div`
+  padding: 0.75rem 1rem 0.75rem 1rem;
+  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
+`
+
+export const ProposalEditor = ({
   className,
   title,
   body,
@@ -28,34 +36,27 @@ const _ProposalEditor = ({
   onBodyInput: (body: string) => void
 }) => {
   const bodyPlaceholder = `## Summary
-  
-Lorem ipsum dolor sit amet
-  
+
+Insert your summary here
+
 ## Methodology
   
-Lorem ipsum dolor sit amet
+Insert your methodology here
 
 ## Conclusion
   
-Lorem ipsum dolor sit amet
+Insert your conclusion here
   
   `
 
   return (
-    <div className={className}>
+    <ProposalEditorContainer className={className}>
       <ProposalEditorHeader>
         <Trans>Proposal</Trans>
       </ProposalEditorHeader>
-      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder="Proposal Title" fontSize="1.5rem" />
+      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={t`Proposal Title`} fontSize="1.5rem" />
       <hr />
       <ResizingTextArea value={body} onUserInput={onBodyInput} placeholder={bodyPlaceholder} fontSize="1rem" />
-    </div>
+    </ProposalEditorContainer>
   )
 }
-
-export const ProposalEditor = styled(_ProposalEditor)`
-  padding: 0.75rem 1rem 0rem 1rem;
-  border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg1};
-`

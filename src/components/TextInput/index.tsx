@@ -14,9 +14,6 @@ const Input = styled.input<{ error?: boolean; fontSize?: string }>`
   text-overflow: ellipsis;
   font-weight: 500;
   width: 100%;
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
   padding: 0px;
   -webkit-appearance: textfield;
 
@@ -49,9 +46,6 @@ const TextAreaInput = styled.textarea<{ error?: boolean; fontSize?: string }>`
   font-weight: 500;
   width: 100%;
   line-height: 1.2;
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
   padding: 0px;
   -webkit-appearance: textfield;
 

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import JSBI from 'jsbi'
 import { utils } from 'ethers'
-import { Button, TYPE } from 'theme'
+import { TYPE } from 'theme'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
@@ -36,28 +36,39 @@ const ProposalWrapper = styled.div`
 `
 
 const CreateProposalButton = ({
+  proposalThreshold,
   hasActiveOrPendingProposal,
   hasEnoughVote,
   isFormInvalid,
   handleCreateProposal,
 }: {
+  proposalThreshold?: number
   hasActiveOrPendingProposal: boolean
   hasEnoughVote: boolean
   isFormInvalid: boolean
   handleCreateProposal: () => void
 }) => {
-  return hasActiveOrPendingProposal ? (
-    <ButtonError marginTop="18px" error={true}>
-      <Trans>You already have an active or pending proposal</Trans>
+  return (
+    <ButtonError
+      style={{ marginTop: '18px' }}
+      error={hasActiveOrPendingProposal || !hasEnoughVote}
+      disabled={isFormInvalid || hasActiveOrPendingProposal || !hasEnoughVote}
+      onClick={handleCreateProposal}
+    >
+      {hasActiveOrPendingProposal ? (
+        <Trans>You already have an active or pending proposal</Trans>
+      ) : !hasEnoughVote ? (
+        <>
+          {proposalThreshold ? (
+            <Trans>You must have {(proposalThreshold / 10 ** 18).toLocaleString()} votes to submit a proposal</Trans>
+          ) : (
+            <Trans>You don&apos;t have enough votes to submit a proposal</Trans>
+          )}
+        </>
+      ) : (
+        <Trans>Create Proposal</Trans>
+      )}
     </ButtonError>
-  ) : !hasEnoughVote ? (
-    <ButtonError marginTop="18px" error={true}>
-      <Trans>You don&apos;t have enough vote to create a proposal</Trans>
-    </ButtonError>
-  ) : (
-    <Button style={{ marginTop: '18px' }} disabled={isFormInvalid} onClick={handleCreateProposal}>
-      <Trans>Create Proposal</Trans>
-    </Button>
   )
 }
 
@@ -190,6 +201,7 @@ ${bodyValue}
           </div>
         </ProposalWrapper>
         <CreateProposalButton
+          proposalThreshold={proposalThreshold}
           hasActiveOrPendingProposal={
             latestProposalData?.status === ProposalState.Active || latestProposalData?.status === ProposalState.Pending
           }

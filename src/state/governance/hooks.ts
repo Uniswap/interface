@@ -11,6 +11,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../transactions/hooks'
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
+import { t } from '@lingui/macro'
 
 interface ProposalDetail {
   target: string
@@ -277,7 +278,7 @@ export function useCreateProposalCallback(): (
           .propose(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: `Submitted new proposal`,
+              summary: t`Submitted new proposal`,
             })
             return response.hash
           })
