@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-05 21:08\n"
+"PO-Revision-Date: 2021-06-05 22:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -761,7 +761,7 @@ msgstr "Im Bereich"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
-msgstr "Liquidität erhöhen"
+msgstr "Liquidität hinzufügen"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
@@ -1090,7 +1090,7 @@ msgstr "{0} gepoolt:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "Pool Übersicht"
+msgstr "Pool-Übersicht"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1116,7 +1116,7 @@ msgstr "Preis aktualisiert"
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "Preisspanne"
+msgstr "Preisbereich"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1256,7 +1256,7 @@ msgstr "Selbstdelegierung"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "Preisspanne festlegen"
+msgstr "Preisbereich festlegen"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
@@ -1448,7 +1448,7 @@ msgstr "Experten-Modus aktivieren"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
-msgstr "UNI ist angekommen"
+msgstr "UNI ist eingetroffen"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1501,11 +1501,11 @@ msgstr "Uniswap verfügbar in: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr "Uniswap Liquiditätsabbau"
+msgstr "Uniswap Liquiditätsförderung"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr "Uniswap Migrationskontrakt: up-right_pfeile:"
+msgstr "Uniswap Migrations-contract ↗"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1518,25 +1518,25 @@ msgstr "Unbekannter Fehler{0}. Versuchen Sie, Ihre Schlupftoleranz zu erhöhen. 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
-msgstr "Abstimmungen freischalten"
+msgstr "Stimmen freischalten"
 
 #: src/pages/Vote/index.tsx
 msgid "Unlock Voting"
-msgstr "Abstimmung freischalten"
+msgstr "Abstimmen freischalten"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
-msgstr "Abstimmungen entsperren"
+msgstr "Stimmen werden freigeschalten"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr "Nicht unterstütztes Asset"
+msgstr "Nicht unterstützter Token"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
-msgstr "Nicht unterstützte Assets"
+msgstr "Nicht unterstützte Token"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
@@ -1577,7 +1577,7 @@ msgstr "V2-Liquidität anzeigen"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "Angenommene Gebühren und Analysen anzeigen<0>:up-right_pfeil anzeigen:</0>"
+msgstr "Eingenommene Gebühren und Analysen anzeigen<0>↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
@@ -1587,7 +1587,7 @@ msgstr "Liste anzeigen"
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
-msgstr "Auf Explorer anzeigen"
+msgstr "Im Explorer anzeigen"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -1598,25 +1598,25 @@ msgstr "Transaktion im Explorer anzeigen"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
-msgstr "Abstimmungen"
+msgstr "Abstimmen"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
-msgstr "Gegenstimmen"
+msgstr "Dagegen stimmen"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote For"
-msgstr "Stimme für"
+msgstr "Dafür stimmen"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr "Vote gegen Vorschlag {proposalId}"
+msgstr "Stimme gegen Antrag {proposalId}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
-msgstr "Für Vorschlag {proposalId} stimmen"
+msgstr "Stimme für Antrag {proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1628,7 +1628,7 @@ msgstr "Die Abstimmung endet ungefähr {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
-msgstr "Warten auf Bestätigung"
+msgstr "Warte auf Bestätigung"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -1640,15 +1640,15 @@ msgstr "Willkommen bei Team Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Wenn Sie ohne Abzug beanspruchen, bleibt Ihre Liquidität im Bergbau-Pool."
+msgstr "Wenn Sie Einfordern ohne die Liquidität abzuheben, bleibt Ihre Liquidität im Förder-Pool."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Wenn Sie den Vertrag zurückziehen, wird der Vertrag automatisch Anspruch auf UNI in Ihrem Namen!"
+msgstr "Wenn Sie Abheben wird der contract \"automagisch\" UNI für Sie einziehen!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Wenn Sie sich zurückziehen, wird Ihre UNI beansprucht und Ihre Liquidität aus dem Bergbau-Pool entfernt."
+msgstr "Wenn Sie abheben, wird Ihr UNI eingefordert und Ihre Liquidität aus dem Förder-Pool entfernt."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1657,20 +1657,20 @@ msgstr "Abheben"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw & Claim"
-msgstr "Zurückziehen & beanspruchen"
+msgstr "Abheben & Einfordern"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "Eingezahlte Liquidität zurückziehen"
+msgstr "Deponierte Liquidität abheben"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
-msgstr "{0} UNI-V2 zurückziehen"
+msgstr "Hebe {0} UNI-V2 ab"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "UNI-V2 zurückgezogen!"
+msgstr "UNI-V2 abgehoben!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
@@ -1711,7 +1711,7 @@ msgstr "Sie müssen ein Konto verbinden."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Sie müssen den Uniswap Smarte Verträge die Erlaubnis geben, Ihre {0}zu verwenden. Sie müssen dies nur einmal pro Token tun."
+msgstr "Sie müssen den Uniswap Smart Contracts die Erlaubnis erteilen, Ihre {0} zu verwenden. Sie müssen dies nur einmal pro Token tun."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -1719,7 +1719,7 @@ msgstr "Sie sollten nur Liquidität in Uniswap V3 zu einem Preis einzahlen, den 
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
-msgstr "Sie werden auch die von dieser Stelle verdienten Gebühren einziehen."
+msgstr "Sie werden auch die Gebühren einziehen, die diese Position eingenommen hat."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1728,7 +1728,7 @@ msgstr "Sie werden erhalten"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "Ihre UNI-Aufteilung"
+msgstr "Ihre UNI-Aufschlüsselung"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -1740,7 +1740,7 @@ msgstr "Ihre V3 Liquiditätspositionen werden hier erscheinen."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
-msgstr "Ihre Liquiditätseinlagen"
+msgstr "Ihre Liquiditätspositionen"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
@@ -1750,7 +1750,7 @@ msgstr "Ihre Liquidität wird nur dann Gebühren verdienen, wenn der Marktpreis 
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "Ihre Poolfreigabe:"
+msgstr "Ihr Poolanteil:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
@@ -1795,15 +1795,15 @@ msgstr "Ihre Transaktionskosten werden wesentlich höher sein, da sie das Gas be
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "Ihre Transaktion könnte Frontrun sein"
+msgstr "Ihre Transaktion könnte anfällig für \"Frontrunning\" sein"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
-msgstr "Ihre Transaktion kann fehlschlagen"
+msgstr "Ihre Transaktion könnte fehlschlagen"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sie für mehr als diesen Zeitraum aussteht."
+msgstr "Ihre Transaktion wird rückgängig gemacht, wenn sie nicht innerhalb dieser Zeit verarbeitet wird."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
@@ -1827,7 +1827,7 @@ msgstr "für {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "hat Socken Emoji"
+msgstr "hat \"socks\" Emoji"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -1835,7 +1835,7 @@ msgstr "https: // oder ipfs: // oder ENS-Name"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
-msgstr "minuten"
+msgstr "Minuten"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -1867,7 +1867,7 @@ msgstr "{0} Benutzerdefinierte Token"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} hinterlegt"
+msgstr "{0} deponiert"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
@@ -1881,7 +1881,7 @@ msgstr "{0} erhaltene Gebühren:"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
-msgstr "{0} ausstehend"
+msgstr "{0} Ausstehend"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -1918,7 +1918,7 @@ msgstr "{0} Stimmen"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
-msgstr "{0} pro {1}"
+msgstr "{0}/{1}"
 
 #: src/components/RateToggle/index.tsx
 msgid "{0} price"
@@ -1952,7 +1952,7 @@ msgstr "{0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} Liquiditätsbergbau"
+msgstr "{0}-{1} Liquiditätsförderung"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
@@ -1984,5 +1984,5 @@ msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← Zurück zu Pools Übersicht"
+msgstr "← Zurück zur Pool-Übersicht"
 
