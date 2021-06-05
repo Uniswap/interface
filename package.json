@@ -120,7 +120,7 @@
     "@celo/utils": "^1.2.1",
     "@celo/wallet-ledger": "^1.2.0",
     "@craco/craco": "^6.1.2",
-    "@ledgerhq/hw-transport-webusb": "^5.51.1",
+    "@ledgerhq/hw-transport-webusb": "^5.53.1",
     "@sentry/react": "^6.4.1",
     "@sentry/tracing": "^6.4.1",
     "@ubeswap/core": "^1.0.2",
