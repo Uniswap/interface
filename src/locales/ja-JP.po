@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-04 20:28\n"
+"PO-Revision-Date: 2021-06-05 17:29\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -64,7 +64,7 @@ msgstr "-{feeAmountFormatted}%"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
-msgstr "0 UNI/週"
+msgstr "0 UNI / 週"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
@@ -1004,11 +1004,11 @@ msgstr "このモードは、自分が何をしているか分かっている場
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
-msgstr "オフ"
+msgstr "OFF"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "オン"
+msgstr "ON"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1897,7 +1897,7 @@ msgstr "{0} UNI"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI / week"
-msgstr "{0} UNI/週"
+msgstr "{0} UNI / 週"
 
 #: src/components/earn/StakingModal.tsx
 msgid "{0} UNI-V2"
