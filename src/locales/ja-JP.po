@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-05 17:29\n"
+"PO-Revision-Date: 2021-06-05 21:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1594,7 +1594,7 @@ msgstr "エクスプローラーで見る"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
-msgstr "Explorer でトランザクションを表示する"
+msgstr "エクスプローラーで取引を表示する"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1909,7 +1909,7 @@ msgstr "{0} UNI-V2 LPトークンが利用可能"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
-msgstr "{0} 件の投票"
+msgstr "{0} の投票"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
