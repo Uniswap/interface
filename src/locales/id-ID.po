@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Indonesian\n"
-"PO-Revision-Date: 2021-06-05 17:29\n"
+"PO-Revision-Date: 2021-06-05 18:31\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -105,7 +105,7 @@ msgstr "<0> Analisis akun dan biaya yang dikenakan</0> <1> ↗</1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0> Kembali ke</0> V3"
+msgstr "<0>Kembali ke</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -137,7 +137,7 @@ msgstr "Tentang"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
-msgstr "Menerima"
+msgstr "Setuju"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
@@ -388,7 +388,7 @@ msgstr "Bersihkan semua"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "Menutup"
+msgstr "Tutup"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -406,7 +406,7 @@ msgstr "Mengumpulkan"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Kumpulkan sebagai BASAH"
+msgstr "Kumpulkan sebagai WETH"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -612,7 +612,7 @@ msgstr "Memutuskan"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Perselisihan"
+msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
@@ -992,11 +992,11 @@ msgstr "Tidak ada hasil yang ditemukan."
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
-msgstr "MATI"
+msgstr "OFF"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "DI"
+msgstr "ON"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
@@ -1004,11 +1004,11 @@ msgstr "GUNAKAN MODE INI HANYA JIKA ANDA TAHU APA YANG ANDA LAKUKAN."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
-msgstr "Mati"
+msgstr "Off"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "Di"
+msgstr "On"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1497,7 +1497,7 @@ msgstr "Uniswap V3 ada di sini!"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap tersedia di: <0>{0}</0>"
+msgstr "Uniswap dalam bahasa: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1831,7 +1831,7 @@ msgstr "memiliki emoji kaus kaki"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https: // atau ipfs: // atau nama ENS"
+msgstr "https:// atau ipfs:// atau nama ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -1980,7 +1980,7 @@ msgstr "{tokenB} per {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~ $ <0 />"
+msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
