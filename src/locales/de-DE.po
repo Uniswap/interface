@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-04 20:28\n"
+"PO-Revision-Date: 2021-06-05 19:24\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -406,7 +406,7 @@ msgstr "Sammeln"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Als MIT sammeln"
+msgstr "Als WETH beziehen"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -905,7 +905,7 @@ msgstr "Max.:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "Maximal gesendet"
+msgstr "Maximum gesendet"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -921,7 +921,7 @@ msgstr "Liquidität migrieren"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "Liquidität zu V3 migrieren"
+msgstr "Liquidität nach V3 migrieren"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
@@ -1103,11 +1103,11 @@ msgstr "Preisunterschied:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr "Preisauswirkung"
+msgstr "Preiseinfluss"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "Preisauswirkung zu hoch"
+msgstr "Preiseinfluss zu hoch"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
@@ -1152,7 +1152,7 @@ msgstr "Lesen Sie mehr über Uniswap Governance"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
-msgstr "Lesen Sie mehr über Liquidität"
+msgstr "Lesen Sie mehr über die Bereitstellung von Liquidität"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
@@ -1195,7 +1195,7 @@ msgstr "Entferne {0} {1} und {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Liquidität {0}/{1} V3 entfernen"
+msgstr "V3 Liquidität {0}/{1} entfernen"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
@@ -1415,7 +1415,7 @@ msgstr "Gesamtmenge"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
-msgstr "Gesamt hinterlegt"
+msgstr "Gesamt deponiert"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Total deposits"
@@ -1477,15 +1477,15 @@ msgstr "UNI-V2 {0}-{1}"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
-msgstr "Unbeanspruchte UNI"
+msgstr "Noch nicht bezogene UNI"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
-msgstr "Unbeanspruchte Gebühren"
+msgstr "Noch nicht bezogene Gebühren"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
-msgstr "Unbeansprucht:"
+msgstr "Noch nicht bezogen:"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
@@ -1687,7 +1687,7 @@ msgstr "Sie erstellen einen Pool"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Sie sind der erste Liquiditätsanbieter für diesen Uniswap V3. Ihre Liquidität wird zum aktuellen {0} -Preis migriert."
+msgstr "Sie sind der erste Liquiditätsgeber für diesen Uniswap V3 Pool. Ihre Liquidität wird zum aktuellen {0}-Preis migriert."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -1715,7 +1715,7 @@ msgstr "Sie müssen den Uniswap Smarte Verträge die Erlaubnis geben, Ihre {0}zu
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Sie sollten nur Liquidität in Uniswap V3 zu einem Preis einzahlen, den Sie für richtig halten. <0/>Wenn der Preis falsch erscheint, können Sie entweder einen Swap, um den Preis zu verschieben, oder warten, bis jemand anderes dies tut."
+msgstr "Sie sollten nur Liquidität in Uniswap V3 zu einem Preis einzahlen, den Sie für richtig halten. <0/>Wenn der Preis falsch erscheint, können Sie entweder durch einen Tausch den Preis verändern oder warten bis jemand anderes dies tut."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -1744,7 +1744,7 @@ msgstr "Ihre Liquiditätseinlagen"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "Ihre Liquidität wird nur dann Gebühren verdienen, wenn der Marktpreis des Paares in Ihrem Bereich liegt. <0> Benötigen Sie Hilfe bei der Auswahl eines Bereichs?</0>"
+msgstr "Ihre Liquidität wird nur dann Gebühren verdienen, wenn der Marktpreis des Paares in Ihrem Bereich liegt. <0>Benötigen Sie Hilfe bei der Auswahl eines Bereichs?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1763,17 +1763,17 @@ msgstr "Ihre Position hat 0 Liquidität und verdient keine Gebühren."
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "Ihre Position wird zu 100% aus {0} zu diesem Preis bestehen"
+msgstr "Ihre Position wird zu 100% aus {0} bestehen bei diesem Preis"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "Ihre Position wird zu diesem Preis 100% {0} betragen."
+msgstr "Ihre Position wird bei diesem Preis 100% {0} sein."
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "Ihre Position wird keine Gebühren verdienen oder in Geschäften genutzt werden, bis sich der Marktpreis in Ihr Sortiment bewegt."
+msgstr "Ihre Position wird keine Gebühren verdienen oder in Geschäften genutzt werden, bis sich der Marktpreis in Ihren Bereich bewegt."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -1815,7 +1815,7 @@ msgstr "Ihre Transaktionen werden hier erscheinen..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "Deine unbeanspruchte UNI"
+msgstr "Deine noch nicht bezogenen UNI"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
