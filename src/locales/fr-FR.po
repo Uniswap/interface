@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2021-06-04 20:28\n"
+"PO-Revision-Date: 2021-06-05 16:14\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -303,7 +303,7 @@ msgstr "Adresse bloquée"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "En ajoutant de la liquidité, vous gagnerez 0,3 % de toutes les transactions sur cette paire proportionnellement à votre part du pool. Les frais sont ajoutés à la piscine, accumulés en temps réel et peuvent être réclamés en retirant votre liquidité."
+msgstr "En ajoutant de la liquidité, vous gagnerez 0,3 % de toutes les transactions sur cette paire proportionnellement à votre part du pool. Les frais sont ajoutés à la pool, accumulés en temps réel et peuvent être réclamés en retirant votre liquidité."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -406,7 +406,7 @@ msgstr "Collecter"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Collecter en tant qu'EFFETH"
+msgstr "Collectionner en WETH"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -612,7 +612,7 @@ msgstr "Déconnecter"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Discord."
+msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
@@ -689,7 +689,7 @@ msgstr "Le mode expert désactive l'invite de transaction de confirmation et per
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Explorez les piscines populaires sur Uniswap Analytics."
+msgstr "Explorez les pools populaires sur Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -819,7 +819,7 @@ msgstr "Plage non valide sélectionnée. Le prix minimum doit être inférieur a
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "récipient invalide"
+msgstr "Destinataire invalide"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -840,7 +840,7 @@ msgstr "Récompenses du fournisseur de liquidité"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Les fournisseurs de liquidités gagnent 0,3 % de frais sur tous les ordres proportionnels à leur part du pool. Les frais sont ajoutés à la piscine, accumulés en temps réel et peuvent être réclamés en retirant votre liquidité."
+msgstr "Les fournisseurs de liquidités gagnent 0,3 % de frais sur tous les ordres proportionnels à leur part du pool. Les frais sont ajoutés à la pool, accumulés en temps réel et peuvent être réclamés en retirant votre liquidité."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -888,7 +888,7 @@ msgstr "Gérer ce pool."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
-msgstr "Max."
+msgstr "Max"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -1062,7 +1062,7 @@ msgstr "Liquidité"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "Piscine trouvée !"
+msgstr "Pool trouvée !"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
@@ -1124,7 +1124,7 @@ msgstr "Prix :"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Partage des prix et de la piscine"
+msgstr "Partage des prix et de la pool"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1505,7 +1505,7 @@ msgstr "Uniswap minage des liquidités"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr "Contrat de migration Uniswap: up-right_arrow:"
+msgstr "Contrat de migration Uniswap↗"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1819,7 +1819,7 @@ msgstr "Votre UNI non réclamé"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
-msgstr "Valider"
+msgstr "confirmer"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
