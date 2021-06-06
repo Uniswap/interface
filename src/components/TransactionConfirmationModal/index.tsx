@@ -1,4 +1,4 @@
-import { ChainId } from '@fuseio/fuse-swap-sdk'
+import { ChainId, Currency } from '@fuseio/fuse-swap-sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
@@ -13,6 +13,7 @@ import Circle from '../../assets/images/yellow-loader.svg'
 
 import { getExplorerLink, getExplorerLinkText } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
+import AddTokenToMetamaskButton from '../AddTokenToMetamaskButton'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -68,11 +69,13 @@ function ConfirmationPendingContent({ onDismiss, pendingText }: { onDismiss: () 
 function TransactionSubmittedContent({
   onDismiss,
   chainId,
-  hash
+  hash,
+  currency
 }: {
   onDismiss: () => void
   hash: string | undefined
   chainId: ChainId
+  currency?: Currency
 }) {
   const theme = useContext(ThemeContext)
 
@@ -98,6 +101,9 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
+
+          <AddTokenToMetamaskButton currency={currency} />
+
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
               Close
@@ -168,6 +174,7 @@ interface ConfirmationModalProps {
   content: () => React.ReactNode
   attemptingTxn: boolean
   pendingText: string
+  currency?: Currency
 }
 
 export default function TransactionConfirmationModal({
@@ -176,7 +183,8 @@ export default function TransactionConfirmationModal({
   attemptingTxn,
   hash,
   pendingText,
-  content
+  content,
+  currency
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
@@ -188,7 +196,7 @@ export default function TransactionConfirmationModal({
       {attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash ? (
-        <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} />
+        <TransactionSubmittedContent chainId={chainId} hash={hash} onDismiss={onDismiss} currency={currency} />
       ) : (
         content()
       )}

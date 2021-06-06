@@ -254,6 +254,41 @@ const ButtonErrorStyle = styled(Base)`
   }
 `
 
+export const ButtonPrimaryLightStyle = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  height: 35px;
+  background-color: ${({ theme }) => `${theme.primary1}36`};
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-top: 1rem;
+
+  padding: 0.15rem 1rem;
+  border-radius: 12px;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+    background-color: ${({ theme }) => darken(0.03, `${theme.primary1}36`)};
+  }
+
+  svg {
+    margin-top: 2px;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  margin: 0 0 0.5rem 0;
+`}
+`
+
 export function ButtonConfirmed({
   confirmed,
   altDisabledStyle,

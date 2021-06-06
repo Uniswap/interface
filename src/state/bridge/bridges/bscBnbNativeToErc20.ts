@@ -124,6 +124,7 @@ export default class BscBnbNativeToErc20Bridge extends TokenBridge {
         await this.watchForeignBridge()
       }
       this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
+      return response
     } catch (error) {
       this.dispatch(transferError())
 
@@ -138,6 +139,8 @@ export default class BscBnbNativeToErc20Bridge extends TokenBridge {
 
         console.log(error)
       }
+
+      return
     }
   }
 }

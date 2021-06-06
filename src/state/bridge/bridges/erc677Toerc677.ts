@@ -113,6 +113,7 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
         await this.watchHomeBridge()
       }
       this.addTransaction(response, { summary: this.transactionSummary, text: this.transactionText })
+      return response
     } catch (error) {
       this.dispatch(transferError())
 
@@ -128,6 +129,8 @@ export default class Erc677ToErc677Bridge extends TokenBridge {
 
         console.log(error)
       }
+
+      return
     }
   }
 }
