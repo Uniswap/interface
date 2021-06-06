@@ -90,13 +90,12 @@ export function tryParseAmount<T extends Currency>(value?: string, currency?: T)
 }
 
 // try to create a default amount to price for a given token
-export function tryDefaultPriceAmount<T extends Currency>(currency?: T | null): CurrencyAmount<T> | undefined {
+export function tryDefaultPriceAmount<T extends Currency>(currency?: T): CurrencyAmount<T> | undefined {
   if (!currency) {
     return undefined
   }
-  const oneInputCurrencyUnit = parseUnits('1', currency.decimals).toString()
-  const defaultAmountToPrice = CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(oneInputCurrencyUnit))
-  return defaultAmountToPrice
+  const oneCurrencyUnit = parseUnits('1', currency.decimals).toString()
+  return CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(oneCurrencyUnit))
 }
 
 const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
@@ -159,7 +158,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
-  const pricedAmount = tryDefaultPriceAmount(inputCurrency)
+  const pricedAmount = tryDefaultPriceAmount(inputCurrency ?? undefined)
 
   const bestV2TradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, {
     maxHops: singleHopOnly ? 1 : undefined,
