@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-06 00:16\n"
+"PO-Revision-Date: 2021-06-06 01:33\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -113,7 +113,7 @@ msgstr "<0>ヒント:</0> 流動性トークンを削除すると、プールの
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0>ヒント:</0> このツールを使用して、画面に自動表示されないV2の流動性を見つけます。"
+msgstr "<0>ヒント:</0> このツールを使用して、画面に自動表示されないV2のプールを見つけます。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
