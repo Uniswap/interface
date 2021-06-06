@@ -89,6 +89,16 @@ export function tryParseAmount<T extends Currency>(value?: string, currency?: T)
   return undefined
 }
 
+// try to create a default amount to price for a given token
+export function tryDefaultPriceAmount<T extends Currency>(currency?: T | null): CurrencyAmount<T> | undefined {
+  if (!currency) {
+    return undefined
+  }
+  const oneInputCurrencyUnit = parseUnits('1', currency.decimals).toString()
+  const defaultAmountToPrice = CurrencyAmount.fromRawAmount(currency, JSBI.BigInt(oneInputCurrencyUnit))
+  return defaultAmountToPrice
+}
+
 const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
   '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f': true, // v2 factory
   '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a': true, // v2 router 01
@@ -118,6 +128,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
   parsedAmount: CurrencyAmount<Currency> | undefined
+  pricedAmount: CurrencyAmount<Currency> | undefined
   inputError?: string
   v2Trade: V2Trade<Currency, Currency, TradeType> | undefined
   v3TradeState: { trade: V3Trade<Currency, Currency, TradeType> | null; state: V3TradeState }
@@ -148,6 +159,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+  const pricedAmount = tryDefaultPriceAmount(inputCurrency)
 
   const bestV2TradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, {
     maxHops: singleHopOnly ? 1 : undefined,
@@ -212,6 +224,7 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
     currencies,
     currencyBalances,
     parsedAmount,
+    pricedAmount,
     inputError,
     v2Trade: v2Trade ?? undefined,
     v3TradeState: v3Trade,
