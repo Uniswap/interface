@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
 
+import InfoHelper from 'components/InfoHelper'
 import ListItem from './ListItem'
 import { Farm } from 'state/farms/types'
 
@@ -60,6 +61,11 @@ const FarmsList = ({ farms }: FarmsListProps) => {
       <TableHeader>
         <Flex grid-area="pools" alignItems="center" justifyContent="flex-start">
           <ClickableText>Pools | AMP</ClickableText>
+          <InfoHelper
+            text={
+              'AMP = Amplification factor. Amplified pools have higher capital efficiency. Higher AMP, higher capital efficiency and amplified liquidity within a price range.'
+            }
+          />
         </Flex>
 
         <Flex grid-area="liq" alignItems="center" justifyContent="flex-end">
@@ -68,6 +74,7 @@ const FarmsList = ({ farms }: FarmsListProps) => {
 
         <Flex grid-area="apy" alignItems="center" justifyContent="flex-start">
           <ClickableText>APY</ClickableText>
+          <InfoHelper text={'Estimated total annualized yield from KNC rewards.'} />
         </Flex>
 
         <Flex grid-area="reward" alignItems="center" justifyContent="flex-end">

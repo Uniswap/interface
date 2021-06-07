@@ -34,18 +34,20 @@ import {
   LearnMoreLinkContainer,
   HarvestAllContainer,
   TotalRewardsContainer,
+  TotalRewardsTitleWrapper,
   TotalRewardsTitle,
   RewardNumber,
   RewardUSD,
   RemainingTimeContainer,
   EndInTitle,
-  HistoryButton,
+  HistoryButton
 } from './styleds'
 import { formattedNum } from 'utils'
 import Vesting from './vesting'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import RainMaker from '../../assets/images/rain-maker.webp'
 import FarmHistoryModal from 'components/FarmHistoryModal'
+import InfoHelper from 'components/InfoHelper'
 
 const FARM_ENDED = 'Ended'
 
@@ -67,13 +69,13 @@ const Farms = () => {
     return <LocalLoader />
   }
 
-  const farms = allFarms.map((farm) => {
+  const farms = allFarms.map(farm => {
     const { pid } = farm
-    const index = farmsUserData.findIndex((farmUserData) => farmUserData.pid === pid)
+    const index = farmsUserData.findIndex(farmUserData => farmUserData.pid === pid)
 
     return {
       ...farm,
-      userData: farmsUserData[index],
+      userData: farmsUserData[index]
     }
   })
 
@@ -166,7 +168,14 @@ const Farms = () => {
               </LearnMoreContainer>
               <HarvestAllContainer>
                 <TotalRewardsContainer>
-                  <TotalRewardsTitle>My Total Rewards</TotalRewardsTitle>
+                  <TotalRewardsTitleWrapper>
+                    <TotalRewardsTitle>My Total Rewards</TotalRewardsTitle>
+                    <InfoHelper
+                      text={
+                        'Total rewards that can be harvested. Harvested rewards are locked and vested over ~30 days.'
+                      }
+                    />
+                  </TotalRewardsTitleWrapper>
                   <RewardNumber>{getFullDisplayBalance(totalRewards)} KNC</RewardNumber>
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD, true)}</RewardUSD>
                 </TotalRewardsContainer>
