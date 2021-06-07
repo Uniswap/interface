@@ -369,7 +369,7 @@ export default function AddLiquidity({
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange } =
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange, getSetFullRange } =
     useRangeHopCallbacks(baseCurrency ?? undefined, quoteCurrency ?? undefined, feeAmount, tickLower, tickUpper, pool)
 
   // we need an existence check on parsed amounts for single-asset deposits
@@ -596,6 +596,7 @@ export default function AddLiquidity({
                     getDecrementUpper={getDecrementUpper}
                     getIncrementUpper={getIncrementUpper}
                     getSetRange={getSetRange}
+                    getSetFullRange={getSetFullRange}
                     onLeftRangeInput={onLeftRangeInput}
                     onRightRangeInput={onRightRangeInput}
                     currencyA={baseCurrency}

@@ -16,9 +16,10 @@ const Button = styled(ButtonOutlined).attrs(() => ({
 
 interface PresetsButtonProps {
   setRange: (numTicks: number) => void
+  setFullRange: () => void
 }
 
-export default function PresetsButtons({ setRange }: PresetsButtonProps) {
+export default function PresetsButtons({ setRange, setFullRange }: PresetsButtonProps) {
   return (
     <AutoRow gap="4px" width="auto">
       <Button onClick={() => setRange(1)}>
@@ -36,7 +37,7 @@ export default function PresetsButtons({ setRange }: PresetsButtonProps) {
           <Trans>+/- 10%</Trans>
         </TYPE.body>
       </Button>
-      <Button>
+      <Button onClick={() => setFullRange()}>
         <TYPE.body fontSize={12}>
           <Trans>Full Range</Trans>
         </TYPE.body>

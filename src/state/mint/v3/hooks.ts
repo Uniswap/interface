@@ -511,5 +511,19 @@ export function useRangeHopCallbacks(
     [baseToken, quoteToken, feeAmount, pool]
   )
 
-  return { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange }
+  const getSetFullRange = useCallback(() => {
+    if (baseToken && quoteToken) {
+      const newPriceLower = tickToPrice(baseToken, quoteToken, TickMath.MIN_TICK)
+      const newPriceUpper = tickToPrice(baseToken, quoteToken, TickMath.MAX_TICK)
+
+      return [
+        newPriceLower.toSignificant(5, undefined, Rounding.ROUND_UP),
+        newPriceUpper.toSignificant(5, undefined, Rounding.ROUND_UP),
+      ]
+    }
+
+    return ['', '']
+  }, [baseToken, quoteToken])
+
+  return { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange, getSetFullRange }
 }

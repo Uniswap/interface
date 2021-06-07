@@ -18,6 +18,7 @@ export default function RangeSelector({
   getDecrementUpper,
   getIncrementUpper,
   getSetRange,
+  getSetFullRange,
   currencyA,
   currencyB,
   feeAmount,
@@ -29,6 +30,7 @@ export default function RangeSelector({
   getDecrementUpper: () => string
   getIncrementUpper: () => string
   getSetRange: (numTicks: number) => string[]
+  getSetFullRange: () => string[]
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   currencyA?: Currency | null
@@ -47,6 +49,13 @@ export default function RangeSelector({
       <PresetsButtons
         setRange={(numTicks) => {
           const [range1, range2] = getSetRange(numTicks)
+          batch(() => {
+            onLeftRangeInput(isSorted ? range1 : range2)
+            onRightRangeInput(isSorted ? range2 : range1)
+          })
+        }}
+        setFullRange={() => {
+          const [range1, range2] = getSetFullRange()
           batch(() => {
             onLeftRangeInput(isSorted ? range1 : range2)
             onRightRangeInput(isSorted ? range2 : range1)
