@@ -26,12 +26,12 @@ export default function PresetsButtons({ setRange }: PresetsButtonProps) {
           <Trans>+/- 0.1%</Trans>
         </TYPE.body>
       </Button>
-      <Button onClick={() => setRange(5)}>
+      <Button onClick={() => setRange(50)}>
         <TYPE.body fontSize={12}>
           <Trans>+/- 5%</Trans>
         </TYPE.body>
       </Button>
-      <Button onClick={() => setRange(10)}>
+      <Button onClick={() => setRange(100)}>
         <TYPE.body fontSize={12}>
           <Trans>+/- 10%</Trans>
         </TYPE.body>
