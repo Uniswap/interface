@@ -3,6 +3,9 @@ import React from 'react'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { RowBetween } from 'components/Row'
+import { AutoColumn } from 'components/Column'
+import PresetsButtons from './PresetsButtons'
+import { batch } from 'react-redux'
 
 // currencyA is the base token
 export default function RangeSelector({
@@ -14,6 +17,7 @@ export default function RangeSelector({
   getIncrementLower,
   getDecrementUpper,
   getIncrementUpper,
+  getSetRange,
   currencyA,
   currencyB,
   feeAmount,
@@ -24,6 +28,7 @@ export default function RangeSelector({
   getIncrementLower: () => string
   getDecrementUpper: () => string
   getIncrementUpper: () => string
+  getSetRange: (numTicks: number) => string[]
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   currencyA?: Currency | null
@@ -38,31 +43,42 @@ export default function RangeSelector({
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
   return (
-    <RowBetween>
-      <StepCounter
-        value={leftPrice?.toSignificant(5) ?? ''}
-        onUserInput={onLeftRangeInput}
-        width="48%"
-        decrement={isSorted ? getDecrementLower : getIncrementUpper}
-        increment={isSorted ? getIncrementLower : getDecrementUpper}
-        feeAmount={feeAmount}
-        label={leftPrice ? `${currencyB?.symbol}` : '-'}
-        title={<Trans>Min Price</Trans>}
-        tokenA={currencyA?.symbol}
-        tokenB={currencyB?.symbol}
+    <AutoColumn gap="md">
+      <PresetsButtons
+        setRange={(numTicks) => {
+          const [range1, range2] = getSetRange(numTicks)
+          batch(() => {
+            onLeftRangeInput(isSorted ? range1 : range2)
+            onRightRangeInput(isSorted ? range2 : range1)
+          })
+        }}
       />
-      <StepCounter
-        value={rightPrice?.toSignificant(5) ?? ''}
-        onUserInput={onRightRangeInput}
-        width="48%"
-        decrement={isSorted ? getDecrementUpper : getIncrementLower}
-        increment={isSorted ? getIncrementUpper : getDecrementLower}
-        feeAmount={feeAmount}
-        label={rightPrice ? `${currencyB?.symbol}` : '-'}
-        tokenA={currencyA?.symbol}
-        tokenB={currencyB?.symbol}
-        title={<Trans>Max Price</Trans>}
-      />
-    </RowBetween>
+      <RowBetween>
+        <StepCounter
+          value={leftPrice?.toSignificant(5) ?? ''}
+          onUserInput={onLeftRangeInput}
+          width="48%"
+          decrement={isSorted ? getDecrementLower : getIncrementUpper}
+          increment={isSorted ? getIncrementLower : getDecrementUpper}
+          feeAmount={feeAmount}
+          label={leftPrice ? `${currencyB?.symbol}` : '-'}
+          title={<Trans>Min Price</Trans>}
+          tokenA={currencyA?.symbol}
+          tokenB={currencyB?.symbol}
+        />
+        <StepCounter
+          value={rightPrice?.toSignificant(5) ?? ''}
+          onUserInput={onRightRangeInput}
+          width="48%"
+          decrement={isSorted ? getDecrementUpper : getIncrementLower}
+          increment={isSorted ? getIncrementUpper : getDecrementLower}
+          feeAmount={feeAmount}
+          label={rightPrice ? `${currencyB?.symbol}` : '-'}
+          tokenA={currencyA?.symbol}
+          tokenB={currencyB?.symbol}
+          title={<Trans>Max Price</Trans>}
+        />
+      </RowBetween>
+    </AutoColumn>
   )
 }

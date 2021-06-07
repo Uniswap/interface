@@ -494,5 +494,22 @@ export function useRangeHopCallbacks(
     return ''
   }, [baseToken, quoteToken, tickUpper, feeAmount, pool])
 
-  return { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper }
+  const getSetRange = useCallback(
+    (numTicks: number) => {
+      if (baseToken && quoteToken && feeAmount && pool) {
+        // calculate range around current price given `numTicks`
+        const newPriceLower = tickToPrice(baseToken, quoteToken, pool.tickCurrent - numTicks * TICK_SPACINGS[feeAmount])
+        const newPriceUpper = tickToPrice(baseToken, quoteToken, pool.tickCurrent + numTicks * TICK_SPACINGS[feeAmount])
+
+        return [
+          newPriceLower.toSignificant(5, undefined, Rounding.ROUND_UP),
+          newPriceUpper.toSignificant(5, undefined, Rounding.ROUND_UP),
+        ]
+      }
+      return ['', '']
+    },
+    [baseToken, quoteToken, feeAmount, pool]
+  )
+
+  return { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange }
 }

@@ -187,13 +187,8 @@ function V2PairMigration({
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
-    baseToken,
-    baseToken.equals(token0) ? token1 : token0,
-    feeAmount,
-    tickLower,
-    tickUpper
-  )
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetRange } =
+    useRangeHopCallbacks(baseToken, baseToken.equals(token0) ? token1 : token0, feeAmount, tickLower, tickUpper)
 
   const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(noLiquidity)
 
@@ -556,6 +551,7 @@ function V2PairMigration({
             getIncrementLower={getIncrementLower}
             getDecrementUpper={getDecrementUpper}
             getIncrementUpper={getIncrementUpper}
+            getSetRange={getSetRange}
             onLeftRangeInput={onLeftRangeInput}
             onRightRangeInput={onRightRangeInput}
             currencyA={invertPrice ? currency1 : currency0}
