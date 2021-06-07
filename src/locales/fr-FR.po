@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2021-06-05 16:14\n"
+"PO-Revision-Date: 2021-06-07 16:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -291,7 +291,7 @@ msgstr "Idéal pour les paires exotiques."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "Le meilleur pour la plupart des paires."
+msgstr "Idéal pour la plupart des paires."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
@@ -315,7 +315,7 @@ msgstr "En vous connectant à un portefeuille, vous acceptez les <0>conditions d
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
-msgstr "Changement"
+msgstr "Changer"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -323,13 +323,13 @@ msgstr "Graphiques"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Consultez nos guides de passage et de migration pour la v3 LP."
+msgstr "Consultez nos guides d'utilisation et de migration pour la v3 LP."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "Claim"
+msgstr "Réclamer"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -346,11 +346,11 @@ msgstr "Claim UNI Token"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Réclamer les Récompenses UNI accumulées"
+msgstr "Réclamer les récompenses UNI accumulées"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Frais de réclamation"
+msgstr "Réclamer les frais"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -384,7 +384,7 @@ msgstr "Tout effacer"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
-msgstr "Effacer tout"
+msgstr "Tout effacer"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -507,7 +507,7 @@ msgstr "Copier l'adresse"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Créer un Groupement & Approvisionnement"
+msgstr "Créer un Pool & Approvisionner"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
