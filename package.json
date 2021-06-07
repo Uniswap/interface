@@ -8,6 +8,7 @@
     "@reach/dialog": "^0.15.0",
     "@reach/portal": "^0.15.0",
     "@reduxjs/toolkit": "^1.5.1",
+    "@sentry/cli": "^1.66.0",
     "@sentry/webpack-plugin": "^1.15.1",
     "@typechain/ethers-v5": "^6.0.5",
     "@types/jest": "^26.0.23",
