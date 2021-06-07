@@ -92,7 +92,7 @@ const Vesting = () => {
       if (!fullyVestedAlready) {
         acc.vestableIndexes.push(index)
       }
-      acc.vestableAmount = acc.vestableAmount.add(vestableAmount)
+      acc.vestableAmount = acc.vestableAmount.add(vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount)
 
       if (!fullyVestedAlready && !!currentBlockNumber && currentBlockNumber > s[1]) {
         acc.fullyIndexes.push(index)
@@ -261,10 +261,11 @@ const Schedule = ({ schedule, index }: any) => {
         .mul(100)
         .div(BigNumber.from(schedule[1]).sub(BigNumber.from(schedule[0])))
     : 100
-  const vestableAmount = BigNumber.from(schedule[2])
+  let vestableAmount = BigNumber.from(schedule[2])
     .mul(vestedAndVestablePercent)
     .div(100)
     .sub(BigNumber.from(schedule[3]))
+  vestableAmount = vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
 
   const unvestableAmount = BigNumber.from(schedule[2])
     .mul(BigNumber.from(100).sub(vestedAndVestablePercent))
@@ -403,7 +404,7 @@ const Schedule = ({ schedule, index }: any) => {
                 fontSize={16}
                 style={{
                   position: 'absolute',
-                  top: '-25px',
+                  top: '20px',
                   left: `${vestedAndVestablePercent}%`
                 }}
               >
