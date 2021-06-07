@@ -34,7 +34,7 @@ export default function About() {
       <div className={style.image2}></div>
       <div className={style.image3} style={{ bottom: `0` }}></div>
       <Text fontSize={[24, 58]} mt={[35, 150]}>
-        <Text fontWeight={300}>DeFi's First</Text>
+        <Text fontWeight={300} color={'#ffffff'}>DeFi's First</Text>
         <Text fontWeight={700}>
           <Text color={'#1183b7'} display={'inline-block'}>
             Dynamic&nbsp;
@@ -45,12 +45,12 @@ export default function About() {
           <Text color={'#78d5ff'} display={'inline-block'}>
             Maker&nbsp;
           </Text>
-          <Text color={'#c9d2d7'} display={'inline-block'} fontWeight={300}>
+          <Text color={'#ffffff'} display={'inline-block'} fontWeight={300}>
             Protocol&nbsp;
           </Text>
         </Text>
       </Text>
-      <Text px={4} mt={10} fontSize={[16, 21]} color={'#c9d2d7'}>
+      <Text px={4} mt={10} fontSize={[16, 21]} color={'#ffffff'}>
         Providing frictionless crypto liquidity with high capital efficiency and dynamic fees
       </Text>
 
@@ -91,7 +91,7 @@ export default function About() {
         </ButtonOutlined>
       </div>
       <Text mt={[70, 100]} color={'#f4f4f4'} fontSize={[24, 40]}>
-        <span>Programmable Pricing Curve</span>
+        <span>Amplified Liquidity Pools</span>
       </Text>
       <div className={style.section_curve_details}>
         <i>
@@ -279,6 +279,12 @@ export default function About() {
             Bug Bounty
           </Text>
           <img src={require('../../assets/svg/about_icon_bug_bounty.svg')} />
+        </div>
+        <div>
+          <Text fontSize={[12, 18]} fontWeight={500}>
+            Insured by
+          </Text>
+          <img src={require('../../assets/svg/unslashed.svg')} />
         </div>
       </div>
       <div className={style.powered}>
