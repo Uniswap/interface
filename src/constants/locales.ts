@@ -41,7 +41,7 @@ export const LOCALE_LABEL: { [locale in SupportedLocale]: string } = {
   'ca-ES': 'Català',
   'cs-CZ': 'čeština',
   'da-DK': 'dansk',
-  'de-DE': 'Deutsche',
+  'de-DE': 'Deutsch',
   'el-GR': 'ελληνικά',
   'en-US': 'English',
   'es-ES': 'Español',
