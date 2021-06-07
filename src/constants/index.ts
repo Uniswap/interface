@@ -10,7 +10,7 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
   [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: '0xBD1EEAf651aEB210106E1c1aFb3BC41C388ee577'
+  [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956'
 }
 
 export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
