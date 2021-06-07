@@ -89,12 +89,6 @@
     "lint:fix": "eslint . --fix",
     "prepare": "husky install"
   },
-  "eslintConfig": {
-    "extends": "react-app",
-    "ignorePatterns": [
-      "node_modules"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
