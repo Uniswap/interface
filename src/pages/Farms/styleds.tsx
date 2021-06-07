@@ -114,6 +114,10 @@ export const TotalRewardsContainer = styled.div`
   margin-right: 16px;
 `
 
+export const TotalRewardsTitleWrapper = styled.div`
+  display: flex;
+`
+
 export const TotalRewardsTitle = styled.div`
   font-size: 16px;
   font-weight: 500;

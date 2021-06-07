@@ -2,12 +2,12 @@ import { ApolloClient, InMemoryCache, NormalizedCacheObject } from '@apollo/clie
 import { ChainId } from 'libs/sdk/src'
 
 export const defaultExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: process.env.REACT_APP_SUBGRAPH_URL,
+  uri: 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm',
   cache: new InMemoryCache()
 })
 
 export const ropstenExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/edwardevans094/devdmm',
+  uri: 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-ropsten',
   cache: new InMemoryCache()
 })
 
