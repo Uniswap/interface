@@ -74,14 +74,13 @@ export function useDataFromEventLogs() {
   const previousChainId = usePrevious(chainId)
 
   useEffect(() => {
-    if (!filter || !library || chainId === previousChainId) return
     let stale = false
+    if (!filter || !library || chainId === previousChainId) return
 
-    if (!formattedEvents) {
+    if (!stale && !formattedEvents) {
       library
         .getLogs(filter)
         .then((proposalEvents) => {
-          if (stale) return
           // reverse events to get them from newest to odlest
           const formattedEventData = proposalEvents
             ?.map((event) => {
