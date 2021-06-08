@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-06-04 20:28\n"
+"PO-Revision-Date: 2021-06-08 12:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -41,7 +41,7 @@ msgstr "(İddia)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(hepsini temizle)"
+msgstr "(tümünü temizle)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
@@ -137,7 +137,7 @@ msgstr "hakkında"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
-msgstr "Kabul etmek"
+msgstr "Onayla"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
