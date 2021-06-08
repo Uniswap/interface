@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-08 12:05\n"
+"PO-Revision-Date: 2021-06-08 13:16\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -33,7 +33,7 @@ msgstr "${0} ETH"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "(Max)"
-msgstr "(макс.)"
+msgstr "(Макс.)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
@@ -97,7 +97,7 @@ msgstr "<0/> Все предложения"
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/> Голосов"
+msgstr "<0/> Голоса"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -109,7 +109,7 @@ msgstr "<0> Вернуться к</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Подсказка:</0> Погашение токенов пула преобразует вашу позицию обратно в исходные токены по текущему курсу, пропорционально вашей доле в пуле. Начисленные комиссии включаются в суммы, которые вы получите."
+msgstr "<0>Подсказка:</0> Погашение токенов пула преобразует вашу позицию обратно в исходные токены по текущему курсу пропорционально вашей доле в пуле. Начисленные комиссии включаются в суммы, которые вы получите."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -121,7 +121,7 @@ msgstr "<0>Подсказка:</0> При добавлении ликвидно�
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0>Разблокировать голосование</0> для подготовки следующего предложения."
+msgstr "<0>Разблокируйте голосование</0>, чтобы подготовиться к следующему предложению."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -170,7 +170,7 @@ msgstr "Добавить ликвидность."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "Добавить {0} в Метамаску <0/>"
+msgstr "Добавить {0} в MetaMask <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -207,7 +207,7 @@ msgstr "Разрешить сделки с высоким влиянием на 
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Разрешите протоколу Uniswap использовать ваш {0}"
+msgstr "Разрешите протоколу Uniswap использовать ваши {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -697,7 +697,7 @@ msgstr "Уровень комиссии"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
-msgstr "Для"
+msgstr "За"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
@@ -893,11 +893,11 @@ msgstr "Максимум"
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Max Price"
-msgstr "Максимальная цена"
+msgstr "Макс. цена"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
-msgstr "Максимальная цена"
+msgstr "Макс. цена"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
@@ -1795,7 +1795,7 @@ msgstr "Стоимость вашей транзакции будет гораз
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "Ваша транзакция может быть подвержена атаке на опережение (фронт-раннингу)"
+msgstr "Ваша транзакция подвержена атаке на опережение (фронт-раннингу)"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
@@ -1835,11 +1835,11 @@ msgstr "https:// или ipfs:// или ENS-имя"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
-msgstr "минуты"
+msgstr "минут(-ы)"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
-msgstr "через {0}"
+msgstr "от {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
@@ -1847,7 +1847,7 @@ msgstr "из списка токенов {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Импортировать токен} other {Импортируйте токены}}"
+msgstr "{0, plural, one {Импортировать токен} other {Импортировать токены}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1918,7 +1918,7 @@ msgstr "{0} голосов"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
-msgstr "{0} в {1}"
+msgstr "{0} за {1}"
 
 #: src/components/RateToggle/index.tsx
 msgid "{0} price"
@@ -1933,11 +1933,11 @@ msgstr "{0} токенов"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0} {1} Price:"
-msgstr "{0} {1} Цена:"
+msgstr "Цена {0} {1}:"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "{0} • Added by user"
-msgstr "{0} • Добавлено пользователем"
+msgstr "{0} • Пользовательский"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 #: src/components/PositionListItem/index.tsx
@@ -1952,7 +1952,7 @@ msgstr "{0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} добыча ликвидности"
+msgstr "майнинг ликвидности {0}-{1}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
@@ -1960,7 +1960,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} токенов LP"
+msgstr "LP-токены {0}/{1}"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
