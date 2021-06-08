@@ -46,10 +46,10 @@ export const TabContainer = styled.div`
 export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   width: fit-content;
   margin-right: 2rem;
-  padding: 0 0 0 8px;
+  padding: 0 0 4px 0;
   color: ${({ theme }) => theme.text1};
   border-radius: 0;
-  border-left: ${({ theme, isActive }) => (isActive ? `2px solid ${theme.primary1}` : 'none')};
+  border-bottom: ${({ theme, isActive }) => (isActive ? `2px solid ${theme.primary1}` : 'none')};
 
   &:hover {
     text-decoration: none;
