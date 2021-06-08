@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-08 02:37\n"
+"PO-Revision-Date: 2021-06-08 06:12\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -401,32 +401,32 @@ msgstr "コード"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "回収する"
+msgstr "取得する"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "ウェットとして収集"
+msgstr "WETHで取得"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "手数料を徴収する"
+msgstr "報酬を取得"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "集められた"
+msgstr "取得済"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "回収中"
+msgstr "取得中"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "手数料の収集"
+msgstr "報酬を取得中"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "徴収手数料は現在利用可能な手数料を引き出します。"
+msgstr "報酬の取得は現在取得できる報酬を引き出します。"
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -451,7 +451,7 @@ msgstr "スワップの確認"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "ウォレット内でこの取引を確認する"
+msgstr "ウォレットで取引を確認する"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -749,7 +749,7 @@ msgstr "プールをインポート"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
-msgstr "V2 プールのインポート"
+msgstr "V2プールのインポート"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -781,11 +781,11 @@ msgstr "メタマスクのインストール"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "この取引には流動性が不足しています。"
+msgstr "取引のための流動性が不足しています。"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "この取引には流動性が不足しています。マルチホップ取引を有効にしてください。"
+msgstr "取引のための流動性が不足しています。マルチホップ取引を有効にしてください。"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -840,7 +840,7 @@ msgstr "流動性提供者の報酬"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性提供者はすべての取引で発生する0.3%の手数料のうち、プールのシェアに応じた報酬を獲得します。 報酬はリアルタイムにプールに追加され、反映されます。報酬は流動性を引き出すことで請求できます。"
+msgstr "流動性提供者はこのペアのすべての取引で発生する0.3%の手数料のうち、プールのシェアに応じた報酬を獲得します。 報酬はリアルタイムにプールに追加され、反映されます。報酬は流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -1215,7 +1215,7 @@ msgstr "取引ルート"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "トークン名またはアドレス"
+msgstr "トークン名、アドレス"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
@@ -1636,7 +1636,7 @@ msgstr "週次の報酬"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
-msgstr "チームユニコーンへようこそ"
+msgstr "チーム ユニコーンへようこそ"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
