@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-07 18:48\n"
+"PO-Revision-Date: 2021-06-08 08:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -832,15 +832,15 @@ msgstr "Liquidität"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "Liquiditätsanbieter-Gebühr"
+msgstr "Liquiditätsgebergebühr"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "Liquiditätsanbieter-Belohnungen"
+msgstr "Belohnungen für Liquiditätsgeber"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Liquiditätsanbieter verdienen eine 0,3%ige Gebühr für alle Geschäfte im Verhältnis zu ihrem Anteil am Pool. Die Gebühren werden dem Pool zugerechnet, fallen in Echtzeit an und können durch Entfernen der Liquidität in Anspruch genommen werden."
+msgstr "Liquiditätsgeber verdienen eine 0,3%ige Gebühr für jeden Tausch im Verhältnis zu ihrem Anteil am Pool. Die Gebühren werden dem Pool zugerechnet, fallen in Echtzeit an und können durch Entfernen der Liquidität in Anspruch genommen werden."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -1223,7 +1223,7 @@ msgstr "Pool auswählen"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Wählen Sie einen Pool-Typ basierend auf Ihrer bevorzugten Liquiditätsanbietergebühr."
+msgstr "Wählen Sie einen Pool-Typ basierend auf Ihrer bevorzugten Liquiditätsgebergebühr."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1691,7 +1691,7 @@ msgstr "Sie sind der erste Liquiditätsgeber für diesen Uniswap V3 Pool. Ihre L
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
-msgstr "Sie sind der erste Liquiditätsanbieter."
+msgstr "Sie sind der erste Liquiditätsgeber."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
