@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-06 01:33\n"
+"PO-Revision-Date: 2021-06-08 02:37\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -199,7 +199,7 @@ msgstr "反対"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
-msgstr "LPトークンの移行を許可する"
+msgstr "流動性トークンの移行を許可する"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
@@ -303,7 +303,7 @@ msgstr "ブロックされたアドレス"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "流動性を追加することで、すべての取引で発生する0.3%の手数料のうち、プールのシェアに応じた報酬を獲得します。報酬はリアルタイムにプールに追加され、反映されます。報酬は流動性を引き出すことで請求できます。"
+msgstr "流動性を追加することで、このペアのすべての取引で発生する0.3%の手数料のうち、プールのシェアに応じた報酬を獲得します。報酬はリアルタイムにプールに追加され、反映されます。報酬は流動性を引き出すことで請求できます。"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -681,7 +681,7 @@ msgstr "リストのインポートエラー"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
-msgstr "非アクティブなトークンリストからの検索結果"
+msgstr "あなたが利用していないトークンリストからの検索結果"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -1403,7 +1403,7 @@ msgstr "トークン"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "使われていないリストのトークンです。以下の特定のトークンをインポートするか、[管理] をクリックして他のリストを有効にしてください。"
+msgstr "あなたが利用していないリストにあるトークンです。以下の特定のトークンをインポートするか、[管理] をクリックして他のリストを有効にしてください。"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
@@ -1827,11 +1827,11 @@ msgstr "賛成 {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "ソックスの絵文字があります"
+msgstr "靴下の絵文字があります"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https:// 、ipfs:// または ENS名"
+msgstr "https://, ipfs://, ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -1960,7 +1960,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LPトークン"
+msgstr "{0}/{1} 流動性トークン"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
