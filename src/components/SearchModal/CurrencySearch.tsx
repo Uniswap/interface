@@ -6,7 +6,7 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import AutoSizer from 'react-virtualized-auto-sizer'
 
-import { Currency, ETHER, Token } from 'libs/sdk/src'
+import { ChainId, Currency, ETHER, Token } from 'libs/sdk/src'
 import ImportRow from './ImportRow'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList, useIsTokenActive } from 'hooks/Tokens'
@@ -227,18 +227,20 @@ export function CurrencySearch({
         </Column>
       )}
 
-      <Footer>
-        <Row justify="center">
-          <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
-            <RowFixed>
-              <IconWrapper size="16px" marginRight="6px">
-                <Edit />
-              </IconWrapper>
-              <TYPE.main color={theme.blue1}>Manage Token Lists</TYPE.main>
-            </RowFixed>
-          </ButtonText>
-        </Row>
-      </Footer>
+      {chainId && ![ChainId.MATIC, ChainId.MUMBAI].includes(chainId) && (
+        <Footer>
+          <Row justify="center">
+            <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
+              <RowFixed>
+                <IconWrapper size="16px" marginRight="6px">
+                  <Edit />
+                </IconWrapper>
+                <TYPE.main color={theme.blue1}>Manage Token Lists</TYPE.main>
+              </RowFixed>
+            </ButtonText>
+          </Row>
+        </Footer>
+      )}
     </ContentWrapper>
   )
 }
