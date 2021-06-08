@@ -7,7 +7,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
+import { AlertCircle, ArrowDown, ArrowLeft, CheckCircle, HelpCircle, Info } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Link, RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -476,7 +476,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         display: 'flex',
                         justifyContent: 'space-between',
                         height: '24px',
-                        opacity: 0.4,
+                        opacity: 0.8,
                         marginLeft: '0.25rem',
                       }}
                     >

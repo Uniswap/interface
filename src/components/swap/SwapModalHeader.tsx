@@ -36,7 +36,7 @@ export const ArrowWrapper = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.bg1};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.white};
+  border-color: ${({ theme }) => theme.bg0};
   z-index: 2;
 `
 
