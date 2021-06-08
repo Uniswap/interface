@@ -55,6 +55,7 @@ import RateToggle from 'components/RateToggle'
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import HoverInlineText from 'components/HoverInlineText'
+import LiquidityDistribution from 'components/LiquidityDistribution'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -593,6 +594,8 @@ export default function AddLiquidity({
                       </ExternalLink>
                     </Trans>
                   </TYPE.main>
+
+                  <LiquidityDistribution tokenA={currencyA?.wrapped} tokenB={currencyB?.wrapped} />
 
                   <RangeSelector
                     priceLower={priceLower}
