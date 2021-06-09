@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import styled from 'styled-components'
 import JSBI from 'jsbi'
 import { utils } from 'ethers'
 import { TYPE } from 'theme'
