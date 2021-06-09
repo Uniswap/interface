@@ -14,6 +14,7 @@ import { Fraction, JSBI } from 'libs/sdk/src'
 import { KNC } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
+import InfoHelper from 'components/InfoHelper'
 
 const VestAllGroup = styled.div`
   display: grid;
@@ -134,6 +135,11 @@ const Vesting = () => {
       <ExpandedContent>
         <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 0 10px 0">
           TOTAL HARVESTED REWARDS
+          <InfoHelper
+            text={
+              'Your total harvested rewards since the beginning. Each time you harvest new rewards, they are locked and vested over ~30 days, starting from the date harvested. Unlocked rewards can be claimed at any time (no deadline).'
+            }
+          />
         </TYPE.body>
         <AutoRow justify="space-between">
           <div>
@@ -206,13 +212,35 @@ const Vesting = () => {
         <VestSchedule style={{ padding: ' 0 0 20px 0', margin: '0 0 20px 0', borderBottom: '1px solid #404b51' }}>
           <AutoRow>
             <TYPE.body color={theme.text11} fontWeight={600} fontSize={16} margin="0 10px 0 0">
-              VESTING PERIODS
+              VESTING SCHEDULES
+              <InfoHelper
+                text={
+                  'Each time you harvest rewards, a new vesting period of ~30 days is created. Multiple vesting periods can run concurrently. Unlocked rewards for each vesting schedule can be claimed at any time (no deadline).'
+                }
+              />
             </TYPE.body>
           </AutoRow>
         </VestSchedule>
-        {schedules.map((s, index) => (
-          <Schedule schedule={s} key={index} index={index} />
-        ))}
+        {schedules
+          .filter(
+            schedule =>
+              !BigNumber.from(schedule[2])
+                .sub(BigNumber.from(schedule[3]))
+                .isZero()
+          )
+          .map((s, index) => (
+            <Schedule schedule={s} key={index} index={index} />
+          ))}
+
+        {schedules
+          .filter(schedule =>
+            BigNumber.from(schedule[2])
+              .sub(BigNumber.from(schedule[3]))
+              .isZero()
+          )
+          .map((s, index) => (
+            <Schedule schedule={s} key={index} index={index} />
+          ))}
       </ExpandedContent>
     </>
   )
@@ -265,6 +293,10 @@ const Schedule = ({ schedule, index }: any) => {
     .mul(vestedAndVestablePercent)
     .div(100)
     .sub(BigNumber.from(schedule[3]))
+  console.log('====vestableAmount')
+  console.log(fixedFormatting(BigNumber.from(schedule[2]), 18))
+  console.log(fixedFormatting(BigNumber.from(schedule[3]), 18))
+  console.log(fixedFormatting(vestableAmount, 18))
   vestableAmount = vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
 
   const unvestableAmount = BigNumber.from(schedule[2])
@@ -329,22 +361,23 @@ const Schedule = ({ schedule, index }: any) => {
               fontSize={14}
               style={{
                 position: 'absolute',
-                top: '-25px'
+                top: '-35px'
               }}
             >
-              CLAIMED
+              CLAIMED <br />
+              {fixedFormatting(BigNumber.from(schedule[3]), 18)}
             </TYPE.body>
-            <TYPE.body
+            {/* <TYPE.body
               color={theme.text7}
               fontWeight={'normal'}
               fontSize={16}
               style={{
                 position: 'absolute',
-                top: '20px'
+                top: '-20px'
               }}
             >
               {fixedFormatting(BigNumber.from(schedule[3]), 18)}
-            </TYPE.body>
+            </TYPE.body> */}
 
             <div
               style={{
@@ -370,46 +403,70 @@ const Schedule = ({ schedule, index }: any) => {
             ></div>
             {vestedPercent < 100 && (
               <>
-                <TYPE.body
+                {/* <TYPE.body
                   color={theme.text7}
                   fontWeight={'normal'}
                   fontSize={16}
                   style={{
                     position: 'absolute',
-                    top: '20px',
+                    top: '-20px',
                     left: `${vestedPercent < 10 ? '10' : vestedPercent > 80 ? '80' : vestedPercent}%`
                   }}
                 >
                   {fixedFormatting(vestableAmount, 18)}
-                </TYPE.body>
+                </TYPE.body> */}
                 <TYPE.body
                   color={theme.text7}
                   fontWeight={'normal'}
                   fontSize={14}
                   style={{
                     position: 'absolute',
-                    top: '-25px',
+                    top: '-35px',
                     left: `${vestedPercent < 10 ? '10' : vestedPercent > 80 ? '80' : vestedPercent}%`
                   }}
                 >
-                  UNLOCKED
+                  UNLOCKED <br />
+                  {fixedFormatting(vestableAmount, 18)}
                 </TYPE.body>
               </>
             )}
 
             {vestedAndVestablePercent < 100 && (
-              <TYPE.body
-                color={theme.text7}
-                fontWeight={'normal'}
-                fontSize={16}
-                style={{
-                  position: 'absolute',
-                  top: '20px',
-                  left: `${vestedAndVestablePercent}%`
-                }}
-              >
-                {fixedFormatting(unvestableAmount, 18)}
-              </TYPE.body>
+              <>
+                <TYPE.body
+                  color={theme.text7}
+                  fontWeight={'normal'}
+                  fontSize={14}
+                  style={{
+                    position: 'absolute',
+                    top: '13px',
+                    padding: '5px 0 0 3px',
+                    borderLeft: '1px dashed gray',
+                    left: `${vestedAndVestablePercent}%`
+                  }}
+                >
+                  {fixedFormatting(unvestableAmount, 18)} LOCKED
+                </TYPE.body>
+
+                {/* <TYPE.body
+                  color={theme.text7}
+                  fontWeight={'normal'}
+                  fontSize={14}
+                  style={{
+                    position: 'absolute',
+                    top: '-25px',
+                    left: `${
+                      vestedAndVestablePercent < 20
+                        ? '20'
+                        : vestedAndVestablePercent > 70
+                        ? '70'
+                        : vestedAndVestablePercent
+                    }%`
+                  }}
+                >
+                  LOCKED
+                </TYPE.body> */}
+              </>
             )}
 
             {/* finish */}
