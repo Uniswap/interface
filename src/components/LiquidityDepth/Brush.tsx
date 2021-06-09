@@ -29,7 +29,16 @@ export default function Brush({ x, y, width, height, leftHandleColor, rightHandl
       </defs>
       <g>
         <g id="gradient">
-          <rect x={x} y={y} id="svg_19" fill="url(#seeker_gradient)" height={height} width={width} opacity="0.1" />
+          <rect
+            x={x}
+            y={y}
+            id="svg_19"
+            fill="url(#seeker_gradient)"
+            height={height}
+            width={width}
+            opacity="0.1"
+            cursor="move"
+          />
         </g>
 
         <g id="seeker_left">

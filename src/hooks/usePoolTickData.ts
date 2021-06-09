@@ -9,17 +9,19 @@ import { TickProcessed } from 'constants/ticks'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
 const PRICE_FIXED_DIGITS = 4
-const DEFAULT_SURROUNDING_TICKS = 300
+const DEFAULT_SURROUNDING_TICKS = 30
 
-export function useActiveLiquidity(
+export function usePoolTickData(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
   numSurroundingTicks = DEFAULT_SURROUNDING_TICKS
 ): {
   loading: boolean
+  syncing: boolean
   error: boolean
   valid: boolean
+  activeTick: number | undefined
   tickData: TickProcessed[]
 } {
   const pool = usePool(currencyA, currencyB, feeAmount)
@@ -54,9 +56,11 @@ export function useActiveLiquidity(
       !tickSpacing
     ) {
       return {
-        loading: loading || syncing || pool[0] === PoolState.LOADING,
+        loading: loading || pool[0] === PoolState.LOADING,
+        syncing: syncing,
         error: error || pool[0] === PoolState.INVALID,
         valid: false,
+        activeTick,
         tickData: [],
       }
     }
@@ -113,6 +117,7 @@ export function useActiveLiquidity(
       syncing: false,
       error: false,
       valid: true,
+      activeTick,
       tickData: ticksProcessed,
     }
   }, [token0, token1, activeTick, loading, syncing, error, valid, tickData, pool, tickSpacing, numSurroundingTicks])
