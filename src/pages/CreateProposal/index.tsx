@@ -27,13 +27,6 @@ import {
 } from 'state/governance/hooks'
 import { Trans } from '@lingui/macro'
 
-const ProposalWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-`
-
 const CreateProposalButton = ({
   proposalThreshold,
   hasActiveOrPendingProposal,
@@ -220,7 +213,7 @@ ${bodyValue}
   }
 
   return (
-    <AppBody {...{ maxWidth: '1200px' }}>
+    <AppBody>
       <CreateProposalTabs />
       <Wrapper>
         <BlueCard>
@@ -235,28 +228,22 @@ ${bodyValue}
           </AutoColumn>
         </BlueCard>
 
-        <ProposalWrapper>
-          <div style={{ flex: '1 400px' }}>
-            <ProposalActionSelector onClick={handleActionSelectorClick} proposalAction={proposalAction} />
-            <ProposalActionDetail
-              proposalAction={proposalAction}
-              currency={currencyValue}
-              amount={amountValue}
-              toAddress={toAddressValue}
-              onCurrencySelect={handleCurrencySelect}
-              onAmountInput={handleAmountInput}
-              onToAddressInput={handleToAddressInput}
-            />
-          </div>
-          <div style={{ flex: '1 400px' }}>
-            <ProposalEditor
-              title={titleValue}
-              body={bodyValue}
-              onTitleInput={handleTitleInput}
-              onBodyInput={handleBodyInput}
-            />
-          </div>
-        </ProposalWrapper>
+        <ProposalActionSelector onClick={handleActionSelectorClick} proposalAction={proposalAction} />
+        <ProposalActionDetail
+          proposalAction={proposalAction}
+          currency={currencyValue}
+          amount={amountValue}
+          toAddress={toAddressValue}
+          onCurrencySelect={handleCurrencySelect}
+          onAmountInput={handleAmountInput}
+          onToAddressInput={handleToAddressInput}
+        />
+        <ProposalEditor
+          title={titleValue}
+          body={bodyValue}
+          onTitleInput={handleTitleInput}
+          onBodyInput={handleBodyInput}
+        />
         <CreateProposalButton
           proposalThreshold={proposalThreshold}
           hasActiveOrPendingProposal={

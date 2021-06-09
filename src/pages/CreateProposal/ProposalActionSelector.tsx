@@ -48,6 +48,7 @@ const ActionDropdown = styled(ButtonDropdown)`
 `
 
 const ProposalActionSelectorContainer = styled.div`
+  margin-top: 10px;
   padding: 0.75rem 0.5rem 0.75rem 1rem;
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.bg2};
