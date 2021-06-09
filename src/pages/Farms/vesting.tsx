@@ -221,26 +221,19 @@ const Vesting = () => {
             </TYPE.body>
           </AutoRow>
         </VestSchedule>
-        {schedules
-          .filter(
-            schedule =>
-              !BigNumber.from(schedule[2])
-                .sub(BigNumber.from(schedule[3]))
-                .isZero()
-          )
-          .map((s, index) => (
-            <Schedule schedule={s} key={index} index={index} />
-          ))}
+        {schedules.map(
+          (s, index) =>
+            !BigNumber.from(s[2])
+              .sub(BigNumber.from(s[3]))
+              .isZero() && <Schedule schedule={s} key={index} index={index} />
+        )}
 
-        {schedules
-          .filter(schedule =>
-            BigNumber.from(schedule[2])
-              .sub(BigNumber.from(schedule[3]))
-              .isZero()
-          )
-          .map((s, index) => (
-            <Schedule schedule={s} key={index} index={index} />
-          ))}
+        {schedules.map(
+          (s, index) =>
+            BigNumber.from(s[2])
+              .sub(BigNumber.from(s[3]))
+              .isZero() && <Schedule schedule={s} key={index} index={index} />
+        )}
       </ExpandedContent>
     </>
   )
