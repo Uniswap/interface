@@ -20,6 +20,16 @@ interface ChartEntry {
   price1: number
 }
 
+const sampleData = [
+  { price0: 0, activeLiquidity: 1 },
+  { price0: 1, activeLiquidity: 2 },
+  { price0: 2, activeLiquidity: 3 },
+  { price0: 3, activeLiquidity: 6 },
+  { price0: 4, activeLiquidity: 5 },
+  { price0: 5, activeLiquidity: 3 },
+  { price0: 6, activeLiquidity: 2 },
+]
+
 const Wrapper = styled(Box)`
   position: relative;
   min-height: 150px;
@@ -48,7 +58,13 @@ function useDensityChartData({
   const [currentPrice, setCurrentPrice] = useState<number | undefined>()
   const [maxLiquidity, setMaxLiquidity] = useState<number>(0)
 
-  const { loading, syncing, error, valid, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
+  const { loading, syncing, error, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
+
+  useEffect(() => {
+    if ((!currencyA || !currencyB || !feeAmount) && Boolean(formattedData?.length)) {
+      setFormattedData([])
+    }
+  }, [currencyA, currencyB, feeAmount, formattedData])
 
   useEffect(() => {
     function formatData() {
@@ -126,7 +142,7 @@ export default function DensityChart({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
-  const { loading, syncing, error, currentPrice, maxLiquidity, formattedData } = useDensityChartData({
+  const { loading, syncing, currentPrice, maxLiquidity, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -136,10 +152,6 @@ export default function DensityChart({
 
   const leftPrice = isSorted ? priceLower : priceUpper?.invert()
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
-
-  if (error) {
-    console.error('ERROR')
-  }
 
   if (loading) {
     return (
@@ -157,71 +169,70 @@ export default function DensityChart({
         </SyncingIndicator>
       ) : null}
 
-      {formattedData?.length ? (
-        <VictoryChart
-          height={275}
-          padding={40}
-          animate={{ duration: 250, easing: 'cubic' }}
-          containerComponent={
-            <VictoryBrushContainer
-              brushDimension="x"
-              brushDomain={
-                leftPrice && rightPrice
-                  ? {
-                      x: [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))],
-                    }
-                  : undefined
-              }
-              brushComponent={
-                //allowDraw={false}
-                <Brush
-                  leftHandleColor={currencyA ? tokenAColor : '#607BEE'}
-                  rightHandleColor={currencyB ? tokenBColor : '#F3B71E'}
-                />
-              }
-              handleWidth={40}
-              onBrushDomainChangeEnd={(domain) => {
-                onLeftRangeInput(Number(domain.x[0]).toFixed(PRICE_FIXED_DIGITS))
-                onRightRangeInput(Number(domain.x[1]).toFixed(PRICE_FIXED_DIGITS))
-              }}
-            />
-          }
-        >
-          <VictoryBar
-            data={formattedData}
-            style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.2' } }}
-            x={'price0'}
-            y={'activeLiquidity'}
-          />
-
-          <VictoryLine
-            data={
-              maxLiquidity
-                ? [
-                    { x: currentPrice, y: 0 },
-                    { x: currentPrice, y: maxLiquidity },
-                  ]
+      <VictoryChart
+        height={275}
+        padding={40}
+        animate={{ duration: 500, easing: 'cubic' }}
+        containerComponent={
+          // add allowDraw={false} when library supports it
+          <VictoryBrushContainer
+            allowDrag={Boolean(formattedData?.length)}
+            allowResize={Boolean(formattedData?.length)}
+            brushDimension="x"
+            brushDomain={
+              leftPrice && rightPrice
+                ? {
+                    x: [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))],
+                  }
                 : undefined
             }
-            style={{
-              data: { stroke: theme.secondary1 },
+            brushComponent={
+              <Brush
+                leftHandleColor={currencyA ? tokenAColor : '#607BEE'}
+                rightHandleColor={currencyB ? tokenBColor : '#F3B71E'}
+                allowDrag={Boolean(formattedData?.length)}
+              />
+            }
+            handleWidth={40}
+            onBrushDomainChangeEnd={(domain) => {
+              onLeftRangeInput(Number(domain.x[0]).toFixed(PRICE_FIXED_DIGITS))
+              onRightRangeInput(Number(domain.x[1]).toFixed(PRICE_FIXED_DIGITS))
             }}
           />
+        }
+      >
+        <VictoryBar
+          data={formattedData?.length ? formattedData : sampleData}
+          style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.2' } }}
+          x={'price0'}
+          y={'activeLiquidity'}
+        />
 
-          <VictoryAxis
-            padding={20}
-            fixLabelOverlap={true}
-            style={{
-              tickLabels: {
-                fill: theme.text1,
-                opacity: '0.6',
-              },
-            }}
-          />
-        </VictoryChart>
-      ) : (
-        'No data!'
-      )}
+        <VictoryLine
+          data={
+            maxLiquidity && currentPrice
+              ? [
+                  { x: currentPrice, y: 0 },
+                  { x: currentPrice, y: maxLiquidity },
+                ]
+              : []
+          }
+          style={{
+            data: { stroke: theme.secondary1 },
+          }}
+        />
+
+        <VictoryAxis
+          padding={20}
+          fixLabelOverlap={true}
+          style={{
+            tickLabels: {
+              fill: theme.text1,
+              opacity: '0.6',
+            },
+          }}
+        />
+      </VictoryChart>
     </Wrapper>
   )
 }

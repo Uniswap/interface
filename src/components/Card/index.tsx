@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro'
-import { opacify, rgba } from 'polished'
+import { rgba } from 'polished'
 import { Box } from 'rebass/styled-components'
 
 const Card = styled(Box)<{ width?: string; padding?: string; border?: string; borderRadius?: string }>`
