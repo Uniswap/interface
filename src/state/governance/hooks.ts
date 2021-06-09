@@ -273,9 +273,9 @@ export function useCreateProposalCallback(): (
         createProposalData.description,
       ]
 
-      return govContract.estimateGas.propose(...args, {}).then((estimatedGasLimit) => {
+      return govContract.estimateGas.propose(...args).then((estimatedGasLimit) => {
         return govContract
-          .propose(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
+          .propose(...args, { gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
               summary: t`Submitted new proposal`,
@@ -299,11 +299,15 @@ export function useLatestProposalId(address: string): string | undefined {
   return undefined
 }
 
-export function useProposalThreshold(): number | undefined {
+export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
   const { chainId } = useActiveWeb3React()
-  const gov = useGovernanceContract()
 
+  const gov = useGovernanceContract()
+  const res = useSingleCallResult(gov, 'proposalThreshold')
   const uni = chainId ? UNI[chainId] : undefined
-  const proposalThreshold = useSingleCallResult(gov, 'proposalThreshold')?.result?.[0]
-  return proposalThreshold && uni ? proposalThreshold : undefined
+  if (res.result && uni && !res.loading) {
+    return CurrencyAmount.fromRawAmount(uni, res.result[0]).wrapped
+  }
+
+  return undefined
 }

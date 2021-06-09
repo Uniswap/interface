@@ -6,7 +6,6 @@ import { TYPE } from 'theme'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
-import { generateBytesByType } from 'utils/generateBytesByType'
 import { CreateProposalTabs } from '../../components/NavigationTabs'
 import { ButtonError } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -42,12 +41,19 @@ const CreateProposalButton = ({
   isFormInvalid,
   handleCreateProposal,
 }: {
-  proposalThreshold?: number
+  proposalThreshold?: CurrencyAmount<Token>
   hasActiveOrPendingProposal: boolean
   hasEnoughVote: boolean
   isFormInvalid: boolean
   handleCreateProposal: () => void
 }) => {
+  const formattedProposalThreshold = proposalThreshold
+    ? JSBI.divide(
+        proposalThreshold.quotient,
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals))
+      ).toLocaleString()
+    : undefined
+
   return (
     <ButtonError
       style={{ marginTop: '18px' }}
@@ -59,8 +65,8 @@ const CreateProposalButton = ({
         <Trans>You already have an active or pending proposal</Trans>
       ) : !hasEnoughVote ? (
         <>
-          {proposalThreshold ? (
-            <Trans>You must have {(proposalThreshold / 10 ** 18).toLocaleString()} votes to submit a proposal</Trans>
+          {formattedProposalThreshold ? (
+            <Trans>You must have {formattedProposalThreshold} votes to submit a proposal</Trans>
           ) : (
             <Trans>You don&apos;t have enough votes to submit a proposal</Trans>
           )}
@@ -79,7 +85,7 @@ export default function CreateProposal() {
     useLatestProposalId(account ?? '0x0000000000000000000000000000000000000000')?.toString() ?? '0'
   const latestProposalData = useProposalData(latestProposalId)
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
-  const proposalThreshold: number | undefined = useProposalThreshold()
+  const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
 
   const [modalOpen, setModalOpen] = useState(false)
   const [hash, setHash] = useState<string | undefined>()
@@ -91,21 +97,60 @@ export default function CreateProposal() {
   const [titleValue, setTitleValue] = useState('')
   const [bodyValue, setBodyValue] = useState('')
 
-  const handleActionSelectorClick = useCallback(() => [setModalOpen(true)], [setModalOpen])
+  const handleActionSelectorClick = useCallback(() => {
+    setModalOpen(true)
+  }, [setModalOpen])
+
   const handleActionChange = useCallback(
-    (proposalAction: ProposalAction) => [setProposalAction(proposalAction)],
+    (proposalAction: ProposalAction) => {
+      setProposalAction(proposalAction)
+    },
     [setProposalAction]
   )
-  const handleDismissActionSelector = useCallback(() => [setModalOpen(false)], [setModalOpen])
-  const handleDismissSubmissionModal = useCallback(
-    () => [setHash(undefined), setAttempting(false)],
-    [setHash, setAttempting]
+
+  const handleDismissActionSelector = useCallback(() => {
+    setModalOpen(false)
+  }, [setModalOpen])
+
+  const handleDismissSubmissionModal = useCallback(() => {
+    setHash(undefined)
+    setAttempting(false)
+  }, [setHash, setAttempting])
+
+  const handleToAddressInput = useCallback(
+    (toAddress: string) => {
+      setToAddressValue(toAddress)
+    },
+    [setToAddressValue]
   )
-  const handleToAddressInput = useCallback((toAddress: string) => [setToAddressValue(toAddress)], [setToAddressValue])
-  const handleCurrencySelect = useCallback((currency: Currency) => [setCurrencyValue(currency)], [setCurrencyValue])
-  const handleAmountInput = useCallback((amount: string) => [setAmountValue(amount)], [setAmountValue])
-  const handleTitleInput = useCallback((title: string) => [setTitleValue(title)], [setTitleValue])
-  const handleBodyInput = useCallback((body: string) => [setBodyValue(body)], [setBodyValue])
+
+  const handleCurrencySelect = useCallback(
+    (currency: Currency) => {
+      setCurrencyValue(currency)
+    },
+    [setCurrencyValue]
+  )
+
+  const handleAmountInput = useCallback(
+    (amount: string) => {
+      setAmountValue(amount)
+    },
+    [setAmountValue]
+  )
+
+  const handleTitleInput = useCallback(
+    (title: string) => {
+      setTitleValue(title)
+    },
+    [setTitleValue]
+  )
+
+  const handleBodyInput = useCallback(
+    (body: string) => {
+      setBodyValue(body)
+    },
+    [setBodyValue]
+  )
 
   const isFormInvalid = useMemo(
     () =>
@@ -125,31 +170,44 @@ export default function CreateProposal() {
   const handleCreateProposal = async () => {
     setAttempting(true)
 
-    if (!createProposalCallback) return
-
     const createProposalData: CreateProposalData = {} as CreateProposalData
-    let calldataValues: string[] = []
-
     createProposalData.targets = currencyValue?.isToken ? [currencyValue.address] : []
-    createProposalData.values = ['0']
+
+    if (!createProposalCallback || !proposalAction || !createProposalData.targets) return
+
+    let types: string[][]
+    let values: string[][]
 
     switch (proposalAction) {
-      case ProposalAction.TRANSFER_TOKEN:
-        createProposalData.signatures = ['transfer(address,uint256)']
-        calldataValues = [toAddressValue, amountValue]
+      case ProposalAction.TRANSFER_TOKEN: {
+        const tokenAmount: string = JSBI.multiply(
+          JSBI.BigInt(amountValue),
+          JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(currencyValue.decimals))
+        ).toString()
+        types = [['address', 'uint256']]
+        values = [[toAddressValue, tokenAmount]]
+        createProposalData.signatures = [`transfer(${types[0].join(',')})`]
         break
-      case ProposalAction.APPROVE_TOKEN:
-        createProposalData.signatures = ['approve(address,uint256)']
-        calldataValues = [toAddressValue, amountValue]
+      }
+
+      case ProposalAction.APPROVE_TOKEN: {
+        const tokenAmount: string = JSBI.multiply(
+          JSBI.BigInt(amountValue),
+          JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(currencyValue.decimals))
+        ).toString()
+        types = [['address', 'uint256']]
+        values = [[toAddressValue, tokenAmount]]
+        createProposalData.signatures = [`approve(${types[0].join(',')})`]
         break
-      default:
-        createProposalData.signatures = []
+      }
     }
 
-    const typesArray = createProposalData.signatures[0].split('(').pop()?.split(')')[0]?.split(',')
-    const bytes = typesArray?.map((type, i) => generateBytesByType(type, calldataValues[i]))
+    createProposalData.calldatas = []
+    for (let i = 0; i < createProposalData.signatures.length; i++) {
+      createProposalData.calldatas[i] = utils.defaultAbiCoder.encode(types[i], values[i])
+    }
 
-    createProposalData.calldatas = bytes !== undefined ? ['0x'.concat(...bytes)] : []
+    createProposalData.values = ['0']
     createProposalData.description = `# ${titleValue}
 
 ${bodyValue}
@@ -208,7 +266,7 @@ ${bodyValue}
           hasEnoughVote={Boolean(
             availableVotes &&
               proposalThreshold &&
-              JSBI.greaterThanOrEqual(availableVotes.quotient, JSBI.BigInt(proposalThreshold))
+              JSBI.greaterThanOrEqual(availableVotes.quotient, proposalThreshold.quotient)
           )}
           isFormInvalid={isFormInvalid}
           handleCreateProposal={handleCreateProposal}
