@@ -6,7 +6,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { useColor } from 'hooks/useColor'
 import Brush from './Brush'
 import JSBI from 'jsbi'
-import { usePoolTickData } from 'hooks/usePoolTickData'
+import { usePoolTickData, PRICE_FIXED_DIGITS } from 'hooks/usePoolTickData'
 import { TickProcessed } from 'constants/ticks'
 import Loader from 'components/Loader'
 import styled from 'styled-components'
@@ -161,17 +161,14 @@ export default function DensityChart({
         <VictoryChart
           height={275}
           padding={40}
+          animate={{ duration: 250, easing: 'cubic' }}
           containerComponent={
-            //animate={{ duration: 500, easing: 'cubic' }}
             <VictoryBrushContainer
               brushDimension="x"
               brushDomain={
                 leftPrice && rightPrice
                   ? {
-                      x: [
-                        parseFloat(leftPrice?.toSignificant(5) ?? '0'),
-                        parseFloat(rightPrice?.toSignificant(5) ?? '4000'),
-                      ],
+                      x: [parseFloat(leftPrice?.toSignificant(5)), parseFloat(rightPrice?.toSignificant(5))],
                     }
                   : undefined
               }
@@ -184,8 +181,8 @@ export default function DensityChart({
               }
               handleWidth={40}
               onBrushDomainChangeEnd={(domain) => {
-                onLeftRangeInput(domain.x[0].toString())
-                onRightRangeInput(domain.x[1].toString())
+                onLeftRangeInput(Number(domain.x[0]).toFixed(PRICE_FIXED_DIGITS))
+                onRightRangeInput(Number(domain.x[1]).toFixed(PRICE_FIXED_DIGITS))
               }}
             />
           }
