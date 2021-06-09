@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-09 08:05\n"
+"PO-Revision-Date: 2021-06-09 18:14\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -113,7 +113,7 @@ msgstr "<0>Подсказка:</0> Погашение токенов пула п
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0> Подсказка:</0> Используйте этот инструмент для поиска пулов v2, которые не отображаются автоматически в интерфейсе."
+msgstr "<0> Подсказка:</0> Используйте этот инструмент для поиска пулов в V2, которые не отображаются автоматически в интерфейсе."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -246,12 +246,12 @@ msgstr "Одобрено"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
-msgstr "Одобрение"
+msgstr "Идёт одобрение"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
-msgstr "Одобрение {0}"
+msgstr "Идёт одобрение {0}"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -303,7 +303,7 @@ msgstr "Заблокированный адрес"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Добавив ликвидность, вы будете зарабатывать 0,3% от всех сделок на этой паре пропорционально вашей доле в пуле. Комиссии добавляются в пул, начисляются в режиме реального времени и могут быть востребованы путем вывода вашей ликвидности."
+msgstr "Добавив ликвидность, вы будете зарабатывать 0,3% от всех сделок на этой паре пропорционально вашей доле в пуле. Комиссии добавляются в пул, начисляются в режиме реального времени и могут быть востребованы путём вывода вашей ликвидности."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -473,19 +473,19 @@ msgstr "Подключить кошелёк"
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
-msgstr "Подключиться к кошельку"
+msgstr "Подключить кошелёк"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "Подключитесь к кошельку, чтобы найти пулы"
+msgstr "Подключите кошелёк, чтобы найти пулы"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "Подключитесь к кошельку для просмотра вашей ликвидности в V2."
+msgstr "Подключите кошелёк, чтобы просмотреть вашу ликвидность в V2."
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
-msgstr "Подключитесь к кошельку для просмотра вашей ликвидности."
+msgstr "Подключите кошелёк, чтобы просмотреть вашу ликвидность."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -604,7 +604,7 @@ msgstr "Детали"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "Отключить сложные маршруты"
+msgstr "Без сложных маршрутов"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
@@ -624,7 +624,7 @@ msgstr "Документация"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "Не видите какую-то из ваших позиций v2? <0>Импортируйте её.</0>"
+msgstr "Не видите какую-то из ваших позиций в V2? <0>Импортируйте её.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -749,7 +749,7 @@ msgstr "Импортировать пул"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
-msgstr "Импортировать V2-пул"
+msgstr "Импортировать пул из V2"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -765,7 +765,7 @@ msgstr "Увеличить ликвидность"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr "Начальные цены и доля пула"
+msgstr "Начальные цены и доля в пуле"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -777,7 +777,7 @@ msgstr "Вход прогнозируется. Вы будете продава�
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
-msgstr "Установить Metamask"
+msgstr "Установить MetaMask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -793,7 +793,7 @@ msgstr "Недостаточно ликвидности для этой сдел
 #: src/state/mint/v3/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Insufficient {0} balance"
-msgstr "Недостаточный баланс {0}"
+msgstr "Баланс {0} недостаточен"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
@@ -840,7 +840,7 @@ msgstr "Вознаграждения для поставщика ликвидн�
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Поставщики ликвидности зарабатывают 0,3% от всех сделок пропорционально своей доле в пуле. Комиссии добавляются в пул, начисляются в режиме реального времени и могут быть востребованы путем вывода ликвидности."
+msgstr "Поставщики ликвидности зарабатывают 0,3% от всех сделок пропорционально своей доле в пуле. Комиссии добавляются в пул, начисляются в режиме реального времени и могут быть востребованы путём вывода ликвидности."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -926,11 +926,11 @@ msgstr "Перенести ликвидность в V3"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate V2 Liquidity"
-msgstr "Перенести V2-ликвидность"
+msgstr "Перенести ликвидность из V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
-msgstr "Перенести V2-ликвидность"
+msgstr "Перенести ликвидность из V2"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
@@ -967,7 +967,7 @@ msgstr "Новая позиция"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
-msgstr "V2-ликвидность не обнаружена."
+msgstr "Ликвидность в V2 не обнаружена."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
@@ -1124,7 +1124,7 @@ msgstr "Цена:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Цены и доля пула"
+msgstr "Цены и доля в пуле"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1235,7 +1235,7 @@ msgstr "Выберите токен"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
-msgstr "Выберите токен, чтобы узнать свою ликвидность v2."
+msgstr "Выберите токен, чтобы найти свою ликвидность в V2."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1334,7 +1334,7 @@ msgstr "Невозможно перевести входящий токен. В�
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "Рыночная цена выходит за рамки указанного вами диапазона. Вы можете внести только один актив."
+msgstr "Рыночная цена находится вне указанного вами диапазона. Вы можете внести только один актив."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1460,7 +1460,7 @@ msgstr "Цена UNI:"
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Токены UNI представляют собой голосующие доли в управлении Uniswap. Вы можете проголосовать по каждому предложению самостоятельно или делегировать свои голоса третьей стороне."
+msgstr "Токены UNI представляют собой права голоса в управлении Uniswap. Вы можете проголосовать по каждому предложению самостоятельно или делегировать свои голоса третьей стороне."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1493,7 +1493,7 @@ msgstr "Управление Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 здесь!"
+msgstr "Uniswap V3 запустился!"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1556,7 +1556,7 @@ msgstr "Пользователь"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
-msgstr "V2-ликвидность"
+msgstr "Ликвидность в V2"
 
 #: src/pages/Swap/index.tsx
 msgid "V3"
@@ -1573,7 +1573,7 @@ msgstr "Просмотреть аналитику UNI"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
-msgstr "Просмотреть V2-ликвидность"
+msgstr "Просмотреть ликвидность в V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -1687,7 +1687,7 @@ msgstr "Вы создаете пул"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Вы первый поставщик ликвидности в этом пуле Uniswap V3. Ваша ликвидность будет перенсена по текущей цене {0}."
+msgstr "Вы первый поставщик ликвидности в этом пуле Uniswap V3. Ваша ликвидность будет перенесена по текущей цене {0}."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -1732,11 +1732,11 @@ msgstr "Разбивка ваших UNI"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
-msgstr "Ваша V2-ликвидность"
+msgstr "Ваша ликвидность в V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Your V3 liquidity positions will appear here."
-msgstr "Здесь появятся ваши позиции ликвидности V3."
+msgstr "Здесь появятся ваши позиции ликвидности в V3."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
