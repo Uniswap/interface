@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
 
-const StyledRangeInput = styled.input<{ size: number }>`
+const StyledRangeInput = styled.input<{ value: number }>`
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
   width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
@@ -17,8 +17,8 @@ const StyledRangeInput = styled.input<{ size: number }>`
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
-    height: ${({ size }) => size}px;
-    width: ${({ size }) => size}px;
+    height: 28px;
+    width: 28px;
     background-color: #565a69;
     border-radius: 100%;
     border: none;
@@ -33,8 +33,8 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-moz-range-thumb {
-    height: ${({ size }) => size}px;
-    width: ${({ size }) => size}px;
+    height: 28px;
+    width: 28px;
     background-color: #565a69;
     border-radius: 100%;
     border: none;
@@ -48,8 +48,8 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-ms-thumb {
-    height: ${({ size }) => size}px;
-    width: ${({ size }) => size}px;
+    height: 28px;
+    width: 28px;
     background-color: #565a69;
     border-radius: 100%;
     color: ${({ theme }) => theme.bg1};
@@ -62,12 +62,24 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.bg5},
+      ${({ theme }) => theme.bg5} ${({ value }) => value}%,
+      ${({ theme }) => theme.bg3} ${({ value }) => value}%,
+      ${({ theme }) => theme.bg3}
+    );
     height: 2px;
   }
 
   &::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.bg5},
+      ${({ theme }) => theme.bg5} ${({ value }) => value}%,
+      ${({ theme }) => theme.bg3} ${({ value }) => value}%,
+      ${({ theme }) => theme.bg3}
+    );
     height: 2px;
   }
 
@@ -90,31 +102,26 @@ const StyledRangeInput = styled.input<{ size: number }>`
 interface InputSliderProps {
   value: number
   onChange: (value: number) => void
-  step?: number
-  min?: number
-  max?: number
-  size?: number
 }
 
-export default function Slider({ value, onChange, min = 0, step = 1, max = 100, size = 28 }: InputSliderProps) {
+export default function InputSlider({ value, onChange }: InputSliderProps) {
   const changeCallback = useCallback(
     e => {
-      onChange(parseInt(e.target.value))
+      onChange(e.target.value)
     },
     [onChange]
   )
 
   return (
     <StyledRangeInput
-      size={size}
       type="range"
       value={value}
       style={{ width: '90%', marginLeft: 15, marginRight: 15, padding: '15px 0' }}
       onChange={changeCallback}
-      aria-labelledby="input slider"
-      step={step}
-      min={min}
-      max={max}
+      aria-labelledby="input-slider"
+      step={1}
+      min={0}
+      max={100}
     />
   )
 }

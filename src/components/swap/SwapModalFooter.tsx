@@ -9,7 +9,7 @@ import {
   computeSlippageAdjustedAmounts,
   computeTradePriceBreakdown,
   formatExecutionPrice,
-  warningSeverity
+  warningSeverity,
 } from '../../utils/prices'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -17,13 +17,17 @@ import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
+import { estimateGasCosts } from '../../state/gasprice/hooks'
+import { utils } from 'ethers'
+import { AppState } from '../../state'
+import { useSelector } from 'react-redux'
 
 export default function SwapModalFooter({
   trade,
   onConfirm,
   allowedSlippage,
   swapErrorMessage,
-  disabledConfirm
+  disabledConfirm,
 }: {
   trade: Trade
   allowedSlippage: number
@@ -35,8 +39,22 @@ export default function SwapModalFooter({
   const theme = useContext(ThemeContext)
   const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
     allowedSlippage,
-    trade
+    trade,
   ])
+
+  const state = useSelector<AppState, AppState['gasprice']>((state) => state.gasprice)
+
+  const { lowestFeeEstimateEth, largestFeeEstimate, largestFeeEstimateEth } = estimateGasCosts(state)
+
+  const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
+
+  // Compute estimated ETH the user will get back
+  const slippageWei = isExactIn
+    ? utils.parseEther(slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)!)
+    : utils.parseEther(slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)!)
+  const minimumWei = slippageWei.sub(largestFeeEstimate)
+  const minimumEth = utils.formatEther(minimumWei)
+
   const { priceImpactWithoutFee, realizedLPFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
   const severity = warningSeverity(priceImpactWithoutFee)
 
@@ -56,7 +74,7 @@ export default function SwapModalFooter({
               alignItems: 'center',
               display: 'flex',
               textAlign: 'right',
-              paddingLeft: '10px'
+              paddingLeft: '10px',
             }}
           >
             {formatExecutionPrice(trade, showInverted)}
@@ -69,20 +87,26 @@ export default function SwapModalFooter({
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {trade.tradeType === TradeType.EXACT_INPUT ? 'Minimum received' : 'Maximum sold'}
+              {'Network fee (est): '}
             </TYPE.black>
-            <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
+            <QuestionHelper text="The lowest and highest estimated network fee." />
           </RowFixed>
           <RowFixed>
-            <TYPE.black fontSize={14}>
-              {trade.tradeType === TradeType.EXACT_INPUT
-                ? slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4) ?? '-'
-                : slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4) ?? '-'}
+            <TYPE.black color={theme.text1} fontSize={14}>
+              {lowestFeeEstimateEth + ' to ' + largestFeeEstimateEth + ' eth'}
             </TYPE.black>
-            <TYPE.black fontSize={14} marginLeft={'4px'}>
-              {trade.tradeType === TradeType.EXACT_INPUT
-                ? trade.outputAmount.currency.symbol
-                : trade.inputAmount.currency.symbol}
+          </RowFixed>
+        </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+              {isExactIn ? 'To Receive (est)' : 'Maximum sold'}
+            </TYPE.black>
+            <QuestionHelper text="Deducts slippage and the any.sender refund from the swap." />
+          </RowFixed>
+          <RowFixed>
+            <TYPE.black color={theme.text1} fontSize={14}>
+              {minimumEth}
             </TYPE.black>
           </RowFixed>
         </RowBetween>

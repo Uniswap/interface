@@ -1,49 +1,64 @@
 import { Trade, TradeType } from '@uniswap/sdk'
 import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
+import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
-
-const InfoLink = styled(ExternalLink)`
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  padding: 6px 6px;
-  border-radius: 8px;
-  text-align: center;
-  font-size: 14px;
-  color: ${({ theme }) => theme.text1};
-`
+import { estimateGasCosts } from '../../state/gasprice/hooks'
+import { AppState } from '../../state'
+import { useSelector } from 'react-redux'
+import { utils } from 'ethers'
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
+  // const gasPrice = useState('gasprice')
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
+  const state = useSelector<AppState, AppState['gasprice']>((state) => state.gasprice)
+
+  const { lowestFeeEstimateEth, largestFeeEstimate, largestFeeEstimateEth } = estimateGasCosts(state)
+
+  // Compute estimated ETH the user will get back
+  const slippageWei = isExactIn
+    ? utils.parseEther(slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)!)
+    : utils.parseEther(slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)!)
+  const minimumWei = slippageWei.sub(largestFeeEstimate)
+  const minimumEth = utils.formatEther(minimumWei)
 
   return (
     <>
-      <AutoColumn style={{ padding: '0 16px' }}>
+      <AutoColumn style={{ padding: '0 20px' }}>
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-              {isExactIn ? 'Minimum received' : 'Maximum sold'}
+              {'Network fee (est): '}
             </TYPE.black>
-            <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
+            <QuestionHelper text="Estimated network fee low to high." />
           </RowFixed>
           <RowFixed>
             <TYPE.black color={theme.text1} fontSize={14}>
-              {isExactIn
-                ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${trade.outputAmount.currency.symbol}` ??
-                  '-'
-                : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${trade.inputAmount.currency.symbol}` ??
-                  '-'}
+              {lowestFeeEstimateEth + ' to ' + largestFeeEstimateEth + ' eth'}
+            </TYPE.black>
+          </RowFixed>
+        </RowBetween>
+        <RowBetween>
+          <RowFixed>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+              {isExactIn ? 'To Receive (est)' : 'Maximum sold'}
+            </TYPE.black>
+            <QuestionHelper text="Total to receive (estimate) after deducting slippage and the estimated network fee." />
+          </RowFixed>
+          <RowFixed>
+            <TYPE.black color={theme.text1} fontSize={14}>
+              {minimumEth}
             </TYPE.black>
           </RowFixed>
         </RowBetween>
@@ -85,32 +100,23 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const showRoute = Boolean(trade && trade.route.path.length > 2)
 
   return (
-    <AutoColumn gap="0px">
+    <AutoColumn gap="md">
       {trade && (
         <>
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
           {showRoute && (
             <>
-              <RowBetween style={{ padding: '0 16px' }}>
-                <span style={{ display: 'flex', alignItems: 'center' }}>
+              <SectionBreak />
+              <AutoColumn style={{ padding: '0 24px' }}>
+                <RowFixed>
                   <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                     Route
                   </TYPE.black>
                   <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-                </span>
+                </RowFixed>
                 <SwapRoute trade={trade} />
-              </RowBetween>
+              </AutoColumn>
             </>
-          )}
-          {!showRoute && (
-            <AutoColumn style={{ padding: '12px 16px 0 16px' }}>
-              <InfoLink
-                href={'https://info.uniswap.org/pair/' + trade.route.pairs[0].liquidityToken.address}
-                target="_blank"
-              >
-                View pair analytics ↗
-              </InfoLink>
-            </AutoColumn>
           )}
         </>
       )}

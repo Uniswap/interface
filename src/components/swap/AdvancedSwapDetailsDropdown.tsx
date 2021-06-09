@@ -5,7 +5,7 @@ import { AdvancedSwapDetails, AdvancedSwapDetailsProps } from './AdvancedSwapDet
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
-  padding-bottom: 16px;
+  padding-bottom: 20px;
   margin-top: -2rem;
   width: 100%;
   max-width: 400px;

@@ -58,7 +58,7 @@ function V1PairRemoval({
     : new TokenAmount(token, ZERO)
 
   const addTransaction = useTransactionAdder()
-  const isRemovalPending = useIsTransactionPending(pendingRemovalHash ?? undefined)
+  const isRemovalPending = useIsTransactionPending(pendingRemovalHash)
 
   const remove = useCallback(() => {
     if (!liquidityTokenAmount) return
@@ -79,11 +79,11 @@ function V1PairRemoval({
         })
 
         addTransaction(response, {
-          summary: `Remove ${chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH V1 liquidity`
+          summary: `Remove ${token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH V1 liquidity`
         })
         setPendingRemovalHash(response.hash)
       })
-      .catch((error: Error) => {
+      .catch(error => {
         console.error(error)
         setConfirmingRemoval(false)
       })
@@ -91,7 +91,7 @@ function V1PairRemoval({
 
   const noLiquidityTokens = !!liquidityTokenAmount && liquidityTokenAmount.equalTo(ZERO)
 
-  const isSuccessfullyRemoved = !!pendingRemovalHash && noLiquidityTokens
+  const isSuccessfullyRemoved = !!pendingRemovalHash && !!noLiquidityTokens
 
   return (
     <AutoColumn gap="20px">
@@ -119,7 +119,7 @@ function V1PairRemoval({
       </LightCard>
       <TYPE.darkGray style={{ textAlign: 'center' }}>
         {`Your Uniswap V1 ${
-          chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol
+          token.equals(WETH[chainId]) ? 'WETH' : token.symbol
         }/ETH liquidity will be redeemed for underlying assets.`}
       </TYPE.darkGray>
     </AutoColumn>
@@ -140,12 +140,12 @@ export default function RemoveV1Exchange({
 
   const liquidityToken: Token | undefined = useMemo(
     () =>
-      validatedAddress && chainId && token
+      validatedAddress && token
         ? new Token(chainId, validatedAddress, 18, `UNI-V1-${token.symbol}`, 'Uniswap V1')
         : undefined,
     [chainId, validatedAddress, token]
   )
-  const userLiquidityBalance = useTokenBalance(account ?? undefined, liquidityToken)
+  const userLiquidityBalance = useTokenBalance(account, liquidityToken)
 
   // redirect for invalid url params
   if (!validatedAddress || tokenAddress === AddressZero) {
@@ -166,7 +166,7 @@ export default function RemoveV1Exchange({
 
         {!account ? (
           <TYPE.largeHeader>You must connect an account.</TYPE.largeHeader>
-        ) : userLiquidityBalance && token && exchangeContract ? (
+        ) : userLiquidityBalance && token ? (
           <V1PairRemoval
             exchangeContract={exchangeContract}
             liquidityTokenAmount={userLiquidityBalance}

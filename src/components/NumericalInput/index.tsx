@@ -46,7 +46,7 @@ export const Input = React.memo(function InnerInput({
   ...rest
 }: {
   value: string | number
-  onUserInput: (input: string) => void
+  onUserInput: (string) => void
   error?: boolean
   fontSize?: string
   align?: 'right' | 'left'

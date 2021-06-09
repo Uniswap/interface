@@ -6,43 +6,30 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   border-radius: 14px;
   background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.primary1 : theme.text4) : 'none')};
   color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.text2) : theme.text3)};
-  font-size: 1rem;
+  font-size: 0.825rem;
   font-weight: 400;
-
-  padding: 0.35rem 0.6rem;
-  border-radius: 12px;
-  background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.primary1 : theme.text4) : 'none')};
-  color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.text2) : theme.text2)};
-  font-size: 1rem;
-  font-weight: ${({ isOnSwitch }) => (isOnSwitch ? '500' : '400')};
-  :hover {
-    user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
-    background: ${({ theme, isActive, isOnSwitch }) =>
-      isActive ? (isOnSwitch ? theme.primary1 : theme.text3) : 'none'};
-    color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.white : theme.text2) : theme.text3)};
-  }
 `
 
-const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
-  border-radius: 12px;
-  border: none;
-  background: ${({ theme }) => theme.bg3};
+const StyledToggle = styled.a<{ isActive?: boolean; activeElement?: boolean }>`
+  border-radius: 16px;
+  border: 1px solid ${({ theme, isActive }) => (isActive ? theme.primary5 : theme.text4)};
   display: flex;
   width: fit-content;
   cursor: pointer;
-  outline: none;
-  padding: 0;
+  text-decoration: none;
+  :hover {
+    text-decoration: none;
+  }
 `
 
 export interface ToggleProps {
-  id?: string
   isActive: boolean
   toggle: () => void
 }
 
-export default function Toggle({ id, isActive, toggle }: ToggleProps) {
+export default function Toggle({ isActive, toggle }: ToggleProps) {
   return (
-    <StyledToggle id={id} isActive={isActive} onClick={toggle}>
+    <StyledToggle isActive={isActive} target="_self" onClick={toggle}>
       <ToggleElement isActive={isActive} isOnSwitch={true}>
         On
       </ToggleElement>

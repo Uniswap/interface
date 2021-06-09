@@ -1,6 +1,6 @@
 import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { usePopper } from 'react-popper'
 import styled from 'styled-components'
 import useInterval from '../../hooks/useInterval'
@@ -83,9 +83,9 @@ export interface PopoverProps {
 }
 
 export default function Popover({ content, show, children, placement = 'auto' }: PopoverProps) {
-  const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
-  const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
-  const [arrowElement, setArrowElement] = useState<HTMLDivElement | null>(null)
+  const [referenceElement, setReferenceElement] = useState<HTMLDivElement>(null)
+  const [popperElement, setPopperElement] = useState<HTMLDivElement>(null)
+  const [arrowElement, setArrowElement] = useState<HTMLDivElement>(null)
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, {
     placement,
     strategy: 'fixed',
@@ -94,20 +94,17 @@ export default function Popover({ content, show, children, placement = 'auto' }:
       { name: 'arrow', options: { element: arrowElement } }
     ]
   })
-  const updateCallback = useCallback(() => {
-    update && update()
-  }, [update])
-  useInterval(updateCallback, show ? 100 : null)
+  useInterval(update, show ? 100 : null)
 
   return (
     <>
-      <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
+      <ReferenceElement ref={setReferenceElement}>{children}</ReferenceElement>
       <Portal>
-        <PopoverContainer show={show} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
+        <PopoverContainer show={show} ref={setPopperElement} style={styles.popper} {...attributes.popper}>
           {content}
           <Arrow
             className={`arrow-${attributes.popper?.['data-popper-placement'] ?? ''}`}
-            ref={setArrowElement as any}
+            ref={setArrowElement}
             style={styles.arrow}
             {...attributes.arrow}
           />

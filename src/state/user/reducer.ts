@@ -1,20 +1,19 @@
 import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
-import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
   addSerializedToken,
+  dismissTokenWarning,
   removeSerializedPair,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
   updateMatchesDarkMode,
   updateUserDarkMode,
+  updateVersion,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  updateUserDeadline,
-  toggleURLWarning,
-  updateUserSingleHopOnly
+  updateUserDeadline
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -28,8 +27,6 @@ export interface UserState {
 
   userExpertMode: boolean
 
-  userSingleHopOnly: boolean // only allow swaps on direct pairs
-
   // user defined slippage tolerance in bips, used in all txns
   userSlippageTolerance: number
 
@@ -42,6 +39,13 @@ export interface UserState {
     }
   }
 
+  // the token warnings that the user has dismissed
+  dismissedTokenWarnings?: {
+    [chainId: number]: {
+      [tokenAddress: string]: true
+    }
+  }
+
   pairs: {
     [chainId: number]: {
       // keyed by token0Address:token1Address
@@ -50,7 +54,6 @@ export interface UserState {
   }
 
   timestamp: number
-  URLWarningVisible: boolean
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -61,26 +64,22 @@ export const initialState: UserState = {
   userDarkMode: null,
   matchesDarkMode: false,
   userExpertMode: false,
-  userSingleHopOnly: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
-  timestamp: currentTimestamp(),
-  URLWarningVisible: true
+  timestamp: currentTimestamp()
 }
 
 export default createReducer(initialState, builder =>
   builder
     .addCase(updateVersion, state => {
       // slippage isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
       if (typeof state.userSlippageTolerance !== 'number') {
         state.userSlippageTolerance = INITIAL_ALLOWED_SLIPPAGE
       }
 
       // deadline isnt being tracked in local storage, reset to default
-      // noinspection SuspiciousTypeOfGuard
       if (typeof state.userDeadline !== 'number') {
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
@@ -107,24 +106,20 @@ export default createReducer(initialState, builder =>
       state.userDeadline = action.payload.userDeadline
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateUserSingleHopOnly, (state, action) => {
-      state.userSingleHopOnly = action.payload.userSingleHopOnly
-    })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
       state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
       state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
       state.timestamp = currentTimestamp()
     })
     .addCase(removeSerializedToken, (state, { payload: { address, chainId } }) => {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
       state.tokens[chainId] = state.tokens[chainId] || {}
       delete state.tokens[chainId][address]
       state.timestamp = currentTimestamp()
+    })
+    .addCase(dismissTokenWarning, (state, { payload: { chainId, tokenAddress } }) => {
+      state.dismissedTokenWarnings = state.dismissedTokenWarnings ?? {}
+      state.dismissedTokenWarnings[chainId] = state.dismissedTokenWarnings[chainId] ?? {}
+      state.dismissedTokenWarnings[chainId][tokenAddress] = true
     })
     .addCase(addSerializedPair, (state, { payload: { serializedPair } }) => {
       if (
@@ -144,8 +139,5 @@ export default createReducer(initialState, builder =>
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
-    })
-    .addCase(toggleURLWarning, state => {
-      state.URLWarningVisible = !state.URLWarningVisible
     })
 )

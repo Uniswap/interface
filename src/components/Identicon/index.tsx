@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import Jazzicon from 'jazzicon'
 
-const StyledIdenticonContainer = styled.div`
+const StyledIdenticon = styled.div`
   height: 1rem;
   width: 1rem;
   border-radius: 1.125rem;
@@ -24,6 +24,5 @@ export default function Identicon() {
     }
   }, [account])
 
-  // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-  return <StyledIdenticonContainer ref={ref as any} />
+  return <StyledIdenticon ref={ref} />
 }

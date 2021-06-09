@@ -1,36 +1,31 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useRef, useEffect, useContext, useState } from 'react'
 import { Settings, X } from 'react-feather'
-import ReactGA from 'react-ga'
-import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
+import styled from 'styled-components'
+
 import {
-  useExpertModeManager,
-  useUserTransactionTTL,
   useUserSlippageTolerance,
-  useUserSingleHopOnly
+  useExpertModeManager,
+  useUserDeadline,
+  useDarkModeManager
 } from '../../state/user/hooks'
+import SlippageTabs from '../SlippageTabs'
+import { RowFixed, RowBetween } from '../Row'
 import { TYPE } from '../../theme'
-import { ButtonError } from '../Button'
-import { AutoColumn } from '../Column'
-import Modal from '../Modal'
 import QuestionHelper from '../QuestionHelper'
-import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
-import TransactionSettings from '../TransactionSettings'
+import { ThemeContext } from 'styled-components'
+import { AutoColumn } from '../Column'
+import { ButtonError } from '../Button'
+import { useSettingsMenuOpen, useToggleSettingsMenu } from '../../state/application/hooks'
+import { Text } from 'rebass'
+import Modal from '../Modal'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.text2};
-  }
-
-  :hover {
-    opacity: 0.7;
+    stroke: ${({ theme }) => theme.text1};
   }
 `
 
@@ -55,6 +50,7 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
+  background-color: ${({ theme }) => theme.bg3};
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -63,6 +59,7 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
+    background-color: ${({ theme }) => theme.bg4};
   }
 
   svg {
@@ -88,10 +85,13 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span`
   min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+
+  border: 1px solid ${({ theme }) => theme.bg3};
+
+  border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
@@ -100,8 +100,9 @@ const MenuFlyout = styled.span`
   right: 0rem;
   z-index: 100;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     min-width: 18.125rem;
+    right: -46px;
   `};
 `
 
@@ -122,26 +123,42 @@ const ModalContentWrapper = styled.div`
 
 export default function SettingsTab() {
   const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.SETTINGS)
+  const open = useSettingsMenuOpen()
   const toggle = useToggleSettingsMenu()
 
   const theme = useContext(ThemeContext)
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
 
-  const [ttl, setTtl] = useUserTransactionTTL()
+  const [deadline, setDeadline] = useUserDeadline()
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
-  const [singleHopOnly, setSingleHopOnly] = useUserSingleHopOnly()
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
 
-  useOnClickOutside(node, open ? toggle : undefined)
+  useEffect(() => {
+    const handleClickOutside = e => {
+      if (node.current?.contains(e.target) ?? false) {
+        return
+      }
+      toggle()
+    }
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [open, toggle])
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-    <StyledMenu ref={node as any}>
+    <StyledMenu ref={node}>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
           <AutoColumn gap="lg">
@@ -171,7 +188,7 @@ export default function SettingsTab() {
                   }
                 }}
               >
-                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
+                <Text fontSize={20} fontWeight={500}>
                   Turn On Expert Mode
                 </Text>
               </ButtonError>
@@ -179,15 +196,15 @@ export default function SettingsTab() {
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
+      <StyledMenuButton onClick={toggle}>
         <StyledMenuIcon />
-        {expertMode ? (
+        {expertMode && (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
               🧙
             </span>
           </EmojiWrapper>
-        ) : null}
+        )}
       </StyledMenuButton>
       {open && (
         <MenuFlyout>
@@ -195,11 +212,11 @@ export default function SettingsTab() {
             <Text fontWeight={600} fontSize={14}>
               Transaction Settings
             </Text>
-            <TransactionSettings
+            <SlippageTabs
               rawSlippage={userSlippageTolerance}
               setRawSlippage={setUserslippageTolerance}
-              deadline={ttl}
-              setDeadline={setTtl}
+              deadline={deadline}
+              setDeadline={setDeadline}
             />
             <Text fontWeight={600} fontSize={14}>
               Interface Settings
@@ -212,7 +229,6 @@ export default function SettingsTab() {
                 <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
               </RowFixed>
               <Toggle
-                id="toggle-expert-mode-button"
                 isActive={expertMode}
                 toggle={
                   expertMode
@@ -230,21 +246,10 @@ export default function SettingsTab() {
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Disable Multihops
+                  Toggle Dark Mode
                 </TYPE.black>
-                <QuestionHelper text="Restricts swaps to direct pairs only." />
               </RowFixed>
-              <Toggle
-                id="toggle-disable-multihop-button"
-                isActive={singleHopOnly}
-                toggle={() => {
-                  ReactGA.event({
-                    category: 'Routing',
-                    action: singleHopOnly ? 'disable single hop' : 'enable single hop'
-                  })
-                  setSingleHopOnly(!singleHopOnly)
-                }}
-              />
+              <Toggle isActive={darkMode} toggle={toggleDarkMode} />
             </RowBetween>
           </AutoColumn>
         </MenuFlyout>

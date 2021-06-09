@@ -65,6 +65,11 @@ const Input = styled.input<{ error?: boolean }>`
   }
 `
 
+interface Value {
+  address: string
+  name?: string
+}
+
 export default function AddressInputPanel({
   id,
   value,
@@ -101,7 +106,7 @@ export default function AddressInputPanel({
               <TYPE.black color={theme.text2} fontWeight={500} fontSize={14}>
                 Recipient
               </TYPE.black>
-              {address && chainId && (
+              {address && (
                 <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')} style={{ fontSize: '14px' }}>
                   (View on Etherscan)
                 </ExternalLink>

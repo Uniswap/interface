@@ -31,7 +31,7 @@ export default function CommonBases({
   selectedCurrency
 }: {
   chainId?: ChainId
-  selectedCurrency?: Currency | null
+  selectedCurrency?: Currency
   onSelect: (currency: Currency) => void
 }) {
   return (
@@ -44,11 +44,7 @@ export default function CommonBases({
       </AutoRow>
       <AutoRow gap="4px">
         <BaseWrapper
-          onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-              onSelect(ETHER)
-            }
-          }}
+          onClick={() => !currencyEquals(selectedCurrency, ETHER) && onSelect(ETHER)}
           disable={selectedCurrency === ETHER}
         >
           <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />

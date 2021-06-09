@@ -73,7 +73,7 @@ const SubHeader = styled.div`
   font-size: 12px;
 `
 
-const IconWrapper = styled.div<{ size?: number | null }>`
+const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
@@ -90,7 +90,7 @@ const IconWrapper = styled.div<{ size?: number | null }>`
 export default function Option({
   link = null,
   clickable = true,
-  size,
+  size = null,
   onClick = null,
   color,
   header,

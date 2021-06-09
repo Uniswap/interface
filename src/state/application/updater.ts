@@ -5,7 +5,7 @@ import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { updateBlockNumber } from './actions'
 import { useDispatch } from 'react-redux'
 
-export default function Updater(): null {
+export default function Updater() {
   const { library, chainId } = useActiveWeb3React()
   const dispatch = useDispatch()
 
@@ -31,7 +31,7 @@ export default function Updater(): null {
 
   // attach/detach listeners
   useEffect(() => {
-    if (!library || !chainId || !windowVisible) return undefined
+    if (!library || !chainId || !windowVisible) return
 
     setState({ chainId, blockNumber: null })
 

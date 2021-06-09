@@ -1,8 +1,7 @@
-import React, { useCallback, useContext, useEffect } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
 import { X } from 'react-feather'
-import { useSpring } from 'react-spring/web'
 import styled, { ThemeContext } from 'styled-components'
-import { animated } from 'react-spring'
+import useInterval from '../../hooks/useInterval'
 import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
@@ -26,50 +25,43 @@ export const Popup = styled.div`
   border-radius: 10px;
   padding: 20px;
   padding-right: 35px;
+  z-index: 2;
   overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;
-    &:not(:last-of-type) {
-      margin-right: 20px;
-    }
   `}
 `
-const Fader = styled.div`
+const DELAY = 100
+const Fader = styled.div<{ count: number }>`
   position: absolute;
   bottom: 0px;
   left: 0px;
-  width: 100%;
+  width: ${({ count }) => `calc(100% - (100% / ${150 / count}))`};
   height: 2px;
   background-color: ${({ theme }) => theme.bg3};
+  transition: width 100ms linear;
 `
 
-const AnimatedFader = animated(Fader)
+export default function PopupItem({ content, popKey }: { content: PopupContent; popKey: string }) {
+  const [count, setCount] = useState(1)
 
-export default function PopupItem({
-  removeAfterMs,
-  content,
-  popKey
-}: {
-  removeAfterMs: number | null
-  content: PopupContent
-  popKey: string
-}) {
+  const [isRunning, setIsRunning] = useState(true)
   const removePopup = useRemovePopup()
+
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
-  useEffect(() => {
-    if (removeAfterMs === null) return undefined
 
-    const timeout = setTimeout(() => {
-      removeThisPopup()
-    }, removeAfterMs)
-
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [removeAfterMs, removeThisPopup])
+  useInterval(
+    () => {
+      count > 150 ? removeThisPopup() : setCount(count + 1)
+    },
+    isRunning ? DELAY : null
+  )
 
   const theme = useContext(ThemeContext)
+
+  const handleMouseEnter = useCallback(() => setIsRunning(false), [])
+  const handleMouseLeave = useCallback(() => setIsRunning(true), [])
 
   let popupContent
   if ('txn' in content) {
@@ -84,17 +76,11 @@ export default function PopupItem({
     popupContent = <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
   }
 
-  const faderStyle = useSpring({
-    from: { width: '100%' },
-    to: { width: '0%' },
-    config: { duration: removeAfterMs ?? undefined }
-  })
-
   return (
-    <Popup>
-      <StyledClose color={theme.text2} onClick={removeThisPopup} />
+    <Popup onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <StyledClose color={theme.text2} onClick={() => removePopup(popKey)} />
       {popupContent}
-      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
+      <Fader count={count} />
     </Popup>
   )
 }

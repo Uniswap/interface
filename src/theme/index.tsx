@@ -14,7 +14,7 @@ export * from './components'
 
 const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
-  upToSmall: 720,
+  upToSmall: 600,
   upToMedium: 960,
   upToLarge: 1280
 }
@@ -52,35 +52,33 @@ export function colors(darkMode: boolean): Colors {
     bg2: darkMode ? '#2C2F36' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
+    bg5: darkMode ? '#565A69' : '#888D9B',
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
+    modalBG: darkMode ? 'rgba(0,0,0,42.5)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: darkMode ? '#2172E5' : '#FDC134',
+    primary2: darkMode ? '#3680E7' : '#fed78c',
+    primary3: darkMode ? '#4D8FEA' : '#fed78c',
+    primary4: darkMode ? '#376bad70' : '#f6eedd',
+    primary5: darkMode ? '#153d6f70' : '#fdf8e9',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#6da8ff' : '#ffa700',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
-    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary1: darkMode ? '#2172E5' : '#ffa700',
+    secondary2: darkMode ? '#17000b26' : '#f6eedd',
+    secondary3: darkMode ? '#17000b26' : '#fdf8e9',
 
     // other
-    red1: '#FD4040',
+    red1: '#FF6871',
     red2: '#F82D3A',
-    red3: '#D60000',
     green1: '#27AE60',
     yellow1: '#FFE270',
-    yellow2: '#F3841E',
-    blue1: '#2172E5'
+    yellow2: '#F3841E'
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
@@ -138,9 +136,6 @@ export const TYPE = {
   black(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'text1'} {...props} />
   },
-  white(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'white'} {...props} />
-  },
   body(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
   },
@@ -153,11 +148,8 @@ export const TYPE = {
   subHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
   },
-  small(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={11} {...props} />
-  },
   blue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
   },
   yellow(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'yellow1'} {...props} />
@@ -179,6 +171,7 @@ export const TYPE = {
 export const FixedGlobalStyle = createGlobalStyle`
 html, input, textarea, button {
   font-family: 'Inter', sans-serif;
+  letter-spacing: -0.018em;
   font-display: fallback;
 }
 @supports (font-variation-settings: normal) {
@@ -192,10 +185,6 @@ body {
   margin: 0;
   padding: 0;
 }
-
- a {
-   color: ${colors(false).blue1}; 
- }
 
 * {
   box-sizing: border-box;
@@ -211,8 +200,6 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;
-  
 }
 `
 
@@ -227,7 +214,7 @@ body {
   background-position: 0 -30vh;
   background-repeat: no-repeat;
   background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
+    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.6, theme.primary1)} 0%, ${transparentize(
       1,
       theme.bg1
     )} 100%)`};

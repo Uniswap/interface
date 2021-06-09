@@ -1,4 +1,4 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainId, Pair, Token, Currency } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
@@ -10,16 +10,17 @@ import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
   addSerializedToken,
+  dismissTokenWarning,
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance,
-  toggleURLWarning,
-  updateUserSingleHopOnly
+  updateUserSlippageTolerance
 } from './actions'
+import { useDefaultTokenList } from '../lists/hooks'
+import { isDefaultToken } from '../../utils'
 
 function serializeToken(token: Token): SerializedToken {
   return {
@@ -42,18 +43,19 @@ function deserializeToken(serializedToken: SerializedToken): Token {
 }
 
 export function useIsDarkMode(): boolean {
-  const { userDarkMode, matchesDarkMode } = useSelector<
-    AppState,
-    { userDarkMode: boolean | null; matchesDarkMode: boolean }
-  >(
-    ({ user: { matchesDarkMode, userDarkMode } }) => ({
-      userDarkMode,
-      matchesDarkMode
-    }),
-    shallowEqual
-  )
+  //   const { userDarkMode, matchesDarkMode } = useSelector<
+  //     AppState,
+  //     { userDarkMode: boolean | null; matchesDarkMode: boolean }
+  //   >(
+  //     ({ user: { matchesDarkMode, userDarkMode } }) => ({
+  //       userDarkMode,
+  //       matchesDarkMode
+  //     }),
+  //     shallowEqual
+  //   )
 
-  return userDarkMode === null ? matchesDarkMode : userDarkMode
+  return false
+  //   userDarkMode === null ? matchesDarkMode : userDarkMode
 }
 
 export function useDarkModeManager(): [boolean, () => void] {
@@ -82,23 +84,6 @@ export function useExpertModeManager(): [boolean, () => void] {
   return [expertMode, toggleSetExpertMode]
 }
 
-export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) => void] {
-  const dispatch = useDispatch<AppDispatch>()
-
-  const singleHopOnly = useSelector<AppState, AppState['user']['userSingleHopOnly']>(
-    state => state.user.userSingleHopOnly
-  )
-
-  const setSingleHopOnly = useCallback(
-    (newSingleHopOnly: boolean) => {
-      dispatch(updateUserSingleHopOnly({ userSingleHopOnly: newSingleHopOnly }))
-    },
-    [dispatch]
-  )
-
-  return [singleHopOnly, setSingleHopOnly]
-}
-
 export function useUserSlippageTolerance(): [number, (slippage: number) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userSlippageTolerance = useSelector<AppState, AppState['user']['userSlippageTolerance']>(state => {
@@ -115,7 +100,7 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
   return [userSlippageTolerance, setUserSlippageTolerance]
 }
 
-export function useUserTransactionTTL(): [number, (slippage: number) => void] {
+export function useUserDeadline(): [number, (slippage: number) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const userDeadline = useSelector<AppState, AppState['user']['userDeadline']>(state => {
     return state.user.userDeadline
@@ -157,7 +142,7 @@ export function useUserAddedTokens(): Token[] {
 
   return useMemo(() => {
     if (!chainId) return []
-    return Object.values(serializedTokensMap?.[chainId as ChainId] ?? {}).map(deserializeToken)
+    return Object.values(serializedTokensMap[chainId as ChainId] ?? {}).map(deserializeToken)
   }, [serializedTokensMap, chainId])
 }
 
@@ -179,13 +164,34 @@ export function usePairAdder(): (pair: Pair) => void {
   )
 }
 
-export function useURLWarningVisible(): boolean {
-  return useSelector((state: AppState) => state.user.URLWarningVisible)
-}
+/**
+ * Returns whether a token warning has been dismissed and a callback to dismiss it,
+ * iff it has not already been dismissed and is a valid token.
+ */
+export function useTokenWarningDismissal(chainId?: number, token?: Currency): [boolean, null | (() => void)] {
+  const dismissalState = useSelector<AppState, AppState['user']['dismissedTokenWarnings']>(
+    state => state.user.dismissedTokenWarnings
+  )
 
-export function useURLWarningToggle(): () => void {
-  const dispatch = useDispatch()
-  return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
+  const dispatch = useDispatch<AppDispatch>()
+
+  // get default list, mark as dismissed if on list
+  const defaultList = useDefaultTokenList()
+  const isDefault = isDefaultToken(defaultList, token)
+
+  return useMemo(() => {
+    if (!chainId || !token) return [false, null]
+
+    const dismissed: boolean =
+      token instanceof Token ? dismissalState?.[chainId]?.[token.address] === true || isDefault : true
+
+    const callback =
+      dismissed || !(token instanceof Token)
+        ? null
+        : () => dispatch(dismissTokenWarning({ chainId, tokenAddress: token.address }))
+
+    return [dismissed, callback]
+  }, [chainId, token, dismissalState, isDefault, dispatch])
 }
 
 /**
