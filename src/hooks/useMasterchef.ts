@@ -35,9 +35,9 @@ const useMasterChef = () => {
 
   // Deposit
   const deposit = useCallback(
-    async (pid: number, amount: string, name: string, shouldHaverst = false) => {
+    async (pid: number, amount: BigNumber, name: string, shouldHaverst = false) => {
       try {
-        const tx = await masterChefContract?.deposit(pid, BigNumber.from(amount), shouldHaverst)
+        const tx = await masterChefContract?.deposit(pid, amount, shouldHaverst)
         return addTransaction(tx, { summary: `Deposit ${name}` })
       } catch (e) {
         console.error(e)
@@ -49,9 +49,9 @@ const useMasterChef = () => {
 
   // Withdraw
   const withdraw = useCallback(
-    async (pid: number, amount: string, name: string) => {
+    async (pid: number, amount: BigNumber, name: string) => {
       try {
-        const tx = await masterChefContract?.withdraw(pid, BigNumber.from(amount))
+        const tx = await masterChefContract?.withdraw(pid, amount)
         return addTransaction(tx, { summary: `Withdraw ${name}` })
       } catch (e) {
         console.error(e)

@@ -4,7 +4,7 @@ import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
-import { shortenAddress } from '../../utils'
+import { getEtherscanLinkText, shortenAddress } from '../../utils'
 import { AutoRow } from '../Row'
 import Copy from './Copy'
 import Transaction from './Transaction'
@@ -228,7 +228,8 @@ export default function AccountDetails({
   const { chainId, account, connector } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
-  const disableDisconnect = connector !== injected && connector !== walletlink && connector !== trezor && connector !== ledger
+  const disableDisconnect =
+    connector !== injected && connector !== walletlink && connector !== trezor && connector !== ledger
 
   function formatConnectorName() {
     const { ethereum } = window
@@ -359,7 +360,7 @@ export default function AccountDetails({
                             href={chainId && getEtherscanLink(chainId, ENSName, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>{getEtherscanLinkText(chainId)}</span>
                           </AddressLink>
                         )}
                       </div>
@@ -381,7 +382,7 @@ export default function AccountDetails({
                             href={getEtherscanLink(chainId, account, 'address')}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>{getEtherscanLinkText(chainId)}</span>
                           </AddressLink>
                         )}
                       </div>

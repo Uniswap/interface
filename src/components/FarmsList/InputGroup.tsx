@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 import styled from 'styled-components'
 
+import { ZERO } from 'libs/sdk/src/constants'
 import { useActiveWeb3React } from 'hooks'
 import { formattedNum, isAddressString } from 'utils'
 import useTokenBalance from 'hooks/useTokenBalance'
@@ -20,7 +21,13 @@ import usePendingRewardBalance from 'hooks/usePendingRewardBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
-  return new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(6)
+  const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
+
+  if (fraction.equalTo(ZERO)) {
+    return '0'
+  }
+
+  return fraction.toFixed(18)
 }
 
 const RewardBalanceWrapper = styled.div`
@@ -76,17 +83,31 @@ export default function InputGroup({
     !!chainId ? MASTERCHEF_ADDRESS[chainId] : undefined
   )
 
+  const isStakeDisabled =
+    pendingTx ||
+    depositValue === '' ||
+    depositValue === '0' ||
+    ethers.utils.parseUnits(depositValue || '0', balance.decimals).gt(balance.value)
+
+  const isUnstakeDisabled =
+    pendingTx ||
+    withdrawValue === '' ||
+    withdrawValue === '0' ||
+    ethers.utils.parseUnits(withdrawValue || '0', staked.decimals).gt(staked.value)
+
+  const isHarvestDisabled = pendingTx || !userEarning.value.gt(BigNumber.from('0'))
+
   const { deposit, withdraw, harvest } = useMasterChef()
 
   const handleClickStake = async () => {
     setPendingTx(true)
-    await deposit(pid, depositValue, pairSymbol, false)
+    await deposit(pid, ethers.utils.parseUnits(depositValue, balance.decimals), pairSymbol, false)
     setPendingTx(false)
   }
 
   const handleWithdraw = async () => {
     setPendingTx(true)
-    await withdraw(pid, withdrawValue, pairSymbol)
+    await withdraw(pid, ethers.utils.parseUnits(withdrawValue, staked.decimals), pairSymbol)
     setPendingTx(false)
   }
 
@@ -112,12 +133,12 @@ export default function InputGroup({
             {chainId && (
               <>
                 <CurrencyInputPanel
-                  value={depositValue ? fixedFormatting(BigNumber.from(depositValue), balance.decimals) : ''}
+                  value={depositValue}
                   onUserInput={value => {
-                    setDepositValue(ethers.utils.parseUnits(value, balance.decimals).toString())
+                    setDepositValue(value)
                   }}
                   onMax={() => {
-                    setDepositValue(balance.value.toString())
+                    setDepositValue(fixedFormatting(balance.value, balance.decimals))
                   }}
                   showMaxButton={true}
                   currency={new Token(chainId, pairAddress, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
@@ -129,8 +150,8 @@ export default function InputGroup({
                   fontSize="14px"
                 />
 
-                <ButtonPrimary disabled={pendingTx} padding="12px" margin="14px 0" onClick={handleClickStake}>
-                  Stake
+                <ButtonPrimary disabled={isStakeDisabled} padding="12px" margin="14px 0" onClick={handleClickStake}>
+                  {depositValue && isStakeDisabled ? 'Invalid Amount' : 'Stake'}
                 </ButtonPrimary>
               </>
             )}
@@ -139,12 +160,12 @@ export default function InputGroup({
             {chainId && (
               <>
                 <CurrencyInputPanel
-                  value={withdrawValue ? fixedFormatting(BigNumber.from(withdrawValue), staked.decimals) : ''}
+                  value={withdrawValue}
                   onUserInput={value => {
-                    setWithdrawValue(ethers.utils.parseUnits(value, staked.decimals).toString())
+                    setWithdrawValue(value)
                   }}
                   onMax={() => {
-                    setWithdrawValue(staked.value.toString())
+                    setWithdrawValue(fixedFormatting(staked.value, staked.decimals))
                   }}
                   showMaxButton={true}
                   currency={new Token(chainId, pairAddress, balance.decimals, `${pairSymbol}`, `${pairSymbol}`)}
@@ -157,8 +178,8 @@ export default function InputGroup({
                   fontSize="14px"
                 />
 
-                <ButtonPrimary disabled={pendingTx} padding="12px" margin="14px 0" onClick={handleWithdraw}>
-                  Unstake
+                <ButtonPrimary disabled={isUnstakeDisabled} padding="12px" margin="14px 0" onClick={handleWithdraw}>
+                  {withdrawValue && isUnstakeDisabled ? 'Invalid Amount' : 'Unstake'}
                 </ButtonPrimary>
               </>
             )}
@@ -168,7 +189,7 @@ export default function InputGroup({
               <div>{`${getFullDisplayBalance(userEarning.value, userEarning.decimals)} KNC`}</div>
               <RewardUSD>{rewardUSD && formattedNum(rewardUSD, true)}</RewardUSD>
             </RewardBalanceWrapper>
-            <ButtonPrimary padding="12px" margin="15px 0" onClick={handleClickHarvest}>
+            <ButtonPrimary disabled={isHarvestDisabled} padding="12px" margin="15px 0" onClick={handleClickHarvest}>
               Harvest
             </ButtonPrimary>
           </AutoRow>
