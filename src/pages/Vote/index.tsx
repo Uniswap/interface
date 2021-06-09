@@ -213,7 +213,7 @@ export default function Vote() {
               )}
               <ButtonPrimary
                 as={Link}
-                to="/proposal"
+                to="/create-proposal"
                 style={{ width: 'fit-content', borderRadius: '8px' }}
                 padding="8px"
               >
