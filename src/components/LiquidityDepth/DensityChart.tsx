@@ -20,7 +20,7 @@ interface ChartEntry {
   price1: number
 }
 
-const sampleData = [
+const sampleData: Partial<ChartEntry>[] = [
   { price0: 0, activeLiquidity: 1 },
   { price0: 1, activeLiquidity: 2 },
   { price0: 2, activeLiquidity: 3 },
@@ -60,6 +60,7 @@ function useDensityChartData({
 
   const { loading, syncing, error, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
 
+  // clear data when inputs are cleared
   useEffect(() => {
     if ((!currencyA || !currencyB || !feeAmount) && Boolean(formattedData?.length)) {
       setFormattedData([])
