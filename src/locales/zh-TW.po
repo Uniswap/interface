@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-09 08:05\n"
+"PO-Revision-Date: 2021-06-09 17:20\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -150,7 +150,7 @@ msgstr "已激活"
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
-msgstr "添加"
+msgstr "新增"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -259,7 +259,7 @@ msgstr "您確定嗎？"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "作為Uniswap社區的成員，您可以認領 UNI 代幣，用於投票和治理。<0/><1/><2>閱讀更多關於 UNI 代幣信息</2>"
+msgstr "作為 Uniswap 社群的成員，您可以認領 UNI 代幣，用於投票和治理。<0/><1/><2>閱讀更多關於 UNI 代幣的訊息</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -287,7 +287,7 @@ msgstr "余額：{0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "較適合特異幣對。"
+msgstr "較適合低交易量的幣對。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -1481,7 +1481,7 @@ msgstr "未被領取的 UNI 代幣"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
-msgstr "未領取的手續費\""
+msgstr "未領取的手續費"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
