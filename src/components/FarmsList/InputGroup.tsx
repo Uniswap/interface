@@ -83,17 +83,31 @@ export default function InputGroup({
     !!chainId ? MASTERCHEF_ADDRESS[chainId] : undefined
   )
 
-  const isStakeDisabled =
-    pendingTx ||
-    depositValue === '' ||
-    depositValue === '0' ||
-    ethers.utils.parseUnits(depositValue || '0', balance.decimals).gt(balance.value)
+  let isStakeInvalidAmount
 
-  const isUnstakeDisabled =
-    pendingTx ||
-    withdrawValue === '' ||
-    withdrawValue === '0' ||
-    ethers.utils.parseUnits(withdrawValue || '0', staked.decimals).gt(staked.value)
+  try {
+    isStakeInvalidAmount =
+      depositValue === '' ||
+      parseFloat(depositValue) === 0 ||
+      ethers.utils.parseUnits(depositValue || '0', balance.decimals).gt(balance.value) // This causes error if number of decimals > 18
+  } catch (err) {
+    isStakeInvalidAmount = true
+  }
+
+  const isStakeDisabled = pendingTx || isStakeInvalidAmount
+
+  let isUnstakeInvalidAmount
+
+  try {
+    isUnstakeInvalidAmount =
+      withdrawValue === '' ||
+      parseFloat(withdrawValue) === 0 ||
+      ethers.utils.parseUnits(withdrawValue || '0', staked.decimals).gt(staked.value) // This causes error if number of decimals > 18
+  } catch (err) {
+    isUnstakeInvalidAmount = true
+  }
+
+  const isUnstakeDisabled = pendingTx || isUnstakeInvalidAmount
 
   const isHarvestDisabled = pendingTx || !userEarning.value.gt(BigNumber.from('0'))
 
@@ -151,7 +165,7 @@ export default function InputGroup({
                 />
 
                 <ButtonPrimary disabled={isStakeDisabled} padding="12px" margin="14px 0" onClick={handleClickStake}>
-                  {depositValue && isStakeDisabled ? 'Invalid Amount' : 'Stake'}
+                  {depositValue && isStakeInvalidAmount ? 'Invalid Amount' : 'Stake'}
                 </ButtonPrimary>
               </>
             )}
@@ -179,7 +193,7 @@ export default function InputGroup({
                 />
 
                 <ButtonPrimary disabled={isUnstakeDisabled} padding="12px" margin="14px 0" onClick={handleWithdraw}>
-                  {withdrawValue && isUnstakeDisabled ? 'Invalid Amount' : 'Unstake'}
+                  {withdrawValue && isUnstakeInvalidAmount ? 'Invalid Amount' : 'Unstake'}
                 </ButtonPrimary>
               </>
             )}
