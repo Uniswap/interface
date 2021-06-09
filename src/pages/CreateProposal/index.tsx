@@ -171,13 +171,18 @@ export default function CreateProposal() {
     setAttempting(true)
 
     const createProposalData: CreateProposalData = {} as CreateProposalData
-    createProposalData.targets = currencyValue?.isToken ? [currencyValue.address] : []
 
-    if (!createProposalCallback || !proposalAction || !createProposalData.targets) return
+    if (!createProposalCallback || !proposalAction || !currencyValue.isToken) return
+
+    createProposalData.targets = [currencyValue.address]
+    createProposalData.values = ['0']
+    createProposalData.description = `# ${titleValue}
+
+${bodyValue}
+`
 
     let types: string[][]
     let values: string[][]
-
     switch (proposalAction) {
       case ProposalAction.TRANSFER_TOKEN: {
         const tokenAmount: string = JSBI.multiply(
@@ -206,12 +211,6 @@ export default function CreateProposal() {
     for (let i = 0; i < createProposalData.signatures.length; i++) {
       createProposalData.calldatas[i] = utils.defaultAbiCoder.encode(types[i], values[i])
     }
-
-    createProposalData.values = ['0']
-    createProposalData.description = `# ${titleValue}
-
-${bodyValue}
-`
 
     const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
       setAttempting(false)
