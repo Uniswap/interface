@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-08 13:16\n"
+"PO-Revision-Date: 2021-06-09 08:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -263,7 +263,7 @@ msgstr "Как член сообщества Uniswap, вы можете вост
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "Не менее {0} {1} и {2} {3} будут возвращены на ваш кошелек из-за выбранного диапазона цен."
+msgstr "Не менее {0} {1} и {2} {3} будут возвращены на ваш кошелёк из-за выбранного диапазона цен."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
@@ -311,7 +311,7 @@ msgstr "Добавляя этот список, вы подразумевает�
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Подключая кошелек, вы соглашаетесь с <0>Условиями предоставления услуг</0> и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap </1>."
+msgstr "Подключая кошелёк, вы соглашаетесь с <0>Условиями предоставления услуг</0> и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap </1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -463,12 +463,12 @@ msgstr "Подтвердите эту транзакцию в своём кош�
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
-msgstr "Подключить кошелек"
+msgstr "Подключить кошелёк"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "Подключить кошелек"
+msgstr "Подключить кошелёк"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -490,7 +490,7 @@ msgstr "Подключитесь к кошельку для просмотра �
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Connect wallet"
-msgstr "Подключить кошелек"
+msgstr "Подключить кошелёк"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -564,7 +564,7 @@ msgstr "Внести"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Суммы внесения"
+msgstr "Внесите суммы"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
@@ -996,7 +996,7 @@ msgstr "ВЫКЛ"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "НА"
+msgstr "ВКЛ"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
@@ -1012,7 +1012,7 @@ msgstr "Вкл"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Как только вы будете довольны курсом, нажмите \"Внести\", чтобы перейти к подтверждению."
+msgstr "Как только вы будете довольны курсом, нажмите «Внести», чтобы перейти к подтверждению."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
@@ -1223,7 +1223,7 @@ msgstr "Выберите пул"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Выберите тип пула на основе комиссии поставщика ликвидности, которую вы предпочитаете."
+msgstr "Выберите тип пула в зависимости от подходящей вам комиссии поставщика ликвидности."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1260,7 +1260,7 @@ msgstr "Установите диапазон цен"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
-msgstr "Установить начальную цену"
+msgstr "Установите начальную цену"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
@@ -1532,7 +1532,7 @@ msgstr "Разблокировка голосов"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr "Неподдерживаемый актив"
+msgstr "Актив не поддерживается"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
@@ -1922,7 +1922,7 @@ msgstr "{0} за {1}"
 
 #: src/components/RateToggle/index.tsx
 msgid "{0} price"
-msgstr "{0} цена"
+msgstr "Цена {0}"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ManageLists.tsx
