@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import JSBI from 'jsbi'
+import styled from 'styled-components'
 import { utils } from 'ethers'
-import { TYPE } from 'theme'
+import { ExternalLink, TYPE } from 'theme'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNI } from '../../constants/tokens'
 import AppBody from '../AppBody'
@@ -69,6 +70,16 @@ const CreateProposalButton = ({
     </ButtonError>
   )
 }
+
+const CreateProposalWrapper = styled(Wrapper)`
+  display: flex;
+  flex-flow: column wrap;
+`
+
+const AutonomousProposalCTA = styled.div`
+  text-align: center;
+  margin-top: 10px;
+`
 
 export default function CreateProposal() {
   const { account, chainId } = useActiveWeb3React()
@@ -157,6 +168,10 @@ export default function CreateProposal() {
     [proposalAction, toAddressValue, currencyValue, amountValue, titleValue, bodyValue]
   )
 
+  const hasEnoughVote = Boolean(
+    availableVotes && proposalThreshold && JSBI.greaterThanOrEqual(availableVotes.quotient, proposalThreshold.quotient)
+  )
+
   const createProposalCallback = useCreateProposalCallback()
 
   const handleCreateProposal = async () => {
@@ -214,7 +229,7 @@ ${bodyValue}
   return (
     <AppBody {...{ maxWidth: '800px' }}>
       <CreateProposalTabs />
-      <Wrapper>
+      <CreateProposalWrapper>
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'primaryText1'}>
@@ -248,15 +263,17 @@ ${bodyValue}
           hasActiveOrPendingProposal={
             latestProposalData?.status === ProposalState.Active || latestProposalData?.status === ProposalState.Pending
           }
-          hasEnoughVote={Boolean(
-            availableVotes &&
-              proposalThreshold &&
-              JSBI.greaterThanOrEqual(availableVotes.quotient, proposalThreshold.quotient)
-          )}
+          hasEnoughVote={hasEnoughVote}
           isFormInvalid={isFormInvalid}
           handleCreateProposal={handleCreateProposal}
         />
-      </Wrapper>
+        {!hasEnoughVote ? (
+          <AutonomousProposalCTA>
+            Don’t have 10M votes? Autonomous proposals can be created by anyone using{' '}
+            <ExternalLink href="https://fish.vote">fish.vote</ExternalLink>
+          </AutonomousProposalCTA>
+        ) : null}
+      </CreateProposalWrapper>
       <ProposalActionSelectorModal
         isOpen={modalOpen}
         onDismiss={handleDismissActionSelector}
