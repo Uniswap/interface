@@ -33,10 +33,9 @@ const ActionSelectorHeader = styled.div`
 
 const ActionDropdown = styled(ButtonDropdown)`
   padding: 0px;
-  margin-top: 10px;
   background-color: transparent;
   color: ${({ theme }) => theme.text1}
-  font-size: 24px;
+  font-size: 1.25rem;
 
   :hover,
   :active,
@@ -47,12 +46,21 @@ const ActionDropdown = styled(ButtonDropdown)`
   }
 `
 
-const ProposalActionSelectorContainer = styled.div`
+const ProposalActionSelectorFlex = styled.div`
   margin-top: 10px;
-  padding: 0.75rem 0.5rem 0.75rem 1rem;
+  display: flex;
+  flex-flow: column nowrap;
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.bg2};
   background-color: ${({ theme }) => theme.bg1};
+`
+
+const ProposalActionSelectorContainer = styled.div`
+  flex: 1;
+  padding: 1rem;
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 10px;
 `
 
 export const ProposalActionSelector = ({
@@ -65,12 +73,14 @@ export const ProposalActionSelector = ({
   proposalAction: ProposalAction
 }) => {
   return (
-    <ProposalActionSelectorContainer className={className}>
-      <ActionSelectorHeader>
-        <Trans>Proposed Action</Trans>
-      </ActionSelectorHeader>
-      <ActionDropdown onClick={onClick}>{proposalAction}</ActionDropdown>
-    </ProposalActionSelectorContainer>
+    <ProposalActionSelectorFlex>
+      <ProposalActionSelectorContainer className={className}>
+        <ActionSelectorHeader>
+          <Trans>Proposed Action</Trans>
+        </ActionSelectorHeader>
+        <ActionDropdown onClick={onClick}>{proposalAction}</ActionDropdown>
+      </ProposalActionSelectorContainer>
+    </ProposalActionSelectorFlex>
   )
 }
 

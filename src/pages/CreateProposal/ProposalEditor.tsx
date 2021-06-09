@@ -55,7 +55,7 @@ Insert your conclusion here
       <ProposalEditorHeader>
         <Trans>Proposal</Trans>
       </ProposalEditorHeader>
-      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={t`Proposal Title`} fontSize="1.5rem" />
+      <ProposalTitle value={title} onUserInput={onTitleInput} placeholder={t`Proposal Title`} fontSize="1.25rem" />
       <hr />
       <ResizingTextArea value={body} onUserInput={onBodyInput} placeholder={bodyPlaceholder} fontSize="1rem" />
     </ProposalEditorContainer>

@@ -212,16 +212,16 @@ ${bodyValue}
   }
 
   return (
-    <AppBody>
+    <AppBody {...{ maxWidth: '800px' }}>
       <CreateProposalTabs />
       <Wrapper>
         <BlueCard>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'primaryText1'}>
               <Trans>
-                <strong>Tip:</strong> Enter the proposed action and a description to help the community understand your
-                proposal. You will not be able to modify a proposal once submitted, so please check that all information
-                is correct. The voting period will begin immediately and last for 7 days.
+                <strong>Tip:</strong> Select the proposed action and describe your proposal for the community. The
+                proposal cannot be modified after submission, so please verify all information before submitting. The
+                voting period will begin immediately and last for 7 days.
               </Trans>
             </TYPE.link>
           </AutoColumn>
