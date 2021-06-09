@@ -137,6 +137,10 @@ export default function DensityChart({
   const leftPrice = isSorted ? priceLower : priceUpper?.invert()
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
+  if (error) {
+    console.error('ERROR')
+  }
+
   if (loading) {
     return (
       <Wrapper>
@@ -153,66 +157,74 @@ export default function DensityChart({
         </SyncingIndicator>
       ) : null}
 
-      <VictoryChart
-        height={275}
-        padding={40}
-        animate={{ duration: 500, easing: 'cubic' }}
-        containerComponent={
-          <VictoryBrushContainer
-            brushDimension="x"
-            brushDomain={
-              leftPrice && rightPrice
-                ? {
-                    x: [
-                      parseFloat(leftPrice?.toSignificant(5) ?? '0'),
-                      parseFloat(rightPrice?.toSignificant(5) ?? '4000'),
-                    ],
-                  }
+      {formattedData?.length ? (
+        <VictoryChart
+          height={275}
+          padding={40}
+          containerComponent={
+            //animate={{ duration: 500, easing: 'cubic' }}
+            <VictoryBrushContainer
+              brushDimension="x"
+              brushDomain={
+                leftPrice && rightPrice
+                  ? {
+                      x: [
+                        parseFloat(leftPrice?.toSignificant(5) ?? '0'),
+                        parseFloat(rightPrice?.toSignificant(5) ?? '4000'),
+                      ],
+                    }
+                  : undefined
+              }
+              brushComponent={
+                //allowDraw={false}
+                <Brush
+                  leftHandleColor={currencyA ? tokenAColor : '#607BEE'}
+                  rightHandleColor={currencyB ? tokenBColor : '#F3B71E'}
+                />
+              }
+              handleWidth={40}
+              onBrushDomainChangeEnd={(domain) => {
+                onLeftRangeInput(domain.x[0].toString())
+                onRightRangeInput(domain.x[1].toString())
+              }}
+            />
+          }
+        >
+          <VictoryBar
+            data={formattedData}
+            style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.2' } }}
+            x={'price0'}
+            y={'activeLiquidity'}
+          />
+
+          <VictoryLine
+            data={
+              maxLiquidity
+                ? [
+                    { x: currentPrice, y: 0 },
+                    { x: currentPrice, y: maxLiquidity },
+                  ]
                 : undefined
             }
-            brushComponent={
-              //allowDraw={false}
-              <Brush
-                leftHandleColor={currencyA ? tokenAColor : '#607BEE'}
-                rightHandleColor={currencyB ? tokenBColor : '#F3B71E'}
-              />
-            }
-            handleWidth={40}
-            onBrushDomainChangeEnd={(domain) => {
-              onLeftRangeInput(domain.x[0].toString())
-              onRightRangeInput(domain.x[1].toString())
+            style={{
+              data: { stroke: theme.secondary1 },
             }}
           />
-        }
-      >
-        <VictoryBar
-          data={formattedData}
-          style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.2' } }}
-          x={'price0'}
-          y={'activeLiquidity'}
-        />
 
-        <VictoryLine
-          data={[
-            { x: currentPrice, y: 0 },
-            { x: currentPrice, y: maxLiquidity },
-          ]}
-          style={{
-            data: { stroke: theme.secondary1 },
-          }}
-        />
-
-        <VictoryAxis
-          padding={20}
-          fixLabelOverlap={true}
-          style={{
-            tickLabels: {
-              fill: theme.text1,
-              opacity: '0.6',
-            },
-          }}
-        />
-      </VictoryChart>
+          <VictoryAxis
+            padding={20}
+            fixLabelOverlap={true}
+            style={{
+              tickLabels: {
+                fill: theme.text1,
+                opacity: '0.6',
+              },
+            }}
+          />
+        </VictoryChart>
+      ) : (
+        'No data!'
+      )}
     </Wrapper>
   )
 }

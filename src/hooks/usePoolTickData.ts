@@ -9,7 +9,7 @@ import { TickProcessed } from 'constants/ticks'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
 const PRICE_FIXED_DIGITS = 4
-const DEFAULT_SURROUNDING_TICKS = 30
+const DEFAULT_SURROUNDING_TICKS = 3
 
 export function usePoolTickData(
   currencyA: Currency | undefined,
