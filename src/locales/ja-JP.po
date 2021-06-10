@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-09 23:07+0000\n"
+"POT-Creation-Date: 2021-06-10 12:50+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-10 12:05\n"
+"PO-Revision-Date: 2021-06-10 13:15\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -148,6 +148,7 @@ msgid "Active"
 msgstr "アクティブ"
 
 #: src/components/PositionCard/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "追加"
@@ -337,7 +338,7 @@ msgstr "請求"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "UNIを請求する"
+msgstr "UNIを請求"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
@@ -457,6 +458,7 @@ msgstr "ウォレットで取引を確認する"
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/state/burn/hooks.ts
+#: src/state/burn/v3/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 #: src/state/stake/hooks.ts
@@ -630,13 +632,17 @@ msgstr "V2の流動性が表示されない場合、該当のトークンを<0>�
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "保有するUNIトークンは、Uniswapのガバナンスにおける投票権を表します。"
 
+#: src/state/burn/v3/hooks.ts
+msgid "Enter a percent"
+msgstr "パーセントを入力してください"
+
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
 msgstr "受取人を入力ください"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "有効なスリップページのパーセンテージを入力してください"
+msgstr "有効なスリップページの値を入力してください"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -781,11 +787,11 @@ msgstr "メタマスクのインストール"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "取引のための流動性が不足しています。"
+msgstr "流動性が不足しているため、取引できません。"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "取引のための流動性が不足しています。マルチホップ取引を有効にしてください。"
+msgstr "流動性が不足しているため、取引できません。マルチホップ取引を有効にしてください。"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -888,7 +894,7 @@ msgstr "プールを管理"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
-msgstr "最大値"
+msgstr "最大"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -1024,7 +1030,7 @@ msgstr "不明なエラーが発生しました。ページを更新するか、
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
-msgstr "範囲外です"
+msgstr "範囲外"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1168,7 +1174,7 @@ msgstr "最近の取引"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
-msgstr "削除"
+msgstr "解除"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1182,7 +1188,7 @@ msgstr "自分で投票する"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "流動性を削除"
+msgstr "流動性を解除"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
@@ -1191,15 +1197,15 @@ msgstr "リストを削除"
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} を削除"
+msgstr "{0} {1} と {2} {3} を解除"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "{0}/{1} V3流動性を削除"
+msgstr "{0}/{1} V3流動性を解除"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "{0} {1} と {2} {3} を削除しています"
+msgstr "{0} {1} と {2} {3} を解除中"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
@@ -1261,6 +1267,10 @@ msgstr "価格帯"
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
 msgstr "開始価格を設定"
+
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+msgid "Share of Pool"
+msgstr "プールのシェア"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
@@ -1330,7 +1340,7 @@ msgstr "Uniswap不変式 x * y = kはスワップで満たされませんでし�
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
-msgstr "入力トークンは転送できません。入力トークンに問題がある可能性があります。"
+msgstr "入力したトークンは転送できません。入力したトークンに問題がある可能性があります。"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
@@ -1411,7 +1421,7 @@ msgstr "上位のプール"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
-msgstr "総供給量"
+msgstr "総供給"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -1536,7 +1546,7 @@ msgstr "サポートされていないトークン"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
-msgstr "サポートされていないアセット"
+msgstr "サポートされていないトークン"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
@@ -1577,7 +1587,7 @@ msgstr "V2の流動性を表示"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "発生した手数料と分析を表示<0>↗</0>"
+msgstr "発生した報酬と分析を表示<0>↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
@@ -1839,11 +1849,11 @@ msgstr "分"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
-msgstr "{0} 経由で"
+msgstr "{0} から"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
-msgstr "{0} トークンリスト経由"
+msgstr "{0} トークンリストから"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
@@ -1873,6 +1883,7 @@ msgstr "預け入れる {0}"
 msgid "{0} ETH"
 msgstr "{0} ETH"
 
+#: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1915,6 +1926,9 @@ msgstr "{0} の投票"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
