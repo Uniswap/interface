@@ -171,9 +171,9 @@ export default function DensityChart({
       ) : null}
 
       <VictoryChart
+        animate={{ duration: 500, easing: 'cubic' }}
         height={275}
         padding={40}
-        animate={{ duration: 500, easing: 'cubic' }}
         containerComponent={
           // add allowDraw={false} when library supports it
           <VictoryBrushContainer
@@ -196,8 +196,11 @@ export default function DensityChart({
             }
             handleWidth={40}
             onBrushDomainChangeEnd={(domain) => {
-              onLeftRangeInput(Number(domain.x[0]).toFixed(PRICE_FIXED_DIGITS))
-              onRightRangeInput(Number(domain.x[1]).toFixed(PRICE_FIXED_DIGITS))
+              const leftRangeValue = Number(domain.x[0])
+              const rightRangeValue = Number(domain.x[1])
+
+              leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(PRICE_FIXED_DIGITS))
+              rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(PRICE_FIXED_DIGITS))
             }}
           />
         }

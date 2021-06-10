@@ -11,14 +11,14 @@ function bitmapIndex(tick: number, tickSpacing: number) {
   return Math.floor(tick / tickSpacing / 256)
 }
 
-const REFRESH_FREQUENCY = { blocksPerFetch: 2 }
+const REFRESH_FREQUENCY = { blocksPerFetch: 4 }
 
 export function useTicks(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
   activeTick: number | undefined,
-  numSurroundingTicks: number
+  numSurroundingTicks: number | undefined
 ): {
   loading: boolean
   syncing: boolean
@@ -39,13 +39,17 @@ export function useTicks(
 
   const minIndex = useMemo(
     () =>
-      tickSpacing && activeTick ? bitmapIndex(activeTick - numSurroundingTicks * tickSpacing, tickSpacing) : undefined,
+      tickSpacing && activeTick && numSurroundingTicks
+        ? bitmapIndex(activeTick - numSurroundingTicks * tickSpacing, tickSpacing)
+        : undefined,
     [tickSpacing, activeTick, numSurroundingTicks]
   )
 
   const maxIndex = useMemo(
     () =>
-      tickSpacing && activeTick ? bitmapIndex(activeTick + numSurroundingTicks * tickSpacing, tickSpacing) : undefined,
+      tickSpacing && activeTick && numSurroundingTicks
+        ? bitmapIndex(activeTick + numSurroundingTicks * tickSpacing, tickSpacing)
+        : undefined,
     [tickSpacing, activeTick, numSurroundingTicks]
   )
 
