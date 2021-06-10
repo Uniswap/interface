@@ -3,40 +3,45 @@ import { FeeAmount, nearestUsableTick, TickMath, tickToPrice, TICK_SPACINGS } fr
 import keyBy from 'lodash.keyby'
 import JSBI from 'jsbi'
 import { PoolState, usePool } from './usePools'
-import { useTicks } from './useTicks'
+import { useAllV3Ticks } from './useAllV3Ticks'
 import { useMemo } from 'react'
 import { TickProcessed } from 'constants/ticks'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
-const PRICE_FIXED_DIGITS = 4
-const DEFAULT_SURROUNDING_TICKS = 300
+const PRICE_FIXED_DIGITS = 8
 
-export function useActiveLiquidity(
+const DEFAULT_SURROUNDING_TICKS = {
+  [FeeAmount.LOW]: 2_250,
+  [FeeAmount.MEDIUM]: 6_931,
+  [FeeAmount.HIGH]: 10_986,
+}
+
+export function usePoolTickData(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
-  numSurroundingTicks = DEFAULT_SURROUNDING_TICKS
+  numSurroundingTicks?: number
 ): {
   loading: boolean
+  syncing: boolean
   error: boolean
   valid: boolean
+  activeTick: number | undefined
   tickData: TickProcessed[]
 } {
   const pool = usePool(currencyA, currencyB, feeAmount)
 
   const tickSpacing = feeAmount && TICK_SPACINGS[feeAmount]
 
+  numSurroundingTicks =
+    numSurroundingTicks ??
+    (feeAmount && tickSpacing ? Math.floor(DEFAULT_SURROUNDING_TICKS[feeAmount] / tickSpacing) : undefined)
+
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick =
     pool[1]?.tickCurrent && tickSpacing ? nearestUsableTick(pool[1]?.tickCurrent, tickSpacing) : undefined
 
-  const { loading, syncing, error, valid, tickData } = useTicks(
-    currencyA,
-    currencyB,
-    feeAmount,
-    activeTick,
-    numSurroundingTicks
-  )
+  const { loading, syncing, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
 
   const token0 = currencyA?.wrapped
   const token1 = currencyB?.wrapped
@@ -51,12 +56,15 @@ export function useActiveLiquidity(
       !valid ||
       pool[0] !== PoolState.EXISTS ||
       !activeTick ||
-      !tickSpacing
+      !tickSpacing ||
+      !numSurroundingTicks
     ) {
       return {
-        loading: loading || syncing || pool[0] === PoolState.LOADING,
+        loading: loading || pool[0] === PoolState.LOADING,
+        syncing: syncing,
         error: error || pool[0] === PoolState.INVALID,
         valid: false,
+        activeTick,
         tickData: [],
       }
     }
@@ -113,6 +121,7 @@ export function useActiveLiquidity(
       syncing: false,
       error: false,
       valid: true,
+      activeTick,
       tickData: ticksProcessed,
     }
   }, [token0, token1, activeTick, loading, syncing, error, valid, tickData, pool, tickSpacing, numSurroundingTicks])

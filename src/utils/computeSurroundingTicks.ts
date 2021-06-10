@@ -4,18 +4,18 @@ import { TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { TickProcessed } from 'constants/ticks'
 
-const PRICE_FIXED_DIGITS = 4
+const PRICE_FIXED_DIGITS = 8
 
 // Computes the numSurroundingTicks above or below the active tick.
 export default function computeSurroundingTicks(
   token0: Token,
   token1: Token,
   activeTickProcessed: TickProcessed,
-  tickIdxToInitializedTick: { [key: number]: TickData },
+  tickIdxToInitializedTick: { [key: string]: TickData },
   tickSpacing: number,
   numSurroundingTicks: number,
   ascending: boolean
-) {
+): TickProcessed[] {
   let previousTickProcessed: TickProcessed = {
     ...activeTickProcessed,
   }
@@ -43,7 +43,7 @@ export default function computeSurroundingTicks(
 
     // Check if there is an initialized tick at our current tick.
     // If so copy the gross and net liquidity from the initialized tick.
-    const currentInitializedTick = tickIdxToInitializedTick[currentTickIdx]
+    const currentInitializedTick = tickIdxToInitializedTick[currentTickIdx.toString()]
     if (currentInitializedTick) {
       currentTickProcessed.liquidityGross = JSBI.BigInt(currentInitializedTick.liquidityGross)
       currentTickProcessed.liquidityNet = JSBI.BigInt(currentInitializedTick.liquidityNet)

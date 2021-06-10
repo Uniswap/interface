@@ -1,33 +1,29 @@
-import useScrollPosition from '@react-hook/window-scroll'
-import React, { useState } from 'react'
-import { Text } from 'rebass'
-import { NavLink } from 'react-router-dom'
-import { darken } from 'polished'
 import { Trans } from '@lingui/macro'
+import useScrollPosition from '@react-hook/window-scroll'
+import { darken } from 'polished'
+import React, { useState } from 'react'
 import { Moon, Sun } from 'react-feather'
+import { NavLink } from 'react-router-dom'
+import { Text } from 'rebass'
+import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
+import { useUserHasAvailableClaim } from 'state/claim/hooks'
+import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
+import { useDarkModeManager } from 'state/user/hooks'
+import { useETHBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
-
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
-import { SupportedChainId } from '../../constants/chains'
-
+import { NETWORK_LABELS, SupportedChainId } from '../../constants/chains'
 import { useActiveWeb3React } from '../../hooks/web3'
-import { useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
-import { CardNoise } from '../earn/styled'
-import { TYPE, ExternalLink } from '../../theme'
-
+import { ExternalLink, TYPE } from '../../theme'
 import { YellowCard } from '../Card'
-import Menu from '../Menu'
-
-import Row, { RowFixed } from '../Row'
-import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
-import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
-import { useUserHasAvailableClaim } from '../../state/claim/hooks'
-import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
-import { Dots } from '../swap/styleds'
+import { CardNoise } from '../earn/styled'
+import Menu from '../Menu'
 import Modal from '../Modal'
+import Row, { RowFixed } from '../Row'
+import { Dots } from '../swap/styleds'
+import Web3Status from '../Web3Status'
 import UniBalanceContent from './UniBalanceContent'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
@@ -301,16 +297,6 @@ export const StyledMenuButton = styled.button`
     stroke: ${({ theme }) => theme.text1};
   }
 `
-
-const NETWORK_LABELS: { [chainId in SupportedChainId | number]: string } = {
-  [SupportedChainId.MAINNET]: 'Mainnet',
-  [SupportedChainId.RINKEBY]: 'Rinkeby',
-  [SupportedChainId.ROPSTEN]: 'Ropsten',
-  [SupportedChainId.GOERLI]: 'Görli',
-  [SupportedChainId.KOVAN]: 'Kovan',
-  [SupportedChainId.ARBITRUM_KOVAN]: 'kArbitrum',
-  [SupportedChainId.ARBITRUM_ONE]: 'Arbitrum One',
-}
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()

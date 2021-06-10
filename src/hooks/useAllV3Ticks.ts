@@ -1,10 +1,10 @@
-import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, TICK_SPACINGS } from '@uniswap/v3-sdk'
-import { ZERO_ADDRESS } from 'constants/misc'
+import { Token } from '@uniswap/sdk-core'
+import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { nearestUsableTick, TickMath } from '@uniswap/v3-sdk/dist/'
+import { ZERO_ADDRESS } from '../constants/misc'
 import { useEffect, useMemo, useState } from 'react'
-import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
-import { useTickLens } from './useContract'
-import { PoolState, usePool } from './usePools'
+import { Result, useSingleCallResult, useSingleContractMultipleData } from 'state/multicall/hooks'
+import { useTickLens, useV3Factory } from './useContract'
 import { TickData } from 'constants/ticks'
 
 function bitmapIndex(tick: number, tickSpacing: number) {
@@ -13,12 +13,11 @@ function bitmapIndex(tick: number, tickSpacing: number) {
 
 const REFRESH_FREQUENCY = { blocksPerFetch: 2 }
 
-export function useTicks(
-  currencyA: Currency | undefined,
-  currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined,
-  activeTick: number | undefined,
-  numSurroundingTicks: number
+// for now, reconsider using this function, it consumes a lot of data and cpu to fetch all the ticks.
+export function useAllV3Ticks(
+  token0: Token | undefined,
+  token1: Token | undefined,
+  feeAmount: FeeAmount | undefined
 ): {
   loading: boolean
   syncing: boolean
@@ -26,28 +25,23 @@ export function useTicks(
   valid: boolean
   tickData: TickData[]
 } {
-  const [tickDataLatestSynced, setTickDataLatestSynced] = useState<TickData[]>([])
-
-  const pool = usePool(currencyA, currencyB, feeAmount)
-
-  const poolAddress =
-    currencyA && currencyB && feeAmount && pool.length === 2 && pool[0] === PoolState.EXISTS
-      ? Pool.getAddress(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
-      : undefined
-
   const tickSpacing = feeAmount && TICK_SPACINGS[feeAmount]
 
   const minIndex = useMemo(
-    () =>
-      tickSpacing && activeTick ? bitmapIndex(activeTick - numSurroundingTicks * tickSpacing, tickSpacing) : undefined,
-    [tickSpacing, activeTick, numSurroundingTicks]
+    () => (tickSpacing ? bitmapIndex(nearestUsableTick(TickMath.MIN_TICK, tickSpacing), tickSpacing) : undefined),
+    [tickSpacing]
+  )
+  const maxIndex = useMemo(
+    () => (tickSpacing ? bitmapIndex(nearestUsableTick(TickMath.MAX_TICK, tickSpacing), tickSpacing) : undefined),
+    [tickSpacing]
   )
 
-  const maxIndex = useMemo(
-    () =>
-      tickSpacing && activeTick ? bitmapIndex(activeTick + numSurroundingTicks * tickSpacing, tickSpacing) : undefined,
-    [tickSpacing, activeTick, numSurroundingTicks]
-  )
+  const [tickDataLatestSynced, setTickDataLatestSynced] = useState<TickData[]>([])
+
+  // fetch the pool address
+  const factoryContract = useV3Factory()
+  const poolAddress = useSingleCallResult(factoryContract, 'getPool', [token0?.address, token1?.address, feeAmount])
+    .result?.[0]
 
   const tickLensArgs: [string, number][] = useMemo(
     () =>
@@ -94,7 +88,7 @@ export function useTicks(
     [callStates]
   )
 
-  // return the latest synced tickData even if we are still loading the newest data
+  // return the latest synced tickdata even if we are still loading the newest data
   useEffect(() => {
     if (!syncing && !loading && !error && valid) {
       setTickDataLatestSynced(tickData)
@@ -102,7 +96,13 @@ export function useTicks(
   }, [error, loading, syncing, tickData, valid])
 
   return useMemo(
-    () => ({ loading, syncing, error, valid, tickData: tickDataLatestSynced }),
+    () => ({
+      loading,
+      syncing,
+      error,
+      valid,
+      tickData: tickDataLatestSynced,
+    }),
     [loading, syncing, error, valid, tickDataLatestSynced]
   )
 }

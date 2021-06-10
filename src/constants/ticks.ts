@@ -2,8 +2,8 @@ import JSBI from 'jsbi'
 
 export interface TickData {
   tick: number
-  liquidityNet: number
-  liquidityGross: number
+  liquidityNet: string
+  liquidityGross: string
 }
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.

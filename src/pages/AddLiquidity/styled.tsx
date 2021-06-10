@@ -3,6 +3,16 @@ import { AutoColumn } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import { DarkGreyCard } from 'components/Card'
 import Input from 'components/NumericalInput'
+import { BodyWrapper } from 'pages/AppBody'
+
+export const PageWrapper = styled(BodyWrapper)`
+  max-width: 870px;
+  width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    max-width: 480px;
+  `};
+`
 
 export const Wrapper = styled.div`
   position: relative;
@@ -62,4 +72,22 @@ export const StyledInput = styled(Input)`
   text-align: left;
   font-size: 18px;
   width: 100%;
+`
+
+export const ResponsiveTwoColumns = styled.div`
+  display: grid;
+  grid-gap: 32px;
+  grid-template-columns: 1fr auto 1fr;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: auto;
+  `};
+`
+
+export const Separator = styled.div`
+  border: ${({ theme }) => `1px solid ${theme.bg3}`};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
 `

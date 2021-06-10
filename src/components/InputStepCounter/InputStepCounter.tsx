@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, ReactNode } from 'react'
-import { LightCard } from 'components/Card'
+import { OutlineCard } from 'components/Card'
 import { RowBetween } from 'components/Row'
 import { Input as NumericalInput } from '../NumericalInput'
 import styled, { keyframes } from 'styled-components'
@@ -31,14 +31,14 @@ const SmallButton = styled(ButtonPrimary)`
   width: 48%;
 `
 
-const FocusedOutlineCard = styled(LightCard)<{ active?: boolean; pulsing?: boolean }>`
+const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
   border-color: ${({ active, theme }) => active && theme.blue1};
   padding: 12px;
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
-  /* background-color: ${({ theme }) => theme.bg0}; */
+  background-color: transparent;
   text-align: center;
   margin-right: 12px;
   width: 100%;

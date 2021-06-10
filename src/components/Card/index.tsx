@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro'
+import { rgba } from 'polished'
 import { Box } from 'rebass/styled-components'
 
 const Card = styled(Box)<{ width?: string; padding?: string; border?: string; borderRadius?: string }>`
@@ -51,5 +52,10 @@ export const PinkCard = styled(Card)`
 export const BlueCard = styled(Card)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.blue2};
+  border-radius: 12px;
+`
+
+export const DarkBlueCard = styled(Card)`
+  background-color: ${({ theme }) => rgba(theme.blue1, 0.05)};
   border-radius: 12px;
 `

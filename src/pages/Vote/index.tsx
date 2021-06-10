@@ -248,7 +248,7 @@ export default function Vote() {
               </TYPE.subHeader>
             </EmptyProposals>
           )}
-          {allProposals?.map((p: ProposalData, i) => {
+          {allProposals?.reverse().map((p: ProposalData, i) => {
             return (
               <Proposal as={Link} to={'/vote/' + p.id} key={i}>
                 <ProposalNumber>{p.id}</ProposalNumber>
@@ -259,7 +259,7 @@ export default function Vote() {
           })}
         </TopSection>
         <TYPE.subHeader color="text3">
-          <Trans>A minimum threshold of 1% of the total UNI supply is required to submit proposals</Trans>
+          <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
         </TYPE.subHeader>
       </PageWrapper>
       <SwitchLocaleLink />

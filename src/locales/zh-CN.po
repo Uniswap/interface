@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-02 23:02+0000\n"
+"POT-Creation-Date: 2021-06-16 02:37+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-05 17:29\n"
+"PO-Revision-Date: 2021-06-16 03:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -128,8 +128,8 @@ msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
 msgstr "<0>🎉 </0>欢迎加入Unicorn（独角兽）团队 :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
-msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "提交提案的最低门槛为 UNI 代币总供应量的1％。"
+msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
+msgstr "提交提案所需的最低门槛为 UNI 总供应量的 0.25%"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -149,6 +149,7 @@ msgstr "已激活"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "添加"
 
@@ -166,7 +167,7 @@ msgstr "注入 V2 流动资金"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "注入流动资金。"
+msgstr "添加流动性。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -234,6 +235,8 @@ msgstr "数据分析"
 msgid "Approve"
 msgstr "批准"
 
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
@@ -248,6 +251,8 @@ msgstr "已批准"
 msgid "Approving"
 msgstr "批准中"
 
+#: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
@@ -287,7 +292,7 @@ msgstr "余额：{0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "较适合特异币对。"
+msgstr "较适合低交易量的币对。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -337,7 +342,7 @@ msgstr "领取"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "领取 UNI 代币"
+msgstr "领取UNI代币"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
@@ -457,6 +462,7 @@ msgstr "在您的钱包中确认这笔交易"
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/state/burn/hooks.ts
+#: src/state/burn/v3/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 #: src/state/stake/hooks.ts
@@ -588,7 +594,7 @@ msgstr "已充入 {0} UNI-V2 流动池代币"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "充入流动资金"
+msgstr "正在存入的流动资金"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -629,6 +635,10 @@ msgstr "看不到您的一些 v2 流动资金吗？<0>将它手动导入。</0>"
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "已赚取的 UNI 代币代表了 Uniswap 治理中的投票份额。"
+
+#: src/state/burn/v3/hooks.ts
+msgid "Enter a percent"
+msgstr "输入百分比"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
@@ -1262,6 +1272,10 @@ msgstr "设置兑换率范围"
 msgid "Set Starting Price"
 msgstr "设置起始兑换率"
 
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+msgid "Share of Pool"
+msgstr "流动池份额"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "流动池份额："
@@ -1341,8 +1355,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "输出代币无法进行转账。输出代币可能有些问题。"
 
 #: src/hooks/useSwapCallback.ts
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "输出代币无法进行转账。输出代币可能有些问题。注：转账时带扣除费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "无法对输出代币进行转账。输出代币可能有些问题。注：转账时额外抽取费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1373,8 +1387,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "该工具将安全地将您的 {0} 流动资金迁移到 V3。该过程完全不依赖任何信任需求"
 
 #: src/hooks/useSwapCallback.ts
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "由于兑换率变动，该交易将不会成功。请尝试增加滑点容差。注：转账时带扣除费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "由于兑换率变动，此交易将不会成功。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1512,8 +1526,8 @@ msgid "Unknown Source"
 msgstr "未知来源"
 
 #: src/hooks/useSwapCallback.ts
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "未知错误{0}。请尝试增加滑点容差。注：转账时带扣除费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "未知错误{0}。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1876,6 +1890,7 @@ msgstr "{0} ETH"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
 msgstr "{0} 已赚取手续费："
 
@@ -1915,11 +1930,15 @@ msgstr "{0} 票"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
 msgstr "{0} 每 {1}"
 
+#: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 msgid "{0} price"
 msgstr "{0} 兑换率"
