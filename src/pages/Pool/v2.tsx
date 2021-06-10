@@ -178,9 +178,11 @@ export default function Pool() {
                 <ResponsiveButtonPrimary
                   id="find-pool-button"
                   as={Link}
-                  padding="6px 8px"
-                  borderRadius="12px"
                   to="/pool/v2/find"
+                  style={{
+                    padding: '6px 8px',
+                    borderRadius: '12px',
+                  }}
                 >
                   <Text fontWeight={500} fontSize={16}>
                     <Trans>Import Pool</Trans>
@@ -190,8 +192,11 @@ export default function Pool() {
                   id="join-pool-button"
                   as={Link}
                   padding="6px 8px"
-                  borderRadius="12px"
                   to="/add/v2/ETH"
+                  style={{
+                    padding: '6px 8px',
+                    borderRadius: '12px',
+                  }}
                 >
                   <Text fontWeight={500} fontSize={16}>
                     <Trans>Add V2 Liquidity</Trans>
