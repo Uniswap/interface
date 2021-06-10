@@ -357,6 +357,10 @@ body {
   padding-top: 2px;
 }
 
+.swapr-pagination li.rc-pagination-options {
+  display: none;
+}
+
 .swapr-pagination li.rc-pagination-disabled {
   border: solid 1px ${props => props.theme.bg3};
   color: ${props => props.theme.bg3};
