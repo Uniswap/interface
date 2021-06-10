@@ -306,7 +306,7 @@ export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
   const res = useSingleCallResult(gov, 'proposalThreshold')
   const uni = chainId ? UNI[chainId] : undefined
   if (res.result && uni && !res.loading) {
-    return CurrencyAmount.fromRawAmount(uni, res.result[0]).wrapped
+    return CurrencyAmount.fromRawAmount(uni, res.result[0])
   }
 
   return undefined

@@ -26,6 +26,8 @@ import {
   useUserVotes,
 } from 'state/governance/hooks'
 import { Trans } from '@lingui/macro'
+import { tryParseAmount } from 'state/swap/hooks'
+import { getAddress } from '@ethersproject/address'
 
 const CreateProposalButton = ({
   proposalThreshold,
@@ -181,6 +183,9 @@ export default function CreateProposal() {
 
     if (!createProposalCallback || !proposalAction || !currencyValue.isToken) return
 
+    const tokenAmount = tryParseAmount(amountValue, currencyValue)
+    if (!tokenAmount) return
+
     createProposalData.targets = [currencyValue.address]
     createProposalData.values = ['0']
     createProposalData.description = `# ${titleValue}
@@ -192,23 +197,15 @@ ${bodyValue}
     let values: string[][]
     switch (proposalAction) {
       case ProposalAction.TRANSFER_TOKEN: {
-        const tokenAmount: string = JSBI.multiply(
-          JSBI.BigInt(amountValue),
-          JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(currencyValue.decimals))
-        ).toString()
         types = [['address', 'uint256']]
-        values = [[toAddressValue, tokenAmount]]
+        values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
         createProposalData.signatures = [`transfer(${types[0].join(',')})`]
         break
       }
 
       case ProposalAction.APPROVE_TOKEN: {
-        const tokenAmount: string = JSBI.multiply(
-          JSBI.BigInt(amountValue),
-          JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(currencyValue.decimals))
-        ).toString()
         types = [['address', 'uint256']]
-        values = [[toAddressValue, tokenAmount]]
+        values = [[getAddress(toAddressValue), tokenAmount.quotient.toString()]]
         createProposalData.signatures = [`approve(${types[0].join(',')})`]
         break
       }
