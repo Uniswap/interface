@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-09 23:07+0000\n"
+"POT-Creation-Date: 2021-06-10 12:50+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-10 00:10\n"
+"PO-Revision-Date: 2021-06-10 13:15\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -148,6 +148,7 @@ msgid "Active"
 msgstr "Активний"
 
 #: src/components/PositionCard/index.tsx
+#: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
 msgstr "Додати"
@@ -457,6 +458,7 @@ msgstr "Підтвердіть транзакцію у вашому гаманц
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/Swap/index.tsx
 #: src/state/burn/hooks.ts
+#: src/state/burn/v3/hooks.ts
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
 #: src/state/stake/hooks.ts
@@ -629,6 +631,10 @@ msgstr "Не бачите одну з ваших позицій v2? <0>Імпо�
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
 msgstr "Отримані маркери UNI представляють акції голосування в управлінні Uniswap (Unischang)."
+
+#: src/state/burn/v3/hooks.ts
+msgid "Enter a percent"
+msgstr "Введіть відсоток"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
@@ -1262,6 +1268,10 @@ msgstr "Встановити ціновий діапазон"
 msgid "Set Starting Price"
 msgstr "Встановити стартову ціну"
 
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+msgid "Share of Pool"
+msgstr "Частка пулу"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "Розповсюдження пулу:"
@@ -1876,6 +1886,7 @@ msgstr "{0} ETH"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
+#: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
 msgstr "{0} Зроблено комісій:"
 
@@ -1915,6 +1926,9 @@ msgstr "{0} голосів"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 #: src/pages/AddLiquidity/index.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/AddLiquidityV2/PoolPriceBar.tsx
+#: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
