@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-10 13:15\n"
+"PO-Revision-Date: 2021-06-10 14:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -264,7 +264,7 @@ msgstr "Uniswapコミュニティのメンバーとして、投票とガバナ�
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "少なくとも {0} の {1} と {2} の {3} は選択された価格範囲のため、ウォレットに返金されます。"
+msgstr "少なくとも {0} の {1} と {2} の {3} は設定した価格範囲のため、ウォレットに返金されます。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
@@ -389,12 +389,12 @@ msgstr "すべてクリア"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "閉じる"
+msgstr "終了"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
-msgstr "閉まっている"
+msgstr "終了済"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -728,11 +728,11 @@ msgstr "決済したポジションを隠す"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
-msgstr "価格への影響"
+msgstr "大きな価格への影響"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "了解しました"
+msgstr "理解しました"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
@@ -759,7 +759,7 @@ msgstr "V2プールのインポート"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
-msgstr "自己責任でインポート"
+msgstr "自己の責任でインポート"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
@@ -1630,7 +1630,7 @@ msgstr "提案 {proposalId} に賛成票を入れる"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
-msgstr "投票は終了しました {0}"
+msgstr "{0} に投票は終了しました"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
@@ -1738,7 +1738,7 @@ msgstr "受け取る数量"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "あなたのUNIの破壊"
+msgstr "あなたのUNIのブレークダウン"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
