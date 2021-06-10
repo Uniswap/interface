@@ -2,7 +2,7 @@
   {
     "inputs": [
       { "internalType": "address", "name": "_admin", "type": "address" },
-      { "internalType": "contract IERC20Ext", "name": "_rewardToken", "type": "address" },
+      { "internalType": "address[]", "name": "_rewardTokens", "type": "address[]" },
       { "internalType": "contract IKyberRewardLocker", "name": "_rewardLocker", "type": "address" }
     ],
     "stateMutability": "nonpayable",
@@ -14,7 +14,7 @@
       { "indexed": true, "internalType": "address", "name": "stakeToken", "type": "address" },
       { "indexed": true, "internalType": "uint32", "name": "startBlock", "type": "uint32" },
       { "indexed": true, "internalType": "uint32", "name": "endBlock", "type": "uint32" },
-      { "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }
+      { "indexed": false, "internalType": "uint256[]", "name": "rewardPerBlocks", "type": "uint256[]" }
     ],
     "name": "AddNewPool",
     "type": "event"
@@ -55,8 +55,9 @@
     "inputs": [
       { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
       { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
-      { "indexed": true, "internalType": "uint256", "name": "blockNumber", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "lockedAmount", "type": "uint256" }
+      { "indexed": true, "internalType": "address", "name": "rewardToken", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "lockedAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "blockNumber", "type": "uint256" }
     ],
     "name": "Harvest",
     "type": "event"
@@ -67,7 +68,7 @@
       { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
       { "indexed": true, "internalType": "uint32", "name": "startBlock", "type": "uint32" },
       { "indexed": true, "internalType": "uint32", "name": "endBlock", "type": "uint32" },
-      { "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }
+      { "indexed": false, "internalType": "uint256[]", "name": "rewardPerBlocks", "type": "uint256[]" }
     ],
     "name": "RenewPool",
     "type": "event"
@@ -83,7 +84,7 @@
     "inputs": [
       { "indexed": true, "internalType": "uint256", "name": "pid", "type": "uint256" },
       { "indexed": true, "internalType": "uint32", "name": "endBlock", "type": "uint32" },
-      { "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }
+      { "indexed": false, "internalType": "uint256[]", "name": "rewardPerBlocks", "type": "uint256[]" }
     ],
     "name": "UpdatePool",
     "type": "event"
@@ -100,25 +101,11 @@
     "type": "event"
   },
   {
-    "inputs": [],
-    "name": "BPS",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "PRECISION",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       { "internalType": "address", "name": "_stakeToken", "type": "address" },
       { "internalType": "uint32", "name": "_startBlock", "type": "uint32" },
       { "internalType": "uint32", "name": "_endBlock", "type": "uint32" },
-      { "internalType": "uint128", "name": "_rewardPerBlock", "type": "uint128" }
+      { "internalType": "uint256[]", "name": "_rewardPerBlocks", "type": "uint256[]" }
     ],
     "name": "addPool",
     "outputs": [],
@@ -133,7 +120,10 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
+    "inputs": [
+      { "internalType": "uint256", "name": "rewardTokenIndex", "type": "uint256" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
     "name": "adminWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -156,6 +146,42 @@
     "name": "emergencyWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_pid", "type": "uint256" }],
+    "name": "getPoolInfo",
+    "outputs": [
+      { "internalType": "uint256", "name": "totalStake", "type": "uint256" },
+      { "internalType": "address", "name": "stakeToken", "type": "address" },
+      { "internalType": "uint32", "name": "startBlock", "type": "uint32" },
+      { "internalType": "uint32", "name": "endBlock", "type": "uint32" },
+      { "internalType": "uint32", "name": "lastRewardBlock", "type": "uint32" },
+      { "internalType": "uint256[]", "name": "rewardPerBlocks", "type": "uint256[]" },
+      { "internalType": "uint256[]", "name": "accRewardPerShares", "type": "uint256[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getRewardTokens",
+    "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_pid", "type": "uint256" },
+      { "internalType": "address", "name": "_account", "type": "address" }
+    ],
+    "name": "getUserInfo",
+    "outputs": [
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "uint256[]", "name": "unclaimedRewards", "type": "uint256[]" },
+      { "internalType": "uint256[]", "name": "lastRewardPerShares", "type": "uint256[]" }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -184,8 +210,8 @@
       { "internalType": "uint256", "name": "_pid", "type": "uint256" },
       { "internalType": "address", "name": "_user", "type": "address" }
     ],
-    "name": "pendingReward",
-    "outputs": [{ "internalType": "uint256", "name": "rewards", "type": "uint256" }],
+    "name": "pendingRewards",
+    "outputs": [{ "internalType": "uint256[]", "name": "rewards", "type": "uint256[]" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -193,21 +219,6 @@
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "poolExists",
     "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "poolInfo",
-    "outputs": [
-      { "internalType": "uint128", "name": "rewardPerBlock", "type": "uint128" },
-      { "internalType": "uint128", "name": "accRewardPerShare", "type": "uint128" },
-      { "internalType": "uint256", "name": "totalStake", "type": "uint256" },
-      { "internalType": "address", "name": "stakeToken", "type": "address" },
-      { "internalType": "uint32", "name": "startBlock", "type": "uint32" },
-      { "internalType": "uint32", "name": "endBlock", "type": "uint32" },
-      { "internalType": "uint32", "name": "lastRewardBlock", "type": "uint32" }
-    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -223,7 +234,7 @@
       { "internalType": "uint256", "name": "_pid", "type": "uint256" },
       { "internalType": "uint32", "name": "_startBlock", "type": "uint32" },
       { "internalType": "uint32", "name": "_endBlock", "type": "uint32" },
-      { "internalType": "uint128", "name": "_rewardPerBlock", "type": "uint128" }
+      { "internalType": "uint256[]", "name": "_rewardPerBlocks", "type": "uint256[]" }
     ],
     "name": "renewPool",
     "outputs": [],
@@ -238,9 +249,9 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "rewardToken",
-    "outputs": [{ "internalType": "contract IERC20Ext", "name": "", "type": "address" }],
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "rewardTokens",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -262,7 +273,7 @@
     "inputs": [
       { "internalType": "uint256", "name": "_pid", "type": "uint256" },
       { "internalType": "uint32", "name": "_endBlock", "type": "uint32" },
-      { "internalType": "uint128", "name": "_rewardPerBlock", "type": "uint128" }
+      { "internalType": "uint256[]", "name": "_rewardPerBlocks", "type": "uint256[]" }
     ],
     "name": "updatePool",
     "outputs": [],
@@ -274,20 +285,6 @@
     "name": "updatePoolRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "", "type": "uint256" },
-      { "internalType": "address", "name": "", "type": "address" }
-    ],
-    "name": "userInfo",
-    "outputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "internalType": "uint128", "name": "unclaimedReward", "type": "uint128" },
-      { "internalType": "uint128", "name": "lastRewardPerShare", "type": "uint128" }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -306,5 +303,6 @@
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  }
+  },
+  { "stateMutability": "payable", "type": "receive" }
 ]

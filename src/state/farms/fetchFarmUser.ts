@@ -46,7 +46,7 @@ export const useFarmUserStakedBalances = (account: string | null | undefined, fa
 
   const rawStakedBalances = useSingleContractMultipleData(
     masterChefContract,
-    'userInfo',
+    'getUserInfo',
     farmsToFetch.map(farm => [farm.pid, account as string])
   )
 
@@ -64,14 +64,18 @@ export const useFarmUserEarnings = (account: string | null | undefined, farmsToF
 
   const rawEarnings = useSingleContractMultipleData(
     masterChefContract,
-    'pendingReward',
+    'pendingRewards',
     farmsToFetch.map(farm => [farm.pid, account as string])
   )
 
   const anyLoading: boolean = useMemo(() => rawEarnings.some(callState => callState.loading), [rawEarnings])
 
   const parsedEarnings = rawEarnings.map((earnings: any) => {
-    return earnings?.result ? BigNumber.from(earnings?.result?.[0]).toString() : undefined
+    return earnings?.result && earnings?.result?.rewards?.length > 0
+      ? [...Array(earnings?.result?.rewards?.length).keys()].map(value =>
+          BigNumber.from(earnings?.result?.rewards[value]).toString()
+        )
+      : undefined
   })
 
   return { loading: anyLoading, data: parsedEarnings }

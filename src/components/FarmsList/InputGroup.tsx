@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { ZERO } from 'libs/sdk/src/constants'
 import { useActiveWeb3React } from 'hooks'
-import { formattedNum, isAddressString } from 'utils'
+import { formattedNum, getTokenSymbol, isAddressString } from 'utils'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { Fraction, JSBI, Token, TokenAmount } from 'libs/sdk/src'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -17,8 +17,8 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import useMasterChef from 'hooks/useMasterchef'
 import useStakedBalance from 'hooks/useStakedBalance'
 import { AutoRow } from 'components/Row'
-import usePendingRewardBalance from 'hooks/usePendingRewardBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
+import { Reward } from 'state/farms/types'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -50,7 +50,8 @@ export default function InputGroup({
   type,
   assetSymbol,
   assetDecimals = 18,
-  kncPrice
+  kncPrice,
+  farmRewards
 }: {
   pairAddress: string
   pid: number
@@ -61,6 +62,7 @@ export default function InputGroup({
   assetSymbol?: string
   assetDecimals?: number
   kncPrice?: string
+  farmRewards: Reward[]
 }): JSX.Element {
   const { chainId } = useActiveWeb3React()
   const [pendingTx, setPendingTx] = useState(false)
@@ -69,11 +71,12 @@ export default function InputGroup({
   const pairAddressChecksum = isAddressString(pairAddress)
   const balance = useTokenBalance(pairAddressChecksum)
   const staked = useStakedBalance(pid, assetDecimals)
-  const userEarning = usePendingRewardBalance(pid, assetDecimals)
-  const rewardUSD =
-    userEarning &&
-    kncPrice &&
-    (parseFloat(kncPrice) * parseFloat(getFullDisplayBalance(userEarning.value, userEarning.decimals))).toString()
+  // const rewardUSD =
+  //   userEarning &&
+  //   kncPrice &&
+  //   (parseFloat(kncPrice) * parseFloat(getFullDisplayBalance(userRewards?[0].value, userEarning.decimals))).toString()
+
+  const rewardUSD = 0
 
   const [approvalState, approve] = useApproveCallback(
     new TokenAmount(
@@ -109,7 +112,13 @@ export default function InputGroup({
 
   const isUnstakeDisabled = pendingTx || isUnstakeInvalidAmount
 
-  const isHarvestDisabled = pendingTx || !userEarning.value.gt(BigNumber.from('0'))
+  const canHarvest = (rewards: Reward[]): boolean => {
+    const canHarvest = rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
+
+    return canHarvest
+  }
+
+  const isHarvestDisabled = pendingTx || !canHarvest(farmRewards)
 
   const { deposit, withdraw, harvest } = useMasterChef()
 
@@ -200,7 +209,16 @@ export default function InputGroup({
           </AutoRow>
           <AutoRow justify="space-between" align="flex-start" style={{ flexDirection: 'column' }}>
             <RewardBalanceWrapper>
-              <div>{`${getFullDisplayBalance(userEarning.value, userEarning.decimals)} KNC`}</div>
+              <div>
+                {farmRewards?.map((reward, index) => {
+                  return (
+                    <span key={reward.token.address}>
+                      <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}</span>
+                      {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
+                    </span>
+                  )
+                })}
+              </div>
               <RewardUSD>{rewardUSD && formattedNum(rewardUSD, true)}</RewardUSD>
             </RewardBalanceWrapper>
             <ButtonPrimary disabled={isHarvestDisabled} padding="12px" margin="15px 0" onClick={handleClickHarvest}>

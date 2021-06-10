@@ -102,28 +102,28 @@ export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.RINKEBY]: new Token(
     ChainId.RINKEBY,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.ROPSTEN]: new Token(
     ChainId.ROPSTEN,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.GÖRLI]: new Token(
     ChainId.GÖRLI,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
     18,
     'KNC',
     'Kyber Network Crystal'
   ),
   [ChainId.KOVAN]: new Token(
     ChainId.KOVAN,
-    '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+    '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -323,7 +323,7 @@ export const BUNDLE_ID = '1'
 export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
   [key: string]: string
 } = {
-  '0xbe87e5634f9fc7cd3ed88ad58b1462f3c5a7eb5b': '0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202',
+  '0x8b4ddf9f13f382aff76d262f6c8c50e6d7961b94': '0xdefa4e8a7bcba345f687a2f1456f5edd9ce97202',
   '0x7b2810576aa1cce68f2b118cef1f36467c648f92': '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
   '0x068b43f7f2f2c6a662c36e201144ae45f7a1c040': '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   '0x65bd1f48f1dd07bb285a3715c588f75684128ace': '0xdac17f958d2ee523a2206206994597c13d831ec7',
@@ -339,7 +339,7 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
 
 export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '0x98A591C8f389059dddE151FebC3047Bc65CF2c96',
+  [ChainId.ROPSTEN]: '0x6899bBF136113Fa598D023246f9FFD4892a0EC3F',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',

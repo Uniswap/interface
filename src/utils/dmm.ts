@@ -24,8 +24,11 @@ import {
   TokenAmount as TokenAmountDMM,
   ChainId as ChainIdDMM
 } from 'libs/sdk/src'
-import { BLOCKS_PER_YEAR } from '../constants'
+import { BLOCKS_PER_YEAR, ZERO_ADDRESS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
+import { Farm, Reward } from 'state/farms/types'
+import { useAllTokens } from 'hooks/Tokens'
+import { useRewardTokens } from 'state/farms/hooks'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
@@ -279,4 +282,36 @@ export function useCurrencyConvertedToNative(currency?: Currency): Currency | un
     return convertToNativeTokenFromETH(currency, chainId)
   }
   return undefined
+}
+
+export function useFarmRewards(farms?: Farm[]): Reward[] {
+  const { chainId } = useActiveWeb3React()
+  const rewardTokens = useRewardTokens()
+  const allTokens = useAllTokens()
+
+  if (!farms) {
+    return []
+  }
+
+  const initialRewards: Reward[] = []
+
+  const farmRewards = farms.reduce((total, farm) => {
+    if (farm.userData?.earnings) {
+      rewardTokens.map((address, index) => {
+        if (total[index]) {
+          total[index].amount = total[index].amount.add(BigNumber.from(farm.userData?.earnings?.[index]))
+        } else {
+          total[index] = {
+            token: address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ? WETH[chainId as ChainId] : allTokens[address],
+            amount: BigNumber.from(farm.userData?.earnings?.[index])
+          }
+        }
+      })
+      return total
+    }
+
+    return total
+  }, initialRewards)
+
+  return farmRewards
 }

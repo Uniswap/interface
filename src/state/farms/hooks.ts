@@ -7,7 +7,7 @@ import { FARM_DATA } from 'apollo/queries'
 import { ChainId } from 'libs/sdk/src'
 import { AppState, useAppDispatch } from 'state'
 import { Farm, FarmUserData } from 'state/farms/types'
-import { setFarmsPublicData, setLoading, setError } from './actions'
+import { setRewardTokens, setFarmsPublicData, setLoading, setError } from './actions'
 import { useETHPrice } from 'state/application/hooks'
 import useMasterChef from 'hooks/useMasterchef'
 import {
@@ -21,6 +21,32 @@ import { useActiveWeb3React } from 'hooks'
 export const useFarms = (): Farm[] => {
   const farms = useSelector((state: AppState) => state.farms.data)
   return farms
+}
+
+export const useRewardTokens = () => {
+  const dispatch = useAppDispatch()
+
+  const { chainId } = useActiveWeb3React()
+  const { getRewardTokens } = useMasterChef()
+
+  const rewardTokens = useSelector((state: AppState) => state.farms.rewardTokens)
+
+  const fetchRewardTokens = useCallback(async () => {
+    try {
+      const rewardTokens = await getRewardTokens()
+      dispatch(setRewardTokens(rewardTokens))
+    } catch (e) {
+      dispatch(setRewardTokens([]))
+    }
+  }, [dispatch, getRewardTokens])
+
+  useEffect(() => {
+    if (chainId) {
+      fetchRewardTokens()
+    }
+  }, [chainId, fetchRewardTokens])
+
+  return rewardTokens
 }
 
 export const fetchFarms = async (poolsList: string[], chainId?: ChainId) => {

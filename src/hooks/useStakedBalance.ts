@@ -19,7 +19,7 @@ const useStakedBalance = (pid: number, decimals = 18) => {
   const fetchBalance = useCallback(async () => {
     const getStaked = async (pid: number, owner: string | null | undefined): Promise<BalanceProps> => {
       try {
-        const { amount } = await masterChefContract?.userInfo(pid, owner)
+        const { amount } = await masterChefContract?.getUserInfo(pid, owner)
         return { value: BigNumber.from(amount), decimals: decimals }
       } catch (e) {
         return { value: BigNumber.from(0), decimals: decimals }

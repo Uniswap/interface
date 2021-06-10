@@ -20,7 +20,7 @@ import {
 import ROUTER_ABI from '../constants/abis/dmm-router.json'
 import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from 'libs/sdk/src'
+import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from 'libs/sdk/src'
 import { TokenAddressMap } from '../state/lists/hooks'
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -354,4 +354,19 @@ export const getRopstenTokenLogoURL = (address: string) => {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
     address
   )}/logo.png`
+}
+
+export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {
+  if (token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()) {
+    switch (chainId) {
+      case ChainId.MATIC:
+        return 'MATIC'
+      case ChainId.MUMBAI:
+        return 'MATIC'
+      default:
+        return 'ETH'
+    }
+  }
+
+  return token.symbol || 'ETH'
 }

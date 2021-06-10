@@ -1,22 +1,30 @@
 import { createReducer } from '@reduxjs/toolkit'
 
 import { Farm } from 'state/farms/types'
-import { setFarmsPublicData, setLoading, setError, setFarmsUserData } from './actions'
+import { setRewardTokens, setFarmsPublicData, setLoading, setError, setFarmsUserData } from './actions'
 
 export interface FarmsState {
   readonly data: Farm[]
   readonly loading: boolean
   readonly error?: Error
+  rewardTokens: string[]
 }
 
 const initialState: FarmsState = {
   data: [],
   loading: false,
-  error: undefined
+  error: undefined,
+  rewardTokens: []
 }
 
 export default createReducer<FarmsState>(initialState, builder =>
   builder
+    .addCase(setRewardTokens, (state, { payload: rewardTokens }) => {
+      return {
+        ...state,
+        rewardTokens
+      }
+    })
     .addCase(setFarmsPublicData, (state, { payload: { farms } }) => {
       return {
         ...state,
