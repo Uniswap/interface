@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-10 13:15\n"
+"PO-Revision-Date: 2021-06-10 17:21\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -427,7 +427,7 @@ msgstr "Получение комиссий"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "Получение комиссий автоматически выведет начисленные комиссии."
+msgstr "Получение комиссий выведет начисленные для вас комиссии."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -602,7 +602,7 @@ msgstr "Подробно"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
-msgstr "Детали"
+msgstr "Подробности"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
@@ -707,7 +707,7 @@ msgstr "За"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Для каждого указанного ниже пула нажмите \"Переместить\", чтобы удалить ликвидность из Uniswap V2 и внести ее в Uniswap V3."
+msgstr "Для каждого указанного ниже пула нажмите «Перенести», чтобы удалить ликвидность из Uniswap V2 и внести её в Uniswap V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1270,7 +1270,7 @@ msgstr "Установите начальную цену"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
-msgstr "Доля пула"
+msgstr "Доля в пуле"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
