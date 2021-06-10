@@ -113,7 +113,7 @@ function useDensityChartData({
     if (!loading) {
       formatData()
     }
-  }, [loading, syncing, activeTick, tickData])
+  }, [loading, activeTick, tickData])
 
   return {
     loading,
