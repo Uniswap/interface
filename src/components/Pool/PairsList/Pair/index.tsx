@@ -35,6 +35,11 @@ const BadgeText = styled.div`
   color: ${props => props.theme.green2};
 `
 
+const EllipsizedText = styled(TYPE.body)`
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 interface PairProps {
   token0?: Token
   token1?: Token
@@ -74,9 +79,9 @@ export default function Pair({ token0, token1, usdLiquidity, apy, staked, usdLiq
             </TYPE.subHeader>
           </Box>
           <Box>
-            <TYPE.body color="white" lineHeight="20px" fontWeight="700" fontSize="16px">
+            <EllipsizedText color="white" lineHeight="20px" fontWeight="700" fontSize="16px" maxWidth="100%">
               {token0?.symbol}/{token1?.symbol}
-            </TYPE.body>
+            </EllipsizedText>
           </Box>
         </Flex>
       </Flex>
