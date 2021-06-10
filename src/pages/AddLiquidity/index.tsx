@@ -754,7 +754,7 @@ export default function AddLiquidity({
                     }
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
-                    <Text fontWeight={500}>{errorMessage ? errorMessage : 'Add'}</Text>
+                    <Text fontWeight={500}>{errorMessage ? errorMessage : <Trans>Add</Trans>}</Text>
                   </ButtonError>
                 </AutoColumn>
               )}
