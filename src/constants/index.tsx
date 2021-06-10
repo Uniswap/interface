@@ -1,18 +1,6 @@
 import React, { ReactNode } from 'react'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import {
-  ChainId,
-  JSBI,
-  Percent,
-  CurrencyAmount,
-  WETH,
-  WSPOA,
-  DXD,
-  WXDAI,
-  Token,
-  Currency,
-  RoutablePlatform
-} from 'dxswap-sdk'
+import { ChainId, JSBI, Percent, CurrencyAmount, WETH, DXD, WXDAI, Token, Currency, RoutablePlatform } from 'dxswap-sdk'
 import { authereum, injected, walletConnect } from '../connectors'
 import UniswapLogo from '../assets/svg/uniswap-logo.svg'
 import SwaprLogo from '../assets/svg/logo.svg'
@@ -100,8 +88,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     USDT[ChainId.MAINNET]
   ],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
-  [ChainId.SOKOL]: [WSPOA[ChainId.SOKOL]],
+  [ChainId.ARBITRUM]: [WETH[ChainId.ARBITRUM]],
   [ChainId.XDAI]: [
     WXDAI[ChainId.XDAI],
     WETH[ChainId.XDAI],
@@ -121,8 +108,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.MAINNET]: [DXD[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT[ChainId.MAINNET], WBTC[ChainId.MAINNET]],
   [ChainId.RINKEBY]: [],
-  [ChainId.ARBITRUM_TESTNET_V3]: [],
-  [ChainId.SOKOL]: [],
+  [ChainId.ARBITRUM]: [WETH[ChainId.ARBITRUM]],
   [ChainId.XDAI]: [DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI]]
 }
 
@@ -130,8 +116,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   [ChainId.MAINNET]: [WETH[ChainId.MAINNET], DXD[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT[ChainId.MAINNET]],
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.ARBITRUM_TESTNET_V3]: [WETH[ChainId.ARBITRUM_TESTNET_V3]],
-  [ChainId.SOKOL]: [Token.WSPOA[ChainId.SOKOL]],
+  [ChainId.ARBITRUM]: [WETH[ChainId.ARBITRUM]],
   [ChainId.XDAI]: [WXDAI[ChainId.XDAI], DXD[ChainId.XDAI], WETH[ChainId.XDAI], USDC[ChainId.XDAI], STAKE]
 }
 
@@ -257,6 +242,18 @@ export const NETWORK_DETAIL: { [chainId: number]: NetworkDetails } = {
     },
     rpcUrls: ['https://rpc.xdaichain.com/'],
     blockExplorerUrls: ['https://blockscout.com/xdai/mainnet'],
+    metamaskAddable: true
+  },
+  [ChainId.ARBITRUM]: {
+    chainId: `0x${ChainId.ARBITRUM.toString(16)}`,
+    chainName: 'Arbitrum',
+    nativeCurrency: {
+      name: Currency.ETHER.name || 'Ether',
+      symbol: Currency.ETHER.symbol || 'ETH',
+      decimals: Currency.ETHER.decimals || 18
+    },
+    rpcUrls: ['https://arb1.arbitrum.io/rpc/'],
+    blockExplorerUrls: ['https://explorer.arbitrum.io/'],
     metamaskAddable: true
   }
 }

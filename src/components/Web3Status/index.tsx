@@ -27,16 +27,14 @@ import { useActiveWeb3React } from '../../hooks'
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
   [ChainId.RINKEBY]: EthereumLogo,
-  [ChainId.ARBITRUM_TESTNET_V3]: ArbitrumLogo,
-  [ChainId.SOKOL]: '',
+  [ChainId.ARBITRUM]: ArbitrumLogo,
   [ChainId.XDAI]: XDAILogo
 }
 
 const ChainLabel: any = {
   [ChainId.MAINNET]: 'Ethereum',
   [ChainId.RINKEBY]: 'Rinkeby',
-  [ChainId.ARBITRUM_TESTNET_V3]: 'Arbitrum',
-  [ChainId.SOKOL]: 'Sokol',
+  [ChainId.ARBITRUM]: 'Arbitrum',
   [ChainId.XDAI]: 'xDai'
 }
 
@@ -46,6 +44,7 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   justify-content: center;
   & > img,
   span {
+    border-radius: ${props => (props.size ? props.size / 2 : 15)}px;
     height: ${({ size }) => (size ? size + 'px' : '30px')};
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`

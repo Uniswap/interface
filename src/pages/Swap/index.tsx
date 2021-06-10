@@ -304,6 +304,7 @@ export default function Swap() {
                 onCurrencySelect={handleInputSelect}
                 otherCurrency={currencies[Field.OUTPUT]}
                 id="swap-currency-input"
+                showCommonBases
               />
               <SwitchIconContainer>
                 <SwitchTokensAmountsContainer
@@ -326,6 +327,7 @@ export default function Swap() {
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
                 id="swap-currency-output"
+                showCommonBases
               />
             </AutoColumn>
             {!showWrap && !!trade && (

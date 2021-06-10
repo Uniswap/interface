@@ -51,8 +51,7 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     [ChainId.MAINNET]: { ...map1[ChainId.MAINNET], ...map2[ChainId.MAINNET] },
     [ChainId.RINKEBY]: { ...map1[ChainId.RINKEBY], ...map2[ChainId.RINKEBY] },
     [ChainId.XDAI]: { ...map1[ChainId.XDAI], ...map2[ChainId.XDAI] },
-    [ChainId.SOKOL]: { ...map1[ChainId.SOKOL], ...map2[ChainId.SOKOL] },
-    [ChainId.ARBITRUM_TESTNET_V3]: { ...map1[ChainId.ARBITRUM_TESTNET_V3], ...map2[ChainId.ARBITRUM_TESTNET_V3] }
+    [ChainId.ARBITRUM]: { ...map1[ChainId.ARBITRUM], ...map2[ChainId.ARBITRUM] }
   }
 }
 
