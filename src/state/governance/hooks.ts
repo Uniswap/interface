@@ -3,7 +3,6 @@ import { isAddress } from 'ethers/lib/utils'
 import { PROPOSAL_DESCRIPTION_TEXT } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
-import usePrevious from '../../hooks/usePrevious'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -71,10 +70,8 @@ export function useDataFromEventLogs() {
     [govContract]
   )
 
-  const previousChainId = usePrevious(chainId)
-
   useEffect(() => {
-    if (!filter || !library || chainId === previousChainId) return
+    if (!filter || !library) return
     let stale = false
 
     if (!formattedEvents) {
@@ -115,7 +112,7 @@ export function useDataFromEventLogs() {
     }
 
     return
-  }, [filter, library, formattedEvents, chainId, previousChainId])
+  }, [filter, library, formattedEvents, chainId])
 
   return formattedEvents
 }
