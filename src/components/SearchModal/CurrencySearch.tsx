@@ -229,7 +229,7 @@ export function CurrencySearch({
               <IconWrapper size="16px" marginRight="6px">
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.blue1}>
+              <TYPE.main color={theme.primaryText1}>
                 <Trans>Manage Token Lists</Trans>
               </TYPE.main>
             </RowFixed>
