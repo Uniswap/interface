@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-11 10:05\n"
+"PO-Revision-Date: 2021-06-11 11:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -208,7 +208,7 @@ msgstr "Разрешить сделки с высоким влиянием на 
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Разрешите протоколу Uniswap использовать ваши {0}"
+msgstr "Разрешить протоколу Uniswap использовать ваши {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -1896,7 +1896,7 @@ msgstr "Заработано комиссий {0}:"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
-msgstr "{0} в ожидании"
+msgstr "{0} подтверждается"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
