@@ -1,5 +1,4 @@
-// should always be imported and executed first
-import './set-xdai-addresses'
+import './set-addresses'
 
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import '@fontsource/montserrat/400.css'
@@ -20,6 +19,7 @@ import FeesUpdater from './state/fees/updater'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import TokenListUpdater from './state/lists/updater'
+import MultiChainLinksUpdater from './state/multi-chain-links/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
 
@@ -56,6 +56,7 @@ ReactDOM.render(
           <ThemeProvider>
             <ThemedGlobalStyle />
             <HashRouter>
+              <MultiChainLinksUpdater />
               <App />
             </HashRouter>
           </ThemeProvider>

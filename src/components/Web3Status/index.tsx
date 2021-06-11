@@ -1,7 +1,7 @@
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, transparentize } from 'polished'
 import React, { useMemo } from 'react'
-import { Activity, ChevronDown } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { NetworkContextName } from '../../constants'
@@ -58,7 +58,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   width: 100%;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 12px;
+  border-radius: 6px;
   cursor: pointer;
   user-select: none;
   :focus {
@@ -70,6 +70,7 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   border: 1px solid ${({ theme }) => theme.red1};
   color: ${({ theme }) => theme.white};
   font-weight: 500;
+  transition: background-color 0.3s ease;
   :hover,
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.red1)};
@@ -130,15 +131,10 @@ const Text = styled.p<{ fontSize?: number }>`
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0 0.5rem 0 0.25rem;
-  font-size: 1rem;
+  font-size: 12px;
   width: fit-content;
   font-weight: 500;
   ${({ fontSize }) => (fontSize ? `font-size:${fontSize}px` : '')};
-`
-
-const NetworkIcon = styled(Activity)`
-  width: 5px;
-  height: 5px;
 `
 
 // we want the latest one to come first, so return negative if a is after b
@@ -169,7 +165,6 @@ function Web3StatusInner() {
   if (error) {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
-        <NetworkIcon />
         <Text>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}</Text>
       </Web3StatusError>
     )

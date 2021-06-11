@@ -1,5 +1,15 @@
 import { Contract } from '@ethersproject/contracts'
-import { ChainId, Token, Currency, WETH, WSPOA, WXDAI } from 'dxswap-sdk'
+import {
+  ChainId,
+  Token,
+  Currency,
+  WETH,
+  WSPOA,
+  WXDAI,
+  STAKING_REWARDS_FACTORY_ADDRESS,
+  STAKING_REWARDS_FACTORY_ABI,
+  STAKING_REWARDS_DISTRIBUTION_ABI
+} from 'dxswap-sdk'
 import { abi as IDXswapPairABI } from 'dxswap-core/build/IDXswapPair.json'
 import { useMemo } from 'react'
 import {
@@ -103,4 +113,20 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 export function useMulticallContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
+}
+
+export function useStakingRewardsDistributionFactoryContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(
+    chainId && STAKING_REWARDS_FACTORY_ADDRESS[chainId],
+    STAKING_REWARDS_FACTORY_ABI,
+    withSignerIfPossible
+  )
+}
+
+export function useStakingRewardsDistributionContract(
+  address?: string,
+  withSignerIfPossible?: boolean
+): Contract | null {
+  return useContract(address, STAKING_REWARDS_DISTRIBUTION_ABI, withSignerIfPossible)
 }

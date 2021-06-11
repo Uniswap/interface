@@ -1,4 +1,4 @@
-import { Currency, Pair } from 'dxswap-sdk'
+import { Currency, CurrencyAmount, Pair } from 'dxswap-sdk'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -7,12 +7,11 @@ import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
-import { Input as NumericalInput } from '../NumericalInput'
+import NumericalInput from '../Input/NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
-import { DarkCard } from '../Card'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -69,14 +68,13 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   z-index: 1;
 `
 
-const Container = styled(DarkCard)<{ hideInput: boolean; focused: boolean }>`
+const Container = styled.div<{ focused: boolean }>`
   height: 80px;
-  ::before {
-    background: ${({ theme }) => theme.bg1And2};
-  }
-  background: ${({ focused, theme }) => (focused ? theme.bg3 : 'auto')};
-  transition: background 0.3s ease;
-  padding: 16px;
+  background-color: ${({ theme }) => theme.bg1And2};
+  border: solid 1px ${({ focused, theme }) => (focused ? theme.bg3 : theme.bg1And2)};
+  border-radius: 12px;
+  transition: border 0.3s ease;
+  padding: 17px 22px;
 `
 
 const Content = styled.div`
@@ -123,6 +121,7 @@ interface CurrencyInputPanelProps {
   id: string
   showCommonBases?: boolean
   customBalanceText?: string
+  balance?: CurrencyAmount
 }
 
 export default function CurrencyInputPanel({
@@ -140,7 +139,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText
+  customBalanceText,
+  balance
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -163,7 +163,7 @@ export default function CurrencyInputPanel({
 
   return (
     <InputPanel id={id}>
-      <Container hideInput={hideInput} focused={focused} padding="20px">
+      <Container focused={focused}>
         <Content>
           {!hideInput && (
             <LabelRow>
@@ -181,9 +181,9 @@ export default function CurrencyInputPanel({
                     style={{ display: 'inline', cursor: 'pointer' }}
                   >
                     <UppercaseHelper>
-                      {!hideBalance && !!currency && selectedCurrencyBalance
-                        ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                        : ' -'}
+                      {!hideBalance && !!(currency || pair) && (balance || selectedCurrencyBalance)
+                        ? (customBalanceText ?? 'Balance: ') + (balance || selectedCurrencyBalance)?.toSignificant(6)
+                        : '-'}
                     </UppercaseHelper>
                   </TYPE.body>
                 )}
@@ -202,13 +202,13 @@ export default function CurrencyInputPanel({
                     onUserInput(val)
                   }}
                 />
-                {account && currency && showMaxButton && label !== 'To' && (
+                {account && (currency || pair) && showMaxButton && label !== 'To' && (
                   <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
                 )}
               </>
             )}
             <CurrencySelect
-              selected={!!currency}
+              selected={!!(currency || pair)}
               className="open-currency-select-button"
               onClick={() => {
                 if (!disableCurrencySelect) {
@@ -224,7 +224,7 @@ export default function CurrencyInputPanel({
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
-                    {pair?.token0.symbol}:{pair?.token1.symbol}
+                    {pair?.token0.symbol}/{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
                   <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>

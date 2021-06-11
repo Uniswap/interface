@@ -64,23 +64,20 @@ export function useTokenBalancesWithLoadingIndicator(
 
   const anyLoading: boolean = useMemo(() => balances.some(callState => callState.loading), [balances])
 
-  return [
-    useMemo(
-      () =>
-        address && validatedTokens.length > 0
-          ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-              const value = balances?.[i]?.result?.[0]
-              const amount = value ? JSBI.BigInt(value.toString()) : undefined
-              if (amount) {
-                memo[token.address] = new TokenAmount(token, amount)
-              }
-              return memo
-            }, {})
-          : {},
-      [address, validatedTokens, balances]
-    ),
-    anyLoading
-  ]
+  return useMemo(() => {
+    if (!address || validatedTokens.length === 0) return [{}, anyLoading]
+    return [
+      validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
+        const value = balances?.[i]?.result?.[0]
+        const amount = value ? JSBI.BigInt(value.toString()) : undefined
+        if (amount) {
+          memo[token.address] = new TokenAmount(token, amount)
+        }
+        return memo
+      }, {}),
+      anyLoading
+    ]
+  }, [address, anyLoading, balances, validatedTokens])
 }
 
 export function useTokenBalances(
@@ -92,9 +89,12 @@ export function useTokenBalances(
 
 // get the balance for a single token/account combo
 export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
-  const tokenBalances = useTokenBalances(account, [token])
-  if (!token) return undefined
-  return tokenBalances[token.address]
+  const memoizedTokenArray = useMemo(() => [token], [token])
+  const tokenBalances = useTokenBalances(account, memoizedTokenArray)
+  return useMemo(() => {
+    if (!token) return undefined
+    return tokenBalances[token.address]
+  }, [tokenBalances, token])
 }
 
 export function useCurrencyBalances(
@@ -134,5 +134,5 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
   const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
-  return balances ?? {}
+  return useMemo(() => balances ?? {}, [balances])
 }

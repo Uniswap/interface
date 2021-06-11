@@ -1,6 +1,4 @@
-import { ChainId } from 'dxswap-sdk'
-import { transparentize } from 'polished'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { TYPE } from '../../theme'
 import Modal from '../Modal'
@@ -9,6 +7,9 @@ import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
 import { NETWORK_DETAIL } from '../../constants'
 import { ButtonPrimary } from '../Button'
+import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
+import { useIsSwitchingToCorrectChain } from '../../state/multi-chain-links/hooks'
+import { useActiveWeb3React } from '../../hooks'
 
 const WarningContainer = styled.div`
   width: 100%;
@@ -16,7 +17,7 @@ const WarningContainer = styled.div`
 `
 
 const OuterContainer = styled.div`
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background: ${({ theme }) => theme.bg1And2};
 `
 
 const UpperSectionContainer = styled.div`
@@ -27,28 +28,33 @@ const StyledWarningIcon = styled(AlertTriangle)`
   stroke: ${({ theme }) => theme.text3};
 `
 
-export default function NetworkWarningModal({
-  isOpen,
-  targetedNetwork
-}: {
-  isOpen: boolean
-  targetedNetwork?: ChainId
-}) {
+export default function NetworkWarningModal() {
+  const { chainId } = useActiveWeb3React()
+  const urlLoadedChainId = useTargetedChainIdFromUrl()
+  const switchingToCorrectChain = useIsSwitchingToCorrectChain()
+
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setOpen(!!chainId && !!urlLoadedChainId && !!switchingToCorrectChain)
+  }, [chainId, switchingToCorrectChain, urlLoadedChainId])
+
   const handleDismiss = useCallback(() => null, [])
+
   const handleAddClick = useCallback(() => {
-    if (!window.ethereum || !window.ethereum.request || !targetedNetwork) return
+    if (!window.ethereum || !window.ethereum.request || !urlLoadedChainId) return
     window.ethereum
       .request({
         method: 'wallet_addEthereumChain',
-        params: [{ ...NETWORK_DETAIL[targetedNetwork], metamaskAddable: undefined }]
+        params: [{ ...NETWORK_DETAIL[urlLoadedChainId], metamaskAddable: undefined }]
       })
       .catch(error => {
         console.error(`error adding network to metamask`, error)
       })
-  }, [targetedNetwork])
+  }, [urlLoadedChainId])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={handleDismiss} maxHeight={90}>
+    <Modal isOpen={open} onDismiss={handleDismiss} maxHeight={90}>
       <OuterContainer>
         <WarningContainer className="network-warning-container">
           <AutoColumn>
@@ -68,13 +74,14 @@ export default function NetworkWarningModal({
                 color="text4"
               >
                 You're currently on the wrong network to correctly visualize this page. Please switch to{' '}
-                {targetedNetwork ? NETWORK_DETAIL[targetedNetwork].chainName : ''} in your connected wallet to continue.
+                {urlLoadedChainId && NETWORK_DETAIL[urlLoadedChainId] ? NETWORK_DETAIL[urlLoadedChainId].chainName : ''}{' '}
+                in your connected wallet to continue.
               </TYPE.body>
-              {targetedNetwork &&
+              {urlLoadedChainId &&
                 window.ethereum &&
                 window.ethereum.isMetaMask &&
-                NETWORK_DETAIL[targetedNetwork] &&
-                NETWORK_DETAIL[targetedNetwork].metamaskAddable && (
+                NETWORK_DETAIL[urlLoadedChainId] &&
+                NETWORK_DETAIL[urlLoadedChainId].metamaskAddable && (
                   <>
                     <TYPE.body
                       marginY="20px"

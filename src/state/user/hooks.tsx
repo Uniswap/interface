@@ -3,9 +3,11 @@ import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { PairState, usePairs } from '../../data/Reserves'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens } from '../../hooks/Tokens'
+import { MainnetGasPrice } from '../application/actions'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -17,7 +19,10 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  toggleURLWarning
+  toggleURLWarning,
+  removeSerializedPair,
+  updateUserMultihop,
+  updateUserPreferredGasPrice
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -38,6 +43,17 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   )
+}
+
+function serializeSimplifiedPair(pair: Pair): SerializedPair {
+  return {
+    token0: serializeToken(pair.token0),
+    token1: serializeToken(pair.token1)
+  }
+}
+
+function deserializeSimplifiedPair(serializedPair: SerializedPair): [Token, Token] {
+  return [deserializeToken(serializedPair.token0), deserializeToken(serializedPair.token1)]
 }
 
 export function useIsDarkMode(): boolean {
@@ -64,6 +80,26 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useIsMultihop(): boolean {
+  const { userMultihop } = useSelector<AppState, { userMultihop: boolean }>(
+    ({ user: { userMultihop } }) => ({ userMultihop }),
+    shallowEqual
+  )
+
+  return userMultihop
+}
+
+export function useMultihopManager(): [boolean, () => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const userMultihop = useIsMultihop()
+
+  const toggleMultihop = useCallback(() => {
+    dispatch(updateUserMultihop({ userMultihop: !userMultihop }))
+  }, [userMultihop, dispatch])
+
+  return [userMultihop, toggleMultihop]
 }
 
 export function useIsExpertMode(): boolean {
@@ -95,6 +131,25 @@ export function useUserSlippageTolerance(): [number, (slippage: number) => void]
   )
 
   return [userSlippageTolerance, setUserSlippageTolerance]
+}
+
+export function useUserPreferredGasPrice(): [
+  MainnetGasPrice | string | null,
+  (preferredGasPrice: MainnetGasPrice | string | null) => void
+] {
+  const dispatch = useDispatch<AppDispatch>()
+  const userPreferredGasPrice = useSelector<AppState, AppState['user']['userPreferredGasPrice']>(state => {
+    return state.user.userPreferredGasPrice
+  })
+
+  const setUserPreferredGasPrice = useCallback(
+    (userPreferredGasPrice: MainnetGasPrice | string | null) => {
+      dispatch(updateUserPreferredGasPrice(userPreferredGasPrice))
+    },
+    [dispatch]
+  )
+
+  return [userPreferredGasPrice, setUserPreferredGasPrice]
 }
 
 export function useUserTransactionTTL(): [number, (slippage: number) => void] {
@@ -143,22 +198,42 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
-function serializePair(pair: Pair): SerializedPair {
-  return {
-    token0: serializeToken(pair.token0),
-    token1: serializeToken(pair.token1)
-  }
-}
-
 export function usePairAdder(): (pair: Pair) => void {
   const dispatch = useDispatch<AppDispatch>()
 
   return useCallback(
     (pair: Pair) => {
-      dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
+      dispatch(addSerializedPair({ serializedPair: serializeSimplifiedPair(pair) }))
     },
     [dispatch]
   )
+}
+
+export function usePairRemover(): (pair: Pair) => void {
+  const dispatch = useDispatch<AppDispatch>()
+
+  return useCallback(
+    (pair: Pair) => {
+      dispatch(removeSerializedPair({ serializedPair: serializeSimplifiedPair(pair) }))
+    },
+    [dispatch]
+  )
+}
+
+export function useUserAddedPairs(): Pair[] {
+  const { chainId } = useActiveWeb3React()
+  const serializedPairsMap = useSelector<AppState, AppState['user']['pairs']>(({ user: { pairs } }) => pairs)
+  const simplifiedPairs = Object.values(serializedPairsMap[chainId as ChainId] ?? {}).map(deserializeSimplifiedPair)
+  const pairs = usePairs(simplifiedPairs)
+
+  return useMemo(() => {
+    return pairs.reduce((userAddedPairs: Pair[], pair) => {
+      if (pair[0] === PairState.EXISTS && pair[1] !== null) {
+        userAddedPairs.push(pair[1])
+      }
+      return userAddedPairs
+    }, [])
+  }, [pairs])
 }
 
 export function useURLWarningVisible(): boolean {

@@ -4,7 +4,6 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import styled from 'styled-components'
-import { transparentize } from 'polished'
 import MetamaskIcon from '../../assets/images/metamask.png'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { injected } from '../../connectors'
@@ -19,6 +18,8 @@ import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
 import DxDao from '../../assets/svg/dxdao.svg'
+import { AutoRow } from '../Row'
+import { AlertTriangle } from 'react-feather'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -30,7 +31,11 @@ const CloseIcon = styled.div`
 const CloseColor = styled(Close)`
   width: 16px;
   height: 16px;
-  color: ${({ theme }) => theme.text5};
+  color: ${({ theme }) => theme.text3};
+`
+
+const StyledWarningIcon = styled(AlertTriangle)`
+  stroke: ${({ theme }) => theme.text3};
 `
 
 const Wrapper = styled.div`
@@ -60,7 +65,7 @@ const ContentWrapper = styled.div`
 
 const UpperSection = styled.div`
   position: relative;
-  background-color: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background-color: ${({ theme }) => theme.bg1And2};
 
   h5 {
     margin: 0;
@@ -272,17 +277,20 @@ export default function WalletModal({
             <CloseColor />
           </CloseIcon>
           <HeaderRow>
-            <TYPE.body fontWeight={500} fontSize={16}>
-              {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
-            </TYPE.body>
+            <AutoRow gap="6px">
+              <StyledWarningIcon size="20px" />
+              <TYPE.main fontSize="16px" lineHeight="22px" color={'text3'}>
+                {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
+              </TYPE.main>
+            </AutoRow>
           </HeaderRow>
           <ContentWrapper>
-            <TYPE.yellow>
-              {error instanceof UnsupportedChainIdError ? (
-                <h5>Please connect to the appropriate Ethereum network.</h5>
-              ) : (
-                'Error connecting. Try refreshing the page.'
-              )}
+            <TYPE.yellow color="text4">
+              <h5>
+                {error instanceof UnsupportedChainIdError
+                  ? 'Please connect to the appropriate network.'
+                  : 'Error connecting. Try refreshing the page.'}
+              </h5>
             </TYPE.yellow>
           </ContentWrapper>
         </UpperSection>

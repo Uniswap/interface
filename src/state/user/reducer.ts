@@ -1,4 +1,4 @@
-import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../constants'
+import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW, DEFAULT_USER_MULTIHOP_ENABLED } from '../../constants'
 import { createReducer } from '@reduxjs/toolkit'
 import { updateVersion } from '../global/actions'
 import {
@@ -10,11 +10,14 @@ import {
   SerializedToken,
   updateMatchesDarkMode,
   updateUserDarkMode,
+  updateUserMultihop,
   updateUserExpertMode,
   updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning
+  toggleURLWarning,
+  updateUserPreferredGasPrice
 } from './actions'
+import { MainnetGasPrice } from '../application/actions'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -32,6 +35,12 @@ export interface UserState {
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
+
+  // whether multihop trades are wnabled or not
+  userMultihop: boolean
+
+  // the gas price the user would like to use on mainnet
+  userPreferredGasPrice: MainnetGasPrice | string | null
 
   tokens: {
     [chainId: number]: {
@@ -60,6 +69,8 @@ export const initialState: UserState = {
   userExpertMode: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
+  userMultihop: DEFAULT_USER_MULTIHOP_ENABLED,
+  userPreferredGasPrice: MainnetGasPrice.FAST,
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
@@ -81,16 +92,29 @@ export default createReducer(initialState, builder =>
         state.userDeadline = DEFAULT_DEADLINE_FROM_NOW
       }
 
+      // multihop isnt being tracked in local storage, reset to default
+      if (typeof state.userMultihop !== 'boolean') {
+        state.userMultihop = DEFAULT_USER_MULTIHOP_ENABLED
+      }
+
       state.lastUpdateVersionTimestamp = currentTimestamp()
     })
-    .addCase(updateUserDarkMode, (state, action) => {
+    .addCase(updateUserDarkMode, state => {
       // TODO: fix this once light theme goes live
       state.userDarkMode = true // action.payload.userDarkMode
       state.timestamp = currentTimestamp()
     })
-    .addCase(updateMatchesDarkMode, (state, action) => {
+    .addCase(updateMatchesDarkMode, state => {
       // TODO: fix this once light theme goes live
       state.matchesDarkMode = true // action.payload.matchesDarkMode
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserMultihop, (state, action) => {
+      state.userMultihop = action.payload.userMultihop
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserPreferredGasPrice, (state, action) => {
+      state.userPreferredGasPrice = action.payload
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserExpertMode, (state, action) => {
@@ -126,8 +150,11 @@ export default createReducer(initialState, builder =>
       }
       state.timestamp = currentTimestamp()
     })
-    .addCase(removeSerializedPair, (state, { payload: { chainId, tokenAAddress, tokenBAddress } }) => {
+    .addCase(removeSerializedPair, (state, { payload: { serializedPair } }) => {
+      const chainId = serializedPair.token0.chainId
       if (state.pairs[chainId]) {
+        const tokenAAddress = serializedPair.token0.address
+        const tokenBAddress = serializedPair.token1.address
         // just delete both keys if either exists
         delete state.pairs[chainId][pairKey(tokenAAddress, tokenBAddress)]
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]

@@ -1,8 +1,16 @@
 import React from 'react'
 import { Price } from 'dxswap-sdk'
-import { Repeat } from 'react-feather'
-import { StyledBalanceMaxMini } from './styleds'
 import { TYPE } from '../../theme'
+import styled from 'styled-components'
+import { transparentize } from 'polished'
+import { RowFixed } from '../Row'
+
+const Wrapper = styled(RowFixed)`
+  background: ${props => transparentize(0.9, props.theme.bg4)};
+  border-radius: 4px;
+  padding: 4px 5px;
+  cursor: pointer;
+`
 
 interface TradePriceProps {
   price?: Price
@@ -19,22 +27,19 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
     : `${price?.baseCurrency?.symbol} per ${price?.quoteCurrency?.symbol}`
 
   return (
-    <TYPE.body
-      fontSize="12px"
-      lineHeight="15px"
-      fontWeight="500"
-      style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
-    >
+    <Wrapper onClick={() => setShowInverted(!showInverted)}>
       {show ? (
         <>
-          {formattedPrice ?? '-'} {label}
-          <StyledBalanceMaxMini style={{ marginLeft: 6 }} onClick={() => setShowInverted(!showInverted)}>
-            <Repeat size={12} />
-          </StyledBalanceMaxMini>
+          <TYPE.body mr="4px" fontSize="13px" lineHeight="12px" letterSpacing="0" fontWeight="700">
+            {formattedPrice ?? '-'}
+          </TYPE.body>
+          <TYPE.body fontSize="13px" lineHeight="12px" letterSpacing="0" fontWeight="500">
+            {label}
+          </TYPE.body>
         </>
       ) : (
         '-'
       )}
-    </TYPE.body>
+    </Wrapper>
   )
 }

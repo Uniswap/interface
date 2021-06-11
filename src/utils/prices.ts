@@ -1,10 +1,24 @@
 import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
-import { CurrencyAmount, Fraction, JSBI, Percent, TokenAmount, Trade, Pair } from 'dxswap-sdk'
+import {
+  CurrencyAmount,
+  Fraction,
+  JSBI,
+  Percent,
+  TokenAmount,
+  Trade,
+  Pair,
+  Price,
+  Currency,
+  _10000,
+  _100
+} from 'dxswap-sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
 import { basisPointsToPercent } from './index'
+import Decimal from 'decimal.js-light'
+import { parseUnits } from 'ethers/lib/utils'
 
-const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000))
+const ONE_HUNDRED_PERCENT = new Percent(_10000, _10000)
 
 // computes price breakdown for the trade
 export function computeTradePriceBreakdown(
@@ -17,7 +31,7 @@ export function computeTradePriceBreakdown(
     : ONE_HUNDRED_PERCENT.subtract(
         trade.route.pairs.reduce<Fraction>((currentFee: Fraction, currentIndex: Pair): Fraction => {
           return currentFee.multiply(
-            ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), JSBI.BigInt(10000)))
+            ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(currentIndex.swapFee.toString()), _10000))
           )
         }, ONE_HUNDRED_PERCENT)
       )
@@ -50,16 +64,14 @@ export function calculateProtocolFee(
   amount?: CurrencyAmount,
   chainId?: number
 ): { protocolFee?: Fraction; protocolFeeAmount?: CurrencyAmount } {
-  const protocolFee = pair
-    ? new Percent(JSBI.BigInt(pair.swapFee.toString()), JSBI.BigInt(10000)).divide(pair.protocolFeeDenominator)
-    : undefined
+  const protocolFee = pair ? new Percent(pair.swapFee, _100).divide(pair.protocolFeeDenominator) : undefined
 
   // the amount of the input that accrues to LPs
   const protocolFeeAmount =
     protocolFee && amount && chainId
       ? amount instanceof TokenAmount
-        ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).divide(JSBI.BigInt(10000)).quotient)
-        : CurrencyAmount.nativeCurrency(protocolFee.multiply(amount.raw).divide(JSBI.BigInt(100)).quotient, chainId)
+        ? new TokenAmount(amount.token, protocolFee.multiply(amount.raw).divide(_10000).quotient)
+        : CurrencyAmount.nativeCurrency(protocolFee.multiply(amount.raw).divide(_10000).quotient, chainId)
       : undefined
 
   return { protocolFee, protocolFeeAmount }
@@ -115,4 +127,27 @@ export function sortTradesByExecutionPrice(trades: (Trade | undefined)[]): (Trad
       return -1
     }
   })
+}
+
+export function getLpTokenPrice(
+  pair: Pair,
+  nativeCurrency: Currency,
+  totalSupply: string,
+  reserveNativeCurrency: string
+): Price {
+  const decimalTotalSupply = new Decimal(totalSupply)
+  // the following check avoids division by zero when total supply is zero
+  // (case in which a pair has been created but liquidity has never been proviided)
+  const priceDenominator = decimalTotalSupply.isZero()
+    ? '1'
+    : parseUnits(
+        new Decimal(totalSupply).toFixed(pair.liquidityToken.decimals),
+        pair.liquidityToken.decimals
+      ).toString()
+  return new Price(
+    pair.liquidityToken,
+    nativeCurrency,
+    priceDenominator,
+    parseUnits(new Decimal(reserveNativeCurrency).toFixed(nativeCurrency.decimals), nativeCurrency.decimals).toString()
+  )
 }

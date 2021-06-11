@@ -1,16 +1,18 @@
 import { Token } from 'dxswap-sdk'
-import { transparentize } from 'polished'
-import React, { useCallback } from 'react'
-import styled from 'styled-components'
+import React, { useCallback, useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { getExplorerLink, shortenAddress } from '../../utils'
 import CurrencyLogo from '../CurrencyLogo'
 import Modal from '../Modal'
-import { AutoRow, RowBetween } from '../Row'
+import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
-import { AlertTriangle } from 'react-feather'
+import { AlertCircle, AlertTriangle } from 'react-feather'
 import { ButtonError } from '../Button'
+import { TokenList } from '@uniswap/token-lists'
+import ListLogo from '../ListLogo'
+import { transparentize } from 'polished'
 
 const WarningContainer = styled.div`
   width: 100%;
@@ -18,7 +20,7 @@ const WarningContainer = styled.div`
 `
 
 const OuterContainer = styled.div`
-  background: ${({ theme }) => transparentize(0.45, theme.bg2)};
+  background: ${({ theme }) => theme.bg1And2};
 `
 
 const UpperSectionContainer = styled.div`
@@ -34,11 +36,19 @@ const StyledWarningIcon = styled(AlertTriangle)`
   stroke: ${({ theme }) => theme.text3};
 `
 
+const WarningWrapper = styled.div`
+  border-radius: 4px;
+  padding: 4px;
+  background-color: ${({ theme }) => transparentize(0.8, theme.red1)};
+`
+
 interface TokenWarningCardProps {
   token?: Token
+  list?: TokenList
 }
 
-function TokenWarningCard({ token }: TokenWarningCardProps) {
+export function TokenWarningCard({ token, list }: TokenWarningCardProps) {
+  const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
 
   if (!token) return null
@@ -65,6 +75,23 @@ function TokenWarningCard({ token }: TokenWarningCardProps) {
               {shortenAddress(token.address)} (View on block explorer)
             </TYPE.main>
           </ExternalLink>
+        )}
+        {list !== undefined ? (
+          <RowFixed>
+            {list.logoURI && <ListLogo logoURI={list.logoURI} defaultText={list.name} size="16px" />}
+            <TYPE.small ml="6px" fontSize={14} color={theme.text3}>
+              via {list.name} token list
+            </TYPE.small>
+          </RowFixed>
+        ) : (
+          <WarningWrapper>
+            <RowFixed>
+              <AlertCircle stroke={theme.red1} size="10px" />
+              <TYPE.body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
+                Unknown Source
+              </TYPE.body>
+            </RowFixed>
+          </WarningWrapper>
         )}
       </AutoColumn>
     </AutoRow>
@@ -125,9 +152,7 @@ export default function TokenWarningModal({
               })}
               <RowBetween marginTop="24px">
                 <ButtonError
-                  error={true}
-                  padding="0.5rem 1rem"
-                  height={58}
+                  error
                   className="token-dismiss-button"
                   onClick={() => {
                     onConfirm()

@@ -35,21 +35,29 @@ import { TYPE } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
-import { ClickableText } from '../Pool/styleds'
+import { ClickableText } from '../Pools/styleds'
 import Loader from '../../components/Loader'
 import { useTargetedChainIdFromUrl } from '../../hooks/useTargetedChainIdFromUrl'
-import NetworkWarningModal from '../../components/NetworkWarningModal'
+import { ROUTABLE_PLATFORM_LOGO } from '../../constants'
+import QuestionHelper from '../../components/QuestionHelper'
 
 const RotatedRepeat = styled(Repeat)`
   transform: rotate(90deg);
-  width: 12px;
-  height: 10px;
+  width: 14px;
 `
 
 const SwitchIconContainer = styled.div`
   height: 0;
   position: relative;
   width: 100%;
+`
+
+const PaddedRowBetween = styled(RowBetween)`
+  padding: 0 8px;
+`
+
+const PaddedCard = styled(Card)`
+  padding: 0 8px;
 `
 
 export default function Swap() {
@@ -258,10 +266,6 @@ export default function Swap() {
 
   return (
     <>
-      <NetworkWarningModal
-        isOpen={!!account && !!urlLoadedChainId && chainId !== urlLoadedChainId}
-        targetedNetwork={urlLoadedChainId}
-      />
       <TokenWarningModal
         isOpen={
           (!urlLoadedChainId || chainId === urlLoadedChainId) &&
@@ -288,8 +292,8 @@ export default function Swap() {
             onDismiss={handleConfirmDismiss}
           />
 
-          <AutoColumn gap="16px">
-            <AutoColumn gap="6px">
+          <AutoColumn gap="12px">
+            <AutoColumn gap="3px">
               <CurrencyInputPanel
                 label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
                 value={formattedAmounts[Field.INPUT]}
@@ -302,15 +306,14 @@ export default function Swap() {
                 id="swap-currency-input"
               />
               <SwitchIconContainer>
-                <SwitchTokensAmountsContainer>
+                <SwitchTokensAmountsContainer
+                  onClick={() => {
+                    setApprovalSubmitted(false) // reset 2 step UI for approvals
+                    onSwitchTokens()
+                  }}
+                >
                   <ArrowWrapper clickable>
-                    <RotatedRepeat
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={theme.text4}
-                    />
+                    <RotatedRepeat color={theme.text4} />
                   </ArrowWrapper>
                 </SwitchTokensAmountsContainer>
               </SwitchIconContainer>
@@ -325,22 +328,39 @@ export default function Swap() {
                 id="swap-currency-output"
               />
             </AutoColumn>
-
-            {!showWrap && (
-              <Card padding="0">
-                {!!trade && (
-                  <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
-                    Best price found on{' '}
-                    <span style={{ color: 'white', fontWeight: 700 }}>{bestPricedTrade?.platform.name}</span>.
-                    {trade.platform.name !== RoutablePlatform.SWAPR.name ? (
-                      <>
-                        {' '}
-                        Swap with <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
-                      </>
-                    ) : null}
-                  </TYPE.body>
-                )}
-              </Card>
+            {!showWrap && !!trade && (
+              <AutoColumn gap="8px">
+                <PaddedCard py="0px" px="8px">
+                  <RowBetween alignItems="center">
+                    <TYPE.body fontSize="11px" lineHeight="15px" fontWeight="500">
+                      Best price found on{' '}
+                      <span style={{ color: 'white', fontWeight: 700 }}>{bestPricedTrade?.platform.name}</span>.
+                      {trade.platform.name !== RoutablePlatform.SWAPR.name ? (
+                        <>
+                          {' '}
+                          Swap with <span style={{ color: 'white', fontWeight: 700 }}>NO additional fees</span>
+                        </>
+                      ) : null}
+                    </TYPE.body>
+                    <QuestionHelper text="The trade is routed directly to the selected platform, so no swap or network fees are ever added by Swapr." />
+                  </RowBetween>
+                </PaddedCard>
+                <PaddedRowBetween align="center" px="8px">
+                  <RowFixed alignItems="center">
+                    {ROUTABLE_PLATFORM_LOGO[trade.platform.name]}
+                    <ClickableText marginLeft="4px" fontSize="14px" fontWeight="600" color="white">
+                      {trade.platform.name}
+                    </ClickableText>
+                  </RowFixed>
+                  <RowFixed>
+                    <TradePrice
+                      price={trade?.executionPrice}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                    />
+                  </RowFixed>
+                </PaddedRowBetween>
+              </AutoColumn>
             )}
             <div>
               {!account ? (
@@ -433,22 +453,6 @@ export default function Swap() {
               )}
               {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
             </div>
-            {!showWrap && !!trade && (
-              <RowBetween align="center">
-                <RowFixed>
-                  <ClickableText fontSize="14px" fontWeight="600" color="white">
-                    {trade.platform.name}
-                  </ClickableText>
-                </RowFixed>
-                <RowFixed>
-                  <TradePrice
-                    price={trade?.executionPrice}
-                    showInverted={showInverted}
-                    setShowInverted={setShowInverted}
-                  />
-                </RowFixed>
-              </RowBetween>
-            )}
           </AutoColumn>
         </Wrapper>
       </AppBody>
