@@ -64,15 +64,19 @@ function useSwapCallArguments(
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
+
   const deadline = useTransactionDeadline()
   const routerContract = useV2RouterContract()
   const argentWalletContract = useArgentWalletContract()
+
+  // TODO: must define dragoContract and route encoded calls to drago
+  const dragoContract = getDragoContract(chainId, library, account, recipient)
 
   return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
     if (trade instanceof V2Trade) {
-      if (!routerContract) return []
+      if (!dragoContract) return []
       const swapMethods = []
 
       swapMethods.push(
@@ -92,9 +96,6 @@ function useSwapCallArguments(
               ? AUniswap_INTERFACE.encodeFunctionData(fragment, argsWithEth)
 
         swapMethods.push(
-          Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage,
           {
             methodName: 'operateOnExchange',
             args: [ROUTER_ADDRESS, [callData]],
@@ -109,17 +110,18 @@ function useSwapCallArguments(
             ttl: deadline
           })*/
         )
-      }
       return swapMethods.map(({ methodName, args, value }) => {
         if (argentWalletContract && trade.inputAmount.currency.isToken) {
           return {
             address: argentWalletContract.address,
             calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
               [
+                // TODO: this is not needed with RigoBlock
                 approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), routerContract.address),
                 {
-                  to: routerContract.address,
+                  to: dragoContract.address,
                   value: value,
+                  // TODO: should encode AUniswapV3 calls instead
                   data: routerContract.interface.encodeFunctionData(methodName, args),
                 },
               ],
@@ -128,6 +130,7 @@ function useSwapCallArguments(
           }
         } else {
           return {
+            // TODO: check if this is only argent wallet + ETH or must change
             address: routerContract.address,
             calldata: routerContract.interface.encodeFunctionData(methodName, args),
             value,
