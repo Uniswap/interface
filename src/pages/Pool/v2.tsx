@@ -54,6 +54,7 @@ const ButtonRow = styled(RowFixed)`
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
+  border-radius: 12px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 48%;
   `};
@@ -175,29 +176,12 @@ export default function Pool() {
                 <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
                   <Trans>Create a pair</Trans>
                 </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary
-                  id="find-pool-button"
-                  as={Link}
-                  to="/pool/v2/find"
-                  style={{
-                    padding: '6px 8px',
-                    borderRadius: '12px',
-                  }}
-                >
+                <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pool/v2/find" padding="6px 8px">
                   <Text fontWeight={500} fontSize={16}>
                     <Trans>Import Pool</Trans>
                   </Text>
                 </ResponsiveButtonPrimary>
-                <ResponsiveButtonPrimary
-                  id="join-pool-button"
-                  as={Link}
-                  padding="6px 8px"
-                  to="/add/v2/ETH"
-                  style={{
-                    padding: '6px 8px',
-                    borderRadius: '12px',
-                  }}
-                >
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/v2/ETH" padding="6px 8px">
                   <Text fontWeight={500} fontSize={16}>
                     <Trans>Add V2 Liquidity</Trans>
                   </Text>
