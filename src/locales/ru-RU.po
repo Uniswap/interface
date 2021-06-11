@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-11 10:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -216,7 +216,7 @@ msgstr "Разрешено"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Всегда проверяйте, что адрес сайта – <0>app.uniswap.org</0>. Для безопасности добавьте его в закладки."
+msgstr "Всегда проверяйте, что адрес сайта — <0>app.uniswap.org</0>. Для безопасности добавьте его в закладки."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -224,7 +224,7 @@ msgstr "Сумма"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Произошла ошибка при попытке произвести этот обмен. Возможно, вам потребуется увеличить допустимое проскальзывание. Если это не сработает, возможно, имеет место несовместимость с токеном, которым вы торгуете. Токены с комиссией за перевод или изменяемой базой несовместимы с Uniswap V3."
+msgstr "Произошла ошибка при попытке произвести этот обмен. Возможно, нужно увеличить допустимое проскальзывание. Если это не сработает, возможно, имеет место несовместимость с токеном, которым вы торгуете. Токены с комиссией за перевод или изменяемой базой несовместимы с Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -316,7 +316,7 @@ msgstr "Добавляя этот список, вы подразумевает�
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Подключая кошелёк, вы соглашаетесь с <0>Условиями предоставления услуг</0> и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap </1>."
+msgstr "Подключая кошелёк, вы соглашаетесь с <0>Условиями предоставления услуг</0> Uniswap Labs и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap </1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -1043,7 +1043,7 @@ msgstr "Сумма к получению — оценочная. Если цен
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "Сумма к получению — оценочная. Вы получите как минимум <0>{0} {1}</0> или транзакция откатится."
+msgstr "Сумма к получению — оценочная. Вы получите как минимум <0>{0} {1}</0>, или транзакция откатится."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1241,7 +1241,7 @@ msgstr "Выберите тип пула в зависимости от подх
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "Выберите токен"
+msgstr "Выбрать токен"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
@@ -1332,7 +1332,7 @@ msgstr "Всё равно обменять"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
-msgstr "Обмен {0} {1} на {2} {3}"
+msgstr "Идет обмен {0} {1} на {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1380,7 +1380,7 @@ msgstr "Пары с этими токенами создаются чаще вс
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
-msgstr "Этот токен не отображается в списке активных токенов. Убедитесь, что это токен, которым вы хотите торговать."
+msgstr "Этот токен не входит в активные списки токенов. Убедитесь, что это действительно тот токен, которым вы хотите торговать."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1853,7 +1853,7 @@ msgstr "минут(-ы)"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
-msgstr "от {0}"
+msgstr "из {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
