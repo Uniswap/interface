@@ -45,7 +45,7 @@ export function colors(darkMode: boolean): Colors {
     text1: darkMode ? '#FFFFFF' : '#000000',
     text2: darkMode ? '#C3C5CB' : '#565A69',
     text3: darkMode ? '#8F96AC' : '#6E727D',
-    text4: darkMode ? '#565A69' : '#C3C5CB',
+    text4: darkMode ? '#B2B9D2' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
@@ -72,22 +72,22 @@ export function colors(darkMode: boolean): Colors {
     primaryText1: darkMode ? '#438BF0' : '#D50066',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#FF007A',
+    secondary1: darkMode ? '#2172E5' : '#E8006F',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
     // other
     red1: darkMode ? '#FF4343' : '#DA2D2B',
-    red2: '#F82D3A',
+    red2: darkMode ? '#F82D3A' : '#DF1F38',
     red3: '#D60000',
     green1: darkMode ? '#27AE60' : '#007D35',
     yellow1: '#E3A507',
     yellow2: '#FF8F00',
     yellow3: '#F3B71E',
     blue1: darkMode ? '#2172E5' : '#0068FC',
-    blue2: '#5199FF',
-    error: '#FD4040',
-    success: '#27AE60',
+    blue2: darkMode ? '#5199FF' : '#0068FC',
+    error: darkMode ? '#FD4040' : '#DF1F38',
+    success: darkMode ? '#27AE60' : '#007D35',
     warning: '#FF8F00',
 
     // dont wanna forget these blue yet
