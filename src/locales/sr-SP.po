@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-06-12 11:04\n"
+"PO-Revision-Date: 2021-06-12 12:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -117,7 +117,7 @@ msgstr "<0> Савет:</0> Користите ову алатку за прон
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0> Савет:</0> Када додате ликвидност, добићете токене базена који представљају вашу позицију. Ови токени аутоматски зарађују накнаде пропорционалне вашем уделу у фонду и могу се искористити у било ком тренутку."
+msgstr "<0> Савет:</0> Када додате ликвидност, добићете групу токене која представљаја вашу позицију. Ови токени аутоматски зарађују накнаде пропорционалне вашем уделу у фонду и могу се искористити у било ком тренутку."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -125,7 +125,7 @@ msgstr "<0> Откључајте гласање</0> да се припреми �
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0> 🎉</0> Добродошли у тим Уницорн :) <1> 🎉</1>"
+msgstr "<0> 🎉</0> Добродошли у тим Unicorn :) <1> 🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
@@ -133,7 +133,7 @@ msgstr "За подношење предлога потребан је мини�
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "О томе"
+msgstr "О"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
@@ -171,12 +171,12 @@ msgstr "Додајте ликвидност."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "Додајте {0} у Метамаск <0 />"
+msgstr "Додајте {0} у Метамаск <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Add {0} {1} and {2} {3}"
-msgstr "Сабери {0} {1} и {2} {3}"
+msgstr "Додај {0} {1} и {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -192,7 +192,7 @@ msgstr "Додато {0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "Адреса нема доступно полагање права"
+msgstr "Адреса нема доступних потраживања"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
@@ -204,11 +204,11 @@ msgstr "Дозволи миграцију ЛП токена"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Омогућите трговање са утицајем високе цене и прескочите екран за потврду. Користите на властиту одговорност."
+msgstr "Омогућите трговање утицајем високе цене и прескочите екран за потврду. Користите на властиту одговорност."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Дозволите протоколу за размену да користи вашу {0}"
+msgstr "Дозволите Uniswap протоколу да користи вашу {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -216,7 +216,7 @@ msgstr "Дозвољен"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Увек се уверите да је УРЛ <0> апп.унисвап.орг</0> - обележи да буде сигурно."
+msgstr "Увек се уверите да је URL <0>app.uniswap.org</0> - обележите да бисте били сигурни."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
