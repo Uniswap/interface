@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2021-06-12 16:05\n"
+"PO-Revision-Date: 2021-06-12 21:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -547,7 +547,7 @@ msgstr "Prix actuel"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "Prix actuel de {0}:"
+msgstr "Prix actuel de {0} :"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -555,7 +555,7 @@ msgstr "Votes délégués"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
-msgstr "Délégué à:"
+msgstr "Délégué à :"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
@@ -570,7 +570,7 @@ msgstr "Dépôt"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Montant du dépôt"
+msgstr "Montants du dépôt"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
@@ -606,7 +606,7 @@ msgstr "Détaillé"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
-msgstr "Détails du produit"
+msgstr "Détails"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
@@ -618,7 +618,7 @@ msgstr "Déconnecter"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Discord"
+msgstr "Discorde"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
@@ -634,23 +634,23 @@ msgstr "Vous ne voyez pas une de vos positions v2 ? <0>Importez-la.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Les jetons UNI gagnés représentent les parts de vote dans la gouvernance d'Uniswap."
+msgstr "Les jetons UNI gagnés représentent les parts de vote dans la gouvernance Uniswap."
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
-msgstr "Entrez un pourcentage"
+msgstr "Saisissez un pourcentage"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
-msgstr "Entrez un destinataire"
+msgstr "Saisissez un destinataire"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "Entrez un pourcentage de slippage valide"
+msgstr "Saisissez un pourcentage de slippage valide"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Entrez une adresse pour déclencher une réclamation UNI. Si l'adresse a une UNI réclamable, elle leur sera envoyée lors de la soumission."
+msgstr "Saisissez une adresse pour déclencher une réclamation UNI. Si l'adresse a une UNI réclamable, elle leur sera envoyée lors de la soumission."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -661,15 +661,15 @@ msgstr "Entrez une adresse pour déclencher une réclamation UNI. Si l'adresse a
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Enter an amount"
-msgstr "Entrez un montant"
+msgstr "Saisissez un montant"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Enter valid list location"
-msgstr "Entrez un emplacement de liste valide"
+msgstr "Saisissez un emplacement de liste valide"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
-msgstr "Entrez une adresse de jeton valide"
+msgstr "Saisissez une adresse de jeton valide"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1068,7 +1068,7 @@ msgstr "Veuillez taper le mot \"{confirmWord}\" pour activer le mode expert."
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Liquidité"
+msgstr "Pool"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
