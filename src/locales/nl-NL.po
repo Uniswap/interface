@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Dutch\n"
-"PO-Revision-Date: 2021-06-12 06:04\n"
+"PO-Revision-Date: 2021-06-12 19:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -53,7 +53,7 @@ msgstr "+{feeAmountFormatted}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
-msgstr "- Verwijder verzending"
+msgstr "- Verzending verwijderen"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "-{feeAmountFormatted}%"
@@ -101,7 +101,7 @@ msgstr "<0/> Stemmen"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>Account analytics en inkomsten </0><1>↗ </1>"
+msgstr "<0>Account analyse en inkomsten </0><1>↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
@@ -109,7 +109,7 @@ msgstr "<0>Terug naar</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Tip:</0> Verwijderde pool tokens omzetten je positie tegen de huidige koers terug naar onderliggende tokens in verhouding tot je deel van de pool. Verhoogde kosten zijn opgenomen in de bedragen die u ontvangt."
+msgstr "<0>Tip:</0>Pool tokens verwijderen zet je positie tegen de huidige koers terug om naar de onderliggende tokens, in verhouding tot jouw deel van de pool. Inkomsten zijn reeds opgenomen in de bedragen die u ontvangt."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -117,7 +117,7 @@ msgstr "<0>Tip:</0> Gebruik deze tool om v2-pools te vinden die niet automatisch
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Tip:</0> Wanneer je liquiditeit toevoegt, ontvang je tokens die je positie vertegenwoordigen. Deze tokens verdienen automatisch kosten in verhouding tot uw aandeel in de pool, en kunnen op elk moment worden ingewisseld."
+msgstr "<0>Tip:</0> Wanneer je liquiditeit toevoegt, ontvang je tokens die je positie vertegenwoordigen. Deze tokens verdienen automatisch inkomsten in verhouding tot jouw aandeel in de pool, en kunnen op elk moment worden ingewisseld tegen de onderliggende tokens."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -204,7 +204,7 @@ msgstr "LP token migratie toestaan"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Hoog prijsimpact transacties toestaan en het bevestigingsscherm overslaan. Gebruik op eigen risico."
+msgstr "Transacties met hoge prijs impact toestaan en het bevestigingsscherm overslaan. Gebruik op eigen risico."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -216,7 +216,7 @@ msgstr "Toegestaan"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Zorg er altijd voor dat de URL is<0>app.uniswap.org</0> - bladwijzer om veilig te zijn."
+msgstr "Zorg er altijd voor dat de URL <0>app.uniswap.org</0> is - voeg het toe aan je bladwijzers om veilig te zijn."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"

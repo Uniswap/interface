@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-12 17:13\n"
+"PO-Revision-Date: 2021-06-12 19:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -642,15 +642,15 @@ msgstr "Adjon meg egy százalékot"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
-msgstr "Írja be a címzettet"
+msgstr "Címzett megadása"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "Adjon meg érvényes csúszási százalékot"
+msgstr "Adjon meg érvényes csökkenési százalékot"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Adjon meg egy címet az UNI igénylés kiváltásához. Ha a címnek van igényelhető UNI-je, elküldik nekik benyújtáskor."
+msgstr "Adjon meg egy címet az UNI-követelés kiváltásához. Ha a címnek van igényelhető UNI-ja, akkor azt a címre történő benyújtáskor elküldjük."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -665,11 +665,11 @@ msgstr "Adjon meg egy összeget"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Enter valid list location"
-msgstr "Adja meg a lista érvényes helyét"
+msgstr "Adja meg az érvényes lista helyét"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
-msgstr "Adjon meg érvényes token címet"
+msgstr "Adja meg az érvényes token címet"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -691,7 +691,7 @@ msgstr "Hiba történt a lista importálásakor"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
-msgstr "Kibővített eredmények az inaktív tokenlistákból"
+msgstr "Az inaktív tokenlisták kibővített eredményei"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
