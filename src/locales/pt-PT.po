@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Portuguese\n"
-"PO-Revision-Date: 2021-06-12 05:06\n"
+"PO-Revision-Date: 2021-06-12 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -351,15 +351,15 @@ msgstr "Reivindicar token UNI"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Reivindicar recompensas de UNI acumuladas"
+msgstr "Reivindicar recompensas UNI acumuladas"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Solicitar tarifas"
+msgstr "Reivindicar comissões"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "Reivindique seus tokens UNI"
+msgstr "Reivindicar os seus tokens UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -372,16 +372,16 @@ msgstr "UNI reivindicado!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "Reivindicando"
+msgstr "A reivindicar"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Reivindicando UNI"
+msgstr "A reivindicar UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "Reivindicando {0} UNI"
+msgstr "A reivindicar {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -393,12 +393,12 @@ msgstr "Limpar tudo"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "FECHAR"
+msgstr "Fechar"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
-msgstr "Fechadas"
+msgstr "Fechado"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
@@ -406,36 +406,36 @@ msgstr "Código"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "Pegar"
+msgstr "Recolher"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Coletar como WETH"
+msgstr "Recolher como WETH"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "Coletar taxas"
+msgstr "Recolher comissões"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "Coletado"
+msgstr "Recolhido"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "Coletando"
+msgstr "A recolher"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Taxas de coleta"
+msgstr "A recolher comissões"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "Coletar tarifas retirará as tarifas disponíveis para você no momento."
+msgstr "A recolha de comissões irá retirar para si as comissões disponíveis atualmente."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "bases comuns"
+msgstr "Bases comuns"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
@@ -669,25 +669,25 @@ msgstr "Insira um local de lista válido"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
-msgstr "Digite um endereço de token válido"
+msgstr "Insira um endereço de token válido"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Error"
-msgstr "ERRO"
+msgstr "Erro"
 
 #: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting"
-msgstr "Erro ao conectar"
+msgstr "Erro ao ligar"
 
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
-msgstr "Erro ao conectar. Tente atualizar a página."
+msgstr "Erro ao ligar. Tente atualizar a página."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
-msgstr "Erro importando lista"
+msgstr "Erro ao importar a lista"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -695,15 +695,15 @@ msgstr "Resultados expandidos da lista de tokens inativos"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "O modo Expert desativa o pedido de confirmação da transação e permite negociações de alto slippage que muitas vezes resultam em taxas ruins e fundos perdidos."
+msgstr "O modo Especialista desativa o pedido de confirmação de transação e permite negociações de deslizamento elevado que muitas vezes resultam em taxas más e perda de fundos."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Explore os pools populares no Uniswap Analytics."
+msgstr "Explore as pools populares no Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "Nível de Taxa"
+msgstr "Escalão gratuíto"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -711,7 +711,7 @@ msgstr "Para"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Para cada banco mostrado abaixo, clique em migrar para remover sua liquidez do Uniswap V2 e depositá-lo no Uniswap V3."
+msgstr "Para cada pool apresentada abaixo, clique em migrar para remover a sua liquidez do Uniswap V2 e depositá-la no Uniswap V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -732,22 +732,22 @@ msgstr "Ocultar posições fechadas"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
-msgstr "Impacto de preço alto"
+msgstr "Impacto de preço elevado"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "Eu entendo"
+msgstr "Eu compreendo"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "Se você comprar um token desta lista, talvez você não consiga vendê-lo de volta."
+msgstr "Se comprar um token desta lista, pode não conseguir vendê-lo de volta."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
 #: src/components/SearchModal/ImportToken.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
-msgstr "Importação"
+msgstr "Importar"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import List"
@@ -755,7 +755,7 @@ msgstr "Importar Lista"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
-msgstr "Importar Banco"
+msgstr "Importar Pool"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
@@ -767,7 +767,7 @@ msgstr "Importar por sua conta e risco"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
-msgstr "Dentro do alcance"
+msgstr "Dentro do intervalo"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
@@ -775,15 +775,15 @@ msgstr "Aumentar Liquidez"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr "Preços iniciais e compartilhamento em conjunto"
+msgstr "Preços iniciais e parcela da pool"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
-msgstr "Inicializandochar@@0"
+msgstr "A inicializar..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "O valor inserido está estimado. Você venderá no máximo <0>{0} {1}</0> ou a transação será revertida."
+msgstr "O valor inserido é estimado. Irá vender no máximo <0>{0} {1}</0> ou a transação será revertida."
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
@@ -791,11 +791,11 @@ msgstr "Instalar Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "liquidez insuficiente para esta troca."
+msgstr "Liquidez insuficiente para esta troca."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "liquidez insuficiente para esta negociação. Tente ativar trocas multi-salto."
+msgstr "Liquidez insuficiente para esta troca. Tente ativar trocas multi-salto."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -825,11 +825,11 @@ msgstr "Entrada de preço inválida"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "Faixa inválida selecionada. O preço mínimo deve ser inferior ao preço máximo."
+msgstr "Intervalo selecionado inválido. O preço mínimo deve ser inferior ao preço máximo."
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "Recipiente inválido"
+msgstr "Destinatário inválido"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -842,15 +842,15 @@ msgstr "Liquidez"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "Taxa do provedor de liquidez"
+msgstr "Comissão do fornecedor de liquidez"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "Recompensas de fornecedor de Liquidez"
+msgstr "Recompensas do fornecedor de liquidez"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Provedores de Liquidez ganham uma taxa de 0,3% em todas as operações proporcionais à sua participação no pool. Taxas são adicionadas ao pool, acumular em tempo real e podem ser reivindicadas retirando sua liquidez."
+msgstr "Os fornecedores de liquidez ganham uma taxa de 0,3% em todas as trocas, proporcional à sua participação na pool. As comissões são adicionadas à pool, acumulam em tempo real e podem ser reivindicadas retirando a sua liquidez."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -869,11 +869,11 @@ msgstr "Carregado"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Loading"
-msgstr "Carregando..."
+msgstr "A carregar"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Certifique-se de que a URL é <0>app.uniswap.org</0>"
+msgstr "Certifique-se que o URL é <0>app.uniswap.org</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -882,19 +882,19 @@ msgstr "Certifique-se de que a URL é <0>app.uniswap.org</0>"
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "Administrar"
+msgstr "Gerir"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "Gerenciar Liquidez no Banco de Recompensas"
+msgstr "Gerir Liquidez na Pool de Recompensas"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
-msgstr "Gerenciar listas de tokens"
+msgstr "Gerir listas de tokens"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "Gerenciar este banco."
+msgstr "Gerir esta pool."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -944,11 +944,11 @@ msgstr "Migrar liquidez V2"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Migre seus tokens de liquidez do Uniswap V2 para Uniswap V3."
+msgstr "Migre os seus tokens de liquidez do Uniswap V2 para Uniswap V3."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
-msgstr "Migrando"
+msgstr "A migrar"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -969,7 +969,7 @@ msgstr "Mínimo recebido"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
-msgstr "MAIS"
+msgstr "Mais"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1178,11 +1178,11 @@ msgstr "Transações recentes"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
-msgstr "Excluir"
+msgstr "Remover"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "Remover Quantidade"
+msgstr "Remover Quantia"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
@@ -1209,7 +1209,7 @@ msgstr "Remover {0}/{1} liquidez V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "Removendo {0} {1} e {2} {3}"
+msgstr "A remover {0} {1} e {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
@@ -1217,7 +1217,7 @@ msgstr "Restringe trocas apenas para pares diretos."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
-msgstr "Retornar"
+msgstr "Voltar"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Route"
@@ -1225,15 +1225,15 @@ msgstr "Rota"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "Pesquisar nome ou endereço colar"
+msgstr "Pesquisar nome ou colar endereço"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "Selecionar Banco"
+msgstr "Selecionar Pool"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Selecione um tipo de pool com base em sua taxa preferida de provedor de liquidez."
+msgstr "Selecione um tipo de pool com base na sua comissão de fornecedor de liquidez preferida."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1829,11 +1829,11 @@ msgstr "Suas transações aparecerão aqui..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "Sua UNI não reivindicada"
+msgstr "As suas UNI não reivindicadas"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
-msgstr "Confirmar"
+msgstr "confirmar"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
@@ -1845,11 +1845,11 @@ msgstr "tem meias emojis"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https: // ou ipfs: // ou nome ENS"
+msgstr "https:// ou ipfs:// ou nome ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
-msgstr "Minutos"
+msgstr "minutos"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
@@ -1857,11 +1857,11 @@ msgstr "através de {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
-msgstr "via lista de {0}"
+msgstr "através de {0} lista de token"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Token de importação} other {Importar tokens}}"
+msgstr "{0, plural, one {Importar tokens} other {Importar token}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx

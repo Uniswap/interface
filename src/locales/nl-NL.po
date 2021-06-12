@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Dutch\n"
-"PO-Revision-Date: 2021-06-12 03:09\n"
+"PO-Revision-Date: 2021-06-12 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -97,7 +97,7 @@ msgstr "<0/> Alle voorstellen"
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/> stemmen"
+msgstr "<0/> Stemmen"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -145,7 +145,7 @@ msgstr "Rekening"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "actief"
+msgstr "Actief"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -716,11 +716,11 @@ msgstr "Voor elke pool hieronder wordt weergegeven, klik op migreren om uw liqui
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
-msgstr "van"
+msgstr "Vanaf"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
-msgstr "Van (hoogst)"
+msgstr "Vanaf (ten hoogste)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -825,11 +825,11 @@ msgstr "Ongeldige prijsinvoer"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "Ongeldig bereik geselecteerd. De minimale prijs moet lager zijn dan de maximale prijs."
+msgstr "Ongeldig bereik geselecteerd. De minimumprijs moet lager zijn dan de maximumprijs."
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "ongeldige ontvanger"
+msgstr "Ongeldige ontvanger"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
