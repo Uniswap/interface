@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-06-12 16:05\n"
+"PO-Revision-Date: 2021-06-12 17:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,7 +109,7 @@ msgstr "<0> Takaisin kohtaan</0>V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Vinkki:</0> Poolirahakkeiden poistaminen palauttaa asemasi taustalla oleviin rahakkeisiin nykyisen kurssin mukaisesti, suhteutettuna omaan osuuteesi poolista. Kertyneet palkkiot sisältyvät saamiisi määriin."
+msgstr "<0>Vinkki:</0> Poolirahakkeiden poistaminen palauttaa positiosi taustalla oleviin rahakkeisiin nykyisen kurssin mukaisesti, suhteutettuna omaan osuuteesi poolista. Kertyneet palkkiot sisältyvät saamiisi määriin."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -117,7 +117,7 @@ msgstr "<0> Vinkki:</0> Käytä tätä työkalua etsiäksesi v2-pooleja, jotka e
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Vinkki:</0> Kun lisäät likviditeettiä, saat poolin rahakkeita, jotka edustavat asemaasi. Nämä rahakkeet ansaitsevat automaattisesti palkkioita suhteessa osuutesi poolista, ja ne voidaan lunastaa milloin tahansa."
+msgstr "<0>Vinkki:</0> Kun lisäät likviditeettiä, saat poolin rahakkeita, jotka edustavat positiotasi. Nämä rahakkeet ansaitsevat automaattisesti palkkioita suhteessa osuutesi poolista, ja ne voidaan lunastaa milloin tahansa."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -630,7 +630,7 @@ msgstr "Asiakirjat"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "Etkö näe yhtä v2-asemastasi? <0>Tuo se.</0>"
+msgstr "Etkö näe yhtä v2-positiostasi? <0>Tuo se.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -728,7 +728,7 @@ msgstr "Hae apua Discordista"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
-msgstr "Piilota suljetut asemat"
+msgstr "Piilota suljetut positiot"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -973,7 +973,7 @@ msgstr "Lisää"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
-msgstr "Uusi asema"
+msgstr "Uusi positio"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -1360,11 +1360,11 @@ msgstr "Tulosrahaketta ei voida siirtää. Tulosrahakkeessa voi olla ongelma. Si
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "Tämän poolin hinta on valitsemasi hintaluokan ulkopuolella. Asemasi ei tällä hetkellä ansaitse palkkioita."
+msgstr "Tämän poolin hinta on valitsemasi hintaluokan ulkopuolella. Positiosi ei tällä hetkellä ansaitse palkkioita."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "Tämän poolin hinta on valitun alueen sisällä. Sijaintisi on tällä hetkellä ansaitseva maksu."
+msgstr "Tämän poolin hinta sopii vallittuun hintaluokkaan. Positiosi ansaitsee tällä hetkellä palkkioita."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
@@ -1591,11 +1591,11 @@ msgstr "Näytä V2-likviditeetti"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "Näytä kertynyt maksu ja analytiikka<0>↗</0>"
+msgstr "Näytä kertyneet palkkiot ja analytiikka<0>↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
-msgstr "Näytä lista"
+msgstr "Näytä luettelo"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
@@ -1616,21 +1616,21 @@ msgstr "Äänestä"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
-msgstr "Äänestä Vastaan"
+msgstr "Äänestä vastaan"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote For"
-msgstr "Äänestää"
+msgstr "Äänestä puolesta"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr "Äänestä ehdotusta vastaan {proposalId}"
+msgstr "Äänestä ehdotusta {proposalId} vastaan"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
-msgstr "Äänestä ehdotuksesta {proposalId}"
+msgstr "Äänestä ehdotuksen {proposalId} puolesta"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1642,66 +1642,66 @@ msgstr "Äänestys päättyy noin {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
-msgstr "Odotetaan Vahvistusta"
+msgstr "Odotetaan vahvistusta"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
-msgstr "Viikoittaiset Palkinnot"
+msgstr "Viikoittaiset palkinnot"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
-msgstr "Tervetuloa Unicorn tiimiin :)"
+msgstr "Tervetuloa Team Unicorniin :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Kun lunastat nostamatta likviditeettiäsi jää kaivosaltaaseen."
+msgstr "Kun lunastat vetäytymättä, likviditeettisi jää louhintapooliin."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Kun peruutat, sopimus lunastaa automaattisesti UNI:n sinun puolestasi!"
+msgstr "Kun vetäydyt, sopimus lunastaa automaattisesti UNIn puolestasi!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Kun vetäydytte pois, UNI väitetään ja maksuvalmiutenne on poistettu kaivosaltaasta."
+msgstr "Kun vetäydyt, UNI lunastetaan ja likviditeettisi poistetaan louhintapoolista."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Withdraw"
-msgstr "Peruuta"
+msgstr "Vetäydy"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw & Claim"
-msgstr "Peruuta & Lunasta"
+msgstr "Vetäydy & lunasta"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "Talletetun likviditeetin poistaminen"
+msgstr "Vedä talletettu likviditeetti takaisin"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
-msgstr "Peruutetaan {0} UNI-V2"
+msgstr "Vedetään pois {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "Peruutti UNI-V2!"
+msgstr "UNI-V2 vedetty pois!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Rivitys"
+msgstr "Wrap"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
-msgstr "Väärä Verkko"
+msgstr "Väärä verkko"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr "Olet luomassa allasta"
+msgstr "Olet luomassa poolia"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Olet ensimmäinen likviditeetin tarjoaja tälle Uniswap V3 -altaalle. Likviditeettisi siirtyy nykyiseen {0} hintaan."
+msgstr "Olet tämän Uniswap V3 -poolin ensimmäinen likviditeetin tarjoaja. Likviditeettisi siirtyy nykyiseen {0} hintaan."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -1709,7 +1709,7 @@ msgstr "Olet ensimmäinen likviditeetin tarjoaja."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Voit joko äänestää jokaisesta ehdotuksesta itse tai siirtää äänesi kolmannelle osapuolelle."
+msgstr "Voit joko äänestää jokaisesta ehdotuksesta itse tai delegoida äänesi kolmannelle osapuolelle."
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
@@ -1725,15 +1725,15 @@ msgstr "Sinun on yhdistettävä tili."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Sinun täytyy antaa Uniswap smart sopimukset lupa käyttää {0}. Sinun täytyy tehdä tämä vain kerran per token."
+msgstr "Sinun täytyy antaa Uniswapin älykkäille sopimuksille lupa käyttää {0}. Sinun täytyy tehdä tämä vain kerran per rahake."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Sinun pitäisi vain tallettaa likviditeettiä Uniswap V3 hintaan uskot oikein. <0/>Jos hinta vaikuttaa virheelliseltä, voit joko vaihtaa hintaa tai odottaa jonkun muun tekevän niin."
+msgstr "Sinun tulisi tallettaa likviditeettiä Uniswap V3:een ainoastaan hintaan, jonka uskot olevan oikein. <0/>Jos hinta vaikuttaa virheelliseltä, voit joko vaihtaa hintaa tai odottaa jonkun muun tekevän niin."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
-msgstr "Keräät myös tästä asemasta ansaitut maksut."
+msgstr "Keräät myös tästä positiosta ansaittuja palkkioita."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1742,7 +1742,7 @@ msgstr "Tulet vastaanottamaan"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "Sinun UNI-erittely"
+msgstr "Sinun UNI-erittelysi"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -1750,66 +1750,66 @@ msgstr "Sinun V2-likviditeettisi"
 
 #: src/pages/Pool/index.tsx
 msgid "Your V3 liquidity positions will appear here."
-msgstr "V3 likviditeettipositiot näkyvät täällä."
+msgstr "V3-likviditeettipositiosi näkyvät täällä."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
-msgstr "Maksuvalmiutesi talletukset"
+msgstr "Sinun likviditeettitalletuksesi"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "Likviditeettisi ansaitsee maksuja vain, kun parin markkinahinta on vaihteluvälilläsi. <0> Tarvitsetko apua alueen valitsemisessa?</0>"
+msgstr "Likviditeettisi ansaitsee palkkioita vain, kun parin markkinahinta sopii hintaluokkaasi. <0> Tarvitsetko apua hintaluokan valitsemisessa?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "Sinun biljardi:"
+msgstr "Sinun pooliosuutesi:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
-msgstr "Oma sijainti"
+msgstr "Oma positiosi"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "Asemaasi on 0 likviditeettiä, eikä se ansaitse maksuja."
+msgstr "Positiosi likviditeetti on 0, eikä se ansaitse palkkioita."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "Sijaintisi on 100 % koostuu {0} tällä hinnalla"
+msgstr "Positiosi tulee olemaan 100-prosenttisesti {0} tällä hinnalla"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "Sijaintisi on 100% {0} tällä hinnalla."
+msgstr "Positiosi tulee olemaan 100-prosenttisesti {0} tällä hinnalla"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "Kannatuksesi ei ansaitse maksuja tai sitä käytetään kaupoissa ennen kuin markkinahinta siirtyy sinun valikoimaasi."
+msgstr "Positiosi ei ansaitse maksuja eikä sitä käytetä kaupankäynnissä ennen kuin markkinahinta sopii hintaluokkaasi."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
-msgstr "Sinun sijaintisi"
+msgstr "Sinun positiosi"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
-msgstr "Oma hinta"
+msgstr "Sinun kurssisi"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "Kaikki uima-altaasi tunnisteet:"
+msgstr "Kaikki poolirahakkeesi:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "Tapahtuman hinta on paljon korkeampi, koska se sisältää kaasun luoda pooli."
+msgstr "Tapahtuman hinta on paljon korkeampi, koska se sisältää kaasua poolin luomiseen."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "Tapahtumasi voi olla etusivu"
+msgstr "Tapahtumasi voi joutua front running -toiminnan kohteeksi"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
@@ -1817,11 +1817,11 @@ msgstr "Tapahtumasi voi epäonnistua"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "Tapahtumasi palautuu, jos se on odottamassa enemmän kuin tämä ajanjakso."
+msgstr "Tapahtumasi peruuntuu, jos se odottaa tätä ajanjaksoa kauemmin."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "Tapahtumasi palautuu, jos hinta muuttuu epäsuotuisasti enemmän kuin tämä prosenttiosuus."
+msgstr "Tapahtumasi peruuntuu, jos hinta muuttuu epäsuotuisasti tätä prosenttiosuutta enemmän."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
@@ -1829,7 +1829,7 @@ msgstr "Tapahtumasi näkyvät täällä..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "Lunastamaton YKI"
+msgstr "Lunastamattomat UNIsi"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -1837,15 +1837,15 @@ msgstr "vahvista"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
-msgstr "hintaan {0}"
+msgstr "kohteelle {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "on sukat emoji"
+msgstr "on sukkahymiö"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https: // tai ipfs: // tai ENS-nimi"
+msgstr "https:// tai ipfs:// tai ENS-nimi"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -1857,11 +1857,11 @@ msgstr "kohteen {0} kautta"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
-msgstr "{0} tunnuslistan kautta"
+msgstr "rahakeluettelon {0} kautta"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Tuo tunnus} other {Tuo tunnuksia}}"
+msgstr "{0, plural, one {Tuo rahake} other {Tuo rahakkeita}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1881,7 +1881,7 @@ msgstr "{0} mukautettua rahaketta"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} Tallennettu"
+msgstr "{0} talletettu"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
@@ -1892,11 +1892,11 @@ msgstr "{0} ETH"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
-msgstr "{0} Ansaitut maksut:"
+msgstr "{0} Ansaitut palkkiot:"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
-msgstr "{0} Odottaa"
+msgstr "{0} odottaa"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -1920,11 +1920,11 @@ msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} UNI-V2 LP-tokenia saatavilla"
+msgstr "{0} UNI-V2 LP -rahaketta saatavilla"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
-msgstr "{0} Ääntä"
+msgstr "{0} ääntä"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -1947,7 +1947,7 @@ msgstr "{0} hinta"
 #: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
-msgstr "{0} kuponkia"
+msgstr "{0} rahaketta"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1979,7 +1979,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LP poletteja"
+msgstr "{0}/{1} LP-rahaketta"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -2003,5 +2003,5 @@ msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← Takaisin altaisiin Yleiskatsaus"
+msgstr "← Takaisin poolien yleiskatsaukseen"
 

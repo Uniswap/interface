@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-06-12 16:05\n"
+"PO-Revision-Date: 2021-06-12 17:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -691,15 +691,15 @@ msgstr "Eroare la importarea listei"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
-msgstr "Rezultate extinse din liste de token inactive"
+msgstr "Rezultate extinse din Listele de Jetoane/Grupuri inactive"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "Modul Expert dezactivează prompt tranzacția de confirmare și permite tranzacțiile cu derapaje mari, care duc adesea la rate nefavorabile și la pierderi de fonduri."
+msgstr "Modul Expert dezactivează prompt tranzacția de confirmare și permite tranzacțiile cu derapaj ridicat, care duc adesea la rate nefavorabile și la pierderi de fonduri."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Explorează pool-uri populare pe Uniswap Analytics."
+msgstr "Explorează grupurile populare pe Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -711,7 +711,7 @@ msgstr "Pentru"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Pentru fiecare grup indicat mai jos, faceți clic pe migrare pentru a elimina lichiditatea de la Uniswap V2 și depuneți-l în Uniswap V3."
+msgstr "Pentru fiecare grup indicat mai jos, dă clic pe migrare pentru a elimina lichiditatea de la Uniswap V2 și depune-l în Uniswap V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -724,7 +724,7 @@ msgstr "De la (cel mult)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
-msgstr "Obțineți asistență pentru Discord"
+msgstr "Obține asistență pentru Discord"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
@@ -732,15 +732,15 @@ msgstr "Ascunde pozițiile închise"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
-msgstr "Impact preț mare"
+msgstr "Impact Preț Ridicat"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "Am înțeles"
+msgstr "Înţeleg"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "Dacă cumperi un token din această listă, s-ar putea să nu îl poți vinde înapoi."
+msgstr "Dacă cumperi un jeton din această listă, s-ar putea să nu îl poți vinde înapoi."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -751,15 +751,15 @@ msgstr "Importă"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import List"
-msgstr "Listă de import"
+msgstr "Importă Lista"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
-msgstr "Importă grupa"
+msgstr "Importă Grupul"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
-msgstr "Import V2 Pool"
+msgstr "Importă Grupul V2"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -771,11 +771,11 @@ msgstr "În interval"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
-msgstr "Crește lichiditatea"
+msgstr "Crește Lichiditatea"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr "Prețurile inițiale și cota parte"
+msgstr "Prețurile inițiale și cota din grup"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -783,7 +783,7 @@ msgstr "Se inițializează..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "Intrarea este estimată. Vei vinde cel mult <0>{0} {1}</0> sau tranzacția va reveni."
+msgstr "Intrarea este estimată. Vei vinde cel mult <0>{0} {1}</0> sau tranzacția se va relua."
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
@@ -791,11 +791,11 @@ msgstr "Instalează Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "Lichiditate insuficientă pentru acest comerţ."
+msgstr "Lichiditate insuficientă pentru această tranzacție."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Lichiditate insuficientă pentru această tranzacție. Încercați să permiteți tranzacțiile multi-hop."
+msgstr "Lichiditate insuficientă pentru această tranzacție. Încearcă să permiți tranzacțiile multi-hop."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -807,7 +807,7 @@ msgstr "Sold {0} insuficient"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
-msgstr "Setări interfață"
+msgstr "Setări Interfață"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
@@ -816,7 +816,7 @@ msgstr "Pereche nevalidă"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Invalid pair."
-msgstr "Asociere invalidă."
+msgstr "Pereche nevalidă."
 
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid price input"
@@ -842,7 +842,7 @@ msgstr "Lichiditate"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "Taxa furnizorului de lichiditate"
+msgstr "Taxa Furnizorului de Lichiditate"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
@@ -850,7 +850,7 @@ msgstr "Recompense furnizor de lichidități"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Furnizorii de lichidități câștigă o taxă de 0,3 % pentru toate tranzacțiile proporționale cu cota lor din grupare. Taxele sunt adăugate în rezervă, acumulează în timp real şi pot fi revendicate prin retragerea lichidităţii."
+msgstr "Furnizorii de lichidități câștigă o taxă de 0,3 % pentru toate tranzacțiile proporționale cu cota lor din grup. Taxele sunt adăugate în grup, se acumulează în timp real şi pot fi revendicate prin retragerea lichidităţii."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -869,11 +869,11 @@ msgstr "Încărcat"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Loading"
-msgstr "Încărcare"
+msgstr "Se încarcă"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Asigurați-vă că URL-ul este<0>app.uniswap.org</0>"
+msgstr "Asigură-te că URL-ul este<0>app.uniswap.org</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -886,11 +886,11 @@ msgstr "Gestionează"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "Gestionează lichiditatea în bazinul de recompense"
+msgstr "Gestionează Lichiditatea în Grupul de Recompense"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
-msgstr "Gestionează lista de simboluri"
+msgstr "Gestionează Lista de Jetoane"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
@@ -903,7 +903,7 @@ msgstr "Maxim"
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Max Price"
-msgstr "Preț maxim"
+msgstr "Preț Maxim"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
@@ -915,7 +915,7 @@ msgstr "Max:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "Maxim trimis"
+msgstr "Maximum trimis"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -927,16 +927,16 @@ msgstr "Migrare"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate Liquidity"
-msgstr "Migrare lichiditate"
+msgstr "Migrare Lichiditate"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "Migrare lichiditate la V3"
+msgstr "Migrare Lichiditate la V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate V2 Liquidity"
-msgstr "Migrare lichiditate V2"
+msgstr "Migrare Lichiditate V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
@@ -944,7 +944,7 @@ msgstr "Migrare lichiditate V2"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Migrați jetoanele de lichiditate de la Uniswap V2 la Uniswap V3."
+msgstr "Migrează jetoanele tale de lichiditate de la Uniswap V2 la Uniswap V3."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
@@ -965,11 +965,11 @@ msgstr "Min:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
-msgstr "Minim primit"
+msgstr "Minimum primit"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
-msgstr "Mai"
+msgstr "Mai mult"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -977,20 +977,20 @@ msgstr "Poziție nouă"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
-msgstr "Nu s-a găsit lichiditate V2."
+msgstr "Nu s-a găsit nicio Lichiditate V2."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr "Nu există pool-uri active"
+msgstr "Nu există grupuri active"
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
-msgstr "Nici o lichiditate găsită."
+msgstr "Nu a fost găsită nicio lichiditate."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "Nici un pool găsit."
+msgstr "Nu a fost găsit niciun grup."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
@@ -1002,11 +1002,11 @@ msgstr "Nici un rezultat găsit."
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "OFF"
-msgstr "OPRIT"
+msgstr "DEZACTIVAT"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "PE"
+msgstr "PORNIT"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."

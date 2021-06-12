@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-12 16:05\n"
+"PO-Revision-Date: 2021-06-12 17:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,7 +109,7 @@ msgstr "<0> Zpět na</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Tip:</0> Odstranění tokenů bazénu převede vaši pozici zpět na základní tokeny v aktuálním tempu, úměrně vašemu podílu na bazénu. Naběhlé poplatky jsou zahrnuty do částek, které obdržíte."
+msgstr "<0>Tip:</0> Odstranění tokenů fondu převede vaši pozici zpět na základní tokeny při aktuální sazbě, úměrně vašemu podílu na fondu. Do částek, které obdržíte jsou zahrnuty naběhlé poplatky."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -117,11 +117,11 @@ msgstr "<0> Tip:</0> Pomocí tohoto nástroje můžete najít fondy v2, které s
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Tip:</0> Když přidáte likviditu, obdržíte tokeny bazénu reprezentující vaši pozici. Tyto žetony automaticky získávají poplatky úměrné vašemu podílu na bazénu a mohou být kdykoli vyměněny."
+msgstr "<0>Tip:</0> Když přidáte likviditu, obdržíte tokeny fondu reprezentující vaši pozici. Tyto tokeny automaticky vynášejí poplatky úměrně vašemu podílu na fondu a kdykoli je lze vykoupit."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0>Odemkněte hlasování</0> pro přípravu dalšího návrhu."
+msgstr "<0>Odblokujte hlasování,</0> abyste se mohli připravit na další návrh."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -224,7 +224,7 @@ msgstr "Částka"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Při pokusu o provedení tohoto swapu došlo k chybě. Možná budete muset zvýšit toleranci skluzu. Pokud to nefunguje, může dojít k nekompatibilitě s tokenem, s nímž obchodujete. Poplatek za poznámky u tokenů za převod a rebase není kompatibilní s Uniswap V3."
+msgstr "Při pokusu o provedení tohoto swapu došlo k chybě. Možná budete muset zvýšit toleranci skluzu. Pokud to nefunguje, může to být způsobeno nekompatibilitou s tokenem, s nímž obchodujete. Pamatujte, že poplatek za převod a zpětné převzetí tokenů není kompatibilní s Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -679,11 +679,11 @@ msgstr "Chyba"
 #: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting"
-msgstr "Chyba při připojování"
+msgstr "Chyba připojení"
 
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."
-msgstr "Chyba připojení. Zkuste stránku obnovit."
+msgstr "Chyba připojení. Zkuste obnovit stránku."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -703,7 +703,7 @@ msgstr "Prozkoumejte populární bazény na Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "Sazba poplatku"
+msgstr "Úroveň poplatku"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -711,7 +711,7 @@ msgstr "Pro"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Pro každý bazén, který je zobrazen níže, klepněte na tlačítko migrovat vaši likviditu z Uniswap V2 a vložte ji do Uniswap V3."
+msgstr "Pro každý níže zobrazený fond klikněte na tlačítko migrovat, abyste mohli odstranit svou likviditu z Uniswap V2 a uložit ji do Uniswap V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -720,7 +720,7 @@ msgstr "Od"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
-msgstr "Od (nanejvýš )"
+msgstr "Od (nanejvýš)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -755,11 +755,11 @@ msgstr "Importovat seznam"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
-msgstr "Importovat soubor"
+msgstr "Importovat fond"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
-msgstr "Importujte fond V2"
+msgstr "Importovat fond V2"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -795,7 +795,7 @@ msgstr "Nedostatek likvidity pro tento obchod."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Nedostatečná likvidita pro tento obchod. Zkuste povolit obchodování s více obchody."
+msgstr "Nedostatečná likvidita pro tento obchod. Zkuste povolit obchodování multi-hop."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -842,11 +842,11 @@ msgstr "Likvidita"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "Poplatek poskytovatele likvidity"
+msgstr "Poplatek poskytovateli likvidity"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "Poskytovatel likvidity odměňuje"
+msgstr "Odměny poskytovatele likvidity"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -1006,11 +1006,11 @@ msgstr "VYPNUTO"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "NA"
+msgstr "ZAPNUTO"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "POUZE POUŽÍT TÉTO MODY, POKUD NEJSTE JSOU JAKO JAK."
+msgstr "TENTO REŽIM POUŽIJTE JEN TEHDY, JESTLIŽE VÍTE, CO DĚLÁTE."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1018,11 +1018,11 @@ msgstr "Vypnuto"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "Na"
+msgstr "Zapnuto"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Jakmile jste spokojeni s sazbou, klikněte na nabídku pro kontrolu."
+msgstr "Až budete spokojeni se sazbou, klikněte na dodávku pro kontrolu."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
@@ -1039,11 +1039,11 @@ msgstr "Mimo rozsah"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "Výstup je odhadnut. Pokud se cena změní o více než {0}%, vaše transakce se vrátí."
+msgstr "Výstup je odhadnutý. Jestliže se cena změní o více než {0} %, Vaše transakce bude vzata zpět."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "Produkce se odhaduje. Budete dostávat alespoň <0>{0} {1}</0> jinak se transakce vrátí."
+msgstr "Výstup je odhadnutý. Obdržíte alespoň <0>{0} {1}</0>, nebo bude transakce vzata zpět."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1055,7 +1055,7 @@ msgstr "Vlastník"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr "Zúčastněné skupiny"
+msgstr "Zúčastněné fondy"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1068,24 +1068,24 @@ msgstr "Pro povolení expertního režimu zadejte slovo \"{confirmWord}\"."
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Sójové boby"
+msgstr "Fond"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "Skupina nalezena!"
+msgstr "Fond nalezen!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Sazba bazénu"
+msgstr "Sazba fondu"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Sazba bazénu"
+msgstr "Sazba fondu"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Pool žetony v odměňovaném bazénu:"
+msgstr "Tokeny fondu ve fondu odměn:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1096,7 +1096,7 @@ msgstr "Pool žetony v odměňovaném bazénu:"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "Sestaveno {0}:"
+msgstr "Sestaveno do fondu {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
@@ -1729,7 +1729,7 @@ msgstr "Musíte udělit oprávnění k chytrým smlouvám Uniswap pro použití 
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Měli byste vložit likviditu pouze do Uniswap V3 za cenu, kterou si myslíte, že je správná. <0/>Pokud se cena zdá být nesprávná, můžete buď provést swap k přesunutí ceny, nebo počkat, než to udělá někdo jiný."
+msgstr "Likviditu byste měli do Uniswap V3 vložit pouze za cenu, o které si myslíte, že je správná. <0/>Pokud se cena zdá být nesprávná, můžete buď provést swap k přesunutí ceny, nebo počkat, až to udělá někdo jiný."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -1742,15 +1742,15 @@ msgstr "Obdržíte"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "Vaše Rozdělení UNI"
+msgstr "Váš rozpis UNI"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
-msgstr "Vaše V2 likvidita"
+msgstr "Vaše likvidita V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Your V3 liquidity positions will appear here."
-msgstr "Zde se objeví vaše V3 likviditní pozice."
+msgstr "Zde se objeví vaše pozice likvidity V3."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -1947,7 +1947,7 @@ msgstr "{0} cena"
 #: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
-msgstr "{0} tokeny"
+msgstr "{0} tokenů"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1967,19 +1967,19 @@ msgstr "{0} • Přidáno uživatelem"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
-msgstr "{0}%"
+msgstr "{0} %"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} Těžba likvidity"
+msgstr "Těžba likvidity {0}-{1}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
-msgstr "{0}/{1} LP NFT"
+msgstr "LP NFT {0}/{1}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LP tokeny"
+msgstr "Tokeny LP {0}/{1} "
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -1995,7 +1995,7 @@ msgstr "{percentForSlider}%"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
-msgstr "{tokenB} za {tokenA}"
+msgstr "{tokenB} na {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
@@ -2003,5 +2003,5 @@ msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "Přehled zpátky do bazénu"
+msgstr "← Zpět na přehled fondů"
 

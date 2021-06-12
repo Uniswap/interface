@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-12 16:05\n"
+"PO-Revision-Date: 2021-06-12 17:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -474,20 +474,20 @@ msgstr "Pénztárca csatlakoztatása"
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "Csatlakoztassa a pénztárcát"
+msgstr "Egy pénztárca csatlakoztatása"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Connect to a wallet"
-msgstr "Csatlakozzon egy pénztárcához"
+msgstr "Csatlakozás egy pénztárcához"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "Csatlakozzon egy pénztárcához, hogy megtalálja a medencéket"
+msgstr "Csatlakozzon egy pénztárcához a poolok megtalálásához"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "Csatlakozzon egy pénztárcához, hogy megtekinthesse a V2 likviditását."
+msgstr "Csatlakozzon egy pénztárcához a V2 likviditás megtekintéséhez."
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
@@ -496,11 +496,11 @@ msgstr "Csatlakozzon egy pénztárcához a likviditás megtekintéséhez."
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Connect wallet"
-msgstr "Csatlakoztassa a pénztárcát"
+msgstr "Pénztárca csatlakoztatása"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
-msgstr "Összekapcsolva {name}"
+msgstr "Csatlakoztatva: {name}"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -513,45 +513,45 @@ msgstr "Cím másolása"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Pool & Supply létrehozása"
+msgstr "Pool és kínálat létrehozása"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
 msgid "Create a pair"
-msgstr "Hozzon létre egy párot"
+msgstr "Egy pár létrehozása"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "Hozzon létre egy medencét"
+msgstr "Pool létrehozása"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "Hozzon létre egy problémát a GitHubon"
+msgstr "Egy probléma felvetése a GitHubon"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "Készítsen medence és adjunk hozzá {0}/{1} V3 likviditási"
+msgstr "Pool létrehozása és {0}/{1} V3 likviditás hozzáadása"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
-msgstr "Készítsen poolot."
+msgstr "Pool létrehozása."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
-msgstr "Jelenlegi ár"
+msgstr "Napi árfolyam"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
-msgstr "Jelenlegi ár"
+msgstr "Napi árfolyam"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "Jelenlegi {0} ár:"
+msgstr "Jelenlegi {0} árfolyam:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
-msgstr "Küldött szavazatok"
+msgstr "Szavazatok delegálása"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
@@ -559,7 +559,7 @@ msgstr "Delegálva:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
-msgstr "A szavazatok delegálása"
+msgstr "Szavazatok delegálása"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
@@ -570,31 +570,31 @@ msgstr "Letét"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Betéti összegek"
+msgstr "Letéti összegek"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Betét UNI-V2 LP tokenek"
+msgstr "UNI-V2 LP tokenek letétbe helyezése"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "Betéti likviditás"
+msgstr "Likviditás letétbe helyezése"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Tegye le a Likviditási Szolgáltató tokenjeit, hogy megkapja az UNI-t, az Uniswap protokoll irányítási tokent."
+msgstr "Helyezze letétbe a likviditásszolgáltatói tokeneket, hogy megkapja az UNI-t, az Uniswap protokoll irányítási tokent."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
-msgstr "Betétes likviditás:"
+msgstr "Letétbe helyezett likviditás:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "{0} UNI-V2 letétbe helyezve"
+msgstr "Letétbe helyezett {0} UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "Betéti likviditás"
+msgstr "Likviditás letétbe helyezése"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -610,7 +610,7 @@ msgstr "Részletek"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "A Multihopok letiltása"
+msgstr "Multihopok letiltása"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
