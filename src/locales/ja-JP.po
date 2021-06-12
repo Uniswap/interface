@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-12 08:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -45,7 +45,7 @@ msgstr "(すべてクリア)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(変更)"
+msgstr "(編集)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -97,19 +97,19 @@ msgstr "<0/>すべての提案"
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/> の投票権を保有"
+msgstr "<0/>投票"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>発生した報酬と分析</0><1>↗ </1>"
+msgstr "<0>アカウント分析と発生した手数料</0><1>↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "V3に<0>戻る</0>"
+msgstr "V3<0>に戻る</0>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>ヒント:</0> 流動性トークンを削除すると、プールのシェアに比例して現在の価格で元のトークンに戻ります。発生した報酬は受け取るトークンに含まれます。"
+msgstr "<0>ヒント:</0> プールトークンを削除すると、プールのシェアに応じて現在の価格で原資産のトークンに戻ります。発生した手数料は受け取るトークンに含まれます。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
