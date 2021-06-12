@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-12 22:08\n"
+"PO-Revision-Date: 2021-06-12 23:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1348,7 +1348,7 @@ msgstr "Vstupní žeton nelze přenést. Možná je se vstupním žetonem nějak
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "Tržní cena je mimo Vámi stanovený cenový rozsah. Pouze vklad na jedno aktivum."
+msgstr "Tržní cena je mimo Vámi stanovené cenové rozmezí. Pouze vklad na jedno aktivum."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1361,7 +1361,7 @@ msgstr "Výstupní žeton nelze přenést. Možná je s výstupním žetonem ně
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "Cena tohoto bazénu je mimo váš vybraný rozsah. Vaše pozice v současné době nezískává poplatky."
+msgstr "Cena tohoto fondu je mimo Vámi vybrané rozmezí. Vaše pozice v současné době nevynáší poplatky."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
