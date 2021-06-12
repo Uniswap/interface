@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Portuguese\n"
-"PO-Revision-Date: 2021-06-12 07:06\n"
+"PO-Revision-Date: 2021-06-12 08:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1527,7 +1527,7 @@ msgstr "Fonte desconhecida"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Erro desconhecido{0}. Tente aumentar sua tolerância ao deslizamento. Taxa de nota sobre tokens de transferência e rebase são incompatíveis com Uniswap V3."
+msgstr "Erro desconhecido{0}. Tente aumentar a sua tolerância ao deslizamento. Note que comissões sobre transferência e tokens rebase são incompatíveis com Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1540,13 +1540,13 @@ msgstr "Desbloquear Votação"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
-msgstr "Desbloqueando votos"
+msgstr "A desbloquear votos"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr "Recurso não suportado"
+msgstr "Ativo não suportado"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
@@ -1654,15 +1654,15 @@ msgstr "Bem-vindo à equipa Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Quando você afirma sem retirar sua liquidez permanece na reserva de mineração."
+msgstr "Quando reivindica sem levantar, a sua liquidez permanece na pool de mineração."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Quando você retirar, o contrato automaticamente reivindicará a UNI em seu nome!"
+msgstr "Quando levanta, o contrato automaticamente reivindicará a UNI em seu nome!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Quando você saque, a sua UNI é reivindicada e sua liquidez é removida do pool de mineração."
+msgstr "Quando retirar, a sua UNI é reivindicada e a sua liquidez é removida do pool de mineração."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1684,11 +1684,11 @@ msgstr "Retirando {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "Retirou a UNI-V2!"
+msgstr "Levantou UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Ajustar"
+msgstr "Embrulhar"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1697,82 +1697,82 @@ msgstr "Rede errada"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr "Você está criando um pool"
+msgstr "Está a criar uma pool"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Você é o primeiro provedor de liquidez deste pool Uniswap V3. Sua liquidez migrará pelo preço atual {0}."
+msgstr "É o primeiro fornecedor de liquidez desta pool Uniswap V3. A sua liquidez irá migrar ao preço atual {0}."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
-msgstr "Você é o primeiro provedor de liquidez."
+msgstr "É o primeiro fornecedor de liquidez."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Pode votar cada uma das propostas ou delegar os seus votos num terceiro."
+msgstr "Pode votar em cada uma das propostas ou delegar os seus votos num terceiro."
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
-msgstr "Agora você pode negociar {0}"
+msgstr "Agora pode negociar {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "Você ainda não tem liquidez nesta piscina."
+msgstr "Ainda não tem liquidez nesta pool."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
-msgstr "Você deve conectar uma conta."
+msgstr "Deve ligar uma conta."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Você precisa dar permissão de contratos inteligentes do Uniswap para usar seu {0}. Você só precisa fazer isso uma vez por token."
+msgstr "Tem de dar permissão aos contratos inteligentes do Uniswap para usarem o seu {0}. Só precisa de fazer isso uma vez por token."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Você só deve depositar liquidez no Uniswap V3 por um preço que você acredita estar correto. <0/>Se o preço parece incorreto, você pode fazer uma troca para mover o preço ou esperar que outra pessoa o faça."
+msgstr "Só deve depositar liquidez no Uniswap V3 por um preço que acredite estar correto. <0/>Se o preço parecer incorreto, pode fazer uma troca para mover o preço ou esperar que outra pessoa o faça."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
-msgstr "Você também coletará tarifas obtidas nessa posição."
+msgstr "Também irá cobrar comissões obtidas nesta posição."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "You will receive"
-msgstr "Você receberá"
+msgstr "Irá receber"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "Seu Detalhamento UNI"
+msgstr "As suas UNI em pormenor"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
-msgstr "Sua liquidez V2"
+msgstr "A sua liquidez V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Your V3 liquidity positions will appear here."
-msgstr "Suas posições de liquidez V3 aparecerão aqui."
+msgstr "As suas posições de liquidez V3 aparecerão aqui."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
-msgstr "Seus depósitos de liquidez"
+msgstr "Os seus depósitos de liquidez"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "Sua liquidez somente gerará taxas quando o preço de mercado do par estiver dentro de sua faixa. <0> Precisa de ajuda para escolher um intervalo?</0>"
+msgstr "A sua liquidez só gerará comissões quando o preço de mercado do par estiver dentro do seu intervalo. <0> Precisa de ajuda para escolher um intervalo?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "Seu compartilhamento no pool:"
+msgstr "A sua parcela na pool:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
-msgstr "Sua posição"
+msgstr "A sua posição"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "A sua posição tem 0 liquidez e não está ganhando taxas."
+msgstr "A sua posição tem 0 liquidez, e não está a ganhar comissões."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -1787,45 +1787,45 @@ msgstr "A sua posição será de 100% {0} a este preço."
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "Sua posição não receberá taxas ou será usada nas negociações até que o preço do mercado se mova para a sua gama."
+msgstr "A sua posição não receberá comissões ou será usada em negociações até que o preço do mercado se mova para o seu intervalo."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
 msgid "Your positions"
-msgstr "Suas posições"
+msgstr "As suas posições"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
-msgstr "Sua avaliação"
+msgstr "A sua comissão"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "Seu total de tokens:"
+msgstr "O seu total de tokens da pool:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "Seu custo de transação será muito mais elevado, pois inclui o gás para criar o pool."
+msgstr "O seu custo de transação será muito mais elevado, já que inclui o combustível para criar a pool."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "Sua transação pode ser primária"
+msgstr "A sua transação pode ser primária"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
-msgstr "Sua transação pode falhar"
+msgstr "A sua transação pode falhar"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "Sua transação será revertida se estiver pendente por mais do que este período de tempo."
+msgstr "A sua transação será revertida se estiver pendente por mais do que este período de tempo."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "Sua transação irá reverter se o preço mudar desfavoravelmente, mais do que esta percentagem."
+msgstr "A sua transação será revertida se o preço mudar desfavoravelmente, mais do que esta percentagem."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
-msgstr "Suas transações aparecerão aqui..."
+msgstr "As suas transações aparecerão aqui..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
