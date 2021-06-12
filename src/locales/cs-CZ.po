@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-12 14:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,11 +37,11 @@ msgstr "(Max)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(claim)"
+msgstr "(reklamace)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(vyčistit vše)"
+msgstr "(vyprázdnit vše)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
@@ -68,27 +68,27 @@ msgstr "0 UNI / týden"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "0.05% poplatek"
+msgstr "Poplatek 0,05 %"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0.3% poplatek"
+msgstr "Poplatek 0,3 %"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1 % poplatek"
+msgstr "Poplatek 1 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
-msgstr "25%"
+msgstr "25 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
-msgstr "50%"
+msgstr "50 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
-msgstr "75%"
+msgstr "75 %"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
@@ -155,7 +155,7 @@ msgstr "Přidat"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "Přidat delegát +"
+msgstr "Přidat delegáta +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
@@ -163,7 +163,7 @@ msgstr "Přidat likviditu"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "Přidat V2 likviditu"
+msgstr "Přidat likviditu V2"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
@@ -171,7 +171,7 @@ msgstr "Přidat likviditu."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "Přidat {0} do metamasku <0/>"
+msgstr "Přidat {0} do metamasky <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -180,11 +180,11 @@ msgstr "Přidat {0} {1} a {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "Přidat {0}-{1} likviditu"
+msgstr "Přidat likviditu {0}-{1}"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Přidat {0}/{1} V3 likviditu"
+msgstr "Přidat likviditu V3 {0}/{1}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -204,11 +204,11 @@ msgstr "Povolit migraci tokenů LP"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Povolit obchody s vysokým dopadem ceny a přeskočit obrazovku s potvrzením. Použijte na vlastní nebezpečí."
+msgstr "Povolit obchody s vysokým dopadem na cenu a přeskočit obrazovku s potvrzením. Používejte na vlastní nebezpečí."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Povolit Uniswap Protocol používat váš {0}"
+msgstr "Povolit protokolu Uniswap používat váš {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -216,11 +216,11 @@ msgstr "Povoleno"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Vždy se ujistěte, že URL je<0>app.uniswap.org</0> - záložka je bezpečná."
+msgstr "Vždy zajistěte, aby URL bylo <0>app.uniswap.org</0> - dejte si jej do záložek jako bezpečné."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
-msgstr "Částka, která má být získána"
+msgstr "Částka"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -228,7 +228,7 @@ msgstr "Při pokusu o provedení tohoto swapu došlo k chybě. Možná budete mu
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "Analytici"
+msgstr "Analýza"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
