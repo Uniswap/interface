@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-12 17:13\n"
+"PO-Revision-Date: 2021-06-12 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -129,7 +129,7 @@ msgstr "<0>🎉 </0>Vítejte v týmu Unicorn :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "Předkládání návrhů je vyžadováno minimální prahovou hodnotou 1 % celkové dodávky UNI."
+msgstr "K předkládání návrhů je nutná minimální prahová hodnota 1 % celkové zásoby UNI."
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -618,7 +618,7 @@ msgstr "Odpojit"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Neshoda"
+msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
@@ -691,7 +691,7 @@ msgstr "Chyba importu seznamu"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
-msgstr "Rozšířené výsledky z neaktivních tokenů"
+msgstr "Rozšířené výsledky z neaktivních seznamů tokenů"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
@@ -699,7 +699,7 @@ msgstr "Expert režim vypne výzvu k potvrzení transakce a umožní velké sklu
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Prozkoumejte populární bazény na Uniswap Analytics."
+msgstr "Prozkoumejte populární fondy na Analýze Uniswap."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -724,11 +724,11 @@ msgstr "Od (nanejvýš)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
-msgstr "Získejte podporu na Discord"
+msgstr "Získejte podporu o Discord"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
-msgstr "Skrýt uzavřené pozice"
+msgstr "Skrýt zavřené pozice"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -736,7 +736,7 @@ msgstr "Vysoký dopad na cenu"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "Chápu"
+msgstr "Rozumím"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
@@ -890,11 +890,11 @@ msgstr "Spravovat likviditu v poolu odměn"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
-msgstr "Správa seznamů tokenů"
+msgstr "Spravovat seznamy tokenů"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "Spravovat tento bazén."
+msgstr "Spravovat tento fond."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -931,16 +931,16 @@ msgstr "Migrovat likviditu"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "Přenést likviditu na V3"
+msgstr "Migrovat likviditu na V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate V2 Liquidity"
-msgstr "Migrovat V2 Likviditu"
+msgstr "Migrovat likviditu V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
-msgstr "Migrovat V2 likviditu"
+msgstr "Migrovat likviditu V2"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
@@ -961,7 +961,7 @@ msgstr "Minimální cena"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
-msgstr "Min:"
+msgstr "Minimum:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
@@ -1142,7 +1142,7 @@ msgstr "Návrhy"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
-msgstr "Zde se objeví návrhy předložené členy komunity."
+msgstr "Zde se budou zobrazovat návrhy předkládané členy komunity."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1170,7 +1170,7 @@ msgstr "Přečtěte si více o nepodporovaných aktivech"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
-msgstr "Poslední transakce"
+msgstr "Nedávné transakce"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1178,15 +1178,15 @@ msgstr "Poslední transakce"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove"
-msgstr "Odebrat"
+msgstr "Odstranit"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "Odebrat částku"
+msgstr "Odstranit částku"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "Odebrat delegaci"
+msgstr "Odstranit delegáta"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1205,19 +1205,19 @@ msgstr "Odstranit {0} {1} a {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Odstranit {0}/{1} V3 likviditu"
+msgstr "Odstranit likviditu V3 {0}/{1}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "Odstranění {0} {1} a {2} {3}"
+msgstr "Odstraňování {0} {1} a {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "Omezuje swapy pouze na směrování párů."
+msgstr "Omezte swapy jen na přímé páry."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
-msgstr "Vrátit se"
+msgstr "Návrat"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Route"
@@ -1225,11 +1225,11 @@ msgstr "Trasa"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "Hledat jméno nebo vložit adresu"
+msgstr "Vyhledejte název nebo vložte adresu"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "Vybrat sdružení"
+msgstr "Vyberte fond"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
@@ -1892,7 +1892,7 @@ msgstr "{0} ETH"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
-msgstr "{0} Získaných poplatků:"
+msgstr "{0} Získané poplatky:"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
