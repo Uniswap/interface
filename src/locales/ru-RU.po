@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-11 11:04\n"
+"PO-Revision-Date: 2021-06-12 21:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -679,7 +679,7 @@ msgstr "Ошибка"
 #: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting"
-msgstr "Ошибка при подключении"
+msgstr "Ошибка подключения"
 
 #: src/components/WalletModal/index.tsx
 msgid "Error connecting. Try refreshing the page."

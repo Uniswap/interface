@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-12 20:08\n"
+"PO-Revision-Date: 2021-06-12 21:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -669,7 +669,7 @@ msgstr "Zadejte platnou polohu seznamu"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
-msgstr "Zadejte platnou adresu tokenu"
+msgstr "Zadejte platnou adresu žetonu"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -695,7 +695,7 @@ msgstr "Rozšířené výsledky z neaktivních seznamů tokenů"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "Expert režim vypne výzvu k potvrzení transakce a umožní velké skluzové obchody, které často vedou ke špatným sazbám a ztrátě finančních prostředků."
+msgstr "Režim Expert vypne výzvu k potvrzení transakce a umožní obchody s velkým skluzem, které často vedou ke špatným kurzům a ztrátě finančních prostředků."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -740,7 +740,7 @@ msgstr "Rozumím"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "Pokud si zakoupíte token z tohoto seznamu, nemůžete ho prodat zpět."
+msgstr "Jestliže zakoupíte token z tohoto seznamu, možná ho nebudete moci zase prodat."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -1100,7 +1100,7 @@ msgstr "Sestaveno do fondu {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "Přehled skupin"
+msgstr "Přehled fondů"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1121,7 +1121,7 @@ msgstr "Příliš vysoký dopad ceny"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "Cena aktualizována"
+msgstr "Cena byla aktualizována"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1266,7 +1266,7 @@ msgstr "Sobě delegovat"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "Nastavit rozsah ceny"
+msgstr "Nastavit cenové rozmezí"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
@@ -1303,11 +1303,11 @@ msgstr "Něco je špatně"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Krok 1. Získejte UNI-V2 žetony pro likviditu"
+msgstr "Krok 1. Získejte žetony likvidity UNI-V2"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
-msgstr "Odesílání hlasování"
+msgstr "Odesílání hlasů"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
@@ -1340,7 +1340,7 @@ msgstr "Děkujeme, že jste součástí komunity Uniswap <0 />"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Uniswap invariant x * y = k nebyl swapem uspokojen. To obvykle znamená, že jeden z tokenů, které vyměňujete, zahrnuje vlastní chování při přenosu."
+msgstr "Konstanta Uniswap x*y=k nebyla swapem splněna. To obvykle znamená, že jeden z tokenů, které vyměňujete, zahrnuje vlastní chování při přenosu."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1365,23 +1365,23 @@ msgstr "Cena tohoto bazénu je mimo váš vybraný rozsah. Vaše pozice v souča
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "Cena tohoto bazénu je ve vybraném rozsahu. Vaše pozice nyní získává poplatky."
+msgstr "Cena tohoto fondu je ve Vámi vybraném rozsahu. Vaše pozice nyní vynáší poplatky."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "Poměr tokenů, které přidáte, nastaví cenu tohoto souboru."
+msgstr "Cenu tohoto fondu stanoví poměr tokenů, které přidáte."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "Transakci nelze odeslat, protože lhůta uplynula. Zkontrolujte, zda není termín transakce příliš nízký."
+msgstr "Transakci nebylo možno odeslat, protože uplynula lhůta. Zkontrolujte, zda není Vaše lhůta pro transakce příliš krátká."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
-msgstr "Tyto žetony jsou běžně spárovány s jinými žetony."
+msgstr "Tyto tokeny bývají spárovány s jinými tokeny."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
-msgstr "Tento token se neobjevuje na seznamech aktivních tokenů. Ujistěte se, že toto je token, se kterým chcete obchodovat."
+msgstr "Tento žeton není na seznamech aktivních žetonů. Ujistěte se, že toto je ten žeton, který chcete obchodovat."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1397,7 +1397,7 @@ msgstr "Tato transakce nebude úspěšná ani kvůli pohybu ceny, ani poplatku z
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
-msgstr "Tip: Vlastní tokeny jsou uloženy lokálně ve vašem prohlížeči"
+msgstr "Tip: Vlastní žetony jsou uloženy lokálně ve Vašem prohlížeči"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1617,7 +1617,7 @@ msgstr "Hlasovat"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
-msgstr "Hlasuj proti"
+msgstr "Hlasovat proti"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote For"
@@ -1626,7 +1626,7 @@ msgstr "Hlasovat pro"
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr "Hlasuj proti návrhu {proposalId}"
+msgstr "Hlasovat proti návrhu {proposalId}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1643,7 +1643,7 @@ msgstr "Hlasování končí přibližně v {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
-msgstr "Čekání na potvrzení"
+msgstr "Čeká se na potvrzení"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -1668,7 +1668,7 @@ msgstr "Když budete vybírat, vaše UNI budou nárokovány a vaše likvidita bu
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Withdraw"
-msgstr "Odebrat"
+msgstr "Vybrat"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw & Claim"
@@ -1677,7 +1677,7 @@ msgstr "Vybrat a nárokovat"
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "Odebrat uloženou likviditu"
+msgstr "Vybrat uloženou likviditu"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
@@ -1685,7 +1685,7 @@ msgstr "Výběr {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "Staženo UNI-V2!"
+msgstr "UNI-V2 vybráno!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
@@ -1694,11 +1694,11 @@ msgstr "Zalomit"
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
-msgstr "Špatná síť"
+msgstr "Nesprávná síť"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr "Vytváříte bazén"
+msgstr "Vytváříte fond"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
@@ -1718,15 +1718,15 @@ msgstr "Nyní můžete obchodovat {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "V tomto bazénu zatím nemáte likviditu."
+msgstr "V tomto fondu zatím nemáte likviditu."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
-msgstr "Musíte se připojit k účtu."
+msgstr "Musíte připojit nějaký účet."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Musíte chytrým smlouvám Uniswap udělit oprávnění používat vaše {0}. Toto musíte udělat pouze jednou pro každý token."
+msgstr "Musíte chytrým smlouvám Uniswap udělit oprávnění používat Vaše {0}. Toto musíte udělat pouze jednou pro každý žeton."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -1802,7 +1802,7 @@ msgstr "Váš kurz"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "Váš celkový počet tokenů fondu:"
+msgstr "Celkový počet Vašich žetonů fondu:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
@@ -1862,7 +1862,7 @@ msgstr "prostřednictvím seznamu tokenů {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Importovat token} other {Importovat tokeny}}"
+msgstr "{0, plural, one {Importovat žeton} other {Importovat žetony}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1877,7 +1877,7 @@ msgstr "{0} <0/> za <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
-msgstr "{0} vlastních tokenů"
+msgstr "{0} vlastních žetonů"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1921,7 +1921,7 @@ msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} dostupných tokenů UNI-V2 LP"
+msgstr "{0} dostupných žetonů UNI-V2 LP"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -1948,7 +1948,7 @@ msgstr "{0} cena"
 #: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
-msgstr "{0} tokenů"
+msgstr "{0} žetonů"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1980,7 +1980,7 @@ msgstr "LP NFT {0}/{1}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "Tokeny LP {0}/{1} "
+msgstr "Žetony LP {0}/{1} "
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
