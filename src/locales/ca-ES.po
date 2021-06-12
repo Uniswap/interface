@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Catalan\n"
-"PO-Revision-Date: 2021-06-12 14:04\n"
+"PO-Revision-Date: 2021-06-12 15:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -296,7 +296,7 @@ msgstr "El millor per a parells exòtics."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "El millor per a la majoria de parelles."
+msgstr "El millor per a la majoria de parells."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
@@ -513,7 +513,7 @@ msgstr "Copia l'adreça"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Creeu piscina i subministrament"
+msgstr "Crea grup i subministrament"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -530,7 +530,7 @@ msgstr "Creeu un problema a GitHub"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "Crear piscina i afegiu {0}/{1} liquiditat V3"
+msgstr "Crea fons i afegeix {0}/{1} liquiditat V3"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
@@ -767,7 +767,7 @@ msgstr "Importa al vostre propi risc"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
-msgstr "Dins de l'abast"
+msgstr "Dins del rang"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
@@ -1360,11 +1360,11 @@ msgstr "La fitxa de sortida no es pot transferir. Pot haver-hi un problema amb e
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "El preu d'aquesta piscina està fora de l'interval seleccionat. Actualment, la vostra posició no cobra comissions."
+msgstr "El preu d'aquest grup està fora de l'interval seleccionat. Actualment, la vostra posició no cobra comissions."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "El preu d'aquesta piscina està dins de l'interval seleccionat. Actualment, la vostra posició està cobrant comissions."
+msgstr "El preu d'aquest grup està dins de l'interval seleccionat. Actualment, la vostra posició està cobrant comissions."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
@@ -1758,7 +1758,7 @@ msgstr "Els vostres dipòsits de liquiditat"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "La vostra liquiditat només obtindrà comissions quan el preu de mercat del parell estigui dins del vostre abast. <0> Necessiteu ajuda per escollir un interval?</0>"
+msgstr "La vostra liquiditat només obtindrà comissions quan el preu de mercat del parell estigui dins del vostre rang. <0> Necessiteu ajuda per escollir un rang?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx

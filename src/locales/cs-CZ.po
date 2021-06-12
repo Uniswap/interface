@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-12 14:04\n"
+"PO-Revision-Date: 2021-06-12 15:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -264,11 +264,11 @@ msgstr "Jste si jisti?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Jako člen komunity Uniswap můžete tvrdit, že UNI bude použita pro hlasování a správu věcí veřejných.<0/><1/><2>Přečtěte si více o UNI</2>"
+msgstr "Jako člen komunity Uniswap si můžete nárokovat UNI k použití při hlasování a správě věcí veřejných.<0/><1/><2>Přečtěte si více o UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "Alespoň {0} {1} a {2} {3} budou vráceny do vaší peněženky kvůli zvolenému cenovému rozpětí."
+msgstr "Alespoň {0} {1} a {2} {3} budou kvůli vybranému cenovému rozpětí vráceny do Vaší peněženky."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
@@ -276,7 +276,7 @@ msgstr "Automaticky"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "K dispozici k vkladu: {0}"
+msgstr "K dispozici k uložení: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -312,11 +312,11 @@ msgstr "Přidáním likvidity získáte 0,3% všech obchodů na tomto dvojici ú
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "Přidáním tohoto seznamu implicitně věříte, že data jsou správná. Kdokoli může vytvořit seznam, včetně vytváření falešných verzí existujících seznamů a seznamů, které označují projekty, které jej nemají."
+msgstr "Přidáním tohoto seznamu implicitně vyjadřujete důvěru v to, že data jsou správná. Seznam může vytvořit kdokoli, včetně vytváření falešných verzí existujících seznamů a seznamů, které prohlašují, že reprezentují projekty, které žádný seznam nemají."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Připojením peněženky souhlasíte s Uniswap Labs<0>Podmínky služby</0> a potvrzte, že jste si přečetli <1>Zrušení odpovědnosti protokolu a rozumí</1>."
+msgstr "Připojením peněženky souhlasíte s <0>Podmínkami služeb</0> společnosti Uniswap Labs a potvrzujete, že jste si přečetli <1>Odřeknutí odpovědnosti za protokol Uniswap</1> a porozuměli jste mu."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -334,7 +334,7 @@ msgstr "Podívejte se na naše průvodce v3 LP a migrační průvodce."
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "Claim"
+msgstr "Nárokovat"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -342,46 +342,46 @@ msgstr "Claim"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Claim UNI"
+msgstr "Nárokovat si UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgstr "Nárokujte si token UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Získat kumulovanou UNI odměnu"
+msgstr "Nárokujte si akumulované odměny UNI"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Poplatky za podání žádosti"
+msgstr "Poplatky za nárokování"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "Získejte své UNI tokeny"
+msgstr "Nárokujte si své tokeny UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "nárokováno"
+msgstr "Nárokováno"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "Vyžádáno UNI!"
+msgstr "Nárokováno UNI!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "Tvrzení"
+msgstr "Nárokování"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Uplatňování UNI"
+msgstr "Nárokování UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "Získávání {0} UNI"
+msgstr "Nárokování {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -456,7 +456,7 @@ msgstr "Potvrďte výměnu"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "Potvrďte tuto transakci ve Vaší peněžence"
+msgstr "Potvrďte tuto transakci ve své peněžence"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -650,7 +650,7 @@ msgstr "Zadejte platné procento skluzu"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Zadejte adresu pro spuštění nároku UNI. Pokud má adresa nějakou nárokovatelnou UNI, bude jim odeslána po odeslání."
+msgstr "Chcete-li spustit nárokování UNI, zadejte adresu. Jestliže bude mít adresa nějaké nárokovatelné UNI, bude jim po odeslání posláno."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1491,11 +1491,11 @@ msgstr "UNI-V2 {0}-{1}"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
-msgstr "Nenárokovaný UNI"
+msgstr "Nenárokované UNI"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
-msgstr "Nevyžádané poplatky"
+msgstr "Nenárokované poplatky"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
@@ -1654,15 +1654,15 @@ msgstr "Vítejte v týmu Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Když tvrdíte, že vaše likvidita zůstává v horním poli."
+msgstr "Když budete nárokovat, aniž byste vybírali, vaše likvidita zůstává v těžebním fondu."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Po odstoupení bude smlouva automaticky požadovat UNI vaším jménem!"
+msgstr "Když budete vybírat, smlouva bude automaticky nárokovat UNI ve váš prospěch!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Když se rozhodnete, vaše UNI je požadována a vaše likvidita je odstraněna z těžebního fondu."
+msgstr "Když budete vybírat, vaše UNI budou nárokovány a vaše likvidita bude odstraněna z těžebního fondu."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1671,7 +1671,7 @@ msgstr "Odebrat"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw & Claim"
-msgstr "Vybrat & nárokovat"
+msgstr "Vybrat a nárokovat"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1829,7 +1829,7 @@ msgstr "Vaše transakce se objeví zde..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "Vaše nevyužitá UNI"
+msgstr "Vaše nenárokované UNI"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
