@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-06-12 17:13\n"
+"PO-Revision-Date: 2021-06-12 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1010,7 +1010,7 @@ msgstr "PORNIT"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "UTILIZAȚI NUMAI ACEASTĂ MOD DUPĂ CUM ÎNAINTE SĂ ȘTIȚI."
+msgstr "UTILIZEAZĂ DOAR ACEST MOD DACĂ ȘTII CE TREBUIE SĂ FACI."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1018,28 +1018,28 @@ msgstr "Dezactivat"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "Pe"
+msgstr "Activat"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Odată ce sunteți mulțumit de rata de schimb faceți clic pe ofertă pentru a o examina."
+msgstr "Odată ce ești mulțumit de rata de schimb fă clic pe ofertă pentru a o examina."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Doar voturile UNI care au fost auto-delegate sau delegate la o altă adresă înainte ca blocul {0} să fie eligibil pentru vot."
+msgstr "Doar voturile UNI care au fost auto-delegate sau delegate la o altă adresă înainte ca blocul {0} sunt eligibile pentru vot."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Ups! A apărut o eroare necunoscută. Reîmprospătați pagina, sau vizitați un alt browser sau dispozitiv."
+msgstr "Ups! A avut loc o eroare necunoscută. Reîmprospătează pagina, sau vizitează un alt browser sau dispozitiv."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
-msgstr "În afara razei"
+msgstr "Prea departe"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "Ieșirea este estimată. Dacă prețul se schimbă cu mai mult de {0}% tranzacția dvs. va reveni."
+msgstr "Ieșirea este estimată. Dacă prețul se schimbă cu mai mult de {0}% tranzacția ta se va anula."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
@@ -1068,24 +1068,24 @@ msgstr "Te rugăm să introduci cuvântul \"{confirmWord}\" pentru a activa modu
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Rezervă"
+msgstr "Grup"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "Rezervă găsită!"
+msgstr "Grup Găsit!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Cota de gunoi"
+msgstr "Tarif de Grup"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Rata de adunare"
+msgstr "Tarif de grup"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Jetoane în bazinul de recompense:"
+msgstr "Jetoane de grup în recompense de grup:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1100,7 +1100,7 @@ msgstr "Grupat {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "Prezentare generală culori"
+msgstr "Prezentare Generală Grupuri"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1109,24 +1109,24 @@ msgstr "Preț"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
-msgstr "Diferență de preț:"
+msgstr "Diferență de Preț:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr "Impactul prețului"
+msgstr "Impactul Prețului"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "Impact preț prea mare"
+msgstr "Impact de Preț este Prea Mare"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "Preț actualizat"
+msgstr "Preț Actualizat"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "Intervalul de preț"
+msgstr "Interval de preț"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1158,7 +1158,7 @@ msgstr "Citește mai multe despre UNI"
 
 #: src/pages/Vote/index.tsx
 msgid "Read more about Uniswap governance"
-msgstr "Citește mai multe despre guvernanța Uniswap"
+msgstr "Citește mai multe despre guvernarea Uniswap"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
@@ -1182,7 +1182,7 @@ msgstr "Elimină"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "Elimină suma"
+msgstr "Elimină Suma"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
@@ -1192,7 +1192,7 @@ msgstr "Elimină Delegatul"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "Elimină lichiditatea"
+msgstr "Elimină Lichiditatea"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
@@ -1205,7 +1205,7 @@ msgstr "Elimină {0} {1} și {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Șterge {0}/{1} V3 lichidități"
+msgstr "Elimină lichiditățile V3 {0}/{1}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
@@ -2003,5 +2003,5 @@ msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← Înapoi la Rezumatul Panourilor"
+msgstr "← Înapoi la Rezumatul Grupurilor"
 
