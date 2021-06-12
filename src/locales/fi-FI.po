@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-06-12 10:04\n"
+"PO-Revision-Date: 2021-06-12 11:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1022,24 +1022,24 @@ msgstr "On"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Kun olet tyytyväinen korko klikkaa tarjonta tarkistaa."
+msgstr "Kun olet tyytyväinen kurssiin, paina \"tarjonta\" tarkistaaksesi."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Ainoastaan UNI-äänet, jotka oli itse delegoitu tai siirretty toiseen osoitteeseen ennen kuin ryhmä {0} on oikeutettu äänestämään."
+msgstr "Ainoastaan itsedelegoidut ja toiseen osoitteeseen ennen lohkoa {0} delegoidut UNI-äänet ovat oikeutettuja äänestämään."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Hups! Tapahtui tuntematon virhe. Ole hyvä ja päivitä sivu tai vieraile toisella selaimella tai laitteella."
+msgstr "Hups! Tapahtui tuntematon virhe. Ole hyvä ja päivitä sivu tai vieraile sivulla toisella selaimella tai laitteella."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
-msgstr "Ei kantoaluetta"
+msgstr "Alueen ulkopuolella"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "Tuotos on arvioitu. Jos hinta muuttuu enemmän kuin {0}% tapahtumassasi."
+msgstr "Tuotto on arvio. Jos hinta muuttuu enemmän kuin {0}%, tapahtuma perutaan."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
@@ -1047,7 +1047,7 @@ msgstr "Tuotos on arvioitu. Saat vähintään <0>{0} {1}</0> tai tapahtuma perut
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "Ulostulo lähetetään kohteeseen <0>{0}</0>"
+msgstr "Tuotto lähetetään kohteeseen <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
@@ -1059,7 +1059,7 @@ msgstr "Osallistuvat poolit"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
-msgstr "Ole hyvä ja yhdistä asianmukaiseen Ethereum verkkoon."
+msgstr "Ole hyvä ja yhdistä asianmukaiseen Ethereum-verkkoon."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1068,19 +1068,19 @@ msgstr "Ole hyvä ja kirjoita sana \"{confirmWord}\" ottaaksesi asiantuntijatila
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Uima-allas"
+msgstr "Pooli"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "Pool Löydetty!"
+msgstr "Pooli löydetty!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Poolin Hinta"
+msgstr "Poolin kurssi"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Poolin hinta"
+msgstr "Poolin kurssi"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
