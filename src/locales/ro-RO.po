@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Romanian\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-12 14:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,15 +37,15 @@ msgstr "(Max)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(claim)"
+msgstr "(revendicare)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(curățat)"
+msgstr "(elimină tot)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(editat)"
+msgstr "(editează)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -53,7 +53,7 @@ msgstr "+{feeAmountFormatted}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
-msgstr "- Eliminați trimiterile"
+msgstr "- Elimină trimiterile"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "-{feeAmountFormatted}%"
@@ -68,15 +68,15 @@ msgstr "0 UNI / săptămână"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "0,05% taxă"
+msgstr "taxă 0,05%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0.3% taxă"
+msgstr "Taxă 0.3%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1% taxă"
+msgstr "Taxă 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -101,7 +101,7 @@ msgstr "Voturi <0/>"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>Statistici cont și taxe acumulate</0><1> :up-κ: </1>"
+msgstr "<0>Statistici cont și comisioane acumulate</0><1> ↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"

@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Catalan\n"
-"PO-Revision-Date: 2021-06-12 13:10\n"
+"PO-Revision-Date: 2021-06-12 14:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,7 +109,7 @@ msgstr "<0>Torna a</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Consell:</0> L’eliminació de les fitxes de grup converteix la vostra posició en fitxes subjacents al ritme actual, proporcional a la vostra quota de fons. Les comissions acumulades estan incloses en els imports que rebeu."
+msgstr "<0>Consell:</0> L’eliminació de les fitxes de grup converteix la vostra posició en fitxes subjacents al ritme actual, proporcional a la vostra quota de grup. Les comissions acumulades estan incloses en els imports que rebeu."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -117,7 +117,7 @@ msgstr "<0>Consell:</0> Utilitzeu aquesta eina per trobar grups de v2 que no apa
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Consell:</0> Quan afegiu liquiditat, rebreu fitxes de pool que representin la vostra posició. Aquests tokens guanyen automàticament quotes proporcionals a la vostra quota de fons i es poden bescanviar en qualsevol moment."
+msgstr "<0>Consell:</0> Quan afegiu liquiditat, rebreu fitxes de grup que representin la vostra posició. Aquestes fitxes guanyen automàticament quotes proporcionals a la vostra quota de fons i es poden bescanviar en qualsevol moment."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -292,7 +292,7 @@ msgstr "Saldo: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "El millor per a parelles exòtiques."
+msgstr "El millor per a parells exòtics."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -300,7 +300,7 @@ msgstr "El millor per a la majoria de parelles."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "El millor per a parelles estables."
+msgstr "El millor per a parells estables."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -308,7 +308,7 @@ msgstr "Adreça bloquejada"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Si afegiu liquiditat, guanyareu el 0,3% de totes les operacions d’aquest parell proporcional a la vostra quota de fons. Les comissions s’afegeixen al fons, s’acumulen en temps real i es poden reclamar retirant la vostra liquiditat."
+msgstr "Si afegiu liquiditat, guanyareu el 0,3% de totes les operacions d’aquest parell proporcional a la vostra quota de grup. Les comissions s’afegeixen al grup, s’acumulen en temps real i es poden reclamar retirant la vostra liquiditat."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -522,7 +522,7 @@ msgstr "Crea un parell"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "Crea una piscina"
+msgstr "Crea un grup"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -534,7 +534,7 @@ msgstr "Crear piscina i afegiu {0}/{1} liquiditat V3"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
-msgstr "Crea una piscina."
+msgstr "Crea un grup."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
@@ -850,7 +850,7 @@ msgstr "Recompenses del proveïdor de liquiditat"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Els proveïdors de liquiditat guanyen una comissió del 0,3% en tots els negocis proporcional a la seva quota de fons. Les comissions s’afegeixen al fons, s’acumulen en temps real i es poden reclamar retirant la vostra liquiditat."
+msgstr "Els proveïdors de liquiditat guanyen una comissió del 0,3% en tots els negocis proporcional a la seva quota de grup. Les comissions s’afegeixen al fons, s’acumulen en temps real i es poden reclamar retirant la vostra liquiditat."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -886,7 +886,7 @@ msgstr "Gestiona"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "Gestioneu la liquiditat al fons de recompenses"
+msgstr "Gestioneu la liquiditat al grup de recompenses"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
@@ -1068,24 +1068,24 @@ msgstr "Escriviu la paraula \"{confirmWord}\" per habilitar el mode expert."
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Piscina"
+msgstr "Grup"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "Piscina trobada"
+msgstr "Grup trobat!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Tarifa de piscina"
+msgstr "Tarifa de grup"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Tarifa de la piscina"
+msgstr "Tarifa de grup"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Fitxes de fons a la piscina de recompenses:"
+msgstr "Fitxes de grup al grup de recompenses:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1100,7 +1100,7 @@ msgstr "Agrupat {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "Visió general de les piscines"
+msgstr "Visió general dels grups"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1134,7 +1134,7 @@ msgstr "Preu:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Preus i quota de piscina"
+msgstr "Preus i quota de grup"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1192,7 +1192,7 @@ msgstr "Elimina delegat"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "Elimineu la liquiditat"
+msgstr "Elimina la liquiditat"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
@@ -1201,11 +1201,11 @@ msgstr "Elimina la llista"
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove {0} {1} and {2} {3}"
-msgstr "Traieu {0} {1} i {2} {3}"
+msgstr "Elimina {0} {1} i {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Traieu {0}/{1} liquiditat V3"
+msgstr "Elimina {0}/{1} liquiditat V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
@@ -1213,7 +1213,7 @@ msgstr "Eliminació de {0} {1} i {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "Restringeix els permutes només a parells directes."
+msgstr "Restringeix els intercanvis només a parells directes."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
@@ -1229,7 +1229,7 @@ msgstr "Cerqueu el nom o enganxeu l'adreça"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "Seleccioneu Piscina"
+msgstr "Seleccioneu grup"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
@@ -1257,7 +1257,7 @@ msgstr "Interval seleccionat"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
-msgstr "Jo"
+msgstr "Auto"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1274,11 +1274,11 @@ msgstr "Estableix el preu inicial"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
-msgstr "Quota de Pool"
+msgstr "Quota de grup"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "Quota de Pool:"
+msgstr "Quota de grup:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
@@ -1662,7 +1662,7 @@ msgstr "Quan es retiri, el contracte reclamarà automàticament UNI en nom vostr
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Quan es retira, es reclama la seva UNI i s’elimina la seva liquiditat del fons miner."
+msgstr "Quan es retira, es reclama la seva UNI i s’elimina la seva liquiditat del grup miner."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1688,7 +1688,7 @@ msgstr "Va retirar UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Cobrir"
+msgstr "Embolicar"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx

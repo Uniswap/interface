@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-06-12 13:10\n"
+"PO-Revision-Date: 2021-06-12 14:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -308,15 +308,15 @@ msgstr "Блокирана адреса"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Додавањем ликвидности зарадит ћете 0,3% свих трговина на овом пару пропорционално вашем удјелу у фонду. Накнаде се додају у фонд, прикупљају се у реалном времену и могу се захтевати повлачењем ваше ликвидности."
+msgstr "Додавањем ликвидности зарадићете 0,3% свих трговина на овом пару пропорционално вашем уделу у фонду. Накнаде се додају у фонд, прикупљају се у реалном времену и могу се захтевати повлачењем ваше ликвидности."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "Додавањем ове листе имплицитно верујете да су подаци тачни. Свако може да креира листу, укључујући стварање лажних верзија постојећих листа и листа за које се тврди да представљају пројекте који их немају."
+msgstr "Додавањем ове листе имплицитно сте сагласни да су подаци тачни. Свако може да креира листу, укључујући стварање лажних верзија постојећих листа и листа за које се тврди да представљају пројекте којих нема."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Повезивањем новчаника прихватате услове коришћења услуге <0> Унисвап Лабс</0> и потврдите да сте прочитали и разумели изјаву о одрицању одговорности протокола <1> Унисвап</1> ."
+msgstr "Повезивањем новчаника прихватате Uniswap Labs <0>Услове коришћења услуге</0> и потврђујете да сте прочитали и разумели <1>Изјаву о одрицању одговорности Uniswap протокола</1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -328,7 +328,7 @@ msgstr "Графикони"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Погледајте наше водиче за в3 ЛП и водиче за миграцију."
+msgstr "Погледајте наше водиче за v3 LP и водиче за миграцију."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -346,54 +346,54 @@ msgstr "Преузми УНИ"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Преузми УНИ жетон"
+msgstr "Преузми УНИ токен"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Потраживања сакупила УНИ награде"
+msgstr "Преузми накупљене УНИ награде"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Накнаде за потраживање"
+msgstr "Преузми накнаде"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "Затражите своје УНИ токене"
+msgstr "Преузми своје УНИ токене"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "Положено право"
+msgstr "Преузето"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "Захтевано УНИ!"
+msgstr "Преузет УНИ!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "Полагање права"
+msgstr "Преузимање"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Полагање права на УНИ"
+msgstr "Преузимање УНИ"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "Тврдња {0} УНИ"
+msgstr "Преузимање {0} УНИ"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
-msgstr "Избриши све"
+msgstr "Обриши све"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
-msgstr "Избриши све"
+msgstr "Обриши све"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
-msgstr "Близу"
+msgstr "Затвори"
 
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -406,32 +406,32 @@ msgstr "Код"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "Сакупљајте"
+msgstr "Сакупи"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Сакупљати као ВЕТО"
+msgstr "Сакупи као WETH"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "Наплати накнаде"
+msgstr "Сакупи накнаде"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "Прикупљени"
+msgstr "Сакупљено"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "Прикупљање"
+msgstr "Сакупљање"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Наплата накнада"
+msgstr "Сакупљање накнада"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "Накнаде за прикупљање повући ће тренутно доступне накнаде за вас."
+msgstr "Сакупљање накнада повући ће тренутно доступне накнаде за вас."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -443,7 +443,7 @@ msgstr "Потврди"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
-msgstr "Потврдите понуду"
+msgstr "Потврдите снабдевање"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -474,7 +474,7 @@ msgstr "Повежите новчаник"
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
 msgid "Connect a wallet"
-msgstr "Прикључите новчаник"
+msgstr "Повежите новчаник"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -483,11 +483,11 @@ msgstr "Повежите се са новчаником"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "Повежите се са новчаником да бисте пронашли базене"
+msgstr "Повежите се са новчаником да бисте пронашли фондове"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "Повежите се са новчаником да бисте видели своју В2 ликвидност."
+msgstr "Повежите се са новчаником да бисте видели своју V2 ликвидност."
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
@@ -513,7 +513,7 @@ msgstr "Копирај адресу"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Направите Поол & Суппли"
+msgstr "Направите Фонд & Снабдевање"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -522,19 +522,19 @@ msgstr "Направите пар"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "Направите базен"
+msgstr "Направите фонд"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "Направите проблем на ГитХуб-у"
+msgstr "Направите питање на GitHub-у"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "Створити базен и додати {0}/{1} В3 ликвидност"
+msgstr "Направите фонд и додајте {0}/{1} V3 ликвидност"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
-msgstr "Направите базен."
+msgstr "Направите фонд."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
@@ -574,7 +574,7 @@ msgstr "Износи депозита"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Положите УНИ-В2 ЛП жетоне"
+msgstr "Положите UNI-V2 LP токене"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
