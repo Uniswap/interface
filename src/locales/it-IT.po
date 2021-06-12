@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Italian\n"
-"PO-Revision-Date: 2021-06-12 15:06\n"
+"PO-Revision-Date: 2021-06-12 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -368,7 +368,7 @@ msgstr "Richiesto"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "UNI Richiesto!"
+msgstr "UNI Richiesta!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
@@ -650,7 +650,7 @@ msgstr "Inserisci una percentuale di slittamento valida"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Inserisci un indirizzo per attivare un reclamo UNI. Se l'indirizzo ha un qualsiasi UNI che può essere richiesto, verrà inviato loro al momento dell'invio."
+msgstr "Inserisci un indirizzo per attivare un reclamo UNI. Se l'indirizzo ha una qualsiasi UNI che può essere richiesta, verrà inviata loro al momento dell'invio."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -1291,7 +1291,7 @@ msgstr "Semplice"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "Tolleranza dello slittamento"
+msgstr "Tolleranza allo slittamento"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1388,11 +1388,11 @@ msgstr "Questo strumento eseguirà la migrazione in modo sicuro della tua liquid
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Questa transazione non avrà esito positivo a causa del movimento dei prezzi. Prova ad aumentare la tua tolleranza dello slittamento. Nota la commissione sui token di trasferimento e di base non sono compatibili con Uniswap V3."
+msgstr "Questa transazione non avrà esito positivo a causa del movimento dei prezzi. Prova ad aumentare la tua tolleranza allo slittamento. Nota la commissione sui token di trasferimento e di base non sono compatibili con Uniswap V3."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
-msgstr "Questa transazione non avrà esito positivo a causa del movimento del prezzo o della commissione sul trasferimento. Prova ad aumentare la tua tolleranza dello slittamento."
+msgstr "Questa transazione non avrà esito positivo a causa del movimento del prezzo o della commissione sul trasferimento. Prova ad aumentare la tua tolleranza allo slittamento."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1491,7 +1491,7 @@ msgstr "UNI-V2 {0}-{1}"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Unclaimed UNI"
-msgstr "UNI Non richiesto"
+msgstr "UNI non richiesto"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
@@ -1511,7 +1511,7 @@ msgstr "Uniswap V3 è qui!"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap disponibile in: <0>{0}</0>"
+msgstr "Uniswap disponibile tra: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1527,7 +1527,7 @@ msgstr "Fonte sconosciuta"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Errore sconosciuto{0}. Prova ad aumentare la tua tolleranza allo slittamento. Nota la commissione sui token di trasferimento e rebase non sono compatibili con Uniswap V3."
+msgstr "Errore sconosciuto{0}. Prova ad aumentare la tua tolleranza allo slittamento. Nota la commissione sui token di trasferimento e di base non sono compatibili con Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1558,7 +1558,7 @@ msgstr "Unwrap"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
-msgstr "Aggiorna Delega"
+msgstr "Aggiorna la delega"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1570,7 +1570,7 @@ msgstr "Utente"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
-msgstr "V2 liquidità"
+msgstr "Liquidità V2"
 
 #: src/pages/Swap/index.tsx
 msgid "V3"
@@ -1579,7 +1579,7 @@ msgstr "V3"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
-msgstr "V3 {0} Prezzo:"
+msgstr "Prezzo {0} V3:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
@@ -1638,7 +1638,7 @@ msgstr "Votazione terminata {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
-msgstr "La votazione termina circa {0}"
+msgstr "La votazione termina approssimativamente {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -1662,7 +1662,7 @@ msgstr "Al momento del recesso, il contratto rivendicherà automaticamente UNI p
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Quando si ritira, la vostra UNI viene rivendicata e la vostra liquidità viene rimossa dalla piscina mineraria."
+msgstr "Quando si ritira, la vostra UNI viene rivendicata e la vostra liquidità viene rimossa dal pool di estrazione."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1684,7 +1684,7 @@ msgstr "Ritiro {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "Ritirato UNI-V2!"
+msgstr "UNI-V2 ritirato!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
@@ -1764,7 +1764,7 @@ msgstr "La tua liquidità guadagnerà commissioni solo quando il prezzo di merca
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "La tua quota della piscina:"
+msgstr "La tua quota del pool:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
@@ -1772,7 +1772,7 @@ msgstr "La tua posizione"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "La tua posizione ha 0 liquidità, e non sta guadagnando commissioni."
+msgstr "La tua posizione ha 0 liquidità e non sta guadagnando commissioni."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -1809,7 +1809,7 @@ msgstr "Il costo della transazione sarà molto più alto in quanto include il ga
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "La tua transazione potrebbe essere in frontrun"
+msgstr "La tua transazione potrebbe essere anticipata"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
@@ -1829,7 +1829,7 @@ msgstr "Le tue transazioni appariranno qui..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "La tua UNI non rivendicata"
+msgstr "La tua UNI non richiesta"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -1841,7 +1841,7 @@ msgstr "per {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "ha le emoji di calzini"
+msgstr "ha le emoji dei calzini"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
