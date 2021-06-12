@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-12 14:04\n"
+"PO-Revision-Date: 2021-06-12 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -308,27 +308,27 @@ msgstr "Zárolt cím"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "A likviditás hozzáadásával a pár összes részvényének 0,3% -át meg fogja keresni, arányosan a pool részesedésével. A díjak hozzáadódnak a készlethez, valós időben halmozódnak fel, és a likviditás visszavonásával igényelhetők."
+msgstr "Likviditás hozzáadásával az összes kereskedés 3%-át keresheti meg ezen a páron, a poolból való részesedéssel arányosan. A díjakat a poolhoz adjuk hozzá, valós időben halmozódnak fel, és a likviditás kivonásával lehet igényelni."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "A lista hozzáadásával implicit módon bízik abban, hogy az adatok helyesek. Bárki létrehozhat egy listát, beleértve a meglévő listák hamis verzióinak létrehozását és azokat a listákat, amelyek azt állítják, hogy olyan projekteket képviselnek, amelyeknek még nincs ilyen."
+msgstr "A lista hozzáadásával hallgatólagosan megbízik az adatok helyességében. Bárki létrehozhat egy listát, beleértve a meglévő listák hamisított változatait is és olyan listákat is, amelyek azt állítják, hogy olyan projekteket képviselnek, amelyeknek nincs."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Pénztárca csatlakoztatásával elfogadja az Uniswap Labs <0> Általános Szerződési Feltételeit</0> és tudomásul veszi, hogy elolvasta és megértette a <1> protokoll visszavonásának nyilatkozatát</1> ."
+msgstr "A pénztárca csatlakoztatásával Ön elfogadja az Uniswap Labs <0>Szolgáltatási feltételeit</0> és elismeri, hogy elolvasta és megértette az <1>Uniswap protokoll lemondó nyilatkozatát</1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
-msgstr "változás"
+msgstr "Módosítás"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
-msgstr "Diagramok"
+msgstr "Grafikonok"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Nézze meg v3 LP áttekintési és átállási útmutatóinkat."
+msgstr "Nézze meg a v3 LP használati és migrációs útmutatókat."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -342,16 +342,16 @@ msgstr "Követelés"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Állítsa az UNI-t"
+msgstr "UNI igénylése"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Igényelje az UNI tokent"
+msgstr "UNI token igénylése"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Felhalmozott UNI jutalmak követelése"
+msgstr "Felhalmozott UNI jutalmak igénylése"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -359,16 +359,16 @@ msgstr "Követelési díjak"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "Igényelje UNI-jeleit"
+msgstr "Saját UNI tokenek igénylése"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "Azt állította"
+msgstr "Igényelt"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "Azt állította, hogy UNI!"
+msgstr "Igényelt UNI!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
@@ -376,7 +376,7 @@ msgstr "Igénylés"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Az UNI igénye"
+msgstr "Az UNI igénylése"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -385,11 +385,11 @@ msgstr "{0} UNI igénylése"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
-msgstr "Mindent kitöröl"
+msgstr "Mindent töröl"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
-msgstr "Mindent kitöröl"
+msgstr "Mindent töröl"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -406,24 +406,24 @@ msgstr "Kód"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "Gyűjt"
+msgstr "Begyűjtés"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Gyűjtse WETH-ként"
+msgstr "Begyűjtés WETH-ként"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "Gyűjtsön díjakat"
+msgstr "Díjak begyűjtése"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "Összegyűjtött"
+msgstr "Beszedett"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "Gyűjtő"
+msgstr "Beszedés"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
@@ -431,7 +431,7 @@ msgstr "Díjak beszedése"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "A díjak beszedése az Ön számára jelenleg elérhető díjakat vonja vissza."
+msgstr "A díjak beszedése visszavonja a jelenleg elérhető díjakat az Ön számára."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -439,16 +439,16 @@ msgstr "Közös alapok"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
-msgstr "megerősít"
+msgstr "Megerősítés"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
-msgstr "Ellenőrizze az ellátást"
+msgstr "Kínálat megerősítése"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
-msgstr "Erősítse meg a Csere lehetőséget"
+msgstr "Swap megerősítése"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -456,7 +456,7 @@ msgstr "Erősítse meg a Csere lehetőséget"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "Erősítse meg ezt a tranzakciót a pénztárcájában"
+msgstr "Tranzakció megerősítése a pénztárcájában"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -469,7 +469,7 @@ msgstr "Erősítse meg ezt a tranzakciót a pénztárcájában"
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
-msgstr "Csatlakoztassa a Pénztárcát"
+msgstr "Pénztárca csatlakoztatása"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx

@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-12 15:06\n"
+"PO-Revision-Date: 2021-06-12 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1546,7 +1546,7 @@ msgstr "Ξεκλείδωμα Ψήφων"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr "Μη Υποστηριζόμενο Αντικείμενο"
+msgstr ""
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
@@ -1554,7 +1554,7 @@ msgstr "Μη Υποστηριζόμενα Περιουσιακά Στοιχεί�
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "Unwrap"
+msgstr ""
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1654,7 +1654,7 @@ msgstr "Καλώς ήρθατε στην ομάδα Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Όταν διεκδικείτε χωρίς ανάληψη ρευστότητας σας παραμένει στην πισίνα εξόρυξης."
+msgstr ""
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
@@ -1697,7 +1697,7 @@ msgstr "Λάθος Δίκτυο"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr "Δημιουργείτε μια πισίνα"
+msgstr "Δημιουργείτε μια ψηφοφορία"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
@@ -1717,7 +1717,7 @@ msgstr "Τώρα μπορείτε να ανταλλάξετε {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "Δεν έχετε ακόμα ρευστότητα σε αυτή την πισίνα."
+msgstr "Δεν έχετε ακόμα ρευστότητα σε αυτή την ψηφοφορία."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -1764,7 +1764,7 @@ msgstr "Η ρευστότητά σας θα κερδίσει τέλη μόνο �
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "Μοιραστείτε την ομάδα σας:"
+msgstr "Μοιραστείτε την ψηφοφορία σας:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
@@ -1772,7 +1772,7 @@ msgstr "Η θέση σας"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "Η θέση σας έχει 0 ρευστότητα, και δεν κερδίζει τέλη."
+msgstr ""
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -1787,7 +1787,7 @@ msgstr "Η θέση σας θα είναι 100% {0} σε αυτή την τιμ�
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "Η θέση σας δεν θα κερδίσει τέλη ή θα χρησιμοποιηθεί στις συναλλαγές μέχρι η τιμή της αγοράς να μετακινηθεί στο εύρος σας."
+msgstr ""
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -1829,7 +1829,7 @@ msgstr "Οι συναλλαγές σας θα εμφανιστούν εδώ..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "Αζήτητη σας UNI"
+msgstr ""
 
 #: src/components/Settings/index.tsx
 msgid "confirm"

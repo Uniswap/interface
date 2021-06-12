@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: French\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-12 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -288,7 +288,7 @@ msgstr "Solde :"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0} {1}"
-msgstr "Solde: {0} {1}"
+msgstr "Solde : {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -346,7 +346,7 @@ msgstr "Réclamer vos UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgstr "Réclamer les jetons UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -368,11 +368,11 @@ msgstr "Réclamé"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "Réclamé UNI!"
+msgstr "Réclamé UNI !"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "Revendication"
+msgstr "Réclamation"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
@@ -411,11 +411,11 @@ msgstr "Collecter"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "Collectionner en WETH"
+msgstr "Collecter en WETH"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "Recueillir des frais"
+msgstr "Collecter des frais"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
@@ -427,7 +427,7 @@ msgstr "Collecte en cours"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Frais de recouvrement"
+msgstr "Collecter des frais"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
@@ -443,12 +443,12 @@ msgstr "Valider"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
-msgstr "Confirmer la fourniture"
+msgstr "Valider la fourniture"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
-msgstr "Confirmer le swap"
+msgstr "Valider le swap"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -456,7 +456,7 @@ msgstr "Confirmer le swap"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "Confirmez cette transaction dans votre portefeuille"
+msgstr "Validez cette transaction dans votre portefeuille"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -716,7 +716,7 @@ msgstr "Pour chaque pool indiqué ci-dessous, cliquez sur migrer pour retirer vo
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
-msgstr "A partir de"
+msgstr "À partir de"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
@@ -740,7 +740,7 @@ msgstr "Je comprends"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "Si vous achetez un jeton de cette liste, il se peut que vous ne puissiez pas le revendiquer."
+msgstr "Si vous achetez un jeton de cette liste, il se peut que vous ne puissiez pas le réclamer."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -755,7 +755,7 @@ msgstr "Liste d'importation"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
-msgstr "Importer un groupe"
+msgstr "Importer un pool"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
@@ -791,11 +791,11 @@ msgstr "Installer Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "Pas assez de liquidités pour ce commerce."
+msgstr "Pas assez de liquidités pour cette transaction."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Pas assez de liquidités pour cet échange. Essayez d'activer les transactions multi-liens."
+msgstr "Pas assez de liquidités pour cette transaction. Essayez d'activer les transactions multi-liens."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
