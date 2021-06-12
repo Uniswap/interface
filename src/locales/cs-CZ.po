@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-12 19:08\n"
+"PO-Revision-Date: 2021-06-12 20:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1402,7 +1402,7 @@ msgstr "Tip: Vlastní tokeny jsou uloženy lokálně ve vašem prohlížeči"
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "To"
-msgstr "Komu"
+msgstr "Do"
 
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
@@ -1422,7 +1422,7 @@ msgstr "Tokeny z neaktivních seznamů. Níže importujte konkrétní tokeny neb
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
-msgstr "Horní skupiny"
+msgstr "Nejvýše umístěné fondy"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1438,7 +1438,7 @@ msgstr "Vklady celkem"
 
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
-msgstr "Nastavení transakce"
+msgstr "Nastavení transakcí"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -1451,15 +1451,15 @@ msgstr "Transakce odeslána"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Transaction deadline"
-msgstr "Termín transakce"
+msgstr "Lhůta pro transakce"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
-msgstr "Zkuste to znovu"
+msgstr "Zkusit znovu"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
-msgstr "Zapnout Expert režim"
+msgstr "Zapnout režim Expert"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
@@ -1639,7 +1639,7 @@ msgstr "Hlasování skončilo {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
-msgstr "Hlasování končí přibližně {0}"
+msgstr "Hlasování končí přibližně v {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -1726,15 +1726,15 @@ msgstr "Musíte se připojit k účtu."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Musíte udělit oprávnění k chytrým smlouvám Uniswap pro použití vašeho {0}. Toto musíte udělat pouze jednou za token."
+msgstr "Musíte chytrým smlouvám Uniswap udělit oprávnění používat vaše {0}. Toto musíte udělat pouze jednou pro každý token."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Likviditu byste měli do Uniswap V3 vložit pouze za cenu, o které si myslíte, že je správná. <0/>Pokud se cena zdá být nesprávná, můžete buď provést swap k přesunutí ceny, nebo počkat, až to udělá někdo jiný."
+msgstr "Likviditu byste měli do Uniswap V3 vložit pouze za cenu, o které si myslíte, že je správná. <0/>Jestliže Vám cena připadá nesprávná, můžete buď provést swap k přesunutí ceny, nebo počkat, až to udělá někdo jiný."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
-msgstr "Budete také vybírat poplatky získané z této pozice."
+msgstr "Budete také pobírat poplatky získané z této pozice."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1759,13 +1759,13 @@ msgstr "Vaše vklady likvidity"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "Vaše likvidita bude získávat poplatky, pouze pokud je tržní cena páru ve vašem rozmezí. <0> Potřebujete pomoc s výběrem rozsahu?</0>"
+msgstr "Vaše likvidita bude vynášet poplatky, pouze pokud bude tržní cena páru ve vašem rozmezí. <0>Potřebujete pomoci s výběrem rozmezí?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "Vaše sdílení:"
+msgstr "Váš podíl na fondu:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
@@ -1773,12 +1773,12 @@ msgstr "Vaše pozice"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "Vaše pozice má 0 likviditu a nezískává poplatky."
+msgstr "Vaše pozice má likviditu 0 a nevynáší poplatky."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "Vaše pozice bude stoprocentně složena z {0} za tuto cenu"
+msgstr "Vaše pozice bude stoprocentně složena z {0} při této ceně"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1788,7 +1788,7 @@ msgstr "Vaše pozice bude 100% {0} za tuto cenu."
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "Vaše pozice nebude získávat poplatky ani nebude použita v obchodech, dokud se tržní cena nepřesune do vašeho rozsahu."
+msgstr "Vaše pozice nebude vynášet poplatky ani nebude použita v obchodech, dokud se tržní cena nepřesune do vašeho rozmezí."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -1802,11 +1802,11 @@ msgstr "Váš kurz"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "Váš celkový tokens:"
+msgstr "Váš celkový počet tokenů fondu:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "Vaše transakční náklady budou mnohem vyšší, protože budou zahrnovat plyn pro vytvoření bazálu."
+msgstr "Náklady na Vaši transakci náklady budou mnohem vyšší, protože budou zahrnovat benzín k vytvoření fondu."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -1818,15 +1818,15 @@ msgstr "Vaše transakce může selhat"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "Vaše transakce se vrátí, pokud čeká déle než toto období."
+msgstr "Jestliže bude Vaše transakce nevyřízená déle než po toto časové období, bude vzata zpět."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "Vaše transakce se vrátí, pokud se cena změní nepříznivě o více než toto procento."
+msgstr "Jestliže se cena nepříznivě změní o více, než o tuto procentní hodnotu, Vaše transakce bude vzata zpět."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
-msgstr "Vaše transakce se objeví zde..."
+msgstr "Tady se budou zobrazovat vaše transakce..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
@@ -1842,11 +1842,11 @@ msgstr "pro {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "má socký emoji"
+msgstr "má emoji na ponožkách"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https: // nebo ipfs: // nebo ENS name"
+msgstr "https:// nebo ipfs:// nebo název ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -1862,7 +1862,7 @@ msgstr "prostřednictvím seznamu tokenů {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Importovat token} other {Importujte tokeny}}"
+msgstr "{0, plural, one {Importovat token} other {Importovat tokeny}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1921,7 +1921,7 @@ msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
-msgstr "Dostupné mince {0} UNI-V2 LP"
+msgstr "{0} dostupných tokenů UNI-V2 LP"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"

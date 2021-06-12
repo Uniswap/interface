@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-06-12 14:04\n"
+"PO-Revision-Date: 2021-06-12 20:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -582,7 +582,7 @@ msgstr "Ликвидност депозита"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Положите своје токене добављача ликвидности да бисте добили УНИ, токен управљања протоколом Унисвап."
+msgstr "Положите своје токене Добављача ликвидности да бисте добили УНИ, токен управљања протоколом Uniswap."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -590,11 +590,11 @@ msgstr "Депонована ликвидност:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "Положено {0} УНИ-В2"
+msgstr "Положено {0} УНИ-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "Депозит ликвидности"
+msgstr "Депоновање ликвидности"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -610,7 +610,7 @@ msgstr "Детаљи"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "Онемогући Мултихопс"
+msgstr "Онемогући Вишеструке скокове"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
@@ -618,7 +618,7 @@ msgstr "Прекини везу"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Неслога"
+msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
@@ -630,11 +630,11 @@ msgstr "Документи"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "Не видите ниједну од својих в2 позиција? <0> Увезите га.</0>"
+msgstr "Не видите ниједну од ваших V2 позиција? <0> Увезите их.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Зарађени УНИ токени представљају акције са правом гласа у управљању Унисвап-ом."
+msgstr "Зарађени УНИ токени представљају акције са правом гласа у управљању Uniswap-ом."
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -646,7 +646,7 @@ msgstr "Унесите примаоца"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "Унесите важећи проценат клизања"
+msgstr "Унесите важећи проценат проклизавања"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
