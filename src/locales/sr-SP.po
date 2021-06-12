@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-06-12 12:06\n"
+"PO-Revision-Date: 2021-06-12 13:10\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -224,7 +224,7 @@ msgstr "Износ"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ће вам требати повећати толеранцију клизања. Ако то не успе, можда постоји некомпатибилност са токеном којим тргујете. Накнада за напомену за токене за пренос и пребазу није компатибилна са Унисвап В3."
+msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ћете морати да повећате толеранцију проклизавања. Ако то не успе, можда доћи до некомпатибилности са токеном којим тргујете. Накнада за пренос и постављање базне вредности токена није компатибилна са Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -264,19 +264,19 @@ msgstr "Јеси ли сигуран?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Као члан заједнице Унисвап можете затражити да се УНИ користи за гласање и управљање. <0 /> <1 /> <2> Прочитајте више о УНИ</2>"
+msgstr "Као члан Uniswap заједнице можете затражити да се УНИ користи за гласање и управљање. <0/> <1/> <2> Прочитајте више о УНИ</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "Барем {0} {1} и {2} {3} ће бити враћени у ваш новчаник због изабраног распона цена."
+msgstr "Најмање {0} {1} и {2} {3} ће бити враћени у ваш новчаник због изабраног распона цена."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
-msgstr "Ауто"
+msgstr "Аutomatski"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "Доступно за полог: {0}"
+msgstr "Доступно за депозит: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
