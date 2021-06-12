@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Afrikaans\n"
-"PO-Revision-Date: 2021-06-12 09:04\n"
+"PO-Revision-Date: 2021-06-12 10:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -184,7 +184,7 @@ msgstr "Voeg {0}-{1} likiditeit by"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Voeg {0}/{1} V3 likiditeit"
+msgstr "Voeg {0}/{1} V3 likiditeit by"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -208,7 +208,7 @@ msgstr "Laat handel oor hoë prysimpak toe en slaan die bevestigingsskerm oor. G
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Laat die Uniswap-protokol toe om u {0}"
+msgstr "Laat die Uniswap-protokol toe om u {0} te gebruik"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -1634,7 +1634,7 @@ msgstr "Stem vir voorstel {proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
-msgstr "Die stemming het geeinding {0}"
+msgstr "Die stemming het geeïnding {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
