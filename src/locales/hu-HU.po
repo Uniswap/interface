@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-12 19:08\n"
+"PO-Revision-Date: 2021-06-12 20:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -646,7 +646,7 @@ msgstr "Címzett megadása"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "Adjon meg érvényes csökkenési százalékot"
+msgstr "Adjon meg érvényes csúszási százalékot"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -695,11 +695,12 @@ msgstr "Az inaktív tokenlisták kibővített eredményei"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "A szakértői mód kikapcsolja a tranzakció megerősítését, és lehetővé teszi a nagy csúszásmentes kereskedéseket, amelyek gyakran rossz arányokat és elvesztett forrásokat eredményeznek."
+msgstr "A szakértői mód kikapcsolja a tranzakció megerősítését, és lehetővé teszi a nagy csúszásmentes kereskedéseket, amelyek gyakran rossz arányokat és elvesztett forrásokat eredményeznek.\n"
+"A szakértői mód kikapcsolja a tranzakció megerősítésére vonatkozó felszólítást, és lehetővé tesz nagy csúszású kereskedést, amely gyakran rossz árfolyamokat és elveszett pénzeszközöket eredményez."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Fedezze fel az Uniswap Analytics népszerű gyűjteményeit."
+msgstr "Fedezze fel az Uniswap Analytics népszerű pooljait."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -707,16 +708,16 @@ msgstr "Díjszint"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
-msgstr "Mert"
+msgstr "Számára"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Az alábbiakban bemutatott összes készlethez kattintson a migrálás gombra, hogy eltávolítsa a likviditást az Uniswap V2-ből, és helyezze át az Uniswap V3-ba."
+msgstr "Az alább látható egyes poolok esetében kattintson a migrálás gombra, hogy eltávolítsa a likviditását az Uniswap V2-ből, és letétbe helyezze az Uniswap V3-ban."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
-msgstr "Tól től"
+msgstr "Feladótól"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
@@ -724,7 +725,7 @@ msgstr "Feladó (legfeljebb)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
-msgstr "Kérjen támogatást a Discord szolgáltatásról"
+msgstr "Kérjen támogatást a Discordon"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
@@ -736,11 +737,11 @@ msgstr "Magas árhatás"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "Megértem"
+msgstr "Értem"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "Ha egy tokent vásárol ebből a listából, előfordulhat, hogy nem tudja visszaadni."
+msgstr "Ha ebből a listából vásárol tokent, nem biztos, hogy vissza tudja adni."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -751,7 +752,7 @@ msgstr "Importálás"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import List"
-msgstr "Importálás"
+msgstr "Importlista"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
@@ -759,7 +760,7 @@ msgstr "Import Pool"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
-msgstr "Import V2 készlet"
+msgstr "Import V2 Pool"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
@@ -767,35 +768,35 @@ msgstr "Import saját felelősségére"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
-msgstr "Hatótávolságban"
+msgstr "Tartományban"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Increase Liquidity"
-msgstr "Növelje a likviditást"
+msgstr "Likviditás növelése"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr "Kezdeti árak és a pool részesedése"
+msgstr "Kezdeti árfolyam és a pool részesedés"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
-msgstr "Inicializálás ..."
+msgstr "Inicializálás..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "Becsült becslés. Legfeljebb <0>{0} {1}</0> vagy a tranzakció visszaáll."
+msgstr "Az input becsült. Legfeljebb <0>{0} {1}</0> értékesíthet, különben a tranzakció visszafordul."
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
-msgstr "Telepítse a Metamask alkalmazást"
+msgstr "Metamask telepítése"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "Elégtelen likviditás ehhez a kereskedelemhez."
+msgstr "Nincs elegendő likviditás ehhez a kereskedéshez."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Elégtelen likviditás ehhez a kereskedelemhez. Próbálja meg engedélyezni a multi-hop kereskedéseket."
+msgstr "Nincs elegendő likviditás ehhez a kereskedéshez. Próbálja meg engedélyezni a multi-hop kereskedéseket."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -807,7 +808,7 @@ msgstr "Elégtelen {0} egyenleg"
 
 #: src/components/Settings/index.tsx
 msgid "Interface Settings"
-msgstr "Interfész beállításai"
+msgstr "Interfész beállítások"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/v3/hooks.ts
@@ -820,20 +821,20 @@ msgstr "Érvénytelen pár."
 
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid price input"
-msgstr "Érvénytelen árbevitel"
+msgstr "Érvénytelen árfolyam input"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "Érvénytelen tartomány van kiválasztva. A min árnak alacsonyabbnak kell lennie, mint a maximális ár."
+msgstr "Érvénytelen tartományt választott ki. A minimális árnak alacsonyabbnak kell lennie, mint a maximális ár."
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "érvénytelen címzett"
+msgstr "Érvénytelen címzett"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
-msgstr "Tanul"
+msgstr "Tanulás"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -846,11 +847,11 @@ msgstr "Likviditásszolgáltató díja"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"
-msgstr "Likviditást nyújtó jutalmak"
+msgstr "Likviditásszolgáltató jutalma"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "A likviditási szolgáltatók 0,3% -os díjat keresnek minden ügyletnél, arányosan a pool részesedésével. A díjak hozzáadódnak a készlethez, valós időben halmozódnak fel, és a likviditás visszavonásával igényelhetők."
+msgstr "A likviditásszolgáltatók 0,3%-os díjat kapnak minden kereskedés után, amely arányos a poolból való részesedésükkel. A díjakat a poolhoz adják hozzá, valós időben halmozódnak fel, és a likviditás visszavonásával igényelhetők."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -858,7 +859,7 @@ msgstr "Listák"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Loaded"
-msgstr "Töltött"
+msgstr "Feltöltve"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -869,11 +870,11 @@ msgstr "Töltött"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Loading"
-msgstr "Betöltés"
+msgstr "Feltöltés"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Győződjön meg arról, hogy az URL <0> app.uniswap.org</0>"
+msgstr "Győződjön meg arról, hogy az URL-cím <0> app.uniswap.org</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -886,7 +887,7 @@ msgstr "Kezelés"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "A likviditás kezelése a Jutalomkészletben"
+msgstr "Likviditás kezelése a Rewards Poolban"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
@@ -894,7 +895,7 @@ msgstr "Tokenlisták kezelése"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "Kezelje ezt a medencét."
+msgstr "Kezelje ezt a Poolt."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -903,11 +904,11 @@ msgstr "Max"
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Max Price"
-msgstr "Max Price"
+msgstr "Max. árfolyam"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Max price"
-msgstr "Max ár"
+msgstr "Max. árfolyam"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
@@ -915,7 +916,7 @@ msgstr "Max:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "Maximálisan elküldve"
+msgstr "Maximum elküldve"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -923,7 +924,7 @@ msgstr "Maximálisan elküldve"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
-msgstr "Vándorol"
+msgstr "Migrálás"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate Liquidity"
@@ -931,7 +932,7 @@ msgstr "Likviditás migrálása"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "A likviditás migrálása a V3-ra"
+msgstr "Likviditás migrálása a V3-ra"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
@@ -944,7 +945,7 @@ msgstr "V2 likviditás migrálása"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Vigye át a likviditási tokeneket az Uniswap V2-ről az Uniswap V3-ra."
+msgstr "Likviditási tokenek migrálása az Uniswap V2-ről az Uniswap V3-ra."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
@@ -953,11 +954,11 @@ msgstr "Migrálás"
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Min Price"
-msgstr "Min. Ár"
+msgstr "Min. árfolyam"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Min price"
-msgstr "Min. Ár"
+msgstr "Min. árfolyam"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
@@ -977,20 +978,20 @@ msgstr "Új pozíció"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
-msgstr "Nem található V2 likviditás."
+msgstr "V2 likviditás nem található."
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr "Nincs aktív medence"
+msgstr "Nincs aktív pool"
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
-msgstr "Nem található likviditás."
+msgstr "Likviditás nem található."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "Nincs medence."
+msgstr "Pool nem található."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
@@ -1006,11 +1007,11 @@ msgstr "KI"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "TOVÁBB"
+msgstr "BE"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "CSAK HASZNÁLJA EZT A MÓDOT, HOGY TUDJA, MIT CSINÁL."
+msgstr "CSAK AKKOR HASZNÁLJA EZT A MÓDOT, HOGY TUDJA, MIT CSINÁL."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1018,15 +1019,15 @@ msgstr "Ki"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "Tovább"
+msgstr "Be"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Ha elégedett az árfolyamra, kattintson az áttekintésre."
+msgstr "Ha elégedett az árfolyammal, kattintson a kínálatra az áttekintéshez."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Csak azok az UNI-szavazatok jogosultak szavazni, amelyeket a {0} blokk előtt önállóan vagy más címre delegáltak."
+msgstr "Csak azok az UNI-szavazatok jogosultak szavazni, amelyeket a {0} blokk előtt saját maguk vagy más címre delegáltak."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
@@ -1034,12 +1035,12 @@ msgstr "Hoppá! Ismeretlen hiba történt. Kérjük, frissítse az oldalt, vagy 
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
-msgstr "Hatótávolságon kívül"
+msgstr "Tartományon kívül"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "A teljesítmény becsült. {0}% -nál nagyobb mértékben változik, a tranzakció visszaáll."
+msgstr "Az output becsült érték. Ha az ár {0}%-nál nagyobb mértékben változik, a tranzakció visszaáll."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
@@ -1055,7 +1056,7 @@ msgstr "Tulajdonos"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr "Részt vevő medencék"
+msgstr "Résztvevő poolok"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1068,24 +1069,24 @@ msgstr "Írja be a \"{confirmWord}\" szót a szakértői mód engedélyezéséhe
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Medence"
+msgstr "Pool"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "Medence megtalálva!"
+msgstr "Pool megtalálva!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Medence ár"
+msgstr "Pool árfolyam"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Pool ár"
+msgstr "Pool árfolyam"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Pool tokenek a jutalomban:"
+msgstr "Pool tokenek a jutalom poolban:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1096,45 +1097,45 @@ msgstr "Pool tokenek a jutalomban:"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "Összevont {0}:"
+msgstr "Összevonva {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "Medencék áttekintése"
+msgstr "Poolok áttekintése"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
-msgstr "Ár"
+msgstr "Árfolyam"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
-msgstr "Árkülönbség:"
+msgstr "Árfolyamkülönbség:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr "Árhatás"
+msgstr "Árfoylamhatás"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "Az ár hatása túl magas"
+msgstr "Az árfolyam hatása túl magas"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "Ár frissítve"
+msgstr "Árfolyam frissítve"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "Árkategória"
+msgstr "Árfolyam-tartomány"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
-msgstr "Ár:"
+msgstr "Árfolyam:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Az árak és a medence részesedése"
+msgstr "Árfolyamok és pool-részesedés"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1150,23 +1151,23 @@ msgstr "Javaslattevő"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
-msgstr "Árak"
+msgstr "Árfolyamok"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
-msgstr "További információ az UNI-ról"
+msgstr "További információk az UNI-ról"
 
 #: src/pages/Vote/index.tsx
 msgid "Read more about Uniswap governance"
-msgstr "További információ az Uniswap irányításáról"
+msgstr "További információk az Uniswap irányításáról"
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
-msgstr "További információ a likviditás biztosításáról"
+msgstr "További információk a likviditás nyújtásáról"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
-msgstr "További információ a nem támogatott eszközökről"
+msgstr "További információk a nem támogatott eszközökről"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
@@ -1182,17 +1183,17 @@ msgstr "Eltávolítás"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "Távolítsa el az összeget"
+msgstr "Összeg eltávolítása"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "Távolítsa el a Delegált elemet"
+msgstr "Delegált eltávolítása"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "Távolítsa el a Likviditást"
+msgstr "Likviditás eltávolítása"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
@@ -1201,11 +1202,11 @@ msgstr "Lista eltávolítása"
 #: src/pages/RemoveLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove {0} {1} and {2} {3}"
-msgstr "Távolítsa el a {0} {1} és {2} {3}"
+msgstr "{0} {1} és {2} {3} eltávolítása"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Távolítsuk el {0}/{1} V3 likviditási"
+msgstr "{0}/{1} V3 likviditás eltávolítása"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
@@ -1213,7 +1214,7 @@ msgstr "{0} {1} és {2} eltávolítása {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "A swapokat csak közvetlen párokra korlátozza."
+msgstr "Kizárólag a közvetlen párokra korlátozza a swapokat."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
@@ -1225,11 +1226,11 @@ msgstr "Útvonal"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "Név vagy cím beillesztése"
+msgstr "Név keresése vagy cím beillesztése"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "Válassza a Pool lehetőséget"
+msgstr "Pool választása"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."

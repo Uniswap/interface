@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Swedish\n"
-"PO-Revision-Date: 2021-06-12 19:08\n"
+"PO-Revision-Date: 2021-06-12 20:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,11 +109,11 @@ msgstr "<0>Tillbaka till</0>V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Tips: </0> Ta bort poolpolletter omvandlar din position tillbaka till underliggande polletter i den aktuella takten, proportionellt mot din andel av poolen. Upplupna avgifter ingår i de belopp du får."
+msgstr "<0>Tips:</0> Att ta bort polletter från poolen konverterar din position tillbaka till underliggande polletter enligt gällande kurs, proportionellt mot din andel av poolen. Upplupna avgifter ingår i de belopp du får."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0> Tips:</0> Använd det här verktyget för att hitta v2-pooler som inte automatiskt visas i gränssnittet."
+msgstr "<0>Tips:</0> Använd det här verktyget för att hitta v2-pooler som inte automatiskt visas i gränssnittet."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
