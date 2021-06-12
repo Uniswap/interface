@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-12 22:08\n"
+"PO-Revision-Date: 2021-06-12 23:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -538,16 +538,16 @@ msgstr "Pool létrehozása."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
-msgstr "Napi árfolyam"
+msgstr "Jelenlegi ár"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
-msgstr "Napi árfolyam"
+msgstr "Jelenlegi ár"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "Jelenlegi {0} árfolyam:"
+msgstr "Jelenlegi {0} ár:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -821,7 +821,7 @@ msgstr "Érvénytelen pár."
 
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid price input"
-msgstr "Érvénytelen árfolyam input"
+msgstr "Érvénytelen ár input"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -954,11 +954,11 @@ msgstr "Migrálás"
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
 msgid "Min Price"
-msgstr "Min. árfolyam"
+msgstr "Min. ár"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Min price"
-msgstr "Min. árfolyam"
+msgstr "Min. ár"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
@@ -1106,36 +1106,36 @@ msgstr "Poolok áttekintése"
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price"
-msgstr "Árfolyam"
+msgstr "Ár"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
-msgstr "Árfolyamkülönbség:"
+msgstr "Árkülönbség:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr "Árfoylamhatás"
+msgstr "Árhatás"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "Az árfolyam hatása túl magas"
+msgstr "Az ár hatása túl nagy"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "Árfolyam frissítve"
+msgstr "Ár frissítve"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "Árfolyam-tartomány"
+msgstr "Ártartomány"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
-msgstr "Árfolyam:"
+msgstr "Ár:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Árfolyamok és pool-részesedés"
+msgstr "Árak és pool-részesedés"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -2005,5 +2005,5 @@ msgstr "~ $ <0 />"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← Vissza a medencék áttekintéséhez"
+msgstr "← Vissza a poolok áttekintéséhez"
 
