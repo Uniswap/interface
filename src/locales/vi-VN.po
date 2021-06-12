@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Vietnamese\n"
-"PO-Revision-Date: 2021-06-12 06:04\n"
+"PO-Revision-Date: 2021-06-12 07:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1085,7 +1085,7 @@ msgstr "Tỷ lệ hồ bơi"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Nhóm mã thông báo trong nhóm phần thưởng:"
+msgstr "Nhóm mã token trong nhóm phần thưởng:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1241,11 +1241,11 @@ msgstr "Chọn loại hồ bơi dựa trên phí nhà cung cấp thanh khoản �
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "Chọn một mã thông báo"
+msgstr "Chọn một mã token"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
-msgstr "Chọn một mã thông báo để tìm thanh khoản v2 của bạn."
+msgstr "Chọn một mã token để tìm thanh khoản v2 của bạn."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1303,7 +1303,7 @@ msgstr "Đã xảy ra sự cố"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Bước 1. Nhận mã thông báo thanh khoản UNI-V2"
+msgstr "Bước 1. Nhận mã token thanh khoản UNI-V2"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1340,11 +1340,11 @@ msgstr "Cảm ơn bạn đã tham gia cộng đồng Uniswap <0 />"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Bất biến Uniswap x * y = k không được thỏa mãn bởi hoán đổi. Điều này thường có nghĩa là một trong những mã thông báo bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
+msgstr "Bất biến Uniswap x * y = k không được thỏa mãn bởi hoán đổi. Điều này thường có nghĩa là một trong những mã token bạn đang hoán đổi kết hợp hành vi tùy chỉnh khi chuyển."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
-msgstr "Không thể chuyển mã thông báo đầu vào. Có thể có sự cố với mã thông báo đầu vào."
+msgstr "Không thể chuyển mã token đầu vào. Có thể có sự cố với mã token đầu vào."
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
@@ -1352,11 +1352,11 @@ msgstr "Giá thị trường nằm ngoài phạm vi giá đã chỉ định củ
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "Không thể chuyển mã thông báo đầu ra. Có thể có sự cố với mã thông báo đầu ra."
+msgstr "Không thể chuyển mã token đầu ra. Có thể có sự cố với mã token đầu ra."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Không thể chuyển mã thông báo đầu ra. Có thể có sự cố với mã thông báo đầu ra. Lưu ý phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
+msgstr "Không thể chuyển mã token đầu ra. Có thể có sự cố với mã token đầu ra. Lưu ý phí chuyển và mã token rebase không tương thích với Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1368,7 +1368,7 @@ msgstr "Giá của hồ bơi này nằm trong phạm vi bạn đã chọn. Vị 
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "Tỷ lệ mã thông báo bạn thêm vào sẽ thiết lập giá của nhóm này."
+msgstr "Tỷ lệ mã token bạn thêm vào sẽ thiết lập giá của nhóm này."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
@@ -1376,7 +1376,7 @@ msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng ki
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
-msgstr "Các mã thông báo này thường được ghép nối với các mã thông báo khác."
+msgstr "Các mã token này thường được ghép nối với các mã token khác."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
@@ -1388,7 +1388,7 @@ msgstr "Công cụ này sẽ chuyển thanh khoản {0} Quá trình này hoàn t
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Giao dịch này sẽ không thành công do biến động giá. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý phí chuyển và mã thông báo rebase không tương thích với Uniswap V3."
+msgstr "Giao dịch này sẽ không thành công do biến động giá. Hãy thử tăng khả năng chịu trượt của bạn. Lưu ý phí chuyển và mã token rebase không tương thích với Uniswap V3."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1413,7 +1413,7 @@ msgstr "Chuyển đổi Chế độ chuyên gia"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
-msgstr "Mã thông báo"
+msgstr "Token"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
