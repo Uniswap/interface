@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Finnish\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-12 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -41,11 +41,11 @@ msgstr "(claim)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(tyhjennä kaikki)"
+msgstr "(clear all)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(muokkaa)"
+msgstr "(edit)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -72,11 +72,11 @@ msgstr "0,05 %:n maksu"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0,3 prosentin maksu"
+msgstr "0,3 %:n maksu"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1% maksu"
+msgstr "1 %:n maksu"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -92,7 +92,7 @@ msgstr "75%"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr "<0/> Kaikki Ehdotukset"
+msgstr "<0/> Kaikki ehdotukset"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
@@ -101,31 +101,31 @@ msgstr "<0/> Äänet"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>Tilin analytiikka ja kertynyt maksu</0><1> ↗ </1>"
+msgstr "<0>Tilin analytiikka ja kertyneet maksut</0><1> ↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0> Takaisin kohtaan</0> V3"
+msgstr "<0> Takaisin kohtaan</0>V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Vinkki:</0> Poistaminen poolin poletteja muuntaa sijaintisi takaisin taustalla oleviin poletteihin nykyisellä nopeudella, suhteutettuna oman osuuden poolista. Kertyneet palkkiot sisältyvät saamiisi määriin."
+msgstr "<0>Vinkki:</0> Poolirahakkeiden poistaminen palauttaa asemasi taustalla oleviin rahakkeisiin nykyisen kurssin mukaisesti, suhteutettuna omaan osuuteesi poolista. Kertyneet palkkiot sisältyvät saamiisi määriin."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0> Vinkki:</0> Käytä tätä työkalua v2-ryhmien etsimiseen, jotka eivät näy automaattisesti käyttöliittymässä."
+msgstr "<0> Vinkki:</0> Käytä tätä työkalua etsiäksesi v2-pooleja, jotka eivät automaattisesti näy käyttöliittymässä."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Vinkki:</0> Kun lisäät likviditeettiä, saat poolin poletteja, jotka edustavat sijaintiasi. Nämä rahakkeet automaattisesti ansaita palkkioita suhteessa osuutesi altaasta, ja voidaan lunastaa milloin tahansa."
+msgstr "<0>Vinkki:</0> Kun lisäät likviditeettiä, saat poolin rahakkeita, jotka edustavat asemaasi. Nämä rahakkeet ansaitsevat automaattisesti palkkioita suhteessa osuutesi poolista, ja ne voidaan lunastaa milloin tahansa."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0>Avaa äänestäminen</0> valmistautuaksesi seuraavaan ehdotukseen."
+msgstr "<0>Avaa äänestys</0> valmistautuaksesi seuraavaan ehdotukseen."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0>🎉 </0>Tervetuloa tiimiin Unicorn :) <1>🎉</1>"
+msgstr "<0>🎉 </0>Tervetuloa Team Unicorniin :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
