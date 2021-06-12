@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Vietnamese\n"
-"PO-Revision-Date: 2021-06-12 08:05\n"
+"PO-Revision-Date: 2021-06-12 09:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -838,7 +838,7 @@ msgstr "Học hỏi"
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Liquidity"
-msgstr "Tính thanh khoản"
+msgstr "Thanh khoản"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
@@ -923,15 +923,15 @@ msgstr "Đã gửi tối đa"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
-msgstr "Di cư"
+msgstr "Di chuyển"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate Liquidity"
-msgstr "Thanh khoản di chuyển"
+msgstr "Di chuyển thanh khoản"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "Chuyển thanh khoản sang V3"
+msgstr "Di chuyển thanh khoản sang V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
@@ -940,7 +940,7 @@ msgstr "Di chuyển V2 Tính thanh khoản"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
-msgstr "Di chuyển V2 tính thanh khoản"
+msgstr "Di chuyển thanh khoản V2"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
@@ -969,7 +969,7 @@ msgstr "Số tiền nhận được tối thiểu"
 
 #: src/pages/Pool/index.tsx
 msgid "More"
-msgstr "Hơn"
+msgstr "Thêm nữa"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
@@ -1051,7 +1051,7 @@ msgstr "Đầu ra sẽ được gửi đến <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
-msgstr "Chủ nhân"
+msgstr "Chủ sở hữu"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
@@ -1192,7 +1192,7 @@ msgstr "Xóa ủy quyền"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "Loại bỏ tính thanh khoản"
+msgstr "Loại bỏ thanh khoản"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
@@ -1295,7 +1295,7 @@ msgstr "Khả năng chịu trượt"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
-msgstr "Một số tài sản không khả dụng thông qua giao diện này vì chúng có thể không hoạt động tốt với các hợp đồng thông minh hoặc chúng tôi không thể cho phép giao dịch vì lý do pháp lý."
+msgstr "Một số tài sản không khả dụng thông qua giao diện này vì chúng không hoạt động tốt với các hợp đồng thông minh hoặc chúng tôi không thể cho phép giao dịch vì lý do pháp lý."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
@@ -1495,7 +1495,7 @@ msgstr "UNI vô thừa nhận"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Unclaimed fees"
-msgstr "Phí chưa xác nhận"
+msgstr "Phí chưa nhận"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Unclaimed:"
@@ -1507,7 +1507,7 @@ msgstr "Quản trị Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 là ở đây!"
+msgstr "Uniswap V3 ở đây!"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
@@ -1583,7 +1583,7 @@ msgstr "V3 {0} Giá:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
-msgstr "Xem UNI Analytics"
+msgstr "Xem Bảng phân tích UNI"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -1591,7 +1591,7 @@ msgstr "Xem thanh khoản V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "Xem phí đã tích lũy và số liệu phân tích <0> ↗</0>"
+msgstr "Xem phí đã tích lũy và số liệu phân tích <0>↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
@@ -1680,7 +1680,7 @@ msgstr "Rút tiền thanh khoản đã ký gửi"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
-msgstr "Rút {0} UNI-V2"
+msgstr "Đang rút {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
@@ -1713,7 +1713,7 @@ msgstr "Bạn có thể tự bỏ phiếu cho từng đề xuất hoặc ủy th
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
-msgstr "Bây giờ bạn có thể giao dịch {0}"
+msgstr "Giờ đây, bạn có thể giao dịch {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
@@ -1729,7 +1729,7 @@ msgstr "Bạn phải cấp quyền cho hợp đồng thông minh Uniswap để s
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Bạn chỉ nên gửi thanh khoản vào Uniswap V3 ở mức giá mà bạn tin là chính xác. <0 /> Nếu giá có vẻ không chính xác, bạn có thể hoán đổi để thay đổi giá hoặc đợi người khác thực hiện."
+msgstr "Bạn chỉ nên gửi thanh khoản vào Uniswap V3 ở mức giá mà bạn tin là chính xác. <0/> Nếu giá có vẻ không chính xác, bạn có thể hoán đổi để thay đổi giá hoặc đợi người khác thực hiện."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -1758,7 +1758,7 @@ msgstr "Tiền gửi thanh khoản của bạn"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "Tính thanh khoản của bạn sẽ chỉ kiếm được phí khi giá thị trường của cặp giao dịch nằm trong phạm vi của bạn. <0> Cần trợ giúp để chọn một phạm vi?</0>"
+msgstr "Bạn sẽ chỉ kiếm được phí thanh khoản khi giá thị trường của cặp giao dịch nằm trong phạm vi của bạn. <0> Cần trợ giúp để chọn một phạm vi?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1782,7 +1782,7 @@ msgstr "Vị trí của bạn sẽ 100% bao gồm {0} ở mức giá này"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "Vị trí của bạn sẽ là {0} % ở mức giá này."
+msgstr "Vị trí của bạn sẽ là 100% {0} ở mức giá này."
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1825,11 +1825,11 @@ msgstr "Giao dịch của bạn sẽ hoàn nguyên nếu giá thay đổi bất 
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
-msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây ..."
+msgstr "Các giao dịch của bạn sẽ xuất hiện tại đây..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "UNI chưa được xác nhận của bạn"
+msgstr "UNI chưa được nhận của bạn"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -1845,7 +1845,7 @@ msgstr "có biểu tượng cảm xúc vớ"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https: // hoặc ipfs: // hoặc tên ENS"
+msgstr "https:// hoặc ipfs:// hoặc tên ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -1872,7 +1872,7 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0 /> mỗi <1 />"
+msgstr "{0} <0/> mỗi <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -1881,7 +1881,7 @@ msgstr "{0} Token tùy chỉnh"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} gửi 0"
+msgstr "{0} Đã gửi"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
@@ -1979,7 +1979,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LP Tokens"
+msgstr "{0}/{1} LP Token"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -1999,7 +1999,7 @@ msgstr "{tokenB} trên {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~ $ <0 />"
+msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
