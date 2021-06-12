@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-12 18:04\n"
+"PO-Revision-Date: 2021-06-12 19:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -224,7 +224,7 @@ msgstr "Částka"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Při pokusu o provedení tohoto swapu došlo k chybě. Možná budete muset zvýšit toleranci skluzu. Pokud to nefunguje, může to být způsobeno nekompatibilitou s tokenem, s nímž obchodujete. Pamatujte, že poplatek za převod a zpětné převzetí tokenů není kompatibilní s Uniswap V3."
+msgstr "Při pokusu o provedení tohoto swapu došlo k chybě. Možná budete muset zvýšit toleranci skluzu. Pokud to nefunguje, může to být způsobeno nekompatibilitou s tokenem, s nímž obchodujete. Pamatujte, že poplatky za převod a zpětné převzetí tokenů nejsou kompatibilní s Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -443,7 +443,7 @@ msgstr "Potvrdit"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
-msgstr "Potvrdit dodávku"
+msgstr "Potvrdit zásobu"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -513,7 +513,7 @@ msgstr "Zkopírovat adresu"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Vytvořit fond a dodávku"
+msgstr "Vytvořit fond a zásobu"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -982,15 +982,15 @@ msgstr "Nebyla nalezena likvidita V2."
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr "Žádné aktivní skupiny"
+msgstr "Žádné aktivní fondy"
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
-msgstr "Nenalezena žádná likvidita."
+msgstr "Nebyla nalezena žádná likvidita."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "Žádný bazén nenalezen."
+msgstr "Nebyl nalezen žádný fond."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
@@ -1022,7 +1022,7 @@ msgstr "Zapnuto"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Až budete spokojeni se sazbou, klikněte na dodávku pro kontrolu."
+msgstr "Až budete spokojeni se sazbou, klikněte na zásobu pro kontrolu."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
@@ -1233,7 +1233,7 @@ msgstr "Vyberte fond"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Vyberte typ bazénu na základě vašeho preferovaného poplatku za poskytnutí likvidity."
+msgstr "Na základě preferovaného poplatku poskytovateli likvidity vyberte typ fondu."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1241,11 +1241,11 @@ msgstr "Vyberte typ bazénu na základě vašeho preferovaného poplatku za posk
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "Vybrat token"
+msgstr "Vyberte token"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
-msgstr "Vyberte token a vyhledejte svou likviditu v2."
+msgstr "Chcete-li najít svou likviditu v2, vyberte token."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1261,7 +1261,7 @@ msgstr "Sám"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
-msgstr "Samostatná delegace"
+msgstr "Sobě delegovat"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1274,24 +1274,24 @@ msgstr "Nastavit počáteční cenu"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
-msgstr "Podíl fondu"
+msgstr "Podíl na fondu"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "Podíl sdružení:"
+msgstr "Podíl na fondu:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
-msgstr "Show Portis"
+msgstr "Zobrazit Portis"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
-msgstr "Jednoduchý"
+msgstr "Jednoduché"
 
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "Tolerance boční stránky"
+msgstr "Tolerance skluzu"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1299,7 +1299,7 @@ msgstr "Některá aktiva nejsou dostupná prostřednictvím tohoto rozhraní, pr
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
-msgstr "Něco se pokazilo"
+msgstr "Něco je špatně"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
@@ -1311,7 +1311,7 @@ msgstr "Odesílání hlasování"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
-msgstr "Dodávka"
+msgstr "Zásoba"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying {0} {1} and {2} {3}"
@@ -1356,7 +1356,8 @@ msgstr "Výstupní token nelze přenést. Může dojít k problému s výstupní
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Výstupní token nelze přenést. Může dojít k problému s výstupním tokenem. Poplatek za poznámky u tokenů za převod a rebase není kompatibilní s Uniswap V3."
+msgstr "Výstupní token nelze přenést. možná je s výstupním tokenem nějaký problém. \n"
+"Pamatujte, že poplatky za převod a zpětné převzetí tokenů nejsou kompatibilní s Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1388,7 +1389,7 @@ msgstr "Tento nástroj bezpečně migruje vaši {0} likviditu do V3. Proces je z
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Tato transakce nebude úspěšná z důvodu cenového pohybu. Zkuste zvýšit toleranci skluzu. Poplatek za poznámky u tokenů za převod a rebase není kompatibilní s Uniswap V3."
+msgstr "Tato transakce nebude úspěšná z důvodu cenového pohybu. Zkuste zvýšit toleranci skluzu. Pamatujte, že poplatky za převod a zpětné převzetí tokenů nejsou kompatibilní s Uniswap V3."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1425,7 +1426,7 @@ msgstr "Horní skupiny"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
-msgstr "Celkový přívod"
+msgstr "Celková zásoba"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Total deposited"
@@ -1503,7 +1504,7 @@ msgstr "Nenárokované:"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
-msgstr "Uniswapová správa"
+msgstr "Správa Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
@@ -1515,11 +1516,11 @@ msgstr "Uniswap k dispozici za: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr "Neriswapová těžba likvidity"
+msgstr "Těžba likvidity Uniswap"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr "Uniswap migrační kontrakt: up-right_arrow:"
+msgstr "Migrační kontrakt Uniswap↗"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1527,34 +1528,34 @@ msgstr "Neznámý zdroj"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Neznámá chyba{0}. Zkuste zvýšit toleranci skluzu. Poplatek za tokeny za převod a rebase není kompatibilní s Uniswap V3."
+msgstr "Neznámá chyba{0}. Zkuste zvýšit toleranci skluzu. Pamatujte, že poplatky za převod a zpětné převzetí tokenů nejsou kompatibilní s Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
 msgid "Unlock Votes"
-msgstr "Odemknout hlasování"
+msgstr "Odblokovat hlasy"
 
 #: src/pages/Vote/index.tsx
 msgid "Unlock Voting"
-msgstr "Odemknout hlasování"
+msgstr "Odblokovat hlasování"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Unlocking Votes"
-msgstr "Odemykání hlasů"
+msgstr "Odblokování hlasů"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr "Nepodporovaný majetek"
+msgstr "Nepodporované aktivum"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
-msgstr "Nepodporované položky"
+msgstr "Nepodporovaná aktiva"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "Unwrap"
+msgstr "Rozbalit"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1570,7 +1571,7 @@ msgstr "Uživatel"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
-msgstr "V2 likvidita"
+msgstr "Likvidita V2"
 
 #: src/pages/Swap/index.tsx
 msgid "V3"
@@ -1587,7 +1588,7 @@ msgstr "Zobrazit UNI Analytics"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
-msgstr "Zobrazit V2 Likviditu"
+msgstr "Zobrazit likviditu V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -1876,12 +1877,12 @@ msgstr "{0} <0/> za <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
-msgstr "{0} vlastních žetonů"
+msgstr "{0} vlastních tokenů"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} vloženo"
+msgstr "{0} uloženo"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
@@ -1896,7 +1897,7 @@ msgstr "{0} Získané poplatky:"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
-msgstr "{0} čeká"
+msgstr "{0} nevyřízených"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
