@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Norwegian\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-12 22:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,7 +37,7 @@ msgstr "(Maks)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(claim)"
+msgstr "(hent)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -68,7 +68,7 @@ msgstr "0 UNI / uke"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "0,05% avgift"
+msgstr "0,05 % avgift"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
@@ -76,19 +76,19 @@ msgstr "0,3 % avgift"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1% avgift"
+msgstr "1 % avgift"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
-msgstr "25%"
+msgstr "25 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
-msgstr "50%"
+msgstr "50 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
-msgstr "75%"
+msgstr "75 %"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
@@ -97,7 +97,7 @@ msgstr "<0/> Alle forslag"
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/> stemmer"
+msgstr "<0/> Stemmer"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -105,19 +105,19 @@ msgstr "<0>Konto-analyser og påløpte avgifter</0><1> :up-″: </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0> Tilbake til</0> V3"
+msgstr "<0>Tilbake til</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Tips: </0> Fjerning av bassengtokens konverterer din posisjon tilbake til underliggende tokens i nåværende hastighet, proporsjonal med din andel av bassenget. Påløpte avgifter er inkludert i beløpet du mottar."
+msgstr "<0>Tips: </0> Fjerning av pottpolletter konverterer din posisjon tilbake til underliggende polletter i nåværende hastighet, proporsjonal med din andel av potten. Påløpte avgifter er inkludert i beløpet du mottar."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0> Tips:</0> Bruk dette verktøyet til å finne v2-bassenger som ikke automatisk vises i grensesnittet."
+msgstr "<0> Tips:</0> Bruk dette verktøyet til å finne v2-potter som ikke automatisk vises i grensesnittet."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Tips: </0> Når du legger til likviditet, vil du motta samlingstoker som representerer din posisjon. Disse toktene tar automatisk gebyr proporsjonal med din andel av reserven, og kan innløses når som helst."
+msgstr "<0>Tips: </0> Når du legger til likviditet, vil du motta samlingpotter som representerer din posisjon. Disse pollettene tar automatisk gebyr proporsjonal med din andel av potten, og kan innløses når som helst."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -159,11 +159,11 @@ msgstr "Legg til delegat +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "Legg til Likviditet"
+msgstr "Legg til likviditet"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "Legg til V2 Likviditet"
+msgstr "Legg til V2-likviditet"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
@@ -171,7 +171,7 @@ msgstr "Legg til likviditet."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "Legg til {0} til Metamask <0/>"
+msgstr "Legg til {0} til metamaske <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -184,7 +184,7 @@ msgstr "Legg til {0}-{1} likviditet"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Legg til {0}/{1} V3 likviditet"
+msgstr "Legg til {0}/{1} V3-likviditet"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -192,7 +192,7 @@ msgstr "Lagt til {0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "Adressen har ikke noe tilgjengelig krav"
+msgstr "Adressen har ikke noen tilgjengelig krav"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
@@ -200,15 +200,15 @@ msgstr "Mot"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
-msgstr "Tillat LP token migrering"
+msgstr "Tillat migrering av LP-pollett"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Tillat høypris påvirke handel og hopp over bekreftelsesskjermen. Bruk på egen risiko."
+msgstr "Tillat høyprispåvirkede handel og hopp over bekreftelsesskjermen. Bruk på egen risiko."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Tillat Uniswap Protokollen å bruke din {0}"
+msgstr "Tillat Uniswap-protokollen å bruke din {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -216,7 +216,7 @@ msgstr "Tillatt"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Sørg alltid for at nettadressen er <0>app.uniswap.org</0> - bokmerke den er trygg."
+msgstr "Sørg alltid for at URL-en er <0>app.uniswap.org</0> – bokmerke den som trygg."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -224,11 +224,11 @@ msgstr "Beløp"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Det oppstod en feil under forsøk på å utføre denne byttingen. Det kan hende du må øke glidetoleransen. Hvis det ikke fungerer, kan det være en inkompatibilitet med symbolet du handler. Noteringsgebyr ved overføring og rebase-tokens er inkompatibelt med Uniswap V3."
+msgstr "Det oppstod en feil under forsøk på å utføre denne byttingen. Det kan hende du må øke glidetoleransen. Hvis det ikke fungerer, kan det være en inkompatibilitet med symbolet du handler. Noteringsgebyr ved overføring og rebase-polletter er inkompatibelt med Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "Analyser"
+msgstr "Analyse"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -264,7 +264,7 @@ msgstr "Er du sikker?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Som medlem av Uniswap-fellesskapet kan du hevde at UNI skal brukes til stemmegivning og regjering. <0/><1/><2>Les mer om UNI</2>"
+msgstr "Som medlem av Uniswap-fellesskapet kan du hevde at UNI skal brukes til stemmegivning og styring. <0/><1/><2>Les mer om UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -272,7 +272,7 @@ msgstr "Minst {0} {1} og {2} {3} vil bli refundert til lommeboken på grunn av v
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
-msgstr "Automatisk"
+msgstr "Auto"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -448,7 +448,7 @@ msgstr "Bekreft levering"
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
-msgstr "Bekreft bytt"
+msgstr "Bekreft bytte"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx

@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-12 22:09\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -244,19 +244,19 @@ msgstr "Схвалити {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
-msgstr "Затверджено"
+msgstr "Схвалено"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
-msgstr "Затвердження"
+msgstr "Схвалення"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
-msgstr "Затвердження {0}"
+msgstr "Схвалення {0}"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -264,7 +264,7 @@ msgstr "Ви впевнені?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Як учасник спільноти Uniswap ви можете стверджувати, що UNI слід використовувати для голосування та управління. <0><2>Прочитайте більше про UNI</2>"
+msgstr "Як учасник спільноти Uniswap ви можете стверджувати, що UNI слід використовувати для голосування й управління.<0/><1/><2>Прочитайте більше про UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
