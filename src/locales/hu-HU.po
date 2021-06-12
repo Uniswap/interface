@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-12 13:10\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -41,7 +41,7 @@ msgstr "(követelés)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(mindent kitöröl)"
+msgstr "(összes törlése)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
@@ -53,7 +53,7 @@ msgstr "+{feeAmountFormatted}%"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove send"
-msgstr "- Távolítsa el a küldést"
+msgstr "- Küldés eltávolítása"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "-{feeAmountFormatted}%"
@@ -68,11 +68,11 @@ msgstr "0 UNI / hét"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "0,05% -os díj"
+msgstr "0,05% díj"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0,3% -os díj"
+msgstr "0,3% díj"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
@@ -109,19 +109,19 @@ msgstr "<0> Vissza ide:</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0> Tipp:</0> A készletjelzők eltávolítása a pozíciót visszaalakítja mögöttes tokenekké az aktuális sebességgel, a készlet részesedésével arányosan. Az elhatárolt díjakat a kapott összegek tartalmazzák."
+msgstr "<0> Tipp:</0> A pool tokenek kivonása a pozícióját visszafordítja az alapjául szolgáló tokenekre az aktuális árfolyamon, a poolból való részesedésével arányosan. Az elhatárolt díjakat az Ön által kapott összegek tartalmazzák."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0> Tipp:</0> Ezzel az eszközzel megkeresheti a felületen automatikusan nem megjelenő v2 készleteket."
+msgstr "<0> Tipp:</0> Ezzel a poollal olyan v2 poolokat találhat, amelyek nem jelennek meg automatikusan a felületen."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0> Tipp:</0> A likviditás hozzáadásakor pool-tokeneket kap, amelyek a pozícióját képviselik. Ezek a tokenek automatikusan díjakat keresnek, a saját részarányával arányosan, és bármikor beválthatók."
+msgstr "<0> Tipp:</0> Amikor likviditást ad hozzá, a pozícióját képviselő pool tokeneket fog kapni. Ezek a tokenek automatikusan a poolból való részesedésével arányos díjakat keresnek, és bármikor beválthatók."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0> Feloldja a szavazást</0> felkészülni a következő javaslatra."
+msgstr "<0> Szavazás feloldása</0> a következő javaslatra való felkészüléshez."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -129,7 +129,7 @@ msgstr "<0> 🎉</0> Üdvözöljük az Unicorn csapatában :) <1> 🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "A pályázatok benyújtásához a teljes UNI-kínálat minimum 1% -ának megfelelő küszöb szükséges"
+msgstr "A javaslatok benyújtásához a teljes UNI-kínálat legalább 1%-ának elérése szükséges"
 
 #: src/components/Menu/index.tsx
 msgid "About"
