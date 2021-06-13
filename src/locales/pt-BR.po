@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Portuguese, Brazilian\n"
-"PO-Revision-Date: 2021-06-13 13:12\n"
+"PO-Revision-Date: 2021-06-13 14:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1634,15 +1634,15 @@ msgstr "Votar na proposta {proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
-msgstr "A votação terminou {0}"
+msgstr "Votação encerrada {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
-msgstr "A votação termina aproximadamente {0}"
+msgstr "A votação se encerra aproximadamente às {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
-msgstr "Aguardando confirmação"
+msgstr "Aguardando a confirmação"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -1650,19 +1650,19 @@ msgstr "Recompensas Semanais"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
-msgstr "Bem-vindo ao time Unicorn :)"
+msgstr "Seja bem-vindo à equipe Unicórnio :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Quando você afirma sem retirar sua liquidez permanece na reserva de mineração."
+msgstr "Quando você resgata sem sacar, sua liquidez permanece no lote de mineração."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Quando você retirar, o contrato automaticamente reivindicará a UNI em seu nome!"
+msgstr "Quando você sacar, o contrato resgata automaticamente as UNI que estiverem em seu nome!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Quando você saque, a sua UNI é reivindicada e sua liquidez é removida do pool de mineração."
+msgstr "Quando você sacar, suas UNI serão resgatadas e sua liquidez será removida do lote de mineração."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1676,40 +1676,40 @@ msgstr "Sacar e Reivindicar"
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "Retirar liquidez depositada"
+msgstr "Sacar liquidez depositada"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
-msgstr "Retirando {0} UNI-V2"
+msgstr "Sacar {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "Retirou a UNI-V2!"
+msgstr "Sacou UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Ajustar"
+msgstr "Cobrir"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
-msgstr "Rede errada"
+msgstr "Rede incorreta"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr "Você está criando um pool"
+msgstr "Você está abrindo um novo lote"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Você é o primeiro provedor de liquidez deste pool Uniswap V3. Sua liquidez migrará pelo preço atual {0}."
+msgstr "Você é o primeiro fornecedor com liquidez neste lote do Uniswap V3. Sua liquidez será migrada ao preço atual de {0}."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
-msgstr "Você é o primeiro provedor de liquidez."
+msgstr "Você é o primeiro fornecedor com liquidez."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Pode votar cada uma das propostas ou delegar os seus votos num terceiro."
+msgstr "Você mesmo pode votar em cada proposta ou delegar seu voto para um terceiro."
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
@@ -1717,11 +1717,11 @@ msgstr "Agora você pode negociar {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "Você ainda não tem liquidez nesta piscina."
+msgstr "Você ainda não tem liquidez neste lote."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
-msgstr "Você deve conectar uma conta."
+msgstr "É preciso conectar-se a uma conta."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
