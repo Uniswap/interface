@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-06-13 00:10\n"
+"PO-Revision-Date: 2021-06-13 01:28\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -68,15 +68,15 @@ msgstr "0 UNI / semana"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "Comisión del 0,05 %"
+msgstr "Tarifa del 0,05%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "Comisión del 0,3 %"
+msgstr "Tarifa del 0,3 %"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "Comisión de 1 %"
+msgstr "Tarifa del 1 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -228,7 +228,7 @@ msgstr "Se produjo un error al intentar ejecutar este intercambio. Es posible qu
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "Analíticas"
+msgstr "Estadísticas"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -260,11 +260,11 @@ msgstr "Aprobando {0}"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
-msgstr "¿Estás seguro?"
+msgstr "¿Está seguro?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Como miembro de la comunidad de Uniswap, puedes reclamar que UNI sea utilizado para votar y gobernanza.<0/><1/><2>Lee más sobre UNI</2>"
+msgstr "Como miembro de la comunidad de Uniswap, puede reclamar que UNI sea utilizado para votar y gestionar.<0/><1/><2>Lea más sobre UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -292,15 +292,15 @@ msgstr "Saldo: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "Lo mejor para parejas exóticas."
+msgstr "Lo mejor para pares exóticos."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "Lo mejor para la mayoría de pares."
+msgstr "Lo mejor para la mayoría de los pares."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "Lo mejor para parejas estables."
+msgstr "Lo mejor para pares estables."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -308,15 +308,15 @@ msgstr "Dirección bloqueada"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Al añadir liquidez, ganarás el 0,3% de todas las operaciones en este par proporcionalmente a tu parte del pozo. Las tarifas se añaden a la piscina, se acumulan en tiempo real y se pueden reclamar retirando su liquidez."
+msgstr "Al añadir liquidez, ganará un 0,3 % de todas las operaciones con este par de forma proporcional a su participación en el fondo común. Las comisiones se añaden al fondo, se acumulan en tiempo real y se pueden reclamar al retirar su liquidez."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "Al añadir esta lista usted confía implícitamente en que los datos son correctos. Cualquiera puede crear una lista, incluyendo la creación de versiones falsas de listas existentes y listas que afirman representar proyectos que no tienen uno."
+msgstr "Al añadir esta lista está confiando implícitamente en que los datos son correctos. Cualquiera puede crear una lista; incluso se pueden crear versiones falsas de listas existentes y listas que afirman representar proyectos que no tienen una."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Al conectar una cartera, usted acepta los <0>Términos de servicio</0> de Uniswap Labs y reconoce que ha leído y comprendido la <1>exención de responsabilidad del protocolo Uniswap</1>."
+msgstr "Al conectar una cartera, usted acepta los <0>Términos de servicio</0> de Uniswap Labs y reconoce que ha leído y comprendido la <1>Exención de responsabilidad del protocolo Uniswap</1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -328,13 +328,13 @@ msgstr "Gráficos"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Echa un vistazo a nuestras guías de navegación y migración de LP v3."
+msgstr "Eche un vistazo a nuestras guías de navegación y migración de LP v3."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "Claim"
+msgstr "Reclamar"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -342,11 +342,11 @@ msgstr "Claim"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Claim UNI"
+msgstr "Reclamar UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgstr "Reclamar token de UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -355,11 +355,11 @@ msgstr "Reclamar recompensas UNI acumuladas"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Reclamar honorarios"
+msgstr "Reclamar comisiones"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "Reclama tus tokens UNI"
+msgstr "Reclame sus tokens UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -1010,7 +1010,7 @@ msgstr "ENCENDIDO"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "SÓLO UTILIZA ESTE MÓDIGO SI CONDICIONES QUE SON DOING."
+msgstr "UTILICE ESTE MODO ÚNICAMENTE SI SABE LO QUE ESTÁ HACIENDO."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
