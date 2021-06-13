@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-06-13 06:04\n"
+"PO-Revision-Date: 2021-06-13 07:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1261,7 +1261,7 @@ msgstr "Auto"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
-msgstr "Autodeselegante"
+msgstr "Autodelegado"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1274,15 +1274,15 @@ msgstr "Fijar precio inicial"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
-msgstr "Participación de la piscina"
+msgstr "Participación del fondo común"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "Comparte de Pool:"
+msgstr "Participación del fondo común:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
-msgstr "Show Portis"
+msgstr "Mostrar Portis"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1295,7 +1295,7 @@ msgstr "Tolerancia de deslizamiento"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
-msgstr "Algunos activos no están disponibles a través de esta interfaz porque puede que no funcionen bien con los contratos inteligentes o que no podemos permitir el comercio por razones legales."
+msgstr "Algunos activos no están disponibles a través de esta interfaz porque puede que no funcionen bien con los contratos inteligentes o que no podamos permitir el comercio por razones legales."
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Something went wrong"
@@ -1303,7 +1303,7 @@ msgstr "Algo salió mal"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Paso 1. Obtener fichas de liquidez UNI-V2"
+msgstr "Paso 1. Obtener tokens de liquidez UNI-V2"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1340,7 +1340,7 @@ msgstr "Gracias por ser parte de la comunidad Uniswap <0 />"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "El invariante de Uniswap x * y = k no fue satisfecho por el intercambio. Esto generalmente significa que uno de los tokens que está intercambiando incorpora un comportamiento personalizado en la transferencia."
+msgstr "El invariante Uniswap x*y=k no estaba satisfecho con el intercambio. Esto generalmente significa que uno de los tokens que está intercambiando incorpora un comportamiento personalizado en la transferencia."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1360,15 +1360,15 @@ msgstr "El token de salida no se puede transferir. Puede haber un problema con e
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "El precio de esta piscina está fuera de su rango seleccionado. Su posición no está ganando comisiones en este momento."
+msgstr "El precio de este fondo común está fuera de su rango seleccionado. Su posición no está ganando comisiones en este momento."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "El precio de esta piscina está dentro de su rango seleccionado. Su posición actualmente está ganando cuotas."
+msgstr "El precio de este fondo común está dentro de su rango seleccionado. Su posición actualmente está ganando comisiones."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "La proporción de tokens que añadas establecerá el precio de esta piscina."
+msgstr "La proporción de tokens que añada establecerá el precio de este fondo común."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
@@ -1384,7 +1384,7 @@ msgstr "Este token no aparece en las listas de tokens activos. Asegúrese de que
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "Esta herramienta migrará su liquidez {0} a V3. El proceso es completamente sin confianza gracias a la"
+msgstr "Esta herramienta migrará su liquidez {0} a V3. El proceso es totalmente infalible gracias a la"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1396,7 +1396,7 @@ msgstr "Esta transacción no se realizará correctamente debido al movimiento de
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
-msgstr "Consejo: Los tokens personalizados se almacenan localmente en tu navegador"
+msgstr "Consejo: los tokens personalizados se almacenan localmente en su navegador"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1409,7 +1409,7 @@ msgstr "A (al menos)"
 
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
-msgstr "Cambiar modo experto"
+msgstr "Cambiar a modo experto"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1421,7 +1421,7 @@ msgstr "Tokens de listas inactivas. Importe tokens específicos a continuación 
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
-msgstr "Piscinas superiores"
+msgstr "Fondos comunes superiores"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1861,7 +1861,7 @@ msgstr "a través de la lista de fichas {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Importar token} other {¡Importa tokens}}"
+msgstr "{0, plural, one {Importar token} other {Importa tokens}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1876,7 +1876,7 @@ msgstr "{0} <0/> por <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
-msgstr "{0} fichas personalizadas"
+msgstr "{0} tokens personalizados"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
