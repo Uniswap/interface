@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Swedish\n"
-"PO-Revision-Date: 2021-06-12 20:08\n"
+"PO-Revision-Date: 2021-06-13 09:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,7 +109,7 @@ msgstr "<0>Tillbaka till</0>V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Tips:</0> Att ta bort polletter från poolen konverterar din position tillbaka till underliggande polletter enligt gällande kurs, proportionellt mot din andel av poolen. Upplupna avgifter ingår i de belopp du får."
+msgstr "<0>Tips:</0> Att ta bort tokens från poolen konverterar din position tillbaka till underliggande tokens enligt gällande kurs, proportionellt mot din andel av poolen. Upplupna avgifter ingår i de belopp du får."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -117,11 +117,11 @@ msgstr "<0>Tips:</0> Använd det här verktyget för att hitta v2-pooler som int
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Tip:</0> När du lägger till likviditet får du pooltokens som representerar din position. Dessa tokens automatiskt tjäna avgifter proportionellt mot din del av poolen, och kan lösas in när som helst."
+msgstr "<0>Tips:</0> När du lägger till likviditet får du pooltokens som representerar din position. Dessa tokens genererar automatiskt avgifter proportionellt mot din andel av poolen och kan lösas in när som helst."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0>Lås upp röstning</0> för att förbereda för nästa förslag."
+msgstr "<0>Öppna upp för röstning</0> för att förbereda för nästa förslag."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -129,11 +129,11 @@ msgstr "<0>🎉 </0>Välkommen till teamet Unicorn :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "En minimitröskel på 1 procent av UNI:s totala försörjning krävs för att lägga fram förslag"
+msgstr "En minimitröskel på 1 procent av totala UNI-utbudet krävs för att lägga fram förslag"
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "Om"
+msgstr "Omkring"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
@@ -145,7 +145,7 @@ msgstr "Konto"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "Aktiv"
+msgstr "Aktivt"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -155,19 +155,19 @@ msgstr "Lägg till"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "Lägg till Delegera +"
+msgstr "Lägg till delegat +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "Lägg till likviditet"
+msgstr "Fyll på likviditet"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "Lägg till V2 Likviditet"
+msgstr "Fyll på V2-likviditet"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "Tillsätt likviditet."
+msgstr "Fyll på likviditet."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -180,19 +180,19 @@ msgstr "Lägg till {0} {1} och {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "Lägg till {0}-{1} likviditet"
+msgstr "Lägg till {0}-{1}-likviditet"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Addera {0}/{1} V3 likviditet"
+msgstr "Lägg {0}/{1} V3-likviditet"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
-msgstr "Lade till {0}"
+msgstr "Tillagt {0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "Adressen har inget tillgängligt anspråk"
+msgstr "Adressen har inget tillgängligt krav"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
@@ -204,7 +204,7 @@ msgstr "Tillåt migrering av LP-token"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Tillåt höga priseffekter handel och hoppa över bekräfta skärmen. Använd på egen risk."
+msgstr "Tillåt transaktioner med hög prispåverkan och hoppa över bekräftelseskärmen. Använd på egen risk."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -216,7 +216,7 @@ msgstr "Tillåten"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Se alltid till att URL:en är<0>app.uniswap.org</0> - bokmärke den för att vara säker."
+msgstr "Se alltid till att URL:en är<0>app.uniswap.org</0> - bokmärk den för att vara på säker sida."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -224,7 +224,7 @@ msgstr "Belopp"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ett fel uppstod när det här försöket skulle genomföras. Du kan behöva öka din glidningstolerans. Om det inte fungerar kan det finnas en inkompatibilitet med det token du handlar. Notavgift vid överföring och rebase-tokens är oförenligt med Uniswap V3."
+msgstr "Ett fel uppstod när denna swap skulle genomföras. Du kan behöva öka din toleransmarginal. Om det inte fungerar kan det finnas en oförenlighet med den token du handlar. Kom ihåg att avgifter för överföring och rebase tokens är oförenliga med Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"

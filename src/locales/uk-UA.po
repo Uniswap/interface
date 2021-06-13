@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-13 07:06\n"
+"PO-Revision-Date: 2021-06-13 09:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,11 +37,11 @@ msgstr "(Максимум)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(claim)"
+msgstr "(забрати)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(очистити все)"
+msgstr "(забрати все)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
@@ -64,19 +64,19 @@ msgstr "-{feeAmountFormatted}%"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "0 UNI / week"
-msgstr "0 UNI / тиждень"
+msgstr "0 UNI/тиждень"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "Вартість 0,05%"
+msgstr "Комісія 0,05%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0.3% комісія"
+msgstr "Комісія 0,3%"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1% Плата"
+msgstr "Комісія 1%"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
@@ -97,7 +97,7 @@ msgstr "<0/> Всі пропозиції"
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/> Голосів"
+msgstr "<0/> голосів"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -105,35 +105,35 @@ msgstr "<0>Аналітика облікових записів та накоп�
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0> Повернутися до</0> V3"
+msgstr "<0>Назад до </0>V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Порада:</0> Видалення токенів наповнення токенів перетворює вашу позицію в необхідну частину токену, пропорційно обміну басейну. Нараховані платежі включені в суми, які ви отримуєте."
+msgstr "<0>Порада:</0> Видалення токенів портфеля переводить вашу позицію назад на базовий токен за поточним курсом, пропорційно вашій частці портфелю. Нараховані комісії включено в суми, які ви отримуєте."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0> Порада:</0> Використовуйте цей інструмент для пошуку пулів v2, які не відображаються автоматично в інтерфейсі."
+msgstr "<0>Порада:</0> Використовуйте цей інструмент для пошуку портфелів v2, які не відображаються автоматично в інтерфейсі."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Порада:</0> При додаванні рідини, ви отримаєте токени пулу, що представляє вашу позицію. Ці токени автоматично заробляють плату пропорційно вашій вкладці басейну, і можуть бути викуплені в будь-який час."
+msgstr "<0>Порада:</0> При додаванні ліквідності ви отримаєте токени портфеля, що представляє вашу позицію. Ці токени автоматично заробляють комісію пропорційно вашій частці портфеля, і можуть бути викуплені в будь-який час."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0>Розблокуйте голос</0> для підготовки до наступної пропозиції."
+msgstr "<0>Розблокуйте голосування</0> для підготовки до наступної пропозиції."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0>🎉 </0>Вітаємо в Unicorn команди :) <1>🎉</1>"
+msgstr "<0>🎉 </0>Вітаємо в команді Unicorn :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "Мінімальна межа у 1% від загальної пропозиції UNI потрібна для пропозиції"
+msgstr "Для подання пропозицій необхідний мінімальний поріг 1% від загальної кількості UNI"
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "Про програму"
+msgstr "Загальна інформація"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
@@ -155,7 +155,7 @@ msgstr "Додати"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "Додати Делегат +"
+msgstr "Додати Delegate +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
@@ -163,7 +163,7 @@ msgstr "Додати ліквідність"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "Додати V2 ліквідність"
+msgstr "Додати ліквідність V2"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
@@ -180,11 +180,11 @@ msgstr "Додати {0} {1} і {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "Додати {0}-{1} ліквідність"
+msgstr "Додати ліквідність {0}-{1}"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Додати {0}/{1} V3 ліквідність"
+msgstr "Додати ліквідність V3 {0}/{1}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -204,7 +204,7 @@ msgstr "Дозволити перенесення токенів LP"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Дозвольте високі ціни угоди і пропустити екран підтвердження. Використовуйте на свій страх і ризик."
+msgstr "Дозвольте торгувати з високими цінами й пропустіть екран підтвердження. Приймайте це рішення на власний ризик."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -224,7 +224,7 @@ msgstr "Сума"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Під час спроби виконати цей обмін сталася помилка. Можливо, вам доведеться збільшити толерантність до ковзання. Якщо це не спрацює, можливо, існує несумісність з токеном, яким ви торгуєте. Зверніть увагу, плата за перенесення та перебазування токенів несумісна з Uniswap V3."
+msgstr "Під час спроби цього обміну сталася помилка. Можливо, вам доведеться збільшити толерантність до проковзування. Якщо це не спрацює, то ймовірне існування несумісності з токеном, яким ви торгуєте. Зауважте, що плата за перенесення й перебазування токенів несумісна з Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -308,7 +308,7 @@ msgstr "Заблокована адреса"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Додаючи ліквідність, ви отримаєте 0,3% від усіх торгів на цю пару пропорційно вашій частці в басейні. Комісія додається в басейн, накопичується в реальному часі і можна стверджувати, виключивши вашу ліквідність."
+msgstr "Додавши ліквідність, ви заробите 0,3% усієї торгівлі за цією парою пропорційно вашій частці портфеля. До портфеля додається комісія, що нараховується в режимі реального часу й може бути отримана шляхом зняття ліквідності."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -328,13 +328,13 @@ msgstr "Діаграми"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Ознайомтеся з нашим прогулянком v3 LP та міграційними інструкціями."
+msgstr "Ознайомтесь з нашими посібниками з просування v3 LP та посібниками з перенесення."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "Claim"
+msgstr "Забрати"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -342,24 +342,24 @@ msgstr "Claim"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Claim UNI"
+msgstr "Забрати UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgstr "Забрати токени UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Забрати накопичені винагороди ЮНІ"
+msgstr "Забрати накопичені винагороди UNI"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Вимагати платежі"
+msgstr "Забрати комісії"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "Заявіть свої токени UNI"
+msgstr "Заберіть свої токени UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -368,20 +368,20 @@ msgstr "Задоволений"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "Твердили ЮНІ!"
+msgstr "Зібрано UNI!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "Захоплення"
+msgstr "Відбувається збирання"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Захоплення ЮНІ"
+msgstr "Відбувається збирання UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "Захоплення {0} UNI"
+msgstr "Відбувається збирання UNI {0}"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -582,7 +582,7 @@ msgstr "Ліквідність внеску"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Вкладіть свої токени ліквідації щоб отримати UNI, токен управління Uniswap протоколом."
+msgstr "Вкладіть свої токени Провайдера ліквідності й отримайте UNI, токен управління протоколом Uniswap."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -610,15 +610,15 @@ msgstr "Подробиці"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "Вимкнути мульти-хопи"
+msgstr "Вимкнути Multihops"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
-msgstr "Від'єднатись"
+msgstr "Відключитись"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Discord"
+msgstr "Несправність"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
@@ -630,7 +630,7 @@ msgstr "Документація"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "Не бачите одну з ваших позицій v2? <0>Імпортувати ї.</0>"
+msgstr "Не бачите жодної з ваших позицій v2? <0>Імпортуйте їх.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
