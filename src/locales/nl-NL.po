@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Dutch\n"
-"PO-Revision-Date: 2021-06-12 19:08\n"
+"PO-Revision-Date: 2021-06-13 02:19\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -208,7 +208,7 @@ msgstr "Transacties met hoge prijs impact toestaan en het bevestigingsscherm ove
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Sta het Uniswap Protocol toe om je {0} te gebruiken"
+msgstr "Sta het Uniswap Protocol toe om uw {0} te gebruiken"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
