@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-13 17:13\n"
+"PO-Revision-Date: 2021-06-13 18:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -224,7 +224,7 @@ msgstr "Ποσό"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Παρουσιάστηκε σφάλμα κατά την προσπάθεια εκτέλεσης αυτής της ανταλλαγής. Ίσως χρειαστεί να αυξήσετε την ανοχή ολίσθησης. Εάν αυτό δεν λειτουργεί, μπορεί να υπάρχει ασυμβατότητα με το διακριτικό που διαπραγματεύεστε. Σημείωση τέλος για τα διακριτικά μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -551,7 +551,7 @@ msgstr "Τρέχουσα τιμή {0}:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
-msgstr "Αντιπροσωπευτικές Ψηφοφορίες"
+msgstr "Ανάθεση Ψήφων"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
@@ -559,7 +559,7 @@ msgstr "Ανατέθηκε σε:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
-msgstr "Εκχώρηση ψήφων"
+msgstr "Γίνεται ανάθεση ψήφων"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
@@ -783,7 +783,7 @@ msgstr "Έναρξη..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "Η εισαγωγή έχει εκτιμηθεί. Θα πουλήσετε το πολύ <0>{0} {1}</0> ή η συναλλαγή θα επανέλθει."
+msgstr "Η τιμή που εισάγετε εκτιμήθηκε. Θα πουλήσετε το πολύ <0>{0} {1}</0> ή η συναλλαγή θα υπαναχωρήσει."
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
@@ -791,7 +791,7 @@ msgstr "Εγκατάσταση Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "Ανεπαρκής ρευστότητα για αυτό το εμπόριο."
+msgstr "Ανεπαρκής ρευστότητα για αυτή τη διαπραγμάτευση."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
