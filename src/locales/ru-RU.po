@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-12 21:04\n"
+"PO-Revision-Date: 2021-06-13 14:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1026,7 +1026,7 @@ msgstr "Как только вы будете довольны курсом, н�
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Право на голосование имеют только голоса UNI, которые делегированы себе или на другой адрес до блока {0}."
+msgstr "Проголосовать могут только те голоса UNI, которые делегированы себе или на другой адрес до блока {0}."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
