@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Portuguese, Brazilian\n"
-"PO-Revision-Date: 2021-06-13 15:05\n"
+"PO-Revision-Date: 2021-06-13 16:08\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -240,7 +240,7 @@ msgstr "Aprovar"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
-msgstr "Aprovar {0}"
+msgstr "Aprovação {0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -1182,7 +1182,7 @@ msgstr "Remover"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "Remover Quantidade"
+msgstr "Remover Valor"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
