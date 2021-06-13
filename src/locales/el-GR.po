@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-12 16:05\n"
+"PO-Revision-Date: 2021-06-13 15:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -155,7 +155,7 @@ msgstr "Προσθήκη"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
-msgstr "Προσθήκη Αντιπροσωπείας +"
+msgstr "Προσθήκη εκπροσώπου +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
@@ -167,7 +167,7 @@ msgstr "Προσθήκη Ρευστότητας V2"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "Προσθέστε ρευστότητα."
+msgstr "Προσθήκη ρευστότητας."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -200,7 +200,7 @@ msgstr "Εναντίον"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
-msgstr "Επίτρεψε LP token μετανάστευση"
+msgstr "Επιτρέψτε τη μετεγκατάσταση διακριτικού LP"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
@@ -216,7 +216,7 @@ msgstr "Επιτρέπεται"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Πάντα βεβαιωθείτε ότι το URL είναι<0>app.uniswap.org</0> - σελιδοδείκτη για να είναι ασφαλές."
+msgstr ""
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -292,15 +292,15 @@ msgstr "Υπόλοιπο: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "Καλύτερο για εξωτικά ζευγάρια."
+msgstr "Καλύτερο για εξωτικά ζεύγη."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "Καλύτερο για τα περισσότερα ζευγάρια."
+msgstr "Καλύτερο για τα περισσότερα ζεύγη."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "Καλύτερο για σταθερά ζευγάρια."
+msgstr "Καλύτερο για σταθερά ζεύγη."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -346,12 +346,12 @@ msgstr "Διεκδικήστε UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgstr "Διεκδίκηση διακριτικού UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Ισχυρισμός των συσσωρευμένων ανταμοιβών UNI"
+msgstr "Διεκδίκηση των συσσωρευμένων επιβραβεύσεων UNI"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -359,16 +359,16 @@ msgstr "Διεκδίκηση τελών"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "Ζητήστε τα διακριτικά σας UNI"
+msgstr "Διεκδικήστε τα διακριτικά σας UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "Διεκδικείται"
+msgstr "Διεκδικήθηκε"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "Ισχυρίστηκε UNI!"
+msgstr "UNI διεκδικήθηκε!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
@@ -376,12 +376,12 @@ msgstr "Διεκδίκηση"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Διεκδικώντας Το UNI"
+msgstr "Γίνεται Διεκδίκηση UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "Διεκδικώντας {0} UNI"
+msgstr "Γίνεται Διεκδίκηση {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -483,7 +483,7 @@ msgstr "Σύνδεση σε πορτοφόλι"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "Συνδεθείτε σε ένα πορτοφόλι για να βρείτε πισίνες"
+msgstr "Συνδεθείτε σε ένα πορτοφόλι για να βρείτε ψηφοφορίες"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
@@ -1010,7 +1010,7 @@ msgstr "ΑΝΟΙΚΤΟ"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "ΜΟΝΟ ΧΡΗΣΙΜΟΠΟΙΗΣΕΤΕ ΝΑ ΞΕΙ ΝΑ ΓΝΩΡΙΖΕΤΕ ΤΙ ΕΙΔΟΠΟΙΗΣΕΤΕ."
+msgstr ""
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1055,7 +1055,7 @@ msgstr "Ιδιοκτήτης"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr "Συμμετέχουσες πισίνες"
+msgstr "Συμμετέχουσες ψηφοφορίες"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
@@ -1068,7 +1068,7 @@ msgstr "Παρακαλώ πληκτρολογήστε τη λέξη \"{confirmWo
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Πισίνα"
+msgstr "Ψηφοφορία"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
@@ -1085,7 +1085,7 @@ msgstr "Ρυθμός συγκέντρωσης"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Μάρκες πισίνας στην ομάδα ανταμοιβών:"
+msgstr ""
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1162,7 +1162,7 @@ msgstr "Διαβάστε περισσότερα για τη διακυβέρνη
 
 #: src/pages/Pool/v2.tsx
 msgid "Read more about providing liquidity"
-msgstr "Διαβάστε περισσότερα για την παροχή ρευστότητας"
+msgstr "Διαβάστε περισσότερα σχετικά με την παροχή ρευστότητας"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Read more about unsupported assets"
