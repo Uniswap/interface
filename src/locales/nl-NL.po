@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Dutch\n"
-"PO-Revision-Date: 2021-06-13 03:05\n"
+"PO-Revision-Date: 2021-06-13 04:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -133,7 +133,7 @@ msgstr "Een minimumdrempel van 1% van de totale UNI-voorraad is vereist om voors
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "Informatie"
+msgstr "Over"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
@@ -159,7 +159,7 @@ msgstr "Voeg gedelegeerde toe +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "Liquidity toevoegen"
+msgstr "Liquiditeit toevoegen"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
@@ -192,7 +192,7 @@ msgstr "Toegevoegd {0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "Adres heeft geen beschikbare vordering"
+msgstr "Adres heeft geen beschikbare claim"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
@@ -204,7 +204,7 @@ msgstr "LP token migratie toestaan"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Transacties met hoge prijs impact toestaan en het bevestigingsscherm overslaan. Gebruik op eigen risico."
+msgstr "Sta transacties met hoge prijsimpact toe en sla het bevestigingsscherm over. Gebruiken op eigen risico."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
@@ -216,7 +216,7 @@ msgstr "Toegestaan"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Zorg er altijd voor dat de URL <0>app.uniswap.org</0> is - voeg het toe aan je bladwijzers om veilig te zijn."
+msgstr "Zorg ervoor dat de URL altijd<0>app.uniswap.org</0> is - voeg hem voor de veiligheid toe aan uw bladwijzers."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -224,7 +224,7 @@ msgstr "Hoeveelheid"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Er is een fout opgetreden bij het uitvoeren van deze wissel. Mogelijk moet u uw sliptolerantie vergroten. Als dat niet werkt, is er mogelijk een incompatibiliteit met het token dat u verhandelt. Let op: kosten voor transfer- en rebase-tokens zijn niet compatibel met Uniswap V3."
+msgstr "Er is een fout opgetreden bij het uitvoeren van deze wissel. U dient mogelijk uw slippagetolerantie te vergroten. Als dat niet werkt, is er mogelijk een incompatibiliteit met het token dat u verhandelt. Let op: kosten voor transfer- en rebase-tokens zijn niet compatibel met Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
