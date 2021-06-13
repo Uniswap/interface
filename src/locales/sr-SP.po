@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Serbian (Cyrillic)\n"
-"PO-Revision-Date: 2021-06-13 06:04\n"
+"PO-Revision-Date: 2021-06-13 07:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -224,7 +224,7 @@ msgstr "Износ"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ћете морати да повећате толеранцију проклизавања. Ако то не успе, можда доћи до некомпатибилности са токеном којим тргујете. Накнада за пренос и постављање базне вредности токена није компатибилна са Uniswap V3."
+msgstr "Дошло је до грешке приликом покушаја извршења ове замене. Можда ћете морати да повећате клизну толеранцију. Ако то не успе, можда доћи до некомпатибилности са токеном којим тргујете. Накнада за пренос и постављање базне вредности токена није компатибилна са Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -634,7 +634,7 @@ msgstr "Не видите ниједну од ваших V2 позиција? <0
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Зарађени УНИ токени представљају акције са правом гласа у управљању Uniswap-ом."
+msgstr "Зарађени UNI токени представљају акције са правом гласа у управљању Uniswap-ом."
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -646,7 +646,7 @@ msgstr "Унесите примаоца"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "Унесите важећи проценат проклизавања"
+msgstr "Унесите важећи клизни проценат"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
@@ -1205,7 +1205,7 @@ msgstr "Уклони {0} {1} и {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Уклони {0}/{1} В3 ликвидност"
+msgstr "Уклони {0}/{1} V3 ликвидност"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
@@ -1291,7 +1291,7 @@ msgstr "Једноставно"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "Толеранција проклизавања"
+msgstr "Клизна толеранција"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1841,11 +1841,11 @@ msgstr "за {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "има чарапе емоји"
+msgstr "има чарапе емоџи"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "хттпс: // или ипфс: // или ЕНС име"
+msgstr "https:// или ipfs:// или ENS име"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -1857,11 +1857,11 @@ msgstr "преко {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
-msgstr "преко листе {0}"
+msgstr "преко {0} листе токена"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Увези токен} other {Увезите токене}}"
+msgstr "{0, plural, one {Import token} other {Import tokens}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1872,11 +1872,11 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0 /> по <1 />"
+msgstr "{0} <0/> по <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
-msgstr "{0} Прилагођени жетони"
+msgstr "{0} Прилагођени токени"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1885,7 +1885,7 @@ msgstr "{0} Депоновано"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
-msgstr "{0} ЕТХ"
+msgstr "{0} ETH"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1904,7 +1904,7 @@ msgstr "{0} чекању"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "{0} UNI"
-msgstr "{0} УНИ"
+msgstr "{0} UNI"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
@@ -1912,15 +1912,15 @@ msgstr "{0} УНИ"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI / week"
-msgstr "{0} УНИ / недељно"
+msgstr "{0} UNI / недељно"
 
 #: src/components/earn/StakingModal.tsx
 msgid "{0} UNI-V2"
-msgstr "{0} УНИ-В2"
+msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} УНИ-В2 ЛП токена"
+msgstr "{0} UNI-V2 LP токена доступно"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -1971,23 +1971,23 @@ msgstr "{0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} Рударство ликвидности"
+msgstr "{0}-{1} Рударење ликвидности"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
-msgstr "{0}/{1} ЦД НФТ"
+msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} ЛП Токени"
+msgstr "{0}/{1} LP Токени"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} УНИ"
+msgstr "{SOCKS_AMOUNT} UNI"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} УНИ"
+msgstr "{USER_AMOUNT} UNI"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
@@ -1999,9 +1999,9 @@ msgstr "{tokenB} по {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~ $ <0 />"
+msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← Повратак на Преглед базена"
+msgstr "← Повратак на Преглед фондова"
 

@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-12 22:09\n"
+"PO-Revision-Date: 2021-06-13 07:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -268,19 +268,19 @@ msgstr "Як учасник спільноти Uniswap ви можете ств�
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "Щонайменше {0} {1} і {2} {3} повертаються до вашого гаманця через вибраний період ціни."
+msgstr "Щонайменше {0} {1} і {2} {3} повертаються до вашого гаманця завдяки вибраному діапазону ціни."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
-msgstr "Авто"
+msgstr "Автоматично"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "Доступний для депозиту: {0}"
+msgstr "Доступно для депозиту: {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
-msgstr "Відмінити"
+msgstr "Назад"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -292,7 +292,7 @@ msgstr "Баланс: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "Найкраще для екзотичних парків."
+msgstr "Найкраще для екзотичних пар."
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -304,7 +304,7 @@ msgstr "Найкраще для стабільних пар."
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
-msgstr "Адреса заблокована"
+msgstr "Заблокована адреса"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
@@ -551,7 +551,7 @@ msgstr "Поточна {0} ціна:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
-msgstr "Делегувати голосування"
+msgstr "Делегувати голоси"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
@@ -559,26 +559,26 @@ msgstr "Делеговані до:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegating votes"
-msgstr "Делегуючі голоси"
+msgstr "Делегування голосів"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "Поповнити"
+msgstr "Внести"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Сума для поповнення"
+msgstr "Суми поповнення"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Токени для поповнення на UNI-V2"
+msgstr "Токени для внесення на UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "Вторинна ліквідність"
+msgstr "Ліквідність внеску"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
