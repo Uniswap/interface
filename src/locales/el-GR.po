@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-13 19:06\n"
+"PO-Revision-Date: 2021-06-13 20:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -216,7 +216,7 @@ msgstr "Επιτρέπεται"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr ""
+msgstr "Βεβαιωθείτε ότι η διεύθυνση URL είναι <0> app.uniswap.org</0> - για να είστε ασφαλείς κάντε το σελιδοδείκτη."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -630,7 +630,7 @@ msgstr "Έγγραφα"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr ""
+msgstr "Δεν βλέπετε μία από τις θέσεις σας στο v2; <0> Εισαγάγετε τη.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -724,7 +724,7 @@ msgstr "Από (το μέγιστο)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
-msgstr ""
+msgstr "Βρείτε υποστήριξη για τη Διαφωνία"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
@@ -775,7 +775,7 @@ msgstr "Αύξηση Ρευστότητας"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr ""
+msgstr "Αρχικές τιμές και μοιραστείτε την ψηφοφορία"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -820,7 +820,7 @@ msgstr "Μη έγκυρο ζευγάρι."
 
 #: src/state/mint/v3/hooks.ts
 msgid "Invalid price input"
-msgstr ""
+msgstr "Μη έγκυρη εισαγωγή τιμής"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1010,7 +1010,7 @@ msgstr "ΑΝΟΙΚΤΟ"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr ""
+msgstr "ΧΡΗΣΙΜΟΠΟΙΗΣΤΕ ΑΥΤΟ ΤΟΝ ΤΡΟΠΟ ΜΟΝΟ ΕΑΝ ΓΝΩΡΙΖΕΤΕ ΤΙ ΚΑΝΕΤΕ."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1085,7 +1085,7 @@ msgstr "Ρυθμός ψηφοφορίας"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr ""
+msgstr "Διακριτικά ψηφοφορίας στη ψηφοφορία αμοιβών:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1100,7 +1100,7 @@ msgstr "Ψηφίστηκε {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr ""
+msgstr "Επισκόπηση Ψηφοφοριών"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1134,7 +1134,7 @@ msgstr "Τιμή:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr ""
+msgstr "Τιμές και μοιραστείτε την ψηφοφορία"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1146,7 +1146,7 @@ msgstr "Προτάσεις που υποβάλλονται από τα μέλη 
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
-msgstr ""
+msgstr "Άτομο που κάνει προτάσεις"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1213,7 +1213,7 @@ msgstr "Αφαίρεση των {0} {1} και {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr ""
+msgstr "Περιορίζει τις ανταλλαγές μόνο σε απευθείας ζεύγη."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
@@ -1328,7 +1328,7 @@ msgstr "Ανταλλαγή"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr ""
+msgstr "Ανταλλάξτε ούτως ή άλλως"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
@@ -1519,7 +1519,7 @@ msgstr "Εξόρυξη ρευστότητας Uniswap"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr ""
+msgstr "Σύμβαση μετεγκατάστασης Uniswap↗"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
@@ -1546,7 +1546,7 @@ msgstr "Ξεκλείδωμα Ψήφων"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unsupported Asset"
-msgstr ""
+msgstr "Μη Υποστηριζόμενο Περιουσιακό Στοιχείο"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
@@ -1654,7 +1654,7 @@ msgstr "Καλώς ήρθατε στην ομάδα Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr ""
+msgstr "Όταν διεκδικείτε χωρίς ανάληψη, η ρευστότητά σας παραμένει στο χώρο θήρευσης των ψηφοφοριών."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
@@ -1772,7 +1772,7 @@ msgstr "Η θέση σας"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr ""
+msgstr "Η θέση σας έχει 0 ρευστότητα, και δεν κερδίζει χρεώσεις."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -1787,7 +1787,7 @@ msgstr "Η θέση σας θα είναι 100% {0} σε αυτή την τιμ�
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr ""
+msgstr "Η θέση σας δεν θα κερδίσει χρεώσεις ή θα χρησιμοποιηθεί σε συναλλαγές έως ότου η τιμή αγοράς μετακινηθεί στο εύρος σας."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -1829,7 +1829,7 @@ msgstr "Οι συναλλαγές σας θα εμφανιστούν εδώ..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr ""
+msgstr "Το αζήτητο UNI σας"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
