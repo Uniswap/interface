@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-06-12 23:05\n"
+"PO-Revision-Date: 2021-06-13 00:10\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -590,7 +590,7 @@ msgstr "Liquidez depositada:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "Destruido {0} UNI-V2"
+msgstr "Depositado {0} UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
@@ -618,7 +618,7 @@ msgstr "Desconectar"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Discordia"
+msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
@@ -630,19 +630,19 @@ msgstr "Documentos"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "¿No ves una de tus posiciones v2? <0>Importarlo.</0>"
+msgstr "¿No puede visualizar una de sus posiciones v2? <0>Impórtelo.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Las fichas ganadas de UNI representan acciones de voto en la gobernancia de Uniswap."
+msgstr "Los tokens UNI ganados representan acciones de voto en la gestión de Uniswap."
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
-msgstr "Ingrese un porcentaje"
+msgstr "Introduzca un porcentaje"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
-msgstr "Ingrese un destinatario"
+msgstr "Introduzca un destinatario"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
@@ -650,7 +650,7 @@ msgstr "Introduzca un porcentaje de deslizamiento válido"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Introduzca una dirección para desencadenar un reclamo de UNI. Si la dirección tiene algún UNI reclamable, se les enviará al enviar."
+msgstr "Introduzca una dirección para activar una reclamación de UNI. Si la dirección tiene alguna UNI reclamable, se les enviará al presentarla."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -982,7 +982,7 @@ msgstr "No se encontró liquidez V2."
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr "No hay piscinas activas"
+msgstr "No hay fondos comunes activos"
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
@@ -990,7 +990,7 @@ msgstr "No se encontró liquidez."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "Piscina no encontrada."
+msgstr "Fondo común no encontrado."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
@@ -1006,7 +1006,7 @@ msgstr "APAGADO"
 
 #: src/components/Toggle/ListToggle.tsx
 msgid "ON"
-msgstr "EN"
+msgstr "ENCENDIDO"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
@@ -1018,7 +1018,7 @@ msgstr "Apagado"
 
 #: src/components/Toggle/index.tsx
 msgid "On"
-msgstr "En"
+msgstr "Encendido"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
