@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Arabic\n"
-"PO-Revision-Date: 2021-06-13 10:04\n"
+"PO-Revision-Date: 2021-06-13 11:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
