@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Swedish\n"
-"PO-Revision-Date: 2021-06-13 09:04\n"
+"PO-Revision-Date: 2021-06-13 10:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -264,7 +264,7 @@ msgstr "Är du säker?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Som medlem i Uniswap communityt kan du hävda att UNI används för röstning och styrning.<0/><1/><2>Läs mer om UNI</2>"
+msgstr "Som medlem i Uniswap-gemenskapen kan du begära att UNI används för röstning och styrning.<0/><1/><2>Läs mer om UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -308,15 +308,15 @@ msgstr "Blockerad adress"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Genom att lägga till likviditet kommer du att tjäna 0,3% av alla affärer på detta par proportionellt mot din andel av poolen. Avgifter läggs till poolen, samlas in i realtid och kan hävdas genom att dra tillbaka din likviditet."
+msgstr "Genom att fylla på likviditet kommer du att tjäna 0,3 procent av alla affärer med detta par proportionellt mot din andel av poolen. Avgifter läggs till poolen, samlas in i realtid och kan krävas vid likviditetsutflöde."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "Genom att lägga till denna lista litar du underförstått på att uppgifterna är korrekta. Vem som helst kan skapa en lista, inklusive att skapa falska versioner av befintliga listor och listor som hävdar att representera projekt som inte har en."
+msgstr "Genom att lägga till de här listan litar du underförstått på att uppgifterna är korrekta. Vem som helst kan skapa en lista, inklusive att skapa falska versioner av befintliga listor och listor som påstår sig representera projekt som inte har en lista."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Genom att ansluta en plånbok godkänner du Uniswap Labs’ <0>användarvillkor</0> och bekräftar att du har läst och förstått ansvarsfriskrivningen <1>Uniswap protokoll</1>."
+msgstr "Genom att ansluta en plånbok samtycker du till Uniswap Labs <0>användarvillkor</0> och bekräftar att du har läst och förstått <1>Uniswap-protokollets ansvarsfriskrivning</1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -328,13 +328,13 @@ msgstr "Diagram"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "Kolla in våra v3 LP genomgång och migrationsguider."
+msgstr "Kolla in våra v3 LP-genomgångs och migrationsguider."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "Claim"
+msgstr "Krav"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -342,20 +342,20 @@ msgstr "Claim"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "Claim UNI"
+msgstr "Gör krav på UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "Claim UNI Token"
+msgstr "Gör krav på UNI-token"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Hämta ackumulerade UNI-belöningar"
+msgstr "Gör anspråk på ackumulerade UNI-belöningar"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Hämta avgifter"
+msgstr "Begär avgifter"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -363,12 +363,12 @@ msgstr "Gör anspråk på dina UNI-tokens"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "Bekräftad"
+msgstr "Begärda"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "Anropade UNI!"
+msgstr "Gjorde krav på UNI!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
@@ -376,12 +376,12 @@ msgstr "Kräver"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "Påstår UNI"
+msgstr "Gör krav på UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "Påstår {0} UNI"
+msgstr "Kräver {0} UNI"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -427,15 +427,15 @@ msgstr "Samlar"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Hämtar avgifter"
+msgstr "Insamlingsavgifter"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "Insamlingsavgiften kommer att dras tillbaka för närvarande tillgängliga avgifter för dig."
+msgstr "Insamlingsavgifterna kommer att dra av för närvarande tillgängliga avgifter för dig."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "Vanliga baser"
+msgstr "Gemensamma baser"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
@@ -456,7 +456,7 @@ msgstr "Bekräfta byte"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "Bekräfta denna transaktion i din plånbok"
+msgstr "Bekräfta transaktionen i din plånbok"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -513,7 +513,7 @@ msgstr "Kopiera adress"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Skapa frågebank & Förråd"
+msgstr "Skapa pool & tillgång"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -522,19 +522,19 @@ msgstr "Skapa ett par"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "Skapa en frågebank"
+msgstr "Skapa en pool"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "Skapa ett problem på GitHub"
+msgstr "Skapa en tvistefråga på GitHub"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "Skapa frågebank och lägg till {0}/{1} V3 likviditet"
+msgstr "Skapa en pool och lägg till {0}/{1} V3-likviditet"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
-msgstr "Skapa pool."
+msgstr "Skapa en pool."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
@@ -547,7 +547,7 @@ msgstr "Nuvarande pris"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "Nuvarande {0} Pris:"
+msgstr "Nuvarande {0} pris:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
