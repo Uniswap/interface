@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Spanish\n"
-"PO-Revision-Date: 2021-06-13 01:28\n"
+"PO-Revision-Date: 2021-06-13 05:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -427,11 +427,11 @@ msgstr "Recolectando"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Cargos de cobro"
+msgstr "Cobro de comisiones"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "Las comisiones de cobro retirarán las tarifas disponibles actualmente para usted."
+msgstr "El cobro de comisiones extrae aquellas que se encuentren disponibles para usted en ese momento."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
@@ -1022,15 +1022,15 @@ msgstr "Encendido"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Una vez que esté satisfecho con la tarifa haga clic en el suministro para revisar."
+msgstr "Una vez que esté satisfecho con la comisión, haga clic en el suministro para revisar."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Sólo los votos UNI que fueron delegados o delegados a otra dirección antes del bloque {0} son elegibles para votar."
+msgstr "Solo los votos de UNI que fueron autodelegados o delegados a otra dirección antes del bloque {0} son elegibles para votar."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "¡Ups! Se ha producido un error desconocido. Por favor, actualiza la página o visita desde otro navegador o dispositivo."
+msgstr "¡Ups! Se ha producido un error desconocido. Actualice la página o acceda desde otro navegador o dispositivo."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1039,15 +1039,15 @@ msgstr "Fuera de rango"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "La salida es estimada. Si el precio cambia en más de {0}%, su transacción se revertirá."
+msgstr "El rendimiento es estimado. Si el precio cambia en más de {0} %, su transacción se revertirá."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "La salida es estimada. Recibirás al menos <0>{0} {1}</0> o la transacción se revertirá."
+msgstr "El rendimiento es estimado. Recibirá al menos <0>{0} {1}</0> o la transacción se revertirá."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "La salida se enviará a <0>{0}</0>"
+msgstr "Lo producido se enviará a <0>{0}</0>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
@@ -1055,37 +1055,37 @@ msgstr "Propietario"
 
 #: src/pages/Earn/index.tsx
 msgid "Participating pools"
-msgstr "Grupos participantes"
+msgstr "Fondos comunes que participan"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
-msgstr "Por favor, conéctese a la red Ethereum apropiada."
+msgstr "Conéctese a la red Ethereum apropiada."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
-msgstr "Por favor, escribe la palabra \"{confirmWord}\" para activar el modo experto."
+msgstr "Escribe la palabra \"{confirmWord}\" para activar el modo experto."
 
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "Herramienta"
+msgstr "Fondo común"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "¡Palanca encontrada!"
+msgstr "¡Fondo común encontrado!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Tasa de Pool"
+msgstr "Tasa de fondo común"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Tasa de lata"
+msgstr "Tasa de fondo común"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "Herramientas en el grupo de recompensas:"
+msgstr "Fondo común de tokens en el fondo común de recompensas:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
