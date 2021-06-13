@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-13 16:08\n"
+"PO-Revision-Date: 2021-06-13 17:13\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -574,7 +574,7 @@ msgstr "Ποσά Κατάθεσης"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Κατάθεση Κωδικών UNI-V2 LP"
+msgstr "Κατάθεση Διακριτικών UNI-V2 LP"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
@@ -618,7 +618,7 @@ msgstr "Αποσύνδεση"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
-msgstr "Discord"
+msgstr "Διαφωνία"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
@@ -634,7 +634,7 @@ msgstr ""
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "Κερδισμένα νομίσματα του UNI αντιπροσωπεύουν μετοχές ψήφου στη διακυβέρνηση Uniswap."
+msgstr "Κερδισμένα διακριτικά του UNI αντιπροσωπεύουν μετοχές ψήφου στη διακυβέρνηση Uniswap."
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -646,11 +646,11 @@ msgstr "Εισαγάγετε έναν παραλήπτη"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "Εισάγετε ένα έγκυρο ποσοστό ολίσθησης"
+msgstr "Εισάγετε ένα έγκυρο ποσοστό διαφοράς κόστους συναλλαγής"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Εισάγετε μια διεύθυνση για να προκαλέσετε μια αξίωση UNI. Εάν η διεύθυνση έχει οποιοδήποτε Δεικτό UNI θα αποσταλεί σε αυτούς κατά την υποβολή τους."
+msgstr "Εισάγετε μια διεύθυνση για να εκκινήσετε μια διεκδίκηση UNI. Εάν η διεύθυνση έχει οποιοδήποτε UNI που μπορεί να διεκδικηθεί, αυτό θα αποσταλεί σε αυτούς κατά την υποβολή."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -665,7 +665,7 @@ msgstr "Εισάγετε ένα ποσό"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Enter valid list location"
-msgstr "Εισάγετε έγκυρη τοποθεσία λίστας"
+msgstr "Εισάγετε έγκυρη λίστα τοποθεσιών"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -695,7 +695,7 @@ msgstr "Εκτεταμένα αποτελέσματα από ανενεργές 
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "Ειδική λειτουργία απενεργοποιεί την έγκαιρη επιβεβαίωση της συναλλαγής και επιτρέπει υψηλή ολίσθηση συναλλαγές που συχνά οδηγούν σε κακά ποσοστά και χαμένα κεφάλαια."
+msgstr "Η λειτουργία εμπειρογνωμόνων απενεργοποιεί την έγκαιρη επιβεβαίωση της συναλλαγής και επιτρέπει υψηλή διαφορά κόστους συναλλαγών που συχνά οδηγούν σε κακά ποσοστά και χαμένα κεφάλαια."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -703,7 +703,7 @@ msgstr "Εξερευνήστε δημοφιλείς ομάδες στο Uniswap 
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "Βαθμίδα Αμοιβής"
+msgstr "Βαθμίδα Χρέωσης"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -711,7 +711,7 @@ msgstr "Για"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "Για κάθε πισίνα που φαίνεται παρακάτω, κάντε κλικ στην επιλογή μετεγκατάσταση για να αφαιρέσετε τη ρευστότητά σας από Uniswap V2 και να την καταθέσετε στο Uniswap V3."
+msgstr "Για κάθε ψηφοφορία που φαίνεται παρακάτω, κάντε κλικ στην επιλογή μετεγκατάσταση για να αφαιρέσετε τη ρευστότητά σας από Uniswap V2 και να την καταθέσετε στο Uniswap V3."
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -886,11 +886,11 @@ msgstr "Διαχείριση"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "Διαχείριση ρευστότητας στο Pool Ανταμοιβών"
+msgstr "Διαχείριση ρευστότητας στην Ψηφοφορία Ανταμοιβών"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
-msgstr "Διαχείριση Λίστας Token"
+msgstr "Διαχείριση Λίστας Διακριτικών"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
@@ -915,7 +915,7 @@ msgstr "Μέγιστο:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "Μέγιστη αποστολή"
+msgstr "Απεστάλη το μέγιστο"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1022,11 +1022,11 @@ msgstr "Ανοικτο"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
-msgstr "Μόλις είστε ευχαριστημένοι με το ποσοστό κάντε κλικ προμήθεια για να επανεξετάσετε."
+msgstr "Μόλις είστε ευχαριστημένοι με το ποσοστό κάντε κλικ στο παροχή για επανεξέταση."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Μόνο οι ψήφοι των \"νωμένων Εθνών που ήταν αυτομεταβιβάσιμες ή μεταβιβάστηκαν σε άλλη διεύθυνση πριν το μπλοκ {0} είναι επιλέξιμες για ψηφοφορία."
+msgstr ""
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
@@ -1076,11 +1076,11 @@ msgstr "Βρέθηκε ψηφοφορία!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "Ρυθμός Συγκέντρωσης"
+msgstr "Ρυθμός Ψηφοφορίας"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "Ρυθμός συγκέντρωσης"
+msgstr "Ρυθμός ψηφοφορίας"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1150,7 +1150,7 @@ msgstr ""
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
-msgstr "Συντελεστές"
+msgstr "Ρυθμός"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
@@ -1282,7 +1282,7 @@ msgstr "Μοιραστείτε την ψηφοφορία:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
-msgstr "Show Portis"
+msgstr "Εμφάνιση Portis"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
