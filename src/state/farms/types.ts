@@ -37,3 +37,8 @@ export interface Reward {
   token: Token
   amount: BigNumber
 }
+
+export interface RewardPerBlock {
+  token: Token
+  amount: BigNumber
+}

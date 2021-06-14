@@ -24,11 +24,13 @@ import {
   TokenAmount as TokenAmountDMM,
   ChainId as ChainIdDMM
 } from 'libs/sdk/src'
-import { BLOCKS_PER_YEAR, ZERO_ADDRESS } from '../constants'
+import { BLOCKS_PER_YEAR, KNC, ZERO_ADDRESS } from '../constants'
 import { useActiveWeb3React } from 'hooks'
-import { Farm, Reward } from 'state/farms/types'
+import { Farm, Reward, RewardPerBlock } from 'state/farms/types'
 import { useAllTokens } from 'hooks/Tokens'
 import { useRewardTokens } from 'state/farms/hooks'
+import { useETHPrice, useKNCPrice } from 'state/application/hooks'
+import { getFullDisplayBalance } from './formatBalance'
 
 export function priceRangeCalc(price?: Price | Fraction, amp?: Fraction): [Fraction | undefined, Fraction | undefined] {
   //Ex amp = 1.23456
@@ -249,20 +251,43 @@ export function tokenAmountDmmToUni(amount: TokenAmountDMM): TokenAmountUNI | un
  * @param poolLiquidityUsd Total pool liquidity in USD
  * @returns
  */
-export function getFarmApr(
-  rewardToken: Token,
-  rewardPerBlock: BigNumber,
-  kncPriceUsd: string,
-  poolLiquidityUsd: string
-): number {
+export function useFarmApr(rewardPerBlocks: RewardPerBlock[], poolLiquidityUsd: string): number {
+  const { chainId } = useActiveWeb3React()
+  const ethPrice = useETHPrice()
+  const kncPrice = useKNCPrice()
+
   if (parseFloat(poolLiquidityUsd) === 0) {
     return 0
   }
 
-  const rewardPerBlockAmount = new TokenAmountDMM(rewardToken, rewardPerBlock.toString())
+  if (!rewardPerBlocks || rewardPerBlocks.length === 0) {
+    return 0
+  }
 
-  const yearlyKNCRewardAllocation = parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR
-  const apr = ((yearlyKNCRewardAllocation * parseFloat(kncPriceUsd)) / parseFloat(poolLiquidityUsd)) * 100
+  const yearlyRewardUSD = rewardPerBlocks.reduce((total, rewardPerBlock) => {
+    if (!rewardPerBlock || !rewardPerBlock.amount) {
+      return total
+    }
+
+    if (
+      ethPrice.currentPrice &&
+      rewardPerBlock.token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
+    ) {
+      const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
+      const yearlyETHRewardAllocation = parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR
+      total += yearlyETHRewardAllocation * parseFloat(ethPrice.currentPrice)
+    }
+
+    if (kncPrice && rewardPerBlock.token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
+      const rewardPerBlockAmount = new TokenAmountDMM(rewardPerBlock.token, rewardPerBlock.amount.toString())
+      const yearlyKNCRewardAllocation = parseFloat(rewardPerBlockAmount.toSignificant(6)) * BLOCKS_PER_YEAR
+      total += yearlyKNCRewardAllocation * parseFloat(kncPrice)
+    }
+
+    return total
+  }, 0)
+
+  const apr = (yearlyRewardUSD / parseFloat(poolLiquidityUsd)) * 100
 
   return apr
 }
@@ -314,4 +339,67 @@ export function useFarmRewards(farms?: Farm[]): Reward[] {
   }, initialRewards)
 
   return farmRewards
+}
+
+export function useFarmRewardsUSD(rewards?: Reward[]): number {
+  const { chainId } = useActiveWeb3React()
+  const ethPrice = useETHPrice()
+  const kncPrice = useKNCPrice()
+
+  if (!rewards) {
+    return 0
+  }
+
+  const rewardUSD = rewards.reduce((total, reward) => {
+    if (!reward || !reward.amount) {
+      return total
+    }
+
+    if (
+      ethPrice.currentPrice &&
+      reward.token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
+    ) {
+      total += parseFloat(getFullDisplayBalance(reward.amount)) * parseFloat(ethPrice.currentPrice)
+    }
+
+    if (kncPrice && reward.token.address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
+      total += parseFloat(getFullDisplayBalance(reward.amount)) * parseFloat(kncPrice)
+    }
+
+    return total
+  }, 0)
+
+  return rewardUSD
+}
+
+export function useFarmRewardPerBlocks(farms?: Farm[]): Reward[] {
+  const { chainId } = useActiveWeb3React()
+  const rewardTokens = useRewardTokens()
+  const allTokens = useAllTokens()
+
+  if (!farms) {
+    return []
+  }
+
+  const initialRewardPerBlocks: Reward[] = []
+
+  const farmRewardPerBlocks = farms.reduce((total, farm) => {
+    if (farm.rewardPerBlocks) {
+      rewardTokens.map((address, index) => {
+        if (total[index]) {
+          total[index].amount = total[index].amount.add(BigNumber.from(farm.rewardPerBlocks[index]))
+        } else {
+          total[index] = {
+            token: address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ? WETH[chainId as ChainId] : allTokens[address],
+            amount: BigNumber.from(farm.rewardPerBlocks[index])
+          }
+        }
+      })
+      return total
+    }
+
+    return total
+  }, initialRewardPerBlocks)
+
+  return farmRewardPerBlocks
 }

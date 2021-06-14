@@ -97,7 +97,7 @@ const WETH_ONLY: ChainTokenList = {
 }
 
 export const KNC_ADDRESS = '0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202'
-export const KNC_ADDRESS_ROPSTEN = '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b'
+
 export const KNC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, KNC_ADDRESS, 18, 'KNC', 'Kyber Network Crystal'),
   [ChainId.RINKEBY]: new Token(
