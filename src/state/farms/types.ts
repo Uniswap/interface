@@ -1,10 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
+import { Token } from 'libs/sdk/src'
+
 export interface Farm {
   pid: number
   id: string
-  rewardPerBlock: BigNumber
-  accRewardPerShare: BigNumber
+  rewardPerBlocks: BigNumber[]
+  accRewardPerShares: BigNumber[]
   totalStake: BigNumber
   stakeToken: string
   startBlock: number
@@ -19,7 +21,7 @@ export interface Farm {
     allowance?: string
     tokenBalance?: string
     stakedBalance?: string
-    earnings?: string
+    earnings?: string[]
   }
 }
 
@@ -28,5 +30,10 @@ export interface FarmUserData {
   allowance?: string
   tokenBalance?: string
   stakedBalance?: string
-  earnings?: string
+  earnings?: string[]
+}
+
+export interface Reward {
+  token: Token
+  amount: BigNumber
 }

@@ -22,7 +22,7 @@ const useMasterChef = () => {
   const getPoolInfo = useCallback(
     async (pid: number) => {
       try {
-        const poolInfo = await masterChefContract?.poolInfo(pid)
+        const poolInfo = await masterChefContract?.getPoolInfo(pid)
 
         return poolInfo
       } catch (err) {
@@ -32,6 +32,17 @@ const useMasterChef = () => {
     },
     [masterChefContract]
   )
+
+  const getRewardTokens = useCallback(async (): Promise<string[]> => {
+    try {
+      const rewardTokens = await masterChefContract?.getRewardTokens()
+
+      return rewardTokens
+    } catch (err) {
+      console.error(err)
+      return err
+    }
+  }, [masterChefContract])
 
   // Deposit
   const deposit = useCallback(
@@ -87,7 +98,16 @@ const useMasterChef = () => {
     [addTransaction, masterChefContract]
   )
 
-  return { masterChefContract, getPoolLength, getPoolInfo, deposit, withdraw, harvest, harvestMultiplePools }
+  return {
+    masterChefContract,
+    getPoolLength,
+    getPoolInfo,
+    getRewardTokens,
+    deposit,
+    withdraw,
+    harvest,
+    harvestMultiplePools
+  }
 }
 
 export default useMasterChef

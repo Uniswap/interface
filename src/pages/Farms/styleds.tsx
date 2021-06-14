@@ -125,7 +125,7 @@ export const TotalRewardsTitle = styled.div`
   margin-bottom: 4px;
 `
 
-export const RewardNumber = styled.span`
+export const RewardNumber = styled.div`
   font-size: 24px;
   font-weight: 500;
   color: ${({ theme }) => theme.text11};

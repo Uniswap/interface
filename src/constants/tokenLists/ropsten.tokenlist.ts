@@ -7,7 +7,7 @@ export const ROPSTEN_TOKEN_LIST = {
   tokens: [
     {
       chainId: 3,
-      address: '0xbe87E5634f9FC7cD3ED88ad58b1462F3C5A7EB5b',
+      address: '0x8B4DDF9F13f382aff76D262F6C8C50E6d7961b94',
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
       decimals: 18,

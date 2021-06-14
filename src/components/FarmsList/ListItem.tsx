@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { Flex } from 'rebass'
-import { useTranslation } from 'react-i18next'
 import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 
@@ -11,20 +10,20 @@ import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Farm } from 'state/farms/types'
-import { formattedNum, isAddressString, shortenAddress } from 'utils'
-import { useFarmClaimModalToggle, useFarmStakeModalToggle, useKNCPrice } from 'state/application/hooks'
+import { formattedNum, getTokenSymbol, isAddressString, shortenAddress } from 'utils'
+import { useKNCPrice } from 'state/application/hooks'
 import InputGroup from './InputGroup'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { getFarmApr } from 'utils/dmm'
+import { getFarmApr, useFarmRewards } from 'utils/dmm'
 import { ExternalLink } from 'theme'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
   grid-gap: 3rem;
-  grid-template-columns: 2fr 1.5fr 1fr 1fr 1fr 0.25fr;
+  grid-template-columns: 2fr 1.5fr 1fr 2fr 1fr 0.25fr;
   grid-template-areas: 'pools liq apy reward staked_balance expand';
   padding: 15px 36px 13px 26px;
   font-size: 14px;
@@ -119,8 +118,7 @@ const StyledItemCard = styled.div`
 
 const DataText = styled(Flex)<{ align?: string }>`
   color: ${({ theme }) => theme.text7};
-  flex-direction: column;
-  align-items: ${({ align }) => (align === 'right' ? 'flex-end' : 'flex-start')};
+  justify-content: ${({ align }) => (align === 'right' ? 'flex-end' : 'flex-start')};
   font-weight: 500;
 `
 
@@ -142,12 +140,9 @@ export const ItemCard = ({ farm }: ListItemProps) => {
 }
 
 const ListItem = ({ farm }: ListItemProps) => {
-  const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
   const kncPrice = useKNCPrice()
   const [expand, setExpand] = useState<boolean>(false)
-  const toggleFarmClaimModal = useFarmClaimModalToggle()
-  const toggleFarmStakeModal = useFarmStakeModalToggle()
 
   const currency0 = useToken(farm.token0?.id) as Token
   const currency1 = useToken(farm.token1?.id) as Token
@@ -157,7 +152,8 @@ const ListItem = ({ farm }: ListItemProps) => {
   const userStakedBalance = farm.userData?.stakedBalance
     ? BigNumber.from(farm.userData?.stakedBalance)
     : BigNumber.from(0)
-  const userEarning = farm.userData?.earnings ? BigNumber.from(farm.userData?.earnings) : BigNumber.from(0)
+
+  const farmRewards = useFarmRewards([farm])
 
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
@@ -197,7 +193,9 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
-  const apr = kncPrice ? getFarmApr(KNC[chainId as ChainId], farm.rewardPerBlock, kncPrice, liquidity.toString()) : 0
+  const apr = kncPrice
+    ? getFarmApr(KNC[chainId as ChainId], farm.rewardPerBlocks[0], kncPrice, liquidity.toString())
+    : 0
 
   const amp = farm.amp / 10000
 
@@ -222,7 +220,16 @@ const ListItem = ({ farm }: ListItemProps) => {
           {formattedNum(liquidity.toString(), true)}
         </DataText>
         <APY grid-area="apy">{apr.toFixed(2)}%</APY>
-        <DataText grid-area="reward" align="right">{`${getFullDisplayBalance(userEarning)} KNC`}</DataText>
+        <DataText grid-area="reward" align="right">
+          {farmRewards.map((reward, index) => {
+            return (
+              <span key={reward.token.address}>
+                <span>{`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}</span>
+                {index + 1 < farmRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
+              </span>
+            )
+          })}
+        </DataText>
         <DataText grid-area="staked_balance" align="right">
           {formattedNum(userStakedBalanceUSD.toString(), true)}
         </DataText>
@@ -248,7 +255,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                 <GreyText>{formattedNum(userStakedBalanceUSD.toString(), true)}</GreyText>
               </BalanceInfo>
               <div grid-area="harvest">
-                <GreyText>KNC Reward</GreyText>
+                <GreyText>Reward</GreyText>
               </div>
             </StakeGroup>
             <StakeGroup>
@@ -259,6 +266,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                 token0Address={farm.token0.id}
                 token1Address={farm.token1.id}
                 kncPrice={kncPrice}
+                farmRewards={farmRewards}
               />
             </StakeGroup>
             <LPInfoContainer>

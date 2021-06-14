@@ -42,18 +42,20 @@ import {
   EndInTitle,
   HistoryButton
 } from './styleds'
-import { formattedNum } from 'utils'
+import { formattedNum, getTokenSymbol } from 'utils'
 import Vesting from './vesting'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import RainMaker from '../../assets/images/rain-maker.webp'
 import FarmHistoryModal from 'components/FarmHistoryModal'
 import InfoHelper from 'components/InfoHelper'
+import { Reward } from 'state/farms/types'
+import { useFarmRewards } from 'utils/dmm'
 
 const FARM_ENDED = 'Ended'
 
 const Farms = () => {
   const { t } = useTranslation()
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const kncPrice = useKNCPrice()
   const { loading: publicDataLoading, error: publicDataError, data: allFarms } = useFarmsPublicData()
@@ -65,10 +67,6 @@ const Farms = () => {
 
   const { harvestMultiplePools } = useMasterChef()
 
-  if (publicDataLoading || userFarmsLoading) {
-    return <LocalLoader />
-  }
-
   const farms = allFarms.map(farm => {
     const { pid } = farm
     const index = farmsUserData.findIndex(farmUserData => farmUserData.pid === pid)
@@ -79,18 +77,16 @@ const Farms = () => {
     }
   })
 
-  const totalRewards = farms.reduce((total, farm) => {
-    if (farm.userData?.earnings) {
-      return total.add(BigNumber.from(farm.userData?.earnings))
-    }
+  const totalRewards = useFarmRewards(farms)
 
-    return total
-  }, BigNumber.from(0))
+  if (publicDataLoading || userFarmsLoading) {
+    return <LocalLoader />
+  }
 
   const totalRewardsUSD =
     totalRewards &&
     kncPrice &&
-    (parseFloat(getFullDisplayBalance(totalRewards).toString()) * parseFloat(kncPrice)).toString()
+    (parseFloat(getFullDisplayBalance(totalRewards[0]?.amount).toString()) * parseFloat(kncPrice)).toString()
 
   const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
   const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
@@ -106,10 +102,25 @@ const Farms = () => {
   const handleClickHarvestAll = async () => {
     setPendingTx(true)
 
-    const poolsHaveReward = farms.filter(farm => farm.userData.earnings && BigNumber.from(farm.userData.earnings).gt(0))
+    const poolsHaveReward = farms.filter(farm => {
+      if (!farm.userData.earnings) {
+        return false
+      }
+
+      const hasReward = farm.userData.earnings.some(value => BigNumber.from(value).gt(0))
+
+      return hasReward
+    })
+
     await harvestMultiplePools(poolsHaveReward.map(farm => farm.pid))
 
     setPendingTx(false)
+  }
+
+  const canHarvest = (rewards: Reward[]): boolean => {
+    const canHarvest = rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
+
+    return canHarvest
   }
 
   return (
@@ -176,12 +187,23 @@ const Farms = () => {
                       }
                     />
                   </TotalRewardsTitleWrapper>
-                  <RewardNumber>{getFullDisplayBalance(totalRewards)} KNC</RewardNumber>
+                  <RewardNumber>
+                    {totalRewards.map((reward, index) => {
+                      return (
+                        <span key={reward.token.address}>
+                          <span>
+                            {`${getFullDisplayBalance(reward?.amount)} ${getTokenSymbol(reward.token, chainId)}`}
+                          </span>
+                          {index + 1 < totalRewards.length ? <span style={{ margin: '0 4px' }}>+</span> : null}
+                        </span>
+                      )
+                    })}
+                  </RewardNumber>
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD, true)}</RewardUSD>
                 </TotalRewardsContainer>
                 <div>
                   <ButtonPrimary
-                    disabled={totalRewards.lte(BigNumber.from(0)) || pendingTx}
+                    disabled={!canHarvest(totalRewards) || pendingTx}
                     padding="10px 36px"
                     onClick={handleClickHarvestAll}
                   >
