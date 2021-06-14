@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-14 18:04\n"
+"PO-Revision-Date: 2021-06-14 21:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -192,7 +192,7 @@ msgstr "{0} 추가됨"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "주소에 사용 가능한 클레임이 없습니다."
+msgstr "주소에 사용 가능한 청구가 없습니다."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
@@ -208,7 +208,7 @@ msgstr "높은 가격 영향 거래를 허용하고 확인 화면을 건너 뜁�
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "{0}을 사용하도록 허용"
+msgstr "Uniswap 프로토콜이 귀하의 {0}을(를) 사용하도록 허용"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
