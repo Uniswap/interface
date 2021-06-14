@@ -17,7 +17,6 @@ import { AVERAGE_BLOCK_TIME_IN_SECS } from '../../constants'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
 import HistoryImg from 'assets/svg/history.svg'
-
 import {
   PageWrapper,
   KNCPriceContainer,
@@ -49,7 +48,7 @@ import RainMaker from '../../assets/images/rain-maker.webp'
 import FarmHistoryModal from 'components/FarmHistoryModal'
 import InfoHelper from 'components/InfoHelper'
 import { Reward } from 'state/farms/types'
-import { useFarmRewards } from 'utils/dmm'
+import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
 
 const FARM_ENDED = 'Ended'
 
@@ -78,15 +77,11 @@ const Farms = () => {
   })
 
   const totalRewards = useFarmRewards(farms)
+  const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
 
   if (publicDataLoading || userFarmsLoading) {
     return <LocalLoader />
   }
-
-  const totalRewardsUSD =
-    totalRewards &&
-    kncPrice &&
-    (parseFloat(getFullDisplayBalance(totalRewards[0]?.amount).toString()) * parseFloat(kncPrice)).toString()
 
   const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
   const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
@@ -199,7 +194,7 @@ const Farms = () => {
                       )
                     })}
                   </RewardNumber>
-                  <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD, true)}</RewardUSD>
+                  <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD.toString(), true)}</RewardUSD>
                 </TotalRewardsContainer>
                 <div>
                   <ButtonPrimary

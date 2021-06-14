@@ -6,18 +6,17 @@ import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { ChainId, Fraction, JSBI, Token } from 'libs/sdk/src'
-import { DMM_ANALYTICS_URL, KNC } from '../../constants'
+import { DMM_ANALYTICS_URL } from '../../constants'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ExpandableSectionButton from 'components/ExpandableSectionButton'
 import { Farm } from 'state/farms/types'
 import { formattedNum, getTokenSymbol, isAddressString, shortenAddress } from 'utils'
-import { useKNCPrice } from 'state/application/hooks'
 import InputGroup from './InputGroup'
 import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { getFarmApr, useFarmRewards } from 'utils/dmm'
+import { useFarmApr, useFarmRewardPerBlocks, useFarmRewards } from 'utils/dmm'
 import { ExternalLink } from 'theme'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
@@ -141,7 +140,6 @@ export const ItemCard = ({ farm }: ListItemProps) => {
 
 const ListItem = ({ farm }: ListItemProps) => {
   const { chainId } = useActiveWeb3React()
-  const kncPrice = useKNCPrice()
   const [expand, setExpand] = useState<boolean>(false)
 
   const currency0 = useToken(farm.token0?.id) as Token
@@ -154,6 +152,7 @@ const ListItem = ({ farm }: ListItemProps) => {
     : BigNumber.from(0)
 
   const farmRewards = useFarmRewards([farm])
+  const farmRewardPerBlocks = useFarmRewardPerBlocks([farm])
 
   // Ratio in % of LP tokens that are staked in the MC, vs the total number in circulation
   const lpTokenRatio = new Fraction(
@@ -193,9 +192,7 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
-  const apr = kncPrice
-    ? getFarmApr(KNC[chainId as ChainId], farm.rewardPerBlocks[0], kncPrice, liquidity.toString())
-    : 0
+  const apr = useFarmApr(farmRewardPerBlocks, liquidity.toString())
 
   const amp = farm.amp / 10000
 
@@ -265,7 +262,6 @@ const ListItem = ({ farm }: ListItemProps) => {
                 pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}
                 token0Address={farm.token0.id}
                 token1Address={farm.token1.id}
-                kncPrice={kncPrice}
                 farmRewards={farmRewards}
               />
             </StakeGroup>

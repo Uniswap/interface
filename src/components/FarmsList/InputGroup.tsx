@@ -19,6 +19,7 @@ import useStakedBalance from 'hooks/useStakedBalance'
 import { AutoRow } from 'components/Row'
 import { getFullDisplayBalance } from 'utils/formatBalance'
 import { Reward } from 'state/farms/types'
+import { useFarmRewardsUSD } from 'utils/dmm'
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
   const fraction = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals)))
@@ -50,7 +51,6 @@ export default function InputGroup({
   type,
   assetSymbol,
   assetDecimals = 18,
-  kncPrice,
   farmRewards
 }: {
   pairAddress: string
@@ -61,7 +61,6 @@ export default function InputGroup({
   type?: string
   assetSymbol?: string
   assetDecimals?: number
-  kncPrice?: string
   farmRewards: Reward[]
 }): JSX.Element {
   const { chainId } = useActiveWeb3React()
@@ -71,12 +70,7 @@ export default function InputGroup({
   const pairAddressChecksum = isAddressString(pairAddress)
   const balance = useTokenBalance(pairAddressChecksum)
   const staked = useStakedBalance(pid, assetDecimals)
-  // const rewardUSD =
-  //   userEarning &&
-  //   kncPrice &&
-  //   (parseFloat(kncPrice) * parseFloat(getFullDisplayBalance(userRewards?[0].value, userEarning.decimals))).toString()
-
-  const rewardUSD = 0
+  const rewardUSD = useFarmRewardsUSD(farmRewards)
 
   const [approvalState, approve] = useApproveCallback(
     new TokenAmount(
@@ -219,7 +213,7 @@ export default function InputGroup({
                   )
                 })}
               </div>
-              <RewardUSD>{rewardUSD && formattedNum(rewardUSD, true)}</RewardUSD>
+              <RewardUSD>{rewardUSD && formattedNum(rewardUSD.toString(), true)}</RewardUSD>
             </RewardBalanceWrapper>
             <ButtonPrimary disabled={isHarvestDisabled} padding="12px" margin="15px 0" onClick={handleClickHarvest}>
               Harvest

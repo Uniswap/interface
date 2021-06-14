@@ -193,7 +193,7 @@ const getKNCPriceByETH = async (chainId?: ChainId) => {
 
     const derivedETH = result?.data?.tokens[0]?.derivedETH
 
-    kncPriceByETH = parseFloat(derivedETH)
+    kncPriceByETH = parseFloat(derivedETH) || 0
   } catch (e) {
     console.log(e)
   }
