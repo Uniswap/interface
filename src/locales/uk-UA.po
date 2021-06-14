@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-14 06:04\n"
+"PO-Revision-Date: 2021-06-14 09:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -703,7 +703,7 @@ msgstr "Дослідіть популярні пули на Uniswap Analytics."
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
-msgstr "Фай-Теєр"
+msgstr "Рівень комісій"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -732,7 +732,7 @@ msgstr "Приховати закриті позиції"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
-msgstr "Високий вплив на ціну"
+msgstr "Вплив високої ціни"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
@@ -775,7 +775,7 @@ msgstr "Збільшити ліквідність"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Initial prices and pool share"
-msgstr "Початкові ціни та обсяг акцій"
+msgstr "Початкові ціни й частка пулу"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Initializing..."
@@ -791,11 +791,11 @@ msgstr "Встановити Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "Недостатньо ліквідності для цієї торгівлі."
+msgstr "Недостатня ліквідність для цієї угоди."
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "Недостатньо ліквідності для цієї торгівлі. Спробуйте включити багатохостингові угоди."
+msgstr "Недостатня ліквідність для цієї угоди. Спробуйте активувати багатоінтервальну торгівлю multi-hop."
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -825,7 +825,7 @@ msgstr "Недійсне введення ціни"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "Некоректний діапазон обраний. Мінімальна ціна має бути меншою за максимальну ціну."
+msgstr "Вибрано недійсний діапазон. Мінімальна ціна має бути нижчою за максимальну."
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
@@ -833,7 +833,7 @@ msgstr "Недійсний одержувач"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
-msgstr "Вчитися"
+msgstr "Ознайомитися"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -842,7 +842,7 @@ msgstr "Ліквідність"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Liquidity Provider Fee"
-msgstr "Плата за надання ліквідності"
+msgstr "Комісія постачальника ліквідності"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity provider rewards"

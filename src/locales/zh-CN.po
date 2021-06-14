@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-14 08:07\n"
+"PO-Revision-Date: 2021-06-14 09:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -159,15 +159,15 @@ msgstr "添加委托 +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "添加流动性"
+msgstr "注入流动资金"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "添加V2流动资金"
+msgstr "注入V2流动资金"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "添加流动性。"
+msgstr "注入流动资金。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -180,11 +180,11 @@ msgstr "添加{0} {1}和{2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "添加{0}-{1}流动性"
+msgstr "注入{0}-{1}流动资金"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "添加{0}/{1} V3流动性"
+msgstr "添加{0}/{1} V3流动资金"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -224,11 +224,11 @@ msgstr "数额"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币与 Uniswap 不兼容。注：转账时带扣除费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
+msgstr "尝试执行此兑换时发生错误。您可能需要增加滑点限制。如果还是不行，则可能是您正在交易的代币不兼容。注：转账时扣除费用的代币和重定基准代币都与Uniswap V3不兼容。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "数据分析"
+msgstr "分析"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -240,7 +240,7 @@ msgstr "批准"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approve {0}"
-msgstr "批准 {0}"
+msgstr "批准{0}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
@@ -256,7 +256,7 @@ msgstr "批准中"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Approving {0}"
-msgstr "正在批准 {0}"
+msgstr "正在批准{0}"
 
 #: src/components/Settings/index.tsx
 msgid "Are you sure?"
@@ -264,11 +264,11 @@ msgstr "您确定吗？"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "作为Uniswap社区的成员，您可以认领 UNI 代币，用于投票和治理。<0/><1/><2>阅读更多关于 UNI 代币信息</2>"
+msgstr "作为Uniswap社区的成员，您可以领取UNI代币，用于投票和治理。<0/><1/><2>阅读更多关于UNI的信息</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "根据选定的兑换率范围，至少会有 {0} {1} 和 {2} {3} 将退还到您的钱包。"
+msgstr "根据选定的兑换率范围，至少会有{0} {1}和{2} {3}将退还到您的钱包。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
@@ -276,7 +276,7 @@ msgstr "自动"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "可调用的数额：{0}"
+msgstr "可存款的数额：{0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -292,7 +292,7 @@ msgstr "余额：{0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "较适合低交易量的币对。"
+msgstr "适合外来币对。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -300,7 +300,7 @@ msgstr "较适合大部分币对。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "较适合稳定代币币对。"
+msgstr "适合稳定币对。"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -316,7 +316,7 @@ msgstr "添加此代币列表代表您信任其数据是正确的。任何人都
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "通过连接钱包，您同意接受 Uniswap 实验室的<0>服务条款</0>，并确认您已阅读和理解<1>Uniswap协议免责声明</1>。"
+msgstr "通过连接钱包，您同意接受Uniswap实验室的<0>服务条款</0>，并确认您已阅读和理解<1>Uniswap协议免责声明</1>。"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -328,7 +328,7 @@ msgstr "图表"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
-msgstr "查看我们的 v3 流动池介绍和迁移指南。"
+msgstr "查看我们的v3流动池介绍和迁移指南。"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -342,24 +342,24 @@ msgstr "领取"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "领取 UNI 代币"
+msgstr "领取UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "领取 UNI 代币"
+msgstr "领取UNI代币"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "领取累积的 UNI 代币奖励"
+msgstr "领取累积的UNI奖励"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "领取已累积的手续费"
+msgstr "领取手续费"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
-msgstr "领取您的 UNI 代币"
+msgstr "领取您的UNI代币"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
@@ -368,20 +368,20 @@ msgstr "已领取"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "已领取 UNI 代币！"
+msgstr "已领取UNI！"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
-msgstr "领取中"
+msgstr "正在领取"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "正在领取 UNI 代币"
+msgstr "正在领取UNI"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "正在领取 {0} UNI 代币"
+msgstr "正在领取{0} UNI代币"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -411,7 +411,7 @@ msgstr "收取"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Collect as WETH"
-msgstr "以 WETH 方式收取"
+msgstr "以WETH方式收取"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
@@ -423,11 +423,11 @@ msgstr "已收取"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "收取中"
+msgstr "正在收取"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "收取手续费"
+msgstr "正在收取手续费"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
@@ -578,15 +578,15 @@ msgstr "充入 UNI-V2 流动池代币"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "充入流动资金"
+msgstr "存入流动资金"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "充入您的流动池代币以领取 UNI（Uniswap 的治理代币）。"
+msgstr "存入您的流动池代币以领取UNI（Uniswap协议治理代币）。"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
-msgstr "已充入的流动资金："
+msgstr "已存入的流动资金："
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
@@ -594,7 +594,7 @@ msgstr "已充入 {0} UNI-V2 流动池代币"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "充入流动资金"
+msgstr "正在存入的流动资金"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -711,7 +711,7 @@ msgstr "赞成"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
-msgstr "对于下面显示的每个流动池，单击“迁移”以从 Uniswap V2 赎回您的流动资金，并将其注入到 Uniswap V3。"
+msgstr "对于下面显示的每个流动池，单击“迁移”以从Uniswap V2赎回您的流动资金，并将其存入到Uniswap V3。"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -791,7 +791,7 @@ msgstr "安装Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "现有流动量不足以支持此交易。"
+msgstr "现有流动资金不足以支持此交易。"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
@@ -1205,7 +1205,7 @@ msgstr "去除 {0} {1} 和 {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "去除 {0}/{1} V3 流动资金"
+msgstr "去除{0}/{1} V3流动资金"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
