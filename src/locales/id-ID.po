@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Indonesian\n"
-"PO-Revision-Date: 2021-06-14 06:04\n"
+"PO-Revision-Date: 2021-06-14 07:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1352,23 +1352,23 @@ msgstr "Harga pasar di luar rentang harga yang Anda tentukan. Khusus setoran ase
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "Token keluaran tidak dapat ditransfer. Mungkin ada masalah dengan token keluaran."
+msgstr "Token output tidak dapat ditransfer. Mungkin ada masalah dengan token output."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Token keluaran tidak dapat ditransfer. Mungkin ada masalah dengan token keluaran. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
+msgstr "Token output tidak dapat ditransfer. Mungkin ada masalah dengan token output. Catatan biaya transfer dan token rebase tidak sesuai dengan Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "Harga kolam ini di luar kisaran yang Anda pilih. Posisi Anda saat ini tidak menghasilkan biaya."
+msgstr "Harga pool ini di luar rentang yang Anda pilih. Posisi Anda saat ini tidak menghasilkan biaya."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "Harga kolam ini berada dalam kisaran yang Anda pilih. Posisi Anda saat ini mendapatkan bayaran."
+msgstr "Harga pool ini berada dalam rentang yang Anda pilih. Posisi Anda saat ini menghasilkan biaya."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "Rasio token yang Anda tambahkan akan menetapkan harga kumpulan ini."
+msgstr "Rasio token yang Anda tambahkan akan menetapkan harga pool ini."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
@@ -1384,7 +1384,7 @@ msgstr "Token ini tidak muncul di daftar token yang aktif. Pastikan ini adalah t
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "Alat ini akan memindahkan {0} likuiditas Anda ke V3 dengan aman. Prosesnya benar-benar tidak dapat dipercaya berkat"
+msgstr "Alat ini akan memigrasikan {0} likuiditas Anda ke V3 dengan aman. Prosesnya benar-benar tidak dapat dipercaya berkat"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1409,7 +1409,7 @@ msgstr "Untuk (setidaknya)"
 
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
-msgstr "Alihkan Mode Pakar"
+msgstr "Beralih Mode Pakar"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
@@ -1454,7 +1454,7 @@ msgstr "Batas waktu transaksi"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
-msgstr "Coba lagi"
+msgstr "Coba Lagi"
 
 #: src/components/Settings/index.tsx
 msgid "Turn On Expert Mode"
@@ -1462,7 +1462,7 @@ msgstr "Nyalakan Mode Pakar"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "UNI has arrived"
-msgstr "UNI telah tiba"
+msgstr "UNI telah sampai"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
@@ -1511,7 +1511,7 @@ msgstr "Uniswap V3 ada di sini!"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Uniswap dalam bahasa: <0>{0}</0>"
+msgstr "Uniswap tersedia dalam: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
@@ -1583,7 +1583,7 @@ msgstr "V3 {0} Harga:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
-msgstr "Lihat UNI Analytics"
+msgstr "Lihat Analitik UNI"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -1591,7 +1591,7 @@ msgstr "Lihat Likuiditas V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "Lihat biaya yang masih harus dibayar dan analitik <0> ↗</0>"
+msgstr "Lihat biaya yang masih harus dibayar dan analitik<0>↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
@@ -1612,20 +1612,20 @@ msgstr "Lihat transaksi di Explorer"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
-msgstr "Pilih"
+msgstr "Beri Suara"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote Against"
-msgstr "Beri Suara Menentang"
+msgstr "Beri Suara Melawan"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Vote For"
-msgstr "Memilih untuk"
+msgstr "Beri Suara Untuk"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr "Beri suara menentang usulan {proposalId}"
+msgstr "Beri suara melawan usulan {proposalId}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
@@ -1642,11 +1642,11 @@ msgstr "Voting berakhir kira-kira {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
-msgstr "Menunggu konfirmasi"
+msgstr "Menunggu Konfirmasi"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
-msgstr "Imbalan Mingguan"
+msgstr "Hadiah Mingguan"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
@@ -1654,20 +1654,20 @@ msgstr "Selamat datang di tim Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Ketika Anda mengklaim tanpa menarik, likuiditas Anda tetap berada di kolam penambangan."
+msgstr "Ketika mengklaim tanpa menarik, likuiditas Anda tetap berada di pool penambangan."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "Saat Anda menarik diri, kontrak akan secara otomatis mengklaim UNI atas nama Anda!"
+msgstr "Saat Anda menarik, kontrak akan secara otomatis mengklaim UNI atas nama Anda!"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Saat Anda menarik, UNI Anda diklaim dan likuiditas Anda dihapus dari kumpulan penambangan."
+msgstr "Saat Anda menarik, UNI Anda diklaim dan likuiditas Anda dihapus dari pool penambangan."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Withdraw"
-msgstr "Menarik"
+msgstr "Tarik"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw & Claim"
@@ -1676,11 +1676,11 @@ msgstr "Tarik & Klaim"
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "Menarik likuiditas yang disimpan"
+msgstr "Tarik likuiditas yang disetor"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
-msgstr "Penarikan {0} UNI-V2"
+msgstr "Menarik {0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
@@ -1688,7 +1688,7 @@ msgstr "Menarik UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Membungkus"
+msgstr "Wrap"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1697,7 +1697,7 @@ msgstr "Jaringan Salah"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
-msgstr "Anda sedang membuat pangkalan"
+msgstr "Anda sedang membuat pool"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
@@ -1717,7 +1717,7 @@ msgstr "Anda sekarang dapat berdagang {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "Anda belum memiliki likuiditas di kumpulan ini."
+msgstr "Anda belum memiliki likuiditas di pool ini."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -1725,11 +1725,11 @@ msgstr "Anda harus menghubungkan akun."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Anda harus memberikan izin kontrak pintar Uniswap untuk menggunakan {0}Anda. Anda hanya perlu melakukan ini sekali per token."
+msgstr "Anda harus memberikan izin smart contract kepada Uniswap untuk menggunakan {0} Anda. Anda hanya perlu melakukan ini satu kali per token."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "Anda hanya boleh menyetorkan likuiditas ke Uniswap V3 dengan harga yang Anda yakini benar. <0 /> Jika harga tampak salah, Anda dapat melakukan pertukaran untuk memindahkan harga atau menunggu orang lain melakukannya."
+msgstr "Anda hanya boleh menyetorkan likuiditas ke Uniswap V3 dengan harga yang Anda yakini benar. <0/>Jika harga tampak salah, Anda dapat melakukan pertukaran untuk memindahkan harga atau menunggu orang lain melakukannya."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -1742,7 +1742,7 @@ msgstr "Anda akan menerima"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "Rincian UNI Anda"
+msgstr "Perincian UNI Anda"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -1754,21 +1754,21 @@ msgstr "Posisi likuiditas V3 Anda akan muncul di sini."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
-msgstr "Deposit likuiditas Anda"
+msgstr "Setoran likuiditas Anda"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "Likuiditas Anda hanya akan mendapatkan biaya ketika harga pasar dari pasangan tersebut berada dalam jangkauan Anda. <0> Butuh bantuan memilih kisaran?</0>"
+msgstr "Likuiditas Anda hanya akan menghasilkan biaya ketika harga pasar dari pasangan tersebut berada dalam rentang Anda. <0>Butuh bantuan memilih rentang?</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "Bagian kolam Anda:"
+msgstr "Bagian pool Anda:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
-msgstr "Posisi kamu"
+msgstr "Posisi Anda"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
@@ -1787,7 +1787,7 @@ msgstr "Posisi Anda akan 100% {0} pada harga ini."
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "Posisi Anda tidak akan menghasilkan biaya atau digunakan dalam perdagangan sampai harga pasar bergerak ke kisaran Anda."
+msgstr "Posisi Anda tidak akan menghasilkan biaya atau digunakan dalam perdagangan sampai harga pasar bergerak ke rentang Anda."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -1805,11 +1805,11 @@ msgstr "Token total pool Anda:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "Biaya transaksi Anda akan jauh lebih tinggi karena sudah termasuk gas untuk membuat kolam."
+msgstr "Biaya transaksi Anda akan jauh lebih tinggi karena sudah termasuk gas untuk membuat pool."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "Transaksi Anda mungkin di depan"
+msgstr "Transaksi Anda mungkin front running"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
@@ -1833,7 +1833,7 @@ msgstr "UNI Anda yang belum diklaim"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
-msgstr "Konfirmasi"
+msgstr "konfirmasikan"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
@@ -1861,7 +1861,7 @@ msgstr "melalui {0} daftar token"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
-msgstr "{0, plural, one {Impor tanda} other {Impor token}}"
+msgstr "{0, plural, one {Impor token} other {Impor token}}"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/Vote/VotePage.tsx
@@ -1872,7 +1872,7 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0 /> per <1 />"
+msgstr "{0} <0/> per <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -1896,7 +1896,7 @@ msgstr "{0} Biaya yang Diperoleh:"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
-msgstr "{0} Menunggu keputusan"
+msgstr "{0} Tertunda"
 
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -1920,7 +1920,7 @@ msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} token UNI-V2 LP tersedia"
+msgstr "{0} token LP UNI-V2 yang tersedia"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -1979,7 +1979,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LP Token"
+msgstr "{0}/{1} Token LP"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -2003,5 +2003,5 @@ msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← Kembali ke Ikhtisar Pangkalan"
+msgstr "← Kembali ke Gambaran Umum Pool"
 
