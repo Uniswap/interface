@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Indonesian\n"
-"PO-Revision-Date: 2021-06-14 01:28\n"
+"PO-Revision-Date: 2021-06-14 02:20\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -427,7 +427,7 @@ msgstr "Mengumpulkan"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Memungut biaya"
+msgstr "Menagih biaya"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
