@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-14 09:04\n"
+"PO-Revision-Date: 2021-06-14 10:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -159,15 +159,15 @@ msgstr "添加委托 +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "注入流动资金"
+msgstr "添加流动资金"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "注入V2流动资金"
+msgstr "添加V2流动资金"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "注入流动资金。"
+msgstr "添加流动资金"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
@@ -180,7 +180,7 @@ msgstr "添加{0} {1}和{2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "注入{0}-{1}流动资金"
+msgstr "添加{0}-{1}流动资金"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
@@ -276,7 +276,7 @@ msgstr "自动"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "可存款的数额：{0}"
+msgstr "可存入的数额：{0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -487,7 +487,7 @@ msgstr "连接到钱包以查找流动池"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
-msgstr "连接到钱包以查看您的 V2 流动资金。"
+msgstr "连接到钱包以查看您的V2流动资金。"
 
 #: src/pages/Pool/v2.tsx
 msgid "Connect to a wallet to view your liquidity."
@@ -500,7 +500,7 @@ msgstr "连接钱包"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
-msgstr "已与 {name} 连接"
+msgstr "已与{name}连接"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -513,7 +513,7 @@ msgstr "复制地址"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "创建流动池和供应流动资金"
+msgstr "创建流动池和供应"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -526,11 +526,11 @@ msgstr "创建流动池"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "在GitHub上创建难题"
+msgstr "在GitHub上创建问题"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "创建流动池并注入 {0}/{1} V3 流动资金"
+msgstr "创建流动池并注入{0}/{1} V3流动资金"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
@@ -547,7 +547,7 @@ msgstr "当前兑换率"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "当前 {0} 兑换率："
+msgstr "当前{0}兑换率："
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
@@ -566,15 +566,15 @@ msgstr "委托投票"
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "充值"
+msgstr "存款"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "充值数额"
+msgstr "存款数额"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "充入 UNI-V2 流动池代币"
+msgstr "存入UNI-V2流动池代币"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
@@ -590,11 +590,11 @@ msgstr "已存入的流动资金："
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "已充入 {0} UNI-V2 流动池代币"
+msgstr "已存入{0} UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "正在存入的流动资金"
+msgstr "正在存入流动资金"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
@@ -602,7 +602,7 @@ msgstr "描述"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
-msgstr "详细信息"
+msgstr "详细"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
@@ -610,7 +610,7 @@ msgstr "详细信息"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "停用“多节点”（多跳式）兑换途径"
+msgstr "禁用多跳式"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
@@ -795,7 +795,7 @@ msgstr "现有流动资金不足以支持此交易。"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "现有流动量不足以支持此交易。请尝试启用“多节点”（多跳式）交易途径。"
+msgstr "现有流动资金不足以支持此交易。请尝试启用多跳交易。"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -936,7 +936,7 @@ msgstr "将流动资金迁移到V3"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate V2 Liquidity"
-msgstr "迁移V2 流动资金"
+msgstr "迁移V2流动资金"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
@@ -944,7 +944,7 @@ msgstr "迁移V2流动资金"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "将您的流动资金从 Uniswap V2 迁移到 Uniswap V3。"
+msgstr "将您的流动资金从Uniswap V2迁移到Uniswap V3。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
@@ -977,7 +977,7 @@ msgstr "新仓位"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
-msgstr "找不到V2流动资金。"
+msgstr "未找到V2流动资金。"
 
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
@@ -1245,7 +1245,7 @@ msgstr "选择代币"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
-msgstr "选择代币以查找您的 v2 流动资金。"
+msgstr "选择代币以查找您的v2流动资金。"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1303,7 +1303,7 @@ msgstr "出问题了"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "第 1 步：获取 UNI-V2 流动池代币"
+msgstr "第1步：获取UNI-V2流动池代币"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1348,7 +1348,7 @@ msgstr "输入代币无法进行转账。输入代币可能有些问题。"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "市场兑换率超出您指定的范围。将只注入单项代币。"
+msgstr "市场兑换率超出您指定的范围。将只存入单一资产。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1384,7 +1384,7 @@ msgstr "此代币未出现在激活的代币列表中。请确保这是您想要
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "该工具将安全地将您的 {0} 流动资金迁移到 V3。该过程完全不依赖任何信任需求"
+msgstr "该工具将安全地将您的{0}流动资金迁移到V3。该过程完全去信任，得益于"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1482,7 +1482,7 @@ msgstr "UNI {0}/{1} 被摧毁"
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "需要 UNI-V2 流动池代币。一旦您已注入流动资金到 {0}-{1} 池，您就可以在此页面上抵押您的流动池代币。"
+msgstr "需要UNI-V2流动池代币。一旦您已注入流动资金到{0}-{1}池，您就可以在此页面上质押您的流动池代币。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 {0}-{1}"
@@ -1515,7 +1515,7 @@ msgstr "Uniswap 可选语言：<0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr "Uniswap 流动资金挖矿："
+msgstr "Uniswap流动资金挖矿"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
@@ -1570,7 +1570,7 @@ msgstr "用户"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
-msgstr "V2 流动资金"
+msgstr "V2流动资金"
 
 #: src/pages/Swap/index.tsx
 msgid "V3"
@@ -1587,7 +1587,7 @@ msgstr "查看 UNI 代币分析"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
-msgstr "查看 V2 流动资金"
+msgstr "查看V2流动资金"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -1662,7 +1662,7 @@ msgstr "当您赎回流动资金时，智能合约将自动为您领取 UNI 代�
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "当您赎回流动资金时，您的 UNI 代币将被领取，流动资金也将从矿池中移除。"
+msgstr "当您赎回流动资金时，您的UNI将被领取，流动资金也将从矿池中移除。"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1676,7 +1676,7 @@ msgstr "赎回和领取"
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdraw deposited liquidity"
-msgstr "赎回注入的流动资金"
+msgstr "赎回存入的流动资金"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
@@ -1701,7 +1701,7 @@ msgstr "您正在创建一个流动池"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "您是此 Uniswap V3 流动池的第一个流动资金提供者。您的流动资金将以当前的 {0} 兑换率迁移。"
+msgstr "您是此Uniswap V3流动池的第一个流动资金提供者。您的流动资金将以当前的{0}兑换率迁移。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -1729,7 +1729,7 @@ msgstr "您必须授予 Uniswap 智能合约使用您的 {0} 的权限。每个�
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "请确保以您认为是正确的兑换率来将流动资金注入到 Uniswap V3。 <0/>如果兑换率看起来不正确，您可以进行兑换交易以移动兑换率，或者等待别人进行此操作。"
+msgstr "请确保以您认为是正确的兑换率来将流动资金存入到Uniswap V3。<0/>如果兑换率看起来不正确，您可以进行兑换交易以移动兑换率，或者等待别人这样做。"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -1750,11 +1750,11 @@ msgstr "您的V2流动资金"
 
 #: src/pages/Pool/index.tsx
 msgid "Your V3 liquidity positions will appear here."
-msgstr "您的 V3 流动资金将在此显示。"
+msgstr "您的V3流动资金将在此显示。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
-msgstr "您注入的流动资金"
+msgstr "您的流动资金存款"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
@@ -1881,7 +1881,7 @@ msgstr "{0} 自定义代币"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "注入 {0}"
+msgstr "已存入{0}"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
@@ -1971,7 +1971,7 @@ msgstr "{0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} 流动资金采矿"
+msgstr "{0}-{1}流动资金采矿"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
