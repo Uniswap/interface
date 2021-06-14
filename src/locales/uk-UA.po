@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-14 09:04\n"
+"PO-Revision-Date: 2021-06-14 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -869,11 +869,11 @@ msgstr "Завантажено"
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Loading"
-msgstr "Завантаження"
+msgstr "Завантажується"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Make sure the URL is<0>app.uniswap.org</0>"
-msgstr "Переконайтеся, що URL-адреса є<0>app.uniswap.org</0>"
+msgstr "Переконайтеся в тому, що URL-адреса така: <0>app.uniswap.org</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -882,23 +882,23 @@ msgstr "Переконайтеся, що URL-адреса є<0>app.uniswap.org</
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "Керування"
+msgstr "Управління"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
-msgstr "Управління ліквідністю в басейні нагород"
+msgstr "Управління ліквідністю в пулі винагород"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Manage Token Lists"
-msgstr "Керувати списками токенів"
+msgstr "Управління списками токенів"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "Управління басейном."
+msgstr "Керуйте цим пулом."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
-msgstr "Макс"
+msgstr "Максимум"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -923,7 +923,7 @@ msgstr "Максимум відправлених"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
-msgstr "Міграція"
+msgstr "Перенесення"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate Liquidity"
@@ -931,24 +931,24 @@ msgstr "Перенесення ліквідності"
 
 #: src/pages/Pool/v2.tsx
 msgid "Migrate Liquidity to V3"
-msgstr "Перенесення ліквідності V3"
+msgstr "Перенесення ліквідності до V3"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate V2 Liquidity"
-msgstr "Мігрувати V2 ліквідність"
+msgstr "Перенесення ліквідності V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate V2 liquidity"
-msgstr "Міграція V2 ліквідності"
+msgstr "Перенесення ліквідності V2"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Migrate your liquidity tokens from Uniswap V2 to Uniswap V3."
-msgstr "Перенесення токенів ліквідності з Uniswap V2 на Uniswap V3."
+msgstr "Перенесіть свої токени ліквідності з Uniswap V2 lj Uniswap V3."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Migrating"
-msgstr "Міграція"
+msgstr "Відбувається перенесення"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -961,7 +961,7 @@ msgstr "Мінімальна ціна"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Min:"
-msgstr "Мін:"
+msgstr "Мінімум:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Minimum received"
@@ -973,7 +973,7 @@ msgstr "Більше"
 
 #: src/pages/Pool/index.tsx
 msgid "New Position"
-msgstr "Нове розташування"
+msgstr "Нова позиція"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "No V2 Liquidity found."
@@ -982,11 +982,11 @@ msgstr "Не знайдено ліквідності V2."
 #: src/pages/Earn/index.tsx
 #: src/pages/Earn/index.tsx
 msgid "No active pools"
-msgstr "Немає активних басейнів"
+msgstr "Немає активних пулів"
 
 #: src/pages/Pool/v2.tsx
 msgid "No liquidity found."
-msgstr "Ніякої ліквідності не знайдено."
+msgstr "Ліквідності не знайдено."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
@@ -1249,7 +1249,7 @@ msgstr "Виберіть маркер, щоб знайти свою ліквід
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
-msgstr "Обрати пару"
+msgstr "Виберіть пару"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"

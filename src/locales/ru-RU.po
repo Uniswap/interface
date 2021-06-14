@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-13 21:04\n"
+"PO-Revision-Date: 2021-06-14 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -783,7 +783,7 @@ msgstr "Инициализация..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "Вход прогнозируется. Вы будете продавать не более <0>{0} {1}</0> или транзакция будет возвращена."
+msgstr "Сумма к продаже — оценочная. Вы продадите максимум <0>{0} {1}</0>, или транзакция откатится."
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"

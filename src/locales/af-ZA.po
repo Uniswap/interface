@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Afrikaans\n"
-"PO-Revision-Date: 2021-06-12 10:04\n"
+"PO-Revision-Date: 2021-06-14 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -850,7 +850,7 @@ msgstr "Belonings vir likiditeitsverskaffer"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Likiditeitsverskaffers verdien 'n fooi van 0,3% op alle transaksies wat eweredig is aan hul deel van die swembad. Fooie word by die swembad gevoeg, intyds toegeval en kan geëis word deur u likiditeit te onttrek."
+msgstr "Likiditeitsverskaffers verdien 'n fooi van 0,3% op alle transaksies wat eweredig is aan hul deel van die poel. Fooie word by die poel gevoeg, intyds toegeval en kan geëis word deur u likiditeit te onttrek."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -1554,7 +1554,7 @@ msgstr "Nie-ondersteunde bates"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "Pak uit"
+msgstr "Maak oop"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
