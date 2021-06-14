@@ -5,7 +5,7 @@ import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUnisw
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x1c87257F5e8609940Bc751a07BB085Bb7f8cDBE6',
-  [ChainId.ROPSTEN]: '0x12807818B584a3Fa65D38B6C25B13983fE888D6E',
+  [ChainId.ROPSTEN]: '0x96E8B9E051c81661C36a18dF64ba45F86AC80Aae',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
