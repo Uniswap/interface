@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-10 17:43+0000\n"
+"POT-Creation-Date: 2021-06-14 17:25+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-13 20:04\n"
+"PO-Revision-Date: 2021-06-14 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -224,7 +224,7 @@ msgstr "Ποσό"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Παρουσιάστηκε σφάλμα κατά την προσπάθεια εκτέλεσης αυτής της ανταλλαγής. Ίσως χρειαστεί να αυξήσετε την ανοχή ολίσθησης. Εάν αυτό δεν λειτουργεί, μπορεί να υπάρχει ασυμβατότητα με το διακριτικό που διαπραγματεύεστε. Σημείωση τέλος για τα διακριτικά μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -1026,7 +1026,7 @@ msgstr "Μόλις είστε ευχαριστημένοι με το ποσοσ�
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr ""
+msgstr "Μόνο οι ψήφοι του UNI που ανατέθηκαν αυτοπροσώπως ή ανατέθηκαν σε άλλη διεύθυνση πριν από το μπλοκ {0} έχουν δικαίωμα ψήφου."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
@@ -1355,8 +1355,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "Το διακριτικό αποτελέσματος δεν μπορεί να μεταφερθεί. Ενδέχεται να υπάρχει ένα ζήτημα με το διακριτικό αποτελέσματος."
 
 #: src/hooks/useSwapCallback.ts
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Δεν είναι δυνατή η μεταφορά του διακριτικού εξόδου. Ενδέχεται να υπάρχει πρόβλημα με το διακριτικό εξόδου. Σημείωση τέλος για τα διακριτικά μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Δεν είναι δυνατή η μεταφορά του διακριτικού εξόδου. Ενδέχεται να υπάρχει πρόβλημα με το διακριτικό εξόδου. Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1384,11 +1384,11 @@ msgstr "Αυτό το διακριτικό δεν εμφανίζεται στη�
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "Αυτό το εργαλείο θα μεταφέρει με ασφάλεια τη ρευστότητα {0} σας στο V3. Η διαδικασία είναι απολύτως αξιόπιστη χάρη στο"
+msgstr "Αυτό το εργαλείο θα μεταφέρει με ασφάλεια τη ρευστότητα {0} σας στο V3. Η διαδικασία αυτή διακρίνεται από έλλειψη εμπιστοσύνης μεταξύ των μερών χάρη στο"
 
 #: src/hooks/useSwapCallback.ts
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Αυτή η συναλλαγή δεν θα πετύχει λόγω της μεταβολής των τιμών. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης. Σημείωση τέλος για τα διακριτικά μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Αυτή η συναλλαγή δεν θα πετύχει λόγω της μεταβολής των τιμών. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1526,8 +1526,8 @@ msgid "Unknown Source"
 msgstr "Αγνωστη πηγή"
 
 #: src/hooks/useSwapCallback.ts
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Άγνωστο σφάλμα{0}. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης. Σημείωση τέλος για τα διακριτικά μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Άγνωστο σφάλμα{0}. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1554,7 +1554,7 @@ msgstr "Μη Υποστηριζόμενα Περιουσιακά Στοιχεί�
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr ""
+msgstr "Ξεδιπλώνω"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"

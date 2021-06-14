@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-10 17:43+0000\n"
+"POT-Creation-Date: 2021-06-14 17:25+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hungarian\n"
-"PO-Revision-Date: 2021-06-12 23:05\n"
+"PO-Revision-Date: 2021-06-14 18:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1356,8 +1356,8 @@ msgid "The output token cannot be transferred. There may be an issue with the ou
 msgstr "Az output token nem transzferálható. Probléma lehet az output tokennel."
 
 #: src/hooks/useSwapCallback.ts
-msgid "The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Az output token nem transzferálható. Probléma lehet az output tokennel. Az átutalási és az újraalapozási tokenek megjegyzésdíja nem kompatibilis az Uniswap V3-mal."
+msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "A kimeneti token nem vihető át. Probléma lehet a kimeneti tokennel. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1388,8 +1388,8 @@ msgid "This tool will safely migrate your {0} liquidity to V3. The process is co
 msgstr "Ez az eszköz biztonságosan migrálja a {0} likviditását a V3-ba. A folyamat teljesen megbízhatatlan köszönhetően"
 
 #: src/hooks/useSwapCallback.ts
-msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ez a tranzakció nem fog sikerülni az ármozgás miatt. Próbálja meg növelni a csúszási toleranciáját. Megjegyzés: az átutalási és újraalapozási tokenek díja nem kompatibilis az Uniswap V3-mal."
+msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Ez a tranzakció az ármozgás miatt nem fog sikerülni. Próbáld meg növelni a csúszástűrést. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1527,8 +1527,8 @@ msgid "Unknown Source"
 msgstr "Ismeretlen forrás"
 
 #: src/hooks/useSwapCallback.ts
-msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Ismeretlen hiba{0}. Próbálja meg növelni a csúszási tűréshatárt. Megjegyzés: Az átutalási és újraalapozási tokenek díja nem kompatibilis az Uniswap V3-mal."
+msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
+msgstr "Ismeretlen hiba{0}. Próbáld meg növelni a csúszástűrést. Megjegyzés: az átviteli és újrabázis tokenek díja nem kompatibilis az Uniswap V3 verzióval."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
