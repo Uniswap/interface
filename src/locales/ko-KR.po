@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-14 13:12\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -45,7 +45,7 @@ msgstr "(모두 지우기)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(편집하다)"
+msgstr "(편집)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -105,7 +105,7 @@ msgstr "<0> 계정 분석 및 발생 수수료</0> <1> ↗</1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0> 돌아 가기</0> V3"
+msgstr "<0> 돌아가기</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
@@ -133,11 +133,11 @@ msgstr "제안서를 제출하려면 총 UNI 공급량의 최소 1 %가 필요�
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "약"
+msgstr "정보"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
-msgstr "동의하기"
+msgstr "수락"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
@@ -145,13 +145,13 @@ msgstr "계정"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "유효한"
+msgstr "활성"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
-msgstr "더하다"
+msgstr "추가"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Add Delegate +"
@@ -167,11 +167,11 @@ msgstr "V2 유동성 추가"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "유동성을 추가하십시오."
+msgstr "유동성 추가"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "추가 {0} Metamask에 <0/>"
+msgstr "{0}을(를) Metamask에 추가<0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -180,23 +180,23 @@ msgstr "{0} {1} 과 {2} {3}추가"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "추가 {0}-{1} 유동성"
+msgstr "{0}-{1} 유동성 추가"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "추가 {0}/{1} V3 유동성"
+msgstr "{0}/{1} V3 유동성 추가"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
-msgstr "추가됨 {0}"
+msgstr "{0} 추가됨"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
-msgstr "주소에 사용 가능한 소유권 주장이 없습니다."
+msgstr "주소에 사용 가능한 클레임이 없습니다."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Against"
-msgstr "에 맞서"
+msgstr "반대"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allow LP token migration"
@@ -320,7 +320,7 @@ msgstr "지갑을 연결하면 Uniswap Labs의 <0> 서비스 약관에 동의하
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
-msgstr "변화"
+msgstr "변경"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
@@ -398,11 +398,11 @@ msgstr "닫기"
 #: src/components/Badge/RangeBadge.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Closed"
-msgstr "닫은"
+msgstr "닫힘"
 
 #: src/components/Menu/index.tsx
 msgid "Code"
-msgstr "암호"
+msgstr "코드"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
@@ -419,11 +419,11 @@ msgstr "수수료 징수"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "모은"
+msgstr "수집"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
-msgstr "수집"
+msgstr "수집 중"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
@@ -435,7 +435,7 @@ msgstr "수수료를 징수하면 현재 사용 가능한 수수료가 인출됩
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "공통 기지"
+msgstr "공통 기준"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
@@ -456,7 +456,7 @@ msgstr "스왑 확인"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
-msgstr "지갑에서이 거래를 확인하세요"
+msgstr "지갑에서 이 거래를 확인하세요"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -500,7 +500,7 @@ msgstr "지갑 연결"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
-msgstr "{name}과 연결됨"
+msgstr "{name}와(과) 연결됨"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -530,7 +530,7 @@ msgstr "GitHub에서 문제 만들기"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "풀 만들기 및 추가 {0}/{1} V3 유동성"
+msgstr "풀 만들기 및 {0}/{1} V3 유동성 추가"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
@@ -566,7 +566,7 @@ msgstr "투표 위임"
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "예금"
+msgstr "예치"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
@@ -574,7 +574,7 @@ msgstr "입금액"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "UNI-V2 LP 토큰 입금"
+msgstr "UNI-V2 LP 토큰 예치"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
@@ -582,7 +582,7 @@ msgstr "예금 유동성"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "유동성 공급자 토큰을 예치하여 Uniswap 프로토콜 거버넌스 토큰 인 UNI를 받으십시오."
+msgstr "유동성 공급자 토큰을 예치하여 Uniswap 프로토콜 거버넌스 토큰인 UNI를 받으십시오."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -751,7 +751,7 @@ msgstr "수입"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import List"
-msgstr "가져 오기 목록"
+msgstr "목록 가져오기"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
