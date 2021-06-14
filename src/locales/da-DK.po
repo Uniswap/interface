@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Danish\n"
-"PO-Revision-Date: 2021-06-14 08:07\n"
+"PO-Revision-Date: 2021-06-14 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -443,7 +443,7 @@ msgstr "Bekræft"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
-msgstr "Bekræft Tilførsel"
+msgstr "Bekræft levering"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -469,7 +469,7 @@ msgstr "Bekræft denne transaktion i din tegnebog"
 #: src/state/stake/hooks.ts
 #: src/state/swap/hooks.ts
 msgid "Connect Wallet"
-msgstr "Forbind Tegnebog"
+msgstr "Forbind tegnebog"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Pool/index.tsx
@@ -483,7 +483,7 @@ msgstr "Opret forbindelse til en tegnebog"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Connect to a wallet to find pools"
-msgstr "Opret forbindelse til en tegnebog for at finde pools"
+msgstr "Opret forbindelse til en tegnebog for at finde puljer"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Connect to a wallet to view your V2 liquidity."
@@ -496,7 +496,7 @@ msgstr "Opret forbindelse til en tegnebog for at se din likviditet."
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Connect wallet"
-msgstr "Tilslut tegnebog"
+msgstr "Forbind tegnebog"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
@@ -509,11 +509,11 @@ msgstr "Kopieret"
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
-msgstr "Kopiér Adresse"
+msgstr "Kopiér adresse"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Opret Pool & Forsyning"
+msgstr "Opret pulje og forsyning"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -522,7 +522,7 @@ msgstr "Opret et par"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "Opret en pool"
+msgstr "Opret en pulje"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
@@ -530,11 +530,11 @@ msgstr "Opret et problem på GitHub"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "Opret pool og tilføj {0}/{1} V3 likviditet"
+msgstr "Opret pulje, og tilføj {0}/{1} V3-likviditet"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
-msgstr "Opret pool."
+msgstr "Opret pulje."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
@@ -547,11 +547,11 @@ msgstr "Nuværende pris"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
-msgstr "Nuværende {0} pris:"
+msgstr "Nuværende {0}-pris:"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Delegate Votes"
-msgstr "Delegere Stemmer"
+msgstr "Uddelegér stemmer"
 
 #: src/pages/Vote/index.tsx
 msgid "Delegated to:"
@@ -566,23 +566,23 @@ msgstr "Uddelegerer stemmer"
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "Depositum"
+msgstr "Indbetaling"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Indbetal Beløb"
+msgstr "Indbetalingsbeløb"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "Depositum UNI-V2 LP Tokens"
+msgstr "Indbetal UNI-V2 LP-tokens"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
-msgstr "Indskud likviditet"
+msgstr "Indbetalingslikviditet"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Indbetal din Liquidity Provider tokens for at modtage UNI, Uniswap Protocol governance token."
+msgstr "Indsæt dine likviditetsudbyder-tokens for at modtage UNI, Uniswap-protokolstyringstokenet."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -594,11 +594,11 @@ msgstr "Indbetalt {0} UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
-msgstr "Indlån Likviditet"
+msgstr "Indbetalingslikviditet"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Description"
-msgstr "Varebeskrivelse"
+msgstr "Beskrivelse"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
