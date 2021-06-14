@@ -11,7 +11,7 @@ import { RowBetween } from '../Row';
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
 import ArbitrumLogo from '../../assets/images/arbitrum-logo.jpg'
-import triangleIcon from '../../assets/svg/triangle.svg'
+import { TriangleIcon } from '../Icons';
 
 const ChainLogo: any = {
   [ChainId.MAINNET]: EthereumLogo,
@@ -88,11 +88,6 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   `};
 `
 
-const TriangleIcon = styled.img`
-  margin-left: 6px;
-`;
-
-
 interface AccountStatusProps {
   pendingTransactions: string[];
   ENSName?: string;
@@ -124,7 +119,7 @@ export function AccountStatus({pendingTransactions, ENSName, account, networkCon
           <TYPE.white ml="8px" fontWeight={700} fontSize="12px">
             {ChainLabel[networkConnectorChainId]}
           </TYPE.white>
-          <TriangleIcon src={triangleIcon} alt="triangle" />
+          <TriangleIcon/>
         </Web3StatusNetwork>
       </NetworkSwitcherPopover>
     </View>
