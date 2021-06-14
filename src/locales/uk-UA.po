@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-14 21:04\n"
+"PO-Revision-Date: 2021-06-14 22:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1096,7 +1096,7 @@ msgstr "Токени пулу в пулі винагород:"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "Завантажено {0}:"
+msgstr "Заведено в пул {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
@@ -1109,15 +1109,15 @@ msgstr "Ціна"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Price Difference:"
-msgstr "Різниця у ціні:"
+msgstr "Різниця в ціні:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Price Impact"
-msgstr "Вплив на ціну"
+msgstr "Вплив ціни"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "Занадто високий вплив ціни"
+msgstr "Вплив ціни занадто високий"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
@@ -1134,7 +1134,7 @@ msgstr "Ціна:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Ціни і акції пулу"
+msgstr "Ціни та частка пулу"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1142,7 +1142,7 @@ msgstr "Пропозиції"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
-msgstr "Пропозиції, представлені членами спільноти, з'являться тут."
+msgstr "Пропозиції, подані членами спільноти, з’являться тут."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1186,7 +1186,7 @@ msgstr "Видалити суму"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "Видалити делегат"
+msgstr "Видалити делегата"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1205,19 +1205,19 @@ msgstr "Видалити {0} {1} і {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Видалити {0}/{1} V3 ліквідність"
+msgstr "Видалити ліквідність V3 {0}/{1}"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
-msgstr "Видалення {0} {1} і {2} {3}"
+msgstr "Видалення {0} {1} та {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "Обмежує зміни лише до прямих пар пар."
+msgstr "Обмежує обмін лише прямими парами."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
-msgstr "Повернення товару"
+msgstr "Повернутись"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Route"
@@ -1225,15 +1225,15 @@ msgstr "Маршрут"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Search name or paste address"
-msgstr "Знайдіть ім'я або вставку адресу"
+msgstr "Шукайте ім’я або введіть адресу"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "Вибрати басейн"
+msgstr "Вибрати пул"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Виберіть тип пуску на основі необхідної комісії провайдера ліквідності."
+msgstr "Виберіть тип пулу, виходячи з бажаної комісії постачальника ліквідності."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1245,7 +1245,7 @@ msgstr "Вибрати токен"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
-msgstr "Виберіть маркер, щоб знайти свою ліквідність v2."
+msgstr "Виберіть токен, щоб знайти свою ліквідність v2."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1503,23 +1503,23 @@ msgstr "Незатребуване:"
 
 #: src/pages/Vote/index.tsx
 msgid "Uniswap Governance"
-msgstr "Об’єднати управління"
+msgstr "Управління Uniswap"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Uniswap V3 is here!"
-msgstr "Uniswap V3 тут!"
+msgstr "Uniswap V3 вже тут!"
 
 #: src/components/SwitchLocaleLink/index.tsx
 msgid "Uniswap available in: <0>{0}</0>"
-msgstr "Відміна доступна за: <0>{0}</0>"
+msgstr "Uniswap доступно в: <0>{0}</0>"
 
 #: src/pages/Earn/index.tsx
 msgid "Uniswap liquidity mining"
-msgstr "Обміняти видобуток ліквідності"
+msgstr "Майнінг ліквідності Uniswap"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Uniswap migration contract↗"
-msgstr "Скасувати міграційний контракт↗"
+msgstr "Контракт Uniswap щодо перенесення↗"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
