@@ -120,8 +120,7 @@ export default function Vote() {
   const toggleDelegateModal = useToggleDelegateModal()
 
   // get data to list all proposals
-  // TODO don't hardcode for first gov alpha
-  const allProposals: ProposalData[] = useAllProposalData()[0]
+  const allProposals: ProposalData[] = useAllProposalData()
 
   // user data
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
@@ -249,7 +248,7 @@ export default function Vote() {
               </TYPE.subHeader>
             </EmptyProposals>
           )}
-          {allProposals?.reverse()?.map((p: ProposalData, i) => {
+          {allProposals?.map((p: ProposalData, i) => {
             return (
               <Proposal as={Link} to={'/vote/' + p.id} key={i}>
                 <ProposalNumber>{p.id}</ProposalNumber>
