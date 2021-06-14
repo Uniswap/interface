@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-14 11:04\n"
+"PO-Revision-Date: 2021-06-14 12:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -125,7 +125,7 @@ msgstr "<0>解锁投票</0>，以准备下一个提案。"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
-msgstr "<0>🎉 </0>欢迎加入Unicorn（独角兽）团队 :) <1>🎉</1>"
+msgstr "<0>🎉 </0>欢迎加入Unicorn团队 :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
@@ -1550,11 +1550,11 @@ msgstr "不支持的资产"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Unsupported Assets"
-msgstr "不支持的代币"
+msgstr "不支持的资产"
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "展开"
+msgstr "Unwrap"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1562,7 +1562,7 @@ msgstr "更新投票权委托"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
-msgstr "更新代币列表"
+msgstr "更新列表"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "User"
@@ -1579,11 +1579,11 @@ msgstr "V3"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "V3 {0} Price:"
-msgstr "V3 {0} 兑换率："
+msgstr "V3 {0}兑换率："
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
-msgstr "查看 UNI 代币分析"
+msgstr "查看UNI分析"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -1595,20 +1595,20 @@ msgstr "查看已累积手续费和数据分析<0>↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
-msgstr "查看代币列表"
+msgstr "查看列表"
 
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
-msgstr "在以太坊资源浏览器上查看"
+msgstr "在资源管理器上查看"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
-msgstr "在以太坊资源浏览器上查看交易"
+msgstr "在资源管理器上查看交易"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1625,20 +1625,20 @@ msgstr "投票赞成"
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr "投票反对提案 {proposalId}"
+msgstr "投票反对提案{proposalId}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
-msgstr "投票赞成提案 {proposalId}"
+msgstr "投票赞成提案{proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
-msgstr "投票结束 {0}"
+msgstr "投票结束{0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
-msgstr "投票大约结束于 {0}"
+msgstr "投票大约结束于{0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -1650,7 +1650,7 @@ msgstr "每周奖励"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
-msgstr "欢迎来到 Unicorn （独角兽）团队 :)"
+msgstr "欢迎来到Unicorn团队 :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
@@ -1658,7 +1658,7 @@ msgstr "当您领取奖励但没赎回流动资金时，流动资金仍然留在
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "当您赎回流动资金时，智能合约将自动为您领取 UNI 代币！"
+msgstr "当您赎回流动资金时，合约将自动为您领取UNI！"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
@@ -1680,11 +1680,11 @@ msgstr "赎回存入的流动资金"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrawing {0} UNI-V2"
-msgstr "赎回 {0} UNI-V2 流动池代币"
+msgstr "赎回{0} UNI-V2"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Withdrew UNI-V2!"
-msgstr "已赎回 UNI-V2！"
+msgstr "赎回UNI-V2！"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
@@ -1713,11 +1713,11 @@ msgstr "您可以对每个提案自行进行投票，也可以将您的投票权
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
-msgstr "您现在可以交易 {0}"
+msgstr "您现在可以交易{0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "您在此流动池中还未有流动资金。"
+msgstr "您在此流动池中还没有流动资金。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -1725,7 +1725,7 @@ msgstr "您必须连接帐户。"
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "您必须授予 Uniswap 智能合约使用您的 {0} 的权限。每个代币只需要授权一次。"
+msgstr "您必须授予Uniswap智能合约使用您的{0}的权限。每个代币只需要授权一次。"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -1742,7 +1742,7 @@ msgstr "您将收到"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "您的 UNI 代币明细表"
+msgstr "您的UNI明细表"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
@@ -1768,7 +1768,7 @@ msgstr "您的流动池份额："
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
-msgstr "您的流动资金仓位"
+msgstr "您的仓位"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
@@ -1777,12 +1777,12 @@ msgstr "您的仓位没有任何流动资金，没在赚取手续费。"
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "在达到此兑换率时，您的仓位流动资金将 100% 由 {0} 代币所组成。"
+msgstr "在此兑换率时，您的仓位将100%由{0}组成。"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "在达到此兑换率时，您的仓位流动资金将 100% 由 {0} 代币所组成。"
+msgstr "在此兑换率时，您的仓位将为100% {0}。"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1805,7 +1805,7 @@ msgstr "您的流动池代币总额："
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "由于需包含创建流动池的 gas 费用，您的此交易成本将高出许多。"
+msgstr "由于需包含创建流动池的gas费用，您的此交易成本将高出许多。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
@@ -1817,11 +1817,11 @@ msgstr "您的交易可能失败"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "如果您的交易待处理超过此时间期限，则将还原该交易。"
+msgstr "如果您的交易待处理超过此时间期限，则交易将复原。"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "如果兑换率变动超过此百分比，则将还原该交易。"
+msgstr "如果兑换率变动超过此百分比，则交易将复原。"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
@@ -1829,7 +1829,7 @@ msgstr "您的交易将出现在这里..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "您未领取的 UNI 代币"
+msgstr "您未领取的UNI"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -1837,15 +1837,15 @@ msgstr "确认"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
-msgstr "为 {0}"
+msgstr "为{0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "有 socks 表情包"
+msgstr "有袜子表情符号"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https:// 或 ipfs:// 或 ENS 名"
+msgstr "https://或ipfs://或ENS名"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -1853,11 +1853,11 @@ msgstr "分钟"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
-msgstr "通过 {0}"
+msgstr "通过{0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
-msgstr "从 {0} 代币列表"
+msgstr "通过{0}代币列表"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
@@ -1872,11 +1872,11 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0/> 每 <1/>"
+msgstr "{0} <0/>每<1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
-msgstr "{0} 自定义代币"
+msgstr "{0}自定义代币"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1904,7 +1904,7 @@ msgstr "{0} 待处理"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "{0} UNI"
-msgstr "{0} UNI 代币"
+msgstr "{0} UNI"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
@@ -1912,11 +1912,11 @@ msgstr "{0} UNI 代币"
 #: src/pages/Earn/Manage.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI / week"
-msgstr "{0} UNI 代币 / 每周"
+msgstr "{0} UNI/周"
 
 #: src/components/earn/StakingModal.tsx
 msgid "{0} UNI-V2"
-msgstr "{0} UNI-V2 流动池代币"
+msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
@@ -1975,7 +1975,7 @@ msgstr "{0}-{1}流动资金采矿"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
-msgstr "{0}/{1} 流动池 NFT 代币"
+msgstr "{0}/{1} 流动池NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
@@ -1983,11 +1983,11 @@ msgstr "{0}/{1} 流动池代币"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
-msgstr "{SOCKS_AMOUNT} UNI 代币"
+msgstr "{SOCKS_AMOUNT} UNI"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{USER_AMOUNT} UNI"
-msgstr "{USER_AMOUNT} UNI 代币"
+msgstr "{USER_AMOUNT} UNI"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
