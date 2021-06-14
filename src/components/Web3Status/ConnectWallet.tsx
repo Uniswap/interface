@@ -14,6 +14,7 @@ import { ApplicationModal } from '../../state/application/actions';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 
 const Button = styled.button`
+  height: 32px;
   padding: 10.5px 14px;
   background-color: ${({ theme }) => theme.primary1};
   color: ${({ theme }) => theme.text1};
