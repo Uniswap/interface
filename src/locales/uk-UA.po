@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Ukrainian\n"
-"PO-Revision-Date: 2021-06-13 21:04\n"
+"PO-Revision-Date: 2021-06-14 05:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1372,15 +1372,15 @@ msgstr "Співвідношення токенів, які ви додаєте,
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
-msgstr "Транзакцію надіслати не вдалося, оскільки термін минув. Будь ласка, перевірте, щоб термін трансакції не був занадто низьким."
+msgstr "Не вдалося надіслати транзакцію, оскільки термін минув. Упевніться в тому, що термін транзакції не занадто короткий."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
-msgstr "Ці токени зазвичай поєднані з іншими токенами."
+msgstr "Ці токени зазвичай поєднані в пари з іншими токенами."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
-msgstr "Цей маркер не відображається у списку (ах) активних маркерів. Переконайтеся, що це маркер, яким ви хочете торгувати."
+msgstr "Цей токен не відображається в списку (-ах) активних токенів. Переконайтеся в тому, що це токен, яким ви хочете торгувати."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1742,15 +1742,15 @@ msgstr "Ви отримаєте"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Your UNI Breakdown"
-msgstr "Ваш пристрій ООН"
+msgstr "Ваш розподіл UNI"
 
 #: src/pages/Pool/v2.tsx
 msgid "Your V2 liquidity"
-msgstr "Ваша V2 ліквідність"
+msgstr "Ваша ліквідність V2"
 
 #: src/pages/Pool/index.tsx
 msgid "Your V3 liquidity positions will appear here."
-msgstr "Тут з'являться ваші позиції V3 ліквідності."
+msgstr "Тут з’являться ваші позиції ліквідності V3."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
@@ -1772,22 +1772,22 @@ msgstr "Ваша позиція"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Your position has 0 liquidity, and is not earning fees."
-msgstr "Ваша позиція має 0 ліквідності і не заробляє платежі."
+msgstr "Ваша позиція має ліквідність 0 і не заробляє комісії."
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "Ваша позиція буде на 100% складена за цією ціною {0}"
+msgstr "Ваша позиція буде на 100% складатися з {0} за цією ціною"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "Ваша позиція буде на 100% {0} за цієї ціни."
+msgstr "Ваша позиція буде на 100% {0} за цією ціною."
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "Ваша позиція не отримає плату або не буде використовуватися в угодах, поки ринкова ціна не зміниться на ваш ареал."
+msgstr "Ваша позиція не зароблятиме комісій і не використовуватиметься в торгівлі, поки ринкова ціна не перейде у ваш діапазон."
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
@@ -1796,40 +1796,40 @@ msgstr "Ваші позиції"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Your rate"
-msgstr "Ваша оцінка"
+msgstr "Ваша ставка"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "Ваш токени басейну:"
+msgstr "Ваша загальна сума токенів пулу:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
-msgstr "Вартість вашої транзакції буде набагато більшою, оскільки газ має для створення басейну."
+msgstr "Вартість вашої транзакції буде набагато вищою, оскільки вона включає газ для створення пулу."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "Ваша транзакція може бути фронтально"
+msgstr "Ваша транзакція може бути випереджаючою біг"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
-msgstr "Ваші операції можуть не виконуватися"
+msgstr "Ваша транзакція може перерватися"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
-msgstr "Ваші операції будуть відмінені, якщо це відбувається в очікуванні більш ніж на цей період часу."
+msgstr "Вашу транзакцію буде скасовано, якщо вона очікуватиме більше цього періоду часу."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "Вашу транзакцію буде повернуто, якщо ця ціна зміниться більш ніж на цей відсоток."
+msgstr "Вашу транзакцію буде скасовано, якщо ціна зміниться більш ніж на цей відсоток."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
-msgstr "Ваші транзакції будуть відображені тут..."
+msgstr "Тут з’являтимуться ваші транзакції..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "Ваша неотримана UNI"
+msgstr "Ваші неотримані UNI"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -1837,15 +1837,15 @@ msgstr "підтвердити"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
-msgstr "на {0}"
+msgstr "для {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "має емодзі"
+msgstr "має емодзі зі шкарпетками"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https: // або ipfs: // або ім’я ENS"
+msgstr "https://, або ipfs://, або ім’я ENS"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
