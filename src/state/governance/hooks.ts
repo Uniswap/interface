@@ -1,16 +1,18 @@
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { isAddress } from 'ethers/lib/utils'
-import { PROPOSAL_DESCRIPTION_TEXT } from '../../constants/proposals'
-import { UNI } from '../../constants/tokens'
-import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
-import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { ethers, utils } from 'ethers'
 import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from '../transactions/hooks'
-import { useState, useEffect, useCallback, useMemo } from 'react'
 import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { GOVERNANCE_ADDRESSES } from 'constants/addresses'
+import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
+import { ethers, utils } from 'ethers'
+import { isAddress } from 'ethers/lib/utils'
+import { useGovernanceContracts, useUniContract } from 'hooks/useContract'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { calculateGasMargin } from 'utils/calculateGasMargin'
+import { EDUCATION_FUND_1_START_BLOCK, UNISWAP_GRANTS_START_BLOCK } from '../../constants/proposals'
+import { UNI } from '../../constants/tokens'
+import { useMultipleContractMultipleData, useMultipleContractSingleData, useSingleCallResult } from '../multicall/hooks'
+import { useTransactionAdder } from '../transactions/hooks'
 
 interface ProposalDetail {
   target: string
@@ -43,64 +45,80 @@ export enum ProposalState {
   Executed,
 }
 
+const GovernanceInterface = new ethers.utils.Interface(GOV_ABI)
 // get count of all proposals made
-export function useProposalCount(): number | undefined {
-  const gov = useGovernanceContract()
-  const res = useSingleCallResult(gov, 'proposalCount')
-  if (res.result && !res.loading) {
-    return parseInt(res.result[0])
-  }
-  return undefined
+export function useProposalCounts(): Record<string, number> | undefined {
+  const { chainId } = useActiveWeb3React()
+  const addresses = useMemo(() => {
+    if (!chainId) {
+      return []
+    }
+    return GOVERNANCE_ADDRESSES.map((addressMap) => addressMap[chainId])
+  }, [chainId])
+  const responses = useMultipleContractSingleData(addresses, GovernanceInterface, 'proposalCount')
+  return useMemo(() => {
+    return responses.reduce((acc, response, i) => {
+      if (response.result && !response.loading) {
+        return {
+          ...acc,
+          [addresses[i]]: parseInt(response.result[0]),
+        }
+      }
+      return acc
+    }, {})
+  }, [addresses, responses])
 }
 
 /**
  * Need proposal events to get description data emitted from
  * new proposal event.
  */
-const eventParser = new ethers.utils.Interface(GOV_ABI)
 export function useDataFromEventLogs() {
   const { library, chainId } = useActiveWeb3React()
   const [formattedEvents, setFormattedEvents] =
     useState<{ description: string; details: { target: string; functionSig: string; callData: string }[] }[]>()
-  const govContract = useGovernanceContract()
+  const govContracts = useGovernanceContracts()
 
   // create filter for these specific events
-  const filter = useMemo(
-    () => (govContract ? { ...govContract.filters.ProposalCreated(), fromBlock: 0, toBlock: 'latest' } : undefined),
-    [govContract]
+  const filters = useMemo(
+    () =>
+      govContracts
+        ? govContracts.map((contract) => ({
+            ...contract.filters.ProposalCreated(),
+            fromBlock: 10861678,
+            toBlock: 'latest',
+          }))
+        : undefined,
+    [govContracts]
   )
 
   useEffect(() => {
-    if (!filter || !library) return
+    if (!filters || !library) return
     let stale = false
 
     if (!formattedEvents) {
-      library
-        .getLogs(filter)
-        .then((proposalEvents) => {
+      const filterRequests = filters.map((filter) => library.getLogs(filter))
+      Promise.all(filterRequests)
+        .then((events) => events.flat())
+        .then((governanceContractsProposalEvents) => {
           if (stale) return
-          // reverse events to get them from newest to odlest
-          const formattedEventData = proposalEvents
-            ?.map((event) => {
-              const eventParsed = eventParser.parseLog(event).args
-              return {
-                description: eventParsed.description,
-                details: eventParsed.targets.map((target: string, i: number) => {
-                  const signature = eventParsed.signatures[i]
-                  const [name, types] = signature.substr(0, signature.length - 1).split('(')
-
-                  const calldata = eventParsed.calldatas[i]
-                  const decoded = utils.defaultAbiCoder.decode(types.split(','), calldata)
-
-                  return {
-                    target,
-                    functionSig: name,
-                    callData: decoded.join(', '),
-                  }
-                }),
-              }
-            })
-            .reverse()
+          const formattedEventData = governanceContractsProposalEvents.map((event) => {
+            const eventParsed = GovernanceInterface.parseLog(event).args
+            return {
+              description: eventParsed.description,
+              details: eventParsed.targets.map((target: string, i: number) => {
+                const signature = eventParsed.signatures[i]
+                const [name, types] = signature.substr(0, signature.length - 1).split('(')
+                const calldata = eventParsed.calldatas[i]
+                const decoded = utils.defaultAbiCoder.decode(types.split(','), calldata)
+                return {
+                  target,
+                  functionSig: name,
+                  callData: decoded.join(', '),
+                }
+              }),
+            }
+          })
           setFormattedEvents(formattedEventData)
         })
         .catch((error) => {
@@ -112,57 +130,95 @@ export function useDataFromEventLogs() {
     }
 
     return
-  }, [filter, library, formattedEvents, chainId])
+  }, [filters, library, formattedEvents, chainId])
 
   return formattedEvents
 }
 
 // get data for all past and active proposals
 export function useAllProposalData() {
-  const proposalCount = useProposalCount()
-  const govContract = useGovernanceContract()
+  const { chainId } = useActiveWeb3React()
+  const proposalCounts = useProposalCounts()
 
-  const proposalIndexes = []
-  for (let i = 1; i <= (proposalCount ?? 0); i++) {
-    proposalIndexes.push([i])
-  }
+  const proposalIndexes = useMemo(() => {
+    const results: number[][][] = []
+    const emptyState = new Array(GOVERNANCE_ADDRESSES.length).fill([], 0)
+    GOVERNANCE_ADDRESSES.forEach((addressMap, i) => {
+      results[i] = []
+      if (!chainId) {
+        return emptyState
+      }
+      const address = addressMap[chainId]
+      if (!proposalCounts || proposalCounts[address] === undefined) {
+        return emptyState
+      }
+      for (let j = 1; j <= proposalCounts[address]; j++) {
+        results[i].push([j])
+      }
+      return results
+    })
+    return results.filter((indexArray) => indexArray.length > 0)
+  }, [chainId, proposalCounts])
+
+  const addresses = useMemo(() => {
+    if (!chainId) {
+      return []
+    }
+    return GOVERNANCE_ADDRESSES.map((addressMap) => addressMap[chainId]).filter(
+      (address) => proposalCounts && proposalCounts[address] > 0
+    )
+  }, [chainId, proposalCounts])
 
   // get metadata from past events
   const formattedEvents = useDataFromEventLogs()
 
   // get all proposal entities
-  const allProposals = useSingleContractMultipleData(govContract, 'proposals', proposalIndexes)
+  const allProposalsCallData = useMultipleContractMultipleData(
+    addresses,
+    GovernanceInterface,
+    'proposals',
+    proposalIndexes
+  ).flat()
 
   // get all proposal states
-  const allProposalStates = useSingleContractMultipleData(govContract, 'state', proposalIndexes)
+  const allProposalStatesCallData = useMultipleContractMultipleData(
+    addresses,
+    GovernanceInterface,
+    'state',
+    proposalIndexes
+  ).flat()
 
-  if (formattedEvents && allProposals && allProposalStates) {
-    allProposals.reverse()
-    allProposalStates.reverse()
-
-    return allProposals
-      .filter((p, i) => {
-        return Boolean(p.result) && Boolean(allProposalStates[i]?.result) && Boolean(formattedEvents[i])
-      })
-      .map((p, i) => {
-        const description = PROPOSAL_DESCRIPTION_TEXT[allProposals.length - i - 1] || formattedEvents[i].description
-        const formattedProposal: ProposalData = {
-          id: allProposals[i]?.result?.id.toString(),
-          title: description?.split(/# |\n/g)[1] || 'Untitled',
-          description: description || 'No description.',
-          proposer: allProposals[i]?.result?.proposer,
-          status: allProposalStates[i]?.result?.[0] ?? ProposalState.Undetermined,
-          forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString(), 18)),
-          againstCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.againstVotes.toString(), 18)),
-          startBlock: parseInt(allProposals[i]?.result?.startBlock?.toString()),
-          endBlock: parseInt(allProposals[i]?.result?.endBlock?.toString()),
-          details: formattedEvents[i].details,
-        }
-        return formattedProposal
-      })
-  } else {
+  if (
+    !allProposalsCallData?.every((p) => Boolean(p.result)) ||
+    !allProposalStatesCallData?.every((p) => Boolean(p.result)) ||
+    !formattedEvents?.every((p) => Boolean(p))
+  ) {
     return []
   }
+
+  const omittedProposalStartBlocks = [EDUCATION_FUND_1_START_BLOCK]
+
+  return allProposalsCallData
+    .map((proposal, i) => {
+      let description = formattedEvents[i].description
+      const startBlock = parseInt(proposal?.result?.startBlock?.toString())
+      if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
+        description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
+      }
+      return {
+        id: proposal?.result?.id.toString(),
+        title: description?.split(/# |\n/g)[1] ?? 'Untitled',
+        description: description ?? 'No description.',
+        proposer: proposal?.result?.proposer,
+        status: allProposalStatesCallData[i]?.result?.[0] ?? ProposalState.Undetermined,
+        forCount: parseFloat(ethers.utils.formatUnits(proposal?.result?.forVotes.toString(), 18)),
+        againstCount: parseFloat(ethers.utils.formatUnits(proposal?.result?.againstVotes.toString(), 18)),
+        startBlock,
+        endBlock: parseInt(proposal?.result?.endBlock?.toString()),
+        details: formattedEvents[i].details,
+      }
+    })
+    .filter((proposal) => !omittedProposalStartBlocks.includes(proposal.startBlock))
 }
 
 export function useProposalData(id: string): ProposalData | undefined {
@@ -232,15 +288,16 @@ export function useVoteCallback(): {
 } {
   const { account } = useActiveWeb3React()
 
-  const govContract = useGovernanceContract()
+  const govContracts = useGovernanceContracts()
+  const latestGovernanceContract = govContracts ? govContracts[0] : null
   const addTransaction = useTransactionAdder()
 
   const voteCallback = useCallback(
     (proposalId: string | undefined, support: boolean) => {
-      if (!account || !govContract || !proposalId) return
+      if (!account || !latestGovernanceContract || !proposalId) return
       const args = [proposalId, support]
-      return govContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
-        return govContract
+      return latestGovernanceContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
+        return latestGovernanceContract
           .castVote(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
@@ -250,7 +307,7 @@ export function useVoteCallback(): {
           })
       })
     },
-    [account, addTransaction, govContract]
+    [account, addTransaction, latestGovernanceContract]
   )
   return { voteCallback }
 }
