@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-14 16:05\n"
+"PO-Revision-Date: 2021-06-14 17:14\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -220,7 +220,7 @@ msgstr "항상 URL이 <0> app.uniswap.org인지 확인하십시오.</0> -안전�
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
-msgstr "양"
+msgstr "금액"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -228,7 +228,7 @@ msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄�
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "해석학"
+msgstr "분석"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -280,7 +280,7 @@ msgstr "입금 가능 : {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
-msgstr "뒤"
+msgstr "뒤로"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
@@ -736,7 +736,7 @@ msgstr "높은 가격 영향"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "I understand"
-msgstr "이해 했어요"
+msgstr "알겠습니다"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
@@ -882,7 +882,7 @@ msgstr "URL이 <0> app.uniswap.org</0>인지 확인하십시오."
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "꾸리다"
+msgstr "관리"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
@@ -1523,7 +1523,7 @@ msgstr "Uniswap 마이그레이션 계약 ↗"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
-msgstr "알수없는 출처"
+msgstr "알 수 없는 출처"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1705,7 +1705,7 @@ msgstr "귀하는이 Uniswap V3 풀의 최초 유동성 공급자입니다. 유�
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
-msgstr "당신은 최초의 유동성 공급자입니다."
+msgstr "귀하는 최초의 유동성 제공자입니다."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
