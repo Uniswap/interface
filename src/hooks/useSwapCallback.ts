@@ -215,9 +215,9 @@ export function swapErrorToUserReadableMessage(error: any): string {
     case 'Too little received':
     case 'Too much requested':
     case 'STF':
-      return t`This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      return t`This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
     case 'TF':
-      return t`The output token cannot be transferred. There may be an issue with the output token. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      return t`The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
     default:
       if (reason?.indexOf('undefined is not an object') !== -1) {
         console.error(error, reason)
@@ -225,7 +225,7 @@ export function swapErrorToUserReadableMessage(error: any): string {
       }
       return t`Unknown error${
         reason ? `: "${reason}"` : ''
-      }. Try increasing your slippage tolerance. Note fee on transfer and rebase tokens are incompatible with Uniswap V3.`
+      }. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3.`
   }
 }
 
