@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Indonesian\n"
-"PO-Revision-Date: 2021-06-14 00:10\n"
+"PO-Revision-Date: 2021-06-14 01:28\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1213,7 +1213,7 @@ msgstr "Menghapus {0} {1} dan {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "Membatasi swap hanya untuk pasangan langsung."
+msgstr "Membatasi swap hanya untuk pair langsung."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
@@ -1257,7 +1257,7 @@ msgstr "Rentang yang Dipilih"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
-msgstr "Diri"
+msgstr "Sendiri"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1274,7 +1274,7 @@ msgstr "Tetapkan Harga Awal"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
-msgstr "Berbagi Kolam Renang"
+msgstr "Pool Share"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
@@ -1701,7 +1701,7 @@ msgstr "Anda sedang membuat pangkalan"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "Anda adalah penyedia likuiditas pertama untuk kumpulan Uniswap V3 ini. Likuiditas Anda akan bermigrasi pada harga {0} saat ini."
+msgstr "Anda adalah penyedia likuiditas pertama untuk pool Uniswap V3 ini. Likuiditas Anda akan bermigrasi pada harga {0} saat ini."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
