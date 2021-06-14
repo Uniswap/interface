@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Korean\n"
-"PO-Revision-Date: 2021-06-14 22:04\n"
+"PO-Revision-Date: 2021-06-14 23:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,7 +109,7 @@ msgstr "<0> 돌아가기</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0> 팁 :</0> 풀 토큰을 제거하면 풀 점유율에 비례하여 현재 비율로 포지션을 기본 토큰으로 다시 전환합니다. 미지급 수수료는 귀하가받는 금액에 포함됩니다."
+msgstr "<0> 팁 :</0> 풀 토큰을 제거하면 풀 쉐어에 비례하여 현재 요율로 포지션을 기본 토큰으로 다시 전환합니다. 미지급 수수료는 귀하가 받는 금액에 포함됩니다."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -117,7 +117,7 @@ msgstr "<0> 팁 :</0> 이 도구를 사용하여 인터페이스에 자동으로
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0> 팁 :</0> 유동성을 추가하면 귀하의 포지션을 나타내는 풀 토큰을 받게됩니다. 이 토큰은 풀의 몫에 비례하여 자동으로 수수료를 획득하며 언제든지 사용할 수 있습니다."
+msgstr "<0> 팁 :</0> 유동성을 추가하면 귀하의 포지션을 나타내는 풀 토큰을 받게됩니다. 이 토큰은 풀의 쉐어에 비례하여 자동으로 수수료를 획득하며 언제든지 사용할 수 있습니다."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -224,7 +224,7 @@ msgstr "금액"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 미끄러짐 허용치를 높여야 할 수도 있습니다. 그래도 작동하지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 전송 및 리베이스 토큰에 대한 참고 수수료는 Uniswap V3와 호환되지 않습니다."
+msgstr "이 스왑을 실행하는 중에 오류가 발생했습니다. 슬리피지 허용치를 높여야 할 수도 있습니다. 그래도 되지 않으면 거래중인 토큰과 호환되지 않을 수 있습니다. 이체 및 리베이스 토큰에 대한 수수료가 Uniswap V3와 호환되지 않을 수도 있음에 유의하십시오."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -264,11 +264,11 @@ msgstr "확실합니까?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Uniswap 커뮤니티의 회원으로서 UNI가 투표 및 거버넌스에 사용된다고 주장 할 수 있습니다. <0/> <1/> <2> UN에 대해 자세히 알아보기</2>"
+msgstr "Uniswap 커뮤니티의 회원으로서 UNI가 투표 및 거버넌스에 사용되도록 청구할 수 있습니다. <0/> <1/> <2> UN에 대해 자세히 알아보기</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "선택한 가격대로 인해 최소 {0} {1} 및 {2} {3} 이 지갑으로 환불됩니다."
+msgstr "선택한 가격 범위로 인해 최소 {0} {1} 및 {2} {3} 이 지갑으로 환불됩니다."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
@@ -308,15 +308,15 @@ msgstr "차단된 주소"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "유동성을 추가하면 풀 점유율에 비례하여이 쌍에 대한 모든 거래의 0.3 %를 벌 수 있습니다. 수수료는 풀에 추가되고 실시간으로 발생하며 유동성을 인출하여 청구 할 수 있습니다."
+msgstr "유동성을 추가하면 풀 쉐어에 비례하여이 쌍에 대한 모든 거래의 0.3%를 벌 수 있습니다. 수수료는 풀에 추가되고 실시간으로 발생하며 유동성을 인출하여 청구할 수 있습니다."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시 적으로 신뢰하게됩니다. 기존 목록의 가짜 버전 및 목록이없는 프로젝트를 대표한다고 주장하는 목록을 만드는 등 누구나 목록을 만들 수 있습니다."
+msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시적으로 신뢰하게 됩니다. 기존 목록의 가짜 버전 및 목록이 없는 프로젝트를 나타낸다고 주장하는 목록을 만드는 등 누구나 목록을 만들 수 있습니다."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "지갑을 연결하면 Uniswap Labs의 <0> 서비스 약관에 동의하게됩니다.</0> <1> Uniswap 프로토콜 면책 조항을 읽고 이해했음을 인정합니다.</1> ."
+msgstr "지갑을 연결하면 Uniswap Labs의 <0> 서비스 약관</0>에 동의하고 <1>Uniswap 프로토콜 면책 조항</1>을 읽고 이해했음을 인정하는 것입니다."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -381,7 +381,7 @@ msgstr "UNI 청구"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "{0} UNI 획득"
+msgstr "{0} UNI 청구 중"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -419,7 +419,7 @@ msgstr "수수료 징수"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "수집"
+msgstr "수집됨"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
@@ -582,7 +582,7 @@ msgstr "예금 유동성"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "유동성 공급자 토큰을 예치하여 Uniswap 프로토콜 거버넌스 토큰인 UNI를 받으십시오."
+msgstr "유동성 제공자 토큰을 예치하여 Uniswap 프로토콜 거버넌스 토큰인 UNI를 받으십시오."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -630,11 +630,11 @@ msgstr "문서"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "v2 포지션 중 하나가 보이지 않습니까? <0> 가져 오기.</0>"
+msgstr "v2 포지션 중 하나가 보이지 않습니까? <0>가져 오십시오.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
-msgstr "획득 한 UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅니다."
+msgstr "획득한 UNI 토큰은 Uniswap 거버넌스의 의결권을 나타냅니다."
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
@@ -646,11 +646,11 @@ msgstr "수령인을 입력하세요."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Enter a valid slippage percentage"
-msgstr "유효한 슬리피지 비율을 입력하세요."
+msgstr "유효한 슬리피지 요율을 입력하세요."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "UNI 청구를 트리거할 주소를 입력하십시오. 주소에 청구 가능한 UNI가 있으면 제출시 전송됩니다."
+msgstr "UNI 청구를 트리거할 주소를 입력하십시오. 주소에 청구 가능한 UNI가 있으면 제출시 이체됩니다."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -695,7 +695,7 @@ msgstr "비활성 토큰 목록에서 확장된 결과"
 
 #: src/components/Settings/index.tsx
 msgid "Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result in bad rates and lost funds."
-msgstr "전문가 모드는 거래 확인 프롬프트를 끄고 종종 나쁜 금리와 자금 손실을 초래하는 높은 미끄러짐 거래를 허용합니다."
+msgstr "전문가 모드를 사용하면 거래 확인창이 꺼지고 안 좋은 요율과 자금 손실을 초래하는 높은 슬리피지 거래를 허용할 수 있습니다."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
@@ -707,7 +707,7 @@ msgstr "수수료 등급"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
-msgstr "에 대한"
+msgstr "다음에 대한"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "For each pool shown below, click migrate to remove your liquidity from Uniswap V2 and deposit it into Uniswap V3."
@@ -728,7 +728,7 @@ msgstr "Discord에서 지원 받기"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide closed positions"
-msgstr "마감 된 포지션 숨기기"
+msgstr "마감된 포지션 숨기기"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -740,7 +740,7 @@ msgstr "알겠습니다"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "If you purchase a token from this list, you may not be able to sell it back."
-msgstr "이 목록에서 토큰을 구매하면 다시 판매하지 못할 수 있습니다."
+msgstr "이 목록에서 토큰을 구매하면, 다시 판매하지 못할 수 있습니다."
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/components/SearchModal/ImportRow.tsx
@@ -783,7 +783,7 @@ msgstr "초기화 중 ..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "입력이 추정됩니다. 최대 <0>{0} {1}</0> 그렇지 않으면 거래가 되돌아갑니다."
+msgstr "입력이 추정됩니다. 최대 <0>{0} {1}</0>을(를) 팔거나 그렇지 않으면 거래가 취소됩니다."
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
@@ -850,7 +850,7 @@ msgstr "유동성 제공자 보상"
 
 #: src/pages/Pool/v2.tsx
 msgid "Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "유동성 공급자는 풀 점유율에 비례하여 모든 거래에 대해 0.3 %의 수수료를받습니다. 수수료는 풀에 추가되고 실시간으로 발생하며 유동성을 인출하여 청구 할 수 있습니다."
+msgstr "유동성 제공자는 풀 점유율에 비례하여 모든 거래에 대해 0.3%의 수수료를받습니다. 수수료는 풀에 추가되고 실시간으로 발생하며 유동성을 인출하여 청구할 수 있습니다."
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Lists"
@@ -915,7 +915,7 @@ msgstr "최대 :"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
-msgstr "최대 전송"
+msgstr "최대 이체"
 
 #: src/components/PositionCard/Sushi.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1010,7 +1010,7 @@ msgstr "ON"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "수행중인 작업을 알고있는 경우에만이 모드를 사용하십시오."
+msgstr "수행중인 작업을 알고 있는 경우에만 이 모드를 사용하십시오."
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1030,7 +1030,7 @@ msgstr "{0} 이전에 자체 위임되었거나 다른 주소로 위임 된 UNI 
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "이런! 알 수없는 오류가 발생했습니다. 페이지를 새로 고침하거나 다른 브라우저 또는 기기에서 방문하세요."
+msgstr "죄송합니다! 알 수없는 오류가 발생했습니다. 페이지를 새로 고침하거나 다른 브라우저 또는 기기에서 방문하세요."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "Out of range"
@@ -1039,15 +1039,15 @@ msgstr "범위를 벗어남"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "산출은 추정됩니다. {0}% 이상 변경되면 거래가 취소됩니다."
+msgstr "산출은 추정됩니다. 가격이 {0}% 이상 변경되면 거래가 취소됩니다."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "산출은 추정됩니다. 최소한 <0>{0} {1}</0> 그렇지 않으면 거래가 되돌아갑니다."
+msgstr "산출은 추정됩니다. 최소한 <0>{0} {1}</0>을(를) 받거나 그렇지 않으면 거래가 취소됩니다."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
-msgstr "출력은 <0>{0}</0>"
+msgstr "산출은 <0>{0}</0>(으)로 이체됩니다"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Owner"
@@ -1059,7 +1059,7 @@ msgstr "참여 풀"
 
 #: src/components/WalletModal/index.tsx
 msgid "Please connect to the appropriate Ethereum network."
-msgstr "적절한 이더 리움 네트워크에 연결하십시오."
+msgstr "적절한 이더리움 네트워크에 연결하십시오."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1076,11 +1076,11 @@ msgstr "풀을 찾았습니다!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "풀 비율"
+msgstr "풀 요율"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "풀 비율"
+msgstr "풀 요율"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1096,7 +1096,7 @@ msgstr "보상 풀의 풀 토큰 :"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Pooled {0}:"
-msgstr "풀링 됨 {0}:"
+msgstr "{0} 풀링 됨:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
@@ -1150,7 +1150,7 @@ msgstr "제안자"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
-msgstr "비율"
+msgstr "요율"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
@@ -1344,7 +1344,7 @@ msgstr "Uniswap 불변 x * y = k가 스왑에 의해 충족되지 않았습니�
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
-msgstr "입력 토큰을 전송할 수 없습니다. 입력 토큰에 문제가있을 수 있습니다."
+msgstr "입력 토큰을 이체할 수 없습니다. 입력 토큰에 문제가 있을 수 있습니다."
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
@@ -1352,11 +1352,11 @@ msgstr "시장 가격이 지정된 가격 범위를 벗어났습니다. 단일 �
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "출력 토큰을 전송할 수 없습니다. 출력 토큰에 문제가 있을 수 있습니다."
+msgstr "산출 토큰을 이체할 수 없습니다. 산출 토큰에 문제가 있을 수 있습니다."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "출력 토큰을 전송할 수 없습니다. 출력 토큰에 문제가있을 수 있습니다. 참고 : 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
+msgstr "산출 토큰을 이체할 수 없습니다. 산출 토큰에 문제가 있을 수 있습니다. 참고: 이체 수수료 및 리베이스 토큰이 Uniswap V3와 호환되지 않습니다."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1364,11 +1364,11 @@ msgstr "이 풀의 가격이 선택한 범위를 벗어났습니다. 귀하의 �
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "이 풀의 가격은 선택한 범위 내에 있습니다. 귀하의 직책은 현재 수수료를 받고 있습니다."
+msgstr "이 풀의 가격은 선택한 범위 내에 있습니다. 귀하의 포지션은 현재 수수료를 받고 있습니다."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "추가하는 토큰의 비율이이 풀의 가격을 설정합니다."
+msgstr "추가하는 토큰의 요율이 이 풀의 가격을 설정합니다."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
@@ -1384,15 +1384,15 @@ msgstr "이 토큰은 활성 토큰 목록에 표시되지 않습니다. 이것�
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "{0} 유동성을 V3로 안전하게 마이그레이션합니다. 이 과정은"
+msgstr "이 도구로 {0} 유동성을 V3로 안전하게 마이그레이션할 수 있습니다. 이 과정은 다음 덕분에 신뢰할 수 있습니다."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "이 거래는 가격 변동으로 인해 성공하지 못합니다. 미끄러짐 허용치를 높이십시오. 참고 : 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
+msgstr "이 거래는 가격 변동으로 인해 성공하지 못합니다. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
-msgstr "이 거래는 가격 변동이나 이체 수수료로 인해 성공하지 못합니다. 미끄러짐 허용치를 높이십시오."
+msgstr "이 거래는 가격 변동이나 이체 수수료로 인해 성공하지 못합니다. 슬리피지 허용치를 높이십시오."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1405,7 +1405,7 @@ msgstr "스왑 후"
 
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
-msgstr "수신(최소)"
+msgstr "스왑 후(최소)"
 
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
@@ -1527,7 +1527,7 @@ msgstr "알 수 없는 출처"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "알 수없는 오류{0}. 미끄러짐 허용치를 높이십시오. 참고 : 전송 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
+msgstr "알 수 없는 오류 {0}. 슬리피지 허용치를 높이십시오. 참고: 이체 수수료 및 리베이스 토큰은 Uniswap V3와 호환되지 않습니다."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
@@ -1638,7 +1638,7 @@ msgstr "투표 종료 {0}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ends approximately {0}"
-msgstr "투표는 약 {0}"
+msgstr "투표는 대략 {0}에 끝납니다"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -1654,7 +1654,7 @@ msgstr "Team Unicorn에 오신 것을 환영합니다. :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "인출하지 않고 청구하면 유동성이 채굴 풀에 남아 있습니다."
+msgstr "유동성을 인출하지 않고 청구하면 유동성이 채굴 풀에 남아 있습니다."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
@@ -1701,7 +1701,7 @@ msgstr "풀을 만들고 있습니다."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the current {0} price."
-msgstr "귀하는이 Uniswap V3 풀의 최초 유동성 공급자입니다. 유동성은 현재 {0} 가격으로 마이그레이션됩니다."
+msgstr "귀하는이 Uniswap V3 풀의 최초 유동성 제공자입니다. 유동성은 현재 {0} 가격으로 마이그레이션됩니다."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are the first liquidity provider."
@@ -1709,15 +1709,15 @@ msgstr "귀하는 최초의 유동성 제공자입니다."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr "각 제안에 대해 직접 투표하거나 제 3 자에게 투표를 위임 할 수 있습니다."
+msgstr "각 제안에 대해 직접 투표하거나 제3자에게 투표를 위임할 수 있습니다."
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
-msgstr "{0}거래 할 수 있습니다."
+msgstr "{0}을(를) 거래할 수 있습니다."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "아직이 풀에 유동성이 없습니다."
+msgstr "아직 이 풀에 유동성이 없습니다."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -1733,7 +1733,7 @@ msgstr "유동성을 Uniswap V3에 정확하다고 생각하는 가격으로 예
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
-msgstr "이 직책에서 얻은 수수료도 징수합니다."
+msgstr "이 포지션에서 얻은 수수료도 징수합니다."
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1777,7 +1777,7 @@ msgstr "귀하의 포지션에는 유동성이 없으며, 수수료를 벌지 �
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
 msgid "Your position will be 100% composed of {0} at this price"
-msgstr "이 가격에서 귀하의 포지션은 100 % {0}"
+msgstr "이 가격에서 귀하의 포지션은 100% {0}(으)로 구성됩니다"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1809,11 +1809,11 @@ msgstr "풀을 만드는 데 필요한 가스가 포함되어 있으므로 거�
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may be frontrun"
-msgstr "귀하의 거래는 프론트 런일 수 있습니다"
+msgstr "귀하의 거래는 프론트런일 수 있습니다"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction may fail"
-msgstr "거래가 실패 할 수 있습니다"
+msgstr "거래가 실패할 수 있습니다"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if it is pending for more than this period of time."
@@ -1821,7 +1821,7 @@ msgstr "이 기간 이상 보류중인 거래는 되돌려집니다."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
-msgstr "가격이이 비율 이상으로 불리하게 변경되면 거래가 취소됩니다."
+msgstr "가격이이 요율 이상으로 불리하게 변경되면 거래가 취소됩니다."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
@@ -1837,7 +1837,7 @@ msgstr "확인"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
-msgstr "{0}"
+msgstr "{0} 동안"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
@@ -1845,7 +1845,7 @@ msgstr "양말 이모티콘 있음"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
-msgstr "https : // 또는 ipfs : // 또는 ENS 이름"
+msgstr "https:// 또는 ipfs:// 또는 ENS 이름"
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -1853,7 +1853,7 @@ msgstr "분"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
-msgstr "{0}통해"
+msgstr "{0} 경유"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
@@ -1872,7 +1872,7 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0/> 당 <1/>"
+msgstr "{0} <0/> / <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -1881,7 +1881,7 @@ msgstr "{0} 사용자 지정 토큰"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "{0} Deposited"
-msgstr "{0} 입금"
+msgstr "{0} 예치됨"
 
 #: src/components/Header/index.tsx
 msgid "{0} ETH"
@@ -1892,7 +1892,7 @@ msgstr "{0} ETH"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
-msgstr "{0} 적립 된 수수료 :"
+msgstr "적립된 {0} 수수료 :"
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"
@@ -1971,7 +1971,7 @@ msgstr "{0}%"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} 유동성 광업"
+msgstr "{0}-{1} 유동성 채굴"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
