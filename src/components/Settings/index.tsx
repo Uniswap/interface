@@ -55,6 +55,8 @@ const EmojiWrapper = styled.div`
 `
 
 const StyledMenu = styled.button`
+  height: 32px;
+  width: 32px;
   padding: 6px 8px;
   border-radius: 12px;
   margin-left: 7px;
