@@ -3614,10 +3614,10 @@
   resolved "https://registry.yarnpkg.com/@ubeswap/core/-/core-1.0.2.tgz#506919c723d7f130c7b1a33d9e68f10207a86792"
   integrity sha512-NjVhCrIej5p+0G2AdPGzWZZW96XjY12s+Qq9dkqxziqcPpJy3EMTMfuLINPxP3uzRyjsPp6mUIFwWJGlTX0qog==
 
-"@ubeswap/default-token-list@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-3.0.0.tgz#d3bf76ee75d2f14f65a71da1cb1f664c26f85329"
-  integrity sha512-RYL0e+M4Uh+K0hdO4PSMOBZX3QOlYQhiyN/kE635WIFKmyfaudPOgSAtmf/oY06r/qmIwn117DVAUHGVDJz+xg==
+"@ubeswap/default-token-list@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@ubeswap/default-token-list/-/default-token-list-3.0.2.tgz#727b9134cfc6f1ab8ed85d5438b135f32e7a8ab0"
+  integrity sha512-EwWShv3fiYCoGXX17wjBckJ5Ovbj90YEMda2S5Zxt495Ee6FpkE98uFhjL/pL5xrwIWesx5bYHEoEypSSnZA0g==
 
 "@ubeswap/injected-connector@^6.1.0":
   version "6.1.0"
