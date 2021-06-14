@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Indonesian\n"
-"PO-Revision-Date: 2021-06-14 03:06\n"
+"PO-Revision-Date: 2021-06-14 04:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -129,7 +129,7 @@ msgstr "<0> 🎉</0> Selamat datang di tim Unicorn :) <1> 🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "Batas minimum 1% dari total pasokan UNI diperlukan untuk mengajukan proposal"
+msgstr "Batas minimum 1% dari total pasokan UNI diperlukan untuk mengajukan usulan"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -994,7 +994,7 @@ msgstr "Tidak ada kolam yang ditemukan."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
-msgstr "Tidak ada proposal yang ditemukan."
+msgstr "Usulan tidak ditemukan."
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
@@ -1138,11 +1138,11 @@ msgstr "Harga dan pool share"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
-msgstr "Proposal"
+msgstr "Usulan"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals submitted by community members will appear here."
-msgstr "Proposal yang diajukan oleh anggota komunitas akan muncul di sini."
+msgstr "Usulan yang diajukan oleh anggota komunitas akan muncul di sini."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
@@ -1213,7 +1213,7 @@ msgstr "Menghapus {0} {1} dan {2} {3}"
 
 #: src/components/Settings/index.tsx
 msgid "Restricts swaps to direct pairs only."
-msgstr "Membatasi swap hanya untuk pair langsung."
+msgstr "Membatasi swap hanya untuk pasangan langsung."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Return"
@@ -1474,7 +1474,7 @@ msgstr "Harga UNI:"
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Token UNI mewakili hak suara dalam tata kelola Uniswap. Anda dapat memberikan suara pada setiap proposal sendiri atau mendelegasikan suara Anda ke pihak ketiga."
+msgstr "Token UNI menunjukkan hak suara dalam pengaturan Uniswap. Anda dapat memberikan suara secara langsung pada tiap usulan atau mendelegasikannya kepada pihak ketiga."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
@@ -1625,12 +1625,12 @@ msgstr "Memilih untuk"
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote against proposal {proposalId}"
-msgstr "Memberi suara menentang proposal {proposalId}"
+msgstr "Beri suara menentang usulan {proposalId}"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Vote for proposal {proposalId}"
-msgstr "Beri suara untuk proposal {proposalId}"
+msgstr "Beri suara untuk usulan {proposalId}"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Voting ended {0}"
@@ -1709,7 +1709,7 @@ msgstr "Anda adalah penyedia likuiditas pertama."
 
 #: src/components/vote/DelegateModal.tsx
 msgid "You can either vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Anda dapat memilih sendiri setiap proposal atau mendelegasikan suara Anda ke pihak ketiga."
+msgstr "Anda dapat memilih sendiri setiap usulan atau mendelegasikan suara Anda ke pihak ketiga."
 
 #: src/pages/Swap/index.tsx
 msgid "You can now trade {0}"
