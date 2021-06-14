@@ -14,12 +14,12 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Turkish\n"
-"PO-Revision-Date: 2021-06-10 18:14\n"
+"PO-Revision-Date: 2021-06-14 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
-msgstr "$ -"
+msgstr "$-"
 
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -37,7 +37,7 @@ msgstr "(Maks.)"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "(claim)"
-msgstr "(İddia)"
+msgstr "(iste)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
@@ -45,7 +45,7 @@ msgstr "(tümünü temizle)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
-msgstr "(Düzenle)"
+msgstr "(düzenle)"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "+{feeAmountFormatted}%"
@@ -68,48 +68,48 @@ msgstr "0 UNI / hafta"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "% 0,05 ücret"
+msgstr "%0,05 ücret"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "% 0.3 ücret"
+msgstr "%0,3 ücret"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "% 1 ücret"
+msgstr "%1 ücret"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
-msgstr "% 25"
+msgstr "%25"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
-msgstr "% 50"
+msgstr "%50"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
-msgstr "% 75"
+msgstr "%75"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr "<0 /> Tüm Teklifler"
+msgstr "<0/> Tüm Teklifler"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0 /> Oylar"
+msgstr "<0/> Oylar"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0> Hesap analizi ve tahakkuk eden ücretler</0> <1> ↗</1>"
+msgstr "<0>Hesap analizi ve tahakkuk eden ücretler</0><1> ↗</1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
-msgstr "<0>Geri dön</0> V3"
+msgstr "<0>Geri dön:</0> V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0> İpucu:</0> Havuz jetonlarını kaldırmak, konumunuzu havuzdaki payınızla orantılı olarak mevcut oranda temel jetonlara dönüştürür. Tahakkuk eden ücretler, aldığınız tutarlara dahildir."
+msgstr "<0> İpucu:</0> Havuz jetonlarını kaldırmak, konumunuzu havuzdaki payınızla orantılı olarak geçerli oran üzerinden temel jetonlara dönüştürür. Tahakkuk eden ücretler, aldığınız tutarlara dahildir."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -121,7 +121,7 @@ msgstr "<0> İpucu:</0> Likidite eklediğinizde, pozisyonunuzu temsil eden havuz
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
-msgstr "<0> Oylamanın kilidini aç</0> bir sonraki teklife hazırlanmak için."
+msgstr "Bir sonraki teklife hazırlanmak için <0>Oylamanın kilidini açın</0>."
 
 #: src/components/claim/ClaimModal.tsx
 msgid "<0>🎉 </0>Welcome to team Unicorn :) <1>🎉</1>"
@@ -129,15 +129,15 @@ msgstr "<0> 🎉</0> Unicorn takımına hoş geldiniz :) <1> 🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "Teklifleri sunmak için toplam UNI arzının% 1'i kadar minimum eşik gereklidir"
+msgstr "Teklifleri sunmak için toplam UNI arzının en az %1'i kadar bir eşik gereklidir"
 
 #: src/components/Menu/index.tsx
 msgid "About"
-msgstr "hakkında"
+msgstr "Hakkında"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
-msgstr "Onayla"
+msgstr "Kabul et"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
@@ -171,24 +171,24 @@ msgstr "Likidite ekleyin."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "{0} ekle <0 />"
+msgstr "Metamask'a {0} ekle <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Add {0} {1} and {2} {3}"
-msgstr "{0} {1} ve {2} {3}"
+msgstr "{0} {1} ve {2} {3} ekle"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "Ekle {0}-{1} likiditeyi"
+msgstr "{0}-{1} likidite ekle"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "Ekle {0}/{1} V3 likiditesini"
+msgstr "{0}/{1} V3 likidite ekle"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
-msgstr "{0}eklendi"
+msgstr "{0} eklendi"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -204,11 +204,11 @@ msgstr "LP jeton geçişine izin ver"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "Yüksek fiyat etkili işlemlere izin verin ve onay ekranını atlayın. Kendi sorumluluğunuzdadır kullanın."
+msgstr "Yüksek fiyat etkili işlemlere izin verin ve onay ekranını atlayın. Kendi sorumluluğunuz altında kullanın."
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "Uniswap Protokolü sizin kullanmasına izin ver {0}"
+msgstr "Uniswap Protokolünün {0} kullanmasına izin verin"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -216,7 +216,7 @@ msgstr "İzin veriliyor"
 
 #: src/components/Header/URLWarning.tsx
 msgid "Always make sure the URL is<0>app.uniswap.org</0> - bookmark it to be safe."
-msgstr "Her zaman URL'nin <0> app.uniswap.org olduğundan emin olun</0> - güvenli olması için işaretleyin."
+msgstr "Her zaman URL'nin <0>app.uniswap.org</0> olduğundan emin olun. Emin olmak için yer işaretlerine ekleyin."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
@@ -224,7 +224,7 @@ msgstr "Miktar"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Bu değişimi gerçekleştirmeye çalışırken bir hata oluştu. Kayma toleransınızı artırmanız gerekebilir. Bu işe yaramazsa, işlem yaptığınız jetonla uyumsuzluk olabilir. Transfer ve yeniden ödeme jetonları üzerindeki not ücreti, Uniswap V3 ile uyumlu değildir."
+msgstr "Bu değişimi gerçekleştirmeye çalışırken bir hata oluştu. Kayma toleransınızı artırmanız gerekebilir. Bu işe yaramazsa, işlem yaptığınız jetonla uyumsuzluk olabilir. Transfer ve yeniden ödeme jetonları üzerindeki ücretin, Uniswap V3 ile uyumlu olmadığına dikkat edin."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -264,15 +264,15 @@ msgstr "Emin misiniz?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "Uniswap topluluğunun bir üyesi olarak, UNI'nin oylama ve yönetim için kullanılmasını talep edebilirsiniz. <0 /> <1 /> <2> UNI hakkında daha fazla bilgi edinin</2>"
+msgstr "Uniswap topluluğunun bir üyesi olarak, UNI'nin oylama ve yönetim için kullanılmasını talep edebilirsiniz.<0/><1/><2>UNI hakkında daha fazla bilgi edinin</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
-msgstr "Seçilen fiyat aralığına göre en az {0} {1} ve {2} {3}"
+msgstr "Seçilen fiyat aralığından en az {0} {1} ve {2} {3} cüzdanınıza iade edilecektir."
 
 #: src/components/TransactionSettings/index.tsx
 msgid "Auto"
-msgstr "Oto"
+msgstr "Otomatik"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
@@ -284,11 +284,11 @@ msgstr "Geri"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Balance:"
-msgstr "Denge:"
+msgstr "Bakiye:"
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0} {1}"
-msgstr "Denge: {0} {1}"
+msgstr "Bakiye: {0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
@@ -308,23 +308,23 @@ msgstr "Engellenen adres"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "Likidite ekleyerek, havuzdaki payınızla orantılı olarak bu çiftteki tüm işlemlerin% 0,3'ünü kazanacaksınız. Ücretler havuza eklenir, gerçek zamanlı olarak tahakkuk eder ve likiditenizi çekerek talep edilebilir."
+msgstr "Likidite ekleyerek, havuzdaki payınızla orantılı olarak bu çiftteki tüm işlemlerin %0,3'ünü kazanacaksınız. Ücretler havuza eklenir, gerçek zamanlı olarak tahakkuk eder ve likidite çekilerek talep edilebilir."
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
-msgstr "Bu listeyi ekleyerek, verilerin doğru olduğuna dolaylı olarak güveniyorsunuz. Mevcut listelerin sahte sürümlerini ve listeye sahip olmayan projeleri temsil ettiğini iddia eden listeler de dahil olmak üzere herkes bir liste oluşturabilir."
+msgstr "Bu listeyi ekleyerek, verilerin doğru olduğuna dolaylı olarak güveniyorsunuz. Mevcut listelerin sahte sürümlerini ve listesi olmayan projeleri temsil ettiğini iddia eden listeler de dahil olmak üzere herkes bir liste oluşturabilir."
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "Bir cüzdan bağlayarak Uniswap Labs'ın <0> Hizmet Şartları'nı kabul etmiş olursunuz</0> ve <1> Uniswap protokolü sorumluluk reddini okuduğunuzu ve anladığınızı onaylayın</1> ."
+msgstr "Bir cüzdan bağlayarak Uniswap Labs'ın <0>Hizmet Şartları'nı</0> kabul etmiş ve <1>Uniswap protokolü sorumluluk reddini</1> okuduğunuzu ve anladığınızı onaylamış olursunuz."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
-msgstr "Değişiklik"
+msgstr "Değiştir"
 
 #: src/components/Header/index.tsx
 msgid "Charts"
-msgstr "Grafikler"
+msgstr "Çizelgeler"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Check out our v3 LP walkthrough and migration guides."
@@ -334,7 +334,7 @@ msgstr "V3 LP adım adım açıklamalı kılavuzumuza ve geçiş kılavuzlarım�
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Claim"
-msgstr "İddia"
+msgstr "Talep"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -346,16 +346,16 @@ msgstr "UNI talep et"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
-msgstr "UNI Jetonunu talep edin"
+msgstr "UNI Jetonu talep et"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "Hak talebi birikmiş UNI ödülleri"
+msgstr "Birikmiş UNI ödüllerini talep et"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
-msgstr "Talep ücretleri"
+msgstr "Ücretleri talep et"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Claim your UNI tokens"
@@ -363,12 +363,12 @@ msgstr "UNI jetonlarınızı talep edin"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
-msgstr "Hak talebinde bulunuldu"
+msgstr "Talep Edilen"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "İddia Edilen UNI!"
+msgstr "UNI talep edildi!"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
@@ -385,11 +385,11 @@ msgstr "{0} UNI talep ediliyor"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
-msgstr "Hepsini temizle"
+msgstr "Tümünü Temizle"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Clear all"
-msgstr "Hepsini temizle"
+msgstr "Tümünü temizle"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -406,7 +406,7 @@ msgstr "Kod"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
-msgstr "Toplamak"
+msgstr "Topla"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -415,11 +415,11 @@ msgstr "WETH olarak toplayın"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect fees"
-msgstr "Ücretleri toplayın"
+msgstr "Ücretleri topla"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
-msgstr "Toplanmış"
+msgstr "Toplandı"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
@@ -427,19 +427,19 @@ msgstr "Toplama"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees"
-msgstr "Tahsilat ücretleri"
+msgstr "Ücretler toplanıyor"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting fees will withdraw currently available fees for you."
-msgstr "Toplama ücretleri, sizin için şu anda mevcut olan ücretleri geri çekecektir."
+msgstr "Ücretleri toplama işlemi, sizin için şu anda mevcut olan ücretleri çekecektir."
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "Common bases"
-msgstr "Ortak üsler"
+msgstr "Ortak tabanlar"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Confirm"
-msgstr "Onaylamak"
+msgstr "Onayla"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Confirm Supply"
@@ -448,7 +448,7 @@ msgstr "Kaynağı Onayla"
 #: src/components/swap/ConfirmSwapModal.tsx
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Confirm Swap"
-msgstr "Değiştirmeyi Onaylayın"
+msgstr "Değiştirmeyi Onayla"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -500,7 +500,7 @@ msgstr "Cüzdan bağlayın"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Connected with {name}"
-msgstr "{name}ile bağlantılı"
+msgstr "{name} ile bağlantılı"
 
 #: src/components/AccountDetails/Copy.tsx
 msgid "Copied"
@@ -509,11 +509,11 @@ msgstr "Kopyalandı"
 #: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
-msgstr "Adresi kopyala"
+msgstr "Adresi Kopyala"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "Havuz Oluştur ve Tedarik"
+msgstr "Havuz ve Kaynak Oluştur"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -526,11 +526,11 @@ msgstr "Bir havuz oluştur"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
-msgstr "GitHub'da bir sorun oluşturun"
+msgstr "GitHub'da bir konu oluşturun"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Create pool and add {0}/{1} V3 liquidity"
-msgstr "Havuz oluşturma ve ekleme {0}/{1} V3 likiditesini"
+msgstr "Havuz oluşturun ve {0}/{1} V3 likidite ekleyin"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Create pool."
@@ -538,12 +538,12 @@ msgstr "Havuz oluşturun."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current Price"
-msgstr "Mevcut fiyat"
+msgstr "Güncel Fiyat"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Current price"
-msgstr "Mevcut fiyat"
+msgstr "Güncel fiyat"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Current {0} Price:"
@@ -566,11 +566,11 @@ msgstr "Oyları devretme"
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "Depozito"
+msgstr "Mevduat"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "Para Yatırma Tutarları"
+msgstr "Mevduat Tutarları"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
@@ -582,7 +582,7 @@ msgstr "Mevduat likiditesi"
 
 #: src/pages/Earn/index.tsx
 msgid "Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token."
-msgstr "Uniswap protokolü yönetişim belirteci olan UNI'yi almak için Likidite Sağlayıcı belirteçlerinizi yatırın."
+msgstr "Uniswap protokolü yönetim jetonu olan UNI'yi almak için Likidite Sağlayıcı jetonlarınızı yatırın."
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "Deposited liquidity:"
@@ -590,7 +590,7 @@ msgstr "Yatırılan likidite:"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposited {0} UNI-V2"
-msgstr "Yatırıldı {0} UNI-V2"
+msgstr "Yatırılan {0} UNI-V2"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Depositing Liquidity"
@@ -610,11 +610,11 @@ msgstr "Detaylar"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "Çoklu Durakları Devre Dışı Bırak"
+msgstr "Çoklu Sekmeleri Devre Dışı Bırak"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
-msgstr "Bağlantıyı kes"
+msgstr "Bağlantıyı Kes"
 
 #: src/components/Menu/index.tsx
 msgid "Discord"
@@ -630,7 +630,7 @@ msgstr "Dokümanlar"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "V2 konumlarınızdan birini görmüyor musunuz? <0> İçe aktarın.</0>"
+msgstr "V2 konumlarınızdan birini görmüyor musunuz? <0>İçe aktarın.</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -882,7 +882,7 @@ msgstr "URL'nin <0> app.uniswap.org olduğundan emin olun</0>"
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "Yönetin"
+msgstr "Yönet"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
@@ -898,7 +898,7 @@ msgstr "Bu havuzu yönetin."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
-msgstr "Max"
+msgstr "Maksimum"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/RangeSelector/index.tsx
@@ -911,7 +911,7 @@ msgstr "Maksimum fiyat"
 
 #: src/components/PositionListItem/index.tsx
 msgid "Max:"
-msgstr "Max:"
+msgstr "Maksimum:"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Maximum sent"
@@ -923,7 +923,7 @@ msgstr "Maksimum gönderme"
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/Pool/index.tsx
 msgid "Migrate"
-msgstr "Göç"
+msgstr "Geçir"
 
 #: src/pages/Pool/index.tsx
 msgid "Migrate Liquidity"
@@ -1936,7 +1936,7 @@ msgstr "{0} Oylar"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0} per {1}"
-msgstr "{0} başına {1}"
+msgstr "{0} / {1}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
@@ -1967,11 +1967,11 @@ msgstr "{0} • Kullanıcı tarafından eklendi"
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "{0}%"
-msgstr "% {0}"
+msgstr "%{0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0}-{1} Liquidity Mining"
-msgstr "{0}-{1} Likidite Madencilik"
+msgstr "{0}-{1} Likidite Madenciliği"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
@@ -1979,7 +1979,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} LP Jetonlar"
+msgstr "{0}/{1} LP Jetonları"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
@@ -1991,17 +1991,17 @@ msgstr "{USER_AMOUNT} UNI"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{percentForSlider}%"
-msgstr "% {percentForSlider}"
+msgstr "%{percentForSlider}"
 
 #: src/components/InputStepCounter/InputStepCounter.tsx
 msgid "{tokenB} per {tokenA}"
-msgstr "{tokenB} başına {tokenA}"
+msgstr "{tokenB} / {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~ $ <0 />"
+msgstr "~$ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← Havuzlara Genel Bakış'e geri dön"
+msgstr "← Havuzlara Genel Bakış'a geri dön"
 
