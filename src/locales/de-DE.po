@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-14 18:04\n"
+"PO-Revision-Date: 2021-06-14 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -41,7 +41,7 @@ msgstr "(anfordern)"
 
 #: src/components/AccountDetails/index.tsx
 msgid "(clear all)"
-msgstr "(alles löschen)"
+msgstr "(alle löschen)"
 
 #: src/pages/Vote/index.tsx
 msgid "(edit)"
@@ -68,27 +68,27 @@ msgstr "0 UNI / Woche"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.05% fee"
-msgstr "0,05% Gebühr"
+msgstr "0,05 % Gebühr"
 
 #: src/components/FeeSelector/index.tsx
 msgid "0.3% fee"
-msgstr "0,3% Gebühr"
+msgstr "0,3 % Gebühr"
 
 #: src/components/FeeSelector/index.tsx
 msgid "1% fee"
-msgstr "1% Gebühr"
+msgstr "1 % Gebühr"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "25%"
-msgstr "25%"
+msgstr "25 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "50%"
-msgstr "50%"
+msgstr "50 %"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "75%"
-msgstr "75%"
+msgstr "75 %"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
@@ -101,7 +101,7 @@ msgstr "<0/> Abstimmungen"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>Kontoanalyse und eingenommene Gebühren</0><1> ↗ </1>"
+msgstr "<0>Kontoanalyse und angefallene Gebühren</0><1> ↗ </1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
@@ -109,7 +109,7 @@ msgstr "<0>Zurück zu </0>V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Tipp:</0> Durch das Entfernen von Pool-Token wird Ihre Position zum aktuellen Kurs proportional zu Ihrem Anteil am Pool in die zugrunde liegenden Token umgewandelt. Eingenommene Gebühren sind in den Beträgen enthalten, die Sie erhalten."
+msgstr "<0>Tipp:</0> Durch das Entfernen von Pool-Token wird Ihre Position zum aktuellen Kurs proportional zu Ihrem Anteil am Pool in die zugrunde liegenden Token umgewandelt. Angefallende Gebühren sind in den Beträgen enthalten, die Sie erhalten."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
