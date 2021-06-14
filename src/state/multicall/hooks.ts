@@ -231,6 +231,50 @@ export function useMultipleContractSingleData(
   }, [fragment, results, contractInterface, latestBlockNumber])
 }
 
+export function useMultipleContractMultipleData(
+  addresses: (string | undefined)[],
+  contractInterface: Interface,
+  methodName: string,
+  callInputs?: OptionalMethodInputs[][],
+  options?: ListenerOptions,
+  gasRequired?: number
+): CallState[] {
+  const fragment = useMemo(() => contractInterface.getFunction(methodName), [contractInterface, methodName])
+
+  const calls = useMemo(() => {
+    return addresses.map((address, i) => {
+      const passesChecks = address && contractInterface && fragment
+
+      if (!passesChecks) {
+        return []
+      }
+
+      return callInputs
+        ? callInputs[i].map<Call | undefined>((inputs) => {
+            const callData: string | undefined = isValidMethodArgs(inputs)
+              ? contractInterface.encodeFunctionData(fragment, inputs)
+              : undefined
+            return address && callData
+              ? {
+                  address,
+                  callData,
+                  ...(gasRequired ? { gasRequired } : {}),
+                }
+              : undefined
+          })
+        : []
+    })
+  }, [addresses, callInputs, contractInterface, fragment, gasRequired])
+
+  const results = useCallsData(calls.flat(), options)
+
+  const latestBlockNumber = useBlockNumber()
+
+  return useMemo(() => {
+    return results.map((result) => toCallState(result, contractInterface, fragment, latestBlockNumber))
+  }, [fragment, contractInterface, results, latestBlockNumber])
+}
+
 export function useSingleCallResult(
   contract: Contract | null | undefined,
   methodName: string,
