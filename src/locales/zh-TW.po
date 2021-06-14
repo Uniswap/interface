@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-11 16:05\n"
+"PO-Revision-Date: 2021-06-14 12:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -101,7 +101,7 @@ msgstr "<0/> 投票"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
-msgstr "<0>賬戶分析和已累積的手續費</0><1>↗</1>"
+msgstr "<0>帳戶分析和已累積的手續費</0><1>↗</1>"
 
 #: src/pages/Swap/index.tsx
 msgid "<0>Back to </0>V3"
@@ -141,11 +141,11 @@ msgstr "接受"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
-msgstr "賬戶"
+msgstr "帳戶"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "已激活"
+msgstr "啟用"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -204,11 +204,11 @@ msgstr "允許流動池代幣遷移"
 
 #: src/components/Settings/index.tsx
 msgid "Allow high price impact trades and skip the confirm screen. Use at your own risk."
-msgstr "允許高度影響價格的交易，並跳過確認步驟。須自行承擔使用風險。"
+msgstr "允許高兌換率影響的交易，並跳過確認步驟。須自行承擔使用風險。"
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "允許 Uniswap 調用您的 {0}"
+msgstr "允許 Uniswap 協議使用您的 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -224,11 +224,11 @@ msgstr "數額"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限製。如果還是不行，則可能是您正在交易的代幣與 Uniswap 不兼容。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與Uniswap V3不兼容。"
+msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限製。如果還是不行，則可能是您正在交易的代幣與 Uniswap 不相容。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與Uniswap V3不兼容。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
-msgstr "數據分析"
+msgstr "分析"
 
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -264,7 +264,7 @@ msgstr "您確定嗎？"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "作為 Uniswap 社群的成員，您可以認領 UNI 代幣，用於投票和治理。<0/><1/><2>閱讀更多關於 UNI 代幣的訊息</2>"
+msgstr "作為 Uniswap 社群的成員，您可以認領 UNI 代幣，用於投票和治理。<0/><1/><2>閱讀更多關於 UNI 的訊息</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -276,7 +276,7 @@ msgstr "自動"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "可調用的數額：{0}"
+msgstr "可存入的數額：{0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -342,7 +342,7 @@ msgstr "領取"
 #: src/components/claim/ClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claim UNI"
-msgstr "領取 UNI 代幣"
+msgstr "領取 UNI"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claim UNI Token"
