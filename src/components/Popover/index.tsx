@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import useInterval from '../../hooks/useInterval'
 import Portal from '@reach/portal'
 import border8pxRadius from '../../assets/images/border-8px-radius.png'
-import { DialogOverlay } from '@reach/dialog'
 
 const PopoverContainer = styled.div<{ show: boolean }>`
   z-index: 9999;
@@ -55,19 +54,15 @@ export default function Popover({ content, show, children, placement = 'auto', c
     <>
       <ReferenceElement ref={setReferenceElement as any}>{children}</ReferenceElement>
       <Portal>
-        {show && (
-          <DialogOverlay>
-            <PopoverContainer
-              className={className}
-              show
-              ref={setPopperElement as any}
-              style={styles.popper}
-              {...attributes.popper}
-            >
-              {content}
-            </PopoverContainer>
-          </DialogOverlay>
-        )}
+        <PopoverContainer
+          className={className}
+          show={show}
+          ref={setPopperElement as any}
+          style={styles.popper}
+          {...attributes.popper}
+        >
+          {content}
+        </PopoverContainer>
       </Portal>
     </>
   )
