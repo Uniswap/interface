@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-14 06:04\n"
+"PO-Revision-Date: 2021-06-14 08:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -92,12 +92,12 @@ msgstr "75%"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr "<0/> 所有提案"
+msgstr "<0/>所有提案"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0/> 投票"
+msgstr "<0/>投票"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -109,11 +109,11 @@ msgstr "<0>返回</0>V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>提示：</0>退出资金池，按照当前汇率将您的资金池份额转换回原本代币。您收到的代币数额中将包含已累计的手续费。"
+msgstr "<0>提示：</0>退出资金池，按照当前汇率将您的资金池份额转换回标的代币。您收到的代币数额中将包含已累计的手续费。"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0>提示：</0>使用此工具可查找未自动出现在界面中的 v2 池。"
+msgstr "<0>提示：</0>使用此工具可查找未自动出现在界面中的v2池。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
@@ -129,7 +129,7 @@ msgstr "<0>🎉 </0>欢迎加入Unicorn（独角兽）团队 :) <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 1% of the total UNI supply is required to submit proposals"
-msgstr "提交提案的最低门槛为 UNI 代币总供应量的1％。"
+msgstr "提交提案的最低门槛为UNI总供应量的1%。"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -145,7 +145,7 @@ msgstr "账户"
 
 #: src/components/SearchModal/ImportRow.tsx
 msgid "Active"
-msgstr "已激活"
+msgstr "激活"
 
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -159,36 +159,36 @@ msgstr "添加委托 +"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Add Liquidity"
-msgstr "注入流动资金"
+msgstr "添加流动性"
 
 #: src/pages/Pool/v2.tsx
 msgid "Add V2 Liquidity"
-msgstr "注入 V2 流动资金"
+msgstr "添加V2流动资金"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Add liquidity."
-msgstr "注入流动资金。"
+msgstr "添加流动性。"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "将 {0} 添加到 Metamask <0/>"
+msgstr "将{0}添加到Metamask <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Add {0} {1} and {2} {3}"
-msgstr "注入 {0} {1} 和 {2} {3}"
+msgstr "添加{0} {1}和{2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "注入 {0}-{1} 流动资金"
+msgstr "添加{0}-{1}流动性"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "注入 {0}/{1} V3 流动资金"
+msgstr "添加{0}/{1} V3流动性"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
-msgstr "已添加 {0}"
+msgstr "已添加{0}"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -208,7 +208,7 @@ msgstr "允许高度影响价格的交易，并跳过确认步骤。须自行承
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "允许 Uniswap 调用您的 {0}"
+msgstr "允许Uniswap协议使用您的{0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
