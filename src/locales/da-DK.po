@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Danish\n"
-"PO-Revision-Date: 2021-06-14 16:05\n"
+"PO-Revision-Date: 2021-06-14 17:14\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -650,7 +650,7 @@ msgstr "Indtast en gyldig glideprocent"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on submission."
-msgstr "Indtast en adresse for at udløse et UNI-krav. Hvis adressen har nogen påstand UNI vil den blive sendt til dem ved indsendelse."
+msgstr "Indtast en adresse for at udløse et UNI-krav. Hvis adressen har nogen UNI, der kan gøres krav på, vil den blive sendt til dem ved indsendelse."
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
@@ -665,11 +665,11 @@ msgstr "Indtast et beløb"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Enter valid list location"
-msgstr "Indtast gyldig liste placering"
+msgstr "Indtast gyldig listeplacering"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
-msgstr "Indtast gyldig token adresse"
+msgstr "Indtast gyldig tokenadresse"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1117,16 +1117,16 @@ msgstr "Prispåvirkning"
 
 #: src/pages/Swap/index.tsx
 msgid "Price Impact Too High"
-msgstr "Priseffekt For Høj"
+msgstr "Prispåvirkning for høj"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
-msgstr "Pris Opdateret"
+msgstr "Pris opdateret"
 
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "Pris interval"
+msgstr "Prisinterval"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1134,7 +1134,7 @@ msgstr "Pris:"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Prices and pool share"
-msgstr "Priser og poolandel"
+msgstr "Priser og puljeandel"
 
 #: src/pages/Vote/index.tsx
 msgid "Proposals"
@@ -1146,7 +1146,7 @@ msgstr "Forslag indsendt af medlemmer af fællesskabet vil blive vist her."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Proposer"
-msgstr "Forfatter"
+msgstr "Forslagsstiller"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1170,7 +1170,7 @@ msgstr "Læs mere om ikke-understøttede aktiver"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
-msgstr "Seneste Transaktioner"
+msgstr "Seneste transaktioner"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1182,17 +1182,17 @@ msgstr "Fjern"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
-msgstr "Fjern Beløb"
+msgstr "Fjern beløb"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Remove Delegate"
-msgstr "Fjern Delegeret"
+msgstr "Fjern delegeret"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove Liquidity"
-msgstr "Fjern Likviditet"
+msgstr "Fjern likviditet"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Remove list"
@@ -1205,7 +1205,7 @@ msgstr "Fjern {0} {1} og {2} {3}"
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Remove {0}/{1} V3 liquidity"
-msgstr "Fjern {0}/{1} V3 likviditet"
+msgstr "Fjern {0}/{1} V3-likviditet"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Removing {0} {1} and {2} {3}"
@@ -1229,11 +1229,11 @@ msgstr "Søg navn eller indsæt adresse"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select Pool"
-msgstr "Vælg Pool"
+msgstr "Vælg pulje"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "Vælg en pulje type baseret på din foretrukne likviditet udbyder gebyr."
+msgstr "Vælg en pulje type baseret på dit foretrukne likviditetsudbydergebyr."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1241,11 +1241,11 @@ msgstr "Vælg en pulje type baseret på din foretrukne likviditet udbyder gebyr.
 #: src/pages/PoolFinder/index.tsx
 #: src/state/swap/hooks.ts
 msgid "Select a token"
-msgstr "Vælg en token"
+msgstr "Vælg et token"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
-msgstr "Vælg et token for at finde din v2 likviditet."
+msgstr "Vælg et token for at finde din v2-likviditet."
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select pair"
@@ -1253,7 +1253,7 @@ msgstr "Vælg par"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
-msgstr "Valgt Område"
+msgstr "Valgt område"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
@@ -1266,23 +1266,23 @@ msgstr "Selvuddelegering"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "Sæt Prisområde"
+msgstr "Indstil prisinterval"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
-msgstr "Sæt Startpris"
+msgstr "Indstil startpris"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
-msgstr "Andel af pool"
+msgstr "Andel i pulje"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "Andel af Pool:"
+msgstr "Andel i pulje:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
-msgstr "Show Portis"
+msgstr "Vis Portis"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Simple"
@@ -1291,7 +1291,7 @@ msgstr "Simpel"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "Gevinst tolerance"
+msgstr "Glidningstolerance"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1303,7 +1303,7 @@ msgstr "Noget gik galt"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Step 1. Get UNI-V2 Liquidity tokens"
-msgstr "Trin 1. Få UNI-V2 Liquidity tokens"
+msgstr "Trin 1. Få UNI-V2 Likviditetstokens"
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
@@ -1328,7 +1328,7 @@ msgstr "Byt"
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
 msgid "Swap Anyway"
-msgstr "Ombyt Alligevel"
+msgstr "Ombyt alligevel"
 
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
