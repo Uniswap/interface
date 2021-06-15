@@ -47,7 +47,12 @@ const PopoverFooter = styled.div`
   background-color: ${({ theme }) => theme.bg1And2};
 `;
 
-export default function NetworkSwitcherPopover({ children }: { children: ReactNode }) {
+interface NetworkSwitcherPopoverProps {
+  children: ReactNode;
+  offsetX?: number;
+}
+
+export default function NetworkSwitcherPopover({ children, offsetX}: NetworkSwitcherPopoverProps) {
   const { connector } = useActiveWeb3React()
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
   const popoverRef = useRef(null)
@@ -87,6 +92,7 @@ export default function NetworkSwitcherPopover({ children }: { children: ReactNo
   return (
     <div ref={popoverRef}>
       <StyledPopover
+        offsetX={offsetX}
         content={
           <>
             <OptionGrid>

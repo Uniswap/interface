@@ -111,7 +111,7 @@ export function AccountStatus({pendingTransactions, ENSName, account, networkCon
           ENSName || shortenAddress(account)
         )}
       </Web3StatusConnected>
-      <NetworkSwitcherPopover>
+      <NetworkSwitcherPopover offsetX={-30}>
         <Web3StatusNetwork onClick={toggleNetworkSwitcherPopover}>
           <IconWrapper size={20}>
             <img src={ChainLogo[networkConnectorChainId]} alt="chain logo" />

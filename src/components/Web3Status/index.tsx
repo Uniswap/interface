@@ -103,7 +103,7 @@ export default function Web3Status() {
   
   if (error) {
     return (
-      <NetworkSwitcherPopover>
+      <NetworkSwitcherPopover offsetX={60}>
         <Web3StatusError>
           {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
           <SwitchNetworkButton onClick={toggleNetworkSwitcherPopover}>

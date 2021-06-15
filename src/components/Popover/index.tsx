@@ -35,15 +35,17 @@ export interface PopoverProps {
   children: React.ReactNode
   placement?: Placement
   className?: string
+  offsetX?: number;
+  offsetY?: number;
 }
 
-export default function Popover({ content, show, children, placement = 'auto', className }: PopoverProps) {
+export default function Popover({ content, show, children, placement = 'auto', className, offsetY = 8, offsetX = 0 }: PopoverProps) {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const { styles, update, attributes } = usePopper(referenceElement, popperElement, {
     placement,
     strategy: 'fixed',
-    modifiers: [{ name: 'offset', options: { offset: [8, 8] } }]
+    modifiers: [{ name: 'offset', options: { offset: [offsetX, offsetY] } }]
   })
   const updateCallback = useCallback(() => {
     update && update()
