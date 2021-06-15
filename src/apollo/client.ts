@@ -17,7 +17,7 @@ export const mainnetExchangeClient: ApolloClient<NormalizedCacheObject> = new Ap
 })
 
 export const maticExchangeClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/dynamic-amm/dynamic-amm-matic',
+  uri: 'https://api.thegraph.com/subgraphs/name/piavgh/dmm-exchange-matic',
   cache: new InMemoryCache()
 })
 
