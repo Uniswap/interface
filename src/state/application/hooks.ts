@@ -1,11 +1,11 @@
-import { useCallback, useMemo, useEffect } from 'react'
+import { useCallback, useMemo, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import dayjs from 'dayjs'
 
 import { exchangeCient } from 'apollo/client'
 import { ETH_PRICE, TOKEN_DERIVED_ETH } from 'apollo/queries'
-import { ChainId } from 'libs/sdk/src'
-import { KNC } from '../../constants'
+import { ChainId, Token, WETH } from 'libs/sdk/src'
+import { KNC, ZERO_ADDRESS } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -218,4 +218,46 @@ export function useKNCPrice(): AppState['application']['kncPrice'] {
   }, [kncPrice, dispatch, ethPrice.currentPrice, chainId])
 
   return kncPrice
+}
+
+/**
+ * Gets the current price of KNC by ETH
+ */
+const getTokenPriceByETH = async (tokenAddress: string, chainId?: ChainId) => {
+  let tokenPriceByETH = 0
+
+  try {
+    const result = await exchangeCient[chainId as ChainId].query({
+      query: TOKEN_DERIVED_ETH(tokenAddress),
+      fetchPolicy: 'no-cache'
+    })
+
+    const derivedETH = result?.data?.tokens[0]?.derivedETH
+
+    tokenPriceByETH = parseFloat(derivedETH)
+  } catch (e) {
+    console.log(e)
+  }
+
+  return tokenPriceByETH
+}
+
+export function useTokensPrice(tokens: Token[]) {
+  const ethPrice = useETHPrice()
+  const { chainId } = useActiveWeb3React()
+  const [prices, setPrices] = useState([])
+  useEffect(() => {
+    async function checkForTokenPrice() {
+      const tokensPrice = tokens.map(async token => {
+        if (token.address == ZERO_ADDRESS.toLowerCase() || token.equals(WETH[chainId as ChainId])) {
+          return ethPrice
+        }
+        const tokenPriceByETH = await getTokenPriceByETH(token.address, chainId)
+        const tokenPrice = ethPrice.currentPrice && tokenPriceByETH * parseFloat(ethPrice.currentPrice)
+        return tokenPrice
+      })
+      Promise.all(tokensPrice).then(res => {})
+    }
+    checkForTokenPrice()
+  }, [ethPrice.currentPrice, chainId])
 }

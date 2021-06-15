@@ -106,10 +106,10 @@ export function useCurrencyBalances(
   const tokenBalances = useTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === ETHER) ?? false, [currencies])
   const ethBalance = useETHBalances(containsETH ? [account] : [])
-
   return useMemo(
     () =>
       currencies?.map(currency => {
+        console.log('===currency', currency, currency === ETHER)
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
         if (currency === ETHER) return ethBalance[account]

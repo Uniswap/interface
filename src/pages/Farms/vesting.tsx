@@ -9,12 +9,16 @@ import styled, { ThemeContext } from 'styled-components'
 import { TYPE } from 'theme'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
-import { useBlockNumber, useKNCPrice } from 'state/application/hooks'
-import { Fraction, JSBI } from 'libs/sdk/src'
+import { useBlockNumber, useKNCPrice, useTokensPrice } from 'state/application/hooks'
+import { Fraction, JSBI, Token } from 'libs/sdk/src'
 import { KNC } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import InfoHelper from 'components/InfoHelper'
+import { useRewardTokens } from 'state/farms/hooks'
+import { formattedNum, getTokenSymbol } from 'utils'
+import { useFarmRewardsUSD } from 'utils/dmm'
+import { Reward } from 'state/farms/types'
 
 const VestAllGroup = styled.div`
   display: grid;
@@ -53,64 +57,112 @@ const Seperator = styled.div`
   border: 1px solid #404b51;
 `
 
+// interface VTObject {
+//   vestableIndexes: {[key: string] : number[]},
+//     vestableAmount: {[key: string] : BigNumber},
+//     fullyIndexes: {[key: string] : number[]},
+//     fullyAmount: {[key: string] : BigNumber},
+//     totalAmount: {[key: string] : BigNumber},
+//     unlockedAmount: {[key: string] : BigNumber},
+// }
+// interface LooseObject {
+//   [key: string]: any
+// }
+
+// interface LooseObject2 {
+//   [key: string]: any
+// }
 const Vesting = () => {
   const theme = useContext(ThemeContext)
   const kncPrice = useKNCPrice()
+
   const toUSD = useCallback(
     value => kncPrice && value && `$${(parseFloat(kncPrice) * parseFloat(fixedFormatting(value, 18))).toFixed(2)}`,
     [kncPrice]
   )
+  // {'knc' : 100, 'eth': 100}
+
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
   const { schedules } = useVesting()
   console.log('==schedules', schedules)
 
-  const { vestableIndexes, vestableAmount, fullyIndexes, fullyAmount, totalAmount, unlockedAmount } = schedules.reduce<{
-    vestableIndexes: number[]
-    vestableAmount: BigNumber
-    fullyIndexes: number[]
-    fullyAmount: BigNumber
-    totalAmount: BigNumber
-    unlockedAmount: BigNumber
-  }>(
-    (acc, s, index) => {
-      acc.totalAmount = acc.totalAmount.add(BigNumber.from(s[2]))
-      const fullyVestedAlready = BigNumber.from(s[2])
-        .sub(BigNumber.from(s[3]))
-        .isZero()
-      const vestedAndVestablePercent = BigNumber.from(currentBlockNumber)
-        .sub(BigNumber.from(s[1]))
-        .isNegative()
-        ? BigNumber.from(currentBlockNumber)
-            .sub(BigNumber.from(s[0]))
-            .mul(100)
-            .div(BigNumber.from(s[1]).sub(BigNumber.from(s[0])))
-        : 100
-      const unlockedAmount = BigNumber.from(s[2])
-        .mul(vestedAndVestablePercent)
-        .div(100)
-      const vestableAmount = unlockedAmount.sub(BigNumber.from(s[3]))
-      if (!fullyVestedAlready) {
-        acc.vestableIndexes.push(index)
-      }
-      acc.vestableAmount = acc.vestableAmount.add(vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount)
-
-      if (!fullyVestedAlready && !!currentBlockNumber && currentBlockNumber > s[1]) {
-        acc.fullyIndexes.push(index)
-        acc.fullyAmount = acc.fullyAmount.add(BigNumber.from(s[2]))
-      }
-
-      acc.unlockedAmount = acc.unlockedAmount.add(unlockedAmount)
-      return acc
-    },
-    {
-      vestableIndexes: [],
-      vestableAmount: BigNumber.from(0),
-      fullyIndexes: [],
-      fullyAmount: BigNumber.from(0),
-      totalAmount: BigNumber.from(0),
-      unlockedAmount: BigNumber.from(0)
+  const info = schedules.reduce<{
+    [key: string]: {
+      vestableIndexes: number[]
+      vestableAmount: BigNumber
+      fullyIndexes: number[]
+      fullyAmount: BigNumber
+      totalAmount: BigNumber
+      unlockedAmount: BigNumber
+      token: Token
     }
+  }>((acc, s, index) => {
+    const address = (s[4] as Token).symbol as string
+
+    if (!acc[address]) {
+      acc[address] = {
+        vestableIndexes: [],
+        vestableAmount: BigNumber.from(0),
+        fullyIndexes: [],
+        fullyAmount: BigNumber.from(0),
+        totalAmount: BigNumber.from(0),
+        unlockedAmount: BigNumber.from(0),
+        token: s[4] as Token
+      }
+    }
+
+    acc[address].totalAmount = acc[address].totalAmount.add(BigNumber.from(s[2]))
+    const fullyVestedAlready = BigNumber.from(s[2])
+      .sub(BigNumber.from(s[3]))
+      .isZero()
+    const vestedAndVestablePercent = BigNumber.from(currentBlockNumber)
+      .sub(BigNumber.from(s[1]))
+      .isNegative()
+      ? BigNumber.from(currentBlockNumber)
+          .sub(BigNumber.from(s[0]))
+          .mul(100)
+          .div(BigNumber.from(s[1]).sub(BigNumber.from(s[0])))
+      : 100
+    const unlockedAmount = BigNumber.from(s[2])
+      .mul(vestedAndVestablePercent)
+      .div(100)
+    const vestableAmount = unlockedAmount.sub(BigNumber.from(s[3]))
+    if (!fullyVestedAlready) {
+      acc[address].vestableIndexes.push(index)
+    }
+    acc[address].vestableAmount = acc[address].vestableAmount.add(
+      vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
+    )
+
+    if (!fullyVestedAlready && !!currentBlockNumber && currentBlockNumber > s[1]) {
+      acc[address].fullyIndexes.push(index)
+      acc[address].fullyAmount = acc[address].fullyAmount.add(BigNumber.from(s[2]))
+    }
+
+    acc[address].unlockedAmount = acc[address].unlockedAmount.add(unlockedAmount)
+    return acc
+  }, {})
+
+  const totalUSD = useFarmRewardsUSD(
+    Object.keys(info).map(k => {
+      return { token: info[k].token, amount: info[k].totalAmount } as Reward
+    })
+  )
+  const lockedUSD = useFarmRewardsUSD(
+    Object.keys(info).map(k => {
+      return { token: info[k].token, amount: info[k].totalAmount.sub(info[k].unlockedAmount) } as Reward
+    })
+  )
+  const claimedUSD = useFarmRewardsUSD(
+    Object.keys(info).map(k => {
+      return { token: info[k].token, amount: info[k].unlockedAmount.sub(info[k].vestableAmount) } as Reward
+    })
+  )
+  const unlockedUSD = useFarmRewardsUSD(
+    Object.keys(info).map(k => {
+      return { token: info[k].token, amount: info[k].vestableAmount } as Reward
+    })
   )
 
   const [pendingTx, setPendingTx] = useState(false)
@@ -119,16 +171,16 @@ const Vesting = () => {
     if (!chainId || !account) return
     console.log('===claim all active')
     setPendingTx(true)
-    await vestAtIndex(KNC[chainId].address, vestableIndexes)
+    await Promise.all(Object.keys(info).map(k => vestAtIndex(info[k].token.address, info[k].vestableIndexes)))
     setPendingTx(false)
   }
 
   const onClaimAllFully = async () => {
-    if (!chainId || !account) return
-    console.log('===claim all fully')
-    setPendingTx(true)
-    await vestAtIndex(KNC[chainId].address, fullyIndexes)
-    setPendingTx(false)
+    // if (!chainId || !account) return
+    // console.log('===claim all fully')
+    // setPendingTx(true)
+    // await vestAtIndex(KNC[chainId].address, fullyIndexes)
+    // setPendingTx(false)
   }
   return (
     <>
@@ -143,31 +195,32 @@ const Vesting = () => {
         </TYPE.body>
         <AutoRow justify="space-between">
           <div>
-            <TYPE.body color={theme.text11} fontWeight={600} fontSize={28}>
-              <img
-                src={
-                  'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202/logo.png'
-                }
-                alt="uniswap-icon"
-                width="24px"
-              />
-              {fixedFormatting(totalAmount, 18)} KNC
-            </TYPE.body>
-            <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={24} margin="3px 0 0 23px">
-              {toUSD(totalAmount)}
+            {Object.keys(info).map(k => (
+              <div key={k}>
+                <TYPE.body color={theme.text11} fontWeight={600} fontSize={28}>
+                  {fixedFormatting(info[k].totalAmount, 18)} {k}
+                </TYPE.body>
+              </div>
+            ))}
+
+            <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={24}>
+              {formattedNum(totalUSD.toString(), true)}
             </TYPE.body>
           </div>
+
           <Seperator />
           <div>
             <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
               Locked Rewards
             </TYPE.body>
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} margin="10px 0 0 0">
-              {fixedFormatting(totalAmount.sub(unlockedAmount), 18)} KNC
-            </TYPE.body>
+            {Object.keys(info).map(k => (
+              <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+                {fixedFormatting(info[k].totalAmount.sub(info[k].unlockedAmount), 18)} {k}
+              </TYPE.body>
+            ))}
 
             <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-              {toUSD(totalAmount.sub(unlockedAmount))}
+              {formattedNum(lockedUSD.toString(), true)}
             </TYPE.body>
           </div>
           <Seperator />
@@ -175,12 +228,14 @@ const Vesting = () => {
             <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
               Claimed Rewards
             </TYPE.body>
-            <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} margin="10px 0 0 0">
-              {fixedFormatting(unlockedAmount.sub(vestableAmount), 18)} KNC
-            </TYPE.body>
+            {Object.keys(info).map(k => (
+              <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+                {fixedFormatting(info[k].unlockedAmount.sub(info[k].vestableAmount), 18)} {k}
+              </TYPE.body>
+            ))}
 
             <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-              {toUSD(unlockedAmount.sub(vestableAmount))}
+              {formattedNum(claimedUSD.toString(), true)}
             </TYPE.body>
           </div>
           <Seperator />
@@ -189,12 +244,14 @@ const Vesting = () => {
               <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={14}>
                 Unlocked Rewards
               </TYPE.body>
-              <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} margin="10px 0 0 0">
-                {fixedFormatting(vestableAmount, 18)} KNC
-              </TYPE.body>
+              {Object.keys(info).map(k => (
+                <TYPE.body color={theme.text11} fontWeight={'normal'} fontSize={18} key={k}>
+                  {fixedFormatting(info[k].vestableAmount, 18)} {k}
+                </TYPE.body>
+              ))}
 
               <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
-                {toUSD(vestableAmount)}
+                {formattedNum(unlockedUSD.toString(), true)}
               </TYPE.body>
             </div>
             <div>
@@ -243,7 +300,7 @@ const fixedFormatting = (value: BigNumber, decimals: number) => {
   return new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(6)
 }
 
-const Schedule = ({ schedule, index }: any) => {
+const Schedule = ({ schedule }: any) => {
   const theme = useContext(ThemeContext)
   const kncPrice = useKNCPrice()
   const toUSD = useCallback(
@@ -286,10 +343,10 @@ const Schedule = ({ schedule, index }: any) => {
     .mul(vestedAndVestablePercent)
     .div(100)
     .sub(BigNumber.from(schedule[3]))
-  console.log('====vestableAmount')
-  console.log(fixedFormatting(BigNumber.from(schedule[2]), 18))
-  console.log(fixedFormatting(BigNumber.from(schedule[3]), 18))
-  console.log(fixedFormatting(vestableAmount, 18))
+  // console.log('====vestableAmount')
+  // console.log(fixedFormatting(BigNumber.from(schedule[2]), 18))
+  // console.log(fixedFormatting(BigNumber.from(schedule[3]), 18))
+  // console.log(fixedFormatting(vestableAmount, 18))
   vestableAmount = vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
 
   const unvestableAmount = BigNumber.from(schedule[2])
@@ -301,9 +358,9 @@ const Schedule = ({ schedule, index }: any) => {
   const { vestAtIndex } = useVesting()
   const onVest = async () => {
     if (!chainId || !account) return
-    console.log('===vest', index)
+    console.log('===vest', schedule[4].address, schedule[5])
     setPendingTx(true)
-    await vestAtIndex(KNC[chainId].address, [index])
+    await vestAtIndex(schedule[4].address, [schedule[5]])
     setPendingTx(false)
   }
   return (
@@ -315,7 +372,7 @@ const Schedule = ({ schedule, index }: any) => {
       <AutoRow margin="0 0 20px 0" justify="space-between">
         <AutoRow gap={'5px'} style={{ flex: '2' }}>
           <TYPE.body color={theme.text11} fontWeight={600} fontSize={16}>
-            Rewards: {fixedFormatting(BigNumber.from(schedule[2]), 18)} KNC
+            Rewards: {fixedFormatting(BigNumber.from(schedule[2]), 18)} {getTokenSymbol(schedule[4], chainId)}
           </TYPE.body>
 
           <TYPE.body color={theme.text9} fontWeight={'normal'} fontSize={14}>
@@ -330,7 +387,7 @@ const Schedule = ({ schedule, index }: any) => {
         {!fullyVestedAlready && (
           <AutoRow gap={'5px'} style={{ flex: '1' }}>
             <Tag style={{ flex: '2', justifyContent: 'space-around' }}>
-              Unlocked: {fixedFormatting(vestableAmount, 18)} KNC
+              Unlocked: {fixedFormatting(vestableAmount, 18)} {getTokenSymbol(schedule[4], chainId)}
             </Tag>
 
             <ButtonPrimary height="30px" onClick={onVest} style={{ flex: '1' }}>
