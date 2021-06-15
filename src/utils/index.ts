@@ -42,12 +42,23 @@ export function isAddressString(value: any): string {
   }
 }
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]?: string } = {
-  1: '',
-  3: 'ropsten.',
-  4: 'rinkeby.',
-  5: 'goerli.',
-  42: 'kovan.'
+function getEtherscanDomain(chainId: ChainId): string {
+  switch (chainId) {
+    case ChainId.MAINNET:
+      return 'https://etherscan.io'
+    case ChainId.ROPSTEN:
+      return 'https://ropsten.etherscan.io'
+    case ChainId.RINKEBY:
+      return 'https://rinkeby.etherscan.io'
+    case ChainId.GÖRLI:
+      return 'https://goerli.etherscan.io'
+    case ChainId.KOVAN:
+      return 'https://kovan.etherscan.io'
+    case ChainId.MATIC:
+      return 'https://polygonscan.com'
+    case ChainId.MUMBAI:
+      return 'https://explorer-mumbai.maticvigil.com'
+  }
 }
 
 export function getEtherscanLink(
@@ -55,9 +66,7 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  const prefix = [1, 3, 4, 5, 42].includes(chainId)
-    ? `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
-    : `https://explorer-mumbai.maticvigil.com`
+  const prefix = getEtherscanDomain(chainId)
 
   switch (type) {
     case 'transaction': {
