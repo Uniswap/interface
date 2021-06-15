@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-14 18:04\n"
+"PO-Revision-Date: 2021-06-15 04:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1356,7 +1356,7 @@ msgstr "買うトークンは送信できません。買うトークンに問題
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "出力トークンは転送できません。出力トークンに問題がある可能性があります。注：転送およびリベーストークンの料金は、UniswapV3と互換性がありません。"
+msgstr "購入するトークンは転送できません。購入するトークンに問題がある可能性があります。注：転送時に手数料が発生およびリベースするトークンは、UniswapV3と互換性がありません。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
