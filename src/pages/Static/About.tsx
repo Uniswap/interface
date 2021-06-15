@@ -8,13 +8,13 @@ import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import LocalLoader from 'components/LocalLoader'
 import { ExternalLink } from 'theme'
 import { useGlobalData } from 'state/about/hooks'
-import { formattedNum } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId } from 'libs/sdk/src'
 import { DMM_ANALYTICS_URL, KNC } from '../../constants'
 import AccessLiquidity from '../../assets/svg/access-liquidity.svg'
 import Straightforward from '../../assets/svg/straightforward.svg'
 import NoRisk from '../../assets/svg/no-risk.svg'
+import { formatBigLiquidity } from 'utils/formatBalance'
 
 export default function About() {
   const { chainId } = useActiveWeb3React()
@@ -34,7 +34,9 @@ export default function About() {
       <div className={style.image2}></div>
       <div className={style.image3} style={{ bottom: `0` }}></div>
       <Text fontSize={[24, 58]} mt={[35, 150]}>
-        <Text fontWeight={300} color={'#ffffff'}>DeFi's First</Text>
+        <Text fontWeight={300} color={'#ffffff'}>
+          DeFi's First
+        </Text>
         <Text fontWeight={700}>
           <Text color={'#1183b7'} display={'inline-block'}>
             Dynamic&nbsp;
@@ -51,14 +53,14 @@ export default function About() {
         </Text>
       </Text>
       <Text px={4} mt={10} fontSize={[16, 21]} color={'#ffffff'}>
-        Providing frictionless crypto liquidity with high capital efficiency and dynamic fees
+        Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
       </Text>
 
       <div style={{ padding: '24px' }}>
         <div className={style.section_number}>
           <div>
             <Text fontSize={[24, 42]} fontWeight={[600, 700]} color="#FFFFFF">
-              {formattedNum(globalData.totalVolumeUSD, true)}
+              {formatBigLiquidity(globalData.totalVolumeUSD, 2, true)}
             </Text>
             <Text fontSize={14} mt={2}>
               Total Trading Volume
@@ -67,7 +69,7 @@ export default function About() {
           <div style={{ width: '0px', border: '1px solid #303e46' }}></div>
           <div>
             <Text fontSize={[24, 42]} fontWeight={[600, 700]} color="#FFFFFF" mt={[4, 0]}>
-              {formattedNum(globalData.totalLiquidityUSD, true)}
+              {formatBigLiquidity(globalData.totalLiquidityUSD, 2, true)}
             </Text>
             <Text fontSize={14} mt={2}>
               Total Value Locked
