@@ -130,7 +130,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.MATIC]: new Token(
     ChainId.MATIC,
-    KNC_ADDRESS, //TODO need to update
+    '0x1C954E8fe737F99f68Fa1CCda3e51ebDB291948C',
     18,
     'KNC',
     'Kyber Network Crystal'
