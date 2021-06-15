@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-14 18:04\n"
+"PO-Revision-Date: 2021-06-15 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -109,15 +109,15 @@ msgstr "<0>Επιστροφή στη </0>V3"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "<0>Tip:</0> Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive."
-msgstr "<0>Συμβουλή:</0> Η αφαίρεση διακριτικών ψηφοφορίας μετατρέπει τη θέση σας πίσω σε υποκείμενα διακριτικά με την τρέχουσα ισοτιμία, αναλογικά με το μερίδιό σας από την πισίνα. Τα δεδουλευμένα τέλη περιλαμβάνονται στα ποσά που λαμβάνετε."
+msgstr "<0>Συμβουλή:</0> Η αφαίρεση μάρκας από τη δεξαμενή οπισθοχωρεί την θέση σας σε υποκείμενες μάρκες στη τρέχουσα τιμή, αναλογικά με το μερίδιό σας στην δεξαμενή. Τα δεδουλευμένα τέλη περιλαμβάνονται στα ποσά που λαμβάνετε."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
-msgstr "<0> Συμβουλή:</0> Χρησιμοποιήστε αυτό το εργαλείο για να βρείτε ψηφοφορίες v2 που δεν εμφανίζονται αυτόματα στη διεπαφή."
+msgstr "<0> Συμβουλή:</0> Χρησιμοποιήστε αυτό το εργαλείο για να βρείτε δεξαμενές της v2 που δεν εμφανίζονται αυτόματα στη διεπαφή."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "<0>Tip:</0> When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time."
-msgstr "<0>Συμβουλή:</0> Όταν προσθέσετε ρευστότητα, θα λάβετε tokens πισίνας που αντιπροσωπεύουν τη θέση σας. Αυτές οι μάρκες κερδίζουν αυτόματα τέλη ανάλογα με το μερίδιό σας στην πισίνα, και μπορούν να εξαργυρωθούν ανά πάσα στιγμή."
+msgstr "<0>Συμβουλή:</0> Όταν προσθέσετε ρευστότητα, θα λάβετε μάρκες δεξαμενής που αντιπροσωπεύουν τη θέση σας. Αυτές οι μάρκες κερδίζουν αυτόματα τέλη ανάλογα με το μερίδιό σας στην πισίνα, και μπορούν να εξαργυρωθούν ανά πάσα στιγμή."
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0>Unlock voting</0> to prepare for the next proposal."
@@ -1026,7 +1026,7 @@ msgstr "Μόλις είστε ευχαριστημένοι με το ποσοσ�
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
-msgstr "Μόνο οι ψήφοι του UNI που ανατέθηκαν αυτοπροσώπως ή ανατέθηκαν σε άλλη διεύθυνση πριν από το μπλοκ {0} έχουν δικαίωμα ψήφου."
+msgstr "Μόνο οι ψήφοι UNI που ανατέθηκαν αυτοπροσώπως ή ανατέθηκαν σε άλλη διεύθυνση πριν από το μπλοκ {0} έχουν δικαίωμα ψήφου."
 
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
@@ -1356,7 +1356,7 @@ msgstr "Το διακριτικό αποτελέσματος δεν μπορεί
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Δεν είναι δυνατή η μεταφορά του διακριτικού εξόδου. Ενδέχεται να υπάρχει πρόβλημα με το διακριτικό εξόδου. Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+msgstr "Δεν είναι δυνατή η μεταφορά της μάρκας αποτελέσματος. Ενδέχεται να υπάρχει πρόβλημα με τη μάρκα αποτελέσματος. Σημείωση: οι χρεώσεις μεταφοράς και οι μάρκες rebase δεν είναι συμβατές με το Uniswap V3."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
