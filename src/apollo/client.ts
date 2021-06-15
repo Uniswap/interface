@@ -47,7 +47,7 @@ export const mainnetBlockClient = new ApolloClient({
 })
 
 export const maticBlockClient = new ApolloClient({
-  uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
+  uri: 'https://api.thegraph.com/subgraphs/name/ord786/matic-blocks',
   cache: new InMemoryCache()
 })
 
