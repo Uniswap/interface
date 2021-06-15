@@ -349,7 +349,7 @@ export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '0x20df3fcF8B90C54c29fb0f4Ff83121381f5fDBE3',
+  [ChainId.ROPSTEN]: '0x97D0308d0174FB088F2BfDb3e365Eec8E9DC1666',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',

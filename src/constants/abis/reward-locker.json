@@ -62,6 +62,17 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "index", "type": "uint256" },
+      { "indexed": true, "internalType": "contract IERC20Ext", "name": "token", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "beneficiary", "type": "address" },
+      { "indexed": false, "internalType": "uint256", "name": "quantity", "type": "uint256" }
+    ],
+    "name": "VestingEntryQueued",
+    "type": "event"
+  },
+  {
     "inputs": [
       { "internalType": "address", "name": "", "type": "address" },
       { "internalType": "contract IERC20Ext", "name": "", "type": "address" }
@@ -159,7 +170,7 @@
     ],
     "name": "lock",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -171,7 +182,7 @@
     ],
     "name": "lockWithStartBlock",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -233,12 +244,40 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "contract IERC20Ext[]", "name": "tokens", "type": "address[]" }],
+    "name": "vestCompletedSchedulesForMultipleTokens",
+    "outputs": [{ "internalType": "uint256[]", "name": "vestedAmounts", "type": "uint256[]" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
       { "internalType": "contract IERC20Ext", "name": "token", "type": "address" },
       { "internalType": "uint256[]", "name": "indexes", "type": "uint256[]" }
     ],
-    "name": "vestScheduleAtIndex",
+    "name": "vestScheduleAtIndices",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract IERC20Ext[]", "name": "tokens", "type": "address[]" },
+      { "internalType": "uint256[]", "name": "indices", "type": "uint256[]" }
+    ],
+    "name": "vestScheduleForMultipleTokensAtIndices",
+    "outputs": [{ "internalType": "uint256[]", "name": "vestedAmounts", "type": "uint256[]" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "contract IERC20Ext[]", "name": "tokens", "type": "address[]" },
+      { "internalType": "uint256", "name": "startIndex", "type": "uint256" },
+      { "internalType": "uint256", "name": "endIndex", "type": "uint256" }
+    ],
+    "name": "vestScheduleForMultipleTokensInRange",
+    "outputs": [{ "internalType": "uint256[]", "name": "vestedAmounts", "type": "uint256[]" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },

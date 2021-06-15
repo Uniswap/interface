@@ -311,6 +311,7 @@ export function useCurrencyConvertedToNative(currency?: Currency): Currency | un
 export function useFarmRewards(farms?: Farm[]): Reward[] {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokens()
+
   const allTokens = useAllTokens()
 
   if (!farms) {
@@ -356,7 +357,8 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
 
     if (
       ethPrice.currentPrice &&
-      reward.token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
+      (reward.token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase() ||
+        reward.token.address.toLowerCase() === ZERO_ADDRESS.toLowerCase())
     ) {
       total += parseFloat(getFullDisplayBalance(reward.amount)) * parseFloat(ethPrice.currentPrice)
     }
@@ -401,4 +403,15 @@ export function useFarmRewardPerBlocks(farms?: Farm[]): Reward[] {
   }, initialRewardPerBlocks)
 
   return farmRewardPerBlocks
+}
+
+export function useRewardTokensFullInfo(): Token[] {
+  const { chainId } = useActiveWeb3React()
+  const rewardTokens = useRewardTokens()
+  const allTokens = useAllTokens()
+  return rewardTokens.map(address =>
+    address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
+      ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, 'ETH', 'Ether')
+      : allTokens[address]
+  )
 }
