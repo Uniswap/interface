@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-15 15:04\n"
+"PO-Revision-Date: 2021-06-15 18:06\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -224,7 +224,7 @@ msgstr "Ποσό"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Παρουσιάστηκε σφάλμα κατά την προσπάθεια εκτέλεσης αυτής της ανταλλαγής. Ίσως χρειαστεί να αυξήσετε την ανοχή ολίσθησης. Εάν αυτό δεν λειτουργεί, μπορεί να υπάρχει ασυμβατότητα με το διακριτικό που διαπραγματεύεστε. Σημείωση τέλος για τα διακριτικά μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+msgstr "Παρουσιάστηκε σφάλμα κατά την προσπάθεια εκτέλεσης αυτής της ανταλλαγής. Ίσως χρειαστεί να αυξήσετε την ανοχή ολίσθησης. Εάν αυτό δεν λειτουργεί, μπορεί να υπάρχει ασυμβατότητα με τη μάρκα που διαπραγματεύεστε. Σημείωση: οι χρεώσεις κατά την μεταφορά και οι μάρκες rebase είναι ασύμβατες με το Uniswap V3."
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -1291,7 +1291,7 @@ msgstr "Απλό"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr ""
+msgstr "Ανοχή ολίσθησης"
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1388,11 +1388,11 @@ msgstr "Αυτό το εργαλείο θα μεταφέρει με ασφάλε
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr ""
+msgstr "Αυτή η συναλλαγή δεν θα πετύχει λόγω της μεταβολής των τιμών. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης. Σημείωση: οι χρεώσεις μεταφοράς και οι μάρκες rebase δεν είναι συμβατές με το Uniswap V3."
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
-msgstr ""
+msgstr "Αυτή η συναλλαγή δεν θα πετύχει είτε λόγω της κίνησης των τιμών είτε της χρέωσης κατά τη μεταφορά. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
@@ -1527,7 +1527,7 @@ msgstr "Άγνωστη πηγή"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Άγνωστο σφάλμα{0}. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+msgstr "Άγνωστο σφάλμα{0}. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης Σημείωση: οι χρεώσεις μεταφοράς και οι rebase μάρκες δεν είναι συμβατές με το Uniswap V3."
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
