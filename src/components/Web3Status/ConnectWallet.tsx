@@ -176,6 +176,7 @@ export const ConnectWallet = ({setModal, tryActivation}: ConnectWalletProps) => 
       <StyledPopover
         content={<List>{getOptions()}</List>}
         show={walletSwitcherPopoverOpen}
+        offsetX={17}
       >
         <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
           {t('Connect wallet')}
