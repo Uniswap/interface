@@ -35,7 +35,8 @@ const OptionGrid = styled.div`
     `};
 `
 
-const PopoverFooter = styled.div`
+const ChangeWalletButton = styled.button`
+  width: 100%;
   padding: 20px 18px;
   font-weight: bold;
   font-size: 11px;
@@ -45,15 +46,16 @@ const PopoverFooter = styled.div`
   text-transform: uppercase;
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg1And2};
+  border: none;
+  cursor: pointer;
 `;
 
 interface NetworkSwitcherPopoverProps {
   children: ReactNode;
-  offsetX?: number;
 }
 
-export default function NetworkSwitcherPopover({ children, offsetX}: NetworkSwitcherPopoverProps) {
-  const { connector } = useActiveWeb3React()
+export default function NetworkSwitcherPopover({ children}: NetworkSwitcherPopoverProps) {
+  const { connector, chainId, account } = useActiveWeb3React()
   const networkSwitcherPopoverOpen = useModalOpen(ApplicationModal.NETWORK_SWITCHER)
   const popoverRef = useRef(null)
   const closeModals = useCloseModals()
@@ -61,7 +63,6 @@ export default function NetworkSwitcherPopover({ children, offsetX}: NetworkSwit
     if (networkSwitcherPopoverOpen) closeModals()
   })
 
-  const { chainId, account } = useActiveWeb3React()
 
   const selectNetwork = useCallback(
     (optionChainId: ChainId) => {
@@ -90,7 +91,8 @@ export default function NetworkSwitcherPopover({ children, offsetX}: NetworkSwit
   return (
     <div ref={popoverRef}>
       <StyledPopover
-        offsetX={offsetX}
+        placement="bottom-end"
+        offsetX={40}
         content={
           <>
             <OptionGrid>
@@ -119,7 +121,7 @@ export default function NetworkSwitcherPopover({ children, offsetX}: NetworkSwit
                 comingSoon
               />
             </OptionGrid>
-            <PopoverFooter>change wallet</PopoverFooter>
+            <ChangeWalletButton>Change wallet</ChangeWalletButton>
           </>
         }
         show={networkSwitcherPopoverOpen}
