@@ -137,7 +137,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.MUMBAI]: new Token(
     ChainId.MUMBAI,
-    KNC_ADDRESS, //TODO need to update
+    '0xFD1f9381Cb641Dc76Fe8087dbcf8ea84a2c77cbE',
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -344,7 +344,7 @@ export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
   [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: ''
+  [ChainId.MUMBAI]: '0xDF79298D220934a6bb7c6647553733d25A837c78'
 }
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
@@ -354,7 +354,7 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
   [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: ''
+  [ChainId.MUMBAI]: '0x865CCCCEab0d73d361efC02D89D1B9D87905957b'
 }
 
 export const FARM_DEPOSIT_TOPIC: { [chainId in ChainId]: string } = {
