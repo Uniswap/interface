@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Simplified\n"
-"PO-Revision-Date: 2021-06-15 19:05\n"
+"PO-Revision-Date: 2021-06-15 23:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -180,11 +180,11 @@ msgstr "注入 {0} {1} 和 {2} {3}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
-msgstr "注入{0}-{1}流动资金"
+msgstr "注入 {0}-{1} 流动资金"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add {0}/{1} V3 liquidity"
-msgstr "添加{0}/{1} V3流动性"
+msgstr "注入 {0}/{1} V3 流动资金"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
@@ -276,7 +276,7 @@ msgstr "自动"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "可存款的数额：{0}"
+msgstr "可调用的数额：{0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -292,7 +292,7 @@ msgstr "余额：{0} {1}"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for exotic pairs."
-msgstr "适合外来货币对。"
+msgstr "较适合低交易量的币对。"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
@@ -308,7 +308,7 @@ msgstr "已屏蔽地址"
 
 #: src/components/PositionCard/index.tsx
 msgid "By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity."
-msgstr "通过注入流动性，您将按您在流动池中所占份额赚取对应交易量的0.3%手续费。手续费将实时累计，添加到流动池中，您可以通过赎回您的流动资金将手续费也赎回。"
+msgstr "通过注入流动资金，您将按您在流动池中所占份额赚取对应交易量的0.3%手续费。手续费将实时累计，添加到流动池中，您可以通过赎回您的流动资金将手续费也赎回。"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "By adding this list you are implicitly trusting that the data is correct. Anyone can create a list, including creating fake versions of existing lists and lists that claim to represent projects that do not have one."
@@ -783,7 +783,7 @@ msgstr "正在初始化..."
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
-msgstr "输入为估计值。您最多会售出<0>{0} {1}</0> 否则交易复原。"
+msgstr "输入数额仅为估值。您最多会售出<0>{0} {1}</0> 否则将还原交易。"
 
 #: src/components/WalletModal/index.tsx
 msgid "Install Metamask"
@@ -1039,11 +1039,11 @@ msgstr "超出范围"
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Output is estimated. If the price changes by more than {0}% your transaction will revert."
-msgstr "输出为估计值。如果兑换率变化超过{0}%，您的交易将复原。"
+msgstr "输出数额仅为估值。如果兑换率变化超过 {0}%，您的交易将会还原。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output is estimated. You will receive at least <0>{0} {1}</0> or the transaction will revert."
-msgstr "输出为估计值。您将收到至少<0>{0} {1}</0> ，否则交易将复原。"
+msgstr "输出数额仅为估值。您将收到至少 <0>{0} {1}</0> 代币，否则将还原交易。"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Output will be sent to <0>{0}</0>"
@@ -1352,11 +1352,11 @@ msgstr "市场兑换率超出您指定的范围。将只注入单项代币。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "产出无法进行转账。输出代币可能遇到问题。"
+msgstr "输出代币无法进行转账。输出代币可能有些问题。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "无法传输输出令牌。输出令牌可能有问题。注意：转账和 rebase 代币的费用与 Uniswap V3 不兼容。"
+msgstr "无法对输出代币进行转账。输出代币可能有些问题。注：转账时额外抽取费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
@@ -1388,7 +1388,7 @@ msgstr "该工具将安全地将您的 {0} 流动资金迁移到 V3。该过程�
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "由于价格变动，此交易不会成功。尝试增加您的滑点容忍度。注意：转账和 rebase 代币的费用与 Uniswap V3 不兼容。"
+msgstr "由于兑换率变动，此交易将不会成功。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
@@ -1527,7 +1527,7 @@ msgstr "未知来源"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "未知错误{0}。尝试增加您的滑点容忍度。注意：转账和 rebase 代币的费用与 Uniswap V3 不兼容。"
+msgstr "未知错误{0}。尝试增加您的滑点容差。注：转账时额外抽取费用（fee-on-transfer）的代币和会自动重新定价（rebase）的代币都与Uniswap V3不兼容。"
 
 #: src/pages/Vote/VotePage.tsx
 #: src/pages/Vote/index.tsx
