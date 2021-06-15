@@ -7,6 +7,14 @@ export const MUMBAI_TOKEN_LIST = {
   tokens: [
     {
       chainId: 80001,
+      address: '0xFD1f9381Cb641Dc76Fe8087dbcf8ea84a2c77cbE',
+      symbol: 'KNC',
+      name: 'Kyber Network Crystal',
+      decimals: 18,
+      logoURI: getTokenLogoURL('0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202')
+    },
+    {
+      chainId: 80001,
       address: '0x2CeC76B26A8d96BF3072D34A01BB3a4edE7c06BE',
       symbol: 'USDC',
       name: 'USDC',
