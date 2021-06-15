@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: German\n"
-"PO-Revision-Date: 2021-06-14 20:05\n"
+"PO-Revision-Date: 2021-06-15 06:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -638,7 +638,7 @@ msgstr "Verdiente UNI-Token repräsentieren Stimmanteile an der Uniswap-Governan
 
 #: src/state/burn/v3/hooks.ts
 msgid "Enter a percent"
-msgstr "Geben Sie einen Prozentwert ein"
+msgstr "Prozentwert eingeben"
 
 #: src/state/swap/hooks.ts
 msgid "Enter a recipient"
