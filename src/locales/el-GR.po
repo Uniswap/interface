@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-15 07:06\n"
+"PO-Revision-Date: 2021-06-15 08:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1261,7 +1261,7 @@ msgstr "Αυτοπροσώπως"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
-msgstr "Ίδιος Εκπρόσωπος"
+msgstr "Ανάθεση στον εαυτό μου"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1270,15 +1270,15 @@ msgstr "Ορισμός Εύρους Τιμών"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
-msgstr "Ορισμός Τιμής Έναρξης"
+msgstr "Ορισμός Τιμής Εκκίνησης"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
-msgstr "Μοιραστείτε την ψηφοφορία"
+msgstr "Μερίδιο από τη Δεξαμενή"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "Μοιραστείτε την ψηφοφορία:"
+msgstr "Μερίδιο από τη Δεξαμενή:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
@@ -1291,7 +1291,7 @@ msgstr "Απλό"
 #: src/components/TransactionSettings/index.tsx
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Slippage tolerance"
-msgstr "Περιθώριο διαφοράς κόστους συναλλαγής"
+msgstr ""
 
 #: src/components/swap/UnsupportedCurrencyFooter.tsx
 msgid "Some assets are not available through this interface because they may not work well with the smart contracts or we are unable to allow trading for legal reasons."
@@ -1307,11 +1307,11 @@ msgstr "Βήμα 1. Πάρτε τα διακριτικά ρευστότητας 
 
 #: src/components/vote/VoteModal.tsx
 msgid "Submitting Vote"
-msgstr "Υποβολή Ψήφου"
+msgstr "Γίνεται υποβολή ψήφου"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supply"
-msgstr "Προμήθεια"
+msgstr "Παροχή"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Supplying {0} {1} and {2} {3}"
@@ -1340,11 +1340,11 @@ msgstr "Σας ευχαριστούμε που συμμετείχατε στην
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "Το αμετάβλητο Uniswap x * y = k δεν ικανοποιήθηκε από την ανταλλαγή. Αυτό συνήθως σημαίνει ότι ένα από τα διακριτικά που ανταλλάσσετε περιλαμβάνει προσαρμοσμένη συμπεριφορά κατά τη μεταφορά."
+msgstr "Το αμετάβλητο Uniswap x * y = k δεν ικανοποιήθηκε από την ανταλλαγή. Αυτό συνήθως σημαίνει ότι μία από τις μάρκες που ανταλλάσσετε περιλαμβάνει προσαρμοσμένη συμπεριφορά κατά τη μεταφορά."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
-msgstr "Δεν είναι δυνατή η μεταφορά του διακριτικού εισαγωγής. Ενδέχεται να υπάρχει πρόβλημα με το διακριτικό εισαγωγής."
+msgstr "Δεν είναι δυνατή η μεταφορά της μάρκας εισαγωγής. Ενδέχεται να υπάρχει πρόβλημα με τη μάρκα εισαγωγής."
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
@@ -1352,7 +1352,7 @@ msgstr "Η αγοραία τιμή είναι εκτός του εύρους τ�
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "Το διακριτικό αποτελέσματος δεν μπορεί να μεταφερθεί. Ενδέχεται να υπάρχει ένα ζήτημα με το διακριτικό αποτελέσματος."
+msgstr "Η μάρκα αποτελέσματος δεν μπορεί να μεταφερθεί. Ενδέχεται να υπάρχει ένα ζήτημα με τη μάρκα αποτελέσματος."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1360,15 +1360,15 @@ msgstr "Δεν είναι δυνατή η μεταφορά της μάρκας �
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "Η τιμή αυτής της ψηφοφορίας είναι εκτός του επιλεγμένου εύρους. Η θέση σας δεν κερδίζει επί του παρόντος χρεώσεις."
+msgstr "Η τιμή αυτής της δεξαμενής είναι εκτός του επιλεγμένου εύρους. Η θέση σας δεν κερδίζει επί του παρόντος χρεώσεις."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "Η τιμή αυτής της ψηφοφορίας είναι εντός του επιλεγμένου εύρους. Η θέση σας κερδίζει επί του παρόντος χρεώσεις."
+msgstr "Η τιμή αυτής της δεξαμενής είναι εντός του επιλεγμένου εύρους. Η θέση σας κερδίζει επί του παρόντος χρεώσεις."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
-msgstr "Η αναλογία των διακριτικών που προσθέτετε θα ορίσει την τιμή αυτής της ψηφοφορίας."
+msgstr "Η αναλογία των διακριτικών που προσθέτετε θα ορίσει την τιμή αυτής της δεξαμενής."
 
 #: src/hooks/useSwapCallback.ts
 msgid "The transaction could not be sent because the deadline has passed. Please check that your transaction deadline is not too low."
@@ -1376,11 +1376,11 @@ msgstr "Δεν ήταν δυνατή η αποστολή της συναλλαγ
 
 #: src/components/SearchModal/CommonBases.tsx
 msgid "These tokens are commonly paired with other tokens."
-msgstr "Αυτά τα διακριτικά δεν συνδυάζονται συνήθως με αλλά διακριτικά."
+msgstr "Αυτές οι μάρκες δεν συνδυάζονται συνήθως με αλλά μάρκες."
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "This token doesn't appear on the active token list(s). Make sure this is the token that you want to trade."
-msgstr "Αυτό το διακριτικό δεν εμφανίζεται στην(ις) ενεργή (ές) λίστα(ες). Βεβαιωθείτε ότι αυτό είναι το διακριτικό που θέλετε να διαπραγματευτείτε."
+msgstr "Αυτή η μάρκα δεν εμφανίζεται στην(ις) ενεργή (ές) λίστα(ες). Βεβαιωθείτε ότι αυτή είναι η μάρκα που θέλετε να διαπραγματευτείτε."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
@@ -1388,15 +1388,15 @@ msgstr "Αυτό το εργαλείο θα μεταφέρει με ασφάλε
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "Αυτή η συναλλαγή δεν θα πετύχει λόγω της μεταβολής των τιμών. Δοκιμάστε να αυξήσετε την ανοχή ολίσθησης Σημείωση: τα τέλη μεταφοράς και επαναφοράς δεν είναι συμβατά με το Uniswap V3."
+msgstr ""
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance."
-msgstr "Αυτή η συναλλαγή δεν θα πετύχει είτε λόγω της μεταβολής των τιμών είτε των χρεώσεων κατά τη μεταφορά. Δοκιμάστε να αυξήσετε το περιθώριο διαφοράς κόστους συναλλαγής."
+msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Tip: Custom tokens are stored locally in your browser"
-msgstr "Συμβουλή: Τα προσαρμοσμένα διακριτικά αποθηκεύονται τοπικά στο πρόγραμμα περιήγησης σας"
+msgstr "Συμβουλή: Οι προσαρμοσμένες μάρκες αποθηκεύονται τοπικά στο πρόγραμμα περιήγησης σας"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1405,23 +1405,23 @@ msgstr "'Ως"
 
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
-msgstr "Έως (τουλάχιστον)"
+msgstr "Έως (από το ελάχιστο)"
 
 #: src/components/Settings/index.tsx
 msgid "Toggle Expert Mode"
-msgstr "Εναλλαγή Λειτουργίας Ειδικών"
+msgstr "Λειτουργία Εναλλαγής Εμπειρογνωμόνων"
 
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
-msgstr "Διακριτικά"
+msgstr "Μάρκες"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Tokens from inactive lists. Import specific tokens below or click Manage to activate more lists."
-msgstr "Διακριτικά από ανενεργές λίστες. Εισαγάγετε συγκεκριμένα διακριτικά παρακάτω ή κάντε κλικ στην επιλογή Διαχείριση για να ενεργοποιήσετε περισσότερες λίστες."
+msgstr "Μάρκες από ανενεργές λίστες. Εισαγάγετε συγκεκριμένες μάρκες παρακάτω ή κάντε κλικ στην επιλογή Διαχείριση για να ενεργοποιήσετε περισσότερες λίστες."
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Top pools"
-msgstr "Κορυφαίες ψηφοφορίες"
+msgstr "Κορυφαίες δεξαμενές"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "Total Supply"
@@ -1474,15 +1474,15 @@ msgstr "Τιμή UNI:"
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
-msgstr "Τα διακριτικά UNI αντιπροσωπεύουν μετοχές με ψήφους στη διακυβέρνηση Uniswap. Μπορείτε να ψηφίσετε μόνοι σας για κάθε πρόταση ή να αναθέσετε τις ψήφους σας σε ένα τρίτο μέρος."
+msgstr "Οι μάρκες UNI αντιπροσωπεύουν μετοχές με ψήφους στη διακυβέρνηση Uniswap. Μπορείτε να ψηφίσετε μόνοι σας για κάθε πρόταση ή να αναθέσετε τις ψήφους σας σε ένα τρίτο μέρος."
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "UNI {0}/{1} Burned"
-msgstr "UNI {0}/{1} Χρησιμοποιήθηκαν"
+msgstr "UNI {0}/{1} \"Κάηκαν\""
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 LP tokens are required. Once you've added liquidity to the {0}-{1} pool you can stake your liquidity tokens on this page."
-msgstr "Απαιτούνται διακριτικά UNI-V2 LP από τη στιγμή που έχετε προσθέσει ρευστότητα στο {0}-{1} pool μπορείτε να ποντάρετε τα διακριτικά ρευστότητας σας σε αυτή τη σελίδα."
+msgstr "Απαιτούνται μάρκες UNI-V2 παρόχου ρευστότητας (LP). Μόλις έχετε προσθέσει ρευστότητα στη {0}-{1} δεξαμενή μπορείτε να ποντάρετε τις μάρκες ρευστότητας σας σε αυτή τη σελίδα."
 
 #: src/pages/Earn/Manage.tsx
 msgid "UNI-V2 {0}-{1}"
@@ -1523,7 +1523,7 @@ msgstr "Σύμβαση μετεγκατάστασης Uniswap↗"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
-msgstr "Αγνωστη πηγή"
+msgstr "Άγνωστη πηγή"
 
 #: src/hooks/useSwapCallback.ts
 msgid "Unknown error{0}. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1558,7 +1558,7 @@ msgstr "Ξεδιπλώνω"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
-msgstr "Ενημέρωση Αντιπροσωπείας"
+msgstr "Ενημέρωση Ανάθεσης"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Update list"
@@ -1583,11 +1583,11 @@ msgstr "V3 {0} Τιμή:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
-msgstr "Προβολή UNI Analytics"
+msgstr "Προβολή Αναλυτικής UNI"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
-msgstr "Προβολή V2 Ρευστότητας"
+msgstr "Προβολή Ρευστότητας V2"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
@@ -1646,7 +1646,7 @@ msgstr "Αναμονή Επιβεβαίωσης"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
-msgstr "Εβδομαδιαίες Ανταμοιβές"
+msgstr "Εβδομαδιαίες Επιβραβεύσεις"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Welcome to team Unicorn :)"
@@ -1654,7 +1654,7 @@ msgstr "Καλώς ήρθατε στην ομάδα Unicorn :)"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "Όταν διεκδικείτε χωρίς ανάληψη, η ρευστότητά σας παραμένει στο χώρο θήρευσης των ψηφοφοριών."
+msgstr "Όταν διεκδικείτε χωρίς ανάληψη, η ρευστότητά σας παραμένει στη δεξαμενή εξόρυξης."
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
@@ -1662,7 +1662,7 @@ msgstr "Όταν πραγματοποιήσετε ανάληψη, η σύμβα�
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "Όταν πραγματοποιείτε ανάληψη, τα UNI σας διεκδικούνται και η ρευστότητά σας αφαιρείται από την θήρευση ψηφοφορίας."
+msgstr "Όταν πραγματοποιείτε ανάληψη, τα UNI σας διεκδικούνται και η ρευστότητά σας αφαιρείται από τη δεξαμενή εξόρυξης."
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1717,7 +1717,7 @@ msgstr "Τώρα μπορείτε να διαπραγματευτείτε {0}"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "You don’t have liquidity in this pool yet."
-msgstr "Δεν έχετε ακόμα ρευστότητα σε αυτή την ψηφοφορία."
+msgstr "Δεν έχετε ακόμα ρευστότητα σε αυτή την δεξαμενή."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You must connect an account."
@@ -1725,7 +1725,7 @@ msgstr "Πρέπει να συνδέσετε ένα λογαριασμό."
 
 #: src/pages/Swap/index.tsx
 msgid "You must give the Uniswap smart contracts permission to use your {0}. You only have to do this once per token."
-msgstr "Πρέπει να δώσετε στο έξυπνο συμβόλαιο Uniswap άδεια για να χρησιμοποιήσει το {0} σας. Πρέπει να το κάνετε αυτό μία φορά ανά διακριτικό."
+msgstr "Πρέπει να δώσετε στο έξυπνο συμβόλαιο Uniswap άδεια για να χρησιμοποιήσει το {0} σας. Πρέπει να το κάνετε αυτό μία φορά ανά μάρκα."
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
@@ -1764,7 +1764,7 @@ msgstr "Η ρευστότητά σας θα κερδίσει χρεώσεις μ
 #: src/components/PositionCard/index.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your pool share:"
-msgstr "Μοιραστείτε την ψηφοφορία σας:"
+msgstr "Το μερίδιό σας από την δεξαμενή:"
 
 #: src/components/PositionCard/index.tsx
 msgid "Your position"
@@ -1801,7 +1801,7 @@ msgstr "Η τιμή σας"
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Your total pool tokens:"
-msgstr "Τα συνολικά διακριτικά της ψηφοφορίας σας:"
+msgstr "Οι συνολικές μάρκες της δεξαμενής σας:"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your transaction cost will be much higher as it includes the gas to create the pool."
@@ -1857,7 +1857,7 @@ msgstr "μέσω {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "via {0} token list"
-msgstr "μέσω {0} λίστας διακριτικών"
+msgstr "μέσω {0} λίστας μάρκας"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, one {Import token} other {Import tokens}}"
@@ -1876,7 +1876,7 @@ msgstr "{0} <0/> ανά <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
-msgstr "{0} Προσαρμοσμένα Διακριτικά"
+msgstr "{0} Προσαρμοσμένες Μάρκες"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
@@ -1920,7 +1920,7 @@ msgstr "{0} UNI-V2"
 
 #: src/pages/Earn/Manage.tsx
 msgid "{0} UNI-V2 LP tokens available"
-msgstr "{0} διαθέσιμα διακριτικά UNI-V2 LP"
+msgstr "{0} διαθέσιμες μάρκες UNI-V2 LP"
 
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
@@ -1947,7 +1947,7 @@ msgstr "{0} τιμή"
 #: src/components/SearchModal/ManageLists.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "{0} tokens"
-msgstr "{0} διακριτικά"
+msgstr "{0} μάρκες"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1979,7 +1979,7 @@ msgstr "{0}/{1} LP NFT"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
-msgstr "{0}/{1} Διακριτικά LP"
+msgstr "{0}/{1} Μάρκες Παρόχου Ρευστότητας (LP)"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "{SOCKS_AMOUNT} UNI"
