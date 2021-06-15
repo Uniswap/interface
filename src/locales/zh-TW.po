@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Chinese Traditional\n"
-"PO-Revision-Date: 2021-06-15 15:04\n"
+"PO-Revision-Date: 2021-06-15 23:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -208,7 +208,7 @@ msgstr "允許高兌換率影響的交易，並跳過確認步驟。須自行承
 
 #: src/pages/Swap/index.tsx
 msgid "Allow the Uniswap Protocol to use your {0}"
-msgstr "允許 Uniswap 協議使用您的 {0}"
+msgstr "允許 Uniswap 使用您的 {0}"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Allowed"
@@ -224,7 +224,7 @@ msgstr "數額"
 
 #: src/hooks/useSwapCallback.ts
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note fee on transfer and rebase tokens are incompatible with Uniswap V3."
-msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限製。如果還是不行，則可能是您正在交易的代幣與 Uniswap 不相容。註：轉賬時帶扣除費用（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與Uniswap V3不兼容。"
+msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限製。如果還是不行，則可能是您正在交易的代幣與 Uniswap 不相容。註：轉帳額外抽取手續費（fee-on-transfer）的代幣和會自動重新定價（rebase）的代幣都與 Uniswap V3 不相容。"
 
 #: src/components/Menu/index.tsx
 msgid "Analytics"
@@ -264,7 +264,7 @@ msgstr "您確定嗎？"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "作為 Uniswap 社群的成員，您可以認領 UNI 代幣，用於投票和治理。<0/><1/><2>閱讀更多關於 UNI 的訊息</2>"
+msgstr "作為 Uniswap 社群的成員，您可以認領 UNI 代幣，用於投票和治理。<0/><1/><2>閱讀更多關於 UNI 代幣的訊息</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -351,7 +351,7 @@ msgstr "領取 UNI 代幣"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "Claim accumulated UNI rewards"
-msgstr "領取累積的 UNI 獎勵"
+msgstr "領取累積的 UNI 代幣獎勵"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Claim fees"
@@ -368,7 +368,7 @@ msgstr "已領取"
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claimed UNI!"
-msgstr "已領取 UNI！"
+msgstr "已領取 UNI 代幣！"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claiming"
@@ -376,12 +376,12 @@ msgstr "領取中"
 
 #: src/components/Header/index.tsx
 msgid "Claiming UNI"
-msgstr "正在領取 UNI"
+msgstr "正在領取 UNI 代幣"
 
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 msgid "Claiming {0} UNI"
-msgstr "正在領取 {0} UNI"
+msgstr "正在領取 {0} UNI 代幣"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Clear All"
@@ -513,7 +513,7 @@ msgstr "複製地址"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
-msgstr "創建流動池和供應"
+msgstr "創建流動池和供應流動資金"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/pages/Pool/v2.tsx
@@ -566,11 +566,11 @@ msgstr "委托投票"
 #: src/components/earn/StakingModal.tsx
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit"
-msgstr "存款"
+msgstr "充值"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "存款數額"
+msgstr "充值數額"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
@@ -602,7 +602,7 @@ msgstr "描述"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Detailed"
-msgstr "詳細"
+msgstr "詳細信息"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "Details"
@@ -630,7 +630,7 @@ msgstr "文檔"
 
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
-msgstr "看不到您的一些 v2 流動資金嗎？<0>將它手動匯入。</0>"
+msgstr "看不到您的一些 v2 流動資金嗎？<0>將它手動導入。</0>"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Earned UNI tokens represent voting shares in Uniswap governance."
@@ -687,7 +687,7 @@ msgstr "連接錯誤。請嘗試刷新頁面。"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
-msgstr "匯入列表時出錯"
+msgstr "導入列表時出錯"
 
 #: src/components/SearchModal/CurrencyList.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -699,7 +699,7 @@ msgstr "“專家模式”將解除確認交易的提示，並允許兌換率高
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "在 Uniswap 分析中探索較受歡迎的流動池。"
+msgstr "在 Uniswap 數據分析中探索較受歡迎的流動池。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -716,11 +716,11 @@ msgstr "對於下面顯示的每個流動池，單擊“遷移”以從 Uniswap 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/Swap/index.tsx
 msgid "From"
-msgstr "自"
+msgstr "源自"
 
 #: src/pages/Swap/index.tsx
 msgid "From (at most)"
-msgstr "自 (最多)"
+msgstr "來源 (最多為)"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Get support on Discord"
@@ -747,23 +747,23 @@ msgstr "如果您從這個代幣列表中購買代幣，您可能無法再將其
 #: src/components/SearchModal/ImportToken.tsx
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Import"
-msgstr "匯入"
+msgstr "導入"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import List"
-msgstr "匯入列表"
+msgstr "導入代幣列表"
 
 #: src/pages/Pool/v2.tsx
 msgid "Import Pool"
-msgstr "匯入流動池"
+msgstr "導入流動池"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Import V2 Pool"
-msgstr "匯入 V2 流動池"
+msgstr "導入 V2 流動池"
 
 #: src/components/SearchModal/ImportList.tsx
 msgid "Import at your own risk"
-msgstr "自行承擔匯入的風險"
+msgstr "自行承擔導入的風險"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "In range"
@@ -791,11 +791,11 @@ msgstr "安裝Metamask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
-msgstr "現有流動資金不足以支持此交易。"
+msgstr "現有流動量不足以支持此交易。"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade. Try enabling multi-hop trades."
-msgstr "現有流動資金不足以支持此交易。請嘗試啟用“多節點”（多跳式）交易途徑。"
+msgstr "現有流動量不足以支持此交易。請嘗試啟用“多節點”（多跳式）交易途徑。"
 
 #: src/state/mint/hooks.ts
 #: src/state/mint/hooks.ts
@@ -829,7 +829,7 @@ msgstr "選擇的範圍無效。最小兌換率必須低於最大兌換率。"
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
-msgstr "無效的接收者"
+msgstr "無效的接收方"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
@@ -1257,7 +1257,7 @@ msgstr "選定範圍"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
-msgstr "自我"
+msgstr "自身"
 
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
@@ -1340,7 +1340,7 @@ msgstr "感謝您加入 Uniswap 社區 <0/>"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
-msgstr "兌換交易不滿足 Uniswap 不變量 x*y=k 的要求。這通常意味著您要兌換的代幣之一在代幣轉賬過程中帶有一些自定義代幣合約特性。"
+msgstr "兌換交易不滿足 Uniswap 不變量 X × Y = K 的要求。這通常意味著您要兌換的代幣之一在代幣轉賬過程中帶有一些自定義代幣合約特性。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The input token cannot be transferred. There may be an issue with the input token."
@@ -1384,7 +1384,7 @@ msgstr "此代幣未出現在激活的代幣列表中。請確保這是您想要
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "This tool will safely migrate your {0} liquidity to V3. The process is completely trustless thanks to the"
-msgstr "該工具將安全地將您的 {0} 流動資金遷移到 V3。該過程完全去信任，得益於"
+msgstr "該工具將安全地將您的 {0} 流動資金遷移到 V3。該過程完全不依賴任何信任需求"
 
 #: src/hooks/useSwapCallback.ts
 msgid "This transaction will not succeed due to price movement. Try increasing your slippage tolerance. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1466,11 +1466,11 @@ msgstr "UNI 代幣已到賬"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI in circulation:"
-msgstr "流通中的 UNI："
+msgstr "流通中的 UNI 代幣："
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "UNI price:"
-msgstr "UNI 兌換率："
+msgstr "UNI 代幣兌換率："
 
 #: src/pages/Vote/index.tsx
 msgid "UNI tokens represent voting shares in Uniswap governance. You can vote on each proposal yourself or delegate your votes to a third party."
@@ -1583,7 +1583,7 @@ msgstr "V3 {0} 兌換率："
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
-msgstr "查看 UNI 分析"
+msgstr "查看 UNI 代幣分析"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -1591,7 +1591,7 @@ msgstr "查看 V2 流動資金"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "查看已累積手續費和分析<0>↗</0>"
+msgstr "查看已累積手續費和數據分析<0>↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
@@ -1601,14 +1601,14 @@ msgstr "查看代幣列表"
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
-msgstr "在資源瀏覽器上查看"
+msgstr "在以太坊資源瀏覽器上查看"
 
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
-msgstr "在資源瀏覽器上查看"
+msgstr "在以太坊資源瀏覽器上查看"
 
 #: src/components/Header/index.tsx
 msgid "Vote"
@@ -1658,11 +1658,11 @@ msgstr "當您領取獎勵但沒贖回流動資金時，流動資金仍然留在
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
-msgstr "當您贖回流動資金時，智能合約將自動為您領取 UNI！"
+msgstr "當您贖回流動資金時，智能合約將自動為您領取 UNI 代幣！"
 
 #: src/components/earn/UnstakingModal.tsx
 msgid "When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool."
-msgstr "當您贖回流動資金時，您的 UNI 將被領取，流動資金也將從礦池中移除。"
+msgstr "當您贖回流動資金時，您的 UNI 代幣將被領取，流動資金也將從礦池中移除。"
 
 #: src/components/earn/UnstakingModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -1693,7 +1693,7 @@ msgstr "包裹"
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
-msgstr "錯誤的網路"
+msgstr "錯誤的網絡"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "You are creating a pool"
@@ -1782,7 +1782,7 @@ msgstr "在達到此兌換率時，您的倉位流動資金將 100% 由 {0} 所�
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Your position will be 100% {0} at this price."
-msgstr "在達到此兌換率時，您的倉位流動資金將为100% {0}。"
+msgstr "在達到此兌換率時，您的倉位流動資金將 100% 由 {0} 所組成。"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
@@ -1975,7 +1975,7 @@ msgstr "{0}-{1} 流動資金采礦"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP NFT"
-msgstr "{0}/{1} 流動池 NFT "
+msgstr "{0}/{1} 流動池 NFT 代幣"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "{0}/{1} LP Tokens"
