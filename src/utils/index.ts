@@ -22,6 +22,8 @@ import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, WETH } from 'libs/sdk/src'
 import { TokenAddressMap } from '../state/lists/hooks'
+import { getMaticTokenLogoURL } from './maticTokenMapping'
+import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -332,16 +334,6 @@ export const get2DayPercentChange = (valueNow: any, value24HoursAgo: any, value4
   return [currentChange, adjustedPercentChange]
 }
 
-export const getTokenLogoURL = (address: string) => {
-  if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
-    return 'https://i.imgur.com/1cDH5dy.png'
-  }
-
-  return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
-    address
-  )}/logo.png`
-}
-
 export const getRopstenTokenLogoURL = (address: string) => {
   if (address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()) {
     return 'https://i.imgur.com/1cDH5dy.png'
@@ -354,6 +346,38 @@ export const getRopstenTokenLogoURL = (address: string) => {
   return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
     address
   )}/logo.png`
+}
+
+export const getTokenLogoURL = (address: string, chainId?: ChainId): string => {
+  if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
+    return 'https://i.imgur.com/1cDH5dy.png'
+  }
+
+  let imageURL
+
+  switch (chainId) {
+    case ChainId.MAINNET:
+      imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
+        address
+      )}/logo.png`
+      break
+    case ChainId.ROPSTEN:
+      imageURL = getRopstenTokenLogoURL(address)
+      break
+    case ChainId.MATIC:
+      imageURL = getMaticTokenLogoURL(address)
+      break
+    case ChainId.MUMBAI:
+      imageURL = getMumbaiTokenLogoURL(address)
+      break
+    default:
+      imageURL = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${isAddress(
+        address
+      )}/logo.png`
+      break
+  }
+
+  return imageURL
 }
 
 export const getTokenSymbol = (token: Token, chainId?: ChainId): string => {

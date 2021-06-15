@@ -1,5 +1,3 @@
-import { getTokenLogoURL } from 'utils'
-
 export const MUMBAI_TOKEN_LIST = {
   name: 'DmmExchange Token List',
   keywords: ['dmmexchange'],
@@ -10,32 +8,35 @@ export const MUMBAI_TOKEN_LIST = {
       address: '0xFD1f9381Cb641Dc76Fe8087dbcf8ea84a2c77cbE',
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
-      decimals: 18,
-      logoURI: getTokenLogoURL('0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202')
+      decimals: 18
+    },
+    {
+      chainId: 80001,
+      address: '0x19395624C030A11f58e820C3AeFb1f5960d9742a',
+      symbol: 'WETH',
+      name: 'Wrapped Ether',
+      decimals: 18
     },
     {
       chainId: 80001,
       address: '0x2CeC76B26A8d96BF3072D34A01BB3a4edE7c06BE',
       symbol: 'USDC',
       name: 'USDC',
-      decimals: 6,
-      logoURI: getTokenLogoURL('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
+      decimals: 6
     },
     {
       chainId: 80001,
       address: '0x064B91Bda6d178DfE03835de9450BFe78201c43F',
       symbol: 'USDT',
       name: 'USDT',
-      decimals: 6,
-      logoURI: getTokenLogoURL('0xdAC17F958D2ee523a2206206994597C13D831ec7')
+      decimals: 6
     },
     {
       chainId: 80001,
       address: '0x5e2de02472aC02736b43054f095837725A5870eF',
       symbol: 'DAI',
       name: 'DAI',
-      decimals: 18,
-      logoURI: getTokenLogoURL('0x6B175474E89094C44Da98b954EedeAC495271d0F')
+      decimals: 18
     }
   ],
   version: {
