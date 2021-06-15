@@ -11,7 +11,7 @@ export default function useRampWidget() {
     const widget = new RampInstantSDK({
       hostAppName: 'FuseSwap',
       hostLogoUrl: 'https://fuse-brand-assets.s3.eu-central-1.amazonaws.com/fuse.png',
-      swapAsset: 'FUSD',
+      swapAsset: 'FUSE_FUSD',
       userAddress: account,
       hostApiKey: process.env.REACT_APP_RAMP_HOST_API_KEY
     })
