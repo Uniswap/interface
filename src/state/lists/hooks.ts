@@ -7,6 +7,7 @@ import { AppState } from '../index'
 import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
 import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
+import { MATIC_TOKEN_LIST } from '../../constants/tokenLists/matic.tokenlist'
 import { MUMBAI_TOKEN_LIST } from '../../constants/tokenLists/mumbai.tokenlist'
 import { useActiveWeb3React } from 'hooks'
 import sortByListPriority from 'utils/listSort'
@@ -99,6 +100,8 @@ export function useDMMTokenList(): TokenAddressMap {
       return listToTokenMap(MAINNET_TOKEN_LIST)
     case ChainId.ROPSTEN:
       return listToTokenMap(ROPSTEN_TOKEN_LIST)
+    case ChainId.MATIC:
+      return listToTokenMap(MATIC_TOKEN_LIST)
     case ChainId.MUMBAI:
       return listToTokenMap(MUMBAI_TOKEN_LIST)
     default:
