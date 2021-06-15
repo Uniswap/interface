@@ -236,7 +236,7 @@ const Pools = ({
             <PoolList
               poolsList={poolsList}
               subgraphPoolsData={poolsData}
-              userLiquidityPositions={userLiquidityPositions.liquidityPositions}
+              userLiquidityPositions={userLiquidityPositions?.liquidityPositions}
               maxItems={3}
             />
           ) : (
