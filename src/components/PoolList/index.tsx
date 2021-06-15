@@ -61,8 +61,8 @@ const getOneYearFL = (liquidity: string, feeOneDay?: string): number => {
 
 interface PoolListProps {
   poolsList: (Pair | null)[]
-  subgraphPoolsData: SubgraphPoolData[]
-  userLiquidityPositions: UserLiquidityPosition[]
+  subgraphPoolsData?: SubgraphPoolData[]
+  userLiquidityPositions?: UserLiquidityPosition[]
   maxItems?: number
 }
 
@@ -86,13 +86,15 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
     [key: string]: UserLiquidityPosition
   } = {}
 
-  subgraphPoolsData.forEach(data => {
-    transformedSubgraphPoolsData[data.id] = data
-  })
+  subgraphPoolsData &&
+    subgraphPoolsData.forEach(data => {
+      transformedSubgraphPoolsData[data.id] = data
+    })
 
-  userLiquidityPositions.forEach(position => {
-    transformedUserLiquidityPositions[position.pool.id] = position
-  })
+  userLiquidityPositions &&
+    userLiquidityPositions.forEach(position => {
+      transformedUserLiquidityPositions[position.pool.id] = position
+    })
 
   // pagination
   const [page, setPage] = useState(1)
