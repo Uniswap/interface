@@ -9,6 +9,7 @@ import { Fraction, JSBI, Pair } from 'libs/sdk/src'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import AddCircle from 'components/Icons/AddCircle'
+import TradeIcon from 'components/Icons/TradeIcon'
 import { MouseoverTooltip } from 'components/Tooltip'
 import CopyHelper from 'components/Copy'
 import { usePoolDetailModalToggle } from 'state/application/hooks'
@@ -22,11 +23,11 @@ import Loader from 'components/Loader'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
-  grid-gap: 1em;
-  grid-template-columns: 1.5fr repeat(8, 1fr) 1fr 1.5fr;
+  grid-gap: 1.5rem;
+  grid-template-columns: 1.5fr repeat(8, 1fr) 0.5fr 1fr;
   grid-template-areas: 'pool ratio liq vol';
   padding: 15px 36px 13px 26px;
-  font-size: 12px;
+  font-size: 14px;
   align-items: flex-start;
   height: fit-content;
   position: relative;
@@ -143,6 +144,11 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
   const oneYearFL = getOneYearFL(subgraphPoolData?.reserveUSD, fee).toFixed(2)
 
+  const ampLiquidity = formattedNum(
+    `${parseFloat(amp.toSignificant(5)) * parseFloat(subgraphPoolData?.reserveUSD)}`,
+    true
+  )
+
   return (
     <div>
       {isWarning && (
@@ -185,9 +191,10 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         </GridItem>
 
         <GridItem>
-          <DataTitle>Liquidity</DataTitle>
+          <DataTitle>Liq/AMPL</DataTitle>
           <DataText grid-area="liq">
-            {!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData.reserveUSD, true)}
+            <div>{!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData.reserveUSD, true)}</div>
+            <div>{!subgraphPoolData ? <Loader /> : ampLiquidity}</div>
           </DataText>
         </GridItem>
         <GridItem>
@@ -336,14 +343,14 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         </ButtonEmpty>
       </ButtonWrapper>
       <ButtonWrapper>
-        <ButtonPrimary
-          padding="8px 16px"
+        <ButtonEmpty
+          padding="0"
           as={Link}
           to={`/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`}
           width="fit-content"
         >
-          Trade
-        </ButtonPrimary>
+          <TradeIcon />
+        </ButtonEmpty>
         <ButtonEmpty padding="0" width="fit-content" onClick={handleShowMore}>
           <StyledMoreHorizontal />
         </ButtonEmpty>
