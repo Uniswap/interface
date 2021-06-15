@@ -12,7 +12,7 @@ import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
 import MetaMaskLogo from '../../assets/images/metamask.png'
 
-import { getEtherscanLink, getEtherscanLinkText, getRopstenTokenLogoURL, getTokenLogoURL } from '../../utils'
+import { getEtherscanLink, getEtherscanLinkText, getTokenLogoURL } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 
 const Wrapper = styled.div`
@@ -72,11 +72,7 @@ function AddTokenToMetaMask({ token, chainId }: { token: Token; chainId: ChainId
     const tokenAddress = token.address
     const tokenSymbol = token.symbol
     const tokenDecimals = token.decimals
-    let tokenImage = getTokenLogoURL(token.address)
-
-    if (chainId === ChainId.ROPSTEN) {
-      tokenImage = getRopstenTokenLogoURL(token.address)
-    }
+    const tokenImage = getTokenLogoURL(token.address, chainId)
 
     try {
       const { ethereum } = window

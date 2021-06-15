@@ -1,14 +1,16 @@
-import { Currency, ETHER, Token } from 'libs/sdk/src'
+import { ChainId, Currency, ETHER, Token } from 'libs/sdk/src'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import MaticLogo from '../../assets/images/matic-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
+import { useActiveWeb3React } from 'hooks'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
-import { getTokenLogoURL, getRopstenTokenLogoURL } from 'utils'
+import { getTokenLogoURL } from 'utils'
 
-const StyledEthereumLogo = styled.img<{ size: string }>`
+const StyledNativeCurrencyLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
@@ -22,6 +24,16 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
 `
 
+const logo: { readonly [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]: EthereumLogo,
+  [ChainId.ROPSTEN]: EthereumLogo,
+  [ChainId.RINKEBY]: EthereumLogo,
+  [ChainId.GÖRLI]: EthereumLogo,
+  [ChainId.KOVAN]: EthereumLogo,
+  [ChainId.MATIC]: MaticLogo,
+  [ChainId.MUMBAI]: MaticLogo
+}
+
 export default function CurrencyLogo({
   currency,
   size = '24px',
@@ -31,6 +43,7 @@ export default function CurrencyLogo({
   size?: string
   style?: React.CSSProperties
 }) {
+  const { chainId } = useActiveWeb3React()
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
@@ -38,16 +51,17 @@ export default function CurrencyLogo({
 
     if (currency instanceof Token) {
       if (currency instanceof WrappedTokenInfo) {
-        return [...uriLocations, getTokenLogoURL(currency.address), getRopstenTokenLogoURL(currency.address)]
+        return [...uriLocations, getTokenLogoURL(currency.address, chainId)]
       }
 
-      return [getTokenLogoURL(currency.address), getRopstenTokenLogoURL(currency.address)]
+      return [getTokenLogoURL(currency.address, chainId)]
     }
     return []
-  }, [currency, uriLocations])
+  }, [chainId, currency, uriLocations])
 
-  if (currency === ETHER) {
-    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
+  if (currency === ETHER && chainId) {
+    console.log('dakjdklaj')
+    return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} />
   }
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />

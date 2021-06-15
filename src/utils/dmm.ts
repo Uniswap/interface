@@ -295,9 +295,8 @@ export function useFarmApr(rewardPerBlocks: RewardPerBlock[], poolLiquidityUsd: 
 export function convertToNativeTokenFromETH(currency: Currency, chainId: ChainIdDMM): Currency {
   if (chainId && [137, 80001].includes(chainId) && currency === Currency.ETHER) {
     return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
-  } else if (chainId && [137, 80001].includes(chainId) && currency.symbol === `WETH`) {
-    return new TokenDMM(chainId, WETH[chainId].address, 18, 'WMATIC', 'WMATIC')
   }
+
   return currency
 }
 

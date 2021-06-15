@@ -9,7 +9,7 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
+  [ChainId.MATIC]: '0x8Efa5A9AD6D594Cf76830267077B78cE0Bc5A5F8',
   [ChainId.MUMBAI]: '0xD536e64EAe5FBc62E277167e758AfEA570279956'
 }
 
@@ -19,7 +19,7 @@ export const FACTORY_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
+  [ChainId.MATIC]: '0x10908C875D865C66f271F5d3949848971c9595C9',
   [ChainId.MUMBAI]: '0x7900309d0b1c8D3d665Ae40e712E8ba4FC4F5453'
 }
 
