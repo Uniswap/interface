@@ -46,19 +46,34 @@ import { useActiveWeb3React } from './web3'
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
-  addressOrAddressMap: string | { [chainId: number]: string } | undefined,
+  addressOrAddressMap: string | { [chainId: number]: string } | { [chainId: number]: string }[] | undefined,
   ABI: any,
   withSignerIfPossible = true
 ): T | null {
   const { library, account, chainId } = useActiveWeb3React()
 
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !library || !chainId) return null
+    if (!addressOrAddressMap || !ABI || !library || !chainId) {
+      return null
+    }
     let address: string | undefined
-    if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
-    else address = addressOrAddressMap[chainId]
-    if (!address) return null
+    if (typeof addressOrAddressMap === 'string') {
+      address = addressOrAddressMap
+    } else if (!Array.isArray(addressOrAddressMap)) {
+      address = addressOrAddressMap[chainId]
+    }
+    if (!address && !Array.isArray(addressOrAddressMap)) {
+      return null
+    }
     try {
+      if (Array.isArray(addressOrAddressMap)) {
+        return addressOrAddressMap.map((addressMap) =>
+          getContract(addressMap[chainId], ABI, library, withSignerIfPossible && account ? account : undefined)
+        )
+      }
+      if (!address) {
+        return null
+      }
       return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
     } catch (error) {
       console.error('Failed to get contract', error)
@@ -116,11 +131,22 @@ export function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
 }
 
-export function useGovernanceContracts(): (Contract | null)[] {
-  return [
-    useContract(GOVERNANCE_ADDRESSES[0], GOVERNANCE_ABI, false),
-    useContract(GOVERNANCE_ADDRESSES[1], GOVERNANCE_ABI, true),
-  ]
+export function useGovernanceContracts(): Contract[] | null {
+  const { library, account, chainId } = useActiveWeb3React()
+
+  return useMemo(() => {
+    if (!library || !chainId) {
+      return null
+    }
+    try {
+      return GOVERNANCE_ADDRESSES.filter((addressMap) => Boolean(addressMap[chainId])).map((addressMap) =>
+        getContract(addressMap[chainId], GOVERNANCE_ABI, library, account ? account : undefined)
+      )
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [library, chainId, account])
 }
 
 export function useUniContract() {
