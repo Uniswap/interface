@@ -52,7 +52,20 @@ const useVesting = () => {
     },
     [lockerContract, addTransaction]
   )
-  return { schedules, vestAtIndex }
+
+  const vestMultipleTokensAtIndices = useCallback(
+    async (tokens: string[], indices: number[][]) => {
+      try {
+        const tx = await lockerContract?.vestScheduleForMultipleTokensAtIndices(tokens, indices)
+        return addTransaction(tx, { summary: `Vest all` })
+      } catch (e) {
+        console.error(e)
+        return e
+      }
+    },
+    [lockerContract, addTransaction]
+  )
+  return { schedules, vestAtIndex, vestMultipleTokensAtIndices }
 }
 
 export default useVesting

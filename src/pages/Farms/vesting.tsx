@@ -11,7 +11,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
 import { useBlockNumber, useKNCPrice, useTokensPrice } from 'state/application/hooks'
 import { Fraction, JSBI, Token } from 'libs/sdk/src'
-import { KNC } from 'constants/index'
+import { AVERAGE_BLOCK_TIME_IN_SECS, KNC } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import InfoHelper from 'components/InfoHelper'
@@ -80,7 +80,7 @@ const Vesting = () => {
       unlockedAmount: BigNumber
       token: Token
     }
-  }>((acc, s, index) => {
+  }>((acc, s) => {
     const address = (s[4] as Token).symbol as string
 
     if (!acc[address]) {
@@ -99,27 +99,36 @@ const Vesting = () => {
     const fullyVestedAlready = BigNumber.from(s[2])
       .sub(BigNumber.from(s[3]))
       .isZero()
-    const vestedAndVestablePercent = BigNumber.from(currentBlockNumber)
+    const isEnd = !BigNumber.from(currentBlockNumber)
       .sub(BigNumber.from(s[1]))
       .isNegative()
-      ? BigNumber.from(currentBlockNumber)
-          .sub(BigNumber.from(s[0]))
-          .mul(100)
+    // const vestedAndVestablePercent = BigNumber.from(currentBlockNumber)
+    //   .sub(BigNumber.from(s[1]))
+    //   .isNegative()
+    //   ? BigNumber.from(currentBlockNumber)
+    //       .sub(BigNumber.from(s[0]))
+    //       .mul(100)
+    //       .div(BigNumber.from(s[1]).sub(BigNumber.from(s[0])))
+    //   : 100
+    // const unlockedAmount = BigNumber.from(s[2])
+    //   .mul(vestedAndVestablePercent)
+    //   .div(100)
+    console.log('===isend', isEnd)
+    const unlockedAmount = isEnd
+      ? BigNumber.from(s[2])
+      : BigNumber.from(s[2])
+          .mul(BigNumber.from(currentBlockNumber).sub(BigNumber.from(s[0])))
           .div(BigNumber.from(s[1]).sub(BigNumber.from(s[0])))
-      : 100
-    const unlockedAmount = BigNumber.from(s[2])
-      .mul(vestedAndVestablePercent)
-      .div(100)
     const vestableAmount = unlockedAmount.sub(BigNumber.from(s[3]))
     if (!fullyVestedAlready) {
-      acc[address].vestableIndexes.push(index)
+      acc[address].vestableIndexes.push(s[5])
     }
     acc[address].vestableAmount = acc[address].vestableAmount.add(
       vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
     )
 
     if (!fullyVestedAlready && !!currentBlockNumber && currentBlockNumber > s[1]) {
-      acc[address].fullyIndexes.push(index)
+      acc[address].fullyIndexes.push(s[5])
       acc[address].fullyAmount = acc[address].fullyAmount.add(BigNumber.from(s[2]))
     }
 
@@ -149,12 +158,19 @@ const Vesting = () => {
   )
 
   const [pendingTx, setPendingTx] = useState(false)
-  const { vestAtIndex } = useVesting()
+  const { vestAtIndex, vestMultipleTokensAtIndices } = useVesting()
   const onClaimAll = async () => {
     if (!chainId || !account) return
     console.log('===claim all active')
     setPendingTx(true)
-    await Promise.all(Object.keys(info).map(k => vestAtIndex(info[k].token.address, info[k].vestableIndexes)))
+    const addresses = Object.keys(info).map(k => info[k].token.address)
+    const indices = Object.keys(info).reduce<number[][]>((acc, k) => {
+      acc.push(info[k].vestableIndexes)
+      return acc
+    }, [])
+    console.log('claim all', addresses, indices)
+    await vestMultipleTokensAtIndices(addresses, indices)
+    // await Promise.all(Object.keys(info).map(k => vestAtIndex(info[k].token.address, info[k].vestableIndexes)))
     setPendingTx(false)
   }
 
@@ -280,7 +296,8 @@ const Vesting = () => {
 }
 
 const fixedFormatting = (value: BigNumber, decimals: number) => {
-  return new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(6)
+  const res = new Fraction(value.toString(), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toFixed(6)
+  return parseFloat(res).toString()
 }
 
 const Schedule = ({ schedule }: any) => {
@@ -304,7 +321,7 @@ const Schedule = ({ schedule }: any) => {
     currentBlockNumber && BigNumber.from(schedule[1]).toNumber() > currentBlockNumber
       ? BigNumber.from(schedule[1])
           .sub(currentBlockNumber)
-          .mul(13)
+          .mul(AVERAGE_BLOCK_TIME_IN_SECS)
           .toNumber()
       : undefined
   const fullyVestedAlready = BigNumber.from(schedule[2])
@@ -314,6 +331,9 @@ const Schedule = ({ schedule }: any) => {
     .mul(100)
     .div(BigNumber.from(schedule[2]))
     .toNumber()
+  const isEnd = !BigNumber.from(currentBlockNumber)
+    .sub(BigNumber.from(schedule[1]))
+    .isNegative()
   const vestedAndVestablePercent = BigNumber.from(currentBlockNumber)
     .sub(BigNumber.from(schedule[1]))
     .isNegative()
@@ -322,10 +342,12 @@ const Schedule = ({ schedule }: any) => {
         .mul(100)
         .div(BigNumber.from(schedule[1]).sub(BigNumber.from(schedule[0])))
     : 100
-  let vestableAmount = BigNumber.from(schedule[2])
-    .mul(vestedAndVestablePercent)
-    .div(100)
-    .sub(BigNumber.from(schedule[3]))
+  let vestableAmount = isEnd
+    ? BigNumber.from(schedule[2]).sub(BigNumber.from(schedule[3]))
+    : BigNumber.from(schedule[2])
+        .mul(BigNumber.from(currentBlockNumber).sub(BigNumber.from(schedule[0])))
+        .div(BigNumber.from(schedule[1]).sub(BigNumber.from(schedule[0])))
+        .sub(BigNumber.from(schedule[3]))
   vestableAmount = vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
 
   const unvestableAmount = BigNumber.from(schedule[2])

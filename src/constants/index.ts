@@ -339,7 +339,7 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
 
 export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '0x6899bBF136113Fa598D023246f9FFD4892a0EC3F',
+  [ChainId.ROPSTEN]: '0xCa0767cb6473628F27287c04096f242Ca649f5B6',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
@@ -349,7 +349,7 @@ export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '0x97D0308d0174FB088F2BfDb3e365Eec8E9DC1666',
+  [ChainId.ROPSTEN]: '0x68eFA21972109CB315c61B33A1ab8b7e9ef78242',
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
