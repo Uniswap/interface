@@ -11,7 +11,7 @@ function bitmapIndex(tick: number, tickSpacing: number) {
   return Math.floor(tick / tickSpacing / 256)
 }
 
-const REFRESH_FREQUENCY = { blocksPerFetch: 2 }
+const REFRESH_FREQUENCY = { blocksPerFetch: 4 }
 
 // for now, reconsider using this function, it consumes a lot of data and cpu to fetch all the ticks.
 export function useAllV3Ticks(
@@ -78,8 +78,8 @@ export function useAllV3Ticks(
             ...(current?.map((tickData: TickData) => {
               return {
                 tick: tickData.tick,
-                liquidityNet: tickData.liquidityNet,
-                liquidityGross: tickData.liquidityGross,
+                liquidityNet: tickData.liquidityNet.toString(),
+                liquidityGross: tickData.liquidityGross.toString(),
               }
             }) ?? []),
           ],

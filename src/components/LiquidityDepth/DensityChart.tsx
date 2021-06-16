@@ -1,4 +1,4 @@
-import React, { ReactChild, ReactNode } from 'react'
+import React from 'react'
 import { VictoryBar, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryChart, VictoryLabel } from 'victory'
 import useTheme from 'hooks/useTheme'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
