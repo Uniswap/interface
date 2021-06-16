@@ -11,7 +11,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
 import { useBlockNumber, useKNCPrice, useTokensPrice } from 'state/application/hooks'
 import { Fraction, JSBI, Token } from 'libs/sdk/src'
-import { KNC } from 'constants/index'
+import { AVERAGE_BLOCK_TIME_IN_SECS, KNC } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import InfoHelper from 'components/InfoHelper'
@@ -304,7 +304,7 @@ const Schedule = ({ schedule }: any) => {
     currentBlockNumber && BigNumber.from(schedule[1]).toNumber() > currentBlockNumber
       ? BigNumber.from(schedule[1])
           .sub(currentBlockNumber)
-          .mul(13)
+          .mul(AVERAGE_BLOCK_TIME_IN_SECS)
           .toNumber()
       : undefined
   const fullyVestedAlready = BigNumber.from(schedule[2])
