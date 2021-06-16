@@ -720,8 +720,6 @@ export default function AddLiquidity({
                         <RowBetween>
                           {showApprovalA && (
                             <ButtonPrimary
-                              borderRadius="12px"
-                              padding={'12px'}
                               onClick={approveACallback}
                               disabled={approvalA === ApprovalState.PENDING}
                               width={showApprovalB ? '48%' : '100%'}
@@ -737,8 +735,6 @@ export default function AddLiquidity({
                           )}
                           {showApprovalB && (
                             <ButtonPrimary
-                              borderRadius="12px"
-                              padding={'12px'}
                               onClick={approveBCallback}
                               disabled={approvalB === ApprovalState.PENDING}
                               width={showApprovalA ? '48%' : '100%'}
