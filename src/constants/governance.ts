@@ -6,7 +6,9 @@ const governanceContracts = (): Record<string, string> =>
   GOVERNANCE_ADDRESSES.reduce(
     (acc, addressMap, i) => ({
       ...acc,
-      [addressMap[SupportedChainId.MAINNET]]: `Governance${i === GOVERNANCE_ADDRESSES.length - 1 ? '' : ` (V${i})`}`,
+      [addressMap[SupportedChainId.MAINNET]]: `Governance${
+        i === 0 ? '' : ` (V${GOVERNANCE_ADDRESSES.length - 1 - i})`
+      }`,
     }),
     {}
   )

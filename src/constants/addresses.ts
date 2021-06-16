@@ -18,13 +18,19 @@ export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap(
 )
 
 // most current governance contract address should always be the 0 index
+// only support governance on mainnet
 export const GOVERNANCE_ADDRESSES: AddressMap[] = [
   {
     [SupportedChainId.MAINNET]: '0xC4e172459f1E7939D522503B81AFAaC1014CE6F6',
   },
-  constructSameAddressMap('0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F', false),
+  {
+    [SupportedChainId.MAINNET]: '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F',
+  },
 ]
-export const TIMELOCK_ADDRESS: AddressMap = constructSameAddressMap('0x1a9C8182C09F50C8318d769245beA52c32BE35BC', false)
+export const TIMELOCK_ADDRESS: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x1a9C8182C09F50C8318d769245beA52c32BE35BC',
+}
+
 export const MERKLE_DISTRIBUTOR_ADDRESS: AddressMap = {
   [SupportedChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e',
 }

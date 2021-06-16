@@ -248,9 +248,9 @@ export default function Vote() {
               </TYPE.subHeader>
             </EmptyProposals>
           )}
-          {allProposals?.reverse().map((p: ProposalData, i) => {
+          {allProposals?.reverse()?.map((p: ProposalData) => {
             return (
-              <Proposal as={Link} to={'/vote/' + p.id} key={i}>
+              <Proposal as={Link} to={`/vote/${p.governorIndex}/${p.id}`} key={`${p.governorIndex}${p.id}`}>
                 <ProposalNumber>{p.id}</ProposalNumber>
                 <ProposalTitle>{p.title}</ProposalTitle>
                 <ProposalStatus status={p.status}>{ProposalState[p.status]}</ProposalStatus>
