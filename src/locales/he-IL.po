@@ -14,12 +14,12 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-06-16 12:05\n"
+"PO-Revision-Date: 2021-06-16 14:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "$-"
-msgstr "$ -"
+msgstr "$-"
 
 #: src/components/earn/PoolCard.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -137,7 +137,7 @@ msgstr "אודות"
 
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Accept"
-msgstr "קבלה"
+msgstr "לְקַבֵּל"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Account"
@@ -522,7 +522,7 @@ msgstr "צור זוג"
 
 #: src/pages/Pool/index.tsx
 msgid "Create a pool"
-msgstr "צור בריכה"
+msgstr "צור מאגר"
 
 #: src/components/ErrorBoundary/index.tsx
 msgid "Create an issue on GitHub"
