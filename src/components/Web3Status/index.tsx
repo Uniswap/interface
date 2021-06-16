@@ -7,13 +7,14 @@ import useENSName from '../../hooks/useENSName'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { useActiveWeb3React } from '../../hooks'
-import { ConnectWallet } from './ConnectWallet'
+import { ConnectWalletPopover } from './ConnectWalletPopover'
 import WalletModal from '../WalletModal'
 import { AccountStatus } from './AccountStatus'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import NetworkSwitcherPopover from '../NetworkSwitcherPopover'
-import { useNetworkSwitcherPopoverToggle } from '../../state/application/hooks'
+import { useNetworkSwitcherPopoverToggle, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 import { TriangleIcon } from '../Icons'
+import { useTranslation } from 'react-i18next'
 
 const Web3StatusError = styled.div`
   display: flex;
@@ -38,6 +39,21 @@ const SwitchNetworkButton = styled.button`
   text-transform: uppercase;
   font-weight: bold;
   font-size: 11px;
+  line-height: 12px;
+  letter-spacing: 0.08em;
+  border: none;
+  cursor: pointer;
+`
+
+const Button = styled.button`
+  height: 32px;
+  padding: 10.5px 14px;
+  background-color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.text1};
+  border-radius: 12px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
   line-height: 12px;
   letter-spacing: 0.08em;
   border: none;
@@ -96,6 +112,9 @@ export default function Web3Status() {
         }
       })
   }
+
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  const { t } = useTranslation();
   
   if (!contextNetwork.active && !active) {
     return null
@@ -115,26 +134,27 @@ export default function Web3Status() {
     )
   }
   
-  console.log('networkConnectorChainId', networkConnectorChainId)
-  console.log('account', account)
-  
   return (
     <>
-      {(networkConnectorChainId && !account) && (
-        <ConnectWallet
-          setModal={setModal}
-          tryActivation={tryActivation}
-        />
-      )}
-      {(networkConnectorChainId && !!account) && (
-        <AccountStatus
-          pendingTransactions={pending}
-          ENSName={ENSName ?? undefined}
-          account={account}
-          networkConnectorChainId={networkConnectorChainId}
-          onAddressClick={() => setModal(ModalView.Account)}
-        />
-      )}
+      <ConnectWalletPopover
+        setModal={setModal}
+        tryActivation={tryActivation}
+      >
+        {(networkConnectorChainId && !account) && (
+          <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
+            {t('Connect wallet')}
+          </Button>
+        )}
+        {(networkConnectorChainId && !!account) && (
+          <AccountStatus
+            pendingTransactions={pending}
+            ENSName={ENSName ?? undefined}
+            account={account}
+            networkConnectorChainId={networkConnectorChainId}
+            onAddressClick={() => setModal(ModalView.Account)}
+          />
+        )}
+      </ConnectWalletPopover>
       <WalletModal
         modal={modal}
         setModal={setModal}

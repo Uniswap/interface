@@ -1,32 +1,16 @@
-import React, { useRef } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core';
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { isMobile } from 'react-device-detect';
-import { useTranslation } from 'react-i18next'
 import { SUPPORTED_WALLETS } from '../../constants';
 import { injected } from '../../connectors'
 import MetamaskIcon from '../../assets/images/metamask.png';
 import { ModalView } from '.';
 import Popover from '../Popover';
-import { useCloseModals, useModalOpen, useWalletSwitcherPopoverToggle } from '../../state/application/hooks';
+import { useCloseModals, useModalOpen } from '../../state/application/hooks';
 import { ApplicationModal } from '../../state/application/actions';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
-
-const Button = styled.button`
-  height: 32px;
-  padding: 10.5px 14px;
-  background-color: ${({ theme }) => theme.primary1};
-  color: ${({ theme }) => theme.text1};
-  border-radius: 12px;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 12px;
-  letter-spacing: 0.08em;
-  border: none;
-  cursor: pointer;
-`
 
 const List = styled.ul`
   padding: 0;
@@ -84,11 +68,11 @@ const StyledPopover = styled(Popover)`
 interface ConnectWalletProps {
   setModal: (modal: ModalView | null) => void;
   tryActivation: (connector: AbstractConnector | undefined) => void
+  children: ReactNode
 }
 
-export const ConnectWallet = ({setModal, tryActivation}: ConnectWalletProps) => {
+export const ConnectWalletPopover = ({setModal, tryActivation, children}: ConnectWalletProps) => {
   const { connector } = useWeb3React()
-  const { t } = useTranslation();
 
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
@@ -169,7 +153,7 @@ export const ConnectWallet = ({setModal, tryActivation}: ConnectWalletProps) => 
   useOnClickOutside(popoverRef, () => {
     if (walletSwitcherPopoverOpen) closeModals()
   })
-  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  
     
   return (
     <div ref={popoverRef}>
@@ -179,9 +163,7 @@ export const ConnectWallet = ({setModal, tryActivation}: ConnectWalletProps) => 
         placement="bottom-end"
         offsetX={40}
       >
-        <Button id="connect-wallet" onClick={toggleWalletSwitcherPopover}>
-          {t('Connect wallet')}
-        </Button>
+       {children} 
       </StyledPopover>
     </div>
   )
