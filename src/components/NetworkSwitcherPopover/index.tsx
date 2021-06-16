@@ -3,7 +3,7 @@ import { ChainId } from 'dxswap-sdk'
 import styled from 'styled-components'
 import Option from './Option'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useCloseModals } from '../../state/application/hooks'
+import { useModalOpen, useCloseModals, useWalletSwitcherPopoverToggle } from '../../state/application/hooks'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import XDAILogo from '../../assets/images/xdai-stake-logo.png'
@@ -88,6 +88,8 @@ export default function NetworkSwitcherPopover({ children}: NetworkSwitcherPopov
     [account, chainId, closeModals, connector]
   )
   
+  const toggleWalletSwitcherPopover = useWalletSwitcherPopoverToggle()
+  
   return (
     <div ref={popoverRef}>
       <StyledPopover
@@ -121,7 +123,7 @@ export default function NetworkSwitcherPopover({ children}: NetworkSwitcherPopov
                 comingSoon
               />
             </OptionGrid>
-            <ChangeWalletButton>Change wallet</ChangeWalletButton>
+            <ChangeWalletButton onClick={toggleWalletSwitcherPopover}>Change wallet</ChangeWalletButton>
           </>
         }
         show={networkSwitcherPopoverOpen}
