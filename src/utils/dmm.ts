@@ -270,6 +270,7 @@ export function useFarmApr(rewardPerBlocks: RewardPerBlock[], poolLiquidityUsd: 
     }
 
     if (
+      chainId &&
       ethPrice.currentPrice &&
       rewardPerBlock.token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
     ) {
