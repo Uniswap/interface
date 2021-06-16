@@ -226,7 +226,7 @@ export function useAllProposalData(): ProposalData[] {
           startBlock,
           endBlock: parseInt(proposal?.result?.endBlock?.toString()),
           details: formattedEvents[i].details,
-          governorIndex: i,
+          governorIndex: governanceContractIndex,
         }
       })
     )
