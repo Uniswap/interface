@@ -263,20 +263,9 @@
   {
     "inputs": [
       { "internalType": "contract IERC20Ext[]", "name": "tokens", "type": "address[]" },
-      { "internalType": "uint256[]", "name": "indices", "type": "uint256[]" }
+      { "internalType": "uint256[][]", "name": "indices", "type": "uint256[][]" }
     ],
     "name": "vestScheduleForMultipleTokensAtIndices",
-    "outputs": [{ "internalType": "uint256[]", "name": "vestedAmounts", "type": "uint256[]" }],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "contract IERC20Ext[]", "name": "tokens", "type": "address[]" },
-      { "internalType": "uint256", "name": "startIndex", "type": "uint256" },
-      { "internalType": "uint256", "name": "endIndex", "type": "uint256" }
-    ],
-    "name": "vestScheduleForMultipleTokensInRange",
     "outputs": [{ "internalType": "uint256[]", "name": "vestedAmounts", "type": "uint256[]" }],
     "stateMutability": "nonpayable",
     "type": "function"
