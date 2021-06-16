@@ -23,11 +23,9 @@ const useVesting = () => {
         console.log('rewardTokens', rewardTokens)
         const vt = rewardTokens.map(async t => {
           const res = await lockerContract?.getVestingSchedules(address, t.address)
-          // [s1, s2]
-          // res.map((s: any, index: any) => [...s, t, index])
-          return res.map((s: any, index: any) => [...s, t, index]).flat()
+          return res.map((s: any, index: any) => [...s, t, index])
         })
-        return Promise.all(vt)
+        return Promise.all(vt).then(res => res.flat())
       } catch (e) {
         return []
       }
