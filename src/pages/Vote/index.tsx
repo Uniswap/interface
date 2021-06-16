@@ -119,8 +119,7 @@ export default function Vote() {
   const toggleDelegateModal = useToggleDelegateModal()
 
   // get data to list all proposals
-  // TODO don't hardcode for first gov alpha
-  const allProposals: ProposalData[] = useAllProposalData()[0]
+  const allProposals: ProposalData[] = useAllProposalData()
 
   // user data
   const availableVotes: CurrencyAmount<Token> | undefined = useUserVotes()
@@ -248,7 +247,7 @@ export default function Vote() {
               </TYPE.subHeader>
             </EmptyProposals>
           )}
-          {allProposals?.reverse()?.map((p: ProposalData, i) => {
+          {allProposals?.reverse().map((p: ProposalData, i) => {
             return (
               <Proposal as={Link} to={'/vote/' + p.id} key={i}>
                 <ProposalNumber>{p.id}</ProposalNumber>
@@ -259,7 +258,7 @@ export default function Vote() {
           })}
         </TopSection>
         <TYPE.subHeader color="text3">
-          <Trans>A minimum threshold of 1% of the total UNI supply is required to submit proposals</Trans>
+          <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
         </TYPE.subHeader>
       </PageWrapper>
       <SwitchLocaleLink />
