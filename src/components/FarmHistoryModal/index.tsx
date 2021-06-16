@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { Box, Text } from 'rebass'
 import { useActiveWeb3React } from 'hooks'
 import {
-  MASTERCHEF_ADDRESS,
+  FAIRLAUNCH_ADDRESSES,
   REWARD_LOCKER_ADDRESS,
   FARM_DEPOSIT_TOPIC,
   FARM_HARVEST_TOPIC,
@@ -86,70 +86,13 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
   const [txs, setTxs] = useState<Array<TxObj>>([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const masterChefAddress = useMemo(() => (chainId ? MASTERCHEF_ADDRESS[chainId].toLocaleLowerCase() : ''), [chainId])
+  const fairLaunchAddress = useMemo(
+    () => (chainId ? FAIRLAUNCH_ADDRESSES[chainId]?.[0].toLocaleLowerCase() || '' : ''),
+    [chainId]
+  )
   const rewardLockedAddress = useMemo(() => (chainId ? REWARD_LOCKER_ADDRESS[chainId].toLocaleLowerCase() : ''), [
     chainId
   ])
-
-  useEffect(() => {
-    if (account && farmHistoryModalOpen) {
-      getTransactions()
-    }
-  }, [farmHistoryModalOpen])
-
-  const getTransactions = useCallback(
-    async (startBlockNumber?: number) => {
-      if (library && chainId) {
-        const currentBlock = library.blockNumber
-        setIsLoading(true)
-        fetch(
-          `${ETHERSCAN_API[chainId]}/api?module=account&action=txlist&address=${account}&startblock=${startBlockNumber}&endblock=${currentBlock}&sort=desc&apikey=${ETHERSCAN_API_KEY}`
-        )
-          .then(res => res.json())
-          .then(data => {
-            if (data.status === '1') {
-              const filteredTxs = data.result.filter((tx: { to: string }) => {
-                return tx.to === masterChefAddress || tx.to === rewardLockedAddress
-              })
-              return Promise.all(filterFarmTxs(filteredTxs))
-            }
-            return Promise.resolve([])
-          })
-          .then(txs => {
-            setTxs(txs)
-            setIsLoading(false)
-          })
-      }
-    },
-    [library, chainId]
-  )
-
-  const filterFarmTxs = useCallback(
-    (txs: Array<TxObj>): Promise<TxObj>[] => {
-      if (library && chainId) {
-        return txs.map(tx => {
-          return new Promise((res, rej) => {
-            library
-              .getTransactionReceipt(tx.hash)
-              .then((txReceipt: any) => {
-                const txData = getTxData(txReceipt, chainId)
-                res({
-                  timeStamp: tx.timeStamp,
-                  hash: tx.hash,
-                  method: txData.method,
-                  amount: txData.amount,
-                  token: txData.token,
-                  harvestAmount: txData.harvestAmount
-                })
-              })
-              .catch(e => rej(e))
-          })
-        })
-      }
-      return []
-    },
-    [library, chainId]
-  )
 
   const getTxData = useCallback((txReceipt: any, chainId: ChainId) => {
     let method = ''
@@ -186,7 +129,7 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
           amount = BigNumber.from(log.data.slice(0, 66)) // first 8 bytes for first param
         } else if (method === 'WITHDRAW') {
           amount = withdrawAmount
-        } else if (method === 'HARVEST'){
+        } else if (method === 'HARVEST') {
           amount = harvestAmount
         } else {
           amount = BigNumber.from(log.data)
@@ -201,6 +144,60 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
     }
   }, [])
 
+  const filterFarmTxs = useCallback(
+    (txs: Array<TxObj>): Promise<TxObj>[] => {
+      if (library && chainId) {
+        return txs.map(tx => {
+          return new Promise((res, rej) => {
+            library
+              .getTransactionReceipt(tx.hash)
+              .then((txReceipt: any) => {
+                const txData = getTxData(txReceipt, chainId)
+                res({
+                  timeStamp: tx.timeStamp,
+                  hash: tx.hash,
+                  method: txData.method,
+                  amount: txData.amount,
+                  token: txData.token,
+                  harvestAmount: txData.harvestAmount
+                })
+              })
+              .catch(e => rej(e))
+          })
+        })
+      }
+      return []
+    },
+    [library, chainId]
+  )
+
+  const getTransactions = useCallback(
+    async (startBlockNumber?: number) => {
+      if (library && chainId) {
+        const currentBlock = library.blockNumber
+        setIsLoading(true)
+        fetch(
+          `${ETHERSCAN_API[chainId]}/api?module=account&action=txlist&address=${account}&startblock=${startBlockNumber}&endblock=${currentBlock}&sort=desc&apikey=${ETHERSCAN_API_KEY}`
+        )
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === '1') {
+              const filteredTxs = data.result.filter((tx: { to: string }) => {
+                return tx.to === fairLaunchAddress || tx.to === rewardLockedAddress
+              })
+              return Promise.all(filterFarmTxs(filteredTxs))
+            }
+            return Promise.resolve([])
+          })
+          .then(txs => {
+            setTxs(txs)
+            setIsLoading(false)
+          })
+      }
+    },
+    [library, chainId]
+  )
+
   const tokenToFarm = useCallback(
     (id: string) => {
       const index = farms.findIndex(farm => {
@@ -214,10 +211,16 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
     [farms]
   )
 
+  useEffect(() => {
+    if (account && farmHistoryModalOpen) {
+      getTransactions()
+    }
+  }, [farmHistoryModalOpen])
+
   return (
     <Modal isOpen={farmHistoryModalOpen} onDismiss={toggleFarmHistoryModal} maxHeight="fit-content" maxWidth="570px">
       <Wrapper>
-        <Box overflow="hidden"  height="100%">
+        <Box overflow="hidden" height="100%">
           <Text className="title">Histories</Text>
           {isLoading && (
             <Text textAlign="center" mt="3" fontSize="12px">
@@ -243,7 +246,9 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
                       return farm ? <TokenSymbol farm={farm} /> : 'KNC'
                     })()}
                   </Text>
-                  <Text fontSize="12px" textAlign="right">{tx.method}</Text>
+                  <Text fontSize="12px" textAlign="right">
+                    {tx.method}
+                  </Text>
                 </Row>
                 {tx.method === 'WITHDRAW' && tx.harvestAmount && !tx.harvestAmount.isZero() && (
                   <Row>
@@ -254,7 +259,9 @@ const FarmHistoryModal = ({ farms }: { farms: Farm[] }) => {
                       </Text>
                       KNC
                     </Text>
-                    <Text fontSize="12px" textAlign="right">HARVEST</Text>
+                    <Text fontSize="12px" textAlign="right">
+                      HARVEST
+                    </Text>
                   </Row>
                 )}
               </Fragment>

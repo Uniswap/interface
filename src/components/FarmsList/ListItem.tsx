@@ -201,16 +201,12 @@ const ListItem = ({ farm }: ListItemProps) => {
       <TableRow isExpanded={expand} onClick={() => setExpand(!expand)}>
         <DataText grid-area="pools">
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            {amp === 1 ? (
-              <>
-                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
-                <span>
-                  {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
-                </span>
-              </>
-            ) : (
-              <div />
-            )}
+            <>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={16} margin={true} />
+              <span>
+                {farm.token0?.symbol} - {farm.token1?.symbol} (AMP = {amp})
+              </span>
+            </>
           </div>
         </DataText>
         <DataText grid-area="liq" align="right">
@@ -257,6 +253,7 @@ const ListItem = ({ farm }: ListItemProps) => {
             </StakeGroup>
             <StakeGroup>
               <InputGroup
+                fairLaunchAddress={farm.fairLaunchAddress}
                 pid={farm.pid}
                 pairAddress={farm.id}
                 pairSymbol={`${farm.token0.symbol}-${farm.token1.symbol} LP`}

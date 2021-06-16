@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { ButtonPrimary } from 'components/Button'
-import LocalLoader from 'components/LocalLoader'
+import { ChainId } from 'libs/sdk/src'
 import Panel from 'components/Panel'
 import FarmsList from 'components/FarmsList'
 import FarmClaimModal from 'components/FarmClaimModal'
 import FarmStakeModal from 'components/FarmStakeModal'
-import { useFarmsPublicData, useFarmsUserData } from 'state/farms/hooks'
+import { useFarmsData } from 'state/farms/hooks'
 import { useActiveWeb3React } from 'hooks'
-import useMasterChef from 'hooks/useMasterchef'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ExternalLink } from 'theme'
 import { useBlockNumber, useFarmHistoryModalToggle, useKNCPrice } from 'state/application/hooks'
@@ -23,6 +21,7 @@ import {
   KNCPriceWrapper,
   TabContainer,
   Tab,
+  PoolTitleContainer,
   StakedOnlyToggleWrapper,
   StakedOnlyToggle,
   StakedOnlyToggleText,
@@ -57,31 +56,16 @@ const Farms = () => {
   const { account, chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const kncPrice = useKNCPrice()
-  const { loading: publicDataLoading, error: publicDataError, data: allFarms } = useFarmsPublicData()
-  const { loading: userFarmsLoading, data: farmsUserData } = useFarmsUserData(account, allFarms)
+  const { loading, data: allFarms } = useFarmsData()
   const [activeTab, setActiveTab] = useState(0)
   const [pendingTx, setPendingTx] = useState(false)
   const [stakedOnly, setStakedOnly] = useState(false)
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
 
-  const { harvestMultiplePools } = useMasterChef()
-
-  const farms = allFarms.map(farm => {
-    const { pid } = farm
-    const index = farmsUserData.findIndex(farmUserData => farmUserData.pid === pid)
-
-    return {
-      ...farm,
-      userData: farmsUserData[index]
-    }
-  })
+  const farms = allFarms
 
   const totalRewards = useFarmRewards(farms)
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)
-
-  if (publicDataLoading || userFarmsLoading) {
-    return <LocalLoader />
-  }
 
   const farm = farms && Array.isArray(farms) && farms.length > 0 && farms[0]
   const isFarmEnded = farm && blockNumber && farm.endBlock < blockNumber
@@ -94,23 +78,23 @@ const Farms = () => {
     farm => farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0)
   )
 
-  const handleClickHarvestAll = async () => {
-    setPendingTx(true)
+  // const handleClickHarvestAll = async () => {
+  //   setPendingTx(true)
 
-    const poolsHaveReward = farms.filter(farm => {
-      if (!farm.userData.earnings) {
-        return false
-      }
+  //   const poolsHaveReward = farms.filter(farm => {
+  //     if (!farm.userData.earnings) {
+  //       return false
+  //     }
 
-      const hasReward = farm.userData.earnings.some(value => BigNumber.from(value).gt(0))
+  //     const hasReward = farm.userData.earnings.some(value => BigNumber.from(value).gt(0))
 
-      return hasReward
-    })
+  //     return hasReward
+  //   })
 
-    await harvestMultiplePools(poolsHaveReward.map(farm => farm.pid))
+  //   await harvestMultiplePools(poolsHaveReward.map(farm => farm.pid))
 
-    setPendingTx(false)
-  }
+  //   setPendingTx(false)
+  // }
 
   const canHarvest = (rewards: Reward[]): boolean => {
     const canHarvest = rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
@@ -137,7 +121,10 @@ const Farms = () => {
         </KNCPriceContainer>
         <TabContainer>
           <Tab onClick={() => setActiveTab(0)} isActive={activeTab === 0}>
-            <div>{t('allPools')}</div>
+            <PoolTitleContainer>
+              <span style={{ marginRight: '4px' }}>{t('allPools')}</span>
+              {loading && <Loader />}
+            </PoolTitleContainer>
           </Tab>
           <Tab onClick={() => setActiveTab(1)} isActive={activeTab === 1}>
             <div>{t('vesting')}</div>
@@ -152,10 +139,12 @@ const Farms = () => {
               <StakedOnlyToggleText>Staked Only</StakedOnlyToggleText>
             </StakedOnlyToggleWrapper>
           )}
-          <HistoryButton onClick={toggleFarmHistoryModal}>
-            <img src={HistoryImg} alt="HistoryImg" />
-            History
-          </HistoryButton>
+          {chainId && [ChainId.MAINNET, ChainId.ROPSTEN].includes(chainId) && (
+            <HistoryButton onClick={toggleFarmHistoryModal}>
+              <img src={HistoryImg} alt="HistoryImg" />
+              History
+            </HistoryButton>
+          )}
         </TabContainer>
 
         {activeTab === 0 ? (
@@ -196,7 +185,7 @@ const Farms = () => {
                   </RewardNumber>
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD.toString(), true)}</RewardUSD>
                 </TotalRewardsContainer>
-                <div>
+                {/* <div>
                   <ButtonPrimary
                     disabled={!canHarvest(totalRewards) || pendingTx}
                     padding="10px 36px"
@@ -204,7 +193,7 @@ const Farms = () => {
                   >
                     Harvest All
                   </ButtonPrimary>
-                </div>
+                </div> */}
               </HarvestAllContainer>
             </HeadingContainer>
 

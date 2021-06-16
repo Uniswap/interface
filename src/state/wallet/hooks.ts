@@ -109,7 +109,6 @@ export function useCurrencyBalances(
   return useMemo(
     () =>
       currencies?.map(currency => {
-        console.log('===currency', currency, currency === ETHER)
         if (!account || !currency) return undefined
         if (currency instanceof Token) return tokenBalances[currency.address]
         if (currency === ETHER) return ethBalance[account]

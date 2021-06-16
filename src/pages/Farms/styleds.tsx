@@ -60,6 +60,11 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   }
 `
 
+export const PoolTitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
+
 export const StakedOnlyToggleWrapper = styled.div`
   display: flex;
   align-items: center;

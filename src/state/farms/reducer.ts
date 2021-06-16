@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 
 import { Farm } from 'state/farms/types'
-import { setRewardTokens, setFarmsPublicData, setLoading, setError, setFarmsUserData } from './actions'
+import { setRewardTokens, setFarmsData, setLoading, setError } from './actions'
 
 export interface FarmsState {
   readonly data: Farm[]
@@ -25,18 +25,11 @@ export default createReducer<FarmsState>(initialState, builder =>
         rewardTokens
       }
     })
-    .addCase(setFarmsPublicData, (state, { payload: { farms } }) => {
+    .addCase(setFarmsData, (state, { payload: { farms } }) => {
       return {
         ...state,
         data: farms
       }
-    })
-    .addCase(setFarmsUserData, (state, { payload: { farmsUserData } }) => {
-      farmsUserData.forEach(farmUserData => {
-        const { pid } = farmUserData
-        const index = state.data.findIndex(farm => farm.pid === pid)
-        state.data[index] = { ...state.data[index], userData: farmUserData }
-      })
     })
     .addCase(setLoading, (state, { payload: loading }) => {
       return {
