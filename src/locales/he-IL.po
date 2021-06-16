@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-06-16 15:05\n"
+"PO-Revision-Date: 2021-06-16 17:15\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -92,12 +92,12 @@ msgstr "75%"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "<0/> All Proposals"
-msgstr "<0 /> כל ההצעות"
+msgstr "<0/> כל ההצעות"
 
 #: src/pages/Vote/index.tsx
 #: src/pages/Vote/index.tsx
 msgid "<0/> Votes"
-msgstr "<0 /> הצבעות"
+msgstr "<0/> הצבעות"
 
 #: src/pages/Pool/v2.tsx
 msgid "<0>Account analytics and accrued fees</0><1> ↗ </1>"
@@ -171,7 +171,7 @@ msgstr "הוסף נזילות."
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0} to Metamask <0/>"
-msgstr "הוסף {0} למטא-מסכה <0 />"
+msgstr "הוסף {0} למטא-מסכה <0/>"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -264,7 +264,7 @@ msgstr "האם אתה בטוח?"
 
 #: src/components/claim/ClaimModal.tsx
 msgid "As a member of the Uniswap community you may claim UNI to be used for voting and governance.<0/><1/><2>Read more about UNI</2>"
-msgstr "כחבר בקהילת Uniswap אתה יכול לטעון ש- UNI משמשת להצבעה ולממשל. <0 /> <1 /> <2> קרא עוד על UNI</2>"
+msgstr "כחבר בקהילת Uniswap אתה יכול לטעון ש- UNI משמשת להצבעה ולממשל. <0/> <1/> <2> קרא עוד על UNI</2>"
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "At least {0} {1} and {2} {3} will be refunded to your wallet due to selected price range."
@@ -1729,7 +1729,7 @@ msgstr "עליך לתת לחוזים החכמים של Uniswap להשתמש ב- 
 
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <0/>If the price seems incorrect, you can either make a swap to move the price or wait for someone else to do so."
-msgstr "עליכם להפקיד נזילות רק ב- Uniswap V3 במחיר שלדעתכם נכון. <0 /> אם נראה שהמחיר שגוי, באפשרותך להחליף כדי להזיז את המחיר או לחכות שמישהו אחר יעשה זאת."
+msgstr "עליכם להפקיד נזילות רק ב- Uniswap V3 במחיר שלדעתכם נכון. <0/> אם נראה שהמחיר שגוי, באפשרותך להחליף כדי להזיז את המחיר או לחכות שמישהו אחר יעשה זאת."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "You will also collect fees earned from this position."
@@ -1872,7 +1872,7 @@ msgstr "{0} %"
 #: src/components/PositionListItem/index.tsx
 #: src/components/PositionListItem/index.tsx
 msgid "{0} <0/> per <1/>"
-msgstr "{0} <0 /> לכל <1 />"
+msgstr "{0} <0 /> לכל <1/>"
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "{0} Custom Tokens"
@@ -1999,7 +1999,7 @@ msgstr "{tokenB} לכל {tokenA}"
 
 #: src/components/CurrencyInputPanel/FiatValue.tsx
 msgid "~$ <0/>"
-msgstr "~ $ <0 />"
+msgstr "~ $ <0/>"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
