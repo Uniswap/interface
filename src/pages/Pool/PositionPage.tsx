@@ -781,7 +781,12 @@ export function PositionPage({
                     <Trans>Min price</Trans>
                   </ExtentsText>
                   <TYPE.mediumHeader textAlign="center">{priceLower?.toSignificant(5)}</TYPE.mediumHeader>
-                  <ExtentsText> {currencyQuote?.symbol + ' per ' + currencyBase?.symbol}</ExtentsText>
+                  <ExtentsText>
+                    {' '}
+                    <Trans>
+                      {currencyQuote?.symbol} per {currencyBase?.symbol}
+                    </Trans>
+                  </ExtentsText>
 
                   {inRange && (
                     <TYPE.small color={theme.text3}>

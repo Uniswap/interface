@@ -27,7 +27,7 @@ import {
   V3_CORE_FACTORY_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
   ARGENT_WALLET_DETECTOR_ADDRESS,
-  GOVERNANCE_ADDRESS,
+  GOVERNANCE_ADDRESSES,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MULTICALL2_ADDRESSES,
   V2_ROUTER_ADDRESS,
@@ -116,8 +116,11 @@ export function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
 }
 
-export function useGovernanceContract() {
-  return useContract(GOVERNANCE_ADDRESS, GOVERNANCE_ABI, true)
+export function useGovernanceContracts(): (Contract | null)[] {
+  return [
+    useContract(GOVERNANCE_ADDRESSES[0], GOVERNANCE_ABI, false),
+    useContract(GOVERNANCE_ADDRESSES[1], GOVERNANCE_ABI, true),
+  ]
 }
 
 export function useUniContract() {

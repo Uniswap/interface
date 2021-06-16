@@ -452,7 +452,6 @@ export default function Swap({ history }: RouteComponentProps) {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             height: '24px',
-                            opacity: 0.8,
                             lineHeight: '120%',
                             marginLeft: '0.75rem',
                           }}
@@ -477,7 +476,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         display: 'flex',
                         justifyContent: 'space-between',
                         height: '24px',
-                        opacity: 0.4,
+                        opacity: 0.8,
                         marginLeft: '0.25rem',
                       }}
                     >
