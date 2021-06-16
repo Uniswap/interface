@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-06-16 11:05\n"
+"PO-Revision-Date: 2021-06-16 12:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -894,7 +894,7 @@ msgstr "נהל רשימות אסימונים"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Manage this pool."
-msgstr "נהל את הבריכה הזו."
+msgstr "נהל את המאגר הזה."
 
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -990,7 +990,7 @@ msgstr "לא נמצאה נזילות."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "No pool found."
-msgstr "לא נמצאה בריכה."
+msgstr "לא נמצא מאגר."
 
 #: src/pages/Vote/index.tsx
 msgid "No proposals found."
@@ -1068,24 +1068,24 @@ msgstr "אנא הקלד את המילה \"{confirmWord}\" כדי להפעיל מ
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 msgid "Pool"
-msgstr "בריכה"
+msgstr "מאגר"
 
 #: src/pages/PoolFinder/index.tsx
 msgid "Pool Found!"
-msgstr "בריכה נמצאה!"
+msgstr "מאגר נמצא!"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Pool Rate"
-msgstr "תעריף בריכה"
+msgstr "תעריף מאגר"
 
 #: src/components/earn/PoolCard.tsx
 msgid "Pool rate"
-msgstr "תעריף בריכה"
+msgstr "תעריף מאגר"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 msgid "Pool tokens in rewards pool:"
-msgstr "אסימונים לבריכה בבריכת תגמולים:"
+msgstr "אסימונים למאגר בבריכת תגמולים:"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
@@ -1100,7 +1100,7 @@ msgstr "מאוגד {0}:"
 
 #: src/pages/Pool/index.tsx
 msgid "Pools Overview"
-msgstr "סקירת בריכות"
+msgstr "סקירת מאגרים"
 
 #: src/components/swap/SwapModalHeader.tsx
 #: src/pages/RemoveLiquidity/index.tsx
@@ -1233,7 +1233,7 @@ msgstr "בחר בריכה"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "בחר סוג בריכה על בסיס עמלת ספק הנזילות המועדפת עליך."
+msgstr "בחר סוג מאגר על בסיס עמלת ספק הנזילות המועדפת עליך."
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1274,11 +1274,11 @@ msgstr "הגדר מחיר התחלתי"
 
 #: src/pages/AddLiquidityV2/PoolPriceBar.tsx
 msgid "Share of Pool"
-msgstr "נתח הבריכה"
+msgstr "נתח המאגר"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
-msgstr "נתח הבריכה:"
+msgstr "נתח המאגר:"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
@@ -1360,11 +1360,11 @@ msgstr "לא ניתן להעביר את אסימון הפלט. ייתכן שיש
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "המחיר של הבריכה הזו מחוץ לטווח שבחרתם. עמדתך אינה מרוויחה כרגע עמלות."
+msgstr "המחיר של המאגר הזה מחוץ לטווח שבחרתם. עמדתך אינה מרוויחה כרגע עמלות."
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "המחיר של הבריכה הזו הוא בטווח שבחרתם. עמדתך מרוויחה כרגע עמלות."
+msgstr "המחיר של המאגר הזה הוא בטווח שבחרתם. עמדתך מרוויחה כרגע עמלות."
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
@@ -1829,7 +1829,7 @@ msgstr "העסקאות שלך יופיעו כאן ..."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your unclaimed UNI"
-msgstr "האו\"ם הלא מתבקש שלך"
+msgstr "ה-UNI שלך לא נדרש"
 
 #: src/components/Settings/index.tsx
 msgid "confirm"
@@ -1841,7 +1841,7 @@ msgstr "עבור {0}"
 
 #: src/components/Web3Status/index.tsx
 msgid "has socks emoji"
-msgstr "יש אימוג'י גרביים"
+msgstr "יש אימוג'י של גרביים"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
@@ -2003,5 +2003,5 @@ msgstr "~ $ <0 />"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "← Back to Pools Overview"
-msgstr "← חזרה לסקירת בריכות"
+msgstr "← חזרה לסקירת מאגרים"
 
