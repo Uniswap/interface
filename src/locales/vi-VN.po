@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Vietnamese\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-16 20:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1336,7 +1336,7 @@ msgstr "Đổi {0} {1} lấy {2} {3}"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
-msgstr "Cảm ơn bạn đã tham gia cộng đồng Uniswap <0 />"
+msgstr "Cảm ơn bạn đã tham gia cộng đồng Uniswap <0/>"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The Uniswap invariant x*y=k was not satisfied by the swap. This usually means one of the tokens you are swapping incorporates custom behavior on transfer."
