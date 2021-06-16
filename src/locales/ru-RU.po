@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Russian\n"
-"PO-Revision-Date: 2021-06-16 03:05\n"
+"PO-Revision-Date: 2021-06-16 08:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -129,7 +129,7 @@ msgstr "<0>🎉 </0>Добро пожаловать в команду едино
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "Для подачи предложений требуется минимальный порог в 0,25% от общего объема поставки UNI."
+msgstr "Для внесения предложений требуется минимальный порог в 0,25% от общего предложения UNI"
 
 #: src/components/Menu/index.tsx
 msgid "About"
