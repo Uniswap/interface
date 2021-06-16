@@ -22,7 +22,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
           detectedHex = shade(0.005, detectedHex)
           AAscore = hex(detectedHex, '#FFF')
         }
-        return detectedHex + '20'
+        return detectedHex
       }
       return null
     })

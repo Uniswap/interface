@@ -270,7 +270,7 @@ ${bodyValue}
         />
         {!hasEnoughVote ? (
           <AutonomousProposalCTA>
-            Don’t have 10M votes? Anyone can create an autonomous proposal using{' '}
+            Don’t have 2.5M votes? Anyone can create an autonomous proposal using{' '}
             <ExternalLink href="https://fish.vote">fish.vote</ExternalLink>
           </AutonomousProposalCTA>
         ) : null}

@@ -70,7 +70,7 @@ export function SubmittedView({
             style={{ marginLeft: '4px' }}
           >
             <TYPE.subHeader>
-              <Trans>View transaction on Etherscan</Trans>
+              <Trans>View transaction on Explorer</Trans>
             </TYPE.subHeader>
           </ExternalLink>
         )}
