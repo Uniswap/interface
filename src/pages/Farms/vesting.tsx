@@ -57,21 +57,6 @@ const Seperator = styled.div`
   border: 1px solid #404b51;
 `
 
-// interface VTObject {
-//   vestableIndexes: {[key: string] : number[]},
-//     vestableAmount: {[key: string] : BigNumber},
-//     fullyIndexes: {[key: string] : number[]},
-//     fullyAmount: {[key: string] : BigNumber},
-//     totalAmount: {[key: string] : BigNumber},
-//     unlockedAmount: {[key: string] : BigNumber},
-// }
-// interface LooseObject {
-//   [key: string]: any
-// }
-
-// interface LooseObject2 {
-//   [key: string]: any
-// }
 const Vesting = () => {
   const theme = useContext(ThemeContext)
   const kncPrice = useKNCPrice()
@@ -80,8 +65,6 @@ const Vesting = () => {
     value => kncPrice && value && `$${(parseFloat(kncPrice) * parseFloat(fixedFormatting(value, 18))).toFixed(2)}`,
     [kncPrice]
   )
-  // {'knc' : 100, 'eth': 100}
-
   const { account, chainId } = useActiveWeb3React()
   const currentBlockNumber = useBlockNumber()
   const { schedules } = useVesting()
@@ -343,10 +326,6 @@ const Schedule = ({ schedule }: any) => {
     .mul(vestedAndVestablePercent)
     .div(100)
     .sub(BigNumber.from(schedule[3]))
-  // console.log('====vestableAmount')
-  // console.log(fixedFormatting(BigNumber.from(schedule[2]), 18))
-  // console.log(fixedFormatting(BigNumber.from(schedule[3]), 18))
-  // console.log(fixedFormatting(vestableAmount, 18))
   vestableAmount = vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount
 
   const unvestableAmount = BigNumber.from(schedule[2])
