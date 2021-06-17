@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Hebrew\n"
-"PO-Revision-Date: 2021-06-16 17:15\n"
+"PO-Revision-Date: 2021-06-17 09:04\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -316,7 +316,7 @@ msgstr "על ידי הוספת רשימה זו אתה סומך באופן מרו
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the <1>Uniswap protocol disclaimer</1>."
-msgstr "על ידי חיבור ארנק אתה מסכים לתנאי השירות <0> של Uniswap Labs</0> ומודה כי קראת והבנת את כתב הוויתור על פרוטוקול Uniswap</1>."
+msgstr "על ידי חיבור ארנק אתה מסכים <0>לתנאי השירות</0> של Uniswap Labs ומודה כי קראת והבנת את כתב הוויתור על פרוטוקול <1>Uniswap</1>."
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
