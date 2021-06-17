@@ -497,6 +497,7 @@ export function useRangeHopCallbacks(
   const getSetRange = useCallback(
     (numTicks: number) => {
       if (baseToken && quoteToken && feeAmount && pool) {
+        console.log(`getSetRange to ${feeAmount} ${numTicks}`)
         // calculate range around current price given `numTicks`
         const newPriceLower = tickToPrice(baseToken, quoteToken, pool.tickCurrent - numTicks)
         const newPriceUpper = tickToPrice(baseToken, quoteToken, pool.tickCurrent + numTicks)
@@ -513,11 +514,11 @@ export function useRangeHopCallbacks(
 
   const getSetFullRange = useCallback(() => {
     if (baseToken && quoteToken && feeAmount && pool) {
-      const newPriceLower = tickToPrice(baseToken, quoteToken, pool?.tickCurrent % TICK_SPACINGS[feeAmount])
+      const newPriceLower = tickToPrice(baseToken, quoteToken, TickMath.MIN_TICK)
       const newPriceUpper = tickToPrice(baseToken, quoteToken, TickMath.MAX_TICK)
 
       return [
-        newPriceLower.toSignificant(5, undefined, Rounding.ROUND_UP),
+        newPriceLower.toSignificant(8, undefined, Rounding.ROUND_UP),
         newPriceUpper.toSignificant(5, undefined, Rounding.ROUND_UP),
       ]
     }

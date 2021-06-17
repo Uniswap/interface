@@ -47,6 +47,7 @@ export default function RangeSelector({
   return (
     <AutoColumn gap="md">
       <PresetsButtons
+        feeAmount={feeAmount}
         setRange={(numTicks) => {
           const [range1, range2] = getSetRange(numTicks)
           batch(() => {
