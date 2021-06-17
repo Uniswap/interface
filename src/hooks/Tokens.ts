@@ -15,6 +15,7 @@ import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
 import { filterTokens } from '../components/SearchModal/filtering'
 import { arrayify } from 'ethers/lib/utils'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
@@ -181,7 +182,8 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 }
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
-  const isETH = currencyId?.toUpperCase() === 'ETH'
+  const { chainId } = useActiveWeb3React()
+  const isETH = chainId && currencyId?.toUpperCase() === convertToNativeTokenFromETH(Currency.ETHER, chainId).symbol
   const token = useToken(isETH ? undefined : currencyId)
   return isETH ? ETHER : token
 }

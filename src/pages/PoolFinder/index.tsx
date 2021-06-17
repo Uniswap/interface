@@ -27,8 +27,7 @@ enum Fields {
 }
 
 export default function PoolFinder() {
-  const { account } = useActiveWeb3React()
-  const { chainId } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
@@ -149,8 +148,8 @@ export default function PoolFinder() {
           )}
         </ButtonDropdownLight>
         <StyledInternalLink
-          to={`/pools/${!!currency0 ? currencyId(currency0) : undefined}/${
-            !!currency1 ? currencyId(currency1) : undefined
+          to={`/pools/${!!currency0 ? currencyId(currency0, chainId) : undefined}/${
+            !!currency1 ? currencyId(currency1, chainId) : undefined
           }`}
         >
           <Text textAlign="center">Add liquidity</Text>

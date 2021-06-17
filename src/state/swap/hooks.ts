@@ -15,7 +15,8 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { BAD_RECIPIENT_ADDRESSES } from "../../constants";
+import { BAD_RECIPIENT_ADDRESSES } from '../../constants'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -106,7 +107,7 @@ export function useDerivedSwapInfo(): {
   v2Trade: Trade | undefined
   inputError?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
     independentField,
@@ -181,7 +182,7 @@ export function useDerivedSwapInfo(): {
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
+    inputError = 'Insufficient ' + convertToNativeTokenFromETH(amountIn.currency, chainId).symbol + ' balance'
   }
 
   return {

@@ -293,7 +293,7 @@ export function useFarmApr(rewardPerBlocks: RewardPerBlock[], poolLiquidityUsd: 
   return apr
 }
 
-export function convertToNativeTokenFromETH(currency: Currency, chainId: ChainIdDMM): Currency {
+export function convertToNativeTokenFromETH(currency: Currency, chainId?: ChainIdDMM): Currency {
   if (chainId && [137, 80001].includes(chainId) && currency === Currency.ETHER) {
     return new TokenDMM(chainId, WETH[chainId].address, 18, 'MATIC', 'MATIC')
   }
@@ -352,6 +352,7 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
     }
 
     if (
+      chainId &&
       ethPrice.currentPrice &&
       (reward.token.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase() ||
         reward.token.address.toLowerCase() === ZERO_ADDRESS.toLowerCase())
@@ -401,9 +402,10 @@ export function useRewardTokensFullInfo(): Token[] {
   const { chainId } = useActiveWeb3React()
   const rewardTokens = useRewardTokens()
   const allTokens = useAllTokens()
+  const nativeName = chainId && [137, 80001].includes(chainId) ? 'MATIC' : 'ETH'
   return rewardTokens.map(address =>
     address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
-      ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, 'ETH', 'Ether')
+      ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
       : allTokens[address]
   )
 }

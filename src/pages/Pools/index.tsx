@@ -80,7 +80,7 @@ const Pools = ({
   history
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) => {
   const { t } = useTranslation()
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const [searchValue, setSearchValue] = useState('')
 
   const above1400 = useMedia('(min-width: 1400px)')
@@ -100,7 +100,7 @@ const Pools = ({
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
-      const newCurrencyIdA = currencyId(currencyA)
+      const newCurrencyIdA = currencyId(currencyA, chainId)
       if (newCurrencyIdA === currencyIdB) {
         history.push(`/pools/${currencyIdB}/${currencyIdA}`)
       } else {
@@ -111,7 +111,7 @@ const Pools = ({
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
-      const newCurrencyIdB = currencyId(currencyB)
+      const newCurrencyIdB = currencyId(currencyB, chainId)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
           history.push(`/pools/${currencyIdB}/${newCurrencyIdB}`)
