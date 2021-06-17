@@ -418,7 +418,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
                     padding="8px"
                     as={Link}
                     width="150px"
-                    to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
+                    to={`/remove/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
                   >
                     Remove
                   </ButtonOutlined2>
@@ -426,7 +426,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
                   <ButtonPrimary
                     padding="8px"
                     as={Link}
-                    to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pair.address}`}
+                    to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
                     width="150px"
                   >
                     Add
@@ -438,7 +438,7 @@ export default function FullPositionCard({ pair, border, stakedBalance, myLiquid
               <ButtonPrimary
                 padding="8px"
                 as={Link}
-                to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
+                to={`/uni/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}`}
                 width="100%"
               >
                 Manage Liquidity in Rewards Pool
