@@ -270,6 +270,18 @@ img {
   }
 }
 
+.youtube_video {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
 .icon {
   width: 76px;
   height: 68px;

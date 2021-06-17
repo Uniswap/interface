@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactPlayer from 'react-player/lazy'
 import style from './about.module.scss'
 
 import { Box, Flex, Image, Text } from 'rebass'
@@ -205,10 +206,14 @@ export default function About() {
         padding="12px 18px"
         as={Link}
         to={poolsMenuLink}
-        style={{ margin: '60px auto', fontSize: '16px' }}
+        style={{ margin: '60px auto 100px auto', fontSize: '16px' }}
       >
         Explore pools
       </ButtonOutlined>
+
+      <div className={style.youtube_video}>
+        <ReactPlayer url="https://www.youtube.com/watch?v=2xgboyu7rss" />
+      </div>
 
       <Text fontSize={[24, 36]} color={'#f4f4f4'} mt={[100, 200]} mb={45} maxWidth={'700px'} mx="auto">
         Access DMM Liquidity for your Blockchain Platform
