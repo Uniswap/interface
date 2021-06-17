@@ -56,23 +56,37 @@ export default function About() {
         Providing frictionless crypto liquidity with greater flexibility and extremely high capital efficiency
       </Text>
 
-      <div style={{ padding: '24px' }}>
-        <div className={style.section_number}>
+      <div className={style.section_number_container}>
+        <div className={`${style.section_number} ${style.trading_volume_section}`}>
           <div>
-            <Text fontSize={[24, 42]} fontWeight={[600, 700]} color="#FFFFFF">
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF">
               {formatBigLiquidity(globalData.totalVolumeUSD, 2, true)}
             </Text>
             <Text fontSize={14} mt={2}>
               Total Trading Volume
             </Text>
           </div>
-          <div style={{ width: '0px', border: '1px solid #303e46' }}></div>
-          <div>
-            <Text fontSize={[24, 42]} fontWeight={[600, 700]} color="#FFFFFF" mt={[4, 0]}>
+        </div>
+
+        <div className={style.section_number}>
+          <div className={style.liquidity_number}>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
               {formatBigLiquidity(globalData.totalLiquidityUSD, 2, true)}
             </Text>
             <Text fontSize={14} mt={2}>
               Total Value Locked
+            </Text>
+          </div>
+          <div className={style.line}></div>
+          <div className={style.amp_liquidity_number}>
+            <Text fontSize={[24, 28]} fontWeight={[600, 700]} color="#FFFFFF" mt={[0, 0]}>
+              {formatBigLiquidity(globalData.totalAmplifiedLiquidityUSD, 2, true)}
+            </Text>
+            <Text fontSize={14} mt={2}>
+              Total AMP Liquitity
+            </Text>
+            <Text fontSize={10} fontStyle="italic" mt={2}>
+              Equivalent TVL when compared to typical AMMs
             </Text>
           </div>
         </div>

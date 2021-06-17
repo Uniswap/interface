@@ -60,7 +60,6 @@ export default function CurrencyLogo({
   }, [chainId, currency, uriLocations])
 
   if (currency === ETHER && chainId) {
-    console.log('dakjdklaj')
     return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} />
   }
 
