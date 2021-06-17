@@ -497,6 +497,7 @@ export function useRangeHopCallbacks(
   const getSetRange = useCallback(
     (numTicks: number) => {
       if (baseToken && quoteToken && feeAmount && pool) {
+        console.log(`getSetRange to ${feeAmount} ${numTicks}`)
         // calculate range around current price given `numTicks`
         const newPriceLower = tickToPrice(baseToken, quoteToken, pool.tickCurrent - numTicks)
         const newPriceUpper = tickToPrice(baseToken, quoteToken, pool.tickCurrent + numTicks)
