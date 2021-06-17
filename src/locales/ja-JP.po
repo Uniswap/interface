@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-17 06:04\n"
+"PO-Revision-Date: 2021-06-17 07:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -129,7 +129,7 @@ msgstr "<0>🎉 </0>チーム ユニコーンにようこそ <1>🎉</1>"
 
 #: src/pages/Vote/index.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
-msgstr "提案を提出するには、UNIの総供給量の0.25％以上のしきい値が必要です。"
+msgstr "提案を提出するには、UNIの総供給量の0.25％以上のUNIが必要です。"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -276,7 +276,7 @@ msgstr "自動"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Available to deposit: {0}"
-msgstr "預入れ可能： {0}"
+msgstr "預け入れ可能： {0}"
 
 #: src/components/WalletModal/index.tsx
 msgid "Back"
@@ -296,11 +296,11 @@ msgstr "マイナーなペアに最適"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for most pairs."
-msgstr "ほとんどのペアに最適です。"
+msgstr "ほとんどのペアに最適"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Best for stable pairs."
-msgstr "変動のないペアに最適"
+msgstr "安定的なペアに最適"
 
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
@@ -570,11 +570,11 @@ msgstr "預け入れ"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Deposit Amounts"
-msgstr "トークンの数量"
+msgstr "預け入れる数量"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Deposit UNI-V2 LP Tokens"
-msgstr "UNI-V2 LP トークンを入金"
+msgstr "UNI-V2 LP トークンを預け入れる"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Deposit liquidity"
@@ -610,7 +610,7 @@ msgstr "詳細"
 
 #: src/components/Settings/index.tsx
 msgid "Disable Multihops"
-msgstr "マルチホップの無効"
+msgstr "マルチホップの無効化"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Disconnect"
@@ -699,7 +699,7 @@ msgstr "エキスパートモードは取引確認画面をスキップし、不
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore popular pools on Uniswap Analytics."
-msgstr "Uniswapアナリシスで人気のあるプールを探しましょう。"
+msgstr "Uniswap分析サイトで人気のあるプールを探しましょう。"
 
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
@@ -882,7 +882,7 @@ msgstr "URLが<0>app.uniswap.org</0>であることを確認してください"
 #: src/components/SearchModal/Manage.tsx
 #: src/components/earn/PoolCard.tsx
 msgid "Manage"
-msgstr "詳細"
+msgstr "管理"
 
 #: src/components/PositionCard/index.tsx
 msgid "Manage Liquidity in Rewards Pool"
@@ -1010,7 +1010,7 @@ msgstr "ON"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
-msgstr "このモードは、自分が何をしているか分かっている場合にのみご使用ください。"
+msgstr "このモードは、あなたが何をしているかを理解している場合にのみご使用ください。"
 
 #: src/components/Toggle/index.tsx
 msgid "Off"
@@ -1233,7 +1233,7 @@ msgstr "プールを選択"
 
 #: src/components/FeeSelector/index.tsx
 msgid "Select a pool type based on your preferred liquidity provider fee."
-msgstr "希望する手数料のプールをお選びください。"
+msgstr "希望する手数料率のプールをお選びください。"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
@@ -1266,7 +1266,7 @@ msgstr "自己委任する"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "価格帯"
+msgstr "価格帯の設定"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
@@ -1352,7 +1352,7 @@ msgstr "市場価格が設定した価格帯から外れています。単一ト
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
-msgstr "買うトークンは転送できません。買うトークンに問題がある可能性があります。"
+msgstr "買うトークンが転送できません。買うトークンに問題がある可能性があります。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -1364,7 +1364,7 @@ msgstr "現在の価格は設定した価格帯から外れています。その
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "現在の価格は設定した価格帯に入っています。そのため、現在であなたの流動性は報酬を獲得しています。"
+msgstr "現在の価格は設定した価格帯に入っています。そのため、あなたの流動性は現在、報酬を獲得しています。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
@@ -1583,7 +1583,7 @@ msgstr "v3 {0} 価格:"
 
 #: src/components/Header/UniBalanceContent.tsx
 msgid "View UNI Analytics"
-msgstr "UNI アナリティクスを表示"
+msgstr "UNI 分析サイトを表示"
 
 #: src/pages/Pool/index.tsx
 msgid "View V2 Liquidity"
@@ -1591,7 +1591,7 @@ msgstr "V2の流動性を表示"
 
 #: src/components/PositionCard/index.tsx
 msgid "View accrued fees and analytics<0>↗</0>"
-msgstr "発生した報酬と分析を表示<0>↗</0>"
+msgstr "発生した報酬と分析を見る<0>↗</0>"
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "View list"
@@ -1654,7 +1654,7 @@ msgstr "チーム ユニコーンへようこそ"
 
 #: src/components/earn/ClaimRewardModal.tsx
 msgid "When you claim without withdrawing your liquidity remains in the mining pool."
-msgstr "流動性を引き出しをせずに請求すると、流動性はマイニングプールに残ります。"
+msgstr "流動性を引き出すことなく、請求すると、流動性はマイニングプールに残ります。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "When you withdraw, the contract will automagically claim UNI on your behalf!"
@@ -1892,7 +1892,7 @@ msgstr "{0} ETH"
 #: src/pages/RemoveLiquidity/V3.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "{0} Fees Earned:"
-msgstr "{0} の報酬を獲得："
+msgstr "{0} の獲得した報酬："
 
 #: src/components/Web3Status/index.tsx
 msgid "{0} Pending"

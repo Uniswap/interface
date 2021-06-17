@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Greek\n"
-"PO-Revision-Date: 2021-06-16 17:15\n"
+"PO-Revision-Date: 2021-06-17 07:07\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1554,7 +1554,7 @@ msgstr "Μη Υποστηριζόμενα Περιουσιακά Στοιχεί�
 
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
-msgstr "Ξεδιπλώνω"
+msgstr "Αποκαλύπτω"
 
 #: src/pages/Vote/index.tsx
 msgid "Update Delegation"
@@ -1688,7 +1688,7 @@ msgstr "Πραγματοποιήθηκε ανάληψη UNI-V2!"
 
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
-msgstr "Αναδίπλωση"
+msgstr "Καλύπτω"
 
 #: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
