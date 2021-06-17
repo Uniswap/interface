@@ -5,7 +5,7 @@ export const MATIC_TOKEN_LIST = {
   tokens: [
     {
       chainId: 137,
-      address: '0x1C954E8fe737F99f68Fa1CCda3e51ebDB291948C',
+      address: '0x51E8D106C646cA58Caf32A47812e95887C071a62', // TODO: update later to the real KNC
       symbol: 'KNC',
       name: 'Kyber Network Crystal',
       decimals: 18
