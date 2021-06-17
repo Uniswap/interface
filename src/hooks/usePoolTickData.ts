@@ -55,7 +55,7 @@ export function usePoolTickData(
       error ||
       !valid ||
       pool[0] !== PoolState.EXISTS ||
-      !activeTick ||
+      activeTick === undefined ||
       !tickSpacing ||
       !numSurroundingTicks
     ) {
