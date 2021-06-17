@@ -20,6 +20,7 @@ import { unwrappedToken } from 'utils/wrappedCurrency'
 import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc } from 'utils/dmm'
 import { setSelectedPool } from 'state/pools/actions'
 import Loader from 'components/Loader'
+import InfoHelper from 'components/InfoHelper'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -191,7 +192,12 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
         </GridItem>
 
         <GridItem>
-          <DataTitle>Liq/AMPL</DataTitle>
+          <DataTitle>
+            <span>Liq/AMPL</span>
+            <InfoHelper
+              text={'AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.'}
+            />
+          </DataTitle>
           <DataText grid-area="liq">
             <div>{!subgraphPoolData ? <Loader /> : formattedNum(subgraphPoolData.reserveUSD, true)}</div>
             <div>{!subgraphPoolData ? <Loader /> : ampLiquidity}</div>
@@ -202,7 +208,14 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
           <DataText grid-area="vol">{!subgraphPoolData ? <Loader /> : formattedNum(volume, true)}</DataText>
         </GridItem>
         <GridItem>
-          <DataTitle>Ratio</DataTitle>
+          <DataTitle>
+            <span>Ratio</span>
+            <InfoHelper
+              text={
+                'Current token pair ratio of the pool. Ratio changes depending on pool trades. Add liquidity according to this ratio.'
+              }
+            />
+          </DataTitle>
           <DataText grid-area="ratio">
             <div>{`• ${percentToken0}% ${pool.token0.symbol}`}</div>
             <div>{`• ${percentToken1}% ${pool.token1.symbol}`}</div>
@@ -214,7 +227,14 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
           <DataText>{!subgraphPoolData ? <Loader /> : formattedNum(fee, true)}</DataText>
         </GridItem>
         <GridItem>
-          <DataTitle>AMP</DataTitle>
+          <DataTitle>
+            <span>AMP</span>
+            <InfoHelper
+              text={
+                'Amplification Factor. Higher AMP, higher capital efficiency within a price range. Higher AMP recommended for more stable pairs, lower AMP for more volatile pairs.'
+              }
+            />
+          </DataTitle>
           <DataText>{formattedNum(amp.toSignificant(5))}</DataText>
         </GridItem>
         <GridItem>

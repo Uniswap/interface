@@ -54,10 +54,16 @@ export function useMultipleContracts(
 
     try {
       addresses.forEach(address => {
-        result[address] = getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+        if (address) {
+          result[address] = getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+        }
       })
 
-      return result
+      if (Object.keys(result).length > 0) {
+        return result
+      }
+
+      return null
     } catch (error) {
       console.error('Failed to get contract', error)
 
