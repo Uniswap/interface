@@ -130,7 +130,7 @@ export const KNC: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.MATIC]: new Token(
     ChainId.MATIC,
-    '0x1C954E8fe737F99f68Fa1CCda3e51ebDB291948C',
+    '0x51E8D106C646cA58Caf32A47812e95887C071a62', // TODO: update later to the real KNC
     18,
     'KNC',
     'Kyber Network Crystal'
@@ -343,7 +343,7 @@ export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
   [ChainId.RINKEBY]: [''],
   [ChainId.GÖRLI]: [''],
   [ChainId.KOVAN]: [''],
-  [ChainId.MATIC]: [''],
+  [ChainId.MATIC]: ['0xf530a090EF6481cfB33F98c63532E7745abab58A', '0xF13A25d05898530b5615698aa98D76684914aEdB'],
   [ChainId.MUMBAI]: ['0xDF79298D220934a6bb7c6647553733d25A837c78', '0x0f7696c307a2eDb5b3Ff631Aba9D834BE6339e6B']
 }
 
@@ -353,7 +353,7 @@ export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.RINKEBY]: '',
   [ChainId.GÖRLI]: '',
   [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
+  [ChainId.MATIC]: '0xC3E2aED41ECdFB1ad41ED20D45377Da98D5489dD',
   [ChainId.MUMBAI]: '0x865CCCCEab0d73d361efC02D89D1B9D87905957b'
 }
 
