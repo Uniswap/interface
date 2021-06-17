@@ -39,6 +39,12 @@ const ListButton = styled.button`
   border: 0;
   background: none;
   cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    filter: grayscale(90%);
+    opacity: 0.6;
+  }
 `;
 
 const ListIconWrapper = styled.div`
@@ -91,6 +97,7 @@ export const ConnectWalletPopover = ({setModal, tryActivation, children}: Connec
                   option.connector !== connector && !option.href && tryActivation(option.connector)
                 }}
                 icon={require('../../assets/images/' + option.iconName)}
+                active={option.connector && option.connector === connector}
               />
             </>
           )
@@ -141,6 +148,7 @@ export const ConnectWalletPopover = ({setModal, tryActivation, children}: Connec
             }}
             name={option.name}
             icon={require('../../assets/images/' + option.iconName)}
+            active={option.connector && option.connector === connector}
           />
         )
       )
@@ -175,9 +183,10 @@ interface ItemProps {
   name: string;
   link?: string;
   onClick?: () => void;
+  active?: boolean;
 }
 
-export const Item = ({id, onClick, name, icon, link}: ItemProps) => {
+export const Item = ({id, onClick, name, icon, link, active}: ItemProps) => {
 
   const getContent = () => (
     <>
@@ -192,7 +201,7 @@ export const Item = ({id, onClick, name, icon, link}: ItemProps) => {
     <ListItem id={id}>
       {!!link 
         ? <ListButton as="a" href={link} target="_blank" rel="noopener noreferrer">{getContent()}</ListButton>
-        : <ListButton onClick={onClick}>{getContent()}</ListButton>
+        : <ListButton disabled={active} onClick={onClick}>{getContent()}</ListButton>
       }
     </ListItem>
   )
