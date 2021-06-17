@@ -13,9 +13,9 @@ export default function computeSurroundingTicks(
   activeTickProcessed: TickProcessed,
   tickIdxToInitializedTick: { [key: string]: TickData },
   tickSpacing: number,
-  numSurroundingTicks: number,
   ascending: boolean
 ): TickProcessed[] {
+  const start = Date.now()
   let previousTickProcessed: TickProcessed = {
     ...activeTickProcessed,
   }
@@ -23,7 +23,7 @@ export default function computeSurroundingTicks(
   // Iterate outwards (either up or down depending on direction) from the active tick,
   // building active liquidity for every tick.
   let processedTicks: TickProcessed[] = []
-  for (let i = 0; i < numSurroundingTicks; i++) {
+  for (let i = 0; i < Object.keys(tickIdxToInitializedTick).length; i++) {
     const currentTickIdx = ascending
       ? previousTickProcessed.tickIdx + tickSpacing
       : previousTickProcessed.tickIdx - tickSpacing
@@ -73,6 +73,8 @@ export default function computeSurroundingTicks(
   if (!ascending) {
     processedTicks = processedTicks.reverse()
   }
+
+  console.log('Compute surrounding (' + ascending + ')' + (Date.now() - start) / 1000)
 
   return processedTicks
 }
