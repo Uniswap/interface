@@ -337,14 +337,14 @@ export const ROPSTEN_TOKEN_LOGOS_MAPPING: {
   '0xc778417e063141139fce010982780140aa0cd5ab': '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
 }
 
-export const MASTERCHEF_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '',
-  [ChainId.ROPSTEN]: '0xCa0767cb6473628F27287c04096f242Ca649f5B6',
-  [ChainId.RINKEBY]: '',
-  [ChainId.GÖRLI]: '',
-  [ChainId.KOVAN]: '',
-  [ChainId.MATIC]: '',
-  [ChainId.MUMBAI]: '0xDF79298D220934a6bb7c6647553733d25A837c78'
+export const FAIRLAUNCH_ADDRESSES: { [chainId in ChainId]: string[] } = {
+  [ChainId.MAINNET]: [''],
+  [ChainId.ROPSTEN]: ['0xCa0767cb6473628F27287c04096f242Ca649f5B6'],
+  [ChainId.RINKEBY]: [''],
+  [ChainId.GÖRLI]: [''],
+  [ChainId.KOVAN]: [''],
+  [ChainId.MATIC]: [''],
+  [ChainId.MUMBAI]: ['0xDF79298D220934a6bb7c6647553733d25A837c78', '0x0f7696c307a2eDb5b3Ff631Aba9D834BE6339e6B']
 }
 
 export const REWARD_LOCKER_ADDRESS: { [chainId in ChainId]: string } = {

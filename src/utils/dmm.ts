@@ -310,11 +310,6 @@ export function useCurrencyConvertedToNative(currency?: Currency): Currency | un
 }
 
 export function useFarmRewards(farms?: Farm[]): Reward[] {
-  const { chainId } = useActiveWeb3React()
-  const rewardTokens = useRewardTokens()
-
-  const allTokens = useAllTokens()
-
   if (!farms) {
     return []
   }
@@ -322,14 +317,14 @@ export function useFarmRewards(farms?: Farm[]): Reward[] {
   const initialRewards: Reward[] = []
 
   const farmRewards = farms.reduce((total, farm) => {
-    if (farm.userData?.earnings) {
-      rewardTokens.map((address, index) => {
+    if (farm.userData?.rewards) {
+      farm.rewardTokens.map((token, index) => {
         if (total[index]) {
-          total[index].amount = total[index].amount.add(BigNumber.from(farm.userData?.earnings?.[index]))
+          total[index].amount = total[index].amount.add(BigNumber.from(farm.userData?.rewards?.[index]))
         } else {
           total[index] = {
-            token: address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ? WETH[chainId as ChainId] : allTokens[address],
-            amount: BigNumber.from(farm.userData?.earnings?.[index])
+            token,
+            amount: BigNumber.from(farm.userData?.rewards?.[index])
           }
         }
       })
@@ -375,10 +370,6 @@ export function useFarmRewardsUSD(rewards?: Reward[]): number {
 }
 
 export function useFarmRewardPerBlocks(farms?: Farm[]): Reward[] {
-  const { chainId } = useActiveWeb3React()
-  const rewardTokens = useRewardTokens()
-  const allTokens = useAllTokens()
-
   if (!farms) {
     return []
   }
@@ -387,12 +378,12 @@ export function useFarmRewardPerBlocks(farms?: Farm[]): Reward[] {
 
   const farmRewardPerBlocks = farms.reduce((total, farm) => {
     if (farm.rewardPerBlocks) {
-      rewardTokens.map((address, index) => {
+      farm.rewardTokens.map((token, index) => {
         if (total[index]) {
           total[index].amount = total[index].amount.add(BigNumber.from(farm.rewardPerBlocks[index]))
         } else {
           total[index] = {
-            token: address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ? WETH[chainId as ChainId] : allTokens[address],
+            token,
             amount: BigNumber.from(farm.rewardPerBlocks[index])
           }
         }

@@ -15,9 +15,9 @@ import WETH_ABI from '../constants/abis/weth.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
-import { FACTORY_ADDRESSES, MASTERCHEF_ADDRESS, REWARD_LOCKER_ADDRESS } from '../constants'
+import { FACTORY_ADDRESSES, FAIRLAUNCH_ADDRESSES, REWARD_LOCKER_ADDRESS } from '../constants'
 import FACTORY_ABI from '../constants/abis/dmm-factory.json'
-import MASTERCHEF_ABI from '../constants/abis/masterchef.json'
+import FAIRLAUNCH_ABI from '../constants/abis/fairlaunch.json'
 import REWARD_LOCKER_ABI from '../constants/abis/reward-locker.json'
 
 // returns null on errors
@@ -33,6 +33,37 @@ export function useContract(address: string | undefined, ABI: any, withSignerIfP
       return null
     }
   }, [address, ABI, library, withSignerIfPossible, account])
+}
+
+// returns null on errors
+export function useMultipleContracts(
+  addresses: string[] | undefined,
+  ABI: any,
+  withSignerIfPossible = true
+): {
+  [key: string]: Contract
+} | null {
+  const { library, account } = useActiveWeb3React()
+
+  return useMemo(() => {
+    if (!addresses || !Array.isArray(addresses) || addresses.length === 0 || !ABI || !library) return null
+
+    const result: {
+      [key: string]: Contract
+    } = {}
+
+    try {
+      addresses.forEach(address => {
+        result[address] = getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+      })
+
+      return result
+    } catch (error) {
+      console.error('Failed to get contract', error)
+
+      return null
+    }
+  }, [addresses, ABI, library, withSignerIfPossible, account])
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
@@ -101,9 +132,24 @@ export function useFactoryContract(): Contract | null {
   return useContract(chainId && FACTORY_ADDRESSES[chainId], FACTORY_ABI)
 }
 
-export function useMasterChefContract(withSignerIfPossible?: boolean): Contract | null {
+export function useFairLaunchContracts(
+  withSignerIfPossible?: boolean
+): {
+  [key: string]: Contract
+} | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MASTERCHEF_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
+
+  return useMultipleContracts(chainId && FAIRLAUNCH_ADDRESSES[chainId], FAIRLAUNCH_ABI, withSignerIfPossible)
+}
+
+export function useFairLaunchContract(address: string, withSignerIfPossible?: boolean): Contract | null {
+  const fairLaunchContracts = useFairLaunchContracts(withSignerIfPossible)
+
+  if (!fairLaunchContracts) {
+    return null
+  }
+
+  return fairLaunchContracts[address]
 }
 
 export function useRewardLockerContract(withSignerIfPossible?: boolean): Contract | null {

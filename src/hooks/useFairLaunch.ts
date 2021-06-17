@@ -1,28 +1,28 @@
 import { useCallback } from 'react'
 import { BigNumber } from 'ethers'
 
-import { useMasterChefContract } from 'hooks/useContract'
+import { useFairLaunchContract } from 'hooks/useContract'
 import { useTransactionAdder } from '../state/transactions/hooks'
 
-const useMasterChef = () => {
+const useFairLaunch = (address: string) => {
   const addTransaction = useTransactionAdder()
-  const masterChefContract = useMasterChefContract() // withSigner
+  const fairLaunchContract = useFairLaunchContract(address) // withSigner
 
   const getPoolLength = useCallback(async () => {
     try {
-      const poolLength = await masterChefContract?.poolLength()
+      const poolLength = await fairLaunchContract?.poolLength()
 
       return poolLength
     } catch (err) {
       console.error(err)
       return err
     }
-  }, [masterChefContract])
+  }, [fairLaunchContract])
 
   const getPoolInfo = useCallback(
     async (pid: number) => {
       try {
-        const poolInfo = await masterChefContract?.getPoolInfo(pid)
+        const poolInfo = await fairLaunchContract?.getPoolInfo(pid)
 
         return poolInfo
       } catch (err) {
@@ -30,76 +30,76 @@ const useMasterChef = () => {
         return err
       }
     },
-    [masterChefContract]
+    [fairLaunchContract]
   )
 
   const getRewardTokens = useCallback(async (): Promise<string[]> => {
     try {
-      const rewardTokens = await masterChefContract?.getRewardTokens()
+      const rewardTokens = await fairLaunchContract?.getRewardTokens()
 
       return rewardTokens
     } catch (err) {
       console.error(err)
       return err
     }
-  }, [masterChefContract])
+  }, [fairLaunchContract])
 
   // Deposit
   const deposit = useCallback(
     async (pid: number, amount: BigNumber, name: string, shouldHaverst = false) => {
       try {
-        const tx = await masterChefContract?.deposit(pid, amount, shouldHaverst)
+        const tx = await fairLaunchContract?.deposit(pid, amount, shouldHaverst)
         return addTransaction(tx, { summary: `Deposit ${name}` })
       } catch (e) {
         console.error(e)
         return e
       }
     },
-    [addTransaction, masterChefContract]
+    [addTransaction, fairLaunchContract]
   )
 
   // Withdraw
   const withdraw = useCallback(
     async (pid: number, amount: BigNumber, name: string) => {
       try {
-        const tx = await masterChefContract?.withdraw(pid, amount)
+        const tx = await fairLaunchContract?.withdraw(pid, amount)
         return addTransaction(tx, { summary: `Withdraw ${name}` })
       } catch (e) {
         console.error(e)
         return e
       }
     },
-    [addTransaction, masterChefContract]
+    [addTransaction, fairLaunchContract]
   )
 
   const harvest = useCallback(
     async (pid: number, name: string) => {
       try {
-        const tx = await masterChefContract?.harvest(pid)
+        const tx = await fairLaunchContract?.harvest(pid)
         return addTransaction(tx, { summary: `Harvest ${name}` })
       } catch (e) {
         console.error(e)
         return e
       }
     },
-    [addTransaction, masterChefContract]
+    [addTransaction, fairLaunchContract]
   )
 
   const harvestMultiplePools = useCallback(
     async (pids: number[]) => {
       try {
-        const tx = await masterChefContract?.harvestMultiplePools(pids)
+        const tx = await fairLaunchContract?.harvestMultiplePools(pids)
         return addTransaction(tx, { summary: `Harvest multiple pools: ${pids.join(',')}` })
       } catch (e) {
         console.error(e)
         return e
       }
     },
-    [addTransaction, masterChefContract]
+    [addTransaction, fairLaunchContract]
   )
 
   return {
-    masterChefContract,
+    masterChefContract: fairLaunchContract,
     getPoolLength,
     getPoolInfo,
     getRewardTokens,
@@ -110,4 +110,4 @@ const useMasterChef = () => {
   }
 }
 
-export default useMasterChef
+export default useFairLaunch

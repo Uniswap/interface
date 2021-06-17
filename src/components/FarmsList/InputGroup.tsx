@@ -10,11 +10,10 @@ import { formattedNum, getTokenSymbol, isAddressString } from 'utils'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { Fraction, JSBI, Token, TokenAmount } from 'libs/sdk/src'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import { MASTERCHEF_ADDRESS } from 'constants/index'
 import { Dots } from '../swap/styleds'
 import { ButtonPrimary } from 'components/Button'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import useMasterChef from 'hooks/useMasterchef'
+import useFairLaunch from 'hooks/useFairLaunch'
 import useStakedBalance from 'hooks/useStakedBalance'
 import { AutoRow } from 'components/Row'
 import { getFullDisplayBalance } from 'utils/formatBalance'
@@ -43,6 +42,7 @@ const RewardUSD = styled.div`
 `
 
 export default function InputGroup({
+  fairLaunchAddress,
   pairAddress,
   pid,
   pairSymbol,
@@ -53,6 +53,7 @@ export default function InputGroup({
   assetDecimals = 18,
   farmRewards
 }: {
+  fairLaunchAddress: string
   pairAddress: string
   pid: number
   pairSymbol: string
@@ -69,7 +70,7 @@ export default function InputGroup({
   const [withdrawValue, setWithdrawValue] = useState('')
   const pairAddressChecksum = isAddressString(pairAddress)
   const balance = useTokenBalance(pairAddressChecksum)
-  const staked = useStakedBalance(pid, assetDecimals)
+  const staked = useStakedBalance(fairLaunchAddress, pid, assetDecimals)
   const rewardUSD = useFarmRewardsUSD(farmRewards)
 
   const [approvalState, approve] = useApproveCallback(
@@ -77,7 +78,7 @@ export default function InputGroup({
       new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
       MaxUint256.toString()
     ),
-    !!chainId ? MASTERCHEF_ADDRESS[chainId] : undefined
+    !!chainId ? fairLaunchAddress : undefined
   )
 
   let isStakeInvalidAmount
@@ -114,7 +115,7 @@ export default function InputGroup({
 
   const isHarvestDisabled = pendingTx || !canHarvest(farmRewards)
 
-  const { deposit, withdraw, harvest } = useMasterChef()
+  const { deposit, withdraw, harvest } = useFairLaunch(fairLaunchAddress)
 
   const handleClickStake = async () => {
     setPendingTx(true)
