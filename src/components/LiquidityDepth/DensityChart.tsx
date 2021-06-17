@@ -1,5 +1,5 @@
 import React from 'react'
-import { VictoryBar, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryChart, VictoryLabel } from 'victory'
+import { VictoryArea, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryChart, VictoryLabel } from 'victory'
 import useTheme from 'hooks/useTheme'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { useColor } from 'hooks/useColor'
@@ -139,11 +139,12 @@ export default function DensityChart({
             />
           }
         >
-          <VictoryBar
+          <VictoryArea
             data={formattedData ? formattedData : sampleData}
             style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.5' } }}
             x={'price0'}
             y={'activeLiquidity'}
+            interpolation="step"
           />
 
           {price && (
