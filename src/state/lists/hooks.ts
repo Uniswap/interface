@@ -4,7 +4,7 @@ import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../index'
-import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
+import { MATIC_TOKEN_LISTS, UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import { ROPSTEN_TOKEN_LIST } from '../../constants/tokenLists/ropsten.tokenlist'
 import { MAINNET_TOKEN_LIST } from '../../constants/tokenLists/mainnet.tokenlist'
 import { MATIC_TOKEN_LIST } from '../../constants/tokenLists/matic.tokenlist'
@@ -119,6 +119,48 @@ export function useAllLists(): {
   }
 } {
   return useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
+}
+
+export function useAllListsByChainId(): {
+  readonly [url: string]: {
+    readonly current: TokenList | null
+    readonly pendingUpdate: TokenList | null
+    readonly loadingRequestId: string | null
+    readonly error: string | null
+  }
+} {
+  const { chainId } = useActiveWeb3React()
+
+  const allLists = useAllLists()
+
+  const INITIAL_LISTS: {
+    [url: string]: {
+      readonly current: TokenList | null
+      readonly pendingUpdate: TokenList | null
+      readonly loadingRequestId: string | null
+      readonly error: string | null
+    }
+  } = {}
+
+  let lists
+
+  if (chainId && [ChainId.MATIC, ChainId.MUMBAI].includes(chainId)) {
+    lists = Object.keys(allLists)
+      .filter(key => MATIC_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
+  } else {
+    lists = Object.keys(allLists)
+      .filter(key => !MATIC_TOKEN_LISTS.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = allLists[key]
+        return obj
+      }, INITIAL_LISTS)
+  }
+
+  return lists
 }
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {

@@ -11,7 +11,7 @@ $desktop-width: 1024px;
 }
 
 @mixin tablet {
-  @media (min-width: #{$mobile-width}) and (max-width: #{$tablet-width - 1px}) {
+  @media (min-width: #{$mobile-width}) and (max-width: #{$desktop-width - 1px}) {
     @content;
   }
 }
@@ -45,18 +45,87 @@ img {
   }
 }
 
-.section_number {
-  width: 100%;
-  max-width: 650px;
+.section_number_container {
+  max-width: 800px;
   margin: 65px auto 0 auto;
-  background: #1d272b;
-  border: solid 1px #303e46;
-  border-radius: 20px;
-  padding: 34px 56px;
+  padding: 24px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+
   @include mobile {
     flex-direction: column;
+  }
+}
+
+.section_number {
+  max-width: 450px;
+  margin: 0 auto;
+  background: #1d272b;
+  border: dashed 1px #303e46;
+  border-radius: 20px;
+  padding: 28px 24px;
+  display: flex;
+  justify-content: space-around;
+
+  .line {
+    width: 0px;
+    border: 1px solid #303e46;
+  }
+
+  @include mobile {
+    flex-direction: column;
+    margin-bottom: 12px;
+    width: 100%;
+
+    .line {
+      width: 100%;
+    }
+  }
+}
+
+.trading_volume_section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 28px 24px;
+
+  @include tablet() {
+    padding: 36px 48px;
+  }
+
+  @include desktop() {
+    padding: 44px 60px;
+  }
+}
+
+.liquidity_number {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 20px;
+  width: 50%;
+
+  @include mobile {
+    margin-right: 0;
+    margin-bottom: 32px;
+    width: 100%;
+  }
+}
+
+.amp_liquidity_number {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 20px;
+  margin-left: 20px;
+  width: 50%;
+
+  @include mobile {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 32px;
+    width: 100%;
   }
 }
 
@@ -198,6 +267,18 @@ img {
         }
       }
     }
+  }
+}
+
+.youtube_video {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  margin: 0 auto;
+
+  @include mobile {
+    width: 100%;
   }
 }
 

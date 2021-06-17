@@ -50,6 +50,8 @@ export const GLOBAL_DATA = (block?: number) => {
         untrackedVolumeUSD
         totalLiquidityUSD
         totalLiquidityETH
+        totalAmplifiedLiquidityUSD
+        totalAmplifiedLiquidityETH
         txCount
         pairCount
       }
