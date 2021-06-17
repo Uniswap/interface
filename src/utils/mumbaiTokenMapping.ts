@@ -19,6 +19,9 @@ export const getMumbaiTokenLogoURL = (address: string) => {
   if (address?.toLowerCase() === '0x5e2de02472ac02736b43054f095837725a5870ef') {
     address = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
   }
+  if (address?.toLowerCase() === '0x326c977e6efc84e512bb9c30f76e30c160ed06fb') {
+    address = '0x514910771AF9Ca656af840dff83E8264EcF986CA'
+  }
 
   if (!uri) {
     uri = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`

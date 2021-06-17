@@ -155,7 +155,7 @@ const Farms = () => {
             <HeadingContainer>
               <LearnMoreContainer>
                 <LearnMoreInstruction>
-                  Stake your DMM Liquidity Provider tokens to earn KNC token rewards.
+                  Stake your DMM Liquidity Provider tokens to earn token rewards.
                 </LearnMoreInstruction>
                 <LearnMoreLinkContainer>
                   <ExternalLink href="https://docs.dmm.exchange">Learn More →</ExternalLink>
