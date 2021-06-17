@@ -40,7 +40,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import NumericalInput from 'components/NumericalInput'
 import { parseUnits } from 'ethers/lib/utils'
 import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
+import { useCurrencyConvertedToNative, feeRangeCalc, convertToNativeTokenFromETH } from 'utils/dmm'
 import { useDerivedPairInfo } from 'state/pair/hooks'
 
 const ActiveText = styled.div`
@@ -322,21 +322,24 @@ export default function AddLiquidity({
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit)
         }).then(response => {
-          setAttemptingTxn(false)
+          const cA = currencies[Field.CURRENCY_A]
+          const cB = currencies[Field.CURRENCY_B]
+          if (!!cA && !!cB) {
+            setAttemptingTxn(false)
+            addTransaction(response, {
+              summary:
+                'Add ' +
+                parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+                ' ' +
+                convertToNativeTokenFromETH(cA, chainId).symbol +
+                ' and ' +
+                parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+                ' ' +
+                convertToNativeTokenFromETH(cB, chainId).symbol
+            })
 
-          addTransaction(response, {
-            summary:
-              'Add ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_A]?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencies[Field.CURRENCY_B]?.symbol
-          })
-
-          setTxHash(response.hash)
+            setTxHash(response.hash)
+          }
         })
       )
       .catch(error => {
@@ -396,7 +399,7 @@ export default function AddLiquidity({
 
   const handleCurrencyASelect = useCallback(
     (currencyA: Currency) => {
-      const newCurrencyIdA = currencyId(currencyA)
+      const newCurrencyIdA = currencyId(currencyA, chainId)
       if (newCurrencyIdA === currencyIdB) {
         history.push(`/add/${currencyIdB}/${currencyIdA}`)
       } else {
@@ -407,7 +410,7 @@ export default function AddLiquidity({
   )
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
-      const newCurrencyIdB = currencyId(currencyB)
+      const newCurrencyIdB = currencyId(currencyB, chainId)
       if (currencyIdA === newCurrencyIdB) {
         if (currencyIdB) {
           history.push(`/add/${currencyIdB}/${newCurrencyIdB}`)

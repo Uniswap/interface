@@ -21,6 +21,7 @@ import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc } from 'utils/dmm'
 import { setSelectedPool } from 'state/pools/actions'
 import Loader from 'components/Loader'
 import InfoHelper from 'components/InfoHelper'
+import { useActiveWeb3React } from 'hooks'
 
 const TableRow = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
@@ -116,6 +117,7 @@ interface ListItemProps {
 }
 
 export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps) => {
+  const { chainId } = useActiveWeb3React()
   const amp = new Fraction(pool.amp).divide(JSBI.BigInt(10000))
 
   const realPercentToken0 = pool
@@ -182,7 +184,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
               <ButtonEmpty
                 padding="0"
                 as={Link}
-                to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.address}`}
+                to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pool.address}`}
                 width="fit-content"
               >
                 <AddCircle />
@@ -264,7 +266,10 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
           <ButtonPrimary
             padding="8px 48px"
             as={Link}
-            to={`/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`}
+            to={`/swap?inputCurrency=${currencyId(currency0, chainId)}&outputCurrency=${currencyId(
+              currency1,
+              chainId
+            )}`}
             width="fit-content"
           >
             <TradeButtonText>Trade</TradeButtonText>
@@ -276,6 +281,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 }
 
 const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps) => {
+  const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch()
   const togglePoolDetailModal = usePoolDetailModalToggle()
 
@@ -356,7 +362,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         <ButtonEmpty
           padding="0"
           as={Link}
-          to={`/add/${currencyId(currency0)}/${currencyId(currency1)}/${pool.address}`}
+          to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pool.address}`}
           width="fit-content"
         >
           <AddCircle />
@@ -366,7 +372,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
         <ButtonEmpty
           padding="0"
           as={Link}
-          to={`/swap?inputCurrency=${currencyId(currency0)}&outputCurrency=${currencyId(currency1)}`}
+          to={`/swap?inputCurrency=${currencyId(currency0, chainId)}&outputCurrency=${currencyId(currency1, chainId)}`}
           width="fit-content"
         >
           <TradeIcon />

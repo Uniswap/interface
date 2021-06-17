@@ -42,7 +42,7 @@ import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { convertToNativeTokenFromETH, useCurrencyConvertedToNative } from 'utils/dmm'
 
 export default function RemoveLiquidity({
   history,
@@ -320,21 +320,23 @@ export default function RemoveLiquidity({
         gasLimit: safeGasEstimate
       })
         .then((response: TransactionResponse) => {
-          setAttemptingTxn(false)
+          if (!!currencyA && !!currencyB) {
+            setAttemptingTxn(false)
 
-          addTransaction(response, {
-            summary:
-              'Remove ' +
-              parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
-              ' ' +
-              currencyA?.symbol +
-              ' and ' +
-              parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
-              ' ' +
-              currencyB?.symbol
-          })
+            addTransaction(response, {
+              summary:
+                'Remove ' +
+                parsedAmounts[Field.CURRENCY_A]?.toSignificant(3) +
+                ' ' +
+                convertToNativeTokenFromETH(currencyA, chainId).symbol +
+                ' and ' +
+                parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
+                ' ' +
+                convertToNativeTokenFromETH(currencyB, chainId).symbol
+            })
 
-          setTxHash(response.hash)
+            setTxHash(response.hash)
+          }
         })
         .catch((error: Error) => {
           setAttemptingTxn(false)
@@ -441,21 +443,23 @@ export default function RemoveLiquidity({
   )
 
   const handleSelectCurrencyA = useCallback(
-    (currency: Currency) => {
-      if (currencyIdB && currencyId(currency) === currencyIdB) {
-        history.push(`/remove/${currencyId(currency)}/${currencyIdA}`)
+    (currencyA: Currency) => {
+      const newCurrencyIdA = currencyId(currencyA, chainId)
+      if (newCurrencyIdA === currencyIdB) {
+        history.push(`/remove/${currencyIdB}/${currencyIdA}`)
       } else {
-        history.push(`/remove/${currencyId(currency)}/${currencyIdB}`)
+        history.push(`/remove/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
     [currencyIdA, currencyIdB, history]
   )
   const handleSelectCurrencyB = useCallback(
-    (currency: Currency) => {
-      if (currencyIdA && currencyId(currency) === currencyIdA) {
-        history.push(`/remove/${currencyIdB}/${currencyId(currency)}`)
+    (currencyB: Currency) => {
+      const newCurrencyIdB = currencyId(currencyB, chainId)
+      if (currencyIdA === newCurrencyIdB) {
+        history.push(`/remove/${currencyIdB}/${newCurrencyIdB}`)
       } else {
-        history.push(`/remove/${currencyIdA}/${currencyId(currency)}`)
+        history.push(`/remove/${currencyIdA}/${newCurrencyIdB}`)
       }
     },
     [currencyIdA, currencyIdB, history]
