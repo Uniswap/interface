@@ -26,7 +26,7 @@ export function useDensityChartData({
   const [priceAtActiveTick, setPriceAtActiveTick] = useState<number | undefined>()
   const [maxLiquidity, setMaxLiquidity] = useState<number>(0)
 
-  const { loading, syncing, error, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
+  const { loading, error, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
 
   // clear data when inputs are cleared
   useEffect(() => {
@@ -81,7 +81,6 @@ export function useDensityChartData({
 
   return {
     loading,
-    syncing,
     error,
     priceAtActiveTick,
     maxLiquidity,

@@ -23,7 +23,6 @@ export function usePoolTickData(
   numSurroundingTicks?: number
 ): {
   loading: boolean
-  syncing: boolean
   error: boolean
   valid: boolean
   activeTick: number | undefined
@@ -41,7 +40,7 @@ export function usePoolTickData(
   const activeTick =
     pool[1]?.tickCurrent && tickSpacing ? nearestUsableTick(pool[1]?.tickCurrent, tickSpacing) : undefined
 
-  const { loading, syncing, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
+  const { loading, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
 
   const token0 = currencyA?.wrapped
   const token1 = currencyB?.wrapped
@@ -51,7 +50,6 @@ export function usePoolTickData(
       !token0 ||
       !token1 ||
       loading ||
-      syncing ||
       error ||
       !valid ||
       pool[0] !== PoolState.EXISTS ||
@@ -61,7 +59,6 @@ export function usePoolTickData(
     ) {
       return {
         loading: loading || pool[0] === PoolState.LOADING,
-        syncing: syncing,
         error: error || pool[0] === PoolState.INVALID,
         valid: false,
         activeTick,
@@ -118,11 +115,10 @@ export function usePoolTickData(
 
     return {
       loading: false,
-      syncing: false,
       error: false,
       valid: true,
       activeTick,
       tickData: ticksProcessed,
     }
-  }, [token0, token1, activeTick, loading, syncing, error, valid, tickData, pool, tickSpacing, numSurroundingTicks])
+  }, [token0, token1, activeTick, loading, error, valid, tickData, pool, tickSpacing, numSurroundingTicks])
 }
