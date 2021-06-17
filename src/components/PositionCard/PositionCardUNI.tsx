@@ -230,7 +230,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   function toWETH(currencyA: Currency) {
     if (!chainId) return undefined
-    return currencyA === ETHER ? WETH[chainId].address : currencyId(currencyA)
+    return currencyA === ETHER ? WETH[chainId].address : currencyId(currencyA, chainId)
   }
 
   return (

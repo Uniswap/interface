@@ -403,9 +403,11 @@ export function useRewardTokensFullInfo(): Token[] {
   const rewardTokens = useRewardTokens()
   const allTokens = useAllTokens()
   const nativeName = chainId && [137, 80001].includes(chainId) ? 'MATIC' : 'ETH'
-  return rewardTokens.map(address =>
-    address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
-      ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
-      : allTokens[address]
-  )
+  return !!rewardTokens
+    ? rewardTokens.map(address =>
+        address.toLowerCase() === ZERO_ADDRESS.toLowerCase()
+          ? new Token(chainId as ChainId, ZERO_ADDRESS.toLowerCase(), 18, nativeName, nativeName)
+          : allTokens[address]
+      )
+    : []
 }
