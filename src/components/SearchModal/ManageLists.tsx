@@ -10,7 +10,7 @@ import { TokenList } from '@uniswap/token-lists'
 import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
-import { useIsListActive, useAllLists, useActiveListUrls } from '../../state/lists/hooks'
+import { useIsListActive, useAllListsByChainId, useActiveListUrls } from '../../state/lists/hooks'
 import { ExternalLink, LinkStyledButton, TYPE, IconWrapper } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
@@ -203,7 +203,7 @@ export function ManageLists({
 
   const [listUrlInput, setListUrlInput] = useState<string>('')
 
-  const lists = useAllLists()
+  const lists = useAllListsByChainId()
 
   // sort by active but only if not visible
   const activeListUrls = useActiveListUrls()
