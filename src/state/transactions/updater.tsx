@@ -1,6 +1,8 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { SupportedChainId } from '../../constants/chains'
 import { useActiveWeb3React } from '../../hooks/web3'
+import { retry, RetryableError, RetryOptions } from '../../utils/retry'
 import { updateBlockNumber } from '../application/actions'
 import { useAddPopup, useBlockNumber } from '../application/hooks'
 import { checkedTransaction, finalizeTransaction } from './actions'
@@ -29,6 +31,12 @@ export function shouldCheck(lastBlockNumber: number, tx: TxInterface): boolean {
   }
 }
 
+const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
+  [SupportedChainId.ARBITRUM_ONE]: { n: 10, minWait: 250, maxWait: 1000 },
+  [SupportedChainId.ARBITRUM_KOVAN]: { n: 10, minWait: 250, maxWait: 1000 },
+}
+const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 3, minWait: 1000, maxWait: 3000 }
+
 export default function Updater(): null {
   const { chainId, library } = useActiveWeb3React()
 
@@ -42,14 +50,33 @@ export default function Updater(): null {
   // show popup on confirm
   const addPopup = useAddPopup()
 
+  const getReceipt = useCallback(
+    (hash: string) => {
+      if (!library || !chainId) throw new Error('No library or chainId')
+      const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
+      return retry(
+        () =>
+          library.getTransactionReceipt(hash).then((receipt) => {
+            if (receipt === null) {
+              console.debug('Retrying for hash', hash)
+              throw new RetryableError()
+            }
+            return receipt
+          }),
+        retryOptions
+      )
+    },
+    [chainId, library]
+  )
+
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
 
-    Object.keys(transactions)
+    const cancels = Object.keys(transactions)
       .filter((hash) => shouldCheck(lastBlockNumber, transactions[hash]))
-      .forEach((hash) => {
-        library
-          .getTransactionReceipt(hash)
+      .map((hash) => {
+        const { promise, cancel } = getReceipt(hash)
+        promise
           .then((receipt) => {
             if (receipt) {
               dispatch(
@@ -89,10 +116,17 @@ export default function Updater(): null {
             }
           })
           .catch((error) => {
-            console.error(`failed to check transaction hash: ${hash}`, error)
+            if (!error.isCancelledError) {
+              console.error(`Failed to check transaction hash: ${hash}`, error)
+            }
           })
+        return cancel
       })
-  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup])
+
+    return () => {
+      cancels.forEach((cancel) => cancel())
+    }
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, addPopup, getReceipt])
 
   return null
 }

@@ -1,5 +1,4 @@
 import { Contract } from '@ethersproject/contracts'
-import { WETH9 } from '@uniswap/sdk-core'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
@@ -28,7 +27,7 @@ import {
   V3_CORE_FACTORY_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
   ARGENT_WALLET_DETECTOR_ADDRESS,
-  GOVERNANCE_ADDRESS,
+  GOVERNANCE_ADDRESSES,
   MERKLE_DISTRIBUTOR_ADDRESS,
   MULTICALL2_ADDRESSES,
   V2_ROUTER_ADDRESS,
@@ -42,7 +41,7 @@ import { NonfungiblePositionManager } from 'types/v3/NonfungiblePositionManager'
 import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
 import { Erc20, ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Multicall2, Weth } from '../abis/types'
-import { UNI } from '../constants/tokens'
+import { UNI, WETH9_EXTENDED } from '../constants/tokens'
 import { useActiveWeb3React } from './web3'
 
 // returns null on errors
@@ -78,7 +77,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWETHContract(withSignerIfPossible?: boolean) {
   const { chainId } = useActiveWeb3React()
-  return useContract<Weth>(chainId ? WETH9[chainId]?.address : undefined, WETH_ABI, withSignerIfPossible)
+  return useContract<Weth>(chainId ? WETH9_EXTENDED[chainId]?.address : undefined, WETH_ABI, withSignerIfPossible)
 }
 
 export function useArgentWalletDetectorContract() {
@@ -117,8 +116,23 @@ export function useMerkleDistributorContract() {
   return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MERKLE_DISTRIBUTOR_ABI, true)
 }
 
-export function useGovernanceContract() {
-  return useContract(GOVERNANCE_ADDRESS, GOVERNANCE_ABI, true)
+export function useGovernanceContracts(): (Contract | null)[] {
+  const { library, account, chainId } = useActiveWeb3React()
+
+  return useMemo(() => {
+    if (!library || !chainId) {
+      return []
+    }
+
+    return GOVERNANCE_ADDRESSES.filter((addressMap) => Boolean(addressMap[chainId])).map((addressMap) => {
+      try {
+        return getContract(addressMap[chainId], GOVERNANCE_ABI, library, account ? account : undefined)
+      } catch (error) {
+        console.error('Failed to get contract', error)
+        return null
+      }
+    })
+  }, [library, chainId, account])
 }
 
 export function useUniContract() {

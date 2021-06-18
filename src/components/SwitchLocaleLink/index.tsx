@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import React, { useMemo } from 'react'
+import ReactGA from 'react-ga'
 import { useLocation } from 'react-router'
 import styled from 'styled-components/macro'
 import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/locales'
@@ -38,7 +39,21 @@ export function SwitchLocaleLink() {
     return (
       <Container>
         <Trans>
-          Uniswap available in: {<StyledInternalLink to={target}>{LOCALE_LABEL[targetLocale]}</StyledInternalLink>}
+          Uniswap available in:{' '}
+          {
+            <StyledInternalLink
+              onClick={() => {
+                ReactGA.event({
+                  category: 'Localization',
+                  action: 'Switch Locale',
+                  label: `${activeLocale} -> ${targetLocale}`,
+                })
+              }}
+              to={target}
+            >
+              {LOCALE_LABEL[targetLocale]}
+            </StyledInternalLink>
+          }
         </Trans>
       </Container>
     )

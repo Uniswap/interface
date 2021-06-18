@@ -121,13 +121,13 @@ const ProposerAddressLink = styled(ExternalLink)`
 
 export default function VotePage({
   match: {
-    params: { id },
+    params: { governorIndex, id },
   },
-}: RouteComponentProps<{ id: string }>) {
+}: RouteComponentProps<{ governorIndex: string; id: string }>) {
   const { chainId, account } = useActiveWeb3React()
 
   // get data for this specific proposal
-  const proposalData: ProposalData | undefined = useProposalData(id)
+  const proposalData: ProposalData | undefined = useProposalData(Number.parseInt(governorIndex), id)
 
   // update support based on button interactions
   const [support, setSupport] = useState<boolean>(true)
@@ -278,15 +278,12 @@ export default function VotePage({
               <CardSection>
                 <AutoColumn gap="md">
                   <WrapSmall>
-                    <Trans>
-                      <TYPE.black fontWeight={600}>
-                        <Trans>For</Trans>
-                      </TYPE.black>
-                      <TYPE.black fontWeight={600}>
-                        {' '}
-                        {proposalData?.forCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </TYPE.black>
-                    </Trans>
+                    <TYPE.black fontWeight={600}>
+                      <Trans>For</Trans>
+                    </TYPE.black>
+                    <TYPE.black fontWeight={600}>
+                      {proposalData?.forCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                    </TYPE.black>
                   </WrapSmall>
                 </AutoColumn>
                 <ProgressWrapper>
@@ -302,7 +299,7 @@ export default function VotePage({
                       <Trans>Against</Trans>
                     </TYPE.black>
                     <TYPE.black fontWeight={600}>
-                      {proposalData?.againstCount.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                      {proposalData?.againstCount?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                     </TYPE.black>
                   </WrapSmall>
                 </AutoColumn>

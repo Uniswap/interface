@@ -366,7 +366,7 @@ export default function AccountDetails({
                           >
                             <LinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>
-                              <Trans>View on Etherscan</Trans>
+                              <Trans>View on Explorer</Trans>
                             </span>
                           </AddressLink>
                         )}
@@ -392,7 +392,7 @@ export default function AccountDetails({
                           >
                             <LinkIcon size={16} />
                             <span style={{ marginLeft: '4px' }}>
-                              <Trans>View on Etherscan</Trans>
+                              <Trans>View on Explorer</Trans>
                             </span>
                           </AddressLink>
                         )}

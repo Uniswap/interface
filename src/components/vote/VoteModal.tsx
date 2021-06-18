@@ -155,7 +155,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
                 style={{ marginLeft: '4px' }}
               >
                 <TYPE.subHeader>
-                  <Trans>View transaction on Etherscan</Trans>
+                  <Trans>View transaction on Explorer</Trans>
                 </TYPE.subHeader>
               </ExternalLink>
             )}

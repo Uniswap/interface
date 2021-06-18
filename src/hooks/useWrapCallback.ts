@@ -1,5 +1,6 @@
-import { Currency, WETH9 } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { WETH9_EXTENDED } from '../constants/tokens'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
@@ -33,7 +34,7 @@ export default function useWrapCallback(
 
   return useMemo(() => {
     if (!wethContract || !chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
-    const weth = WETH9[chainId]
+    const weth = WETH9_EXTENDED[chainId]
     if (!weth) return NOT_APPLICABLE
 
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
