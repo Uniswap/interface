@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
@@ -12,6 +12,10 @@ export interface ChartEntry {
   price0: number
 }
 
+export const ChartContext = createContext<
+  Partial<{ zoom: number; canZoomIn: boolean; canZoomOut: boolean; zoomIn: () => void; zoomOut: () => void }>
+>({})
+
 export function useDensityChartData({
   currencyA,
   currencyB,
@@ -22,7 +26,7 @@ export function useDensityChartData({
   feeAmount: FeeAmount | undefined
 }) {
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>()
-  const [priceAtActiveTick, setPriceAtActiveTick] = useState<number | undefined>()
+  const [activeChartEntry, setActiveChartEntry] = useState<ChartEntry | undefined>()
   const [maxLiquidity, setMaxLiquidity] = useState<number>(0)
 
   const { loading, error, activeTick, tickData } = usePoolTickData(currencyA, currencyB, feeAmount)
@@ -59,7 +63,7 @@ export function useDensityChartData({
         }
 
         if (active) {
-          setPriceAtActiveTick(chartEntry.price0)
+          setActiveChartEntry(chartEntry)
         }
 
         newData.push(chartEntry)
@@ -80,7 +84,7 @@ export function useDensityChartData({
   return {
     loading,
     error,
-    priceAtActiveTick,
+    activeChartEntry,
     maxLiquidity,
     formattedData,
   }
