@@ -69,7 +69,6 @@ export function useAllV3Ticks(
   const valid = useMemo(() => callStates.some(({ valid }) => valid), [callStates])
 
   const tickData = useMemo(() => {
-    const start = Date.now()
     const s = callStates
       .map(({ result }) => (result as Result)?.populatedTicks)
       .reduce(
@@ -85,7 +84,6 @@ export function useAllV3Ticks(
         ],
         []
       )
-    console.log('useAllV3Ticks: ' + (Date.now() - start) / 1000)
     return s
   }, [callStates])
 

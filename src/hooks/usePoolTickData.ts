@@ -70,7 +70,6 @@ export function usePoolTickData(
       liquidityNet: JSBI.BigInt(0),
       liquidityGross: JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, activeTickForPrice).toFixed(PRICE_FIXED_DIGITS),
-      price1: tickToPrice(token1, token0, activeTickForPrice).toFixed(PRICE_FIXED_DIGITS),
     }
 
     // if active tick is initialized, fill liquidity

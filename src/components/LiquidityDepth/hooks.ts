@@ -10,7 +10,6 @@ export interface ChartEntry {
   isCurrent: boolean
   activeLiquidity: number
   price0: number
-  price1: number
 }
 
 export function useDensityChartData({
@@ -57,7 +56,6 @@ export function useDensityChartData({
           isCurrent: active,
           activeLiquidity: parseFloat(t.liquidityActive.toString()),
           price0: parseFloat(t.price0),
-          price1: parseFloat(t.price1),
         }
 
         if (active) {

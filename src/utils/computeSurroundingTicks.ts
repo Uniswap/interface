@@ -15,7 +15,6 @@ export default function computeSurroundingTicks(
   tickSpacing: number,
   ascending: boolean
 ): TickProcessed[] {
-  const start = Date.now()
   let previousTickProcessed: TickProcessed = {
     ...activeTickProcessed,
   }
@@ -37,7 +36,6 @@ export default function computeSurroundingTicks(
       tickIdx: currentTickIdx,
       liquidityNet: JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-      price1: tickToPrice(token1, token0, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
       liquidityGross: JSBI.BigInt(0),
     }
 
@@ -73,8 +71,6 @@ export default function computeSurroundingTicks(
   if (!ascending) {
     processedTicks = processedTicks.reverse()
   }
-
-  console.log('Compute surrounding (' + ascending + ')' + (Date.now() - start) / 1000)
 
   return processedTicks
 }

@@ -13,5 +13,4 @@ export interface TickProcessed {
   liquidityGross: JSBI
   liquidityNet: JSBI
   price0: string
-  price1: string
 }
