@@ -16,7 +16,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useToken } from 'hooks/Tokens'
 import useTokenBalance from 'hooks/useTokenBalance'
 import { getFullDisplayBalance } from 'utils/formatBalance'
-import { useFarmApr, useFarmRewardPerBlocks, useFarmRewards } from 'utils/dmm'
+import { getTradingFeeAPR, useFarmApr, useFarmRewardPerBlocks, useFarmRewards } from 'utils/dmm'
 import { ExternalLink } from 'theme'
 
 const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
@@ -192,7 +192,13 @@ const ListItem = ({ farm }: ListItemProps) => {
 
   const liquidity = parseFloat(lpTokenRatio.toSignificant(6)) * parseFloat(farm.reserveUSD)
 
-  const apr = useFarmApr(farmRewardPerBlocks, liquidity.toString())
+  const farmAPR = useFarmApr(farmRewardPerBlocks, liquidity.toString())
+
+  const tradingFee = farm?.oneDayFeeUSD ? farm?.oneDayFeeUSD : farm?.oneDayFeeUntracked
+
+  const tradingFeeAPR = getTradingFeeAPR(farm?.reserveUSD, tradingFee)
+
+  const apr = farmAPR + tradingFeeAPR
 
   const amp = farm.amp / 10000
 

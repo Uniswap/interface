@@ -59,15 +59,13 @@ const Farms = () => {
   const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const kncPrice = useKNCPrice()
-  const { loading, data: allFarms } = useFarmsData()
+  const { loading, data: farms } = useFarmsData()
   const [activeTab, setActiveTab] = useState(0)
   const [pendingTx, setPendingTx] = useState(false)
   const [stakedOnly, setStakedOnly] = useState(false)
   const fairLaunchContracts = useFairLaunchContracts()
   const { harvestMultiplePools } = useFairLaunch(FAIRLAUNCH_ADDRESSES[chainId as ChainId]?.[0])
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
-
-  const farms = allFarms
 
   const totalRewards = useFarmRewards(farms)
   const totalRewardsUSD = useFarmRewardsUSD(totalRewards)

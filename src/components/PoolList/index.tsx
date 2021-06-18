@@ -9,7 +9,7 @@ import { useMedia } from 'react-use'
 import { ButtonEmpty } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
 import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
-import { getHealthFactor } from 'utils/dmm'
+import { getHealthFactor, getTradingFeeAPR } from 'utils/dmm'
 import ListItem, { ItemCard } from './ListItem'
 import PoolDetailModal from './PoolDetailModal'
 
@@ -54,10 +54,6 @@ const LoadMoreButtonContainer = styled.div`
     background-color: transparent;
   `};
 `
-
-const getOneYearFL = (liquidity: string, feeOneDay?: string): number => {
-  return !feeOneDay || parseFloat(liquidity) === 0 ? 0 : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
-}
 
 interface PoolListProps {
   poolsList: (Pair | null)[]
@@ -169,8 +165,8 @@ const PoolList = ({ poolsList, subgraphPoolsData, userLiquidityPositions, maxIte
       case SORT_FIELD.FEES:
         return parseFloat(feeA) > parseFloat(feeB) ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       case SORT_FIELD.ONE_YEAR_FL:
-        const oneYearFLPoolA = getOneYearFL(poolASubgraphData?.reserveUSD, feeA)
-        const oneYearFLPoolB = getOneYearFL(poolBSubgraphData?.reserveUSD, feeB)
+        const oneYearFLPoolA = getTradingFeeAPR(poolASubgraphData?.reserveUSD, feeA)
+        const oneYearFLPoolB = getTradingFeeAPR(poolBSubgraphData?.reserveUSD, feeB)
 
         return oneYearFLPoolA > oneYearFLPoolB ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
       default:

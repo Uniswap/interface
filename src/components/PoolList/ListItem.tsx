@@ -17,7 +17,7 @@ import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
 import { shortenAddress, formattedNum } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc } from 'utils/dmm'
+import { getMyLiquidity, priceRangeCalcByPair, feeRangeCalc, getTradingFeeAPR } from 'utils/dmm'
 import { setSelectedPool } from 'state/pools/actions'
 import Loader from 'components/Loader'
 import InfoHelper from 'components/InfoHelper'
@@ -103,12 +103,6 @@ const PoolAddressContainer = styled(Flex)`
   align-items: center;
 `
 
-const getOneYearFL = (liquidity?: string, feeOneDay?: string): number => {
-  return !feeOneDay || !liquidity || parseFloat(liquidity) === 0
-    ? 0
-    : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
-}
-
 interface ListItemProps {
   pool: Pair
   subgraphPoolData: SubgraphPoolData
@@ -145,7 +139,7 @@ export const ItemCard = ({ pool, subgraphPoolData, myLiquidity }: ListItemProps)
 
   const fee = subgraphPoolData?.oneDayFeeUSD ? subgraphPoolData?.oneDayFeeUSD : subgraphPoolData?.oneDayFeeUntracked
 
-  const oneYearFL = getOneYearFL(subgraphPoolData?.reserveUSD, fee).toFixed(2)
+  const oneYearFL = getTradingFeeAPR(subgraphPoolData?.reserveUSD, fee).toFixed(2)
 
   const ampLiquidity = formattedNum(
     `${parseFloat(amp.toSignificant(5)) * parseFloat(subgraphPoolData?.reserveUSD)}`,
@@ -312,7 +306,7 @@ const ListItem = ({ pool, subgraphPoolData, myLiquidity, oddRow }: ListItemProps
 
   const fee = subgraphPoolData?.oneDayFeeUSD ? subgraphPoolData?.oneDayFeeUSD : subgraphPoolData?.oneDayFeeUntracked
 
-  const oneYearFL = getOneYearFL(subgraphPoolData?.reserveUSD, fee).toFixed(2)
+  const oneYearFL = getTradingFeeAPR(subgraphPoolData?.reserveUSD, fee).toFixed(2)
 
   const ampLiquidity = formattedNum(
     `${parseFloat(amp.toSignificant(5)) * parseFloat(subgraphPoolData?.reserveUSD)}`,
