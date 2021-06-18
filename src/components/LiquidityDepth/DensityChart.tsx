@@ -81,11 +81,6 @@ export default function DensityChart({
 
   interactive = interactive && Boolean(formattedData?.length)
 
-  console.log(`${activeChartEntry} ${zoom}`)
-  zoom &&
-    activeChartEntry &&
-    console.log(`${Math.max(0, activeChartEntry.index - zoom)}, ${activeChartEntry.index + zoom}`)
-
   const filteredData =
     activeChartEntry && zoom
       ? formattedData?.slice(Math.max(0, activeChartEntry.index - zoom), activeChartEntry.index + zoom)
