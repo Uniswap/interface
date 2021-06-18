@@ -32,12 +32,6 @@ const Wrapper = styled(Box)`
   align-content: center;
 `
 
-const SyncingIndicator = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-`
-
 export default function DensityChart({
   price,
   currencyA,
@@ -64,7 +58,7 @@ export default function DensityChart({
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
-  const { loading, syncing, priceAtActiveTick, maxLiquidity, formattedData } = useDensityChartData({
+  const { loading, priceAtActiveTick, maxLiquidity, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -87,12 +81,6 @@ export default function DensityChart({
 
   return (
     <Wrapper>
-      {syncing ? (
-        <SyncingIndicator>
-          <Loader stroke={theme.text4} />
-        </SyncingIndicator>
-      ) : null}
-
       {/* formatted === undefined will show sample data */}
       {formattedData === [] ? (
         <ColumnCenter>

@@ -10,20 +10,12 @@ import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
 const PRICE_FIXED_DIGITS = 8
 
-const DEFAULT_SURROUNDING_TICKS = {
-  [FeeAmount.LOW]: 2_250,
-  [FeeAmount.MEDIUM]: 6_931,
-  [FeeAmount.HIGH]: 10_986,
-}
-
 export function usePoolTickData(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined,
-  numSurroundingTicks?: number
+  feeAmount: FeeAmount | undefined
 ): {
   loading: boolean
-  syncing: boolean
   error: boolean
   valid: boolean
   activeTick: number | undefined
@@ -33,15 +25,11 @@ export function usePoolTickData(
 
   const tickSpacing = feeAmount && TICK_SPACINGS[feeAmount]
 
-  numSurroundingTicks =
-    numSurroundingTicks ??
-    (feeAmount && tickSpacing ? Math.floor(DEFAULT_SURROUNDING_TICKS[feeAmount] / tickSpacing) : undefined)
-
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick =
     pool[1]?.tickCurrent && tickSpacing ? nearestUsableTick(pool[1]?.tickCurrent, tickSpacing) : undefined
 
-  const { loading, syncing, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
+  const { loading, error, valid, tickData } = useAllV3Ticks(currencyA?.wrapped, currencyB?.wrapped, feeAmount)
 
   const token0 = currencyA?.wrapped
   const token1 = currencyB?.wrapped
@@ -51,17 +39,14 @@ export function usePoolTickData(
       !token0 ||
       !token1 ||
       loading ||
-      syncing ||
       error ||
       !valid ||
       pool[0] !== PoolState.EXISTS ||
       activeTick === undefined ||
-      !tickSpacing ||
-      !numSurroundingTicks
+      !tickSpacing
     ) {
       return {
         loading: loading || pool[0] === PoolState.LOADING,
-        syncing: syncing,
         error: error || pool[0] === PoolState.INVALID,
         valid: false,
         activeTick,
@@ -85,7 +70,6 @@ export function usePoolTickData(
       liquidityNet: JSBI.BigInt(0),
       liquidityGross: JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, activeTickForPrice).toFixed(PRICE_FIXED_DIGITS),
-      price1: tickToPrice(token1, token0, activeTickForPrice).toFixed(PRICE_FIXED_DIGITS),
     }
 
     // if active tick is initialized, fill liquidity
@@ -100,7 +84,6 @@ export function usePoolTickData(
       activeTickProcessed,
       tickToInitializedTick,
       tickSpacing,
-      numSurroundingTicks,
       true
     )
 
@@ -110,7 +93,6 @@ export function usePoolTickData(
       activeTickProcessed,
       tickToInitializedTick,
       tickSpacing,
-      numSurroundingTicks,
       false
     )
 
@@ -118,11 +100,10 @@ export function usePoolTickData(
 
     return {
       loading: false,
-      syncing: false,
       error: false,
       valid: true,
       activeTick,
       tickData: ticksProcessed,
     }
-  }, [token0, token1, activeTick, loading, syncing, error, valid, tickData, pool, tickSpacing, numSurroundingTicks])
+  }, [token0, token1, activeTick, loading, error, valid, tickData, pool, tickSpacing])
 }

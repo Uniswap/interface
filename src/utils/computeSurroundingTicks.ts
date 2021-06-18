@@ -13,7 +13,6 @@ export default function computeSurroundingTicks(
   activeTickProcessed: TickProcessed,
   tickIdxToInitializedTick: { [key: string]: TickData },
   tickSpacing: number,
-  numSurroundingTicks: number,
   ascending: boolean
 ): TickProcessed[] {
   let previousTickProcessed: TickProcessed = {
@@ -23,7 +22,7 @@ export default function computeSurroundingTicks(
   // Iterate outwards (either up or down depending on direction) from the active tick,
   // building active liquidity for every tick.
   let processedTicks: TickProcessed[] = []
-  for (let i = 0; i < numSurroundingTicks; i++) {
+  for (let i = 0; i < Object.keys(tickIdxToInitializedTick).length; i++) {
     const currentTickIdx = ascending
       ? previousTickProcessed.tickIdx + tickSpacing
       : previousTickProcessed.tickIdx - tickSpacing
@@ -37,7 +36,6 @@ export default function computeSurroundingTicks(
       tickIdx: currentTickIdx,
       liquidityNet: JSBI.BigInt(0),
       price0: tickToPrice(token0, token1, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-      price1: tickToPrice(token1, token0, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
       liquidityGross: JSBI.BigInt(0),
     }
 
