@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-18 15:05\n"
+"PO-Revision-Date: 2021-06-18 16:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -825,7 +825,7 @@ msgstr "無効な価格入力"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Invalid range selected. The min price must be lower than the max price."
-msgstr "設定した価格帯が間違っています。最小価格は最大価格より低くしてください。"
+msgstr "設定した価格範囲が間違っています。最小価格は最大価格より低くしてください。"
 
 #: src/state/swap/hooks.ts
 msgid "Invalid recipient"
@@ -1126,7 +1126,7 @@ msgstr "価格が更新されています"
 #: src/components/PositionList/index.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
-msgstr "価格帯"
+msgstr "価格範囲"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Price:"
@@ -1253,7 +1253,7 @@ msgstr "ペアを選択"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
-msgstr "選択した価格帯"
+msgstr "設定した価格範囲"
 
 #: src/pages/Vote/index.tsx
 msgid "Self"
@@ -1266,7 +1266,7 @@ msgstr "自己委任する"
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Set Price Range"
-msgstr "価格帯の設定"
+msgstr "価格範囲を設定"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Set Starting Price"
@@ -1348,7 +1348,7 @@ msgstr "売るトークンが転送できません。売るトークンに問題
 
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
-msgstr "市場価格が設定した価格帯から外れています。単一トークンのみ預け入れできます。"
+msgstr "市場価格が設定した価格範囲から外れています。単一トークンのみ預け入れできます。"
 
 #: src/hooks/useSwapCallback.ts
 msgid "The output token cannot be transferred. There may be an issue with the output token."
@@ -1360,11 +1360,11 @@ msgstr "購入するトークンは転送できません。購入するトーク
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is outside of your selected range. Your position is not currently earning fees."
-msgstr "現在の価格は設定した価格帯から外れています。そのため、現時点であなたのポジションは報酬を獲得しません。"
+msgstr "現在の価格は設定した価格範囲から外れています。そのため、現時点であなたのポジションは報酬を獲得しません。"
 
 #: src/components/Badge/RangeBadge.tsx
 msgid "The price of this pool is within your selected range. Your position is currently earning fees."
-msgstr "現在の価格は設定した価格帯に入っています。そのため、あなたの流動性は現在、報酬を獲得しています。"
+msgstr "現在の価格は設定した価格範囲に入っています。そのため、あなたの流動性は現在、報酬を獲得しています。"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "The ratio of tokens you add will set the price of this pool."
@@ -1758,7 +1758,7 @@ msgstr "預け入れた流動性"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Your liquidity will only earn fees when the market price of the pair is within your range. <0>Need help picking a range?</0>"
-msgstr "流動性は、設定する価格帯内にペアの市場価格が入っている場合のみ報酬を獲得します。 価格帯の設定ガイドは<0>こちら</0>"
+msgstr "流動性は、設定する価格範囲にペアの市場価格が入っている場合のみ報酬を獲得します。 価格帯の設定ガイドは<0>こちら</0>"
 
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1787,7 +1787,7 @@ msgstr "この価格であなたのポジションは100%の {0} になります
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 msgid "Your position will not earn fees or be used in trades until the market price moves into your range."
-msgstr "市場価格が設定した価格帯に入るまで、あなたのポジションは報酬を得られず、取引にも使われません。"
+msgstr "市場価格が設定した価格範囲に入るまで、あなたのポジションは報酬を得られず、取引にも使われません。"
 
 #: src/components/PositionList/index.tsx
 #: src/components/PositionList/index.tsx
