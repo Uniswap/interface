@@ -80,8 +80,8 @@ const Vesting = () => {
       token: Token
     }
   }>((acc, s) => {
+    if (!currentBlockNumber) return acc
     const address = (s[4] as Token).symbol as string
-
     if (!acc[address]) {
       acc[address] = {
         vestableIndexes: [],
@@ -98,6 +98,7 @@ const Vesting = () => {
     const fullyVestedAlready = BigNumber.from(s[2])
       .sub(BigNumber.from(s[3]))
       .isZero()
+
     const isEnd = !BigNumber.from(currentBlockNumber)
       .sub(BigNumber.from(s[1]))
       .isNegative()
@@ -112,7 +113,6 @@ const Vesting = () => {
     // const unlockedAmount = BigNumber.from(s[2])
     //   .mul(vestedAndVestablePercent)
     //   .div(100)
-    console.log('===isend', isEnd)
     const unlockedAmount = isEnd
       ? BigNumber.from(s[2])
       : BigNumber.from(s[2])
@@ -315,7 +315,7 @@ const Schedule = ({ schedule }: any) => {
           .sub(BigNumber.from(schedule[0]))
           .mul(13)
           .toNumber())
-  const currentBlockNumber = useBlockNumber()
+  const currentBlockNumber = useBlockNumber() || schedule[0]
   const endIn =
     currentBlockNumber && BigNumber.from(schedule[1]).toNumber() > currentBlockNumber
       ? BigNumber.from(schedule[1])
