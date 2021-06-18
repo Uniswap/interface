@@ -2,7 +2,6 @@ import { gql } from '@apollo/client'
 
 import { ChainId } from 'libs/sdk/src'
 import { BUNDLE_ID, FACTORY_ADDRESSES } from '../constants'
-import { useActiveWeb3React } from 'hooks'
 
 export const ETH_PRICE = (block?: number) => {
   const queryString = block
@@ -36,9 +35,7 @@ export const TOKEN_DERIVED_ETH = (tokenAddress: string) => {
   return gql(queryString)
 }
 
-export const GLOBAL_DATA = (block?: number) => {
-  const { chainId } = useActiveWeb3React()
-
+export const GLOBAL_DATA = (chainId: ChainId, block?: number) => {
   const queryString = `query dmmFactories {
     dmmFactories(
        ${block ? `block: { number: ${block}}` : ``} 

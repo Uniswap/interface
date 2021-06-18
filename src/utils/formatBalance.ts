@@ -16,7 +16,7 @@ export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, signifi
  * @param usd boolean
  * @returns string
  */
-export const formatBigLiquidity = (num: number, decimals: number, usd = true): string => {
+export const formatBigLiquidity = (num: string, decimals: number, usd = true): string => {
   const lookup = [
     { value: 1, symbol: '' },
     { value: 1e3, symbol: 'k' },
@@ -33,10 +33,10 @@ export const formatBigLiquidity = (num: number, decimals: number, usd = true): s
     .slice()
     .reverse()
     .find(function(item) {
-      return num >= item.value
+      return parseFloat(num) >= item.value
     })
 
-  const formattedValue = item ? (num / item.value).toFixed(decimals).replace(rx, '$1') + item.symbol : '0'
+  const formattedValue = item ? (parseFloat(num) / item.value).toFixed(decimals).replace(rx, '$1') + item.symbol : '0'
 
   return usd ? `$${formattedValue}` : formattedValue
 }
