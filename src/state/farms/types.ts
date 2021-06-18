@@ -19,6 +19,8 @@ export interface Farm {
   amp: number
   reserveUSD: string
   totalSupply: string
+  oneDayFeeUSD?: string
+  oneDayFeeUntracked?: string
   userData?: {
     allowance?: string
     tokenBalance?: string

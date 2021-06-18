@@ -15,6 +15,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useFairLaunchContracts } from 'hooks/useContract'
 import { FAIRLAUNCH_ADDRESSES, ZERO_ADDRESS } from '../../constants'
 import { useAllTokens } from 'hooks/Tokens'
+import { getBulkPoolData } from 'state/pools/hooks'
 
 export const useFarms = (): Farm[] => {
   const farms = useSelector((state: AppState) => state.farms.data)
@@ -107,7 +108,7 @@ export const useFarmsData = () => {
 
       const poolAddresses = poolInfos.map(poolInfo => poolInfo.stakeToken.toLowerCase())
 
-      const farmsData = await fetchFarms(poolAddresses, chainId)
+      const farmsData = await getBulkPoolData(poolAddresses, ethPrice.currentPrice, chainId)
 
       const rewardTokens = rewardTokenAddresses.map(address =>
         address.toLowerCase() === ZERO_ADDRESS.toLowerCase() ? WETH[chainId as ChainId] : allTokens[address]

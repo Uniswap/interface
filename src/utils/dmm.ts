@@ -105,6 +105,12 @@ export const feeRangeCalc = (amp: number): string => {
   return `${(baseFee / 2 / 100).toPrecision()}% - ${((baseFee * 2) / 100).toPrecision()}%`
 }
 
+export const getTradingFeeAPR = (liquidity?: string, feeOneDay?: string): number => {
+  return !feeOneDay || !liquidity || parseFloat(liquidity) === 0
+    ? 0
+    : (parseFloat(feeOneDay) * 365 * 100) / parseFloat(liquidity)
+}
+
 const DEFAULT_MY_LIQUIDITY = '-'
 
 export const getMyLiquidity = (liquidityPosition?: UserLiquidityPosition): string | 0 => {
