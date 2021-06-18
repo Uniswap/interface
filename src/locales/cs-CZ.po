@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-18 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Czech\n"
-"PO-Revision-Date: 2021-06-16 16:05\n"
+"PO-Revision-Date: 2021-06-18 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -400,6 +400,10 @@ msgstr "Zavřít"
 msgid "Closed"
 msgstr "Zavřeno"
 
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "Uzavřené pozice"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "Kód"
@@ -727,8 +731,8 @@ msgid "Get support on Discord"
 msgstr "Získejte podporu o Discord"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "Skrýt zavřené pozice"
+msgid "Hide"
+msgstr "Skrýt"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1279,6 +1283,10 @@ msgstr "Podíl na fondu"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "Podíl na fondu:"
+
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "Ukázat"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"

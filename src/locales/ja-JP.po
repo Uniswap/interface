@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2021-06-16 02:37+0000\n"
+"POT-Creation-Date: 2021-06-18 19:45+0000\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-18 16:05\n"
+"PO-Revision-Date: 2021-06-18 20:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -400,6 +400,10 @@ msgstr "終了"
 msgid "Closed"
 msgstr "終了済"
 
+#: src/pages/Pool/index.tsx
+msgid "Closed positions"
+msgstr "クローズドポジション"
+
 #: src/components/Menu/index.tsx
 msgid "Code"
 msgstr "コード"
@@ -727,8 +731,8 @@ msgid "Get support on Discord"
 msgstr "Discordでサポートを受ける"
 
 #: src/pages/Pool/index.tsx
-msgid "Hide closed positions"
-msgstr "決済したポジションを隠す"
+msgid "Hide"
+msgstr "隠す"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1279,6 +1283,10 @@ msgstr "プールのシェア"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Share of Pool:"
 msgstr "プールのシェア:"
+
+#: src/pages/Pool/index.tsx
+msgid "Show"
+msgstr "公演"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
