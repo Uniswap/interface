@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { ChainId } from 'libs/sdk/src'
+import { ButtonPrimary } from 'components/Button'
 import Panel from 'components/Panel'
 import FarmsList from 'components/FarmsList'
 import FarmClaimModal from 'components/FarmClaimModal'
@@ -11,7 +12,7 @@ import { useActiveWeb3React } from 'hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ExternalLink } from 'theme'
 import { useBlockNumber, useFarmHistoryModalToggle, useKNCPrice } from 'state/application/hooks'
-import { AVERAGE_BLOCK_TIME_IN_SECS } from '../../constants'
+import { AVERAGE_BLOCK_TIME_IN_SECS, FAIRLAUNCH_ADDRESSES } from '../../constants'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import Loader from 'components/Loader'
 import HistoryImg from 'assets/svg/history.svg'
@@ -48,18 +49,22 @@ import FarmHistoryModal from 'components/FarmHistoryModal'
 import InfoHelper from 'components/InfoHelper'
 import { Reward } from 'state/farms/types'
 import { useFarmRewards, useFarmRewardsUSD } from 'utils/dmm'
+import { useFairLaunchContracts } from 'hooks/useContract'
+import useFairLaunch from 'hooks/useFairLaunch'
 
 const FARM_ENDED = 'Ended'
 
 const Farms = () => {
   const { t } = useTranslation()
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
   const blockNumber = useBlockNumber()
   const kncPrice = useKNCPrice()
   const { loading, data: allFarms } = useFarmsData()
   const [activeTab, setActiveTab] = useState(0)
   const [pendingTx, setPendingTx] = useState(false)
   const [stakedOnly, setStakedOnly] = useState(false)
+  const fairLaunchContracts = useFairLaunchContracts()
+  const { harvestMultiplePools } = useFairLaunch(FAIRLAUNCH_ADDRESSES[chainId as ChainId]?.[0])
   const toggleFarmHistoryModal = useFarmHistoryModalToggle()
 
   const farms = allFarms
@@ -78,23 +83,35 @@ const Farms = () => {
     farm => farm.userData?.stakedBalance && BigNumber.from(farm.userData.stakedBalance).gt(0)
   )
 
-  // const handleClickHarvestAll = async () => {
-  //   setPendingTx(true)
+  const shouldShowHarvestAllButton = (): boolean => {
+    if (!fairLaunchContracts || Object.keys(fairLaunchContracts).length !== 1) {
+      return false
+    }
 
-  //   const poolsHaveReward = farms.filter(farm => {
-  //     if (!farm.userData.earnings) {
-  //       return false
-  //     }
+    return true
+  }
 
-  //     const hasReward = farm.userData.earnings.some(value => BigNumber.from(value).gt(0))
+  const handleClickHarvestAll = async () => {
+    if (!shouldShowHarvestAllButton()) {
+      return
+    }
 
-  //     return hasReward
-  //   })
+    setPendingTx(true)
 
-  //   await harvestMultiplePools(poolsHaveReward.map(farm => farm.pid))
+    const poolsHaveReward = farms.filter(farm => {
+      if (!farm.userData?.rewards) {
+        return false
+      }
 
-  //   setPendingTx(false)
-  // }
+      const hasReward = farm.userData?.rewards?.some(value => BigNumber.from(value).gt(0))
+
+      return hasReward
+    })
+
+    await harvestMultiplePools(poolsHaveReward.map(farm => farm.pid))
+
+    setPendingTx(false)
+  }
 
   const canHarvest = (rewards: Reward[]): boolean => {
     const canHarvest = rewards.some(reward => reward?.amount.gt(BigNumber.from('0')))
@@ -185,15 +202,17 @@ const Farms = () => {
                   </RewardNumber>
                   <RewardUSD>{totalRewardsUSD && formattedNum(totalRewardsUSD.toString(), true)}</RewardUSD>
                 </TotalRewardsContainer>
-                {/* <div>
-                  <ButtonPrimary
-                    disabled={!canHarvest(totalRewards) || pendingTx}
-                    padding="10px 36px"
-                    onClick={handleClickHarvestAll}
-                  >
-                    Harvest All
-                  </ButtonPrimary>
-                </div> */}
+                {shouldShowHarvestAllButton() && (
+                  <div>
+                    <ButtonPrimary
+                      disabled={!canHarvest(totalRewards) || pendingTx}
+                      padding="10px 36px"
+                      onClick={handleClickHarvestAll}
+                    >
+                      Harvest All
+                    </ButtonPrimary>
+                  </div>
+                )}
               </HarvestAllContainer>
             </HeadingContainer>
 

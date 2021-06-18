@@ -21,9 +21,9 @@ export default function About() {
   const { chainId } = useActiveWeb3React()
 
   const poolsMenuLink = chainId ? `/pools/ETH/${KNC[chainId as ChainId].address}` : '/pools/ETH'
-  const { loading, data } = useGlobalData()
+  const data = useGlobalData()
 
-  if (loading || !data) {
+  if (!data) {
     return <LocalLoader />
   }
 
