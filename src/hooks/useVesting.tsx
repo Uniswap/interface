@@ -21,10 +21,12 @@ const useVesting = () => {
     const getSchedules = async (address: string): Promise<any> => {
       try {
         console.log('rewardTokens', rewardTokens)
-        const vt = rewardTokens.map(async t => {
-          const res = await lockerContract?.getVestingSchedules(address, t.address)
-          return res.map((s: any, index: any) => [...s, t, index])
-        })
+        const vt = rewardTokens
+          .filter(t => !!t)
+          .map(async t => {
+            const res = await lockerContract?.getVestingSchedules(address, t.address)
+            return res.map((s: any, index: any) => [...s, t, index])
+          })
         return Promise.all(vt).then(res => res.flat())
       } catch (e) {
         return []

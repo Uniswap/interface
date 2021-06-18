@@ -1,4 +1,4 @@
-import { ChainId, Token } from 'libs/sdk/src'
+import { ChainId, ETHER, Token } from 'libs/sdk/src'
 import React from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
@@ -17,6 +17,7 @@ import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { ExternalLink } from 'theme/components'
+import { convertToNativeTokenFromETH } from 'utils/dmm'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -265,7 +266,9 @@ export default function Header() {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
 
-  const poolsMenuLink = chainId ? `/pools/ETH/${KNC[chainId as ChainId].address}` : '/pools/ETH'
+  const poolsMenuLink = chainId
+    ? `/pools/${convertToNativeTokenFromETH(ETHER, chainId).symbol}/${KNC[chainId as ChainId].address}`
+    : '/pools/ETH'
 
   return (
     <HeaderFrame>
