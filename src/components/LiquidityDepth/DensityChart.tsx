@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { VictoryArea, VictoryLine, VictoryBrushContainer, VictoryAxis, VictoryChart, VictoryLabel } from 'victory'
 import useTheme from 'hooks/useTheme'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
@@ -11,7 +11,7 @@ import { Trans } from '@lingui/macro'
 import { XCircle } from 'react-feather'
 import { TYPE } from '../../theme'
 import { ColumnCenter } from 'components/Column'
-import { useDensityChartData, ChartEntry } from './hooks'
+import { useDensityChartData, ChartEntry, ChartContext } from './hooks'
 
 const sampleData: Partial<ChartEntry>[] = [
   { price0: 0, activeLiquidity: 1 },
@@ -53,12 +53,14 @@ export default function DensityChart({
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean
 }) {
+  const { zoom } = useContext(ChartContext)
+
   const theme = useTheme()
 
   const tokenAColor = useColor(currencyA?.wrapped)
   const tokenBColor = useColor(currencyB?.wrapped)
 
-  const { loading, priceAtActiveTick, maxLiquidity, formattedData } = useDensityChartData({
+  const { loading, activeChartEntry, maxLiquidity, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -79,10 +81,15 @@ export default function DensityChart({
 
   interactive = interactive && Boolean(formattedData?.length)
 
+  const filteredData =
+    activeChartEntry && zoom
+      ? formattedData?.slice(Math.max(0, activeChartEntry.index - zoom), activeChartEntry.index + zoom)
+      : undefined
+
   return (
     <Wrapper>
-      {/* formatted === undefined will show sample data */}
-      {formattedData === [] ? (
+      {/* filteredData === undefined will show sample data */}
+      {filteredData === [] ? (
         <ColumnCenter>
           <XCircle stroke={theme.text4} />
           <TYPE.darkGray padding={10}>
@@ -91,7 +98,6 @@ export default function DensityChart({
         </ColumnCenter>
       ) : (
         <VictoryChart
-          animate={{ duration: 500, easing: 'cubic' }}
           height={275}
           padding={40}
           minDomain={{ y: 0 }}
@@ -128,7 +134,7 @@ export default function DensityChart({
           }
         >
           <VictoryArea
-            data={formattedData ? formattedData : sampleData}
+            data={filteredData ? filteredData : sampleData}
             style={{ data: { stroke: theme.blue1, fill: theme.blue1, opacity: '0.5' } }}
             x={'price0'}
             y={'activeLiquidity'}
@@ -139,10 +145,10 @@ export default function DensityChart({
             <VictoryLine
               data={
                 /* plot at `priceAtActiveTick` to put on same axis as VictoryBar, but display `price` as label */
-                maxLiquidity && priceAtActiveTick
+                maxLiquidity && activeChartEntry
                   ? [
-                      { x: priceAtActiveTick, y: 0 },
-                      { x: priceAtActiveTick, y: maxLiquidity },
+                      { x: activeChartEntry.price0, y: 0 },
+                      { x: activeChartEntry.price0, y: maxLiquidity },
                     ]
                   : []
               }
