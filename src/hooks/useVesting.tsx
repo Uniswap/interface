@@ -20,7 +20,6 @@ const useVesting = () => {
   const fetchSchedules = useCallback(async () => {
     const getSchedules = async (address: string): Promise<any> => {
       try {
-        console.log('rewardTokens', rewardTokens)
         const vt = rewardTokens
           .filter(t => !!t)
           .map(async t => {
@@ -40,7 +39,7 @@ const useVesting = () => {
     if (account && chainId && lockerContract) {
       fetchSchedules()
     }
-  }, [account, setSchedules, currentBlockNumber, fetchSchedules, lockerContract])
+  }, [account, setSchedules, currentBlockNumber, fetchSchedules, lockerContract, chainId])
 
   const vestAtIndex = useCallback(
     async (token: string, index: number[]) => {

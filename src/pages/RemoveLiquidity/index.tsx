@@ -451,7 +451,7 @@ export default function RemoveLiquidity({
         history.push(`/remove/${newCurrencyIdA}/${currencyIdB}`)
       }
     },
-    [currencyIdA, currencyIdB, history]
+    [currencyIdA, currencyIdB, history, chainId]
   )
   const handleSelectCurrencyB = useCallback(
     (currencyB: Currency) => {
@@ -462,7 +462,7 @@ export default function RemoveLiquidity({
         history.push(`/remove/${currencyIdA}/${newCurrencyIdB}`)
       }
     },
-    [currencyIdA, currencyIdB, history]
+    [currencyIdA, currencyIdB, history, chainId]
   )
 
   const handleDismissConfirmation = useCallback(() => {
