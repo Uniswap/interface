@@ -14,7 +14,7 @@ msgstr ""
 "X-Crowdin-File-ID: 4\n"
 "Project-Id-Version: uniswap-interface\n"
 "Language-Team: Japanese\n"
-"PO-Revision-Date: 2021-06-18 20:05\n"
+"PO-Revision-Date: 2021-06-19 04:05\n"
 
 #: src/pages/Pool/PositionPage.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -732,7 +732,7 @@ msgstr "Discordでサポートを受ける"
 
 #: src/pages/Pool/index.tsx
 msgid "Hide"
-msgstr "隠す"
+msgstr "非表示"
 
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
@@ -1286,7 +1286,7 @@ msgstr "プールのシェア:"
 
 #: src/pages/Pool/index.tsx
 msgid "Show"
-msgstr "公演"
+msgstr "表示"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Show Portis"
