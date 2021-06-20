@@ -1,6 +1,7 @@
-import 'inter-ui'
 import '@reach/dialog/styles.css'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
+import { useChainIdBackground } from 'hooks/useChainIdBackground'
+import 'inter-ui'
 import React, { StrictMode } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
@@ -11,8 +12,8 @@ import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants/misc'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
-import store from './state'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
+import store from './state'
 import ApplicationUpdater from './state/application/updater'
 import ListsUpdater from './state/lists/updater'
 import MulticallUpdater from './state/multicall/updater'
@@ -48,6 +49,7 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 }
 
 function Updaters() {
+  useChainIdBackground()
   return (
     <>
       <ListsUpdater />
