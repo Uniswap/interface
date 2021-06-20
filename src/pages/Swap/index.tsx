@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { AdvancedSwapDetails } from 'components/swap/AdvancedSwapDetails'
+import { SwapNetworkAlert } from 'components/swap/SwapNetworkAlert'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import JSBI from 'jsbi'
@@ -23,7 +24,6 @@ import Row, { AutoRow, RowFixed } from '../../components/Row'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-
 import { ArrowWrapper, BottomGrouping, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import TradePrice from '../../components/swap/TradePrice'
@@ -69,6 +69,7 @@ const StyledInfo = styled(Info)`
 `
 
 export default function Swap({ history }: RouteComponentProps) {
+  const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
   // token warning stuff
@@ -93,7 +94,6 @@ export default function Swap({ history }: RouteComponentProps) {
       return !Boolean(token.address in defaultTokens)
     })
 
-  const { account } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -358,6 +358,7 @@ export default function Swap({ history }: RouteComponentProps) {
         onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
+      <SwapNetworkAlert />
       <AppBody>
         <SwapHeader allowedSlippage={allowedSlippage} />
         <Wrapper id="swap-page">
