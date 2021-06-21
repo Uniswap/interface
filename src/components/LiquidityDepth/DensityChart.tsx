@@ -107,7 +107,6 @@ export default function DensityChart({
               allowDrag={interactive}
               allowResize={interactive}
               brushDimension="x"
-              handleWidth={30 /* handle width must be as large as handle head */}
               brushDomain={
                 leftPrice && rightPrice
                   ? {
@@ -118,6 +117,16 @@ export default function DensityChart({
               brushComponent={
                 <Brush
                   leftHandleColor={currencyA ? tokenAColor : theme.primary1}
+                  leftLabel={
+                    price && leftPrice
+                      ? `${((parseFloat(leftPrice.toSignificant(8)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
+                      : undefined
+                  }
+                  rightLabel={
+                    price && rightPrice
+                      ? `${((parseFloat(rightPrice.toSignificant(8)) / parseFloat(price) - 1) * 100).toFixed(2)}%`
+                      : undefined
+                  }
                   rightHandleColor={currencyB ? tokenBColor : theme.secondary1}
                   allowDrag={interactive}
                 />
@@ -130,6 +139,7 @@ export default function DensityChart({
                 leftRangeValue > 0 && onLeftRangeInput(leftRangeValue.toFixed(6))
                 rightRangeValue > 0 && onRightRangeInput(rightRangeValue.toFixed(6))
               }}
+              handleWidth={30 /* handle width must be as large as handle head */}
             />
           }
         >

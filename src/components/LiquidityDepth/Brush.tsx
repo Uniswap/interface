@@ -1,14 +1,36 @@
+import useTheme from 'hooks/useTheme'
 import React, { SVGProps } from 'react'
 
 interface BrushProps extends SVGProps<SVGRectElement> {
+  leftLabel: string | undefined
   leftHandleColor: string
+
+  rightLabel: string | undefined
   rightHandleColor: string
+
   allowDrag: boolean
 }
 
 const LEFT_HEAD_OFFSET = 13
+const LABEL_PADDING = 10
+const LABEL_CHAR_WIDTH = 6
 
-export function Brush({ x, y, width, height, leftHandleColor, rightHandleColor, allowDrag }: BrushProps) {
+const labelWidth = (label: string | undefined) =>
+  label ? label.split('').length * LABEL_CHAR_WIDTH + LABEL_PADDING * 2 : 0
+
+export function Brush({
+  x,
+  y,
+  width,
+  height,
+  leftLabel,
+  leftHandleColor,
+  rightLabel,
+  rightHandleColor,
+  allowDrag,
+}: BrushProps) {
+  const theme = useTheme()
+
   if (!(x && y && width && height)) return null
 
   x = Number(x)
@@ -67,6 +89,29 @@ export function Brush({ x, y, width, height, leftHandleColor, rightHandleColor, 
             y1={y + 7}
             x1={x + 9 - LEFT_HEAD_OFFSET}
           />
+          {leftLabel && (
+            <g id="seeker_left_label">
+              {/* move label to right to avoid overlap when range is small */}
+              <rect
+                x={x - labelWidth(leftLabel) / (width < 35 ? 1 : 2)}
+                y={y + height - 30 / 2}
+                width={`${labelWidth(leftLabel)}px`}
+                height="30px"
+                fill={theme.bg2}
+                rx="8px"
+              />
+              <text
+                x={x - (width < 35 ? labelWidth(leftLabel) / 2 : 0)}
+                y={y + height}
+                fill={theme.text1}
+                fontSize="13px"
+                dominantBaseline="middle"
+                textAnchor="middle"
+              >
+                {leftLabel}
+              </text>
+            </g>
+          )}
         </g>
 
         <g id="seeker_right">
@@ -103,6 +148,29 @@ export function Brush({ x, y, width, height, leftHandleColor, rightHandleColor, 
             y1={y + 7}
             x1={x + width + 9}
           />
+          {rightLabel && (
+            <g id="seeker_right_label">
+              {/* move label to right to avoid overlap when range is small */}
+              <rect
+                x={x + width - (width > 35 ? labelWidth(rightLabel) / 2 : 0)}
+                y={y + height - 30 / 2}
+                width={`${labelWidth(rightLabel)}px`}
+                height="30px"
+                fill={theme.bg2}
+                rx="8px"
+              />
+              <text
+                x={x + width + (width < 35 ? labelWidth(rightLabel) / 2 : 0)}
+                y={y + height}
+                fill={theme.text1}
+                fontSize="13px"
+                dominantBaseline="middle"
+                textAnchor="middle"
+              >
+                {rightLabel}
+              </text>
+            </g>
+          )}
         </g>
       </g>
     </g>
